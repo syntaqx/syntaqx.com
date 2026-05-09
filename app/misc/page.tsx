@@ -17,9 +17,9 @@ const tools = [
     tags: ["network", "privacy"],
   },
   {
-    title: "JWT Decoder",
+    title: "JWT Debugger",
     description:
-      "Decode, inspect, and verify JSON Web Tokens entirely in your browser.",
+      "Decode, encode, and verify JSON Web Tokens entirely in your browser.",
     href: "/misc/jwt",
     tags: ["jwt", "auth", "security"],
   },

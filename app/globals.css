@@ -10,6 +10,8 @@
   --muted: #95B1AE;
   --dim: #6b7280;
   --pink: #FF9CC7;
+  --jwt-purple: #C4A7FF;
+  --jwt-cyan: #7EDCDC;
   --mauve: #C86691;
   --surface: #141414;
   --border: #1e1e1e;
@@ -25,6 +27,8 @@
   --muted: #4b5e5c;
   --dim: #6b7280;
   --pink: #c4608a;
+  --jwt-purple: #7c5cbf;
+  --jwt-cyan: #0e8585;
   --mauve: #a34f74;
   --surface: #ffffff;
   --border: #d4d4d4;
@@ -39,6 +43,8 @@
   --color-muted: var(--muted);
   --color-dim: var(--dim);
   --color-pink: var(--pink);
+  --color-jwt-purple: var(--jwt-purple);
+  --color-jwt-cyan: var(--jwt-cyan);
   --color-mauve: var(--mauve);
   --color-surface: var(--surface);
   --color-border: var(--border);

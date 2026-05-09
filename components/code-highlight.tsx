@@ -18,8 +18,9 @@ export function CodeHighlight({
 
   useEffect(() => {
     if (!code.trim()) {
-      setHtml("");
-      return;
+      // Return cleanup that resets — avoids synchronous setState in effect body
+      const id = requestAnimationFrame(() => setHtml(""));
+      return () => cancelAnimationFrame(id);
     }
 
     let cancelled = false;
@@ -54,7 +55,7 @@ export function CodeHighlight({
 
   return (
     <div
-      className={`[&_pre]:!bg-transparent [&_pre]:!p-0 [&_pre]:text-sm [&_pre]:font-mono [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:!text-sm ${className}`}
+      className={`[&_pre]:bg-transparent! [&_pre]:p-0! [&_pre]:text-sm [&_pre]:font-mono [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:!text-sm ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

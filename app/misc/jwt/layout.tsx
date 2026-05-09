@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "JWT Decoder",
+  title: "JWT Debugger",
   description:
-    "Decode, inspect, and verify JSON Web Tokens entirely in your browser.",
+    "Decode, encode, and verify JSON Web Tokens entirely in your browser.",
 };
 
 export default function JwtLayout({ children }: { children: React.ReactNode }) {
