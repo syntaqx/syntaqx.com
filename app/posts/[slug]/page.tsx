@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { getAllPosts, getPostBySlug, markdownToHtml } from "@/lib/posts";
-import { ArrowLeft } from "lucide-react";
 import { PostMeta } from "@/components/post-meta";
 import { CopyCodeScript } from "@/components/copy-code";
 import type { Metadata } from "next";
@@ -40,14 +38,6 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <article>
-      <Link
-        href="/posts"
-        className="inline-flex items-center gap-1.5 text-xs text-dim hover:text-accent transition-colors mb-8"
-      >
-        <ArrowLeft size={12} />
-        back to posts
-      </Link>
-
       <header className="mb-10 pb-6 border-b border-border">
         <h1 className="text-xl font-semibold tracking-tight mb-3">
           {post.title}
