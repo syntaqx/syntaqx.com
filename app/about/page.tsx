@@ -200,11 +200,11 @@ export default function AboutPage() {
                 "Contributing to and maintaining projects that solve real problems. Code should be shared when it can be. The community makes us all better.",
             },
           ].map((item) => (
-            <Card key={item.title}>
+            <Card key={item.title} className="flex flex-col h-full">
               <h3 className="text-sm font-medium text-foreground mb-1">
                 {item.title}
               </h3>
-              <p className="text-xs text-dim leading-relaxed min-h-[3lh] line-clamp-3">
+              <p className="text-xs text-dim leading-relaxed flex-1 sm:min-h-[4lh]">
                 {item.description}
               </p>
             </Card>
