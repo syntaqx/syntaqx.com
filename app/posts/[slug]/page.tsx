@@ -17,14 +17,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(slug);
   if (!post) return {};
 
+  const url = `https://syntaqx.com/posts/${slug}`;
+
   return {
     title: post.title,
     description: post.description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
+      url,
       type: "article",
       publishedTime: post.date,
+      authors: ["Chase Pierce"],
+      tags: post.tags,
     },
   };
 }
@@ -36,8 +44,32 @@ export default async function PostPage({ params }: Props) {
 
   const content = await markdownToHtml(post.content);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    url: `https://syntaqx.com/posts/${slug}`,
+    author: {
+      "@type": "Person",
+      name: "Chase Pierce",
+      url: "https://syntaqx.com",
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Chase Pierce",
+      url: "https://syntaqx.com",
+    },
+    ...(post.tags?.length && { keywords: post.tags.join(", ") }),
+  };
+
   return (
     <article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="mb-10 pb-6 border-b border-border">
         <h1 className="text-xl font-semibold tracking-tight mb-3">
           {post.title}
