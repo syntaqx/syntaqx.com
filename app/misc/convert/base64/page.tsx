@@ -388,7 +388,7 @@ export default function Base64Page() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  RFC 4648 &mdash; Base Encodings
+                  RFC 4648 - Base Encodings
                 </a>
               </li>
               <li>
@@ -398,7 +398,7 @@ export default function Base64Page() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  RFC 2045 &sect;6.8 &mdash; MIME Base64
+                  RFC 2045 &sect;6.8 - MIME Base64
                 </a>
               </li>
               <li>
@@ -408,7 +408,7 @@ export default function Base64Page() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  MDN &mdash; Base64 glossary
+                  MDN - Base64 glossary
                 </a>
               </li>
               <li>
@@ -418,7 +418,7 @@ export default function Base64Page() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  Wikipedia &mdash; Base64
+                  Wikipedia - Base64
                 </a>
               </li>
             </ul>

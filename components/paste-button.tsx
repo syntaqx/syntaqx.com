@@ -18,14 +18,17 @@ export function PasteButton({
 }: PasteButtonProps) {
   const [pasted, setPasted] = useState(false);
 
-  const paste = () => {
-    navigator.clipboard.readText().then((text) => {
+  const paste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
       if (text) {
         onPaste(text);
         setPasted(true);
         setTimeout(() => setPasted(false), 1500);
       }
-    });
+    } catch {
+      // Permission denied or clipboard API unavailable — silently ignore
+    }
   };
 
   const sizes = {

@@ -355,7 +355,7 @@ export default function WhoamiPage() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  RFC 791 &mdash; Internet Protocol (IPv4)
+                  RFC 791 - Internet Protocol (IPv4)
                 </a>
               </li>
               <li>
@@ -365,7 +365,7 @@ export default function WhoamiPage() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  RFC 8200 &mdash; IPv6 Specification
+                  RFC 8200 - IPv6 Specification
                 </a>
               </li>
               <li>
@@ -375,7 +375,7 @@ export default function WhoamiPage() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  MDN &mdash; Navigator API
+                  MDN - Navigator API
                 </a>
               </li>
               <li>
@@ -385,7 +385,7 @@ export default function WhoamiPage() {
                   rel="noopener noreferrer"
                   className="text-muted hover:text-accent transition-colors"
                 >
-                  Wikipedia &mdash; IP address
+                  Wikipedia - IP address
                 </a>
               </li>
             </ul>

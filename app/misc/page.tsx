@@ -16,6 +16,13 @@ const tools = [
     href: "/misc/whoami",
     tags: ["network", "privacy"],
   },
+  {
+    title: "JWT Decoder",
+    description:
+      "Decode, inspect, and verify JSON Web Tokens entirely in your browser.",
+    href: "/misc/jwt",
+    tags: ["jwt", "auth", "security"],
+  },
 ];
 
 const converters = [
