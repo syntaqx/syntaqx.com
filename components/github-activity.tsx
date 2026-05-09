@@ -1,3 +1,5 @@
+import { ScrollEnd } from "@/components/scroll-end";
+
 export interface ContributionDay {
   date: string;
   level: number; // 0-4
@@ -110,7 +112,7 @@ export function GitHubActivity({
     <div className="rounded-lg border border-border bg-surface/50 p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs font-medium uppercase tracking-widest text-dim">
-          Public Activity
+          GitHub Activity
         </h3>
         <a
           href={`https://github.com/${username}`}
@@ -118,12 +120,12 @@ export function GitHubActivity({
           rel="noopener noreferrer"
           className="text-xs text-dim hover:text-accent transition-colors"
         >
-          {total.toLocaleString()} contributions · GitHub →
+          {total.toLocaleString()} contributions →
         </a>
       </div>
 
       {/* Month labels */}
-      <div className="relative h-4 mb-1">
+      <div className="relative h-4 mb-1 overflow-hidden">
         {monthLabels.map((m, i) => (
           <span
             key={i}
@@ -137,20 +139,25 @@ export function GitHubActivity({
         ))}
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-flow-col auto-cols-fr gap-0.75">
-        {weeks.map((week, wi) => (
-          <div key={wi} className="flex flex-col gap-0.75">
-            {week.map((day) => (
+      {/* Grid — scrollable on small screens, fits on md+ */}
+      <ScrollEnd>
+        <div
+          className="grid grid-flow-col auto-cols-[8px] md:auto-cols-fr gap-0.75"
+          style={{
+            gridTemplateRows: "repeat(7, 1fr)",
+          }}
+        >
+          {weeks.map((week) =>
+            week.map((day) => (
               <div
                 key={day.date}
-                className={`aspect-square w-full rounded-xs ${LEVEL_COLORS[day.level]}`}
+                className={`aspect-square rounded-xs ${LEVEL_COLORS[day.level]}`}
                 title={day.date}
               />
-            ))}
-          </div>
-        ))}
-      </div>
+            )),
+          )}
+        </div>
+      </ScrollEnd>
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-1.5 mt-3">

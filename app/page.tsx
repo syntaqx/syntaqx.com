@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
+import { socials } from "@/lib/constants";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { PostMeta } from "@/components/post-meta";
+import { SimpleIcon } from "@/components/simple-icon";
 import {
   GitHubActivity,
   fetchGitHubContributions,
@@ -59,6 +61,35 @@ export default async function Home() {
             </div>
           </div>
           <div className="mt-10 lg:mt-0 lg:flex-1 lg:min-w-0">
+            <div className="rounded-lg border border-border bg-surface/50 p-4 mb-4">
+              <div className="flex items-center gap-6">
+                <div className="shrink-0">
+                  <p className="text-sm font-medium text-foreground">
+                    Follow me
+                  </p>
+                  <p className="text-xs text-dim">If you&apos;re into that.</p>
+                </div>
+                <div className="flex items-center gap-1 flex-1 justify-end">
+                  {socials.map((s) => (
+                    <a
+                      key={s.href}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-center w-12 h-12 rounded-md hover:bg-accent/10 transition-colors"
+                      aria-label={s.label}
+                      title={s.label}
+                    >
+                      <SimpleIcon
+                        name={s.icon}
+                        size={24}
+                        className="text-dim group-hover:text-accent transition-colors"
+                      />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
             <GitHubActivity data={contributions} />
           </div>
         </div>
