@@ -26,17 +26,15 @@ export default async function Home() {
               <p>
                 <span className="text-foreground font-medium">Currently</span> /
                 VP of Software Engineering. I lead engineering orgs, own
-                architecture and delivery, and still write code. Great products
-                demand architecture that can evolve with them — get that right
-                first, or the product stagnates and becomes impossible to
-                change.
+                architecture and delivery, and still write code. Architecture is
+                what unlocks amazing products. Get it right, and the product can
+                grow and change forever. Get it wrong, and everything stagnates.
               </p>
               <p>
                 <span className="text-foreground font-medium">Product</span> / I
-                obsess over building things people actually want to use. The
-                best architecture in the world means nothing if it doesn&apos;t
-                serve the product. I sit with stakeholders, understand their
-                pain, and ship software that removes friction or unlocks value.
+                obsess over what users actually need. I force clarity on
+                problems before building solutions, because if you can&apos;t
+                articulate the problem, you don&apos;t know what to build.
               </p>
               <p>
                 <span className="text-foreground font-medium">Previously</span>{" "}
