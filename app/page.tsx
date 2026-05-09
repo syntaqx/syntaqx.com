@@ -46,7 +46,7 @@ export default async function Home() {
               <p>
                 <span className="text-foreground font-medium">Otherwise</span> /
                 Open sorcerer. Perpetually online. Obsessed with technology,
-                driven by product. Your favorite internet junkie with a love of
+                hooked on shipping. Your favorite internet junkie with a love of
                 all things digital and bacon-based.
               </p>
             </div>
