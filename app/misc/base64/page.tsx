@@ -2,8 +2,6 @@
 
 import { useState, useCallback, useRef, type DragEvent } from "react";
 import {
-  Copy,
-  Check,
   ClipboardPaste,
   Trash2,
   Upload,
@@ -12,6 +10,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Checkbox } from "@/components/checkbox";
+import { CopyButton } from "@/components/copy-button";
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -97,25 +96,6 @@ function byteSize(str: string): string {
 }
 
 // --- Components -------------------------------------------------------------
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = () => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
-  };
-  return (
-    <button
-      onClick={copy}
-      className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
-    >
-      {copied ? <Check size={12} /> : <Copy size={12} />}
-      {copied ? "Copied" : "Copy"}
-    </button>
-  );
-}
 
 // --- Page -------------------------------------------------------------------
 
@@ -351,7 +331,7 @@ export default function Base64Page() {
                       {byteSize(output)}
                     </span>
                   )}
-                  {output && <CopyButton text={output} />}
+                  {output && <CopyButton text={output} label />}
                 </div>
               </div>
               <textarea

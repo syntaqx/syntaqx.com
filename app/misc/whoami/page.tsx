@@ -1,25 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Copy, Check, RefreshCw, Info, ExternalLink } from "lucide-react";
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = () => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
-  };
-  return (
-    <button
-      onClick={copy}
-      className="inline-flex items-center gap-1 rounded border border-border px-1.5 py-0.5 text-[10px] text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
-    >
-      {copied ? <Check size={10} /> : <Copy size={10} />}
-    </button>
-  );
-}
+import { RefreshCw, Info, ExternalLink } from "lucide-react";
+import { CopyButton } from "@/components/copy-button";
 
 function Row({
   label,
@@ -41,7 +24,7 @@ function Row({
             >
               {value}
             </span>
-            <CopyButton text={value} />
+            <CopyButton text={value} size="sm" />
           </>
         ) : (
           <div className="h-4 w-24 rounded bg-border/40 animate-pulse" />
@@ -62,6 +45,8 @@ interface IpData {
 }
 
 export default function WhoamiPage() {
+  const [ipv4, setIpv4] = useState<string | null>(null);
+  const [ipv6, setIpv6] = useState<string | null>(null);
   const [ipData, setIpData] = useState<IpData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,25 +75,46 @@ export default function WhoamiPage() {
   const fetchIp = async () => {
     setLoading(true);
     setError(null);
+    setIpv4(null);
+    setIpv6(null);
+
+    // Fetch IPv4 and IPv6 in parallel
+    const v4 = fetch("https://api.ipify.org?format=json")
+      .then((r) => r.json())
+      .then((d) => d.ip as string)
+      .catch(() => null);
+
+    const v6 = fetch("https://api64.ipify.org?format=json")
+      .then((r) => r.json())
+      .then((d) => d.ip as string)
+      .catch(() => null);
+
+    const [v4Result, v6Result] = await Promise.all([v4, v6]);
+
+    setIpv4(v4Result);
+    // Only set IPv6 if it's actually different from IPv4 (and looks like IPv6)
+    if (v6Result && v6Result !== v4Result && v6Result.includes(":")) {
+      setIpv6(v6Result);
+    }
+
+    // Use whichever IP we got for geo lookup
+    const primaryIp = v4Result || v6Result;
+    if (!primaryIp) {
+      setError("Could not determine your IP address");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch("https://ipinfo.io/json?token=");
-      if (!res.ok) {
-        // Fallback to simpler API
-        const fallback = await fetch("https://api.ipify.org?format=json");
-        const data = await fallback.json();
-        setIpData({ ip: data.ip });
-      } else {
+      const res = await fetch(`https://ipinfo.io/${primaryIp}/json?token=`);
+      if (res.ok) {
         const data = await res.json();
         setIpData(data);
+      } else {
+        setIpData({ ip: primaryIp });
       }
     } catch {
-      try {
-        const fallback = await fetch("https://api.ipify.org?format=json");
-        const data = await fallback.json();
-        setIpData({ ip: data.ip });
-      } catch {
-        setError("Could not determine your IP address");
-      }
+      setIpData({ ip: primaryIp });
     } finally {
       setLoading(false);
     }
@@ -117,7 +123,7 @@ export default function WhoamiPage() {
   useEffect(() => {
     fetchIp();
 
-    const nav = navigator as Record<string, unknown>;
+    const nav = navigator as unknown as Record<string, unknown>;
     const conn = nav.connection as
       | { effectiveType?: string; downlink?: number }
       | undefined;
@@ -185,26 +191,57 @@ export default function WhoamiPage() {
               </button>
             </div>
             <div className="px-4 py-6 text-center">
-              {error ? (
-                <p className="text-sm text-pink">{error}</p>
-              ) : ipData ? (
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-accent font-mono tracking-wide">
-                      {ipData.ip}
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[10px] text-dim uppercase tracking-widest">
+                    IPv4
+                  </span>
+                  {error ? (
+                    <span className="text-sm text-pink">
+                      Could not determine IP
                     </span>
-                    <CopyButton text={ipData.ip} />
-                  </div>
-                  {location && (
-                    <span className="text-xs text-dim">{location}</span>
+                  ) : ipv4 ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-accent font-mono tracking-wide">
+                        {ipv4}
+                      </span>
+                      <CopyButton text={ipv4} />
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold font-mono tracking-wide text-transparent rounded bg-border/40 animate-pulse">
+                        000.000.000.000
+                      </span>
+                    </div>
                   )}
                 </div>
-              ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <div className="h-8 w-48 rounded bg-border/50 animate-pulse" />
-                  <div className="h-4 w-32 rounded bg-border/30 animate-pulse" />
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[10px] text-dim uppercase tracking-widest">
+                    IPv6
+                  </span>
+                  {ipv6 ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-accent font-mono tracking-wide break-all">
+                        {ipv6}
+                      </span>
+                      <CopyButton text={ipv6} />
+                    </div>
+                  ) : (
+                    <span
+                      className={`text-xs ${loading ? "text-transparent rounded bg-border/30 animate-pulse" : "text-dim/50"}`}
+                    >
+                      {loading
+                        ? "0000:0000:0000:0000:0000:0000"
+                        : "Unavailable"}
+                    </span>
+                  )}
                 </div>
-              )}
+                <span
+                  className={`text-xs ${!location && loading ? "text-transparent rounded bg-border/30 animate-pulse" : "text-dim"}`}
+                >
+                  {location || (loading ? "Loading location" : "\u00A0")}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -216,6 +253,12 @@ export default function WhoamiPage() {
               </span>
             </div>
             <div className="px-4">
+              <Row label="IPv4" value={ipv4} mono />
+              <Row
+                label="IPv6"
+                value={ipv6 ?? (loading ? null : "Unavailable")}
+                mono
+              />
               <Row label="ISP / Org" value={ipData?.org ?? null} />
               <Row label="Location" value={location || null} />
               <Row label="Timezone" value={ipData?.timezone ?? null} />
