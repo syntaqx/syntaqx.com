@@ -8,6 +8,7 @@ import { SearchButton } from "@/components/search";
 import { Nav, MobileMenu, Breadcrumb } from "@/components/nav";
 import { BackgroundEffect } from "@/components/background-effect";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { nav, socials } from "@/lib/constants";
 import "./globals.css";
 
@@ -129,6 +130,7 @@ export default function RootLayout({
           </div>
         </footer>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
