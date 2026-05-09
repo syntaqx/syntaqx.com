@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Search, X, FileText, Loader2 } from "lucide-react";
 
 interface SearchResult {
@@ -37,7 +38,11 @@ export function SearchButton() {
           <span className="text-[11px]">⌘</span>K
         </kbd>
       </button>
-      {open && <SearchModal onClose={() => setOpen(false)} />}
+      {open &&
+        createPortal(
+          <SearchModal onClose={() => setOpen(false)} />,
+          document.body,
+        )}
     </>
   );
 }
@@ -93,7 +98,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
         );
         setResults(
           data.map((d: any) => ({
-            url: d.url,
+            url: d.url.replace(/\.html$/, ""),
             title: d.meta?.title || d.url,
             excerpt: d.excerpt,
           })),
@@ -129,7 +134,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]"
+      className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
       onClick={onClose}
     >
       <div className="fixed inset-0 bg-background/60 backdrop-blur-sm" />
