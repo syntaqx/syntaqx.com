@@ -1,65 +1,103 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getAllPosts } from "@/lib/posts";
+import { ArrowRight } from "lucide-react";
+import { Card } from "@/components/card";
+import { Button } from "@/components/button";
+import { PostMeta } from "@/components/post-meta";
+import {
+  GitHubActivity,
+  fetchGitHubContributions,
+} from "@/components/github-activity";
 
-export default function Home() {
+export default async function Home() {
+  const posts = getAllPosts();
+  const contributions = await fetchGitHubContributions("syntaqx");
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div>
+      {/* Hero — Holman-style intro */}
+      <section className="mb-20">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
+          <div className="lg:w-1/2 shrink-0">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.15] mb-6">
+              Chase Pierce
+            </h1>
+            <div className="text-sm text-muted leading-relaxed space-y-3 mb-8">
+              <p>
+                <span className="text-foreground font-medium">Currently</span> /
+                VP of Software Engineering. I lead engineering orgs, own
+                architecture and delivery, and still write code. I obsess over
+                building products people actually want to use, and the
+                architecture that makes them possible.
+              </p>
+              <p>
+                <span className="text-foreground font-medium">Previously</span>{" "}
+                / Writing code since I was 11. Over 20 years sitting with
+                stakeholders, understanding their pain, and shipping software
+                that removes friction or unlocks value. Gaming, social media,
+                fintech, e-commerce, proptech, hosting, travel, sports tech, and
+                more. The problems are universal. The fun part is solving them.
+              </p>
+              <p>
+                <span className="text-foreground font-medium">Otherwise</span> /
+                Open sorcerer. Perpetually online. Obsessed with technology,
+                driven by product. Your favorite internet junkie with a love of
+                all things digital and bacon-based.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button href="/about">
+                More about me
+                <ArrowRight size={13} />
+              </Button>
+              <Button href="/posts" variant="secondary">
+                Read the blog
+              </Button>
+            </div>
+          </div>
+          <div className="mt-10 lg:mt-0 lg:flex-1 lg:min-w-0">
+            <GitHubActivity data={contributions} />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </section>
+
+      {/* Posts */}
+      <section>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xs font-medium uppercase tracking-widest text-dim">
+            Recent Posts
+          </h2>
+          <Link
+            href="/posts"
+            className="text-xs text-dim hover:text-accent transition-colors flex items-center gap-1"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            view all <ArrowRight size={11} />
+          </Link>
         </div>
-      </main>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/posts/${post.slug}`}
+              className="group flex flex-col"
+            >
+              <Card hover className="flex flex-col h-full p-5">
+                <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors mb-2">
+                  {post.title}
+                </h3>
+                {post.description && (
+                  <p className="text-xs text-dim leading-relaxed line-clamp-3 mb-auto">
+                    {post.description}
+                  </p>
+                )}
+                <div className="mt-4 pt-3 border-t border-border">
+                  <PostMeta date={post.date} tags={post.tags} />
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

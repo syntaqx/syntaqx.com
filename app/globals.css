@@ -1,26 +1,231 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Dark theme (default) */
+:root,
+.dark {
+  --background: #0d0d0d;
+  --foreground: #e0e0e0;
+  --accent: #00D1CA;
+  --accent-muted: #334B49;
+  --muted: #95B1AE;
+  --dim: #6b7280;
+  --pink: #FF9CC7;
+  --mauve: #C86691;
+  --surface: #141414;
+  --border: #1e1e1e;
+  --border-hover: #2a2a2a;
+}
+
+/* Light theme */
+.light {
+  --background: #fafafa;
+  --foreground: #1A1A1A;
+  --accent: #00a8a2;
+  --accent-muted: #5c8a86;
+  --muted: #5f7a77;
+  --dim: #9ca3af;
+  --pink: #d4749e;
+  --mauve: #a34f74;
+  --surface: #ffffff;
+  --border: #e5e5e5;
+  --border-hover: #d4d4d4;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --color-pink: var(--pink);
+  --color-mauve: var(--mauve);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --font-sans: var(--font-geist-mono);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 209, 202, 0.25);
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-muted);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Prose typography for blog posts */
+.prose {
+  line-height: 1.8;
+  font-size: 0.9375rem;
+}
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2.5em;
+  margin-bottom: 0.75em;
+  color: var(--foreground);
+}
+.prose h1 { font-size: 1.75rem; }
+.prose h2 {
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5em;
+  color: var(--accent);
+}
+.prose h3 { font-size: 1.1rem; color: var(--muted); }
+.prose p { margin-top: 1.25em; margin-bottom: 1.25em; }
+.prose a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.prose a:hover {
+  border-bottom-color: var(--accent);
+}
+.prose strong { font-weight: 600; color: var(--foreground); }
+.prose em { color: var(--muted); }
+.prose ul, .prose ol { padding-left: 1.5em; margin-top: 1em; margin-bottom: 1em; }
+.prose ul { list-style-type: "› "; }
+.prose ol { list-style-type: decimal; }
+.prose li { margin-top: 0.35em; margin-bottom: 0.35em; }
+.prose li::marker { color: var(--accent); }
+.prose blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1.25em;
+  margin: 2em 0;
+  color: var(--muted);
+  font-style: normal;
+}
+.prose code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+  background: rgba(0, 209, 202, 0.06);
+  border: 1px solid var(--border);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  color: var(--accent);
+}
+.prose pre {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 2em 0;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+/* Shiki dual-theme: use dark colors by default, light in .light */
+.dark .prose pre,
+:root .prose pre {
+  background-color: var(--shiki-dark-bg, var(--surface)) !important;
+}
+.dark .prose pre code span,
+:root .prose pre code span {
+  color: var(--shiki-dark) !important;
+}
+.light .prose pre {
+  background-color: var(--shiki-light-bg, var(--surface)) !important;
+}
+.light .prose pre code span {
+  color: var(--shiki-light) !important;
+}
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: var(--foreground);
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3em 0;
+}
+.prose img {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  margin: 2em 0;
+}
+
+/* GFM tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;
+  font-size: 0.8125rem;
+}
+.prose thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--foreground);
+  border-bottom: 2px solid var(--border);
+  padding: 0.5em 0.75em;
+}
+.prose tbody td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.5em 0.75em;
+  color: var(--muted);
+}
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* GFM task lists */
+.prose ul:has(input[type="checkbox"]) {
+  list-style: none;
+  padding-left: 0;
+}
+.prose input[type="checkbox"] {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  position: relative;
+}
+.prose input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.prose input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: -1px;
+  left: 2px;
+  font-size: 10px;
+  color: var(--background);
+}
+
+/* GFM strikethrough */
+.prose del {
+  color: var(--dim);
+  text-decoration: line-through;
 }
