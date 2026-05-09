@@ -4,6 +4,12 @@ import { Card } from "@/components/card";
 
 const converters = [
   {
+    title: "Base64 Decode / Encode",
+    description: "Decode or encode Base64 strings directly in your browser.",
+    href: "/misc/convert/base64",
+    tags: ["encoding", "base64"],
+  },
+  {
     title: "Text Format Converter",
     description:
       "Convert between JSON, YAML, TOML, XML, TOON, CSV, ENV, and query strings.",
@@ -27,7 +33,7 @@ export default function ConvertIndexPage() {
           Converters
         </h1>
         <p className="text-sm text-muted">
-          Browser-based conversion tools. Nothing leaves your machine.
+          Conversion tools for text, images, and more.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
