@@ -22,6 +22,13 @@ const items = [
     href: "/misc/base64",
     tags: ["tool", "encoding"],
   },
+  {
+    title: "Data Format Converter",
+    description:
+      "Convert between JSON, YAML, and TOML in real time. Edit any format and the others update instantly.",
+    href: "/misc/convert",
+    tags: ["tool", "data", "config"],
+  },
 ];
 
 export default function PlaygroundPage() {

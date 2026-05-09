@@ -1,14 +1,8 @@
 "use client";
 
 import { useState, useCallback, useRef, type DragEvent } from "react";
-import {
-  ClipboardPaste,
-  Trash2,
-  Upload,
-  FileText,
-  Info,
-  ExternalLink,
-} from "lucide-react";
+import { Trash2, Upload, FileText, Info, ExternalLink } from "lucide-react";
+import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { CopyButton } from "@/components/copy-button";
 
@@ -140,14 +134,6 @@ export default function Base64Page() {
     if (input) run(input, mode, charset, next);
   };
 
-  const paste = async () => {
-    const text = await navigator.clipboard.readText();
-    if (text) {
-      setFileName(null);
-      run(text, mode, charset, perLine);
-    }
-  };
-
   const clear = () => {
     setInput("");
     setOutput("");
@@ -257,13 +243,13 @@ export default function Base64Page() {
                     <Upload size={12} />
                     File
                   </button>
-                  <button
-                    onClick={paste}
-                    className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
-                  >
-                    <ClipboardPaste size={12} />
-                    Paste
-                  </button>
+                  <PasteButton
+                    onPaste={(text) => {
+                      setFileName(null);
+                      run(text, mode, charset, perLine);
+                    }}
+                    label
+                  />
                   {input && (
                     <button
                       onClick={clear}

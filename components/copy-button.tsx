@@ -8,6 +8,7 @@ interface CopyButtonProps {
   label?: boolean;
   size?: "sm" | "md";
   className?: string;
+  disabled?: boolean;
 }
 
 export function CopyButton({
@@ -15,6 +16,7 @@ export function CopyButton({
   label = false,
   size = "md",
   className = "",
+  disabled = false,
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
@@ -31,7 +33,7 @@ export function CopyButton({
       icon: 10,
     },
     md: {
-      button: "gap-1.5 rounded border border-border px-2 py-1.5 text-xs",
+      button: "gap-1.5 rounded border border-border px-2 py-1 text-xs",
       icon: 12,
     },
   };
@@ -41,7 +43,8 @@ export function CopyButton({
   return (
     <button
       onClick={copy}
-      className={`inline-flex items-center ${s.button} text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer ${className}`}
+      disabled={disabled}
+      className={`inline-flex items-center ${s.button} text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${className}`}
     >
       {copied ? <Check size={s.icon} /> : <Copy size={s.icon} />}
       {label && (copied ? "Copied" : "Copy")}
