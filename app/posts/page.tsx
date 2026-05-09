@@ -18,7 +18,8 @@ export default function PostsPage() {
           All Posts
         </h1>
         <p className="text-sm text-muted">
-          {posts.length} articles on engineering, devops, and the craft.
+          Thoughts on building products, leading teams, and everything in
+          between.
         </p>
       </div>
       <div className="flex flex-col gap-3">

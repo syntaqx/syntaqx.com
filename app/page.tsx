@@ -26,17 +26,24 @@ export default async function Home() {
               <p>
                 <span className="text-foreground font-medium">Currently</span> /
                 VP of Software Engineering. I lead engineering orgs, own
-                architecture and delivery, and still write code. I obsess over
-                building products people actually want to use, and the
-                architecture that makes them possible.
+                architecture and delivery, and still write code. Great products
+                demand architecture that can evolve with them — get that right
+                first, or the product stagnates and becomes impossible to
+                change.
+              </p>
+              <p>
+                <span className="text-foreground font-medium">Product</span> / I
+                obsess over building things people actually want to use. The
+                best architecture in the world means nothing if it doesn&apos;t
+                serve the product. I sit with stakeholders, understand their
+                pain, and ship software that removes friction or unlocks value.
               </p>
               <p>
                 <span className="text-foreground font-medium">Previously</span>{" "}
-                / Writing code since I was 11. Over 20 years sitting with
-                stakeholders, understanding their pain, and shipping software
-                that removes friction or unlocks value. Gaming, social media,
-                fintech, e-commerce, proptech, hosting, travel, sports tech, and
-                more. The problems are universal. The fun part is solving them.
+                / Writing code since I was 11. Over 20 years across gaming,
+                social media, fintech, e-commerce, proptech, hosting, travel,
+                sports tech, and more. The problems are universal. The fun part
+                is solving them.
               </p>
               <p>
                 <span className="text-foreground font-medium">Otherwise</span> /

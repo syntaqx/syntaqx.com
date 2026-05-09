@@ -5,7 +5,7 @@ import Image from "next/image";
 import { SimpleIcon } from "@/components/simple-icon";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SearchButton } from "@/components/search";
-import { Nav, Breadcrumb } from "@/components/nav";
+import { Nav, MobileMenu, Breadcrumb } from "@/components/nav";
 import { BackgroundEffect } from "@/components/background-effect";
 import { Analytics } from "@vercel/analytics/react";
 import { nav, socials } from "@/lib/constants";
@@ -64,7 +64,7 @@ export default function RootLayout({
         <BackgroundEffect />
         <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
           <div className="border-b border-border/50">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 relative">
               <div className="flex items-center gap-3">
                 <Link
                   href="/"
@@ -81,12 +81,13 @@ export default function RootLayout({
                     syntaqx
                   </span>
                 </Link>
-                <span className="text-dim">/</span>
+                <span className="hidden sm:inline text-dim">/</span>
                 <Nav />
               </div>
               <div className="flex items-center gap-2">
                 <SearchButton />
                 <ThemeToggle />
+                <MobileMenu />
               </div>
             </div>
           </div>
@@ -96,7 +97,7 @@ export default function RootLayout({
           {children}
         </main>
         <footer className="border-t border-border mt-auto">
-          <div className="mx-auto max-w-7xl px-6 py-6 flex items-center justify-between">
+          <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-dim">
               {nav.map((item) => (
                 <Link
@@ -108,9 +109,6 @@ export default function RootLayout({
                 </Link>
               ))}
             </div>
-            <p className="text-xs text-dim">
-              &copy; {new Date().getFullYear()} Chase Pierce
-            </p>
             <div className="flex items-center gap-4">
               {socials.map((s) => (
                 <a
@@ -125,6 +123,9 @@ export default function RootLayout({
                 </a>
               ))}
             </div>
+            <p className="text-xs text-dim">
+              &copy; {new Date().getFullYear()} Chase Pierce
+            </p>
           </div>
         </footer>
         <Analytics />

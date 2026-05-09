@@ -44,12 +44,15 @@ export default function AboutPage() {
                 it&apos;s gotten worse.
               </p>
               <p>
-                I started writing code at 11, hacking on game servers and
-                solving problems nobody asked me to solve. That turned into a
-                development internship at a local news station as a teenager,
-                and I never looked back. I&apos;ve shipped software across
-                gaming, social media, travel, proptech, sports tech, field
-                services, fintech, payments, e-commerce, hosting, cloud
+                I started writing code around 11, building tools and systems
+                around the games I played. Content management for my gaming
+                community, bots that automated things that shouldn&apos;t have
+                been automatable, custom game maps. I built things my friends
+                and I wanted but couldn&apos;t buy, and it got me hooked. That
+                turned into a development internship at a local news station as
+                a teenager, and I never looked back. I&apos;ve shipped software
+                across gaming, social media, travel, proptech, sports tech,
+                field services, fintech, payments, e-commerce, hosting, cloud
                 infrastructure, and media. From massive-scale consumer platforms
                 serving hundreds of millions of users to scrappy startups where
                 I was racking and stacking servers, writing deployment scripts,
@@ -71,12 +74,21 @@ export default function AboutPage() {
               <p>
                 I&apos;ve been brought on to take companies to the next level:
                 align with the right architecture, scale forward, and build the
-                foundations that let teams ship with confidence. Today I&apos;m
-                a VP of Software Engineering. I lead engineering, DevOps, and
-                architecture. I own delivery. But I&apos;m still an architect at
-                heart. I still write code, review PRs, debate system design, and
-                get in the weeds when it matters. The best engineering leaders
-                never lose touch with the craft, and I lead from the front.
+                foundations that let teams ship with confidence. The systems I
+                build favor configuration over convention. When business needs
+                change, that should be a configuration change, not a rewrite.
+                Products that can adapt without engineering intervention are
+                products that survive.
+              </p>
+              <p>
+                Today I&apos;m a VP of Software Engineering. I lead engineering,
+                DevOps, and architecture. I own delivery. I obsess over the
+                product and force clarity on solutions that don&apos;t have
+                clear problems. If you can&apos;t articulate the problem, you
+                don&apos;t know what to build. I still write code, review PRs,
+                debate system design, and get in the weeds when it matters. The
+                best engineering leaders never lose touch with the craft, and I
+                lead from the front.
               </p>
               <p>
                 After coming back to Utah from San Francisco, I founded the{" "}
@@ -162,14 +174,19 @@ export default function AboutPage() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
-              title: "Product Thinking",
+              title: "Architecture First",
               description:
-                "Great architecture unlocks the ability to build fantastic products. I care about what users need today, but I obsess over building things that still work when the world shifts tomorrow.",
+                "Amazing products require architecture that can change and grow alongside them. Get the foundations right first, or the product becomes stagnant and impossible to evolve.",
             },
             {
-              title: "Scalable Architecture",
+              title: "Product Thinking",
               description:
-                "Building systems that handle now, tomorrow, and next year without breaking because conventions changed. The goal is longevity, not just performance.",
+                "The best architecture means nothing if it doesn't serve the product. I obsess over what users need, sit with stakeholders, and ship software that removes friction or unlocks value.",
+            },
+            {
+              title: "Configuration over Convention",
+              description:
+                "Build products that can be configured to do what you need today, tomorrow, and in the future. When business needs change, it's a configuration, not a bug.",
             },
             {
               title: "Developer Experience",
@@ -177,19 +194,14 @@ export default function AboutPage() {
                 "Building internal platforms, CLIs, and tooling that make engineers more productive and happier at work.",
             },
             {
-              title: "Open Source",
-              description:
-                "Contributing to and maintaining projects that solve real problems. Code should be shared when it can be.",
-            },
-            {
               title: "Engineering Leadership",
               description:
                 "Building high-performing teams with autonomy, trust, and a shared sense of craft. Culture is a feature.",
             },
             {
-              title: "Removing Pain",
+              title: "Open Source",
               description:
-                "Sitting with stakeholders, finding the friction, and delivering tools that unlock value they didn't know was possible.",
+                "Contributing to and maintaining projects that solve real problems. Code should be shared when it can be.",
             },
           ].map((item) => (
             <Card key={item.title}>

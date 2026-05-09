@@ -134,17 +134,17 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
+      className="fixed inset-0 z-100 flex items-start justify-center px-4 pt-[12vh] sm:pt-[15vh]"
       onClick={onClose}
     >
-      <div className="fixed inset-0 bg-background/60 backdrop-blur-sm" />
+      <div className="fixed inset-0 bg-background/70 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-lg rounded-xl border border-border bg-surface shadow-2xl overflow-hidden"
+        className="relative w-full max-w-xl rounded-xl border border-border bg-surface shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Input */}
-        <div className="flex items-center gap-3 border-b border-border px-4 py-3">
-          <Search size={15} className="text-dim shrink-0" />
+        <div className="flex items-center gap-3 border-b border-border px-4 py-3.5 sm:px-5 sm:py-4">
+          <Search size={16} className="text-dim shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -156,41 +156,45 @@ function SearchModal({ onClose }: { onClose: () => void }) {
                 ? "Search unavailable (build index first)"
                 : "Search posts, pages..."
             }
-            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-dim outline-none"
+            className="flex-1 bg-transparent text-sm sm:text-base text-foreground placeholder:text-dim outline-none"
             disabled={error}
           />
           {loading && (
             <Loader2 size={14} className="text-dim animate-spin shrink-0" />
           )}
+          <kbd className="hidden sm:inline-flex rounded-md border border-border bg-background/50 px-2 py-0.5 text-[10px] text-dim font-mono">
+            ESC
+          </kbd>
           <button
             onClick={onClose}
-            className="rounded-md border border-border px-1.5 py-0.5 text-[10px] text-dim hover:text-foreground transition-colors cursor-pointer"
+            className="sm:hidden p-1 text-dim hover:text-foreground transition-colors cursor-pointer"
+            aria-label="Close search"
           >
-            ESC
+            <X size={16} />
           </button>
         </div>
 
         {/* Results */}
         {query.trim() && results.length > 0 && (
-          <ul className="max-h-80 overflow-y-auto p-2">
+          <ul className="max-h-[50vh] sm:max-h-96 overflow-y-auto p-2">
             {results.map((result, i) => (
               <li key={result.url}>
                 <a
                   href={result.url}
                   onClick={onClose}
-                  className={`flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors ${
+                  className={`flex items-start gap-3 rounded-lg px-3 py-3 transition-colors ${
                     i === selected
                       ? "bg-accent/10 text-accent"
-                      : "text-muted hover:bg-surface"
+                      : "text-muted hover:bg-accent/5"
                   }`}
                 >
-                  <FileText size={14} className="mt-0.5 shrink-0 opacity-60" />
+                  <FileText size={14} className="mt-0.5 shrink-0 opacity-50" />
                   <div className="min-w-0">
                     <p className="text-sm font-medium truncate">
                       {result.title}
                     </p>
                     <p
-                      className="text-xs text-dim line-clamp-2 mt-0.5"
+                      className="text-xs text-dim line-clamp-2 mt-1 leading-relaxed"
                       dangerouslySetInnerHTML={{ __html: result.excerpt }}
                     />
                   </div>
@@ -202,23 +206,45 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
         {/* Empty state */}
         {query.trim() && !loading && results.length === 0 && !error && (
-          <div className="px-4 py-8 text-center text-xs text-dim">
+          <div className="px-4 py-10 text-center text-sm text-dim">
             No results for &ldquo;{query}&rdquo;
           </div>
         )}
 
         {/* Error state */}
         {error && (
-          <div className="px-4 py-8 text-center text-xs text-dim">
+          <div className="px-4 py-10 text-center text-sm text-dim">
             Search index not found. Run{" "}
-            <code className="text-accent">npm run build</code> to generate it.
+            <code className="text-accent font-mono text-xs">npm run build</code>{" "}
+            to generate it.
           </div>
         )}
 
         {/* Hint */}
         {!query.trim() && !error && (
-          <div className="px-4 py-8 text-center text-xs text-dim">
+          <div className="px-4 py-10 text-center text-sm text-dim">
             Start typing to search across the site
+          </div>
+        )}
+
+        {/* Footer hints */}
+        {results.length > 0 && (
+          <div className="hidden sm:flex items-center gap-4 border-t border-border px-4 py-2.5 text-[10px] text-dim">
+            <span className="flex items-center gap-1">
+              <kbd className="rounded border border-border bg-background/50 px-1 py-px font-mono">
+                ↑
+              </kbd>
+              <kbd className="rounded border border-border bg-background/50 px-1 py-px font-mono">
+                ↓
+              </kbd>
+              navigate
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="rounded border border-border bg-background/50 px-1.5 py-px font-mono">
+                ↵
+              </kbd>
+              open
+            </span>
           </div>
         )}
       </div>
