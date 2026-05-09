@@ -81,5 +81,11 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/api/v1/:path*", "/v1/:path*"],
+  matcher: [
+    "/api/v1/:path*",
+    "/v1/:path*",
+    // Match root only on api subdomain — uses has condition to avoid
+    // intercepting the main site homepage or Vercel preview bots.
+    { source: "/", has: [{ type: "host", value: "api.syntaqx.com" }] },
+  ],
 };
