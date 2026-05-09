@@ -110,7 +110,17 @@ export default function RootLayout({
                 </Link>
               ))}
             </div>
+            <p className="text-xs text-dim">
+              &copy; {new Date().getFullYear()} Chase Pierce
+            </p>
             <div className="flex items-center gap-4">
+              <Link
+                href="/docs/api"
+                className="text-xs text-dim hover:text-accent transition-colors"
+              >
+                API
+              </Link>
+              <span className="text-border">|</span>
               {socials.map((s) => (
                 <a
                   key={s.href}
@@ -124,9 +134,6 @@ export default function RootLayout({
                 </a>
               ))}
             </div>
-            <p className="text-xs text-dim">
-              &copy; {new Date().getFullYear()} Chase Pierce
-            </p>
           </div>
         </footer>
         <Analytics />
