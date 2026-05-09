@@ -75,7 +75,7 @@ export default function RootLayout({
                     alt="syntaqx"
                     width={24}
                     height={24}
-                    className="w-[24px] h-[24px]"
+                    className="w-6 h-6"
                   />
                   <span className="text-sm font-semibold text-accent">
                     syntaqx

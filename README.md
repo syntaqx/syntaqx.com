@@ -30,7 +30,7 @@ This runs the Next.js build and then generates the Pagefind search index from th
 
 ## Project Structure
 
-```
+```sh
 app/            → Pages and layouts (App Router)
 components/     → React components
 content/posts/  → Blog posts (Markdown with TOML frontmatter)
