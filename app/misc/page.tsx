@@ -23,11 +23,11 @@ const items = [
     tags: ["tool", "encoding"],
   },
   {
-    title: "Data Format Converter",
+    title: "Converters",
     description:
-      "Convert between JSON, YAML, and TOML in real time. Edit any format and the others update instantly.",
+      "Text formats, images, and more. JSON, YAML, TOML, favicons, and others.",
     href: "/misc/convert",
-    tags: ["tool", "data", "config"],
+    tags: ["tool", "converter"],
   },
 ];
 
