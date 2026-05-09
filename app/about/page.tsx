@@ -62,25 +62,22 @@ export default function AboutPage() {
               </p>
               <p>
                 That exposure taught me something: everywhere you look, the same
-                technological problems exist. The industry changes, the domain
-                changes, but the architecture decisions, the scaling challenges,
-                the trade-offs. They&apos;re universal. Once you see that, the
-                problems themselves become the fun part, agnostic of any given
-                industry. I love sitting down with stakeholders, understanding
-                their pain, comprehending the real problem, then delivering
-                tools that remove friction or unlock value they didn&apos;t know
-                was possible, with the perspective of technology at heart.
+                problems exist. The industry changes, the domain changes, but
+                the architecture decisions, the scaling challenges, the
+                trade-offs are universal. Once you see that, the problems
+                themselves become the fun part.
               </p>
               <p>
                 I&apos;ve been brought on to take companies to the next level.
                 The approach is always the same: get the architecture right
-                first, because that&apos;s what unlocks you to build amazing
-                products on top of it. Then force clarity on the problems
-                you&apos;re solving, because without that you&apos;re just
-                building features in the dark. The outcome is software that can
-                be shaped into what it needs to be today and configured for
-                whatever it needs to become tomorrow. When business needs
-                change, that&apos;s a configuration change, not a rewrite.
+                first, because without it you can&apos;t build the right
+                products at all. Then force clarity on the problem, because
+                that&apos;s what tells you what to build. Once the problem is
+                clear, the architecture circles back to provide the right
+                solution, and when the problem inevitably changes, good
+                architecture means that change is a configuration, not a
+                rewrite. Every shift in requirements should be expected, not a
+                bug.
               </p>
               <p>
                 Today I&apos;m a VP of Software Engineering. I lead engineering,
@@ -124,7 +121,7 @@ export default function AboutPage() {
               {
                 icon: Users,
                 label: "Approach",
-                value: "Stakeholders first, technology at heart",
+                value: "Architecture enables, problem clarity directs",
               },
             ].map((item) => (
               <Card key={item.label}>
@@ -175,39 +172,39 @@ export default function AboutPage() {
             {
               title: "Architecture First",
               description:
-                "Amazing products require architecture that can change and grow alongside them. Get the foundations right first, or the product becomes stagnant and impossible to evolve.",
+                "Architecture needs to be right to enable building the right products. Without it, you can't build anything worth building. That's why I obsess over protecting it.",
             },
             {
-              title: "Product Thinking",
+              title: "Problem Clarity",
               description:
-                "The best architecture means nothing if it doesn't serve the product. I obsess over what users need, sit with stakeholders, and ship software that removes friction or unlocks value.",
+                "Architecture tells you what you can build. Problem clarity tells you what you should build. I force clarity on the problem first, because if you can't articulate it, you don't know what to build.",
             },
             {
               title: "Configuration over Convention",
               description:
-                "Build products that can be configured to do what you need today, tomorrow, and in the future. When business needs change, it's a configuration, not a bug.",
+                "When the problem changes, good architecture means the solution is a configuration change, not a rewrite. Every shift in requirements should be expected, not a bug.",
             },
             {
               title: "Developer Experience",
               description:
-                "Building internal platforms, CLIs, and tooling that make engineers more productive and happier at work.",
+                "Internal platforms, CLIs, and tooling that make engineers more productive and happier. The team's velocity is a product of how good their tools are.",
             },
             {
               title: "Engineering Leadership",
               description:
-                "Building high-performing teams with autonomy, trust, and a shared sense of craft. Culture is a feature.",
+                "High-performing teams with autonomy, trust, and a shared sense of craft. Culture is a feature, not a side effect.",
             },
             {
               title: "Open Source",
               description:
-                "Contributing to and maintaining projects that solve real problems. Code should be shared when it can be.",
+                "Contributing to and maintaining projects that solve real problems. Code should be shared when it can be. The community makes us all better.",
             },
           ].map((item) => (
             <Card key={item.title}>
               <h3 className="text-sm font-medium text-foreground mb-1">
                 {item.title}
               </h3>
-              <p className="text-xs text-dim leading-relaxed">
+              <p className="text-xs text-dim leading-relaxed min-h-[3lh] line-clamp-3">
                 {item.description}
               </p>
             </Card>

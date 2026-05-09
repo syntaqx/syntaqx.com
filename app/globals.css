@@ -18,17 +18,17 @@
 
 /* Light theme */
 .light {
-  --background: #fafafa;
+  --background: #f5f5f4;
   --foreground: #1A1A1A;
-  --accent: #00a8a2;
-  --accent-muted: #5c8a86;
-  --muted: #5f7a77;
-  --dim: #9ca3af;
-  --pink: #d4749e;
+  --accent: #00918c;
+  --accent-muted: #4a7d79;
+  --muted: #4b5e5c;
+  --dim: #6b7280;
+  --pink: #c4608a;
   --mauve: #a34f74;
   --surface: #ffffff;
-  --border: #e5e5e5;
-  --border-hover: #d4d4d4;
+  --border: #d4d4d4;
+  --border-hover: #b5b5b5;
 }
 
 @theme inline {
@@ -54,9 +54,24 @@ body {
 }
 
 /* Selection */
-::selection {
+.dark ::selection,
+:root ::selection {
   background: rgba(0, 209, 202, 0.25);
   color: #fff;
+}
+.light ::selection {
+  background: rgba(0, 145, 140, 0.2);
+  color: #1a1a1a;
+}
+
+/* Hexagon background opacity per theme */
+.light .hexagon-bg {
+  opacity: 0.10;
+  filter: brightness(0) saturate(0);
+}
+.dark .hexagon-bg,
+:root .hexagon-bg {
+  opacity: 0.12;
 }
 
 /* Scrollbar */

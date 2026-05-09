@@ -8,11 +8,12 @@ export function BackgroundEffect() {
       aria-hidden="true"
     >
       <div
-        className="absolute inset-0 opacity-[0.08]"
+        className="absolute inset-0 hexagon-bg"
         style={{
           backgroundImage: "url(/hexagons.svg)",
           backgroundRepeat: "repeat",
           backgroundSize: "56px 97px",
+          backgroundPosition: "0 16px",
         }}
       />
       <div

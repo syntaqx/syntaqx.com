@@ -66,7 +66,7 @@ export default function ProjectsPage() {
                   className="text-dim group-hover:text-accent transition-colors"
                 />
               </div>
-              <p className="text-xs text-dim leading-relaxed flex-1">
+              <p className="text-xs text-dim leading-relaxed line-clamp-2 min-h-[2lh]">
                 {project.description}
               </p>
               <div className="mt-3 flex flex-wrap gap-1">

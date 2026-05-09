@@ -26,14 +26,13 @@ export default async function Home() {
               <p>
                 <span className="text-foreground font-medium">Currently</span> /
                 VP of Software Engineering. I lead engineering orgs, own
-                architecture and delivery, and still write code. The right
-                architecture is what unlocks you to build amazing products. Get
-                it wrong, and the product stagnates, change becomes impossible,
-                and you&apos;re fighting the system instead of building on it.
-                That&apos;s why I obsess over protecting the architecture. Once
-                the problem is clear, we can solution the right thing on top of
-                it, and the result is software that can be shaped into what it
-                needs to be today and configured for whatever comes next.
+                architecture and delivery, and still write code. The
+                architecture needs to be right to enable building the right
+                products. Without it, you&apos;re fighting the system instead of
+                building on it. Problem clarity tells you what to build. Then
+                the architecture circles back to provide the right solution, and
+                when requirements change, that&apos;s a configuration change,
+                not a bug.
               </p>
               <p>
                 <span className="text-foreground font-medium">Previously</span>{" "}

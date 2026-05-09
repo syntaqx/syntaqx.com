@@ -64,7 +64,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground antialiased">
         <BackgroundEffect />
         <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
-          <div className="border-b border-border/50">
+          <div className="border-b border-border">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 relative">
               <div className="flex items-center gap-3">
                 <Link
