@@ -14,7 +14,7 @@ function Row({
   mono?: boolean;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 py-2 border-b border-border last:border-b-0">
+    <div className="flex items-center justify-between gap-4 min-h-9 py-1.5 border-b border-border last:border-b-0">
       <span className="text-xs text-dim shrink-0">{label}</span>
       <div className="flex items-center gap-1.5 min-w-0">
         {value ? (
@@ -27,7 +27,10 @@ function Row({
             <CopyButton text={value} size="sm" />
           </>
         ) : (
-          <div className="h-4 w-24 rounded bg-border/40 animate-pulse" />
+          <div className="flex items-center gap-1.5">
+            <div className="h-4 w-20 rounded bg-border/40 animate-pulse" />
+            <div className="w-6.5 h-6.5 rounded border border-border/40 bg-border/20 animate-pulse" />
+          </div>
         )}
       </div>
     </div>
