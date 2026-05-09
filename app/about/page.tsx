@@ -124,25 +124,30 @@ export default function AboutPage() {
                 value: "Architecture enables, problem clarity directs",
               },
             ].map((item) => (
-              <Card key={item.label}>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <item.icon size={13} className="text-accent" />
-                  <p className="text-[10px] uppercase tracking-widest text-dim">
+              <div
+                key={item.label}
+                className="rounded-lg border border-border bg-surface/50"
+              >
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+                  <item.icon size={12} className="text-accent" />
+                  <p className="text-xs font-medium uppercase tracking-widest text-dim">
                     {item.label}
                   </p>
                 </div>
-                <p className="text-sm text-foreground font-medium">
+                <p className="text-sm text-foreground font-medium px-4 py-3">
                   {item.value}
                 </p>
-              </Card>
+              </div>
             ))}
 
             {/* Connect */}
-            <Card>
-              <p className="text-[10px] uppercase tracking-widest text-dim mb-3">
-                Connect
-              </p>
-              <div className="flex flex-col gap-1.5">
+            <div className="rounded-lg border border-border bg-surface/50">
+              <div className="px-4 py-3 border-b border-border">
+                <p className="text-xs font-medium uppercase tracking-widest text-dim">
+                  Connect
+                </p>
+              </div>
+              <div className="flex flex-col gap-1.5 px-4 py-3">
                 {socials.map((s) => (
                   <a
                     key={s.href}
@@ -156,7 +161,7 @@ export default function AboutPage() {
                   </a>
                 ))}
               </div>
-            </Card>
+            </div>
           </div>
         </div>
       </section>
@@ -173,31 +178,37 @@ export default function AboutPage() {
               title: "Architecture First",
               description:
                 "Architecture needs to be right to enable building the right products. Without it, you can't build anything worth building. That's why I obsess over protecting it.",
+              tags: ["systems", "design", "infrastructure"],
             },
             {
               title: "Problem Clarity",
               description:
                 "Architecture tells you what you can build. Problem clarity tells you what you should build. I force clarity on the problem first, because if you can't articulate it, you don't know what to build.",
+              tags: ["product", "strategy"],
             },
             {
               title: "Configuration over Convention",
               description:
                 "When the problem changes, good architecture means the solution is a configuration change, not a rewrite. Every shift in requirements should be expected, not a bug.",
+              tags: ["architecture", "resilience"],
             },
             {
               title: "Developer Experience",
               description:
                 "Internal platforms, CLIs, and tooling that make engineers more productive and happier. The team's velocity is a product of how good their tools are.",
+              tags: ["tooling", "platforms", "dx"],
             },
             {
               title: "Engineering Leadership",
               description:
                 "High-performing teams with autonomy, trust, and a shared sense of craft. Culture is a feature, not a side effect.",
+              tags: ["leadership", "culture", "teams"],
             },
             {
               title: "Open Source",
               description:
                 "Contributing to and maintaining projects that solve real problems. Code should be shared when it can be. The community makes us all better.",
+              tags: ["oss", "community"],
             },
           ].map((item) => (
             <Card key={item.title} className="flex flex-col h-full">
@@ -207,6 +218,18 @@ export default function AboutPage() {
               <p className="text-xs text-dim leading-relaxed flex-1 sm:min-h-[4lh]">
                 {item.description}
               </p>
+              {item.tags && (
+                <div className="mt-3 flex flex-wrap gap-1">
+                  {item.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-block rounded border border-border px-1.5 py-0.5 text-[10px] text-dim"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </Card>
           ))}
         </div>
