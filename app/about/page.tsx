@@ -72,23 +72,22 @@ export default function AboutPage() {
                 was possible, with the perspective of technology at heart.
               </p>
               <p>
-                I&apos;ve been brought on to take companies to the next level:
-                align with the right architecture, scale forward, and build the
-                foundations that let teams ship with confidence. The systems I
-                build favor configuration over convention. When business needs
-                change, that should be a configuration change, not a rewrite.
-                Products that can adapt without engineering intervention are
-                products that survive.
+                I&apos;ve been brought on to take companies to the next level.
+                The approach is always the same: get the architecture right
+                first, because that&apos;s what unlocks you to build amazing
+                products on top of it. Then force clarity on the problems
+                you&apos;re solving, because without that you&apos;re just
+                building features in the dark. The outcome is software that can
+                be shaped into what it needs to be today and configured for
+                whatever it needs to become tomorrow. When business needs
+                change, that&apos;s a configuration change, not a rewrite.
               </p>
               <p>
                 Today I&apos;m a VP of Software Engineering. I lead engineering,
-                DevOps, and architecture. I own delivery. I obsess over the
-                product and force clarity on solutions that don&apos;t have
-                clear problems. If you can&apos;t articulate the problem, you
-                don&apos;t know what to build. I still write code, review PRs,
-                debate system design, and get in the weeds when it matters. The
-                best engineering leaders never lose touch with the craft, and I
-                lead from the front.
+                DevOps, and architecture. I own delivery. I still write code,
+                review PRs, debate system design, and get in the weeds when it
+                matters. The best engineering leaders never lose touch with the
+                craft, and I lead from the front.
               </p>
               <p>
                 After coming back to Utah from San Francisco, I founded the{" "}
