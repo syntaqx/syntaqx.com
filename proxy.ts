@@ -5,6 +5,23 @@ export function proxy(request: NextRequest) {
   const host = request.headers.get("host") || "";
   const { pathname } = request.nextUrl;
 
+  // Production: api.syntaqx.com root → API index
+  if (host.startsWith("api.") && (pathname === "/" || pathname === "")) {
+    const baseUrl = "https://api.syntaqx.com/v1";
+    return Response.json(
+      {
+        healthz_url: `${baseUrl}/healthz`,
+        openapi_url: `${baseUrl}/openapi`,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Request-ID": crypto.randomUUID(),
+        },
+      },
+    );
+  }
+
   // Production: api.syntaqx.com/v1/* → /api/v1/*
   if (host.startsWith("api.") && pathname.startsWith("/v1")) {
     const url = request.nextUrl.clone();
@@ -35,5 +52,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/v1/:path*", "/v1/:path*"],
+  matcher: ["/", "/api/v1/:path*", "/v1/:path*"],
 };
