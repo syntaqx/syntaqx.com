@@ -1,9 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+function corsHeaders(): Record<string, string> {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+}
+
 export function proxy(request: NextRequest) {
   const host = request.headers.get("host") || "";
   const { pathname } = request.nextUrl;
+
+  // Handle CORS preflight for API routes
+  if (request.method === "OPTIONS" && (host.startsWith("api.") || pathname.startsWith("/api/v1"))) {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(),
+    });
+  }
 
   // Production: api.syntaqx.com root → API index
   if (host.startsWith("api.") && (pathname === "/" || pathname === "")) {
@@ -17,6 +33,7 @@ export function proxy(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           "X-Request-ID": crypto.randomUUID(),
+          ...corsHeaders(),
         },
       },
     );
@@ -29,6 +46,9 @@ export function proxy(request: NextRequest) {
     const response = NextResponse.rewrite(url);
     response.headers.set("X-Request-ID", crypto.randomUUID());
     response.headers.set("Content-Type", "application/json");
+    for (const [k, v] of Object.entries(corsHeaders())) {
+      response.headers.set(k, v);
+    }
     return response;
   }
 
@@ -36,7 +56,13 @@ export function proxy(request: NextRequest) {
   if (host.startsWith("api.")) {
     return Response.json(
       { message: "Not found." },
-      { status: 404, headers: { "Content-Type": "application/json" } },
+      {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders(),
+        },
+      },
     );
   }
 
@@ -45,6 +71,9 @@ export function proxy(request: NextRequest) {
     const response = NextResponse.next();
     response.headers.set("X-Request-ID", crypto.randomUUID());
     response.headers.set("Content-Type", "application/json");
+    for (const [k, v] of Object.entries(corsHeaders())) {
+      response.headers.set(k, v);
+    }
     return response;
   }
 
