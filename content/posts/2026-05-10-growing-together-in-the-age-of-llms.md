@@ -10,7 +10,7 @@ Over the past year, I've had a lot of solutions brought to me by people outside 
 
 Then I start asking questions. Why this algorithm? Blank stare. *What algorithm?* Where is this field on the user card actually coming from? Because it isn't in the database today, and getting it there means a schema change, a backfill across two hundred million rows, and a migration plan that doesn't take the product down on the way through. How does this fit the auth model we already have? What happens when the service it depends on goes down? What happens six months from now when the requirements shift, as they always do? The conversation usually stalls there, because those weren't questions the tool surfaced. Why would it? It built exactly what it was asked to build, against a UX someone designed in isolation from everything we already have.
 
-The gap is in knowing what to ask for. And that gap shows up on both sides of this. Non-engineers are shipping things without the context to know what they're committing the rest of us to. Engineers are shipping things without the context to know what the model just committed *them* to. Same problem, different starting point. This piece is about both.
+The gap is in knowing what to ask for. And it shows up on both sides of this. Non-engineers are shipping things without the experience to recognize what they're committing the rest of us to. Engineers are shipping things without the scrutiny to catch what the model just committed *them* to. Same gap, different cause: one side never built the instinct, the other is letting it atrophy. This piece is about both.
 
 ## The trap
 
@@ -22,11 +22,11 @@ That's not a knock on the people building these things. They're doing exactly wh
 
 Non-engineers have no reason to be suspicious of what the tool gave them. They've never watched a missing index take a payments service offline. They've never seen a "small" config change cascade into a 3 AM outage. They've never had to unwind a decision that was reasonable on day one and load-bearing by day ninety. The paranoid questions you learn to ask come from a decade of incidents, and you can't download that by prompting harder.
 
-I'm not saying this to gatekeep. I'm saying it because the tool skips those lessons constantly, and it skips them for me too. We've had real incidents caused by senior engineers making the exact same class of mistake. Why would anyone's first vibe-coded project be free of them? But when you point it out, people hear it as an attack instead of a code review. That's the hard part of this dynamic. The feedback feels personal because there's no shared context for why it matters.
+I'm not saying this to gatekeep. I'm saying it because the tool skips those lessons constantly, and it skips them for me too. We've had real incidents caused by senior engineers making the exact same class of mistake. Why would anyone's first vibe-coded project be free of them? But when you point it out, people hear it as an attack instead of a code review. That's the hard part of this dynamic. The feedback feels personal because there's no shared frame for why it matters. They've never been on the other side of the problems the feedback is trying to prevent.
 
 ## Architecture answers are only as good as the context behind them
 
-People do ask LLMs about architecture. They ask all the time. The problem isn't that the question gets skipped, it's that the answer comes back confident and specific without any of the context that would actually make it the right answer.
+People ask LLMs about architecture all the time, and the model will engage, confidently. The trouble is that the answer comes back specific and assured without any of the context that would actually make it the right one.
 
 The foundation is what gives you the right to build amazing things later. It's also what gives you the right to change your mind. Every interesting product I've worked on lived long enough to become something different than what it was originally scoped as. Sales pulled it one way, customers pulled it another, the data model from year one stopped fitting the business in year three. The teams that survived that without grinding to a halt weren't the ones with the cleanest first version. They were the ones whose architecture left room for the second, third, and fourth version they didn't know they were going to need.
 
@@ -40,7 +40,7 @@ It's tempting to make this a non-engineer problem. It isn't.
 
 Think about how you actually learned the things you know. It wasn't from documentation. It was from spending two hours debugging something that turned out to be a race condition. It was from running a migration that locked a table and watching your error rate climb. The mental model stuck because you struggled with it.
 
-When an LLM hands you working code in 30 seconds, that loop gets cut. You ship, it works, you move on. Do that enough times and gaps start showing up, not in your output but in your understanding. You can build the thing. You can't always explain why it works or predict where it'll fail. And when it does fail, you reach for the LLM again to diagnose a problem it doesn't have the context to solve.
+When an LLM hands you working code in 30 seconds, that loop gets cut. You ship, it works, you move on. Do that enough times and gaps start showing up, not in your output but in your understanding. You can build the thing. You can't always explain why it works or predict where it'll fail. And when it does fail, you reach for the LLM again to diagnose a problem it can't see end to end.
 
 I've watched this play out in incidents. Something breaks, an engineer asks the AI to explain the error, gets five plausible answers, tries each one, none of them work. The bug isn't in the code. It's in the interaction between the code, the infrastructure, a data shape that changed after last week's migration, and the monitoring gap that let it run for three days before anyone noticed.
 
@@ -62,7 +62,7 @@ Once in a while I'll do something with no assistance at all. No copilot, no auto
 
 Everything above is a description of where things are right now, and the landscape moves daily. There's a plausible near-future where most of the code-quality problem is solved by orchestration: one agent writes, another reviews, another checks security, another validates performance. You push a branch and a swarm of reviewers finds the issues before a human looks. We're not far from that.
 
-Even in that world, the hardest problem in software still isn't writing correct code. It's deciding what to build when the people asking for it disagree with each other. Sales needs a feature that contradicts what Product scoped last quarter. The CEO saw a competitor's demo and wants "that, but better" by next month. None of them are wrong, they're solving for their own context, and the LLM can't resolve that for you because it can't see any of it.
+Even in that world, the hardest problem in software still isn't writing correct code. It's deciding what to build when the people asking for it disagree with each other. Sales needs a feature that contradicts what Product scoped last quarter. The CEO saw a competitor's demo and wants "that, but better" by next month. None of them are wrong, they're each solving for their own corner of the business, and the LLM can't reconcile that for you because it can't see any of it.
 
 The engineering job is absorbing all of that without the system falling apart, and sometimes the right answer is to push back and not build the thing at all. AI does what you tell it to do. The skill is knowing what to tell it, knowing what not to build, and recognizing when "this is fine for now" is going to cost you a year of rework later. That instinct comes from shipping the wrong thing and living with the consequences. I don't see a shortcut to it coming anytime soon.
 
