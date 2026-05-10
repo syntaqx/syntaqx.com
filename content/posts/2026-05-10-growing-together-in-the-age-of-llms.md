@@ -1,7 +1,7 @@
 +++
 title = "Growing Together in the Age of LLMs"
 date = 2026-05-10T00:00:00Z
-description = "AI gets everyone to working code fast. Working code and code you can still build on in two years have never been the same thing."
+description = "AI made the code part easy. The judgment behind it still has to come from somewhere."
 categories = ["AI", "Software Engineering"]
 tags = ["LLMs", "AI in Development", "Software Engineering", "Career Growth"]
 +++
