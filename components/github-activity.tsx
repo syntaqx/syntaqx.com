@@ -1,5 +1,3 @@
-import { ScrollEnd } from "@/components/scroll-end";
-
 export interface ContributionDay {
   date: string;
   level: number; // 0-4
@@ -108,7 +106,7 @@ export function GitHubActivity({
   nextDay.setDate(nextDay.getDate() + 1);
   while (nextDay <= lastDayOfMonth) {
     futureDays.push({
-      date: nextDay.toISOString().split("T")[0],
+      date: `${nextDay.getFullYear()}-${String(nextDay.getMonth() + 1).padStart(2, "0")}-${String(nextDay.getDate()).padStart(2, "0")}`,
       level: -1, // sentinel for "future"
     });
     nextDay.setDate(nextDay.getDate() + 1);
@@ -141,6 +139,8 @@ export function GitHubActivity({
     }
   });
 
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
   return (
     <div className="rounded-lg border border-border bg-surface/50 p-5">
       <div className="flex items-center justify-between mb-4">
@@ -157,13 +157,14 @@ export function GitHubActivity({
         </a>
       </div>
 
-      {/* Grid — scrollable on small screens, fits on md+ */}
-      <ScrollEnd>
-        <div className="flex">
+      {/* Grid — clips older months from the left, shows most recent */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-surface/50 to-transparent z-10 pointer-events-none" />
+        <div className="flex justify-end py-0.5">
           {monthGroups.map((group, gi) => (
             <div
               key={gi}
-              className={`flex flex-col ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
+              className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
             >
               {/* Month label */}
               <span className="text-[10px] text-dim mb-1 text-center">
@@ -171,7 +172,7 @@ export function GitHubActivity({
               </span>
               {/* Weeks in this month */}
               <div
-                className="grid grid-flow-col auto-cols-[8px] md:auto-cols-[10px] gap-0.75"
+                className="grid grid-flow-col auto-cols-[10px] sm:auto-cols-[12px] md:auto-cols-[13px] gap-0.75"
                 style={{ gridTemplateRows: "repeat(7, 1fr)" }}
               >
                 {group.weeks.map((week) =>
@@ -179,6 +180,8 @@ export function GitHubActivity({
                     <div
                       key={day.date}
                       className={`aspect-square rounded-xs ${
+                        day.date === todayStr ? "ring-1 ring-accent" : ""
+                      } ${
                         day.level === -1
                           ? "bg-border/20 border border-dashed border-border/30"
                           : LEVEL_COLORS[day.level]
@@ -191,7 +194,7 @@ export function GitHubActivity({
             </div>
           ))}
         </div>
-      </ScrollEnd>
+      </div>
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-1.5 mt-3">
