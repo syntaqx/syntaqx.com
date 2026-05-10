@@ -1,3 +1,5 @@
+import { TodayHighlight } from "@/components/today-highlight";
+
 export interface ContributionDay {
   date: string;
   level: number; // 0-4
@@ -139,8 +141,6 @@ export function GitHubActivity({
     }
   });
 
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
   return (
     <div className="rounded-lg border border-border bg-surface/50 p-5">
       <div className="flex items-center justify-between mb-4">
@@ -179,9 +179,8 @@ export function GitHubActivity({
                   week.map((day) => (
                     <div
                       key={day.date}
+                      data-date={day.date}
                       className={`aspect-square rounded-xs ${
-                        day.date === todayStr ? "ring-1 ring-accent" : ""
-                      } ${
                         day.level === -1
                           ? "bg-border/20 border border-dashed border-border/30"
                           : LEVEL_COLORS[day.level]
@@ -204,6 +203,8 @@ export function GitHubActivity({
         ))}
         <span className="text-[10px] text-dim ml-1">More</span>
       </div>
+
+      <TodayHighlight />
     </div>
   );
 }
