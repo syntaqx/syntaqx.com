@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts, getNewestPostSlug } from "@/lib/posts";
 import { socials } from "@/lib/constants";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/card";
@@ -14,6 +14,8 @@ import {
 export default async function Home() {
   const posts = getAllPosts();
   const contributions = await fetchGitHubContributions("syntaqx");
+
+  const newestSlug = getNewestPostSlug(posts);
 
   return (
     <div>
@@ -140,9 +142,16 @@ export default async function Home() {
               className="group flex flex-col"
             >
               <Card hover className="flex flex-col h-full p-5">
-                <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors mb-2">
-                  {post.title}
-                </h3>
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">
+                    {post.title}
+                  </h3>
+                  {post.slug === newestSlug && (
+                    <span className="shrink-0 rounded border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-accent">
+                      New
+                    </span>
+                  )}
+                </div>
                 {post.description && (
                   <p className="text-xs text-dim leading-relaxed line-clamp-3 mb-auto">
                     {post.description}

@@ -148,6 +148,20 @@ export function getPostBySlug(slug: string): PostData | undefined {
   return undefined;
 }
 
+// "New" badge window: most recent post is highlighted for two weeks after publish.
+// Captured at module load so render stays pure for the React Compiler. On a
+// statically generated site this resolves to build time, which is what we want.
+const NEW_POST_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
+const BUILD_TIME = Date.now();
+
+export function getNewestPostSlug(posts: PostData[]): string | null {
+  const newest = posts[0];
+  if (!newest) return null;
+  return BUILD_TIME - new Date(newest.date).getTime() < NEW_POST_WINDOW_MS
+    ? newest.slug
+    : null;
+}
+
 export async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark()
     .use(remarkGfm)
