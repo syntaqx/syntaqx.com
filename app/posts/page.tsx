@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
 import { Card } from "@/components/card";
-import { PostMeta } from "@/components/post-meta";
+import { PostMeta, PostTags } from "@/components/post-meta";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -29,18 +29,22 @@ export default function PostsPage() {
             href={`/posts/${post.slug}`}
             className="group block"
           >
-            <Card hover>
-              <h2 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">
+            <Card hover className="p-5">
+              <h2 className="text-base font-medium text-foreground group-hover:text-accent transition-colors">
                 {post.title}
               </h2>
-              <div className="mt-2">
-                <PostMeta date={post.date} tags={post.tags} maxTags={3} />
-              </div>
               {post.description && (
                 <p className="mt-2 text-xs text-dim leading-relaxed line-clamp-2">
                   {post.description}
                 </p>
               )}
+              <div className="mt-4 pt-3 border-t border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <PostMeta
+                  date={post.date}
+                  readingTimeMinutes={post.readingTimeMinutes}
+                />
+                <PostTags tags={post.tags} max={3} />
+              </div>
             </Card>
           </Link>
         ))}

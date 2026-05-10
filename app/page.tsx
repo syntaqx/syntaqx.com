@@ -149,7 +149,10 @@ export default async function Home() {
                   </p>
                 )}
                 <div className="mt-4 pt-3 border-t border-border">
-                  <PostMeta date={post.date} tags={post.tags} />
+                  <PostMeta
+                    date={post.date}
+                    readingTimeMinutes={post.readingTimeMinutes}
+                  />
                 </div>
               </Card>
             </Link>

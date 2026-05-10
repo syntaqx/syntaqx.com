@@ -17,6 +17,16 @@ export interface PostData {
   categories?: string[];
   images?: string[];
   content: string;
+  readingTimeMinutes: number;
+}
+
+function estimateReadingTime(markdown: string): number {
+  // Strip code fences and inline code so they don't inflate the count.
+  const stripped = markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ");
+  const words = stripped.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 220));
 }
 
 /** Parse Hugo-style +++ TOML frontmatter */
@@ -121,6 +131,7 @@ function getPostByFileName(fileName: string): PostData {
     categories: (data.categories as string[]) ?? [],
     images: (data.images as string[]) ?? [],
     content,
+    readingTimeMinutes: estimateReadingTime(content),
   };
 }
 
