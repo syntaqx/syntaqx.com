@@ -134,12 +134,12 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-start justify-center px-4 pt-[12vh] sm:pt-[15vh]"
+      className="fixed inset-0 z-100 flex items-start justify-center sm:px-4 sm:pt-[15vh]"
       onClick={onClose}
     >
       <div className="fixed inset-0 bg-background/70 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-xl rounded-xl border border-border bg-surface shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150"
+        className="relative w-full h-full sm:h-auto sm:max-w-xl sm:rounded-xl border-b sm:border border-border bg-surface shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Input */}
@@ -176,7 +176,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
         {/* Results */}
         {query.trim() && results.length > 0 && (
-          <ul className="max-h-[50vh] sm:max-h-96 overflow-y-auto p-2">
+          <ul className="flex-1 overflow-y-auto sm:max-h-96 p-2">
             {results.map((result, i) => (
               <li key={result.url}>
                 <a
