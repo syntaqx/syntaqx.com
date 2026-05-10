@@ -26,7 +26,7 @@ export default async function Home() {
             </h1>
             <div className="text-sm text-muted leading-relaxed space-y-3 mb-8">
               <p>
-                <span className="text-foreground font-medium">Currently</span> /
+                <span className="text-foreground font-medium">Currently</span> /{" "}
                 VP of Software Engineering. I lead engineering orgs, own
                 architecture and delivery, and still write code. The
                 architecture needs to be right to enable building the right
@@ -44,7 +44,7 @@ export default async function Home() {
                 is solving them.
               </p>
               <p>
-                <span className="text-foreground font-medium">Otherwise</span> /
+                <span className="text-foreground font-medium">Otherwise</span> /{" "}
                 Open sorcerer. Perpetually online. Obsessed with technology,
                 hooked on shipping. Your favorite internet junkie with a love of
                 all things digital and bacon-based.
