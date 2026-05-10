@@ -105,28 +105,34 @@ export function MobileMenu() {
 
 export function Breadcrumb() {
   const pathname = usePathname();
-  if (pathname === "/") return null;
-
   const segments = pathname.split("/").filter(Boolean);
 
   return (
     <div className="border-b border-border">
-      <div className="mx-auto max-w-7xl px-6 py-1.5 flex items-center gap-1.5 text-xs text-dim">
-        <Link href="/" className="hover:text-accent transition-colors">
+      <div className="mx-auto max-w-7xl px-6 py-1.5 flex items-center gap-1.5 text-xs text-dim min-w-0 overflow-hidden">
+        <Link
+          href="/"
+          className={`shrink-0 hover:text-accent transition-colors ${
+            segments.length === 0 ? "text-muted" : ""
+          }`}
+        >
           home
         </Link>
         {segments.map((segment, i) => {
           const href = "/" + segments.slice(0, i + 1).join("/");
           const isLast = i === segments.length - 1;
           return (
-            <span key={href} className="flex items-center gap-1.5">
+            <span
+              key={href}
+              className="flex items-center gap-1.5 min-w-0 shrink-0 last:shrink"
+            >
               <span>/</span>
               {isLast ? (
-                <span className="text-muted">{segment}</span>
+                <span className="text-muted truncate">{segment}</span>
               ) : (
                 <Link
                   href={href}
-                  className="hover:text-accent transition-colors"
+                  className="shrink-0 hover:text-accent transition-colors"
                 >
                   {segment}
                 </Link>

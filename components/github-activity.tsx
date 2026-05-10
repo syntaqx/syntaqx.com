@@ -157,9 +157,8 @@ export function GitHubActivity({
         </a>
       </div>
 
-      {/* Grid — clips older months from the left, shows most recent */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-surface/50 to-transparent z-10 pointer-events-none" />
+      {/* Grid — scrollable when content overflows */}
+      <div className="relative overflow-x-auto">
         <div className="flex justify-end py-0.5">
           {monthGroups.map((group, gi) => (
             <div

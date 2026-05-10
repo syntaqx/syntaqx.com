@@ -15,8 +15,8 @@ export function PostMeta({
   dateFormat = "MMM d, yyyy",
 }: PostMetaProps) {
   return (
-    <div className="flex items-center gap-3 text-xs text-dim">
-      <span className="flex items-center gap-1">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-dim">
+      <span className="flex items-center gap-1 shrink-0">
         <Calendar size={11} />
         <time dateTime={date}>{format(new Date(date), dateFormat)}</time>
       </span>

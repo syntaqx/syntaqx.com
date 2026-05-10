@@ -71,7 +71,7 @@ export default async function PostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <header className="mb-10 pb-6 border-b border-border">
-        <h1 className="text-xl font-semibold tracking-tight mb-3">
+        <h1 className="text-lg sm:text-xl font-semibold tracking-tight mb-3 break-words">
           {post.title}
         </h1>
         <PostMeta
