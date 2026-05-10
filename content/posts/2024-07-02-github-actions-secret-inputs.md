@@ -115,10 +115,10 @@ A simple one-time link that would provide the secret value workflow.
 
 To initially test my theory, I added a simple handler to my personal API that would behave like most secret sharing services, but without me having to bother picking (or paying for) one until I knew this could work:
 
-- `POST https://api.syntaqx.com/secrets` - Create a new secret
-- `GET https://api.syntaqx.com/secrets/{id}` - Retrieve a secret
+- `POST https://api.syntaqx.com/v1/secrets` - Create a new secret
+- `GET https://api.syntaqx.com/v1/secrets/{id}` - Retrieve a secret
 
-> __⚠️ Warning:__ While this API is live, it currently does not provide any real security or reliability. The values are stored in memory, the encryption is weak, and you should not rely on these endpoints for real world use.
+> __⚠️ Warning:__ This API is no longer live and was only used as a proof of concept. It did not provide any real security or reliability — values were stored in memory, encryption was weak, and it should not have been relied on for real world use.
 >
 > We ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
 >
@@ -141,7 +141,7 @@ on:
         required: true
         type: string
       url:
-        description: 'One-click Link (https://api.syntaqx.com/secrets/{id})'
+        description: 'One-click Link (https://api.syntaqx.com/v1/secrets/{id})'
         required: true
         type: string
 
