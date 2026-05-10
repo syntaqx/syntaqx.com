@@ -110,7 +110,7 @@ export function Breadcrumb() {
   const segments = pathname.split("/").filter(Boolean);
 
   return (
-    <div className="border-b border-border/50">
+    <div className="border-b border-border">
       <div className="mx-auto max-w-7xl px-6 py-1.5 flex items-center gap-1.5 text-xs text-dim">
         <Link href="/" className="hover:text-accent transition-colors">
           home
