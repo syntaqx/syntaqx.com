@@ -94,17 +94,50 @@ export function GitHubActivity({
     weeks.push(recentDays.slice(i, i + 7));
   }
 
-  // Figure out month labels
-  const monthLabels: { label: string; col: number }[] = [];
-  let lastMonth = -1;
-  weeks.forEach((week, wi) => {
+  // Pad current month with future days so it shows the full month
+  const today = new Date();
+  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const lastDataDate =
+    recentDays.length > 0
+      ? new Date(recentDays[recentDays.length - 1].date + "T00:00:00")
+      : today;
+
+  // Add placeholder days from tomorrow to end of month
+  const futureDays: ContributionDay[] = [];
+  const nextDay = new Date(lastDataDate);
+  nextDay.setDate(nextDay.getDate() + 1);
+  while (nextDay <= lastDayOfMonth) {
+    futureDays.push({
+      date: nextDay.toISOString().split("T")[0],
+      level: -1, // sentinel for "future"
+    });
+    nextDay.setDate(nextDay.getDate() + 1);
+  }
+
+  // Add future days into the last partial week or create new weeks
+  if (futureDays.length > 0) {
+    const lastWeek = weeks[weeks.length - 1];
+    if (lastWeek && lastWeek.length < 7) {
+      const remaining = 7 - lastWeek.length;
+      lastWeek.push(...futureDays.splice(0, remaining));
+    }
+    for (let i = 0; i < futureDays.length; i += 7) {
+      weeks.push(futureDays.slice(i, i + 7));
+    }
+  }
+
+  // Group weeks by month
+  const monthGroups: { label: string; weeks: ContributionDay[][] }[] = [];
+  weeks.forEach((week) => {
     const firstDay = week[0];
-    if (firstDay) {
-      const month = new Date(firstDay.date + "T00:00:00").getMonth();
-      if (month !== lastMonth) {
-        monthLabels.push({ label: MONTHS[month], col: wi });
-        lastMonth = month;
-      }
+    if (!firstDay) return;
+    const month = new Date(firstDay.date + "T00:00:00").getMonth();
+    const label = MONTHS[month];
+    const last = monthGroups[monthGroups.length - 1];
+    if (last && last.label === label) {
+      last.weeks.push(week);
+    } else {
+      monthGroups.push({ label, weeks: [week] });
     }
   });
 
@@ -124,38 +157,39 @@ export function GitHubActivity({
         </a>
       </div>
 
-      {/* Month labels */}
-      <div className="relative h-4 mb-1 overflow-hidden">
-        {monthLabels.map((m, i) => (
-          <span
-            key={i}
-            className="text-[10px] text-dim absolute top-0"
-            style={{
-              left: `${(m.col / weeks.length) * 100}%`,
-            }}
-          >
-            {m.label}
-          </span>
-        ))}
-      </div>
-
       {/* Grid — scrollable on small screens, fits on md+ */}
       <ScrollEnd>
-        <div
-          className="grid grid-flow-col auto-cols-[8px] md:auto-cols-fr gap-0.75"
-          style={{
-            gridTemplateRows: "repeat(7, 1fr)",
-          }}
-        >
-          {weeks.map((week) =>
-            week.map((day) => (
+        <div className="flex">
+          {monthGroups.map((group, gi) => (
+            <div
+              key={gi}
+              className={`flex flex-col ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
+            >
+              {/* Month label */}
+              <span className="text-[10px] text-dim mb-1 text-center">
+                {group.label}
+              </span>
+              {/* Weeks in this month */}
               <div
-                key={day.date}
-                className={`aspect-square rounded-xs ${LEVEL_COLORS[day.level]}`}
-                title={day.date}
-              />
-            )),
-          )}
+                className="grid grid-flow-col auto-cols-[8px] md:auto-cols-[10px] gap-0.75"
+                style={{ gridTemplateRows: "repeat(7, 1fr)" }}
+              >
+                {group.weeks.map((week) =>
+                  week.map((day) => (
+                    <div
+                      key={day.date}
+                      className={`aspect-square rounded-xs ${
+                        day.level === -1
+                          ? "bg-border/20 border border-dashed border-border/30"
+                          : LEVEL_COLORS[day.level]
+                      }`}
+                      title={day.date}
+                    />
+                  )),
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </ScrollEnd>
 

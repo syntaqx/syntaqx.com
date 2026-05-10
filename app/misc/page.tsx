@@ -23,6 +23,13 @@ const tools = [
     href: "/misc/jwt",
     tags: ["jwt", "auth", "security"],
   },
+  {
+    title: "UUID / ULID Generator",
+    description:
+      "Generate, validate, and inspect UUIDs (v1, v4, v7) and ULIDs.",
+    href: "/misc/uuid",
+    tags: ["uuid", "ulid", "identifier"],
+  },
 ];
 
 const converters = [

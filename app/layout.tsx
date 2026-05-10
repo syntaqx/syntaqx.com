@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://syntaqx.com"),
   title: {
     default: "syntaqx",
-    template: "%s — syntaqx",
+    template: "%s - syntaqx",
   },
   description:
     "VP of Software Engineering. Architect at heart, open sorcerer, and your favorite internet junkie.",

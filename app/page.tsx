@@ -62,21 +62,21 @@ export default async function Home() {
           </div>
           <div className="mt-10 lg:mt-0 lg:flex-1 lg:min-w-0">
             <div className="rounded-lg border border-border bg-surface/50 p-4 mb-4">
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4 sm:gap-6">
                 <div className="shrink-0">
                   <p className="text-sm font-medium text-foreground">
                     Follow me
                   </p>
                   <p className="text-xs text-dim">If you&apos;re into that.</p>
                 </div>
-                <div className="flex items-center gap-1 flex-1 justify-end">
+                <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-end min-w-0">
                   {socials.map((s) => (
                     <a
                       key={s.href}
                       href={s.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center justify-center w-12 h-12 rounded-md hover:bg-accent/10 transition-colors"
+                      className="group flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-md hover:bg-accent/10 transition-colors shrink-0"
                       aria-label={s.label}
                       title={s.label}
                     >
