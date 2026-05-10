@@ -154,7 +154,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
             placeholder={
               error
                 ? "Search unavailable (build index first)"
-                : "Search posts, pages..."
+                : "Search docs, posts, pages..."
             }
             className="flex-1 bg-transparent text-sm sm:text-base text-foreground placeholder:text-dim outline-none"
             disabled={error}

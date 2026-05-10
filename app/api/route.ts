@@ -5,6 +5,15 @@ export function GET() {
   return Response.json(
     {
       healthz_url: `${baseUrl}/healthz`,
+      uuid_url: `${baseUrl}/uuid`,
+      ip_url: `${baseUrl}/ip`,
+      hash_url: `${baseUrl}/hash`,
+      base64_url: `${baseUrl}/base64`,
+      jwt_decode_url: `${baseUrl}/jwt/decode`,
+      timestamp_url: `${baseUrl}/timestamp`,
+      flaky_url: `${baseUrl}/flaky`,
+      random_url: `${baseUrl}/random`,
+      useragent_url: `${baseUrl}/useragent`,
       openapi_url: `${baseUrl}/openapi`,
     },
     {

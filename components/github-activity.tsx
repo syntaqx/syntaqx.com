@@ -158,8 +158,11 @@ export function GitHubActivity({
       </div>
 
       {/* Grid — scrollable when content overflows */}
-      <div className="relative overflow-x-auto">
-        <div className="flex justify-end py-0.5">
+      <div className="relative overflow-x-auto" style={{ direction: "rtl" }}>
+        <div
+          className="flex py-0.5"
+          style={{ direction: "ltr", width: "max-content", marginLeft: "auto" }}
+        >
           {monthGroups.map((group, gi) => (
             <div
               key={gi}

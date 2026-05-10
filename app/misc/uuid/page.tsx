@@ -486,30 +486,19 @@ export default function UuidPage() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                <span className="text-muted font-medium">UUID v7</span>{" "}
-                (recommended) embeds a Unix timestamp in the first 48 bits,
-                making IDs naturally sortable by creation time. Ideal for
-                database primary keys.
-              </p>
-              <p>
-                <span className="text-muted font-medium">UUID v4</span> is fully
-                random (122 bits of entropy). The most widely used version but
-                not sortable.
-              </p>
-              <p>
-                <span className="text-muted font-medium">UUID v1</span> uses a
-                timestamp and node ID (MAC address or random). Sortable but can
-                leak creation time.
-              </p>
-              <p>
-                <span className="text-muted font-medium">ULID</span>{" "}
-                (Universally Unique Lexicographically Sortable Identifier) is a
-                26-character Crockford Base32 string. Like UUID v7 but shorter
-                and case-insensitive.
-              </p>
-              <p>
                 All IDs are generated client-side using the Web Crypto API for
                 cryptographically secure random values.
+              </p>
+              <p>
+                For a deeper look at UUID versions, ULID, auto-increment
+                tradeoffs, and why UUID v7 is the recommended default, see the{" "}
+                <a
+                  href="/docs/identifier-conventions"
+                  className="text-accent hover:underline"
+                >
+                  Identifier Conventions
+                </a>{" "}
+                doc.
               </p>
             </div>
           </div>
@@ -548,16 +537,6 @@ export default function UuidPage() {
                   className="text-muted hover:text-accent transition-colors"
                 >
                   Wikipedia - UUID
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-04.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
-                >
-                  UUID v7 Design Rationale
                 </a>
               </li>
             </ul>

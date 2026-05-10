@@ -8,9 +8,6 @@ import {
   Check,
   Play,
   Server,
-  Globe,
-  Info,
-  ExternalLink,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -53,6 +50,8 @@ interface SchemaObject {
   $ref?: string;
   description?: string;
   const?: string;
+  example?: unknown;
+  default?: unknown;
 }
 
 // ---------------------------------------------------------------------------
@@ -77,18 +76,27 @@ function resolveRef(spec: OpenApiSpec, schema: SchemaObject): SchemaObject {
 
 function schemaToExample(spec: OpenApiSpec, schema: SchemaObject): unknown {
   const resolved = resolveRef(spec, schema);
+  if (resolved.example !== undefined) return resolved.example;
   if (resolved.const) return resolved.const;
   if (resolved.enum) return resolved.enum[0];
   if (resolved.type === "object" && resolved.properties) {
     const obj: Record<string, unknown> = {};
     for (const [key, prop] of Object.entries(resolved.properties)) {
-      obj[key] = schemaToExample(spec, prop);
+      const p = resolveRef(spec, prop);
+      if (p.example !== undefined) {
+        obj[key] = p.example;
+      } else if (p.default !== undefined) {
+        obj[key] = p.default;
+      } else {
+        obj[key] = schemaToExample(spec, p);
+      }
     }
     return obj;
   }
   if (resolved.type === "array" && resolved.items) {
     return [schemaToExample(spec, resolved.items)];
   }
+  if (resolved.default !== undefined) return resolved.default;
   switch (resolved.type) {
     case "string":
       return "string";
@@ -372,13 +380,36 @@ function Endpoint({
 
 export default function ApiDocsPage() {
   const [spec, setSpec] = useState<OpenApiSpec | null>(null);
+  const [serverIdx, setServerIdx] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("/api/v1/openapi")
-      .then((r) => r.json())
-      .then(setSpec)
-      .catch(console.error);
-  }, []);
+    const load = () =>
+      fetch("/api/v1/openapi")
+        .then((r) => r.json())
+        .then((data: OpenApiSpec) => {
+          setSpec(data);
+          if (serverIdx === null && data.servers?.length) {
+            // Default to localhost in dev, production otherwise
+            const isLocal =
+              typeof window !== "undefined" &&
+              window.location.hostname === "localhost";
+            const idx = isLocal
+              ? (data.servers.findIndex((s) => s.url.includes("localhost")) ??
+                0)
+              : 0;
+            setServerIdx(idx >= 0 ? idx : 0);
+          }
+        })
+        .catch(console.error);
+
+    load();
+
+    // In development, poll for spec changes so edits auto-refresh
+    if (process.env.NODE_ENV === "development") {
+      const id = setInterval(load, 2000);
+      return () => clearInterval(id);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!spec) {
     return (
@@ -403,15 +434,14 @@ export default function ApiDocsPage() {
     }
   }
 
-  const baseUrl =
-    typeof window !== "undefined" && window.location.hostname === "localhost"
-      ? `${window.location.protocol}//${window.location.host}/api/v1`
-      : "https://api.syntaqx.com/v1";
+  const servers = spec.servers || [];
+  const activeServer = servers[serverIdx ?? 0];
+  const baseUrl = activeServer?.url || "";
 
   return (
     <div>
-      <div className="grid gap-10 lg:grid-cols-[1fr_320px] items-start">
-        {/* Main content */}
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div>
           <p className="text-xs text-accent font-medium tracking-wider uppercase mb-4">
             API Reference
@@ -420,112 +450,71 @@ export default function ApiDocsPage() {
             {spec.info.title}
           </h1>
           <p className="text-sm text-muted mb-1">{spec.info.description}</p>
-          <p className="text-[10px] text-dim mb-8">
+          <p className="text-[10px] text-dim">
             v{spec.info.version} &middot; OpenAPI {spec.openapi}
           </p>
+        </div>
 
-          {/* Endpoints by tag */}
-          <div className="space-y-8">
-            {Object.entries(grouped).map(([tag, endpoints]) => (
-              <section key={tag}>
-                <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-3">
-                  {tag}
-                </h2>
-                <div className="space-y-3">
-                  {endpoints.map((ep) => (
-                    <Endpoint
-                      key={`${ep.method}-${ep.path}`}
-                      method={ep.method}
-                      path={ep.path}
-                      op={ep.op}
-                      spec={spec}
-                      baseUrl={baseUrl}
-                    />
+        {/* Server selector */}
+        {servers.length > 0 && (
+          <div className="shrink-0">
+            <div className="rounded-lg border border-border bg-surface/50 p-3">
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-dim mb-2">
+                <Server size={10} className="text-accent" />
+                Server
+              </div>
+              {servers.length === 1 ? (
+                <p className="text-xs font-mono text-foreground break-all">
+                  {servers[0].url}
+                </p>
+              ) : (
+                <div className="space-y-1">
+                  {servers.map((s, i) => (
+                    <button
+                      key={s.url}
+                      onClick={() => setServerIdx(i)}
+                      className={`block w-full text-left rounded px-2 py-1.5 text-xs font-mono transition-colors ${
+                        i === (serverIdx ?? 0)
+                          ? "text-accent bg-accent/10"
+                          : "text-muted hover:text-foreground hover:bg-surface"
+                      }`}
+                    >
+                      {s.url}
+                      {s.description && (
+                        <span className="block text-[10px] font-sans text-dim">
+                          {s.description}
+                        </span>
+                      )}
+                    </button>
                   ))}
                 </div>
-              </section>
-            ))}
+              )}
+            </div>
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Sidebar */}
-        <div className="hidden lg:flex flex-col gap-4">
-          {/* Servers */}
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Server size={12} className="text-accent" />
-              Servers
-            </h3>
-            <div className="px-4 py-3 space-y-2">
-              {spec.servers?.map((s) => (
-                <div key={s.url}>
-                  <p className="text-xs font-mono text-foreground break-all">
-                    {s.url}
-                  </p>
-                  {s.description && (
-                    <p className="text-[10px] text-dim">{s.description}</p>
-                  )}
-                </div>
+      {/* Endpoints by tag */}
+      <div className="space-y-8">
+        {Object.entries(grouped).map(([tag, endpoints]) => (
+          <section key={tag}>
+            <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-3">
+              {tag}
+            </h2>
+            <div className="space-y-3">
+              {endpoints.map((ep) => (
+                <Endpoint
+                  key={`${ep.method}-${ep.path}`}
+                  method={ep.method}
+                  path={ep.path}
+                  op={ep.op}
+                  spec={spec}
+                  baseUrl={baseUrl}
+                />
               ))}
             </div>
-          </div>
-
-          {/* Base URL */}
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Globe size={12} className="text-accent" />
-              Base URL
-            </h3>
-            <div className="px-4 py-3">
-              <p className="text-xs font-mono text-foreground break-all">
-                {baseUrl}
-              </p>
-              <p className="text-[10px] text-dim mt-1">Currently active</p>
-            </div>
-          </div>
-
-          {/* About */}
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
-              About
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2">
-              <p>
-                All responses are JSON. Error responses follow a consistent
-                envelope with <span className="text-muted">message</span> and
-                optional <span className="text-muted">errors</span> fields.
-              </p>
-              <p>
-                Rate limiting headers (
-                <span className="text-muted">X-RateLimit-Limit</span>,{" "}
-                <span className="text-muted">X-RateLimit-Remaining</span>,{" "}
-                <span className="text-muted">X-RateLimit-Reset</span>) are
-                included on every response.
-              </p>
-            </div>
-          </div>
-
-          {/* Resources */}
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
-              Resources
-            </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
-              <li>
-                <a
-                  href="/api/v1/openapi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
-                >
-                  OpenAPI Spec (JSON)
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          </section>
+        ))}
       </div>
     </div>
   );

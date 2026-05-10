@@ -20,20 +20,30 @@ export interface ApiErrorBody {
 
 /** Return a JSON success response. */
 export function json<T>(data: T, init?: ResponseInit): Response {
-  return Response.json(data, init);
+  const headers = new Headers(init?.headers);
+  if (!headers.has("X-Request-ID")) {
+    headers.set("X-Request-ID", crypto.randomUUID());
+  }
+  return Response.json(data, { ...init, headers });
 }
 
 /** Return a normalized JSON error response. */
 export function errorResponse(
   status: number,
   message: string,
-  options?: { errors?: Record<string, string[]> },
+  options?: { errors?: Record<string, string[]>; headers?: Record<string, string> },
 ): Response {
   const body: ApiErrorBody = {
     message,
     ...(options?.errors && { errors: options.errors }),
   };
-  return Response.json(body, { status });
+  return Response.json(body, {
+    status,
+    headers: {
+      "X-Request-ID": crypto.randomUUID(),
+      ...options?.headers,
+    },
+  });
 }
 
 // ---------------------------------------------------------------------------
