@@ -33,7 +33,7 @@ export default async function Home() {
                 products. Without it, you&apos;re fighting the system instead of
                 building on it. Problem clarity tells you what to build. Then
                 the architecture circles back to provide the right solution, and
-                when requirements change, that&apos;s a configuration change,
+                when requirements change, that should be a configuration change,
                 not a bug.
               </p>
               <p>
