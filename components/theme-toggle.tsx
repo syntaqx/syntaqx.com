@@ -33,7 +33,7 @@ export function ThemeToggle() {
   useEffect(() => {
     const stored = localStorage.getItem("theme") as Theme | null;
     const initial = stored ?? "system";
-    setTheme(initial);
+    const id = requestAnimationFrame(() => setTheme(initial));
     applyTheme(initial);
 
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -43,7 +43,10 @@ export function ThemeToggle() {
       }
     };
     mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    return () => {
+      cancelAnimationFrame(id);
+      mq.removeEventListener("change", handler);
+    };
   }, []);
 
   useEffect(() => {

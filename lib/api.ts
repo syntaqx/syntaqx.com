@@ -37,13 +37,11 @@ export function errorResponse(
     message,
     ...(options?.errors && { errors: options.errors }),
   };
-  return Response.json(body, {
-    status,
-    headers: {
-      "X-Request-ID": crypto.randomUUID(),
-      ...options?.headers,
-    },
-  });
+  const headers = new Headers(options?.headers);
+  if (!headers.has("X-Request-ID")) {
+    headers.set("X-Request-ID", crypto.randomUUID());
+  }
+  return Response.json(body, { status, headers });
 }
 
 // ---------------------------------------------------------------------------
@@ -58,7 +56,21 @@ interface RateLimitEntry {
 const store = new Map<string, RateLimitEntry>();
 
 const WINDOW_SECONDS = 3600; // 1 hour
-const MAX_REQUESTS = 5000;
+
+/**
+ * Per-IP request ceiling per window.
+ *
+ * Production defaults to the documented 5,000/hr. In any non-production
+ * environment (dev, test, preview) we bump this to a stupidly high number
+ * so local hammering — manual testing, hot-reload re-fetches, scripted
+ * sweeps — never trips the limiter. Override at runtime with
+ * `API_RATE_LIMIT_MAX`.
+ */
+const MAX_REQUESTS = (() => {
+  const override = Number(process.env.API_RATE_LIMIT_MAX);
+  if (Number.isFinite(override) && override > 0) return override;
+  return process.env.NODE_ENV === "production" ? 5000 : 1_000_000;
+})();
 
 /** Prune expired entries periodically to avoid unbounded growth. */
 function prune(now: number) {

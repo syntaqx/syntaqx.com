@@ -124,38 +124,47 @@ export default function WhoamiPage() {
   };
 
   useEffect(() => {
-    fetchIp();
+    const fetchId = requestAnimationFrame(() => {
+      fetchIp();
+    });
 
     const nav = navigator as unknown as Record<string, unknown>;
     const conn = nav.connection as
       | { effectiveType?: string; downlink?: number }
       | undefined;
 
-    setClientInfo({
-      userAgent: navigator.userAgent,
-      language: navigator.language,
-      languages: navigator.languages?.join(", ") || navigator.language,
-      platform: navigator.platform,
-      screenRes: `${screen.width} x ${screen.height}`,
-      windowSize: `${window.innerWidth} x ${window.innerHeight}`,
-      pixelRatio: `${window.devicePixelRatio}x`,
-      colorDepth: `${screen.colorDepth}-bit`,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      timezoneOffset: `UTC${new Date().getTimezoneOffset() <= 0 ? "+" : "-"}${String(Math.floor(Math.abs(new Date().getTimezoneOffset()) / 60)).padStart(2, "0")}:${String(Math.abs(new Date().getTimezoneOffset()) % 60).padStart(2, "0")}`,
-      cookiesEnabled: navigator.cookieEnabled ? "Yes" : "No",
-      doNotTrack: navigator.doNotTrack === "1" ? "Enabled" : "Not set",
-      online: navigator.onLine ? "Online" : "Offline",
-      connection: conn
-        ? `${conn.effectiveType || "unknown"}${conn.downlink ? ` / ${conn.downlink} Mbps` : ""}`
-        : "Unknown",
-      cores: navigator.hardwareConcurrency
-        ? `${navigator.hardwareConcurrency}`
-        : "Unknown",
-      memory: (nav.deviceMemory as number)
-        ? `${nav.deviceMemory} GB`
-        : "Unknown",
-      touchPoints: `${navigator.maxTouchPoints}`,
+    const id = requestAnimationFrame(() => {
+      setClientInfo({
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        languages: navigator.languages?.join(", ") || navigator.language,
+        platform: navigator.platform,
+        screenRes: `${screen.width} x ${screen.height}`,
+        windowSize: `${window.innerWidth} x ${window.innerHeight}`,
+        pixelRatio: `${window.devicePixelRatio}x`,
+        colorDepth: `${screen.colorDepth}-bit`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        timezoneOffset: `UTC${new Date().getTimezoneOffset() <= 0 ? "+" : "-"}${String(Math.floor(Math.abs(new Date().getTimezoneOffset()) / 60)).padStart(2, "0")}:${String(Math.abs(new Date().getTimezoneOffset()) % 60).padStart(2, "0")}`,
+        cookiesEnabled: navigator.cookieEnabled ? "Yes" : "No",
+        doNotTrack: navigator.doNotTrack === "1" ? "Enabled" : "Not set",
+        online: navigator.onLine ? "Online" : "Offline",
+        connection: conn
+          ? `${conn.effectiveType || "unknown"}${conn.downlink ? ` / ${conn.downlink} Mbps` : ""}`
+          : "Unknown",
+        cores: navigator.hardwareConcurrency
+          ? `${navigator.hardwareConcurrency}`
+          : "Unknown",
+        memory: (nav.deviceMemory as number)
+          ? `${nav.deviceMemory} GB`
+          : "Unknown",
+        touchPoints: `${navigator.maxTouchPoints}`,
+      });
     });
+
+    return () => {
+      cancelAnimationFrame(fetchId);
+      cancelAnimationFrame(id);
+    };
   }, []);
 
   const location = [ipData?.city, ipData?.region, ipData?.country]

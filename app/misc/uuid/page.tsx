@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import Link from "next/link";
 import {
   Info,
   ExternalLink,
@@ -492,12 +493,12 @@ export default function UuidPage() {
               <p>
                 For a deeper look at UUID versions, ULID, auto-increment
                 tradeoffs, and why UUID v7 is the recommended default, see the{" "}
-                <a
+                <Link
                   href="/docs/identifier-conventions"
                   className="text-accent hover:underline"
                 >
                   Identifier Conventions
-                </a>{" "}
+                </Link>{" "}
                 doc.
               </p>
             </div>

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, rateLimit, errorResponse } from "@/lib/api";
+import { json, errorResponse } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -73,13 +73,6 @@ registry.registerPath({
 const MAX_INPUT_LENGTH = 1_000_000;
 
 export async function POST(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = rateLimit(ip);
-  if (rl.limited) {
-    return errorResponse(429, "Too many requests. Please try again later.");
-  }
-
   let body: unknown;
   try {
     body = await request.json();
@@ -129,5 +122,5 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return json({ output }, { headers: rl.headers });
+  return json({ output });
 }

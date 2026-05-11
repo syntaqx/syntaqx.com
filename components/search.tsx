@@ -10,6 +10,23 @@ interface SearchResult {
   excerpt: string;
 }
 
+interface PagefindResultData {
+  url: string;
+  meta?: { title?: string };
+  excerpt: string;
+}
+
+interface PagefindResult {
+  data: () => Promise<PagefindResultData>;
+}
+
+interface PagefindApi {
+  init: () => Promise<void>;
+  debouncedSearch: (
+    term: string,
+  ) => Promise<{ results: PagefindResult[] } | null>;
+}
+
 export function SearchButton() {
   const [open, setOpen] = useState(false);
 
@@ -51,7 +68,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [pagefind, setPagefind] = useState<any>(null);
+  const [pagefind, setPagefind] = useState<PagefindApi | null>(null);
   const [error, setError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const selectedRef = useRef(0);
@@ -61,10 +78,10 @@ function SearchModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     async function load() {
       try {
-        const pf = await import(
+        const pf = (await import(
           // @ts-expect-error pagefind is generated at build time
           /* webpackIgnore: true */ "/pagefind/pagefind.js"
-        );
+        )) as PagefindApi;
         await pf.init();
         setPagefind(pf);
       } catch {
@@ -86,6 +103,9 @@ function SearchModal({ onClose }: { onClose: () => void }) {
         setResults([]);
         return;
       }
+      // Yield to the event loop so the loading flag isn't flipped
+      // synchronously inside the parent effect body.
+      await Promise.resolve();
       setLoading(true);
       try {
         const response = await pagefind.debouncedSearch(term);
@@ -94,10 +114,10 @@ function SearchModal({ onClose }: { onClose: () => void }) {
           return;
         }
         const data = await Promise.all(
-          response.results.slice(0, 8).map((r: any) => r.data()),
+          response.results.slice(0, 8).map((r) => r.data()),
         );
         setResults(
-          data.map((d: any) => ({
+          data.map((d) => ({
             url: d.url.replace(/\.html$/, ""),
             title: d.meta?.title || d.url,
             excerpt: d.excerpt,
@@ -113,7 +133,10 @@ function SearchModal({ onClose }: { onClose: () => void }) {
   );
 
   useEffect(() => {
-    search(query);
+    const id = requestAnimationFrame(() => {
+      search(query);
+    });
+    return () => cancelAnimationFrame(id);
   }, [query, search]);
 
   // Keyboard navigation
@@ -130,7 +153,9 @@ function SearchModal({ onClose }: { onClose: () => void }) {
     }
   }
 
-  selectedRef.current = selected;
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
   return (
     <div

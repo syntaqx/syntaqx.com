@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, rateLimit, errorResponse } from "@/lib/api";
+import { json, errorResponse } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -81,13 +81,6 @@ function randomString(length: number, chars: string): string {
 }
 
 export function GET(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = rateLimit(ip);
-  if (rl.limited) {
-    return errorResponse(429, "Too many requests. Please try again later.");
-  }
-
   const { searchParams } = request.nextUrl;
 
   // Length
@@ -118,5 +111,5 @@ export function GET(request: NextRequest) {
   const strings = Array.from({ length: count }, () =>
     randomString(length, chars),
   );
-  return json(strings, { headers: rl.headers });
+  return json(strings);
 }

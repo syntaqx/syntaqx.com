@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { json, rateLimit, errorResponse } from "@/lib/api";
+import { json } from "@/lib/api";
 import { registry } from "@/lib/openapi";
-import type { NextRequest } from "next/server";
 
 // ---------------------------------------------------------------------------
 // Schema registration
@@ -37,14 +36,6 @@ registry.registerPath({
 // Handler
 // ---------------------------------------------------------------------------
 
-export function GET(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = rateLimit(ip);
-
-  if (rl.limited) {
-    return errorResponse(429, "Too many requests. Please try again later.");
-  }
-
-  return json({ status: "ok" }, { headers: rl.headers });
+export function GET() {
+  return json({ status: "ok" });
 }

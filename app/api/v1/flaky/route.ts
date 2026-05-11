@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, rateLimit, errorResponse } from "@/lib/api";
+import { json, errorResponse } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -99,13 +99,6 @@ function sleep(ms: number): Promise<void> {
 }
 
 export async function GET(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = rateLimit(ip);
-  if (rl.limited) {
-    return errorResponse(429, "Too many requests. Please try again later.");
-  }
-
   const { searchParams } = request.nextUrl;
 
   // Success rate
@@ -145,14 +138,11 @@ export async function GET(request: NextRequest) {
   const succeeded = Math.random() * 100 < rate;
 
   if (succeeded) {
-    return json(
-      { attempt_id: attemptId, latency_ms: actualDelay },
-      { headers: rl.headers },
-    );
+    return json({ attempt_id: attemptId, latency_ms: actualDelay });
   }
 
   const message =
     STATUS_MESSAGES[failStatus] || `Error ${failStatus} (simulated)`;
 
-  return errorResponse(failStatus, message, { headers: rl.headers });
+  return errorResponse(failStatus, message);
 }

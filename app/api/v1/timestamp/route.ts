@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, rateLimit, errorResponse } from "@/lib/api";
+import { json, errorResponse } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -11,7 +11,7 @@ const TimestampResponse = z
   .object({
     unix: z.number().openapi({ description: "Unix timestamp (seconds)" }),
     unix_ms: z.number().openapi({ description: "Unix timestamp (milliseconds)" }),
-    iso8601: z.string().openapi({ description: "ISO 8601 formatted" }),
+    rfc3339: z.string().openapi({ description: "RFC 3339 / ISO 8601 formatted" }),
     rfc2822: z.string().openapi({ description: "RFC 2822 formatted" }),
     day_of_year: z.number(),
     week_of_year: z.number(),
@@ -87,7 +87,7 @@ function formatTimestamp(d: Date) {
   return {
     unix: Math.floor(d.getTime() / 1000),
     unix_ms: d.getTime(),
-    iso8601: d.toISOString(),
+    rfc3339: d.toISOString(),
     rfc2822: d.toUTCString(),
     day_of_year: dayOfYear(d),
     week_of_year: weekOfYear(d),
@@ -100,17 +100,10 @@ function formatTimestamp(d: Date) {
 // ---------------------------------------------------------------------------
 
 export function GET(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = rateLimit(ip);
-  if (rl.limited) {
-    return errorResponse(429, "Too many requests. Please try again later.");
-  }
-
   const t = request.nextUrl.searchParams.get("t");
 
   if (t === null) {
-    return json(formatTimestamp(new Date()), { headers: rl.headers });
+    return json(formatTimestamp(new Date()));
   }
 
   // Try parsing as a number (unix seconds or ms)
@@ -122,16 +115,16 @@ export function GET(request: NextRequest) {
     if (isNaN(d.getTime())) {
       return errorResponse(400, "Invalid timestamp value.");
     }
-    return json(formatTimestamp(d), { headers: rl.headers });
+    return json(formatTimestamp(d));
   }
 
-  // Try ISO 8601
+  // Try ISO 8601 / RFC 3339
   const d = new Date(t);
   if (isNaN(d.getTime())) {
     return errorResponse(
       400,
-      "Invalid timestamp. Provide a Unix timestamp or ISO 8601 string.",
+      "Invalid timestamp. Provide a Unix timestamp or RFC 3339 string.",
     );
   }
-  return json(formatTimestamp(d), { headers: rl.headers });
+  return json(formatTimestamp(d));
 }

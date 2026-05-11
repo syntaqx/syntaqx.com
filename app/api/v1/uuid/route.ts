@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, rateLimit, errorResponse } from "@/lib/api";
+import { json, errorResponse } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -57,13 +57,6 @@ registry.registerPath({
 // ---------------------------------------------------------------------------
 
 export function GET(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = rateLimit(ip);
-  if (rl.limited) {
-    return errorResponse(429, "Too many requests. Please try again later.");
-  }
-
   const { searchParams } = request.nextUrl;
   const rawCount = searchParams.get("count");
   const count = rawCount ? parseInt(rawCount, 10) : 1;
@@ -73,5 +66,5 @@ export function GET(request: NextRequest) {
   }
 
   const uuids = Array.from({ length: count }, () => crypto.randomUUID());
-  return json(uuids, { headers: rl.headers });
+  return json(uuids);
 }

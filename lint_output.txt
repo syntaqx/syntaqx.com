@@ -1,0 +1,873 @@
+
+> syntaqx.com@0.1.0 lint
+> eslint
+
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\about\page.tsx
+  1:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\api\v1\timestamp\route.ts
+  76:9  warning  'dayNum' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\api\v1\uuid\route.ts
+  10:7  warning  'UuidResponse' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\convert\favicon\page.tsx
+  237:6   warning  React Hook useCallback has a missing dependency: 'fileName'. Either include it or remove the dependency array                                                                                                                                                                            react-hooks/exhaustive-deps
+  328:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  420:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\convert\text\page.tsx
+  375:3  warning  'lang' is defined but never used      @typescript-eslint/no-unused-vars
+  377:3  warning  'isSource' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\jwt\page.tsx
+  527:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\jwt\page.tsx:527:5
+  525 |
+  526 |     const version = ++verifyVersionRef.current;
+> 527 |     setVerifyResult({ status: "verifying" });
+      |     ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  528 |
+  529 |     verifySignature(decoded.jwt, keyMaterial).then((result) => {
+  530 |       if (version === verifyVersionRef.current) {  react-hooks/set-state-in-effect
+  591:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\jwt\page.tsx:591:5
+  589 |
+  590 |     const version = ++encodeVersionRef.current;
+> 591 |     setEncodeError(null);
+      |     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  592 |
+  593 |     signJwt(encodeHeader, encodePayload, keyMaterial)
+  594 |       .then((token) => {                                                           react-hooks/set-state-in-effect
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\uuid\page.tsx
+  495:17  error  Do not use an `<a>` element to navigate to `/docs/identifier-conventions/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\whoami\page.tsx
+  127:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\misc\whoami\page.tsx:127:5
+  125 |
+  126 |   useEffect(() => {
+> 127 |     fetchIp();
+      |     ^^^^^^^ Avoid calling setState() directly within an effect
+  128 |
+  129 |     const nav = navigator as unknown as Record<string, unknown>;
+  130 |     const conn = nav.connection as  react-hooks/set-state-in-effect
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\app\not-found.tsx
+  1:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\components\search.tsx
+   54:44  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+   97:48  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  100:24  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  116:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\components\search.tsx:116:5
+  114 |
+  115 |   useEffect(() => {
+> 116 |     search(query);
+      |     ^^^^^^ Avoid calling setState() directly within an effect
+  117 |   }, [query, search]);
+  118 |
+  119 |   // Keyboard navigation  react-hooks/set-state-in-effect
+  133:3   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\components\search.tsx:133:3
+  131 |   }
+  132 |
+> 133 |   selectedRef.current = selected;
+      |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  134 |
+  135 |   return (
+  136 |     <div                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/refs
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\components\theme-toggle.tsx
+  36:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\components\theme-toggle.tsx:36:5
+  34 |     const stored = localStorage.getItem("theme") as Theme | null;
+  35 |     const initial = stored ?? "system";
+> 36 |     setTheme(initial);
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |     applyTheme(initial);
+  38 |
+  39 |     const mq = window.matchMedia("(prefers-color-scheme: dark)");  react-hooks/set-state-in-effect
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\public\pagefind\pagefind-component-ui.js
+   1:798    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:1019   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:82208  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:82858  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:83333  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:83702  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:84294  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:84830  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:84987  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85130  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85345  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85484  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85643  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85769  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85819  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85871  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:85950  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:86209  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:86446  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:86909  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:87104  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:87564  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:88170  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:88215  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:89162  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:89245  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:89382  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:90050  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:90241  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:90451  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:90682  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:91006  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:91719  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:91854  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:91964  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:92085  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:92318  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:92397  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:92688  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   1:93741  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   2:658    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   2:4921   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   2:4948   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   2:5176   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   3:63     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   3:294    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:53     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:524    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:562    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:632    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:687    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:781    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:819    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:835    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:999    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1078   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1141   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1372   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1409   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1501   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1732   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1810   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:1924   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:2034   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:2125   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:2212   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:2544   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:2688   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:2866   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   4:3201   warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+   4:3275   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:342    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:406    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:481    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:565    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:627    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:708    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:983    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:1357   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:1636   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:1930   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:2061   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:2193   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:2850   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:3315   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:3639   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:4061   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:4329   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:4460   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:4607   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:4671   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:4988   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:5100   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:5137   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:5386   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:5510   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:5820   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:6802   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   7:6986   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:358    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:840    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:887    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:1428   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:1492   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:1583   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:2169   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:2887   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:3045   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:3483   warning  'r' is defined but never used                                          @typescript-eslint/no-unused-vars
+  39:3800   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:4005   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:4440   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:4598   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:5241   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:5502   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:5585   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:5764   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:6764   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:6947   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:7151   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:7318   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:7497   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:7916   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:8174   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:8441   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:8995   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:9050   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:9139   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:9257   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:9392   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:9576   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:9642   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:10570  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:10655  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:11141  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:12109  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:12311  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:12582  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:12955  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:13250  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:13802  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:13981  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:14152  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:14369  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:14772  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:15129  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:15328  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:15466  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:15740  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:15935  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:16153  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:16581  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:16631  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:16817  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:16884  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:17107  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:17183  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:17571  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:18786  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:19451  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:19980  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:20455  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:21788  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:21885  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:22473  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:22775  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23300  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23425  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23478  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23552  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23691  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23754  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23815  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:23873  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:24100  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:24149  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:24226  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:24388  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:24526  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:24896  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:25010  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:25206  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:25348  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:25460  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:25632  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:25766  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:25867  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:26057  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:26266  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:26468  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:26639  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:26846  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:27216  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:27426  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:27552  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:27702  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:27935  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:28029  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:28373  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:28457  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:28678  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:28882  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:29045  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:29179  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:29493  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:29561  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:29765  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:30405  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:30521  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:30688  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:30786  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:30980  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:31270  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32013  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32204  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32387  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32464  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32543  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32583  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32723  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32843  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:32931  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33031  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33249  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33385  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33452  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33622  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33730  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33806  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:33921  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:34022  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:34172  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:34277  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:35829  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:35911  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:37007  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:37175  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:37331  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:37422  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:37541  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:37648  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:37880  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:38006  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:38109  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:38263  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:38363  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:38483  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:38521  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:38865  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:39342  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:39426  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:39490  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:39594  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:39719  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:39799  warning  's' is defined but never used                                          @typescript-eslint/no-unused-vars
+  39:39805  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:39973  warning  's' is defined but never used                                          @typescript-eslint/no-unused-vars
+  39:39979  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:40104  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:40193  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:40547  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:40709  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:40812  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  39:41091  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:134    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:455    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:502    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:870    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:996    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:1223   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:1482   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:2596   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:3428   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:3719   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:3877   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:4064   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:4293   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:5130   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:5364   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:5441   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:5527   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:5735   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:6844   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:6959   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:7226   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:7493   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:7666   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:7804   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:7881   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:7947   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:8098   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:8257   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:8353   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:8714   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:8842   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:9060   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:9232   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:9443   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:9474   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:9620   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:9750   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:9943   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:10112  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:10509  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:10714  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:10892  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:11101  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:11707  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:11857  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:12072  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:12321  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:12435  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:12644  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:12837  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:13031  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:13131  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:13441  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:13494  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:13583  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:13701  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:14142  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:14282  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:14320  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:14412  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:14567  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:14632  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:14824  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:15094  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:15993  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:16136  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:16387  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:16501  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:16599  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:16665  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:16819  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:17758  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:17918  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:18089  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:18266  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:18610  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:18741  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:18977  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:19142  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:19312  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:19557  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:19853  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:20207  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:20244  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  56:20545  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\public\pagefind\pagefind-highlight.js
+    33:7   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+   121:22  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+   137:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   150:24  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+   170:22  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+   177:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   197:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   297:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   309:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   340:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   527:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   547:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   577:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   649:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   691:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   723:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   750:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   775:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   825:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   848:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   883:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   903:17  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+   966:13  error    Unexpected aliasing of 'this' to local variable                        @typescript-eslint/no-this-alias
+  1016:5   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1017:5   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1052:5   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\public\pagefind\pagefind-modular-ui.js
+  1:1273  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1586  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1978  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2443  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2840  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3231  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3384  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3429  warning  's' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:3434  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3540  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:146   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:780   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:1140  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:2142  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:2161  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:2492  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:2962  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:3040  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:3057  warning  's' is defined but never used                                          @typescript-eslint/no-unused-vars
+  7:3319  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:4310  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:4667  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:5197  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:5636  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:5745  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:5822  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:6006  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:6329  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:6671  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:6903  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:7418  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:7837  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:7972  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:8082  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:8203  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:8464  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:8734  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:8904  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  7:9406  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  8:398   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  8:462   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\public\pagefind\pagefind-ui.js
+  1:765     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:912     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1027    warning  'Rl' is assigned a value but never used                                @typescript-eslint/no-unused-vars
+  1:1164    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1250    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1598    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1733    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1915    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1977    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2136    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2312    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2734    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2910    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3057    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3140    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3199    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3243    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3347    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3488    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3526    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3607    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3632    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3678    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3966    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:4097    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:4192    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:4349    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:4689    warning  'ra' is assigned a value but never used                                @typescript-eslint/no-unused-vars
+  1:4748    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:4808    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:4872    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:4931    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:5040    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:5179    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:5576    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:5867    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:5913    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:5940    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6012    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6045    warning  'ga' is assigned a value but never used                                @typescript-eslint/no-unused-vars
+  1:6160    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6485    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6560    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6699    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6781    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6890    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:6967    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7054    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7403    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7521    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7695    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7820    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7861    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8514    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8664    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8695    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8777    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10208   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10863   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11338   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11707   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12176   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12496   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12552   warning  'c' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:12555   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12624   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12774   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13119   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13228   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13515   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13563   warning  'l' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:13583   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13692   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13759   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13841   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13873   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13953   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14008   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14193   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14314   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14563   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14657   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14767   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14867   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15003   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15048   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15183   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15227   warning  'r' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:15280   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15352   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15383   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15463   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15838   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16097   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16231   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16304   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16561   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16884   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16940   warning  'c' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:16943   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17012   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17224   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17333   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17559   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17667   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17688   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18008   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18108   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18184   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18248   warning  'l' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:18268   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18378   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18445   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18528   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18560   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18640   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18695   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:18881   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19002   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19062   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19136   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19167   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19219   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19309   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19614   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19680   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19807   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20057   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20151   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20261   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20362   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20500   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20545   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20682   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20726   warning  'r' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:20779   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20852   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20883   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20963   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21341   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21668   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21802   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21880   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22285   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22365   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22491   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22549   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22719   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22829   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22966   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:23441   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:23580   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:23935   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24036   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24060   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24089   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24200   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24391   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24500   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24801   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:24901   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25121   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25224   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25306   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25402   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25426   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25457   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25582   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25886   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:25940   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:26360   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:26482   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:106685  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:106717  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:106976  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107011  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107106  warning  'C' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:107168  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107248  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107293  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107423  warning  'c' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:107426  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107444  warning  'c' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:107447  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107463  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107541  warning  'Q' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:107809  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:107877  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108007  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108074  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108095  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108138  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108395  warning  'I' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:108450  warning  'I' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:108500  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108573  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108632  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108656  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108685  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:108771  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:109029  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:109236  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:109463  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:109649  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:109794  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:109898  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110039  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110071  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110179  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110214  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110385  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110417  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110525  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110560  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110659  warning  'A' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:110737  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110778  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110833  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110971  warning  'u' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:110974  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:110992  warning  'u' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:110995  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111011  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111111  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111210  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111265  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111333  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111454  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111528  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111552  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111653  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:111791  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:112556  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:112818  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:113567  warning  'h' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:113570  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:113593  warning  'h' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:113596  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:113617  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:114530  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:114580  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:114686  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:114849  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:115015  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:219     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:404     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:448     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:472     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:646     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:705     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:771     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:888     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:949     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1055    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1116    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1256    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1311    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1351    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1441    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1512    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1569    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1597    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1632    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:1662    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:2526    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:2738    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:3112    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:3719    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  2:4136    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\public\pagefind\pagefind-worker.js
+  1:5859   warning  'wasmModule' is assigned a value but never used                        @typescript-eslint/no-unused-vars
+  1:8307   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9151   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9213   warning  'revfd' is assigned a value but never used                             @typescript-eslint/no-unused-vars
+  1:11615  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11676  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12117  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12170  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12211  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12653  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12886  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13115  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13158  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13756  warning  'tds' is assigned a value but never used                               @typescript-eslint/no-unused-vars
+  1:13769  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:17323  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  6:2182   warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  6:2413   warning  'e2' is defined but never used                                         @typescript-eslint/no-unused-vars
+  6:4093   warning  'err2' is defined but never used                                       @typescript-eslint/no-unused-vars
+  6:9773   warning  'language' is assigned a value but never used                          @typescript-eslint/no-unused-vars
+
+C:\Users\syntaqx\Code\syntaqx\syntaqx.com\public\pagefind\pagefind.js
+  1:5859   warning  'wasmModule' is assigned a value but never used                        @typescript-eslint/no-unused-vars
+  1:9132   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9194   warning  'revfd' is assigned a value but never used                             @typescript-eslint/no-unused-vars
+  1:11596  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11657  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12098  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12151  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12192  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12634  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12867  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13096  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13139  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13737  warning  'tds' is assigned a value but never used                               @typescript-eslint/no-unused-vars
+  1:13750  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:17304  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  6:2182   warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  6:2413   warning  'e2' is defined but never used                                         @typescript-eslint/no-unused-vars
+  6:4101   warning  'err2' is defined but never used                                       @typescript-eslint/no-unused-vars
+  6:9792   warning  'language' is assigned a value but never used                          @typescript-eslint/no-unused-vars
+  6:12521  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  6:14202  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  6:16932  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+
+✖ 746 problems (29 errors, 717 warnings)
+

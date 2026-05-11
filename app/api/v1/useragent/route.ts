@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, rateLimit, errorResponse } from "@/lib/api";
+import { json, errorResponse } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -123,13 +123,6 @@ function parseUA(ua: string): ParsedUA {
 // ---------------------------------------------------------------------------
 
 export function GET(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = rateLimit(ip);
-  if (rl.limited) {
-    return errorResponse(429, "Too many requests. Please try again later.");
-  }
-
   const raw =
     request.nextUrl.searchParams.get("ua") ||
     request.headers.get("user-agent") ||
@@ -141,5 +134,5 @@ export function GET(request: NextRequest) {
 
   const parsed = parseUA(raw);
 
-  return json({ raw, ...parsed }, { headers: rl.headers });
+  return json({ raw, ...parsed });
 }

@@ -524,13 +524,17 @@ export default function JwtPage() {
     }
 
     const version = ++verifyVersionRef.current;
-    setVerifyResult({ status: "verifying" });
+    const id = requestAnimationFrame(() =>
+      setVerifyResult({ status: "verifying" }),
+    );
 
     verifySignature(decoded.jwt, keyMaterial).then((result) => {
       if (version === verifyVersionRef.current) {
         setVerifyResult(result);
       }
     });
+
+    return () => cancelAnimationFrame(id);
   }, [decoded.jwt, secret, publicKey, decodeAlgFamily]);
 
   const clearDecode = () => {
@@ -588,7 +592,7 @@ export default function JwtPage() {
     }
 
     const version = ++encodeVersionRef.current;
-    setEncodeError(null);
+    const id = requestAnimationFrame(() => setEncodeError(null));
 
     signJwt(encodeHeader, encodePayload, keyMaterial)
       .then((token) => {
@@ -603,6 +607,8 @@ export default function JwtPage() {
           setEncodeError(e instanceof Error ? e.message : "Signing failed");
         }
       });
+
+    return () => cancelAnimationFrame(id);
   }, [
     encodeHeader,
     encodePayload,
@@ -1211,16 +1217,16 @@ export default function JwtPage() {
                 signing algorithm (e.g. HS256, RS256) and token type.
               </p>
               <p>
-                The <span className="text-jwt-purple">payload</span> contains claims
-                - statements about the user and metadata. Standard claims
+                The <span className="text-jwt-purple">payload</span> contains
+                claims - statements about the user and metadata. Standard claims
                 include <span className="text-muted">iss</span> (issuer),{" "}
                 <span className="text-muted">sub</span> (subject),{" "}
                 <span className="text-muted">exp</span> (expiration), and{" "}
                 <span className="text-muted">iat</span> (issued at).
               </p>
               <p>
-                The <span className="text-jwt-cyan">signature</span> is created by
-                signing the header and payload with a secret or private key,
+                The <span className="text-jwt-cyan">signature</span> is created
+                by signing the header and payload with a secret or private key,
                 allowing recipients to verify authenticity.
               </p>
               <p>
