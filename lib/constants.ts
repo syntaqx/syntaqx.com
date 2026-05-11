@@ -5,12 +5,12 @@ export const socials = [
     icon: "linkedin",
     label: "LinkedIn",
   },
-  { href: "https://x.com/syntaqx", icon: "x", label: "X" },
   {
     href: "https://stackoverflow.com/users/1295839/syntaqx",
     icon: "stackoverflow",
     label: "Stack Overflow",
   },
+  { href: "https://x.com/syntaqx", icon: "x", label: "X" },
 ];
 
 export const nav = [
