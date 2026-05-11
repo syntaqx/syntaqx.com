@@ -415,7 +415,7 @@ export default function FaviconPage() {
                     className="flex flex-col items-center gap-2"
                   >
                     <div
-                      className="border border-border rounded bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-[length:8px_8px] flex items-center justify-center"
+                      className="border border-border rounded bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px] flex items-center justify-center"
                       style={{
                         width: Math.max(p.size, 32) + 16,
                         height: Math.max(p.size, 32) + 16,

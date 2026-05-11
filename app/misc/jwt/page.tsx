@@ -787,7 +787,7 @@ export default function JwtPage() {
                     )}
                   </div>
                 </div>
-                <div className="relative min-h-[9rem]">
+                <div className="relative min-h-36">
                   {/* Color-coded backdrop */}
                   <div
                     aria-hidden
@@ -848,7 +848,7 @@ export default function JwtPage() {
                       disabled={!headerJson}
                     />
                   </div>
-                  <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-[4.5rem]">
+                  <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
                     {headerJson || (
                       <span className="text-dim/30">{"{\n  ...\n}"}</span>
                     )}
@@ -866,7 +866,7 @@ export default function JwtPage() {
                       disabled={!payloadJson}
                     />
                   </div>
-                  <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-[4.5rem]">
+                  <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
                     {payloadJson || (
                       <span className="text-dim/30">{"{\n  ...\n}"}</span>
                     )}
@@ -1169,7 +1169,7 @@ export default function JwtPage() {
                     )}
                   </div>
                 </div>
-                <pre className="px-3 py-2 text-xs font-mono break-all whitespace-pre-wrap overflow-auto min-h-[4.5rem] max-h-60">
+                <pre className="px-3 py-2 text-xs font-mono break-all whitespace-pre-wrap overflow-auto min-h-18 max-h-60">
                   {encodedOutput ? (
                     (() => {
                       const parts = encodedOutput.split(".");
