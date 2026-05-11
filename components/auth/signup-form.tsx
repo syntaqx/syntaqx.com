@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import { Checkbox } from "@/components/checkbox";
 import { FormError } from "./form-error";
 
 type ApiError = { message?: string };
@@ -106,20 +107,15 @@ export function SignupForm() {
         />
       </Field>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="text-xs font-medium text-foreground">
+      <fieldset className="flex flex-col gap-3">
+        <legend className="text-xs font-medium text-foreground mb-2">
           Email preferences
         </legend>
-        <label className="flex items-start gap-2 text-xs text-muted cursor-pointer">
-          <input
-            type="checkbox"
-            checked={marketingOptIn}
-            onChange={(e) => setMarketingOptIn(e.target.checked)}
-            disabled={pending}
-            className="mt-0.5 h-3.5 w-3.5 rounded border-border bg-background accent-accent"
-          />
-          <span>Receive occasional product updates and announcements.</span>
-        </label>
+        <Checkbox
+          checked={marketingOptIn}
+          onChange={setMarketingOptIn}
+          label="Receive occasional product updates and announcements."
+        />
       </fieldset>
 
       <button
