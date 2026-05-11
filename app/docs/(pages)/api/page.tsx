@@ -229,11 +229,11 @@ function Endpoint({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-surface/50">
+    <div className="rounded-lg border border-border bg-surface/50 overflow-hidden">
       {/* Header */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface transition-colors"
+        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface transition-colors cursor-pointer"
       >
         {open ? (
           <ChevronDown size={14} className="text-dim shrink-0" />
