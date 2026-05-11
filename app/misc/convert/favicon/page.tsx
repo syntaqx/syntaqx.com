@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import { Upload, Download, Trash2, ImageIcon, Archive } from "lucide-react";
 import { zipSync } from "fflate";
 
@@ -326,7 +326,7 @@ export default function FaviconPage() {
             />
             {sourceUrl ? (
               <div className="flex flex-col items-center gap-3">
-                <Image
+                <NextImage
                   src={sourceUrl}
                   alt="Source"
                   width={128}
@@ -421,7 +421,7 @@ export default function FaviconPage() {
                         height: Math.max(p.size, 32) + 16,
                       }}
                     >
-                      <Image
+                      <NextImage
                         src={p.dataUrl}
                         alt={`${p.size}x${p.size}`}
                         width={p.size}
