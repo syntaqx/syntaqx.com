@@ -124,14 +124,15 @@ export function Breadcrumb() {
   return (
     <div className="border-b border-border">
       <div className="mx-auto max-w-7xl px-6 py-1.5 flex items-center gap-1.5 text-xs text-dim min-w-0 overflow-hidden">
-        <Link
-          href="/"
-          className={`shrink-0 hover:text-accent transition-colors ${
-            segments.length === 0 ? "text-muted" : ""
-          }`}
-        >
+        <Link href="/" className="shrink-0 hover:text-accent transition-colors">
           home
         </Link>
+        {segments.length === 0 && (
+          <span className="flex items-center gap-1.5 min-w-0 shrink-0 last:shrink">
+            <span>/</span>
+            <span className="text-muted truncate">index</span>
+          </span>
+        )}
         {segments.map((segment, i) => {
           const href = "/" + segments.slice(0, i + 1).join("/");
           const isLast = i === segments.length - 1;
