@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Button } from "@/components/button";
 import { ArrowRight } from "lucide-react";
 

@@ -372,9 +372,7 @@ function serialize(format: Format, data: unknown): string {
 
 function EditorPane({
   value,
-  lang,
   placeholder,
-  isSource,
   onChange,
   onKeyDown,
 }: {

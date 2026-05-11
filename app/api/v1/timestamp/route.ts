@@ -73,7 +73,6 @@ function dayOfYear(d: Date): number {
 
 function weekOfYear(d: Date): number {
   const start = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const dayNum = ((d.getUTCDay() + 6) % 7);
   start.setUTCDate(start.getUTCDate() + 4 - ((start.getUTCDay() + 6) % 7));
   const yearStart = new Date(Date.UTC(start.getUTCFullYear(), 0, 1));
   return Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);

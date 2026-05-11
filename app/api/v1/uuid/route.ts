@@ -8,6 +8,7 @@ import type { NextRequest } from "next/server";
 // ---------------------------------------------------------------------------
 
 const UuidResponse = z.string().uuid().openapi("Uuid");
+const UuidArrayResponse = z.array(UuidResponse).openapi("UuidArray");
 
 registry.registerPath({
   method: "get",
@@ -29,7 +30,7 @@ registry.registerPath({
       description: "An array of UUID strings",
       content: {
         "application/json": {
-          schema: z.array(z.string().uuid()),
+          schema: UuidArrayResponse,
         },
       },
     },

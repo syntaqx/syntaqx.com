@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { Upload, Download, Trash2, ImageIcon, Archive } from "lucide-react";
 import { zipSync } from "fflate";
 
@@ -234,7 +235,7 @@ export default function FaviconPage() {
     } finally {
       setGenerating(false);
     }
-  }, [sourceUrl, sizes]);
+  }, [sourceUrl, sizes, fileName]);
 
   const downloadIco = useCallback(() => {
     if (!icoBlob) return;
@@ -325,10 +326,13 @@ export default function FaviconPage() {
             />
             {sourceUrl ? (
               <div className="flex flex-col items-center gap-3">
-                <img
+                <Image
                   src={sourceUrl}
                   alt="Source"
-                  className="max-h-32 max-w-32 object-contain rounded"
+                  width={128}
+                  height={128}
+                  unoptimized
+                  className="max-h-32 max-w-32 object-contain rounded h-auto w-auto"
                 />
                 <span className="text-xs text-dim">{fileName}</span>
                 <span className="text-[10px] text-dim">
@@ -417,11 +421,12 @@ export default function FaviconPage() {
                         height: Math.max(p.size, 32) + 16,
                       }}
                     >
-                      <img
+                      <Image
                         src={p.dataUrl}
                         alt={`${p.size}x${p.size}`}
                         width={p.size}
                         height={p.size}
+                        unoptimized
                         className="image-rendering-pixelated"
                         style={{
                           imageRendering: p.size <= 32 ? "pixelated" : "auto",
