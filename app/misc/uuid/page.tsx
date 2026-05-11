@@ -373,7 +373,7 @@ export default function UuidPage() {
                 )}
               </div>
             </div>
-            <div className="px-3 py-2 min-h-[6rem] max-h-80 overflow-y-auto">
+            <div className="px-3 py-2 min-h-24 max-h-80 overflow-y-auto">
               {displayIds.length > 0 ? (
                 <div className="space-y-0.5">
                   {displayIds.map((id, i) => (
