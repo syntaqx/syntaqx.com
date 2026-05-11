@@ -69,7 +69,7 @@ export function ThemeToggle() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center rounded-md p-1.5 text-dim hover:text-accent hover:bg-surface transition-colors"
+        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface/50 text-dim hover:text-muted hover:border-border-hover transition-colors cursor-pointer"
         aria-label="Toggle theme"
       >
         <ActiveIcon size={14} />

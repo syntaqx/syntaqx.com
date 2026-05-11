@@ -96,6 +96,19 @@ export function MobileMenu() {
                   </Link>
                 );
               })}
+              <div className="border-t border-border pt-6">
+                <Link
+                  href="/login"
+                  onClick={() => setOpen(false)}
+                  className={`text-lg transition-colors ${
+                    pathname === "/login"
+                      ? "text-accent font-medium"
+                      : "text-muted hover:text-foreground"
+                  }`}
+                >
+                  sign in
+                </Link>
+              </div>
             </nav>
           </div>,
           document.body,

@@ -88,6 +88,12 @@ export default function RootLayout({
               <div className="flex items-center gap-2">
                 <SearchButton />
                 <ThemeToggle />
+                <Link
+                  href="/login"
+                  className="hidden sm:inline-flex h-8 items-center rounded-lg border border-border bg-surface/50 px-3 text-xs text-dim hover:text-muted hover:border-border-hover transition-colors"
+                >
+                  Sign in
+                </Link>
                 <MobileMenu />
               </div>
             </div>
@@ -119,6 +125,18 @@ export default function RootLayout({
                 className="text-xs text-dim hover:text-accent transition-colors"
               >
                 API
+              </Link>
+              <Link
+                href="/legal/terms"
+                className="text-xs text-dim hover:text-accent transition-colors"
+              >
+                Terms
+              </Link>
+              <Link
+                href="/legal/privacy"
+                className="text-xs text-dim hover:text-accent transition-colors"
+              >
+                Privacy
               </Link>
               <span className="text-border">|</span>
               {socials.map((s) => (
