@@ -1,4 +1,5 @@
 import { TodayHighlight } from "@/components/today-highlight";
+import { vacations } from "@/lib/constants";
 
 export interface ContributionDay {
   date: string;
@@ -59,6 +60,83 @@ const LEVEL_COLORS = [
   "bg-accent/60",
   "bg-accent",
 ];
+
+const VACATION_RING = "ring-1 ring-amber-500/60 ring-inset";
+const HOLIDAY_RING = "ring-1 ring-sky-400/60 ring-inset";
+
+/** Returns the matching vacation label for a date string, or null. */
+function vacationFor(date: string): string | null {
+  for (const v of vacations) {
+    if (date >= v.start && date < v.end) return v.label;
+  }
+  return null;
+}
+
+/** nth weekday of a month, e.g. 3rd Monday of January. */
+function nthWeekdayOfMonth(
+  year: number,
+  month: number, // 0-indexed
+  weekday: number, // 0=Sun ... 6=Sat
+  n: number,
+): string {
+  const first = new Date(year, month, 1);
+  const offset = (weekday - first.getDay() + 7) % 7;
+  const day = 1 + offset + (n - 1) * 7;
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/** Last weekday of a month, e.g. last Monday of May. */
+function lastWeekdayOfMonth(
+  year: number,
+  month: number,
+  weekday: number,
+): string {
+  const last = new Date(year, month + 1, 0);
+  const offset = (last.getDay() - weekday + 7) % 7;
+  const day = last.getDate() - offset;
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/** Shift a fixed-date holiday to the federally observed weekday.
+ *  Saturday is observed on the preceding Friday; Sunday on the following Monday. */
+function observed(dateStr: string): string {
+  const d = new Date(dateStr + "T00:00:00");
+  const dow = d.getDay();
+  if (dow === 0)
+    d.setDate(d.getDate() + 1); // Sun -> Mon
+  else if (dow === 6) d.setDate(d.getDate() - 1); // Sat -> Fri
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function holidaysForYear(year: number): Record<string, string> {
+  return {
+    [observed(`${year}-01-01`)]: "New Year's Day",
+    [nthWeekdayOfMonth(year, 0, 1, 3)]: "MLK Day",
+    [nthWeekdayOfMonth(year, 1, 1, 3)]: "Presidents' Day",
+    [lastWeekdayOfMonth(year, 4, 1)]: "Memorial Day",
+    [observed(`${year}-06-19`)]: "Juneteenth",
+    [observed(`${year}-07-04`)]: "Independence Day",
+    [nthWeekdayOfMonth(year, 8, 1, 1)]: "Labor Day",
+    [nthWeekdayOfMonth(year, 9, 1, 2)]: "Columbus Day",
+    [observed(`${year}-11-11`)]: "Veterans Day",
+    [nthWeekdayOfMonth(year, 10, 4, 4)]: "Thanksgiving",
+    [observed(`${year}-12-25`)]: "Christmas",
+  };
+}
+
+/** Cached holiday map keyed by date string across the relevant years. */
+const HOLIDAY_MAP: Record<string, string> = (() => {
+  const now = new Date();
+  const out: Record<string, string> = {};
+  for (let y = now.getFullYear() - 1; y <= now.getFullYear() + 1; y++) {
+    Object.assign(out, holidaysForYear(y));
+  }
+  return out;
+})();
+
+function holidayFor(date: string): string | null {
+  return HOLIDAY_MAP[date] ?? null;
+}
 
 const MONTHS = [
   "Jan",
@@ -178,18 +256,34 @@ export function GitHubActivity({
                 style={{ gridTemplateRows: "repeat(7, 1fr)" }}
               >
                 {group.weeks.map((week) =>
-                  week.map((day) => (
-                    <div
-                      key={day.date}
-                      data-date={day.date}
-                      className={`aspect-square rounded-xs ${
-                        day.level === -1
-                          ? "bg-border/20 border border-dashed border-border/30"
-                          : LEVEL_COLORS[day.level]
-                      }`}
-                      title={day.date}
-                    />
-                  )),
+                  week.map((day) => {
+                    const vacation =
+                      day.level >= 0 ? vacationFor(day.date) : null;
+                    const holiday =
+                      !vacation && day.level >= 0 ? holidayFor(day.date) : null;
+                    const base =
+                      day.level === -1
+                        ? "bg-border/20 border border-dashed border-border/30"
+                        : LEVEL_COLORS[day.level];
+                    const className = vacation
+                      ? `${base} ${VACATION_RING}`
+                      : holiday
+                        ? `${base} ${HOLIDAY_RING}`
+                        : base;
+                    const title = vacation
+                      ? `${day.date}: Vacation (${vacation})`
+                      : holiday
+                        ? `${day.date}: ${holiday}`
+                        : day.date;
+                    return (
+                      <div
+                        key={day.date}
+                        data-date={day.date}
+                        className={`aspect-square rounded-xs ${className}`}
+                        title={title}
+                      />
+                    );
+                  }),
                 )}
               </div>
             </div>
@@ -198,12 +292,30 @@ export function GitHubActivity({
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-end gap-1.5 mt-3">
-        <span className="text-[10px] text-dim mr-1">Less</span>
-        {LEVEL_COLORS.map((color, i) => (
-          <div key={i} className={`w-2.5 h-2.5 rounded-xs ${color}`} />
-        ))}
-        <span className="text-[10px] text-dim ml-1">More</span>
+      <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2 mt-3">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-xs ring-1 ring-accent ring-inset" />
+          <span className="text-[10px] text-dim">Today</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div
+            className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${VACATION_RING}`}
+          />
+          <span className="text-[10px] text-dim">Vacation</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div
+            className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${HOLIDAY_RING}`}
+          />
+          <span className="text-[10px] text-dim">US Holiday</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] text-dim">Less</span>
+          {LEVEL_COLORS.map((color, i) => (
+            <div key={i} className={`w-2.5 h-2.5 rounded-xs ${color}`} />
+          ))}
+          <span className="text-[10px] text-dim">More</span>
+        </div>
       </div>
 
       <TodayHighlight />
