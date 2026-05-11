@@ -69,16 +69,16 @@ export default function RootLayout({
               <div className="flex items-center gap-3">
                 <Link
                   href="/"
-                  className="flex items-center gap-2 group shrink-0"
+                  className="flex items-center gap-2 group shrink-0 brand-flicker"
                 >
                   <Image
                     src="/brand.svg"
                     alt="syntaqx"
                     width={24}
                     height={24}
-                    className="w-6 h-6"
+                    className="w-6 h-6 brand-flicker-target"
                   />
-                  <span className="text-sm font-semibold text-accent">
+                  <span className="text-sm font-semibold text-accent transition-colors group-hover:text-foreground brand-flicker-target">
                     syntaqx
                   </span>
                 </Link>

@@ -250,3 +250,56 @@ body {
   color: var(--dim);
   text-decoration: line-through;
 }
+
+/* Brand mark hover: short-circuit flicker */
+@keyframes brand-flicker {
+  0%,
+  100% {
+    opacity: 1;
+    filter: none;
+  }
+  8% {
+    opacity: 0.2;
+  }
+  10% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.4;
+    filter: brightness(1.6) drop-shadow(0 0 4px var(--accent));
+  }
+  22% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0.1;
+    transform: translateX(-1px);
+  }
+  37% {
+    opacity: 1;
+    transform: translateX(1px);
+  }
+  40% {
+    transform: translateX(0);
+  }
+  60% {
+    filter: brightness(1.4) drop-shadow(0 0 6px var(--accent));
+  }
+  70% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+.brand-flicker:hover .brand-flicker-target {
+  animation: brand-flicker 0.9s steps(1, end) 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-flicker:hover .brand-flicker-target {
+    animation: none;
+  }
+}
