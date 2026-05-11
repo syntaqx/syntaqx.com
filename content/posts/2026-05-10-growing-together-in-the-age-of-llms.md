@@ -1,7 +1,7 @@
 +++
 title = "Growing Together in the Age of LLMs"
 date = 2026-05-10T00:00:00Z
-description = "AI made the code part easy. The judgment behind it still has to come from somewhere."
+description = "AI made the first version easy. Everything after that still takes engineering."
 categories = ["AI", "Software Engineering"]
 tags = ["LLMs", "AI in Development", "Software Engineering", "Career Growth"]
 +++
