@@ -58,6 +58,31 @@ export const auth = betterAuth({
     disableSignUp: REGISTRATIONS_DISABLED,
   },
 
+  session: {
+    /**
+     * Sign the session payload into the cookie itself for a short
+     * window so `getSession()` is an HMAC verify instead of a DB
+     * lookup. This is the difference between every /settings/*
+     * navigation paying ~50–100ms for a session round trip vs. ~1ms.
+     *
+     * Better Auth invalidates the cached cookie automatically on any
+     * session-mutating action (sign in/out, password change, account
+     * delete, etc.), so the only staleness window is for fields read
+     * straight off `session.user` (name, image, username) — those can
+     * lag behind a profile edit by up to `maxAge` seconds. Acceptable
+     * for the avatar in the settings sidebar.
+     *
+     * 5 minutes matches the better-auth example default and is short
+     * enough that a logged-out cookie can't be replayed for long if
+     * exfiltrated, while long enough to cover a normal nav burst
+     * across settings tabs.
+     */
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
+    },
+  },
+
   user: {
     additionalFields: {
       marketingOptIn: {
