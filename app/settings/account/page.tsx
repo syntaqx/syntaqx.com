@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import { SettingsHeader } from "../_components";
 import { DeleteAccountForm } from "./delete-form";
 import { UsernameForm } from "./username-form";
@@ -9,7 +8,7 @@ import { ModalSection } from "./modal-section";
 export const metadata = { title: "Account" };
 
 export default async function AccountSettings() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   // Layout already gates, but TS doesn't know that.
   if (!session) redirect("/login?next=/settings/account");
 

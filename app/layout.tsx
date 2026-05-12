@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,6 +11,7 @@ import { UserMenu } from "@/components/auth/user-menu";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import { nav, socials } from "@/lib/constants";
 import "./globals.css";
 
@@ -51,7 +51,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   // Better Auth's username plugin adds `username`; the inferred
   // server-side user type doesn't surface plugin fields here, so widen.
   const user = session?.user as

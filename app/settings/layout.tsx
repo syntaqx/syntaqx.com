@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import { Avatar } from "@/components/avatar";
 import { SettingsNav } from "./settings-nav";
 import { SettingsMobileNav } from "./settings-mobile-nav";
@@ -26,7 +25,7 @@ export default async function SettingsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) {
     redirect("/login?next=/settings");
   }
