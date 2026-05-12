@@ -9,6 +9,30 @@ read [docs/architecture/auth.md](docs/architecture/auth.md). The
 decisions there are deliberate and prior context should not be
 relitigated without cause.
 
+# Database schema changes
+
+The `build` script runs `npm run db:migrate` before `next build`, so
+every deploy (Vercel preview or prod) applies pending migrations
+automatically. The contract this depends on:
+
+1. Edit [`lib/db/schema.ts`](lib/db/schema.ts).
+2. Run `npm run db:generate` (writes `lib/db/migrations/NNNN_*.sql`
+   and updates `meta/_journal.json`).
+3. **Commit both the SQL file and the journal update in the same PR
+   as the schema edit.** Without the SQL file, the deploy migrates
+   nothing; the app then runs against a stale schema and breaks at
+   runtime, not at build time.
+4. Never edit a migration file after it has merged. Write a new one.
+5. `npm run db:push` is for local prototyping only. It bypasses the
+   migration history. Don't run it against any deployed environment
+   and don't commit changes that only work because you pushed.
+
+There is no separate "production migration" step. Push to main, the
+build migrates, the build deploys. If a migration fails, the deploy
+fails — which is the right behavior.
+
+See [docs/architecture/auth.md → Migrations](docs/architecture/auth.md#migrations).
+
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 

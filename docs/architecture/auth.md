@@ -6,16 +6,21 @@
 
 ## Status
 
-**Today (May 2026):** UI shell only. There's a "Sign in" button in the
-header and a `/login` page that posts to `POST /api/auth/sign-in/email`,
-which is a stub that always returns `401 { message: "Invalid email or
-password." }`. No database, no real cookies, no users. The URL shape and
-form contract match what the real implementation will use so the swap-in
-is mechanical.
+**Today (May 2026):** Phase 2 implemented. Neon Postgres + Drizzle +
+Better Auth (`lib/auth.ts`) are live. Email + password signup/sign-in
+work end-to-end through Better Auth's catch-all handler at
+`app/api/auth/[...all]/route.ts`. Sessions are DB-backed and the cookie
+is host-locked (`__Host-syntaqx.sid` in prod, `syntaqx.sid` in dev).
+The `username` and `organization` plugins are enabled; a personal org
+is auto-created in the `user.create.after` database hook. The header
+renders a session-aware `UserMenu` (server-side session lookup, no
+flicker). `/api/v1/me` is the first protected route and returns the
+resolved principal.
 
-**Not yet built:** persistence, real sessions, social providers, signup,
-email verification, password reset, organizations, PATs, OIDC provider,
-BFF→API split. Each is sketched below.
+**Not yet built:** social providers (GitHub/Google — needs creds),
+email verification + password-reset delivery (needs Resend), PATs,
+permission registry, unified `getPrincipal()`, CORS lockdown, OIDC
+provider, BFF→API split.
 
 ## Goals
 
@@ -225,6 +230,74 @@ introspection endpoint). Don't fork the user table.
   Organization, API Keys, and OIDC Provider plugins that match this
   doc nearly 1:1.
 - **Email: Resend.** Verification, password reset, team invitations.
+- **Avatars: Vercel Blob.** User-uploaded images are written to public
+  Blob storage by `POST /api/v1/me/avatar`. Better Auth's `user.image`
+  stores the resulting URL; the upload route is the only thing that
+  knows about Blob. Requires `BLOB_READ_WRITE_TOKEN` in the
+  environment. Replacing or removing an avatar deletes the previous
+  blob if (and only if) it was one we uploaded — external image URLs
+  (OAuth provider defaults) are left alone.
+
+### Migrations
+
+Schema lives in [`lib/db/schema.ts`](../../lib/db/schema.ts). It was
+initially generated from the Better Auth config via
+`@better-auth/cli generate`; subsequent edits are hand-applied (e.g.
+adding `additionalFields`, custom tables, indexes) and the generator
+isn't re-run against an evolved schema.
+
+The workflow is **diff-and-apply**, not push-on-deploy:
+
+| Script | When |
+|---|---|
+| `npm run db:generate` | After editing `lib/db/schema.ts`. Writes a new SQL file under `lib/db/migrations/` and updates `meta/_journal.json`. Commit both. |
+| `npm run db:migrate` | Locally + in CI/prod. Applies any migrations newer than the last row in `drizzle.__drizzle_migrations`. |
+| `npm run db:push` | **Local prototyping only.** Skips the migration history. Never run against a deployed environment. |
+| `npm run db:studio` | Drizzle's data browser. |
+| `npm run db:baseline` | One-shot. Used once, when the DB already had the tables from an earlier `db:push` and we needed to start tracking from the existing state forward. Idempotent — safe to leave wired up. |
+
+The first migration (`0000_baseline.sql`) captures the entire Better
+Auth schema as it existed at that moment. Every change since is a new
+file. **Production deploys run `db:migrate` automatically** — the
+`build` script in `package.json` chains `db:migrate && next build`, so
+every Vercel deploy (preview or prod) applies pending migrations
+before the app boots. If a migration fails, the deploy fails. There is
+no separate production migration step to remember.
+
+### Sign-in identifier (email vs. username)
+
+Better Auth's core only knows how to sign in by `user.email`. The
+`username` plugin adds a separate `signIn.username` endpoint. The
+`/login` form picks the right one based on whether the input contains
+`@`. Both produce the same session cookie; everything downstream is
+identical.
+
+### Future: multiple emails per account (GitHub-style)
+
+Today: `user.email` is single-valued, unique, and serves as both the
+sign-in identifier (when an `@` is present) and the contact address.
+
+When we want a user to be able to add additional verified emails —
+distinct from "the email I sign in with" — the model changes:
+
+1. New `user_email` table: `(id, userId, email, verified, isPrimary,
+   createdAt)`. Unique on `email` globally and on `(userId, isPrimary)
+   where isPrimary = true`.
+2. `user.email` becomes the cached primary, kept in sync via a
+   database hook on `user_email` writes. We don't drop `user.email`
+   because Better Auth's core sign-in path reads it directly.
+3. Sign-in by any verified address: a server hook on `signIn.email`
+   that resolves `email -> user.email` via `user_email` before passing
+   through. Or: keep sign-in pinned to the primary and make secondary
+   emails a contact-only construct.
+4. UI: a `/settings/emails` page that lists addresses, lets the user
+   add/verify/remove, and pick which is primary.
+
+Why not now: the migration is mechanical but disruptive (data move,
+hook ordering, sign-in path fork), and there's nothing to migrate yet.
+Doing it on day one of having actual users is cheaper than doing it on
+day one of having zero users — `npm run db:generate` will write the
+diff cleanly when we get there.
 
 ### Alternatives considered
 
@@ -270,12 +343,12 @@ a `PAT` carries an explicit subset.
 ## Phasing
 
 1. **Done.** Login UI shell + 401 stub.
-2. **Next.** Neon + Drizzle + Better Auth core; GitHub OAuth + email +
-   password; orgs plugin; personal org auto-created on signup; the
-   header becomes a session-aware `UserMenu`; `/api/v1/me` is the first
-   protected route.
-3. **Then.** PAT UI (`/settings/tokens`), permission registry, unified
-   `getPrincipal()`, CORS lockdown in `proxy.ts`.
+2. **Done.** Neon + Drizzle + Better Auth core; email + password; orgs
+   plugin; personal org auto-created on signup; the header renders a
+   session-aware `UserMenu`; `/api/v1/me` is the first protected route.
+3. **Next.** GitHub OAuth (creds), Resend (email verification + reset
+   delivery), PAT UI (`/settings/tokens`), permission registry,
+   unified `getPrincipal()`, CORS lockdown in `proxy.ts`.
 4. **Later.** OIDC Provider plugin, SAML/Okta plugin, audit log.
 5. **Eventually.** BFF→API service split per the diagram above.
 

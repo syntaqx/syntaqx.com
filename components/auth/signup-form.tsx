@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Checkbox } from "@/components/checkbox";
+import { signUp } from "@/lib/auth-client";
 import { FormError } from "./form-error";
-
-type ApiError = { message?: string };
 
 const USERNAME_PATTERN = "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$";
 
 export function SignupForm() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,30 +22,21 @@ export function SignupForm() {
     e.preventDefault();
     setError(null);
     setPending(true);
-    try {
-      const res = await fetch("/api/auth/sign-up/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: username,
-          username,
-          email,
-          password,
-          marketingOptIn,
-        }),
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const body = (await res.json().catch(() => null)) as ApiError | null;
-        setError(body?.message ?? "Sign up failed. Please try again.");
-        return;
-      }
-      // Real auth lands here later: navigate to /verify-email.
-    } catch {
-      setError("Sign up failed. Please try again.");
-    } finally {
-      setPending(false);
+    const { error: err } = await signUp.email({
+      name: username,
+      username,
+      email,
+      password,
+      marketingOptIn,
+    });
+    setPending(false);
+    if (err) {
+      setError(err.message ?? "Sign up failed. Please try again.");
+      return;
     }
+    // autoSignIn is enabled in lib/auth.ts, so we land already signed in.
+    router.push("/");
+    router.refresh();
   }
 
   return (
@@ -130,6 +122,7 @@ export function SignupForm() {
         By creating an account, you agree to the{" "}
         <Link
           href="/legal/terms"
+          tabIndex={-1}
           className="text-muted hover:text-accent transition-colors underline underline-offset-2"
         >
           Terms of Service
@@ -137,6 +130,7 @@ export function SignupForm() {
         and{" "}
         <Link
           href="/legal/privacy"
+          tabIndex={-1}
           className="text-muted hover:text-accent transition-colors underline underline-offset-2"
         >
           Privacy Statement

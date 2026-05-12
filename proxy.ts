@@ -104,7 +104,6 @@ export function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = `/api${pathname}`;
     const response = NextResponse.rewrite(url);
-    response.headers.set("Content-Type", "application/json");
     for (const [k, v] of Object.entries({ ...apiHeaders, ...corsHeaders() })) {
       response.headers.set(k, v);
     }
@@ -132,7 +131,6 @@ export function proxy(request: NextRequest) {
     response.headers.set(k, v);
   }
   if (pathname.startsWith("/api/v1")) {
-    response.headers.set("Content-Type", "application/json");
     for (const [k, v] of Object.entries(corsHeaders())) {
       response.headers.set(k, v);
     }

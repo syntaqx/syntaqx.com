@@ -1,37 +1,40 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { requestPasswordReset } from "@/lib/auth-client";
 import { FormError } from "./form-error";
-
-type ApiError = { message?: string };
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setPending(true);
-    try {
-      const res = await fetch("/api/auth/forget-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const body = (await res.json().catch(() => null)) as ApiError | null;
-        setError(body?.message ?? "Request failed. Please try again.");
-        return;
-      }
-      // Real auth lands here later: show "check your inbox" state.
-    } catch {
-      setError("Request failed. Please try again.");
-    } finally {
-      setPending(false);
+    // Email delivery isn't wired yet (no Resend creds). Better Auth will
+    // create the verification token row but the user won't get a link
+    // until sendResetPassword is configured in lib/auth.ts.
+    const { error: err } = await requestPasswordReset({
+      email,
+      redirectTo: "/login",
+    });
+    setPending(false);
+    if (err) {
+      setError(err.message ?? "Request failed. Please try again.");
+      return;
     }
+    setSent(true);
+  }
+
+  if (sent) {
+    return (
+      <p className="text-center text-sm text-muted">
+        If an account exists for {email}, a reset link is on its way.
+      </p>
+    );
   }
 
   return (

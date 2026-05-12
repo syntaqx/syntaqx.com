@@ -1,13 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { signIn } from "@/lib/auth-client";
 import { FormError } from "./form-error";
 
-type ApiError = { message?: string };
-
 export function LoginForm() {
-  const [email, setEmail] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") || "/";
+
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -16,24 +20,21 @@ export function LoginForm() {
     e.preventDefault();
     setError(null);
     setPending(true);
-    try {
-      const res = await fetch("/api/auth/sign-in/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const body = (await res.json().catch(() => null)) as ApiError | null;
-        setError(body?.message ?? "Sign in failed. Please try again.");
-        return;
-      }
-      // Real auth lands here later: navigate to ?next= or "/".
-    } catch {
-      setError("Sign in failed. Please try again.");
-    } finally {
-      setPending(false);
+    // Pick the right Better Auth endpoint based on whether the input
+    // looks like an email. The `username` plugin exposes
+    // `signIn.username`; the core ships `signIn.email`. Both produce
+    // the same session cookie, so the rest of the flow is identical.
+    const isEmail = identifier.includes("@");
+    const { error: err } = isEmail
+      ? await signIn.email({ email: identifier, password })
+      : await signIn.username({ username: identifier, password });
+    setPending(false);
+    if (err) {
+      setError(err.message ?? "Invalid email or password.");
+      return;
     }
+    router.push(next);
+    router.refresh();
   }
 
   return (
@@ -41,17 +42,20 @@ export function LoginForm() {
       {error && <FormError message={error} onDismiss={() => setError(null)} />}
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-xs text-muted">
-          Email
+        <label htmlFor="identifier" className="text-xs text-muted">
+          Username or email
         </label>
         <input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
+          id="identifier"
+          name="identifier"
+          type="text"
+          autoComplete="username"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           disabled={pending}
           className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors focus:border-accent focus:outline-none disabled:opacity-60"
         />
@@ -64,6 +68,9 @@ export function LoginForm() {
           </label>
           <Link
             href="/forgot-password"
+            // Skip in tab order so Tab from the identifier field lands
+            // on the password input, not this auxiliary link.
+            tabIndex={-1}
             className="text-xs text-dim hover:text-accent transition-colors"
           >
             Forgot password?
