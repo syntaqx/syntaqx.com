@@ -81,28 +81,11 @@ export function proxy(request: NextRequest) {
   if (result.limited) return result.response;
   const apiHeaders = result.headers;
 
-  // Production: api.syntaqx.com root → API index
-  if (isApiSubdomain && (pathname === "/" || pathname === "")) {
-    const baseUrl = "https://api.syntaqx.com/v1";
-    return Response.json(
-      {
-        healthz_url: `${baseUrl}/healthz`,
-        openapi_url: `${baseUrl}/openapi`,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          ...apiHeaders,
-          ...corsHeaders(),
-        },
-      },
-    );
-  }
-
+  // Production: api.syntaqx.com root → /api (single source of truth for the index)
   // Production: api.syntaqx.com/v1/* → /api/v1/*
-  if (isApiSubdomain && pathname.startsWith("/v1")) {
+  if (isApiSubdomain && (pathname === "/" || pathname === "" || pathname.startsWith("/v1"))) {
     const url = request.nextUrl.clone();
-    url.pathname = `/api${pathname}`;
+    url.pathname = pathname.startsWith("/v1") ? `/api${pathname}` : "/api";
     const response = NextResponse.rewrite(url);
     for (const [k, v] of Object.entries({ ...apiHeaders, ...corsHeaders() })) {
       response.headers.set(k, v);

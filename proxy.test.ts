@@ -107,16 +107,14 @@ describe("proxy: rate limiting enforcement", () => {
 });
 
 describe("proxy: api subdomain", () => {
-  it("returns the API index on api.syntaqx.com root", async () => {
+  it("rewrites api.syntaqx.com root to /api so the route handler is the source of truth", () => {
     const res = proxy(
       makeRequest("http://api.syntaqx.com/", { host: "api.syntaqx.com" }),
     ) as Response;
     expect(res.status).toBe(200);
     expect(res.headers.get("X-Request-ID")).toBeTruthy();
     expect(res.headers.get("X-RateLimit-Limit")).toBe("5000");
-    const body = await res.json();
-    expect(body).toHaveProperty("healthz_url");
-    expect(body).toHaveProperty("openapi_url");
+    expect(res.headers.get("x-middleware-rewrite")).toBe("http://api.syntaqx.com/api");
   });
 
   it("returns 404 with envelope on non-/v1 paths under api subdomain", async () => {
