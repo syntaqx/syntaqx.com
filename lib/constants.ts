@@ -21,6 +21,12 @@ export const nav = [
   { href: "/about", label: "about" },
 ];
 
+// Site owner's timezone. GitHub's contributions HTML pads the trailing week
+// with level-0 cells for days that haven't happened in the owner's local
+// time yet; we use this to trim them off so "no activity" can't be confused
+// with "hasn't happened."
+export const OWNER_TZ = "America/Denver";
+
 // Vacation ranges (inclusive start, exclusive end) used to annotate the
 // GitHub activity graph. Zero-contribution days inside these windows are
 // rendered as vacation rather than as quiet days.

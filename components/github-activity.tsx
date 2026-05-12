@@ -1,5 +1,5 @@
 import { TodayHighlight } from "@/components/today-highlight";
-import { vacations } from "@/lib/constants";
+import { OWNER_TZ, vacations } from "@/lib/constants";
 
 export interface ContributionDay {
   date: string;
@@ -164,7 +164,20 @@ export function GitHubActivity({
 
   if (days.length === 0) return null;
 
-  const recentDays = days;
+  // GitHub's contributions HTML returns the full calendar week the owner is
+  // in, padding the trailing days of that week with level-0 cells. Those
+  // look identical to "a day with no commits," so we trim anything past the
+  // owner's local today. Anchored on the owner because that's whose day
+  // GitHub is binning — not the server's UTC, not the viewer's clock.
+  const ownerToday = new Intl.DateTimeFormat("en-CA", {
+    timeZone: OWNER_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  const recentDays = days.filter((d) => d.date <= ownerToday);
+
+  if (recentDays.length === 0) return null;
 
   // Organize into columns (weeks) of 7 rows (days)
   const weeks: ContributionDay[][] = [];
@@ -172,37 +185,9 @@ export function GitHubActivity({
     weeks.push(recentDays.slice(i, i + 7));
   }
 
-  // Pad current month with future days so it shows the full month
-  const today = new Date();
-  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  const lastDataDate =
-    recentDays.length > 0
-      ? new Date(recentDays[recentDays.length - 1].date + "T00:00:00")
-      : today;
-
-  // Add placeholder days from tomorrow to end of month
-  const futureDays: ContributionDay[] = [];
-  const nextDay = new Date(lastDataDate);
-  nextDay.setDate(nextDay.getDate() + 1);
-  while (nextDay <= lastDayOfMonth) {
-    futureDays.push({
-      date: `${nextDay.getFullYear()}-${String(nextDay.getMonth() + 1).padStart(2, "0")}-${String(nextDay.getDate()).padStart(2, "0")}`,
-      level: -1, // sentinel for "future"
-    });
-    nextDay.setDate(nextDay.getDate() + 1);
-  }
-
-  // Add future days into the last partial week or create new weeks
-  if (futureDays.length > 0) {
-    const lastWeek = weeks[weeks.length - 1];
-    if (lastWeek && lastWeek.length < 7) {
-      const remaining = 7 - lastWeek.length;
-      lastWeek.push(...futureDays.splice(0, remaining));
-    }
-    for (let i = 0; i < futureDays.length; i += 7) {
-      weeks.push(futureDays.slice(i, i + 7));
-    }
-  }
+  // No future-day padding: the grid ends at the last day GitHub returned.
+  // Drawing dashed sentinel cells for "the rest of the month" reads as
+  // activity that hasn't happened yet, which is misleading.
 
   // Group weeks by month
   const monthGroups: { label: string; weeks: ContributionDay[][] }[] = [];
@@ -257,14 +242,9 @@ export function GitHubActivity({
               >
                 {group.weeks.map((week) =>
                   week.map((day) => {
-                    const vacation =
-                      day.level >= 0 ? vacationFor(day.date) : null;
-                    const holiday =
-                      !vacation && day.level >= 0 ? holidayFor(day.date) : null;
-                    const base =
-                      day.level === -1
-                        ? "bg-border/20 border border-dashed border-border/30"
-                        : LEVEL_COLORS[day.level];
+                    const vacation = vacationFor(day.date);
+                    const holiday = !vacation ? holidayFor(day.date) : null;
+                    const base = LEVEL_COLORS[day.level];
                     const className = vacation
                       ? `${base} ${VACATION_RING}`
                       : holiday
