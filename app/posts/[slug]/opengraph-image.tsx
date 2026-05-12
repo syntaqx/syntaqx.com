@@ -5,7 +5,7 @@ async function loadFont(): Promise<ArrayBuffer | undefined> {
   try {
     const res = await fetch(
       "https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap",
-      { headers: { "User-Agent": "Mozilla/5.0" } }
+      { headers: { "User-Agent": "Mozilla/5.0" } },
     );
     const css = await res.text();
     const match = css.match(/src: url\(([^)]+)\)/);
@@ -48,7 +48,7 @@ export default async function Image({
         justifyContent: "center",
         padding: "80px",
         backgroundColor: "#0d0d0d",
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: "Inter, sans-serif",
       }}
     >
       {/* Label */}
@@ -121,16 +121,21 @@ export default async function Image({
     </div>,
     {
       ...size,
-      fonts: fontData
-        ? [
-            {
-              name: "Inter",
-              data: fontData,
-              style: "normal" as const,
-              weight: 700 as const,
-            },
-          ]
-        : [],
+      // Only pass `fonts` when we actually have one. Passing an empty
+      // array makes Satori throw "No fonts are loaded" and aborts the
+      // build; omitting the field lets it use its built-in default,
+      // which is the right behavior when the Google Fonts fetch above
+      // returns nothing (transient network hiccup during prerender).
+      ...(fontData && {
+        fonts: [
+          {
+            name: "Inter",
+            data: fontData,
+            style: "normal" as const,
+            weight: 700 as const,
+          },
+        ],
+      }),
     },
   );
 }

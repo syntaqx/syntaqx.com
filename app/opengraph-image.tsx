@@ -88,16 +88,18 @@ export default async function Image() {
     </div>,
     {
       ...size,
-      fonts: fontData
-        ? [
-            {
-              name: "Inter",
-              data: fontData,
-              style: "normal" as const,
-              weight: 400 as const,
-            },
-          ]
-        : [],
+      // See note in app/posts/[slug]/opengraph-image.tsx: empty `fonts`
+      // makes Satori throw. Omit the field on fetch failure.
+      ...(fontData && {
+        fonts: [
+          {
+            name: "Inter",
+            data: fontData,
+            style: "normal" as const,
+            weight: 400 as const,
+          },
+        ],
+      }),
     },
   );
 }
