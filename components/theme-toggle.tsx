@@ -14,11 +14,10 @@ const themes: { value: Theme; label: string; icon: typeof Sun }[] = [
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
   if (theme === "system") {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    root.classList.toggle("dark", prefersDark);
-    root.classList.toggle("light", !prefersDark);
+    // No class \u2192 globals.css `@media (prefers-color-scheme)` drives
+    // the values. This is what avoids a first-paint flash for users who
+    // never pick a theme.
+    root.classList.remove("dark", "light");
   } else {
     root.classList.toggle("dark", theme === "dark");
     root.classList.toggle("light", theme === "light");

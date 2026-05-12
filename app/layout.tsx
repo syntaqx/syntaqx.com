@@ -69,17 +69,18 @@ export default async function RootLayout({
     >
       <head>
         {/*
-          No-flash theme script. Must be a synchronous inline script
-          in <head> so the correct `light`/`dark` class lands on <html>
-          before first paint. `suppressHydrationWarning` quiets a
-          React-19 dev nag about <script> elements rendered by
-          components; the script itself is server-rendered once and
-          never re-executed, which is exactly what we want.
+          Theme bootstrap. CSS already handles `prefers-color-scheme`,
+          so this script only runs to honor an EXPLICIT user choice
+          stored in localStorage. No class is added when the user is
+          on "system" (or has never picked) \u2014 the @media query in
+          globals.css takes over and there is no flash.
+          `suppressHydrationWarning` silences a React-19 dev nag about
+          rendering <script> from a component.
         */}
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");var d=t==="light"?"light":t==="dark"?"dark":window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(d)}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.classList.add(t)}}catch(e){}})()`,
           }}
         />
       </head>

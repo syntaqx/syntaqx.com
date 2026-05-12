@@ -1,20 +1,18 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { getPostBySlug, getAllPosts } from "@/lib/posts";
 
-async function loadFont(): Promise<ArrayBuffer | undefined> {
-  try {
-    const res = await fetch(
-      "https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap",
-      { headers: { "User-Agent": "Mozilla/5.0" } },
-    );
-    const css = await res.text();
-    const match = css.match(/src: url\(([^)]+)\)/);
-    if (!match?.[1]) return undefined;
-    return await fetch(match[1]).then((r) => r.arrayBuffer());
-  } catch {
-    return undefined;
-  }
-}
+// Use Geist Mono — same family as the rest of the site — read straight
+// from the `geist` npm package so the build never has to reach the
+// network for fonts. Satori needs real TTF/OTF (not woff2), which the
+// package conveniently ships.
+const geistMonoBold = readFileSync(
+  join(
+    process.cwd(),
+    "node_modules/geist/dist/fonts/geist-mono/GeistMono-Bold.ttf",
+  ),
+);
 
 export const alt = "syntaqx blog post";
 export const size = { width: 1200, height: 630 };
@@ -35,8 +33,6 @@ export default async function Image({
   const title = post?.title ?? slug;
   const date = post?.date ?? "";
   const tags = post?.tags ?? [];
-
-  const fontData = await loadFont();
 
   return new ImageResponse(
     <div
@@ -121,21 +117,14 @@ export default async function Image({
     </div>,
     {
       ...size,
-      // Only pass `fonts` when we actually have one. Passing an empty
-      // array makes Satori throw "No fonts are loaded" and aborts the
-      // build; omitting the field lets it use its built-in default,
-      // which is the right behavior when the Google Fonts fetch above
-      // returns nothing (transient network hiccup during prerender).
-      ...(fontData && {
-        fonts: [
-          {
-            name: "Inter",
-            data: fontData,
-            style: "normal" as const,
-            weight: 700 as const,
-          },
-        ],
-      }),
+      fonts: [
+        {
+          name: "GeistMono",
+          data: geistMonoBold,
+          style: "normal" as const,
+          weight: 700 as const,
+        },
+      ],
     },
   );
 }

@@ -1,7 +1,55 @@
 @import "tailwindcss";
 
-/* Dark theme (default) */
-:root,
+/*
+ * Theme variables.
+ *
+ * The CSS itself respects `prefers-color-scheme` so the FIRST paint is
+ * always correct on devices with an OS preference — no JS required.
+ * `.light` / `.dark` classes are stronger and override the media
+ * query when the user has explicitly picked a theme via the toggle.
+ * The inline script in app/layout.tsx only adds a class when the user
+ * has stored a choice (or when their OS is dark, redundantly with the
+ * media query — the script's class win doesn't matter because the
+ * values are the same).
+ */
+
+:root {
+  /* Dark theme (the historic default) */
+  --background: #0d0d0d;
+  --foreground: #e0e0e0;
+  --accent: #00D1CA;
+  --accent-muted: #334B49;
+  --muted: #95B1AE;
+  --dim: #6b7280;
+  --pink: #FF9CC7;
+  --jwt-purple: #C4A7FF;
+  --jwt-cyan: #7EDCDC;
+  --mauve: #C86691;
+  --surface: #141414;
+  --border: #1e1e1e;
+  --border-hover: #2a2a2a;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    --background: #f5f5f4;
+    --foreground: #1A1A1A;
+    --accent: #00918c;
+    --accent-muted: #4a7d79;
+    --muted: #4b5e5c;
+    --dim: #6b7280;
+    --pink: #c4608a;
+    --jwt-purple: #7c5cbf;
+    --jwt-cyan: #0e8585;
+    --mauve: #a34f74;
+    --surface: #ffffff;
+    --border: #d4d4d4;
+    --border-hover: #b5b5b5;
+    color-scheme: light;
+  }
+}
+
 .dark {
   --background: #0d0d0d;
   --foreground: #e0e0e0;
@@ -16,9 +64,9 @@
   --surface: #141414;
   --border: #1e1e1e;
   --border-hover: #2a2a2a;
+  color-scheme: dark;
 }
 
-/* Light theme */
 .light {
   --background: #f5f5f4;
   --foreground: #1A1A1A;
@@ -33,6 +81,7 @@
   --surface: #ffffff;
   --border: #d4d4d4;
   --border-hover: #b5b5b5;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -60,24 +109,42 @@ body {
 }
 
 /* Selection */
-.dark ::selection,
-:root ::selection {
+::selection {
   background: rgba(0, 209, 202, 0.25);
   color: #fff;
+}
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) ::selection {
+    background: rgba(0, 145, 140, 0.2);
+    color: #1a1a1a;
+  }
 }
 .light ::selection {
   background: rgba(0, 145, 140, 0.2);
   color: #1a1a1a;
 }
+.dark ::selection {
+  background: rgba(0, 209, 202, 0.25);
+  color: #fff;
+}
 
 /* Hexagon background opacity per theme */
+.hexagon-bg {
+  opacity: 0.12;
+}
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) .hexagon-bg {
+    opacity: 0.10;
+    filter: brightness(0) saturate(0);
+  }
+}
 .light .hexagon-bg {
   opacity: 0.10;
   filter: brightness(0) saturate(0);
 }
-.dark .hexagon-bg,
-:root .hexagon-bg {
+.dark .hexagon-bg {
   opacity: 0.12;
+  filter: none;
 }
 
 /* Scrollbar */
