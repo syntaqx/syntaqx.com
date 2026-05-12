@@ -162,7 +162,17 @@ export function getNewestPostSlug(posts: PostData[]): string | null {
     : null;
 }
 
+// Module-level cache: post content is immutable for the lifetime of a
+// deployment, and Shiki highlighting is the single slowest thing this
+// app does (hundreds of ms per post). Without this, every request to
+// /posts/[slug] re-runs the pipeline because the root layout's
+// session lookup opts the whole tree out of static rendering.
+const htmlCache = new Map<string, string>();
+
 export async function markdownToHtml(markdown: string): Promise<string> {
+  const cached = htmlCache.get(markdown);
+  if (cached !== undefined) return cached;
+
   const result = await remark()
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
@@ -175,5 +185,8 @@ export async function markdownToHtml(markdown: string): Promise<string> {
     })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(markdown);
-  return result.toString();
+
+  const html = result.toString();
+  htmlCache.set(markdown, html);
+  return html;
 }
