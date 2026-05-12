@@ -34,6 +34,11 @@ registry.register("Error", ErrorSchema);
 // ---------------------------------------------------------------------------
 
 export function generateOpenApiSpec() {
+  const isDev = process.env.NODE_ENV === "development";
+  const server = isDev
+    ? { url: "http://localhost:3000/api/v1", description: "Local development" }
+    : { url: "https://api.syntaqx.com/v1", description: "Production" };
+
   const generator = new OpenApiGeneratorV31(registry.definitions);
   return generator.generateDocument({
     openapi: "3.1.0",
@@ -42,15 +47,6 @@ export function generateOpenApiSpec() {
       version: "1.0.0",
       description: "Public API for syntaqx.com",
     },
-    servers: [
-      {
-        url: "https://api.syntaqx.com/v1",
-        description: "Production",
-      },
-      {
-        url: "http://localhost:3000/api/v1",
-        description: "Local development",
-      },
-    ],
+    servers: [server],
   });
 }
