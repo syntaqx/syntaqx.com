@@ -7,11 +7,9 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { SearchButton } from "@/components/search";
 import { Nav, MobileMenu, Breadcrumb } from "@/components/nav";
 import { BackgroundEffect } from "@/components/background-effect";
-import { UserMenu } from "@/components/auth/user-menu";
+import { HeaderAuth } from "@/components/auth/header-auth";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { auth } from "@/lib/auth";
-import { getSession } from "@/lib/session";
 import { nav, socials } from "@/lib/constants";
 import "./globals.css";
 
@@ -46,21 +44,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getSession();
-  // Better Auth's username plugin adds `username`; the inferred
-  // server-side user type doesn't surface plugin fields here, so widen.
-  const user = session?.user as
-    | (NonNullable<typeof session>["user"] & {
-        username?: string | null;
-        image?: string | null;
-      })
-    | undefined;
-  const handle = user ? (user.username ?? user.name) : null;
   return (
     <html
       lang="en"
@@ -111,27 +99,8 @@ export default async function RootLayout({
               <div className="flex h-8 items-center gap-3">
                 <SearchButton />
                 <ThemeToggle />
-                {handle && user ? (
-                  <div className="hidden sm:flex items-center pl-3 ml-2 border-l border-border">
-                    <UserMenu
-                      username={handle}
-                      displayName={user.name || handle}
-                      image={user.image}
-                    />
-                  </div>
-                ) : (
-                  <Link
-                    href="/login"
-                    className="hidden sm:inline-flex h-8 items-center rounded-lg border border-border bg-surface/50 px-3 text-xs text-dim hover:text-muted hover:border-border-hover transition-colors"
-                  >
-                    Sign in
-                  </Link>
-                )}
-                <MobileMenu
-                  username={handle}
-                  displayName={user?.name ?? null}
-                  image={user?.image ?? null}
-                />
+                <HeaderAuth />
+                <MobileMenu />
               </div>
             </div>
           </div>

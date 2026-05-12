@@ -11,7 +11,7 @@ import {
   Settings as SettingsIcon,
   LogOut,
 } from "lucide-react";
-import { signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import { Avatar } from "@/components/avatar";
 
 const links = [
@@ -48,16 +48,19 @@ export function Nav() {
   );
 }
 
-export function MobileMenu({
-  username,
-  displayName,
-  image,
-}: {
-  username?: string | null;
-  displayName?: string | null;
-  image?: string | null;
-} = {}) {
+export function MobileMenu() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const user = session?.user as
+    | {
+        name?: string | null;
+        username?: string | null;
+        image?: string | null;
+      }
+    | undefined;
+  const username = user ? (user.username ?? user.name ?? null) : null;
+  const displayName = user?.name ?? null;
+  const image = user?.image ?? null;
   const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const pathname = usePathname();
