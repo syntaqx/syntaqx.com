@@ -73,7 +73,7 @@ export async function generateMetadata({
   }
   return {
     title: subject.data.name,
-    description: `${subject.data.name} — organization on syntaqx`,
+    description: `${subject.data.name} is an organization on syntaqx`,
   };
 }
 

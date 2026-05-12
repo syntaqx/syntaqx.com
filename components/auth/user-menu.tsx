@@ -91,10 +91,11 @@ export function UserMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Open user menu"
-        className="inline-flex items-center gap-1.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        style={{ width: 46, height: 32 }}
+        className="grid grid-cols-[28px_12px] items-center justify-center gap-1.5 rounded-full leading-none hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <Avatar src={image} label={username} size={28} alt={displayName} />
-        <ChevronDown size={12} className="text-dim" aria-hidden />
+        <ChevronDown size={12} className="block text-dim" aria-hidden />
       </button>
 
       {open && (

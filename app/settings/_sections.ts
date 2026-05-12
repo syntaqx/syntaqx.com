@@ -25,7 +25,7 @@ export const SETTINGS_SECTIONS: readonly SettingsSection[] = [
   {
     href: "/settings/account",
     label: "Account",
-    available: false,
+    available: true,
     group: "personal",
   },
   {

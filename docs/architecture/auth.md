@@ -105,16 +105,25 @@ instead.
 PATs over `Authorization: Bearer pat_…`. Works against either hostname,
 but the documented surface is `api.syntaqx.com/v1/*`.
 
-PATs are GitHub-style fine-grained:
+**First pass — classic tokens.** A token is named, optionally
+expiring, targets one org (defaults to the user's personal org), and
+inherits the *full* permission set the issuing user has in that org.
+No per-token scope picker. The token acts as you.
 
-- A token has a name, an optional expiry, a target org (defaults to
-  user's personal org), and an explicit set of permissions chosen from a
-  central registry (`lib/permissions.ts` — to be written).
-- Token's permissions must be a subset of the user's effective
-  permissions in the target org at mint time.
 - Token value: `pat_` prefix + random body. The plaintext is shown
-  exactly once at creation. The DB stores only a hash + the prefix for
-  display.
+  exactly once at creation. The DB stores only a hash + the prefix
+  for display (`pat_abcd…`).
+- Revocation is immediate (delete the row, the next request 401s).
+- An expiring token past its expiry 401s on use; we don't bother
+  garbage-collecting expired rows until they get noisy.
+
+**Future — fine-grained scopes.** Once a permission registry exists
+(`lib/permissions.ts`), token creation gains a checkbox list of
+permissions, and the token's effective set is `userPermissions ∩
+tokenPermissions`. The `pat_` wire format and revocation semantics
+don't change — only the mint flow and the per-request authz check.
+Classic tokens stay valid; they just behave as "all permissions
+selected."
 
 ## Multi-tenancy: orgs from day one
 
@@ -125,7 +134,8 @@ auto-created. Teams are organizations with multiple members. Roles:
 - Active org is tracked on the session (`session.activeOrganizationId`).
 - Permissions are computed per-org: `effectivePermissions(userId,
   orgId)` returns the set granted by the user's role in that org.
-- PATs target one org and inherit ≤ that org's permissions.
+- PATs target one org and act with the user's full permission set in
+  that org (first pass; per-token scoping is the documented next step).
 
 Doing this from day one is cheap (Better Auth's `organization` plugin
 ships the schema and APIs) and makes the later "I want teams" or "I want
@@ -272,6 +282,36 @@ Better Auth's core only knows how to sign in by `user.email`. The
 `@`. Both produce the same session cookie; everything downstream is
 identical.
 
+### Account deletion
+
+`POST /api/auth/delete-user` (Better Auth's built-in endpoint, exposed
+via `authClient.deleteUser()`). Configured in
+[`lib/auth.ts`](../../lib/auth.ts) under `user.deleteUser`. Today's
+flow:
+
+1. UI gate (`/settings/account`) requires the user to type their
+   handle into a confirmation input. No password re-auth.
+2. Active session is the auth gate. The cookie is HttpOnly,
+   SameSite=Lax, host-locked — so the realistic non-XSS attack
+   surface is "the user clicked the button on their own device."
+3. `beforeDelete` hook runs:
+   - Deletes the avatar blob if (and only if) the URL points at our
+     own Vercel Blob store.
+   - Deletes any organization where this user is the sole member.
+     Always catches the auto-created personal org; safe for any
+     other single-owner org. Multi-member orgs lose this user via
+     the `member.userId` cascade and stay intact for the rest.
+4. Better Auth deletes the `user` row. Postgres cascades clean up
+   `session`, `account`, remaining `member`, and `invitation` rows.
+5. Better Auth clears the session cookie in the response. The client
+   redirects to `/`.
+
+**Known gap:** no second factor beyond the active session. When email
+verification ships (Resend), switch to
+`user.deleteUser.sendDeleteAccountVerification` so deletion requires
+clicking a one-time link sent to the account email — and add a
+password input to the form for an in-page recheck.
+
 ### Future: multiple emails per account (GitHub-style)
 
 Today: `user.email` is single-valued, unique, and serves as both the
@@ -360,9 +400,10 @@ a `PAT` carries an explicit subset.
   commitment; we'd rather earn it explicitly via OIDC per app.
 - **Same-origin `/api/v1/*` from the frontend.** The `api.syntaqx.com`
   hostname is for non-browser callers (PATs) and future OIDC clients.
-- **PATs are GitHub-style fine-grained from day one.** The registry can
-  grow; the *shape* (scoped tokens, not full-account) is the
-  commitment.
+- **PATs ship as classic tokens, fine-grained later.** First pass: a
+  token acts as the issuing user with their full permission set in
+  the target org. Per-token scopes land once the permission registry
+  exists; the wire format and revocation semantics don't change.
 - **Orgs from day one.** Cheaper now than a schema migration later.
 - **Short-lived signed JWT only on the BFF→API hop.** Server-to-server,
   ≤30s, never seen by the browser.

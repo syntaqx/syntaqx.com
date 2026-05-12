@@ -71,35 +71,80 @@ export default function PrivacyPage() {
         </p>
       </Section>
 
-      <Section title="If/when accounts go live">
+      <Section title="What I collect if you create an account">
+        <ul className="list-disc pl-5 space-y-2">
+          <li>
+            <strong className="text-foreground">Email address.</strong> Used to
+            sign in, recover access, and send the few transactional emails
+            (verification, password reset, organization invites) that auth
+            requires. Not used for marketing unless you explicitly opt in.
+          </li>
+          <li>
+            <strong className="text-foreground">Password.</strong> Hashed
+            (scrypt) by Better Auth. I never see and can&apos;t recover the
+            plaintext.
+          </li>
+          <li>
+            <strong className="text-foreground">
+              Username and display name.
+            </strong>{" "}
+            Public. They&apos;re what shows up at{" "}
+            <code className="text-foreground">/&lt;username&gt;</code> and in
+            the header.
+          </li>
+          <li>
+            <strong className="text-foreground">Avatar.</strong> Optional. If
+            you upload one it&apos;s stored in Vercel Blob (publicly accessible
+            by URL, since profile pages are public) and the URL is saved on your
+            account. Replacing or removing your avatar deletes the previous
+            file.
+          </li>
+          <li>
+            <strong className="text-foreground">Sessions.</strong> A row per
+            active session: an opaque token, the IP and user-agent the session
+            was created from, and an expiry. Used to enforce sign-out and to let
+            you see/revoke your sessions later.
+          </li>
+          <li>
+            <strong className="text-foreground">
+              Organization membership.
+            </strong>{" "}
+            Each account gets a personal organization at signup. If you join
+            others later, that membership is recorded.
+          </li>
+        </ul>
         <p>
-          Account features aren&apos;t open yet. When they are, I&apos;ll
-          collect what&apos;s necessary to run them: email, a hashed password
-          (or your OAuth identity), session records, and any data you explicitly
-          create. The architecture is documented in the repository for the
-          curious.
+          All account data lives in a Postgres database hosted on Neon (US
+          region). Avatars live in Vercel Blob (US region). Nothing is shared
+          with third parties beyond the infrastructure providers needed to run
+          the site.
         </p>
       </Section>
 
       <Section title="Cookies and local storage">
         <p>
-          Today: no cookies. Your theme preference (light / dark / system) is
-          stored in your browser&apos;s{" "}
-          <code className="text-foreground">localStorage</code>, which never
-          leaves your device.
+          Your theme preference (light / dark / system) is stored in your
+          browser&apos;s <code className="text-foreground">localStorage</code>,
+          which never leaves your device.
         </p>
         <p>
-          When auth ships: an <code className="text-foreground">HttpOnly</code>{" "}
-          session cookie (host-locked to syntaqx.com) for signed-in users.
-          Strictly functional. Not used for tracking.
+          If you&apos;re signed in, an{" "}
+          <code className="text-foreground">HttpOnly</code> session cookie
+          (host-locked to syntaqx.com) keeps you signed in. Strictly functional.
+          Not used for tracking. Sign out to remove it.
         </p>
       </Section>
 
       <Section title="Your rights">
         <p>
-          If you have an account (when accounts exist), you can export or delete
-          your data on request. For analytics/error data, contact me and
-          I&apos;ll do what&apos;s reasonable.
+          You can edit your display name, change your avatar, and change your
+          password from{" "}
+          <Link href="/settings" className="text-accent hover:underline">
+            Settings
+          </Link>
+          . Account deletion and data export aren&apos;t self-serve yet. Contact
+          me and I&apos;ll handle it. For analytics/error data, same: contact me
+          and I&apos;ll do what&apos;s reasonable.
         </p>
       </Section>
 

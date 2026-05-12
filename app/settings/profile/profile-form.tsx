@@ -5,10 +5,11 @@ import { authClient } from "@/lib/auth-client";
 import { FormError } from "@/components/auth/form-error";
 
 /**
- * Display-name editor. The username is fixed (changing it shifts
- * `/<username>` and break inbound links — that lands on the Account
- * page later), and email is on its own page (Emails). Display name is
- * what the rest of the UI shows; it's safe to edit freely.
+ * Display-name editor. Username changes live on the Account page
+ * (changing the handle moves your sign-in identifier and your `/<handle>`
+ * URL, so it belongs with the other identity-level controls), and email
+ * is on its own page (Emails). Display name is what the rest of the UI
+ * shows; it's safe to edit freely.
  */
 export function ProfileForm({ initialName }: { initialName: string }) {
   const [name, setName] = useState(initialName);

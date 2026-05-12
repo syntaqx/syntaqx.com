@@ -68,7 +68,16 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/*
+          No-flash theme script. Must be a synchronous inline script
+          in <head> so the correct `light`/`dark` class lands on <html>
+          before first paint. `suppressHydrationWarning` quiets a
+          React-19 dev nag about <script> elements rendered by
+          components; the script itself is server-rendered once and
+          never re-executed, which is exactly what we want.
+        */}
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem("theme");var d=t==="light"?"light":t==="dark"?"dark":window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(d)}catch(e){}})()`,
           }}
@@ -98,7 +107,7 @@ export default async function RootLayout({
                 <span className="hidden sm:inline text-dim">/</span>
                 <Nav />
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex h-8 items-center gap-3">
                 <SearchButton />
                 <ThemeToggle />
                 {handle && user ? (
@@ -117,7 +126,11 @@ export default async function RootLayout({
                     Sign in
                   </Link>
                 )}
-                <MobileMenu />
+                <MobileMenu
+                  username={handle}
+                  displayName={user?.name ?? null}
+                  image={user?.image ?? null}
+                />
               </div>
             </div>
           </div>

@@ -56,15 +56,39 @@ export default function TermsPage() {
         </p>
       </Section>
 
-      <Section title="4. Your content">
+      <Section title="4. Your account">
         <p>
-          If/when accounts go live and you submit content, you keep ownership of
-          it. You grant me the rights necessary to host, display, and operate
-          the site. You&apos;re responsible for what you submit.
+          You need to give a valid email address and pick a username to create
+          an account. New account creation may be open, closed, or invite-only
+          at any time. I&apos;m not promising the door is open. Don&apos;t
+          impersonate other people. Don&apos;t pick a handle that squats a name
+          you have no claim to. I may rename or reclaim handles to resolve
+          disputes or to free up names being obviously squatted.
+        </p>
+        <p>
+          You&apos;re responsible for keeping your password safe. If your
+          account is used to do something against these terms, that&apos;s on
+          you regardless of who was at the keyboard.
         </p>
       </Section>
 
-      <Section title="5. Limitation of liability">
+      <Section title="5. Your content">
+        <p>
+          You keep ownership of anything you upload (avatar, display name,
+          anything you publish later). You grant me the rights necessary to
+          host, display, and operate the site, and nothing broader.
+        </p>
+        <p>
+          Don&apos;t upload content you don&apos;t have the right to use.
+          Don&apos;t upload anything illegal, including but not limited to CSAM,
+          content that infringes copyright, or malware. Avatars are publicly
+          visible, so don&apos;t upload anything you wouldn&apos;t want public.
+          I may remove content and/or close the account behind it without notice
+          if it violates this section.
+        </p>
+      </Section>
+
+      <Section title="6. Limitation of liability">
         <p>
           To the maximum extent permitted by law, I am not liable for any
           indirect, incidental, special, consequential, or punitive damages
@@ -74,7 +98,7 @@ export default function TermsPage() {
         </p>
       </Section>
 
-      <Section title="6. Changes">
+      <Section title="7. Changes">
         <p>
           I may update these terms whenever. The &ldquo;last updated&rdquo; date
           at the top will reflect when. Continued use after a change means you
@@ -82,7 +106,7 @@ export default function TermsPage() {
         </p>
       </Section>
 
-      <Section title="7. Contact">
+      <Section title="8. Contact">
         <p>
           Questions? Open an issue on{" "}
           <a

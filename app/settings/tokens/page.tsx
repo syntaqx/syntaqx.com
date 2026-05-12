@@ -7,9 +7,9 @@ export default function TokensSettings() {
     <>
       <SettingsHeader
         title="Personal access tokens"
-        description="GitHub-style fine-grained tokens for non-browser API access."
+        description="Tokens for non-browser API access. Each token acts as you, with your permissions."
       />
-      <ComingSoon note="See docs/architecture/auth.md for the planned shape (named, scoped, optional expiry, target org)." />
+      <ComingSoon note="First pass: a token is named, optionally expiring, and inherits the full set of permissions you have. Fine-grained per-token scopes come later. See docs/architecture/auth.md." />
     </>
   );
 }

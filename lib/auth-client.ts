@@ -42,3 +42,7 @@ export const {
 // destructured root type, so we re-export them with explicit bindings.
 export const requestPasswordReset = authClient.requestPasswordReset;
 export const resetPassword = authClient.resetPassword;
+// `deleteUser` is the same: lives on the proxy, not the destructure.
+// Hits POST /api/auth/delete-user. The session cookie is the gate;
+// see lib/auth.ts → user.deleteUser for the server-side hook.
+export const deleteUser = authClient.deleteUser;

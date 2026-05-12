@@ -2,8 +2,15 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { organization, username } from "better-auth/plugins";
+import { eq } from "drizzle-orm";
+import { del } from "@vercel/blob";
 import { db } from "@/lib/db";
+import {
+  member as memberTable,
+  organization as organizationTable,
+} from "@/lib/db/schema";
 import { isReservedHandle } from "@/lib/reserved";
+import { REGISTRATIONS_DISABLED } from "@/lib/flags";
 
 /**
  * Better Auth server config.
@@ -44,6 +51,11 @@ export const auth = betterAuth({
     autoSignIn: true,
     minPasswordLength: 8,
     maxPasswordLength: 128,
+    // Server-side gate. When true, POST /api/auth/sign-up/email returns
+    // a Better Auth "signups disabled" error regardless of what the UI
+    // does. Pair with NEXT_PUBLIC_REGISTRATIONS_DISABLED so the form
+    // hides too — see lib/flags.ts.
+    disableSignUp: REGISTRATIONS_DISABLED,
   },
 
   user: {
@@ -53,6 +65,56 @@ export const auth = betterAuth({
         required: false,
         defaultValue: false,
         input: true,
+      },
+    },
+    /**
+     * GDPR right-to-erasure. The endpoint is POST /api/auth/delete-user;
+     * the React client calls it via `authClient.deleteUser()`. Today the
+     * gate is the active session plus a username-confirmation step in
+     * the UI — no password re-auth, because we don't yet have email
+     * verification wired (Resend is pending). When email lands, switch
+     * to `sendDeleteAccountVerification` for a two-step confirm-by-link
+     * flow. See docs/architecture/auth.md → Account deletion.
+     *
+     * `beforeDelete` runs inside the same request as the user-row
+     * delete; throwing aborts the deletion. We use it to remove the
+     * data Postgres FK cascades won't touch:
+     *   1. Avatars in Vercel Blob (URL is just text in user.image).
+     *   2. Organizations where this user is the sole member — always
+     *      true for the auto-created personal org, and the right call
+     *      for any single-owner org they made later. Multi-member orgs
+     *      lose this user's membership via the member.userId cascade
+     *      and stay intact for the remaining members.
+     */
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async (user) => {
+        const image = (user as { image?: string | null }).image;
+        if (image && image.includes(".public.blob.vercel-storage.com/")) {
+          try {
+            await del(image);
+          } catch {
+            // Best effort. A leftover blob is cheaper than a failed
+            // erasure (the user still ends up gone from the DB).
+          }
+        }
+
+        const memberships = await db
+          .select({ organizationId: memberTable.organizationId })
+          .from(memberTable)
+          .where(eq(memberTable.userId, user.id));
+
+        for (const m of memberships) {
+          const peers = await db
+            .select({ id: memberTable.id })
+            .from(memberTable)
+            .where(eq(memberTable.organizationId, m.organizationId));
+          if (peers.length === 1) {
+            await db
+              .delete(organizationTable)
+              .where(eq(organizationTable.id, m.organizationId));
+          }
+        }
       },
     },
   },

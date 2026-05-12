@@ -4,7 +4,7 @@ async function loadFont(): Promise<ArrayBuffer | undefined> {
   try {
     const res = await fetch(
       "https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap",
-      { headers: { "User-Agent": "Mozilla/5.0" } }
+      { headers: { "User-Agent": "Mozilla/5.0" } },
     );
     const css = await res.text();
     const match = css.match(/src: url\(([^)]+)\)/);
@@ -15,7 +15,7 @@ async function loadFont(): Promise<ArrayBuffer | undefined> {
   }
 }
 
-export const alt = "syntaqx — Chase Pierce";
+export const alt = "syntaqx, by Chase Pierce";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -32,7 +32,7 @@ export default async function Image() {
         justifyContent: "center",
         padding: "80px",
         backgroundColor: "#0d0d0d",
-          fontFamily: 'Inter, sans-serif',
+        fontFamily: "Inter, sans-serif",
       }}
     >
       {/* Accent line */}

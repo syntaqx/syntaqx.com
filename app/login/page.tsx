@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
 import { SocialButtons } from "@/components/auth/social-buttons";
+import { REGISTRATIONS_DISABLED } from "@/lib/flags";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -37,15 +38,17 @@ export default function LoginPage() {
 
       <SocialButtons />
 
-      <p className="text-center text-xs text-dim">
-        Don&apos;t have an account?{" "}
-        <Link
-          href="/signup"
-          className="text-muted hover:text-accent transition-colors"
-        >
-          Sign up
-        </Link>
-      </p>
+      {!REGISTRATIONS_DISABLED && (
+        <p className="text-center text-xs text-dim">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-muted hover:text-accent transition-colors"
+          >
+            Sign up
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

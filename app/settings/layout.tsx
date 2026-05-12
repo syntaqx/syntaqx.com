@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { Avatar } from "@/components/avatar";
 import { SettingsNav } from "./settings-nav";
+import { SettingsMobileNav } from "./settings-mobile-nav";
 
 /**
  * Settings shell.
@@ -14,6 +15,11 @@ import { SettingsNav } from "./settings-nav";
  * Anonymous users are redirected to /login with a `next` param so they
  * land back where they were trying to go. The login form already honors
  * `?next=`.
+ *
+ * Layout: a 240px sidebar on lg+, single-column on smaller screens. On
+ * mobile the sidebar collapses to a `<select>` switcher
+ * (`SettingsMobileNav`) so the user doesn't have to scroll past every
+ * section to reach their content.
  */
 export default async function SettingsLayout({
   children,
@@ -32,7 +38,7 @@ export default async function SettingsLayout({
 
   return (
     <div className="grid gap-10 lg:grid-cols-[240px_1fr] items-start">
-      <aside className="lg:sticky lg:top-24">
+      <aside className="hidden lg:block lg:sticky lg:top-24">
         <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border">
           <Avatar src={u.image} label={handle} size={36} />
           <div className="flex flex-col min-w-0">
@@ -42,7 +48,12 @@ export default async function SettingsLayout({
         </div>
         <SettingsNav />
       </aside>
-      <div className="min-w-0">{children}</div>
+      <div className="min-w-0">
+        <div className="mb-6 lg:hidden">
+          <SettingsMobileNav />
+        </div>
+        {children}
+      </div>
     </div>
   );
 }
