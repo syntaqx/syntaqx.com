@@ -68,6 +68,7 @@
   "overrides": {
     "next": {
       "postcss": "$postcss"
-    }
+    },
+    "esbuild": "^0.25.0"
   }
 }
