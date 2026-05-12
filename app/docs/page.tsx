@@ -13,12 +13,11 @@ export default function DocsPage() {
 
   return (
     <div>
-      {/* Hero */}
-      <div className="mb-12 max-w-2xl">
-        <h1 className="text-2xl font-bold tracking-tight mb-3">
-          Documentation
+      <div className="mb-8">
+        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+          Docs
         </h1>
-        <p className="text-sm text-muted leading-relaxed">
+        <p className="text-sm text-muted leading-relaxed max-w-2xl">
           Patterns and conventions I&apos;ve landed on after years of trial,
           error, and strong opinions. None of this is new or proprietary. These
           are well-established practices for building software, and this is how
