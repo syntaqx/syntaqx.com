@@ -58,7 +58,7 @@
   "devDependencies": {
     "@fontsource/inter": "^5.2.8",
     "@tailwindcss/postcss": "^4",
-    "@types/javascript-obfuscator": "^0.0.5",
+    "@types/javascript-obfuscator": "^0.17.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^19",
