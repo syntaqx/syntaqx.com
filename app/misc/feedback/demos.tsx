@@ -61,15 +61,15 @@ function CopyDemo() {
 // ---------------------------------------------------------------------------
 // Optimistic UI
 // ---------------------------------------------------------------------------
-// The like/star toggles flip instantly. A simulated request resolves after
-// 600ms; we fail ~25% of the time to show what graceful rollback looks
-// like. The button is never disabled mid-flight: optimistic UI is about
+// Two toggles, one that always succeeds and one that always fails. Random
+// failures look like a glitch; deterministic ones make the rollback path
+// legible. The button is never disabled mid-flight: optimistic UI is about
 // trusting the input, not gating it.
 
-function fakeRequest(): Promise<void> {
+function fakeRequest(shouldFail: boolean): Promise<void> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      Math.random() < 0.25 ? reject(new Error("network")) : resolve();
+      shouldFail ? reject(new Error("network")) : resolve();
     }, 600);
   });
 }
@@ -78,30 +78,54 @@ function OptimisticToggle({
   icon: Icon,
   label,
   initial = 0,
+  shouldFail = false,
 }: {
   icon: typeof Heart;
   label: string;
   initial?: number;
+  shouldFail?: boolean;
 }) {
   const [on, setOn] = useState(false);
   const [count, setCount] = useState(initial);
   const [error, setError] = useState(false);
+  // Monotonic request id. Each click increments it; only the response that
+  // matches the latest id is allowed to mutate state. Older in-flight
+  // requests are dropped on the floor, which keeps rapid clicks from
+  // double-rolling-back (or fighting each other) during the 600ms window.
+  const reqId = useRef(0);
+  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (errorTimer.current) clearTimeout(errorTimer.current);
+    },
+    [],
+  );
 
   const toggle = () => {
     const next = !on;
-    // Optimistic application.
+    // Optimistic application. Note: we do NOT clear `error` here. The error
+    // from a previous failure should stay visible while the next request is
+    // in flight, so the user sees "still retrying" instead of a flash of
+    // success-then-error.
     setOn(next);
     setCount((c) => c + (next ? 1 : -1));
-    setError(false);
 
-    fakeRequest().catch(() => {
-      // Rollback. The error chip flashes for a moment so the user knows
-      // their action didn't stick.
-      setOn(!next);
-      setCount((c) => c + (next ? -1 : 1));
-      setError(true);
-      setTimeout(() => setError(false), 1800);
-    });
+    const myId = ++reqId.current;
+    fakeRequest(shouldFail)
+      .then(() => {
+        if (myId !== reqId.current) return;
+        setError(false);
+        if (errorTimer.current) clearTimeout(errorTimer.current);
+      })
+      .catch(() => {
+        if (myId !== reqId.current) return;
+        setOn(!next);
+        setCount((c) => c + (next ? -1 : 1));
+        setError(true);
+        if (errorTimer.current) clearTimeout(errorTimer.current);
+        errorTimer.current = setTimeout(() => setError(false), 2400);
+      });
   };
 
   return (
@@ -119,7 +143,7 @@ function OptimisticToggle({
       <span className="tabular-nums text-[10px] text-dim">{count}</span>
       {error && (
         <span className="ml-1 text-[10px] uppercase tracking-widest">
-          retry
+          failed
         </span>
       )}
     </button>
@@ -130,13 +154,18 @@ function OptimisticDemo() {
   return (
     <div className="rounded-lg border border-border bg-surface/50">
       <div className="p-4 flex flex-wrap items-center gap-3">
-        <OptimisticToggle icon={Heart} label="Like" initial={42} />
-        <OptimisticToggle icon={Star} label="Star" initial={128} />
+        <OptimisticToggle icon={Heart} label="Always succeeds" initial={42} />
+        <OptimisticToggle
+          icon={Star}
+          label="Always fails"
+          initial={128}
+          shouldFail
+        />
       </div>
       <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-        Clicks apply immediately. A simulated request fails ~25% of the time and
-        the UI rolls back with a brief error state. Click rapidly to feel the
-        difference vs a request-then-update flow.
+        Clicks apply immediately. The first toggle resolves cleanly; the second
+        always fails after 600ms and the UI rolls back with a brief error state.
+        Click rapidly to feel the difference vs a request-then-update flow.
       </div>
     </div>
   );

@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 
 export interface DemoSource {
   name: string;
-  href: string;
+  // Optional. When provided, the name renders as an external link; when
+  // omitted, it renders as plain text in the same slot. Useful for citing a
+  // company without endorsing the click-through.
+  href?: string;
 }
 
 export function DemoSection({
@@ -26,15 +29,19 @@ export function DemoSection({
         <div className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/50 px-2.5 py-1 text-[10px] font-medium uppercase tracking-widest text-dim">
           <span className="text-dim/70">Inspired by</span>
           {sources.map((s, i) => (
-            <span key={s.href} className="contents">
-              <a
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                className="transition-colors hover:text-accent"
-              >
-                {s.name}
-              </a>
+            <span key={s.href ?? s.name} className="contents">
+              {s.href ? (
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition-colors hover:text-accent"
+                >
+                  {s.name}
+                </a>
+              ) : (
+                <span className="text-foreground">{s.name}</span>
+              )}
               {i < sources.length - 1 && <span className="text-dim/40">+</span>}
             </span>
           ))}

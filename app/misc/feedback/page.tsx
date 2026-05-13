@@ -23,7 +23,7 @@ export default function FeedbackPage() {
 
       <DemoSection
         title="Copy with confirmation"
-        sources={[{ name: "GitHub", href: "https://github.com" }]}
+        sources={[{ name: "GitHub" }]}
         blurb={
           <>
             The button briefly becomes its own success state. No toast, no
@@ -37,10 +37,7 @@ export default function FeedbackPage() {
 
       <DemoSection
         title="Optimistic UI"
-        sources={[
-          { name: "Linear", href: "https://linear.app" },
-          { name: "Superhuman", href: "https://superhuman.com" },
-        ]}
+        sources={[{ name: "Linear" }, { name: "Superhuman" }]}
         blurb={
           <>
             Trust the input. Apply the change immediately, reconcile on
@@ -54,10 +51,7 @@ export default function FeedbackPage() {
 
       <DemoSection
         title="Destructive-action guards"
-        sources={[
-          { name: "GitHub", href: "https://github.com" },
-          { name: "Stripe", href: "https://stripe.com" },
-        ]}
+        sources={[{ name: "GitHub" }, { name: "Stripe" }]}
         blurb={
           <>
             Calibrate the friction to the blast radius. A dismiss should be one
@@ -72,7 +66,7 @@ export default function FeedbackPage() {
 
       <DemoSection
         title="Skeletons that match"
-        sources={[{ name: "Facebook", href: "https://facebook.com" }]}
+        sources={[{ name: "Facebook" }]}
         blurb={
           <>
             Layout-stable placeholders sized to the final content. Spinners
