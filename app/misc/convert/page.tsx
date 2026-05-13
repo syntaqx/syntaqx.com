@@ -23,6 +23,13 @@ const converters = [
     href: "/misc/convert/favicon",
     tags: ["svg", "png", "ico"],
   },
+  {
+    title: "Image / Base64 Converter",
+    description:
+      "Convert images to Base64 data URIs, or decode Base64 back into an image.",
+    href: "/misc/convert/image-base64",
+    tags: ["image", "base64", "data-uri"],
+  },
 ];
 
 export default function ConvertIndexPage() {

@@ -30,6 +30,20 @@ const tools = [
     href: "/misc/uuid",
     tags: ["uuid", "ulid", "identifier"],
   },
+  {
+    title: "JS Beautify / Minify / Obfuscate",
+    description:
+      "Format, compress, or obfuscate JavaScript and JSON with Prettier, Terser, and javascript-obfuscator.",
+    href: "/misc/js",
+    tags: ["javascript", "prettier", "terser"],
+  },
+  {
+    title: "Markdown Tools",
+    description:
+      "HTML to Markdown (with rich-text paste), Markdown to HTML, and live preview.",
+    href: "/misc/markdown",
+    tags: ["markdown", "html", "preview"],
+  },
 ];
 
 const patterns = [
@@ -69,6 +83,13 @@ const converters = [
       "Convert SVG, PNG, JPG, GIF, WebP, and other images to ICO files.",
     href: "/misc/convert/favicon",
     tags: ["svg", "png", "ico"],
+  },
+  {
+    title: "Image / Base64 Converter",
+    description:
+      "Convert images to Base64 data URIs, or decode Base64 back into an image.",
+    href: "/misc/convert/image-base64",
+    tags: ["image", "base64", "data-uri"],
   },
 ];
 
