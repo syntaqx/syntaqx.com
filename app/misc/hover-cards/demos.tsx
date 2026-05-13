@@ -146,8 +146,10 @@ function TimeHover({
   const [viewerTz, setViewerTz] = useState<string | null>(null);
 
   // SSR-safe: viewer tz only resolves client-side. Until hydration we render
-  // in UTC so the server output matches.
+  // in UTC so the server output matches. The setState-in-effect is the whole
+  // point here — we *want* a re-render once we know the viewer's zone.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setViewerTz(Intl.DateTimeFormat().resolvedOptions().timeZone);
   }, []);
 

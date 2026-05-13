@@ -79,6 +79,8 @@ export function Avatar({
       className="flex shrink-0 items-center justify-center overflow-hidden rounded-full leading-none"
     >
       {src ? (
+        // Plain <img> is deliberate at avatar sizes; see file header.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
           alt={alt ?? label}

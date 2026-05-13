@@ -69,7 +69,8 @@ function CopyDemo() {
 function fakeRequest(shouldFail: boolean): Promise<void> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      shouldFail ? reject(new Error("network")) : resolve();
+      if (shouldFail) reject(new Error("network"));
+      else resolve();
     }, 600);
   });
 }

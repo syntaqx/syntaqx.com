@@ -257,14 +257,22 @@ export default function MarkdownToolPage() {
   }, []);
 
   // Re-run html-to-md when its options change and we already have input.
+  // convertHtmlToMd is async and calls setState internally; the effect is
+  // the right place for that side-effect since we're reacting to option
+  // changes rather than deriving from props.
   useEffect(() => {
     if (mode === "html-to-md" && input) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       convertHtmlToMd(input);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headingStyle, bulletMarker, codeBlockStyle, useGfm]);
 
   // Re-run md-to-html / preview whenever input changes in those modes.
+  // This effect orchestrates an async pipeline (remark/rehype) and resets
+  // output state when input clears — both legitimate setState-in-effect
+  // cases, not derived values we could compute inline.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     let cancelled = false;
     if (mode === "html-to-md") return;
@@ -293,6 +301,7 @@ export default function MarkdownToolPage() {
       cancelled = true;
     };
   }, [mode, input, convertMdToHtml]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // --- Stats ----------------------------------------------------------------
 
