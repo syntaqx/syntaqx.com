@@ -21,7 +21,7 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.5.0",
     "@neondatabase/serverless": "^1.1.0",
-    "@sentry/nextjs": "^10.52.0",
+    "@sentry/nextjs": "^10.53.1",
     "@shikijs/rehype": "^4.0.2",
     "@tailwindcss/typography": "^0.5.19",
     "@toon-format/toon": "^2.2.0",
