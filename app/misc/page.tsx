@@ -32,6 +32,23 @@ const tools = [
   },
 ];
 
+const patterns = [
+  {
+    title: "Hover Cards",
+    description:
+      "Defer expensive context to intent. Reveal extra detail without bloating the initial render.",
+    href: "/misc/hover-cards",
+    tags: ["ux", "intent"],
+  },
+  {
+    title: "Feedback & Affordance",
+    description:
+      "Copy confirmations, toasts, destructive-action guards, and other ways the UI tells the user what just happened.",
+    href: "/misc/feedback",
+    tags: ["ux", "feedback"],
+  },
+];
+
 const converters = [
   {
     title: "Base64 Decode / Encode",
@@ -57,7 +74,7 @@ const converters = [
 
 function ToolGrid({ items }: { items: typeof tools }) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="grid gap-3">
       {items.map((item) => (
         <Link key={item.href} href={item.href} className="group flex flex-col">
           <Card hover className="flex flex-col h-full">
@@ -100,21 +117,32 @@ export default function PlaygroundPage() {
         </p>
       </div>
 
-      <section className="mb-10">
-        <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4">
-          Tools
-        </h2>
-        <ToolGrid items={tools} />
-      </section>
+      <div className="grid gap-10 lg:grid-cols-2">
+        <div className="space-y-10">
+          <section>
+            <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4">
+              Tools
+            </h2>
+            <ToolGrid items={tools} />
+          </section>
 
-      <section>
-        <Link href="/misc/convert" className="group">
-          <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4 group-hover:text-accent transition-colors">
-            Converters
+          <section>
+            <Link href="/misc/convert" className="group">
+              <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4 group-hover:text-accent transition-colors">
+                Converters
+              </h2>
+            </Link>
+            <ToolGrid items={converters} />
+          </section>
+        </div>
+
+        <section>
+          <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4">
+            UI / UX Patterns
           </h2>
-        </Link>
-        <ToolGrid items={converters} />
-      </section>
+          <ToolGrid items={patterns} />
+        </section>
+      </div>
     </div>
   );
 }
