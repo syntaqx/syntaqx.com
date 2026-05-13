@@ -47,7 +47,7 @@
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-rehype": "^11.1.2",
-    "simple-icons": "^16.18.1",
+    "simple-icons": "^16.19.0",
     "smol-toml": "^1.6.1",
     "terser": "^5.47.1",
     "turndown": "^7.2.4",
