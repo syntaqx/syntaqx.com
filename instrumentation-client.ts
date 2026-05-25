@@ -29,6 +29,19 @@ Sentry.init({
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
+
+  // Drop noise we can't fix. Vercel's injected `vercel-live-feedback`
+  // toolbar (served from `_next-live/feedback/instrument.*.js`) throws
+  // "Cannot read properties of null (reading 'getItem')" inside a
+  // `pagehide` handler when the browser denies `localStorage` (private
+  // mode, storage partitioning, extensions). It's third-party code on
+  // a third-party event listener — we have no fix and no signal value.
+  ignoreErrors: [
+    /Cannot read properties of null \(reading 'getItem'\)/,
+  ],
+  denyUrls: [
+    /\/_next-live\/feedback\//,
+  ],
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
