@@ -302,3 +302,49 @@ export function GitHubActivity({
     </div>
   );
 }
+
+/**
+ * Async server-component wrapper. Co-located here so the home page can
+ * stream the rest of the layout while this awaits the GitHub fetch:
+ *
+ *   <Suspense fallback={<GitHubActivitySkeleton />}>
+ *     <GitHubActivityAsync username="syntaqx" />
+ *   </Suspense>
+ *
+ * The fetch is `revalidate: 3600` cached, but cold renders still pay
+ * the full GitHub HTTPS round trip + Vercel suspense-cache lookup
+ * (~200ms even on hit). Without Suspense, that latency blocked TTFB
+ * → FCP → LCP for every visitor.
+ */
+export async function GitHubActivityAsync({
+  username = "syntaqx",
+}: {
+  username?: string;
+}) {
+  const data = await fetchGitHubContributions(username);
+  return <GitHubActivity username={username} data={data} />;
+}
+
+/**
+ * Height-stable placeholder for the Suspense fallback. Reserves roughly
+ * the same vertical space as the rendered grid + header + legend so
+ * the page doesn't shift when the streamed chunk arrives. CLS-safe.
+ */
+export function GitHubActivitySkeleton() {
+  return (
+    <div
+      className="rounded-lg border border-border bg-surface/50 p-5"
+      aria-hidden="true"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="h-3 w-32 rounded bg-border/50" />
+        <div className="h-3 w-24 rounded bg-border/40" />
+      </div>
+      <div className="h-30 rounded bg-border/20" />
+      <div className="mt-3 flex justify-end gap-3">
+        <div className="h-3 w-16 rounded bg-border/30" />
+        <div className="h-3 w-24 rounded bg-border/30" />
+      </div>
+    </div>
+  );
+}

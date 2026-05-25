@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { getAllPosts, getNewestPostSlug } from "@/lib/posts";
 import { socials } from "@/lib/constants";
 import { ArrowRight } from "lucide-react";
@@ -7,14 +8,12 @@ import { Button } from "@/components/button";
 import { PostMeta } from "@/components/post-meta";
 import { SimpleIcon } from "@/components/simple-icon";
 import {
-  GitHubActivity,
-  fetchGitHubContributions,
+  GitHubActivityAsync,
+  GitHubActivitySkeleton,
 } from "@/components/github-activity";
 
-export default async function Home() {
+export default function Home() {
   const posts = getAllPosts();
-  const contributions = await fetchGitHubContributions("syntaqx");
-
   const newestSlug = getNewestPostSlug(posts);
 
   return (
@@ -116,7 +115,9 @@ export default async function Home() {
                 </div>
               </div>
             </div>
-            <GitHubActivity data={contributions} />
+            <Suspense fallback={<GitHubActivitySkeleton />}>
+              <GitHubActivityAsync username="syntaqx" />
+            </Suspense>
           </div>
         </div>
       </section>

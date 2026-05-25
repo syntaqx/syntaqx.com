@@ -1,5 +1,6 @@
-"use client";
-
+// Decorative-only. No hooks, no events, no client behavior — keep this
+// as a Server Component so it doesn't ship JS or block hydration on
+// every page. (Was "use client" without reason.)
 export function BackgroundEffect() {
   return (
     <div
