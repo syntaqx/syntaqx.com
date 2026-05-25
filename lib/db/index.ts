@@ -53,7 +53,7 @@ const pool =
 // becomes an unhandled 'error' event and crashes the function. We
 // already retry at the query layer (fetch path) and on next checkout
 // (ws path), so swallowing the event is correct.
-pool.on("error", (err) => {
+pool.on("error", (err: Error) => {
   console.warn("[db] idle pool client error:", err.message);
 });
 
