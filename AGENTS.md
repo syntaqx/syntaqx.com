@@ -9,6 +9,11 @@ read [docs/architecture/auth.md](docs/architecture/auth.md). The
 decisions there are deliberate and prior context should not be
 relitigated without cause.
 
+Before doing performance work (Web Vitals, Speed Insights, bundle
+size, hydration, streaming, etc.), read [PERFORMANCE.md](PERFORMANCE.md).
+It records what's already been tried, what's still open, and a
+"don't bother" list. Update it when you ship a perf change.
+
 # Database schema changes
 
 The `build` script runs `npm run db:migrate` before `next build`, so
