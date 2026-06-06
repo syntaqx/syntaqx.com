@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts, getAllTags } from "@/lib/posts";
 
 /** Recursively find all static page routes under app/. */
 function discoverStaticRoutes(dir: string, base = ""): string[] {
@@ -32,10 +32,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
   }));
 
-  const posts = getAllPosts().map((post) => ({
+  const allPosts = getAllPosts();
+
+  const posts = allPosts.map((post) => ({
     url: `${baseUrl}/posts/${post.slug}`,
     lastModified: new Date(post.date),
   }));
 
-  return [...staticPages, ...posts];
+  const tags = getAllTags(allPosts).map((tag) => ({
+    url: `${baseUrl}/tags/${tag.slug}`,
+    lastModified: new Date(),
+  }));
+
+  return [...staticPages, ...posts, ...tags];
 }

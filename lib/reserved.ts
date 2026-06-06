@@ -29,6 +29,7 @@ const RESERVED = new Set<string>([
   "sentry-example-page",
   "settings",
   "signup",
+  "tags",
 
   // Auth/identity surface area we'll likely add
   "account",

@@ -135,6 +135,70 @@ function getPostByFileName(fileName: string): PostData {
   };
 }
 
+/**
+ * Slugify a tag the way Hugo did, so legacy `/tags/<slug>` URLs keep
+ * resolving: lowercase, runs of non-alphanumerics collapse to a single
+ * hyphen, trimmed. e.g. "LLMs" -> "llms", "AI in Development" ->
+ * "ai-in-development", "github-actions" -> "github-actions".
+ */
+export function slugifyTag(tag: string): string {
+  return tag
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export interface TagInfo {
+  /** Display label, using the casing of the first post that declared it. */
+  label: string;
+  slug: string;
+  count: number;
+}
+
+export function getAllTags(posts: PostData[] = getAllPosts()): TagInfo[] {
+  const bySlug = new Map<string, TagInfo>();
+  for (const post of posts) {
+    for (const tag of post.tags ?? []) {
+      const slug = slugifyTag(tag);
+      if (!slug) continue;
+      const existing = bySlug.get(slug);
+      if (existing) {
+        existing.count++;
+      } else {
+        bySlug.set(slug, { label: tag, slug, count: 1 });
+      }
+    }
+  }
+  return [...bySlug.values()].sort(
+    (a, b) => b.count - a.count || a.label.localeCompare(b.label),
+  );
+}
+
+export function getPostsByTag(
+  slug: string,
+  posts: PostData[] = getAllPosts(),
+): PostData[] {
+  const target = slugifyTag(slug);
+  return posts.filter((post) =>
+    (post.tags ?? []).some((tag) => slugifyTag(tag) === target),
+  );
+}
+
+/** Canonical display label for a tag slug, or null if no post uses it. */
+export function getTagLabel(
+  slug: string,
+  posts: PostData[] = getAllPosts(),
+): string | null {
+  const target = slugifyTag(slug);
+  for (const post of posts) {
+    for (const tag of post.tags ?? []) {
+      if (slugifyTag(tag) === target) return tag;
+    }
+  }
+  return null;
+}
+
 export function getPostBySlug(slug: string): PostData | undefined {
   const fileNames = fs
     .readdirSync(postsDirectory)

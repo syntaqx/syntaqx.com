@@ -86,7 +86,7 @@ export default async function PostPage({ params }: Props) {
           className="mt-5"
         />
         {post.tags && post.tags.length > 0 && (
-          <PostTags tags={post.tags} className="mt-3" />
+          <PostTags tags={post.tags} className="mt-3" asLinks />
         )}
       </header>
 

@@ -81,5 +81,11 @@
     },
     "esbuild": "^0.25.0",
     "kysely": "^0.28.17"
+  },
+  "allowScripts": {
+    "@sentry/cli@2.58.6": true,
+    "esbuild@0.25.12": true,
+    "sharp@0.34.5": true,
+    "unrs-resolver@1.12.2": true
   }
 }

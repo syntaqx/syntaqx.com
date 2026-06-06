@@ -49,10 +49,61 @@ const pool =
   globalForPool.__neonPool ??
   new Pool({ connectionString: process.env.DATABASE_URL });
 
+// Retry transient connection failures on the fetch path. With
+// `poolQueryViaFetch`, a single-statement `pool.query()` is one HTTPS
+// round trip to Neon; an occasional `TypeError: fetch failed` (DNS blip,
+// connection reset, Neon scaling a compute) otherwise becomes an
+// uncaught 500. The Neon driver does NOT retry these itself, so we wrap
+// `pool.query` here. Transactions take a dedicated `pool.connect()`
+// client and don't pass through this method — they retry on next
+// checkout instead, which is what we want for the session+user pair.
+//
+// We only patch the pool once: on Vercel the module (and pool) is cached
+// across warm invocations, and in dev it's stashed on globalThis below.
+if (!globalForPool.__neonPool) {
+  const RETRY_DELAYS_MS = [100, 300];
+  const isTransientConnectionError = (err: unknown): boolean => {
+    const msg = err instanceof Error ? err.message : String(err);
+    return (
+      msg.includes("fetch failed") ||
+      msg.includes("Connection terminated unexpectedly") ||
+      msg.includes("ECONNRESET") ||
+      msg.includes("socket hang up")
+    );
+  };
+
+  const originalQuery = pool.query.bind(pool) as (
+    ...args: unknown[]
+  ) => unknown;
+
+  pool.query = function (...args: unknown[]) {
+    // Callback form (last arg a function) is never used by Drizzle and
+    // can't be safely retried; pass it straight through.
+    if (typeof args[args.length - 1] === "function") {
+      return originalQuery(...args);
+    }
+    let attempt = 0;
+    const run = (): Promise<unknown> =>
+      Promise.resolve(originalQuery(...args)).catch((err: unknown) => {
+        if (attempt < RETRY_DELAYS_MS.length && isTransientConnectionError(err)) {
+          const delay = RETRY_DELAYS_MS[attempt++];
+          console.warn(
+            `[db] transient query error, retry ${attempt} in ${delay}ms:`,
+            err instanceof Error ? err.message : err,
+          );
+          return new Promise((r) => setTimeout(r, delay)).then(run);
+        }
+        throw err;
+      });
+    return run();
+  } as typeof pool.query;
+}
+
 // Without this, a backend-initiated socket close between requests
 // becomes an unhandled 'error' event and crashes the function. We
-// already retry at the query layer (fetch path) and on next checkout
-// (ws path), so swallowing the event is correct.
+// retry at the query layer (fetch path, see the pool.query wrapper
+// above) and on next checkout (ws path), so swallowing the event is
+// correct.
 pool.on("error", (err: Error) => {
   console.warn("[db] idle pool client error:", err.message);
 });
