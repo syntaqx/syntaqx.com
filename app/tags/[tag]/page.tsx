@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `Posts tagged "${label}"`,
     description: `All posts tagged ${label}.`,
     alternates: { canonical: url },
+    // Thin archive pages: keep them browsable, but don't ask Google to index
+    // them. Also excluded from the sitemap (see app/sitemap.ts).
+    robots: { index: false, follow: true },
   };
 }
 

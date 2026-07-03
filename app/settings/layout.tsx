@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { Avatar } from "@/components/avatar";
 import { SettingsNav } from "./settings-nav";
 import { SettingsMobileNav } from "./settings-mobile-nav";
+
+// Auth-gated account area — never index. Applies to all /settings/* routes.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 /**
  * Settings shell.

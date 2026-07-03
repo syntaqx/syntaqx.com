@@ -370,7 +370,7 @@ function UserBody({ data }: { data: GhUser }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={data.avatar_url}
-          alt=""
+          alt={`${data.login}'s avatar`}
           width={40}
           height={40}
           className="h-10 w-10 rounded-full border border-border"
@@ -446,7 +446,7 @@ function AvatarDemo({ bare = false }: { bare?: boolean } = {}) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`https://github.com/${h}.png?size=80`}
-                alt=""
+                alt={`${h}'s avatar`}
                 width={40}
                 height={40}
                 loading="lazy"

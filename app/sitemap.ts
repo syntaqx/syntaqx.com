@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import type { MetadataRoute } from "next";
-import { getAllPosts, getAllTags } from "@/lib/posts";
+import { getAllPosts } from "@/lib/posts";
 import { SITE_URL } from "@/lib/constants";
 
 /** Recursively find all static page routes under app/. */
@@ -63,10 +63,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(post.date),
   }));
 
-  const tags = getAllTags(allPosts).map((tag) => ({
-    url: `${baseUrl}/tags/${tag.slug}`,
-    lastModified: new Date(),
-  }));
-
-  return [...staticPages, ...posts, ...tags];
+  // Per-tag archive pages are noindex (thin content — see app/tags/[tag]),
+  // so they're intentionally omitted here. The /tags index stays.
+  return [...staticPages, ...posts];
 }

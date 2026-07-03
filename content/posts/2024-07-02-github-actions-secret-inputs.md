@@ -1,7 +1,7 @@
 +++
 date = "2024-07-02"
 title = "GitHub Actions & Secret Inputs"
-description = "An exploration and solution to providing secret input values in GitHub Actions manual self-service workflows"
+description = "An exploration and a working solution for passing secret input values into GitHub Actions manual, self-service workflows — without leaking them in the logs."
 images = ["/img/open-graph/github-actions-secret-inputs.png"]
 tags = ["github-actions", "github", "devops", "automation"]
 +++

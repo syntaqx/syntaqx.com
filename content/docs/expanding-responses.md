@@ -1,6 +1,6 @@
 +++
 title = "Expanding Responses"
-description = "Use the expand parameter to include related resources inline within API responses."
+description = "Use the expand parameter to inline related resources within API responses — fewer round-trips, and only the extra data you actually ask for."
 category = "Requests & Responses"
 order = 6
 tags = ["api", "expand", "rest"]

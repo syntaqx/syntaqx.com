@@ -205,7 +205,11 @@ export function getPostBySlug(slug: string): PostData | undefined {
     .filter((f) => f.endsWith(".md"));
 
   for (const fileName of fileNames) {
-    if (fileNameToSlug(fileName.replace(/\.md$/, "")) === slug) {
+    const bare = fileName.replace(/\.md$/, "");
+    // Match the canonical (date-stripped) slug, or the full filename so
+    // legacy `/posts/YYYY-MM-DD-<slug>` URLs still resolve. The post page
+    // permanent-redirects aliases to the canonical slug.
+    if (fileNameToSlug(bare) === slug || bare === slug) {
       return getPostByFileName(fileName);
     }
   }

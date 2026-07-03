@@ -1,7 +1,7 @@
 +++
 title = "Growing Together in the Age of LLMs"
 date = 2026-05-10T00:00:00Z
-description = "AI made the first version easy. Everything after that still takes engineering."
+description = "AI made the first version easy. Everything after that — the scaling, the edge cases, the maintenance — still takes real engineering. On growing alongside LLMs."
 categories = ["AI", "Software Engineering"]
 tags = ["LLMs", "AI in Development", "Software Engineering", "Career Growth"]
 +++
@@ -44,7 +44,7 @@ When an LLM hands you working code in 30 seconds, that loop gets cut. You ship, 
 
 I've watched this play out in incidents. Something breaks, an engineer asks the AI to explain the error, gets five plausible answers, tries each one, none of them work. The bug isn't in the code. It's in the interaction between the code, the infrastructure, a data shape that changed after last week's migration, and the monitoring gap that let it run for three days before anyone noticed.
 
-The person who solves that is the one who understands the system end to end. They know what the query planner is doing. They remember the last time this service behaved this way and what the actual cause turned out to be. That knowledge isn't promptable. It's built up by paying attention, getting burned, and not making the same mistake twice. I [wrote about this last year](/posts/2025-02-03-evolution-of-software-engineering): the code was never the hard part. The hard part was always the thinking around it, and that's the part the LLM still leaves on your desk.
+The person who solves that is the one who understands the system end to end. They know what the query planner is doing. They remember the last time this service behaved this way and what the actual cause turned out to be. That knowledge isn't promptable. It's built up by paying attention, getting burned, and not making the same mistake twice. I [wrote about this last year](/posts/evolution-of-software-engineering): the code was never the hard part. The hard part was always the thinking around it, and that's the part the LLM still leaves on your desk.
 
 ## Staying sharp
 
