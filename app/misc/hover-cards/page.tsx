@@ -5,7 +5,7 @@ import { DemoSection } from "../_components/demo-section";
 export const metadata: Metadata = {
   title: "Hover Cards",
   description:
-    "Defer expensive context to intent. Reveal extra detail without bloating the initial render.",
+    "Defer expensive context to intent — reveal extra detail on hover without bloating the initial render. A pattern demo with real, interactive examples.",
 };
 
 export default function HoverCardsPage() {

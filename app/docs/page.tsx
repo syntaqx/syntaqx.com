@@ -4,8 +4,9 @@ import { Card } from "@/components/card";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Docs",
-  description: "Standards, conventions, and reference documentation.",
+  title: "Docs & API Reference",
+  description:
+    "Standards, conventions, and reference documentation for building consistent APIs — naming, pagination, errors, time, identifiers, and more.",
 };
 
 export default function DocsPage() {

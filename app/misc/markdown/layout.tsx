@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Markdown Tools",
   description:
-    "HTML to Markdown (with rich-text paste support), Markdown to HTML, and a live preview.",
+    "Convert HTML to Markdown with rich-text paste support, turn Markdown back into HTML, and preview it live — all running entirely in your browser.",
 };
 
 export default function MarkdownLayout({

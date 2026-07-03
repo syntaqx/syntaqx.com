@@ -1,6 +1,6 @@
 +++
 title = "Rate Limiting"
-description = "Rate limiting behavior, headers, and best practices for handling 429 responses."
+description = "Rate limiting behavior, the headers that describe your current limits, and best practices for gracefully handling 429 responses in your client."
 category = "Operations"
 order = 5
 tags = ["api", "rate-limiting", "headers"]

@@ -17,6 +17,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Pin the workspace root to this project. A stray, empty package-lock.json
+  // in the parent directory otherwise makes Next infer the wrong root, which
+  // breaks module resolution (e.g. "Cannot find module '@vercel/analytics/react'").
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     remotePatterns: [
       {

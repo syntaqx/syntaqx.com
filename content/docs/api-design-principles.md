@@ -1,6 +1,6 @@
 +++
 title = "API Design Principles"
-description = "Core principles and conventions that guide the API design."
+description = "The core principles and conventions that guide how the syntaqx API is designed — consistency, predictability, and least surprise for the developer using it."
 category = "API Design"
 order = 0
 tags = ["api", "design", "rest"]

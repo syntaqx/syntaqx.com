@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getAllPosts, getPostBySlug, markdownToHtml } from "@/lib/posts";
 import { PostMeta, PostTags } from "@/components/post-meta";
 import { CopyCodeScript } from "@/components/copy-code";
@@ -18,7 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(slug);
   if (!post) return {};
 
-  const url = `${SITE_URL}/posts/${slug}`;
+  // Always advertise the canonical slug, even when reached via a legacy alias.
+  const url = `${SITE_URL}/posts/${post.slug}`;
 
   return {
     title: post.title,
@@ -43,6 +44,9 @@ export default async function PostPage({ params }: Props) {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
+  // Legacy `/posts/YYYY-MM-DD-<slug>` links land on the canonical URL (308).
+  if (post.slug !== slug) permanentRedirect(`/posts/${post.slug}`);
+
   const content = await markdownToHtml(post.content);
 
   const jsonLd = {
@@ -51,7 +55,7 @@ export default async function PostPage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    url: `${SITE_URL}/posts/${slug}`,
+    url: `${SITE_URL}/posts/${post.slug}`,
     author: {
       "@type": "Person",
       name: "Chase Pierce",

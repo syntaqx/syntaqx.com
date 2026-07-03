@@ -1,6 +1,6 @@
 +++
 title = "Identifier Conventions"
-description = "How to choose and use identifiers: auto-increment, UUID versions, ULID, and when each makes sense."
+description = "How to choose and use identifiers — auto-increment, UUID versions, and ULID — and when each one makes sense for keys, URLs, and distributed systems."
 category = "Fundamentals"
 order = -0.25
 tags = ["ids", "uuid", "ulid", "database"]

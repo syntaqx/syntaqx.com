@@ -1,6 +1,6 @@
 +++
 title = "Naming Conventions"
-description = "Conventions for naming API routes to ensure consistency and RESTful alignment."
+description = "Conventions for naming API routes and resources to keep the surface consistent, predictable, and aligned with RESTful expectations."
 category = "API Design"
 order = 1
 tags = ["api", "naming", "rest"]
