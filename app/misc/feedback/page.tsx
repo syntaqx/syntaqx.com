@@ -5,7 +5,7 @@ import { CopyDemo, GuardDemo, OptimisticDemo, SkeletonDemo } from "./demos";
 export const metadata: Metadata = {
   title: "Feedback & Affordance",
   description:
-    "Patterns for telling users what just happened, what they can do next, and what to be careful about — a practical tour of feedback and affordance in UI.",
+    "Patterns for telling users what just happened, what they can do next, and what to be careful about: a practical tour of feedback and affordance in UI.",
 };
 
 export default function FeedbackPage() {

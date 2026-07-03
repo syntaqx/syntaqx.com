@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Tools & Experiments",
   description:
-    "Browser-based developer tools, toys, and experiments built for fun — converters, generators, debuggers, and other things I found useful enough to keep.",
+    "Browser-based developer tools, toys, and experiments built for fun: converters, generators, debuggers, and other things I found useful enough to keep.",
 };
 
 function ToolGrid({ items }: { items: MiscTool[] }) {

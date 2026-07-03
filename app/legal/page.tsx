@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Legal",
   description:
-    "Legal information for syntaqx.com — the Terms of Service that govern using the site, and the Privacy policy covering how your data is handled.",
+    "Legal information for syntaqx.com: the Terms of Service that govern using the site, and the Privacy policy covering how your data is handled.",
 };
 
 const pages = [

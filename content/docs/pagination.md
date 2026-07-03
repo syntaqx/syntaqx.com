@@ -1,6 +1,6 @@
 +++
 title = "Pagination"
-description = "Page-based and cursor-based pagination using the Link header — how to walk large result sets consistently, and when to reach for each approach."
+description = "Page-based and cursor-based pagination using the Link header: how to walk large result sets consistently, and when to reach for each approach."
 category = "Requests & Responses"
 order = 4
 tags = ["api", "pagination", "standards"]

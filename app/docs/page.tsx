@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Docs & API Reference",
   description:
-    "Standards, conventions, and reference documentation for building consistent APIs — naming, pagination, errors, time, identifiers, and more.",
+    "Standards, conventions, and reference documentation for building consistent APIs: naming, pagination, errors, time, identifiers, and more.",
 };
 
 export default function DocsPage() {

@@ -24,7 +24,7 @@ registry.registerPath({
   path: "/flaky",
   summary: "Simulate an unreliable service",
   description:
-    "Returns success or failure based on a configurable rate. Use this to test retry logic, circuit breakers, and timeout handling. The response is intentionally random — the same request may succeed or fail.",
+    "Returns success or failure based on a configurable rate. Use this to test retry logic, circuit breakers, and timeout handling. The response is intentionally random: the same request may succeed or fail.",
   tags: ["Testing"],
   request: {
     query: z.object({
@@ -53,7 +53,7 @@ registry.registerPath({
   },
   responses: {
     200: {
-      description: "Success — the request \"survived\"",
+      description: "Success: the request \"survived\"",
       content: { "application/json": { schema: FlakyResponse } },
     },
     500: {

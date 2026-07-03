@@ -1,7 +1,7 @@
 +++
 title = "Growing Together in the Age of LLMs"
 date = 2026-05-10T00:00:00Z
-description = "AI made the first version easy. Everything after that — the scaling, the edge cases, the maintenance — still takes real engineering. On growing alongside LLMs."
+description = "AI made the first version easy. Everything after that (the scaling, the edge cases, the maintenance) still takes real engineering. On growing alongside LLMs."
 categories = ["AI", "Software Engineering"]
 tags = ["LLMs", "AI in Development", "Software Engineering", "Career Growth"]
 +++

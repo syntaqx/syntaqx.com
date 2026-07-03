@@ -5,7 +5,7 @@ import { TagChips } from "@/components/tag-chips";
 export const metadata: Metadata = {
   title: "Browse Posts by Topic",
   description:
-    "Browse every topic I write about — from software engineering and architecture to LLMs, DevOps, and career growth. Find posts by tag.",
+    "Browse every topic I write about: from software engineering and architecture to LLMs, DevOps, and career growth. Find posts by tag.",
 };
 
 export default function TagsPage() {

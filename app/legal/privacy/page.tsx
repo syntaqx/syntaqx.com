@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Privacy",
   description:
-    "How syntaqx.com handles your data — what's collected, what isn't, and the choices you have. I try to collect as little as possible.",
+    "How syntaqx.com handles your data: what's collected, what isn't, and the choices you have. I try to collect as little as possible.",
 };
 
 const lastUpdated = "May 2026";

@@ -1,6 +1,6 @@
 +++
 title = "Error Responses"
-description = "The standard error response format and the HTTP status codes used across the API — so clients can handle failures consistently and predictably."
+description = "The standard error response format and the HTTP status codes used across the API, so clients can handle failures consistently and predictably."
 category = "Requests & Responses"
 order = 2
 tags = ["api", "errors", "standards"]

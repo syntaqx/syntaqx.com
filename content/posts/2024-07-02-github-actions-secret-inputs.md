@@ -1,7 +1,7 @@
 +++
 date = "2024-07-02"
 title = "GitHub Actions & Secret Inputs"
-description = "An exploration and a working solution for passing secret input values into GitHub Actions manual, self-service workflows — without leaking them in the logs."
+description = "An exploration and a working solution for passing secret input values into GitHub Actions manual, self-service workflows, without leaking them in the logs."
 images = ["/img/open-graph/github-actions-secret-inputs.png"]
 tags = ["github-actions", "github", "devops", "automation"]
 +++
@@ -118,7 +118,7 @@ To initially test my theory, I added a simple handler to my personal API that wo
 - `POST https://api.syntaqx.com/v1/secrets` - Create a new secret
 - `GET https://api.syntaqx.com/v1/secrets/{id}` - Retrieve a secret
 
-> __⚠️ Warning:__ This API is no longer live and was only used as a proof of concept. It did not provide any real security or reliability — values were stored in memory, encryption was weak, and it should not have been relied on for real world use.
+> __⚠️ Warning:__ This API is no longer live and was only used as a proof of concept. It did not provide any real security or reliability: values were stored in memory, encryption was weak, and it should not have been relied on for real world use.
 >
 > We ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
 >

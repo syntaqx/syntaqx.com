@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Open-source projects, tools, and experiments I've built and maintain — from static servers and developer utilities to the occasional community effort.",
+    "Open-source projects, tools, and experiments I've built and maintain, from static servers and developer utilities to the occasional community effort.",
 };
 
 const community = [

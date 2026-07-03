@@ -15,7 +15,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "The people, principles, and hard-won opinions behind syntaqx — how I think about architecture, engineering leadership, and building software that lasts.",
+    "The people, principles, and hard-won opinions behind syntaqx: how I think about architecture, engineering leadership, and building software that lasts.",
 };
 
 export default function AboutPage() {

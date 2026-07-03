@@ -1,6 +1,6 @@
 +++
 title = "Database Naming Conventions"
-description = "Consistent naming conventions for database tables, columns, keys, and relationships — so schemas stay readable and predictable as they grow."
+description = "Consistent naming conventions for database tables, columns, keys, and relationships, so schemas stay readable and predictable as they grow."
 category = "Database"
 order = 10
 tags = ["database", "naming", "conventions"]

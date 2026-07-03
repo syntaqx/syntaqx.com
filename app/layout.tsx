@@ -21,16 +21,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "syntaqx — Chase Pierce, VP of Software Engineering",
+    default: "syntaqx: Chase Pierce, VP of Software Engineering",
     template: "%s - syntaqx",
   },
   description:
-    "Chase Pierce — VP of Software Engineering, architect at heart, open sorcerer, and your favorite internet junkie. Writing on engineering, systems, and craft.",
+    "Chase Pierce, VP of Software Engineering, architect at heart, open sorcerer, and your favorite internet junkie. Writing on engineering, systems, and craft.",
   authors: [{ name: "Chase Pierce" }],
   openGraph: {
     title: "syntaqx",
     description:
-      "Chase Pierce — VP of Software Engineering, architect at heart, open sorcerer, and your favorite internet junkie. Writing on engineering, systems, and craft.",
+      "Chase Pierce, VP of Software Engineering, architect at heart, open sorcerer, and your favorite internet junkie. Writing on engineering, systems, and craft.",
     url: SITE_URL,
     siteName: "syntaqx",
     type: "website",

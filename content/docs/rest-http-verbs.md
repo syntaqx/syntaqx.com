@@ -1,6 +1,6 @@
 +++
 title = "REST & HTTP Verbs"
-description = "A quick primer on REST architecture and the HTTP methods that drive it — GET, POST, PUT, PATCH, and DELETE, and what each one should actually mean."
+description = "A quick primer on REST architecture and the HTTP methods that drive it: GET, POST, PUT, PATCH, and DELETE, and what each one should actually mean."
 category = "Fundamentals"
 order = -1
 tags = ["api", "rest", "http"]

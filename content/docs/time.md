@@ -1,6 +1,6 @@
 +++
 title = "Time & Date Formats"
-description = "Standard formats for representing datetimes, durations, and recurring schedules in the API — so time is unambiguous across clients and time zones."
+description = "Standard formats for representing datetimes, durations, and recurring schedules in the API, so time is unambiguous across clients and time zones."
 category = "Fundamentals"
 order = -0.5
 tags = ["time", "rfc3339", "iso8601", "standards"]

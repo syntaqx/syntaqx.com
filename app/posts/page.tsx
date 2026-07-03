@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "All Posts",
   description:
-    "Essays and notes on software engineering, architecture, engineering leadership, and building with LLMs — everything I write, gathered in one place.",
+    "Essays and notes on software engineering, architecture, engineering leadership, and building with LLMs: everything I write, gathered in one place.",
 };
 
 export default function PostsPage() {

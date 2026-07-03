@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "The terms governing use of syntaqx.com — what you can expect from this site and what I expect from visitors. Plain language, no surprises.",
+    "The terms governing use of syntaqx.com: what you can expect from this site and what I expect from visitors. Plain language, no surprises.",
 };
 
 const lastUpdated = "May 2026";
