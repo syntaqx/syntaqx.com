@@ -7,24 +7,19 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: "https://83053c7854f5d2501223a9d596b331ff@o463483.ingest.us.sentry.io/4511368166572032",
 
-  // Disable Sentry in development to avoid noise from local-only errors.
-  enabled: process.env.NODE_ENV === "production",
+  // Only run in real production (NODE_ENV is also "production" in preview
+  // builds, which we don't want tracing/erroring against).
+  enabled: process.env.VERCEL_ENV === "production",
 
-  // Add optional integrations for additional features
-  integrations: [Sentry.replayIntegration()],
+  // Session Replay is intentionally omitted: it hooks pointer/click/input
+  // events to record sessions and was the prime suspect for INP on
+  // /posts/[slug]. Error tracking + sampled tracing stay. See PERFORMANCE.md.
 
-  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  // Traces sampled at 10% — enough signal for a personal site without the
+  // per-page-view overhead of tracing every load.
+  tracesSampleRate: 0.1,
   // Enable logs to be sent to Sentry
   enableLogs: true,
-
-  // Define how likely Replay events are sampled.
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
-
-  // Define how likely Replay events are sampled when an error occurs.
-  replaysOnErrorSampleRate: 1.0,
 
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii

@@ -52,6 +52,22 @@ Not a Vitals fix, but related to the same investigation:
 - Tradeoff: each `db.query.*` is one HTTPS round trip; pairs of
   reads no longer multiplex over a warm WS. Picked reliability.
 
+### Sentry trimmed — INP (client) + TTFB (server/edge)
+
+- Files: [instrumentation-client.ts](instrumentation-client.ts),
+  [sentry.server.config.ts](sentry.server.config.ts),
+  [sentry.edge.config.ts](sentry.edge.config.ts).
+- Dropped client Session Replay entirely (`replayIntegration` removed).
+  It hooked pointer/click/input events to record sessions — the prime
+  INP suspect on `/posts/[slug]` — and shipped ~40KB+ of replay JS on
+  the critical path.
+- `tracesSampleRate: 1` → `0.1` on all three configs (client FCP/INP;
+  server/edge per-request tracing feeds TTFB).
+- `enabled` now gates on `VERCEL_ENV === "production"` (was `NODE_ENV`,
+  which is `production` in preview builds too).
+- Error tracking, logs, and sampled tracing retained. Verify p75 after
+  24–48h before calling INP fixed.
+
 ## Open levers, by priority
 
 1. **TTFB ~1s.** Floor under FCP/LCP. Investigate before any more
@@ -60,17 +76,11 @@ Not a Vitals fix, but related to the same investigation:
    Better Auth session lookup in shared paths. Use Vercel traces
    for a specific slow request rather than guessing.
 
-2. **Sentry config is noisy/expensive.**
-   [instrumentation-client.ts](instrumentation-client.ts) currently
-   sets:
-   - `tracesSampleRate: 1` — every page view traced. Burns quota.
-   - `replaysSessionSampleRate: 0.1` +
-     `replaysOnErrorSampleRate: 1.0` — Replay hooks many DOM
-     events; suspect for residual INP.
-
-   Dial both down deliberately. Also consider gating `enabled` on
-   `VERCEL_ENV === "production"` (currently uses `NODE_ENV`, which
-   is `production` in preview builds too).
+2. **Sentry — addressed (see Done above).** Replay removed,
+   `tracesSampleRate` → 0.1, `enabled` gated on `VERCEL_ENV`. If INP is
+   still >200ms after this deploys, the next suspects are the
+   `@vercel/analytics` + `@vercel/speed-insights` bundles and hydration
+   cost — not app code. Confirm with a field/lab breakdown first.
 
 3. **`/posts/[slug]` LCP element unknown.** If hero `<h1>` is the
    LCP, we already helped FCP and likely LCP. If a code block or
