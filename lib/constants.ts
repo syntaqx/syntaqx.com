@@ -1,3 +1,8 @@
+// Canonical origin for the public site. www is the primary domain in Vercel;
+// the apex (syntaqx.com) 307-redirects to it. Every canonical/OG/sitemap URL
+// MUST use this so we never emit a URL that immediately redirects.
+export const SITE_URL = "https://www.syntaqx.com";
+
 export const socials = [
   { href: "https://github.com/syntaqx", icon: "github", label: "GitHub" },
   {

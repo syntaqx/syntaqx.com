@@ -26,7 +26,6 @@ const RESERVED = new Set<string>([
   "misc",
   "posts",
   "projects",
-  "sentry-example-page",
   "settings",
   "signup",
   "tags",

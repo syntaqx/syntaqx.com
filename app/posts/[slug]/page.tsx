@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, markdownToHtml } from "@/lib/posts";
 import { PostMeta, PostTags } from "@/components/post-meta";
 import { CopyCodeScript } from "@/components/copy-code";
+import { SITE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 
 interface Props {
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(slug);
   if (!post) return {};
 
-  const url = `https://syntaqx.com/posts/${slug}`;
+  const url = `${SITE_URL}/posts/${slug}`;
 
   return {
     title: post.title,
@@ -50,16 +51,16 @@ export default async function PostPage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    url: `https://syntaqx.com/posts/${slug}`,
+    url: `${SITE_URL}/posts/${slug}`,
     author: {
       "@type": "Person",
       name: "Chase Pierce",
-      url: "https://syntaqx.com",
+      url: SITE_URL,
     },
     publisher: {
       "@type": "Person",
       name: "Chase Pierce",
-      url: "https://syntaqx.com",
+      url: SITE_URL,
     },
     ...(post.tags?.length && { keywords: post.tags.join(", ") }),
   };

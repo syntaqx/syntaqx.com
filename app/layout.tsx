@@ -10,7 +10,7 @@ import { BackgroundEffect } from "@/components/background-effect";
 import { HeaderAuth } from "@/components/auth/header-auth";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { nav, socials } from "@/lib/constants";
+import { nav, socials, SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://syntaqx.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "syntaqx",
     template: "%s - syntaqx",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: "syntaqx",
     description:
       "VP of Software Engineering. Architect at heart, open sorcerer, and your favorite internet junkie.",
-    url: "https://syntaqx.com",
+    url: SITE_URL,
     siteName: "syntaqx",
     type: "website",
   },

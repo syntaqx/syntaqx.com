@@ -8,6 +8,7 @@ import {
   getTagLabel,
 } from "@/lib/posts";
 import { PostList } from "@/components/post-list";
+import { SITE_URL } from "@/lib/constants";
 
 interface Props {
   params: Promise<{ tag: string }>;
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const label = getTagLabel(tag);
   if (!label) return { title: "Tag not found", robots: { index: false } };
 
-  const url = `https://syntaqx.com/tags/${tag}`;
+  const url = `${SITE_URL}/tags/${tag}`;
   return {
     title: `Posts tagged "${label}"`,
     description: `All posts tagged ${label}.`,
