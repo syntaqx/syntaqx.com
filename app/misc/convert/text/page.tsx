@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import { PasteButton } from "@/components/paste-button";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 import * as toml from "smol-toml";
 import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon";
 
