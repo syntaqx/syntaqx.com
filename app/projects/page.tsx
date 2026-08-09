@@ -46,6 +46,13 @@ const projects = [
     tags: ["github-action", "kustomize"],
     url: "https://github.com/syntaqx/setup-kustomize",
   },
+  {
+    title: "capacitor",
+    description:
+      "An adaptive HTTP client for Go that automatically adjusts concurrency based on rate limiting and capacity signaling headers.",
+    tags: ["go", "http", "rate-limiting", "open source"],
+    url: "https://github.com/syntaqx/capacitor",
+  },
 ];
 
 export default function ProjectsPage() {
