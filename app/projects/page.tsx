@@ -1,4 +1,4 @@
-import { Code, ExternalLink, Users } from "lucide-react";
+import { Code, ExternalLink, Rocket, Users } from "lucide-react";
 import { Card } from "@/components/card";
 import type { Metadata } from "next";
 
@@ -7,6 +7,23 @@ export const metadata: Metadata = {
   description:
     "Open-source projects, tools, and experiments I've built and maintain, from static servers and developer utilities to the occasional community effort.",
 };
+
+const launched = [
+  {
+    title: "Flagon",
+    description:
+      "A source-available, self-hostable developer platform that brings your projects, environments, and teams together with the products you'd otherwise buy or build stitched right in.",
+    tags: ["platform", "self-hosted", "developer-tools"],
+    url: "https://flagon.io",
+  },
+  {
+    title: "yourpasswordsucks.com",
+    description:
+      "A tongue-in-cheek single-page site that checks your password and tells you, honestly, how much it sucks.",
+    tags: ["html", "security", "passwords", "open source"],
+    url: "https://yourpasswordsucks.com",
+  },
+];
 
 const community = [
   {
@@ -65,6 +82,50 @@ const projects = [
 export default function ProjectsPage() {
   return (
     <div>
+      {/* Launched */}
+      <section className="mb-16">
+        <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-6 flex items-center gap-2">
+          <Rocket size={12} className="text-accent" />
+          Launched
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {launched.map((item) => (
+            <a
+              key={item.title}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col"
+            >
+              <Card hover className="flex flex-col h-full">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-sm font-medium text-accent">
+                    {item.title}
+                  </h2>
+                  <ExternalLink
+                    size={12}
+                    className="text-dim group-hover:text-accent transition-colors"
+                  />
+                </div>
+                <p className="text-xs text-dim leading-relaxed line-clamp-2 min-h-[2lh]">
+                  {item.description}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-1">
+                  {item.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-block rounded border border-border px-1.5 py-0.5 text-[10px] text-dim"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </Card>
+            </a>
+          ))}
+        </div>
+      </section>
+
       {/* Open Source */}
       <section className="mb-16">
         <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-6 flex items-center gap-2">
