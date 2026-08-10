@@ -53,6 +53,13 @@ const projects = [
     tags: ["go", "http", "rate-limiting", "open source"],
     url: "https://github.com/syntaqx/capacitor",
   },
+  {
+    title: "nullable",
+    description:
+      "A single generic type for values that may be null in Go, with first-class support for JSON and database/sql.",
+    tags: ["go", "generics", "json", "open source"],
+    url: "https://github.com/syntaqx/nullable",
+  },
 ];
 
 export default function ProjectsPage() {
