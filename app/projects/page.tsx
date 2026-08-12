@@ -10,13 +10,6 @@ export const metadata: Metadata = {
 
 const launched = [
   {
-    title: "Flagon",
-    description:
-      "A source-available, self-hostable developer platform that brings your projects, environments, and teams together with the products you'd otherwise buy or build stitched right in.",
-    tags: ["platform", "self-hosted", "developer-tools"],
-    url: "https://flagon.io",
-  },
-  {
     title: "yourpasswordsucks.com",
     description:
       "A tongue-in-cheek single-page site that checks your password and tells you, honestly, how much it sucks.",
