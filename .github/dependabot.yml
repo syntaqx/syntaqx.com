@@ -3,8 +3,54 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      # next and its config must move in lockstep.
+      next:
+        patterns:
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+      # react runtime + its type packages together.
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      sentry:
+        patterns:
+          - "@sentry/*"
+      types:
+        patterns:
+          - "@types/*"
+      # Everything else: one PR for prod, one for dev (minor + patch).
+      production-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # eslint-config-next bundles an eslint-plugin-react that calls
+      # context.getFilename(), removed in ESLint 10 -> lint crashes.
+      - dependency-name: "eslint"
+        update-types:
+          - "version-update:semver-major"
+      # kysely 0.29 removed DEFAULT_MIGRATION_TABLE, still imported by
+      # @better-auth/kysely-adapter. Pinned via overrides in package.json.
+      - dependency-name: "kysely"
