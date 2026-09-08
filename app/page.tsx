@@ -28,14 +28,13 @@ export default function Home() {
             <div className="text-sm text-muted leading-relaxed space-y-3 mb-8">
               <p>
                 <span className="text-foreground font-medium">Currently</span> /{" "}
-                VP of Software Engineering. I lead engineering orgs, own
-                architecture and delivery, and still write code. The
-                architecture needs to be right to enable building the right
-                products. Without it, you&apos;re fighting the system instead of
-                building on it. Problem clarity tells you what to build. Then
-                the architecture circles back to provide the right solution, and
-                when requirements change, that should be a configuration change,
-                not a bug.
+                I lead software engineering orgs, own architecture and delivery,
+                and still write code. The architecture needs to be right to
+                enable building the right products. Without it, you&apos;re
+                fighting the system instead of building on it. Problem clarity
+                tells you what to build. Then the architecture circles back to
+                provide the right solution, and when requirements change, that
+                should be a configuration change, not a bug.
               </p>
               <p>
                 <span className="text-foreground font-medium">Previously</span>{" "}

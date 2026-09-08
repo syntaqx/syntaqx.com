@@ -81,11 +81,11 @@ export default function AboutPage() {
                 bug.
               </p>
               <p>
-                Today I&apos;m a VP of Software Engineering. I lead engineering,
-                DevOps, and architecture. I own delivery. I still write code,
-                review PRs, debate system design, and get in the weeds when it
-                matters. The best engineering leaders never lose touch with the
-                craft, and I lead from the front.
+                Today I lead software engineering, DevOps, and architecture. I
+                own delivery. I still write code, review PRs, debate system
+                design, and get in the weeds when it matters. The best
+                engineering leaders never lose touch with the craft, and I lead
+                from the front.
               </p>
               <p>
                 After coming back to Utah from San Francisco, I founded the{" "}
@@ -112,7 +112,7 @@ export default function AboutPage() {
               {
                 icon: Briefcase,
                 label: "Role",
-                value: "VP, Software Engineering",
+                value: "Software Engineering Leadership",
               },
               {
                 icon: Compass,

@@ -56,7 +56,7 @@ export default async function Image() {
           lineHeight: 1.5,
         }}
       >
-        VP of Software Engineering. Architect at heart, open sorcerer.
+        Software engineering leader. Architect at heart, open sorcerer.
       </div>
       {/* Bottom brand */}
       <div
