@@ -81,6 +81,9 @@
     "kysely": "^0.28.17",
     "better-auth": {
       "vitest": "$vitest"
+    },
+    "@eslint/eslintrc": {
+      "js-yaml": "^4.3.2"
     }
   },
   "allowScripts": {
