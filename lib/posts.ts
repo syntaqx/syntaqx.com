@@ -26,7 +26,9 @@ function estimateReadingTime(markdown: string): number {
     .replace(/```[\s\S]*?```/g, " ")
     .replace(/`[^`]*`/g, " ");
   const words = stripped.split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.round(words / 220));
+  // 200 wpm: the standard average, and slower than a brisk skim, which
+  // better matches how these long-form essays actually get read.
+  return Math.max(1, Math.round(words / 200));
 }
 
 /** Parse Hugo-style +++ TOML frontmatter */
