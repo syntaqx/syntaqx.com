@@ -27,6 +27,11 @@ export const metadata: Metadata = {
   description:
     "Chase Pierce, software engineering leader, architect at heart, open sorcerer, and your favorite internet junkie. Writing on engineering, systems, and craft.",
   authors: [{ name: "Chase Pierce" }],
+  alternates: {
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: "syntaqx RSS feed" }],
+    },
+  },
   openGraph: {
     title: "syntaqx",
     description:
@@ -145,6 +150,13 @@ export default function RootLayout({
                 Privacy
               </Link>
               <span className="text-border">|</span>
+              <a
+                href="/feed.xml"
+                className="text-dim hover:text-accent transition-colors"
+                aria-label="RSS feed"
+              >
+                <SimpleIcon name="rss" size={18} />
+              </a>
               {socials.map((s) => (
                 <a
                   key={s.href}

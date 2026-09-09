@@ -1,6 +1,7 @@
 import { getAllPosts, getAllTags, getNewestPostSlug } from "@/lib/posts";
 import { PostList } from "@/components/post-list";
 import { TagChips } from "@/components/tag-chips";
+import { SimpleIcon } from "@/components/simple-icon";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,14 +17,24 @@ export default function PostsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          All Posts
-        </h1>
-        <p className="text-sm text-muted">
-          Thoughts on building products, leading teams, and everything in
-          between.
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+            All Posts
+          </h1>
+          <p className="text-sm text-muted">
+            Thoughts on building products, leading teams, and everything in
+            between.
+          </p>
+        </div>
+        <a
+          href="/feed.xml"
+          className="flex shrink-0 items-center gap-1.5 text-xs text-dim hover:text-accent transition-colors"
+          aria-label="Subscribe via RSS"
+        >
+          <SimpleIcon name="rss" size={14} />
+          RSS
+        </a>
       </div>
       {tags.length > 0 && (
         <div className="mb-8">
