@@ -1,5 +1,10 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import { getAllPosts, getPostBySlug, markdownToHtml } from "@/lib/posts";
+import {
+  getAllPosts,
+  getPostSlugs,
+  getPostBySlug,
+  markdownToHtml,
+} from "@/lib/posts";
 import { PostMeta, PostTags } from "@/components/post-meta";
 import { CopyCodeScript } from "@/components/copy-code";
 import { SITE_URL } from "@/lib/constants";
@@ -10,7 +15,17 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
+  // Pre-render the canonical slug AND the legacy date-prefixed filename
+  // (e.g. `2024-07-01-hello-world`). Without the alias in this list, a hit
+  // on a legacy `/posts/YYYY-MM-DD-<slug>` URL renders on-demand in a
+  // function just to compute its 308 — a lambda hop that lands in the
+  // `/posts/[slug]` field samples. Emitting it makes the redirect a static
+  // 308 served from the CDN. `getPostSlugs()` returns the full filenames;
+  // the Set dedupes any post whose file isn't date-prefixed.
+  const slugs = new Set<string>();
+  for (const post of getAllPosts()) slugs.add(post.slug);
+  for (const name of getPostSlugs()) slugs.add(name);
+  return [...slugs].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

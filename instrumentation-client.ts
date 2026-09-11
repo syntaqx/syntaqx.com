@@ -13,7 +13,7 @@ Sentry.init({
 
   // Session Replay is intentionally omitted: it hooks pointer/click/input
   // events to record sessions and was the prime suspect for INP on
-  // /posts/[slug]. Error tracking + sampled tracing stay. See PERFORMANCE.md.
+  // /posts/[slug]. Error tracking + sampled tracing stay.
 
   // Traces sampled at 10% — enough signal for a personal site without the
   // per-page-view overhead of tracing every load.
