@@ -228,48 +228,48 @@ export function GitHubActivity({
           style={{ direction: "ltr", width: "max-content", marginLeft: "auto" }}
         >
           <ActivityGridTooltips>
-          {monthGroups.map((group, gi) => (
-            <div
-              key={gi}
-              className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
-            >
-              {/* Month label */}
-              <span className="text-[10px] text-dim mb-1 text-center">
-                {group.label}
-              </span>
-              {/* Weeks in this month */}
+            {monthGroups.map((group, gi) => (
               <div
-                className="grid grid-flow-col auto-cols-[10px] sm:auto-cols-[12px] md:auto-cols-[13px] gap-0.75"
-                style={{ gridTemplateRows: "repeat(7, 1fr)" }}
+                key={gi}
+                className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
               >
-                {group.weeks.map((week) =>
-                  week.map((day) => {
-                    const vacation = vacationFor(day.date);
-                    const holiday = !vacation ? holidayFor(day.date) : null;
-                    const base = LEVEL_COLORS[day.level];
-                    const className = vacation
-                      ? `${base} ${VACATION_RING}`
-                      : holiday
-                        ? `${base} ${HOLIDAY_RING}`
-                        : base;
-                    const label = vacation
-                      ? `Vacation (${vacation})`
-                      : holiday
-                        ? holiday
-                        : null;
-                    return (
-                      <ActivityCell
-                        key={day.date}
-                        date={day.date}
-                        label={label}
-                        className={`aspect-square rounded-xs ${className}`}
-                      />
-                    );
-                  }),
-                )}
+                {/* Month label */}
+                <span className="text-[10px] text-dim mb-1 text-center">
+                  {group.label}
+                </span>
+                {/* Weeks in this month */}
+                <div
+                  className="grid grid-flow-col auto-cols-2.5 sm:auto-cols-3 md:auto-cols-3.25 gap-0.75"
+                  style={{ gridTemplateRows: "repeat(7, 1fr)" }}
+                >
+                  {group.weeks.map((week) =>
+                    week.map((day) => {
+                      const vacation = vacationFor(day.date);
+                      const holiday = !vacation ? holidayFor(day.date) : null;
+                      const base = LEVEL_COLORS[day.level];
+                      const className = vacation
+                        ? `${base} ${VACATION_RING}`
+                        : holiday
+                          ? `${base} ${HOLIDAY_RING}`
+                          : base;
+                      const label = vacation
+                        ? `Vacation (${vacation})`
+                        : holiday
+                          ? holiday
+                          : null;
+                      return (
+                        <ActivityCell
+                          key={day.date}
+                          date={day.date}
+                          label={label}
+                          className={`aspect-square rounded-xs ${className}`}
+                        />
+                      );
+                    }),
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
           </ActivityGridTooltips>
         </div>
       </div>
