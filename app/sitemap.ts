@@ -29,28 +29,11 @@ function discoverStaticRoutes(dir: string, base = ""): string[] {
   return routes;
 }
 
-// Routes that exist but must never appear in the sitemap: auth-gated areas
-// (a crawler without a session only ever sees a redirect) and auth entry
-// pages that carry no SEO value. Matched exactly or as a path prefix.
-const NOINDEX_PREFIXES = [
-  "/settings",
-  "/login",
-  "/signup",
-  "/forgot-password",
-];
-
-function isIndexable(route: string): boolean {
-  return !NOINDEX_PREFIXES.some(
-    (prefix) => route === prefix || route.startsWith(`${prefix}/`),
-  );
-}
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
   const appDir = path.join(process.cwd(), "app");
 
   const staticPages = discoverStaticRoutes(appDir)
-    .filter(isIndexable)
     .map((route) => ({
       url: `${baseUrl}${route === "/" ? "" : route}`,
       lastModified: new Date(),

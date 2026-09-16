@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
@@ -7,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { SearchButton } from "@/components/search";
 import { Nav, MobileMenu, Breadcrumb } from "@/components/nav";
 import { BackgroundEffect } from "@/components/background-effect";
-import { HeaderAuth } from "@/components/auth/header-auth";
+import { TopProgressBar } from "@/components/top-progress-bar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { nav, socials, SITE_URL } from "@/lib/constants";
@@ -78,6 +79,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground antialiased">
+        <Suspense fallback={null}>
+          <TopProgressBar />
+        </Suspense>
         <BackgroundEffect />
         <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
           <div className="border-b border-border">
@@ -85,16 +89,16 @@ export default function RootLayout({
               <div className="flex items-center gap-3">
                 <Link
                   href="/"
-                  className="flex items-center gap-2 group shrink-0 brand-flicker"
+                  className="flex items-center gap-2 group shrink-0"
                 >
                   <Image
                     src="/brand.svg"
                     alt="syntaqx"
                     width={24}
                     height={24}
-                    className="w-6 h-6 brand-flicker-target"
+                    className="w-6 h-6"
                   />
-                  <span className="text-sm font-semibold text-accent transition-colors group-hover:text-foreground brand-flicker-target">
+                  <span className="text-sm font-semibold text-accent transition-colors group-hover:text-foreground">
                     syntaqx
                   </span>
                 </Link>
@@ -104,7 +108,6 @@ export default function RootLayout({
               <div className="flex h-8 items-center gap-3">
                 <SearchButton />
                 <ThemeToggle />
-                <HeaderAuth />
                 <MobileMenu />
               </div>
             </div>

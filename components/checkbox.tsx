@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useId, type ReactNode } from "react";
+import { useId, type ReactNode } from "react";
+import * as RadixCheckbox from "@radix-ui/react-checkbox";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { Check, Info } from "lucide-react";
 
 interface CheckboxProps {
@@ -18,51 +20,53 @@ export function Checkbox({
   tooltip,
   className = "",
 }: CheckboxProps) {
-  const [showTooltip, setShowTooltip] = useState(false);
   const id = useId();
 
   return (
     <div className={`flex items-center gap-1.5 ${className}`}>
-      <label
-        htmlFor={id}
-        className="flex items-center gap-1.5 cursor-pointer group"
-      >
-        <button
+      <div className="flex items-center gap-1.5 group">
+        <RadixCheckbox.Root
           id={id}
-          role="checkbox"
-          type="button"
-          aria-checked={checked}
-          onClick={() => onChange(!checked)}
-          className={`flex items-center justify-center w-3.5 h-3.5 rounded border transition-colors cursor-pointer ${
-            checked
-              ? "bg-accent border-accent"
-              : "border-dim/40 group-hover:border-accent/50"
-          }`}
+          checked={checked}
+          onCheckedChange={(c) => onChange(c === true)}
+          className="flex items-center justify-center w-3.5 h-3.5 rounded border border-dim/40 transition-colors cursor-pointer group-hover:border-accent/50 data-[state=checked]:bg-accent data-[state=checked]:border-accent"
         >
-          {checked && (
+          <RadixCheckbox.Indicator className="flex items-center justify-center">
             <Check size={10} strokeWidth={3} className="text-background" />
-          )}
-        </button>
-        <span className="text-xs text-dim group-hover:text-accent transition-colors select-none">
-          {label}
-        </span>
-      </label>
-      {tooltip && (
-        <div
-          className="relative"
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
+          </RadixCheckbox.Indicator>
+        </RadixCheckbox.Root>
+        <label
+          htmlFor={id}
+          className="text-xs text-dim group-hover:text-accent transition-colors select-none cursor-pointer"
         >
-          <Info
-            size={11}
-            className="text-dim/50 hover:text-dim transition-colors cursor-help"
-          />
-          {showTooltip && (
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-48 rounded-md border border-border bg-surface px-2.5 py-1.5 text-[10px] text-dim leading-snug shadow-lg z-50">
-              {tooltip}
-            </div>
-          )}
-        </div>
+          {label}
+        </label>
+      </div>
+      {tooltip && (
+        <Tooltip.Provider delayDuration={150}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <button
+                type="button"
+                aria-label={`More information about ${label}`}
+                className="inline-flex text-dim/50 hover:text-dim transition-colors cursor-help"
+              >
+                <Info size={11} />
+              </button>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content
+                side="top"
+                sideOffset={6}
+                collisionPadding={8}
+                className="max-w-48 rounded-md border border-border bg-surface px-2.5 py-1.5 text-[10px] text-dim leading-snug shadow-lg z-100"
+              >
+                {tooltip}
+                <Tooltip.Arrow className="fill-surface" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
       )}
     </div>
   );

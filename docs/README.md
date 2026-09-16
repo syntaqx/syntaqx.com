@@ -9,5 +9,5 @@ rendered by [app/docs/](../app/docs/).
 
 ## Index
 
-- [architecture/auth.md](architecture/auth.md) — Auth & identity architecture
-  (sessions, PATs, OAuth/OIDC, BFF→API split).
+Nothing here right now. Add engineering docs under this folder as the
+need arises.

@@ -1,18 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
-import {
-  Menu,
-  X,
-  User as UserIcon,
-  Settings as SettingsIcon,
-  LogOut,
-} from "lucide-react";
-import { signOut, useSession } from "@/lib/auth-client";
-import { Avatar } from "@/components/avatar";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { Menu, X } from "lucide-react";
 
 const links = [
   { href: "/posts", label: "posts" },
@@ -49,20 +41,7 @@ export function Nav() {
 }
 
 export function MobileMenu() {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user as
-    | {
-        name?: string | null;
-        username?: string | null;
-        image?: string | null;
-      }
-    | undefined;
-  const username = user ? (user.username ?? user.name ?? null) : null;
-  const displayName = user?.name ?? null;
-  const image = user?.image ?? null;
   const [open, setOpen] = useState(false);
-  const [signingOut, setSigningOut] = useState(false);
   const pathname = usePathname();
   const [prevPathname, setPrevPathname] = useState(pathname);
 
@@ -72,55 +51,40 @@ export function MobileMenu() {
     if (open) setOpen(false);
   }
 
-  // Lock body scroll when open
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = "";
-      };
-    }
-  }, [open]);
-
-  const signedIn = Boolean(username);
-  const profileHref = username ? `/${username}` : "/login";
-
-  async function onSignOut() {
-    setSigningOut(true);
-    await signOut();
-    setOpen(false);
-    router.replace("/");
-    router.refresh();
-  }
-
+  // Radix Dialog owns focus-trapping, focus return, Escape, scroll lock, and
+  // `aria-modal`. Because a modal dialog makes the rest of the page inert,
+  // the trigger can't double as the close control (it's non-interactive
+  // while open) — so the hamburger opens, hides itself while open, and the
+  // panel carries its own close button. The overlay closes on outside click.
   return (
-    <div className="sm:hidden">
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="p-1.5 text-dim hover:text-foreground transition-colors cursor-pointer"
-        aria-label="Toggle menu"
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger
+        aria-label="Open menu"
+        className="sm:hidden p-1.5 text-dim hover:text-foreground transition-colors cursor-pointer data-[state=open]:opacity-0"
       >
-        {open ? <X size={18} /> : <Menu size={18} />}
-      </button>
-      {open &&
-        createPortal(
-          <div
-            className="fixed inset-x-0 top-12.25 bottom-0 z-100 bg-background backdrop-blur-md"
-            onClick={() => setOpen(false)}
+        <Menu size={18} />
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay className="sm:hidden fixed inset-0 z-90 bg-background/40" />
+        <Dialog.Content
+          aria-describedby={undefined}
+          className="sm:hidden fixed inset-x-0 top-12.25 bottom-0 z-100 bg-background backdrop-blur-md outline-none"
+        >
+          <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
+          <Dialog.Close
+            aria-label="Close menu"
+            className="absolute right-5 top-3 p-1.5 text-dim hover:text-foreground transition-colors cursor-pointer"
           >
-            <nav
-              className="mx-auto max-w-7xl px-6 py-8 flex flex-col gap-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {links.map((item) => {
-                const isActive =
-                  pathname === item.href ||
-                  pathname.startsWith(item.href + "/");
-                return (
+            <X size={18} />
+          </Dialog.Close>
+          <nav className="mx-auto max-w-7xl px-6 py-8 flex flex-col gap-6">
+            {links.map((item) => {
+              const isActive =
+                pathname === item.href || pathname.startsWith(item.href + "/");
+              return (
+                <Dialog.Close asChild key={item.href}>
                   <Link
-                    key={item.href}
                     href={item.href}
-                    onClick={() => setOpen(false)}
                     className={`text-lg transition-colors ${
                       isActive
                         ? "text-accent font-medium"
@@ -129,80 +93,13 @@ export function MobileMenu() {
                   >
                     {item.label}
                   </Link>
-                );
-              })}
-              <div className="border-t border-border pt-6">
-                {signedIn && username ? (
-                  <div className="flex flex-col gap-4">
-                    <Link
-                      href={profileHref}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-3"
-                    >
-                      <Avatar
-                        src={image}
-                        label={username}
-                        size={36}
-                        alt={displayName ?? username}
-                      />
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-sm text-foreground truncate">
-                          {displayName ?? username}
-                        </span>
-                        <span className="text-xs text-dim truncate">
-                          @{username}
-                        </span>
-                      </div>
-                    </Link>
-                    <Link
-                      href={profileHref}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-2 text-base text-muted hover:text-foreground transition-colors"
-                    >
-                      <UserIcon size={16} className="text-dim" aria-hidden />
-                      <span>Your profile</span>
-                    </Link>
-                    <Link
-                      href="/settings"
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-2 text-base text-muted hover:text-foreground transition-colors"
-                    >
-                      <SettingsIcon
-                        size={16}
-                        className="text-dim"
-                        aria-hidden
-                      />
-                      <span>Settings</span>
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={onSignOut}
-                      disabled={signingOut}
-                      className="flex items-center gap-2 text-base text-muted hover:text-foreground transition-colors disabled:opacity-60 enabled:cursor-pointer text-left"
-                    >
-                      <LogOut size={16} className="text-dim" aria-hidden />
-                      <span>{signingOut ? "Signing out…" : "Sign out"}</span>
-                    </button>
-                  </div>
-                ) : (
-                  <Link
-                    href="/login"
-                    onClick={() => setOpen(false)}
-                    className={`text-lg transition-colors ${
-                      pathname === "/login"
-                        ? "text-accent font-medium"
-                        : "text-muted hover:text-foreground"
-                    }`}
-                  >
-                    sign in
-                  </Link>
-                )}
-              </div>
-            </nav>
-          </div>,
-          document.body,
-        )}
-    </div>
+                </Dialog.Close>
+              );
+            })}
+          </nav>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
 

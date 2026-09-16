@@ -37,4 +37,6 @@ export const OWNER_TZ = "America/Denver";
 // rendered as vacation rather than as quiet days.
 export const vacations: { label: string; start: string; end: string }[] = [
   { label: "Rome", start: "2026-04-04", end: "2026-04-14" },
+  // `end` is exclusive, so this covers Sep 12-14.
+  { label: "Camping", start: "2026-09-12", end: "2026-09-15" },
 ];

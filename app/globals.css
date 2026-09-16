@@ -15,72 +15,76 @@
 
 :root {
   /* Dark theme (the historic default) */
-  --background: #0d0d0d;
-  --foreground: #e0e0e0;
+  --background: #0a0a0a;
+  --foreground: #e8e8e8;
   --accent: #00D1CA;
   --accent-muted: #334B49;
-  --muted: #95B1AE;
-  --dim: #6b7280;
+  --muted: #a3a3a3;
+  --dim: #7c7c7c;
   --pink: #FF9CC7;
   --jwt-purple: #C4A7FF;
   --jwt-cyan: #7EDCDC;
   --mauve: #C86691;
   --surface: #141414;
-  --border: #1e1e1e;
-  --border-hover: #2a2a2a;
+  /* Soft, low-contrast hairline that stays out of the way on jet black. */
+  --border: #202020;
+  --border-hover: #2c2c2c;
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: light) {
   :root:not(.dark) {
-    --background: #f5f5f4;
-    --foreground: #1A1A1A;
-    --accent: #00918c;
+    --background: #f5f5f5;
+    --foreground: #1a1a1a;
+    --accent: #007a73;
     --accent-muted: #4a7d79;
-    --muted: #4b5e5c;
-    --dim: #6b7280;
+    --muted: #565656;
+    --dim: #6b6b6b;
     --pink: #c4608a;
     --jwt-purple: #7c5cbf;
     --jwt-cyan: #0e8585;
     --mauve: #a34f74;
     --surface: #ffffff;
-    --border: #d4d4d4;
-    --border-hover: #b5b5b5;
+    /* Soft, low-contrast hairline. */
+    --border: #e2e2e2;
+    --border-hover: #d0d0d0;
     color-scheme: light;
   }
 }
 
 .dark {
-  --background: #0d0d0d;
-  --foreground: #e0e0e0;
+  --background: #0a0a0a;
+  --foreground: #e8e8e8;
   --accent: #00D1CA;
   --accent-muted: #334B49;
-  --muted: #95B1AE;
-  --dim: #6b7280;
+  --muted: #a3a3a3;
+  --dim: #7c7c7c;
   --pink: #FF9CC7;
   --jwt-purple: #C4A7FF;
   --jwt-cyan: #7EDCDC;
   --mauve: #C86691;
   --surface: #141414;
-  --border: #1e1e1e;
-  --border-hover: #2a2a2a;
+  /* Soft, low-contrast hairline that stays out of the way on jet black. */
+  --border: #202020;
+  --border-hover: #2c2c2c;
   color-scheme: dark;
 }
 
 .light {
-  --background: #f5f5f4;
-  --foreground: #1A1A1A;
-  --accent: #00918c;
+  --background: #f5f5f5;
+  --foreground: #1a1a1a;
+  --accent: #007a73;
   --accent-muted: #4a7d79;
-  --muted: #4b5e5c;
-  --dim: #6b7280;
+  --muted: #565656;
+  --dim: #6b6b6b;
   --pink: #c4608a;
   --jwt-purple: #7c5cbf;
   --jwt-cyan: #0e8585;
   --mauve: #a34f74;
   --surface: #ffffff;
-  --border: #d4d4d4;
-  --border-hover: #b5b5b5;
+  /* Soft, low-contrast hairline. */
+  --border: #e2e2e2;
+  --border-hover: #d0d0d0;
   color-scheme: light;
 }
 
@@ -108,6 +112,23 @@ body {
   font-family: var(--font-mono), ui-monospace, monospace;
 }
 
+/*
+ * Keyboard focus. `:focus-visible` only fires for keyboard/AT navigation,
+ * not mouse clicks, so pointer users never see the ring. Everything
+ * interactive (links, buttons, inputs, custom role="button" widgets)
+ * gets a consistent, high-contrast accent outline.
+ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* We provide our own :focus-visible ring; drop the UA default that some
+ * elements still paint on plain :focus. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* Selection */
 ::selection {
   background: rgba(0, 209, 202, 0.25);
@@ -115,12 +136,12 @@ body {
 }
 @media (prefers-color-scheme: light) {
   :root:not(.dark) ::selection {
-    background: rgba(0, 145, 140, 0.2);
+    background: rgba(0, 122, 115, 0.2);
     color: #1a1a1a;
   }
 }
 .light ::selection {
-  background: rgba(0, 145, 140, 0.2);
+  background: rgba(0, 122, 115, 0.2);
   color: #1a1a1a;
 }
 .dark ::selection {
@@ -316,57 +337,4 @@ body {
 .prose del {
   color: var(--dim);
   text-decoration: line-through;
-}
-
-/* Brand mark hover: short-circuit flicker */
-@keyframes brand-flicker {
-  0%,
-  100% {
-    opacity: 1;
-    filter: none;
-  }
-  8% {
-    opacity: 0.2;
-  }
-  10% {
-    opacity: 1;
-  }
-  18% {
-    opacity: 0.4;
-    filter: brightness(1.6) drop-shadow(0 0 4px var(--accent));
-  }
-  22% {
-    opacity: 1;
-  }
-  35% {
-    opacity: 0.1;
-    transform: translateX(-1px);
-  }
-  37% {
-    opacity: 1;
-    transform: translateX(1px);
-  }
-  40% {
-    transform: translateX(0);
-  }
-  60% {
-    filter: brightness(1.4) drop-shadow(0 0 6px var(--accent));
-  }
-  70% {
-    opacity: 0.6;
-  }
-  80% {
-    opacity: 1;
-    filter: none;
-  }
-}
-
-.brand-flicker:hover .brand-flicker-target {
-  animation: brand-flicker 0.9s steps(1, end) 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .brand-flicker:hover .brand-flicker-target {
-    animation: none;
-  }
 }

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "How syntaqx.com handles your data: what's collected, what isn't, and the choices you have. I try to collect as little as possible.",
 };
 
-const lastUpdated = "May 2026";
+const lastUpdated = "September 2026";
 
 export default function PrivacyPage() {
   return (
@@ -72,53 +72,10 @@ export default function PrivacyPage() {
         </p>
       </Section>
 
-      <Section title="What I collect if you create an account">
-        <ul className="list-disc pl-5 space-y-2">
-          <li>
-            <strong className="text-foreground">Email address.</strong> Used to
-            sign in, recover access, and send the few transactional emails
-            (verification, password reset, organization invites) that auth
-            requires. Not used for marketing unless you explicitly opt in.
-          </li>
-          <li>
-            <strong className="text-foreground">Password.</strong> Hashed
-            (scrypt) by Better Auth. I never see and can&apos;t recover the
-            plaintext.
-          </li>
-          <li>
-            <strong className="text-foreground">
-              Username and display name.
-            </strong>{" "}
-            Public. They&apos;re what shows up at{" "}
-            <code className="text-foreground">/&lt;username&gt;</code> and in
-            the header.
-          </li>
-          <li>
-            <strong className="text-foreground">Avatar.</strong> Optional. If
-            you upload one it&apos;s stored in Vercel Blob (publicly accessible
-            by URL, since profile pages are public) and the URL is saved on your
-            account. Replacing or removing your avatar deletes the previous
-            file.
-          </li>
-          <li>
-            <strong className="text-foreground">Sessions.</strong> A row per
-            active session: an opaque token, the IP and user-agent the session
-            was created from, and an expiry. Used to enforce sign-out and to let
-            you see/revoke your sessions later.
-          </li>
-          <li>
-            <strong className="text-foreground">
-              Organization membership.
-            </strong>{" "}
-            Each account gets a personal organization at signup. If you join
-            others later, that membership is recorded.
-          </li>
-        </ul>
+      <Section title="Accounts">
         <p>
-          All account data lives in a Postgres database hosted on Neon (US
-          region). Avatars live in Vercel Blob (US region). Nothing is shared
-          with third parties beyond the infrastructure providers needed to run
-          the site.
+          There are no accounts. The site has no sign-in, no user database, and
+          stores nothing about you beyond the visit data listed above.
         </p>
       </Section>
 
@@ -126,26 +83,15 @@ export default function PrivacyPage() {
         <p>
           Your theme preference (light / dark / system) is stored in your
           browser&apos;s <code className="text-foreground">localStorage</code>,
-          which never leaves your device.
-        </p>
-        <p>
-          If you&apos;re signed in, an{" "}
-          <code className="text-foreground">HttpOnly</code> session cookie
-          (host-locked to syntaqx.com) keeps you signed in. Strictly functional.
-          Not used for tracking. Sign out to remove it.
+          which never leaves your device. No other cookies are set.
         </p>
       </Section>
 
       <Section title="Your rights">
         <p>
-          You can edit your display name, change your avatar, and change your
-          password from{" "}
-          <Link href="/settings" className="text-accent hover:underline">
-            Settings
-          </Link>
-          . Account deletion and data export aren&apos;t self-serve yet. Contact
-          me and I&apos;ll handle it. For analytics/error data, same: contact me
-          and I&apos;ll do what&apos;s reasonable.
+          There&apos;s no account data to export or delete. For the analytics
+          and error data described above, contact me and I&apos;ll do
+          what&apos;s reasonable.
         </p>
       </Section>
 

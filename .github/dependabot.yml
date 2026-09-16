@@ -51,6 +51,3 @@ updates:
       - dependency-name: "eslint"
         update-types:
           - "version-update:semver-major"
-      # kysely 0.29 removed DEFAULT_MIGRATION_TABLE, still imported by
-      # @better-auth/kysely-adapter. Pinned via overrides in package.json.
-      - dependency-name: "kysely"

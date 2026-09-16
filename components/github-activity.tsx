@@ -1,4 +1,5 @@
 import { TodayHighlight } from "@/components/today-highlight";
+import { ActivityCell, ActivityGridTooltips } from "@/components/activity-cell";
 import { OWNER_TZ, vacations } from "@/lib/constants";
 
 export interface ContributionDay {
@@ -226,6 +227,7 @@ export function GitHubActivity({
           className="flex py-0.5"
           style={{ direction: "ltr", width: "max-content", marginLeft: "auto" }}
         >
+          <ActivityGridTooltips>
           {monthGroups.map((group, gi) => (
             <div
               key={gi}
@@ -250,17 +252,17 @@ export function GitHubActivity({
                       : holiday
                         ? `${base} ${HOLIDAY_RING}`
                         : base;
-                    const title = vacation
-                      ? `${day.date}: Vacation (${vacation})`
+                    const label = vacation
+                      ? `Vacation (${vacation})`
                       : holiday
-                        ? `${day.date}: ${holiday}`
-                        : day.date;
+                        ? holiday
+                        : null;
                     return (
-                      <div
+                      <ActivityCell
                         key={day.date}
-                        data-date={day.date}
+                        date={day.date}
+                        label={label}
                         className={`aspect-square rounded-xs ${className}`}
-                        title={title}
                       />
                     );
                   }),
@@ -268,6 +270,7 @@ export function GitHubActivity({
               </div>
             </div>
           ))}
+          </ActivityGridTooltips>
         </div>
       </div>
 
