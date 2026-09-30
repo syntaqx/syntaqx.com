@@ -45,9 +45,3 @@ updates:
         update-types:
           - "minor"
           - "patch"
-    ignore:
-      # eslint-config-next bundles an eslint-plugin-react that calls
-      # context.getFilename(), removed in ESLint 10 -> lint crashes.
-      - dependency-name: "eslint"
-        update-types:
-          - "version-update:semver-major"
