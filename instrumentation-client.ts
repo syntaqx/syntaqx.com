@@ -18,12 +18,6 @@ Sentry.init({
   // Traces sampled at 10% — enough signal for a personal site without the
   // per-page-view overhead of tracing every load.
   tracesSampleRate: 0.1,
-  // Enable logs to be sent to Sentry
-  enableLogs: true,
-
-  // Enable sending user PII (Personally Identifiable Information)
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
-  sendDefaultPii: true,
 
   // Drop noise we can't fix. Vercel's injected `vercel-live-feedback`
   // toolbar (served from `_next-live/feedback/instrument.*.js`) throws
