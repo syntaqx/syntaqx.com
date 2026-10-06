@@ -46,7 +46,7 @@ export function ActivityCell({
           side="top"
           sideOffset={6}
           collisionPadding={8}
-          className="z-200 rounded-md border border-border bg-surface px-2 py-1 text-[10px] leading-snug shadow-lg"
+          className="z-200 border border-border bg-surface px-2 py-1 text-[10px] leading-snug shadow-lg"
         >
           {label && (
             <span className="block font-medium text-foreground">{label}</span>

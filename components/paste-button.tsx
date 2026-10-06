@@ -33,11 +33,11 @@ export function PasteButton({
 
   const sizes = {
     sm: {
-      button: "gap-1 rounded border border-border px-1.5 py-1 text-[10px]",
+      button: "gap-1 border border-border px-1.5 py-1 text-[10px]",
       icon: 10,
     },
     md: {
-      button: "gap-1.5 rounded border border-border px-2 py-1 text-xs",
+      button: "gap-1.5 border border-border px-2 py-1 text-xs",
       icon: 12,
     },
   };

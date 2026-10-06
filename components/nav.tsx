@@ -18,7 +18,7 @@ export function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav className="hidden sm:flex items-center gap-5">
+    <nav className="inst hidden items-stretch overflow-x-auto [scrollbar-width:none] sm:flex [&::-webkit-scrollbar]:hidden">
       {links.map((item) => {
         const isActive =
           pathname === item.href || pathname.startsWith(item.href + "/");
@@ -26,10 +26,11 @@ export function Nav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`text-sm transition-colors ${
+            aria-current={isActive ? "page" : undefined}
+            className={`relative flex items-center whitespace-nowrap px-3.5 transition-colors after:absolute after:inset-x-3.5 after:-bottom-px after:h-0.5 after:origin-left after:bg-accent after:transition-transform after:duration-300 after:ease-[steps(6)] ${
               isActive
-                ? "text-accent font-medium"
-                : "text-muted hover:text-foreground"
+                ? "text-foreground after:scale-x-100"
+                : "text-dim hover:text-foreground after:scale-x-0 hover:after:scale-x-100"
             }`}
           >
             {item.label}
@@ -60,7 +61,7 @@ export function MobileMenu() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         aria-label="Open menu"
-        className="sm:hidden p-1.5 text-dim hover:text-foreground transition-colors cursor-pointer data-[state=open]:opacity-0"
+        className="flex w-12 items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer data-[state=open]:opacity-0 sm:hidden"
       >
         <Menu size={18} />
       </Dialog.Trigger>
@@ -68,16 +69,16 @@ export function MobileMenu() {
         <Dialog.Overlay className="sm:hidden fixed inset-0 z-90 bg-background/40" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="sm:hidden fixed inset-x-0 top-12.25 bottom-0 z-100 bg-background backdrop-blur-md outline-none"
+          className="sm:hidden fixed inset-x-0 top-14 bottom-0 z-100 bg-background outline-none"
         >
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
           <Dialog.Close
             aria-label="Close menu"
-            className="absolute right-5 top-3 p-1.5 text-dim hover:text-foreground transition-colors cursor-pointer"
+            className="absolute -top-14 right-0 flex h-14 w-12 items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer"
           >
             <X size={18} />
           </Dialog.Close>
-          <nav className="mx-auto max-w-7xl px-6 py-8 flex flex-col gap-6">
+          <nav className="flex flex-col border-t border-border">
             {links.map((item) => {
               const isActive =
                 pathname === item.href || pathname.startsWith(item.href + "/");
@@ -85,10 +86,11 @@ export function MobileMenu() {
                 <Dialog.Close asChild key={item.href}>
                   <Link
                     href={item.href}
-                    className={`text-lg transition-colors ${
+                    aria-current={isActive ? "page" : undefined}
+                    className={`font-voice border-b border-border px-6 py-4 text-4xl font-bold uppercase leading-none transition-colors ${
                       isActive
-                        ? "text-accent font-medium"
-                        : "text-muted hover:text-foreground"
+                        ? "text-accent"
+                        : "text-foreground hover:text-accent"
                     }`}
                   >
                     {item.label}
@@ -100,48 +102,5 @@ export function MobileMenu() {
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
-  );
-}
-
-export function Breadcrumb() {
-  const pathname = usePathname();
-  const segments = pathname.split("/").filter(Boolean);
-
-  return (
-    <div className="border-b border-border">
-      <div className="mx-auto max-w-7xl px-6 py-1.5 flex items-center gap-1.5 text-xs text-dim min-w-0 overflow-hidden">
-        <Link href="/" className="shrink-0 hover:text-accent transition-colors">
-          home
-        </Link>
-        {segments.length === 0 && (
-          <span className="flex items-center gap-1.5 min-w-0 shrink-0 last:shrink">
-            <span>/</span>
-            <span className="text-muted truncate">index</span>
-          </span>
-        )}
-        {segments.map((segment, i) => {
-          const href = "/" + segments.slice(0, i + 1).join("/");
-          const isLast = i === segments.length - 1;
-          return (
-            <span
-              key={href}
-              className="flex items-center gap-1.5 min-w-0 shrink-0 last:shrink"
-            >
-              <span>/</span>
-              {isLast ? (
-                <span className="text-muted truncate">{segment}</span>
-              ) : (
-                <Link
-                  href={href}
-                  className="shrink-0 hover:text-accent transition-colors"
-                >
-                  {segment}
-                </Link>
-              )}
-            </span>
-          );
-        })}
-      </div>
-    </div>
   );
 }

@@ -17,14 +17,7 @@ import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon";
 // --- Types ------------------------------------------------------------------
 
 type Format =
-  | "json"
-  | "yaml"
-  | "toon"
-  | "toml"
-  | "xml"
-  | "csv"
-  | "querystring"
-  | "env";
+  "json" | "yaml" | "toon" | "toml" | "xml" | "csv" | "querystring" | "env";
 
 type FormatCategory = "structured" | "config" | "flat";
 
@@ -507,10 +500,10 @@ export default function ConvertPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           Text Format Converter
         </h1>
-        <p className="text-sm text-muted">
+        <p className="max-w-2xl text-lg text-dim">
           Edit any format and the others update instantly. Everything runs in
           your browser.
         </p>
@@ -525,7 +518,7 @@ export default function ConvertPage() {
               <select
                 value={primary ?? ""}
                 onChange={(e) => setPrimary((e.target.value as Format) || null)}
-                className="appearance-none rounded border border-border bg-surface/50 pl-3 pr-7 py-1.5 text-xs text-foreground focus:outline-none focus:border-accent/40 cursor-pointer"
+                className="appearance-none border border-border bg-surface pl-3 pr-7 py-1.5 text-xs text-foreground focus:outline-none focus:border-accent/40 cursor-pointer"
               >
                 <option value="">Auto</option>
                 {FORMATS.filter((f) => enabled.includes(f.id)).map((f) => (
@@ -542,7 +535,7 @@ export default function ConvertPage() {
             <button
               onClick={clear}
               disabled={!hasContent}
-              className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-1.5 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Trash2 size={12} />
               Clear all
@@ -551,7 +544,7 @@ export default function ConvertPage() {
           {activeFormats.map((f) => (
             <div key={f.id}>
               <div
-                className={`rounded-lg border bg-surface/50 transition-colors ${
+                className={`border bg-surface transition-colors ${
                   errors[f.id]
                     ? "border-pink/40"
                     : source === f.id
@@ -606,8 +599,8 @@ export default function ConvertPage() {
         {/* Right: info sidebar */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           {/* Format toggles */}
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center justify-between">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Settings2 size={12} className="text-accent" />
                 Formats
@@ -638,7 +631,7 @@ export default function ConvertPage() {
                         <button
                           key={f.id}
                           onClick={() => toggleFormat(f.id)}
-                          className={`rounded border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer ${
+                          className={`border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer ${
                             enabled.includes(f.id)
                               ? "border-accent/40 bg-accent/10 text-accent"
                               : "border-border text-dim hover:text-foreground hover:border-border"
@@ -654,8 +647,8 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-accent" />
               About
             </h3>
@@ -717,8 +710,8 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-accent" />
               References
             </h3>

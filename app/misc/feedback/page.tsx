@@ -12,10 +12,10 @@ export default function FeedbackPage() {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           Feedback &amp; Affordance
         </h1>
-        <p className="text-sm text-muted leading-relaxed">
+        <p className="max-w-2xl text-lg text-dim leading-relaxed">
           Patterns for telling the user what just happened, what they can do
           next, and what deserves a moment of friction.
         </p>

@@ -4,6 +4,8 @@ date = 2026-08-11T00:00:00Z
 description = "I fixed a bug in ten minutes that could've cost me hours, and felt nothing. The fix worked. The understanding never showed up. On what actually goes missing when you let the tool think first."
 categories = ["AI", "Software Engineering"]
 tags = ["LLMs", "AI in Development", "Software Engineering", "Critical Thinking"]
+layout = "feature"
+hero = "loop"
 +++
 
 A few months ago I fixed a bug in ten minutes that could've cost me hours. That's not a brag. That's the whole problem.

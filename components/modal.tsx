@@ -57,7 +57,7 @@ export function Modal({
             onInteractOutside={(e) => {
               if (!dismissable) e.preventDefault();
             }}
-            className={`pointer-events-auto relative w-full sm:max-w-lg sm:rounded-xl border-b sm:border ${
+            className={`pointer-events-auto relative w-full sm:max-w-lg sm:border-b sm:border ${
               isDanger ? "border-pink/50" : "border-border"
             } bg-surface shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-full`}
           >
@@ -79,7 +79,7 @@ export function Modal({
               {dismissable && (
                 <Dialog.Close
                   aria-label="Close"
-                  className="shrink-0 -mr-1 -mt-1 rounded-md p-1 text-dim hover:text-foreground hover:bg-background/40 transition-colors cursor-pointer"
+                  className="shrink-0 -mr-1 -mt-1 p-1 text-dim hover:text-foreground hover:bg-background/40 transition-colors cursor-pointer"
                 >
                   <X size={16} />
                 </Dialog.Close>

@@ -2,6 +2,7 @@ import { getAllPosts, getAllTags, getNewestPostSlug } from "@/lib/posts";
 import { PostList } from "@/components/post-list";
 import { TagChips } from "@/components/tag-chips";
 import { SimpleIcon } from "@/components/simple-icon";
+import { PageHeader } from "@/components/page-header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,30 +18,23 @@ export default function PostsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-            All Posts
-          </h1>
-          <p className="text-sm text-muted">
-            Thoughts on building products, leading teams, and everything in
-            between.
-          </p>
-        </div>
+      <PageHeader label="posts" title="Writing">
+        <p>
+          Thoughts on building products, leading teams, and everything in
+          between.
+        </p>
         <a
           href="/feed.xml"
-          className="flex shrink-0 items-center gap-1.5 text-xs text-dim hover:text-accent transition-colors"
+          className="mt-6 inline-flex items-center gap-1.5 font-mono text-xs text-dim transition-colors hover:text-accent"
           aria-label="Subscribe via RSS"
         >
-          <SimpleIcon name="rss" size={14} />
-          RSS
+          <SimpleIcon name="rss" size={13} />
+          rss
         </a>
-      </div>
+      </PageHeader>
       {tags.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-[10px] font-medium uppercase tracking-widest text-dim mb-3">
-            Browse by tag
-          </h2>
+        <div className="mb-12">
+          <h2 className="eyebrow mb-4">browse by tag</h2>
           <TagChips tags={tags} />
         </div>
       )}

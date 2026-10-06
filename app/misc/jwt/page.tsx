@@ -661,10 +661,10 @@ export default function JwtPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           JWT Debugger
         </h1>
-        <p className="text-sm text-muted">
+        <p className="max-w-2xl text-lg text-dim">
           Decode, encode, and verify JSON Web Tokens. Everything runs in your
           browser, nothing is sent to a server.
         </p>
@@ -672,10 +672,10 @@ export default function JwtPage() {
 
       {/* Mode toggle + Algorithm selector */}
       <div className="mb-5 flex items-center gap-3 flex-wrap">
-        <div className="inline-flex rounded-lg border border-border p-0.5 bg-surface/50">
+        <div className="inline-flex border border-border p-0.5 bg-surface">
           <button
             onClick={() => switchMode("decode")}
-            className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+            className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
               mode === "decode"
                 ? "bg-accent text-background"
                 : "text-dim hover:text-foreground"
@@ -685,7 +685,7 @@ export default function JwtPage() {
           </button>
           <button
             onClick={() => switchMode("encode")}
-            className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+            className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
               mode === "encode"
                 ? "bg-accent text-background"
                 : "text-dim hover:text-foreground"
@@ -722,7 +722,7 @@ export default function JwtPage() {
                 setEncodePublicKey("");
               }
             }}
-            className="rounded-lg border border-border bg-surface/50 px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
+            className="border border-border bg-surface px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
           >
             <optgroup label="HMAC">
               <option value="HS256">HS256</option>
@@ -760,7 +760,7 @@ export default function JwtPage() {
           {mode === "decode" ? (
             <>
               {/* Token input with color-coded overlay */}
-              <div className="rounded-lg border border-border bg-surface/50">
+              <div className="border border-border bg-surface">
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <label className="text-xs text-dim">Encoded Token</label>
                   <div className="flex items-center gap-1.5">
@@ -770,7 +770,7 @@ export default function JwtPage() {
                           setInput(SAMPLE_TOKEN);
                           setSecret(SAMPLE_SECRET);
                         }}
-                        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
                       >
                         <FlaskConical size={12} />
                         Sample
@@ -780,7 +780,7 @@ export default function JwtPage() {
                     {input && (
                       <button
                         onClick={clearDecode}
-                        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -837,7 +837,7 @@ export default function JwtPage() {
 
               {/* Decoded sections */}
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-lg border border-border bg-surface/50">
+                <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                     <span className="text-xs font-medium text-pink">
                       Header
@@ -855,7 +855,7 @@ export default function JwtPage() {
                   </pre>
                 </div>
 
-                <div className="rounded-lg border border-border bg-surface/50">
+                <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                     <span className="text-xs font-medium text-jwt-purple">
                       Payload
@@ -875,7 +875,7 @@ export default function JwtPage() {
               </div>
 
               {/* Claims table */}
-              <div className="rounded-lg border border-border bg-surface/50">
+              <div className="border border-border bg-surface">
                 <div className="px-4 py-3 border-b border-border flex items-center justify-between">
                   <span className="text-xs font-medium text-dim">Claims</span>
                   {expiry && (
@@ -960,7 +960,7 @@ export default function JwtPage() {
               </div>
 
               {/* Signature verification */}
-              <div className="rounded-lg border border-border bg-surface/50">
+              <div className="border border-border bg-surface">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                   <span className="text-xs font-medium text-jwt-cyan flex items-center gap-1.5">
                     {verifyResult.status === "valid" ? (
@@ -998,7 +998,7 @@ export default function JwtPage() {
                       placeholder={`Secret key for ${decoded.jwt && typeof decoded.jwt.header.alg === "string" ? decoded.jwt.header.alg : "HMAC"} verification...`}
                       spellCheck={false}
                       disabled={!decoded.jwt}
-                      className="w-full rounded border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50 disabled:opacity-40"
+                      className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50 disabled:opacity-40"
                     />
                   ) : decodeAlgFamily === "none" ? (
                     <p className="text-xs text-dim">
@@ -1014,7 +1014,7 @@ export default function JwtPage() {
                       rows={6}
                       spellCheck={false}
                       disabled={!decoded.jwt}
-                      className="w-full rounded border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50 disabled:opacity-40 resize-y"
+                      className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50 disabled:opacity-40 resize-y"
                     />
                   )}
                 </div>
@@ -1024,7 +1024,7 @@ export default function JwtPage() {
             <>
               {/* Encode mode */}
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-lg border border-border bg-surface/50">
+                <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                     <span className="text-xs font-medium text-pink">
                       Header
@@ -1039,7 +1039,7 @@ export default function JwtPage() {
                   />
                 </div>
 
-                <div className="rounded-lg border border-border bg-surface/50">
+                <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                     <span className="text-xs font-medium text-jwt-purple">
                       Payload
@@ -1056,7 +1056,7 @@ export default function JwtPage() {
               </div>
 
               {/* Secret/Key for signing */}
-              <div className="rounded-lg border border-border bg-surface/50">
+              <div className="border border-border bg-surface">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                   <span className="text-xs font-medium text-jwt-cyan flex items-center gap-1.5">
                     <ShieldCheck size={12} />
@@ -1083,7 +1083,7 @@ export default function JwtPage() {
                               );
                             }
                           }}
-                          className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
                         >
                           <KeyRound size={12} />
                           Generate Key Pair
@@ -1106,12 +1106,12 @@ export default function JwtPage() {
                       onChange={(e) => setEncodeSecret(e.target.value)}
                       placeholder="Enter a secret key to sign the JWT..."
                       spellCheck={false}
-                      className="w-full rounded border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50"
+                      className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50"
                     />
                   ) : (
                     <>
                       <div>
-                        <label className="text-[10px] text-dim uppercase tracking-widest mb-1 block">
+                        <label className="text-[10px] text-dim mb-1 block">
                           Private Key
                         </label>
                         <textarea
@@ -1120,18 +1120,18 @@ export default function JwtPage() {
                           placeholder={`Paste private key (PEM) or click Generate Key Pair...\n-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----`}
                           rows={6}
                           spellCheck={false}
-                          className="w-full rounded border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50 resize-y"
+                          className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50 resize-y"
                         />
                       </div>
                       {encodePublicKey && (
                         <div>
                           <div className="flex items-center justify-between mb-1">
-                            <label className="text-[10px] text-dim uppercase tracking-widest">
+                            <label className="text-[10px] text-dim">
                               Public Key (for verification)
                             </label>
                             <CopyButton text={encodePublicKey} />
                           </div>
-                          <pre className="rounded border border-border bg-background px-2 py-1.5 text-xs font-mono text-dim break-all whitespace-pre-wrap max-h-40 overflow-auto">
+                          <pre className="border border-border bg-background px-2 py-1.5 text-xs font-mono text-dim break-all whitespace-pre-wrap max-h-40 overflow-auto">
                             {encodePublicKey}
                           </pre>
                         </div>
@@ -1150,7 +1150,7 @@ export default function JwtPage() {
               )}
 
               {/* Encoded output */}
-              <div className="rounded-lg border border-border bg-surface/50">
+              <div className="border border-border bg-surface">
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <label className="text-xs text-dim">Encoded Token</label>
                   <div className="flex items-center gap-1.5">
@@ -1162,7 +1162,7 @@ export default function JwtPage() {
                     {encodedOutput && (
                       <button
                         onClick={clearEncode}
-                        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -1196,8 +1196,8 @@ export default function JwtPage() {
 
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-accent" />
               About JWTs
             </h3>
@@ -1238,8 +1238,8 @@ export default function JwtPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-accent" />
               References
             </h3>

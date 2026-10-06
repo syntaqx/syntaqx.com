@@ -206,98 +206,107 @@ export function GitHubActivity({
   });
 
   return (
-    <div className="rounded-lg border border-border bg-surface/50 p-5">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xs font-medium uppercase tracking-widest text-dim">
-          GitHub Activity
-        </h3>
+    <div className="grid gap-x-12 gap-y-6 lg:grid-cols-[17rem_minmax(0,1fr)]">
+      <div>
+        <h2 className="eyebrow mb-6">activity</h2>
         <a
           href={`https://github.com/${username}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-dim hover:text-accent transition-colors"
+          className="group block"
         >
-          {total.toLocaleString()} contributions →
+          <span className="font-voice block text-6xl leading-[0.82] font-bold text-foreground transition-colors group-hover:text-accent">
+            {total.toLocaleString()}
+          </span>
+          <span className="inst mt-3 block text-dim">
+            contributions, last 12 months ↗
+          </span>
         </a>
       </div>
 
-      {/* Grid — scrollable when content overflows */}
-      <div className="relative overflow-x-auto" style={{ direction: "rtl" }}>
-        <div
-          className="flex py-0.5"
-          style={{ direction: "ltr", width: "max-content", marginLeft: "auto" }}
-        >
-          <ActivityGridTooltips>
-            {monthGroups.map((group, gi) => (
-              <div
-                key={gi}
-                className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
-              >
-                {/* Month label */}
-                <span className="text-[10px] text-dim mb-1 text-center">
-                  {group.label}
-                </span>
-                {/* Weeks in this month */}
+      <div className="min-w-0">
+        {/* Grid — scrollable when content overflows */}
+        <div className="relative overflow-x-auto" style={{ direction: "rtl" }}>
+          <div
+            className="flex py-0.5"
+            style={{
+              direction: "ltr",
+              width: "max-content",
+              marginLeft: "auto",
+            }}
+          >
+            <ActivityGridTooltips>
+              {monthGroups.map((group, gi) => (
                 <div
-                  className="grid grid-flow-col auto-cols-2.5 sm:auto-cols-3 md:auto-cols-3.25 gap-0.75"
-                  style={{ gridTemplateRows: "repeat(7, 1fr)" }}
+                  key={gi}
+                  className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
                 >
-                  {group.weeks.map((week) =>
-                    week.map((day) => {
-                      const vacation = vacationFor(day.date);
-                      const holiday = !vacation ? holidayFor(day.date) : null;
-                      const base = LEVEL_COLORS[day.level];
-                      const className = vacation
-                        ? `${base} ${VACATION_RING}`
-                        : holiday
-                          ? `${base} ${HOLIDAY_RING}`
-                          : base;
-                      const label = vacation
-                        ? `Vacation (${vacation})`
-                        : holiday
-                          ? holiday
-                          : null;
-                      return (
-                        <ActivityCell
-                          key={day.date}
-                          date={day.date}
-                          label={label}
-                          className={`aspect-square rounded-xs ${className}`}
-                        />
-                      );
-                    }),
-                  )}
+                  {/* Month label */}
+                  <span className="inst mb-1.5 text-center text-[0.5rem] text-dim">
+                    {group.label}
+                  </span>
+                  {/* Weeks in this month */}
+                  <div
+                    className="grid grid-flow-col auto-cols-2.5 sm:auto-cols-3 md:auto-cols-3.25 gap-0.75"
+                    style={{ gridTemplateRows: "repeat(7, 1fr)" }}
+                  >
+                    {group.weeks.map((week) =>
+                      week.map((day) => {
+                        const vacation = vacationFor(day.date);
+                        const holiday = !vacation ? holidayFor(day.date) : null;
+                        const base = LEVEL_COLORS[day.level];
+                        const className = vacation
+                          ? `${base} ${VACATION_RING}`
+                          : holiday
+                            ? `${base} ${HOLIDAY_RING}`
+                            : base;
+                        const label = vacation
+                          ? `Vacation (${vacation})`
+                          : holiday
+                            ? holiday
+                            : null;
+                        return (
+                          <ActivityCell
+                            key={day.date}
+                            date={day.date}
+                            label={label}
+                            className={`aspect-square rounded-xs ${className}`}
+                          />
+                        );
+                      }),
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </ActivityGridTooltips>
+              ))}
+            </ActivityGridTooltips>
+          </div>
         </div>
-      </div>
 
-      {/* Legend */}
-      <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2 mt-3">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-xs ring-1 ring-accent ring-inset" />
-          <span className="text-[10px] text-dim">Today</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div
-            className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${VACATION_RING}`}
-          />
-          <span className="text-[10px] text-dim">Vacation</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div
-            className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${HOLIDAY_RING}`}
-          />
-          <span className="text-[10px] text-dim">US Holiday</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] text-dim">Less</span>
-          {LEVEL_COLORS.map((color, i) => (
-            <div key={i} className={`w-2.5 h-2.5 rounded-xs ${color}`} />
-          ))}
-          <span className="text-[10px] text-dim">More</span>
+        {/* Legend */}
+        <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2 mt-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-xs ring-1 ring-accent ring-inset" />
+            <span className="inst text-[0.5rem] text-dim">Today</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div
+              className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${VACATION_RING}`}
+            />
+            <span className="inst text-[0.5rem] text-dim">Vacation</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div
+              className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${HOLIDAY_RING}`}
+            />
+            <span className="inst text-[0.5rem] text-dim">US Holiday</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="inst text-[0.5rem] text-dim">Less</span>
+            {LEVEL_COLORS.map((color, i) => (
+              <div key={i} className={`w-2.5 h-2.5 rounded-xs ${color}`} />
+            ))}
+            <span className="inst text-[0.5rem] text-dim">More</span>
+          </div>
         </div>
       </div>
 
@@ -335,18 +344,15 @@ export async function GitHubActivityAsync({
  */
 export function GitHubActivitySkeleton() {
   return (
-    <div
-      className="rounded-lg border border-border bg-surface/50 p-5"
-      aria-hidden="true"
-    >
-      <div className="flex items-center justify-between mb-4">
-        <div className="h-3 w-32 rounded bg-border/50" />
-        <div className="h-3 w-24 rounded bg-border/40" />
+    <div aria-hidden="true">
+      <div className="flex items-center justify-between mb-6 lg:w-56">
+        <div className="h-3 w-32 bg-border/50" />
+        <div className="h-3 w-24 bg-border/40" />
       </div>
-      <div className="h-30 rounded bg-border/20" />
+      <div className="h-30 bg-border/20" />
       <div className="mt-3 flex justify-end gap-3">
-        <div className="h-3 w-16 rounded bg-border/30" />
-        <div className="h-3 w-24 rounded bg-border/30" />
+        <div className="h-3 w-16 bg-border/30" />
+        <div className="h-3 w-24 bg-border/30" />
       </div>
     </div>
   );

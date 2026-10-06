@@ -25,16 +25,14 @@ export function TagChips({
             key={tag.slug}
             href={`/tags/${tag.slug}`}
             aria-current={isActive ? "page" : undefined}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors ${
+            className={`inst inline-flex items-center gap-2 border px-2.5 py-1.5 transition-colors ${
               isActive
-                ? "border-accent/40 bg-accent/10 text-accent"
-                : "border-border text-dim hover:border-accent/30 hover:text-foreground"
+                ? "border-accent text-accent"
+                : "border-border text-muted hover:border-accent hover:text-accent"
             }`}
           >
             <span>{tag.label}</span>
-            {showCounts && (
-              <span className="text-[10px] text-dim">{tag.count}</span>
-            )}
+            {showCounts && <span className="text-dim">{tag.count}</span>}
           </Link>
         );
       })}

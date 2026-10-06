@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getDocsByCategory } from "@/lib/docs";
-import { Card } from "@/components/card";
+import { PageHeader } from "@/components/page-header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,63 +14,79 @@ export default function DocsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          Docs
-        </h1>
-        <p className="text-sm text-muted leading-relaxed max-w-2xl">
+      <PageHeader
+        label="docs"
+        title="Conventions"
+        scene="spec"
+        sceneLabel="A spec sheet lifted off its index, with one teal row highlighted"
+      >
+        <p>
           Patterns and conventions I&apos;ve landed on after years of trial,
           error, and strong opinions. None of this is new or proprietary. These
           are well-established practices for building software, and this is how
           I choose to implement them.
         </p>
-      </div>
+      </PageHeader>
 
-      {/* Category grid */}
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-x-12 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (
-          <div key={category.name}>
-            <h2 className="text-[10px] font-medium uppercase tracking-widest text-dim mb-3">
-              {category.name}
-            </h2>
-            <Card className="space-y-1">
-              {category.docs.map((doc) => (
-                <Link
-                  key={doc.slug}
-                  href={`/docs/${doc.slug}`}
-                  className="group block py-1.5"
-                >
-                  <span className="text-sm text-foreground group-hover:text-accent transition-colors">
-                    {doc.title}
-                  </span>
-                  {doc.description && (
-                    <p className="text-xs text-dim leading-relaxed mt-0.5">
-                      {doc.description}
-                    </p>
-                  )}
-                </Link>
-              ))}
-            </Card>
-          </div>
+          <DocGroup key={category.name} name={category.name}>
+            {category.docs.map((doc) => (
+              <DocLink
+                key={doc.slug}
+                href={`/docs/${doc.slug}`}
+                title={doc.title}
+                description={doc.description}
+              />
+            ))}
+          </DocGroup>
         ))}
-
-        {/* Reference section */}
-        <div>
-          <h2 className="text-[10px] font-medium uppercase tracking-widest text-dim mb-3">
-            Reference
-          </h2>
-          <Card className="space-y-1">
-            <Link href="/docs/api" className="group block py-1.5">
-              <span className="text-sm text-foreground group-hover:text-accent transition-colors">
-                API Reference
-              </span>
-              <p className="text-xs text-dim leading-relaxed mt-0.5">
-                Interactive API documentation with live request testing.
-              </p>
-            </Link>
-          </Card>
-        </div>
+        <DocGroup name="Reference">
+          <DocLink
+            href="/docs/api"
+            title="API Reference"
+            description="Interactive API documentation with live request testing."
+          />
+        </DocGroup>
       </div>
     </div>
+  );
+}
+
+function DocGroup({
+  name,
+  children,
+}: {
+  name: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <h2 className="eyebrow mb-4">{name}</h2>
+      <ul className="border-t border-border">{children}</ul>
+    </section>
+  );
+}
+
+function DocLink({
+  href,
+  title,
+  description,
+}: {
+  href: string;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <li className="border-b border-border">
+      <Link href={href} className="group block py-4">
+        <span className="text-2xl leading-none text-foreground transition-colors group-hover:text-accent">
+          {title}
+        </span>
+        {description && (
+          <p className="mt-1 text-xs leading-relaxed text-dim">{description}</p>
+        )}
+      </Link>
+    </li>
   );
 }

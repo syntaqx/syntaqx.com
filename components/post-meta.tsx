@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { Calendar, Clock } from "lucide-react";
 import { slugifyTag } from "@/lib/posts";
 
 interface PostMetaProps {
@@ -18,15 +17,13 @@ export function PostMeta({
 }: PostMetaProps) {
   return (
     <div
-      className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-dim ${className}`}
+      className={`inst flex flex-wrap items-center gap-x-3 gap-y-1 text-dim ${className}`}
     >
-      <span className="flex items-center gap-1 shrink-0">
-        <Calendar size={11} />
-        <time dateTime={date}>{format(new Date(date), dateFormat)}</time>
-      </span>
+      <time dateTime={date} className="shrink-0">
+        {format(new Date(date), dateFormat)}
+      </time>
       {readingTimeMinutes !== undefined && (
-        <span className="flex items-center gap-1 shrink-0">
-          <Clock size={11} />
+        <span className="shrink-0 before:mr-3 before:text-border-hover before:content-['/']">
           {readingTimeMinutes} min read
         </span>
       )}
@@ -55,8 +52,7 @@ export function PostTags({
 }: PostTagsProps) {
   if (!tags || tags.length === 0) return null;
   const shown = max ? tags.slice(0, max) : tags;
-  const chip =
-    "inline-block rounded border border-border px-1.5 py-0.5 text-[10px] text-dim";
+  const chip = "inst inline-block border border-border px-2 py-1 text-dim";
   return (
     <div className={`flex flex-wrap gap-1 ${className}`}>
       {shown.map((tag) =>
@@ -64,7 +60,7 @@ export function PostTags({
           <Link
             key={tag}
             href={`/tags/${slugifyTag(tag)}`}
-            className={`${chip} hover:border-accent/30 hover:text-foreground transition-colors`}
+            className={`${chip} hover:border-accent hover:text-accent transition-colors`}
           >
             {tag}
           </Link>

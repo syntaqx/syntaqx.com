@@ -1,21 +1,11 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { format } from "date-fns";
 import { getPostBySlug, getAllPosts } from "@/lib/posts";
-
-// Use Geist Mono — same family as the rest of the site — read straight
-// from the `geist` npm package so the build never has to reach the
-// network for fonts. Satori needs real TTF/OTF (not woff2), which the
-// package conveniently ships.
-const geistMonoBold = readFileSync(
-  join(
-    process.cwd(),
-    "node_modules/geist/dist/fonts/geist-mono/GeistMono-Bold.ttf",
-  ),
-);
+import { ogFonts, OG_SIZE } from "@/lib/og";
+import { OG_COLORS as C, fieldImage, sceneImage } from "@/lib/scene/og";
 
 export const alt = "syntaqx blog post";
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = "image/png";
 
 export async function generateStaticParams() {
@@ -31,8 +21,20 @@ export default async function Image({
   const post = getPostBySlug(slug);
 
   const title = post?.title ?? slug;
-  const date = post?.date ?? "";
-  const tags = post?.tags ?? [];
+  const meta = [
+    post?.date ? format(new Date(post.date), "MMM d, yyyy") : null,
+    post ? `${post.readingTimeMinutes} min read` : null,
+  ]
+    .filter(Boolean)
+    .join("  ·  ")
+    .toUpperCase();
+
+  // Feature posts carry their own hero scene; everything else gets the
+  // plain dithered field, never another page's art.
+  const art = post?.hero
+    ? sceneImage(post.hero, size.width, size.height, { pitch: 6, wide: true })
+    : fieldImage(size.width, size.height);
+  const long = title.length > 34;
 
   return new ImageResponse(
     <div
@@ -40,91 +42,72 @@ export default async function Image({
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        padding: "80px",
-        backgroundColor: "#0d0d0d",
-        fontFamily: "Inter, sans-serif",
+        backgroundColor: C.bg,
+        position: "relative",
       }}
     >
-      {/* Label */}
-      <div
-        style={{
-          fontSize: 14,
-          color: "#00D1CA",
-          textTransform: "uppercase",
-          letterSpacing: 3,
-          marginBottom: 24,
-        }}
-      >
-        Blog Post
-      </div>
-      {/* Title */}
-      <div
-        style={{
-          fontSize: 52,
-          fontWeight: 700,
-          color: "#e0e0e0",
-          lineHeight: 1.15,
-          marginBottom: 32,
-          maxWidth: 900,
-        }}
-      >
-        {title}
-      </div>
-      {/* Meta row */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={art}
+        width={size.width}
+        height={size.height}
+        alt=""
+        style={{ position: "absolute", left: 0, top: 0 }}
+      />
       <div
         style={{
           display: "flex",
-          gap: 24,
-          fontSize: 18,
-          color: "#6b7280",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "60px 72px",
+          width: "100%",
         }}
       >
-        {date && (
-          <span>
-            {new Date(date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </span>
-        )}
-        {tags.length > 0 && <span>{tags.slice(0, 3).join(" · ")}</span>}
-      </div>
-      {/* Bottom brand */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 60,
-          left: 80,
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-        }}
-      >
-        <div style={{ width: 40, height: 3, backgroundColor: "#00D1CA" }} />
         <div
           style={{
-            fontSize: 20,
-            color: "#00D1CA",
-            fontWeight: 700,
+            display: "flex",
+            fontFamily: "Michroma",
+            fontSize: 18,
+            letterSpacing: 2.5,
+            color: C.fg,
           }}
         >
-          syntaqx.com
+          syntaqx
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: post?.hero ? 540 : 1000,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Michroma",
+              fontSize: 14,
+              letterSpacing: 3.5,
+              color: C.acc,
+              marginBottom: 22,
+            }}
+          >
+            {meta}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Big Shoulders",
+              fontSize: post?.hero ? 104 : long ? 96 : 124,
+              lineHeight: 0.88,
+              color: C.fg,
+              textTransform: "uppercase",
+            }}
+          >
+            {title}
+          </div>
         </div>
       </div>
     </div>,
-    {
-      ...size,
-      fonts: [
-        {
-          name: "GeistMono",
-          data: geistMonoBold,
-          style: "normal" as const,
-          weight: 700 as const,
-        },
-      ],
-    },
+    { ...size, fonts: ogFonts },
   );
 }

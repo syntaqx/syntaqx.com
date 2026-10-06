@@ -21,19 +21,14 @@ export function MiscToolsNav() {
   if (others.length === 0) return null;
 
   return (
-    <nav
-      aria-label="More tools"
-      className="mt-16 border-t border-border pt-8"
-    >
-      <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4">
-        More tools
-      </h2>
+    <nav aria-label="More tools" className="mt-16 border-t border-border pt-8">
+      <h2 className="eyebrow mb-4">More tools</h2>
       <ul className="flex flex-wrap gap-2">
         {others.map((tool) => (
           <li key={tool.href}>
             <Link
               href={tool.href}
-              className="inline-block rounded border border-border px-2.5 py-1 text-xs text-muted hover:border-accent hover:text-accent transition-colors"
+              className="inst inline-block border border-border px-2.5 py-1.5 text-muted hover:border-accent hover:text-accent transition-colors"
             >
               {tool.title}
             </Link>

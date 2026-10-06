@@ -1,13 +1,5 @@
-import {
-  MapPin,
-  ArrowRight,
-  Briefcase,
-  Heart,
-  Compass,
-  Users,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SimpleIcon } from "@/components/simple-icon";
-import { Card } from "@/components/card";
 import { Button } from "@/components/button";
 import { socials } from "@/lib/constants";
 import type { Metadata } from "next";
@@ -23,17 +15,15 @@ export default function AboutPage() {
     <div>
       {/* Two-column layout: everything + sidebar from the top */}
       <section className="mb-16">
-        <div className="grid gap-10 lg:grid-cols-[1fr_360px] items-start">
+        <div className="grid gap-16 lg:grid-cols-[1fr_340px] items-start">
           {/* Left: hero + narrative */}
           <div>
-            <p className="text-xs text-accent font-medium tracking-wider uppercase mb-4">
-              About
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.15] mb-8">
+            <p className="eyebrow mb-6">about</p>
+            <h1 className="mb-10 text-[clamp(3rem,6vw,5rem)] leading-[0.9]">
               Hacker, <span className="text-accent">open sorcerer</span>,
               engineering leader.
             </h1>
-            <div className="text-sm text-muted leading-relaxed space-y-4">
+            <div className="max-w-2xl space-y-5 text-lg leading-relaxed text-muted">
               <p>
                 My world is the screen. I&apos;m obsessed with technology: the
                 systems, the architecture, the problem-solving. That&apos;s the
@@ -93,7 +83,7 @@ export default function AboutPage() {
                   href="https://www.meetup.com/slcdevs/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-accent hover:underline"
+                  className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
                 >
                   Salt Lake City Developers
                 </a>{" "}
@@ -106,134 +96,98 @@ export default function AboutPage() {
           </div>
 
           {/* Right: details sidebar */}
-          <div className="space-y-3">
-            {[
-              { icon: MapPin, label: "Location", value: "Utah, USA" },
-              {
-                icon: Briefcase,
-                label: "Role",
-                value: "Software Engineering Leadership",
-              },
-              {
-                icon: Compass,
-                label: "Focus",
-                value: "Architecture, Product & Delivery",
-              },
-              {
-                icon: Users,
-                label: "Approach",
-                value: "Architecture enables, problem clarity directs",
-              },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="rounded-lg border border-border bg-surface/50"
-              >
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
-                  <item.icon size={12} className="text-accent" />
-                  <p className="text-xs font-medium uppercase tracking-widest text-dim">
-                    {item.label}
-                  </p>
+          <aside className="lg:sticky lg:top-24">
+            <dl className="border-t border-border">
+              {[
+                { label: "location", value: "Utah, USA" },
+                { label: "role", value: "Software Engineering Leadership" },
+                { label: "focus", value: "Architecture, Product & Delivery" },
+                {
+                  label: "approach",
+                  value: "Architecture enables, problem clarity directs",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="grid grid-cols-[6rem_1fr] gap-4 border-b border-border py-3"
+                >
+                  <dt className="inst pt-1.5 text-dim">{item.label}</dt>
+                  <dd className="leading-snug font-semibold text-foreground">
+                    {item.value}
+                  </dd>
                 </div>
-                <p className="text-sm text-foreground font-medium px-4 py-3">
-                  {item.value}
-                </p>
+              ))}
+              <div className="grid grid-cols-[6rem_1fr] gap-4 py-3">
+                <dt className="inst pt-1.5 text-dim">connect</dt>
+                <dd className="flex flex-col gap-1">
+                  {socials.map((s) => (
+                    <a
+                      key={s.href}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 py-1 text-sm text-muted hover:text-accent transition-colors"
+                    >
+                      <SimpleIcon name={s.icon} size={14} />
+                      {s.label}
+                    </a>
+                  ))}
+                </dd>
               </div>
-            ))}
-
-            {/* Connect */}
-            <div className="rounded-lg border border-border bg-surface/50">
-              <div className="px-4 py-3 border-b border-border">
-                <p className="text-xs font-medium uppercase tracking-widest text-dim">
-                  Connect
-                </p>
-              </div>
-              <div className="flex flex-col gap-1.5 px-4 py-3">
-                {socials.map((s) => (
-                  <a
-                    key={s.href}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 py-1 text-sm text-muted hover:text-accent transition-colors"
-                  >
-                    <SimpleIcon name={s.icon} size={14} />
-                    {s.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
+            </dl>
+          </aside>
         </div>
       </section>
 
       {/* What I care about */}
       <section className="mb-16">
-        <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-6 flex items-center gap-2">
-          <Heart size={12} className="text-pink" />
-          What I care about
-        </h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <h2 className="eyebrow mb-8">what I care about</h2>
+        <ol className="grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               title: "Architecture First",
               description:
                 "Architecture needs to be right to enable building the right products. Without it, you can't build anything worth building. That's why I obsess over protecting it.",
-              tags: ["systems", "design", "infrastructure"],
             },
             {
               title: "Problem Clarity",
               description:
                 "Architecture tells you what you can build. Problem clarity tells you what you should build. I force clarity on the problem first, because if you can't articulate it, you don't know what to build.",
-              tags: ["product", "strategy"],
             },
             {
               title: "Configuration over Convention",
               description:
                 "When the problem changes, good architecture means the solution is a configuration change, not a rewrite. Every shift in requirements should be expected, not a bug.",
-              tags: ["architecture", "resilience"],
             },
             {
               title: "Developer Experience",
               description:
                 "Internal platforms, CLIs, and tooling that make engineers more productive and happier. The team's velocity is a product of how good their tools are.",
-              tags: ["tooling", "platforms", "dx"],
             },
             {
               title: "Engineering Leadership",
               description:
                 "High-performing teams with autonomy, trust, and a shared sense of craft. Culture is a feature, not a side effect.",
-              tags: ["leadership", "culture", "teams"],
             },
             {
               title: "Open Source",
               description:
                 "Contributing to and maintaining projects that solve real problems. Code should be shared when it can be. The community makes us all better.",
-              tags: ["oss", "community"],
             },
-          ].map((item) => (
-            <Card key={item.title} className="flex flex-col h-full">
-              <h3 className="text-sm font-medium text-foreground mb-1">
+          ].map((item, i) => (
+            <li key={item.title} className="border-t border-border pt-5 pb-10">
+              <span className="font-voice text-2xl leading-none font-bold text-accent">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-3 mb-3 text-2xl leading-none text-foreground">
                 {item.title}
               </h3>
-              <p className="text-xs text-dim leading-relaxed flex-1 sm:min-h-[4lh]">
+              <p className="text-base leading-relaxed text-muted">
                 {item.description}
               </p>
-              {item.tags && (
-                <div className="mt-3 flex flex-wrap gap-1">
-                  {item.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-block rounded border border-border px-1.5 py-0.5 text-[10px] text-dim"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Card>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
       {/* CTA */}

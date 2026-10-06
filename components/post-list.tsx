@@ -1,7 +1,6 @@
 import Link from "next/link";
+import { format } from "date-fns";
 import type { PostData } from "@/lib/posts";
-import { Card } from "@/components/card";
-import { PostMeta, PostTags } from "@/components/post-meta";
 
 interface PostListProps {
   posts: PostData[];
@@ -11,37 +10,38 @@ interface PostListProps {
 
 export function PostList({ posts, newestSlug = null }: PostListProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <ol className="border-t border-border">
       {posts.map((post) => (
-        <Link key={post.slug} href={`/posts/${post.slug}`} className="group block">
-          <Card hover className="p-5">
-            <div className="flex items-start justify-between gap-2">
-              <h2 className="text-base font-medium text-foreground group-hover:text-accent transition-colors">
+        <li key={post.slug} className="border-b border-border">
+          <Link
+            href={`/posts/${post.slug}`}
+            className="group relative grid gap-x-8 gap-y-2 px-0 py-6 transition-colors before:absolute before:top-1/2 before:-left-4 before:size-1.5 before:-translate-y-1/2 before:scale-0 before:bg-accent before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-surface hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4"
+          >
+            <time dateTime={post.date} className="inst text-dim tabular-nums">
+              {format(new Date(post.date), "yyyy.MM.dd")}
+            </time>
+            <div className="min-w-0">
+              <h2 className="text-2xl leading-none text-foreground transition-[color,translate] duration-200 ease-[steps(4)] group-hover:translate-x-1.5 group-hover:text-accent sm:text-[1.65rem]">
                 {post.title}
               </h2>
-              {post.slug === newestSlug && (
-                <span className="shrink-0 rounded border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-accent">
-                  New
-                </span>
+              {post.description && (
+                <p className="mt-2 max-w-2xl text-[0.95rem] leading-snug text-dim line-clamp-2">
+                  {post.description}
+                </p>
               )}
             </div>
-            {post.description && (
-              <p className="mt-2 text-xs text-dim leading-relaxed line-clamp-2">
-                {post.description}
-              </p>
-            )}
-            <div className="mt-4 pt-3 border-t border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-              <PostMeta
-                date={post.date}
-                readingTimeMinutes={post.readingTimeMinutes}
-              />
-              {/* Plain (non-link) tags: this card is itself an <a>, so
-                  nesting anchors here would be invalid HTML. */}
-              <PostTags tags={post.tags} max={3} />
-            </div>
-          </Card>
-        </Link>
+            <span className="inst flex items-center gap-3 text-dim sm:justify-end">
+              {post.layout === "feature" && (
+                <span className="text-accent">feature</span>
+              )}
+              {post.slug === newestSlug && (
+                <span className="text-accent">new</span>
+              )}
+              {post.readingTimeMinutes} min
+            </span>
+          </Link>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }

@@ -14,13 +14,13 @@ export function DocsSidebar({ categories }: DocsSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="space-y-6">
+    <nav className="space-y-7">
       {categories.map((category) => (
         <div key={category.name}>
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-dim mb-2">
+          <h3 className="inst mb-2.5 text-[0.55rem] text-dim">
             {category.name}
           </h3>
-          <ul className="space-y-0.5">
+          <ul className="border-l border-border">
             {category.docs.map((doc) => {
               const href = `/docs/${doc.slug}`;
               const active = pathname === href;
@@ -28,10 +28,10 @@ export function DocsSidebar({ categories }: DocsSidebarProps) {
                 <li key={doc.slug}>
                   <Link
                     href={href}
-                    className={`block text-xs py-1.5 px-2.5 rounded-md transition-colors ${
+                    className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
                       active
-                        ? "text-accent bg-accent/10 font-medium"
-                        : "text-muted hover:text-foreground hover:bg-surface"
+                        ? "border-accent font-semibold text-foreground"
+                        : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
                     }`}
                   >
                     {doc.title}
@@ -43,17 +43,15 @@ export function DocsSidebar({ categories }: DocsSidebarProps) {
         </div>
       ))}
       <div>
-        <h3 className="text-[10px] font-medium uppercase tracking-widest text-dim mb-2">
-          Reference
-        </h3>
-        <ul className="space-y-0.5">
+        <h3 className="inst mb-2.5 text-[0.55rem] text-dim">Reference</h3>
+        <ul className="border-l border-border">
           <li>
             <Link
               href="/docs/api"
-              className={`block text-xs py-1.5 px-2.5 rounded-md transition-colors ${
+              className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
                 pathname === "/docs/api"
-                  ? "text-accent bg-accent/10 font-medium"
-                  : "text-muted hover:text-foreground hover:bg-surface"
+                  ? "border-accent font-semibold text-foreground"
+                  : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
               }`}
             >
               API Reference
@@ -83,7 +81,7 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
     <div className="lg:hidden mb-6">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-2 rounded-lg border border-border bg-surface/50 px-3 py-2.5 text-sm text-foreground"
+        className="w-full flex items-center justify-between gap-2 border border-border bg-surface px-3 py-2.5 text-sm text-foreground"
       >
         <span className="truncate">{currentTitle}</span>
         <ChevronDown
@@ -92,14 +90,14 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
         />
       </button>
       {open && (
-        <div className="mt-2 rounded-lg border border-border bg-surface/50 p-3">
+        <div className="mt-2 border border-border bg-surface p-3">
           <nav className="space-y-4">
             {categories.map((category) => (
               <div key={category.name}>
-                <h3 className="text-[10px] font-medium uppercase tracking-widest text-dim mb-1.5">
+                <h3 className="inst mb-2 text-[0.55rem] text-dim">
                   {category.name}
                 </h3>
-                <ul className="space-y-0.5">
+                <ul className="border-l border-border">
                   {category.docs.map((doc) => {
                     const href = `/docs/${doc.slug}`;
                     const active = pathname === href;
@@ -108,10 +106,10 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
                         <Link
                           href={href}
                           onClick={() => setOpen(false)}
-                          className={`block text-xs py-1.5 px-2.5 rounded-md transition-colors ${
+                          className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
                             active
-                              ? "text-accent bg-accent/10 font-medium"
-                              : "text-muted hover:text-foreground hover:bg-surface"
+                              ? "border-accent font-semibold text-foreground"
+                              : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
                           }`}
                         >
                           {doc.title}
@@ -123,18 +121,16 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
               </div>
             ))}
             <div>
-              <h3 className="text-[10px] font-medium uppercase tracking-widest text-dim mb-1.5">
-                Reference
-              </h3>
-              <ul className="space-y-0.5">
+              <h3 className="inst mb-2 text-[0.55rem] text-dim">Reference</h3>
+              <ul className="border-l border-border">
                 <li>
                   <Link
                     href="/docs/api"
                     onClick={() => setOpen(false)}
-                    className={`block text-xs py-1.5 px-2.5 rounded-md transition-colors ${
+                    className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
                       pathname === "/docs/api"
-                        ? "text-accent bg-accent/10 font-medium"
-                        : "text-muted hover:text-foreground hover:bg-surface"
+                        ? "border-accent font-semibold text-foreground"
+                        : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
                     }`}
                   >
                     API Reference

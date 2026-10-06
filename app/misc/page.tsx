@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/card";
+import { PageHeader } from "@/components/page-header";
 import { tools, patterns, converters, type MiscTool } from "@/lib/misc-tools";
 import type { Metadata } from "next";
 
@@ -17,7 +18,9 @@ function ToolGrid({ items }: { items: MiscTool[] }) {
         <Link key={item.href} href={item.href} className="group flex flex-col">
           <Card hover className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-sm font-medium text-accent">{item.title}</h2>
+              <h2 className="text-2xl leading-none text-foreground transition-colors group-hover:text-accent">
+                {item.title}
+              </h2>
               <ArrowRight
                 size={12}
                 className="text-dim group-hover:text-accent transition-colors"
@@ -30,7 +33,7 @@ function ToolGrid({ items }: { items: MiscTool[] }) {
               {item.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-block rounded border border-border px-1.5 py-0.5 text-[10px] text-dim"
+                  className="inline-block border border-border px-1.5 py-0.5 text-[10px] text-dim"
                 >
                   {tag}
                 </span>
@@ -46,27 +49,25 @@ function ToolGrid({ items }: { items: MiscTool[] }) {
 export default function PlaygroundPage() {
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          Misc
-        </h1>
-        <p className="text-sm text-muted">
-          Tools, toys, and things built for fun.
-        </p>
-      </div>
+      <PageHeader
+        label="misc"
+        title="Tools & toys"
+        scene="toolbox"
+        sceneLabel="An opened box of small tools with its lid floating above"
+      >
+        <p>Tools, toys, and things built for fun.</p>
+      </PageHeader>
 
       <div className="grid gap-10 lg:grid-cols-2">
         <div className="space-y-10">
           <section>
-            <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4">
-              Tools
-            </h2>
+            <h2 className="eyebrow mb-4">Tools</h2>
             <ToolGrid items={tools} />
           </section>
 
           <section>
             <Link href="/misc/convert" className="group">
-              <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4 group-hover:text-accent transition-colors">
+              <h2 className="eyebrow mb-4 group-hover:text-accent transition-colors">
                 Converters
               </h2>
             </Link>
@@ -75,9 +76,7 @@ export default function PlaygroundPage() {
         </div>
 
         <section>
-          <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-4">
-            UI / UX Patterns
-          </h2>
+          <h2 className="eyebrow mb-4">UI / UX Patterns</h2>
           <ToolGrid items={patterns} />
         </section>
       </div>

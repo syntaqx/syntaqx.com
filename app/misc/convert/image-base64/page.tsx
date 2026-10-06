@@ -297,10 +297,10 @@ export default function ImageBase64Page() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           Image / Base64 Converter
         </h1>
-        <p className="text-sm text-muted">
+        <p className="max-w-2xl text-lg text-dim">
           Convert images to Base64 data URIs and decode Base64 back into images.
           Everything runs in your browser, nothing is sent to a server.
         </p>
@@ -310,10 +310,10 @@ export default function ImageBase64Page() {
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
           {/* Segmented control */}
-          <div className="mb-5 inline-flex rounded-lg border border-border p-0.5 bg-surface/50">
+          <div className="mb-5 inline-flex border border-border p-0.5 bg-surface">
             <button
               onClick={() => switchMode("encode")}
-              className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                 mode === "encode"
                   ? "bg-accent text-background"
                   : "text-dim hover:text-foreground"
@@ -323,7 +323,7 @@ export default function ImageBase64Page() {
             </button>
             <button
               onClick={() => switchMode("decode")}
-              className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                 mode === "decode"
                   ? "bg-accent text-background"
                   : "text-dim hover:text-foreground"
@@ -343,7 +343,7 @@ export default function ImageBase64Page() {
                   setEncDragging(true);
                 }}
                 onDragLeave={() => setEncDragging(false)}
-                className={`rounded-lg border bg-surface/50 transition-colors ${
+                className={`border bg-surface transition-colors ${
                   encDragging ? "border-accent border-dashed" : "border-border"
                 }`}
               >
@@ -365,7 +365,7 @@ export default function ImageBase64Page() {
                     )}
                     <button
                       onClick={() => encFileRef.current?.click()}
-                      className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
                     >
                       <Upload size={12} />
                       File
@@ -373,7 +373,7 @@ export default function ImageBase64Page() {
                     {encDataUri && (
                       <button
                         onClick={clearEncode}
-                        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -397,7 +397,7 @@ export default function ImageBase64Page() {
                     <img
                       src={encDataUri}
                       alt={encFileName ?? "preview"}
-                      className="max-h-64 max-w-full rounded border border-border bg-background object-contain"
+                      className="max-h-64 max-w-full border border-border bg-background object-contain"
                     />
                   ) : (
                     <div className="text-center text-xs text-dim">
@@ -438,7 +438,7 @@ export default function ImageBase64Page() {
                   readOnly
                   rows={8}
                   placeholder="Encoded Base64 will appear here..."
-                  className="w-full rounded-lg border border-border bg-surface/50 px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono break-all"
+                  className="w-full border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono break-all"
                 />
               </div>
             </div>
@@ -452,7 +452,7 @@ export default function ImageBase64Page() {
                   setDecDragging(true);
                 }}
                 onDragLeave={() => setDecDragging(false)}
-                className={`rounded-lg border bg-surface/50 transition-colors ${
+                className={`border bg-surface transition-colors ${
                   decDragging ? "border-accent border-dashed" : "border-border"
                 }`}
               >
@@ -468,7 +468,7 @@ export default function ImageBase64Page() {
                     {decInput && (
                       <button
                         onClick={clearDecode}
-                        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -500,7 +500,7 @@ export default function ImageBase64Page() {
                     {decUrl && (
                       <button
                         onClick={downloadDecoded}
-                        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
                       >
                         <Download size={12} />
                         Download
@@ -508,13 +508,13 @@ export default function ImageBase64Page() {
                     )}
                   </div>
                 </div>
-                <div className="rounded-lg border border-border bg-surface/50 px-3 py-4 flex items-center justify-center min-h-45">
+                <div className="border border-border bg-surface px-3 py-4 flex items-center justify-center min-h-45">
                   {decUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={decUrl}
                       alt="decoded"
-                      className="max-h-64 max-w-full rounded border border-border bg-background object-contain"
+                      className="max-h-64 max-w-full border border-border bg-background object-contain"
                     />
                   ) : (
                     <div className="text-center text-xs text-dim">
@@ -533,8 +533,8 @@ export default function ImageBase64Page() {
 
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-accent" />
               About data URIs
             </h3>
@@ -568,8 +568,8 @@ export default function ImageBase64Page() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-accent" />
               References
             </h3>

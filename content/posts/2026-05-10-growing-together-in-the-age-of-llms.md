@@ -4,6 +4,8 @@ date = 2026-05-10T00:00:00Z
 description = "AI made the first version easy. Everything after that (the scaling, the edge cases, the maintenance) still takes real engineering. On growing alongside LLMs."
 categories = ["AI", "Software Engineering"]
 tags = ["LLMs", "AI in Development", "Software Engineering", "Career Growth"]
+layout = "feature"
+hero = "scaffold"
 +++
 
 Over the past year, I've had a lot of solutions brought to me by people outside of engineering. Prototypes, internal tools, even customer-facing features. Working code, demo-ready, built fast. And honestly, every time, I'm impressed. These are smart people solving real problems with tools that would have felt like science fiction five years ago.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllTags } from "@/lib/posts";
 import { TagChips } from "@/components/tag-chips";
+import { PageHeader } from "@/components/page-header";
 
 export const metadata: Metadata = {
   title: "Browse Posts by Topic",
@@ -13,15 +14,12 @@ export default function TagsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          Tags
-        </h1>
-        <p className="text-sm text-muted">
+      <PageHeader label="tags" title="Topics">
+        <p>
           Browse posts by topic. {tags.length} tag
           {tags.length === 1 ? "" : "s"} in total.
         </p>
-      </div>
+      </PageHeader>
       <TagChips tags={tags} showCounts />
     </div>
   );

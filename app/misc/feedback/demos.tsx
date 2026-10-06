@@ -31,7 +31,7 @@ function CopyDemo() {
   };
 
   return (
-    <div className="rounded-lg border border-border bg-surface/50">
+    <div className="rounded-lg border border-border bg-surface">
       <div className="p-4 flex items-center justify-between gap-3">
         <code className="font-mono text-xs text-foreground truncate">
           {sample}
@@ -142,18 +142,14 @@ function OptimisticToggle({
       <Icon size={12} className={on ? "fill-current" : ""} aria-hidden />
       <span>{label}</span>
       <span className="tabular-nums text-[10px] text-dim">{count}</span>
-      {error && (
-        <span className="ml-1 text-[10px] uppercase tracking-widest">
-          failed
-        </span>
-      )}
+      {error && <span className="ml-1 text-[10px]">failed</span>}
     </button>
   );
 }
 
 function OptimisticDemo() {
   return (
-    <div className="rounded-lg border border-border bg-surface/50">
+    <div className="rounded-lg border border-border bg-surface">
       <div className="p-4 flex flex-wrap items-center gap-3">
         <OptimisticToggle icon={Heart} label="Always succeeds" initial={42} />
         <OptimisticToggle
@@ -180,7 +176,7 @@ function OptimisticDemo() {
 
 function GuardDemo() {
   return (
-    <div className="rounded-lg border border-border bg-surface/50">
+    <div className="rounded-lg border border-border bg-surface">
       <div className="divide-y divide-border">
         <GuardRow
           level="No guard"
@@ -222,9 +218,7 @@ function GuardRow({
   return (
     <div className="p-4 flex items-start justify-between gap-4">
       <div className="min-w-0">
-        <div className="text-[10px] font-medium uppercase tracking-widest text-dim mb-1">
-          {level}
-        </div>
+        <div className="text-[10px] font-medium text-dim mb-1">{level}</div>
         <p className="text-xs text-dim leading-relaxed">{desc}</p>
       </div>
       <div className="shrink-0">{children}</div>
@@ -407,11 +401,9 @@ function SkeletonDemo() {
   const secondsLeft = Math.max(0, Math.ceil((nextReloadAt - now) / 1000));
 
   return (
-    <div className="rounded-lg border border-border bg-surface/50">
+    <div className="rounded-lg border border-border bg-surface">
       <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-        <div className="text-[10px] font-medium uppercase tracking-widest text-dim">
-          Loading state
-        </div>
+        <div className="text-[10px] font-medium text-dim">Loading state</div>
         <div className="inline-flex items-center gap-2">
           <span className="text-[10px] tabular-nums text-dim" aria-live="off">
             Auto-reload in {secondsLeft}s
@@ -454,9 +446,7 @@ function SkeletonColumn({
 }) {
   return (
     <div className="p-4">
-      <div className="mb-3 text-[10px] font-medium uppercase tracking-widest text-dim">
-        {label}
-      </div>
+      <div className="mb-3 text-[10px] font-medium text-dim">{label}</div>
       {children}
     </div>
   );

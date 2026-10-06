@@ -254,10 +254,10 @@ export default function UuidPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           UUID / ULID Generator
         </h1>
-        <p className="text-sm text-muted">
+        <p className="max-w-2xl text-lg text-dim">
           Generate, validate, and inspect UUIDs and ULIDs. Everything runs in
           your browser, nothing is sent to a server.
         </p>
@@ -267,12 +267,12 @@ export default function UuidPage() {
         {/* Left: generator + inspector */}
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           {/* Generator controls */}
-          <div className="rounded-lg border border-border bg-surface/50">
+          <div className="border border-border bg-surface">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <span className="text-xs font-medium text-dim">Generate</span>
               <div className="flex items-center gap-2">
                 {/* Count controls */}
-                <div className="inline-flex items-center rounded border border-border bg-background">
+                <div className="inline-flex items-center border border-border bg-background">
                   <button
                     onClick={() => setCount((c) => Math.max(1, c - 1))}
                     disabled={count <= 1}
@@ -303,7 +303,7 @@ export default function UuidPage() {
                 {/* Generate button */}
                 <button
                   onClick={handleGenerate}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-accent text-background px-3 py-1.5 text-xs font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                  className="inline-flex items-center gap-1.5 bg-accent text-background px-3 py-1.5 text-xs font-medium hover:opacity-90 transition-opacity cursor-pointer"
                 >
                   <RefreshCw size={12} />
                   Generate
@@ -313,7 +313,7 @@ export default function UuidPage() {
 
             {/* Type selector */}
             <div className="px-4 py-3 flex flex-wrap items-center gap-3">
-              <div className="inline-flex rounded-lg border border-border p-0.5 bg-background/50">
+              <div className="inline-flex border border-border p-0.5 bg-background/50">
                 {(Object.keys(ID_LABELS) as IdType[]).map((type) => (
                   <button
                     key={type}
@@ -321,7 +321,7 @@ export default function UuidPage() {
                       setIdType(type);
                       setGenerated([]);
                     }}
-                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                    className={`px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                       idType === type
                         ? "bg-accent text-background"
                         : "text-dim hover:text-foreground"
@@ -351,7 +351,7 @@ export default function UuidPage() {
           </div>
 
           {/* Output */}
-          <div className="rounded-lg border border-border bg-surface/50">
+          <div className="border border-border bg-surface">
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
               <span className="text-xs text-dim">
                 {displayIds.length > 0
@@ -367,7 +367,7 @@ export default function UuidPage() {
                 {displayIds.length > 0 && (
                   <button
                     onClick={() => setGenerated([])}
-                    className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                   >
                     <Trash2 size={12} />
                   </button>
@@ -401,7 +401,7 @@ export default function UuidPage() {
           </div>
 
           {/* Inspector */}
-          <div className="rounded-lg border border-border bg-surface/50">
+          <div className="border border-border bg-surface">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <span className="text-xs font-medium text-dim">
                 Inspect / Validate
@@ -411,7 +411,7 @@ export default function UuidPage() {
                 {inspectInput && (
                   <button
                     onClick={() => setInspectInput("")}
-                    className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                   >
                     <Trash2 size={12} />
                   </button>
@@ -425,11 +425,11 @@ export default function UuidPage() {
                 onChange={(e) => setInspectInput(e.target.value)}
                 placeholder="Paste a UUID or ULID to inspect..."
                 spellCheck={false}
-                className="w-full rounded border border-border bg-background px-2 py-1.5 text-sm font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50"
+                className="w-full border border-border bg-background px-2 py-1.5 text-sm font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50"
               />
 
               {inspectResult && (
-                <div className="rounded border border-border bg-background px-3 py-2 space-y-1.5">
+                <div className="border border-border bg-background px-3 py-2 space-y-1.5">
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-xs font-medium ${inspectResult.valid ? "text-green" : "text-pink"}`}
@@ -480,8 +480,8 @@ export default function UuidPage() {
 
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-accent" />
               About UUIDs & ULIDs
             </h3>
@@ -504,8 +504,8 @@ export default function UuidPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-accent" />
               References
             </h3>
