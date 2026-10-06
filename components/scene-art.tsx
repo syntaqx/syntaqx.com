@@ -311,7 +311,7 @@ export function SceneArt({
       ref={ref}
       role="img"
       aria-label={label}
-      className={`block w-full ${className}`}
+      className={`block w-full mask-[radial-gradient(closest-side,black_86%,transparent)] ${className}`}
     />
   );
 }

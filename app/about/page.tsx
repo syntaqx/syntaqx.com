@@ -19,11 +19,11 @@ export default function AboutPage() {
           {/* Left: hero + narrative */}
           <div>
             <p className="eyebrow mb-6">about</p>
-            <h1 className="mb-10 text-[clamp(3rem,6vw,5rem)] leading-[0.9]">
+            <h1 className="mb-10 text-[clamp(2.5rem,4.5vw,3.75rem)] leading-[0.92]">
               Hacker, <span className="text-accent">open sorcerer</span>,
               engineering leader.
             </h1>
-            <div className="max-w-2xl space-y-5 text-lg leading-relaxed text-muted">
+            <div className="max-w-2xl space-y-5 text-[1.0625rem] leading-relaxed text-muted">
               <p>
                 My world is the screen. I&apos;m obsessed with technology: the
                 systems, the architecture, the problem-solving. That&apos;s the
@@ -99,7 +99,7 @@ export default function AboutPage() {
           <aside className="lg:sticky lg:top-24">
             <dl className="border-t border-border">
               {[
-                { label: "location", value: "Utah, USA" },
+                { label: "location", value: "Remote" },
                 { label: "role", value: "Software Engineering Leadership" },
                 { label: "focus", value: "Architecture, Product & Delivery" },
                 {
@@ -176,10 +176,10 @@ export default function AboutPage() {
             },
           ].map((item, i) => (
             <li key={item.title} className="border-t border-border pt-5 pb-10">
-              <span className="font-voice text-2xl leading-none font-bold text-accent">
+              <span className="font-voice text-xl leading-none font-semibold text-accent">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-3 mb-3 text-2xl leading-none text-foreground">
+              <h3 className="mt-3 mb-3 text-xl leading-none text-foreground">
                 {item.title}
               </h3>
               <p className="text-base leading-relaxed text-muted">

@@ -80,7 +80,7 @@ function DocLink({
   return (
     <li className="border-b border-border">
       <Link href={href} className="group block py-4">
-        <span className="text-2xl leading-none text-foreground transition-colors group-hover:text-accent">
+        <span className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
           {title}
         </span>
         {description && (

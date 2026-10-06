@@ -327,10 +327,10 @@ export default function MarkdownToolPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
           Markdown Tools
         </h1>
-        <p className="max-w-2xl text-lg text-dim">
+        <p className="max-w-2xl text-dim">
           Convert HTML or pasted rich text to clean Markdown, render Markdown to
           HTML, or preview it live. Everything runs in your browser.
         </p>

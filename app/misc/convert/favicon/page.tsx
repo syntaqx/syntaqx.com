@@ -284,10 +284,10 @@ export default function FaviconPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
           Favicon Generator
         </h1>
-        <p className="max-w-2xl text-lg text-dim">
+        <p className="max-w-2xl text-dim">
           Drop an image and get an ICO with multiple sizes. Everything runs in
           your browser.
         </p>

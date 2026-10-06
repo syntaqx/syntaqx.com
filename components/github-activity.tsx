@@ -215,7 +215,7 @@ export function GitHubActivity({
           rel="noopener noreferrer"
           className="group block"
         >
-          <span className="font-voice block text-6xl leading-[0.82] font-bold text-foreground transition-colors group-hover:text-accent">
+          <span className="font-voice block text-5xl leading-[0.85] font-semibold text-foreground transition-colors group-hover:text-accent">
             {total.toLocaleString()}
           </span>
           <span className="inst mt-3 block text-dim">

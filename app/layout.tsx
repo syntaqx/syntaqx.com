@@ -12,7 +12,6 @@ import { SimpleIcon } from "@/components/simple-icon";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SearchButton } from "@/components/search";
 import { Nav, MobileMenu } from "@/components/nav";
-import { StatusClock } from "@/components/status-clock";
 import { TopProgressBar } from "@/components/top-progress-bar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -43,9 +42,6 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
 });
-
-// Short SHA of the deployed commit, shown in the header's status bar.
-const BUILD = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7);
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -129,17 +125,6 @@ export default function RootLayout({
             </Link>
             <Nav />
             <div className="flex items-stretch">
-              <a
-                href={`https://github.com/syntaqx/syntaqx.com${BUILD ? `/commit/${BUILD}` : ""}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inst hidden items-center gap-2 border-l border-border px-4 text-dim transition-colors hover:text-foreground xl:flex"
-                title="Deployed commit"
-              >
-                <span className="size-1.5 bg-accent shadow-[0_0_8px_var(--accent)] motion-safe:animate-[pulse-step_1.6s_steps(2)_infinite]" />
-                build {BUILD ?? "local"}
-              </a>
-              <StatusClock />
               <SearchButton />
               <ThemeToggle />
               <MobileMenu />
@@ -211,8 +196,7 @@ export default function RootLayout({
                 ))}
               </div>
               <p className="inst text-dim">
-                &copy; {new Date().getFullYear()} Chase Pierce · salt lake city,
-                ut
+                &copy; {new Date().getFullYear()} Chase Pierce
               </p>
             </div>
           </div>

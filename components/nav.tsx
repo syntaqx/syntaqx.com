@@ -87,7 +87,7 @@ export function MobileMenu() {
                   <Link
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
-                    className={`font-voice border-b border-border px-6 py-4 text-4xl font-bold uppercase leading-none transition-colors ${
+                    className={`font-voice border-b border-border px-6 py-4 text-3xl font-semibold uppercase leading-none transition-colors ${
                       isActive
                         ? "text-accent"
                         : "text-foreground hover:text-accent"

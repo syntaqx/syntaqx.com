@@ -212,10 +212,10 @@ export default function JsToolPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
           JavaScript Beautify / Minify / Obfuscate
         </h1>
-        <p className="max-w-2xl text-lg text-dim">
+        <p className="max-w-2xl text-dim">
           Format, compress, or obfuscate JavaScript and JSON. Everything runs in
           your browser, nothing is sent to a server.
         </p>

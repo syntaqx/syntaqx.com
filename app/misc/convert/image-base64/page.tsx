@@ -297,10 +297,10 @@ export default function ImageBase64Page() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
           Image / Base64 Converter
         </h1>
-        <p className="max-w-2xl text-lg text-dim">
+        <p className="max-w-2xl text-dim">
           Convert images to Base64 data URIs and decode Base64 back into images.
           Everything runs in your browser, nothing is sent to a server.
         </p>

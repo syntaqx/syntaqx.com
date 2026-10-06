@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Search, X, FileText, Loader2 } from "lucide-react";
 
@@ -27,8 +33,25 @@ interface PagefindApi {
   ) => Promise<{ results: PagefindResult[] } | null>;
 }
 
+const noop = () => () => {};
+
+/**
+ * The search shortcut as this device would press it: ⌘K on Apple devices,
+ * Ctrl K elsewhere, nothing on touch-only devices (no keyboard to press).
+ * null on the server, so the hint only appears after hydration.
+ */
+function shortcutHint(): string | null {
+  if (!matchMedia("(any-pointer: fine)").matches) return null;
+  const nav = navigator as Navigator & {
+    userAgentData?: { platform?: string };
+  };
+  const platform = nav.userAgentData?.platform || nav.platform || nav.userAgent;
+  return /mac|iphone|ipad|ipod/i.test(platform) ? "⌘K" : "Ctrl K";
+}
+
 export function SearchButton() {
   const [open, setOpen] = useState(false);
+  const shortcut = useSyncExternalStore(noop, shortcutHint, () => null);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -44,15 +67,22 @@ export function SearchButton() {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger
-        aria-label="Search"
-        className="inst flex items-center gap-2 border-l border-border px-4 text-dim transition-colors hover:text-foreground cursor-pointer"
-      >
-        <Search size={13} />
-        <kbd className="hidden items-center bg-surface px-1.5 py-1 font-[inherit] text-foreground sm:inline-flex">
-          ⌘K
-        </kbd>
-      </Dialog.Trigger>
+      <div className="flex items-center border-l border-border lg:px-3">
+        <Dialog.Trigger
+          aria-label="Search"
+          className="flex h-full w-12 cursor-pointer items-center justify-center text-dim transition-colors hover:text-foreground lg:h-9 lg:w-60 lg:justify-start lg:gap-2.5 lg:border lg:border-border lg:bg-surface lg:px-3 lg:hover:border-border-hover"
+        >
+          <Search size={14} className="shrink-0" />
+          <span className="hidden flex-1 text-left text-sm lg:block">
+            Search
+          </span>
+          {shortcut && (
+            <kbd className="inst hidden border border-border bg-background px-1.5 py-1 text-foreground lg:inline-flex">
+              {shortcut}
+            </kbd>
+          )}
+        </Dialog.Trigger>
+      </div>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-100 bg-background/70 backdrop-blur-sm" />
         <div className="fixed inset-0 z-100 flex items-start justify-center sm:px-4 sm:pt-[15vh] pointer-events-none">

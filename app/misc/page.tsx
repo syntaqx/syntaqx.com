@@ -18,7 +18,7 @@ function ToolGrid({ items }: { items: MiscTool[] }) {
         <Link key={item.href} href={item.href} className="group flex flex-col">
           <Card hover className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-2xl leading-none text-foreground transition-colors group-hover:text-accent">
+              <h2 className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
                 {item.title}
               </h2>
               <ArrowRight
