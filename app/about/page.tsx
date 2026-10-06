@@ -99,7 +99,7 @@ export default function AboutPage() {
           <aside className="lg:sticky lg:top-24">
             <dl className="border-t border-border">
               {[
-                { label: "location", value: "Utah, USA" },
+                { label: "location", value: "Remote" },
                 { label: "role", value: "Software Engineering Leadership" },
                 { label: "focus", value: "Architecture, Product & Delivery" },
                 {

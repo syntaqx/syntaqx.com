@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { PostList } from "@/components/post-list";
 import { SceneArt } from "@/components/scene-art";
 import { SimpleIcon } from "@/components/simple-icon";
+import { StatsStrip, StatsStripSkeleton } from "@/components/stats-strip";
 import {
   GitHubActivityAsync,
   GitHubActivitySkeleton,
@@ -31,13 +32,6 @@ export default function Home() {
   const posts = getAllPosts();
   const newestSlug = getNewestPostSlug(posts);
 
-  const stats = [
-    { value: "20", unit: "+", label: "years shipping" },
-    { value: "11", label: "age at first line" },
-    { value: "12", label: "industries" },
-    { value: String(posts.length), label: "essays & notes" },
-  ];
-
   return (
     <div>
       <section className="relative isolate grid items-center gap-x-10 gap-y-12 pb-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
@@ -47,7 +41,7 @@ export default function Home() {
         />
         <div>
           <p className="inst mb-5 tracking-[0.3em] text-dim">
-            software engineering leader · utah
+            software engineering leader
           </p>
           <h1 className="mb-8 text-[clamp(3rem,6vw,4.75rem)] leading-[0.9]">
             Chase <span className="text-accent">Pierce</span>
@@ -99,22 +93,9 @@ export default function Home() {
         />
       </section>
 
-      <section className="-mx-6 mb-20 grid grid-cols-2 border-y border-border md:grid-cols-4">
-        {stats.map((s, i) => (
-          <div
-            key={s.label}
-            className={`grid gap-2.5 border-border px-6 py-5 md:border-r md:last:border-r-0 ${i % 2 ? "" : "border-r"} ${i < 2 ? "border-b md:border-b-0" : ""}`}
-          >
-            <span className="font-voice text-4xl leading-[0.85] font-semibold">
-              {s.value}
-              {s.unit && (
-                <span className="text-[0.5em] text-accent">{s.unit}</span>
-              )}
-            </span>
-            <span className="inst text-dim">{s.label}</span>
-          </div>
-        ))}
-      </section>
+      <Suspense fallback={<StatsStripSkeleton />}>
+        <StatsStrip username="syntaqx" />
+      </Suspense>
 
       <section className="mb-20">
         <Suspense fallback={<GitHubActivitySkeleton />}>

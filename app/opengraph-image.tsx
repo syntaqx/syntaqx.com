@@ -58,7 +58,7 @@ export default async function Image() {
               marginBottom: 22,
             }}
           >
-            SOFTWARE ENGINEERING LEADER · UTAH
+            SOFTWARE ENGINEERING LEADER
           </div>
           <div
             style={{
