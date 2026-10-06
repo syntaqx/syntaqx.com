@@ -22,6 +22,9 @@ export function TopProgressBar() {
   const loading = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const trickle = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Path + query of the route we're on, so hash-only history changes
+  // (in-page jumps, back/forward between anchors) never count as navigation.
+  const route = useRef("");
 
   function clearTimers() {
     timers.current.forEach(clearTimeout);
@@ -97,9 +100,16 @@ export function TopProgressBar() {
       start();
     }
 
+    // Fragment navigation fires popstate too; only a path or query change
+    // is a real route transition.
     function onPopState() {
+      const now = window.location.pathname + window.location.search;
+      if (now === route.current) return;
+      route.current = now;
       start();
     }
+
+    route.current = window.location.pathname + window.location.search;
 
     document.addEventListener("click", onClick, true);
     window.addEventListener("popstate", onPopState);
@@ -114,6 +124,7 @@ export function TopProgressBar() {
   // Navigation committed: the route changed, so finish (skip first mount).
   const mounted = useRef(false);
   useEffect(() => {
+    route.current = window.location.pathname + window.location.search;
     if (!mounted.current) {
       mounted.current = true;
       return;
@@ -133,8 +144,7 @@ export function TopProgressBar() {
         style={{
           width: `${width}%`,
           transition: "width 200ms ease",
-          boxShadow:
-            "0 0 8px var(--color-accent), 0 0 3px var(--color-accent)",
+          boxShadow: "0 0 8px var(--color-accent), 0 0 3px var(--color-accent)",
         }}
       />
     </div>
