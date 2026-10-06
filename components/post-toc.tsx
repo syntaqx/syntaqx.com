@@ -18,12 +18,23 @@ export function PostToc({ headings }: { headings: Heading[] }) {
     const body = document.querySelector<HTMLElement>("[data-post-body]");
 
     const update = () => {
-      // The current section is the last heading that has passed the header.
+      // At the bottom of the page the last headings can never scroll up to
+      // the header, so short closing sections would never activate. Once
+      // there's nowhere left to scroll, the last section is current.
+      const doc = document.documentElement;
+      const atBottom =
+        window.innerHeight + window.scrollY >= doc.scrollHeight - 4;
+
+      // Otherwise it's the last heading that has passed the header.
       let current: string | null = null;
-      for (const el of els)
-        if (el.getBoundingClientRect().top < 140) current = el.id;
+      if (atBottom && els.length) current = els[els.length - 1].id;
+      else
+        for (const el of els)
+          if (el.getBoundingClientRect().top < 140) current = el.id;
       setActive(current);
-      if (body) {
+
+      if (atBottom) setProgress(1);
+      else if (body) {
         const r = body.getBoundingClientRect();
         const total = Math.max(1, r.height - window.innerHeight * 0.6);
         setProgress(Math.min(1, Math.max(0, -r.top / total)));
