@@ -31,19 +31,16 @@ export default async function DocPage({ params }: Props) {
 
   return (
     <article>
-      <header className="mb-10 pb-6 border-b border-border">
-        <h1 className="text-lg sm:text-xl font-semibold tracking-tight mb-2 wrap-break-word">
+      <header className="mb-10 border-b border-border pb-8">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl wrap-break-word">
           {doc.title}
         </h1>
         {doc.description && (
-          <p className="text-sm text-muted">{doc.description}</p>
+          <p className="max-w-2xl text-lg text-dim">{doc.description}</p>
         )}
       </header>
 
-      <div
-        className="prose max-w-none"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+      <div className="prose" dangerouslySetInnerHTML={{ __html: content }} />
       <CopyCodeScript />
     </article>
   );

@@ -327,10 +327,10 @@ export default function MarkdownToolPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           Markdown Tools
         </h1>
-        <p className="text-sm text-muted">
+        <p className="max-w-2xl text-lg text-dim">
           Convert HTML or pasted rich text to clean Markdown, render Markdown to
           HTML, or preview it live. Everything runs in your browser.
         </p>
@@ -340,10 +340,10 @@ export default function MarkdownToolPage() {
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
           {/* Segmented control */}
-          <div className="mb-5 inline-flex rounded-lg border border-border p-0.5 bg-surface/50">
+          <div className="mb-5 inline-flex border border-border p-0.5 bg-surface">
             <button
               onClick={() => switchMode("html-to-md")}
-              className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                 mode === "html-to-md"
                   ? "bg-accent text-background"
                   : "text-dim hover:text-foreground"
@@ -353,7 +353,7 @@ export default function MarkdownToolPage() {
             </button>
             <button
               onClick={() => switchMode("md-to-html")}
-              className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                 mode === "md-to-html"
                   ? "bg-accent text-background"
                   : "text-dim hover:text-foreground"
@@ -363,7 +363,7 @@ export default function MarkdownToolPage() {
             </button>
             <button
               onClick={() => switchMode("preview")}
-              className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                 mode === "preview"
                   ? "bg-accent text-background"
                   : "text-dim hover:text-foreground"
@@ -382,7 +382,7 @@ export default function MarkdownToolPage() {
                 setDragging(true);
               }}
               onDragLeave={() => setDragging(false)}
-              className={`rounded-lg border bg-surface/50 transition-colors ${
+              className={`border bg-surface transition-colors ${
                 dragging ? "border-accent border-dashed" : "border-border"
               }`}
             >
@@ -405,7 +405,7 @@ export default function MarkdownToolPage() {
                   )}
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
                   >
                     <Upload size={12} />
                     File
@@ -421,7 +421,7 @@ export default function MarkdownToolPage() {
                   {input && (
                     <button
                       onClick={clear}
-                      className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -471,7 +471,7 @@ export default function MarkdownToolPage() {
                       onChange={(e) =>
                         setHeadingStyle(e.target.value as "atx" | "setext")
                       }
-                      className="rounded border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
+                      className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
                     >
                       <option value="atx"># Heading</option>
                       <option value="setext">Setext (===)</option>
@@ -484,7 +484,7 @@ export default function MarkdownToolPage() {
                       onChange={(e) =>
                         setBulletMarker(e.target.value as "-" | "*" | "+")
                       }
-                      className="rounded border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
+                      className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
                     >
                       <option value="-">-</option>
                       <option value="*">*</option>
@@ -500,7 +500,7 @@ export default function MarkdownToolPage() {
                           e.target.value as "fenced" | "indented",
                         )
                       }
-                      className="rounded border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
+                      className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
                     >
                       <option value="fenced">Fenced ```</option>
                       <option value="indented">Indented</option>
@@ -517,7 +517,7 @@ export default function MarkdownToolPage() {
             </div>
 
             {error && (
-              <pre className="text-xs text-pink whitespace-pre-wrap font-mono rounded-lg border border-pink/30 bg-pink/5 px-3 py-2">
+              <pre className="text-xs text-pink whitespace-pre-wrap font-mono border border-pink/30 bg-pink/5 px-3 py-2">
                 {error}
               </pre>
             )}
@@ -534,7 +534,7 @@ export default function MarkdownToolPage() {
                   </label>
                 </div>
                 <div
-                  className="rounded-lg border border-border bg-surface/50 px-4 py-3 min-h-45 prose prose-invert prose-sm max-w-none"
+                  className="border border-border bg-surface px-4 py-3 min-h-45 prose prose-invert prose-sm max-w-none"
                   // We trust this output because we generated it locally from
                   // the user's own Markdown via remark-rehype.
                   dangerouslySetInnerHTML={{ __html: previewHtml }}
@@ -564,7 +564,7 @@ export default function MarkdownToolPage() {
                   readOnly
                   rows={10}
                   placeholder="Output will appear here..."
-                  className="w-full rounded-lg border border-border bg-surface/50 px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
+                  className="w-full border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
                 />
               </div>
             )}
@@ -573,8 +573,8 @@ export default function MarkdownToolPage() {
 
         {/* Right: info & stats */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border">
               Stats
             </h3>
             <dl className="px-4 py-3 text-[11px] text-dim leading-relaxed grid grid-cols-2 gap-y-1.5">
@@ -597,8 +597,8 @@ export default function MarkdownToolPage() {
             </dl>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-accent" />
               About
             </h3>
@@ -629,8 +629,8 @@ export default function MarkdownToolPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-accent" />
               References
             </h3>

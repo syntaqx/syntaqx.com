@@ -1,95 +1,94 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
-
-// See note in app/posts/[slug]/opengraph-image.tsx — same vendored
-// Geist Mono font, no network at build time.
-const geistMonoRegular = readFileSync(
-  join(
-    process.cwd(),
-    "node_modules/geist/dist/fonts/geist-mono/GeistMono-Regular.ttf",
-  ),
-);
+import { ogFonts, OG_SIZE } from "@/lib/og";
+import { OG_COLORS as C, sceneImage } from "@/lib/scene/og";
 
 export const alt = "syntaqx, by Chase Pierce";
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = "image/png";
 
 export default async function Image() {
+  const art = sceneImage("system", 640, 630, { pitch: 6 });
+
   return new ImageResponse(
     <div
       style={{
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        padding: "80px",
-        backgroundColor: "#0d0d0d",
-        fontFamily: "GeistMono, monospace",
+        backgroundColor: C.bg,
+        position: "relative",
       }}
     >
-      {/* Accent line */}
-      <div
-        style={{
-          width: 60,
-          height: 4,
-          backgroundColor: "#00D1CA",
-          marginBottom: 40,
-        }}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={art}
+        width={640}
+        height={630}
+        alt=""
+        style={{ position: "absolute", right: 0, top: 0 }}
       />
       <div
         style={{
-          fontSize: 64,
-          fontWeight: 700,
-          color: "#e0e0e0",
-          lineHeight: 1.1,
-          marginBottom: 24,
-        }}
-      >
-        Chase Pierce
-      </div>
-      <div
-        style={{
-          fontSize: 24,
-          color: "#95B1AE",
-          lineHeight: 1.5,
-        }}
-      >
-        Software engineering leader. Architect at heart, open sorcerer.
-      </div>
-      {/* Bottom brand */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 60,
-          left: 80,
           display: "flex",
-          alignItems: "center",
-          gap: 12,
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "64px 0 60px 72px",
+          width: 640,
         }}
       >
         <div
           style={{
-            fontSize: 20,
-            color: "#00D1CA",
-            fontWeight: 700,
+            display: "flex",
+            fontFamily: "Michroma",
+            fontSize: 18,
+            letterSpacing: 2.5,
+            color: C.fg,
           }}
         >
-          syntaqx.com
+          syntaqx
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Michroma",
+              fontSize: 13,
+              letterSpacing: 4,
+              color: C.dim,
+              marginBottom: 22,
+            }}
+          >
+            SOFTWARE ENGINEERING LEADER · UTAH
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              fontFamily: "Big Shoulders",
+              fontSize: 150,
+              lineHeight: 0.84,
+              color: C.fg,
+            }}
+          >
+            <span>CHASE</span>
+            <span style={{ color: C.acc }}>PIERCE</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Hanken Grotesk",
+              fontSize: 26,
+              color: C.dim,
+              marginTop: 28,
+              maxWidth: 520,
+            }}
+          >
+            Architect at heart, open sorcerer. Writing on engineering, systems,
+            and craft.
+          </div>
         </div>
       </div>
     </div>,
-    {
-      ...size,
-      fonts: [
-        {
-          name: "GeistMono",
-          data: geistMonoRegular,
-          style: "normal" as const,
-          weight: 400 as const,
-        },
-      ],
-    },
+    { ...size, fonts: ogFonts },
   );
 }

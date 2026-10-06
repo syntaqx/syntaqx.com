@@ -212,10 +212,10 @@ export default function JsToolPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           JavaScript Beautify / Minify / Obfuscate
         </h1>
-        <p className="text-sm text-muted">
+        <p className="max-w-2xl text-lg text-dim">
           Format, compress, or obfuscate JavaScript and JSON. Everything runs in
           your browser, nothing is sent to a server.
         </p>
@@ -225,12 +225,12 @@ export default function JsToolPage() {
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
           {/* Segmented control */}
-          <div className="mb-5 inline-flex rounded-lg border border-border p-0.5 bg-surface/50">
+          <div className="mb-5 inline-flex border border-border p-0.5 bg-surface">
             {(["beautify", "minify", "obfuscate"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => switchMode(m)}
-                className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer capitalize ${
+                className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer capitalize ${
                   mode === m
                     ? "bg-accent text-background"
                     : "text-dim hover:text-foreground"
@@ -250,7 +250,7 @@ export default function JsToolPage() {
                 setDragging(true);
               }}
               onDragLeave={() => setDragging(false)}
-              className={`rounded-lg border bg-surface/50 transition-colors ${
+              className={`border bg-surface transition-colors ${
                 dragging ? "border-accent border-dashed" : "border-border"
               }`}
             >
@@ -273,7 +273,7 @@ export default function JsToolPage() {
                   )}
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
                   >
                     <Upload size={12} />
                     File
@@ -290,7 +290,7 @@ export default function JsToolPage() {
                   {input && (
                     <button
                       onClick={clear}
-                      className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -331,7 +331,7 @@ export default function JsToolPage() {
                         onChange={(e) =>
                           setParser(e.target.value as "babel" | "json")
                         }
-                        className="rounded border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
+                        className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
                       >
                         <option value="babel">JavaScript</option>
                         <option value="json">JSON</option>
@@ -342,7 +342,7 @@ export default function JsToolPage() {
                       <select
                         value={tabWidth}
                         onChange={(e) => setTabWidth(Number(e.target.value))}
-                        className="rounded border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
+                        className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
                       >
                         <option value={2}>2 spaces</option>
                         <option value={4}>4 spaces</option>
@@ -394,7 +394,7 @@ export default function JsToolPage() {
                             e.target.value as "low" | "medium" | "high",
                           )
                         }
-                        className="rounded border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
+                        className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
                       >
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
@@ -429,7 +429,7 @@ export default function JsToolPage() {
               <button
                 onClick={run}
                 disabled={running || !input.trim()}
-                className="inline-flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {running ? (
                   <Loader2 size={12} className="animate-spin" />
@@ -447,7 +447,7 @@ export default function JsToolPage() {
             </div>
 
             {error && (
-              <pre className="text-xs text-pink whitespace-pre-wrap font-mono rounded-lg border border-pink/30 bg-pink/5 px-3 py-2">
+              <pre className="text-xs text-pink whitespace-pre-wrap font-mono border border-pink/30 bg-pink/5 px-3 py-2">
                 {error}
               </pre>
             )}
@@ -488,7 +488,7 @@ export default function JsToolPage() {
                 readOnly
                 rows={10}
                 placeholder="Output will appear here..."
-                className="w-full rounded-lg border border-border bg-surface/50 px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
+                className="w-full border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
               />
             </div>
           </div>
@@ -496,8 +496,8 @@ export default function JsToolPage() {
 
         {/* Right: info */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-accent" />
               About this tool
             </h3>
@@ -531,8 +531,8 @@ export default function JsToolPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-accent" />
               References
             </h3>

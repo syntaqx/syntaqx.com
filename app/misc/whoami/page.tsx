@@ -28,8 +28,8 @@ function Row({
           </>
         ) : (
           <div className="flex items-center gap-1.5">
-            <div className="h-4 w-20 rounded bg-border/40 animate-pulse" />
-            <div className="w-6.5 h-6.5 rounded border border-border/40 bg-border/20 animate-pulse" />
+            <div className="h-4 w-20 bg-border/40 animate-pulse" />
+            <div className="w-6.5 h-6.5 border border-border/40 bg-border/20 animate-pulse" />
           </div>
         )}
       </div>
@@ -130,8 +130,7 @@ export default function WhoamiPage() {
 
     const nav = navigator as unknown as Record<string, unknown>;
     const conn = nav.connection as
-      | { effectiveType?: string; downlink?: number }
-      | undefined;
+      { effectiveType?: string; downlink?: number } | undefined;
 
     const id = requestAnimationFrame(() => {
       setClientInfo({
@@ -174,10 +173,8 @@ export default function WhoamiPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          whoami
-        </h1>
-        <p className="text-sm text-muted">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">whoami</h1>
+        <p className="max-w-2xl text-lg text-dim">
           See how you appear on the internet. IP, location, browser, device, and
           more. Nothing is stored.
         </p>
@@ -187,13 +184,13 @@ export default function WhoamiPage() {
         {/* Left: main content */}
         <div className="flex-1 min-w-0 flex flex-col gap-6">
           {/* IP hero */}
-          <div className="rounded-lg border border-border bg-surface/50">
+          <div className="border border-border bg-surface">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <span className="text-xs text-dim">Your Public IP</span>
               <button
                 onClick={fetchIp}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-30"
+                className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-30"
               >
                 <RefreshCw
                   size={12}
@@ -205,9 +202,7 @@ export default function WhoamiPage() {
             <div className="px-4 py-6 text-center">
               <div className="flex flex-col items-center gap-3">
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-dim uppercase tracking-widest">
-                    IPv4
-                  </span>
+                  <span className="text-[10px] text-dim">IPv4</span>
                   {error ? (
                     <span className="text-sm text-pink">
                       Could not determine IP
@@ -221,16 +216,14 @@ export default function WhoamiPage() {
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold font-mono tracking-wide text-transparent rounded bg-border/40 animate-pulse">
+                      <span className="text-2xl font-bold font-mono tracking-wide text-transparent bg-border/40 animate-pulse">
                         000.000.000.000
                       </span>
                     </div>
                   )}
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-dim uppercase tracking-widest">
-                    IPv6
-                  </span>
+                  <span className="text-[10px] text-dim">IPv6</span>
                   {ipv6 ? (
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-accent font-mono tracking-wide break-all">
@@ -240,7 +233,7 @@ export default function WhoamiPage() {
                     </div>
                   ) : (
                     <span
-                      className={`text-xs ${loading ? "text-transparent rounded bg-border/30 animate-pulse" : "text-dim/50"}`}
+                      className={`text-xs ${loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim/50"}`}
                     >
                       {loading
                         ? "0000:0000:0000:0000:0000:0000"
@@ -249,7 +242,7 @@ export default function WhoamiPage() {
                   )}
                 </div>
                 <span
-                  className={`text-xs ${!location && loading ? "text-transparent rounded bg-border/30 animate-pulse" : "text-dim"}`}
+                  className={`text-xs ${!location && loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim"}`}
                 >
                   {location || (loading ? "Loading location" : "\u00A0")}
                 </span>
@@ -258,11 +251,9 @@ export default function WhoamiPage() {
           </div>
 
           {/* Network details */}
-          <div className="rounded-lg border border-border bg-surface/50">
+          <div className="border border-border bg-surface">
             <div className="px-4 py-3 border-b border-border">
-              <span className="text-xs font-medium uppercase tracking-widest text-dim">
-                Network
-              </span>
+              <span className="eyebrow">Network</span>
             </div>
             <div className="px-4">
               <Row label="IPv4" value={ipv4} mono />
@@ -279,11 +270,9 @@ export default function WhoamiPage() {
           </div>
 
           {/* Browser / client details */}
-          <div className="rounded-lg border border-border bg-surface/50">
+          <div className="border border-border bg-surface">
             <div className="px-4 py-3 border-b border-border">
-              <span className="text-xs font-medium uppercase tracking-widest text-dim">
-                Browser &amp; Device
-              </span>
+              <span className="eyebrow">Browser &amp; Device</span>
             </div>
             <div className="px-4">
               <Row label="User Agent" value={clientInfo?.userAgent ?? null} />
@@ -323,8 +312,8 @@ export default function WhoamiPage() {
 
         {/* Right: info sidebar */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-accent" />
               About IP Addresses
             </h3>
@@ -351,8 +340,8 @@ export default function WhoamiPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border flex items-center gap-1.5">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-accent" />
               References
             </h3>

@@ -12,10 +12,8 @@ export default function HoverCardsPage() {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          Hover Cards
-        </h1>
-        <p className="text-sm text-muted leading-relaxed">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">Hover Cards</h1>
+        <p className="max-w-2xl text-lg text-dim leading-relaxed">
           Defer expensive context to intent. The page renders only what every
           reader needs; the rest waits behind a hover, a focus, or a long press.
         </p>
@@ -52,15 +50,15 @@ export default function HoverCardsPage() {
           </>
         }
       >
-        <div className="rounded-lg border border-border bg-surface/50">
+        <div className="border border-border bg-surface">
           <div className="p-4">
-            <div className="mb-2 text-[10px] font-medium uppercase tracking-widest text-dim">
+            <div className="mb-2 text-[10px] font-medium text-dim">
               As mentions
             </div>
             <UserDemo bare />
           </div>
           <div className="border-t border-border p-4">
-            <div className="mb-2 text-[10px] font-medium uppercase tracking-widest text-dim">
+            <div className="mb-2 text-[10px] font-medium text-dim">
               As avatars
             </div>
             <AvatarDemo bare />

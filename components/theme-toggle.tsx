@@ -59,7 +59,7 @@ export function ThemeToggle() {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         aria-label="Toggle theme"
-        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface/50 text-dim hover:text-muted hover:border-border-hover transition-colors cursor-pointer"
+        className="flex w-12 items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer"
       >
         <ActiveIcon size={14} />
       </DropdownMenu.Trigger>
@@ -67,7 +67,7 @@ export function ThemeToggle() {
         <DropdownMenu.Content
           align="end"
           sideOffset={4}
-          className="w-32 rounded-lg border border-border bg-surface py-1 shadow-lg z-100"
+          className="w-32 border border-border bg-surface py-1 shadow-lg z-100"
         >
           <DropdownMenu.RadioGroup
             value={theme}
@@ -81,7 +81,9 @@ export function ThemeToggle() {
                   key={t.value}
                   value={t.value}
                   className={`flex w-full items-center gap-2 px-3 py-1.5 text-xs transition-colors cursor-pointer outline-none data-highlighted:bg-background ${
-                    active ? "text-accent" : "text-dim data-highlighted:text-foreground"
+                    active
+                      ? "text-accent"
+                      : "text-dim data-highlighted:text-foreground"
                   }`}
                 >
                   <Icon size={12} />

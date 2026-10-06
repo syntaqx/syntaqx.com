@@ -8,6 +8,7 @@ import {
   getTagLabel,
 } from "@/lib/posts";
 import { PostList } from "@/components/post-list";
+import { PageHeader } from "@/components/page-header";
 import { SITE_URL } from "@/lib/constants";
 
 interface Props {
@@ -45,17 +46,11 @@ export default async function TagPage({ params }: Props) {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          Tagged
-        </h1>
-        <p className="text-2xl font-semibold tracking-tight text-foreground">
-          {label}
-        </p>
-        <p className="mt-2 text-sm text-muted">
+      <PageHeader label="tagged" title={label}>
+        <p>
           {tagged.length} post{tagged.length === 1 ? "" : "s"}
         </p>
-      </div>
+      </PageHeader>
       <PostList posts={tagged} newestSlug={newestSlug} />
     </div>
   );

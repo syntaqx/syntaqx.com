@@ -173,7 +173,7 @@ function TimeHover({
         </time>
       }
     >
-      <div className="text-[10px] font-medium uppercase tracking-widest text-dim mb-2">
+      <div className="text-[10px] font-medium text-dim mb-2">
         Time conversion
       </div>
       <div className="space-y-1.5">

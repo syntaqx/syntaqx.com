@@ -284,10 +284,10 @@ export default function FaviconPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
           Favicon Generator
         </h1>
-        <p className="text-sm text-muted">
+        <p className="max-w-2xl text-lg text-dim">
           Drop an image and get an ICO with multiple sizes. Everything runs in
           your browser.
         </p>
@@ -306,7 +306,7 @@ export default function FaviconPage() {
             onDragLeave={() => setDragOver(false)}
             onDrop={onDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`rounded-lg border-2 border-dashed bg-surface/50 flex flex-col items-center justify-center py-16 cursor-pointer transition-colors ${
+            className={`border-2 border-dashed bg-surface flex flex-col items-center justify-center py-16 cursor-pointer transition-colors ${
               dragOver
                 ? "border-accent/60 bg-accent/5"
                 : sourceUrl
@@ -332,7 +332,7 @@ export default function FaviconPage() {
                   width={128}
                   height={128}
                   unoptimized
-                  className="max-h-32 max-w-32 object-contain rounded h-auto w-auto"
+                  className="max-h-32 max-w-32 object-contain h-auto w-auto"
                 />
                 <span className="text-xs text-dim">{fileName}</span>
                 <span className="text-[10px] text-dim">
@@ -357,7 +357,7 @@ export default function FaviconPage() {
             <button
               onClick={clear}
               disabled={!sourceUrl}
-              className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-1.5 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Trash2 size={12} />
               Clear
@@ -365,7 +365,7 @@ export default function FaviconPage() {
             <button
               onClick={generate}
               disabled={!sourceUrl || sizes.length === 0 || generating}
-              className="inline-flex items-center gap-1.5 rounded border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <ImageIcon size={12} />
               {generating ? "Generating..." : "Generate ICO"}
@@ -373,7 +373,7 @@ export default function FaviconPage() {
             <button
               onClick={downloadIco}
               disabled={!icoBlob}
-              className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-1.5 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Download size={12} />
               ICO
@@ -386,7 +386,7 @@ export default function FaviconPage() {
             <button
               onClick={downloadZip}
               disabled={!icoBlob}
-              className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-1.5 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Archive size={12} />
               ZIP
@@ -395,14 +395,14 @@ export default function FaviconPage() {
 
           {/* Error */}
           {error && (
-            <div className="rounded-lg border border-pink/40 bg-pink/5 px-3 py-2 text-xs text-pink font-mono">
+            <div className="border border-pink/40 bg-pink/5 px-3 py-2 text-xs text-pink font-mono">
               {error}
             </div>
           )}
 
           {/* Previews */}
           {previews.length > 0 && (
-            <div className="rounded-lg border border-border bg-surface/50">
+            <div className="border border-border bg-surface">
               <div className="px-3 py-2 border-b border-border">
                 <span className="text-xs font-medium text-foreground">
                   Preview
@@ -415,7 +415,7 @@ export default function FaviconPage() {
                     className="flex flex-col items-center gap-2"
                   >
                     <div
-                      className="border border-border rounded bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px] flex items-center justify-center"
+                      className="border border-border bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px] flex items-center justify-center"
                       style={{
                         width: Math.max(p.size, 32) + 16,
                         height: Math.max(p.size, 32) + 16,
@@ -446,8 +446,8 @@ export default function FaviconPage() {
         {/* Right: sidebar */}
         <div className="lg:w-64 shrink-0 flex flex-col gap-6">
           {/* Size toggles */}
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border">
               Sizes (px)
             </h3>
             <div className="px-4 py-3 flex flex-wrap gap-1.5">
@@ -455,7 +455,7 @@ export default function FaviconPage() {
                 <button
                   key={size}
                   onClick={() => toggleSize(size)}
-                  className={`rounded border px-2.5 py-1 text-[11px] font-medium tabular-nums transition-colors cursor-pointer ${
+                  className={`border px-2.5 py-1 text-[11px] font-medium tabular-nums transition-colors cursor-pointer ${
                     sizes.includes(size)
                       ? "border-accent/40 bg-accent/10 text-accent"
                       : "border-border text-dim hover:text-foreground hover:border-border"
@@ -468,8 +468,8 @@ export default function FaviconPage() {
           </div>
 
           {/* About */}
-          <div className="rounded-lg border border-border bg-surface/50">
-            <h3 className="text-xs font-medium uppercase tracking-widest text-dim px-4 py-3 border-b border-border">
+          <div className="border border-border bg-surface">
+            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border">
               About
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">

@@ -4,6 +4,8 @@ date = 2026-09-08T19:04:00Z
 description = "I walked into a dying CRM rebuild welded to a legacy vendor, turned it into a real platform, and shipped a year early. Then we found out the products were solving problems nobody had, so I started fixing the problem statements myself. That fixed the products and broke everything else."
 categories = ["Software Engineering", "Engineering Leadership"]
 tags = ["Engineering Culture", "Developer Experience", "Team Velocity", "Leadership"]
+layout = "feature"
+hero = "weld"
 +++
 
 When I showed up, there was no platform. There was a CRM being written, and behind it a few years of tech debt with every product bolted to a legacy vendor. The plan was to peel the products off the vendor and stand up a new CRM in its place. Two and a half years budgeted, eight months already burned, and the whole thing quietly dying. You didn't have to squint to see it.

@@ -36,10 +36,8 @@ export default function ConvertIndexPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-xs font-medium uppercase tracking-widest text-dim mb-2">
-          Converters
-        </h1>
-        <p className="text-sm text-muted">
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">Converters</h1>
+        <p className="max-w-2xl text-lg text-dim">
           Conversion tools for text, images, and more.
         </p>
       </div>
@@ -52,7 +50,7 @@ export default function ConvertIndexPage() {
           >
             <Card hover className="flex flex-col h-full">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-medium text-accent">
+                <h2 className="text-2xl leading-none text-foreground transition-colors group-hover:text-accent">
                   {item.title}
                 </h2>
                 <ArrowRight
@@ -67,7 +65,7 @@ export default function ConvertIndexPage() {
                 {item.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-block rounded border border-border px-1.5 py-0.5 text-[10px] text-dim"
+                    className="inline-block border border-border px-1.5 py-0.5 text-[10px] text-dim"
                   >
                     {tag}
                   </span>

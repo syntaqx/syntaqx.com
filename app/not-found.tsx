@@ -1,19 +1,25 @@
 import { Button } from "@/components/button";
 import { ArrowRight } from "lucide-react";
+import { SceneArt } from "@/components/scene-art";
 
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
-      <p className="text-8xl font-bold text-accent mb-2">404</p>
-      <h1 className="text-2xl font-bold tracking-tight mb-4">
+      <SceneArt
+        scene="missing"
+        className="mb-10 aspect-square w-64! sm:w-72!"
+        label="A grid of tiles with the center tile missing, floating high above its empty slot"
+      />
+      <p className="eyebrow mb-4">404</p>
+      <h1 className="text-4xl sm:text-5xl leading-tight tracking-tight mb-6 max-w-2xl">
         These aren&apos;t the droids you&apos;re looking for.
       </h1>
-      <p className="text-sm text-dim max-w-md mb-2">
-        The page you requested has mass&mdash;but it exists in a superposition
-        of &ldquo;here&rdquo; and &ldquo;not here,&rdquo; and upon observation
-        it collapsed to &ldquo;not here.&rdquo;
+      <p className="text-lg text-muted max-w-md mb-3">
+        The page you requested has mass, but it exists in a superposition of
+        &ldquo;here&rdquo; and &ldquo;not here,&rdquo; and upon observation it
+        collapsed to &ldquo;not here.&rdquo;
       </p>
-      <p className="text-xs text-dim/60 mb-8 font-mono">
+      <p className="text-xs text-dim mb-10">
         HTTP 404 &middot; ERR_EXISTENTIAL_CRISIS
       </p>
       <div className="flex flex-wrap items-center gap-3">

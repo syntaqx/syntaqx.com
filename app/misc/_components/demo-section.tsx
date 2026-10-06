@@ -23,10 +23,10 @@ export function DemoSection({
     <section className="mb-12">
       <div className="mb-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-sm font-medium text-foreground mb-1">{title}</h2>
+          <h2 className="text-2xl text-foreground mb-1">{title}</h2>
           <p className="text-xs text-dim leading-relaxed">{blurb}</p>
         </div>
-        <div className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/50 px-2.5 py-1 text-[10px] font-medium uppercase tracking-widest text-dim">
+        <div className="shrink-0 inline-flex items-center gap-1.5 border border-border px-2.5 py-1 text-[11px] font-medium text-dim">
           <span className="text-dim/70">Inspired by</span>
           {sources.map((s, i) => (
             <span key={s.href ?? s.name} className="contents">

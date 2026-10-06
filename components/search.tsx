@@ -46,12 +46,11 @@ export function SearchButton() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         aria-label="Search"
-        className="flex h-8 items-center gap-2 rounded-lg border border-border bg-surface/50 px-3 text-xs text-dim hover:text-muted hover:border-border-hover transition-colors cursor-pointer"
+        className="inst flex items-center gap-2 border-l border-border px-4 text-dim transition-colors hover:text-foreground cursor-pointer"
       >
         <Search size={13} />
-        <span className="hidden sm:inline">Search</span>
-        <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] text-dim">
-          <span className="text-[11px]">⌘</span>K
+        <kbd className="hidden items-center bg-surface px-1.5 py-1 font-[inherit] text-foreground sm:inline-flex">
+          ⌘K
         </kbd>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -59,7 +58,7 @@ export function SearchButton() {
         <div className="fixed inset-0 z-100 flex items-start justify-center sm:px-4 sm:pt-[15vh] pointer-events-none">
           <Dialog.Content
             aria-describedby={undefined}
-            className="pointer-events-auto relative w-full h-full sm:h-auto sm:max-w-xl sm:rounded-xl border-b sm:border border-border bg-surface shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col outline-none"
+            className="pointer-events-auto relative w-full h-full sm:h-auto sm:max-w-xl sm:border-b sm:border border-border bg-surface shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col outline-none"
           >
             <Dialog.Title className="sr-only">Search</Dialog.Title>
             <SearchModal onClose={() => setOpen(false)} />
@@ -195,7 +194,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
         {loading && (
           <Loader2 size={14} className="text-dim animate-spin shrink-0" />
         )}
-        <kbd className="hidden sm:inline-flex rounded-md border border-border bg-background/50 px-2 py-0.5 text-[10px] text-dim font-mono">
+        <kbd className="hidden sm:inline-flex border border-border bg-background/50 px-2 py-0.5 text-[10px] text-dim font-mono">
           ESC
         </kbd>
         <Dialog.Close
@@ -225,7 +224,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
                 href={result.url}
                 onClick={onClose}
                 tabIndex={-1}
-                className={`flex items-start gap-3 rounded-lg px-3 py-3 transition-colors ${
+                className={`flex items-start gap-3 px-3 py-3 transition-colors ${
                   i === selected
                     ? "bg-accent/10 text-accent"
                     : "text-muted hover:bg-accent/5"
@@ -272,16 +271,16 @@ function SearchModal({ onClose }: { onClose: () => void }) {
       {results.length > 0 && (
         <div className="hidden sm:flex items-center gap-4 border-t border-border px-4 py-2.5 text-[10px] text-dim">
           <span className="flex items-center gap-1">
-            <kbd className="rounded border border-border bg-background/50 px-1 py-px font-mono">
+            <kbd className="border border-border bg-background/50 px-1 py-px font-mono">
               ↑
             </kbd>
-            <kbd className="rounded border border-border bg-background/50 px-1 py-px font-mono">
+            <kbd className="border border-border bg-background/50 px-1 py-px font-mono">
               ↓
             </kbd>
             navigate
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="rounded border border-border bg-background/50 px-1.5 py-px font-mono">
+            <kbd className="border border-border bg-background/50 px-1.5 py-px font-mono">
               ↵
             </kbd>
             open

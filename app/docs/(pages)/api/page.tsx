@@ -59,7 +59,7 @@ interface SchemaObject {
 // ---------------------------------------------------------------------------
 
 const METHOD_COLORS: Record<string, string> = {
-  get: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+  get: "text-accent bg-accent/10 border-accent/25",
   post: "text-blue-400 bg-blue-400/10 border-blue-400/20",
   put: "text-amber-400 bg-amber-400/10 border-amber-400/20",
   patch: "text-orange-400 bg-orange-400/10 border-orange-400/20",
@@ -143,8 +143,8 @@ function SchemaTable({
   const required = resolved.required || [];
 
   return (
-    <div className="border border-border rounded-lg overflow-hidden">
-      <div className="grid grid-cols-[1fr_1fr_2fr] text-[10px] uppercase tracking-widest text-dim px-4 py-2 border-b border-border bg-surface/50">
+    <div className="border border-border overflow-hidden">
+      <div className="inst grid grid-cols-[1fr_1fr_2fr] text-dim px-4 py-2.5 border-b border-border bg-surface">
         <span>Field</span>
         <span>Type</span>
         <span>Description</span>
@@ -229,11 +229,11 @@ function Endpoint({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-surface/50 overflow-hidden">
+    <div className="border-b border-border">
       {/* Header */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface transition-colors cursor-pointer"
+        className="w-full flex items-center gap-4 px-3 py-3.5 text-left hover:bg-surface transition-colors cursor-pointer"
       >
         {open ? (
           <ChevronDown size={14} className="text-dim shrink-0" />
@@ -241,12 +241,12 @@ function Endpoint({
           <ChevronRight size={14} className="text-dim shrink-0" />
         )}
         <span
-          className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${METHOD_COLORS[method] || "text-dim"}`}
+          className={`inst w-14 shrink-0 border py-1 text-center ${METHOD_COLORS[method] || "text-dim"}`}
         >
           {method}
         </span>
         <span className="font-mono text-sm text-foreground">{path}</span>
-        <span className="text-xs text-dim ml-auto hidden sm:inline">
+        <span className="ml-auto hidden text-sm text-dim sm:inline">
           {op.summary}
         </span>
       </button>
@@ -263,7 +263,7 @@ function Endpoint({
           {/* Request Body */}
           {hasBody && (
             <div className="px-4 py-3 border-b border-border space-y-3">
-              <h4 className="text-[10px] uppercase tracking-widest text-dim">
+              <h4 className="inst text-dim">
                 Request Body
                 {op.requestBody?.required && (
                   <span className="text-red-400 ml-1">required</span>
@@ -277,9 +277,7 @@ function Endpoint({
 
           {/* Responses */}
           <div className="px-4 py-3 space-y-4">
-            <h4 className="text-[10px] uppercase tracking-widest text-dim">
-              Responses
-            </h4>
+            <h4 className="inst text-dim">Responses</h4>
             {Object.entries(responses).map(([code, res]) => {
               const resObj = res as ResponseObject;
               const jsonContent = resObj.content?.["application/json"];
@@ -309,7 +307,7 @@ function Endpoint({
                       <div className="absolute top-2 right-2">
                         <CopyBtn text={example} />
                       </div>
-                      <pre className="text-[11px] font-mono bg-background border border-border rounded-lg p-3 overflow-x-auto text-muted">
+                      <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-muted">
                         {example}
                       </pre>
                     </div>
@@ -323,15 +321,13 @@ function Endpoint({
           <div className="px-4 py-3 border-t border-border space-y-3">
             {hasBody && (
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-dim block mb-1.5">
-                  Body
-                </label>
+                <label className="inst mb-2 block text-dim">Body</label>
                 <textarea
                   value={reqBody}
                   onChange={(e) => setReqBody(e.target.value)}
                   spellCheck={false}
                   rows={Math.min(12, defaultBody.split("\n").length + 1)}
-                  className="w-full font-mono text-[11px] bg-background border border-border rounded-lg p-3 text-foreground resize-y focus:outline-none focus:border-accent/50"
+                  className="w-full font-mono text-[11px] bg-background border border-border p-3 text-foreground resize-y focus:outline-none focus:border-accent/50"
                 />
               </div>
             )}
@@ -357,13 +353,13 @@ function Endpoint({
                     <div className="absolute top-0 right-0">
                       <CopyBtn text={result.body} />
                     </div>
-                    <pre className="text-[11px] font-mono bg-background border border-border rounded-lg p-3 overflow-x-auto text-muted">
+                    <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-muted">
                       {result.body}
                     </pre>
                   </>
                 )}
                 {trying && !result && (
-                  <div className="h-16 rounded-lg bg-border/20 animate-pulse" />
+                  <div className="h-16 bg-border/20 animate-pulse" />
                 )}
               </div>
             )}
@@ -414,9 +410,9 @@ export default function ApiDocsPage() {
   if (!spec) {
     return (
       <div className="space-y-4">
-        <div className="h-6 w-48 rounded bg-border/40 animate-pulse" />
-        <div className="h-4 w-96 rounded bg-border/40 animate-pulse" />
-        <div className="h-32 rounded-lg bg-border/20 animate-pulse" />
+        <div className="h-6 w-48 bg-border/40 animate-pulse" />
+        <div className="h-4 w-96 bg-border/40 animate-pulse" />
+        <div className="h-32 bg-border/20 animate-pulse" />
       </div>
     );
   }
@@ -441,67 +437,59 @@ export default function ApiDocsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-        <div>
-          <p className="text-xs text-accent font-medium tracking-wider uppercase mb-4">
-            API Reference
-          </p>
-          <h1 className="text-2xl font-bold tracking-tight mb-2">
-            {spec.info.title}
-          </h1>
-          <p className="text-sm text-muted mb-1">{spec.info.description}</p>
-          <p className="text-[10px] text-dim">
-            v{spec.info.version} &middot; OpenAPI {spec.openapi}
-          </p>
-        </div>
+      <header className="mb-8 border-b border-border pb-8">
+        <p className="eyebrow mb-5">api reference</p>
+        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
+          {spec.info.title}
+        </h1>
+        <p className="max-w-2xl text-lg text-dim">{spec.info.description}</p>
+        <p className="inst mt-5 text-dim">
+          v{spec.info.version} · openapi {spec.openapi} ·{" "}
+          {Object.values(grouped).flat().length} endpoints
+        </p>
+      </header>
 
-        {/* Server selector */}
-        {servers.length > 0 && (
-          <div className="shrink-0">
-            <div className="rounded-lg border border-border bg-surface/50 p-3">
-              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-dim mb-2">
-                <Server size={10} className="text-accent" />
-                Server
-              </div>
-              {servers.length === 1 ? (
-                <p className="text-xs font-mono text-foreground break-all">
-                  {servers[0].url}
-                </p>
-              ) : (
-                <div className="space-y-1">
-                  {servers.map((s, i) => (
-                    <button
-                      key={s.url}
-                      onClick={() => setServerIdx(i)}
-                      className={`block w-full text-left rounded px-2 py-1.5 text-xs font-mono transition-colors ${
-                        i === (serverIdx ?? 0)
-                          ? "text-accent bg-accent/10"
-                          : "text-muted hover:text-foreground hover:bg-surface"
-                      }`}
-                    >
-                      {s.url}
-                      {s.description && (
-                        <span className="block text-[10px] font-sans text-dim">
-                          {s.description}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Base URL */}
+      {servers.length > 0 && (
+        <div className="mb-12 flex flex-wrap items-stretch border border-border">
+          <span className="inst flex items-center gap-2 border-r border-border bg-surface px-4 py-3 text-dim">
+            <Server size={12} className="text-accent" />
+            base url
+          </span>
+          {servers.map((s, i) => {
+            const active = i === (serverIdx ?? 0);
+            return servers.length === 1 ? (
+              <code
+                key={s.url}
+                className="flex items-center px-4 py-3 font-mono text-sm break-all text-foreground"
+              >
+                {s.url}
+              </code>
+            ) : (
+              <button
+                key={s.url}
+                onClick={() => setServerIdx(i)}
+                title={s.description}
+                aria-pressed={active}
+                className={`relative border-r border-border px-4 py-3 font-mono text-sm break-all transition-colors cursor-pointer after:absolute after:inset-x-4 after:-bottom-px after:h-0.5 ${
+                  active
+                    ? "text-foreground after:bg-accent"
+                    : "text-dim hover:text-foreground"
+                }`}
+              >
+                {s.url}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Endpoints by tag */}
-      <div className="space-y-8">
+      <div className="space-y-12">
         {Object.entries(grouped).map(([tag, endpoints]) => (
           <section key={tag}>
-            <h2 className="text-xs font-medium uppercase tracking-widest text-dim mb-3">
-              {tag}
-            </h2>
-            <div className="space-y-3">
+            <h2 className="eyebrow mb-3">{tag}</h2>
+            <div className="border-t border-border">
               {endpoints.map((ep) => (
                 <Endpoint
                   key={`${ep.method}-${ep.path}`}

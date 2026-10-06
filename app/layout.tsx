@@ -1,23 +1,51 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Geist_Mono } from "next/font/google";
+import {
+  Big_Shoulders,
+  Hanken_Grotesk,
+  JetBrains_Mono,
+  Michroma,
+} from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import { SimpleIcon } from "@/components/simple-icon";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SearchButton } from "@/components/search";
-import { Nav, MobileMenu, Breadcrumb } from "@/components/nav";
-import { BackgroundEffect } from "@/components/background-effect";
+import { Nav, MobileMenu } from "@/components/nav";
+import { StatusClock } from "@/components/status-clock";
 import { TopProgressBar } from "@/components/top-progress-bar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { nav, socials, SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bigShoulders = Big_Shoulders({
+  variable: "--font-big-shoulders",
+  subsets: ["latin"],
+  axes: ["opsz"],
+  // Next has no fallback metrics for this family; skip the override.
+  adjustFontFallback: false,
+});
+
+const michroma = Michroma({
+  variable: "--font-michroma",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+});
+
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
 });
+
+// Short SHA of the deployed commit, shown in the header's status bar.
+const BUILD = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7);
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -58,7 +86,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistMono.variable} h-full`}
+      className={`${bigShoulders.variable} ${michroma.variable} ${hanken.variable} ${jetbrains.variable} h-full`}
       suppressHydrationWarning
     >
       <head>
@@ -82,96 +110,110 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>
-        <BackgroundEffect />
-        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
-          <div className="border-b border-border">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 relative">
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 group shrink-0"
-                >
-                  <Image
-                    src="/brand.svg"
-                    alt="syntaqx"
-                    width={24}
-                    height={24}
-                    className="w-6 h-6"
-                  />
-                  <span className="text-sm font-semibold text-accent transition-colors group-hover:text-foreground">
-                    syntaqx
-                  </span>
-                </Link>
-                <span className="hidden sm:inline text-dim">/</span>
-                <Nav />
-              </div>
-              <div className="flex h-8 items-center gap-3">
-                <SearchButton />
-                <ThemeToggle />
-                <MobileMenu />
-              </div>
+        <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
+          <div className="mx-auto grid h-14 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
+            <Link
+              href="/"
+              className="group flex items-center gap-2.5 border-r border-border px-4 sm:pl-0 sm:pr-5"
+            >
+              <Image
+                src="/brand.svg"
+                alt=""
+                width={22}
+                height={22}
+                className="size-5.5"
+              />
+              <span className="font-inst text-[0.9rem] lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
+                syntaqx
+              </span>
+            </Link>
+            <Nav />
+            <div className="flex items-stretch">
+              <a
+                href={`https://github.com/syntaqx/syntaqx.com${BUILD ? `/commit/${BUILD}` : ""}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inst hidden items-center gap-2 border-l border-border px-4 text-dim transition-colors hover:text-foreground xl:flex"
+                title="Deployed commit"
+              >
+                <span className="size-1.5 bg-accent shadow-[0_0_8px_var(--accent)] motion-safe:animate-[pulse-step_1.6s_steps(2)_infinite]" />
+                build {BUILD ?? "local"}
+              </a>
+              <StatusClock />
+              <SearchButton />
+              <ThemeToggle />
+              <MobileMenu />
             </div>
           </div>
-          <Breadcrumb />
         </header>
         <main className="flex-1 mx-auto w-full max-w-7xl px-6 py-12">
           {children}
         </main>
-        <footer className="border-t border-border mt-auto">
-          <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-dim">
-              {nav.map((item) => (
+        <footer className="mt-auto border-t border-border">
+          <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 md:grid-cols-[1fr_auto] md:items-end">
+            <div className="grid gap-4">
+              <Link
+                href="/"
+                className="font-inst text-base lowercase tracking-wide text-foreground hover:text-accent"
+              >
+                syntaqx
+              </Link>
+              <nav className="inst flex flex-wrap gap-x-6 gap-y-2 text-dim">
+                {nav.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="transition-colors hover:text-accent"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
                 <Link
-                  key={item.href}
-                  href={item.href}
-                  className="hover:text-accent transition-colors"
+                  href="/docs/api"
+                  className="transition-colors hover:text-accent"
                 >
-                  {item.label}
+                  api
                 </Link>
-              ))}
-            </div>
-            <p className="text-xs text-dim">
-              &copy; {new Date().getFullYear()} Chase Pierce
-            </p>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/docs/api"
-                className="text-xs text-dim hover:text-accent transition-colors"
-              >
-                API
-              </Link>
-              <Link
-                href="/legal/terms"
-                className="text-xs text-dim hover:text-accent transition-colors"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/legal/privacy"
-                className="text-xs text-dim hover:text-accent transition-colors"
-              >
-                Privacy
-              </Link>
-              <span className="text-border">|</span>
-              <a
-                href="/feed.xml"
-                className="text-dim hover:text-accent transition-colors"
-                aria-label="RSS feed"
-              >
-                <SimpleIcon name="rss" size={18} />
-              </a>
-              {socials.map((s) => (
-                <a
-                  key={s.href}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-dim hover:text-accent transition-colors"
-                  aria-label={s.label}
+                <Link
+                  href="/legal/terms"
+                  className="transition-colors hover:text-accent"
                 >
-                  <SimpleIcon name={s.icon} size={18} />
+                  terms
+                </Link>
+                <Link
+                  href="/legal/privacy"
+                  className="transition-colors hover:text-accent"
+                >
+                  privacy
+                </Link>
+              </nav>
+            </div>
+            <div className="grid gap-4 md:justify-items-end">
+              <div className="flex items-center gap-4">
+                <a
+                  href="/feed.xml"
+                  className="text-dim transition-colors hover:text-accent"
+                  aria-label="RSS feed"
+                >
+                  <SimpleIcon name="rss" size={18} />
                 </a>
-              ))}
+                {socials.map((s) => (
+                  <a
+                    key={s.href}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-dim transition-colors hover:text-accent"
+                    aria-label={s.label}
+                  >
+                    <SimpleIcon name={s.icon} size={18} />
+                  </a>
+                ))}
+              </div>
+              <p className="inst text-dim">
+                &copy; {new Date().getFullYear()} Chase Pierce · salt lake city,
+                ut
+              </p>
             </div>
           </div>
         </footer>

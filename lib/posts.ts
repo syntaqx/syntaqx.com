@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeShiki from "@shikijs/rehype";
+import { isPostScene, type PostSceneName } from "@/lib/scene/scenes";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
 
@@ -16,6 +17,10 @@ export interface PostData {
   tags?: string[];
   categories?: string[];
   images?: string[];
+  /** "feature" opts a post into the art-directed layout. */
+  layout: "default" | "feature";
+  /** The feature post's own hero scene. Never shared with other pages. */
+  hero?: PostSceneName;
   content: string;
   readingTimeMinutes: number;
 }
@@ -36,7 +41,9 @@ function parseTomlFrontmatter(fileContents: string): {
   data: Record<string, unknown>;
   content: string;
 } {
-  const match = fileContents.match(/^\+\+\+\s*\n([\s\S]*?)\n\+\+\+\s*\n?([\s\S]*)$/);
+  const match = fileContents.match(
+    /^\+\+\+\s*\n([\s\S]*?)\n\+\+\+\s*\n?([\s\S]*)$/,
+  );
   if (!match) {
     return { data: {}, content: fileContents };
   }
@@ -80,8 +87,14 @@ function parseTomlFrontmatter(fileContents: string): {
     }
 
     // Boolean
-    if (value === "true") { data[key] = true; continue; }
-    if (value === "false") { data[key] = false; continue; }
+    if (value === "true") {
+      data[key] = true;
+      continue;
+    }
+    if (value === "false") {
+      data[key] = false;
+      continue;
+    }
 
     // Date (ISO-like)
     if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}/.test(value)) {
@@ -132,6 +145,8 @@ function getPostByFileName(fileName: string): PostData {
     tags: (data.tags as string[]) ?? [],
     categories: (data.categories as string[]) ?? [],
     images: (data.images as string[]) ?? [],
+    layout: data.layout === "feature" ? "feature" : "default",
+    hero: isPostScene(data.hero) ? data.hero : undefined,
     content,
     readingTimeMinutes: estimateReadingTime(content),
   };
@@ -232,10 +247,50 @@ export function getNewestPostSlug(posts: PostData[]): string | null {
     : null;
 }
 
-export async function markdownToHtml(markdown: string): Promise<string> {
+export interface Heading {
+  id: string;
+  text: string;
+}
+
+interface HastNode {
+  type: string;
+  tagName?: string;
+  value?: string;
+  properties?: Record<string, unknown>;
+  children?: HastNode[];
+}
+
+const textOf = (n: HastNode): string =>
+  n.type === "text" ? (n.value ?? "") : (n.children ?? []).map(textOf).join("");
+
+/** Give every h2 a slug id (for deep links and the feature contents rail). */
+function rehypeSectionIds(toc?: Heading[]) {
+  return () => (tree: HastNode) => {
+    const seen = new Map<string, number>();
+    const walk = (n: HastNode) => {
+      if (n.type === "element" && n.tagName === "h2") {
+        const text = textOf(n).trim();
+        const base = slugifyTag(text) || "section";
+        const count = seen.get(base) ?? 0;
+        seen.set(base, count + 1);
+        const id = count ? `${base}-${count}` : base;
+        n.properties = { ...n.properties, id };
+        toc?.push({ id, text });
+      }
+      n.children?.forEach(walk);
+    };
+    walk(tree);
+  };
+}
+
+export async function markdownToHtml(
+  markdown: string,
+  toc?: Heading[],
+): Promise<string> {
   const result = await remark()
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeSectionIds(toc))
     .use(rehypeShiki, {
       themes: {
         dark: "vitesse-dark",

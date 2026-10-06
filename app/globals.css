@@ -7,84 +7,78 @@
  * always correct on devices with an OS preference — no JS required.
  * `.light` / `.dark` classes are stronger and override the media
  * query when the user has explicitly picked a theme via the toggle.
- * The inline script in app/layout.tsx only adds a class when the user
- * has stored a choice (or when their OS is dark, redundantly with the
- * media query — the script's class win doesn't matter because the
- * values are the same).
+ *
+ * Palette: an instrument panel. Near-black with a cool teal bias, and teal
+ * (#00D1CA) as the one brand color. Light mode keeps the same structure.
  */
 
 :root {
-  /* Dark theme (the historic default) */
-  --background: #0a0a0a;
-  --foreground: #e8e8e8;
-  --accent: #00D1CA;
-  --accent-muted: #334B49;
-  --muted: #a3a3a3;
-  --dim: #7c7c7c;
-  --pink: #FF9CC7;
-  --jwt-purple: #C4A7FF;
-  --jwt-cyan: #7EDCDC;
-  --mauve: #C86691;
-  --surface: #141414;
-  /* Soft, low-contrast hairline that stays out of the way on jet black. */
-  --border: #202020;
-  --border-hover: #2c2c2c;
+  --background: #0a0c0c;
+  --foreground: #e6ece9;
+  --accent: #00d1ca;
+  --accent-muted: #0c4f4b;
+  --muted: #a7b2b0;
+  --dim: #84908e;
+  --pink: #ff9cc7;
+  --jwt-purple: #c4a7ff;
+  --jwt-cyan: #7edcdc;
+  --mauve: #c86691;
+  --surface: #0f1313;
+  --border: #1c2423;
+  --border-hover: #2f3a39;
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: light) {
   :root:not(.dark) {
-    --background: #f5f5f5;
-    --foreground: #1a1a1a;
+    --background: #eef2f1;
+    --foreground: #0c1211;
     --accent: #007a73;
-    --accent-muted: #4a7d79;
-    --muted: #565656;
-    --dim: #6b6b6b;
+    --accent-muted: #b5e2df;
+    --muted: #3f4b49;
+    --dim: #586563;
     --pink: #c4608a;
     --jwt-purple: #7c5cbf;
     --jwt-cyan: #0e8585;
     --mauve: #a34f74;
-    --surface: #ffffff;
-    /* Soft, low-contrast hairline. */
-    --border: #e2e2e2;
-    --border-hover: #d0d0d0;
+    --surface: #e6ecea;
+    --border: #d2dad8;
+    --border-hover: #b9c4c2;
     color-scheme: light;
   }
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #e8e8e8;
-  --accent: #00D1CA;
-  --accent-muted: #334B49;
-  --muted: #a3a3a3;
-  --dim: #7c7c7c;
-  --pink: #FF9CC7;
-  --jwt-purple: #C4A7FF;
-  --jwt-cyan: #7EDCDC;
-  --mauve: #C86691;
-  --surface: #141414;
-  /* Soft, low-contrast hairline that stays out of the way on jet black. */
-  --border: #202020;
-  --border-hover: #2c2c2c;
+  --background: #0a0c0c;
+  --foreground: #e6ece9;
+  --accent: #00d1ca;
+  --accent-muted: #0c4f4b;
+  --muted: #a7b2b0;
+  --dim: #84908e;
+  --pink: #ff9cc7;
+  --jwt-purple: #c4a7ff;
+  --jwt-cyan: #7edcdc;
+  --mauve: #c86691;
+  --surface: #0f1313;
+  --border: #1c2423;
+  --border-hover: #2f3a39;
   color-scheme: dark;
 }
 
 .light {
-  --background: #f5f5f5;
-  --foreground: #1a1a1a;
+  --background: #eef2f1;
+  --foreground: #0c1211;
   --accent: #007a73;
-  --accent-muted: #4a7d79;
-  --muted: #565656;
-  --dim: #6b6b6b;
+  --accent-muted: #b5e2df;
+  --muted: #3f4b49;
+  --dim: #586563;
   --pink: #c4608a;
   --jwt-purple: #7c5cbf;
   --jwt-cyan: #0e8585;
   --mauve: #a34f74;
-  --surface: #ffffff;
-  /* Soft, low-contrast hairline. */
-  --border: #e2e2e2;
-  --border-hover: #d0d0d0;
+  --surface: #e6ecea;
+  --border: #d2dad8;
+  --border-hover: #b9c4c2;
   color-scheme: light;
 }
 
@@ -102,70 +96,159 @@
   --color-surface: var(--surface);
   --color-border: var(--border);
   --color-border-hover: var(--border-hover);
-  --font-sans: var(--font-geist-mono);
-  --font-mono: var(--font-geist-mono);
+  /*
+   * Four voices, one job each:
+   *   voice      Big Shoulders: names, titles, pull quotes, big numbers
+   *   instrument Michroma: wordmark, nav, labels, dates, buttons (see .inst)
+   *   reading    Hanken Grotesk: every paragraph
+   *   code       JetBrains Mono: code and data only
+   */
+  --font-voice: var(--font-big-shoulders), "Hanken Grotesk", sans-serif;
+  --font-inst: var(--font-michroma), "Hanken Grotesk", sans-serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-sans);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-voice);
+    font-optical-sizing: auto;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: 0.005em;
+  }
+}
+
+/*
+ * The diagonal. One tilt for the whole site (about 8.5 degrees): buttons,
+ * cards, hover wipes, and light beams all lean the same way.
+ */
+:root {
+  --tilt: 0.15;
+  --tilt-angle: atan(var(--tilt));
+}
+
+/* Lean an element into a parallelogram; `unslant` stands its content back up. */
+@utility slant {
+  transform: skewX(calc(-1 * var(--tilt-angle)));
+}
+@utility unslant {
+  transform: skewX(var(--tilt-angle));
+}
+
+/* Faint slanted light beams for heroes and headers. */
+@utility beams {
+  background-image: linear-gradient(
+    calc(90deg + var(--tilt-angle)),
+    transparent 0 14%,
+    color-mix(in oklab, var(--accent) 7%, transparent) 14% 21%,
+    transparent 21% 57%,
+    color-mix(in oklab, var(--accent) 5%, transparent) 57% 60%,
+    transparent 60% 79%,
+    color-mix(in oklab, var(--accent) 6%, transparent) 79% 88%,
+    transparent 88%
+  );
+}
+
+/* Instrument text: Michroma, small, tracked, caps. */
+@utility inst {
+  font-family: var(--font-inst);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Section label: instrument text after a teal square (the art's handle). */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8em;
+  font-family: var(--font-inst);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--dim);
+
+  &::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    flex-shrink: 0;
+    background: var(--accent);
+  }
+}
+
+/* Four square handles on the corners of a box, like a selected layer. */
+@utility handles {
+  background-image:
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent));
+  background-size: 5px 5px;
+  background-position:
+    top left,
+    top right,
+    bottom left,
+    bottom right;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+}
+
+/* Square caps on every lucide icon so they match the illustration strokes. */
+.lucide {
+  stroke-linecap: square;
+}
+
+@keyframes pulse-step {
+  50% {
+    opacity: 0.25;
+  }
 }
 
 /*
  * Keyboard focus. `:focus-visible` only fires for keyboard/AT navigation,
- * not mouse clicks, so pointer users never see the ring. Everything
- * interactive (links, buttons, inputs, custom role="button" widgets)
- * gets a consistent, high-contrast accent outline.
+ * not mouse clicks, so pointer users never see the ring.
  */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 2px;
 }
-/* We provide our own :focus-visible ring; drop the UA default that some
- * elements still paint on plain :focus. */
 :focus:not(:focus-visible) {
   outline: none;
 }
 
 /* Selection */
 ::selection {
-  background: rgba(0, 209, 202, 0.25);
+  background: rgba(0, 209, 202, 0.3);
   color: #fff;
 }
 @media (prefers-color-scheme: light) {
   :root:not(.dark) ::selection {
     background: rgba(0, 122, 115, 0.2);
-    color: #1a1a1a;
+    color: #0c1211;
   }
 }
 .light ::selection {
   background: rgba(0, 122, 115, 0.2);
-  color: #1a1a1a;
+  color: #0c1211;
 }
 .dark ::selection {
-  background: rgba(0, 209, 202, 0.25);
+  background: rgba(0, 209, 202, 0.3);
   color: #fff;
-}
-
-/* Hexagon background opacity per theme */
-.hexagon-bg {
-  opacity: 0.12;
-}
-@media (prefers-color-scheme: light) {
-  :root:not(.dark) .hexagon-bg {
-    opacity: 0.10;
-    filter: brightness(0) saturate(0);
-  }
-}
-.light .hexagon-bg {
-  opacity: 0.10;
-  filter: brightness(0) saturate(0);
-}
-.dark .hexagon-bg {
-  opacity: 0.12;
-  filter: none;
 }
 
 /* Scrollbar */
@@ -178,76 +261,150 @@ body {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--accent-muted);
-  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
 
-/* Prose typography for blog posts */
+/*
+ * Prose: posts and docs. Plain and readable (Hanken at a 40rem measure);
+ * the voice face only for section heads, numbered in instrument text.
+ */
 .prose {
-  line-height: 1.6;
-  font-size: 0.9375rem;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  max-width: 40rem;
+  color: var(--muted);
+  counter-reset: section;
 }
 .prose h1,
 .prose h2,
 .prose h3,
 .prose h4 {
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin-top: 2em;
-  margin-bottom: 0.5em;
   color: var(--foreground);
+  margin-top: 2.2em;
+  margin-bottom: 0.6em;
 }
-.prose h1 { font-size: 1.75rem; }
+.prose h1 {
+  font-size: 2.75rem;
+}
 .prose h2 {
-  font-size: 1.25rem;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.5em;
+  font-size: 1.75rem;
+  counter-increment: section;
+}
+.prose h2::before {
+  content: counter(section, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.6rem;
+  font-family: var(--font-inst);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
   color: var(--accent);
 }
-.prose h3 { font-size: 1.1rem; color: var(--muted); }
-.prose p { margin-top: 1em; margin-bottom: 1em; }
+.prose h3,
+.prose h4 {
+  font-family: var(--font-sans);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  font-weight: 700;
+}
+.prose h3 {
+  font-size: 1.3rem;
+}
+.prose h4 {
+  font-size: 1.1rem;
+}
+.prose p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
 .prose a {
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s;
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition:
+    color 0.2s,
+    text-decoration-thickness 0.2s;
 }
 .prose a:hover {
-  border-bottom-color: var(--accent);
+  color: var(--accent);
+  text-decoration-thickness: 2px;
 }
-.prose strong { font-weight: 600; color: var(--foreground); }
-.prose em { color: var(--muted); }
-.prose ul, .prose ol { padding-left: 1.5em; margin-top: 0.75em; margin-bottom: 0.75em; }
-.prose ul { list-style-type: "› "; }
-.prose ol { list-style-type: decimal; }
-.prose li { margin-top: 0.35em; margin-bottom: 0.35em; }
-.prose li::marker { color: var(--accent); }
+.prose strong {
+  font-weight: 700;
+  color: var(--foreground);
+}
+.prose em {
+  font-style: italic;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.5em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+.prose ul {
+  list-style-type: square;
+}
+.prose ol {
+  list-style-type: decimal;
+}
+.prose li {
+  margin-top: 0.35em;
+  margin-bottom: 0.35em;
+  padding-left: 0.25em;
+}
+.prose li::marker {
+  color: var(--accent);
+}
 .prose blockquote {
   border-left: 2px solid var(--accent);
   padding-left: 1.25em;
-  margin: 1.5em 0;
-  color: var(--muted);
+  margin: 1.75em 0;
+  color: var(--foreground);
+  font-style: italic;
+}
+/* Feature posts: blockquotes become pull quotes in the voice face. */
+.prose-feature blockquote {
+  padding: 0.4em 0 0.4em 0.9em;
+  margin: 1.4em 0;
+  font-family: var(--font-voice);
+  font-optical-sizing: auto;
+  font-weight: 700;
   font-style: normal;
+  font-size: clamp(1.75rem, 3.2vw, 2.6rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.prose-feature blockquote p {
+  margin: 0;
+}
+.prose-feature blockquote strong,
+.prose-feature blockquote em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: inherit;
 }
 .prose code {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.85em;
-  background: rgba(0, 209, 202, 0.06);
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  background: var(--surface);
   border: 1px solid var(--border);
-  padding: 0.15em 0.4em;
-  border-radius: 0.25rem;
-  color: var(--accent);
+  padding: 0.1em 0.35em;
+  color: var(--foreground);
 }
 .prose pre {
+  font-family: var(--font-mono);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
   padding: 1.25rem 1.5rem;
   overflow-x: auto;
-  margin: 1.5em 0;
+  margin: 1.75em 0;
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 /* Shiki dual-theme: use dark colors by default, light in .light */
 .dark .prose pre,
@@ -274,32 +431,35 @@ body {
 .prose hr {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 2em 0;
+  margin: 2.5em 0;
 }
 .prose img {
-  border-radius: 0.5rem;
   border: 1px solid var(--border);
-  margin: 1.5em 0;
+  margin: 1.75em 0;
 }
 
 /* GFM tables */
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5em 0;
-  font-size: 0.8125rem;
+  margin: 1.75em 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 .prose thead th {
   text-align: left;
-  font-weight: 600;
+  font-family: var(--font-inst);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--foreground);
-  border-bottom: 2px solid var(--border);
-  padding: 0.5em 0.75em;
+  border-bottom: 1px solid var(--foreground);
+  padding: 0.6em 0.75em;
 }
 .prose tbody td {
   border-bottom: 1px solid var(--border);
   padding: 0.5em 0.75em;
-  color: var(--muted);
 }
 .prose tbody tr:last-child td {
   border-bottom: none;
@@ -314,8 +474,7 @@ body {
   appearance: none;
   width: 14px;
   height: 14px;
-  border: 1px solid var(--border);
-  border-radius: 3px;
+  border: 1px solid var(--border-hover);
   margin-right: 0.5em;
   vertical-align: middle;
   position: relative;
