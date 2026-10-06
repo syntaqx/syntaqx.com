@@ -43,20 +43,20 @@ export default function Home() {
       <section className="relative isolate grid items-center gap-x-10 gap-y-12 pb-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
         <div
           aria-hidden="true"
-          className="beams pointer-events-none absolute -inset-x-6 -top-12 bottom-0 -z-10 mask-[linear-gradient(to_bottom,black_40%,transparent)]"
+          className="beams pointer-events-none absolute -inset-x-6 -top-12 bottom-0 -z-10 mask-[linear-gradient(to_bottom,transparent,black_20%,black_50%,transparent)]"
         />
         <div>
           <p className="inst mb-5 tracking-[0.3em] text-dim">
             software engineering leader · utah
           </p>
-          <h1 className="mb-10 text-[clamp(3.75rem,8.5vw,7rem)] leading-[0.86]">
+          <h1 className="mb-8 text-[clamp(3rem,6vw,4.75rem)] leading-[0.9]">
             Chase <span className="text-accent">Pierce</span>
           </h1>
           <dl className="grid max-w-xl gap-5">
             {bio.map((item) => (
               <div key={item.label}>
                 <dt className="inst mb-1.5 text-accent">{item.label}</dt>
-                <dd className="text-[1.05rem] leading-relaxed text-dim">
+                <dd className="text-[0.95rem] leading-relaxed text-dim">
                   {item.text}
                 </dd>
               </div>
@@ -105,7 +105,7 @@ export default function Home() {
             key={s.label}
             className={`grid gap-2.5 border-border px-6 py-5 md:border-r md:last:border-r-0 ${i % 2 ? "" : "border-r"} ${i < 2 ? "border-b md:border-b-0" : ""}`}
           >
-            <span className="font-voice text-5xl leading-[0.82] font-bold">
+            <span className="font-voice text-4xl leading-[0.85] font-semibold">
               {s.value}
               {s.unit && (
                 <span className="text-[0.5em] text-accent">{s.unit}</span>

@@ -439,10 +439,10 @@ export default function ApiDocsPage() {
       {/* Header */}
       <header className="mb-8 border-b border-border pb-8">
         <p className="eyebrow mb-5">api reference</p>
-        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
           {spec.info.title}
         </h1>
-        <p className="max-w-2xl text-lg text-dim">{spec.info.description}</p>
+        <p className="max-w-2xl text-dim">{spec.info.description}</p>
         <p className="inst mt-5 text-dim">
           v{spec.info.version} · openapi {spec.openapi} ·{" "}
           {Object.values(grouped).flat().length} endpoints

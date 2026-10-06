@@ -111,21 +111,18 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative isolate flex h-full min-w-0 flex-col px-8 py-9 sm:px-12"
+      className="group relative isolate flex h-full min-w-0 flex-col px-7 py-7 sm:px-10"
     >
+      {/* The face leans; its accent bar is a child, so it leans with it. */}
       <span
         aria-hidden="true"
-        className={`absolute inset-0 -z-10 border md:slant transition-colors ${
+        className={`absolute inset-0 -z-10 border transition-colors before:absolute before:-top-px before:left-0 before:h-0.5 before:w-12 before:bg-accent before:transition-[width] before:duration-300 before:ease-out group-hover:before:w-full md:slant ${
           lead
-            ? "beams border-accent/60 bg-surface group-hover:border-accent"
+            ? "beams border-accent/50 bg-surface group-hover:border-accent"
             : "border-border bg-surface group-hover:border-border-hover"
         }`}
       />
-      <span
-        aria-hidden="true"
-        className="absolute top-0 left-0 -z-10 h-0.5 md:slant w-16 bg-accent transition-[width] duration-300 ease-out group-hover:w-full"
-      />
-      <span className="mb-6 flex items-center justify-between gap-4">
+      <span className="mb-4 flex items-center justify-between gap-4">
         <span className={`inst ${lead ? "text-accent" : "text-dim"}`}>
           {item.kicker}
         </span>
@@ -135,14 +132,14 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
         />
       </span>
       <h3
-        className={`mb-4 leading-[0.9] wrap-break-word text-foreground transition-colors group-hover:text-accent ${
-          lead ? "text-4xl sm:text-6xl" : "text-3xl sm:text-4xl"
+        className={`mb-3 leading-[0.95] wrap-break-word text-foreground transition-colors group-hover:text-accent ${
+          lead ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"
         }`}
       >
         {item.title}
       </h3>
       <p
-        className={`mb-8 leading-relaxed text-muted ${lead ? "max-w-xl text-lg" : ""}`}
+        className={`mb-6 text-[0.95rem] leading-relaxed text-muted ${lead ? "max-w-xl" : ""}`}
       >
         {item.description}
       </p>
@@ -167,7 +164,7 @@ function SectionHead({ label, count }: { label: string; count: number }) {
 
 export default function ProjectsPage() {
   return (
-    <div className="overflow-x-clip">
+    <div>
       <PageHeader
         label="projects"
         title="Things I've built"
@@ -183,7 +180,7 @@ export default function ProjectsPage() {
 
       <section className="mb-20">
         <SectionHead label="launched" count={launched.length} />
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 px-3 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 md:px-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
           {launched.map((item) => (
             <SlantCard key={item.title} item={item} lead={item.lead} />
           ))}
@@ -199,7 +196,7 @@ export default function ProjectsPage() {
                 href={p.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative isolate grid gap-x-8 gap-y-2 overflow-hidden px-3 py-6 sm:grid-cols-[3rem_minmax(10rem,14rem)_minmax(0,1fr)_auto] sm:items-baseline"
+                className="group relative isolate grid gap-x-8 gap-y-2 overflow-hidden px-3 py-5 sm:grid-cols-[3rem_minmax(10rem,13rem)_minmax(0,1fr)_auto] sm:items-baseline"
               >
                 {/* Diagonal wipe on hover */}
                 <span
@@ -209,11 +206,13 @@ export default function ProjectsPage() {
                 <span className="font-voice text-xl leading-none font-bold text-accent">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="text-3xl leading-none text-foreground transition-colors group-hover:text-accent">
+                <h3 className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
                   {p.title}
                 </h3>
                 <div className="grid gap-3">
-                  <p className="leading-snug text-muted">{p.description}</p>
+                  <p className="text-[0.95rem] leading-snug text-muted">
+                    {p.description}
+                  </p>
                   <Tags tags={p.tags} />
                 </div>
                 <ArrowUpRight
@@ -228,7 +227,7 @@ export default function ProjectsPage() {
 
       <section>
         <SectionHead label="community" count={community.length} />
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 px-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 md:px-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
           {community.map((item) => (
             <SlantCard key={item.title} item={item} />
           ))}

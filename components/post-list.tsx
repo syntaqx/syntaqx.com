@@ -15,17 +15,17 @@ export function PostList({ posts, newestSlug = null }: PostListProps) {
         <li key={post.slug} className="border-b border-border">
           <Link
             href={`/posts/${post.slug}`}
-            className="group relative grid gap-x-8 gap-y-2 px-0 py-6 transition-colors before:absolute before:top-1/2 before:-left-4 before:size-1.5 before:-translate-y-1/2 before:scale-0 before:bg-accent before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-surface hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4"
+            className="group relative grid gap-x-8 gap-y-2 px-0 py-5 transition-colors before:absolute before:top-1/2 before:-left-4 before:size-1.5 before:-translate-y-1/2 before:scale-0 before:bg-accent before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-surface hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4"
           >
             <time dateTime={post.date} className="inst text-dim tabular-nums">
               {format(new Date(post.date), "yyyy.MM.dd")}
             </time>
             <div className="min-w-0">
-              <h2 className="text-2xl leading-none text-foreground transition-[color,translate] duration-200 ease-[steps(4)] group-hover:translate-x-1.5 group-hover:text-accent sm:text-[1.65rem]">
+              <h2 className="text-xl leading-none text-foreground transition-[color,translate] duration-200 ease-[steps(4)] group-hover:translate-x-1.5 group-hover:text-accent sm:text-[1.4rem]">
                 {post.title}
               </h2>
               {post.description && (
-                <p className="mt-2 max-w-2xl text-[0.95rem] leading-snug text-dim line-clamp-2">
+                <p className="mt-1.5 max-w-2xl text-[0.9rem] leading-snug text-dim line-clamp-2">
                   {post.description}
                 </p>
               )}

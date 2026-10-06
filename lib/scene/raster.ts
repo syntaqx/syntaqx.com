@@ -1,4 +1,12 @@
-import { cylSide, circle, project, type Projector, type Scene, type V2, type V3 } from "./iso";
+import {
+  cylSide,
+  circle,
+  project,
+  type Projector,
+  type Scene,
+  type V2,
+  type V3,
+} from "./iso";
 
 /*
  * Cell-space rasterization shared by the live canvas and the OG renderer.
@@ -42,7 +50,12 @@ const hash = (x: number, y: number) => {
 };
 
 /** Even-odd scanline fill at cell centers. `fn` receives the cell index. */
-export function scan(pts: V2[], cols: number, rows: number, fn: (i: number) => void) {
+export function scan(
+  pts: V2[],
+  cols: number,
+  rows: number,
+  fn: (i: number) => void,
+) {
   let minY = Infinity;
   let maxY = -Infinity;
   for (const [, y] of pts) {
@@ -83,15 +96,21 @@ export function rasterize(
   const lum = new Float32Array(cols * rows);
   const acc = new Uint8Array(cols * rows);
 
-  // Haze: a soft radial glow behind the drawing, which dithers to a sparse
-  // field that thins toward the edges.
+  // Haze: a soft elliptical glow behind the drawing, which dithers to a
+  // sparse field. It reaches zero inside the frame, so there's no hard edge.
   const cx = cols * (wide ? 0.68 : 0.5);
   const cy = rows * 0.5;
-  const R = Math.max(cols, rows) * 0.62;
+  const rx = cols * (wide ? 0.32 : 0.5);
+  const ry = rows * 0.5;
   for (let j = 0; j < rows; j++)
     for (let i = 0; i < cols; i++) {
-      const d = Math.min(1, Math.hypot(i - cx, j - cy) / R);
-      lum[j * cols + i] = d < 0.6 ? 0.25 - (d / 0.6) * 0.18 : 0.07 * (1 - (d - 0.6) / 0.4);
+      const d = Math.hypot((i + 0.5 - cx) / rx, (j + 0.5 - cy) / ry);
+      lum[j * cols + i] =
+        d < 0.55
+          ? 0.25 - (d / 0.55) * 0.18
+          : d < 0.95
+            ? 0.07 * (1 - (d - 0.55) / 0.4)
+            : 0;
     }
 
   const fill = (pts: V3[], v: number, accent = false, alpha = 1) =>
@@ -129,8 +148,12 @@ export function levels(field: Field, twinkle = 0): Uint8Array {
     for (let x = 0; x < cols; x++) {
       const i = y * cols + x;
       let v = lum[i];
-      if (v < 0.1 && hash(x + twinkle * 3, y) > 0.985 - v * 0.2) v = 0.2;
-      const lv = Math.min(LEVELS, Math.floor(v * LEVELS + BAYER[y & 7][x & 7] - 0.5));
+      if (v > 0.005 && v < 0.1 && hash(x + twinkle * 3, y) > 0.985 - v * 0.2)
+        v = 0.2;
+      const lv = Math.min(
+        LEVELS,
+        Math.floor(v * LEVELS + BAYER[y & 7][x & 7] - 0.5),
+      );
       if (lv <= 0) continue;
       out[i] = acc[i] && lv >= LEVELS ? HOT : lv;
     }

@@ -32,11 +32,11 @@ export default async function DocPage({ params }: Props) {
   return (
     <article>
       <header className="mb-10 border-b border-border pb-8">
-        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl wrap-break-word">
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl wrap-break-word">
           {doc.title}
         </h1>
         {doc.description && (
-          <p className="max-w-2xl text-lg text-dim">{doc.description}</p>
+          <p className="max-w-2xl text-dim">{doc.description}</p>
         )}
       </header>
 

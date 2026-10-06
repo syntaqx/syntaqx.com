@@ -12,8 +12,10 @@ export default function HoverCardsPage() {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="mb-4 text-4xl leading-[0.9] sm:text-5xl">Hover Cards</h1>
-        <p className="max-w-2xl text-lg text-dim leading-relaxed">
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
+          Hover Cards
+        </h1>
+        <p className="max-w-2xl text-dim leading-relaxed">
           Defer expensive context to intent. The page renders only what every
           reader needs; the rest waits behind a hover, a focus, or a long press.
         </p>
