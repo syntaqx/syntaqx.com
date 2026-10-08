@@ -55,6 +55,7 @@ function canvasPen(
   pal: ReturnType<typeof palette>,
   dpr: number,
   W: number,
+  H: number,
 ): Pen {
   const lw = Math.max(1, dpr * 0.9);
   const ink = (k: Ink) =>
@@ -109,9 +110,15 @@ function canvasPen(
       ctx.letterSpacing = `${1.4 * dpr}px`;
       const t = text.toUpperCase();
       const tw = ctx.measureText(t).width;
+      // Keep the text inside the radial edge mask (closest-side ellipse,
+      // solid to 86%, then fading), or it vanishes on narrow screens.
+      const k = 0.9;
+      const dy = Math.abs(y1 - H / 2);
+      const hw =
+        k * (W / 2) * Math.sqrt(Math.max(0, 1 - (dy / ((k * H) / 2)) ** 2));
       const tx = Math.max(
-        6 * dpr,
-        Math.min(W - tw - 6 * dpr, right ? x1 + 14 * dpr : x1 - 14 * dpr - tw),
+        W / 2 - hw,
+        Math.min(W / 2 + hw - tw, right ? x1 + 14 * dpr : x1 - 14 * dpr - tw),
       );
       ctx.fillStyle = css(pal.bg, 0.85);
       ctx.fillRect(tx - 4 * dpr, y1 - 8 * dpr, tw + 8 * dpr, 14 * dpr);
@@ -236,7 +243,7 @@ export function SceneArt({
       walk(
         data,
         project(data.ext, W, H, wide),
-        canvasPen(lctx, pal, dpr, W),
+        canvasPen(lctx, pal, dpr, W, H),
         st,
       );
       ctx.drawImage(layer, 0, 0);
