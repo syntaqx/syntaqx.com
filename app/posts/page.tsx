@@ -35,7 +35,9 @@ export default function PostsPage() {
       {tags.length > 0 && (
         <div className="mb-12">
           <h2 className="eyebrow mb-4">browse by tag</h2>
-          <TagChips tags={tags} />
+          <div className="-mx-6 overflow-x-auto px-6 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+            <TagChips tags={tags} className="max-sm:w-max max-sm:flex-nowrap" />
+          </div>
         </div>
       )}
       <PostList posts={posts} newestSlug={newestSlug} />

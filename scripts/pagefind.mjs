@@ -46,10 +46,16 @@ if (pages.length === 0) {
 }
 
 const { index } = await pagefind.createIndex();
+let indexed = 0;
 for (const { file, url } of pages) {
-  await index.addHTMLFile({ url, content: await readFile(file, "utf8") });
+  const content = await readFile(file, "utf8");
+  // Legacy-slug aliases prerender as static 308 stubs; they'd show up as
+  // duplicate, empty results.
+  if (content.includes('id="__next-page-redirect"')) continue;
+  await index.addHTMLFile({ url, content });
+  indexed++;
 }
 await index.writeFiles({ outputPath: "public/pagefind" });
 await pagefind.close();
 
-console.log(`pagefind: indexed ${pages.length} pages`);
+console.log(`pagefind: indexed ${indexed} pages`);

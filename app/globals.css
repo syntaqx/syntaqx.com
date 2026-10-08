@@ -396,6 +396,7 @@ body {
   border: 1px solid var(--border);
   padding: 0.1em 0.35em;
   color: var(--foreground);
+  overflow-wrap: anywhere;
 }
 .prose pre {
   font-family: var(--font-mono);

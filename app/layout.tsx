@@ -106,7 +106,10 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>
-        <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
+        <header
+          data-pagefind-ignore
+          className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md"
+        >
           <div className="mx-auto grid h-14 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
             <Link
               href="/"
@@ -124,7 +127,7 @@ export default function RootLayout({
               </span>
             </Link>
             <Nav />
-            <div className="flex items-stretch">
+            <div className="col-start-3 flex items-stretch">
               <SearchButton />
               <ThemeToggle />
               <MobileMenu />
@@ -134,7 +137,7 @@ export default function RootLayout({
         <main className="flex-1 mx-auto w-full max-w-7xl px-6 py-12">
           {children}
         </main>
-        <footer className="mt-auto border-t border-border">
+        <footer data-pagefind-ignore className="mt-auto border-t border-border">
           <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 md:grid-cols-[1fr_auto] md:items-end">
             <div className="grid gap-4">
               <Link
