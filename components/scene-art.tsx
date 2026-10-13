@@ -15,7 +15,11 @@ import { walk, type Ink, type Pen } from "@/lib/scene/walk";
 
 interface Props {
   scene: SceneName;
-  /** Wide layout parks the drawing right of center, for feature heroes. */
+  /**
+   * Wide layout parks the drawing right of center, for feature heroes. Only
+   * from the sm breakpoint up, where the title overlays the art; on phones
+   * the title sits below, so the drawing centers and uses the full width.
+   */
   wide?: boolean;
   /** Tile pitch in CSS px. */
   grain?: number;
@@ -191,15 +195,17 @@ export function SceneArt({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Touch screens can't hover to pull the layers apart, so rest part-open.
+    const rest = matchMedia("(hover: none)").matches ? 0.6 : 0;
     const layer = document.createElement("canvas");
     const lctx = layer.getContext("2d")!;
 
     const st: Actor["st"] = {
       t: 0,
-      spread: 0,
+      spread: rest,
       light: 0,
       flow: 0,
-      target: 0,
+      target: rest,
       lightT: 0,
       visible: true,
     };
@@ -212,11 +218,12 @@ export function SceneArt({
       const dpr = W / cw;
       const pal = palette();
       const data = sceneAt(scene, st);
+      const park = wide && cw >= 640;
 
       // Tiles: rasterize at one cell per `grain` CSS px.
       const cols = Math.ceil(cw / grain);
       const rows = Math.ceil(canvas.clientHeight / grain);
-      const { field } = rasterize(data, cols, rows, st.light, wide);
+      const { field } = rasterize(data, cols, rows, st.light, park);
       const lv = levels(field, reduce ? 0 : Math.floor(st.t * 2));
       ctx.fillStyle = css(pal.bg);
       ctx.fillRect(0, 0, W, H);
@@ -242,7 +249,7 @@ export function SceneArt({
       lctx.clearRect(0, 0, W, H);
       walk(
         data,
-        project(data.ext, W, H, wide),
+        project(data.ext, W, H, park),
         canvasPen(lctx, pal, dpr, W, H),
         st,
       );
@@ -268,7 +275,7 @@ export function SceneArt({
       if (reduce) draw();
     };
     const leave = () => {
-      st.target = 0;
+      st.target = rest;
       st.lightT = 0;
       if (reduce) draw();
     };

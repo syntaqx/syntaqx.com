@@ -31,9 +31,6 @@ export function PostList({ posts, newestSlug = null }: PostListProps) {
               )}
             </div>
             <span className="inst flex items-center gap-3 text-dim sm:justify-end">
-              {post.layout === "feature" && (
-                <span className="text-accent">feature</span>
-              )}
               {post.slug === newestSlug && (
                 <span className="text-accent">new</span>
               )}

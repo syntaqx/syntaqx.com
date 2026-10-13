@@ -63,7 +63,10 @@ const LEVEL_COLORS = [
 ];
 
 const VACATION_RING = "ring-1 ring-amber-500/60 ring-inset";
-const HOLIDAY_RING = "ring-1 ring-sky-400/60 ring-inset";
+// A dot, not a ring: it reads on any fill level and leaves the ring free
+// for today's highlight.
+const HOLIDAY_DOT =
+  "relative after:absolute after:top-1/2 after:left-1/2 after:size-1 after:-translate-1/2 after:rounded-full after:bg-foreground";
 
 /** Returns the matching vacation label for a date string, or null. */
 function vacationFor(date: string): string | null {
@@ -258,7 +261,7 @@ export function GitHubActivity({
                         const className = vacation
                           ? `${base} ${VACATION_RING}`
                           : holiday
-                            ? `${base} ${HOLIDAY_RING}`
+                            ? `${base} ${HOLIDAY_DOT}`
                             : base;
                         const label = vacation
                           ? `Vacation (${vacation})`
@@ -285,7 +288,7 @@ export function GitHubActivity({
         {/* Legend */}
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2 mt-3">
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-xs ring-1 ring-accent ring-inset" />
+            <div className="w-2.5 h-2.5 rounded-xs ring-1 ring-foreground ring-inset" />
             <span className="inst text-[0.5rem] text-dim">Today</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -296,7 +299,7 @@ export function GitHubActivity({
           </div>
           <div className="flex items-center gap-1.5">
             <div
-              className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${HOLIDAY_RING}`}
+              className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${HOLIDAY_DOT}`}
             />
             <span className="inst text-[0.5rem] text-dim">US Holiday</span>
           </div>
