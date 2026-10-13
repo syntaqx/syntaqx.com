@@ -194,28 +194,29 @@ const scaffold: SceneFn = (s) => {
 };
 
 /**
- * We Called It Progress: the stack every disruption is built on, gps up through us,
- * with the next layer being lowered on top and a medallion left on the floor.
+ * We Called It Progress: every abstraction stacked on the last, machine code
+ * up through the cloud, with english being lowered on top and the job that
+ * sits on it left as an open question.
  */
 const stack: SceneFn = (s) => {
-  const layers = ["gps", "maps", "rideshare", "us"];
-  const H = 0.7;
-  const gap = 0.6 + s.spread * 1.2;
+  const layers = ["machine code", "assembly", "compilers", "frameworks", "cloud"];
+  const H = 0.5;
+  const gap = 0.45 + s.spread * 1;
   const zAt = (i: number) => i * (H + gap);
   const top = zAt(layers.length - 1) + H;
-  const next = top + 1.8 + s.spread * 1.6 + bob(s);
+  const next = top + 1.6 + s.spread * 1.6 + bob(s);
   const corners: [number, number][] = [[3.4, 3.4], [8.6, 3.4], [3.4, 8.6], [8.6, 8.6]];
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 12, 12), v: 0.09, grid: 12 },
-    { kind: "cyl", cx: 2, cy: 10, z: 0, r: 1, h: 0.35 },
-    { kind: "label", at: [1, 10, 0.35], text: "medallion · $1M", dx: -1.4, dy: 1 },
     ...layers.map((_, i): Part => ({ kind: "box", box: box(3.4, 3.4, zAt(i), 5.2, 5.2, H), vents: i === 0 })),
     ...layers.map((name, i): Part => ({ kind: "label", at: [8.6, 3.4, zAt(i) + H / 2], text: name, dx: 1.4, dy: -0.3 })),
     ...corners.map(([x, y]): Part => ({ kind: "line", a: [x, y, top], b: [x, y, next], dashed: true, alpha: 0.35 })),
     { kind: "box", box: box(3.4, 3.4, next, 5.2, 5.2, H), accent: true, handles: true },
-    { kind: "label", at: [8.6, 3.4, next + H], text: "next layer", dx: 1.4, dy: -1.2, accent: true },
+    { kind: "label", at: [8.6, 3.4, next + H / 2], text: "english", dx: 1.4, dy: -0.3, accent: true },
+    { kind: "box", box: box(5.3, 5.3, next + H, 1.4, 1.4, 1.1), ghost: true },
+    { kind: "label", at: [6.7, 5.3, next + H + 1.1], text: "the job · ?", dx: 1.4, dy: -1.2 },
   ];
-  return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [3.4, 3.4, next + 2.2]], axes: ground() };
+  return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [3.4, 3.4, next + 3.2]], axes: ground() };
 };
 
 /** Projects: modules on a grid, one being placed. */
