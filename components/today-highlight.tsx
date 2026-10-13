@@ -17,7 +17,7 @@ export function TodayHighlight() {
     const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     const el = document.querySelector(`[data-date="${todayStr}"]`);
     if (el) {
-      el.classList.add("ring-1", "ring-accent", "ring-inset");
+      el.classList.add("ring-1", "ring-foreground", "ring-inset");
     }
   }, []);
 
