@@ -193,6 +193,31 @@ const scaffold: SceneFn = (s) => {
   return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [2.2, 2.2, top + 2.2]], axes: ground() };
 };
 
+/**
+ * We Called It Progress: the stack every disruption is built on, gps up through us,
+ * with the next layer being lowered on top and a medallion left on the floor.
+ */
+const stack: SceneFn = (s) => {
+  const layers = ["gps", "maps", "rideshare", "us"];
+  const H = 0.7;
+  const gap = 0.6 + s.spread * 1.2;
+  const zAt = (i: number) => i * (H + gap);
+  const top = zAt(layers.length - 1) + H;
+  const next = top + 1.8 + s.spread * 1.6 + bob(s);
+  const corners: [number, number][] = [[3.4, 3.4], [8.6, 3.4], [3.4, 8.6], [8.6, 8.6]];
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 12, 12), v: 0.09, grid: 12 },
+    { kind: "cyl", cx: 2, cy: 10, z: 0, r: 1, h: 0.35 },
+    { kind: "label", at: [1, 10, 0.35], text: "medallion · $1M", dx: -1.4, dy: 1 },
+    ...layers.map((_, i): Part => ({ kind: "box", box: box(3.4, 3.4, zAt(i), 5.2, 5.2, H), vents: i === 0 })),
+    ...layers.map((name, i): Part => ({ kind: "label", at: [8.6, 3.4, zAt(i) + H / 2], text: name, dx: 1.4, dy: -0.3 })),
+    ...corners.map(([x, y]): Part => ({ kind: "line", a: [x, y, top], b: [x, y, next], dashed: true, alpha: 0.35 })),
+    { kind: "box", box: box(3.4, 3.4, next, 5.2, 5.2, H), accent: true, handles: true },
+    { kind: "label", at: [8.6, 3.4, next + H], text: "next layer", dx: 1.4, dy: -1.2, accent: true },
+  ];
+  return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [3.4, 3.4, next + 2.2]], axes: ground() };
+};
+
 /** Projects: modules on a grid, one being placed. */
 const modules: SceneFn = (s) => {
   const lift = 5.5 + s.spread * 2 + bob(s);
@@ -250,11 +275,11 @@ const missing: SceneFn = (s) => {
   return { parts, ext: [[0, 9, 0], [9, 0, 0], [9, 9, 0], [0, 0, 0], [3, 3, z + 1.5]], axes: ground(9) };
 };
 
-export const scenes = { system, loop, weld, scaffold, modules, spec, toolbox, missing } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, modules, spec, toolbox, missing } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */
-export const POST_SCENES = ["loop", "weld", "scaffold"] as const satisfies readonly SceneName[];
+export const POST_SCENES = ["loop", "weld", "scaffold", "stack"] as const satisfies readonly SceneName[];
 export type PostSceneName = (typeof POST_SCENES)[number];
 
 export const isPostScene = (name: unknown): name is PostSceneName =>
