@@ -74,7 +74,8 @@
     "esbuild": "^0.25.0",
     "@eslint/eslintrc": {
       "js-yaml": "^4.3.2"
-    }
+    },
+    "postcss-selector-parser": "^7.1.6"
   },
   "allowScripts": {
     "@sentry/cli@2.58.6": true,
