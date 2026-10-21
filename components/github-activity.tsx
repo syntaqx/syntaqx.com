@@ -249,14 +249,12 @@ export function GitHubActivity({
       <div className="min-w-0">
         <div className="flex min-w-0 items-start gap-1.5">
           <div aria-hidden="true" className="flex shrink-0 flex-col py-0.5">
-            <span className="inst invisible mb-1.5 block text-[0.5rem]">
-              Sun
-            </span>
+            <span className="inst invisible mb-1.5 block text-[0.5rem]">S</span>
             <div className="flex flex-col gap-0.75">
-              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+              {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
                 <span
-                  key={day}
-                  className="flex h-2.5 items-center text-[0.5rem] leading-none text-dim sm:h-3 md:h-3.25"
+                  key={`${day}-${index}`}
+                  className="flex h-2.5 w-3 items-center justify-end text-[0.5rem] leading-none text-dim sm:h-3 md:h-3.25"
                 >
                   {day}
                 </span>
