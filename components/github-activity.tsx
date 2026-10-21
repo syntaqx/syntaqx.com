@@ -5,6 +5,7 @@ import { OWNER_TZ, vacations } from "@/lib/constants";
 export interface ContributionDay {
   date: string;
   level: number; // 0-4
+  count: number;
 }
 
 export interface ContributionData {
@@ -29,11 +30,29 @@ export async function fetchGitHubContributions(
     const html = await res.text();
     const days: ContributionDay[] = [];
 
-    // Each <td> has data-date and data-level attributes
-    const cellRegex = /data-date="(\d{4}-\d{2}-\d{2})"[^>]*data-level="(\d)"/g;
+    const tooltipCounts = new Map<string, number>();
+    const tooltipRegex =
+      /<tool-tip\b[^>]*\bfor="([^"]+)"[^>]*>([\s\S]*?)<\/tool-tip>/g;
     let match;
+    while ((match = tooltipRegex.exec(html)) !== null) {
+      const countMatch = match[2].match(/([\d,]+) contribution/i);
+      tooltipCounts.set(
+        match[1],
+        countMatch ? parseInt(countMatch[1].replace(/,/g, "")) : 0,
+      );
+    }
+
+    const cellRegex = /<td\b([^>]*)>/g;
     while ((match = cellRegex.exec(html)) !== null) {
-      days.push({ date: match[1], level: parseInt(match[2]) });
+      const date = match[1].match(/\bdata-date="(\d{4}-\d{2}-\d{2})"/)?.[1];
+      const level = match[1].match(/\bdata-level="(\d)"/)?.[1];
+      const id = match[1].match(/\bid="([^"]+)"/)?.[1];
+      if (!date || !level) continue;
+      days.push({
+        date,
+        level: parseInt(level),
+        count: id ? (tooltipCounts.get(id) ?? 0) : 0,
+      });
     }
 
     // Sort by date so we can slice recent weeks
@@ -228,60 +247,84 @@ export function GitHubActivity({
       </div>
 
       <div className="min-w-0">
-        {/* Grid — scrollable when content overflows */}
-        <div className="relative overflow-x-auto" style={{ direction: "rtl" }}>
-          <div
-            className="flex py-0.5"
-            style={{
-              direction: "ltr",
-              width: "max-content",
-              marginLeft: "auto",
-            }}
-          >
-            <ActivityGridTooltips>
-              {monthGroups.map((group, gi) => (
-                <div
-                  key={gi}
-                  className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
+        <div className="flex min-w-0 items-start gap-1.5">
+          <div aria-hidden="true" className="flex shrink-0 flex-col py-0.5">
+            <span className="inst invisible mb-1.5 block text-[0.5rem]">
+              Sun
+            </span>
+            <div className="flex flex-col gap-0.75">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <span
+                  key={day}
+                  className="flex h-2.5 items-center text-[0.5rem] leading-none text-dim sm:h-3 md:h-3.25"
                 >
-                  {/* Month label */}
-                  <span className="inst mb-1.5 text-center text-[0.5rem] text-dim">
-                    {group.label}
-                  </span>
-                  {/* Weeks in this month */}
-                  <div
-                    className="grid grid-flow-col auto-cols-2.5 sm:auto-cols-3 md:auto-cols-3.25 gap-0.75"
-                    style={{ gridTemplateRows: "repeat(7, 1fr)" }}
-                  >
-                    {group.weeks.map((week) =>
-                      week.map((day) => {
-                        const vacation = vacationFor(day.date);
-                        const holiday = !vacation ? holidayFor(day.date) : null;
-                        const base = LEVEL_COLORS[day.level];
-                        const className = vacation
-                          ? `${base} ${VACATION_RING}`
-                          : holiday
-                            ? `${base} ${HOLIDAY_DOT}`
-                            : base;
-                        const label = vacation
-                          ? `Vacation (${vacation})`
-                          : holiday
-                            ? holiday
-                            : null;
-                        return (
-                          <ActivityCell
-                            key={day.date}
-                            date={day.date}
-                            label={label}
-                            className={`aspect-square rounded-xs ${className}`}
-                          />
-                        );
-                      }),
-                    )}
-                  </div>
-                </div>
+                  {day}
+                </span>
               ))}
-            </ActivityGridTooltips>
+            </div>
+          </div>
+
+          {/* Grid — scrollable when content overflows */}
+          <div
+            className="relative min-w-0 flex-1 overflow-x-auto"
+            style={{ direction: "rtl" }}
+          >
+            <div
+              className="flex py-0.5"
+              style={{
+                direction: "ltr",
+                width: "max-content",
+                marginLeft: "auto",
+              }}
+            >
+              <ActivityGridTooltips>
+                {monthGroups.map((group, gi) => (
+                  <div
+                    key={gi}
+                    className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
+                  >
+                    {/* Month label */}
+                    <span className="inst mb-1.5 text-center text-[0.5rem] text-dim">
+                      {group.label}
+                    </span>
+                    {/* Weeks in this month */}
+                    <div
+                      className="grid grid-flow-col auto-cols-2.5 sm:auto-cols-3 md:auto-cols-3.25 gap-0.75"
+                      style={{ gridTemplateRows: "repeat(7, 1fr)" }}
+                    >
+                      {group.weeks.map((week) =>
+                        week.map((day) => {
+                          const vacation = vacationFor(day.date);
+                          const holiday = !vacation
+                            ? holidayFor(day.date)
+                            : null;
+                          const base = LEVEL_COLORS[day.level];
+                          const className = vacation
+                            ? `${base} ${VACATION_RING}`
+                            : holiday
+                              ? `${base} ${HOLIDAY_DOT}`
+                              : base;
+                          const label = vacation
+                            ? `Vacation (${vacation})`
+                            : holiday
+                              ? holiday
+                              : null;
+                          return (
+                            <ActivityCell
+                              key={day.date}
+                              date={day.date}
+                              count={day.count}
+                              label={label}
+                              className={`aspect-square rounded-xs ${className}`}
+                            />
+                          );
+                        }),
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </ActivityGridTooltips>
+            </div>
           </div>
         </div>
 

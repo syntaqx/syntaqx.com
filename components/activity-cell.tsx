@@ -29,10 +29,12 @@ export function ActivityGridTooltips({ children }: { children: ReactNode }) {
  */
 export function ActivityCell({
   date,
+  count,
   label,
   className,
 }: {
   date: string;
+  count: number;
   label?: string | null;
   className: string;
 }) {
@@ -51,6 +53,9 @@ export function ActivityCell({
           {label && (
             <span className="block font-medium text-foreground">{label}</span>
           )}
+          <span className="block text-foreground">
+            {count} contribution{count === 1 ? "" : "s"}
+          </span>
           <span className="block text-dim">{date}</span>
           <Tooltip.Arrow className="fill-surface" />
         </Tooltip.Content>
