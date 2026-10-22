@@ -39,9 +39,15 @@ registry.registerPath({
   operationId: "hashString",
   summary: "Hash a string",
   description:
-    "Compute a cryptographic hash of the provided input. Supported algorithms: MD5, SHA-1, SHA-256, SHA-384, SHA-512.",
+    "Compute a cryptographic hash of the provided input. Supported algorithms: MD5, SHA-1, SHA-256, SHA-384, SHA-512. Hashing is a safe, read-only operation, so this endpoint also accepts the HTTP QUERY method (RFC 10008) with the same body, or POST with `X-HTTP-Method-Override: QUERY` for clients that can't send QUERY. See https://www.syntaqx.com/docs/http-query.",
   tags: ["Utilities"],
   request: {
+    headers: z.object({
+      "X-HTTP-Method-Override": z
+        .enum(["QUERY"])
+        .optional()
+        .openapi({ description: "Send `QUERY` to have this POST handled as an HTTP QUERY." }),
+    }),
     body: {
       required: true,
       content: { "application/json": { schema: HashRequest } },
