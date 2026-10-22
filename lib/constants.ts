@@ -3,6 +3,8 @@
 // MUST use this so we never emit a URL that immediately redirects.
 export const SITE_URL = "https://www.syntaqx.com";
 
+export const CONTACT_EMAIL = "syntaqx@gmail.com";
+
 export const socials = [
   { href: "https://github.com/syntaqx", icon: "github", label: "GitHub" },
   {
