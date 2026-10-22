@@ -44,7 +44,7 @@ CI tells you a change is safe to ship. It doesn't ship it. What happens after gr
 
 ## This Site
 
-[syntaqx.com's pipeline](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/ci.yml) runs lint, typecheck and test as parallel jobs. A composite setup action restores `node_modules` from a cache keyed on `.nvmrc` and the lockfile, so jobs skip `npm ci` when dependencies haven't changed. The test job starts the same Redis and REST proxy containers as `compose.yml`, every action is pinned to a SHA, and superseded runs are cancelled.
+[syntaqx.com's pipeline](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/ci.yml) runs lint, typecheck and test as parallel jobs. A composite setup action restores `node_modules` from a cache keyed on `.nvmrc` and the lockfile, so jobs skip `npm ci` when dependencies haven't changed. The test job starts the same Redis and REST proxy containers as `compose.yml`, every action is pinned to a SHA, and superseded runs are cancelled. A separate [weekly job](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/doc-links.yml) checks every source the playbook cites and opens an issue for any that have died, since a citation that 404s quietly weakens the doc that leans on it.
 
 The numbers make the setup-cost point. The single serial job took about 57 seconds, of which installing dependencies was 27 and the tests themselves 2. Splitting into parallel jobs alone would have paid that install three times; with the cache warm, the parallel pipeline finishes in about 36.
 
