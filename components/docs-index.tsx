@@ -66,8 +66,14 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
   // Highlight the section being read in the rail.
   useEffect(() => {
     if (q) return;
+    const last = categories[categories.length - 1]?.section;
+    const atBottom = () =>
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
     const observer = new IntersectionObserver(
       (entries) => {
+        // The last sections can't scroll high enough to cross the line, so
+        // the bottom of the page always means the last section.
+        if (atBottom()) return setActive(last);
         const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length) setActive(visible[0].target.id);
       },
@@ -77,12 +83,8 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       const el = document.getElementById(c.section);
       if (el) observer.observe(el);
     }
-    // The last sections can't scroll high enough to cross the line above, so
-    // reaching the bottom of the page makes the last one current.
     const onScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
-        setActive(categories[categories.length - 1]?.section);
-      }
+      if (atBottom()) setActive(last);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
