@@ -2,7 +2,7 @@
 title = "Time & Date Formats"
 description = "RFC 3339 instants in UTC, local wall-clock times with IANA zones for future events, ISO 8601 durations, and iCalendar rules for anything recurring."
 category = "Fundamentals"
-order = -0.5
+order = 102
 tags = ["time", "rfc3339", "iso8601", "standards"]
 aliases = ["time"]
 +++

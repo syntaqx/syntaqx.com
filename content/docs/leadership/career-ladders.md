@@ -2,7 +2,7 @@
 title = "Career Ladders"
 description = "Written levels described by scope and impact, equal IC and management tracks, staff and principal archetypes, and promotions that recognize sustained work."
 category = "Leadership"
-order = 14.4
+order = 1304
 tags = ["leadership", "careers", "promotion", "management"]
 +++
 

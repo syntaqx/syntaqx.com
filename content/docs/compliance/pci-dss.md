@@ -2,7 +2,7 @@
 title = "PCI DSS"
 description = "What PCI DSS v4.0.1 demands of engineering: merchant and service provider levels, SAQs versus a QSA's report, and shrinking scope until most systems are out."
 category = "Compliance"
-order = 9.6
+order = 901
 tags = ["compliance", "pci", "payments", "security"]
 +++
 

@@ -3,7 +3,7 @@ title = "Containers & Immutable Infrastructure"
 nav_title = "Containers"
 description = "Why you rebuild and redeploy the whole artifact instead of maintaining servers, and how to build container images that are small, patched, signed and safe."
 category = "Delivery"
-order = 11.2
+order = 1104
 tags = ["containers", "docker", "delivery", "security"]
 +++
 
@@ -46,7 +46,7 @@ The last row is the one teams undervalue until they need it. If the only definit
 Immutability isn't free, and the costs are worth naming:
 
 - **State has to live elsewhere.** A container you'll throw away can't hold the database, uploaded files or sessions. That forces managed databases, object storage and external caches, which is the right design anyway, but it's work.
-- **Every change is a build.** Fixing a typo in config means a rebuild and a deploy, not a quick edit. That's only painless when the pipeline is fast, which is why this depends on [CI](/docs/delivery/ci-pipelines) and [continuous deployment](/docs/delivery/continuous-deployment).
+- **Every change is a build.** Fixing a typo in config means a rebuild and a deploy, not a quick edit. That's only painless when the pipeline is fast, which is why this depends on [CI](/docs/delivery/ci-pipelines) and [continuous deployment](/docs/delivery/ci-pipelines).
 - **Debugging changes.** You can't SSH in and poke at a production box that will be replaced in an hour, so logs, metrics and traces have to carry what you used to learn by looking. See [Observability](/docs/operations/observability).
 
 Each cost pushes you toward a practice you want anyway. That's the strongest argument for the model: it's hard to do immutable infrastructure badly for long.
@@ -64,7 +64,7 @@ Each cost pushes you toward a practice you want anyway. That's the strongest arg
 - **Run as a non-root user,** set with `USER` in the Dockerfile. Containers share the host's kernel, so a process running as root is one kernel or runtime bug away from root on the host.
 - **Read-only root filesystem,** with explicit writable volumes only where needed. Malware that can't write can't persist.
 - **One process per container,** logging to stdout and stderr for the platform to collect. See [The Twelve-Factor App: Logs](https://12factor.net/logs).
-- **Config from the environment,** never baked into the image, so one image serves every environment. See [Configuration & Secrets](/docs/operations/configuration).
+- **Config from the environment,** never baked into the image, so one image serves every environment. See [Configuration & Secrets](/docs/operations/environments).
 - **Health checks:** liveness to restart a stuck process, readiness to keep traffic away until it can serve, startup for slow boots. See [Kubernetes probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 - **Disposable processes:** fast startup, graceful shutdown on `SIGTERM`, no local state worth keeping. See [The Twelve-Factor App: Disposability](https://12factor.net/disposability).
 

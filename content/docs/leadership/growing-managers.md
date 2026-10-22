@@ -2,7 +2,7 @@
 title = "Growing Managers"
 description = "Growing engineering managers: management as a career change, not a promotion, a new manager's first 90 days, coaching managers, and the way back to IC."
 category = "Leadership"
-order = 14.6
+order = 1307
 tags = ["leadership", "management", "career", "coaching"]
 +++
 

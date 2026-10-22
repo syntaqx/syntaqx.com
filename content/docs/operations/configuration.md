@@ -2,7 +2,7 @@
 title = "Configuration & Secrets"
 description = "Config in the environment, validated and typed at boot, secrets kept in a manager and never in the repo, and rotation designed in from day one."
 category = "Operations"
-order = 5.95
+order = 1292
 tags = ["operations", "configuration", "secrets", "security"]
 aliases = ["configuration"]
 +++
@@ -19,7 +19,7 @@ Config is anything that changes between deploys of the same code:
 - Credentials and API keys
 - Per-environment values: timeouts, pool sizes, log levels
 
-It is **not** config if it's the same in every environment. Routes, retry formulas and business rules are code. Behavior you want to change at runtime without a deploy belongs in a [feature flag](/docs/engineering/feature-flags), not an environment variable.
+It is **not** config if it's the same in every environment. Routes, retry formulas and business rules are code. Behavior you want to change at runtime without a deploy belongs in a [feature flag](/docs/delivery/feature-flags), not an environment variable.
 
 ## Typed and Validated at Boot
 
@@ -69,7 +69,7 @@ Every secret will need rotating eventually, usually at the worst moment. Design 
 
 ## Changing Config
 
-Config changes are deploys. They go through review, they're recorded, and they can be rolled back. "I just tweaked an environment variable in the console" shows up in more [postmortems](/docs/engineering/postmortems) than any bug, precisely because it skipped everything that catches mistakes in code.
+Config changes are deploys. They go through review, they're recorded, and they can be rolled back. "I just tweaked an environment variable in the console" shows up in more [postmortems](/docs/operations/incident-response) than any bug, precisely because it skipped everything that catches mistakes in code.
 
 ## This Site
 

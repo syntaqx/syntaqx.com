@@ -2,7 +2,7 @@
 title = "Environments"
 description = "Local, preview, staging and production: what each one is for, keeping them alike, test data that's never a production copy, and who may deploy where."
 category = "Operations"
-order = 5.96
+order = 1201
 tags = ["operations", "environments", "devops", "configuration"]
 +++
 
@@ -25,11 +25,11 @@ Every environment exists to answer one question with less risk than production. 
 
 ### Preview
 
-Every pull request deploys to its own URL before it merges. Reviewers click instead of imagining, product and design review the real thing, and end-to-end checks run against a deployment, not a laptop. It's the environment that makes [continuous deployment](/docs/delivery/continuous-deployment) safe.
+Every pull request deploys to its own URL before it merges. Reviewers click instead of imagining, product and design review the real thing, and end-to-end checks run against a deployment, not a laptop. It's the environment that makes [continuous deployment](/docs/delivery/ci-pipelines) safe.
 
 ### Staging
 
-Staging is the most over-built environment in software. A long-lived copy of production drifts from it immediately: different data, different traffic, different config, deployed on a different schedule. Add one only when it answers a question preview can't, such as an integration with a partner sandbox that only allows a fixed callback URL, or a load test that needs production-sized data. Otherwise, previews plus [feature flags](/docs/engineering/feature-flags) in production cover it.
+Staging is the most over-built environment in software. A long-lived copy of production drifts from it immediately: different data, different traffic, different config, deployed on a different schedule. Add one only when it answers a question preview can't, such as an integration with a partner sandbox that only allows a fixed callback URL, or a load test that needs production-sized data. Otherwise, previews plus [feature flags](/docs/delivery/feature-flags) in production cover it.
 
 ### Production
 
@@ -41,7 +41,7 @@ Parity is what makes a green preview mean something. Every difference between en
 
 - **Same artifact.** The build that passed CI is the build that runs everywhere. Environments differ in configuration, never in code. See [Containers & Immutable Infrastructure](/docs/delivery/containers).
 - **Same backing services.** Postgres locally if Postgres in production, not SQLite "because it's easier". The same major versions, from the same images.
-- **Same config shape, different values.** Every environment reads the same variables, validated at boot the same way. See [Configuration & Secrets](/docs/operations/configuration).
+- **Same config shape, different values.** Every environment reads the same variables, validated at boot the same way. See [Configuration & Secrets](/docs/operations/environments).
 - **Small time gap.** A change reaches production minutes after it merges, so what you tested is what's running.
 
 ## Test Data
@@ -52,7 +52,7 @@ Parity is what makes a green preview mean something. Every difference between en
 
 ## Flags, Not Environments
 
-An environment is the wrong tool for "this feature isn't ready". A feature that only works in staging is a feature nobody has tested in production. Ship it dark behind a flag, enable it for internal users, then a percentage, then everyone. See [Feature Flags & Progressive Rollout](/docs/engineering/feature-flags).
+An environment is the wrong tool for "this feature isn't ready". A feature that only works in staging is a feature nobody has tested in production. Ship it dark behind a flag, enable it for internal users, then a percentage, then everyone. See [Feature Flags & Progressive Rollout](/docs/delivery/feature-flags).
 
 ## Who Can Deploy Where
 

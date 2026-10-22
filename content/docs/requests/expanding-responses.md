@@ -2,7 +2,7 @@
 title = "Expanding Responses"
 description = "Related resources come back as IDs unless the client asks to expand them: fewer round trips without bloating every response, with depth and access limits."
 category = "Requests & Responses"
-order = 6
+order = 395
 tags = ["api", "expand", "rest"]
 aliases = ["expanding-responses"]
 +++

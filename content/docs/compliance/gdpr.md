@@ -2,7 +2,7 @@
 title = "GDPR & Privacy"
 description = "GDPR as a design constraint: lawful bases, controllers and processors, data subject rights, transfers, 72-hour breach notice, and how each maps onto a system."
 category = "Compliance"
-order = 9.9
+order = 903
 tags = ["compliance", "gdpr", "privacy", "data"]
 +++
 

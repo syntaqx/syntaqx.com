@@ -2,7 +2,7 @@
 title = "Bulk Operations"
 description = "Batch endpoints that create or update many resources in one call: size limits, per-item results, partial failure, idempotency, and when to go async."
 category = "Requests & Responses"
-order = 6.6
+order = 309
 tags = ["api", "bulk", "batch", "design"]
 aliases = ["bulk-operations"]
 +++
@@ -69,7 +69,7 @@ Where items must succeed or fail together (moving money between accounts, a [led
 ## Limits
 
 - **At most 100 items per batch.** A ceiling bounds everything a single request can cost: body size, memory, how long locks are held, and how long the client waits. 100 is small enough that a batch finishes in a normal request's time and large enough to cut round trips by two orders of magnitude. It matches the [page size ceiling](/docs/requests/pagination), so a client can fetch a page, change it, and write it back in one batch. Bigger inputs are split by the client, or uploaded as a file to an async import.
-- **A batch counts as one request per item** against [rate limits](/docs/operations/rate-limiting). Batching saves round trips, not quota. Otherwise a 100-item batch becomes a way to do 100 times the work under the same limit.
+- **A batch counts as one request per item** against [rate limits](/docs/requests/rate-limiting). Batching saves round trips, not quota. Otherwise a 100-item batch becomes a way to do 100 times the work under the same limit.
 - **Items are validated before any work starts** when it's cheap, so a malformed batch fails in milliseconds instead of halfway through.
 
 ## Idempotency

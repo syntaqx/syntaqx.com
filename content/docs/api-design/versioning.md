@@ -1,10 +1,10 @@
 +++
 title = "Versioning & Deprecation"
 description = "Header-selected, date-named API versions, what counts as a breaking change, and announcing removals on the wire with the Deprecation and Sunset headers."
-category = "Operations"
-order = 5.5
+category = "API Design"
+order = 205
 tags = ["api", "versioning", "deprecation", "headers"]
-aliases = ["versioning"]
+aliases = ["versioning", "operations/versioning"]
 +++
 
 An API is a promise to code you'll never see. Someone wrote an integration against it, shipped it, and moved on; if a response changes shape, their code breaks at 3 a.m. and they find out from their customers. Versioning is how the API keeps changing without breaking that promise.
@@ -121,7 +121,7 @@ HTTP/1.1 200 OK
 Api-Version: 2026-10-01
 Deprecation: @1798761600
 Sunset: Mon, 01 Feb 2027 00:00:00 GMT
-Link: <https://www.syntaqx.com/docs/operations/versioning>; rel="deprecation"
+Link: <https://www.syntaqx.com/docs/api-design/versioning>; rel="deprecation"
 ```
 
 The two date formats differ for historical reasons: `Deprecation` is a newer Structured Field date, `Sunset` predates them and uses the classic HTTP-date.
@@ -135,7 +135,7 @@ HTTP/1.1 410 Gone
 Content-Type: application/json
 
 {
-  "message": "This endpoint was removed on 2027-02-01. See https://www.syntaqx.com/docs/operations/versioning."
+  "message": "This endpoint was removed on 2027-02-01. See https://www.syntaqx.com/docs/api-design/versioning."
 }
 ```
 

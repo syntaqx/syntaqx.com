@@ -2,7 +2,7 @@
 title = "Commits, PRs & Code Review"
 description = "Conventional Commits, small squash-merged pull requests with a real description, and code reviews that are fast, labeled, and focused on what matters."
 category = "Engineering Practice"
-order = 12.1
+order = 1002
 tags = ["process", "git", "code-review", "commits"]
 aliases = ["commits-and-reviews"]
 +++
@@ -46,11 +46,11 @@ BREAKING CHANGE: `amount` is now an integer, see /docs/payments/money.
 
 - **Imperative, lowercase, no period.** "add", not "added" or "Adds". It reads as what the commit does when applied, which is how the log is read.
 - **The body says why.** The diff already says what. "Retry on 503 because the processor sheds load during settlement" is worth more than any amount of "update retry logic".
-- **`!` or a `BREAKING CHANGE:` footer** for anything that breaks consumers. It maps straight onto a major version bump under [SemVer](/docs/engineering/dependencies), and onto a new version under [Versioning & Deprecation](/docs/operations/versioning).
+- **`!` or a `BREAKING CHANGE:` footer** for anything that breaks consumers. It maps straight onto a major version bump under [SemVer](/docs/engineering/dependencies), and onto a new version under [Versioning & Deprecation](/docs/api-design/versioning).
 
 ## Pull Requests
 
-- **Small.** Aim for under about 400 changed lines. Past that, reviewers stop reading and start skimming, and approval becomes a formality. Big changes ship as a stack of small PRs, or land dark behind a [feature flag](/docs/engineering/feature-flags) so each step is reviewable and deployable on its own.
+- **Small.** Aim for under about 400 changed lines. Past that, reviewers stop reading and start skimming, and approval becomes a formality. Big changes ship as a stack of small PRs, or land dark behind a [feature flag](/docs/delivery/feature-flags) so each step is reviewable and deployable on its own.
 - **One concern per PR.** A refactor and a behavior change in one diff means nobody can tell which lines change behavior, so neither gets a real review. Land the refactor first, then the change on top of it.
 - **Squash merge.** One PR becomes one commit on `main`, with the PR title as its message. `main` stays readable, and `git bisect` lands on a change that was reviewed as a unit rather than a "fix typo" halfway through someone's branch. The cost is losing the branch's intermediate commits, which small PRs make cheap to lose.
 - **Green before review.** A reviewer's attention is the scarcest thing in the process. Spending it on something CI would have flagged in five minutes wastes it twice: once now, and again after the fix.
@@ -88,7 +88,7 @@ Unlabeled comments leave the author guessing which ones block the merge, so they
 
 ```text
 issue (blocking): this retries a POST without an idempotency key.
-See /docs/operations/retries-and-timeouts.
+See /docs/architecture/retries-and-timeouts.
 
 suggestion (non-blocking): extract the backoff calculation so the
 webhook worker can reuse it.

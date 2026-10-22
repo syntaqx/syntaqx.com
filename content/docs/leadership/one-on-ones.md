@@ -2,7 +2,7 @@
 title = "1:1s & Feedback"
 description = "Running 1:1s that belong to the report, giving feedback that's specific and timely with situation, behavior and impact, and having the hard conversations early."
 category = "Leadership"
-order = 14.3
+order = 1303
 tags = ["leadership", "management", "feedback", "one-on-ones"]
 +++
 

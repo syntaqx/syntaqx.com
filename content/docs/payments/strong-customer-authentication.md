@@ -3,7 +3,7 @@ title = "Strong Customer Authentication & 3-D Secure"
 nav_title = "SCA & 3-D Secure"
 description = "When a card payment needs the cardholder to authenticate, the exemptions that skip it, why the liability shift matters, and how an API models the extra step."
 category = "Payments"
-order = 7.8
+order = 807
 tags = ["payments", "sca", "3ds", "psd2", "authentication"]
 +++
 
@@ -100,7 +100,7 @@ When the issuer asks for authentication, the payment moves to `requires_action` 
 
 ### Soft Declines
 
-An issuer can also decline an unauthenticated attempt with a code that means "try again with authentication" (a soft decline, such as Stripe's [`authentication_required`](https://docs.stripe.com/declines/codes)). That isn't a final answer. If the customer is present, the right response is to run 3DS and retry once, which turns a decline into a sale. If the customer isn't present (below), you can't authenticate them, so the payment fails and the customer has to come back on-session. Retrying a soft decline without authentication is a hard decline in waiting, and repeated unauthenticated retries are exactly what card networks penalize ([Retries & Timeouts](/docs/operations/retries-and-timeouts)).
+An issuer can also decline an unauthenticated attempt with a code that means "try again with authentication" (a soft decline, such as Stripe's [`authentication_required`](https://docs.stripe.com/declines/codes)). That isn't a final answer. If the customer is present, the right response is to run 3DS and retry once, which turns a decline into a sale. If the customer isn't present (below), you can't authenticate them, so the payment fails and the customer has to come back on-session. Retrying a soft decline without authentication is a hard decline in waiting, and repeated unauthenticated retries are exactly what card networks penalize ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)).
 
 ## On-Session and Off-Session Payments
 

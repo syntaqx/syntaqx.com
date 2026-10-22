@@ -2,7 +2,7 @@
 title = "Testing Strategy"
 description = "The test pyramid and why it has that shape, what each test type covers, real databases over mocks, deterministic fixtures, and zero tolerance for flaky tests."
 category = "Engineering Practice"
-order = 12.2
+order = 1004
 tags = ["testing", "quality", "process", "ci"]
 aliases = ["testing"]
 +++
@@ -63,7 +63,7 @@ A mock encodes your belief about how a dependency behaves. When the belief is wr
 When one service calls another, each side's tests can pass while the integration breaks. Contract tests catch that.
 
 - **Consumer-driven:** the consumer records what it relies on (endpoints, fields, status codes), and the provider's CI verifies every consumer's contract. [Pact](https://docs.pact.io/) is the common tool.
-- **Schema-driven:** for public APIs, the OpenAPI document is the contract. CI fails on breaking changes to it, per [Versioning & Deprecation](/docs/operations/versioning).
+- **Schema-driven:** for public APIs, the OpenAPI document is the contract. CI fails on breaking changes to it, per [Versioning & Deprecation](/docs/api-design/versioning).
 - **Events too.** Event schemas between producers and consumers are contracts. See [Events & Async Messaging](/docs/architecture/events).
 
 ## Deterministic Fixtures

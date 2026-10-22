@@ -11,7 +11,7 @@ In practice it's a personal site: posts, the playbook, and a set of stateless de
 ## Decision
 
 - **No authentication, no user identity, no user data.** All of it was removed on 2026-09-16 (`3e7cd3d`).
-- **Datastores are allowed when they earn their place:** managed, on a free tier, holding no personal data beyond what a feature strictly needs, and never on the critical path. If a store is down, the feature degrades and the site keeps serving. Upstash Redis for [rate limiting](https://www.syntaqx.com/docs/operations/rate-limiting) is the first, and it falls back to in-memory counting when Redis is unreachable.
+- **Datastores are allowed when they earn their place:** managed, on a free tier, holding no personal data beyond what a feature strictly needs, and never on the critical path. If a store is down, the feature degrades and the site keeps serving. Upstash Redis for [rate limiting](https://www.syntaqx.com/docs/requests/rate-limiting) is the first, and it falls back to in-memory counting when Redis is unreachable.
 
 ## Consequences
 

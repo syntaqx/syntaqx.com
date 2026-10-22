@@ -2,7 +2,7 @@
 title = "Service Boundaries"
 description = "Where to draw lines in a system: start with a modular monolith, split only for a reason, give every piece of data one owner, and never share a database."
 category = "Architecture"
-order = 8
+order = 401
 tags = ["architecture", "microservices", "monolith", "design"]
 aliases = ["service-boundaries"]
 +++
@@ -54,7 +54,7 @@ The worst outcome isn't a monolith. It's services that have to be deployed toget
 | Asynchronous ([events](/docs/architecture/events), queues) | Something happened, and others may care now or later |
 
 - **Prefer async between services.** A synchronous call couples availability: if the callee is down, the caller is down. Chain five services at 99.9% each and the request succeeds about 99.5% of the time, roughly three and a half hours of failure a month instead of 43 minutes. An event published to a broker waits for a consumer that's down; a synchronous call just fails.
-- **Every sync call has a timeout and a fallback.** A call without a timeout turns a slow dependency into exhausted threads and a cascading outage. See [Retries & Timeouts](/docs/operations/retries-and-timeouts).
+- **Every sync call has a timeout and a fallback.** A call without a timeout turns a slow dependency into exhausted threads and a cascading outage. See [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
 - **No distributed transactions.** Two-phase commit across services couples their availability and their locks. When a workflow spans services, model it as a sequence of local transactions with compensating actions (a saga), and make every step [idempotent](/docs/payments/idempotency) so retries are safe.
 
 ## Boundaries Follow Teams
@@ -69,7 +69,7 @@ The worst outcome isn't a monolith. It's services that have to be deployed toget
 
 Every boundary has an explicit contract, versioned like a public API, whether it's internal or not. Internal consumers break just as hard as external ones, and they're usually less able to pin an old version.
 
-- HTTP APIs follow these docs, including [Versioning & Deprecation](/docs/operations/versioning).
+- HTTP APIs follow these docs, including [Versioning & Deprecation](/docs/api-design/versioning).
 - Events have schemas with the same compatibility rules. See [Events & Async Messaging](/docs/architecture/events).
 - Contract tests run in CI on both sides. See [Testing Strategy](/docs/engineering/testing).
 

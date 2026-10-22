@@ -2,7 +2,7 @@
 title = "Internationalization"
 description = "Building software that can be translated and localized: externalized messages with ICU plurals, Intl formatting, locale choice, RTL layouts, and Unicode traps."
 category = "Frontend"
-order = 13.4
+order = 606
 tags = ["i18n", "localization", "unicode", "frontend"]
 +++
 

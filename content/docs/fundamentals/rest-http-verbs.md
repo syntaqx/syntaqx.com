@@ -2,7 +2,7 @@
 title = "REST & HTTP Verbs"
 description = "What GET, QUERY, POST, PUT, PATCH and DELETE promise to clients, caches and retries, and why breaking those promises causes real outages."
 category = "Fundamentals"
-order = -1
+order = 101
 tags = ["api", "rest", "http"]
 aliases = ["rest-http-verbs"]
 +++

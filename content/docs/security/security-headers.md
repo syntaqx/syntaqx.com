@@ -2,7 +2,7 @@
 title = "Security Headers & CSP"
 description = "The response headers every site should send, a strict Content Security Policy, and how to roll CSP out safely with Report-Only mode before enforcing it."
 category = "Security"
-order = 9.2
+order = 704
 tags = ["security", "csp", "headers", "browser"]
 +++
 

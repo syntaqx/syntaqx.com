@@ -2,7 +2,7 @@
 title = "Accessibility"
 description = "WCAG 2.2 AA as the baseline: semantic HTML first, keyboard and focus, contrast, reduced motion, and testing that goes beyond what automated tools can catch."
 category = "Frontend"
-order = 13
+order = 601
 tags = ["accessibility", "a11y", "wcag", "frontend"]
 +++
 

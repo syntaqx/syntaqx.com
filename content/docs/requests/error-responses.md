@@ -2,7 +2,7 @@
 title = "Error Responses"
 description = "One error shape for every failure, status codes that carry the outcome, and the 400 vs 422 and 403 vs 404 calls clients branch on to recover."
 category = "Requests & Responses"
-order = 2
+order = 302
 tags = ["api", "errors", "standards"]
 aliases = ["error-responses"]
 +++
@@ -52,13 +52,13 @@ There's no `success` boolean in the body and no `200 OK` wrapping an error. HTTP
 | `404` | Not Found | The resource doesn't exist, or the caller isn't allowed to know it exists |
 | `405` | Method Not Allowed | The resource doesn't support the method; `Allow` lists the ones it does |
 | `409` | Conflict | The request conflicts with current state: an [idempotency key](/docs/payments/idempotency) still in flight, canceling an operation that already finished |
-| `410` | Gone | Retired after its [sunset](/docs/operations/versioning) |
+| `410` | Gone | Retired after its [sunset](/docs/api-design/versioning) |
 | `412` | Precondition Failed | An `If-Match` didn't match; someone else changed it ([Caching](/docs/requests/caching)) |
 | `413` | Content Too Large | The body exceeds the endpoint's limit |
 | `415` | Unsupported Media Type | The `Content-Type` isn't one the endpoint accepts |
 | `422` | Unprocessable Content | Well-formed, but the values are invalid |
 | `428` | Precondition Required | The resource requires `If-Match` and the request didn't send one |
-| `429` | Too Many Requests | [Rate limited](/docs/operations/rate-limiting); `Retry-After` says when to try again |
+| `429` | Too Many Requests | [Rate limited](/docs/requests/rate-limiting); `Retry-After` says when to try again |
 | `500` | Internal Server Error | Something broke on the server |
 | `503` | Service Unavailable | Temporarily unable to serve; `Retry-After` when known |
 
@@ -79,7 +79,7 @@ The split is worth keeping because the fixes are different. A `400` is usually a
 
 ### 5xx and Retries
 
-A `5xx` means the outcome is unknown or the server is struggling, and the right client response differs: `503` with `Retry-After` is an invitation to come back, while a `500` on a request with side effects may have half happened. [Retries & Timeouts](/docs/operations/retries-and-timeouts) covers which are safe to retry and how.
+A `5xx` means the outcome is unknown or the server is struggling, and the right client response differs: `503` with `Retry-After` is an invitation to come back, while a `500` on a request with side effects may have half happened. [Retries & Timeouts](/docs/architecture/retries-and-timeouts) covers which are safe to retry and how.
 
 ## What Clients Should Do
 

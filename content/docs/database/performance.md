@@ -2,7 +2,7 @@
 title = "Database Performance"
 description = "Measure before you optimize: reading query plans, designing indexes that earn their write cost, catching N+1 queries, pooling connections, and timeouts."
 category = "Database"
-order = 10.2
+order = 503
 tags = ["database", "postgres", "performance", "indexes"]
 +++
 
@@ -75,7 +75,7 @@ The most common performance bug in application code isn't a slow query; it's a f
 
 - **Fetch related rows in one query:** a join, or `WHERE customer_id = ANY($1)` with the collected IDs, then match them up in code.
 - **Catch it automatically.** Count queries per request in tests or traces and fail when one endpoint's count grows with the data. A per-request query count in your traces makes N+1 visible as a staircase of identical spans.
-- **Design APIs that don't invite it.** [Expanding Responses](/docs/requests/expanding-responses) lets clients ask for related objects in one request instead of looping on the client.
+- **Design APIs that don't invite it.** [Expanding Responses](/docs/api-design/resource-relationships) lets clients ask for related objects in one request instead of looping on the client.
 
 ## Pagination at Depth
 
@@ -99,7 +99,7 @@ A query with no time limit can hold locks and a connection forever, and one runa
 | `lock_timeout` | A statement waiting too long for a lock, such as a migration queued behind a long transaction ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations)) |
 | `idle_in_transaction_session_timeout` | A session that opened a transaction and wandered off, holding locks and blocking vacuum |
 
-Set them per role or per session, not globally in `postgresql.conf`: the Postgres docs advise against the global setting because it also applies to maintenance and migrations that legitimately run long. A web role with a 5-second `statement_timeout` and a reporting role with a longer one is a reasonable shape, matched to the request budgets in [Retries & Timeouts](/docs/operations/retries-and-timeouts).
+Set them per role or per session, not globally in `postgresql.conf`: the Postgres docs advise against the global setting because it also applies to maintenance and migrations that legitimately run long. A web role with a 5-second `statement_timeout` and a reporting role with a longer one is a reasonable shape, matched to the request budgets in [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
 
 ## Read Replicas
 

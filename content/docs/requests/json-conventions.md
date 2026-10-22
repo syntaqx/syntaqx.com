@@ -2,7 +2,7 @@
 title = "JSON Field Conventions"
 description = "How fields are named and typed in JSON bodies: snake_case, absent versus null, string enums, boolean prefixes, and safe handling of 64-bit numbers."
 category = "Requests & Responses"
-order = 2.5
+order = 301
 tags = ["api", "json", "naming", "standards"]
 aliases = ["json-conventions"]
 +++
@@ -25,8 +25,8 @@ A `GET` on a resource returns the resource. A list returns an array. Nothing is 
 Envelopes usually exist to carry metadata next to the payload: a page cursor, a request ID, a status flag. HTTP already has a place for metadata, and using it keeps the body exactly the resource:
 
 - **Pagination** lives in `Link` ([Pagination](/docs/requests/pagination)).
-- **Rate limits** live in `RateLimit` ([Rate Limiting](/docs/operations/rate-limiting)).
-- **The version** lives in `Api-Version` ([Versioning](/docs/operations/versioning)).
+- **Rate limits** live in `RateLimit` ([Rate Limiting](/docs/requests/rate-limiting)).
+- **The version** lives in `Api-Version` ([Versioning](/docs/api-design/versioning)).
 - **Success or failure** lives in the status code ([Error Responses](/docs/requests/error-responses)).
 
 The payoff is that every client stops writing `response.data.data`, a resource returned by a `GET` is byte-for-byte what a webhook or an expansion embeds, and generic HTTP tooling (caches, logs, `curl | jq`) sees the actual object. The cost is that metadata is a little less visible to someone reading raw bodies, which is a fair trade for never having to unwrap anything. GitHub's REST API has worked this way for years, which is good evidence it scales.
@@ -55,7 +55,7 @@ The suffixes and prefixes carry type information in the name. A reader knows `pu
 
 Enum values are lowercase snake_case strings, never integers. `"status": "captured"` reads correctly in a log, a support ticket and a database query; `"status": 3` needs a lookup table, and the table drifts.
 
-Adding a value to an enum is a non-breaking change ([Versioning](/docs/operations/versioning)), so **clients must handle values they don't recognize**: a `switch` with a default case, not one that throws. An API can only keep evolving if clients are written for that.
+Adding a value to an enum is a non-breaking change ([Versioning](/docs/api-design/versioning)), so **clients must handle values they don't recognize**: a `switch` with a default case, not one that throws. An API can only keep evolving if clients are written for that.
 
 ### Large Integers
 
@@ -68,7 +68,7 @@ So any integer that can exceed 2^53 - 1 is sent as a **string**. Amounts in mino
 - **Responses include every documented field.** A field with no value is `null`, not missing. Clients can rely on the shape, and "missing" never has to mean "maybe the server forgot".
 - **In a `PATCH`, absent means "leave it alone" and `null` means "clear it".** That's [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396). Without the distinction, a client that only wants to change `email` has to resend every other field, and one stale copy overwrites someone else's change.
 - **Empty collections are `[]`,** never `null`. Every client can iterate an empty array; `null` makes every loop a null check.
-- **Expansions are the exception:** a related object appears inline only when requested ([Expanding Responses](/docs/requests/expanding-responses)).
+- **Expansions are the exception:** a related object appears inline only when requested ([Expanding Responses](/docs/api-design/resource-relationships)).
 
 ## Unknown Fields
 

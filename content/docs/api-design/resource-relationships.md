@@ -2,7 +2,7 @@
 title = "Resource Relationships"
 description = "Modeling links between resources as their own sub-resources: PUT to link, DELETE to unlink, data on the link itself, and no duplicate URLs for the same thing."
 category = "API Design"
-order = 1.5
+order = 203
 tags = ["api", "rest", "relationships", "design"]
 aliases = ["resource-relationships"]
 +++
@@ -84,7 +84,7 @@ GET /teams/{teamId}/members            # useful: the team's members
 GET /teams/{teamId}/members/{userId}   # usually a second URL for /users/{userId}
 ```
 
-Two URLs for the same user means two cache keys that go stale independently, two places in the docs, and two response shapes that drift apart. Keep the nested path for the link's own operations and its link data, and send clients to the resource's own URL for the resource itself. Whether a list returns just the link data or inlines each user is up to the client: see [Expanding Responses](/docs/requests/expanding-responses).
+Two URLs for the same user means two cache keys that go stale independently, two places in the docs, and two response shapes that drift apart. Keep the nested path for the link's own operations and its link data, and send clients to the resource's own URL for the resource itself. Whether a list returns just the link data or inlines each user is up to the client: see [Expanding Responses](/docs/api-design/resource-relationships).
 
 ## When the Child Really Is Nested
 

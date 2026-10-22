@@ -2,7 +2,7 @@
 title = "Code Ownership"
 description = "Every service and directory has an owning team: CODEOWNERS for reviews, a catalog entry for operations, and a README that gets anyone running in one command."
 category = "Engineering Practice"
-order = 12.6
+order = 1003
 tags = ["ownership", "process", "documentation", "codeowners"]
 +++
 
@@ -69,7 +69,7 @@ Shared libraries are where ownership quietly disappears: everyone uses them, so 
 
 - **Shared code still has one owning team.** Other teams contribute through pull requests that the owner reviews.
 - **Prefer copying over premature sharing.** Two services with similar code can diverge freely; a shared library couples their release schedules, and every change now needs every consumer's agreement. Share once the third copy appears and the abstraction is obvious, not on the second.
-- **A shared library is a product.** It has versions, a changelog and a deprecation policy, like any API. See [Versioning & Deprecation](/docs/operations/versioning).
+- **A shared library is a product.** It has versions, a changelog and a deprecation policy, like any API. See [Versioning & Deprecation](/docs/api-design/versioning).
 
 ## Changing Owners
 

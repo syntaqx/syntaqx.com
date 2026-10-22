@@ -2,7 +2,7 @@
 title = "CI Pipelines"
 description = "Fast, trustworthy continuous integration: parallel jobs, cached dependencies, local parity with real services, least privilege, and pinned actions."
 category = "Delivery"
-order = 11
+order = 1101
 tags = ["ci", "devops", "delivery", "github-actions"]
 aliases = ["ci-pipelines"]
 +++
@@ -36,11 +36,11 @@ Every parallel job installs dependencies on its own. Split a pipeline into three
 - **Least privilege.** Workflows default to `permissions: contents: read` and request more per job, only when a step needs it.
 - **Pin third-party actions to a full commit SHA,** with the version in a comment. A tag is a pointer the action's owner (or whoever compromises them) can move. In March 2025 attackers did exactly that to `tj-actions/changed-files`, a widely used action: they [repointed its version tags](https://github.com/advisories/GHSA-mrrh-fwg8-r2c3) to a malicious commit that printed CI secrets into build logs. Workflows pinned to a SHA kept running the code they'd reviewed. See [Dependency Management](/docs/engineering/dependencies).
 - **No secrets in pull requests from forks.** A fork's pull request runs code anyone on the internet wrote. Triggers that run that code with your repository's secrets, like `pull_request_target` checking out the fork's branch, are the classic ["pwn request"](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/). Jobs that need secrets run only on trusted events.
-- **Secrets come from the platform's secret store,** scoped to the environment that needs them. See [Configuration & Secrets](/docs/operations/configuration).
+- **Secrets come from the platform's secret store,** scoped to the environment that needs them. See [Configuration & Secrets](/docs/operations/environments).
 
 ## What CI Is Not
 
-CI tells you a change is safe to ship. It doesn't ship it. What happens after green is [Continuous Deployment](/docs/delivery/continuous-deployment).
+CI tells you a change is safe to ship. It doesn't ship it. What happens after green is [Continuous Deployment](/docs/delivery/ci-pipelines).
 
 ## This Site
 

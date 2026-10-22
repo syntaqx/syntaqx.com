@@ -2,7 +2,7 @@
 title = "Forms & Validation"
 description = "Native inputs first, validation that waits until people are done, server errors mapped onto fields, accessible error messages, and forms that never lose work."
 category = "Frontend"
-order = 13.3
+order = 604
 tags = ["forms", "validation", "accessibility", "frontend"]
 +++
 

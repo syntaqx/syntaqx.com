@@ -2,14 +2,14 @@
 title = "Zero-Downtime Migrations"
 description = "Changing a live schema without downtime: the expand and contract pattern, safe backfills, lock-aware DDL, and the order to ship code and migrations in."
 category = "Database"
-order = 10.5
+order = 504
 tags = ["database", "migrations", "postgres", "operations"]
 aliases = ["zero-downtime-migrations"]
 +++
 
 During a deploy, old and new versions of the code run against the same database at the same time: for seconds with a rolling deploy, longer with a canary, and indefinitely if you have to roll back. Every migration has to work with both versions. That one constraint rules out most "simple" changes, like renaming a column in a single step, and it's why schema changes deserve their own discipline.
 
-The alternative, a maintenance window, works until it doesn't. It means scheduling changes around traffic, batching them into risky releases, and telling customers the product is down so the schema can change. With [continuous deployment](/docs/delivery/continuous-deployment), there's no window to schedule into, so migrations have to be safe on a live system.
+The alternative, a maintenance window, works until it doesn't. It means scheduling changes around traffic, batching them into risky releases, and telling customers the product is down so the schema can change. With [continuous deployment](/docs/delivery/ci-pipelines), there's no window to schedule into, so migrations have to be safe on a live system.
 
 ## Expand and Contract
 

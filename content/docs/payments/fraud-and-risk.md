@@ -2,7 +2,7 @@
 title = "Fraud & Risk"
 description = "Deciding which payments to allow, review, challenge or block: the cost of both mistakes, rules and models together, card testing, and auditable decisions."
 category = "Payments"
-order = 7.9
+order = 808
 tags = ["payments", "fraud", "risk", "security"]
 +++
 
@@ -66,7 +66,7 @@ It hurts even when no money is lost. Every attempt is an authorization, which ca
 
 Defenses, layered because each one alone is easy to route around:
 
-- **Rate limits per card, per IP, per account and per device**, not just per IP. Attackers rotate IPs cheaply; they can't rotate the card they're testing. See [Rate Limiting](/docs/operations/rate-limiting).
+- **Rate limits per card, per IP, per account and per device**, not just per IP. Attackers rotate IPs cheaply; they can't rotate the card they're testing. See [Rate Limiting](/docs/requests/rate-limiting).
 - **Limit the cheap paths.** Card-setup endpoints and guest checkout are preferred targets because a zero-amount verification doesn't show on the cardholder's statement. Require a session or an account before a card can be saved, and cap how many cards one account can add.
 - **CAPTCHA, applied by risk.** A visible CAPTCHA on every payment costs real customers conversions; an invisible or risk-triggered one, enforced on the server, costs them almost nothing. The common failure is checking it in the browser only, which a script simply skips.
 - **Watch the decline rate as an attack signal.** A sudden spike in declines, especially generic ones, on small amounts is the signature. Alert on it, and switch on tighter limits automatically when it fires.
@@ -89,7 +89,7 @@ The risk service will sometimes be slow or down. Decide in advance what a paymen
 - **Fail open** (approve without a score) keeps revenue flowing and risks an attack slipping through the gap. Attackers do watch for this.
 - **Fail closed** (decline without a score) stops fraud and turns a risk-service outage into a full payment outage.
 
-Neither is right everywhere. A reasonable default: fail open for low-value, low-risk segments with a fallback set of simple rules that run locally (velocity limits, blocklists, CVC must match), and fail closed or queue for review for high-value orders that can wait. Put a strict timeout on the risk call so a slow score degrades to the fallback instead of hanging checkout ([Retries & Timeouts](/docs/operations/retries-and-timeouts)). The same reasoning as the rate limiter applies: the protection must not become the outage.
+Neither is right everywhere. A reasonable default: fail open for low-value, low-risk segments with a fallback set of simple rules that run locally (velocity limits, blocklists, CVC must match), and fail closed or queue for review for high-value orders that can wait. Put a strict timeout on the risk call so a slow score degrades to the fallback instead of hanging checkout ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)). The same reasoning as the rate limiter applies: the protection must not become the outage.
 
 ## Auditable Decisions
 

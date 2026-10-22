@@ -8,6 +8,7 @@ import type { Heading } from "@/lib/posts";
 import { JsonLd } from "@/components/json-ld";
 import { article } from "@/lib/schema";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 interface Props {
   params: Promise<{ slug: string[] }>;
@@ -47,6 +48,12 @@ export default async function DocPage({ params }: Props) {
   // Former URLs and bare section folders redirect in next.config.ts.
   if (!doc) notFound();
   const category = getDocsByCategory().find((c) => c.name === doc.category);
+
+  // The playbook reads front to back: neighbors in reading order.
+  const docs = getAllDocs();
+  const index = docs.findIndex((d) => d.slug === doc.slug);
+  const prev = docs[index - 1];
+  const next = docs[index + 1];
 
   const modified = docLastModified(doc.slug);
   const source = `content/docs/${doc.slug}.md`;
@@ -106,6 +113,31 @@ export default async function DocPage({ params }: Props) {
             data-toc-body
             dangerouslySetInnerHTML={{ __html: content }}
           />
+          {(prev || next) && (
+            <nav
+              aria-label="Previous and next"
+              className="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2"
+            >
+              {prev && (
+                <Link
+                  href={`/docs/${prev.slug}`}
+                  className="group border border-border p-4 transition-colors hover:border-accent"
+                >
+                  <span className="inst block text-dim">Previous · {prev.category}</span>
+                  <span className="mt-1 block group-hover:text-accent">{prev.title}</span>
+                </Link>
+              )}
+              {next && (
+                <Link
+                  href={`/docs/${next.slug}`}
+                  className="group border border-border p-4 text-right transition-colors hover:border-accent sm:col-start-2"
+                >
+                  <span className="inst block text-dim">Next · {next.category}</span>
+                  <span className="mt-1 block group-hover:text-accent">{next.title}</span>
+                </Link>
+              )}
+            </nav>
+          )}
         </div>
         {toc.length > 1 && (
           <PostToc

@@ -2,7 +2,7 @@
 title = "HIPAA"
 description = "HIPAA for engineers: covered entities and business associates, the BAA chain, what the Security Rule asks of a system, breach deadlines, and de-identification."
 category = "Compliance"
-order = 9.8
+order = 904
 tags = ["compliance", "hipaa", "privacy", "security", "healthcare"]
 +++
 

@@ -4,7 +4,7 @@ Status: Accepted (2026-10-22)
 
 ## Context
 
-[Versioning & Deprecation](https://www.syntaqx.com/docs/operations/versioning) selects versions with the `Api-Version` header and keeps a version in the URL path (`/v1/...`) as a fallback for clients that can't set headers. The API had both: endpoints lived under `/v1`, and the header picked the dated version within it.
+[Versioning & Deprecation](https://www.syntaqx.com/docs/api-design/versioning) selects versions with the `Api-Version` header and keeps a version in the URL path (`/v1/...`) as a fallback for clients that can't set headers. The API had both: endpoints lived under `/v1`, and the header picked the dated version within it.
 
 ## Decision
 

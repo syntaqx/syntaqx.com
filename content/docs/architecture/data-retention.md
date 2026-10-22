@@ -2,7 +2,7 @@
 title = "Data Retention & Deletion"
 description = "How long data is kept and how it is removed: soft vs hard delete, retention windows, GDPR erasure next to append-only financial records, and backups."
 category = "Architecture"
-order = 8.3
+order = 407
 tags = ["architecture", "privacy", "gdpr", "database"]
 aliases = ["data-retention"]
 +++

@@ -2,7 +2,7 @@
 title = "Events & Async Messaging"
 description = "Publishing and consuming events reliably: the transactional outbox, idempotent consumers, partition keys for ordering, CloudEvents, and schema evolution."
 category = "Architecture"
-order = 8.1
+order = 402
 tags = ["architecture", "events", "messaging", "cloudevents"]
 aliases = ["events"]
 +++
@@ -95,11 +95,11 @@ Events outlive the code that produced them. They're replayed, archived and read 
 - **Additive changes only.** New optional fields are fine. Removing, renaming or retyping a field is a new event type (`payment.captured.v2`), published alongside the old one until every consumer has moved.
 - **Consumers ignore unknown fields.** That's the other half of the bargain, and what makes additive changes safe.
 
-It's the same breaking-change discipline as [Versioning & Deprecation](/docs/operations/versioning), applied to messages, with less room for error because you can't see who's listening.
+It's the same breaking-change discipline as [Versioning & Deprecation](/docs/api-design/versioning), applied to messages, with less room for error because you can't see who's listening.
 
 ## When Processing Fails
 
-- **Retry with backoff** for transient failures. See [Retries & Timeouts](/docs/operations/retries-and-timeouts).
+- **Retry with backoff** for transient failures. See [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
 - **Dead-letter after a limit.** A message that fails every time (a "poison message") would otherwise block its partition forever, and every event behind it for that entity. Move it to a [dead-letter queue](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html) with the error attached, and let the rest flow.
 - **Alert on dead letters, then replay deliberately** once the bug is fixed. A dead-letter queue nobody watches is just a slower way to lose data.
 - **Watch consumer lag.** How far behind a consumer is matters more than how fast it is: a consumer an hour behind means customers see hour-old state. Lag belongs on the dashboard next to the [SLOs](/docs/operations/slos).

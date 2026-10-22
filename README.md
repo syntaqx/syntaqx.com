@@ -20,7 +20,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Nothing else is required: without Redis, the API's rate limiter sends its headers but never blocks. To run the real limiter (see [Rate Limiting](https://www.syntaqx.com/docs/operations/rate-limiting)), start Redis and its Upstash-compatible REST proxy, then point `.env.local` at it (see [.env.example](.env.example)):
+Nothing else is required: without Redis, the API's rate limiter sends its headers but never blocks. To run the real limiter (see [Rate Limiting](https://www.syntaqx.com/docs/requests/rate-limiting)), start Redis and its Upstash-compatible REST proxy, then point `.env.local` at it (see [.env.example](.env.example)):
 
 ```bash
 docker compose up -d
@@ -53,7 +53,7 @@ This runs the Next.js build and then generates the Pagefind search index from th
 
 ## Deploy
 
-Every merge to `main` deploys to production on Vercel, and every pull request gets a preview deployment first ([Continuous Deployment](https://www.syntaqx.com/docs/delivery/continuous-deployment)). There's no release step.
+Every merge to `main` deploys to production on Vercel, and every pull request gets a preview deployment first ([Continuous Deployment](https://www.syntaqx.com/docs/delivery/ci-pipelines)). There's no release step.
 
 To roll back, use Vercel's instant rollback to the previous production deployment, then revert the commit on `main` so the next deploy doesn't bring it back.
 

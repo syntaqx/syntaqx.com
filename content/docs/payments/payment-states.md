@@ -2,7 +2,7 @@
 title = "Payment States & Ledgers"
 description = "Explicit state machines for financial objects, append-only records, and a double-entry ledger, so every balance can be explained and nothing is ever edited."
 category = "Payments"
-order = 7.2
+order = 803
 tags = ["payments", "state-machines", "ledger", "database"]
 aliases = ["payment-states"]
 +++

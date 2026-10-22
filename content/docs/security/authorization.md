@@ -2,7 +2,7 @@
 title = "Authorization"
 description = "Deciding what an authenticated caller may do: RBAC, ABAC and relationship-based models, where checks belong, object-level access, and testing deny-by-default."
 category = "Security"
-order = 9.15
+order = 702
 tags = ["security", "authorization", "access-control", "api"]
 +++
 

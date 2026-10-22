@@ -2,7 +2,7 @@
 title = "SLOs & Error Budgets"
 description = "Picking SLIs that reflect what users feel, setting SLO targets, spending error budgets deliberately, and alerting on burn rate instead of raw thresholds."
 category = "Operations"
-order = 5.8
+order = 1203
 tags = ["reliability", "slo", "alerting", "operations"]
 aliases = ["slos"]
 +++
@@ -33,7 +33,7 @@ Measure what users feel, as close to them as you can (the load balancer or the c
 | Queues and [webhooks](/docs/payments/webhooks) | Delivery latency, ratio delivered within the retry window |
 
 - **Ratios, not averages.** "99% of requests under 300ms" is an SLI. "Average latency 120ms" hides the slow tail that users actually notice.
-- **`4xx` aren't failures.** A `422` is the API working correctly (see [Error Responses](/docs/requests/error-responses)). Count `429` separately: it's a failure if you throttled someone below their documented [rate limit](/docs/operations/rate-limiting).
+- **`4xx` aren't failures.** A `422` is the API working correctly (see [Error Responses](/docs/requests/error-responses)). Count `429` separately: it's a failure if you throttled someone below their documented [rate limit](/docs/requests/rate-limiting).
 - **A few per service.** Two or three SLIs per user journey. Twenty SLIs means nobody looks at any of them.
 
 ## Setting Targets
@@ -53,7 +53,7 @@ The budget only matters if spending it changes behavior. Write the policy down b
 | Under 25% | Risky changes need a rollback plan reviewed in advance |
 | Exhausted | Feature releases freeze for that service. Work goes to reliability until the budget recovers |
 
-Exceptions (a security fix, a regulatory deadline) are allowed, and written down. Any single incident that burns more than 20% of the budget gets a [postmortem](/docs/engineering/postmortems), even if nobody noticed.
+Exceptions (a security fix, a regulatory deadline) are allowed, and written down. Any single incident that burns more than 20% of the budget gets a [postmortem](/docs/operations/incident-response), even if nobody noticed.
 
 The policy is what keeps the SLO honest. Without it, the budget is a dashboard: feature work continues while reliability burns, and the conversation happens after the outage. With it, the tradeoff between shipping and stability is decided by a rule everyone agreed to in advance, not by whoever argues loudest during the incident.
 

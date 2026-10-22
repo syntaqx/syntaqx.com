@@ -2,7 +2,7 @@
 title = "Deployment Strategies"
 description = "Recreate, rolling, blue-green, canary and dark launches: how each one rolls back, what it costs, and why the database is usually the real constraint."
 category = "Delivery"
-order = 11.15
+order = 1103
 tags = ["deployment", "delivery", "rollback", "canary"]
 +++
 
@@ -53,7 +53,7 @@ Run the new code path on real traffic without users seeing its results. [Dark la
 
 ### Feature Flags
 
-Deploy the code everywhere, turned off, then turn it on for a percentage of users. This separates *deploying* (the code is there) from *releasing* (users get it). See [Feature Flags & Progressive Rollout](/docs/engineering/feature-flags).
+Deploy the code everywhere, turned off, then turn it on for a percentage of users. This separates *deploying* (the code is there) from *releasing* (users get it). See [Feature Flags & Progressive Rollout](/docs/delivery/feature-flags).
 
 - **Rollback:** turn the flag off. Faster than any redeploy, and it works for one feature without reverting everything else in the release.
 - **Costs:** flag logic in the code, and flags that must be cleaned up afterwards.
@@ -85,7 +85,7 @@ A release that renames a column breaks the old version mid-rollout, and rolling 
 
 ## Immutable Deploys Make All of This Easier
 
-Every strategy above assumes "the old version" still exists, exactly as it was, ready to receive traffic again. With [immutable artifacts](/docs/delivery/containers), it does: rolling back is pointing at the previous image, not reconstructing it. Serverless platforms take this furthest, since every deploy is a new, separately addressable build, and [continuous deployment](/docs/delivery/continuous-deployment) depends on it, because rolling back has to be routine for deploying every merge to be safe.
+Every strategy above assumes "the old version" still exists, exactly as it was, ready to receive traffic again. With [immutable artifacts](/docs/delivery/containers), it does: rolling back is pointing at the previous image, not reconstructing it. Serverless platforms take this furthest, since every deploy is a new, separately addressable build, and [continuous deployment](/docs/delivery/ci-pipelines) depends on it, because rolling back has to be routine for deploying every merge to be safe.
 
 ## This Site
 

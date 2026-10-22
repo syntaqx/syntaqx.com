@@ -2,7 +2,7 @@
 title = "Identifier Conventions"
 description = "UUID v7 as the default key, when integers, v4, v5 or ULIDs are the better choice, and what each format reveals, costs, and breaks when you get it wrong."
 category = "Fundamentals"
-order = -0.25
+order = 103
 tags = ["ids", "uuid", "ulid", "database"]
 aliases = ["identifier-conventions"]
 +++

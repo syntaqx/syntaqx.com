@@ -2,7 +2,7 @@
 title = "Incident Response"
 description = "Running an incident while it's happening: declare early, assign a commander who doesn't debug, mitigate before diagnosing, and communicate on a clock."
 category = "Operations"
-order = 5.91
+order = 1205
 tags = ["incidents", "operations", "on-call", "reliability"]
 +++
 
@@ -60,8 +60,8 @@ The structure most of the industry uses descends from the [Incident Command Syst
 During an incident, the goal is to stop the impact, not to understand it. Those are different activities, and the second one can wait.
 
 - **Roll back first if a deploy is plausibly involved.** A rollback is fast, well-practiced and reversible (see [Deployment Strategies](/docs/delivery/deployment-strategies)). Proving the deploy was the cause takes longer than undoing it.
-- **Use the switches you built for this:** kill-switch [feature flags](/docs/engineering/feature-flags), shedding load, failing over, scaling up, blocking an abusive client.
-- **Keep evidence while you mitigate.** Note the time and the action, grab logs or a heap dump if it's cheap, then act. The root cause matters, for the [postmortem](/docs/engineering/postmortems), not for the next ten minutes.
+- **Use the switches you built for this:** kill-switch [feature flags](/docs/delivery/feature-flags), shedding load, failing over, scaling up, blocking an abusive client.
+- **Keep evidence while you mitigate.** Note the time and the action, grab logs or a heap dump if it's cheap, then act. The root cause matters, for the [postmortem](/docs/operations/incident-response), not for the next ten minutes.
 
 The trap is a team that has a theory and wants to confirm it before acting. If confirming takes thirty minutes and rolling back takes two, roll back. If the rollback didn't help, you've learned something and lost two minutes.
 
@@ -95,7 +95,7 @@ An incident ends when impact ends and the system is stable, not when the fix is 
 
 1. The IC declares it resolved and posts a final status update.
 2. Mitigations that are still in place (a disabled feature, an extra replica, a blocked client) are listed with owners, so a temporary fix doesn't become permanent by accident.
-3. A postmortem owner is named and the draft is due within two business days (see [Incident Postmortems](/docs/engineering/postmortems)). The timeline from the channel becomes its spine.
+3. A postmortem owner is named and the draft is due within two business days (see [Incident Postmortems](/docs/operations/incident-response)). The timeline from the channel becomes its spine.
 
 The pager rotation, escalation paths and runbooks that make all of this possible live in [On-Call & Runbooks](/docs/operations/on-call).
 

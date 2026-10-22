@@ -2,7 +2,7 @@
 title = "Tech Debt"
 description = "Treat tech debt like a loan: know which kind you took on, track the interest you pay, budget a steady share to repay it, and modernize with strangler figs."
 category = "Engineering Practice"
-order = 12.7
+order = 1006
 tags = ["tech-debt", "process", "architecture", "planning"]
 +++
 
@@ -25,7 +25,7 @@ Martin Fowler's [technical debt quadrant](https://martinfowler.com/bliki/Technic
 
 Debt nobody can see doesn't get prioritized. Every known piece is a tracked item in the normal backlog, and each one says what the interest is:
 
-- **Incidents** it caused or made worse, linked from the [postmortem](/docs/engineering/postmortems).
+- **Incidents** it caused or made worse, linked from the [postmortem](/docs/operations/incident-response).
 - **Slower delivery:** "every change to billing takes three extra days because of X."
 - **Risk:** an unsupported runtime, a dependency with no maintainer, a single point of failure.
 
@@ -37,7 +37,7 @@ Reserve a steady share of every team's capacity for paying down debt and keeping
 
 - **Not debt sprints.** A quarterly "cleanup sprint" lets interest compound for three months, then gets cancelled the first time a deadline slips.
 - **The team chooses** what to spend it on. They know where the interest hurts.
-- **Upgrades come out of this budget,** before they become emergencies. See [Staying Current](/docs/delivery/staying-current).
+- **Upgrades come out of this budget,** before they become emergencies. See [Staying Current](/docs/engineering/dependencies).
 
 ## Pay It Down Where You're Working
 
@@ -70,7 +70,7 @@ Removing something is how debt actually goes away, and removals need the same ca
 - **Measure who still uses it,** and tell them directly.
 - **Delete it on the date.** A deprecation without a removal date is just a comment.
 
-See [Versioning & Deprecation](/docs/operations/versioning) for the public-API version of this.
+See [Versioning & Deprecation](/docs/api-design/versioning) for the public-API version of this.
 
 ## References
 

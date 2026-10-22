@@ -2,7 +2,7 @@
 title = "Caching & Conditional Requests"
 description = "Cache-Control, ETags and conditional requests: cheap revalidation with 304, safe concurrent updates with If-Match and 412, and Vary on Api-Version."
 category = "Requests & Responses"
-order = 6.2
+order = 306
 tags = ["api", "caching", "http", "concurrency"]
 aliases = ["caching"]
 +++
@@ -92,12 +92,12 @@ Vary: Accept, Api-Version, Accept-Encoding
 ```
 
 - `Accept` because of [content negotiation](/docs/api-design/principles).
-- `Api-Version` because each version can shape the response differently ([Versioning](/docs/operations/versioning)).
+- `Api-Version` because each version can shape the response differently ([Versioning](/docs/api-design/versioning)).
 - `Authorization` responses should be `private` instead of relying on `Vary: Authorization`, which shared caches handle poorly.
 
 ## Don't Cache Errors by Accident
 
-`4xx` and `5xx` responses get `Cache-Control: no-store` unless the error is genuinely stable (a `404` on an ID that can never exist, a `410` after [sunset](/docs/operations/versioning)). A cached `503` turns a ten-second blip into a ten-minute outage.
+`4xx` and `5xx` responses get `Cache-Control: no-store` unless the error is genuinely stable (a `404` on an ID that can never exist, a `410` after [sunset](/docs/api-design/versioning)). A cached `503` turns a ten-second blip into a ten-minute outage.
 
 ## References
 

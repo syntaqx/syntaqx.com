@@ -1,10 +1,10 @@
 +++
 title = "Rate Limiting"
 description = "Why every endpoint is rate limited, what to key limits on, the headers that report them, enforcing them in Redis, and staying up when the limiter fails."
-category = "Operations"
-order = 5
+category = "Requests & Responses"
+order = 307
 tags = ["api", "rate-limiting", "headers"]
-aliases = ["rate-limiting"]
+aliases = ["rate-limiting", "operations/rate-limiting"]
 +++
 
 Every endpoint is rate limited. No exceptions, including the cheap ones.
@@ -71,7 +71,7 @@ As a client:
 2. **Don't retry in a tight loop.** Every rejected request still costs the server something, and a client hammering a `429` can keep itself blocked indefinitely.
 3. **Watch `RateLimit` before you hit zero.** A batch job that sees `r` dropping can slow itself down instead of failing halfway through.
 
-See [Retries & Timeouts](/docs/operations/retries-and-timeouts) for the full retry policy.
+See [Retries & Timeouts](/docs/architecture/retries-and-timeouts) for the full retry policy.
 
 ## How It's Enforced
 

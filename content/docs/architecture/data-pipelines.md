@@ -3,7 +3,7 @@ title = "Data Pipelines & Analytics"
 nav_title = "Data Pipelines"
 description = "Getting data from production into analytics without breaking either: CDC, ELT, tested transformations, replayable pipelines, contracts and one metrics layer."
 category = "Architecture"
-order = 8.6
+order = 408
 tags = ["data", "analytics", "pipelines", "cdc", "warehouse"]
 +++
 

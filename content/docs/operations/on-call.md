@@ -2,7 +2,7 @@
 title = "On-Call & Runbooks"
 description = "A sustainable on-call rotation: severity levels, escalation, handoffs, a runbook template for every alert, and budgeting time to drive toil down."
 category = "Operations"
-order = 5.9
+order = 1204
 tags = ["operations", "on-call", "incidents", "runbooks"]
 aliases = ["on-call"]
 +++
@@ -30,8 +30,8 @@ Declare early and downgrade later. A SEV1 that turns out to be a SEV3 costs an h
 ## During an Incident
 
 - **One incident commander.** They coordinate and decide; they don't debug. Everyone else works the problem. The person deepest in the logs is the worst person to also track who's doing what, what's been tried, and when to update customers.
-- **Mitigate first, diagnose later.** Roll back, fail over, flip the [kill switch](/docs/engineering/feature-flags). Understanding why can wait until customers are fine. Root-causing a live outage feels productive, but every minute of it is a minute of impact a rollback would have ended.
-- **One channel, one timeline.** Decisions and actions go in the incident channel with timestamps. It becomes the [postmortem](/docs/engineering/postmortems) timeline.
+- **Mitigate first, diagnose later.** Roll back, fail over, flip the [kill switch](/docs/delivery/feature-flags). Understanding why can wait until customers are fine. Root-causing a live outage feels productive, but every minute of it is a minute of impact a rollback would have ended.
+- **One channel, one timeline.** Decisions and actions go in the incident channel with timestamps. It becomes the [postmortem](/docs/operations/incident-response) timeline.
 - **Communicate on a schedule.** Status updates every 30 minutes for SEV1, even when the update is "still investigating".
 
 ## Escalation

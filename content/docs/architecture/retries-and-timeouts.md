@@ -1,10 +1,10 @@
 +++
 title = "Retries & Timeouts"
 description = "When to retry, how long to wait, and when to give up: timeouts on every call, exponential backoff with jitter, retry budgets, and what is safe to retry."
-category = "Operations"
-order = 5.6
+category = "Architecture"
+order = 404
 tags = ["reliability", "retries", "timeouts", "operations"]
-aliases = ["retries-and-timeouts"]
+aliases = ["retries-and-timeouts", "operations/retries-and-timeouts"]
 +++
 
 Every network call can fail, hang, or succeed without telling you. A retry policy decides which of those you recover from, and which you turn into an outage by retrying too hard. Done well, retries quietly absorb the blips every distributed system has. Done badly, they're how a ten-second database hiccup becomes an hour-long incident: every client retries at once, the recovering service drowns, and the retries become the load that keeps it down.
@@ -27,7 +27,7 @@ The question isn't "did it fail?", it's "if I send this again, can it happen twi
 | Connection refused, DNS failure, reset before the request was sent | Yes. Nothing reached the server |
 | Timeout or dropped connection after the request was sent | Idempotent requests: yes. Writes: only with the same [Idempotency-Key](/docs/payments/idempotency) |
 | `409 Conflict` (same idempotency key still executing) | Yes, same key, after a short wait |
-| `429 Too Many Requests` | Yes, after `Retry-After` (see [Rate Limiting](/docs/operations/rate-limiting)) |
+| `429 Too Many Requests` | Yes, after `Retry-After` (see [Rate Limiting](/docs/requests/rate-limiting)) |
 | `502`, `503`, `504` | Yes, with backoff (and the same key for writes) |
 | `500` on an idempotent read | Yes, with backoff |
 | `500` on a keyed write | No. The outcome is unknown. Reconcile first |

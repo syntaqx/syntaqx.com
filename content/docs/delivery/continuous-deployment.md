@@ -2,7 +2,7 @@
 title = "Continuous Deployment"
 description = "Why every merge to main goes to production on its own, how that differs from continuous delivery, and what has to be true before you can do it safely."
 category = "Delivery"
-order = 11.1
+order = 1194
 tags = ["cd", "devops", "delivery", "deployment"]
 aliases = ["continuous-deployment"]
 +++
@@ -37,7 +37,7 @@ The intuition most teams start with is that shipping more often means breaking t
 
 Deploying puts code in production. Releasing puts a feature in front of users. The most common objection to continuous deployment is "but this feature isn't ready", and the answer is that it doesn't need to be: unready code can be in production as long as nobody can reach it. Continuous deployment works because the two are separate:
 
-- **Unfinished work ships dark,** behind a flag. See [Feature Flags & Progressive Rollout](/docs/engineering/feature-flags).
+- **Unfinished work ships dark,** behind a flag. See [Feature Flags & Progressive Rollout](/docs/delivery/feature-flags).
 - **Risky changes roll out progressively:** internal users, then a percentage, then everyone, watching the [SLOs](/docs/operations/slos) at each step.
 - **Schema changes are backward compatible,** so every deploy works with the previous one still running. See [Zero-Downtime Migrations](/docs/database/zero-downtime-migrations).
 

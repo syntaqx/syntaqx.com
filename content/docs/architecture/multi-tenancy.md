@@ -2,7 +2,7 @@
 title = "Multi-Tenancy"
 description = "Serving many customers from one system safely: choosing an isolation model, enforcing tenant scope in the database, and keeping noisy neighbors in check."
 category = "Architecture"
-order = 8.2
+order = 406
 tags = ["architecture", "multi-tenancy", "postgres", "security"]
 aliases = ["multi-tenancy"]
 +++
@@ -65,7 +65,7 @@ A resource in another tenant returns `404`, not `403`. A `403` confirms the ID e
 
 Shared infrastructure means one tenant's traffic spike can become everyone's outage. Isolation covers performance as well as data.
 
-- **Rate limits per tenant,** not just per IP. A tenant's integration bug that retries in a tight loop should exhaust that tenant's quota, not the database. See [Rate Limiting](/docs/operations/rate-limiting).
+- **Rate limits per tenant,** not just per IP. A tenant's integration bug that retries in a tight loop should exhaust that tenant's quota, not the database. See [Rate Limiting](/docs/requests/rate-limiting).
 - **Fair queueing.** Background work is partitioned or weighted by tenant, so one tenant's backlog of 2 million jobs doesn't sit in front of everyone else's 10.
 - **Per-tenant metrics.** Latency, error rate and resource use by tenant, so you can see who's hot before it's a page. Keep the label bounded: the top tenants by name and the rest grouped, or the metrics system becomes the noisy neighbor.
 - **Statement timeouts** on every query, so one tenant's pathological filter can't hold a connection for minutes while the pool drains.

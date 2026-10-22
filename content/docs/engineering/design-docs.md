@@ -2,7 +2,7 @@
 title = "Design Docs & ADRs"
 description = "When a change needs a design doc, what goes in one, and why decision records should capture departures from your standards rather than every choice."
 category = "Engineering Practice"
-order = 12
+order = 1001
 tags = ["process", "architecture", "adr", "documentation"]
 aliases = ["design-docs"]
 +++

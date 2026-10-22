@@ -2,7 +2,7 @@
 title = "Money & Amounts"
 description = "How monetary amounts are represented: integer minor units, an explicit ISO 4217 currency on every amount, and rounding rules that never lose a cent."
 category = "Payments"
-order = 7
+order = 801
 tags = ["payments", "money", "currency", "standards"]
 aliases = ["money"]
 +++

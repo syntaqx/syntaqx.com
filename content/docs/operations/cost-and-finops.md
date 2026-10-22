@@ -2,7 +2,7 @@
 title = "Cost & FinOps"
 description = "Cloud cost as an engineering input: unit economics, an owner for every dollar, budgets and anomaly alerts, the few levers that matter, and free-tier cliffs."
 category = "Operations"
-order = 5.99
+order = 1209
 tags = ["cost", "finops", "operations", "cloud"]
 +++
 

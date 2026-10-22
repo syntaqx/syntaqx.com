@@ -2,13 +2,13 @@
 title = "Mobile Releases"
 description = "Shipping mobile apps when you can't roll back: release trains, phased rollouts, flags, minimum versions, health gates, signing, beta tracks and OTA rules."
 category = "Delivery"
-order = 11.4
+order = 1106
 tags = ["mobile", "ios", "android", "release", "delivery"]
 +++
 
-Everything in [Continuous Deployment](/docs/delivery/continuous-deployment) assumes you can put a fix in front of every user within minutes. Mobile breaks that assumption. A release goes through store review, users install it when they feel like it, and once a build is on a phone you can't take it back. The version you shipped two years ago is still running somewhere and still calling your API.
+Everything in [Continuous Deployment](/docs/delivery/ci-pipelines) assumes you can put a fix in front of every user within minutes. Mobile breaks that assumption. A release goes through store review, users install it when they feel like it, and once a build is on a phone you can't take it back. The version you shipped two years ago is still running somewhere and still calling your API.
 
-That's why mobile is the clearest case in [When Delivery Is the Right Call](/docs/delivery/continuous-deployment): you keep continuous integration, automated tests and a releasable main branch, but the step to users is a deliberate, gated release. The practices on this page exist to make that release boring, and to give you back as much of the rollback ability the platform takes away.
+That's why mobile is the clearest case in [When Delivery Is the Right Call](/docs/delivery/ci-pipelines): you keep continuous integration, automated tests and a releasable main branch, but the step to users is a deliberate, gated release. The practices on this page exist to make that release boring, and to give you back as much of the rollback ability the platform takes away.
 
 ## What's Different
 
@@ -27,7 +27,7 @@ The alternative, releasing when a feature is done, sounds more responsive and wo
 
 What makes trains work:
 
-- **Main is always releasable.** Unfinished work merges behind [feature flags](/docs/engineering/feature-flags), switched off, so the cut is never blocked by half-done features.
+- **Main is always releasable.** Unfinished work merges behind [feature flags](/docs/delivery/feature-flags), switched off, so the cut is never blocked by half-done features.
 - **The release branch takes fixes only.** Fixes land on main first, then get cherry-picked to the branch, so the next train never loses them.
 - **The cut is automated.** Version bump, changelog, build, signing and upload to the beta track happen in CI from a single trigger. A release that requires someone's laptop is a release that waits for that person.
 - **One release owner per train**, rotating, who watches health metrics and makes the go/no-go call on rollout stages.
@@ -59,7 +59,7 @@ This is the mobile version of a [canary](/docs/delivery/deployment-strategies), 
 
 ## Flags and Remote Config Are Your Rollback
 
-Since you can't roll back a binary, move the risk out of it. Every significant feature ships dark, behind a [feature flag](/docs/engineering/feature-flags) evaluated at runtime, and is turned on separately from the release:
+Since you can't roll back a binary, move the risk out of it. Every significant feature ships dark, behind a [feature flag](/docs/delivery/feature-flags) evaluated at runtime, and is turned on separately from the release:
 
 - **The binary rollout and the feature rollout are independent.** The build reaches 100% with the feature off; then the feature rolls out by percentage, by platform, by app version, with its own metrics.
 - **Kill switches for anything risky:** a new checkout flow, a third-party SDK, a migration of local data. When it misbehaves, turning it off takes seconds and needs no review.
@@ -73,7 +73,7 @@ Flags have a cost on mobile that they don't on the web: old flag checks live in 
 
 On the web, the client and server deploy together. On mobile, your API serves today's app, last month's and the one from two years ago that someone never updated. Design for it:
 
-- **API changes are backward compatible,** by the same rules as [Versioning](/docs/operations/versioning): add fields, never remove or repurpose them while a supported version reads them. Clients must ignore fields they don't know and handle enum values they've never seen.
+- **API changes are backward compatible,** by the same rules as [Versioning](/docs/api-design/versioning): add fields, never remove or repurpose them while a supported version reads them. Clients must ignore fields they don't know and handle enum values they've never seen.
 - **Send the app version on every request** (in the `User-Agent` or a dedicated header), so you can measure who still uses what, target flags, and decide when an old path can go.
 - **Server-driven behavior where it's cheap**: lists of options, copy, layout of simple screens, eligibility rules. Logic the server decides can be fixed without a release. Don't overdo it; a fully server-driven UI is a browser engine you have to build and test yourself.
 
@@ -117,7 +117,7 @@ When a release is bad, the process is the train's, compressed:
 2. **Fix on main**, cherry-pick to the release branch, and cut a patch version (`4.12.1`). Don't bundle anything else.
 3. **Run the same pipeline**: tests, beta track, phased release. Shorten the stages, but don't skip them; a rushed hotfix that crashes is worse than the original bug.
 4. **Request expedited review** only for genuine emergencies. Apple offers it, and it's a favor that works best when it's rarely asked for.
-5. **Write the [postmortem](/docs/engineering/postmortems)**, with particular attention to why a flag or gate didn't catch it.
+5. **Write the [postmortem](/docs/operations/incident-response)**, with particular attention to why a flag or gate didn't catch it.
 
 ## Over-the-Air Updates, Within the Rules
 

@@ -2,11 +2,11 @@
 title = "SDK Design"
 description = "When to ship client libraries, generated versus hand-written, and the behavior every SDK should build in: retries, idempotency, pagination and errors."
 category = "API Design"
-order = 1.9
+order = 208
 tags = ["api", "sdk", "clients", "developer-experience"]
 +++
 
-An SDK is where your API's conventions either reach the developer or get lost. The [retry rules](/docs/operations/retries-and-timeouts), the [idempotency keys](/docs/payments/idempotency), the [pagination links](/docs/requests/pagination): each is documented, and each is something a busy developer will half-implement under deadline. A good SDK implements them once, correctly, for everyone. A bad one adds a layer of bugs between the developer and an API that was fine.
+An SDK is where your API's conventions either reach the developer or get lost. The [retry rules](/docs/architecture/retries-and-timeouts), the [idempotency keys](/docs/payments/idempotency), the [pagination links](/docs/requests/pagination): each is documented, and each is something a busy developer will half-implement under deadline. A good SDK implements them once, correctly, for everyone. A bad one adds a layer of bugs between the developer and an API that was fine.
 
 ## When to Ship One
 
@@ -30,7 +30,7 @@ A Go developer expects `context.Context`, errors as values and no exceptions. A 
 
 ## Behavior to Build In
 
-**Retries, with idempotency keys.** The SDK should retry what's safe to retry, with backoff and jitter, and nothing else ([Retries & Timeouts](/docs/operations/retries-and-timeouts)). For `POST`, that means generating an `Idempotency-Key` once per logical call and reusing it on every retry; that's the only way a retry after a timeout can't create a second payment. Keep the default retry count small: AWS's SDKs default to three attempts in total, which is enough to ride out a blip without turning an outage into a pile-up. Let callers pass their own key so a retry across process restarts stays one operation.
+**Retries, with idempotency keys.** The SDK should retry what's safe to retry, with backoff and jitter, and nothing else ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)). For `POST`, that means generating an `Idempotency-Key` once per logical call and reusing it on every retry; that's the only way a retry after a timeout can't create a second payment. Keep the default retry count small: AWS's SDKs default to three attempts in total, which is enough to ride out a blip without turning an outage into a pile-up. Let callers pass their own key so a retry across process restarts stays one operation.
 
 **Timeouts.** Every call gets a default timeout, configurable per client and per call. An SDK that can hang forever passes that hang on to every app built on it.
 
@@ -42,7 +42,7 @@ A Go developer expects `context.Context`, errors as values and no exceptions. A 
 
 ## Versioning
 
-An SDK has two versions to keep straight: its own and the API's. The SDK follows [SemVer](https://semver.org/) on its own surface, so a renamed method or changed type is a major release ([Dependency Management](/docs/engineering/dependencies)). The API version it speaks is a separate choice: pin each SDK release to the dated API version that was current when it shipped, sent as `Api-Version` on every call, so upgrading the SDK is how a customer opts into newer API behavior ([Versioning & Deprecation](/docs/operations/versioning)). Stripe works this way: each SDK version uses the API version current at its release and follows semantic versioning for its own changes.
+An SDK has two versions to keep straight: its own and the API's. The SDK follows [SemVer](https://semver.org/) on its own surface, so a renamed method or changed type is a major release ([Dependency Management](/docs/engineering/dependencies)). The API version it speaks is a separate choice: pin each SDK release to the dated API version that was current when it shipped, sent as `Api-Version` on every call, so upgrading the SDK is how a customer opts into newer API behavior ([Versioning & Deprecation](/docs/api-design/versioning)). Stripe works this way: each SDK version uses the API version current at its release and follows semantic versioning for its own changes.
 
 Let callers override the API version per client for the rare case that needs it, and say clearly in the changelog which API version each release pins.
 

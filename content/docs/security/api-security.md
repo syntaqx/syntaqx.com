@@ -2,7 +2,7 @@
 title = "API Security"
 description = "The OWASP API Security Top 10 (2023), risk by risk, and the playbook practice that prevents each one, so security is designed in rather than bolted on."
 category = "Security"
-order = 9.1
+order = 703
 tags = ["security", "api", "owasp", "authorization"]
 +++
 
@@ -34,7 +34,7 @@ SELECT * FROM invoices WHERE id = $1 AND account_id = $2;
 Weak tokens, credentials in URLs, no limits on login or token endpoints. Authentication endpoints are where attackers can try millions of guesses for free, so they need defenses the rest of the API doesn't.
 
 - Credentials go in the `Authorization` header, never the URL. Keys are prefixed, hashed at rest, shown once, and rotatable. See [API Authentication](/docs/api-design/authentication).
-- Rate limit authentication endpoints much harder than the rest, keyed by account as well as IP, because credential stuffing comes from thousands of addresses at once. See [Rate Limiting](/docs/operations/rate-limiting).
+- Rate limit authentication endpoints much harder than the rest, keyed by account as well as IP, because credential stuffing comes from thousands of addresses at once. See [Rate Limiting](/docs/requests/rate-limiting).
 
 ## API3:2023 Broken Object Property Level Authorization
 
@@ -42,15 +42,15 @@ The API returns fields the caller shouldn't see, or accepts fields the caller sh
 
 - **Allowlist output.** Serialize explicit fields, never the whole database row. See [JSON Field Conventions](/docs/requests/json-conventions).
 - **Allowlist input.** Unknown and read-only fields are rejected with `422`, not silently ignored or, worse, saved.
-- **Allowlist expansions.** `expand` only reaches documented relations the caller can read. See [Expanding Responses](/docs/requests/expanding-responses).
+- **Allowlist expansions.** `expand` only reaches documented relations the caller can read. See [Expanding Responses](/docs/api-design/resource-relationships).
 
 ## API4:2023 Unrestricted Resource Consumption
 
 No limits means anyone can make you pay for their requests, in compute, money or third-party quota. The bill is often the real damage: one script hitting an endpoint that sends an SMS or calls a paid model can cost more in an afternoon than the feature earns in a month.
 
-- [Rate limits](/docs/operations/rate-limiting) on every endpoint, with headers that tell clients where they stand.
+- [Rate limits](/docs/requests/rate-limiting) on every endpoint, with headers that tell clients where they stand.
 - Size limits everywhere: page size ([Pagination](/docs/requests/pagination)), batch size ([Bulk Operations](/docs/requests/bulk-operations)), request bodies (`QUERY` content is capped at 64 KB, see [HTTP QUERY](/docs/requests/http-query)).
-- [Timeouts](/docs/operations/retries-and-timeouts) on every call, and long work moved to [long-running operations](/docs/requests/long-running-operations).
+- [Timeouts](/docs/architecture/retries-and-timeouts) on every call, and long work moved to [long-running operations](/docs/requests/long-running-operations).
 - Spend limits on anything metered: SMS, email, AI tokens.
 
 ## API5:2023 Broken Function Level Authorization
@@ -83,14 +83,14 @@ Verbose errors, permissive CORS, missing headers, default credentials, debug end
 
 - One [error format](/docs/requests/error-responses) that never includes stack traces or internal details.
 - [Security headers](/docs/security/security-headers) on every response, and CORS that only allows what it must.
-- Configuration that's validated at boot and identical in shape across environments. See [Configuration & Secrets](/docs/operations/configuration).
+- Configuration that's validated at boot and identical in shape across environments. See [Configuration & Secrets](/docs/operations/environments).
 
 ## API9:2023 Improper Inventory Management
 
 Old versions, forgotten staging hosts and undocumented endpoints that nobody patches. You can't secure what you don't know you're running, and attackers are often better at finding your forgotten hosts than you are.
 
 - Every endpoint is in the OpenAPI document, and CI fails if the document and the routes disagree.
-- Versions have a published lifecycle with `Deprecation` and `Sunset`, and retired versions actually stop answering. See [Versioning & Deprecation](/docs/operations/versioning).
+- Versions have a published lifecycle with `Deprecation` and `Sunset`, and retired versions actually stop answering. See [Versioning & Deprecation](/docs/api-design/versioning).
 - Every service has an owner. See [Code Ownership](/docs/engineering/code-ownership).
 
 ## API10:2023 Unsafe Consumption of APIs
@@ -99,7 +99,7 @@ Trusting data from a third-party API more than user input, because it came from 
 
 - Validate third-party responses against a schema, with the same rigor as user input.
 - Verify signatures on everything inbound: [webhooks](/docs/payments/webhooks) are rejected unless the HMAC and timestamp check out.
-- Time out and fail closed on third-party calls. See [Retries & Timeouts](/docs/operations/retries-and-timeouts).
+- Time out and fail closed on third-party calls. See [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
 - Model output is third-party data too. See [AI & LLM Security](/docs/security/ai-security).
 
 ## Where to Start

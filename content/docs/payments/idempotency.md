@@ -2,7 +2,7 @@
 title = "Idempotency"
 description = "Safe retries for any write with the Idempotency-Key header: how keys are stored and replayed, and what happens on conflicting or concurrent requests."
 category = "Payments"
-order = 7.1
+order = 802
 tags = ["api", "payments", "idempotency", "headers"]
 aliases = ["idempotency"]
 +++
@@ -69,7 +69,7 @@ A result is stored once the endpoint **begins executing**, whatever the outcome.
 
 The reason: a `500` from a payment endpoint doesn't mean nothing happened. It means the server doesn't know what happened. The charge may have gone through before the error. If the retry re-executed the request, it could charge the card a second time. Replaying the stored `500` is the honest answer: "this operation's outcome is uncertain, go and check". The client reconciles by fetching the payment or watching [webhooks](/docs/payments/webhooks), instead of gambling with a second charge.
 
-Requests rejected **before** execution aren't stored: failed validation, bad authentication, [rate limiting](/docs/operations/rate-limiting) (`429`), or a `409` for a concurrent request. Nothing happened, so the client fixes the problem and retries with the same key.
+Requests rejected **before** execution aren't stored: failed validation, bad authentication, [rate limiting](/docs/requests/rate-limiting) (`429`), or a `409` for a concurrent request. Nothing happened, so the client fixes the problem and retries with the same key.
 
 ## Retention
 
@@ -110,7 +110,7 @@ curl -X POST https://api.syntaqx.com/echo \
 
 Run it twice and the second response is the first one again, byte for byte, with `Idempotent-Replayed: true`. Change the body and keep the key, and it's a `400`. Keys live in Redis for 24 hours, scoped to the caller's IP since the API has no accounts, and a claim is a single `SET NX`, so two simultaneous first requests can't both run.
 
-The echo exists only in its stored response, so recording the key and the side effect is one write, the property this doc asks for. And unlike the [rate limiter](/docs/operations/rate-limiting), which keeps serving when Redis is down, this fails closed: if the key store is unreachable, the request gets a `503` and nothing is created, because running a write without its protection is exactly what the key exists to prevent.
+The echo exists only in its stored response, so recording the key and the side effect is one write, the property this doc asks for. And unlike the [rate limiter](/docs/requests/rate-limiting), which keeps serving when Redis is down, this fails closed: if the key store is unreachable, the request gets a `503` and nothing is created, because running a write without its protection is exactly what the key exists to prevent.
 
 ## References
 

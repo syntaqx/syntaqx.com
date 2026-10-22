@@ -2,7 +2,7 @@
 title = "Becoming a Payment Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
 category = "Payments"
-order = 7.97
+order = 812
 tags = ["payments", "compliance", "pci", "licensing"]
 +++
 

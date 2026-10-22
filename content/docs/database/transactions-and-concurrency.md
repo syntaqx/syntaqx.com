@@ -2,7 +2,7 @@
 title = "Transactions & Concurrency"
 description = "What isolation levels really guarantee, stopping lost updates with optimistic or pessimistic locking, retrying serialization failures, and avoiding deadlocks."
 category = "Database"
-order = 10.3
+order = 502
 tags = ["database", "postgres", "transactions", "concurrency"]
 +++
 
@@ -83,7 +83,7 @@ Serializable isolation removes every anomaly, including write skew, by detecting
 The price is that **aborts are normal, not exceptional.** Postgres reports them with SQLSTATE `40001`, and its docs say applications must be prepared to retry the whole transaction from the beginning. The same applies to repeatable read when a concurrent update hits a row you're changing. So a serializable transaction needs a retry loop around it:
 
 - Retry the **entire** transaction, including the reads, never just the failed statement.
-- Bound the retries and back off between them ([Retries & Timeouts](/docs/operations/retries-and-timeouts)).
+- Bound the retries and back off between them ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)).
 - Keep the transaction free of side effects outside the database, because it may run more than once.
 
 ## Deadlocks

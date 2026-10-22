@@ -2,7 +2,7 @@
 title = "Team Structure"
 description = "Designing teams on purpose: Conway's law, stream-aligned teams that own services end to end, platforms run as products, and cognitive load as the sizing limit."
 category = "Leadership"
-order = 14.5
+order = 1306
 tags = ["leadership", "management", "organization", "team-topologies"]
 +++
 

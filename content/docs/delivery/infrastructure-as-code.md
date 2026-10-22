@@ -2,7 +2,7 @@
 title = "Infrastructure as Code"
 description = "Infrastructure declared in code and changed by review: remote locked state, plan and apply from CI, drift detection, modules, and secrets kept out of state."
 category = "Delivery"
-order = 11.25
+order = 1105
 tags = ["iac", "terraform", "opentofu", "delivery"]
 +++
 
@@ -61,7 +61,7 @@ Each environment is the same definitions with different inputs: sizes, counts, d
 
 ## Secrets Stay Out
 
-Configuration and secrets are different things (see [Configuration & Secrets](/docs/operations/configuration)). Infrastructure code creates the place a secret lives, like a secrets-manager entry and the permission to read it, and never contains the secret's value. The value goes in through the secrets manager, so it's never in the repository or, with ephemeral values, in state.
+Configuration and secrets are different things (see [Configuration & Secrets](/docs/operations/environments)). Infrastructure code creates the place a secret lives, like a secrets-manager entry and the permission to read it, and never contains the secret's value. The value goes in through the secrets manager, so it's never in the repository or, with ephemeral values, in state.
 
 ## Policy as Code
 

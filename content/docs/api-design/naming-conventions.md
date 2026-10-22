@@ -2,7 +2,7 @@
 title = "Naming Conventions"
 description = "How API paths are named: plural kebab-case nouns, one level of nesting, IDs not names in URLs, actions as sub-resources, and no formats or versions in paths."
 category = "API Design"
-order = 1
+order = 202
 tags = ["api", "naming", "rest"]
 aliases = ["naming-conventions"]
 +++
@@ -26,7 +26,7 @@ The reasoning behind the less obvious ones:
 - **Plural, always.** `/invoices` is the collection and `/invoices/{id}` is one member of it. Mixing singular and plural means every integrator guesses wrong half the time.
 - **kebab-case paths, snake_case everywhere else.** URLs are case-sensitive and read by humans; hyphens are the conventional word separator in them. Query parameters and JSON fields use snake_case to match the [JSON fields](/docs/requests/json-conventions) and [database columns](/docs/database/naming-conventions) they map to, so nothing is renamed between layers.
 - **IDs, not names.** Names change; a user renames themselves and every stored URL breaks. An opaque, permanent [ID](/docs/fundamentals/identifier-conventions) never does. If a human-readable URL matters (a public profile), make the slug a separate, redirectable field.
-- **No extensions or versions in the path.** Both describe a representation or a revision of the resource, not the resource. They belong in `Accept` and `Api-Version`, so the URL stays one stable name ([Versioning](/docs/operations/versioning)).
+- **No extensions or versions in the path.** Both describe a representation or a revision of the resource, not the resource. They belong in `Accept` and `Api-Version`, so the URL stays one stable name ([Versioning](/docs/api-design/versioning)).
 
 ## Flat or Nested
 

@@ -2,7 +2,7 @@
 title = "Choosing an API Style"
 description = "REST, GraphQL, gRPC and events: what each one optimizes for, what it costs, and how to pick by who the consumer is rather than by what's fashionable."
 category = "API Design"
-order = 1.8
+order = 206
 tags = ["api", "rest", "graphql", "grpc", "architecture"]
 +++
 
@@ -21,7 +21,7 @@ The question is rarely "which style is best". It's "who calls this, and what do 
 
 A public API's consumers are strangers with every language, framework and level of skill. What helps them most is the thing they already know: HTTP. Methods say whether a call is safe to retry, status codes say what happened, `Cache-Control` and ETags let every proxy and browser cache work for free, and when something breaks they can reproduce it with `curl` and read the response. Every one of those properties comes from the protocol, so you don't have to build or document it ([REST & HTTP Verbs](/docs/fundamentals/rest-http-verbs), [Caching](/docs/requests/caching)).
 
-The real weaknesses are over-fetching and round trips: a screen that needs a customer, their last five orders and each order's items can take several requests. The playbook answers that without leaving HTTP: [expansion](/docs/requests/expanding-responses) inlines related resources on request, and [HTTP QUERY](/docs/requests/http-query) carries a structured query that doesn't fit in a URL. That covers most of what people reach for GraphQL to solve, while keeping caching and retry semantics intact.
+The real weaknesses are over-fetching and round trips: a screen that needs a customer, their last five orders and each order's items can take several requests. The playbook answers that without leaving HTTP: [expansion](/docs/api-design/resource-relationships) inlines related resources on request, and [HTTP QUERY](/docs/requests/http-query) carries a structured query that doesn't fit in a URL. That covers most of what people reach for GraphQL to solve, while keeping caching and retry semantics intact.
 
 ## GraphQL: When One Client Composes Many Resources
 

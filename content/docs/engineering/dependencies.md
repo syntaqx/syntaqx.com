@@ -2,7 +2,7 @@
 title = "Dependency Management"
 description = "Lockfiles, SemVer, an automated upgrade cadence, vetting new dependencies, and supply-chain safeguards like provenance, SLSA, and SHA-pinned CI actions."
 category = "Engineering Practice"
-order = 12.4
+order = 1005
 tags = ["dependencies", "security", "supply-chain", "process"]
 aliases = ["dependencies"]
 +++
@@ -29,11 +29,11 @@ A version range like `^4.2.0` means "whatever 4.x is newest today". Without a lo
 
 The promise is what makes automation safe: patch and minor updates can flow through with tests as the gate, while majors get a human. It's only a promise, though. Plenty of "minor" releases break things, which is why the tests gate everything, not the version number.
 
-Commit types map straight onto it: `fix` is a patch, `feat` a minor, and `!` or `BREAKING CHANGE` a major (see [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews)). Public HTTP APIs version differently, by date, per [Versioning & Deprecation](/docs/operations/versioning).
+Commit types map straight onto it: `fix` is a patch, `feat` a minor, and `!` or `BREAKING CHANGE` a major (see [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews)). Public HTTP APIs version differently, by date, per [Versioning & Deprecation](/docs/api-design/versioning).
 
 ## Upgrade Cadence
 
-The cost of an upgrade grows faster than the distance. One minor release is a five-minute review. Three majors behind is a project: breaking changes stack, migration guides assume you're on the previous version, and the security fix you suddenly need only ships for the current one. See [Staying Current](/docs/delivery/staying-current).
+The cost of an upgrade grows faster than the distance. One minor release is a five-minute review. Three majors behind is a project: breaking changes stack, migration guides assume you're on the previous version, and the security fix you suddenly need only ships for the current one. See [Staying Current](/docs/engineering/dependencies).
 
 - **Automate it.** [Renovate](https://docs.renovatebot.com/) or [Dependabot](https://docs.github.com/en/code-security/dependabot) opens upgrade PRs on a schedule, so staying current is the default rather than a task someone has to remember.
 - **Weekly batches** for patch and minor updates, grouped by ecosystem, so it's one review rather than forty.

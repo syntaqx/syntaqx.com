@@ -3,7 +3,7 @@ title = "API Design Principles"
 nav_title = "Principles"
 description = "The rules every endpoint follows: resources and methods, bare JSON with metadata in headers, status codes that mean something, and a Request-Id on all of it."
 category = "API Design"
-order = 0
+order = 201
 tags = ["api", "design", "rest"]
 aliases = ["api-design-principles"]
 +++
@@ -58,7 +58,7 @@ Accept: text/csv
 
 ## Versioning
 
-Clients pin a dated version with the `Api-Version` header. Additive changes ship to every version; breaking changes ship as a new version, with old ones announced for removal via `Deprecation` and `Sunset`. The URL identifies the resource, not the API revision. See [Versioning & Deprecation](/docs/operations/versioning).
+Clients pin a dated version with the `Api-Version` header. Additive changes ship to every version; breaking changes ship as a new version, with old ones announced for removal via `Deprecation` and `Sunset`. The URL identifies the resource, not the API revision. See [Versioning & Deprecation](/docs/api-design/versioning).
 
 ## Every Response Has a Request-Id
 

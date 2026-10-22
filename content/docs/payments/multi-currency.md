@@ -2,7 +2,7 @@
 title = "Multi-Currency & FX"
 description = "Charging in one currency and settling in another: who takes the FX risk, locking a quoted rate, storing both amounts, refunds, and checkout conversion."
 category = "Payments"
-order = 7.95
+order = 811
 tags = ["payments", "currency", "fx", "money"]
 +++
 

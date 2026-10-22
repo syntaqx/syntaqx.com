@@ -2,7 +2,7 @@
 title = "Error & Empty States"
 description = "Designing every view's loading, empty, error, partial and success states up front, with messages that explain what to do, retries, and no blank pages."
 category = "Frontend"
-order = 13.5
+order = 605
 tags = ["frontend", "ux", "errors", "resilience"]
 +++
 
@@ -49,7 +49,7 @@ The API returns a `Request-Id` header on every response, including errors ([Erro
 
 Most frontend errors are transient: a dropped connection, a timeout, a `503` during a deploy. Every error state for a read should have a retry button, and many reads can retry once automatically before showing anything.
 
-Retries follow the same rules as anywhere else ([Retries & Timeouts](/docs/operations/retries-and-timeouts)): reads are safe to repeat, writes are safe only with an [idempotency key](/docs/payments/idempotency), and automatic retries back off instead of hammering a struggling server.
+Retries follow the same rules as anywhere else ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)): reads are safe to repeat, writes are safe only with an [idempotency key](/docs/payments/idempotency), and automatic retries back off instead of hammering a struggling server.
 
 When the device is offline, say so once, globally, instead of letting every widget fail separately. The browser's [`online` and `offline` events](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) are a hint, not proof (a device can be "online" with no working route to your server), so treat a failed request as the real signal and the event as a way to retry promptly when connectivity returns.
 

@@ -2,7 +2,7 @@
 title = "Threat Modeling"
 description = "A lightweight threat model for every new service or trust boundary: four questions, a data flow diagram, a STRIDE pass, and mitigations tracked as work."
 category = "Security"
-order = 9
+order = 701
 tags = ["security", "threat-modeling", "stride", "design"]
 +++
 
@@ -57,7 +57,7 @@ Brainstorming threats finds the ones people already worry about and misses the r
 | **T**ampering | Integrity | Can data be changed in transit or at rest? | TLS, signatures, append-only records |
 | **R**epudiation | Non-repudiation | Can someone deny an action we can't prove they took? | Audit logs with [request IDs](/docs/operations/observability) |
 | **I**nformation disclosure | Confidentiality | Can data reach someone who shouldn't see it? | Authorization, [redaction](/docs/payments/sensitive-data), encryption |
-| **D**enial of service | Availability | Can someone exhaust a resource? | [Rate limits](/docs/operations/rate-limiting), size limits, timeouts |
+| **D**enial of service | Availability | Can someone exhaust a resource? | [Rate limits](/docs/requests/rate-limiting), size limits, timeouts |
 | **E**levation of privilege | Authorization | Can someone do more than they're allowed? | Object-level checks, least privilege, [tenant isolation](/docs/architecture/multi-tenancy) |
 
 Not every letter applies to every element. A data store can't spoof anyone, but it can be tampered with, leaked or filled up. Skipping the letters that don't apply is fine; skipping the ones that are uncomfortable is how breaches happen.
@@ -105,7 +105,7 @@ A threat model that ends as a document has failed. It ends as work:
 
 ## Keep It Alive
 
-Revisit the model when the design changes, after a security incident (see [Postmortems](/docs/engineering/postmortems)), and whenever an [AI system](/docs/security/ai-security) gains a new tool or data source. A stale threat model is worse than none, because people trust it: the team believes a risk was handled when the design it was handled for no longer exists.
+Revisit the model when the design changes, after a security incident (see [Postmortems](/docs/operations/incident-response)), and whenever an [AI system](/docs/security/ai-security) gains a new tool or data source. A stale threat model is worse than none, because people trust it: the team believes a risk was handled when the design it was handled for no longer exists.
 
 ## References
 

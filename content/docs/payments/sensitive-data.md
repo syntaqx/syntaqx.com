@@ -2,7 +2,7 @@
 title = "Sensitive Data"
 description = "Handling card data and PII: keep PCI scope small with tokenization, never log secrets, redact by default, and treat access to sensitive data as an event."
 category = "Payments"
-order = 7.4
+order = 805
 tags = ["payments", "security", "pci", "privacy"]
 aliases = ["sensitive-data"]
 +++

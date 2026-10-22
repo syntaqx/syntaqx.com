@@ -2,13 +2,13 @@
 title = "Feature Flags & Progressive Rollout"
 nav_title = "Feature Flags"
 description = "Separating deploy from release: flag types and lifetimes, OpenFeature for vendor-neutral evaluation, percentage and canary rollouts, kill switches, and cleanup."
-category = "Engineering Practice"
-order = 12.3
+category = "Delivery"
+order = 1102
 tags = ["process", "feature-flags", "deployment", "reliability"]
-aliases = ["feature-flags"]
+aliases = ["feature-flags", "engineering/feature-flags"]
 +++
 
-Deploying code and releasing a feature are different events. Feature flags separate them: code ships dark, turns on for a few users, then everyone, and turns off in seconds if something goes wrong. That separation is what makes [continuous deployment](/docs/delivery/continuous-deployment) safe, because unfinished work can merge and deploy every day without anyone seeing it.
+Deploying code and releasing a feature are different events. Feature flags separate them: code ships dark, turns on for a few users, then everyone, and turns off in seconds if something goes wrong. That separation is what makes [continuous deployment](/docs/delivery/ci-pipelines) safe, because unfinished work can merge and deploy every day without anyone seeing it.
 
 The cost is real, though. Every flag is a branch in production that tests may not cover, and old flags are the most dangerous kind. In 2012, Knight Capital deployed new trading code that [repurposed a flag](https://www.sec.gov/litigation/admin/2013/34-70694.pdf) once used by functionality retired years earlier. One server never got the new code, the flag woke the old code up there, and in about 45 minutes the firm lost over $460 million. The dead code should have been deleted with its flag. Everything below is about getting the benefit without that risk.
 
@@ -70,7 +70,7 @@ Cleanup is where flag programs fail, because removing a flag is never urgent unt
 - **Every release flag has an owner and an expiry date** when it's created.
 - **Expired flags fail a check.** CI or a weekly report lists flags past their date, and the owner removes them.
 - **Removal is part of the feature.** The ticket isn't done until the flag and the dead branch of code are gone. Never repurpose an old flag for something new: retire it and create a fresh one.
-- **Changes are audited.** Who flipped what, when, and why, because a flag flip is a production change. See [Configuration & Secrets](/docs/operations/configuration).
+- **Changes are audited.** Who flipped what, when, and why, because a flag flip is a production change. See [Configuration & Secrets](/docs/operations/environments).
 
 ## References
 

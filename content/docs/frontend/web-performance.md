@@ -2,7 +2,7 @@
 title = "Web Performance"
 description = "Core Web Vitals targets measured from real users, performance budgets enforced in CI, and the handful of habits that keep pages fast: less JavaScript first."
 category = "Frontend"
-order = 13.1
+order = 602
 tags = ["performance", "core-web-vitals", "frontend", "budgets"]
 +++
 

@@ -2,7 +2,7 @@
 title = "Performance Reviews"
 description = "Performance reviews with no surprises: continuous feedback, evidence against the ladder, calibration that checks bias, and humane handling of underperformance."
 category = "Leadership"
-order = 14.7
+order = 1305
 tags = ["leadership", "management", "feedback", "performance"]
 +++
 

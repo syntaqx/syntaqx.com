@@ -2,7 +2,7 @@
 title = "Staying Current"
 description = "Keeping runtimes, frameworks and dependencies modern without big-bang rewrites: small continuous upgrades, an LTS policy, EOL tracking and boring defaults."
 category = "Delivery"
-order = 11.3
+order = 1193
 tags = ["delivery", "dependencies", "upgrades", "maintenance"]
 +++
 
@@ -39,7 +39,7 @@ Today's deprecation warning is next major's breaking change.
 
 - **Surface deprecation warnings** in CI output and logs, not just local consoles.
 - **Ratchet them into errors** over time: fix the existing ones, then fail the build on new ones.
-- **Treat a deprecation in your own API** the same way you ask clients to. See [Versioning & Deprecation](/docs/operations/versioning).
+- **Treat a deprecation in your own API** the same way you ask clients to. See [Versioning & Deprecation](/docs/api-design/versioning).
 
 ## What Counts as Modern
 

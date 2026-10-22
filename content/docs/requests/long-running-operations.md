@@ -2,7 +2,7 @@
 title = "Long-Running Operations"
 description = "Work that outlives a request: 202 Accepted with an operation resource to poll, Retry-After pacing, webhooks on completion, cancellation, and result retention."
 category = "Requests & Responses"
-order = 6.4
+order = 308
 tags = ["api", "async", "operations", "http"]
 aliases = ["long-running-operations"]
 +++

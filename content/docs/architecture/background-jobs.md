@@ -2,7 +2,7 @@
 title = "Background Jobs"
 description = "Moving work out of the request: small idempotent jobs, retries with backoff and dead letters, scheduling without overlap, visibility, and shutting down cleanly."
 category = "Architecture"
-order = 8.5
+order = 403
 tags = ["architecture", "jobs", "queues", "reliability"]
 +++
 
@@ -35,7 +35,7 @@ The fix is the same [transactional outbox](/docs/architecture/events) used for e
 
 ## Retries and Dead Letters
 
-- **Retry with exponential backoff and jitter,** so a dependency that's down for five minutes gets a handful of attempts rather than a flood ([Retries & Timeouts](/docs/operations/retries-and-timeouts)).
+- **Retry with exponential backoff and jitter,** so a dependency that's down for five minutes gets a handful of attempts rather than a flood ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)).
 - **Cap the attempts,** then move the job to a **dead-letter queue** with its error, instead of retrying forever ([SQS dead-letter queues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html) is one concrete implementation).
 - **Classify errors.** A 503 from a provider is worth retrying; a validation error will fail the same way every time, so retrying it only delays the alert.
 

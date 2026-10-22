@@ -3,7 +3,7 @@ title = "Kubernetes Operations"
 nav_title = "Kubernetes"
 description = "Running services on Kubernetes without the classic outages: requests and limits, probes, disruption budgets, graceful shutdown, secrets, GitOps and upgrades."
 category = "Operations"
-order = 5.995
+order = 1208
 tags = ["kubernetes", "operations", "reliability", "security", "gitops"]
 +++
 
@@ -108,7 +108,7 @@ A Kubernetes Secret is base64-encoded, which is an encoding, not encryption. By 
 - **Enable encryption at rest** for Secrets in etcd. Managed providers support this with a KMS key; turn it on.
 - **Don't commit Secret manifests to Git**, even in a private repo. Keep the values in a real secret manager (Vault, AWS Secrets Manager, GCP Secret Manager) and sync them in with the External Secrets Operator or the Secrets Store CSI driver. The manifest in Git references the secret; it never contains it.
 - **Restrict who can read Secrets** with RBAC, and remember that "create pods" implies "read secrets" in that namespace.
-- **Rotate** as described in [Configuration & Secrets](/docs/operations/configuration). External stores make rotation a change in one place instead of a redeploy of every manifest.
+- **Rotate** as described in [Configuration & Secrets](/docs/operations/environments). External stores make rotation a change in one place instead of a redeploy of every manifest.
 
 ## Image Policy
 
@@ -139,7 +139,7 @@ The constraints:
 - **Nodes can lag the control plane** by up to three minor versions, and must never be newer than it.
 - **Deprecated APIs get removed.** Before each upgrade, scan manifests and Helm charts for APIs removed in the target version (tools like Pluto or kubent do this), and fix them first.
 
-Treat upgrades as routine, scheduled work, the same posture as [Staying Current](/docs/delivery/staying-current): upgrade a non-production cluster first, run the workload's tests against it, then roll node pools with surge capacity and PDBs in place. Clusters you're afraid to upgrade are clusters you'll be forced to upgrade at a bad time.
+Treat upgrades as routine, scheduled work, the same posture as [Staying Current](/docs/engineering/dependencies): upgrade a non-production cluster first, run the workload's tests against it, then roll node pools with surge capacity and PDBs in place. Clusters you're afraid to upgrade are clusters you'll be forced to upgrade at a bad time.
 
 ## Observability and Cost
 

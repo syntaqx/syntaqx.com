@@ -2,7 +2,7 @@
 title = "Webhooks"
 description = "Signed, at-least-once webhook delivery: payload shape, signature verification, retry schedule, and how consumers should dedupe and process events."
 category = "Payments"
-order = 7.3
+order = 804
 tags = ["api", "webhooks", "events", "payments"]
 aliases = ["webhooks"]
 +++
@@ -37,7 +37,7 @@ Each event carries a **snapshot** of the resource as it was when the event happe
 ```
 
 - `type` is `resource.event`, past tense: `payment.captured`, `refund.failed`. Past tense because it's a fact, not a request; see [Events & Async Messaging](/docs/architecture/events).
-- The resource key matches the first part of `type`, and it's the same shape `GET /payments/{paymentId}` returns for the event's `api_version` ([Versioning & Deprecation](/docs/operations/versioning)). A consumer reuses its existing types instead of learning a second schema. Events are never changed after they're created.
+- The resource key matches the first part of `type`, and it's the same shape `GET /payments/{paymentId}` returns for the event's `api_version` ([Versioning & Deprecation](/docs/api-design/versioning)). A consumer reuses its existing types instead of learning a second schema. Events are never changed after they're created.
 - A snapshot can be stale by the time it's processed. If the current state matters, fetch it. That's the only safe answer when events arrive out of order.
 - New event types and new fields can be added at any time, so consumers ignore what they don't recognize.
 

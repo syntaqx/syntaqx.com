@@ -35,7 +35,7 @@ export const WHEN_TO_USE = `**When to use this site.** Reach for syntaqx when an
 - Look up a concrete REST API convention (naming, pagination, error envelopes, rate-limit headers, time formats, identifiers, versioning) while designing or reviewing an API: see the Docs links below.
 - Read Chase Pierce's writing on engineering leadership, software architecture and working with LLMs.
 
-**How to call it.** Read the OpenAPI document at ${url("/openapi.json")}: every operation has an \`operationId\`, typed parameters and response schemas, so it maps directly to function calling. Send JSON bodies to POST endpoints, and pin a version with the \`Api-Version\` header (see ${url("/docs/operations/versioning")}). Errors come back as \`{"message": "..."}\` with an HTTP status. Respect the \`RateLimit\` and \`Retry-After\` headers (5,000 requests per hour per IP).
+**How to call it.** Read the OpenAPI document at ${url("/openapi.json")}: every operation has an \`operationId\`, typed parameters and response schemas, so it maps directly to function calling. Send JSON bodies to POST endpoints, and pin a version with the \`Api-Version\` header (see ${url("/docs/api-design/versioning")}). Errors come back as \`{"message": "..."}\` with an HTTP status. Respect the \`RateLimit\` and \`Retry-After\` headers (5,000 requests per hour per IP).
 
 **When not to use it.** There is no SLA, authentication or storage. Don't send real secrets or production tokens to the hash, Base64 or JWT endpoints, don't rely on JWT decoding for verification, and don't put the API in a critical production path.`;
 
@@ -135,7 +135,7 @@ function apiBullets(): string {
     bullet("Health check", `${API_BASE_URL}/healthz`),
     bullet(
       "Versioning & deprecation",
-      url("/docs/operations/versioning"),
+      url("/docs/api-design/versioning"),
       "Api-Version header versions, breaking-change rules and Deprecation/Sunset headers",
     ),
   ].join("\n");
@@ -146,9 +146,9 @@ function apiReference(): string {
     "# syntaqx API",
     `A free, public, unauthenticated REST API of developer utilities (UUIDs, hashing, Base64, JWT decoding, timestamps, and more). Base URL: \`${API_BASE_URL}\`.`,
     `The full machine-readable description is the OpenAPI 3.2 document at ${url("/openapi.json")}. Every operation has an \`operationId\`, typed request and response schemas, and a description.`,
-    `## Rate limits\n\n5,000 requests per hour per IP. Every response carries \`RateLimit-Policy\` and \`RateLimit\` headers (IETF draft-ietf-httpapi-ratelimit-headers), and a \`429\` includes \`Retry-After\`. Details: ${url("/docs/operations/rate-limiting")}`,
+    `## Rate limits\n\n5,000 requests per hour per IP. Every response carries \`RateLimit-Policy\` and \`RateLimit\` headers (IETF draft-ietf-httpapi-ratelimit-headers), and a \`429\` includes \`Retry-After\`. Details: ${url("/docs/requests/rate-limiting")}`,
     `## When to use it\n\n${WHEN_TO_USE}`,
-    `## Versioning and deprecation\n\nPick a dated version with the \`Api-Version\` request header (current: \`${API_VERSIONS[API_VERSIONS.length - 1].version}\`); without it, the oldest supported version is used, and an unsupported value returns \`400\`. Every response echoes \`Api-Version\`. Breaking changes never ship in place. Deprecations are announced with \`Deprecation\` and \`Sunset\` response headers at least 30 days before removal. Policy: ${url("/docs/operations/versioning")}`,
+    `## Versioning and deprecation\n\nPick a dated version with the \`Api-Version\` request header (current: \`${API_VERSIONS[API_VERSIONS.length - 1].version}\`); without it, the oldest supported version is used, and an unsupported value returns \`400\`. Every response echoes \`Api-Version\`. Breaking changes never ship in place. Deprecations are announced with \`Deprecation\` and \`Sunset\` response headers at least 30 days before removal. Policy: ${url("/docs/api-design/versioning")}`,
     `## Errors\n\nErrors use a JSON envelope: \`{"message": "...", "errors": {"field": ["..."]}}\`. Details: ${url("/docs/requests/error-responses")}`,
     `## Links\n\n${apiBullets()}`,
   ].join("\n\n");

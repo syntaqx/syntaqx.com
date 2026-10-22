@@ -2,7 +2,7 @@
 title = "Hiring & Interviews"
 description = "Hiring engineers on evidence: define the bar first, structured interviews with rubrics, work samples over puzzles, and independent feedback before debriefs."
 category = "Leadership"
-order = 14.1
+order = 1301
 tags = ["leadership", "hiring", "interviews", "process"]
 +++
 

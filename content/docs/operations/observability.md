@@ -2,7 +2,7 @@
 title = "Observability"
 description = "Request IDs on every response, structured logs, trace context across services, and the few metrics that matter, so any failure can be traced end to end."
 category = "Operations"
-order = 5.7
+order = 1202
 tags = ["observability", "logging", "tracing", "operations"]
 aliases = ["observability"]
 +++

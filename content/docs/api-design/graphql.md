@@ -3,7 +3,7 @@ title = "GraphQL in Depth"
 nav_title = "GraphQL"
 description = "Designing a GraphQL schema that survives years of change: nullability, connections, mutation payloads, N+1, cost limits, authorization, caching and federation."
 category = "API Design"
-order = 1.85
+order = 207
 tags = ["graphql", "api", "schema", "performance", "security"]
 +++
 
@@ -106,7 +106,7 @@ The lifecycle:
 1. **Add** the new field or type alongside the old one.
 2. **Deprecate** the old one with `@deprecated(reason: "Use shippingAddress.")`. It stays selectable; tooling flags it, and introspection marks it.
 3. **Measure** usage per client from your operation logs. This is the part teams skip, and it's the part that makes removal safe.
-4. **Remove** when usage reaches zero, or when the [deprecation window](/docs/operations/versioning) you promised has passed and you've told the stragglers.
+4. **Remove** when usage reaches zero, or when the [deprecation window](/docs/api-design/versioning) you promised has passed and you've told the stragglers.
 
 What counts as breaking is the same as in REST: removing or renaming a field, changing its type, making an output nullable, making an argument required, removing an enum value clients send. Adding an enum value clients receive is breaking for clients with exhaustive switches; document that enums can grow, and have clients handle unknown values.
 
@@ -134,7 +134,7 @@ Every GraphQL server needs, from the first day it's reachable:
 - **Depth limits**, with a tighter limit on nested lists, since lists multiply.
 - **Breadth and alias limits.** Aliases let one query call the same expensive field a hundred times under different names. Cap top-level fields, aliases and batched operations.
 - **Required, capped page sizes** on every connection, so cost is computable before execution.
-- **Cost analysis.** Weight each field (a scalar is 0 or 1, a connection costs its page size times its children), compute the cost before executing, reject anything over a ceiling, and charge the cost against the client's [rate limit](/docs/operations/rate-limiting) budget instead of counting requests. GitHub's public API does exactly this, with an hourly point budget and a hard cap on nodes per call.
+- **Cost analysis.** Weight each field (a scalar is 0 or 1, a connection costs its page size times its children), compute the cost before executing, reject anything over a ceiling, and charge the cost against the client's [rate limit](/docs/requests/rate-limiting) budget instead of counting requests. GitHub's public API does exactly this, with an hourly point budget and a hard cap on nodes per call.
 - **Timeouts**, as a backstop, because estimates are estimates.
 
 ### Trusted Documents

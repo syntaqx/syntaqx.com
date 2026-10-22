@@ -3,7 +3,7 @@ title = "API Authentication"
 nav_title = "Authentication"
 description = "How API callers prove who they are: prefixed, hashed API keys, restricted by default, OAuth 2.0 for delegated access, scopes, and 401 vs 403 vs 404."
 category = "API Design"
-order = 1.7
+order = 204
 tags = ["api", "authentication", "oauth", "security"]
 aliases = ["api-authentication"]
 +++
@@ -97,7 +97,7 @@ Every credential can be replaced without downtime, because one day it will have 
 
 ## This Site
 
-The syntaqx API is a set of public, stateless tools with no accounts, so it has no authentication at all, a deliberate departure recorded in [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md). Abuse is handled by per-IP [rate limiting](/docs/operations/rate-limiting) instead.
+The syntaqx API is a set of public, stateless tools with no accounts, so it has no authentication at all, a deliberate departure recorded in [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md). Abuse is handled by per-IP [rate limiting](/docs/requests/rate-limiting) instead.
 
 ## References
 

@@ -2,7 +2,7 @@
 title = "Incident Postmortems"
 description = "Blameless postmortems: when to write one, the template, how to find contributing factors instead of a culprit, and making sure action items get done."
 category = "Engineering Practice"
-order = 12.5
+order = 1090
 tags = ["process", "incidents", "reliability", "postmortems"]
 aliases = ["postmortems"]
 +++

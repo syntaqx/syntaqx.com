@@ -3,7 +3,7 @@ title = "Technical Decision-Making"
 nav_title = "Technical Decisions"
 description = "Who decides what, how much process a decision deserves, driving to a decision with a named owner and a date, and disagree and commit when you lose."
 category = "Leadership"
-order = 14
+order = 1391
 tags = ["leadership", "decisions", "process", "architecture"]
 +++
 

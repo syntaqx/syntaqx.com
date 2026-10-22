@@ -2,7 +2,7 @@
 title = "Onboarding"
 description = "Getting a new engineer to a merged change in week one: access ready on day one, a buddy, a written 30/60/90 plan, real starter tasks, and on-call by stages."
 category = "Leadership"
-order = 14.2
+order = 1302
 tags = ["leadership", "onboarding", "teams", "process"]
 +++
 

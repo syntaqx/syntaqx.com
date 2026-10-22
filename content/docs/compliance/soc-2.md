@@ -2,7 +2,7 @@
 title = "SOC 2"
 description = "SOC 2 as an engineer meets it: the Trust Services Criteria, Type 1 versus Type 2, and how reviews, pipelines and on-call become the evidence auditors test."
 category = "Compliance"
-order = 9.7
+order = 902
 tags = ["compliance", "soc2", "security", "audit"]
 +++
 

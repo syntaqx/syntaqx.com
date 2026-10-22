@@ -2,7 +2,7 @@
 title = "HTTP QUERY"
 description = "Supporting RFC 10008's QUERY method today: one query model behind GET, QUERY and a POST fallback, plus caching, CORS, and where the ecosystem still falls short."
 category = "Requests & Responses"
-order = 4.4
+order = 305
 tags = ["api", "http", "query", "rfc10008", "standards"]
 aliases = ["http-query"]
 +++

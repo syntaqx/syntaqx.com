@@ -2,7 +2,7 @@
 title = "Disaster Recovery"
 description = "Recovery targets set from business impact, backups you've actually restored, the four DR strategies and their cost, and infrastructure rebuilt from code."
 category = "Operations"
-order = 5.97
+order = 1206
 tags = ["operations", "reliability", "backups", "disaster-recovery"]
 +++
 
@@ -63,7 +63,7 @@ If the infrastructure only exists as clicks in a console, recovering it means re
 
 - **A runbook per scenario:** region loss, database corruption, compromised credentials, a dependency outage. Each one says who decides, the exact steps, and how to verify recovery. See [On-Call & Runbooks](/docs/operations/on-call).
 - **Game days** rehearse them for real: fail over a region, restore the database, rotate every secret, on a scheduled day with everyone watching. The gaps you find on a game day are gaps you didn't find in an incident.
-- **Every real incident updates the plan.** See [Incident Postmortems](/docs/engineering/postmortems).
+- **Every real incident updates the plan.** See [Incident Postmortems](/docs/operations/incident-response).
 
 ## This Site
 
