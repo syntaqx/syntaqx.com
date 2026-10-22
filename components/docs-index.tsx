@@ -77,7 +77,18 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       const el = document.getElementById(c.section);
       if (el) observer.observe(el);
     }
-    return () => observer.disconnect();
+    // The last sections can't scroll high enough to cross the line above, so
+    // reaching the bottom of the page makes the last one current.
+    const onScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+        setActive(categories[categories.length - 1]?.section);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [categories, q]);
 
   return (
@@ -162,7 +173,7 @@ function SectionRail({
     const rail = railRef.current;
     const item = rail?.querySelector<HTMLElement>(`[data-section="${active}"]`);
     if (!rail || !item) return;
-    const top = item.offsetTop - rail.offsetTop;
+    const top = item.getBoundingClientRect().top - rail.getBoundingClientRect().top + rail.scrollTop;
     if (top < rail.scrollTop || top + item.offsetHeight > rail.scrollTop + rail.clientHeight) {
       rail.scrollTo({ top: Math.max(0, top - 24), behavior: "smooth" });
     }
