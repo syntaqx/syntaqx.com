@@ -7,9 +7,9 @@ tags = ["api", "payments", "idempotency", "headers"]
 aliases = ["idempotency"]
 +++
 
-Networks fail after the server has done the work. A client sends `POST /payments`, the connection drops, and the client has no way to know whether the card was charged. Retry, and the customer may be charged twice. Don't, and the order may never be paid. Both are wrong, and the client can't tell which situation it's in.
+Once an amount is represented correctly ([Money & Amounts](/docs/payments/money)), the next way to get it wrong is to move it twice. Networks fail after the server has done the work: a client sends `POST /payments`, the connection drops, and it can't know whether the card was charged. Retry, and the customer may pay twice. Don't, and the order may never be paid.
 
-An idempotency key removes the dilemma. The client attaches a key to the operation, and the server promises that the same key always produces the same result, with the side effect happening at most once. Now retrying is always safe, so clients can retry freely, which is exactly what you want them to do.
+An idempotency key removes the dilemma. The client attaches a key to the operation, and the server promises that the same key always produces the same result, with the side effect happening at most once. Retrying becomes always safe, so clients can retry freely, which is exactly what you want them to do.
 
 ## The Header
 
@@ -67,7 +67,7 @@ The mismatch case is a client bug: the same key was attached to two different op
 
 A result is stored once the endpoint **begins executing**, whatever the outcome. That includes declines and even `500` errors, which surprises people.
 
-The reason: a `500` from a payment endpoint doesn't mean nothing happened. It means the server doesn't know what happened. The charge may have gone through before the error. If the retry re-executed the request, it could charge the card a second time. Replaying the stored `500` is the honest answer: "this operation's outcome is uncertain, go and check". The client reconciles by fetching the payment or watching [webhooks](/docs/payments/webhooks), instead of gambling with a second charge.
+A `500` from a payment endpoint doesn't mean nothing happened; it means the server doesn't know what happened. The charge may have gone through before the error, and re-executing on retry could charge the card again. Replaying the stored `500` is the honest answer: "this outcome is uncertain, go and check". The client reconciles by fetching the payment or watching [webhooks](/docs/payments/webhooks) instead of gambling with a second charge.
 
 Requests rejected **before** execution aren't stored: failed validation, bad authentication, [rate limiting](/docs/requests/rate-limiting) (`429`), or a `409` for a concurrent request. Nothing happened, so the client fixes the problem and retries with the same key.
 
@@ -75,9 +75,7 @@ Requests rejected **before** execution aren't stored: failed validation, bad aut
 
 Keys are kept for **at least 24 hours**, then pruned. Reusing a pruned key starts a new operation.
 
-Why 24 hours: a retry window has to outlast realistic failures. Seconds cover network blips, minutes cover a deploy, and a day covers a client that crashed overnight and retries its queue in the morning. Longer than that and a "retry" is really a new decision someone should make deliberately. The window also bounds storage: keys are one row per write, and keeping them forever means a table that grows with every request the API has ever served. Stripe uses the same 24-hour minimum, and so does its client guidance.
-
-Retry an unresolved operation only within those 24 hours. Past that, stop retrying with either the old key or a new one, and reconcile: fetch the object, or check events.
+A retry window has to outlast realistic failures: seconds cover network blips, minutes cover a deploy, and a day covers a client that crashed overnight and drains its queue in the morning. Past that, a "retry" is really a new decision someone should make deliberately, and keeping keys forever means a table that grows with every write the API has ever served. Stripe uses the same 24-hour minimum. Past the window, clients stop retrying with any key and reconcile: fetch the object, or check events.
 
 ## Idempotency Beyond the API
 
@@ -92,8 +90,8 @@ Exactly-once delivery doesn't exist across a network. At-least-once delivery plu
 ## Client Expectations
 
 1. Generate a key before the first attempt, and persist it with the operation so it survives process restarts.
-2. Reuse that key on every retry, with the exact same body.
-3. On `409`, back off and retry the same key. A new key could start a second operation while the first is still running.
+2. Reuse that key on every retry, with the exact same body, backing off as in [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
+3. On `409`, retry the same key. A new key could start a second operation while the first is still running.
 4. On `400` for a key mismatch, you've reused a key for a different operation. Fix the client.
 5. To change the parameters, first confirm the original didn't succeed and isn't still running, then use a new key.
 
@@ -110,7 +108,7 @@ curl -X POST https://api.syntaqx.com/echo \
 
 Run it twice and the second response is the first one again, byte for byte, with `Idempotent-Replayed: true`. Change the body and keep the key, and it's a `400`. Keys live in Redis for 24 hours, scoped to the caller's IP since the API has no accounts, and a claim is a single `SET NX`, so two simultaneous first requests can't both run.
 
-The echo exists only in its stored response, so recording the key and the side effect is one write, the property this doc asks for. And unlike the [rate limiter](/docs/requests/rate-limiting), which keeps serving when Redis is down, this fails closed: if the key store is unreachable, the request gets a `503` and nothing is created, because running a write without its protection is exactly what the key exists to prevent.
+The echo exists only in its stored response, so recording the key and the side effect is one write. And unlike the [rate limiter](/docs/requests/rate-limiting), which keeps serving when Redis is down, this fails closed: if the key store is unreachable, the request gets a `503` and nothing is created, because a write without its protection is exactly what the key exists to prevent.
 
 ## References
 

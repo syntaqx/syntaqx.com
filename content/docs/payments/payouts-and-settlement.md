@@ -6,7 +6,7 @@ order = 810
 tags = ["payments", "payouts", "settlement", "ledger"]
 +++
 
-A customer pays on Monday. The merchant sees "succeeded" on Monday. The money reaches the merchant's bank on Wednesday, or the following week, or, for a new merchant, two weeks later. Everything in between is settlement and payouts, and it's where most of the "where's my money?" support tickets on a payments platform come from. The answer has to be computable, from records, for every cent.
+[Disputes](/docs/payments/disputes-and-chargebacks) are why money can't leave the platform the moment it arrives. A customer pays on Monday and the merchant sees "succeeded" on Monday, but the money reaches their bank on Wednesday, or the following week, or for a new merchant two weeks later. Everything in between is settlement and payouts, the source of most "where's my money?" tickets on a payments platform, and the answer has to be computable from records for every cent.
 
 ## The Stages
 
@@ -20,13 +20,13 @@ A customer pays on Monday. The merchant sees "succeeded" on Monday. The money re
 | **Settlement** | The issuer pays the acquirer or processor, net of interchange and network fees. | Yes, to the processor |
 | **Payout** | The processor or platform pays the merchant's bank account from their balance. | Yes, to the merchant |
 
-Each stage is a separate fact with its own timestamp, and the API should say which one a balance reflects. A merchant's balance has at least two buckets: **pending** (captured, not yet settled to you) and **available** (settled, can be paid out). Showing one number labeled "balance" invites the support ticket about why it can't be paid out.
+Each stage is a separate fact with its own timestamp, and the API says which one a balance reflects. A merchant's balance has at least two buckets, **pending** (captured, not yet settled) and **available** (settled, can be paid out); one number labeled "balance" invites the ticket about why it can't be paid out.
 
 ## Settlement Timing
 
 Funds become available on a **rolling** schedule, written T+N: money captured on day T is available N business days later. Two business days is common for established US card accounts, but it varies by country and payment method. Stripe's published timings, for example, run from 2 business days in the United States to 7 calendar days for a first payout in several countries, and bank debits settle more slowly than cards.
 
-Rolling, rather than "everything on Friday," is the better default: each day's volume becomes available on its own day, so a merchant's cash flow tracks their sales instead of arriving in lumps, and a problem with one day's batch affects one day.
+Rolling beats "everything on Friday": each day's volume becomes available on its own day, so cash flow tracks sales, and a problem with one batch affects one day.
 
 ## Fees Are Separate Entries
 
@@ -38,15 +38,15 @@ A $50.00 charge with a 2.9% plus 30 cent fee shouldn't be recorded as a $48.25 p
 | `merchant_balance` | `+4825` |
 | `platform_fees` | `+175` |
 
-Recording only the net loses information you'll need later. A partial refund needs the gross to compute what to give back. A merchant's tax reporting needs gross volume. A fee dispute ("you charged me the wrong rate") needs the rate applied to the gross. And when the processor's fees and the platform's own markup are both in play, they're two different entries going to two different accounts.
+Recording only the net loses what you'll need later: a partial refund needs the gross, tax reporting needs gross volume, a fee dispute needs the rate applied to the gross, and the processor's fees and the platform's markup are two entries to two different accounts.
 
 Platforms that split a payment between several parties (a marketplace paying a seller and a delivery driver, say) post every share as its own entry in the same transaction. The rule from [Money & Amounts](/docs/payments/money) still applies: the shares must sum exactly to the gross, with any rounding remainder assigned deliberately.
 
 ## Payout Schedules, Holds and Reserves
 
-How soon a merchant can be paid is a risk decision, not a convenience setting, because once money leaves the platform, getting it back depends on the merchant's goodwill and their bank balance. Disputes can arrive [120 days later](/docs/payments/disputes-and-chargebacks).
+How soon a merchant can be paid is a risk decision, not a convenience setting: once money leaves the platform, getting it back depends on the merchant's goodwill and bank balance, and disputes arrive up to 120 days later.
 
-- **New merchants wait longer.** A first payout delayed a week or two gives fraud and disputes time to surface before any money leaves. A merchant who signs up with stolen cards and pays themselves out the same day is the attack this stops. Stripe, for example, typically schedules a new account's first payout 7 to 14 days after its first live payment.
+- **New merchants wait longer.** A first payout delayed a week or two gives fraud and disputes time to surface; it stops the merchant who signs up with stolen cards and pays themselves out the same day. Stripe typically schedules a new account's first payout 7 to 14 days after its first live payment.
 - **Rolling reserves** hold back a percentage of each day's volume for a fixed period, then release it. They're the standard tool for merchants whose risk is real but acceptable: high ticket sizes, delivery months after payment, elevated dispute rates. The reserve exists to pay the disputes and refunds that arrive after the sales that caused them.
 - **Holds are explicit and explained.** Every held amount is a ledger entry into a `reserves` or `holds` account with a release date, never just a smaller "available" number. A merchant who can see "$1,200 held until 12 March, rolling 10% reserve" is a merchant who doesn't open a support ticket.
 
@@ -69,11 +69,11 @@ In the US, ACH payouts can be **returned** after they appear to succeed, typical
 
 So a payout's state machine doesn't end at `paid`. It goes `pending ──► in_transit ──► paid`, and from `paid` it can still become `failed` when the return arrives. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
 
-Bank details are where fraud concentrates, too. A changed payout account, especially soon before a large payout, is the classic account-takeover cash-out. Changes to payout details should re-verify the account and can reasonably delay the next payout.
+Bank details are where fraud concentrates too: a changed payout account shortly before a large payout is the classic account-takeover cash-out, so a change re-verifies the account and can reasonably delay the next payout ([Merchant Onboarding](/docs/payments/merchant-onboarding)).
 
 ## Idempotent Payouts
 
-A payout that's sent twice is money that's very hard to get back. Payouts need the same protection as payments: an [idempotency key](/docs/payments/idempotency) on the request, derived from what the payout represents (the merchant and the balance period, for example), so a retry after a timeout can't create a second transfer. When the payout is generated by a scheduled job rather than an API call, the job uses a deterministic key for the same reason: a job that crashes and restarts must not pay twice.
+A payout sent twice is money that's very hard to get back. Payouts carry an [idempotency key](/docs/payments/idempotency) derived from what they represent (the merchant and the balance period), so a retry after a timeout can't create a second transfer, and a scheduled payout job uses the same deterministic key so a crash and restart can't pay twice.
 
 ## Reconciliation
 

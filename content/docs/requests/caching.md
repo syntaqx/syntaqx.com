@@ -7,7 +7,7 @@ tags = ["api", "caching", "http", "concurrency"]
 aliases = ["caching"]
 +++
 
-Caching and concurrency control are two sides of one question: "is the copy I have still the current one?" HTTP answers it with validators (`ETag`, `Last-Modified`) and conditional requests, defined in [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110) and [RFC 9111](https://www.rfc-editor.org/rfc/rfc9111). Using that model instead of inventing one means every browser, CDN, proxy and HTTP library already knows how to take part, and you write none of that code.
+Caching and concurrency control are two sides of one question: "is the copy I have still the current one?" HTTP answers it with validators (`ETag`, `Last-Modified`) and conditional requests, defined in [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110) and [RFC 9111](https://www.rfc-editor.org/rfc/rfc9111). Use that model instead of inventing one, and every browser, CDN, proxy and HTTP library already knows how to take part.
 
 ## Cache-Control
 
@@ -21,7 +21,7 @@ Every response says how it may be cached. With no `Cache-Control`, caches fall b
 | Anything with secrets or card data | `no-store` |
 
 - **`private`** keeps account-specific responses out of shared caches (CDNs, corporate proxies). Only the client's own cache may store them.
-- **`no-cache` doesn't mean "don't cache".** It means "revalidate before reuse": the client keeps its copy and asks the server whether it's still current, which costs a round trip but almost no bandwidth when paired with the ETags below. It's the right default for data that changes unpredictably.
+- **`no-cache` doesn't mean "don't cache".** It means "revalidate before reuse": the client keeps its copy and asks whether it's still current, a round trip but almost no bandwidth with the ETags below. It's the right default for data that changes unpredictably.
 - **`no-store` is the one that forbids storing,** for responses that must never sit on a disk: secrets, card data, one-time tokens.
 - **`immutable`** tells the client not to revalidate at all, for content that by definition can't change.
 
@@ -57,11 +57,11 @@ HTTP/1.1 304 Not Modified
 ETag: "a3f1c9"
 ```
 
-Make revalidation the path of least resistance for clients that poll. A `304` costs the server a lookup and a hash comparison, not a serialized body, so it shouldn't cost the client rate-limit quota either; otherwise the client that does the polite thing (sending `If-None-Match`) pays the same as the one that downloads the whole resource every time. [GitHub](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api) works this way: an authorized conditional request that returns `304` doesn't count against its primary rate limit.
+Make revalidation the path of least resistance for clients that poll. A `304` costs the server a lookup and a comparison, not a serialized body, so it shouldn't cost the client [rate-limit](/docs/requests/rate-limiting) quota either; otherwise the polite client pays the same as the one that downloads everything every time. [GitHub](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api) works this way: an authorized conditional request that returns `304` doesn't count against its primary rate limit.
 
-The syntaqx API does this. Its rate limiter has to count each request in the proxy, before the response exists, so the endpoint gives the request back when it answers with a `304`: one extra Redis command per revalidation, in exchange for making the polite client the cheap one.
+The syntaqx API does too. Its rate limiter counts each request in the proxy, before the response exists, so the endpoint gives the request back when it answers `304`: one extra Redis command per revalidation.
 
-One trap to know about: some platforms answer conditional requests at their edge. Vercel compares `If-None-Match` with your response's `ETag` itself and strips the header before your code runs, so your handler never sees a revalidation and can't act on one (here, refund it). It worked locally and silently did nothing in production. If your code needs to know, forward the header under a name the platform leaves alone, from a layer that still sees it; this site's proxy does exactly that.
+One trap: some platforms answer conditional requests at their edge. Vercel compares `If-None-Match` with your `ETag` itself and strips the header before your code runs, so the handler never sees a revalidation and can't refund it. It worked locally and silently did nothing in production. If your code needs to know, forward the header under a name the platform leaves alone, from a layer that still sees it, as this site's proxy does.
 
 ## Optimistic Concurrency: If-Match
 
@@ -81,7 +81,7 @@ Content-Type: application/merge-patch+json
 | ETag doesn't match, someone else changed it | `412 Precondition Failed` |
 | `If-Match` required but missing | `428 Precondition Required` ([RFC 6585](https://www.rfc-editor.org/rfc/rfc6585)) |
 
-On `412`, the client re-reads, reapplies its change, and tries again. That's "optimistic" concurrency: instead of locking the resource while someone edits it (and deciding what happens when they walk away), every write proves it was based on the current version, and the rare conflict is resolved by the client, which is the only party that knows what the user meant. `If-Match` is required on resources where a lost update is costly (configuration, settings, anything edited by humans in two tabs). In the database, the check is the same guarded update as in [Payment States & Ledgers](/docs/payments/payment-states): `UPDATE ... WHERE id = $1 AND version = $2`.
+On `412`, the client re-reads, reapplies its change, and tries again. That's optimistic concurrency: instead of locking the resource while someone edits it, every write proves it was based on the current version, and the rare conflict goes to the client, the only party that knows what the user meant. `If-Match` is required where a lost update is costly (configuration, settings, anything humans edit in two tabs). In the database it's a guarded update, `UPDATE ... WHERE id = $1 AND version = $2`, as in [Transactions & Concurrency](/docs/database/transactions-and-concurrency).
 
 ## Vary
 

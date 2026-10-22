@@ -6,13 +6,13 @@ order = 602
 tags = ["performance", "core-web-vitals", "frontend", "budgets"]
 +++
 
-Speed is a feature people notice only when it's missing, and it shows up directly in revenue. In a [Deloitte study](https://web.dev/case-studies/milliseconds-make-millions) of mobile sites, improving load speed by a tenth of a second across the journey lifted retail conversions by 8.4%.
+Speed is a feature people notice only when it's missing, and it shows up directly in revenue: in a [Deloitte study](https://web.dev/case-studies/milliseconds-make-millions) of mobile sites, a tenth of a second faster across the journey lifted retail conversions by 8.4%.
 
-It's also one of the few features that degrades on its own. Every dependency, image and script is added for a good reason, and each makes the page a little slower. Nobody decides to make the site slow; it just happens one reasonable change at a time. So performance is held with budgets that fail the build, not fixed in a big project every couple of years.
+It's also one of the few features that degrades on its own. Every dependency, image and script is added for a good reason, and each makes the page a little slower; nobody decides to make the site slow. So performance is held with budgets that fail the build, not fixed in a big project every couple of years.
 
 ## Targets: Core Web Vitals
 
-I use the [Core Web Vitals](https://web.dev/articles/vitals) as targets because they measure what users feel (does the main content show up, does the page respond, does it stop jumping around) rather than what's convenient to measure, like total bytes. Each is judged at the **75th percentile** of real page loads, separately for mobile and desktop. The 75th is a deliberate middle: the median hides the slower devices and networks where people give up, while the 99th is dominated by outliers you can't fix.
+I use the [Core Web Vitals](https://web.dev/articles/vitals) as targets because they measure what users feel (does the main content show up, does the page respond, does it stop jumping around) rather than what's convenient, like total bytes. Each is judged at the **75th percentile** of real page loads, separately for mobile and desktop: the median hides the slower devices where people give up, and the 99th is dominated by outliers you can't fix.
 
 | Metric | Measures | Good |
 | --- | --- | --- |
@@ -25,8 +25,8 @@ I use the [Core Web Vitals](https://web.dev/articles/vitals) as targets because 
 ## Measure Real Users
 
 - **Field data decides.** Real-user monitoring (RUM) and the [Chrome UX Report](https://developer.chrome.com/docs/crux) show what people actually experience, on their devices and networks.
-- **Lab data explains.** Lighthouse and DevTools traces are for finding why a number is bad and checking a fix, not for declaring victory. A fast laptop on office Wi-Fi is not your median user.
-- **Watch the 75th percentile, not the average.** An average blends a fast majority with a slow minority into a number that describes nobody, and hides the slow tail where people leave.
+- **Lab data explains.** Lighthouse and DevTools traces find why a number is bad and check a fix; they don't declare victory. A fast laptop on office Wi-Fi is not your median user.
+- **Watch the 75th percentile, not the average.** An average blends a fast majority with a slow minority into a number that describes nobody.
 
 ## Budgets in CI
 
@@ -34,13 +34,13 @@ A budget turns "keep it fast" into a check that fails:
 
 - **JavaScript size** per route, compressed. The first budget to set, because it's the most common regression.
 - **Lab metrics** on key pages with [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci), asserting LCP, CLS and total blocking time stay under thresholds.
-- **A new dependency** has to fit the budget, or something else gets removed. See [Dependency Management](/docs/engineering/dependencies).
+- **A new dependency** has to fit the budget, or something else gets removed. See [Dependencies & Upgrades](/docs/engineering/dependencies).
 
-Budgets are set from where you are today, then tightened. A budget nobody can meet gets ignored.
+Set budgets from where you are today, then tighten them. A budget nobody can meet gets ignored.
 
 ## Ship Less JavaScript
 
-JavaScript is the most expensive byte on the page: downloaded, parsed, compiled and executed, often on a slow phone's main thread, which is exactly what INP measures.
+JavaScript is the most expensive byte on the page: downloaded, parsed, compiled and executed on a slow phone's main thread, which is exactly what INP measures.
 
 - **Render on the server or at build time,** and send HTML. Static and server rendering get content on screen without waiting for a bundle.
 - **Hydrate only what's interactive.** A page of text doesn't need a client-side app.
@@ -66,7 +66,7 @@ Static assets get content-hashed filenames and `Cache-Control: public, max-age=3
 
 ## Third-Party Scripts
 
-Every tag, widget and pixel runs on your users' devices and counts against your Core Web Vitals. Each one needs an owner and a reason, loads after the content, and is removed when nobody can say what it's for.
+Every tag, widget and pixel runs on your users' devices and counts against your Core Web Vitals. Each needs an owner and a reason, loads after the content, and goes when nobody can say what it's for.
 
 ## This Site
 

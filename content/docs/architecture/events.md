@@ -7,7 +7,7 @@ tags = ["architecture", "events", "messaging", "cloudevents"]
 aliases = ["events"]
 +++
 
-Events decouple services in time. The producer says what happened and moves on, and consumers react when they can, even if they were down when it happened. That's what makes asynchronous systems resilient, but only if publishing is reliable and consuming is safe to repeat. Get either wrong and you have a system that silently loses facts or applies them twice, which is worse than a synchronous call that at least fails loudly.
+[Service Boundaries](/docs/architecture/service-boundaries) prefers asynchronous communication between services; this is how to do it safely. Events decouple services in time: the producer says what happened and moves on, and consumers react when they can, even if they were down when it happened. That's only resilient if publishing is reliable and consuming is safe to repeat. Get either wrong and the system silently loses facts or applies them twice, which is worse than a synchronous call that at least fails loudly.
 
 ## Commands vs Events
 
@@ -18,11 +18,11 @@ Events decouple services in time. The producer says what happened and moves on, 
 | Receivers | Exactly one handler | Zero or more subscribers |
 | Can be rejected | Yes | No, it already happened |
 
-The distinction matters because the failure modes differ. A command that can't be executed should fail loudly to its sender. An event has no sender waiting; if a subscriber can't handle it, that's the subscriber's problem to retry. Disguising a command as an event ("`invoice.should_be_sent`") hides the failure: the producer believes the work is in hand, and nothing tells it otherwise.
+The failure modes differ. A command that can't be executed fails loudly to its sender. An event has no sender waiting; a subscriber that can't handle it retries on its own. Disguising a command as an event ("`invoice.should_be_sent`") hides the failure: the producer believes the work is in hand, and nothing tells it otherwise.
 
 ## The Transactional Outbox
 
-The classic bug is the dual write. The service updates its database, then publishes to the broker. If the process dies between the two, the database says the payment was captured and no other service ever hears about it. Reverse the order and you announce a capture that was then rolled back. No amount of retry logic fixes this, because the two writes go to two systems that can't commit together.
+The classic bug is the dual write: update the database, then publish to the broker. If the process dies between the two, the payment is captured and no other service ever hears about it. Reverse the order and you announce a capture that was then rolled back. No retry logic fixes this, because the two writes go to two systems that can't commit together.
 
 The [transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html) turns two writes into one:
 
@@ -38,23 +38,23 @@ VALUES ($2, 'payment.captured', $1, $3, NOW());
 COMMIT;
 ```
 
-Now the event exists if and only if the capture committed. The relay can crash after publishing and before marking the row, so an event is occasionally published twice. That's the trade: the outbox converts "sometimes lost" into "sometimes duplicated", and duplicates are a problem consumers can solve. Lost events aren't.
+Now the event exists if and only if the capture committed. The relay can crash after publishing and before marking the row, so an event is occasionally published twice. That's the trade: "sometimes lost" becomes "sometimes duplicated", and duplicates are a problem consumers can solve.
 
-A change-data-capture stream (Debezium reading the database's write-ahead log, for example) is an equivalent relay. It needs no polling and adds no load to the tables, at the cost of running and operating the CDC pipeline.
+A change-data-capture stream (Debezium reading the write-ahead log) is an equivalent relay, with no polling, at the cost of operating the CDC pipeline; [Data Pipelines](/docs/architecture/data-pipelines) covers its risks.
 
 ## Consumers Are Idempotent
 
 Every broker worth using delivers **at least once**, because the only way to guarantee delivery over a network is to resend when unsure. Exactly-once delivery doesn't exist across a network; exactly-once **processing** does, and it's the consumer's job.
 
 - **Dedupe by event ID.** Record processed IDs in the same transaction as the side effect, with a unique constraint. If the side effect commits, so does the record of it.
-- **Or make the handler naturally idempotent.** "Set status to captured" is safe to repeat. "Add 100 to the balance" is not, and it's the kind of handler that looks fine in testing and double-credits in production.
+- **Or make the handler naturally idempotent.** "Set status to captured" is safe to repeat. "Add 100 to the balance" looks fine in testing and double-credits in production.
 - **Acknowledge after the work commits,** never before. Acknowledging first turns a crash mid-handler into a lost event.
 
 See [Idempotency](/docs/payments/idempotency) for the same rule at the API boundary, and [Webhooks](/docs/payments/webhooks) for it across organizations.
 
 ## Ordering
 
-Global ordering means a single sequence, which means a single consumer at a time: no parallelism, and one slow message blocks everything. It's almost never what you need. Order **per entity** instead.
+Global ordering means a single consumer at a time: no parallelism, and one slow message blocks everything. It's almost never what you need. Order **per entity** instead.
 
 - **Partition by the entity ID.** All events for one payment go to the same partition (Kafka) or message group (SQS FIFO), so they're consumed in order, while different payments are processed in parallel.
 - **Don't assume order across entities.** Events for different payments interleave any way they like.
@@ -64,7 +64,7 @@ Global ordering means a single sequence, which means a single consumer at a time
 
 Event metadata follows [CloudEvents 1.0](https://cloudevents.io/), using **binary content mode**: attributes travel as headers, and the body is the event payload itself.
 
-Two reasons. First, a standard envelope means brokers, routers and tooling can filter and route on `type` or `source` without understanding every payload, and a consumer written against one producer understands the next. Second, binary mode keeps the body as the resource itself, with no `data` wrapper, the same rule as [API Design Principles](/docs/api-design/principles) and [Webhooks](/docs/payments/webhooks). CloudEvents' structured mode would nest the payload under `data`; binary mode doesn't.
+A standard envelope lets brokers and tooling route on `type` or `source` without understanding every payload, and a consumer written against one producer understands the next. Binary mode keeps the body as the resource itself, with no `data` wrapper, the same rule as [JSON Field Conventions](/docs/requests/json-conventions); CloudEvents' structured mode would nest it under `data`.
 
 ```http
 POST /events HTTP/1.1
@@ -89,7 +89,7 @@ Kafka and AMQP bindings map the same attributes to message headers. Event IDs ar
 
 ## Schema Evolution
 
-Events outlive the code that produced them. They're replayed, archived and read by consumers you've never met, sometimes years later. An API response is consumed once; an event is a record.
+Events outlive the code that produced them. They're replayed, archived and read by consumers you've never met, sometimes years later: an API response is consumed once, an event is a record.
 
 - **Every event type has a schema** (JSON Schema, Avro or Protobuf) in a registry or the repository, checked in CI so a breaking change fails a build instead of a consumer.
 - **Additive changes only.** New optional fields are fine. Removing, renaming or retyping a field is a new event type (`payment.captured.v2`), published alongside the old one until every consumer has moved.

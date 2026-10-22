@@ -6,9 +6,9 @@ order = 1103
 tags = ["deployment", "delivery", "rollback", "canary"]
 +++
 
-Every deployment strategy is an answer to one question: when the new version is wrong, how much damage does it do before you notice, and how fast can you undo it? The strategies differ in how much traffic sees the new version, how long both versions run side by side, and what you pay in capacity for that safety.
+Every deployment strategy answers one question: when the new version is wrong, how much damage does it do before you notice, and how fast can you undo it? They differ in how much traffic sees the new version, how long both versions run side by side, and what that safety costs in capacity. With [continuous deployment](/docs/delivery/ci-pipelines), every merge goes through it.
 
-Pick by the cost of a bad release, not by what's fashionable. An internal tool can redeploy in place; a payment API needs to put a new version in front of a few percent of traffic and watch it before trusting it.
+Pick by the cost of a bad release. An internal tool can redeploy in place; a payment API needs to put a new version in front of a few percent of traffic and watch it before trusting it.
 
 ## The Strategies
 
@@ -18,7 +18,7 @@ Stop the old version, start the new one. [Kubernetes](https://kubernetes.io/docs
 
 - **Rollback:** recreate again with the old version, with the same downtime.
 - **Costs:** downtime on every deploy. No extra capacity, and old and new never run at once.
-- **Use it when** the two versions genuinely can't coexist and a short outage is acceptable, like a batch worker between runs. For anything user-facing, it's the strategy you grow out of.
+- **Use it when** the versions genuinely can't coexist and a short outage is acceptable, like a batch worker between runs.
 
 ### Rolling
 
@@ -32,7 +32,7 @@ Replace instances a few at a time. Kubernetes' default `RollingUpdate` keeps at 
 
 Run two full environments. Blue serves production; deploy the new version to green, test it there with production configuration, then switch traffic to green in one step. [Martin Fowler's description](https://martinfowler.com/bliki/BlueGreenDeployment.html) is the classic one.
 
-- **Rollback:** switch traffic back to blue, which is still running. This is the fastest rollback of any strategy: no rebuild, no redeploy, just a routing change.
+- **Rollback:** switch traffic back to blue, still running. The fastest rollback of any strategy: just a routing change.
 - **Costs:** double capacity while both are up, and the switch is all-or-nothing. The new version gets 100% of traffic the moment it gets any.
 - **The catch:** both environments share data. Blue-green makes the code instantly reversible; it does nothing for a database migration that green already ran.
 
@@ -42,7 +42,7 @@ Send a small slice of traffic to the new version, compare it to the old, and exp
 
 - **Rollback:** route the slice back to the old version. A bad release only ever hurt the canary's share of traffic.
 - **Costs:** routing that can split traffic by percentage, monitoring that can tell the two populations apart, and time: a careful canary takes longer than a rollout.
-- **Why it's the default for high-stakes services:** it's the only strategy that limits blast radius *and* gives you a comparison. You're not asking "are errors up?" in general; you're asking "are errors higher on the new version than on the old one right now?", which cancels out everything else that changed at the same time.
+- **Why it's the default for high-stakes services:** it's the only strategy that limits blast radius *and* gives you a comparison. Not "are errors up?" but "are errors higher on the new version than the old one right now?", which cancels out everything else that changed at the same time.
 
 ### Shadow and Dark Launches
 
@@ -53,10 +53,7 @@ Run the new code path on real traffic without users seeing its results. [Dark la
 
 ### Feature Flags
 
-Deploy the code everywhere, turned off, then turn it on for a percentage of users. This separates *deploying* (the code is there) from *releasing* (users get it). See [Feature Flags & Progressive Rollout](/docs/delivery/feature-flags).
-
-- **Rollback:** turn the flag off. Faster than any redeploy, and it works for one feature without reverting everything else in the release.
-- **Costs:** flag logic in the code, and flags that must be cleaned up afterwards.
+Deploy the code everywhere, turned off, then release it to a percentage of users. Rollback is flipping the flag, for one feature, without reverting anything else. [Feature Flags](/docs/delivery/feature-flags) covers rollout and cleanup.
 
 ## Comparing Them
 
@@ -70,22 +67,20 @@ Deploy the code everywhere, turned off, then turn it on for a percentage of user
 
 ## Let the Canary Be Judged Automatically
 
-A canary watched by a person at 2 a.m. is a canary nobody watches. The [Google SRE workbook](https://sre.google/workbook/canarying-releases/) treats canarying as an A/B test between the canary and the control population, and recommends:
+A canary watched by a person at 2 a.m. is a canary nobody watches. The [Google SRE workbook](https://sre.google/workbook/canarying-releases/) treats canarying as an A/B test between canary and control, and recommends:
 
 - **Judge on SLIs,** like error ratio and latency, because those map to what users feel. CPU and memory are noisy and rarely tell you a release is bad (see [SLOs & Error Budgets](/docs/operations/slos)).
 - **Compare canary to control at the same time,** not today to yesterday; time is its own source of noise.
 - **Keep the metric set small,** a dozen at most, and **run one canary at a time** so the signal isn't muddied.
-- **Automate the verdict:** if the canary diverges beyond a threshold, stop and roll back without waiting for a human. Thresholds too strict produce false alarms; too loose and bad canaries pass, so revisit them as the service changes.
+- **Automate the verdict:** if the canary diverges beyond a threshold, roll back without waiting for a human, and revisit thresholds as the service changes.
 
 ## The Database Is the Real Constraint
 
-Every strategy except recreate runs old and new code against the same database at the same time. Code can be swapped in seconds; a schema can't. So the question that decides whether a release is safe usually isn't the deployment strategy at all. It's whether the schema change is compatible with both versions.
-
-A release that renames a column breaks the old version mid-rollout, and rolling the code back doesn't un-rename the column. The fix is to make every schema change backward compatible, through expand and contract, so any version of the code can run against any schema state in the window. See [Zero-Downtime Migrations](/docs/database/zero-downtime-migrations). With that discipline, every strategy above can roll back. Without it, none of them can.
+Every strategy except recreate runs old and new code against the same database at once. Code swaps in seconds; a schema can't. So whether a release is safe usually depends less on the strategy than on whether the schema change works with both versions. A renamed column breaks the old version mid-rollout, and rolling the code back doesn't un-rename it. With every change backward compatible through [expand and contract](/docs/database/zero-downtime-migrations), every strategy above can roll back. Without it, none can.
 
 ## Immutable Deploys Make All of This Easier
 
-Every strategy above assumes "the old version" still exists, exactly as it was, ready to receive traffic again. With [immutable artifacts](/docs/delivery/containers), it does: rolling back is pointing at the previous image, not reconstructing it. Serverless platforms take this furthest, since every deploy is a new, separately addressable build, and [continuous deployment](/docs/delivery/ci-pipelines) depends on it, because rolling back has to be routine for deploying every merge to be safe.
+Every strategy above assumes "the old version" still exists, exactly as it was. With [immutable artifacts](/docs/delivery/containers) it does: rolling back is pointing at the previous image, not reconstructing it. Serverless platforms take this furthest, since every deploy is a new, separately addressable build.
 
 ## This Site
 

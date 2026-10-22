@@ -7,7 +7,7 @@ tags = ["architecture", "microservices", "monolith", "design"]
 aliases = ["service-boundaries"]
 +++
 
-Most architecture pain comes from boundaries drawn in the wrong place, not from the technology on either side of them. A boundary is a promise: this side owns this data and this behavior, and everyone else goes through its interface. Draw it well and teams work independently. Draw it badly and every change needs three teams in a meeting, which is worse than having no boundary at all.
+The API chapters describe a system's front door. Behind it, most architecture pain comes from boundaries drawn in the wrong place, not from the technology on either side of them. A boundary is a promise: this side owns this data and this behavior, and everyone else goes through its interface. Draw it well and teams work independently. Draw it badly and every change needs three teams in a meeting, which is worse than no boundary at all.
 
 ## Start With a Modular Monolith
 
@@ -17,9 +17,9 @@ One deployable, many modules. Each module has:
 - **Its own tables.** Other modules don't join against them or write to them.
 - **No circular dependencies,** enforced in CI with a dependency linter. Boundaries enforced by good intentions erode one convenient import at a time.
 
-This gets most of what services promise (clear ownership, code you can reason about in isolation) without what they cost: network calls that fail, distributed transactions you can't have, partial outages, and contracts that need versioning. And because the boundaries are already real, extracting a module later is a deployment change, not a rewrite.
+This gets most of what services promise (clear ownership, code you can reason about in isolation) without what they cost: network calls that fail, distributed transactions you can't have, partial outages, and contracts that need versioning. Because the boundaries are already real, extracting a module later is a deployment change, not a rewrite.
 
-Starting with services gets the order backwards. Early on you don't know where the domain's seams are, and boundaries drawn before you know are the expensive kind to move. Inside a monolith, moving a boundary is a refactor. Between services, it's a migration. Martin Fowler made the same argument as [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html): almost every successful microservice system he saw started as a monolith that got too big.
+Starting with services gets the order backwards. Early on you don't know where the domain's seams are, and inside a monolith moving a boundary is a refactor, while between services it's a migration. Martin Fowler's [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html) makes the same argument: almost every successful microservice system he saw started as a monolith that got too big.
 
 ## When to Split
 
@@ -42,7 +42,7 @@ The worst outcome isn't a monolith. It's services that have to be deployed toget
 ## Every Piece of Data Has One Owner
 
 - **One service writes a table.** Others read through its API or consume its [events](/docs/architecture/events).
-- **No shared databases.** A table read by two services is a contract nobody versioned. The owner renames a column, the other service breaks in production, and the owner had no way to know it existed. Shared tables also make it impossible to reason about invariants: if two services write the same rows, neither can guarantee anything about them.
+- **No shared databases.** A table read by two services is a contract nobody versioned: the owner renames a column and the other service breaks in production. And if two services write the same rows, neither can guarantee anything about them.
 - **Copies are fine, if they're labeled.** A service can keep a local, read-only projection of someone else's data, fed by events. It's a cache with known staleness, never the source of truth.
 - **Reference by ID.** Store the other service's ID (`customer_id`), not a copy of its fields, unless you need the value as it was at a moment in time. An invoice keeps the billing address it was issued to, even if the customer moves.
 
@@ -59,19 +59,11 @@ The worst outcome isn't a monolith. It's services that have to be deployed toget
 
 ## Boundaries Follow Teams
 
-[Conway's law](https://www.melconway.com/Home/Committees_Paper.html): systems end up mirroring the communication structure of the organization that builds them. It's an observation, not a recommendation, and fighting it rarely works.
-
-- **One team owns a service:** its code, its data, its alerts and its on-call.
-- **No shared ownership.** "Everyone owns it" means nobody does, and the first incident proves it.
-- **Draw the boundary where conversation is rare.** If two teams coordinate on every change, they're on the wrong sides of the line. Either move the boundary or move the people.
+Systems end up mirroring the communication structure of the organization that builds them ([Conway's law](https://www.melconway.com/Home/Committees_Paper.html)), so one team owns each service end to end: its code, its data, its alerts and its on-call. Draw the boundary where conversation is rare; if two teams coordinate on every change, they're on the wrong sides of the line. [Team Structure](/docs/leadership/team-structure) covers the organizational side.
 
 ## Contracts
 
-Every boundary has an explicit contract, versioned like a public API, whether it's internal or not. Internal consumers break just as hard as external ones, and they're usually less able to pin an old version.
-
-- HTTP APIs follow these docs, including [Versioning & Deprecation](/docs/api-design/versioning).
-- Events have schemas with the same compatibility rules. See [Events & Async Messaging](/docs/architecture/events).
-- Contract tests run in CI on both sides. See [Testing Strategy](/docs/engineering/testing).
+Every boundary has an explicit contract, versioned like a public API whether it's internal or not; internal consumers break just as hard and are usually less able to pin an old version. HTTP APIs follow [Versioning & Deprecation](/docs/api-design/versioning), events get schemas with the same compatibility rules ([Events & Async Messaging](/docs/architecture/events)), and contract tests run in CI on both sides ([Testing Strategy](/docs/engineering/testing)).
 
 Splitting or merging a service is a decision you'll live with for years, so it starts with a [design doc](/docs/engineering/design-docs).
 

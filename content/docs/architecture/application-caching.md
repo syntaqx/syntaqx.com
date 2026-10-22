@@ -6,15 +6,11 @@ order = 405
 tags = ["architecture", "caching", "performance", "redis"]
 +++
 
-A cache trades correctness for speed: it answers from a copy that might be out of date. That's a good trade often enough that every system ends up with caches, and a bad one often enough that "cache invalidation" is half of the oldest joke in the industry ([Two Hard Things](https://martinfowler.com/bliki/TwoHardThings.html)). The discipline is deciding exactly how stale each piece of data is allowed to be, and making sure the system still works when the cache is empty.
-
-This doc is about caches inside your application (in-process memory, Redis). HTTP caching, where browsers and CDNs keep copies of responses, is in [Caching & Conditional Requests](/docs/requests/caching).
+A cache trades correctness for speed: it answers from a copy that might be out of date. That's a good trade often enough that every system ends up with caches, and a bad one often enough that "cache invalidation" is half of the oldest joke in the industry ([Two Hard Things](https://martinfowler.com/bliki/TwoHardThings.html)). The discipline is deciding how stale each piece of data may be, and making sure the system still works when the cache is empty. This covers caches inside your application (in-process memory, Redis); browsers and CDNs are in [Caching & Conditional Requests](/docs/requests/caching).
 
 ## Measure Before You Cache
 
-A cache is a second copy of your data with its own consistency rules, failure modes and memory bill. Add one because a measurement says a specific read is too slow or too expensive, not because a cache sounds faster.
-
-Fix the source first. A missing index, an N+1 query or a chatty API call ([Database Performance](/docs/database/performance)) is usually the real problem, and caching it hides the cause while adding a new one. The best cache candidates are reads that are hot, expensive and tolerant of staleness: a pricing table read on every request, a permissions lookup, the result of a slow third-party call.
+A cache is a second copy of your data with its own consistency rules, failure modes and memory bill. Add one because a measurement says a specific read is too slow or expensive, and fix the source first: a missing index, an N+1 query or a chatty API call ([Database Performance](/docs/database/performance)) is usually the real problem, and caching hides it. The best candidates are hot, expensive and tolerant of staleness: a pricing table read on every request, a permissions lookup, a slow third-party call.
 
 ## Patterns
 
@@ -31,15 +27,15 @@ Start with cache-aside. Write-behind turns the cache into a database without a d
 
 Every cached value needs an answer to "how does this stop being wrong?"
 
-- **TTL.** The entry expires after a fixed time. Simple and self-healing: even if every other invalidation path has a bug, the data is wrong for at most one TTL. Pick it from the business answer to "how stale is acceptable?", not from a guess. Always set one, even alongside other strategies.
-- **Explicit invalidation.** The write path deletes the cache key after updating the source. Fresher, but every code path that writes has to remember, and the one that forgets serves stale data until the TTL saves you.
+- **TTL.** The entry expires after a fixed time. Self-healing: even if every other invalidation path has a bug, the data is wrong for at most one TTL. Pick it from the business answer to "how stale is acceptable?", and always set one, even alongside other strategies.
+- **Explicit invalidation.** The write path deletes the key after updating the source. Fresher, but every write path has to remember, and the one that forgets serves stale data until the TTL saves you.
 - **Versioned keys.** Put a version in the key (`pricing:v42`) and bump it on change; old entries are simply never read again and age out. This avoids racing a delete against a concurrent refill, and it's how you invalidate a whole family of keys at once.
 
 Delete on write, don't update on write. Writing the new value into the cache from the write path races with a concurrent reader refilling it from an older read, and the older value can win. Deleting and letting the next read refill is safer.
 
 ## Stampedes
 
-A popular key expires, and a thousand requests miss at once and all hit the source together. The cache was protecting the database from exactly this load, and for a moment it isn't. Three defenses, usually combined:
+A popular key expires, and a thousand requests miss at once and hit the source together, the exact load the cache was there to absorb. Three defenses, usually combined:
 
 - **Request coalescing.** Only one request per key recomputes; the others wait for its result. In-process this is a map of in-flight promises; across instances it's a short lock on the key.
 - **Jittered TTLs.** Keys filled at the same time (after a deploy, a flush) expire at the same time. Adding random jitter to each TTL spreads the expiries out.
@@ -47,7 +43,7 @@ A popular key expires, and a thousand requests miss at once and all hit the sour
 
 ### The Cold Cache
 
-The worse version of a stampede is the whole cache being empty: a new cluster, a flush, a failover. A system that has quietly come to depend on a 95% hit rate can't serve its normal traffic from the source alone, and it falls over exactly when it's recovering. Amazon's Builders' Library describes caches becoming a critical dependency this way, and recommends treating them as one ([Caching challenges and strategies](https://builder.aws.com/content/3K9TeXp6strMiJ4vhakpRD7BQWO/caching-challenges-and-strategies)):
+The worse version is the whole cache being empty: a new cluster, a flush, a failover. A system that has quietly come to depend on a 95% hit rate can't serve normal traffic from the source alone, and falls over exactly when it's recovering. Amazon's Builders' Library calls this a cache becoming a critical dependency, and recommends treating it as one ([Caching challenges and strategies](https://builder.aws.com/content/3K9TeXp6strMiJ4vhakpRD7BQWO/caching-challenges-and-strategies)):
 
 - **Load test with the cache empty,** not just warm ([Load & Performance Testing](/docs/operations/load-testing)).
 - **Keep serving stale data when the source is down** (a soft TTL that triggers a refresh, and a hard TTL after which the entry is finally dropped).
@@ -55,7 +51,7 @@ The worse version of a stampede is the whole cache being empty: a new cluster, a
 
 ## Negative Caching
 
-A lookup that finds nothing ("no such user", "no rate for this currency") is a result too. If it isn't cached, every request for a missing thing goes to the source, and one client hammering a nonexistent ID can do more damage than all your real traffic. Cache misses, with a shorter TTL than hits. The same applies to errors from a failing dependency: caching the error briefly stops your retries from making its outage worse.
+A lookup that finds nothing ("no such user") is a result too. Uncached, every request for a missing thing goes to the source, and one client hammering a nonexistent ID can do more damage than all your real traffic. Cache misses with a shorter TTL than hits. Caching a failing dependency's error briefly does the same job, and keeps your retries from deepening its outage.
 
 ## Keys
 
@@ -65,7 +61,7 @@ A lookup that finds nothing ("no such user", "no rate for this currency") is a r
 
 ## What the User Sees
 
-Staleness is a product decision, not just an infrastructure one. A cached product description that's a minute old is invisible; a cached account balance that doesn't reflect a payment the user just made is a support ticket. Read your own writes from the source (the user who changed something sees the change), and cache aggressively only what isn't personal or time-sensitive.
+Staleness is a product decision. A minute-old product description is invisible; an account balance that doesn't reflect a payment the user just made is a support ticket. Read your own writes from the source, and cache aggressively only what isn't personal or time-sensitive.
 
 ## Never Cache
 

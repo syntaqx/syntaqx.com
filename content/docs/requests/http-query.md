@@ -7,9 +7,7 @@ tags = ["api", "http", "query", "rfc10008", "standards"]
 aliases = ["http-query"]
 +++
 
-[RFC 10008](https://www.rfc-editor.org/rfc/rfc10008.html), published June 2026, adds the `QUERY` method: a request that carries its query in the body like `POST`, but is **safe and idempotent** like `GET`. It closes a gap every API has hit. Either you put a complex search in the URL and fight length limits, encoding, and URLs full of filters ending up in logs, or you use `POST /search` and lose caching, automatic retries, and the meaning of "this is a read".
-
-`QUERY` is the right answer. The ecosystem is still catching up, so this is how I support it now without leaving clients behind.
+[RFC 10008](https://www.rfc-editor.org/rfc/rfc10008.html), published June 2026, adds the `QUERY` method: a request that carries its query in the body like `POST`, but is **safe and idempotent** like `GET`. It closes the gap [Filtering & Sorting](/docs/requests/filtering-and-sorting) runs into: either a complex search goes in the URL and fights length limits, encoding and logged filters, or it goes in `POST /search` and loses caching, automatic retries, and the meaning of "this is a read". The ecosystem is still catching up, so this is how I support `QUERY` now without leaving clients behind.
 
 ## What QUERY Is
 
@@ -26,7 +24,7 @@ Accept: application/json
 }
 ```
 
-Field names, operator suffixes and `sort` are exactly the [Filtering & Sorting](/docs/requests/filtering-and-sorting) parameters. A comma list in the query string is an array in the body. The body can also express what a query string can't, such as nested `any` and `all` groups for `(a AND b) OR c`.
+Field names, operator suffixes and `sort` are exactly the filtering parameters, and a comma list in the query string is an array in the body. The body can also express what a query string can't, such as nested `any` and `all` groups for `(a AND b) OR c`.
 
 ```http
 HTTP/1.1 200 OK
@@ -45,11 +43,9 @@ Link: <https://api.syntaqx.com/payments/queries/0194a7f3-2b11-7e80-9c3d-4e8f1a2b
 | Request body has meaning | No | Yes | Yes |
 | Cacheable | Yes | Yes, keyed on the body | Rarely |
 
-Responses follow the same rules as everywhere else: a list is an array, metadata lives in headers ([Pagination](/docs/requests/pagination), [JSON Field Conventions](/docs/requests/json-conventions)), errors use the [standard format](/docs/requests/error-responses).
-
 ## One Query Model, Three Doors
 
-Every searchable collection has **one** query model, the same filters and operators as [Filtering & Sorting](/docs/requests/filtering-and-sorting). There are three ways to send it, and they all reach the same handler:
+Every searchable collection has **one** query model, and three ways to send it that all reach the same handler:
 
 | Door | When | Example |
 | ---- | ---- | ------- |
@@ -57,11 +53,11 @@ Every searchable collection has **one** query model, the same filters and operat
 | `QUERY` with a body | The preferred form for anything structured, long, or sensitive | `QUERY /payments` |
 | `POST` with a method override | Clients or infrastructure that can't send `QUERY` yet | `POST /payments` + `X-HTTP-Method-Override: QUERY` |
 
-`GET /payments?status=captured` and `QUERY /payments` with `{"status": "captured"}` return the same thing. The transport changes. The query doesn't.
+`GET /payments?status=captured` and `QUERY /payments` with `{"status": "captured"}` return the same thing.
 
 ### The POST Fallback
 
-This is the polyfill. A `POST` to the collection with `X-HTTP-Method-Override: QUERY` is handled **exactly** as a `QUERY`:
+The polyfill: a `POST` to the collection with `X-HTTP-Method-Override: QUERY` is handled **exactly** as a `QUERY`:
 
 ```http
 POST /payments
@@ -71,12 +67,12 @@ Content-Type: application/json
 { "status": ["captured"] }
 ```
 
-- **The only allowed override is `POST` to `QUERY`.** An override that would turn a request into `DELETE`, `PUT` or anything else is rejected with `400`. A method override that can escalate privileges is a security hole.
+- **The only allowed override is `POST` to `QUERY`.** Any other is rejected with `400`, because an override that can turn a request into `DELETE` is a security hole.
 - **No side effects, ever.** The handler is the read-only `QUERY` handler. An `Idempotency-Key` isn't needed and is ignored.
-- **The header name keeps its `X-` prefix.** Everywhere else these docs drop `X-` ([RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648)), but `X-HTTP-Method-Override` is the name that gateways, SDKs and Google's APIs already send. Renaming it would break the very clients it exists for.
+- **The header keeps its `X-` prefix.** Everywhere else these docs drop `X-` ([RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648)), but `X-HTTP-Method-Override` is what gateways, SDKs and Google's APIs already send, and renaming it would break the clients it exists for.
 - **Responses tell caches the truth.** Intermediaries see a `POST`, so they won't cache it, and the response says `Cache-Control: private, no-store`. Clients that want caching use the stored query (below).
 
-Why not a separate `POST /payments/search` endpoint? Because it's a second URL for the same read, with its own docs and its own drift. One resource, one query model.
+A separate `POST /payments/search` would be a second URL for the same read, with its own docs and its own drift.
 
 ## Discovery
 
@@ -160,20 +156,12 @@ curl -X POST https://api.syntaqx.com/hash \
 
 How it's built:
 
-- **QUERY is served in the proxy layer.** Next.js route handlers answer a native `QUERY` with an empty `400`, so the proxy recognizes both doors, applies the checks above (`Content-Type`, the 64 KB limit, override rules), and calls the endpoint's read-only handler directly.
-- **Native responses are cacheable for a year.** A digest never changes for the same input, so a successful `QUERY` returns `Cache-Control: public, max-age=31536000, immutable`. Overridden requests return `private, no-store`.
-- **No stored query.** A digest is already the complete, permanent answer, so there's nothing to re-run and responses don't include a `Location`.
-- **The OpenAPI document describes it natively,** as a `query` operation on `/hash` in [OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html), next to the `POST` with its override header.
-- **Plain `POST /hash` still works** for existing clients. Every path returns `400` for malformed JSON and `422` for a well-formed query that can't run, as RFC 10008 and [Error Responses](/docs/requests/error-responses) specify.
+- **QUERY is served in the proxy layer,** because Next.js route handlers answer a native `QUERY` with an empty `400`. The proxy recognizes both doors, applies the checks above (`Content-Type`, the 64 KB limit, override rules), and calls the read-only handler directly.
+- **Native responses are cacheable for a year** (`public, max-age=31536000, immutable`), since a digest never changes for the same input. Overridden requests return `private, no-store`.
+- **No stored query,** because a digest is already the complete, permanent answer.
+- **The OpenAPI document describes it natively,** as a `query` operation in [OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html), next to the `POST` with its override header. Plain `POST /hash` still works for existing clients.
 
 `QUERY /docs` takes the [playbook list's](/docs/requests/filtering-and-sorting) filters as a JSON body (`{"section": ["payments"], "sort": "title"}`) and returns the same results as the equivalent `GET`. Its `Link` header points the next page at that `GET` URL, so paging past the first response is a plain request every cache understands.
-
-## Client Expectations
-
-1. Use `GET` for simple filters, `QUERY` for anything structured, long, or sensitive.
-2. Treat `QUERY` like `GET`: retry it freely, and don't expect it to change anything.
-3. On `405` or `501`, retry as `POST` with `X-HTTP-Method-Override: QUERY`.
-4. Keep the `Location` from the response, and `GET` it to re-run or cache the query.
 
 ## References
 

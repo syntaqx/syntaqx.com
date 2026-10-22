@@ -6,7 +6,7 @@ order = 1206
 tags = ["operations", "reliability", "backups", "disaster-recovery"]
 +++
 
-Disaster recovery is the plan for when the thing you were relying on is gone: a deleted table, a corrupted backup, a compromised account, a lost region. Nobody gets credit for it until the day it's the only thing that matters, so it has to be planned, priced and practiced before that day.
+[Incident response](/docs/operations/incident-response) assumes the system is still there to fix. Disaster recovery is the plan for when it isn't: a deleted table, a corrupted backup, a compromised account, a lost region. Nobody gets credit for it until the day it's the only thing that matters, so it has to be planned, priced and practiced before that day.
 
 ## Set Targets From Impact
 
@@ -17,9 +17,7 @@ Every system gets two numbers, agreed with the people who own the business impac
 | **RTO** (recovery time objective) | How long can it be down? | 4 hours |
 | **RPO** (recovery point objective) | How much data can we lose? | 5 minutes |
 
-- **Set them per system.** The ledger and the marketing site don't deserve the same budget.
-- **Tighter targets cost more,** in money and in complexity. Make that trade explicitly.
-- **Write them down** next to the system's [SLOs](/docs/operations/slos), and check the DR design actually meets them.
+Set them per system (the ledger and the marketing site don't deserve the same budget), make the cost of tighter targets an explicit trade, and write them down next to the system's [SLOs](/docs/operations/slos).
 
 ## Backups
 
@@ -32,15 +30,11 @@ Every system gets two numbers, agreed with the people who own the business impac
 
 As the [Google SRE book](https://sre.google/sre-book/data-integrity/) puts it: "No one really wants to make backups; what people really want are restores."
 
-- **Restore on a schedule,** automatically, into a scratch environment, and verify the result (row counts, checksums, an application smoke test).
-- **Time it.** The restore time is your real RTO, whatever the document says.
-- **Alert when a restore drill fails** like any other production failure.
-
-A backup that has never been restored is a hope, not a backup.
+Restore on a schedule, automatically, into a scratch environment, and verify the result: row counts, checksums, an application smoke test. Time it, because the restore time is your real RTO whatever the document says, and alert when a drill fails like any other production failure. A backup that has never been restored is a hope.
 
 ## Strategies
 
-There are four broad strategies, in rising cost and falling recovery time. The names are [AWS's](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html), but the tradeoff is the same on any provider: you pay continuously for capacity in the recovery location, to buy back time on the day you need it.
+Four broad strategies trade rising cost for falling recovery time. The names are [AWS's](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html), but the tradeoff holds anywhere: you pay continuously for capacity in the recovery location to buy back time on the day you need it.
 
 | Strategy | What's running in the recovery region | Recovery |
 | --- | --- | --- |
@@ -53,17 +47,13 @@ Choose from the RTO and RPO, not from ambition. Most systems need backup and res
 
 ## Rebuild From Code
 
-If the infrastructure only exists as clicks in a console, recovering it means remembering those clicks under pressure.
+Infrastructure that exists only as clicks in a console has to be recovered by remembering those clicks under pressure. With [infrastructure as code](/docs/delivery/infrastructure-as-code) for networks, databases, queues, DNS and permissions, recovery is running the same code in a new account or region, and with [immutable artifacts](/docs/delivery/containers), rebuilding is redeploying.
 
-- **Infrastructure as code** for everything: networks, databases, queues, DNS, permissions. Recovery is running the same code in a new account or region.
-- **Immutable artifacts.** Applications deploy as versioned images or builds, so rebuilding is redeploying, not reinstalling. See [Containers & Immutable Infrastructure](/docs/delivery/containers).
-- **Know your dependencies' DR.** Your RTO can't beat your payment processor's, your identity provider's or your DNS host's. List them, read their commitments, and decide what you do while each one is down.
+Know your dependencies' DR too. Your RTO can't beat your payment processor's, identity provider's or DNS host's: list them, read their commitments, and decide what you do while each one is down.
 
 ## Runbooks and Game Days
 
-- **A runbook per scenario:** region loss, database corruption, compromised credentials, a dependency outage. Each one says who decides, the exact steps, and how to verify recovery. See [On-Call & Runbooks](/docs/operations/on-call).
-- **Game days** rehearse them for real: fail over a region, restore the database, rotate every secret, on a scheduled day with everyone watching. The gaps you find on a game day are gaps you didn't find in an incident.
-- **Every real incident updates the plan.** See [Incident Postmortems](/docs/operations/incident-response).
+Each scenario (region loss, database corruption, compromised credentials, a dependency outage) gets a [runbook](/docs/operations/on-call) saying who decides, the exact steps, and how to verify recovery. Game days rehearse them for real: fail over a region, restore the database, rotate every secret, on a scheduled day with everyone watching. The gaps you find on a game day are gaps you didn't find in an incident, and every real incident's [postmortem](/docs/operations/incident-response) updates the plan.
 
 ## This Site
 

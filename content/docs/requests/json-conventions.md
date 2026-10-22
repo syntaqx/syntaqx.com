@@ -7,7 +7,7 @@ tags = ["api", "json", "naming", "standards"]
 aliases = ["json-conventions"]
 +++
 
-Field conventions are the part of an API clients touch on every line of code. When they're consistent, a developer who has used one resource can guess the shape of the next without opening the docs. When they drift (`createdAt` here, `created_at` there, `"active"` or `"is_active"` or `"enabled"`), every resource becomes a separate thing to learn, and every guess is a bug waiting to happen.
+[Naming Conventions](/docs/api-design/naming-conventions) settle the URLs; this settles what's inside the bodies, the part of an API clients touch on every line of code. When fields are consistent, a developer who has used one resource can guess the shape of the next. When they drift (`createdAt` here, `created_at` there, `"active"` or `"is_active"` or `"enabled"`), every resource is a separate thing to learn, and every guess is a bug waiting to happen.
 
 ## No Envelopes
 
@@ -29,7 +29,7 @@ Envelopes usually exist to carry metadata next to the payload: a page cursor, a 
 - **The version** lives in `Api-Version` ([Versioning](/docs/api-design/versioning)).
 - **Success or failure** lives in the status code ([Error Responses](/docs/requests/error-responses)).
 
-The payoff is that every client stops writing `response.data.data`, a resource returned by a `GET` is byte-for-byte what a webhook or an expansion embeds, and generic HTTP tooling (caches, logs, `curl | jq`) sees the actual object. The cost is that metadata is a little less visible to someone reading raw bodies, which is a fair trade for never having to unwrap anything. GitHub's REST API has worked this way for years, which is good evidence it scales.
+Clients stop writing `response.data.data`, a resource from a `GET` is byte-for-byte what a webhook or an expansion embeds, and generic tooling (caches, logs, `curl | jq`) sees the actual object. Metadata is a little less visible in raw bodies, a fair trade for never unwrapping anything. GitHub's REST API has worked this way for years.
 
 ## Naming
 
@@ -49,13 +49,13 @@ The payoff is that every client stops writing `response.data.data`, a resource r
 | Boolean | `is_`, `has_`, `can_` prefix | `"is_active": true` |
 | Enum | Lowercase snake_case string | `"status": "requires_capture"` |
 
-The suffixes and prefixes carry type information in the name. A reader knows `published_on` has no time component and `is_active` is true or false without looking at a value, and `active` can't be mistaken for a timestamp of when something became active.
+The suffixes and prefixes carry the type in the name: `published_on` has no time component, and `is_active` can't be mistaken for a timestamp of when something became active.
 
 ### Enums Are Strings
 
 Enum values are lowercase snake_case strings, never integers. `"status": "captured"` reads correctly in a log, a support ticket and a database query; `"status": 3` needs a lookup table, and the table drifts.
 
-Adding a value to an enum is a non-breaking change ([Versioning](/docs/api-design/versioning)), so **clients must handle values they don't recognize**: a `switch` with a default case, not one that throws. An API can only keep evolving if clients are written for that.
+Adding a value to an enum is a non-breaking change ([Versioning](/docs/api-design/versioning)), so **clients must handle values they don't recognize**: a `switch` with a default case, not one that throws.
 
 ### Large Integers
 
@@ -65,19 +65,17 @@ So any integer that can exceed 2^53 - 1 is sent as a **string**. Amounts in mino
 
 ## Absent vs. `null`
 
-- **Responses include every documented field.** A field with no value is `null`, not missing. Clients can rely on the shape, and "missing" never has to mean "maybe the server forgot".
+- **Responses include every documented field.** A field with no value is `null`, not missing, so clients can rely on the shape.
 - **In a `PATCH`, absent means "leave it alone" and `null` means "clear it".** That's [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396). Without the distinction, a client that only wants to change `email` has to resend every other field, and one stale copy overwrites someone else's change.
-- **Empty collections are `[]`,** never `null`. Every client can iterate an empty array; `null` makes every loop a null check.
-- **Expansions are the exception:** a related object appears inline only when requested ([Expanding Responses](/docs/api-design/resource-relationships)).
+- **Empty collections are `[]`,** never `null`, so no loop needs a null check.
+- **Expansions are the exception:** a related object appears inline only when requested ([Relationships & Expansion](/docs/api-design/resource-relationships#expanding-on-request)).
 
 ## Unknown Fields
 
-The two directions get opposite rules, on purpose:
-
 - **Clients ignore response fields they don't recognize.** That's what lets the server add fields without a new version.
-- **Servers reject request fields they don't recognize** with `422`. A typo like `ammount` that's silently dropped means the request "succeeds" with the default amount, and nobody finds out until reconciliation. Failing loudly turns that into a test failure on day one.
+- **Servers reject request fields they don't recognize** with `422`. A typo like `ammount` that's silently dropped means the request "succeeds" with the default amount, and nobody finds out until reconciliation. Failing loudly makes it a test failure on day one.
 
-The cost of strictness is that a newer client sending a field an older server doesn't know yet gets an error instead of partial success. That's the correct outcome: the client asked for something the server can't do, and should know.
+The opposite rules are deliberate. Strictness means a newer client sending a field an older server doesn't know gets an error instead of partial success, which is correct: it asked for something the server can't do.
 
 ## References
 

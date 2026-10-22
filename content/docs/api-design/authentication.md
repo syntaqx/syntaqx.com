@@ -8,7 +8,7 @@ tags = ["api", "authentication", "oauth", "security"]
 aliases = ["api-authentication"]
 +++
 
-Authentication answers "who is calling?". Authorization answers "are they allowed to do this?". They fail differently, so keep them separate in code, in status codes and in error messages. Most API breaches aren't broken cryptography; they're a valid credential reaching data it shouldn't, which is an authorization bug ([API Security](/docs/security/api-security)).
+Authentication answers "who is calling?"; [authorization](/docs/security/authorization) answers "are they allowed to do this?". They fail differently, so keep them separate in code, status codes and error messages. Most API breaches aren't broken cryptography but a valid credential reaching data it shouldn't, an authorization bug ([API Security](/docs/security/api-security)). This doc is about the first question: the credential.
 
 ## Credentials Go in the Authorization Header
 
@@ -17,13 +17,13 @@ GET /payments
 Authorization: Bearer sk_live_4f2a9c...
 ```
 
-- **Never in the URL.** Query strings are written to access logs, proxy logs, browser history and `Referer` headers on every outbound link. A key in a URL is a key in a dozen places you don't control. [RFC 6750](https://datatracker.ietf.org/doc/html/rfc6750) says bearer tokens "SHOULD NOT be passed in page URLs".
+- **Never in the URL.** Query strings land in access logs, proxy logs, browser history and `Referer` headers: a dozen places you don't control. [RFC 6750](https://datatracker.ietf.org/doc/html/rfc6750) says bearer tokens "SHOULD NOT be passed in page URLs".
 - **Not in a cookie,** for a server-to-server API. Browsers attach cookies automatically, which is what makes CSRF possible; an API called by servers gains nothing from that and inherits the risk.
 - **HTTPS only.** A credential sent over plain HTTP should be rejected and treated as leaked, because it was.
 
 ## API Keys
 
-For one server talking to another as itself, a long-lived API key is the simplest thing that works. The details are where keys go wrong.
+For one server talking to another as itself, a long-lived API key is the simplest thing that works. Keys go wrong in the details.
 
 ### Prefixes Say What a Key Is
 
@@ -33,17 +33,17 @@ For one server talking to another as itself, a long-lived API key is the simples
 | `rk_live_`, `rk_test_` | Restricted: only the permissions it was granted | No |
 | `sk_live_`, `sk_test_` | Secret: full access | No |
 
-A prefix costs a few characters and pays off three ways. A person who finds a key in a log knows at a glance whether it's live and how bad the leak is. Secret scanners (GitHub's, and your own pre-commit hooks) find leaked keys by pattern, so a distinctive prefix gets yours revoked within minutes of a public push. And a test key can be refused by live infrastructure before any lookup. Stripe's keys and GitHub's tokens (`ghp_`, `gho_`) use the same idea for the same reasons.
+A prefix costs a few characters and pays off three ways. Whoever finds a key in a log knows at a glance whether it's live and how bad the leak is. Secret scanners find leaked keys by pattern, so a distinctive prefix gets yours revoked within minutes of a public push. And live infrastructure can refuse a test key before any lookup. Stripe's keys and GitHub's tokens (`ghp_`, `gho_`) do the same.
 
 ### Restricted by Default
 
-A secret key with full access is the worst case of every leak. So new integrations get **restricted keys** with only the permissions they need, and a full-access key is the exception someone has to justify. The integration that only creates refunds can't read your customer list when its key shows up in a pastebin.
+A full-access secret key is the worst case of every leak, so new integrations get **restricted keys** with only the permissions they need, and full access is an exception someone justifies. The integration that only creates refunds can't read your customer list when its key shows up in a pastebin.
 
 ### Store a Hash, Show the Key Once
 
 The API never needs to read a key back, only to recognize it. So store a hash and show the plaintext exactly once, at creation.
 
-- **Plain SHA-256 is right here,** unlike for passwords. Slow hashes like bcrypt exist because passwords are guessable; a randomly generated 32-byte key isn't, so a fast hash is just as safe and doesn't add latency to every request.
+- **Plain SHA-256 is right here,** unlike for passwords. Slow hashes like bcrypt exist because passwords are guessable; a random 32-byte key isn't, so a fast hash is just as safe without adding latency to every request.
 - **Look up by prefix, compare in constant time.** Store a short non-secret identifier with the hash so lookups are indexed, then compare hashes with a constant-time function so response timing doesn't leak how much of a guess was right.
 - **Show the last four characters** in dashboards, so people can tell keys apart without ever seeing one again.
 
@@ -76,9 +76,9 @@ Every credential carries the smallest set of permissions it needs.
 | Valid credential, missing scope | `403` | `WWW-Authenticate: Bearer error="insufficient_scope", scope="refunds:write"` |
 | Valid credential, resource belongs to someone else | `404` | None |
 
-`401` means "I don't know who you are" and tells the client how to authenticate (`WWW-Authenticate` is required on every `401`). `403` means "I know who you are, and you can't do this", and the scope hint tells the developer exactly what to request.
+`401` means "I don't know who you are" and must say how to authenticate with `WWW-Authenticate`. `403` means "I know who you are, and you can't do this", and the scope hint tells the developer what to request.
 
-The last row is the one that matters most. Returning `403` for another account's resource confirms the resource exists, and an attacker iterating IDs learns which ones are real. So a resource you can't see is a resource that doesn't exist: `404`, the same response as for an ID that was never issued. GitHub does this for private repositories.
+The last row matters most. A `403` for another account's resource confirms it exists, and an attacker iterating IDs learns which are real. So a resource you can't see doesn't exist: `404`, identical to an ID never issued. GitHub does this for private repositories.
 
 Error bodies use the standard [error format](/docs/requests/error-responses), say which permission is missing, and never say which part of a credential was wrong:
 
@@ -88,7 +88,7 @@ Error bodies use the standard [error format](/docs/requests/error-responses), sa
 
 ## Rotation
 
-Every credential can be replaced without downtime, because one day it will have to be, in a hurry.
+Every credential can be replaced without downtime, because one day it will have to be, in a hurry. Where keys live and how secrets reach running services is in [Environments & Configuration](/docs/operations/environments).
 
 - **Overlap.** A rotated key keeps working for a grace period so deployments can pick up the new one. I use up to 7 days: long enough for a weekly deploy cycle, short enough that a leaked key doesn't linger. Stripe's rolling keys allow the same window.
 - **Expire on evidence.** Retire the old key once its traffic has been at zero for a while, not when a timer says so.

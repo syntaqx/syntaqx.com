@@ -6,13 +6,13 @@ order = 601
 tags = ["accessibility", "a11y", "wcag", "frontend"]
 +++
 
-About [1 in 6 people](https://www.who.int/news-room/fact-sheets/detail/disability-and-health) worldwide live with a significant disability, and far more are situationally impaired at any moment: a broken arm, a phone in direct sunlight, a noisy train. Accessibility isn't a feature for a niche audience. It's whether a large share of your users can use the product at all.
+About [1 in 6 people](https://www.who.int/news-room/fact-sheets/detail/disability-and-health) worldwide live with a significant disability, and far more are situationally impaired at any moment: a broken arm, a phone in direct sunlight, a noisy train. Accessibility isn't a feature for a niche audience; it's whether a large share of your users can use the product at all.
 
-It's also part of "done", not a later pass, for a practical reason: retrofitting means redesigning components people already depend on, while building it in mostly means using the platform the way it was designed. Most of the work below costs nothing if it's done first.
+It's part of "done", not a later pass. Retrofitting means redesigning components people already depend on, while building it in mostly means using the platform the way it was designed, so most of what follows costs nothing if it's done first.
 
 ## The Baseline: WCAG 2.2 AA
 
-I target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) at level AA for everything I ship. Level A alone leaves real barriers, like insufficient contrast, in place. AAA can't be met by all content (some of its criteria rule out entire kinds of material), so it works as an aspiration for specific pages, not a baseline. AA is the level that's achievable everywhere without compromising design, and it's the one regulators, procurement teams and courts reference.
+I target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) at level AA for everything I ship. Level A alone leaves real barriers, like insufficient contrast, in place. AAA can't be met by all content, so it's an aspiration for specific pages, not a baseline. AA is achievable everywhere without compromising design, and it's the level regulators, procurement teams and courts reference.
 
 WCAG 2.2 added criteria worth knowing by name ([what's new](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/)):
 
@@ -30,7 +30,7 @@ WCAG 2.2 added criteria worth knowing by name ([what's new](https://www.w3.org/W
 The browser already knows how to make a `<button>` focusable, keyboard-operable and announced correctly. A `<div>` with a click handler knows none of that.
 
 - **Use the element that means what you're building:** `<button>` for actions, `<a href>` for navigation, `<nav>`, `<main>`, `<label>`, `<table>` for tabular data, headings in order.
-- **ARIA only when HTML can't do it.** ARIA changes what's announced, not how anything behaves. `role="button"` on a `<div>` makes a screen reader say "button", but the div still ignores Enter and Space and can't receive focus, so it's now a broken button that claims to work. A wrong role is worse than none, which is why the W3C's [first rule of ARIA](https://www.w3.org/TR/using-aria/) is to use a native element whenever one exists.
+- **ARIA only when HTML can't do it.** ARIA changes what's announced, not how anything behaves. `role="button"` on a `<div>` makes a screen reader say "button", but the div still ignores Enter and Space and can't receive focus: a broken button that claims to work. That's why the W3C's [first rule of ARIA](https://www.w3.org/TR/using-aria/) is to use a native element whenever one exists.
 - **Custom widgets** (tabs, comboboxes, dialogs) follow the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) patterns, including their keyboard behavior.
 
 ## Keyboard and Focus
@@ -55,10 +55,7 @@ Respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/
 
 ## Forms
 
-- **Every input has a visible `<label>`.** Placeholders aren't labels; they vanish when you type.
-- **Errors are specific and attached:** the message says what's wrong and how to fix it, and it's linked to its field (`aria-describedby`) so screen readers announce it.
-- **Don't clear the form** on an error. Keep what the person typed.
-- **Use the right `type` and `autocomplete`,** so mobile keyboards and password managers help instead of fight.
+Forms are where most accessibility failures cost someone a task: unlabeled inputs, errors only shown in red, a form cleared on failure. [Forms & Validation](/docs/frontend/forms) covers labels, attached error messages and `autocomplete` in full.
 
 ## Images and Media
 
@@ -68,7 +65,7 @@ Respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/
 
 ## Testing
 
-Automated tools are necessary and nowhere near sufficient. They can tell that an image has `alt` text, but not whether it describes the image; that a button has a name, but not whether the name makes sense. [axe-core](https://github.com/dequelabs/axe-core), the engine behind most of them, reports finding about 57% of WCAG issues on average. A clean automated report means the easy half is done. The rest takes a person:
+Automated tools are necessary and nowhere near sufficient. They can tell that an image has `alt` text, not whether it describes the image; that a button has a name, not whether the name makes sense. [axe-core](https://github.com/dequelabs/axe-core), the engine behind most of them, reports finding about 57% of WCAG issues on average, so a clean report means the easy half is done. The rest takes a person:
 
 1. **Automated checks in CI** with axe on key pages, failing the build on new violations.
 2. **A keyboard pass** on every new flow: unplug the mouse and finish the task.

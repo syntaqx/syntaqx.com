@@ -6,25 +6,17 @@ order = 1304
 tags = ["leadership", "careers", "promotion", "management"]
 +++
 
-Without a written ladder, levels are decided by whoever argues best in calibration, and promotions go to the people whose work is most visible to the people who decide. That's not a fairness problem in theory; it's one in every organization that tries it. A written ladder doesn't remove judgment, but it makes the judgment explicit, discussable and the same for everyone.
-
-## Why Write It Down
-
-- **Fairness.** Two engineers doing the same work should be at the same level, regardless of who their manager is or how loudly they advocate for themselves.
-- **Clarity.** "What do I need to do to get promoted?" deserves a better answer than "keep doing great work". A ladder gives the shared language for that conversation.
-- **Hiring and leveling.** The same descriptions set the bar for interviews ([Hiring & Interviews](/docs/leadership/hiring)) and the level of an offer.
+The growth conversations in [1:1s](/docs/leadership/one-on-ones) need a shared language, and so does every decision about level and pay. Without a written ladder, levels are decided by whoever argues best in calibration, and promotions go to the people whose work is most visible to the people who decide. A ladder doesn't remove judgment, but it makes it explicit, discussable and the same for everyone: two engineers doing the same work land at the same level whoever their manager is, "what do I need to do to get promoted?" gets a better answer than "keep doing great work", and the same descriptions set the bar for [interviews](/docs/leadership/hiring) and the level of an offer.
 
 ## Describe Scope and Impact, Not Tasks
 
-A ladder that lists tasks ("writes unit tests", "participates in code review") describes a checklist anyone can game and nobody grows by completing. Describe levels instead by the scope a person owns and the impact they have: a well-defined task, then a feature, then a system, then a domain spanning several teams, then the organization's technical direction.
+A ladder that lists tasks ("writes unit tests", "participates in code review") is a checklist anyone can game and nobody grows by completing. Describe levels by the scope a person owns and the impact they have: a well-defined task, then a feature, a system, a domain spanning several teams, the organization's technical direction.
 
 [Dropbox's public career framework](https://dropbox.github.io/dbx-career-framework/) is a good model: each level is defined by its "scope, collaborative reach, and levers for impact", with separate core responsibilities (results, direction, talent, culture) and craft skills per discipline. It's also explicit that the framework is a guide, not a promotion checklist, which is the right way to read any ladder.
 
 ## Two Tracks, Equal Seniority
 
-Management is a different job, not a promotion. If the only way to keep growing is to become a manager, you'll convert some of your best engineers into unhappy managers and lose the work only they could do.
-
-Run parallel tracks, individual contributor and management, with equal seniority at equivalent levels: a Staff Engineer and an Engineering Manager are peers, and a Principal Engineer sits alongside a Director. [CircleCI's competency matrix](https://circleci.com/blog/why-we-re-designed-our-engineering-career-paths-at-circleci/) states the premise directly, that it doesn't assume all engineers should or want to become managers, and it builds leadership expectations into every IC level rather than reserving them for managers. Moving between tracks should be possible in both directions without loss of level.
+Management is a different job, not a promotion. If the only way to keep growing is to manage, you'll convert some of your best engineers into unhappy managers and lose the work only they could do. Run parallel tracks with equal seniority: a Staff Engineer and an Engineering Manager are peers, and a Principal Engineer sits alongside a Director. [CircleCI's competency matrix](https://circleci.com/blog/why-we-re-designed-our-engineering-career-paths-at-circleci/) states the premise directly, that it doesn't assume all engineers should or want to become managers, and it builds leadership expectations into every IC level rather than reserving them for managers. Moving between tracks should be possible in both directions without loss of level.
 
 ## Staff and Principal
 
@@ -35,17 +27,13 @@ Above senior, the ladder stops describing one job. Will Larson's [Staff Engineer
 - **Solver:** goes deep on hard, high-risk problems the organization has flagged, until they're resolved.
 - **Right Hand:** extends a senior leader's reach on the organization's most complex problems.
 
-Naming the archetypes matters for promotion: a Solver and a Tech Lead have very different evidence of impact, and judging both against one template undervalues whichever doesn't fit it. Describe staff-plus levels by the scope and kind of impact expected, and let the archetype shape what the evidence looks like.
+Naming them matters for promotion: a Solver and a Tech Lead produce very different evidence, and judging both against one template undervalues whichever doesn't fit it. Describe staff-plus levels by the scope and kind of impact expected, and let the archetype shape the evidence.
 
 ## Promotion Recognizes Sustained Work
 
 Promote people who are **already working at the next level, consistently, over a meaningful period**, not people who might be able to. Promoting on potential sets people up to struggle without support, and it signals to everyone else that the bar is negotiable. The ladder is the reference for "working at the next level", and the evidence is the work itself: designs, outcomes, the people they've grown.
 
-That also means managers owe their reports a path, not a verdict: what the next level looks like for them, what work would demonstrate it, and the chance to do that work. A promotion should rarely be a surprise to the person or to the committee.
-
-## Calibration
-
-Levels drift without calibration. Each manager's sense of "senior" slides toward their own team. Calibrate across teams on a regular cycle: managers present evidence against the ladder, peers challenge it, and the group reaches consistent outcomes. Done well, it protects people from having a weak advocate. Done badly, it rewards the most persuasive manager, so keep the discussion anchored on written evidence against the ladder, not on impressions.
+Managers owe their reports a path, not a verdict: what the next level looks like for them, what work would demonstrate it, and the chance to do that work. A promotion should rarely surprise the person or the committee. Levels also drift without cross-team calibration, as each manager's sense of "senior" slides toward their own team; how to calibrate without rewarding the most persuasive manager is in [Performance Reviews](/docs/leadership/performance-reviews).
 
 ## Avoid Promotion-Driven Development
 

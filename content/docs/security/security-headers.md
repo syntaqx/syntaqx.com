@@ -6,9 +6,9 @@ order = 704
 tags = ["security", "csp", "headers", "browser"]
 +++
 
-Your code will eventually have a bug that lets an attacker inject something: a script through an unescaped field, or a compromised third-party library. Security headers decide how much that bug can do. They tell the browser what your site is allowed to load, run and share, so the browser refuses the rest even when your code doesn't.
+Your code will eventually have a bug that lets an attacker inject something: a script through an unescaped field, or a compromised third-party library. Security headers decide how much that bug can do. They tell the browser what your site may load, run and share, so the browser refuses the rest even when your code doesn't.
 
-They're also cheap: a handful of response headers, set once at the edge. The one that matters most, Content Security Policy, is the one most sites skip, because it's the only one that can break things.
+They're cheap: a handful of headers set once at the edge. The one that matters most, Content Security Policy, is the one most sites skip, because it's the only one that can break things.
 
 ## The Baseline
 
@@ -18,30 +18,21 @@ Every HTML response carries these:
 | ------ | ----- | ------------- |
 | `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | Downgrades to plain HTTP |
 | `Content-Security-Policy` | See below | Injected scripts, clickjacking, data exfiltration |
-| `X-Content-Type-Options` | `nosniff` | Browsers guessing a file is a script |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | Full URLs (with tokens or IDs) leaking to other sites |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` | Features you don't use being abused |
-| `Cross-Origin-Opener-Policy` | `same-origin` | Other windows getting a handle to yours |
-| `Cross-Origin-Resource-Policy` | `same-origin` (or `same-site`) | Other sites embedding your resources |
-
-Each one closes a specific door:
-
-- **`nosniff`** stops a browser from deciding that an uploaded "image" is really JavaScript and running it.
-- **`Referrer-Policy`** keeps a password-reset token or an internal ID in your URL from being sent to every external site a user clicks through to.
-- **`Permissions-Policy`** turns off camera, microphone and location for your origin, so injected code can't prompt for them under your name.
-- **COOP and CORP** isolate your pages and resources from other origins: another site can't keep a handle to your window, or embed your resources to probe them.
+| `X-Content-Type-Options` | `nosniff` | A browser deciding an uploaded "image" is JavaScript and running it |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | A reset token or internal ID in your URL leaking to every site a user clicks through to |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` | Injected code prompting for features you don't use, under your name |
+| `Cross-Origin-Opener-Policy` | `same-origin` | Other windows keeping a handle to yours |
+| `Cross-Origin-Resource-Policy` | `same-origin` (or `same-site`) | Other sites embedding your resources to probe them |
 
 ## HSTS and Preload
 
-`Strict-Transport-Security` tells the browser to use HTTPS for your domain for `max-age` seconds, even if someone types `http://` or follows an old link. Without it, the first request on a coffee-shop network can be intercepted and quietly kept on plain HTTP.
+`Strict-Transport-Security` tells the browser to use HTTPS for your domain for `max-age` seconds, even if someone types `http://` or follows an old link. Without it, the first request on a coffee-shop network can be intercepted and kept on plain HTTP.
 
-HSTS only protects visits after the browser has seen the header once. The [HSTS preload list](https://hstspreload.org/) closes that gap by shipping your domain inside browsers as HTTPS-only. Preload requires a `max-age` of at least one year (`31536000`), `includeSubDomains`, and `preload`.
-
-Preloading is hard to undo: removal takes a browser release cycle, and every subdomain is forced onto HTTPS. Confirm every subdomain, including forgotten internal ones, serves HTTPS before you submit.
+HSTS only protects visits after the browser has seen the header once. The [HSTS preload list](https://hstspreload.org/) closes that gap by shipping your domain inside browsers as HTTPS-only, and requires a `max-age` of at least one year (`31536000`), `includeSubDomains` and `preload`. It's hard to undo: removal takes a browser release cycle, and every subdomain is forced onto HTTPS, so confirm every one, including forgotten internal ones, serves HTTPS before you submit.
 
 ## Content Security Policy
 
-CSP is an allowlist of where scripts, styles, frames and connections may come from. If an attacker injects a `<script>`, the browser refuses to run it, so a cross-site scripting bug stops being a full account takeover. It's defense in depth: escaping output is still the first line, and CSP is what holds when escaping is missed once.
+CSP is an allowlist of where scripts, styles, frames and connections may come from. If an attacker injects a `<script>`, the browser refuses to run it, so a cross-site scripting bug stops being an account takeover. Escaping output is still the first line; CSP is what holds when escaping is missed once.
 
 ```http
 Content-Security-Policy:
@@ -68,30 +59,30 @@ Content-Security-Policy:
 
 The question is how the browser tells your scripts from injected ones.
 
-- **Nonces** are a fresh random value per response, added to each `<script>` tag you render. An attacker who injects markup can't guess this response's nonce, so their script doesn't run. With `'strict-dynamic'`, a trusted script can load others without you listing every CDN. This is the default for server-rendered pages. The cost: the page has to be rendered per request, because a cached page would reuse its nonce.
-- **Hashes** list the exact contents of allowed inline scripts. They suit static pages where those scripts never change, and they survive caching.
-- **Host allowlists** (`script-src cdn.example.com`) are the weakest. They allow *any* script on that host, including an old vulnerable library version or a JSONP endpoint an attacker can turn into script execution. Big shared CDNs make this worse, not better.
+- **Nonces** are a fresh random value per response on each `<script>` tag you render. An attacker can't guess this response's nonce, so injected scripts don't run, and with `'strict-dynamic'` a trusted script can load others without listing every CDN. This is the default for server-rendered pages; the cost is rendering per request, since a cached page would reuse its nonce.
+- **Hashes** list the exact contents of allowed inline scripts. They suit static pages whose scripts never change, and survive caching.
+- **Host allowlists** (`script-src cdn.example.com`) are weakest: they allow *any* script on that host, including an old vulnerable library or a JSONP endpoint an attacker can turn into script execution. Big shared CDNs make it worse.
 
-`'unsafe-inline'` for scripts allows any inline script, which is exactly what an injection produces, so it gives up most of what CSP is for. A policy can list it alongside a nonce and `'strict-dynamic'` for old browsers: browsers that understand the nonce ignore it. Using it on its own is a deliberate departure, and it should be recorded as one.
+`'unsafe-inline'` allows any inline script, which is exactly what an injection produces, so it gives up most of what CSP is for. Listed alongside a nonce and `'strict-dynamic'` as a fallback for old browsers it's harmless, since browsers that understand the nonce ignore it. On its own it's a deliberate departure, and should be recorded as one.
 
 ## Rolling Out CSP
 
-A wrong policy breaks your own site: the analytics stop loading, the payment widget can't connect, a page goes blank. That's why most sites never ship CSP. The way through is to observe before enforcing:
+A wrong policy breaks your own site: analytics stop loading, the payment widget can't connect, a page goes blank. That's why most sites never ship CSP. The way through is to observe before enforcing:
 
 1. **Report-Only.** Send the policy as `Content-Security-Policy-Report-Only` with a reporting endpoint. Browsers enforce nothing, but report every request the policy would have blocked.
-2. **Fix and tune.** Real violations are your own inline scripts and third parties you forgot about. Move scripts to nonces, add the origins you genuinely need, remove what you don't. Expect noise from browser extensions and filter it.
+2. **Fix and tune.** Real violations are your own inline scripts and third parties you forgot. Move scripts to nonces, add the origins you need, remove the rest, and filter out browser-extension noise.
 3. **Enforce.** Once reports are clean across a release or two, send the same policy as `Content-Security-Policy`. Keep reporting on, so a regression shows up in your error tracker instead of as a support ticket.
 4. **Tighten over time.** Every new third-party script is a policy change, reviewed like code, because it is code running with your origin's privileges.
 
 ## CORS Is Not a Security Boundary
 
-CORS relaxes the browser's same-origin policy; it doesn't protect your server. `curl`, scripts and other servers ignore it entirely, so every request is still authorized on its own merits. What CORS controls is which browser origins can *read* your responses.
+CORS relaxes the browser's same-origin policy; it doesn't protect your server. `curl`, scripts and other servers ignore it, so every request is still [authorized](/docs/security/authorization) on its own merits. CORS only controls which browser origins can *read* your responses.
 
-Keep `Access-Control-Allow-Origin` to the origins that need it. Never reflect whatever origin the request sent together with `Access-Control-Allow-Credentials: true`: that lets any website make authenticated requests as your logged-in users and read the answers.
+Keep `Access-Control-Allow-Origin` to the origins that need it, and never reflect the request's origin together with `Access-Control-Allow-Credentials: true`: that lets any website make authenticated requests as your logged-in users and read the answers.
 
 ## This Site
 
-syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-site` so `www` and the `api` subdomain can share resources. Its Content Security Policy ran in Report-Only mode first, and before switching to enforcing, every page type was loaded and every interactive tool exercised against it, reading violations from the browser console. That found what page loads alone wouldn't have: the IP lookup and the hover-card demo call third-party APIs only when used, and the favicon tool reads uploads back from `data:` URLs. Those are listed explicitly, and the policy is now enforced, still reporting to Sentry. Its `script-src` still allows inline scripts, because nonces would mean rendering every page per request; that departure from the policy above is recorded in [ADR 0004](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0004-csp-allows-inline-scripts.md).
+syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-site` so `www` and the `api` subdomain can share resources. Its Content Security Policy ran Report-Only first, and before enforcing, every page type was loaded and every interactive tool exercised against it. That found what page loads alone wouldn't: the IP lookup and hover-card demo call third-party APIs only when used, and the favicon tool reads uploads back from `data:` URLs. Those are listed explicitly, and the policy is enforced, still reporting to Sentry. Its `script-src` allows inline scripts, because nonces would mean rendering every page per request; that departure is recorded in [ADR 0004](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0004-csp-allows-inline-scripts.md).
 
 ## References
 

@@ -1,44 +1,29 @@
 +++
 title = "On-Call & Runbooks"
-description = "A sustainable on-call rotation: severity levels, escalation, handoffs, a runbook template for every alert, and budgeting time to drive toil down."
+description = "A sustainable on-call rotation: who carries the pager, paging and escalation, written handoffs, a runbook for every alert, and time budgeted to drive toil down."
 category = "Operations"
 order = 1204
 tags = ["operations", "on-call", "incidents", "runbooks"]
 aliases = ["on-call"]
 +++
 
-On-call exists so customers get help fast. It only works long term if it's sustainable for the people carrying the pager: few pages, every page actionable, and time set aside to make next week quieter than this one.
+Every alert from [Observability](/docs/operations/observability) and every fast [SLO](/docs/operations/slos) burn ends at a person. On-call exists so customers get help fast, and it only lasts if it's sustainable for the people carrying the pager: few pages, every page actionable, and time set aside to make next week quieter than this one.
 
 ## Rotations
 
-- **The team that ships the service carries its pager.** Ownership and on-call are the same thing. A team that gets paged for its own bugs fixes them; a team that hands the pager to someone else ships them.
+- **The team that ships the service carries its pager.** A team paged for its own bugs fixes them; a team that hands the pager to someone else ships them.
 - **One-week shifts,** primary and secondary, handed off on a weekday morning, never on a Friday evening. A week is long enough to build context on what's been flaky, short enough to recover from.
-- **Enough people to make it sustainable.** For a round-the-clock rotation at one site, that's about eight engineers; with two sites in different time zones splitting the day, about six per site. Fewer than that and each person is on call too often to recover between shifts, and burned-out on-call engineers make slow, bad decisions at exactly the wrong time. The [Google SRE Book](https://sre.google/sre-book/being-on-call/) arrives at the same numbers.
+- **Enough people.** Around the clock at one site takes about eight engineers; two sites splitting the day by time zone, about six each, the numbers the [Google SRE Book](https://sre.google/sre-book/being-on-call/) arrives at. Fewer, and people are on call too often to recover, and tired engineers make slow, bad decisions at exactly the wrong time.
 - **Follow the sun when you can.** Nights are the exception, not the job.
-- **On-call is the shift's main work.** Feature work is a bonus. The rest of the shift goes to toil reduction and alert hygiene.
+- **On-call is the shift's main work.** Feature work is a bonus; the rest goes to toil and alert hygiene.
 
-## Severity Levels
+## Paging and Escalation
 
-| Severity | Definition | Response |
-| -------- | ---------- | -------- |
-| SEV1 | Critical journey down, money moving incorrectly, or data exposed | Page immediately, incident commander, status page, all hands as needed |
-| SEV2 | Major degradation, or an [SLO](/docs/operations/slos) burning fast | Page, fix during the shift |
-| SEV3 | Minor or contained impact | Ticket, fix within the week |
+Severity levels, incident roles and how an incident is run live in [Incidents & Postmortems](/docs/operations/incident-response); on-call is how the right person gets there.
 
-Declare early and downgrade later. A SEV1 that turns out to be a SEV3 costs an hour of a few people's time. A SEV3 that was really a SEV1 costs customers, and the hours lost before anyone realized it are the hardest to explain afterward.
-
-## During an Incident
-
-- **One incident commander.** They coordinate and decide; they don't debug. Everyone else works the problem. The person deepest in the logs is the worst person to also track who's doing what, what's been tried, and when to update customers.
-- **Mitigate first, diagnose later.** Roll back, fail over, flip the [kill switch](/docs/delivery/feature-flags). Understanding why can wait until customers are fine. Root-causing a live outage feels productive, but every minute of it is a minute of impact a rollback would have ended.
-- **One channel, one timeline.** Decisions and actions go in the incident channel with timestamps. It becomes the [postmortem](/docs/operations/incident-response) timeline.
-- **Communicate on a schedule.** Status updates every 30 minutes for SEV1, even when the update is "still investigating".
-
-## Escalation
-
-- Primary acknowledges within **5 minutes** for a page. No acknowledgement escalates to secondary automatically, then to the engineering manager.
+- **Primary acknowledges a page within 5 minutes.** No acknowledgement escalates automatically to secondary, then to the engineering manager.
 - **Escalating is never a failure.** Pulling in the database owner at 3am is cheaper than guessing for two hours.
-- Every service lists who to escalate to, in the runbook, not in someone's memory.
+- **Every service's runbook says who to escalate to,** not someone's memory.
 
 ## Handoffs
 
@@ -84,7 +69,7 @@ Runbooks are kept next to the code, reviewed in pull requests, and updated after
 
 ## Toil
 
-Toil is manual, repetitive, automatable work that grows with the system and leaves nothing behind. It's dangerous because it scales with traffic while the team doesn't: left alone, it eventually consumes all the time that would have gone into making it go away. Google's SRE teams cap it at [50% of an engineer's time](https://sre.google/sre-book/eliminating-toil/), and that's a ceiling, not a target.
+Toil is manual, repetitive, automatable work that grows with the system and leaves nothing behind. It scales with traffic while the team doesn't, so left alone it consumes the time that would have made it go away. Google's SRE teams cap it at [50% of an engineer's time](https://sre.google/sre-book/eliminating-toil/), and that's a ceiling, not a target.
 
 - **Track it.** Every manual intervention on shift gets a tally in the handoff.
 - **Fix the top item every rotation.** Automate it, or make the alert that caused it go away.
@@ -96,7 +81,4 @@ Toil is manual, repetitive, automatable work that grows with the system and leav
 
 - [Google SRE Book: Being On-Call](https://sre.google/sre-book/being-on-call/), rotation size and load
 - [Google SRE Workbook: On-Call](https://sre.google/workbook/on-call/), handoffs and sustainable rotations
-- [Google SRE Book: Managing Incidents](https://sre.google/sre-book/managing-incidents/), incident roles
-- [Google SRE Workbook: Incident Response](https://sre.google/workbook/incident-response/), running an incident
 - [Google SRE Book: Eliminating Toil](https://sre.google/sre-book/eliminating-toil/), the 50% toil cap
-- [PagerDuty: Incident Response Documentation](https://response.pagerduty.com/), severity levels and the incident commander role

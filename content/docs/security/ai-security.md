@@ -6,20 +6,18 @@ order = 706
 tags = ["security", "ai", "llm", "agents"]
 +++
 
-A language model follows instructions, and it can't reliably tell your instructions from instructions hidden in the data it reads. That's not a bug to be patched. It's how the technology works today, so the job is designing systems where a manipulated model can't do much harm.
+A language model follows instructions, and it can't reliably tell yours from instructions hidden in the data it reads. That's not a bug to be patched; it's how the technology works today. So the job is designing systems where a manipulated model can't do much harm.
 
 ## Prompt Injection Is Unsolved
 
 - **Direct injection:** a user types "ignore your previous instructions".
 - **Indirect injection:** the instructions arrive inside content the model reads: a web page, an email, a PDF, a code comment, a tool's output, a support ticket. The user never sees them.
 
-Filters and "please ignore malicious instructions" in the system prompt reduce it; nothing eliminates it. The reason is structural: instructions and data arrive in the same channel, as text, and the model decides what to treat as an instruction by reading it. A filter has to anticipate every phrasing in every language and encoding; an attacker only needs one that gets through.
-
-So treat it the way you treat any input you can't sanitize: plan as if any model that reads untrusted content can be turned against you, and make sure that when it is, it can't reach anything that matters.
+Filters and "please ignore malicious instructions" in the system prompt reduce it; nothing eliminates it. Instructions and data arrive in the same channel, as text, and the model decides which is which by reading it. A filter has to anticipate every phrasing in every language and encoding; an attacker needs one that gets through. So plan as if any model that reads untrusted content can be turned against you, and make sure that when it is, it can't reach anything that matters.
 
 ## The Lethal Trifecta
 
-Not every injectable system is dangerous. A model that summarizes a public web page for the person who asked can be tricked into a bad summary, and that's about it. The useful question is when injection turns into a breach, and Simon Willison's framing answers it: an agent is dangerous when it has all three:
+Not every injectable system is dangerous: a model summarizing a public page can be tricked into a bad summary, and that's about it. Simon Willison's framing says when injection turns into a breach. An agent is dangerous when it has all three:
 
 1. **Access to private data.**
 2. **Exposure to untrusted content.**
@@ -55,9 +53,9 @@ With all three, the attack writes itself: a web page or email the agent reads sa
 
 ## Agents, Tools and MCP
 
-Tools are where a model's words become actions. A model that's tricked into saying something wrong is a content problem; a model that's tricked into calling `delete_repository` or `send_payment` is an incident. So tools get the strictest review in the system.
+Tools are where a model's words become actions. A model tricked into saying something wrong is a content problem; one tricked into calling `delete_repository` or `send_payment` is an incident. Tools get the strictest review in the system.
 
-- **Every tool and MCP server is a dependency,** with the same vetting, pinning and update discipline as any other. See [Dependency Management](/docs/engineering/dependencies).
+- **Every tool and MCP server is a [dependency](/docs/engineering/dependencies),** with the same vetting, pinning and update discipline.
 - **Never pass a user's token through** to a downstream API. The MCP specification forbids token passthrough: a server only accepts tokens issued for it.
 - **Ask for the smallest scopes** and elevate only when a privileged action is first attempted.
 - **Run local tools sandboxed,** with the exact command shown to the user before it runs.
@@ -65,7 +63,7 @@ Tools are where a model's words become actions. A model that's tricked into sayi
 
 ## AI on the Other Side
 
-Attackers use the same models: to find vulnerabilities, write exploits faster, and personalize phishing. The response isn't AI-specific. It's patching quickly ([Vulnerability Management](/docs/security/vulnerability-management)), keeping authorization correct ([API Security](/docs/security/api-security)), and making sure the AI tools you build with are held to the same review as human-written code ([AI-Assisted Development](/docs/engineering/ai-assisted-development)).
+Attackers use the same models to find vulnerabilities, write exploits and personalize phishing. The response isn't AI-specific: patch quickly ([Vulnerability Management](/docs/security/vulnerability-management)), keep authorization correct ([API Security](/docs/security/api-security)), and hold AI-written code to the same review as human-written code ([AI-Assisted Development](/docs/engineering/ai-assisted-development)).
 
 ## References
 

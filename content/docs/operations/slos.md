@@ -9,7 +9,7 @@ aliases = ["slos"]
 
 "Is it reliable enough?" needs a number, agreed on before the incident, not argued about during it. Service level objectives give you that number, and error budgets turn it into a decision rule.
 
-The point isn't to be as reliable as possible. 100% is the wrong target for nearly everything: users can't tell 99.99% from 100% through their own flaky Wi-Fi, and chasing the difference costs releases you could have shipped. An SLO says how much unreliability is acceptable, which turns the rest into a budget you can spend on moving fast. The vocabulary and the burn-rate math below come from Google's [SRE Book](https://sre.google/sre-book/service-level-objectives/) and [Workbook](https://sre.google/workbook/implementing-slos/), and they've become the industry's common language for this.
+The point isn't maximum reliability. 100% is the wrong target for nearly everything: users can't tell 99.99% from 100% through their own flaky Wi-Fi, and chasing the difference costs releases you could have shipped. An SLO says how much unreliability is acceptable, which turns the rest into a budget for moving fast. The vocabulary and burn-rate math come from Google's [SRE Book](https://sre.google/sre-book/service-level-objectives/) and [Workbook](https://sre.google/workbook/implementing-slos/), now the industry's common language.
 
 ## Terms
 
@@ -32,14 +32,14 @@ Measure what users feel, as close to them as you can (the load balancer or the c
 | Pipelines and jobs | Freshness (age of the newest processed data), correctness |
 | Queues and [webhooks](/docs/payments/webhooks) | Delivery latency, ratio delivered within the retry window |
 
-- **Ratios, not averages.** "99% of requests under 300ms" is an SLI. "Average latency 120ms" hides the slow tail that users actually notice.
-- **`4xx` aren't failures.** A `422` is the API working correctly (see [Error Responses](/docs/requests/error-responses)). Count `429` separately: it's a failure if you throttled someone below their documented [rate limit](/docs/requests/rate-limiting).
-- **A few per service.** Two or three SLIs per user journey. Twenty SLIs means nobody looks at any of them.
+- **Ratios, not averages.** "99% of requests under 300ms" is an SLI; "average latency 120ms" hides the slow tail users notice.
+- **`4xx` aren't failures.** A `422` is the API working correctly ([Error Responses](/docs/requests/error-responses)). A `429` is a failure only if you throttled someone below their documented [rate limit](/docs/requests/rate-limiting).
+- **A few per journey.** Two or three; twenty means nobody looks at any of them.
 
 ## Setting Targets
 
 - **Start from today's performance,** then tighten as you earn it. An SLO you miss every month is ignored; one you beat by miles is wasted budget.
-- **Each extra nine is a different kind of system.** 99.9% allows 43 minutes a month: a human can be paged, look, and roll back. 99.99% allows 4: that only works if failover and rollback are automatic, because a person can't get to a laptop in time. As a rule of thumb, each nine costs roughly ten times the last.
+- **Each extra nine is a different kind of system.** 99.9% allows 43 minutes a month: a human can be paged and roll back. 99.99% allows 4, which only works if failover and rollback are automatic. Each nine costs roughly ten times the last.
 - **Critical paths get stricter targets.** Authorizing a payment and rendering a settings page don't deserve the same objective.
 - **Rolling 30-day windows,** reviewed quarterly.
 
@@ -55,7 +55,7 @@ The budget only matters if spending it changes behavior. Write the policy down b
 
 Exceptions (a security fix, a regulatory deadline) are allowed, and written down. Any single incident that burns more than 20% of the budget gets a [postmortem](/docs/operations/incident-response), even if nobody noticed.
 
-The policy is what keeps the SLO honest. Without it, the budget is a dashboard: feature work continues while reliability burns, and the conversation happens after the outage. With it, the tradeoff between shipping and stability is decided by a rule everyone agreed to in advance, not by whoever argues loudest during the incident.
+Without a policy, the budget is a dashboard: feature work continues while reliability burns, and the conversation happens after the outage. With one, the tradeoff between shipping and stability is a rule agreed in advance, not whoever argues loudest during the incident.
 
 ## Alerting on Burn Rate
 
@@ -71,7 +71,7 @@ The [Workbook's recommended alerts](https://sre.google/workbook/alerting-on-slos
 
 An alert fires only when **both** windows are over the burn rate. The long window keeps it from paging on a blip, and the short window (one-twelfth of the long one) makes it stop firing soon after the problem is fixed.
 
-These replace threshold alerts like "error rate above 1% for 5 minutes", which page on short spikes that don't matter and miss slow leaks that do. The supporting signals are covered in [Observability](/docs/operations/observability), and what happens after a page in [On-Call & Runbooks](/docs/operations/on-call).
+These replace threshold alerts like "error rate above 1% for 5 minutes", which page on spikes that don't matter and miss slow leaks that do. What happens after the page is [On-Call & Runbooks](/docs/operations/on-call).
 
 ## References
 

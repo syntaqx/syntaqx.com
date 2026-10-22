@@ -7,7 +7,7 @@ tags = ["testing", "quality", "process", "ci"]
 aliases = ["testing"]
 +++
 
-Tests exist so you can change code with confidence. A test suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
+Tests exist so you can change code with confidence, and everything downstream, from [code review](/docs/engineering/commits-and-reviews) to deploying every merge, leans on them. A suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
 
 ## The Pyramid
 
@@ -85,8 +85,7 @@ A flaky test is a failing test. The damage isn't the one false alarm; it's what 
 
 ## In CI
 
-- The full suite runs on every pull request and blocks the merge. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
-- Keep it under about 10 minutes. Parallelize before you start skipping.
+- The full suite runs on every pull request and blocks the merge, in under about 10 minutes. Parallelize before you start skipping. See [CI & Continuous Deployment](/docs/delivery/ci-pipelines).
 - Coverage is a signal for finding untested code, not a target to hit. Make it a target and people write tests that execute lines without asserting anything; 100% coverage of the wrong assertions proves nothing.
 
 ## This Site

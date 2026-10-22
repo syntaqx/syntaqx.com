@@ -26,22 +26,20 @@ Every error, from every endpoint, at every status code, has the same JSON shape:
 }
 ```
 
-The consistency is the point. A client writes one error handler, and it works for a `404` from one endpoint and a `422` from another. If every team invents its own shape (`error`, `errors`, `error_message`, `detail`), every client grows a special case per endpoint, and the special cases are where error handling quietly breaks.
+The consistency is the point: one error handler works for a `404` from one endpoint and a `422` from another. If every team invents its own shape (`error`, `error_message`, `detail`), every client grows a special case per endpoint, and the special cases are where error handling quietly breaks.
 
 - **Nested fields use dot paths** (`items.0.quantity`), so a form can attach each message to the input that caused it.
 - **Messages are for humans, codes are for programs.** Clients branch on the status code, never by matching message text, so messages can be reworded without breaking anyone.
 - **Never echo the input back.** `"The card number is invalid."`, not `"4242 4242 4242 4241 is invalid."` Error bodies end up in logs, support tickets and screenshots. See [Sensitive Data](/docs/payments/sensitive-data).
-- **Every error carries a `Request-Id` header.** It's what a client pastes into a support ticket, and it ties the response to the server's logs. See [Observability](/docs/operations/observability).
+- **Every error carries a `Request-Id` header,** which clients log and paste into support tickets, and which ties the response to the server's logs. See [Observability](/docs/operations/observability).
 
 ### Why Not RFC 9457 Problem Details?
 
-[RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) defines a standard error format (`application/problem+json` with `type`, `title`, `status`, `detail`, `instance`). It's a good standard, and if you're building an API many teams will contribute error types to, its `type` URIs give each kind of error a stable, documented identity.
-
-I keep the simpler shape for two reasons. Field-level validation is the most common error a client actually has to render, and Problem Details has no standard member for it, so every implementation adds its own extension anyway. And `type` URIs are only valuable if someone writes and maintains the page behind each one; an unmaintained `type` is noise. If an API outgrows `message` and `errors`, Problem Details is where it should go, with `errors` carried as an extension member.
+[RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) defines a standard error format (`application/problem+json` with `type`, `title`, `status`, `detail`, `instance`). It's a good standard, and for an API many teams contribute error types to, its `type` URIs give each kind of error a stable, documented identity. I keep the simpler shape for two reasons. Field-level validation is the most common error a client actually has to render, and Problem Details has no standard member for it, so every implementation adds its own extension anyway. And `type` URIs are only valuable if someone writes and maintains the page behind each one; an unmaintained `type` is noise. If an API outgrows `message` and `errors`, Problem Details is where it should go, with `errors` carried as an extension member.
 
 ## The Status Code Is the Outcome
 
-There's no `success` boolean in the body and no `200 OK` wrapping an error. HTTP already says whether a request worked, and everything between the client and the server reads it: retry logic, load balancers, CDNs, uptime monitors and error-rate dashboards. A `200` with `"success": false` is invisible to all of them, so the error rate looks perfect while clients fail.
+There's no `success` boolean in the body and no `200 OK` wrapping an error. Everything between client and server reads the status code: retry logic, load balancers, CDNs, uptime monitors and error-rate dashboards. A `200` with `"success": false` is invisible to all of them, so the error rate looks perfect while clients fail. Clients branch on the code, and treat one they don't know by its class: a `4xx` won't succeed if repeated as-is, a `5xx` might.
 
 | Code | Meaning | When |
 | ---- | ------- | ---- |
@@ -64,12 +62,10 @@ There's no `success` boolean in the body and no `200 OK` wrapping an error. HTTP
 
 ### 400 or 422?
 
-Both mean "fix your request", but they tell the client *what* to fix:
-
 - **`400`: the request can't be read.** The JSON doesn't parse, a required header is missing, the version doesn't exist. Nothing about the values was checked, because the server never got that far.
 - **`422`: the request was read, and the values are wrong.** The JSON is fine, but `email` isn't an email and `count` is out of range. This is where `errors` lives.
 
-The split is worth keeping because the fixes are different. A `400` is usually a bug in the client's code (it built the request wrong). A `422` is usually bad input from a user (the client should show the messages next to the fields).
+The split is worth keeping because the fixes differ. A `400` is usually a bug in the client's code; a `422` is usually bad user input, and the client shows the messages next to the fields.
 
 ### 401, 403 or 404?
 
@@ -79,14 +75,7 @@ The split is worth keeping because the fixes are different. A `400` is usually a
 
 ### 5xx and Retries
 
-A `5xx` means the outcome is unknown or the server is struggling, and the right client response differs: `503` with `Retry-After` is an invitation to come back, while a `500` on a request with side effects may have half happened. [Retries & Timeouts](/docs/architecture/retries-and-timeouts) covers which are safe to retry and how.
-
-## What Clients Should Do
-
-1. Branch on the status code. Treat unknown codes by their class (`4xx`: don't retry as-is, `5xx`: retry carefully).
-2. Show `message` to developers, and map `errors` onto form fields for users.
-3. Log the `Request-Id` with every failure.
-4. Honor `Retry-After` on `429` and `503`.
+A `5xx` means the outcome is unknown or the server is struggling, and the right response differs: `503` with `Retry-After` is an invitation to come back, while a `500` on a request with side effects may have half happened. [Retries & Timeouts](/docs/architecture/retries-and-timeouts) covers which are safe to retry and how.
 
 ## This Site
 

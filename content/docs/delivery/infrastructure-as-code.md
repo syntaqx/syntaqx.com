@@ -6,21 +6,15 @@ order = 1105
 tags = ["iac", "terraform", "opentofu", "delivery"]
 +++
 
-Infrastructure built by clicking through a cloud console has the same problem as a server patched by hand: it works, and nobody can say exactly why, or build another one like it. The security group that someone widened during an incident, the database parameter tuned last year, the DNS record added for a vendor trial: none of it is written down anywhere except in the live system.
-
-[Infrastructure as code](https://martinfowler.com/bliki/InfrastructureAsCode.html) applies the same discipline to infrastructure that the rest of the playbook applies to software: it lives in version control, changes go through review, and the running system is built from what's in the repository.
+Infrastructure built by clicking through a cloud console has the same problem as a [server patched by hand](/docs/delivery/containers): it works, and nobody can say exactly why, or build another one like it. The security group widened during an incident, the database parameter tuned last year, the DNS record added for a vendor trial: none of it is written down anywhere except in the live system. [Infrastructure as code](https://martinfowler.com/bliki/InfrastructureAsCode.html) applies the discipline the rest of this playbook applies to software: it lives in version control, changes go through review, and the running system is built from the repository.
 
 ## Declarative Beats Imperative
 
-There are two ways to describe infrastructure in code. A script says *what to do*: create this bucket, then attach this policy. A declarative definition says *what should exist*, and a tool works out the steps.
-
-Declarative wins for long-lived infrastructure because it handles the case scripts can't: the world already partly matches. A script run twice tries to create the bucket again and fails, or needs a pile of "if it doesn't exist" checks. A declarative tool compares the definition to reality and changes only the difference. That comparison, the **plan**, is also the most valuable artifact in the whole process: a reviewable list of exactly what will be created, changed and destroyed.
+A script says *what to do*: create this bucket, then attach this policy. A declarative definition says *what should exist*, and a tool works out the steps. Declarative wins for long-lived infrastructure because it handles the case scripts can't: the world already partly matches. A script run twice tries to create the bucket again; a declarative tool compares the definition to reality and changes only the difference. That comparison, the **plan**, is also the most valuable artifact in the whole process: a reviewable list of exactly what will be created, changed and destroyed.
 
 ## Terraform and OpenTofu
 
-Terraform is the most widely used declarative tool, and [OpenTofu](https://opentofu.org/) is its open-source fork. In August 2023 HashiCorp moved Terraform from the Mozilla Public License to the Business Source License, which isn't an open-source license; the community forked the last MPL version as OpenTofu, which the [Linux Foundation announced](https://www.linuxfoundation.org/press/announcing-opentofu) in September 2023 and which reached its first stable release, 1.6.0, in January 2024. OpenTofu remains [MPL-2.0](https://github.com/opentofu/opentofu) and describes itself as a drop-in replacement.
-
-For most teams the choice is about licensing and governance, not features: the configuration language, providers and workflow are the same. What follows applies to both.
+Terraform is the most widely used declarative tool, and [OpenTofu](https://opentofu.org/) is its open-source fork. In August 2023 HashiCorp moved Terraform from the Mozilla Public License to the Business Source License, which isn't open source; the community forked the last MPL version as OpenTofu, [announced by the Linux Foundation](https://www.linuxfoundation.org/press/announcing-opentofu) in September 2023, with its first stable release, 1.6.0, in January 2024. OpenTofu remains [MPL-2.0](https://github.com/opentofu/opentofu) and describes itself as a drop-in replacement. The choice is about licensing and governance, not features; what follows applies to both.
 
 ## State: Remote, Locked, Never Edited by Hand
 
@@ -33,14 +27,14 @@ The tool records what it created in a **state** file, which maps your definition
 
 ## Plan in CI, Apply from CI
 
-The workflow that makes infrastructure reviewable is the same one used for code ([CI Pipelines](/docs/delivery/ci-pipelines)):
+The workflow that makes infrastructure reviewable is the same one used for code ([CI & Continuous Deployment](/docs/delivery/ci-pipelines)):
 
 1. A pull request changes the definitions.
 2. CI runs `plan` and posts the result on the pull request.
 3. A reviewer reads **the plan, not just the diff**. A one-line change to a name can plan as "destroy and recreate the database"; only the plan shows it.
 4. After merge, CI applies exactly that plan.
 
-**Nobody applies from a laptop.** A local apply bypasses review, uses whatever version of the tool and providers that machine has, and leaves no record in the place everyone looks. Tools like [Atlantis](https://www.runatlantis.io/) run this loop from pull-request comments. Whichever you use, the credentials that can change production belong to CI, not to people.
+**Nobody applies from a laptop.** A local apply bypasses review, uses whatever tool and provider versions that machine has, and leaves no record where everyone looks. Tools like [Atlantis](https://www.runatlantis.io/) run this loop from pull-request comments. Either way, the credentials that can change production belong to CI, not to people.
 
 ## Detect Drift
 
@@ -57,11 +51,9 @@ Modules package a pattern (a service's standard database, a bucket with the righ
 
 ## Environments as Code
 
-Each environment is the same definitions with different inputs: sizes, counts, domains. That's what makes [environment parity](/docs/operations/environments) real rather than aspirational, and what makes recreating an environment, or a whole region during [disaster recovery](/docs/operations/disaster-recovery), a matter of running the code rather than following a wiki page.
+Each environment is the same definitions with different inputs: sizes, counts, domains. That's what makes [environment parity](/docs/operations/environments) real, and what makes recreating an environment, or a whole region during [disaster recovery](/docs/operations/disaster-recovery), a matter of running the code rather than following a wiki page.
 
-## Secrets Stay Out
-
-Configuration and secrets are different things (see [Configuration & Secrets](/docs/operations/environments)). Infrastructure code creates the place a secret lives, like a secrets-manager entry and the permission to read it, and never contains the secret's value. The value goes in through the secrets manager, so it's never in the repository or, with ephemeral values, in state.
+Infrastructure code creates the place a secret lives (a secrets-manager entry and the permission to read it) and never contains its value, which goes in through the secrets manager, so it's never in the repository or, with ephemeral values, in state.
 
 ## Policy as Code
 
@@ -69,14 +61,7 @@ Some rules shouldn't depend on a reviewer noticing: storage buckets aren't publi
 
 ## What Isn't Infrastructure as Code
 
-Not everything belongs in the tool, and pretending otherwise produces worse code than a well-documented manual step.
-
-- **Data.** Database contents, user uploads and anything a user created is not infrastructure.
-- **Bootstrapping.** The state backend and the CI identity that runs everything else have to exist first. Create them once, carefully, and document how.
-- **Secrets' values,** as above.
-- **Third-party settings without a provider,** which stay manual. Write down that they're manual, and where.
-
-The honest goal isn't "everything in code". It's that everything is either in code or explicitly listed as not being in code, so nobody discovers a hand-made dependency during an outage.
+Data isn't infrastructure. The state backend and the CI identity that runs everything have to exist first, so they're bootstrapped once, carefully, and documented. Secrets' values stay out, and third-party settings without a provider stay manual. The honest goal isn't "everything in code"; it's that everything is either in code or explicitly listed as not, so nobody discovers a hand-made dependency during an outage.
 
 ## This Site
 

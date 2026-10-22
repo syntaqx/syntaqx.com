@@ -47,7 +47,7 @@ Content-Type: application/json
 ]
 ```
 
-- **Each result has its own `status`,** using the same codes a single request would get. A client already knows what `201` and `422` mean, so it can reuse its single-request handling item by item instead of learning a batch-specific vocabulary.
+- **Each result has its own `status`,** the code a single request would get, so a client reuses its single-request handling item by item.
 - **Successes carry the resource** under its own name, never a `data` wrapper ([JSON Field Conventions](/docs/requests/json-conventions)).
 - **Failures carry the standard [error format](/docs/requests/error-responses).**
 - **Order matches the request,** so result `n` is about item `n`. No client-side matching.
@@ -56,7 +56,7 @@ Content-Type: application/json
 
 The default is **independent items**: each one succeeds or fails on its own, and the batch returns `200` as long as it was processed. The HTTP status describes the batch; the per-item `status` describes each item.
 
-Why `200` and not an error when some items failed? Because the batch did exactly what it promised: it processed every item and reported on each. Returning `4xx` for a partly successful batch tells retry logic and monitoring that nothing happened, and a client that retries the whole batch creates the 998 successes twice. WebDAV's `207 Multi-Status` exists for this situation, but it comes with an XML body format and semantics most HTTP clients don't implement, and a `2xx` with per-item results says the same thing in a shape the client already parses.
+Why `200` when some items failed? Because the batch did what it promised: it processed every item and reported on each. A `4xx` for a partly successful batch tells retry logic and monitoring that nothing happened, and a client that retries the whole batch creates the 998 successes twice. WebDAV's `207 Multi-Status` exists for this, but brings an XML body format most HTTP clients don't implement.
 
 | Situation | Response |
 | --------- | -------- |
@@ -64,12 +64,12 @@ Why `200` and not an error when some items failed? Because the batch did exactly
 | Batch malformed (not an array, too many items) | `400` or `422`, nothing processed |
 | Batch rejected before processing (auth, rate limit) | `401`, `403` or `429`, nothing processed |
 
-Where items must succeed or fail together (moving money between accounts, a [ledger transaction](/docs/payments/payment-states)), the endpoint is **atomic** and says so: one invalid item fails the whole request with `422`, and nothing is written. Never mix the two modes behind a flag. A client that forgets the flag gets partial writes where it expected all-or-nothing, and that's the kind of bug that shows up as an unbalanced ledger, not an error.
+Where items must succeed or fail together (moving money between accounts, a [ledger transaction](/docs/payments/payment-states)), the endpoint is **atomic** and says so: one invalid item fails the whole request with `422`, and nothing is written. Never mix the two modes behind a flag: a client that forgets it gets partial writes where it expected all-or-nothing, a bug that shows up as an unbalanced ledger, not an error.
 
 ## Limits
 
-- **At most 100 items per batch.** A ceiling bounds everything a single request can cost: body size, memory, how long locks are held, and how long the client waits. 100 is small enough that a batch finishes in a normal request's time and large enough to cut round trips by two orders of magnitude. It matches the [page size ceiling](/docs/requests/pagination), so a client can fetch a page, change it, and write it back in one batch. Bigger inputs are split by the client, or uploaded as a file to an async import.
-- **A batch counts as one request per item** against [rate limits](/docs/requests/rate-limiting). Batching saves round trips, not quota. Otherwise a 100-item batch becomes a way to do 100 times the work under the same limit.
+- **At most 100 items per batch.** A ceiling bounds what one request can cost: body size, memory, lock time, and the client's wait. 100 finishes in a normal request's time, cuts round trips by two orders of magnitude, and matches the [page size ceiling](/docs/requests/pagination), so a client can fetch a page, change it, and write it back in one batch. Bigger inputs go to an async import.
+- **A batch counts as one request per item** against [rate limits](/docs/requests/rate-limiting). Batching saves round trips, not quota; otherwise it's a way to do 100 times the work under the same limit.
 - **Items are validated before any work starts** when it's cheap, so a malformed batch fails in milliseconds instead of halfway through.
 
 ## Idempotency
