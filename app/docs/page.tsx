@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { DocsIndex } from "@/components/docs-index";
 import { getDocsByCategory } from "@/lib/docs";
-import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
 import type { Metadata } from "next";
@@ -25,29 +24,22 @@ export default function DocsPage() {
           { name: "API Reference", path: "/docs/api" },
         ])}
       />
-      <PageHeader
-        label="docs"
-        title="Documentation"
-        scene="spec"
-        sceneLabel="A spec sheet lifted off its index, with one teal row highlighted"
-      >
-        <p>
-          The architectural playbook I bring to every team: the standards and
-          practices I&apos;ve landed on after years of trial, error, and strong
-          opinions, written down so they don&apos;t get re-argued in every
-          codebase. None of it is new or proprietary. It&apos;s published
-          standards, applied consistently. Start with{" "}
-          <Link
-            href="/docs/playbook"
-            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
-          >
-            the principles
-          </Link>
-          .
-        </p>
-      </PageHeader>
 
       <DocsIndex
+        intro={
+          <p>
+            The architectural playbook I bring to every team: the standards I&apos;ve
+            landed on, written down so they don&apos;t get re-argued in every codebase.
+            New here? Start with{" "}
+            <Link
+              href="/docs/playbook"
+              className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+            >
+              the principles
+            </Link>
+            .
+          </p>
+        }
         categories={[
           ...categories.map((c) => ({
             name: c.name,
