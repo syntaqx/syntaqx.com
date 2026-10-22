@@ -21,14 +21,20 @@ Every response includes rate limit state:
 
 | Header | Description |
 |--------|-------------|
-| `X-RateLimit-Limit` | Maximum requests allowed in the current window |
-| `X-RateLimit-Remaining` | Requests remaining in the current window |
-| `X-RateLimit-Reset` | UTC epoch seconds when the window resets |
+| `RateLimit-Policy` | The quota policy: `q` requests per `w` seconds ([IETF RateLimit fields](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)) |
+| `RateLimit` | Remaining quota `r` and seconds `t` until the window resets |
+| `X-RateLimit-Limit` | Maximum requests allowed in the current window (legacy) |
+| `X-RateLimit-Remaining` | Requests remaining in the current window (legacy) |
+| `X-RateLimit-Reset` | UTC epoch seconds when the window resets (legacy) |
 | `Retry-After` | Seconds until retry is allowed (only on `429` responses) |
+
+Prefer `RateLimit-Policy` and `RateLimit`. The `X-RateLimit-*` headers carry the same state and stay for existing clients.
 
 ### Example Headers
 
 ```
+RateLimit-Policy: "hourly";q=5000;w=3600
+RateLimit: "hourly";r=4999;t=3600
 X-RateLimit-Limit: 5000
 X-RateLimit-Remaining: 4999
 X-RateLimit-Reset: 1628604000

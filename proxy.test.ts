@@ -32,6 +32,15 @@ describe("proxy: API header guarantees", () => {
     expect(r.headers.get("X-RateLimit-Reset")).toMatch(/^\d+$/);
   });
 
+  it("attaches IETF RateLimit-Policy and RateLimit structured fields", () => {
+    const r = proxy(makeRequest("http://localhost/api/v1/healthz")) as Response;
+    expect(r.headers.get("RateLimit-Policy")).toBe('"hourly";q=5000;w=3600');
+    expect(r.headers.get("RateLimit")).toMatch(/^"hourly";r=4999;t=\d+$/);
+    const t = Number(r.headers.get("RateLimit")!.split("t=")[1]);
+    expect(t).toBeGreaterThan(0);
+    expect(t).toBeLessThanOrEqual(3600);
+  });
+
   it("attaches headers to non-/v1 API paths too (root, catch-all, auth, openapi)", () => {
     for (const path of [
       "/api",
@@ -99,6 +108,7 @@ describe("proxy: rate limiting enforcement", () => {
     expect(res.headers.get("Content-Type")).toContain("application/json");
     expect(res.headers.get("Retry-After")).toMatch(/^\d+$/);
     expect(res.headers.get("X-RateLimit-Remaining")).toBe("0");
+    expect(res.headers.get("RateLimit")).toMatch(/^"hourly";r=0;t=\d+$/);
     expect(res.headers.get("X-Request-ID")).toBeTruthy();
 
     const body = await res.json();

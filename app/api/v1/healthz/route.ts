@@ -13,6 +13,7 @@ const HealthzResponse = z
 registry.registerPath({
   method: "get",
   path: "/healthz",
+  operationId: "getHealth",
   summary: "Health check",
   description: "Returns the current health status of the API.",
   tags: ["System"],

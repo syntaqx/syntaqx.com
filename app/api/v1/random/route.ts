@@ -19,6 +19,7 @@ const CHARSET_NAMES = Object.keys(CHARSETS) as [string, ...string[]];
 registry.registerPath({
   method: "get",
   path: "/random",
+  operationId: "generateRandom",
   summary: "Generate random strings",
   description:
     "Generate one or more random strings. Defaults to a single 32-character alphanumeric string. Use `?count=N` (max 100) to receive an array.",

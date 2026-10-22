@@ -20,6 +20,7 @@ function clientIp(request: NextRequest): string {
  * Apply per-request API headers required by the API design docs:
  *   - X-Request-ID (RFC-style trace identifier)
  *   - X-RateLimit-Limit / -Remaining / -Reset
+ *   - RateLimit-Policy / RateLimit (IETF draft-ietf-httpapi-ratelimit-headers)
  *   - Retry-After (when limited)
  *
  * Returns either a short-circuit 429 response, or a header bag to merge

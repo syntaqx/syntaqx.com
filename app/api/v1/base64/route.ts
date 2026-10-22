@@ -32,6 +32,7 @@ const Base64Response = z
 registry.registerPath({
   method: "post",
   path: "/base64",
+  operationId: "convertBase64",
   summary: "Base64 encode/decode",
   description:
     "Encode a string to base64 or decode a base64 string. Supports standard and URL-safe variants.",

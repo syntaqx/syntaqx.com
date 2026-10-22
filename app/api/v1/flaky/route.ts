@@ -22,6 +22,7 @@ const FlakyResponse = z
 registry.registerPath({
   method: "get",
   path: "/flaky",
+  operationId: "getFlaky",
   summary: "Simulate an unreliable service",
   description:
     "Returns success or failure based on a configurable rate. Use this to test retry logic, circuit breakers, and timeout handling. The response is intentionally random: the same request may succeed or fail.",

@@ -18,6 +18,7 @@ const IpResponse = z
 registry.registerPath({
   method: "get",
   path: "/ip",
+  operationId: "getClientIp",
   summary: "Client IP address",
   description:
     "Returns the caller's IP address, the full X-Forwarded-For chain, and User-Agent.",

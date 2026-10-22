@@ -20,6 +20,7 @@ const UseragentResponse = z
 registry.registerPath({
   method: "get",
   path: "/useragent",
+  operationId: "parseUserAgent",
   summary: "Parse a User-Agent string",
   description:
     "Parse a User-Agent string into browser, OS, and device type. Defaults to the caller's User-Agent. Pass `?ua=` to parse an arbitrary string.",

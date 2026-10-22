@@ -18,6 +18,22 @@ export const socials = [
   { href: "https://x.com/syntaqx", icon: "x", label: "X" },
 ];
 
+// Homepage bio. Also rendered into the Markdown homepage (lib/markdown.ts).
+export const bio = [
+  {
+    label: "currently",
+    text: "I lead software engineering orgs, own architecture and delivery, and still write code. The architecture needs to be right to enable building the right products. Without it, you're fighting the system instead of building on it. Problem clarity tells you what to build. Then the architecture circles back to provide the right solution, and when requirements change, that should be a configuration change, not a bug.",
+  },
+  {
+    label: "previously",
+    text: "Writing code since I was 11. Over 20 years across gaming, social media, fintech, e-commerce, proptech, hosting, travel, sports tech, and more. The problems are universal. The fun part is solving them.",
+  },
+  {
+    label: "otherwise",
+    text: "Open sorcerer. Perpetually online. Obsessed with technology, hooked on shipping. Your favorite internet junkie with a love of all things digital and bacon-based.",
+  },
+];
+
 export const nav = [
   { href: "/posts", label: "posts" },
   { href: "/projects", label: "projects" },

@@ -22,6 +22,7 @@ const TimestampResponse = z
 registry.registerPath({
   method: "get",
   path: "/timestamp",
+  operationId: "getTimestamp",
   summary: "Current timestamp",
   description:
     "Returns the current time in multiple formats. Optionally pass `?t=` with a Unix timestamp (seconds or milliseconds) or ISO 8601 string to convert.",

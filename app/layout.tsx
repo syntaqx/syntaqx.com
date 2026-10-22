@@ -163,6 +163,12 @@ export default function RootLayout({
                   api
                 </Link>
                 <Link
+                  href="/contact"
+                  className="transition-colors hover:text-accent"
+                >
+                  contact
+                </Link>
+                <Link
                   href="/legal/terms"
                   className="transition-colors hover:text-accent"
                 >
