@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
-import { converters, patterns, tools } from "@/lib/misc-tools";
+import { converters, moreToolsFor, patterns, tools } from "@/lib/misc-tools";
 import { article, webApplication, type Crumb } from "@/lib/schema";
 
 /**
@@ -27,6 +27,10 @@ export function MiscJsonLd() {
           description: tool.description,
           path: tool.href,
           crumbs,
+          related: moreToolsFor(tool.href).map((t) => ({
+            name: t.title,
+            path: t.href,
+          })),
         })}
       />
     );
