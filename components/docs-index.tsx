@@ -85,6 +85,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", onScroll);
@@ -173,9 +174,15 @@ function SectionRail({
     const rail = railRef.current;
     const item = rail?.querySelector<HTMLElement>(`[data-section="${active}"]`);
     if (!rail || !item) return;
-    const top = item.getBoundingClientRect().top - rail.getBoundingClientRect().top + rail.scrollTop;
-    if (top < rail.scrollTop || top + item.offsetHeight > rail.scrollTop + rail.clientHeight) {
-      rail.scrollTo({ top: Math.max(0, top - 24), behavior: "smooth" });
+    // Measure against what's on screen: near the end of the page the sticky
+    // rail is pushed up, and part of it is off-screen.
+    const box = rail.getBoundingClientRect();
+    const visibleTop = Math.max(box.top, 0);
+    const visibleBottom = Math.min(box.bottom, window.innerHeight);
+    const heading = item.getBoundingClientRect().top;
+    const comfortable = visibleTop + (visibleBottom - visibleTop) * 0.6;
+    if (heading < visibleTop || heading > comfortable) {
+      rail.scrollBy({ top: heading - visibleTop - 16, behavior: "smooth" });
     }
   }, [active]);
 
