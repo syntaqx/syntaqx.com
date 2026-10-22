@@ -13,7 +13,28 @@ concurrency:
 permissions:
   contents: read
 
+# Lint, typecheck and test run as parallel jobs, so the pipeline takes as
+# long as the slowest one. Each job restores node_modules from a cache keyed
+# on the lockfile, so parallelism doesn't mean paying for `npm ci` three
+# times. See https://www.syntaqx.com/docs/ci-pipelines
+
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: npm run lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: npm run typecheck
+
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -36,22 +57,6 @@ jobs:
           SRH_TOKEN: local_dev_token
           SRH_CONNECTION_STRING: redis://redis:6379
     steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Test
-        run: npm test
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: npm test

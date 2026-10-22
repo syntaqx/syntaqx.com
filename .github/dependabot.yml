@@ -1,7 +1,12 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/"
+    # Workflows, plus the local composite action (which Dependabot doesn't
+    # find from "/" alone). Actions are SHA-pinned; Dependabot bumps the
+    # SHA and its version comment together.
+    directories:
+      - "/"
+      - "/.github/actions/setup"
     schedule:
       interval: "weekly"
     groups:
