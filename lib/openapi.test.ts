@@ -73,7 +73,8 @@ describe("/openapi.json", () => {
     for (const op of ops) {
       expect(op.operationId).toMatch(/^[a-z][A-Za-z0-9]+$/);
       expect(op.description).toBeTruthy();
-      expect(Object.keys(op.responses ?? {})).toContain("200");
+      // A success response: 200, or 201 for an operation that creates something.
+      expect(Object.keys(op.responses ?? {}).some((code) => /^2\d\d$/.test(code))).toBe(true);
     }
     expect(new Set(ids).size).toBe(ids.length);
   });
@@ -106,8 +107,10 @@ describe("OpenAPI and routes stay in sync", () => {
   const apiDir = path.join(process.cwd(), "app", "api");
   const routes = (dir: string, prefix = ""): string[] =>
     fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
-      if (!e.isDirectory() || e.name.startsWith("[")) return [];
-      const route = `${prefix}/${e.name}`;
+      // The top-level [...path] is the API's 404 catch-all, not an endpoint.
+      if (!e.isDirectory() || (prefix === "" && e.name.startsWith("["))) return [];
+      // A dynamic segment like [...slug] is {slug} in the spec.
+      const route = `${prefix}/${e.name.replace(/^\[(?:\.\.\.)?(.+)\]$/, "{$1}")}`;
       const here = fs.existsSync(path.join(dir, e.name, "route.ts")) ? [route] : [];
       return [...here, ...routes(path.join(dir, e.name), route)];
     });

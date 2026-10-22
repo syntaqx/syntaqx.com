@@ -24,6 +24,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Vendored static assets — not our code.
     "public/**",
+    // Agent worktrees: separate checkouts with their own lint runs.
+    ".claude/**",
   ]),
 ]);
 

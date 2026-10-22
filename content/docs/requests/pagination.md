@@ -78,6 +78,10 @@ If the list can grow without bound, or a client will walk all of it, use a curso
 - **Over the maximum is a `422`, not a silent clamp.** A client that asked for 500 and quietly got 100 will believe it has everything.
 - **No total count by default.** `COUNT(*)` over a large, filtered table can cost more than the page itself, and the number is stale by the time the client reads it. Endpoints where a total is cheap and genuinely useful can document one.
 
+## This Site
+
+The syntaqx API serves the playbook itself as a paginated list. `GET https://api.syntaqx.com/docs?limit=10` returns a bare array of ten docs and a `Link` header with the next page; follow it to the end and you see every doc exactly once. Cursors are opaque, a cursor reused with different filters is a `422`, and `limit` over 100 is a `422` rather than a quiet clamp.
+
 ## References
 
 **Specifications**

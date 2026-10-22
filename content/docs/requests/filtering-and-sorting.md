@@ -92,6 +92,10 @@ Query parameters stop working well when:
 
 At that point, don't invent a filter language for the query string. Every one that's been tried (bracket trees, mini expression parsers) ends up as a custom parser with its own escaping rules and its own bugs. Accept a structured query in the body with [HTTP QUERY](/docs/requests/http-query), which stays safe, idempotent and cacheable like `GET`, and uses the same field names and operators as the parameters above.
 
+## This Site
+
+`GET https://api.syntaqx.com/docs` filters the playbook with these conventions: `section=payments,security` (comma means any of), `tag=idempotency`, free text in `q`, and `sort=title` or `-title` with `position` (reading order) as the default. A parameter it doesn't know, like a misspelled `secton`, is a `422` naming the parameter, not a silently unfiltered list.
+
 ## References
 
 **Specifications**

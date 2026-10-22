@@ -1,0 +1,66 @@
+name: Doc links
+
+# Every source the playbook cites, checked weekly. Links rot quietly; a
+# citation that 404s undermines the doc that relies on it. Dead links open
+# (or update) one issue, and a clean run closes it. Bot walls and timeouts
+# are reported as uncertain without failing. See
+# https://www.syntaqx.com/docs/delivery/ci-pipelines
+
+on:
+  schedule:
+    - cron: "0 14 * * 1" # Mondays, 14:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: doc-links
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  ISSUE_TITLE: Dead links in the playbook
+
+jobs:
+  check:
+    name: Check cited links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+
+      - name: Check links
+        id: check
+        run: |
+          set +e
+          npm run --silent links -- --dead-report dead.md > report.md
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open or update the issue
+        if: steps.check.outputs.status != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          number=$(gh issue list --state open --search "in:title \"$ISSUE_TITLE\"" --json number --jq '.[0].number')
+          { cat dead.md; echo; echo "From [this run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."; } > body.md
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file body.md
+          else
+            gh issue create --title "$ISSUE_TITLE" --body-file body.md
+          fi
+
+      - name: Close the issue on a clean run
+        if: steps.check.outputs.status == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          number=$(gh issue list --state open --search "in:title \"$ISSUE_TITLE\"" --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh issue close "$number" --comment "All cited links resolve as of [this run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+          fi
+
+      - name: Fail on dead links
+        if: steps.check.outputs.status != '0'
+        run: exit 1
