@@ -121,3 +121,5 @@ Every response carries a unique `Request-Id`. Log it on your end. When something
 ```http
 Request-Id: 019a0b6e-4c2d-7f31-9b8e-2d5a6c7e8f90
 ```
+
+`X-Request-ID` carries the same value and stays for existing clients. Prefer `Request-Id`.

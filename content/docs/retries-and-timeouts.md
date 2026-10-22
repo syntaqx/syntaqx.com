@@ -29,7 +29,7 @@ No call, internal or external, waits forever.
 | `500` | No. The outcome is unknown. Reconcile first |
 | Other `4xx` | No. The request is wrong and will stay wrong |
 
-`GET`, `PUT`, `PATCH` and `DELETE` are idempotent by definition (see [REST & HTTP Verbs](/docs/rest-http-verbs)). A `POST` is only safe to retry with an idempotency key, which is why every client should send one.
+`GET`, [`QUERY`](/docs/http-query), `PUT`, `PATCH` and `DELETE` are idempotent by definition (see [REST & HTTP Verbs](/docs/rest-http-verbs)). A `POST` is only safe to retry with an idempotency key, which is why every client should send one.
 
 A `500` on an idempotent request is stored and replayed, so retrying it with the same key just returns the same `500`. Retrying with a new key risks doing the work twice. Fetch the object, check events, and only then decide.
 

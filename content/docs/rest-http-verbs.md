@@ -117,6 +117,19 @@ DELETE /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
 HTTP/1.1 204 No Content
 ```
 
+### QUERY - Read With a Body
+
+Run a query whose criteria travel in the request body. Safe and idempotent like `GET`, defined by [RFC 10008](https://www.rfc-editor.org/rfc/rfc10008.html). Use it when a search is too long, too structured, or too sensitive for a URL.
+
+```http
+QUERY /v1/users
+Content-Type: application/json
+
+{ "email_domain": "example.com", "sort": "-created_at" }
+```
+
+See [HTTP QUERY](/docs/http-query) for discovery, caching, and the `POST` fallback for clients that can't send it yet.
+
 ## POST vs. PUT vs. PATCH
 
 | Method | Purpose | Idempotent | Scope |
@@ -130,6 +143,7 @@ HTTP/1.1 204 No Content
 | Verb | Typical Use |
 | ---- | ----------- |
 | GET | Fetch a user profile, list orders, read configuration |
+| QUERY | Search with filters that don't fit in a URL |
 | POST | Create a user, submit a form, trigger a webhook |
 | PUT | Replace a user's full profile, overwrite a config |
 | PATCH | Update an email address, toggle a setting |
