@@ -18,6 +18,7 @@ import {
   MAX_REQUESTS,
   WINDOW_SECONDS,
   rateLimit as inMemoryRateLimit,
+  refundRateLimit as inMemoryRefund,
   rateLimitResult,
   type RateLimitResult,
 } from "@/lib/api";
@@ -27,6 +28,13 @@ export type RateLimitStoreName = "redis" | "memory" | "noop";
 export interface RateLimitStore {
   name: RateLimitStoreName;
   limit(key: string): Promise<RateLimitResult>;
+  /** Give one request back, for a response that shouldn't cost quota (a 304). */
+  refund(key: string): Promise<void>;
+}
+
+/** The key requests are counted under: the client IP, as set by Vercel's edge. */
+export function clientKey(request: Request): string {
+  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 }
 
 /** How long to wait for Redis before falling back, in milliseconds. */
@@ -35,12 +43,14 @@ const REDIS_TIMEOUT_MS = 1000;
 export const memoryStore: RateLimitStore = {
   name: "memory",
   limit: async (key) => inMemoryRateLimit(key),
+  refund: async (key) => inMemoryRefund(key),
 };
 
 export const noopStore: RateLimitStore = {
   name: "noop",
   limit: async () =>
     rateLimitResult(MAX_REQUESTS, Math.floor(Date.now() / 1000) + WINDOW_SECONDS, false),
+  refund: async () => {},
 };
 
 /** Upstash's own variable names, or the ones the Vercel Marketplace integration sets. */
@@ -66,6 +76,15 @@ end
 return { count, redis.call("PTTL", KEYS[1]) }
 `;
 
+/** Give one request back, never below zero, and only within a live window. */
+const REFUND = `
+local count = tonumber(redis.call("GET", KEYS[1]))
+if count and count > 0 then
+  return redis.call("DECR", KEYS[1])
+end
+return 0
+`;
+
 const KEY_PREFIX = "syntaqx:ratelimit:";
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
@@ -79,6 +98,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 export function redisStore(redis: Redis): RateLimitStore {
   const script = redis.createScript<[number, number]>(FIXED_WINDOW);
+  const refund = redis.createScript<number>(REFUND);
   // Clients already over the limit, and when their window ends (epoch ms).
   // Remembered in memory so a blocked client doesn't cost a Redis command
   // per request.
@@ -108,6 +128,13 @@ export function redisStore(redis: Redis): RateLimitStore {
         return memoryStore.limit(key);
       }
     },
+    async refund(key) {
+      try {
+        await withTimeout(refund.exec([KEY_PREFIX + key], []), REDIS_TIMEOUT_MS);
+      } catch {
+        // A lost refund costs one request of quota; not worth failing over.
+      }
+    },
   };
 }
 
@@ -130,6 +157,12 @@ let store: RateLimitStore | undefined;
 export function checkRateLimit(key: string): Promise<RateLimitResult> {
   store ??= selectStore();
   return store.limit(key);
+}
+
+/** Give a request back to the configured store. */
+export function refundRequest(key: string): Promise<void> {
+  store ??= selectStore();
+  return store.refund(key);
 }
 
 /** Test hook: use a specific store, or `undefined` to re-read the environment. */

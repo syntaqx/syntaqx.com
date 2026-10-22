@@ -1,146 +1,104 @@
 +++
 title = "API Design Principles"
-description = "The core principles and conventions that guide how the syntaqx API is designed: consistency, predictability, and least surprise for the developer using it."
+description = "The rules every endpoint follows: resources and methods, bare JSON with metadata in headers, status codes that mean something, and a Request-Id on all of it."
 category = "API Design"
 order = 0
 tags = ["api", "design", "rest"]
 aliases = ["api-design-principles"]
 +++
 
-## RESTful by Default
+An API's real users are the people who integrate against it at 11 p.m. with a deadline. Every rule here exists to make their first guess correct: if they've used one endpoint, they can predict the next one without reading its docs. Consistency is the feature. A clever exception in one endpoint costs every integrator a lookup, forever.
 
-If you're unfamiliar with REST conventions, start with the [REST & HTTP Verbs](/docs/fundamentals/rest-http-verbs) primer.
+## Resources, Methods, Status Codes
 
-Every endpoint follows a few non-negotiable rules:
+- **URLs name things, methods say what you're doing to them.** `GET /uuid`, not `GET /generateUuid`. Verb-shaped URLs push intent into names, where caches, retries and tooling can't see it. See [REST & HTTP Verbs](/docs/fundamentals/rest-http-verbs).
+- **Status codes carry the outcome.** `2xx` means it worked, `4xx` means the client should change something, `5xx` means the server failed. Every HTTP client, proxy, monitor and retry library already understands that, so there's no `"success": true` in the body for clients to check twice and disagree with the status once.
+- **`400` and `422` mean different things.** `400` is a request the server couldn't parse: bad JSON, a missing header. `422` is a well-formed request with invalid values. A client can branch on the code alone: fix the format, or fix the data. See [Error Responses](/docs/requests/error-responses).
 
-- **Resources are nouns**, not verbs. `GET /uuid`, not `GET /generateUuid`.
-- **HTTP methods convey intent.** `GET` reads, `POST` writes.
-- **Status codes convey outcome.** `2xx` means it worked. No `success` wrappers.
-- **Collections return arrays.** Even a single-item collection is `["value"]`, not `"value"`.
+## Bodies Carry Resources, Headers Carry Metadata
 
-## Response Format
-
-All JSON responses return objects at the top level. Do not nest them under a `data` or `attributes` key.
+A single resource is a JSON object. A list is a JSON array. No envelope.
 
 ```json
 {
-  "id": "3e23b9a4-7204-11ed-a1eb-0242ac120002",
-  "type": "example",
-  "name": "Sample Object"
+  "id": "01932c6c-7616-7590-a8db-cb4b0e4d1c8a",
+  "name": "Sample Object",
+  "created_at": "2026-10-22T14:23:45Z"
 }
 ```
 
-### Arrays of Objects
-
-When returning multiple records from a list endpoint, respond with an array of objects:
-
 ```json
 [
-  {
-    "id": "3e23b9a4-7204-11ed-a1eb-0242ac120002",
-    "name": "Object A"
-  },
-  {
-    "id": "4451a6d0-7204-11ed-a1eb-0242ac120002",
-    "name": "Object B"
-  }
+  { "id": "01932c6c-7616-7590-a8db-cb4b0e4d1c8a", "name": "Object A" },
+  { "id": "0194a7f3-2b11-7e80-9c3d-4e8f1a2b5c70", "name": "Object B" }
 ]
 ```
 
-### Errors
+The common alternative wraps every response in an envelope: the payload under a `data` key, with a sibling `meta` object for pagination and counts. I don't, because:
 
-All errors use a consistent envelope with `message` and an optional `errors` object for field-level validation failures. See [Error Responses](/docs/requests/error-responses) for the full format and status code reference.
+- **The envelope is noise on every response.** Every client unwraps `data` on every call, forever, to get the thing it asked for.
+- **HTTP already has a place for metadata.** Pagination goes in the `Link` header ([RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288)), rate limits in `RateLimit`, versions in `Api-Version`, tracing in `Request-Id`. Generic HTTP tooling reads headers without knowing your body schema.
+- **The same resource has the same shape everywhere.** A payment looks the same in `GET /payments/{id}`, in a list, and in a webhook. With envelopes, each context tends to grow its own wrapper.
+
+GitHub's REST API works this way, and it's the most widely used example that unwrapped responses scale fine. JSON naming and types are in [JSON Field Conventions](/docs/requests/json-conventions).
 
 ## Content Negotiation
 
-Most responses are JSON, but some endpoints support alternative formats via the `Accept` header. The client declares what it can handle, and the server picks the best match.
+JSON is the default. Where an endpoint can return another representation of the same resource, the client asks with `Accept`, rather than the API growing parallel URLs like `/report.csv`:
 
-### vCard Example
-
-If the endpoint supports [vCard](https://datatracker.ietf.org/doc/html/rfc6350) format (media type `text/vcard`), a client can request it by setting:
-
-```
-Accept: text/vcard
-```
-
-Server response:
-
-```
-Content-Type: text/vcard
-
-BEGIN:VCARD
-VERSION:3.0
-FN:John Doe
-ORG:Example Organization
-TEL;TYPE=WORK,VOICE:(111) 555-1212
-EMAIL;TYPE=PREF,INTERNET:johndoe@example.org
-END:VCARD
-```
-
-### CSV Example
-
-If the endpoint supports [CSV](https://datatracker.ietf.org/doc/html/rfc4180) output (media type `text/csv`), a client can request it by setting:
-
-```
+```http
+GET /reports/01932c6c-7616-7590-a8db-cb4b0e4d1c8a
 Accept: text/csv
 ```
 
-Server response:
-
-```
-Content-Type: text/csv
-
-id,name,created_at
-1,"Object A","2025-03-17T10:00:00Z"
-2,"Object B","2025-03-18T10:00:00Z"
-```
-
-> **Note:** The client can always request JSON by including `Accept: application/json`.
-
-## Pagination
-
-All pagination is handled via the `Link` header ([RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288)), never in the response body. See [Pagination](/docs/requests/pagination) for full details on page-based and cursor-based approaches.
+- One URL per resource, many representations. Links, caches and permissions don't fork per format.
+- Responses that vary by `Accept` send `Vary: Accept`, so caches don't serve CSV to a client that asked for JSON.
+- A client asking for a format the endpoint can't produce gets `406 Not Acceptable`, not JSON it didn't ask for.
 
 ## Versioning
 
-Versions are selected with the `Api-Version` request header and named by date, with a version in the URL path (`/v1/`) as the fallback. Breaking changes ship in a new version. Non-breaking additions (new fields, new endpoints) ship in every supported version. See [Versioning & Deprecation](/docs/operations/versioning).
+Clients pin a dated version with the `Api-Version` header. Additive changes ship to every version; breaking changes ship as a new version, with old ones announced for removal via `Deprecation` and `Sunset`. The URL identifies the resource, not the API revision. See [Versioning & Deprecation](/docs/operations/versioning).
+
+## Every Response Has a Request-Id
+
+```http
+Request-Id: 01a1648f-c612-79f6-9e96-d0e9005fb00c
+```
+
+A unique ID on every response, success or error, logged by the server on every line it writes for that request. When an integrator reports a problem, the ID turns "it failed around 3 p.m." into a single search. Clients should log it next to their own errors. See [Observability](/docs/operations/observability).
+
+The header has no `X-` prefix: [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) deprecated the convention because "experimental" headers become permanent and then can never be renamed.
 
 ## Request Headers
 
-| Header | Description |
-| ------ | ----------- |
+| Header | Purpose |
+| ------ | ------- |
 | `Content-Type` | `application/json` for request bodies |
-| `Accept` | Desired response format (defaults to `application/json`) |
-| `User-Agent` | Identifies the calling client |
-| `Api-Version` | The dated API version to use (see [Versioning & Deprecation](/docs/operations/versioning)) |
-| `Idempotency-Key` | Makes a `POST` safe to retry (see [Idempotency](/docs/payments/idempotency)) |
+| `Accept` | The representation the client wants (default `application/json`) |
+| `Api-Version` | The dated API version to use |
+| `Idempotency-Key` | Makes a `POST` safe to retry ([Idempotency](/docs/payments/idempotency)) |
+| `User-Agent` | Who's calling, so their traffic can be found and contacted |
 
-## Request-Id
+## This Site
 
-Every response carries a unique `Request-Id`. Log it on your end. When something goes wrong, this is the fastest way to trace a request across services. It's a foundational piece of any observability and traceability strategy. See [Observability](/docs/operations/observability).
-
-```http
-Request-Id: 019a0b6e-4c2d-7f31-9b8e-2d5a6c7e8f90
-```
-
-`X-Request-ID` carries the same value and stays for existing clients. Prefer `Request-Id`.
+The syntaqx API at `api.syntaqx.com` follows every rule above, with the version only in the header ([ADR 0002](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0002-header-only-api-versioning.md)). Every response carries `Request-Id`, plus a legacy `X-Request-ID` with the same value for older clients. The site itself does content negotiation: request a post, a doc or the home page with `Accept: text/markdown` and you get its Markdown instead of HTML, from the same URL.
 
 ## References
 
 **Specifications**
 
-- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), methods, status codes and content negotiation
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), methods, status codes, `Accept` and `406`
 - [RFC 8288: Web Linking](https://datatracker.ietf.org/doc/html/rfc8288), the `Link` header used for pagination
 - [RFC 6648: Deprecating the "X-" Prefix](https://datatracker.ietf.org/doc/html/rfc6648), why `Request-Id` has no `X-`
 
 **Reference**
 
-- [MDN: Content negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation), how `Accept` picks a response format
+- [MDN: Content negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation), how `Accept` picks a representation
 - [MDN: HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status), what each status code means
 
 **In practice**
 
-- [GitHub REST API: Getting started](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api), bare arrays and objects with metadata in headers, the model for no `data` wrappers
+- [GitHub REST API: Getting started](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api), bare arrays and objects with metadata in headers
 - [Stripe: Request IDs](https://docs.stripe.com/api/request_ids), the `Request-Id` response header
 - [Google AIP-121: Resource-oriented design](https://google.aip.dev/121), resources as nouns with standard methods
 - [Zalando RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/), a thorough public rulebook to compare against

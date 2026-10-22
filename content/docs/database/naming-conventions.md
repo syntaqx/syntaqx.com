@@ -1,110 +1,123 @@
 +++
 title = "Database Naming Conventions"
-description = "Consistent naming conventions for database tables, columns, keys, and relationships, so schemas stay readable and predictable as they grow."
+description = "Naming and typing conventions for tables, columns, keys, constraints and indexes, so a schema is predictable enough to guess and safe to change."
 category = "Database"
 order = 10
 tags = ["database", "naming", "conventions"]
 aliases = ["database-naming-conventions"]
 +++
 
-Consistent naming makes relationships discoverable, data types obvious, and audits straightforward. If a column ends in `_id`, you immediately know it's a relationship to another table and likely needs an index.
+A schema is read far more often than it's written, by people writing queries at 2 a.m., by migration tools, by analysts who've never seen the code. Good conventions mean you can guess a column's name, its type and its relationships without looking. If a column ends in `_id`, it points at another table and probably needs an index. If it ends in `_at`, it's a UTC timestamp. That predictability is worth more than any individual naming choice.
 
-## Casing
+## Casing: lowercase snake_case
 
-All database constructs (tables, columns, nodes, predicates) use lowercase with underscores separating words.
+Every table, column, index and constraint is lowercase with underscores between words.
 
-```
+```text
 customer_addresses
-user_id
+customer_id
 first_name
 ```
 
-## Singular vs. Plural
+This isn't just taste. Postgres folds unquoted identifiers to lowercase, so a table created as `"CustomerAddresses"` has to be quoted, exactly, in every query forever after; `SELECT * FROM CustomerAddresses` fails. snake_case also matches the JSON field names in [JSON Field Conventions](/docs/requests/json-conventions), so a column and the API field it feeds have the same name.
 
-Tables hold many rows, so they use plural names. Columns represent a single value per row, so they're always singular.
+## Tables Are Plural
 
-```sql
-CREATE TABLE customers (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  first_name  VARCHAR(255),
-  last_name   VARCHAR(255),
-  is_active   BOOLEAN DEFAULT TRUE,
-  inserted_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ DEFAULT NOW()
-);
-```
+Tables hold many rows, so they're plural: `customers`, `payments`, `addresses`. Columns hold one value per row, so they're singular.
 
-## Primary and Foreign Keys
+Plural also sidesteps a real trap: `user` and `order` are reserved words in Postgres and in the SQL standard. A table called `user` has to be quoted everywhere. `users` and `orders` don't.
 
-The primary key is always `id`. A foreign key uses the singular form of the related table followed by `_id`.
+**Join tables** that model a many-to-many relationship use the domain's name for the relationship when there is one (`memberships`, `enrollments`), and otherwise both tables (`project_collaborators`). A relationship with its own name usually grows its own columns (a role, a joined date), and the name keeps that from looking strange later. See [Resource Relationships](/docs/api-design/resource-relationships).
 
-If `users` has a one-to-many relationship with `addresses`, the foreign key column is `user_id`:
+## Keys
+
+The primary key is always `id`. A foreign key is the singular of the related table plus `_id`:
 
 ```sql
 CREATE TABLE addresses (
-  id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL,
-  street  VARCHAR(255),
-  city    VARCHAR(255)
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  customer_id UUID NOT NULL REFERENCES customers (id),
+  street      TEXT NOT NULL,
+  city        TEXT NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE INDEX addresses_customer_id_idx ON addresses (customer_id);
 ```
 
-### Using `id` with UUIDs or ULIDs
+- **`id` names the role, not the type.** It works the same for integers, UUIDs or ULIDs, as long as one schema is consistent. The default here is [UUID v7](/docs/fundamentals/identifier-conventions): globally unique, sortable by creation time, and kind to B-tree indexes. Postgres 18 generates them natively with `uuidv7()`; on older versions, generate them in the application.
+- **Declare foreign keys in transactional databases.** A missing constraint is how orphaned rows appear, and nobody notices until a report doesn't add up. Analytics warehouses are the exception: they often skip constraints for load speed, and the pipeline is responsible for integrity instead.
+- **Index every foreign key column.** Postgres doesn't do it for you. Without one, deleting a customer scans the whole `addresses` table to check for references, and joins on `customer_id` scan too.
 
-`id` is not limited to integers. If your project uses UUIDs or ULIDs as primary keys, `id` and `_id` still work as long as you're consistent across the dataset. The column name describes the role (primary key, foreign key), not the data type.
+### `_uid` for mixed schemas
 
-```sql
-CREATE TABLE orders (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  customer_id UUID NOT NULL,
-  total       INTEGER NOT NULL
-);
-```
-
-### When to use `_uid`
-
-If you're mixing integer-based IDs and universal IDs within the same dataset, use `_uid` for universal foreign keys to remove ambiguity. The suffix is `_uid` rather than `_uuid` because the value isn't always a UUID type. It could be a UUID, ULID, or any other universally unique value.
-
-When universal IDs are the only ID type in your schema, stick with `_id`. No suffix gymnastics needed.
+When a schema mixes integer keys and universally unique keys, use `_uid` for foreign keys to the universal ones, so the type is obvious from the name. It's `_uid` rather than `_uuid` because the value might be a ULID or another format.
 
 ```sql
--- Mixed: integer PKs on some tables, UUIDs on others
+-- Integer keys on some tables, UUIDs on others
 ALTER TABLE comments ADD COLUMN post_uid UUID NOT NULL;
 ALTER TABLE comments ADD COLUMN author_id BIGINT NOT NULL;
 ```
 
-### External IDs
+When universal IDs are the only kind in the schema, plain `_id` everywhere. No suffix gymnastics.
 
-Use `_xid` for identifiers that come from external systems. These are typically strings and don't need to follow your internal conventions since the format is dictated by the vendor.
+### `_xid` for external IDs
+
+Identifiers that come from another system use `_xid`. They're usually strings in a format the vendor controls, and the suffix makes it clear the value is a reference to someone else's record, not a key you can join on.
 
 ```sql
-ALTER TABLE locations ADD COLUMN google_place_xid VARCHAR(255);
-ALTER TABLE payments  ADD COLUMN stripe_charge_xid VARCHAR(255);
+ALTER TABLE locations ADD COLUMN google_place_xid TEXT;
+ALTER TABLE payments  ADD COLUMN stripe_charge_xid TEXT;
 ```
 
-### Notes
+## Types Follow From the Name
 
-- UUID and GUID are the same thing. GUID is more common in the Microsoft ecosystem.
-- Foreign keys may or may not have database-level constraints. In data warehouses, tables are often joined without formal foreign key constraints.
+| Suffix or prefix | Type | Example |
+| ---------------- | ---- | ------- |
+| `id`, `_id` | The schema's key type, `UUID` by default | `customer_id` |
+| `_uid` | Universal key in a mixed schema | `address_uid` |
+| `_xid` | External ID, usually `TEXT` | `stripe_charge_xid` |
+| `_at` | `TIMESTAMPTZ`, stored in UTC | `created_at`, `deleted_at` |
+| `_on` | `DATE`, no time component | `published_on` |
+| `is_`, `has_`, `can_`, `do_` | `BOOLEAN NOT NULL` with a default | `is_active`, `has_logged_in`, `can_export`, `do_notify` |
+| `amount`, `_amount` | `BIGINT` minor units, paired with a `currency` column | `fee_amount`, `fee_currency` |
 
-## Column Suffixes
+A few rules behind the table:
 
-| Suffix | Meaning | Example |
-| ------ | ------- | ------- |
-| `_id` | Foreign key (integer, or UUID/ULID when used consistently) | `user_id` |
-| `_uid` | Universal foreign key when mixing ID types | `address_uid` |
-| `_xid` | External/vendor ID | `google_place_xid` |
-| `_at` | Datetime/timestamp | `created_at` |
-| `_on` | Date (no time component) | `published_on` |
+- **Timestamps are always `TIMESTAMPTZ`.** A `TIMESTAMP` without a time zone is a number nobody can interpret correctly once servers or users span zones. See [Time & Date Formats](/docs/fundamentals/time).
+- **Every table has `created_at`, and `updated_at` when rows change.** One name, everywhere: not `created_at` in some tables and `inserted_at` in others. Soft deletes are `deleted_at`, never a boolean, so you know when (see [Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Booleans are `NOT NULL`.** A nullable boolean has three values, and the third one is always a bug: what does `is_active = NULL` mean?
+- **Prefer `TEXT` to `VARCHAR(255)`.** In Postgres they perform the same, and `255` is a habit inherited from other databases, not a real limit of anything. When a value genuinely has a maximum length, express it as a `CHECK` constraint with a name that says why.
+- **Money follows [Money & Amounts](/docs/payments/money):** integer minor units in `BIGINT`, always with a currency next to it.
 
-## Column Prefixes
+## Enumerations
 
-| Prefix | Meaning | Example |
-| ------ | ------- | ------- |
-| `is_` | Boolean state | `is_active` |
-| `has_` | Boolean possession | `has_logged_in` |
-| `can_` | Boolean capability | `can_export` |
-| `do_` | Boolean action flag | `do_notify` |
+Use `TEXT` with a `CHECK` constraint, with lowercase snake_case values that match the API:
+
+```sql
+status TEXT NOT NULL CHECK (status IN ('pending', 'authorized', 'captured', 'settled', 'failed', 'voided'))
+```
+
+Native `ENUM` types look tidier, but they're harder to change: values can be added but not easily removed or renamed, and changes interact awkwardly with transactions and migrations. A `CHECK` constraint is replaced like any other constraint. A lookup table is the right choice when values carry their own data (a display name, an ordering) or change without a deploy.
+
+## Constraints and Indexes Have Predictable Names
+
+Name constraints and indexes explicitly, using the same pattern Postgres uses when it generates names: the table, the columns, then a suffix.
+
+| Object | Suffix | Example |
+| ------ | ------ | ------- |
+| Primary key | `_pkey` | `customers_pkey` |
+| Unique constraint | `_key` | `customers_email_key` |
+| Foreign key | `_fkey` | `addresses_customer_id_fkey` |
+| Check constraint | `_check` | `payments_status_check` |
+| Index | `_idx` | `addresses_customer_id_idx` |
+
+Constraint names appear in error messages and in migrations. `violates unique constraint "customers_email_key"` tells whoever is on call exactly what happened; `violates unique constraint "uq_8f3a2"` sends them digging. Explicit names also mean a later migration can drop or replace the constraint by name, on every environment, without looking up what the database happened to call it.
+
+## Notes
+
+- UUID and GUID are the same thing; GUID is the Microsoft name.
+- Conventions only pay off when they're universal. One table named `tblCustomer` makes every query writer stop and check the rest.
 
 ## References
 
@@ -114,8 +127,12 @@ ALTER TABLE payments  ADD COLUMN stripe_charge_xid VARCHAR(255);
 
 **Reference**
 
-- [PostgreSQL: Lexical structure](https://www.postgresql.org/docs/current/sql-syntax-lexical.html), why unquoted lowercase identifiers
+- [PostgreSQL: Lexical structure](https://www.postgresql.org/docs/current/sql-syntax-lexical.html), folding of unquoted identifiers to lowercase
+- [PostgreSQL: SQL key words](https://www.postgresql.org/docs/current/sql-keywords-appendix.html), `USER` and `ORDER` as reserved words
+- [PostgreSQL: UUID functions](https://www.postgresql.org/docs/current/functions-uuid.html), native `uuidv7()` from Postgres 18
+- [PostgreSQL: Character types](https://www.postgresql.org/docs/current/datatype-character.html), no performance difference between `TEXT` and `VARCHAR`
+- [PostgreSQL: Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html), why foreign key columns usually need their own index
 
 **In practice**
 
-- [SQL Style Guide](https://www.sqlstyle.guide/), naming and casing conventions
+- [SQL Style Guide](https://www.sqlstyle.guide/), lowercase names with underscores

@@ -8,13 +8,15 @@ tags = ["architecture", "standards", "principles"]
 
 This is the playbook I bring to every team: the decisions I've already made, written down, so they don't have to be re-argued in every new codebase. None of it is novel. Most of it is a published standard (an RFC, a spec, a practice from Stripe, GitHub or Google) applied consistently. The value is in the consistency.
 
+Each doc makes its own case: the problem, the default, why it beats the alternatives, and what it costs. The sources at the bottom are the evidence and the place to dig deeper, not the argument. If a default can't be defended without "because Stripe does it", it doesn't belong here.
+
 Every doc states a default. Defaults can be overridden, but the override is a decision, and it gets written down ([Design Docs & ADRs](/docs/engineering/design-docs)). Where this site departs from its own playbook, the departure is recorded as an [ADR](https://github.com/syntaqx/syntaqx.com/tree/main/docs/adr); everywhere else, the playbook is the explanation. CI fails any doc here that drops its references, links to a doc that doesn't exist, or wraps JSON in an envelope.
 
 ## Principles
 
 These are the rules the rest of the playbook is built from.
 
-1. **Standards before inventions.** If an RFC, a spec, or a widely adopted practice already solves it, use that. `Link` for pagination, RFC 3339 for time, `Idempotency-Key`, `RateLimit`, `Deprecation` and `Sunset`, `QUERY`. A custom convention has to earn its place.
+1. **Standards before inventions.** If an RFC, a spec, or a widely adopted practice already solves it, use that. `Link` for pagination, RFC 3339 for time, `Idempotency-Key`, `RateLimit`, `Deprecation` and `Sunset`, `QUERY`. A standard arrives with documentation, client libraries, and engineers who already know it; an invention arrives with none of those. A custom convention has to earn its place.
 2. **HTTP means what it says.** Methods carry intent, status codes carry outcome, headers carry metadata. Bodies carry resources: a list is an array, a single resource is an object, and there are no `data` envelopes.
 3. **Make the wrong thing hard.** Money is an integer, so it can't drift. State transitions are guarded in the database. Method overrides can only become `QUERY`. A guardrail beats a guideline.
 4. **Everything retries, so everything is idempotent.** Networks fail after the work is done. Keys, dedupe and at-least-once handling are designed in from the start, not added after the first double charge.

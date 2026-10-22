@@ -68,7 +68,7 @@ Anything longer than a screen belongs in linked docs, not the README.
 Shared libraries are where ownership quietly disappears: everyone uses them, so nobody owns them.
 
 - **Shared code still has one owning team.** Other teams contribute through pull requests that the owner reviews.
-- **Prefer copying over premature sharing.** Two services with similar code can diverge freely; a shared library couples their release schedules.
+- **Prefer copying over premature sharing.** Two services with similar code can diverge freely; a shared library couples their release schedules, and every change now needs every consumer's agreement. Share once the third copy appears and the abstraction is obvious, not on the second.
 - **A shared library is a product.** It has versions, a changelog and a deprecation policy, like any API. See [Versioning & Deprecation](/docs/operations/versioning).
 
 ## Changing Owners
@@ -83,7 +83,7 @@ Code no team will accept is a candidate for deletion, not for a "shared" label. 
 
 ## This Site
 
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) has one owner, so it has no `CODEOWNERS` file. Its README covers what the site is, `npm run dev` to run it, `docker compose up -d` for the optional local Redis, and how it builds. It also lists the test commands and links the ADR index, so it meets the checklist above.
+[syntaqx.com](https://github.com/syntaqx/syntaqx.com) has one owner, so a `CODEOWNERS` file would only list one name; review is enforced by required CI checks instead. Its README covers what the site is and who it belongs to, `npm run dev` to run it with nothing else required, `docker compose up -d` for the optional local Redis, the test commands, and a link to the ADR index. It also says that every merge to `main` deploys and how to roll back, which completes the checklist.
 
 ## References
 

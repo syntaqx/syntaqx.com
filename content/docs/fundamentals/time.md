@@ -1,138 +1,123 @@
 +++
 title = "Time & Date Formats"
-description = "Standard formats for representing datetimes, durations, and recurring schedules in the API, so time is unambiguous across clients and time zones."
+description = "RFC 3339 instants in UTC, local wall-clock times with IANA zones for future events, ISO 8601 durations, and iCalendar rules for anything recurring."
 category = "Fundamentals"
 order = -0.5
 tags = ["time", "rfc3339", "iso8601", "standards"]
 aliases = ["time"]
 +++
 
-Time shows up everywhere. Getting it wrong causes subtle bugs that are painful to track down. These are the standard formats, and every example across these docs follows them.
+Most time bugs come from treating different kinds of time as one kind. "When did this payment happen?", "when should this meeting start?", "how long is the trial?" and "every other Tuesday" are four different questions, and each needs its own representation. Get the kind right and the format follows.
 
-## Datetimes: RFC 3339
+## Instants: RFC 3339, in UTC
 
-All datetimes use [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format. Always include the timezone offset.
-
-```
-2025-03-14T14:23:45Z
-```
-
-Breaking it down:
-
-- `2025-03-14` is the date (year-month-day).
-- `T` separates the date from the time.
-- `14:23:45` is the time in 24-hour format.
-- `Z` means UTC. You may also see offsets like `+02:00` or `-05:00`.
-
-Store timestamps in UTC. Convert to local time on the client side.
-
-## Durations: ISO 8601
-
-When measuring how long something lasts, use [ISO 8601 duration format](https://en.wikipedia.org/wiki/ISO_8601#Durations).
+An instant is a single point on the global timeline: when a payment was captured, when a row was written. Instants are written in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339), always with an offset, and the API always sends them in UTC.
 
 ```
-P1Y2M10DT2H30M
+2026-03-14T14:23:45Z
+2026-03-14T14:23:45.123Z
 ```
 
-Breaking it down:
+Why this and not the alternatives:
 
-- `P` starts the duration.
-- `1Y` = 1 year, `2M` = 2 months, `10D` = 10 days.
-- `T` separates the date portion from the time portion.
-- `2H` = 2 hours, `30M` = 30 minutes.
+- **Not Unix timestamps.** `1773498225` is compact, but nobody can read it in a log, and nothing in it says whether it's seconds or milliseconds. Guess wrong and a date lands in 1970, or around the year 58,000.
+- **Not local time without an offset.** `2026-03-14 14:23:45` means a different instant in every time zone, and the reader can't tell which one you meant.
+- **Always UTC in responses.** Offsets are valid RFC 3339, but if every instant uses `Z`, clients can compare and sort them without parsing, and logs from different services line up.
 
-Mix and match as needed. `P5D` means 5 days. `PT3H` means 3 hours.
+Store instants as `TIMESTAMPTZ` in Postgres (which stores UTC internally) and convert to local time only for display.
 
-## Recurrence: iCalendar (RFC 5545)
+## Future Wall-Clock Times: Local Time Plus a Zone
 
-The [iCalendar specification (RFC 5545)](https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html) defines several properties for modeling recurring events. RRULE is the most common, but it's not the only tool available.
+"UTC everywhere" is right for instants and wrong for one important case: an event in the future, defined by a local clock. A meeting at 9:00 in Denver next July is not a fixed UTC instant today. If Colorado changes its daylight saving rules before then (governments do this, sometimes with weeks of notice), the meeting is still at 9:00 local, and a stored UTC value is now an hour off.
 
-### RRULE
-
-RRULE defines a repeating pattern.
-
-```
-FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR
-```
-
-- `FREQ=WEEKLY`: repeats weekly.
-- `INTERVAL=2`: every 2 weeks.
-- `BYDAY=MO,WE,FR`: on Monday, Wednesday, and Friday.
-
-RRULE handles everything from simple daily schedules to complex yearly patterns.
-
-### EXDATE
-
-EXDATE excludes specific dates from a recurrence set. Use it to skip holidays, cancellations, or one-off exceptions without changing the underlying rule.
-
-```
-RRULE:FREQ=WEEKLY;BYDAY=TU
-EXDATE:20250325T090000Z,20250401T090000Z
-```
-
-This creates a weekly Tuesday event but skips March 25 and April 1.
-
-### RDATE
-
-RDATE adds individual dates to a recurrence set. Use it for irregular additions that don't fit a pattern.
-
-```
-RRULE:FREQ=MONTHLY;BYMONTHDAY=15
-RDATE:20250420T090000Z
-```
-
-Monthly on the 15th, plus an extra occurrence on April 20.
-
-### Combining Properties
-
-The real power comes from combining these properties. An RRULE defines the base pattern, EXDATE carves out exceptions, and RDATE adds one-offs. Together they can model schedules that would be impossible with a single rule.
-
-```
-RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR
-EXDATE:20250324T090000Z
-RDATE:20250322T090000Z
-```
-
-Every Monday, Wednesday, and Friday, except skip Monday March 24 and add Saturday March 22 instead. The recurrence engine evaluates the union of RRULE + RDATE, then subtracts EXDATE.
-
-### DTSTART
-
-`DTSTART` anchors the recurrence. It defines the first occurrence and establishes the time-of-day and timezone for the entire series.
-
-```
-DTSTART:20250301T090000Z
-RRULE:FREQ=WEEKLY;BYDAY=MO
-```
-
-Without DTSTART, recurrence rules lack a reference point. Always include it when persisting schedules.
-
-## In Practice
-
-In practice, these show up as:
+So future local events store what the user actually meant: the local time and the [IANA time zone](https://www.iana.org/time-zones), not an offset.
 
 ```json
 {
-  "created_at": "2025-03-14T14:23:45Z",
-  "trial_duration": "P14D",
-  "billing_schedule": "FREQ=MONTHLY;BYMONTHDAY=1"
+  "starts_at_local": "2027-07-14T09:00:00",
+  "time_zone": "America/Denver"
 }
 ```
 
-Fields ending in `_at` are always RFC 3339 datetimes. Fields ending in `_on` are date-only values (`2025-03-14`). See [Database Naming Conventions](/docs/database/naming-conventions) for the full suffix reference.
+Compute the UTC instant when you need it (to schedule a job, to show it in another zone), using the current zone rules. [RFC 9557](https://datatracker.ietf.org/doc/html/rfc9557) extends RFC 3339 with a bracketed zone suffix (`2027-07-14T09:00:00-06:00[America/Denver]`) for systems that want both in one string, and JavaScript's `Temporal` API speaks it natively.
+
+An offset like `-06:00` is not a time zone. It's the zone's offset at one moment, and it changes twice a year.
+
+## Dates Without Times
+
+A birthday, a due date, or a settlement date is a calendar day, not an instant. Represent it as `YYYY-MM-DD` with no time and no zone:
+
+```json
+{ "due_on": "2026-04-01" }
+```
+
+Encoding a date as midnight UTC (`2026-04-01T00:00:00Z`) is the classic bug: a client west of Greenwich renders it as March 31.
+
+## Durations: ISO 8601
+
+For human, calendar-based periods (a 14-day trial, a 1-month billing period), use the [ISO 8601 duration format](https://en.wikipedia.org/wiki/ISO_8601#Durations):
+
+```
+P14D        14 days
+P1M         1 month
+PT2H30M     2 hours 30 minutes
+```
+
+`P` starts the duration, `T` separates the date part from the time part. Calendar units are deliberately not fixed lengths: `P1M` added to January 31 lands at the end of February, and `P1D` across a daylight saving change is 23 or 25 hours. That's what "a month" means to a customer, and the format preserves it.
+
+For machine durations where the exact length matters (a timeout, a TTL, `Retry-After`), use plain integer seconds or milliseconds in a field whose name says the unit: `timeout_ms`, `ttl_seconds`.
+
+## Recurrence: iCalendar
+
+Recurring schedules are the hardest time problem, and [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545) has already solved it. Don't invent a JSON schema for "every other Monday except holidays"; you'll rediscover every edge case the iCalendar authors did, one bug report at a time.
+
+```
+DTSTART;TZID=America/Denver:20260302T090000
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR
+EXDATE;TZID=America/Denver:20260316T090000
+RDATE;TZID=America/Denver:20260321T090000
+```
+
+- **`DTSTART`** anchors the series: the first occurrence, its time of day, and its zone. Give it a `TZID`, not `Z`. A weekly 9:00 meeting anchored in UTC drifts to 8:00 or 10:00 local at every daylight saving change.
+- **`RRULE`** is the repeating pattern: every two weeks, on Monday, Wednesday and Friday.
+- **`EXDATE`** removes occurrences (a holiday) without changing the rule.
+- **`RDATE`** adds one-off occurrences that don't fit the pattern.
+
+The set is `RRULE` plus `RDATE`, minus `EXDATE`. Expand it with a library (`dateutil.rrule` in Python, `rrule` in JavaScript, `rrule-go` in Go): expansion around daylight saving and month ends is where hand-written code fails.
+
+## In Practice
+
+```json
+{
+  "created_at": "2026-03-14T14:23:45Z",
+  "due_on": "2026-04-01",
+  "trial_duration": "P14D",
+  "timeout_ms": 30000,
+  "schedule": {
+    "rrule": "FREQ=MONTHLY;BYMONTHDAY=1",
+    "dtstart_local": "2026-04-01T09:00:00",
+    "time_zone": "America/Denver"
+  }
+}
+```
+
+Field suffixes carry the kind: `_at` is an instant, `_on` is a date. See [JSON Field Conventions](/docs/requests/json-conventions) and [Database Naming Conventions](/docs/database/naming-conventions).
 
 ## References
 
 **Specifications**
 
-- [RFC 3339: Date and Time on the Internet](https://datatracker.ietf.org/doc/html/rfc3339), the datetime format used everywhere
+- [RFC 3339: Date and Time on the Internet](https://datatracker.ietf.org/doc/html/rfc3339), the timestamp format for instants
+- [RFC 9557: Timestamps with Additional Information](https://datatracker.ietf.org/doc/html/rfc9557), the bracketed time zone suffix
 - [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601), the standard RFC 3339 profiles, and the source of the duration format
 - [RFC 5545: iCalendar](https://datatracker.ietf.org/doc/html/rfc5545), `RRULE`, `EXDATE`, `RDATE` and `DTSTART`
+- [IANA Time Zone Database](https://www.iana.org/time-zones), the zone names and their changing rules
 
 **Reference**
 
+- [MDN: Temporal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal), JavaScript's date API with zones, plain dates and durations
 - [MDN: Date.prototype.toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString), producing UTC timestamps in JavaScript
-- [MDN: Temporal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal), JavaScript's modern date API, including ISO 8601 durations
-- [PostgreSQL: Date/Time Types](https://www.postgresql.org/docs/current/datatype-datetime.html), storing timestamps with `TIMESTAMPTZ`
+- [PostgreSQL: Date/Time Types](https://www.postgresql.org/docs/current/datatype-datetime.html), `TIMESTAMPTZ` and `DATE`
 
 **In practice**
 

@@ -1,149 +1,121 @@
 +++
 title = "Identifier Conventions"
-description = "How to choose and use identifiers (auto-increment, UUID versions, and ULID) and when each one makes sense for keys, URLs, and distributed systems."
+description = "UUID v7 as the default key, when integers, v4, v5 or ULIDs are the better choice, and what each format reveals, costs, and breaks when you get it wrong."
 category = "Fundamentals"
 order = -0.25
 tags = ["ids", "uuid", "ulid", "database"]
 aliases = ["identifier-conventions"]
 +++
 
-Identifiers are one of the first decisions in any data model, and switching later is painful. Pick the right format upfront and stick with it.
+An identifier ends up everywhere: foreign keys, URLs, logs, caches, webhook payloads, other companies' databases. Changing its format later means migrating all of them, so it's one of the few decisions worth getting right on day one.
+
+My default is **UUID v7**. The rest of this doc is why, and when something else is better.
+
+## What an ID Has to Do
+
+Four questions decide the format:
+
+1. **Who generates it?** One database, or many services and clients without coordinating?
+2. **What does it reveal?** How many rows exist, how fast they're created, when each was made?
+3. **How does it index?** Random keys scatter inserts across a B-tree; ordered keys append to the end.
+4. **Who reads it?** Humans in support tickets, URLs, other systems?
 
 ## Auto-Increment Integers
 
-The classic `SERIAL` or `BIGINT` primary key. Simple, compact, and fast to index.
+`BIGSERIAL` keys are small (8 bytes), fast, ordered, and easy to read aloud. Their problems all come from being a single counter:
 
-```sql
-CREATE TABLE users (
-  id BIGSERIAL PRIMARY KEY
-);
-```
+- **They leak.** `/invoices/10482` tells a competitor how many invoices you've issued, and two invoices a week apart tell them your growth rate. Sequential IDs also make enumeration attacks trivial: increment and try the next one.
+- **They need one writer.** Only the database can hand them out, so a client can't create an ID before the insert, and two databases (a sharded table, a merger, an offline client) will collide.
 
-**Strengths**: Small storage footprint, naturally sortable, fast joins, human-readable.
+Use them inside a single database for things that are never exposed: join tables, internal queues, and warehouse tables where 8-byte keys measurably shrink indexes.
 
-**Drawbacks**: Exposes record count and creation order. Problematic in distributed systems where multiple nodes generate IDs. Merging datasets risks collisions.
+## UUID v7: The Default
 
-Use auto-increment when the system is a single database and there's no reason to hide sequence information.
-
-## UUID
-
-UUIDs (Universally Unique Identifiers) are 128-bit values, typically displayed as 32 hex characters with dashes. Standardized by [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562) (which replaced RFC 4122).
-
-```
-550e8400-e29b-41d4-a716-446655440000
-```
-
-Multiple versions exist, each with different tradeoffs.
-
-### UUID v4 (Random)
-
-122 bits of cryptographic randomness. No timestamp, no node ID, no ordering.
-
-```
-f47ac10b-58cc-4372-a567-0e02b2c3d479
-```
-
-The most widely deployed version. Good when all you need is uniqueness. Bad when you need sortability, because random values fragment B-tree indexes and hurt write performance on large tables.
-
-### UUID v1 (Timestamp + Node)
-
-Embeds a 60-bit timestamp (100ns precision) and a 48-bit node ID (typically a MAC address or random value).
-
-```
-6ba7b810-9dad-11d1-80b4-00c04fd430c8
-```
-
-Sortable by creation time, but the timestamp and node fields can leak when the ID was created and on what machine. The non-sequential byte ordering also limits index performance compared to v7.
-
-### UUID v7 (Timestamp + Random)
-
-The recommended version. First 48 bits are a Unix timestamp in milliseconds, followed by random data.
+A [UUID v7](https://datatracker.ietf.org/doc/html/rfc9562#section-5.7) is 128 bits: a 48-bit Unix timestamp in milliseconds, then random bits.
 
 ```
 01932c6c-7616-7590-a8db-cb4b0e4d1c8a
 ```
 
-**Why v7 is the default choice:**
+- **Generated anywhere.** Services, clients and batch jobs create IDs without asking anyone, which also means a client can know an object's ID before the insert, and an import can be retried without duplicating.
+- **Index-friendly.** New IDs sort after old ones, so inserts append to the B-tree instead of splitting pages all over it. On large tables that's the difference that matters most against v4.
+- **Sorted by creation.** Sorting by `id` is sorting by creation time, which makes cursor pagination simple ([Pagination](/docs/requests/pagination)).
 
-- **Sortable**: IDs generated later are lexicographically greater. B-tree indexes stay sequential, which means faster writes and less page splitting.
-- **Distributed-safe**: No coordination between nodes. Generate them anywhere.
-- **Timestamp-inspectable**: The creation time is encoded in the ID itself. Useful for debugging and rough time-ordering without an extra column.
-- **No information leakage**: Unlike v1, there's no node/MAC address embedded.
+What it costs:
+
+- **It reveals when it was created,** to the millisecond. Usually that's fine, since `created_at` is in the response anyway. When creation time is itself sensitive (an anonymous report, a signup that shouldn't be correlated with an event), use v4. [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562#section-8) recommends v4 for security-sensitive uses for the same reason.
+- **Order within a millisecond isn't guaranteed** unless the generator uses one of RFC 9562's monotonic methods (a counter or extra clock precision). If two IDs from the same millisecond must sort in creation order, use a generator that does, or don't depend on it.
 
 ```sql
+-- PostgreSQL 18+
 CREATE TABLE posts (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),  -- or use application-level v7
-  title VARCHAR(255) NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  title      TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ```
 
-Most modern UUID libraries support v7 natively. If the language or database doesn't, generating one is straightforward: pack the current timestamp into the first 48 bits, fill the rest with random bytes, set the version and variant bits.
+PostgreSQL 18 generates v7 natively with `uuidv7()`. On older versions, generate it in the application; it's a few lines (timestamp into the first 48 bits, random bytes for the rest, then the version and variant bits).
 
-### UUID v5 / v3 (Name-Based)
+## UUID v4: Pure Randomness
 
-Deterministic UUIDs derived from a namespace and a name using SHA-1 (v5) or MD5 (v3). Given the same namespace + name, the output is always the same.
+122 random bits, nothing else. Use v4 when the ID must reveal nothing, including when it was made. The cost is index locality: random inserts touch pages all over the index, which on a large, write-heavy table means more page splits, more cache misses and more write amplification.
+
+## UUID v5: Derived From a Name
+
+A [v5](https://datatracker.ietf.org/doc/html/rfc9562#section-5.5) UUID is a hash of a namespace and a name. The same input always produces the same ID, and that's the point:
 
 ```python
 import uuid
-
-# Same namespace + name always produces the same UUID
-ns = uuid.NAMESPACE_URL
-uuid.uuid5(ns, "https://example.com/users/42")
-# => c98b5196-7c6e-5eb4-8adf-8ebc04937a87
+uuid.uuid5(uuid.NAMESPACE_URL, "https://example.com/users/42")
+# always 38fcaf6d-63bc-5c9f-8a4f-de8cf4e651ed
 ```
 
-This is more useful than it first appears:
+- **Idempotent imports.** Derive each record's ID from the source system's key, and re-running an import updates rows instead of duplicating them.
+- **Shared identity without a mapping table.** Two systems that agree on a namespace compute the same ID for the same entity independently.
+- **Stable test fixtures.** `uuid5(ns, "user-admin")` is the same on every run, so fixtures don't hard-code UUIDs ([Testing Strategy](/docs/engineering/testing)).
 
-- **Test fixtures**: Seed data can derive IDs from human-readable keys (`uuid5(ns, "test-user-admin")`), making test datasets stable across runs without hardcoding UUIDs.
-- **Cross-platform identity**: When two systems need to refer to the same entity but can't share a database, both can independently derive the same UUID from an agreed-upon namespace and natural key. No synchronization or ID-mapping table required.
-- **Idempotent imports**: Importing records from an external source can derive the UUID from the source's natural key, so re-running the import produces the same IDs rather than duplicates.
+Don't use v5 for anything a user can guess the input of. Anyone who knows the namespace and the name can compute the ID, so it's not an access control, and it can leak the input it was derived from.
 
-Not suitable for primary keys where uniqueness needs to come from randomness, since collisions are possible if two different inputs happen to share a namespace and name.
+## v1, v6 and ULID
 
-## ULID
+- **v1** embeds a timestamp and a node ID (historically the MAC address) in an order that doesn't sort. Don't create new ones.
+- **v6** is v1 reordered to sort by time. It exists for systems migrating from v1; the RFC says everything else should use v7.
+- **[ULID](https://github.com/ulid/spec)** is v7's idea in a different encoding: 26 characters of Crockford Base32, case-insensitive, no dashes. It's nicer in a URL, but most databases have a native 16-byte UUID type and no ULID type, so ULIDs usually end up stored as strings, larger and slower. Prefer v7 unless the string form genuinely matters.
 
-[ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier) is a 26-character Crockford Base32 string. Like UUID v7 in spirit: timestamp prefix for sortability, random suffix for uniqueness.
+## Choosing
 
-```
-01ARZ3NDEKTSV4RRFFQ69G5FAV
-```
+| Format | Generated by | Reveals | Index locality | Use it for |
+| ------ | ------------ | ------- | -------------- | ---------- |
+| Integer | One database | Count and rate | Excellent | Internal-only keys, warehouses |
+| UUID v7 | Anyone | Creation time | Good | **The default** |
+| UUID v4 | Anyone | Nothing | Poor at scale | IDs where timing is sensitive |
+| UUID v5 | Anyone, from a name | The name, if guessable | Poor | Imports, shared identity, fixtures |
+| ULID | Anyone | Creation time | Good | When the 26-character string matters |
 
-**Compared to UUID v7**: Shorter string representation (26 chars vs 36), case-insensitive, no dashes. The tradeoff is less ecosystem support: most databases have native UUID types but treat ULIDs as strings.
+## Conventions
 
-## Choosing a Format
+- **The ID is opaque to clients.** It's a string to them, even though it's time-ordered. Parsing timestamps out of IDs couples clients to the format.
+- **Public IDs never change.** If an internal key has to change, the public one doesn't.
+- **Column names describe roles, not types:** `id`, `user_id`, `stripe_charge_xid` for external IDs. See [Database Naming Conventions](/docs/database/naming-conventions).
 
-| Format | Sortable | Distributed | Size | Best For |
-| ------ | -------- | ----------- | ---- | -------- |
-| Auto-increment | Yes | No | 4-8 bytes | Single-database systems |
-| UUID v4 | No | Yes | 16 bytes | Simple uniqueness, no ordering needed |
-| UUID v7 | Yes | Yes | 16 bytes | Primary keys, most applications |
-| UUID v1 | Yes | Yes | 16 bytes | Legacy systems (prefer v7 for new work) |
-| ULID | Yes | Yes | 16 bytes | When shorter string representation matters |
+## This Site
 
-For new projects, **UUID v7** is the default. It handles the common case: distributed ID generation with natural ordering and strong uniqueness guarantees. Fall back to auto-increment only when simplicity outweighs distribution needs, and consider ULID when the shorter representation is valuable.
-
-## Column Naming
-
-See [Database Naming Conventions](/docs/database/naming-conventions) for how column suffixes like `_id`, `_uid`, and `_xid` pair with these identifier formats.
-
-## Tools
-
-Generate, validate, and inspect UUIDs and ULIDs with the [UUID/ULID Generator](/misc/uuid). The API's [`/uuid`](/docs/api) returns UUID v7 by default, and v4 with `?version=4`.
+The [UUID/ULID Generator](/misc/uuid) generates and inspects v7, v4, v1 and ULIDs. The API's [`/uuid`](/docs/api) endpoint returns v7 by default and v4 with `?version=4`, and the API's `Request-Id` header is a v7. Its generator is the simple kind: IDs created in the same millisecond, like a batch from `?count=100`, aren't guaranteed to be in order.
 
 ## References
 
 **Specifications**
 
-- [RFC 9562: Universally Unique IDentifiers (UUIDs)](https://datatracker.ietf.org/doc/html/rfc9562), every UUID version, including v7
+- [RFC 9562: Universally Unique IDentifiers (UUIDs)](https://datatracker.ietf.org/doc/html/rfc9562), every version, v7 monotonicity methods, and security considerations
 - [ULID specification](https://github.com/ulid/spec), the format, Crockford Base32 encoding and sort order
 
 **Reference**
 
-- [MDN: UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID), a short primer
-- [MDN: Crypto.randomUUID()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID), generating v4 UUIDs in the browser and Node
+- [PostgreSQL: UUID Functions](https://www.postgresql.org/docs/current/functions-uuid.html), `uuidv7()` and `uuid_extract_timestamp()`
 - [PostgreSQL: UUID Type](https://www.postgresql.org/docs/current/datatype-uuid.html), native storage as 16 bytes
-- [PostgreSQL: UUID Functions](https://www.postgresql.org/docs/current/functions-uuid.html), generating UUIDs in the database
+- [MDN: Crypto.randomUUID()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID), generating v4 UUIDs in the browser and Node
+- [MDN: UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID), a short primer
 
 **In practice**
 

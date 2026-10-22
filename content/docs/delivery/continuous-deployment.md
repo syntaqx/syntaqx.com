@@ -19,7 +19,9 @@ The two are one step apart, and the step matters.
 | Getting to production | A person decides when | The merge decides |
 | Batch size | Whatever accumulated since the last release | One change |
 
-Continuous delivery is a real achievement: `main` is always shippable. But the manual step quietly rebuilds the things CI was meant to remove. Changes pile up between releases, every release is bigger than it needs to be, and when something breaks, the cause is somewhere in that pile.
+Continuous delivery is a real achievement: `main` is always shippable. But the manual step quietly rebuilds the things CI was meant to remove.
+
+Picture a weekly release. Thirty pull requests from eight people go out on Thursday afternoon. Error rates climb. Which of the thirty did it? The authors have moved on to other work, half of them are in meetings, and rolling back means rolling back all thirty, including the urgent fix a customer was waiting for. So the team debugs forward under pressure instead. None of that happens when each of those thirty changes went out on its own, within minutes of merging, with its author still watching.
 
 ## Why Deployment
 
@@ -29,11 +31,11 @@ Continuous delivery is a real achievement: `main` is always shippable. But the m
 - **No release ceremony.** No release trains, no release managers, no code freeze. The process is the pipeline.
 - **It keeps everything else honest.** Nothing can hide on `main` if `main` is production. Tests, reviews and monitoring have to be good enough to stand on their own, and you find out quickly when they aren't.
 
-The [DORA research](https://dora.dev/guides/dora-metrics-four-keys/) backs this up: deployment frequency and lead time go together with lower change failure rates and faster recovery, not against them.
+The intuition most teams start with is that shipping more often means breaking things more often. The [DORA research](https://dora.dev/guides/dora-metrics-four-keys/) found the opposite: teams that deploy more frequently, with shorter lead times, also have lower change failure rates and recover faster. Speed and stability come from the same practices: small changes, automated checks and cheap rollback.
 
 ## Deploy Is Not Release
 
-Deploying puts code in production. Releasing puts a feature in front of users. Continuous deployment works because the two are separate:
+Deploying puts code in production. Releasing puts a feature in front of users. The most common objection to continuous deployment is "but this feature isn't ready", and the answer is that it doesn't need to be: unready code can be in production as long as nobody can reach it. Continuous deployment works because the two are separate:
 
 - **Unfinished work ships dark,** behind a flag. See [Feature Flags & Progressive Rollout](/docs/engineering/feature-flags).
 - **Risky changes roll out progressively:** internal users, then a percentage, then everyone, watching the [SLOs](/docs/operations/slos) at each step.
@@ -41,7 +43,7 @@ Deploying puts code in production. Releasing puts a feature in front of users. C
 
 ## What Has to Be True First
 
-Continuous deployment is the result of good practice, not a substitute for it. Before turning it on:
+Continuous deployment is the result of good practice, not a substitute for it. Turning it on without the foundations just ships bugs faster. Before turning it on:
 
 1. **CI you trust.** Fast, deterministic and required. See [CI Pipelines](/docs/delivery/ci-pipelines).
 2. **Small pull requests, merged often.** Trunk-based development, short-lived branches. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
@@ -51,7 +53,9 @@ Continuous deployment is the result of good practice, not a substitute for it. B
 
 ## When Delivery Is the Right Call
 
-Some releases genuinely need a human gate: app store submissions, software installed on customers' machines, regulated changes that need a recorded sign-off. Use continuous delivery there, and keep the gate as thin as the rules allow. For a web service you run yourself, it's rarely necessary.
+Some releases genuinely need a human gate: app store submissions, software installed on customers' machines, regulated changes that need a recorded sign-off. What they have in common is that you can't take a release back quickly, or someone outside the team has to approve it. Use continuous delivery there, and keep the gate as thin as the rules allow.
+
+For a web service you run yourself, neither is true. You can roll back in a minute, and a manual gate mostly adds a person who can't tell a safe change from an unsafe one any better than the tests can.
 
 ## This Site
 

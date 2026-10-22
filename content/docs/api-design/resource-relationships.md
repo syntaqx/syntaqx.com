@@ -1,51 +1,68 @@
 +++
 title = "Resource Relationships"
-description = "Modeling associations between resources: direct endpoints vs. relationship endpoints, association data, and keeping route sets minimal."
+description = "Modeling links between resources as their own sub-resources: PUT to link, DELETE to unlink, data on the link itself, and no duplicate URLs for the same thing."
 category = "API Design"
 order = 1.5
 tags = ["api", "rest", "relationships", "design"]
 aliases = ["resource-relationships"]
 +++
 
-Every resource has its own CRUD endpoints. Associations between resources get a separate set of endpoints. Mixing the two up leads to APIs that are hard to reason about and harder to maintain.
+Most API design arguments about relationships come from one confusion: treating the link between two resources as if it were one of the resources. "Remove Alice from the project" and "delete Alice" are different operations, and an API that can't tell them apart will eventually do the second when someone meant the first.
 
-## Direct Endpoints vs. Association Endpoints
+So I model a relationship as a resource of its own, with its own URL and lifecycle, separate from the things it connects.
 
-Direct endpoints operate on a resource:
+## Resources and Links
+
+Each resource has its own endpoints, at its own top-level URL:
 
 ```http
 POST   /projects
-GET    /projects
 GET    /projects/{projectId}
 PATCH  /projects/{projectId}
 DELETE /projects/{projectId}
+
+GET    /users/{userId}
 ```
 
-Association endpoints manage the link between two resources. In a many-to-many relationship like projects and collaborators, the association has its own lifecycle:
+The link between them (a user collaborating on a project) lives under the parent it's scoped to, addressed by both IDs:
 
 ```http
-POST   /projects/{projectId}/collaborators/{userId}
 GET    /projects/{projectId}/collaborators
+PUT    /projects/{projectId}/collaborators/{userId}
 PATCH  /projects/{projectId}/collaborators/{userId}
 DELETE /projects/{projectId}/collaborators/{userId}
 ```
 
-Note there is no `GET /projects/{projectId}/collaborators/{userId}` detail route here. The user already has a top-level endpoint at `GET /users/{userId}`. The nested routes only manage the association itself.
+The same verb means something different on each kind of URL, and that's the point:
 
-Each verb means something different depending on which type of endpoint it targets:
+| Verb | On a resource | On a link |
+| ---- | ------------- | --------- |
+| `PUT` / `POST` | Creates the resource | Links two existing resources |
+| `GET` (list) | All resources | Resources linked to this parent |
+| `PATCH` | Changes the resource's fields | Changes the link's fields (role, permissions) |
+| `DELETE` | Destroys the resource | Unlinks; both resources survive |
 
-| Verb | Direct endpoint | Association endpoint |
-| ---- | --------------- | -------------------- |
-| `POST` | Creates a new resource | Links two existing resources together |
-| `GET` (collection) | Returns all resources | Returns resources linked to the parent |
-| `PATCH` | Modifies fields on the resource itself | Modifies fields that belong to the link (e.g. role, permissions) |
-| `DELETE` | Destroys the resource | Unlinks the resources without destroying either one |
+`DELETE /projects/{projectId}/collaborators/{userId}` takes Alice off the project. Her account is untouched.
 
-`DELETE /projects/{projectId}/collaborators/{userId}` removes the user from that project. The user account still exists.
+## Link With PUT, Not POST
 
-## Association-Specific Data
+The link's URL is fully known before it exists: the project ID and the user ID name it. That's exactly what `PUT` is for. It's also idempotent, which matters here more than it looks:
 
-Links between resources often carry their own fields. A project-collaborator association might track the user's role and when they joined, data that belongs to neither the project nor the user on its own.
+- A client adds a collaborator, the connection drops, the client retries. With `PUT`, the retry is a no-op and returns the same link. With `POST`, the server has to decide whether a second link is a duplicate or an error, and clients have to handle `409` for an operation that succeeded.
+- "Make sure Alice is on this project" is a common need (a sync job, a provisioning script). `PUT` expresses it directly.
+
+```http
+PUT /projects/01932c6c-7616-7590-a8db-cb4b0e4d1c8a/collaborators/0194a7f3-2b11-7e80-9c3d-4e8f1a2b5c70
+Content-Type: application/json
+
+{ "role": "editor" }
+```
+
+`201 Created` the first time, `200 OK` when the link already existed. Unlinking with `DELETE` is idempotent the same way.
+
+## Data on the Link
+
+Links often carry facts that belong to neither side: Alice's role on this project, when she joined. Those live on the link, not on the user or the project:
 
 ```json
 {
@@ -56,44 +73,43 @@ Links between resources often carry their own fields. A project-collaborator ass
 }
 ```
 
-`PATCH` on the association endpoint updates these link-specific fields. To change the user's name or email, use `PATCH /users/{userId}` instead.
+`PATCH` on the link changes the role. Changing Alice's name is `PATCH /users/{userId}`. If the link starts accumulating many fields of its own, that's a sign it's a first-class resource (a membership, an enrollment) and deserves its own top-level ID.
 
-## Fetching Associations
+## One URL Per Resource
 
-`GET /projects/{projectId}/collaborators` returns the associations for that project. The response might include only link-specific data (role, joined date) or it might inline the full user details. See [Expanding Responses](/docs/requests/expanding-responses) for patterns that give clients control over what gets included.
-
-## Don't Duplicate Detail Routes
-
-When a resource already has a top-level endpoint, adding a nested `GET` detail route is redundant.
+A nested list is useful: `GET /teams/{teamId}/members` is "this team's members", a filter you can't easily express otherwise. A nested detail route usually isn't:
 
 ```http
-GET /teams/{teamId}/members             # Useful: scoped list filtered by team
-GET /teams/{teamId}/members/{memberId}  # Redundant
-GET /members/{memberId}                 # Already exists, use this
+GET /teams/{teamId}/members            # useful: the team's members
+GET /teams/{teamId}/members/{userId}   # usually a second URL for /users/{userId}
 ```
 
-The nested collection route filters by the parent, which is valuable. The nested detail route just adds a second URL for the same resource. That means two cache keys, two sets of documentation, and two places to update when the response shape changes. Drop it.
+Two URLs for the same user means two cache keys that go stale independently, two places in the docs, and two response shapes that drift apart. Keep the nested path for the link's own operations and its link data, and send clients to the resource's own URL for the resource itself. Whether a list returns just the link data or inlines each user is up to the client: see [Expanding Responses](/docs/requests/expanding-responses).
 
-Association-management verbs (`POST` to link, `PATCH` to update the link, `DELETE` to unlink) are still valid on the nested path. Those operate on the association, not the resource itself.
+## When the Child Really Is Nested
 
-## When Nesting Makes Sense
+Some resources have no life outside their parent: an order's line items, an invoice's lines. Those are plain nested resources, not links, and `POST` creates them because the server assigns their IDs:
 
-Nest the endpoint when the child resource only exists in the context of its parent, or when modeling an explicit many-to-many link.
+| Scenario | Model |
+| -------- | ----- |
+| Line items on an order | Nested resource: `POST /orders/{orderId}/line-items` |
+| A user on a team | Link: `PUT /teams/{teamId}/members/{userId}` |
+| A user's own profile | Part of the user: `GET /users/{userId}` |
+| A global taxonomy | Flat: `GET /categories` |
 
-| Scenario | Approach |
-| -------- | -------- |
-| Line items in an order | Nested: `POST /orders/{orderId}/line-items` |
-| Members of a team | Nested: `POST /teams/{teamId}/members/{memberId}` |
-| A user's profile | Flat: `GET /users/{userId}` (profile is part of the resource) |
-| Categories (global taxonomy) | Flat: `GET /categories` |
+## Deleting Linked Resources
 
-For guidance on flat vs. nested naming in general, see [Naming Conventions](/docs/api-design/naming-conventions).
+Decide up front what deleting one side does to its links, and document it: deleting a project removes its collaborator links; deleting a user removes them from every project. What you never want is a dangling link that lists a user who no longer exists. Enforce it in the database with foreign keys (`ON DELETE CASCADE` on the link table), not in application code that a new code path can skip.
 
 ## References
 
+**Specifications**
+
+- [RFC 9110: HTTP Semantics, PUT](https://datatracker.ietf.org/doc/html/rfc9110#name-put), creating or replacing a resource at a known URI
+
 **In practice**
 
-- [Google AIP-122: Resource names](https://google.aip.dev/122), when a resource has a parent and when it stands alone
 - [Google AIP-124: Resource association](https://google.aip.dev/124), modeling many-to-many relationships
+- [Google AIP-122: Resource names](https://google.aip.dev/122), when a resource has a parent and when it stands alone
 - [Martin Fowler: Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.html), resources with their own URIs as the foundation
 - [Zalando RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/), limits on nesting depth and sub-resources

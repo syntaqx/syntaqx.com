@@ -51,6 +51,12 @@ npm run build
 
 This runs the Next.js build and then generates the Pagefind search index from the static output.
 
+## Deploy
+
+Every merge to `main` deploys to production on Vercel, and every pull request gets a preview deployment first ([Continuous Deployment](https://www.syntaqx.com/docs/delivery/continuous-deployment)). There's no release step.
+
+To roll back, use Vercel's instant rollback to the previous production deployment, then revert the commit on `main` so the next deploy doesn't bring it back.
+
 ## Decisions
 
 The site follows its own [playbook](https://www.syntaqx.com/docs/playbook). Where it deliberately doesn't, the reason is an [Architecture Decision Record](docs/adr/README.md).

@@ -73,6 +73,11 @@ export async function cacheableJson(
   const headers = { ETag: etag, "Cache-Control": cacheControl };
 
   if (etagMatches(request.headers.get("if-none-match"), etag)) {
+    // Revalidation is free: a 304 gives its request back to the rate limit,
+    // so polling with If-None-Match is the cheapest thing a client can do.
+    // Imported lazily because lib/ratelimit imports this module.
+    const { clientKey, refundRequest } = await import("@/lib/ratelimit");
+    await refundRequest(clientKey(request));
     return new Response(null, { status: 304, headers: withRequestId(new Headers(headers)) });
   }
   return json(data, { headers });
@@ -185,6 +190,12 @@ export function rateLimit(key: string): RateLimitResult {
     entry.reset,
     entry.count > MAX_REQUESTS,
   );
+}
+
+/** Give back one request in the in-memory store (a revalidation that returned 304). */
+export function refundRateLimit(key: string): void {
+  const entry = store.get(key);
+  if (entry && entry.count > 0) entry.count--;
 }
 
 // ---------------------------------------------------------------------------

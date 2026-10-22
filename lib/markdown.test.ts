@@ -39,7 +39,7 @@ describe("renderMarkdownPage()", () => {
       "## Versioning and deprecation",
     );
     const versioning = renderMarkdownPage("/docs/operations/versioning").body;
-    expect(versioning).toContain("## Timing Windows");
+    expect(versioning).toContain("## The Lifecycle");
     // Header versioning is the primary recommendation; the URL is the fallback.
     expect(versioning.indexOf("## Header Versioning")).toBeGreaterThan(0);
     expect(versioning.indexOf("## Header Versioning")).toBeLessThan(

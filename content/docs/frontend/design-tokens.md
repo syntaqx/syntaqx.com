@@ -8,6 +8,8 @@ tags = ["design-tokens", "theming", "css", "frontend"]
 
 A design token is a named design decision: `--border` instead of `#1c2423`. Components use the name, never the value. That one rule is what makes theming, rebranding and contrast fixes a change in one file instead of a hunt through a thousand.
 
+The hunt is worse than it sounds. A hard-coded color looks fine on the day it's written, in the one theme it was checked in. Nothing fails, no test catches it, and it surfaces months later as a white line in dark mode that nobody can trace back to a decision, because there never was one.
+
 ## Tokens, Not Literals
 
 - **Color, type, spacing, radius, shadows and motion** are all tokens. A hex code, a pixel font size or a raw duration in a component is a bug.
@@ -55,7 +57,7 @@ A theme is a set of values for the same names. Light and dark mode never fork co
 .dark  { /* the dark values again */ }
 ```
 
-- **Respect the OS first** with [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme), in CSS, so the first paint is right before any JavaScript runs.
+- **Respect the OS first** with [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme), in CSS, so the first paint is right before any JavaScript runs. A theme chosen in JavaScript flashes the wrong colors on every load, which in dark mode means a white screen in a dark room.
 - **Let people override it,** with a class or data attribute on the root that beats the media query, remembered across visits.
 - **Set `color-scheme`** so form controls, scrollbars and system colors match the theme.
 
@@ -65,7 +67,7 @@ Contrast is a property of a pair of tokens in a theme, not of a component. Check
 
 ## Interchange Format
 
-Tokens that design tools and code share should live in one source and be generated into each platform. The W3C Design Tokens Community Group's [Design Tokens Format Module](https://www.designtokens.org/TR/2025.10/format/) is the common JSON format for that, stable as of its 2025.10 version, and supported by tools like Style Dictionary.
+Once tokens exist in a design tool and in code, they will drift unless one is generated from the other. Tokens that both share should live in one source and be generated into each platform. The W3C Design Tokens Community Group's [Design Tokens Format Module](https://www.designtokens.org/TR/2025.10/format/) is the common JSON format for that, stable as of its 2025.10 version, and supported by tools like Style Dictionary.
 
 ## This Site
 

@@ -20,7 +20,7 @@ The test passes or fails against those numbers, in CI where possible, and regres
 
 ## Test Types
 
-Different questions need different shapes of load. [k6's test types](https://grafana.com/docs/k6/latest/testing-guides/test-types/) are a good vocabulary:
+Different questions need different shapes of load, and running only one shape leaves the others to production. The names below are [k6's](https://grafana.com/docs/k6/latest/testing-guides/test-types/), and they're a useful vocabulary whatever tool you use:
 
 | Type | Load | Answers |
 | --- | --- | --- |

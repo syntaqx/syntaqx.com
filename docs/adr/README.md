@@ -2,7 +2,7 @@
 
 This site follows its own [playbook](https://www.syntaqx.com/docs/playbook). Where it does, the playbook is the explanation, and there's nothing to record.
 
-An ADR here records a **departure**: a place where the site deliberately does something other than what the playbook says, why, and what it costs. If you find yourself writing an ADR for a choice the playbook already makes, link the doc instead. If a departure turns out to be the better default, change the playbook and delete the ADR.
+An ADR here records a **departure**: a place where the site deliberately does something other than what the playbook says, why, and what it costs. If you find yourself writing an ADR for a choice the playbook already makes, link the doc instead. If a departure turns out to be the better default, change the playbook and retire the ADR; git keeps the history.
 
 They follow [Design Docs & ADRs](https://www.syntaqx.com/docs/engineering/design-docs): numbered, about a page, and added in the same pull request as the change.
 

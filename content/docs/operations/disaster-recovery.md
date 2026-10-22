@@ -40,7 +40,7 @@ A backup that has never been restored is a hope, not a backup.
 
 ## Strategies
 
-The [AWS reliability guidance](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html) names four strategies, in rising cost and falling recovery time:
+There are four broad strategies, in rising cost and falling recovery time. The names are [AWS's](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html), but the tradeoff is the same on any provider: you pay continuously for capacity in the recovery location, to buy back time on the day you need it.
 
 | Strategy | What's running in the recovery region | Recovery |
 | --- | --- | --- |
