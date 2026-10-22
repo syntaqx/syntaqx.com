@@ -134,6 +134,7 @@ export function article({
   path,
   crumbs,
   datePublished,
+  dateModified,
 }: {
   type?: "TechArticle" | "Article";
   headline: string;
@@ -141,6 +142,7 @@ export function article({
   path: string;
   crumbs: Crumb[];
   datePublished?: string;
+  dateModified?: string;
 }) {
   const url = abs(path);
   return {
@@ -158,6 +160,7 @@ export function article({
         author: personRef,
         publisher: orgRef,
         ...(datePublished && { datePublished }),
+        ...(dateModified && { dateModified }),
       },
       breadcrumbList(crumbs),
     ],

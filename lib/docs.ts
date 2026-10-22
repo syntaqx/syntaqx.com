@@ -78,15 +78,15 @@ function parseTomlFrontmatter(fileContents: string): {
   return { data, content };
 }
 
-/** Every Markdown file under content/docs, as POSIX paths relative to it. */
-function docFiles(dir = docsDirectory): string[] {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return docFiles(full);
-    return entry.name.endsWith(".md")
-      ? [path.relative(docsDirectory, full).split(path.sep).join("/")]
-      : [];
-  });
+/**
+ * Every Markdown file under content/docs, as POSIX paths relative to it. One
+ * recursive read of a fixed directory, so the bundler traces only content/docs
+ * instead of the whole project.
+ */
+function docFiles(): string[] {
+  return (fs.readdirSync(docsDirectory, { recursive: true }) as string[])
+    .filter((file) => file.endsWith(".md"))
+    .map((file) => file.split(path.sep).join("/"));
 }
 
 export function getAllDocs(): DocData[] {
