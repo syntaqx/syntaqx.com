@@ -3,6 +3,7 @@ import path from "path";
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/posts";
 import { getAllDocs } from "@/lib/docs";
+import { docLastModified } from "@/lib/doc-dates";
 import { SITE_URL } from "@/lib/constants";
 
 /** Recursively find all static page routes under app/. */
@@ -40,10 +41,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${route === "/" ? "" : route}`,
   }));
 
-  // Same source as the docs route's generateStaticParams.
-  const docs = getAllDocs().map((doc) => ({
-    url: `${baseUrl}/docs/${doc.slug}`,
-  }));
+  // Same source as the docs route's generateStaticParams. lastModified comes
+  // from git and is omitted when it isn't known (never guessed).
+  const docs = getAllDocs().map((doc) => {
+    const modified = docLastModified(doc.slug);
+    return {
+      url: `${baseUrl}/docs/${doc.slug}`,
+      ...(modified && { lastModified: new Date(modified) }),
+    };
+  });
 
   const allPosts = getAllPosts();
 
