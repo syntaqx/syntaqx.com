@@ -16,16 +16,21 @@ Every financial object has a `status` with a closed set of values and a document
 ### Example: Payment
 
 ```text
-pending ──► authorized ──► captured ──► settled
-   │            │
-   ▼            ▼
- failed       voided
+           ┌──► requires_action ──┐
+           │                      ▼
+pending ───┴─────────────────► authorized ──► captured ──► settled
+   │                              │
+   ▼                              ▼
+ failed                         voided
 ```
 
 | From | To | Trigger |
 | ---- | -- | ------- |
 | `pending` | `authorized` | Issuer approves the authorization |
 | `pending` | `failed` | Issuer declines, or the request errors |
+| `pending` | `requires_action` | Issuer asks the customer to authenticate ([3-D Secure](/docs/payments/strong-customer-authentication)) |
+| `requires_action` | `pending` | Customer completes the challenge; the payment resumes |
+| `requires_action` | `failed` | Customer fails or abandons the challenge, or it expires |
 | `authorized` | `captured` | Merchant captures (full or partial) |
 | `authorized` | `voided` | Merchant cancels, or the authorization expires uncaptured |
 | `captured` | `settled` | Funds arrive in the settlement batch |
