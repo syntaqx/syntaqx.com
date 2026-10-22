@@ -121,3 +121,67 @@ export function rateLimit(key: string): RateLimitResult {
 
   return { limited, limit: MAX_REQUESTS, remaining, reset: entry.reset, headers };
 }
+
+// ---------------------------------------------------------------------------
+// API versioning (see content/docs/versioning.md)
+// ---------------------------------------------------------------------------
+
+export interface ApiVersion {
+  /** Release date, YYYY-MM-DD. Also the value clients send. */
+  version: string;
+  /** Set when deprecated: the Deprecation and Sunset dates (ISO 8601). */
+  deprecatedAt?: string;
+  sunsetAt?: string;
+}
+
+/** Every dated version, oldest first. */
+export const API_VERSIONS: ApiVersion[] = [{ version: "2026-10-22" }];
+
+const VERSION_POLICY_URL = "https://www.syntaqx.com/docs/versioning";
+
+export type ApiVersionResult =
+  | { ok: true; version: string; headers: Record<string, string> }
+  | { ok: false; body: ApiErrorBody };
+
+/**
+ * Resolve the `Api-Version` request header. A missing header gets the oldest
+ * supported version; an unknown or sunset version is rejected. Deprecated
+ * versions still serve, with Deprecation (RFC 9745), Sunset (RFC 8594) and
+ * Link rel="deprecation" headers.
+ */
+export function resolveApiVersion(
+  requested: string | null,
+  now: Date = new Date(),
+  versions: ApiVersion[] = API_VERSIONS,
+): ApiVersionResult {
+  const supported = versions.filter(
+    (v) => !v.sunsetAt || now < new Date(v.sunsetAt),
+  );
+  const match = requested
+    ? supported.find((v) => v.version === requested.trim())
+    : supported[0];
+
+  if (!match) {
+    const list = supported.map((v) => v.version);
+    return {
+      ok: false,
+      body: {
+        message: `Unsupported Api-Version "${requested}". Supported versions: ${list.join(", ")}.`,
+        errors: { "Api-Version": [`must be one of: ${list.join(", ")}`] },
+      },
+    };
+  }
+
+  const headers: Record<string, string> = {
+    "Api-Version": match.version,
+    Vary: "Api-Version",
+  };
+  if (match.deprecatedAt) {
+    headers.Deprecation = `@${Math.floor(Date.parse(match.deprecatedAt) / 1000)}`;
+    headers.Link = `<${VERSION_POLICY_URL}>; rel="deprecation"`;
+    if (match.sunsetAt) {
+      headers.Sunset = new Date(match.sunsetAt).toUTCString();
+    }
+  }
+  return { ok: true, version: match.version, headers };
+}
