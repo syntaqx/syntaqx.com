@@ -5,6 +5,8 @@
  * responses and the normalized error envelope.
  */
 
+import { uuidv7 } from "@/lib/uuid";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -18,12 +20,21 @@ export interface ApiErrorBody {
 // Response builders
 // ---------------------------------------------------------------------------
 
+/** `Request-Id`, plus its legacy `X-Request-ID` alias, sharing one UUID v7. */
+export function requestIdHeaders(id: string = uuidv7()): Record<string, string> {
+  return { "Request-Id": id, "X-Request-ID": id };
+}
+
+function withRequestId(headers: Headers): Headers {
+  if (!headers.has("Request-Id")) {
+    for (const [k, v] of Object.entries(requestIdHeaders())) headers.set(k, v);
+  }
+  return headers;
+}
+
 /** Return a JSON success response. */
 export function json<T>(data: T, init?: ResponseInit): Response {
-  const headers = new Headers(init?.headers);
-  if (!headers.has("X-Request-ID")) {
-    headers.set("X-Request-ID", crypto.randomUUID());
-  }
+  const headers = withRequestId(new Headers(init?.headers));
   return Response.json(data, { ...init, headers });
 }
 
@@ -37,10 +48,7 @@ export function errorResponse(
     message,
     ...(options?.errors && { errors: options.errors }),
   };
-  const headers = new Headers(options?.headers);
-  if (!headers.has("X-Request-ID")) {
-    headers.set("X-Request-ID", crypto.randomUUID());
-  }
+  const headers = withRequestId(new Headers(options?.headers));
   return Response.json(body, { status, headers });
 }
 

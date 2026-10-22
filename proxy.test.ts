@@ -27,11 +27,11 @@ function makeRequest(
 }
 
 describe("proxy: API header guarantees", () => {
-  it("attaches X-Request-ID and X-RateLimit-* headers to /api/* requests", () => {
+  it("attaches Request-Id and X-RateLimit-* headers to /api/* requests", () => {
     const res = proxy(makeRequest("http://localhost/api/v1/healthz"));
     expect(res).toBeDefined();
     const r = res as Response;
-    expect(r.headers.get("X-Request-ID")).toMatch(
+    expect(r.headers.get("Request-Id")).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
     );
     expect(r.headers.get("X-RateLimit-Limit")).toBe("5000");
@@ -58,8 +58,8 @@ describe("proxy: API header guarantees", () => {
     ]) {
       const res = proxy(makeRequest(`http://localhost${path}`)) as Response;
       expect(
-        res.headers.get("X-Request-ID"),
-        `${path} should set X-Request-ID`,
+        res.headers.get("Request-Id"),
+        `${path} should set Request-Id`,
       ).toBeTruthy();
       expect(
         res.headers.get("X-RateLimit-Limit"),
@@ -80,7 +80,7 @@ describe("proxy: API header guarantees", () => {
     const res = proxy(makeRequest("http://localhost/about")) as Response;
     // NextResponse.next() — no rate-limit headers, no request id.
     expect(res.headers.get("X-RateLimit-Limit")).toBeNull();
-    expect(res.headers.get("X-Request-ID")).toBeNull();
+    expect(res.headers.get("Request-Id")).toBeNull();
   });
 
   it("returns 204 with CORS headers for OPTIONS preflight on /api/*", () => {
@@ -116,7 +116,7 @@ describe("proxy: rate limiting enforcement", () => {
     expect(res.headers.get("Retry-After")).toMatch(/^\d+$/);
     expect(res.headers.get("X-RateLimit-Remaining")).toBe("0");
     expect(res.headers.get("RateLimit")).toMatch(/^"hourly";r=0;t=\d+$/);
-    expect(res.headers.get("X-Request-ID")).toBeTruthy();
+    expect(res.headers.get("Request-Id")).toBeTruthy();
 
     const body = await res.json();
     expect(body).toEqual({ message: "Too many requests. Please try again later." });
@@ -149,7 +149,7 @@ describe("proxy: Api-Version", () => {
       }),
     ) as Response;
     expect(res.status).toBe(400);
-    expect(res.headers.get("X-Request-ID")).toBeTruthy();
+    expect(res.headers.get("Request-Id")).toBeTruthy();
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
     const body = await res.json();
     expect(body.message).toContain('Unsupported Api-Version "1999-01-01"');
@@ -181,7 +181,7 @@ describe("proxy: api subdomain", () => {
       makeRequest("http://api.syntaqx.com/", { host: "api.syntaqx.com" }),
     ) as Response;
     expect(res.status).toBe(200);
-    expect(res.headers.get("X-Request-ID")).toBeTruthy();
+    expect(res.headers.get("Request-Id")).toBeTruthy();
     expect(res.headers.get("X-RateLimit-Limit")).toBe("5000");
     expect(res.headers.get("x-middleware-rewrite")).toBe("http://api.syntaqx.com/api");
   });
@@ -191,7 +191,7 @@ describe("proxy: api subdomain", () => {
       makeRequest("http://api.syntaqx.com/random", { host: "api.syntaqx.com" }),
     ) as Response;
     expect(res.status).toBe(404);
-    expect(res.headers.get("X-Request-ID")).toBeTruthy();
+    expect(res.headers.get("Request-Id")).toBeTruthy();
     const body = await res.json();
     expect(body).toEqual({ message: "Not found." });
   });

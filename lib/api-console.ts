@@ -95,5 +95,5 @@ export const SHOWN_RESPONSE_HEADERS = [
   "ratelimit",
   "ratelimit-policy",
   "retry-after",
-  "x-request-id",
+  "request-id",
 ];
