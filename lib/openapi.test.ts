@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { GET as openapiJson } from "@/app/openapi.json/route";
 import { GET as apiOpenapi } from "@/app/api/openapi/route";
 import { API_VERSIONS } from "@/lib/api";
+import { generateOpenApiSpec } from "@/lib/openapi";
 
 type Operation = {
   operationId?: string;
@@ -73,5 +74,26 @@ describe("/openapi.json", () => {
       expect(Object.keys(op.responses ?? {})).toContain("200");
     }
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe("generateOpenApiSpec()", () => {
+  it("points the development server at the requesting origin", () => {
+    const env = process.env as Record<string, string | undefined>;
+    const prev = env.NODE_ENV;
+    env.NODE_ENV = "development";
+    try {
+      expect(generateOpenApiSpec("http://localhost:3127").servers).toEqual([
+        { url: "http://localhost:3127/api", description: "Local development" },
+      ]);
+    } finally {
+      env.NODE_ENV = prev;
+    }
+  });
+
+  it("always uses the production API outside development", () => {
+    expect(generateOpenApiSpec("http://localhost:3127").servers).toEqual([
+      { url: "https://api.syntaqx.com", description: "Production" },
+    ]);
   });
 });
