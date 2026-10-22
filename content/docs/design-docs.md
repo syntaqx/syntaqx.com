@@ -64,18 +64,18 @@ What's undecided, and who decides it.
 An ADR records one decision, in about a page, in the repository it affects. Based on [Michael Nygard's format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions):
 
 ```markdown
-# 0007. Use ULIDs for public identifiers
+# 0007. Use UUID v7 for primary keys
 
 Status: Accepted (2026-03-14)
 
 ## Context
-Public IDs need to be unguessable and sortable by creation time...
+IDs are generated on several services and must sort by creation time...
 
 ## Decision
-All new public identifiers are ULIDs...
+All new tables use UUID v7 primary keys...
 
 ## Consequences
-IDs are 26 characters instead of 36. Existing UUID tables are not migrated...
+B-tree inserts stay sequential. Existing auto-increment tables are not migrated...
 ```
 
 - **Numbered and immutable.** An ADR is never edited after it's accepted. A changed decision is a new ADR that supersedes the old one, and the old one links forward.

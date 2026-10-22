@@ -26,12 +26,16 @@ pending ──► authorized ──► captured ──► settled
 | `pending` | `authorized` | Issuer approves the authorization |
 | `pending` | `failed` | Issuer declines, or the request errors |
 | `authorized` | `captured` | Merchant captures (full or partial) |
-| `authorized` | `voided` | Merchant cancels, or the authorization expires |
+| `authorized` | `voided` | Merchant cancels, or the authorization expires uncaptured |
 | `captured` | `settled` | Funds arrive in the settlement batch |
 
 - **Terminal states are terminal.** `failed`, `voided` and `settled` never transition again.
 - **Transitions are guarded in the database,** not just in code: `UPDATE ... WHERE id = $1 AND status = 'authorized'`, and zero rows updated means someone else got there first.
 - **Every transition is recorded** with when it happened, what triggered it, and the processor's reference.
+
+### Authorizations Expire
+
+An uncaptured authorization only holds funds for a limited time, set by the card network. Like [Stripe](https://docs.stripe.com/payments/capture-later), plan on **7 days** for online card payments and **2 days** for in-person payments (Visa merchant-initiated transactions get 5). Store the expiry as `capture_before`, and a scheduled job moves anything past it to `voided`.
 
 ### Refunds and Disputes Are Their Own Objects
 
@@ -39,7 +43,7 @@ A refund doesn't move a payment to `refunded`. It's a new `refund` object, with 
 
 ```json
 {
-  "id": "01J9Z8K3V7Q4N2M6X5R8T0B1C3",
+  "id": "01932c6c-7616-7590-a8db-cb4b0e4d1c8a",
   "status": "settled",
   "amount": 5000,
   "amount_refunded": 1500,

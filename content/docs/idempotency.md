@@ -6,25 +6,24 @@ order = 7.1
 tags = ["api", "payments", "idempotency", "headers"]
 +++
 
-Networks fail after the server has done the work. A client that times out on `POST /payments` has no way to know whether it charged the card. Idempotency keys make the retry safe: the same key always produces the same result, and the side effect happens at most once.
+Networks fail after the server has done the work. A client that times out on `POST /payments` has no way to know whether it charged the card. Idempotency keys make the retry safe: the same key always produces the same result, and the side effect happens at most once. The behavior matches [Stripe's](https://docs.stripe.com/api/idempotent_requests).
 
 ## The Header
 
-Every `POST` (and any `PATCH` with side effects) accepts an `Idempotency-Key` header, following the [IETF Idempotency-Key draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/).
+Every `POST` accepts an `Idempotency-Key` header, following the [IETF Idempotency-Key draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/).
 
 ```http
 POST /payments
-Idempotency-Key: 01J9Z8K3V7Q4N2M6X5R8T0B1C3
+Idempotency-Key: f47ac10b-58cc-4372-a567-0e02b2c3d479
 Content-Type: application/json
 
 { "amount": 1999, "currency": "USD", "source": "tok_visa" }
 ```
 
-- The client generates the key. A [UUID v4 or ULID](/docs/identifier-conventions) is ideal.
+- The client generates the key. A [UUID v4](/docs/identifier-conventions) is ideal. Up to **255 characters**.
 - One key per **logical operation**, not per HTTP attempt. Every retry of the same operation reuses the same key.
-- `GET`, `PUT` and `DELETE` are already idempotent by definition and don't need one. See [REST & HTTP Verbs](/docs/rest-http-verbs).
-
-For money-moving endpoints the key is **required**. A missing key returns `400`.
+- Never put sensitive data in a key (emails, card numbers, personal identifiers).
+- `GET`, `PUT`, `PATCH` and `DELETE` are idempotent by definition (see [REST & HTTP Verbs](/docs/rest-http-verbs)). A key sent with them has no effect.
 
 ## What the Server Stores
 
@@ -46,11 +45,11 @@ The key record and the side effect are written in the **same transaction** where
 | ------- | ------ |
 | New key | Processed normally, response stored |
 | Same key, same request, completed | Stored response **replayed**, nothing re-executed |
-| Same key, same request, still in progress | `409 Conflict`, retry shortly |
-| Same key, **different** request | `422 Unprocessable Entity`, the key is already bound |
+| Same key, same request, still in progress | `409 Conflict`, retry shortly with the same key |
+| Same key, **different** request | `400 Bad Request`, the key is already bound to another request |
 | Key older than the retention window | Treated as new |
 
-A replayed response is byte-for-byte the original, including errors, and adds one header so the client can tell:
+A replayed response is byte-for-byte the original and adds one header so the client can tell:
 
 ```http
 HTTP/1.1 201 Created
@@ -59,12 +58,16 @@ Idempotent-Replayed: true
 
 ### What Gets Stored
 
-- **Successes and deterministic failures** (`4xx` validation errors) are stored and replayed.
-- **`5xx` and `429` responses are not stored.** The operation didn't complete, so the client is free to retry with the same key.
+A result is stored once the endpoint **begins executing**, whatever the outcome:
+
+- **Successes and failures are both stored,** including declines and `500` errors. A `500` means the outcome is indeterminate: the side effect may have happened. Replaying it keeps a retry from doing the work a second time.
+- **Nothing is stored for requests rejected before execution:** failed validation, bad authentication, [rate limiting](/docs/rate-limiting) (`429`), or a `409` for a concurrent request. Fix the problem and retry with the same key.
 
 ## Retention
 
-Keys are kept for **24 hours**. That covers every reasonable retry schedule (see [Retries & Timeouts](/docs/retries-and-timeouts)) without keeping data forever. After that the key can be reused, so clients shouldn't retry an operation days later with an old key and expect a replay.
+Keys are kept for **at least 24 hours**, then pruned. A key reused after it's pruned starts a new operation.
+
+Retry an unresolved operation only within those 24 hours. If the outcome is still unknown after that, stop retrying with either the old key or a new one, and reconcile: fetch the object, or check [webhook](/docs/webhooks) events.
 
 ## Idempotency Beyond the API
 
@@ -78,7 +81,8 @@ Exactly-once delivery doesn't exist. At-least-once delivery plus idempotent hand
 
 ## Client Expectations
 
-1. Generate a key before the first attempt, and persist it with the operation.
+1. Generate a key before the first attempt, and persist it with the operation so it survives process restarts.
 2. Reuse that key on every retry, with the exact same body.
-3. On `409`, back off and retry the same key.
-4. On `422`, you've reused a key for a different operation. That's a client bug.
+3. On `409`, back off and retry the same key. A new key could start a second operation.
+4. On `400` for a key mismatch, you've reused a key for a different operation. That's a client bug.
+5. To change the parameters, first confirm the original didn't succeed and isn't still running, then use a new key.
