@@ -4,6 +4,7 @@ import {
   OpenApiGeneratorV31,
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { CONTACT_EMAIL } from "@/lib/constants";
 
 extendZodWithOpenApi(z);
 
@@ -45,7 +46,13 @@ export function generateOpenApiSpec() {
     info: {
       title: "syntaqx API",
       version: "1.0.0",
-      description: "Public API for syntaqx.com",
+      description:
+        "Public API for syntaqx.com. Breaking changes only ship in a new major version (the /v1 path segment); deprecations are announced with Deprecation and Sunset headers at least 30 days before removal. See https://www.syntaqx.com/docs/versioning.",
+      contact: {
+        name: "Chase Pierce",
+        url: "https://www.syntaqx.com/contact",
+        email: CONTACT_EMAIL,
+      },
     },
     servers: [server],
   });

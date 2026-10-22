@@ -44,6 +44,39 @@ export const nav = [
   { href: "/about", label: "about" },
 ];
 
+// Footer link groups. Non-page routes (feeds, machine-readable files) are
+// flagged `file` so they render as plain anchors, not client-side Links.
+export const footerNav: {
+  label: string;
+  links: { href: string; label: string; file?: boolean }[];
+}[] = [
+  { label: "site", links: nav },
+  {
+    label: "connect",
+    links: [
+      { href: "/contact", label: "contact" },
+      { href: "/tags", label: "topics" },
+      { href: "/feed.xml", label: "rss", file: true },
+    ],
+  },
+  {
+    label: "developers",
+    links: [
+      { href: "/docs/api", label: "api" },
+      { href: "/openapi.json", label: "openapi", file: true },
+      { href: "/llms.txt", label: "llms.txt", file: true },
+    ],
+  },
+  {
+    label: "legal",
+    links: [
+      { href: "/legal", label: "legal" },
+      { href: "/legal/terms", label: "terms" },
+      { href: "/legal/privacy", label: "privacy" },
+    ],
+  },
+];
+
 // Site owner's timezone. GitHub's contributions HTML pads the trailing week
 // with level-0 cells for days that haven't happened in the owner's local
 // time yet; we use this to trim them off so "no activity" can't be confused
