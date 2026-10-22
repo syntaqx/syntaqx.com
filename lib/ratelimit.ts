@@ -1,5 +1,5 @@
 /**
- * Rate limiting, per /docs/operations/rate-limiting and docs/adr/0011.
+ * Rate limiting, per /docs/operations/rate-limiting.
  *
  * Counts live in a pluggable store:
  *

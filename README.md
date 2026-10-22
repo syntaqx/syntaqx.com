@@ -20,7 +20,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Nothing else is required: without Redis, the API's rate limiter sends its headers but never blocks. To run the real limiter ([ADR 0011](docs/adr/0011-rate-limiting-in-upstash-redis.md)), start Redis and its Upstash-compatible REST proxy, then point `.env.local` at it (see [.env.example](.env.example)):
+Nothing else is required: without Redis, the API's rate limiter sends its headers but never blocks. To run the real limiter (see [Rate Limiting](https://www.syntaqx.com/docs/operations/rate-limiting)), start Redis and its Upstash-compatible REST proxy, then point `.env.local` at it (see [.env.example](.env.example)):
 
 ```bash
 docker compose up -d
@@ -53,7 +53,7 @@ This runs the Next.js build and then generates the Pagefind search index from th
 
 ## Decisions
 
-Why the site is built the way it is lives in [Architecture Decision Records](docs/adr/README.md).
+The site follows its own [playbook](https://www.syntaqx.com/docs/playbook). Where it deliberately doesn't, the reason is an [Architecture Decision Record](docs/adr/README.md).
 
 ## Project Structure
 

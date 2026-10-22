@@ -24,4 +24,4 @@ Migrations, flags, how to roll back.
 
 - [ ] One concern, small enough to review (aim for under ~400 changed lines)
 - [ ] CI is green before asking for review
-- [ ] Docs and an ADR updated if this changes behavior or a decision
+- [ ] Docs updated if this changes behavior; an ADR only if it departs from the playbook

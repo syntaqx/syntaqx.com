@@ -1,19 +1,14 @@
 # Architecture Decision Records
 
-Why this site is built the way it is. Each record captures one significant decision: the context, what was decided, and what it costs. They follow [Design Docs & ADRs](https://www.syntaqx.com/docs/engineering/design-docs): numbered, about a page, and never edited once accepted. A changed decision gets a new record that supersedes the old one. Add an ADR in the same pull request as the change it describes.
+This site follows its own [playbook](https://www.syntaqx.com/docs/playbook). Where it does, the playbook is the explanation, and there's nothing to record.
 
-| # | Decision | Status | Date |
-| - | -------- | ------ | ---- |
-| [0001](0001-record-architecture-decisions.md) | Record architecture decisions | Accepted | 2026-10-22 |
-| [0002](0002-no-auth-no-database.md) | No authentication, user identity, or database | Superseded by [0010](0010-datastores-allowed-no-user-identity.md) | 2026-09-16 |
-| [0003](0003-standards-first-api-conventions.md) | Standards-first API conventions | Accepted | 2026-05-10 |
-| [0004](0004-header-based-dated-versioning.md) | Header-based dated versioning | Accepted | 2026-10-22 |
-| [0005](0005-request-id-uuid-v7-with-legacy-aliases.md) | Request-Id as UUID v7, with legacy X- aliases | Accepted | 2026-10-22 |
-| [0006](0006-http-query-in-the-proxy.md) | Serve HTTP QUERY in the proxy layer | Accepted | 2026-10-22 |
-| [0007](0007-uuid-v7-default-identifier.md) | UUID v7 as the default identifier | Accepted | 2026-05-10 |
-| [0008](0008-400-malformed-422-validation.md) | 400 for malformed requests, 422 for validation failures | Accepted | 2026-10-22 |
-| [0009](0009-playbook-docs-enforced-in-ci.md) | Playbook docs as Markdown, checked in CI | Accepted | 2026-10-22 |
-| [0010](0010-datastores-allowed-no-user-identity.md) | Datastores are allowed; still no authentication or user identity | Accepted | 2026-10-22 |
-| [0011](0011-rate-limiting-in-upstash-redis.md) | Rate limiting in Upstash Redis, with memory and noop stores | Accepted | 2026-10-22 |
-| [0012](0012-docs-in-section-folders.md) | Docs grouped into section folders, with the section in the URL | Accepted | 2026-10-22 |
-| [0013](0013-csp-report-only-first.md) | Content-Security-Policy, report-only first | Accepted | 2026-10-22 |
+An ADR here records a **departure**: a place where the site deliberately does something other than what the playbook says, why, and what it costs. If you find yourself writing an ADR for a choice the playbook already makes, link the doc instead. If a departure turns out to be the better default, change the playbook and delete the ADR.
+
+They follow [Design Docs & ADRs](https://www.syntaqx.com/docs/engineering/design-docs): numbered, about a page, and added in the same pull request as the change.
+
+| # | Decision | Departs from | Date |
+| - | -------- | ------------ | ---- |
+| [0001](0001-no-authentication-or-user-identity.md) | No authentication or user identity | The playbook's account-based practices (auth, tenancy, user data) | 2026-09-16 |
+| [0002](0002-header-only-api-versioning.md) | Header-only API versioning, no URL version | [Versioning](https://www.syntaqx.com/docs/operations/versioning): the URL path fallback | 2026-10-22 |
+| [0003](0003-breaking-changes-before-consumers.md) | Breaking changes without a deprecation window, while there are no consumers | [Versioning](https://www.syntaqx.com/docs/operations/versioning): new versions and 30-day deprecations | 2026-10-22 |
+| [0004](0004-csp-allows-inline-scripts.md) | Content-Security-Policy allows inline scripts, for now | [Security Headers & CSP](https://www.syntaqx.com/docs/security/security-headers): nonces and `strict-dynamic` | 2026-10-22 |

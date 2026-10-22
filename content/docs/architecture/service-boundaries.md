@@ -67,7 +67,7 @@ Every boundary has an explicit contract, versioned like a public API, whether it
 - Events have schemas with the same compatibility rules. See [Events & Async Messaging](/docs/architecture/events).
 - Contract tests run in CI on both sides. See [Testing Strategy](/docs/engineering/testing).
 
-Write the decision down. Splitting or merging a service is exactly the kind of choice that gets an [ADR](/docs/engineering/design-docs).
+Write the decision down. Splitting or merging a service is exactly the kind of choice that gets a [design doc](/docs/engineering/design-docs) first.
 
 ## References
 
