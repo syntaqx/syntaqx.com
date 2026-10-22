@@ -140,6 +140,30 @@ The method is standardized. Support isn't. Each of these has a workaround, and t
 | API descriptions | [OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html) has a `query` operation. 3.1 and older tooling doesn't. | Describe `QUERY` in 3.2 where tooling supports it, and document the `POST` override alongside it |
 | Logging and observability | Tools that log method + URL see the same URL for every query | Log a hash of the normalized body with the [request ID](/docs/observability), never the body itself |
 
+## Live Example
+
+The syntaqx API's [`/v1/hash`](/docs/api) endpoint supports all of this. Hashing has no side effects and always gives the same answer, and its input is exactly the kind of data that shouldn't end up in a URL.
+
+```bash
+# Native QUERY
+curl -X QUERY https://api.syntaqx.com/v1/hash \
+  -H "Content-Type: application/json" \
+  -d '{"input": "hello world"}'
+
+# The POST fallback
+curl -X POST https://api.syntaqx.com/v1/hash \
+  -H "Content-Type: application/json" \
+  -H "X-HTTP-Method-Override: QUERY" \
+  -d '{"input": "hello world"}'
+```
+
+How it's built:
+
+- **QUERY is served in the proxy layer.** Next.js route handlers answer a native `QUERY` with an empty `400`, so the proxy recognizes both doors, applies the checks above (`Content-Type`, the 64 KB limit, override rules), and calls the endpoint's read-only handler directly.
+- **Native responses are cacheable for a year.** A digest never changes for the same input, so a successful `QUERY` returns `Cache-Control: public, max-age=31536000, immutable`. Overridden requests return `private, no-store`.
+- **No stored query.** The API has no database, and a digest is already the complete, permanent answer, so responses don't include a `Location`.
+- **Plain `POST /v1/hash` still works** for existing clients. It returns `400` for invalid fields, and `QUERY` returns `422`, as RFC 10008 specifies.
+
 ## Client Expectations
 
 1. Use `GET` for simple filters, `QUERY` for anything structured, long, or sensitive.

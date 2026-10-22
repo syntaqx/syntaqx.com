@@ -196,3 +196,105 @@ describe("proxy: api subdomain", () => {
     expect(body).toEqual({ message: "Not found." });
   });
 });
+
+describe("proxy: HTTP QUERY", () => {
+  const HELLO_SHA256 =
+    "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9";
+
+  function queryRequest(
+    url: string,
+    init: { method?: string; headers?: Record<string, string>; body?: string } = {},
+  ): NextRequest {
+    const headers = new Headers({
+      "x-forwarded-for": `10.1.0.${++ipCounter}`,
+      "content-type": "application/json",
+      ...init.headers,
+    });
+    return new NextRequest(url, {
+      method: init.method ?? "QUERY",
+      headers,
+      body: init.body ?? JSON.stringify({ input: "hello world" }),
+    });
+  }
+
+  it("serves a native QUERY with cacheable, discoverable responses", async () => {
+    const res = await proxy(queryRequest("http://localhost/api/v1/hash"));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ algorithm: "SHA-256", digest: HELLO_SHA256 });
+    expect(res.headers.get("Cache-Control")).toBe("public, max-age=31536000, immutable");
+    expect(res.headers.get("Accept-Query")).toBe("application/json");
+    expect(res.headers.get("Allow")).toBe("POST, QUERY, OPTIONS");
+    expect(res.headers.get("Request-Id")).toBeTruthy();
+  });
+
+  it("serves POST + X-HTTP-Method-Override: QUERY without caching", async () => {
+    const res = await proxy(
+      queryRequest("http://localhost/api/v1/hash", {
+        method: "POST",
+        headers: { "X-HTTP-Method-Override": "query" },
+      }),
+    );
+    expect(res.status).toBe(200);
+    expect((await res.json()).digest).toBe(HELLO_SHA256);
+    expect(res.headers.get("Cache-Control")).toBe("private, no-store");
+  });
+
+  it("rejects any override other than POST to QUERY", async () => {
+    for (const [method, value] of [["POST", "DELETE"], ["GET", "QUERY"]]) {
+      const res = await proxy(
+        makeRequest("http://localhost/api/v1/hash", {
+          method,
+          headers: { "X-HTTP-Method-Override": value },
+        }),
+      );
+      expect(res.status, `${method} -> ${value}`).toBe(400);
+    }
+  });
+
+  it("returns 415 with Accept-Query for unsupported query formats", async () => {
+    const res = await proxy(
+      queryRequest("http://localhost/api/v1/hash", { headers: { "content-type": "text/plain" } }),
+    );
+    expect(res.status).toBe(415);
+    expect(res.headers.get("Accept-Query")).toBe("application/json");
+  });
+
+  it("returns 413 for query content over 64 KB", async () => {
+    const res = await proxy(
+      queryRequest("http://localhost/api/v1/hash", {
+        body: JSON.stringify({ input: "a".repeat(70_000) }),
+      }),
+    );
+    expect(res.status).toBe(413);
+  });
+
+  it("returns 422 for a well-formed query that can't run, 400 for malformed JSON", async () => {
+    const invalid = await proxy(
+      queryRequest("http://localhost/api/v1/hash", { body: JSON.stringify({ algorithm: "nope" }) }),
+    );
+    expect(invalid.status).toBe(422);
+    expect((await invalid.json()).errors).toBeTruthy();
+
+    const malformed = await proxy(queryRequest("http://localhost/api/v1/hash", { body: "{" }));
+    expect(malformed.status).toBe(400);
+  });
+
+  it("returns 405 for QUERY on endpoints that don't support it", async () => {
+    const res = await proxy(queryRequest("http://localhost/api/v1/uuid"));
+    expect(res.status).toBe(405);
+  });
+
+  it("works on the api subdomain path too", async () => {
+    const req = queryRequest("https://api.syntaqx.com/v1/hash");
+    req.headers.set("host", "api.syntaqx.com");
+    const res = await proxy(req);
+    expect(res.status).toBe(200);
+  });
+
+  it("advertises QUERY on OPTIONS", () => {
+    const res = proxy(makeRequest("http://localhost/api/v1/hash", { method: "OPTIONS" })) as Response;
+    expect(res.headers.get("Allow")).toBe("POST, QUERY, OPTIONS");
+    expect(res.headers.get("Access-Control-Allow-Methods")).toContain("QUERY");
+    expect(res.headers.get("Access-Control-Allow-Headers")).toContain("X-HTTP-Method-Override");
+  });
+});

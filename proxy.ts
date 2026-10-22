@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { rateLimit, requestIdHeaders, resolveApiVersion } from "@/lib/api";
+import { errorResponse, rateLimit, requestIdHeaders, resolveApiVersion } from "@/lib/api";
 import { uuidv7 } from "@/lib/uuid";
+import {
+  METHOD_OVERRIDE_HEADER,
+  handleQuery,
+  queryDiscoveryHeaders,
+  queryKind,
+} from "@/lib/query";
 
 function corsHeaders(): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, Api-Version",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS, QUERY",
+    "Access-Control-Allow-Headers": `Content-Type, Authorization, Api-Version, ${METHOD_OVERRIDE_HEADER}`,
     "Access-Control-Expose-Headers":
-      "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, Request-Id, X-Request-ID",
+      "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, Request-Id, X-Request-ID, Accept-Query",
+    "Access-Control-Max-Age": "86400",
   };
 }
 
@@ -81,6 +88,11 @@ function applyApiHeaders(
   };
 }
 
+function withHeaders(response: Response, headers: Record<string, string>): Response {
+  for (const [k, v] of Object.entries(headers)) response.headers.set(k, v);
+  return response;
+}
+
 export function proxy(request: NextRequest) {
   const host = request.headers.get("host") || "";
   const { pathname } = request.nextUrl;
@@ -91,7 +103,7 @@ export function proxy(request: NextRequest) {
   if (request.method === "OPTIONS" && isApiPath) {
     return new Response(null, {
       status: 204,
-      headers: corsHeaders(),
+      headers: { ...corsHeaders(), ...queryDiscoveryHeaders(pathname) },
     });
   }
 
@@ -102,7 +114,22 @@ export function proxy(request: NextRequest) {
 
   const result = applyApiHeaders(request);
   if (result.blocked) return result.response;
-  const apiHeaders = result.headers;
+  const apiHeaders = { ...result.headers, ...queryDiscoveryHeaders(pathname) };
+
+  // HTTP QUERY: native, or POST + X-HTTP-Method-Override. Route handlers
+  // can't dispatch it, so it's served here. See /docs/http-query.
+  const kind = queryKind(request);
+  if (kind === "invalid") {
+    return withHeaders(
+      errorResponse(400, `${METHOD_OVERRIDE_HEADER} only supports overriding POST to QUERY.`),
+      { ...apiHeaders, ...corsHeaders() },
+    );
+  }
+  if (kind) {
+    return handleQuery(request, kind).then((res) =>
+      withHeaders(res, { ...apiHeaders, ...corsHeaders() }),
+    );
+  }
 
   // Production: api.syntaqx.com root → /api (single source of truth for the index)
   // Production: api.syntaqx.com/v1/* → /api/v1/*
