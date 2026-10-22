@@ -308,3 +308,14 @@ describe("proxy: rate-limit key forwarding", () => {
     expect(res.headers.get("x-middleware-request-syntaqx-ratelimit-key")).toBe("198.51.100.23");
   });
 });
+
+describe("proxy: conditional request forwarding", () => {
+  it("forwards If-None-Match under a name the platform won't strip, replacing client copies", async () => {
+    const res = await proxy(
+      makeRequest("http://localhost/api/healthz", {
+        headers: { "If-None-Match": '"abc"', "syntaqx-if-none-match": '"spoofed"' },
+      }),
+    );
+    expect(res.headers.get("x-middleware-request-syntaqx-if-none-match")).toBe('"abc"');
+  });
+});

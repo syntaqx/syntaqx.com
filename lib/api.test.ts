@@ -92,6 +92,16 @@ describe("cacheableJson()", () => {
     }
   });
 
+  it("honors the forwarded copy when the platform stripped If-None-Match", async () => {
+    const first = await cacheableJson(new Request(url), { status: "ok" }, CACHE.revalidate);
+    const res = await cacheableJson(
+      new Request(url, { headers: { "syntaqx-if-none-match": first.headers.get("ETag")! } }),
+      { status: "ok" },
+      CACHE.revalidate,
+    );
+    expect(res.status).toBe(304);
+  });
+
   it("returns 200 when the ETag doesn't match", async () => {
     const res = await cacheableJson(
       new Request(url, { headers: { "If-None-Match": '"stale"' } }),

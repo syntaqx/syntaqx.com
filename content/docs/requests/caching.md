@@ -61,6 +61,8 @@ Make revalidation the path of least resistance for clients that poll. A `304` co
 
 The syntaqx API does this. Its rate limiter has to count each request in the proxy, before the response exists, so the endpoint gives the request back when it answers with a `304`: one extra Redis command per revalidation, in exchange for making the polite client the cheap one.
 
+One trap to know about: some platforms answer conditional requests at their edge. Vercel compares `If-None-Match` with your response's `ETag` itself and strips the header before your code runs, so your handler never sees a revalidation and can't act on one (here, refund it). It worked locally and silently did nothing in production. If your code needs to know, forward the header under a name the platform leaves alone, from a layer that still sees it; this site's proxy does exactly that.
+
 ## Optimistic Concurrency: If-Match
 
 Two clients read the same resource, both edit it, the second write silently overwrites the first. Conditional writes prevent the lost update:
