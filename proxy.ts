@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { errorResponse, requestIdHeaders, resolveApiVersion } from "@/lib/api";
+import { FORWARDED_IF_NONE_MATCH, errorResponse, requestIdHeaders, resolveApiVersion } from "@/lib/api";
 import { RATE_LIMIT_KEY_HEADER, checkRateLimit, ipKey } from "@/lib/ratelimit";
 import { uuidv7 } from "@/lib/uuid";
 import {
@@ -28,6 +28,10 @@ function corsHeaders(): Record<string, string> {
 function forwardedHeaders(request: NextRequest): Headers {
   const headers = new Headers(request.headers);
   headers.set(RATE_LIMIT_KEY_HEADER, ipKey(request));
+  // The platform strips If-None-Match before the route; keep a copy it won't.
+  headers.delete(FORWARDED_IF_NONE_MATCH);
+  const ifNoneMatch = request.headers.get("if-none-match");
+  if (ifNoneMatch) headers.set(FORWARDED_IF_NONE_MATCH, ifNoneMatch);
   return headers;
 }
 

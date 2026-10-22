@@ -50,6 +50,14 @@ export const CACHE = {
   none: "no-store",
 } as const;
 
+/**
+ * Vercel's edge answers conditional requests itself and strips
+ * If-None-Match before the function runs, so the proxy forwards a copy under
+ * this name. Without it the route never sees a revalidation, can't answer
+ * the 304 itself, and can't refund the request.
+ */
+export const FORWARDED_IF_NONE_MATCH = "syntaqx-if-none-match";
+
 /** Weak comparison (RFC 9110 13.1.2): `*` or any listed tag, ignoring `W/`. */
 function etagMatches(ifNoneMatch: string | null, etag: string): boolean {
   if (!ifNoneMatch) return false;
@@ -72,7 +80,9 @@ export async function cacheableJson(
   const etag = `"${Array.from(digest.slice(0, 16), (b) => b.toString(16).padStart(2, "0")).join("")}"`;
   const headers = { ETag: etag, "Cache-Control": cacheControl };
 
-  if (etagMatches(request.headers.get("if-none-match"), etag)) {
+  const ifNoneMatch =
+    request.headers.get("if-none-match") ?? request.headers.get(FORWARDED_IF_NONE_MATCH);
+  if (etagMatches(ifNoneMatch, etag)) {
     // Revalidation is free: a 304 gives its request back to the rate limit,
     // so polling with If-None-Match is the cheapest thing a client can do.
     // Imported lazily because lib/ratelimit imports this module.
