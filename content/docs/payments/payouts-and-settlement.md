@@ -58,7 +58,7 @@ Refunds and lost disputes can take a merchant's balance below zero, and on a pla
 
 Payouts fail, and they fail days later than you'd expect, because bank transfers report problems asynchronously.
 
-In the US, ACH payouts can be **returned** after they appear to succeed, typically within two banking days, with a standardized Nacha reason code:
+In the US, ACH payouts can be **returned** after they appear to succeed, typically within two banking days, with a standardized Nacha reason code ([ACH & Bank Transfers](/docs/payments/ach) covers the rail, the longer windows on debits, and instant alternatives):
 
 | Code | Meaning | What to do |
 | ---- | ------- | ---------- |
