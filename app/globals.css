@@ -464,7 +464,8 @@ body {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--foreground);
-  border-bottom: 1px solid var(--foreground);
+  /* One step stronger than the row rules, in either theme. */
+  border-bottom: 1px solid var(--border-hover);
   padding: 0.6em 0.75em;
 }
 .prose tbody td {
