@@ -296,3 +296,15 @@ describe("proxy: HTTP QUERY", () => {
     expect(res.headers.get("Access-Control-Allow-Headers")).toContain("X-HTTP-Method-Override");
   });
 });
+
+describe("proxy: rate-limit key forwarding", () => {
+  it("tells the route the key it counted, overwriting any client-supplied value", async () => {
+    const res = await proxy(
+      makeRequest("http://localhost/api/healthz", {
+        ip: "198.51.100.23",
+        headers: { "syntaqx-ratelimit-key": "someone-else" },
+      }),
+    );
+    expect(res.headers.get("x-middleware-request-syntaqx-ratelimit-key")).toBe("198.51.100.23");
+  });
+});

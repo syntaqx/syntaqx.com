@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { errorResponse, requestIdHeaders, resolveApiVersion } from "@/lib/api";
-import { checkRateLimit, clientKey } from "@/lib/ratelimit";
+import { RATE_LIMIT_KEY_HEADER, checkRateLimit, ipKey } from "@/lib/ratelimit";
 import { uuidv7 } from "@/lib/uuid";
 import {
   METHOD_OVERRIDE_HEADER,
@@ -22,6 +22,16 @@ function corsHeaders(): Record<string, string> {
 }
 
 /**
+ * The request as forwarded to the route: the counted rate-limit key added,
+ * and any client-supplied copy of that header replaced.
+ */
+function forwardedHeaders(request: NextRequest): Headers {
+  const headers = new Headers(request.headers);
+  headers.set(RATE_LIMIT_KEY_HEADER, ipKey(request));
+  return headers;
+}
+
+/**
  * Apply per-request API headers required by the API design docs:
  *   - Request-Id (UUID v7), plus the legacy X-Request-ID alias
  *   - X-RateLimit-Limit / -Remaining / -Reset
@@ -37,7 +47,7 @@ function corsHeaders(): Record<string, string> {
 async function applyApiHeaders(
   request: NextRequest,
 ): Promise<{ blocked: true; response: Response } | { blocked: false; headers: Record<string, string> }> {
-  const rl = await checkRateLimit(clientKey(request));
+  const rl = await checkRateLimit(ipKey(request));
   const requestId = uuidv7();
 
   if (rl.limited) {
@@ -131,7 +141,7 @@ export async function proxy(request: NextRequest): Promise<Response> {
   if (isApiSubdomain) {
     const url = request.nextUrl.clone();
     url.pathname = pathname === "/" || pathname === "" ? "/api" : `/api${pathname}`;
-    const response = NextResponse.rewrite(url);
+    const response = NextResponse.rewrite(url, { request: { headers: forwardedHeaders(request) } });
     for (const [k, v] of Object.entries({ ...apiHeaders, ...corsHeaders() })) {
       response.headers.set(k, v);
     }
@@ -139,7 +149,7 @@ export async function proxy(request: NextRequest): Promise<Response> {
   }
 
   // Main domain: any /api/* request — attach API headers and pass through.
-  const response = NextResponse.next();
+  const response = NextResponse.next({ request: { headers: forwardedHeaders(request) } });
   for (const [k, v] of Object.entries(apiHeaders)) {
     response.headers.set(k, v);
   }

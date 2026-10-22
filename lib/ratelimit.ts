@@ -32,9 +32,21 @@ export interface RateLimitStore {
   refund(key: string): Promise<void>;
 }
 
-/** The key requests are counted under: the client IP, as set by Vercel's edge. */
-export function clientKey(request: Request): string {
+/**
+ * Internal request header carrying the key the proxy counted a request
+ * under, so a route refunds exactly that key. The proxy always overwrites it,
+ * so a client can't send its own.
+ */
+export const RATE_LIMIT_KEY_HEADER = "syntaqx-ratelimit-key";
+
+/** The client IP, as set by Vercel's edge. What the proxy counts requests under. */
+export function ipKey(request: Request): string {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+}
+
+/** In a route: the key the proxy counted this request under. */
+export function clientKey(request: Request): string {
+  return request.headers.get(RATE_LIMIT_KEY_HEADER) || ipKey(request);
 }
 
 /** How long to wait for Redis before falling back, in milliseconds. */
@@ -131,8 +143,10 @@ export function redisStore(redis: Redis): RateLimitStore {
     async refund(key) {
       try {
         await withTimeout(refund.exec([KEY_PREFIX + key], []), REDIS_TIMEOUT_MS);
-      } catch {
-        // A lost refund costs one request of quota; not worth failing over.
+      } catch (error) {
+        // A lost refund costs one request of quota: not worth failing the
+        // response over, but worth knowing about.
+        console.warn("rate limit: refund failed", error);
       }
     },
   };
