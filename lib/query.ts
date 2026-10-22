@@ -23,8 +23,8 @@ interface QueryRoute {
 
 /** Endpoints that accept QUERY, keyed by path without the `/api` prefix. */
 const queryRoutes: Record<string, QueryRoute> = {
-  "/v1/hash": {
-    load: () => import("@/app/api/v1/hash/route").then((m) => m.POST),
+  "/hash": {
+    load: () => import("@/app/api/hash/route").then((m) => m.POST),
     // A digest never changes for the same input.
     cacheControl: "public, max-age=31536000, immutable",
   },

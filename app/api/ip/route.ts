@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json } from "@/lib/api";
+import { CACHE, cacheableJson } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -47,9 +47,9 @@ export function GET(request: NextRequest) {
   const forwarded = request.headers.get("x-forwarded-for");
   const ip = forwarded?.split(",")[0]?.trim() || "unknown";
 
-  return json({
+  return cacheableJson(request, {
     ip,
     forwarded_for: forwarded,
     user_agent: request.headers.get("user-agent"),
-  });
+  }, CACHE.revalidate);
 }

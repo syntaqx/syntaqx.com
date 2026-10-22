@@ -17,7 +17,7 @@ The client specifies a page number and items per page. The server responds with 
 ### Example Request
 
 ```http
-GET /api/v1/resources?page=2&per_page=25
+GET /resources?page=2&per_page=25
 ```
 
 #### Query Parameters
@@ -31,7 +31,7 @@ GET /api/v1/resources?page=2&per_page=25
 
 ```http
 HTTP/1.1 200 OK
-Link: <https://api.syntaqx.com/v1/resources?page=1&per_page=25>; rel="prev", <https://api.syntaqx.com/v1/resources?page=3&per_page=25>; rel="next"
+Link: <https://api.syntaqx.com/resources?page=1&per_page=25>; rel="prev", <https://api.syntaqx.com/resources?page=3&per_page=25>; rel="next"
 ```
 
 ## Cursor-Based Pagination
@@ -41,7 +41,7 @@ Cursor-based pagination is more efficient for large or frequently updated datase
 ### Example Request
 
 ```http
-GET /api/v1/resources?cursor=eyJpZCI6IjEyMyJ9&limit=25
+GET /resources?cursor=eyJpZCI6IjEyMyJ9&limit=25
 ```
 
 #### Query Parameters
@@ -55,7 +55,7 @@ GET /api/v1/resources?cursor=eyJpZCI6IjEyMyJ9&limit=25
 
 ```http
 HTTP/1.1 200 OK
-Link: <https://api.syntaqx.com/v1/resources?cursor=eyJpZCI6IjEyMyJ9&limit=25>; rel="next"
+Link: <https://api.syntaqx.com/resources?cursor=eyJpZCI6IjEyMyJ9&limit=25>; rel="next"
 ```
 
 ## Link Header

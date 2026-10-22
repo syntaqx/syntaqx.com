@@ -1,6 +1,6 @@
 # docs/
 
-Internal engineering docs. Not published — this folder is not served by
+Internal engineering docs. Not published: this folder is not served by
 Next.js (no `app/` route), not crawled by Pagefind, and not part of the
 public site at [syntaqx.com/docs](https://www.syntaqx.com/docs).
 
@@ -9,5 +9,5 @@ rendered by [app/docs/](../app/docs/).
 
 ## Index
 
-Nothing here right now. Add engineering docs under this folder as the
-need arises.
+- [Architecture Decision Records](adr/README.md): why this site is built
+  the way it is, one decision per record.

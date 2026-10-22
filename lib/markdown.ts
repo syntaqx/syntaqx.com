@@ -9,7 +9,7 @@ import { contactChannels, contactIntro } from "@/lib/contact";
 import { bio, socials, SITE_URL } from "@/lib/constants";
 import { API_VERSIONS } from "@/lib/api";
 
-export const API_BASE_URL = "https://api.syntaqx.com/v1";
+export const API_BASE_URL = "https://api.syntaqx.com";
 
 export interface MarkdownPage {
   status: number;
@@ -129,9 +129,9 @@ function apiBullets(): string {
     bullet(
       "OpenAPI spec",
       url("/openapi.json"),
-      "OpenAPI 3.1 document describing every endpoint",
+      "OpenAPI 3.2 document describing every endpoint",
     ),
-    bullet("API root", API_BASE_URL.replace(/\/v1$/, ""), "index of endpoint URLs"),
+    bullet("API root", API_BASE_URL, "index of endpoint URLs"),
     bullet("Health check", `${API_BASE_URL}/healthz`),
     bullet(
       "Versioning & deprecation",
@@ -145,7 +145,7 @@ function apiReference(): string {
   return [
     "# syntaqx API",
     `A free, public, unauthenticated REST API of developer utilities (UUIDs, hashing, Base64, JWT decoding, timestamps, and more). Base URL: \`${API_BASE_URL}\`.`,
-    `The full machine-readable description is the OpenAPI 3.1 document at ${url("/openapi.json")}. Every operation has an \`operationId\`, typed request and response schemas, and a description.`,
+    `The full machine-readable description is the OpenAPI 3.2 document at ${url("/openapi.json")}. Every operation has an \`operationId\`, typed request and response schemas, and a description.`,
     `## Rate limits\n\n5,000 requests per hour per IP. Every response carries \`RateLimit-Policy\` and \`RateLimit\` headers (IETF draft-ietf-httpapi-ratelimit-headers), and a \`429\` includes \`Retry-After\`. Details: ${url("/docs/rate-limiting")}`,
     `## When to use it\n\n${WHEN_TO_USE}`,
     `## Versioning and deprecation\n\nPick a dated version with the \`Api-Version\` request header (current: \`${API_VERSIONS[API_VERSIONS.length - 1].version}\`); without it, the oldest supported version is used, and an unsupported value returns \`400\`. Every response echoes \`Api-Version\`. The URL major version (\`/v1\`) is the coarse fallback. Breaking changes never ship in place. Deprecations are announced with \`Deprecation\` and \`Sunset\` response headers at least 30 days before removal. Policy: ${url("/docs/versioning")}`,

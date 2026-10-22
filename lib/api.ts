@@ -38,6 +38,46 @@ export function json<T>(data: T, init?: ResponseInit): Response {
   return Response.json(data, { ...init, headers });
 }
 
+/** Cache-Control values from /docs/caching. */
+export const CACHE = {
+  /** Per-client or changing data: revalidate with the ETag before reuse. */
+  revalidate: "private, no-cache",
+  /** Public, slowly changing data. */
+  public: "public, max-age=300",
+  /** Never changes for the same request. */
+  immutable: "public, max-age=31536000, immutable",
+  /** Generated per request; caching it would be wrong. */
+  none: "no-store",
+} as const;
+
+/** Weak comparison (RFC 9110 13.1.2): `*` or any listed tag, ignoring `W/`. */
+function etagMatches(ifNoneMatch: string | null, etag: string): boolean {
+  if (!ifNoneMatch) return false;
+  if (ifNoneMatch.trim() === "*") return true;
+  const bare = (t: string) => t.trim().replace(/^W\//, "");
+  return ifNoneMatch.split(",").some((t) => bare(t) === bare(etag));
+}
+
+/**
+ * JSON with a strong ETag (a hash of the body) and Cache-Control. A matching
+ * If-None-Match gets an empty 304, per /docs/caching.
+ */
+export async function cacheableJson(
+  request: Request,
+  data: unknown,
+  cacheControl: string,
+): Promise<Response> {
+  const body = new TextEncoder().encode(JSON.stringify(data));
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", body));
+  const etag = `"${Array.from(digest.slice(0, 16), (b) => b.toString(16).padStart(2, "0")).join("")}"`;
+  const headers = { ETag: etag, "Cache-Control": cacheControl };
+
+  if (etagMatches(request.headers.get("if-none-match"), etag)) {
+    return new Response(null, { status: 304, headers: withRequestId(new Headers(headers)) });
+  }
+  return json(data, { headers });
+}
+
 /** Return a 422 for one invalid field, with field-level `errors`. */
 export function invalidField(field: string, message: string): Response {
   return errorResponse(422, message, { errors: { [field]: [message] } });

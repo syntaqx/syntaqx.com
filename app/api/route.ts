@@ -1,6 +1,6 @@
 export function GET() {
   const isDev = process.env.NODE_ENV === "development";
-  const baseUrl = isDev ? "/api/v1" : "https://api.syntaqx.com/v1";
+  const baseUrl = isDev ? "/api" : "https://api.syntaqx.com";
 
   return Response.json(
     {

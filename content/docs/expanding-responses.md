@@ -22,7 +22,7 @@ Use the `expand` query parameter to include related fields in the response.
 When no expansion is requested, related resources are returned as ID references:
 
 ```http
-GET /v1/orders/49b2a928-c215-43fc-a022-9ac49143ab07
+GET /orders/49b2a928-c215-43fc-a022-9ac49143ab07
 ```
 
 ```json
@@ -41,7 +41,7 @@ GET /v1/orders/49b2a928-c215-43fc-a022-9ac49143ab07
 To expand a single relationship, such as `customer`:
 
 ```http
-GET /v1/orders/49b2a928-c215-43fc-a022-9ac49143ab07?expand=customer
+GET /orders/49b2a928-c215-43fc-a022-9ac49143ab07?expand=customer
 ```
 
 ```json
@@ -66,7 +66,7 @@ GET /v1/orders/49b2a928-c215-43fc-a022-9ac49143ab07?expand=customer
 To expand multiple relationships, use the `expand[]` syntax:
 
 ```http
-GET /v1/orders/49b2a928-c215-43fc-a022-9ac49143ab07?expand[]=customer&expand[]=refunds
+GET /orders/49b2a928-c215-43fc-a022-9ac49143ab07?expand[]=customer&expand[]=refunds
 ```
 
 ```json

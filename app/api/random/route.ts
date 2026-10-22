@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, invalidField } from "@/lib/api";
+import { CACHE, json, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -112,5 +112,5 @@ export function GET(request: NextRequest) {
   const strings = Array.from({ length: count }, () =>
     randomString(length, chars),
   );
-  return json(strings);
+  return json(strings, { headers: { "Cache-Control": CACHE.none } });
 }

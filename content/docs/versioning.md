@@ -57,6 +57,8 @@ GET /v1/resources
 
 URL versioning is still valid, but it's the fallback, not the recommendation. Path versions are coarse: every breaking change means a new prefix, every URL a client has stored changes with it, and clients migrate everything at once. Prefer the header wherever you control the client.
 
+The syntaqx API skips the fallback entirely: endpoints live at the root of `api.syntaqx.com`, and the version is only ever the header.
+
 ## Breaking and Non-Breaking Changes
 
 ### Non-Breaking Changes

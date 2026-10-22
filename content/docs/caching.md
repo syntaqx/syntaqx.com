@@ -35,6 +35,8 @@ Cache-Control: private, no-cache
 - **Strong ETags** (`"a3f1c9"`) when the bytes are identical. A hash of the response body, or the row's version number, both work.
 - **Weak ETags** (`W/"a3f1c9"`) when two representations are equivalent but not byte-identical (different compression, key order).
 
+The syntaqx API does this on every deterministic `GET`. [`/healthz`](/docs/api) and [`/openapi`](/docs/api) return an `ETag` hashed from the body, a `timestamp` for a given `t` is `immutable`, and generated values like `/uuid` are `no-store`.
+
 ## Revalidation: 304 Not Modified
 
 Clients send the validator back. If nothing changed, the response is an empty `304`:

@@ -12,7 +12,7 @@ If you're unfamiliar with REST conventions, start with the [REST & HTTP Verbs](/
 
 Every endpoint follows a few non-negotiable rules:
 
-- **Resources are nouns**, not verbs. `GET /v1/uuid`, not `GET /v1/generateUuid`.
+- **Resources are nouns**, not verbs. `GET /uuid`, not `GET /generateUuid`.
 - **HTTP methods convey intent.** `GET` reads, `POST` writes.
 - **Status codes convey outcome.** `2xx` means it worked. No `success` wrappers.
 - **Collections return arrays.** Even a single-item collection is `["value"]`, not `"value"`.

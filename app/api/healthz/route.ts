@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json } from "@/lib/api";
+import { CACHE, cacheableJson } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 
 // ---------------------------------------------------------------------------
@@ -37,6 +37,6 @@ registry.registerPath({
 // Handler
 // ---------------------------------------------------------------------------
 
-export function GET() {
-  return json({ status: "ok" });
+export function GET(request: Request) {
+  return cacheableJson(request, { status: "ok" }, CACHE.revalidate);
 }

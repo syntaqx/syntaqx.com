@@ -128,7 +128,7 @@ See [Database Naming Conventions](/docs/database-naming-conventions) for how col
 
 ## Tools
 
-Generate, validate, and inspect UUIDs and ULIDs with the [UUID/ULID Generator](/misc/uuid).
+Generate, validate, and inspect UUIDs and ULIDs with the [UUID/ULID Generator](/misc/uuid). The API's [`/uuid`](/docs/api) returns UUID v7 by default, and v4 with `?version=4`.
 
 ## References
 

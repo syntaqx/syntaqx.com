@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { json, invalidField } from "@/lib/api";
+import { CACHE, json, invalidField } from "@/lib/api";
+import { uuidv7 } from "@/lib/uuid";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -16,7 +17,7 @@ registry.registerPath({
   operationId: "generateUuids",
   summary: "Generate UUIDs",
   description:
-    "Generate one or more UUIDs. Returns an array of v4 UUIDs. Use `?count=N` (max 100) to control how many.",
+    "Generate one or more UUIDs. Returns an array of UUID v7s by default (sortable, per https://www.syntaqx.com/docs/identifier-conventions), or v4 with `?version=4`. Use `?count=N` (max 100) to control how many.",
   tags: ["Utilities"],
   request: {
     query: z.object({
@@ -24,6 +25,10 @@ registry.registerPath({
         .string()
         .optional()
         .openapi({ description: "Number of UUIDs to generate (1–100, default 1)" }),
+      version: z
+        .enum(["4", "7"])
+        .optional()
+        .openapi({ description: "UUID version: 7 (default, time-ordered) or 4 (random)" }),
     }),
   },
   responses: {
@@ -67,6 +72,12 @@ export function GET(request: NextRequest) {
     return invalidField("count", "count must be an integer between 1 and 100.");
   }
 
-  const uuids = Array.from({ length: count }, () => crypto.randomUUID());
-  return json(uuids);
+  const version = searchParams.get("version") ?? "7";
+  if (version !== "4" && version !== "7") {
+    return invalidField("version", "version must be 4 or 7.");
+  }
+
+  const generate = version === "4" ? () => crypto.randomUUID() : uuidv7;
+  const uuids = Array.from({ length: count }, generate);
+  return json(uuids, { headers: { "Cache-Control": CACHE.none } });
 }

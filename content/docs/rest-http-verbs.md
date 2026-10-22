@@ -17,7 +17,7 @@ Following REST keeps APIs predictable: every team member, every client library, 
 Retrieve a resource or collection. Safe and idempotent. Calling it twice changes nothing.
 
 ```http
-GET /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
+GET /users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
 ```
 
 ```json
@@ -31,7 +31,7 @@ GET /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
 Collections return arrays, even for a single result:
 
 ```http
-GET /v1/users
+GET /users
 ```
 
 ```json
@@ -48,7 +48,7 @@ Create a new resource, or kick off a process. Not idempotent. Sending the same r
 **Creating a resource:**
 
 ```http
-POST /v1/users
+POST /users
 Content-Type: application/json
 
 { "name": "Alice", "email": "alice@example.com" }
@@ -56,7 +56,7 @@ Content-Type: application/json
 
 ```http
 HTTP/1.1 201 Created
-Location: /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
+Location: /users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
 ```
 
 The server assigns the ID. The `Location` header points to the new resource.
@@ -64,7 +64,7 @@ The server assigns the ID. The `Location` header points to the new resource.
 **Triggering a process:**
 
 ```http
-POST /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69/reset-password
+POST /users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69/reset-password
 ```
 
 ```http
@@ -78,7 +78,7 @@ No resource created, just an action dispatched.
 Replace a resource entirely at a known URI. Idempotent. Sending it five times leaves the same result as sending it once. Omitted fields may be cleared depending on implementation.
 
 ```http
-PUT /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
+PUT /users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
 Content-Type: application/json
 
 { "name": "Alice", "email": "alice-new@example.com" }
@@ -93,7 +93,7 @@ HTTP/1.1 200 OK
 Update specific fields without touching the rest. Also idempotent.
 
 ```http
-PATCH /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
+PATCH /users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
 Content-Type: application/json
 
 { "email": "alice-updated@example.com" }
@@ -110,7 +110,7 @@ Only `email` changes. Everything else stays as-is.
 Delete a resource. Idempotent. Deleting something that's already gone still returns success, because the desired state (resource absent) is achieved.
 
 ```http
-DELETE /v1/users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
+DELETE /users/8f14e45f-ea6f-4d9d-8a47-2e0538b48e69
 ```
 
 ```http
@@ -122,7 +122,7 @@ HTTP/1.1 204 No Content
 Run a query whose criteria travel in the request body. Safe and idempotent like `GET`, defined by [RFC 10008](https://www.rfc-editor.org/rfc/rfc10008.html). Use it when a search is too long, too structured, or too sensitive for a URL.
 
 ```http
-QUERY /v1/users
+QUERY /users
 Content-Type: application/json
 
 { "email_domain": "example.com", "sort": "-created_at" }
