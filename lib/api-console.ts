@@ -95,5 +95,8 @@ export const SHOWN_RESPONSE_HEADERS = [
   "ratelimit",
   "ratelimit-policy",
   "retry-after",
+  "cache-control",
+  "etag",
+  "accept-query",
   "request-id",
 ];

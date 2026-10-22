@@ -645,7 +645,9 @@ export default function ApiDocsPage() {
 
   useEffect(() => {
     const load = () =>
-      fetch("/api/openapi")
+      // Revalidate with the ETag on every load (a cheap 304 when unchanged),
+      // so the console never runs against a stale spec.
+      fetch("/api/openapi", { cache: "no-cache" })
         .then((r) => r.json())
         .then((data: OpenApiSpec) => {
           setSpec(data);

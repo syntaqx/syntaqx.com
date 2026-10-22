@@ -14,5 +14,5 @@ import "@/app/api/random/route";
 import "@/app/api/useragent/route";
 
 export function GET(request: Request) {
-  return cacheableJson(request, generateOpenApiSpec(), CACHE.public);
+  return cacheableJson(request, generateOpenApiSpec(new URL(request.url).origin), CACHE.public);
 }

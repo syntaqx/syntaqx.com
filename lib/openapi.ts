@@ -35,10 +35,15 @@ registry.register("Error", ErrorSchema);
 // Spec generator
 // ---------------------------------------------------------------------------
 
-export function generateOpenApiSpec() {
+/**
+ * @param origin The origin the spec was requested from. In development the
+ * server URL follows it, so the reference console targets whatever port the
+ * dev server is on.
+ */
+export function generateOpenApiSpec(origin = "http://localhost:3000") {
   const isDev = process.env.NODE_ENV === "development";
   const server = isDev
-    ? { url: "http://localhost:3000/api", description: "Local development" }
+    ? { url: `${origin}/api`, description: "Local development" }
     : { url: "https://api.syntaqx.com", description: "Production" };
 
   const versions = API_VERSIONS.map((v) => v.version);
