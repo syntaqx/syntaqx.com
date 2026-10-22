@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { rateLimit, resolveApiVersion } from "@/lib/api";
+import { rateLimit, requestIdHeaders, resolveApiVersion } from "@/lib/api";
+import { uuidv7 } from "@/lib/uuid";
 
 function corsHeaders(): Record<string, string> {
   return {
@@ -8,7 +9,7 @@ function corsHeaders(): Record<string, string> {
     "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization, Api-Version",
     "Access-Control-Expose-Headers":
-      "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, X-Request-ID",
+      "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, Request-Id, X-Request-ID",
   };
 }
 
@@ -20,7 +21,7 @@ function clientIp(request: NextRequest): string {
 
 /**
  * Apply per-request API headers required by the API design docs:
- *   - X-Request-ID (RFC-style trace identifier)
+ *   - Request-Id (UUID v7), plus the legacy X-Request-ID alias
  *   - X-RateLimit-Limit / -Remaining / -Reset
  *   - RateLimit-Policy / RateLimit (IETF draft-ietf-httpapi-ratelimit-headers)
  *   - Retry-After (when limited)
@@ -35,7 +36,7 @@ function applyApiHeaders(
   request: NextRequest,
 ): { blocked: true; response: Response } | { blocked: false; headers: Record<string, string> } {
   const rl = rateLimit(clientIp(request));
-  const requestId = crypto.randomUUID();
+  const requestId = uuidv7();
 
   if (rl.limited) {
     return {
@@ -46,7 +47,7 @@ function applyApiHeaders(
           status: 429,
           headers: {
             "Content-Type": "application/json",
-            "X-Request-ID": requestId,
+            ...requestIdHeaders(requestId),
             ...rl.headers,
             ...corsHeaders(),
           },
@@ -62,7 +63,7 @@ function applyApiHeaders(
       response: Response.json(version.body, {
         status: 400,
         headers: {
-          "X-Request-ID": requestId,
+          ...requestIdHeaders(requestId),
           ...rl.headers,
           ...corsHeaders(),
         },
@@ -73,7 +74,7 @@ function applyApiHeaders(
   return {
     blocked: false,
     headers: {
-      "X-Request-ID": requestId,
+      ...requestIdHeaders(requestId),
       ...rl.headers,
       ...version.headers,
     },
@@ -94,7 +95,7 @@ export function proxy(request: NextRequest) {
     });
   }
 
-  // All API traffic from here on is rate-limited and gets an X-Request-ID.
+  // All API traffic from here on is rate-limited and gets a Request-Id.
   if (!isApiPath) {
     return NextResponse.next();
   }

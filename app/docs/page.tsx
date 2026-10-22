@@ -6,9 +6,9 @@ import { itemList } from "@/lib/schema";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Docs & API Reference",
+  title: "Architectural Playbook & API Reference",
   description:
-    "Standards, conventions, and reference documentation for building consistent APIs: naming, pagination, errors, time, identifiers, and more.",
+    "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.",
 };
 
 export default function DocsPage() {
@@ -17,7 +17,7 @@ export default function DocsPage() {
   return (
     <div>
       <JsonLd
-        data={itemList("Docs & API Reference", "/docs", [
+        data={itemList("Architectural Playbook & API Reference", "/docs", [
           ...categories.flatMap((c) =>
             c.docs.map((d) => ({ name: d.title, path: `/docs/${d.slug}` })),
           ),
@@ -26,15 +26,23 @@ export default function DocsPage() {
       />
       <PageHeader
         label="docs"
-        title="Conventions"
+        title="Playbook"
         scene="spec"
         sceneLabel="A spec sheet lifted off its index, with one teal row highlighted"
       >
         <p>
-          Patterns and conventions I&apos;ve landed on after years of trial,
-          error, and strong opinions. None of this is new or proprietary. These
-          are well-established practices for building software, and this is how
-          I choose to implement them.
+          The architectural playbook I bring to every team: the standards and
+          practices I&apos;ve landed on after years of trial, error, and strong
+          opinions, written down so they don&apos;t get re-argued in every
+          codebase. None of it is new or proprietary. It&apos;s published
+          standards, applied consistently. Start with{" "}
+          <Link
+            href="/docs/playbook"
+            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+          >
+            the principles
+          </Link>
+          .
         </p>
       </PageHeader>
 

@@ -2,16 +2,23 @@ import { describe, it, expect } from "vitest";
 import { json, errorResponse, resolveApiVersion, API_VERSIONS } from "./api";
 
 describe("json()", () => {
-  it("attaches an X-Request-ID header when none is provided", () => {
+  it("attaches an Request-Id header when none is provided", () => {
     const res = json({ ok: true });
-    expect(res.headers.get("X-Request-ID")).toMatch(
+    expect(res.headers.get("Request-Id")).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
     );
   });
 
-  it("preserves a caller-provided X-Request-ID", () => {
-    const res = json({ ok: true }, { headers: { "X-Request-ID": "abc-123" } });
-    expect(res.headers.get("X-Request-ID")).toBe("abc-123");
+  it("preserves a caller-provided Request-Id", () => {
+    const res = json({ ok: true }, { headers: { "Request-Id": "abc-123" } });
+    expect(res.headers.get("Request-Id")).toBe("abc-123");
+  });
+
+  it("uses a UUID v7 and mirrors it to the legacy X-Request-ID", () => {
+    const res = json({ ok: true });
+    const id = res.headers.get("Request-Id");
+    expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    expect(res.headers.get("X-Request-ID")).toBe(id);
   });
 
   it("serializes the body as JSON", async () => {
@@ -37,16 +44,16 @@ describe("errorResponse()", () => {
     });
   });
 
-  it("attaches an X-Request-ID header when none is provided", () => {
+  it("attaches an Request-Id header when none is provided", () => {
     const res = errorResponse(500, "boom");
-    expect(res.headers.get("X-Request-ID")).toBeTruthy();
+    expect(res.headers.get("Request-Id")).toBeTruthy();
   });
 
-  it("preserves a caller-provided X-Request-ID", () => {
+  it("preserves a caller-provided Request-Id", () => {
     const res = errorResponse(500, "boom", {
-      headers: { "X-Request-ID": "trace-xyz" },
+      headers: { "Request-Id": "trace-xyz" },
     });
-    expect(res.headers.get("X-Request-ID")).toBe("trace-xyz");
+    expect(res.headers.get("Request-Id")).toBe("trace-xyz");
   });
 });
 
