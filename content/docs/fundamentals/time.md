@@ -2,7 +2,7 @@
 title = "Time & Date Formats"
 description = "RFC 3339 instants in UTC, local wall-clock times with IANA zones for future events, ISO 8601 durations, and iCalendar rules for anything recurring."
 category = "Fundamentals"
-order = -0.5
+order = 102
 tags = ["time", "rfc3339", "iso8601", "standards"]
 aliases = ["time"]
 +++
@@ -11,18 +11,16 @@ Most time bugs come from treating different kinds of time as one kind. "When did
 
 ## Instants: RFC 3339, in UTC
 
-An instant is a single point on the global timeline: when a payment was captured, when a row was written. Instants are written in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339), always with an offset, and the API always sends them in UTC.
+An instant is a single point on the global timeline: when a payment was captured, when a row was written. Write it in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339), always with an offset, and send it in UTC.
 
 ```
 2026-03-14T14:23:45Z
 2026-03-14T14:23:45.123Z
 ```
 
-Why this and not the alternatives:
-
 - **Not Unix timestamps.** `1773498225` is compact, but nobody can read it in a log, and nothing in it says whether it's seconds or milliseconds. Guess wrong and a date lands in 1970, or around the year 58,000.
 - **Not local time without an offset.** `2026-03-14 14:23:45` means a different instant in every time zone, and the reader can't tell which one you meant.
-- **Always UTC in responses.** Offsets are valid RFC 3339, but if every instant uses `Z`, clients can compare and sort them without parsing, and logs from different services line up.
+- **Always UTC in responses.** Other offsets are valid RFC 3339, but when every instant uses `Z`, clients can sort them as strings and logs from different services line up.
 
 Store instants as `TIMESTAMPTZ` in Postgres (which stores UTC internally) and convert to local time only for display.
 
@@ -30,7 +28,7 @@ Store instants as `TIMESTAMPTZ` in Postgres (which stores UTC internally) and co
 
 "UTC everywhere" is right for instants and wrong for one important case: an event in the future, defined by a local clock. A meeting at 9:00 in Denver next July is not a fixed UTC instant today. If Colorado changes its daylight saving rules before then (governments do this, sometimes with weeks of notice), the meeting is still at 9:00 local, and a stored UTC value is now an hour off.
 
-So future local events store what the user actually meant: the local time and the [IANA time zone](https://www.iana.org/time-zones), not an offset.
+So a future local event stores what the user meant: the local time and the [IANA time zone](https://www.iana.org/time-zones), not an offset.
 
 ```json
 {
@@ -45,7 +43,7 @@ An offset like `-06:00` is not a time zone. It's the zone's offset at one moment
 
 ## Dates Without Times
 
-A birthday, a due date, or a settlement date is a calendar day, not an instant. Represent it as `YYYY-MM-DD` with no time and no zone:
+A birthday, a due date or a settlement date is a calendar day, not an instant: `YYYY-MM-DD`, with no time and no zone.
 
 ```json
 { "due_on": "2026-04-01" }
@@ -63,13 +61,13 @@ P1M         1 month
 PT2H30M     2 hours 30 minutes
 ```
 
-`P` starts the duration, `T` separates the date part from the time part. Calendar units are deliberately not fixed lengths: `P1M` added to January 31 lands at the end of February, and `P1D` across a daylight saving change is 23 or 25 hours. That's what "a month" means to a customer, and the format preserves it.
+`P` starts the duration and `T` separates the date part from the time part. Calendar units deliberately have no fixed length: `P1M` added to January 31 lands at the end of February, and `P1D` across a daylight saving change is 23 or 25 hours. That's what "a month" means to a customer, and the format preserves it.
 
 For machine durations where the exact length matters (a timeout, a TTL, `Retry-After`), use plain integer seconds or milliseconds in a field whose name says the unit: `timeout_ms`, `ttl_seconds`.
 
 ## Recurrence: iCalendar
 
-Recurring schedules are the hardest time problem, and [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545) has already solved it. Don't invent a JSON schema for "every other Monday except holidays"; you'll rediscover every edge case the iCalendar authors did, one bug report at a time.
+Recurring schedules are the hardest time problem, and [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545) already solved it. A home-grown JSON schema for "every other Monday except holidays" rediscovers every edge case the iCalendar authors did, one bug report at a time.
 
 ```
 DTSTART;TZID=America/Denver:20260302T090000

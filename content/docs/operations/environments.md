@@ -1,73 +1,83 @@
 +++
-title = "Environments"
-description = "Local, preview, staging and production: what each one is for, keeping them alike, test data that's never a production copy, and who may deploy where."
+title = "Environments & Configuration"
+nav_title = "Environments & Config"
+description = "One build everywhere: what each environment is for, config validated at boot, secrets in a manager and never the repo, rotation built in, and who deploys where."
 category = "Operations"
-order = 5.96
-tags = ["operations", "environments", "devops", "configuration"]
+order = 1201
+tags = ["operations", "environments", "devops", "configuration", "secrets"]
+aliases = ["operations/configuration", "configuration"]
 +++
 
-Every environment exists to answer one question with less risk than production. If an environment doesn't answer a question nothing else can, it's cost: it drifts, it breaks on its own schedule, and people stop trusting what it tells them.
+The same build runs everywhere. What differs between environments is configuration, and how you handle both decides whether a green preview means anything and whether a deploy is boring or a guessing game. Every environment exists to answer one question with less risk than production; one that doesn't answer a question nothing else can is just cost, drifting and breaking on its own schedule until nobody trusts it.
 
 ## The Environments
 
 | Environment | Answers | Lifetime |
 | --- | --- | --- |
 | Local | "Does my change work?" | Per developer |
-| Preview | "Does this pull request work, deployed, for anyone who opens the link?" | Per pull request |
+| Preview | "Does this pull request work, deployed, for anyone with the link?" | Per pull request |
 | Staging | "Does this work against things preview can't reach?" Only when that's a real question | Long-lived |
 | Production | Everything else | Forever |
 
-### Local
+- **Local runs with one command.** Dependencies that need infrastructure fall back to in-process behavior (a no-op adapter, an in-memory store, a fake mailer), and a `compose.yml` runs the real databases and caches, the same images CI uses, when you need real behavior. No shared dev database: shared state makes one person's experiment everyone's broken afternoon.
+- **Every pull request deploys to its own preview URL.** Reviewers click instead of imagining, and end-to-end checks run against a deployment, not a laptop. Previews are what make [continuous deployment](/docs/delivery/ci-pipelines) safe.
+- **Staging is the most over-built environment in software.** A long-lived copy of production drifts immediately: different data, traffic, config and deploy schedule. Add one only for a question preview can't answer, such as a partner sandbox that allows one fixed callback URL. Otherwise previews plus [feature flags](/docs/delivery/feature-flags) in production cover it.
 
-- **One command to run.** `npm install && npm run dev`, nothing else required. Dependencies that need infrastructure fall back to in-process behavior: a no-op adapter, an in-memory store, a fake mailer.
-- **The real thing on demand.** A `compose.yml` runs the actual databases and caches, the same images CI uses, for when you need to see real behavior.
-- **No shared dev database.** Shared state means one person's experiment is everyone's broken afternoon.
-
-### Preview
-
-Every pull request deploys to its own URL before it merges. Reviewers click instead of imagining, product and design review the real thing, and end-to-end checks run against a deployment, not a laptop. It's the environment that makes [continuous deployment](/docs/delivery/continuous-deployment) safe.
-
-### Staging
-
-Staging is the most over-built environment in software. A long-lived copy of production drifts from it immediately: different data, different traffic, different config, deployed on a different schedule. Add one only when it answers a question preview can't, such as an integration with a partner sandbox that only allows a fixed callback URL, or a load test that needs production-sized data. Otherwise, previews plus [feature flags](/docs/engineering/feature-flags) in production cover it.
-
-### Production
-
-The only environment users see, and the only one whose data matters. Changes reach it through the pipeline, never by hand.
+An environment is also the wrong tool for "this feature isn't ready". A feature that only works in staging has never been tested in production; ship it dark behind a flag instead.
 
 ## Parity
 
-Parity is what makes a green preview mean something. Every difference between environments is a place a bug can pass in one and fail in the next, and the differences that bite are the ones nobody remembers exist. The [Twelve-Factor](https://12factor.net/dev-prod-parity) framing names three gaps to close: time, people and tools.
+Every difference between environments is a place a bug passes in one and fails in the next, and the ones that bite are the ones nobody remembers exist. [Twelve-Factor](https://12factor.net/dev-prod-parity) names three gaps to close: time, people and tools.
 
-- **Same artifact.** The build that passed CI is the build that runs everywhere. Environments differ in configuration, never in code. See [Containers & Immutable Infrastructure](/docs/delivery/containers).
-- **Same backing services.** Postgres locally if Postgres in production, not SQLite "because it's easier". The same major versions, from the same images.
-- **Same config shape, different values.** Every environment reads the same variables, validated at boot the same way. See [Configuration & Secrets](/docs/operations/configuration).
-- **Small time gap.** A change reaches production minutes after it merges, so what you tested is what's running.
+- **Same artifact.** The build that passed CI runs everywhere; environments differ in configuration, never code ([Containers & Immutable Infrastructure](/docs/delivery/containers)).
+- **Same backing services.** Postgres locally if Postgres in production, same major versions, same images.
+- **Same config shape, different values,** validated the same way, so a misconfigured preview fails the way production would.
+- **Small time gap.** A change reaches production minutes after it merges.
 
-## Test Data
+Test data is synthetic, never copied: production data in a lower environment is a breach waiting for a reason. One versioned seed command generates realistic data with deterministic IDs ([Identifier Conventions](/docs/fundamentals/identifier-conventions)), and payments and email use sandboxes: test cards, test keys, outbound mail captured.
 
-- **Synthetic, never copied.** Production data in a lower environment is a breach waiting for a reason. Seed scripts and factories generate realistic data instead, with deterministic IDs (see [Identifier Conventions](/docs/fundamentals/identifier-conventions)).
-- **Seeded the same way everywhere.** One seed command for local, preview and staging, versioned with the code.
-- **Payments and email use sandboxes.** Test card numbers, test API keys, and outbound email captured, never sent.
+## Configuration
 
-## Flags, Not Environments
+Config is anything that changes between deploys of the same code: connection strings, credentials, per-environment timeouts and pool sizes. It lives in the environment, strictly separate from code, the rule [Twelve-Factor](https://12factor.net/config) made famous. The test: could you open-source the repository right now without leaking a credential? Routes, retry formulas and business rules are the same everywhere, so they're code; behavior you want to change at runtime without a deploy is a [feature flag](/docs/delivery/feature-flags).
 
-An environment is the wrong tool for "this feature isn't ready". A feature that only works in staging is a feature nobody has tested in production. Ship it dark behind a flag, enable it for internal users, then a percentage, then everyone. See [Feature Flags & Progressive Rollout](/docs/engineering/feature-flags).
+Read the environment once, at startup, into a typed object, and fail fast:
 
-## Who Can Deploy Where
+```ts
+import { z } from "zod";
 
-| Environment | Who deploys | How |
-| --- | --- | --- |
-| Local | You | Your machine |
-| Preview | Anyone with a pull request | Automatically, on push |
-| Staging | The pipeline | On merge, or on demand from the pipeline |
-| Production | The pipeline | On merge to `main`, after CI is green |
+const Config = z.object({
+  DATABASE_URL: z.string().url(),
+  PROCESSOR_TIMEOUT_MS: z.coerce.number().int().positive().default(80_000),
+  LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+});
 
-Nobody deploys to production from a laptop. Production credentials live in the platform's secret store, scoped to the production environment, and the pipeline is the only thing that uses them. Break-glass access exists, is logged, and is reviewed afterward.
+export const config = Config.parse(process.env);
+```
+
+- **Crash on boot, not on first use.** A missing variable should stop a deploy at the health check, not fail a customer's request an hour later.
+- **No `process.env` outside the config module.** One place to read, one place to document.
+- **Defaults only for safe values.** A default timeout is fine; a default database URL is an incident waiting for a typo.
+- **Units in the name:** `PROCESSOR_TIMEOUT_MS`, never `PROCESSOR_TIMEOUT`.
+- **Every variable listed** in a committed `.env.example` with a comment and no real values: the first thing a new engineer reads, and the checklist for a new environment.
+
+Config changes are deploys: reviewed, recorded, reversible. "I just tweaked a variable in the console" shows up in more [postmortems](/docs/operations/incident-response) than any bug, because it skipped everything that catches mistakes in code.
+
+## Secrets
+
+A leaked secret is an incident even if nothing has happened yet, because you have to assume someone has it.
+
+- **Never in the repository:** not in code, `.env` files, CI YAML or history. Push protection and [secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning) run on every repository.
+- **In a secrets manager** (a KMS-backed store, Vault, or the platform's encrypted variables), injected at runtime, scoped per service and environment, and redacted whenever the config is printed. Prefixes make leaks recognizable ([Sensitive Data](/docs/payments/sensitive-data)).
+- **Rotation designed in.** Systems accept old and new during an overlap window (up to 7 days for API keys per [API Authentication](/docs/api-design/authentication), 24 hours for [webhook secrets](/docs/payments/webhooks)). Rotate on a schedule so the procedure is practiced, and immediately on suspicion: rotate, then investigate.
+- **Short-lived credentials beat rotation.** Workload identity (OIDC from CI, cloud IAM roles) means there's no long-lived key to rotate at all.
+
+## Who Deploys Where
+
+Anyone with a pull request gets a preview, automatically. Production deploys come from the pipeline, on merge to `main` after CI is green, and from nowhere else. Production credentials live in the platform's secret store, scoped to production, and the pipeline is the only thing that uses them. Break-glass access exists, is logged, and is reviewed afterward.
 
 ## This Site
 
-`npm run dev` needs nothing else: without Redis, the API's rate limiter uses a no-op store that sends its headers but never blocks. `docker compose up -d` runs the real Redis behind the same REST API Upstash serves in production, and CI runs those same containers. Every pull request gets a Vercel preview deployment, and `main` deploys to production. There's no staging, because nothing here needs one.
+`npm run dev` needs nothing else: every variable is optional and documented in `.env.example`, and without Redis the API's rate limiter uses a no-op store that sends its headers but never blocks. `docker compose up -d` runs the real Redis behind the same REST API Upstash serves in production, and CI runs those same containers. Every pull request gets a Vercel preview, `main` deploys to production, production values live in Vercel's encrypted environment variables, and there's no staging, because nothing here needs one.
 
 ## References
 
@@ -75,10 +85,12 @@ Nobody deploys to production from a laptop. Production credentials live in the p
 
 - [The Twelve-Factor App: Dev/prod parity](https://12factor.net/dev-prod-parity), keeping environments alike
 - [The Twelve-Factor App: Config](https://12factor.net/config), config in the environment, separate from code
-- [Vercel: Environments](https://vercel.com/docs/deployments/environments), local, preview and production on one platform
 - [Vercel: Preview deployments](https://vercel.com/docs/deployments/preview-deployments), a deployment for every pull request
 - [GitHub Actions: Managing environments](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment), environment-scoped secrets and deployment protection rules
+- [GitHub: About secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning), push protection and scanning
 
 **In practice**
 
+- [OWASP: Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html), storage, access and rotation
+- [Stripe: API keys](https://docs.stripe.com/keys), key rotation with a 7-day grace period
 - [Martin Fowler: Feature Toggles](https://martinfowler.com/bliki/FeatureToggle.html), unfinished work in production instead of a separate environment

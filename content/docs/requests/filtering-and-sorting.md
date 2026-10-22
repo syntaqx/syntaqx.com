@@ -2,12 +2,12 @@
 title = "Filtering & Sorting"
 description = "Query parameter conventions for filtering and sorting collections: field filters, range operators, sort=-created_at, allowlists, and when to use QUERY."
 category = "Requests & Responses"
-order = 4.2
+order = 304
 tags = ["api", "filtering", "sorting", "standards"]
 aliases = ["filtering-and-sorting"]
 +++
 
-Lists get filtered and sorted with plain query parameters. The syntax is deliberately small. Most real filters are a handful of equality checks and a date range, and a syntax that covers those with plain `key=value` pairs works in every HTTP client, cache, log line and browser address bar. Anything that outgrows it moves to [HTTP QUERY](/docs/requests/http-query) instead of growing a filter language inside the URL.
+Once a list is [paginated](/docs/requests/pagination), clients need to narrow and order it. The syntax is deliberately small: most real filters are a handful of equality checks and a date range, and plain `key=value` pairs cover those in every HTTP client, cache, log line and address bar. Anything that outgrows it moves to [HTTP QUERY](/docs/requests/http-query) instead of growing a filter language inside the URL.
 
 ## Filtering
 
@@ -23,7 +23,7 @@ GET /payments?status=captured&currency=USD
 
 ### Ranges
 
-Range filters add a suffix to the field name:
+Range filters add a suffix to the field name, which keeps each one a plain `key=value`:
 
 | Suffix | Meaning | Example |
 | ------ | ------- | ------- |
@@ -32,9 +32,7 @@ Range filters add a suffix to the field name:
 | `_gte` | Greater than or equal | `amount_gte=1000` |
 | `_lte` | Less than or equal | `amount_lte=5000` |
 
-Suffixes keep each parameter a plain `key=value`, so they work with every HTTP client, cache and log parser. Bracket syntaxes like `created[gt]=` read fine, but they need custom parsing in every client and server, and different frameworks parse brackets differently.
-
-Every suffix works on any range-filterable field, and the strict and inclusive forms both exist because they answer different questions:
+Bracket syntaxes like `created[gt]=` read fine, but need custom parsing everywhere, and frameworks parse brackets differently. The strict and inclusive forms both exist because they answer different questions:
 
 - **Time windows pair an inclusive start with an exclusive end:** `created_gte=2026-10-01T00:00:00Z&created_before=2026-11-01T00:00:00Z` is exactly October. Consecutive windows line up end to end, so a payment at exactly midnight lands in one month, never both and never neither.
 - **`_after` is for "since":** `created_after=` a timestamp fetches only what came later. For walking a whole list without gaps, prefer a [cursor](/docs/requests/pagination): two items can share a timestamp, and a cursor breaks the tie by `id`.
@@ -57,7 +55,7 @@ Allowlisting does two jobs. **Performance:** every filterable field is backed by
 
 ## Sorting
 
-One `sort` parameter, a comma-separated list of fields, applied left to right. A leading `-` means descending. It's compact, it reads naturally (`-created_at` is "newest first"), and it avoids pairing every field with a separate direction parameter that can get out of step. JSON:API uses the same convention, so many developers already know it:
+One `sort` parameter, a comma-separated list of fields, applied left to right, with a leading `-` for descending. It reads naturally (`-created_at` is "newest first"), avoids a separate direction parameter that can get out of step, and is the JSON:API convention many developers already know:
 
 ```http
 GET /payments?sort=-created_at
@@ -76,7 +74,7 @@ Free-text search is its own parameter, `q`, not a filter:
 GET /customers?q=alice
 ```
 
-Search is a different operation from filtering: it's fuzzy, ranked and often backed by a separate index. Keeping it in its own parameter means a filter always means an exact match, and what `q` matches (name, email, prefix, full text) is documented per endpoint.
+Search is fuzzy, ranked and often backed by a separate index. Keeping it in its own parameter means a filter always means an exact match, and what `q` matches is documented per endpoint.
 
 ## With Pagination
 
@@ -90,7 +88,7 @@ Query parameters stop working well when:
 - The filter values are long enough to approach URL length limits.
 - The values are sensitive and shouldn't land in access logs.
 
-At that point, don't invent a filter language for the query string. Every one that's been tried (bracket trees, mini expression parsers) ends up as a custom parser with its own escaping rules and its own bugs. Accept a structured query in the body with [HTTP QUERY](/docs/requests/http-query), which stays safe, idempotent and cacheable like `GET`, and uses the same field names and operators as the parameters above.
+At that point, don't invent a filter language for the query string; every one ends up a custom parser with its own escaping rules and bugs. Accept a structured query in the body with [HTTP QUERY](/docs/requests/http-query), which stays safe and cacheable like `GET` and uses the same field names and operators.
 
 ## This Site
 

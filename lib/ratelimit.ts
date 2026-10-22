@@ -1,5 +1,5 @@
 /**
- * Rate limiting, per /docs/operations/rate-limiting.
+ * Rate limiting, per /docs/requests/rate-limiting.
  *
  * Counts live in a pluggable store:
  *

@@ -2,7 +2,7 @@
 title = "Tech Debt"
 description = "Treat tech debt like a loan: know which kind you took on, track the interest you pay, budget a steady share to repay it, and modernize with strangler figs."
 category = "Engineering Practice"
-order = 12.7
+order = 1006
 tags = ["tech-debt", "process", "architecture", "planning"]
 +++
 
@@ -17,7 +17,7 @@ Martin Fowler's [technical debt quadrant](https://martinfowler.com/bliki/Technic
 | **Deliberate** | Skipping design because there's "no time" | Shipping now, knowing the cost, with a plan to pay it back |
 | **Inadvertent** | Not knowing good design in the first place | Learning, after building it, how it should have been built |
 
-- **Deliberate and prudent** is a business decision. Record it as a backlog item with what it'll take to pay back, so the loan has terms. If the shortcut departs from the playbook (skipping the deprecation window, say), it also gets an [ADR](/docs/engineering/design-docs), because that's exactly the choice someone will later mistake for an accident.
+- **Deliberate and prudent** is a business decision. Record it as a backlog item with what it'll take to pay back, so the loan has terms. If the shortcut departs from the playbook, it also gets an [ADR](/docs/engineering/design-docs), because that's exactly the choice someone will later mistake for an accident.
 - **Inadvertent and prudent** is inevitable. You learn the domain by building in it. Pay it down as understanding improves.
 - **Reckless** debt in either row is a process problem. Fix the process (reviews, design docs, mentoring), not just the code.
 
@@ -25,7 +25,7 @@ Martin Fowler's [technical debt quadrant](https://martinfowler.com/bliki/Technic
 
 Debt nobody can see doesn't get prioritized. Every known piece is a tracked item in the normal backlog, and each one says what the interest is:
 
-- **Incidents** it caused or made worse, linked from the [postmortem](/docs/engineering/postmortems).
+- **Incidents** it caused or made worse, linked from the [postmortem](/docs/operations/incident-response).
 - **Slower delivery:** "every change to billing takes three extra days because of X."
 - **Risk:** an unsupported runtime, a dependency with no maintainer, a single point of failure.
 
@@ -37,14 +37,11 @@ Reserve a steady share of every team's capacity for paying down debt and keeping
 
 - **Not debt sprints.** A quarterly "cleanup sprint" lets interest compound for three months, then gets cancelled the first time a deadline slips.
 - **The team chooses** what to spend it on. They know where the interest hurts.
-- **Upgrades come out of this budget,** before they become emergencies. See [Staying Current](/docs/delivery/staying-current).
+- **Upgrades come out of this budget,** before they become emergencies. See [Dependencies & Upgrades](/docs/engineering/dependencies).
 
 ## Pay It Down Where You're Working
 
-The cheapest time to fix a piece of code is when you're already changing it: the context is loaded, the tests are running, and the reviewer is already looking. Leave the code a little better than you found it.
-
-- **Land the refactor first,** as its own pull request, then the behavior change on top. Mixed into one diff, a reviewer can't tell which lines change behavior. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
-- **Don't go wandering.** Improve what you touch; a drive-by rewrite of an unrelated module belongs in its own change.
+The cheapest time to fix code is when you're already changing it: the context is loaded and the reviewer is already looking. Leave it a little better than you found it, with the refactor landed as its own pull request before the behavior change ([one concern per PR](/docs/engineering/commits-and-reviews)). Improve what you touch; a drive-by rewrite of an unrelated module belongs in its own change.
 
 ## When to Stop and Pay
 
@@ -58,19 +55,13 @@ At that point it becomes the priority, planned and staffed like any other projec
 
 ## Rewrite or Strangle
 
-Big rewrites are the riskiest way to repay debt. They stop delivery for months, rebuild years of edge cases from memory, and ship all at once. The old system's ugliest code is often its most valuable: each odd branch is a bug someone hit in production and fixed. A rewrite throws that knowledge away and has to rediscover it, one incident at a time.
+Big rewrites are the riskiest way to repay debt. They stop delivery for months, rebuild years of edge cases from memory, and ship all at once. The old system's ugliest code is often its most valuable: each odd branch is a bug someone hit in production and fixed, and a rewrite rediscovers them one incident at a time.
 
 Prefer the **[strangler fig](https://martinfowler.com/bliki/StranglerFigApplication.html):** build the replacement beside the old system, route one capability at a time to it, and delete the old code as each piece moves. Every step ships, every step can be rolled back, and the work can pause without leaving anything half-done. The same idea works at every scale, from a service down to a module, and it's how [Zero-Downtime Migrations](/docs/database/zero-downtime-migrations) handle schemas.
 
 ## Deprecate With Dates
 
-Removing something is how debt actually goes away, and removals need the same care as APIs:
-
-- **Announce it with a date,** and the replacement.
-- **Measure who still uses it,** and tell them directly.
-- **Delete it on the date.** A deprecation without a removal date is just a comment.
-
-See [Versioning & Deprecation](/docs/operations/versioning) for the public-API version of this.
+Removing something is how debt actually goes away. Announce it with a date and the replacement, measure who still uses it and tell them directly, and delete it on the date; a deprecation without a removal date is just a comment. [Versioning & Deprecation](/docs/api-design/versioning) is the public-API version of this.
 
 ## References
 

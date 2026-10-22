@@ -3,27 +3,23 @@ title = "Data Pipelines & Analytics"
 nav_title = "Data Pipelines"
 description = "Getting data from production into analytics without breaking either: CDC, ELT, tested transformations, replayable pipelines, contracts and one metrics layer."
 category = "Architecture"
-order = 8.6
+order = 408
 tags = ["data", "analytics", "pipelines", "cdc", "warehouse"]
 +++
 
-Every company eventually asks questions its production database wasn't built to answer: revenue by cohort, conversion by channel, churn by plan. How you answer them decides whether analytics becomes a trusted part of how the company runs or a pile of dashboards nobody believes. The difference is almost never the tools. It's whether the pipeline is treated as software, with contracts, tests, owners and the ability to rebuild from scratch.
+Every company eventually asks questions its production database wasn't built to answer: revenue by cohort, conversion by channel, churn by plan. How you answer them decides whether analytics becomes a trusted part of how the company runs or a pile of dashboards nobody believes. The difference is almost never the tools; it's whether the pipeline is treated as software, with contracts, tests, owners and the ability to rebuild from scratch.
 
 ## Keep Analytics Off Production
 
 Production databases (OLTP) are tuned for many small reads and writes on a few rows each. Analytical queries (OLAP) scan millions of rows, join everything, and aggregate. Running the second on the first is the most common early mistake, and it fails in two ways.
 
-The obvious one: a heavy report takes locks, fills the buffer cache with cold data and burns CPU, and checkout gets slow. A read replica moves the load but not the problem, since the replica still has a row-store schema designed for the application, and a long analytical query on a replica can conflict with replication and either stall it or get cancelled.
-
-The subtler one: analysts querying production tables couple themselves to your schema. Every [migration](/docs/database/zero-downtime-migrations) can now break a dashboard you don't know exists, and the team that owns the database ends up unable to change it.
+The obvious one: a heavy report fills the buffer cache with cold data and burns CPU, and checkout gets slow. A read replica moves the load but not the problem: its schema is still designed for the application, and a long analytical query there can conflict with replication and either stall it or get cancelled. The subtler one: analysts querying production tables couple themselves to your schema, so every [migration](/docs/database/zero-downtime-migrations) can break a dashboard you don't know exists.
 
 So analytics gets its own store, a columnar warehouse (BigQuery, Snowflake, Redshift, ClickHouse) or lakehouse, fed by a pipeline, with a defined interface between the two.
 
 ## ELT, Not ETL
 
-The old pattern was ETL: extract, transform in a pipeline tool, load the result. The modern default is ELT: extract and load the raw data as-is, then transform it inside the warehouse with SQL.
-
-ELT wins because warehouses made compute cheap and elastic, and because keeping the raw data changes what's possible. When a transformation has a bug, and one will, you fix the SQL and rebuild from the raw layer. With ETL, the raw data was never kept, and the bug is baked into history.
+The old pattern was ETL: extract, transform in a pipeline tool, load the result. The modern default is ELT: load the raw data as-is, then transform it inside the warehouse with SQL. Warehouses made compute cheap, and keeping the raw data changes what's possible: when a transformation has a bug, you fix the SQL and rebuild from the raw layer. With ETL, the raw data was never kept, and the bug is baked into history.
 
 The layers I use:
 
@@ -31,23 +27,21 @@ The layers I use:
 - **Staging:** one model per source table, cleaned up: renamed columns, cast types, deduplicated, nothing joined.
 - **Marts:** business entities and facts (`customers`, `orders`, `daily_revenue`) built from staging, the only layer dashboards and analysts query.
 
-The exceptions to "keep raw" are sensitive fields you shouldn't hold at all, which are dropped or tokenized before loading (see Privacy below).
+The exception to "keep raw" is sensitive fields you shouldn't hold at all, which are dropped or tokenized before loading (see Privacy below).
 
 ## Change Data Capture
 
-There are two ways to get rows out of an application database: query it on a schedule, or read its change log.
+Rows leave an application database one of two ways. Scheduled queries (`WHERE updated_at > last_run`) are simple and fine for small tables, but they miss hard deletes and intermediate states, depend on every write updating `updated_at`, and put scan load on production.
 
-Scheduled queries (`WHERE updated_at > last_run`) are simple and fine for small tables, but they miss hard deletes, miss intermediate states between runs, depend on every write updating `updated_at`, and put scan load on production.
-
-**Change data capture (CDC)** reads the database's own replication log, so it sees every insert, update and delete, in commit order, with almost no load on the database. In PostgreSQL, that's logical decoding through a replication slot; Debezium is the standard open-source connector, streaming changes into Kafka or straight to a warehouse loader, and most managed ingestion tools do the same thing underneath.
+**Change data capture (CDC)** reads the database's own replication log, so it sees every insert, update and delete, in commit order, with almost no load. In PostgreSQL, that's logical decoding through a replication slot; Debezium is the standard open-source connector, and most managed ingestion tools do the same underneath.
 
 The operational catch is the replication slot: PostgreSQL retains every WAL segment the slot hasn't confirmed, so a stalled or abandoned connector makes the primary's disk grow until it fills. Monitor slot lag, alert on it well before disk is at risk, and set `max_slot_wal_keep_size` so a dead consumer costs you a resync instead of an outage.
 
-CDC exports your tables, which means it exports your schema. For data other teams depend on long-term, publishing [domain events](/docs/architecture/events) through an outbox gives them a deliberate contract instead of your internal columns. Use CDC for your own analytics; use events for interfaces between teams.
+CDC exports your tables, which means it exports your schema. For data other teams depend on, [domain events](/docs/architecture/events) through an outbox are a deliberate contract instead of your internal columns. CDC for your own analytics, events between teams.
 
 ## Event Tracking
 
-Product analytics (page views, clicks, feature usage) comes from the client, not the database, and it rots faster than anything else in the stack. Six months in, there are `signup_clicked`, `SignUp Clicked` and `click_signup`, each with different properties, and nobody knows which one the funnel uses.
+Product analytics (page views, clicks, feature usage) comes from the client, and it rots faster than anything else in the stack. Six months in, there are `signup_clicked`, `SignUp Clicked` and `click_signup`, and nobody knows which one the funnel uses.
 
 The fix is a **tracking plan**: a reviewed, versioned list of every event, its properties and their types, owned like code.
 
@@ -61,11 +55,11 @@ The fix is a **tracking plan**: a reviewed, versioned list of every event, its p
 
 A **warehouse** stores data in its own managed format and gives you SQL, with storage and compute managed together. A **lakehouse** stores data as open table formats (Apache Iceberg, Delta Lake) on object storage, and lets several engines (Spark, Trino, the warehouses themselves) query the same tables.
 
-For most companies, start with a managed warehouse. It's the fewest moving parts, and the team's time goes to modeling instead of infrastructure. Move toward a lakehouse when there's a concrete reason: data volumes where object storage pricing matters, machine-learning workloads that need the same data outside SQL, or a need to avoid locking years of data into one vendor's format. Open table formats have made that move much less dramatic than it used to be.
+Start with a managed warehouse: the fewest moving parts, so the team's time goes to modeling instead of infrastructure. Move toward a lakehouse for a concrete reason: volumes where object storage pricing matters, machine-learning workloads that need the data outside SQL, or avoiding years of data locked into one vendor's format. Open table formats have made that move much less dramatic.
 
 ## Transformations Are Code
 
-The transformations between raw and marts are the business logic of analytics: what counts as an active user, how refunds affect revenue, which orders are test orders. They belong in a repository, written as SQL models, reviewed in pull requests, tested in CI and deployed like any other code. dbt made this the standard way of working, and the practices matter more than the tool.
+The transformations between raw and marts are the business logic of analytics: what counts as an active user, how refunds affect revenue, which orders are test orders. They live in a repository as SQL models, reviewed, tested in CI and deployed like any other code. dbt made this standard, and the practices matter more than the tool.
 
 - **Models are `SELECT` statements** that build on other models, so the dependency graph is explicit and the tool can build them in order.
 - **Every model is tested.** At minimum, primary keys are `unique` and `not_null`, foreign keys satisfy `relationships`, and status columns hold `accepted_values`. A test is a query that returns failing rows; zero rows passes.
@@ -73,7 +67,7 @@ The transformations between raw and marts are the business logic of analytics: w
 - **CI builds changed models against a sample** and runs their tests before merge, the same [testing](/docs/engineering/testing) discipline as application code.
 - **Incremental models for large tables,** processing only new data on each run, with a full rebuild available and exercised regularly so it still works when you need it.
 
-A dashboard querying a raw table directly, with its own joins and filters, is the analytics equivalent of a hardcoded SQL query in a template. It will drift from every other definition of the same thing.
+A dashboard querying a raw table with its own joins and filters will drift from every other definition of the same thing.
 
 ## Pipelines Must Be Replayable
 
@@ -84,19 +78,19 @@ A pipeline that can only run forward is one bug away from permanently wrong data
 - **Parameterized by interval.** Each run processes "the data for this interval," given as input, not "everything since the last run," which can't be reproduced.
 - **Deterministic.** No `now()` inside transformations; the interval is the clock.
 
-With those properties, a backfill is routine: fix the logic, rerun the affected range, and the corrected data replaces the wrong data. Without them, every backfill is a bespoke script and a prayer.
+With those, a backfill is routine: fix the logic, rerun the range, and the corrected data replaces the wrong data. Without them, every backfill is a bespoke script and a prayer.
 
 ## Data Contracts
 
 The most common pipeline failure isn't in the pipeline. It's upstream: an application team renames a column, changes a status value or starts sending a field as a string, and every downstream model breaks, often silently.
 
-A **data contract** is the producing team's explicit promise about what it publishes: the schema, the meaning of each field, the allowed values, the freshness, and how changes are announced. It's the same idea as an API contract, applied to data, and it gets the same treatment:
+A **data contract** is the producing team's explicit promise about what it publishes: the schema, what each field means, the allowed values, the freshness, and how changes are announced. It's an API contract for data, treated the same way:
 
 - **Enforced in the producer's CI.** A schema change that breaks the contract fails the producer's build, not the consumer's dashboard a week later.
 - **Versioned with a compatibility policy**, the same rules as [event schema evolution](/docs/architecture/events): additive changes are free; breaking ones need a new version and a migration window.
 - **Owned.** Every published dataset has a named owning team, the one that gets paged when it's late or wrong.
 
-Contracts sound heavy for a small company. The lightweight version is just: the tables analytics reads are documented, owned, and changes to them are reviewed by someone who knows what reads them.
+For a small company, the lightweight version is enough: the tables analytics reads are documented, owned, and changes to them are reviewed by someone who knows what reads them.
 
 ## Quality and Freshness
 
@@ -109,26 +103,22 @@ Data is wrong in quieter ways than services are down. Nobody gets an error page;
 
 ## Orchestration
 
-Something has to run the steps in order, retry failures, backfill ranges and show what ran when. That's an orchestrator: Apache Airflow is the long-established choice, defining pipelines as DAGs of tasks in Python; Dagster models pipelines around the data assets they produce, which fits the "tables are the product" view well. Warehouse-native scheduling and managed ingestion tools cover simpler setups.
-
-Whatever you choose, the rules are the same: tasks are idempotent and parameterized by interval (above), the orchestrator holds no business logic, and retries, alerting and ownership are configured per pipeline rather than left to defaults.
+An orchestrator runs the steps in order, retries failures, backfills ranges and shows what ran when. Apache Airflow is the long-established choice, pipelines as DAGs of tasks in Python; Dagster models pipelines around the data assets they produce; warehouse-native scheduling covers simpler setups. Whatever you choose, tasks are idempotent and parameterized by interval, the orchestrator holds no business logic, and retries, alerting and ownership are set per pipeline rather than left to defaults.
 
 ## Privacy and Retention
 
-Analytics copies data, and every copy is in scope for your privacy obligations. The warehouse often ends up holding the most complete, least protected copy of customer data in the company.
+Analytics copies data, and every copy is in scope for your [privacy obligations](/docs/compliance/gdpr). The warehouse often ends up holding the most complete, least protected copy of customer data in the company.
 
 - **Minimize at ingestion.** Don't load fields analytics doesn't need. Hash or tokenize identifiers that are only needed for joins. Card data never enters the warehouse in any form; see [Sensitive Data](/docs/payments/sensitive-data).
 - **Classify columns** as personal or sensitive, and use the warehouse's column-level access controls and masking so most analysts see aggregates or masked values.
-- **Erasure has to reach the warehouse.** A deletion request that removes the user from production but not from raw tables, snapshots and exports hasn't been honored. The [Data Retention](/docs/architecture/data-retention) rules apply here, including time-limited retention on raw layers.
-- **Retention on raw data** is the tension with "keep everything for rebuilds." Keep raw history as long as you can justify, partition it by time so expiring it is cheap, and document the window.
+- **Erasure has to reach the warehouse,** including raw tables, snapshots and exports ([Data Retention](/docs/architecture/data-retention)).
+- **Raw data has retention too,** the tension with "keep everything for rebuilds." Keep raw history as long as you can justify, partitioned by time so expiring it is cheap, and document the window.
 
 ## One Definition per Metric
 
-The final failure mode is organizational: finance's revenue number doesn't match the product dashboard's, and the meeting is spent arguing about which is right instead of what to do. Both are "right" by their own SQL.
+The final failure mode is organizational: finance's revenue number doesn't match the product dashboard's, and the meeting is spent arguing which is right. Both are "right" by their own SQL.
 
-Define each important metric once, in code, in one place: a semantic or metrics layer, or at minimum a single mart model per metric, with the definition documented next to it. Every dashboard, notebook and report reads from that definition. Changing what "active user" means is then a reviewed pull request with a visible history, not a silent edit to one dashboard.
-
-A short list of company metrics with owners and written definitions does more for trust in data than any tool purchase.
+Define each important metric once, in code: a semantic or metrics layer, or at minimum one mart model per metric with its definition next to it, and every dashboard reads from that. Changing what "active user" means is then a reviewed pull request, not a silent edit to one dashboard. A short list of company metrics with owners and written definitions does more for trust in data than any tool purchase.
 
 ## References
 

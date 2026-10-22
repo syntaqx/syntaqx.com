@@ -2,23 +2,21 @@
 title = "Internationalization"
 description = "Building software that can be translated and localized: externalized messages with ICU plurals, Intl formatting, locale choice, RTL layouts, and Unicode traps."
 category = "Frontend"
-order = 13.4
+order = 606
 tags = ["i18n", "localization", "unicode", "frontend"]
 +++
 
-Internationalization (i18n) is engineering work: building the product so it *can* work in any language and region. Localization (l10n) is the content work that follows: translating, and adapting formats and conventions for a specific locale. The distinction matters because i18n has to happen in the code, and the cost of skipping it lands later, all at once, when the first translation shows every hard-coded string, every concatenated sentence and every layout that assumed English word lengths.
+Internationalization (i18n) is engineering work: building the product so it *can* work in any language and region. Localization (l10n) is the content work that follows: translating, and adapting formats for a specific locale. The distinction matters because i18n has to happen in the code, and the cost of skipping it lands all at once, when the first translation exposes every hard-coded string, concatenated sentence and layout that assumed English word lengths.
 
-Even an English-only product benefits from most of this. Dates, numbers and currencies already vary between US and UK readers, names already come in shapes your validation didn't expect, and a later translation becomes a content project instead of a rewrite.
+Even an English-only product benefits. Dates, numbers and currencies already vary between US and UK readers, names already come in shapes your validation didn't expect, and a later translation becomes a content project instead of a rewrite.
 
 ## Externalize Every String
 
-User-facing text lives in message catalogs keyed by ID, never inline in components. The test is simple: grep the UI code for English sentences. Every hit is a string a translator will never see.
-
-Keys should describe meaning, not wording: `checkout.submit_button`, not `place_order`. When the English copy changes from "Place order" to "Pay now", a meaning-based key stays valid, and the translation system can flag the string as changed instead of losing it.
+User-facing text lives in message catalogs keyed by ID, never inline in components. Grep the UI code for English sentences: every hit is a string a translator will never see. Keys describe meaning, not wording (`checkout.submit_button`, not `place_order`), so when the copy changes from "Place order" to "Pay now", the key stays valid and the translation system flags the string as changed instead of losing it.
 
 ## Plurals and Grammar: ICU MessageFormat
 
-English has two plural forms: "1 file", "2 files". So the code naturally grows `count === 1 ? "file" : "files"`, and that code is wrong for most of the world. [CLDR's plural rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html) give Arabic six categories (zero, one, two, few, many, other), Polish and Russian four (one, few, many, other), and Japanese one. No ternary survives that.
+English has two plural forms, so code naturally grows `count === 1 ? "file" : "files"`, which is wrong for most of the world. [CLDR's plural rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html) give Arabic six categories (zero, one, two, few, many, other), Polish and Russian four (one, few, many, other), and Japanese one. No ternary survives that.
 
 [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/) moves the grammar into the message, where each translator writes the forms their language needs:
 
@@ -34,9 +32,7 @@ The same syntax handles grammatical gender and other variants with `select`. The
 
 ## Never Concatenate Sentences
 
-`"Welcome back, " + name + "!"` assumes the name goes at the end, that the punctuation is the same, and that "welcome back" doesn't change form with the person. Each assumption breaks somewhere. Word order differs across languages, so a sentence assembled from translated fragments is often ungrammatical, and translators can't fix what they can't see as a whole.
-
-Use one message with placeholders, `"Welcome back, {name}!"`, so the translator controls the entire sentence, including where the name goes. The same applies to sentences with embedded links or emphasis: keep the markup inside the message as named tags rather than splitting the sentence around it.
+`"Welcome back, " + name + "!"` assumes the name goes at the end, the punctuation is the same, and "welcome back" doesn't change form with the person. Word order differs across languages, so a sentence assembled from translated fragments is often ungrammatical, and translators can't fix what they can't see whole. Use one message with placeholders, `"Welcome back, {name}!"`, so the translator controls the sentence. Embedded links or emphasis stay inside the message as named tags rather than splitting the sentence around them.
 
 ## Formatting: Use Intl, Not Strings
 
@@ -50,23 +46,23 @@ new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(12
 new Intl.DateTimeFormat("en-GB", { dateStyle: "long" }).format(date);
 ```
 
-Formatting happens at the edge, for display only. Data stays in canonical forms: amounts as integer minor units with a currency code ([Money & Amounts](/docs/payments/money)), instants as UTC timestamps ([Time & Date Formats](/docs/fundamentals/time)). Convert to the user's locale and time zone when rendering, never before storing, or you'll be parsing "1.234,50" back into a number someday.
+Formatting happens at the edge, for display only. Data stays canonical, the way the API sends it: amounts as integer minor units with a currency code ([Money & Amounts](/docs/payments/money)), instants as UTC timestamps ([Time & Date Formats](/docs/fundamentals/time)). Convert when rendering, never before storing, or you'll be parsing "1.234,50" back into a number someday.
 
 ## Choosing the Locale
 
-The browser sends its preferences in [`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept-Language), a list of [BCP 47](https://datatracker.ietf.org/doc/html/rfc5646) language tags with weights. It's a good default for a first visit, and better than guessing from IP location, which says where someone is, not what they read. A German speaker traveling in Japan doesn't want Japanese.
+The browser sends its preferences in [`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept-Language), a weighted list of [BCP 47](https://datatracker.ietf.org/doc/html/rfc5646) language tags. It's a good default for a first visit, and better than guessing from IP location, which says where someone is, not what they read: a German speaker traveling in Japan doesn't want Japanese.
 
-But an explicit choice always wins. Show a language switcher, persist the choice (in the account, or a cookie for anonymous visitors), and never override it with the header again. Browser defaults are often whatever the device shipped with; a person who picked a language from your menu has told you what they actually want. Put the locale in the URL (`/de/pricing`) when pages are public, so each language version is shareable and indexable.
+An explicit choice always wins. Show a language switcher, persist the choice (in the account, or a cookie for anonymous visitors), and never override it with the header again; browser defaults are often whatever the device shipped with. Put the locale in the URL (`/de/pricing`) for public pages, so each language version is shareable and indexable.
 
 ## Right-to-Left Layouts
 
 Arabic, Hebrew and Persian read right to left, and a mirrored layout isn't a translation detail: navigation, icons with direction, progress bars and padding all flip.
 
-[CSS logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values) make this nearly free if you use them from the start. `margin-inline-start` instead of `margin-left`, `padding-inline-end` instead of `padding-right`, `text-align: start` instead of `left`. With `dir="rtl"` on the document, the layout flips itself. Retrofitting a codebase full of `left` and `right` is a long search-and-replace with visual review at every step. Don't mirror everything blindly, though: logos, media controls and numbers keep their direction.
+[CSS logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values) make this nearly free from the start: `margin-inline-start` instead of `margin-left`, `text-align: start` instead of `left`, and with `dir="rtl"` on the document the layout flips itself. Retrofitting a codebase full of `left` and `right` is a long search-and-replace with visual review at every step. Don't mirror blindly, though: logos, media controls and numbers keep their direction.
 
 ## Text Expansion
 
-Translated text is usually longer than English, and short strings grow the most. The W3C's [summary of IBM's guidelines](https://www.w3.org/International/articles/article-text-size) puts strings of up to 10 English characters at 200 to 300% of their original length, and strings over 70 characters at about 130%. A button labeled "Save" has to fit "Speichern"; a tab bar sized to English labels overflows in German.
+Translated text is usually longer than English, and short strings grow most. The W3C's [summary of IBM's guidelines](https://www.w3.org/International/articles/article-text-size) puts strings of up to 10 English characters at 200 to 300% of their original length, and strings over 70 characters at about 130%. A button labeled "Save" has to fit "Speichern"; a tab bar sized to English labels overflows in German.
 
 Design for it: let containers grow, avoid fixed widths on anything holding text, allow wrapping, and truncate only with the full text available on hover or focus.
 
@@ -78,17 +74,15 @@ Design for it: let containers grow, avoid fixed widths on anything holding text,
 
 ## Pseudo-Localization in CI
 
-You can find most i18n bugs before anyone translates anything. [Pseudo-localization](https://learn.microsoft.com/en-us/globalization/methodology/pseudolocalization) generates a fake locale from English: accented characters ("Ŝåṽé"), padding of about 40% to simulate expansion, and brackets around each string. Any text that shows up unaccented was never externalized. Any string missing its closing bracket got truncated. Any bracket pair in the middle of a sentence reveals concatenation. ICU defines `en-XA` (accents) and `en-XB` (bidirectional) for exactly this.
-
-Run the UI in the pseudo-locale in CI with screenshot or end-to-end tests, and these bugs fail the build instead of a release.
+Most i18n bugs can be found before anyone translates anything. [Pseudo-localization](https://learn.microsoft.com/en-us/globalization/methodology/pseudolocalization) generates a fake locale from English: accented characters ("Ŝåṽé"), about 40% padding to simulate expansion, and brackets around each string. Unaccented text was never externalized; a missing closing bracket means truncation; a bracket pair mid-sentence reveals concatenation. The `en-XA` (accents) and `en-XB` (bidirectional) pseudo-locales exist for exactly this. Run the UI in one in CI with screenshot or end-to-end tests, and these bugs fail the build instead of a release.
 
 ## What Not to Translate
 
-Translate what people read. Don't translate identifiers: API field names, enum values, log messages, error codes and URLs stay stable so code, support and search keep working across languages. An error response carries a stable machine-readable shape plus a human message; the message is localizable, the shape isn't. Brand and product names usually stay as they are, by decision, written down.
+Translate what people read. Identifiers stay stable: API field names, enum values, log messages, error codes and URLs, so code, support and search keep working across languages. An [error response](/docs/requests/error-responses) has a stable shape and a human message; the message is localizable, the shape isn't. Brand and product names usually stay as they are, by a decision written down.
 
 ## This Site
 
-The site is English-only and sets `lang="en"` on the document, which tells screen readers and translation tools what they're reading. Its converter tools also show a small example of the length trap: their character counts use `string.length`, so an emoji in the input counts as two. That's fine for a byte-oriented encoder, where code units are what matter, and it would be a bug in a field with a "maximum 280 characters" limit shown to users.
+The site is English-only and sets `lang="en"` on the document, which tells screen readers and translation tools what they're reading. Its converter tools show the length trap in miniature: their character counts use `string.length`, so an emoji counts as two. That's right for a byte-oriented encoder, where code units matter, and would be a bug behind a "maximum 280 characters" limit shown to users.
 
 ## References
 

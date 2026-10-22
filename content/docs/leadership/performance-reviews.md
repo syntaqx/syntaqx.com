@@ -2,35 +2,31 @@
 title = "Performance Reviews"
 description = "Performance reviews with no surprises: continuous feedback, evidence against the ladder, calibration that checks bias, and humane handling of underperformance."
 category = "Leadership"
-order = 14.7
+order = 1305
 tags = ["leadership", "management", "feedback", "performance"]
 +++
 
-A performance review should be the least surprising document someone reads all year. If it contains news, the review isn't the problem; the six months of feedback that didn't happen before it are. I run reviews as a written summary of conversations we've already had, anchored on evidence and the ladder, and checked against the biases that make ratings say more about the reviewer than the person being reviewed.
+A performance review should be the least surprising document someone reads all year. If it contains news, the problem is the six months of [feedback](/docs/leadership/one-on-ones) that didn't happen before it. I run reviews as a written summary of conversations we've already had, anchored on evidence and the [career ladder](/docs/leadership/career-ladders), and checked against the biases that make ratings say more about the reviewer than the person reviewed.
 
 ## What Reviews Are For
 
-Reviews try to do three jobs at once: give people calibrated feedback on how they're doing, plan their growth, and feed decisions about pay and promotion. Those jobs pull against each other. The moment a conversation decides money, people stop listening for growth and start defending their rating.
-
-I don't think you can fully separate them, because people deserve to know how their feedback connects to their pay. What I do is separate them in time. The growth conversation happens in regular [1:1s](/docs/leadership/one-on-ones) and a mid-cycle check-in where nothing is being decided. The review itself summarizes the period and states the outcome plainly. Pretending the review isn't about compensation when everyone knows it is just makes it feel dishonest.
+Reviews try to do three jobs at once: calibrated feedback, growth planning, and decisions about pay and promotion. They pull against each other; the moment a conversation decides money, people stop listening for growth and start defending their rating. You can't fully separate them, because people deserve to know how feedback connects to pay, so I separate them in time. Growth happens in regular 1:1s and a mid-cycle check-in where nothing is decided. The review summarizes the period and states the outcome plainly; pretending it isn't about compensation when everyone knows it is just makes it feel dishonest.
 
 ## No Surprises
 
-The rule I hold every manager to: nothing in a review should be the first time the person has heard it. Corrective feedback goes in a 1:1 when the thing happens, using situation, behavior and impact. Praise does too. By review time, the document is a summary.
-
-This is a fairness issue as much as a kindness one. Feedback given six months late is feedback the person never had a chance to act on. If a manager discovers an issue while writing the review, it goes into the next 1:1 as a conversation, and into the review only as context, not as a judgment the person couldn't have seen coming.
+Nothing in a review should be the first time the person has heard it. Corrective feedback and praise go in a 1:1 when the thing happens, so by review time the document is a summary. That's fairness as much as kindness: feedback six months late is feedback the person never had a chance to act on. An issue a manager discovers while writing the review goes into the next 1:1 as a conversation, and into the review only as context.
 
 ## Write From Evidence, Against the Ladder
 
-Reviews written from memory are reviews of the last six weeks and of whatever made the strongest impression. I ask managers to keep a running doc per report through the period: what they shipped, decisions they made, incidents they handled, feedback from peers, moments they grew. When review season comes, the evidence is already there.
+Reviews written from memory are reviews of the last six weeks and the strongest impression. I ask managers to keep a running doc per report through the period (what they shipped, decisions, incidents handled, peer feedback, moments they grew) so the evidence is already there at review time.
 
-Each claim in the review ties to the [career ladder](/docs/leadership/career-ladders) and to a concrete example. "Strong technical leadership" tells the person nothing. "Led the migration design, wrote the RFC, and got three teams to agree on the cutover plan, which is what the senior level describes as influencing beyond the team" tells them what they did, why it mattered, and what level it's at. The ladder gives everyone the same yardstick, and the example lets anyone check the claim.
+Each claim ties to the ladder and to a concrete example. "Strong technical leadership" tells the person nothing. "Led the migration design, wrote the RFC, and got three teams to agree on the cutover plan, which is what the senior level describes as influencing beyond the team" tells them what they did, why it mattered, and what level it's at. The ladder is the shared yardstick, and the example lets anyone check the claim.
 
 ## Self Reviews and Peer Input
 
-I ask for a self review first, because people remember work their manager never saw, and because the gap between how someone sees their year and how their manager sees it is the most useful thing to talk about. A short template keeps it focused: what you did and its impact, what you learned, where you want to grow next.
+I ask for a self review first, because people remember work their manager never saw, and the gap between how someone sees their year and how their manager sees it is the most useful thing to talk about. Keep it short: what you did and its impact, what you learned, where you want to grow.
 
-Peer input fills in what the manager can't observe. I ask a few peers chosen together with the person, and I ask specific questions ("what should they keep doing, and what one thing would make them more effective?") rather than for a rating. Peer feedback goes into the review as evidence the manager has weighed, not as anonymous quotes the person can't respond to.
+Peer input fills in what the manager can't observe. I ask a few peers, chosen with the person, specific questions ("what should they keep doing, and what one thing would make them more effective?") rather than for a rating, and their feedback goes in as evidence the manager has weighed, not anonymous quotes the person can't respond to.
 
 ## Calibration and Its Pitfalls
 
@@ -47,9 +43,9 @@ It also goes wrong in predictable ways:
 
 Two biases show up in nearly every review I've read.
 
-**Recency bias** weights the last few weeks over the whole period. Someone who had a rough final month after a strong five gets a review about the rough month. The running evidence doc is the fix; so is reading it top to bottom before writing a word.
+**Recency bias** weights the last few weeks over the period: a rough final month after a strong five gets a review about the rough month. The running evidence doc, read top to bottom before writing a word, is the fix.
 
-**Halo bias** lets one strong trait color everything. A brilliant engineer gets "strong collaboration" too, because it's hard to write criticism of someone you admire. The reverse, a horns effect, does the same for one weakness. I ask managers to rate each dimension of the ladder separately, with its own evidence, before forming an overall picture.
+**Halo bias** lets one strong trait color everything: a brilliant engineer gets "strong collaboration" too, because criticizing someone you admire is hard. The horns effect does the same for one weakness. Rate each dimension of the ladder separately, with its own evidence, before forming an overall picture.
 
 ## No Stack Ranking or Forced Distributions
 
@@ -80,14 +76,14 @@ The test of a review is whether the person knows what to do next after reading i
 - Is there one or two things to focus on, not ten?
 - Would I be comfortable if the person read it over my shoulder while I wrote it?
 
-Then I deliver it in person, give them time to read it before we discuss it, and leave the conversation open. A review is the start of the next period's conversation, not the end of the last one.
+Then I deliver it in person, give them time to read it before we discuss it, and leave the conversation open: a review starts the next period's conversation.
 
 ## References
 
-### Reference
+**Reference**
 
 - [Scullen, Mount and Goff: Understanding the Latent Structure of Job Performance Ratings](https://doi.org/10.1037/0021-9010.85.6.956), Journal of Applied Psychology (2000), where idiosyncratic rater effects accounted for 62% and 53% of rating variance against 21% and 25% for actual performance
 
-### In practice
+**In practice**
 
 - [The Verge: Microsoft Kills Stack Ranking](https://www.theverge.com/2013/11/12/5094864/microsoft-kills-stack-ranking-internal-structure), Microsoft ending its forced-ranking system in 2013 after criticism that it set colleagues against each other

@@ -2,13 +2,11 @@
 title = "Multi-Currency & FX"
 description = "Charging in one currency and settling in another: who takes the FX risk, locking a quoted rate, storing both amounts, refunds, and checkout conversion."
 category = "Payments"
-order = 7.95
+order = 811
 tags = ["payments", "currency", "fx", "money"]
 +++
 
-Selling in a customer's own currency raises conversion and approval rates, and it's what customers expect. It also means a payment now involves two amounts, a rate between them, and a question that single-currency systems never have to answer: when the rate moves between the charge and the refund, whose money is that?
-
-Every rule here builds on [Money & Amounts](/docs/payments/money): integer minor units, a currency on every amount, rounding once with a stated rule.
+Everything up to [payouts](/docs/payments/payouts-and-settlement) works in one currency. Selling in the customer's own currency raises conversion and approval rates, and it's what customers expect, but it means a payment now has two amounts, a rate between them, and a question single-currency systems never face: when the rate moves between the charge and the refund, whose money is that? Every rule here builds on [Money & Amounts](/docs/payments/money).
 
 ## Two Currencies, Two Names
 
@@ -21,7 +19,7 @@ There's often a third: the cardholder's own billing currency. If you charge in e
 
 ## Who Takes the Exchange Risk
 
-Between showing a price and the money settling, rates move. Someone absorbs the difference. Decide who, deliberately, because each option puts the risk somewhere:
+Between showing a price and the money settling, rates move, and someone absorbs the difference. Decide who deliberately:
 
 | When the rate is fixed | Who takes the risk | Tradeoff |
 | ---------------------- | ------------------ | -------- |
@@ -67,18 +65,16 @@ The payment stores both sides of the conversion, each as an integer in its own c
 }
 ```
 
-- **Both amounts are facts.** Don't store one and recompute the other; the recomputation will drift from what actually settled, and reconciliation against bank statements will break.
-- **The rate is a decimal string.** A float would turn 1.084 into 1.08399999…, and JSON numbers get parsed as floats by most clients. A string carries the exact value; parse it into a decimal type before using it.
-- **Convert in minor units with the exponents.** EUR and USD both have two decimal places, but JPY has none and KWD has three. Converting €49.00 to yen is `4900 × rate ÷ 100` (EUR's exponent), not `4900 × rate`. Getting this wrong is a factor-of-100 error that tests with two-decimal currencies never catch. Keep the [ISO 4217](https://www.six-group.com/en/products-services/financial-information/data-standards.html) exponents in one table, as Money & Amounts describes.
-- **Round once,** at the end, with half-even. Rounding the rate first and then the amount compounds two rounding errors into one visible cent.
+- **Both amounts are facts.** Recomputing one from the other drifts from what actually settled, and reconciliation against bank statements breaks.
+- **The rate is a decimal string,** because most clients parse JSON numbers as floats; parse it into a decimal type before using it.
+- **Convert in minor units with the exponents.** Converting €49.00 to yen is `4900 × rate ÷ 100` (EUR's exponent), not `4900 × rate`: a factor-of-100 error that tests with only two-decimal currencies never catch.
+- **Round once,** at the end, with half-even. Rounding the rate and then the amount compounds two errors into one visible cent.
 
 In the ledger, a conversion is a balanced transaction in each currency: entries in EUR that sum to zero, entries in USD that sum to zero, linked by the same transaction ID ([Payment States & Ledgers](/docs/payments/payment-states)). Never add EUR and USD in one account.
 
 ## Refunds and FX Gains and Losses
 
-Refund in the **presentment** currency, for the original amount. The customer paid €49.00; they get €49.00 back, whatever happened to the dollar. Refunding "the equivalent of $53.12 at today's rate" hands the customer a different number than they paid, which reads as an error and invites a dispute.
-
-That makes the settlement side move. If the euro strengthened since the sale, returning €49.00 costs you more than the $53.12 you received. The difference is real money and has to land somewhere:
+Refund in the **presentment** currency, for the original amount: the customer paid €49.00, so they get €49.00 back whatever happened to the dollar. "The equivalent of $53.12 at today's rate" is a different number than they paid, which reads as an error and invites a dispute. That makes the settlement side move: if the euro strengthened, returning €49.00 costs more than the $53.12 you received, and the difference has to land somewhere:
 
 - **Record it explicitly** as an FX gain or loss entry, in its own ledger account, not hidden inside the refund amount.
 - **Store the refund's own rate and settlement amount,** exactly like the payment, so the refund is as explainable as the charge.
@@ -88,14 +84,12 @@ Disputes behave the same way, with one difference: you don't choose when they ha
 
 ## Dynamic Currency Conversion
 
-Dynamic currency conversion (DCC) is the offer at a foreign card terminal or checkout to "pay in your home currency". The merchant's provider converts on the spot, at a rate it chooses plus a markup, and the merchant often earns a share of it. The customer is asked to choose in a few seconds at checkout, with no easy way to compare that rate against what their own bank would charge, so the convenience can cost far more than it appears to.
-
-That's why it's regulated:
+Dynamic currency conversion (DCC) is the offer at a foreign terminal or checkout to "pay in your home currency". The merchant's provider converts at a rate it chooses plus a markup, often sharing it with the merchant, and the customer has seconds to choose with no easy way to compare against their own bank. That's why it's regulated:
 
 - **Card networks require an active choice.** DCC can't be applied by default; the customer must be shown both prices, the rate and the markup, and choose ([Visa Acceptance's DCC guide](https://developer.visaacceptance.com/docs/vas/en-us/dcc/developer/all/rest/dcc-merchant.html) describes the choice, disclosure and receipt requirements).
 - **The EU requires the markup in plain numbers.** Conversion charges must be expressed as a percentage markup over the latest ECB reference rate and disclosed before the payment starts, along with the option to pay in the merchant's currency ([Regulation (EU) 2019/518, Article 3a](https://www.legislation.gov.uk/eur/2019/518/article/1)).
 
-If you offer it, make the cheaper option easy to pick and the markup impossible to miss. Revenue that depends on customers not understanding a choice is revenue that turns into complaints, disputes and regulatory attention.
+If you offer it, make the cheaper option easy to pick and the markup impossible to miss. Revenue that depends on customers not understanding a choice turns into complaints, disputes and regulatory attention.
 
 ## Reporting in One Currency
 

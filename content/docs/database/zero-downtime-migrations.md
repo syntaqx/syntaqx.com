@@ -2,14 +2,14 @@
 title = "Zero-Downtime Migrations"
 description = "Changing a live schema without downtime: the expand and contract pattern, safe backfills, lock-aware DDL, and the order to ship code and migrations in."
 category = "Database"
-order = 10.5
+order = 504
 tags = ["database", "migrations", "postgres", "operations"]
 aliases = ["zero-downtime-migrations"]
 +++
 
-During a deploy, old and new versions of the code run against the same database at the same time: for seconds with a rolling deploy, longer with a canary, and indefinitely if you have to roll back. Every migration has to work with both versions. That one constraint rules out most "simple" changes, like renaming a column in a single step, and it's why schema changes deserve their own discipline.
+During a deploy, old and new versions of the code run against the same database at the same time: for seconds with a rolling deploy, longer with a canary, and indefinitely if you roll back. Every migration has to work with both. That one constraint rules out most "simple" changes, like renaming a column in a single step, and it's why schema changes deserve their own discipline.
 
-The alternative, a maintenance window, works until it doesn't. It means scheduling changes around traffic, batching them into risky releases, and telling customers the product is down so the schema can change. With [continuous deployment](/docs/delivery/continuous-deployment), there's no window to schedule into, so migrations have to be safe on a live system.
+A maintenance window avoids the problem by taking the product down, which means scheduling around traffic and batching changes into risky releases. With [continuous deployment](/docs/delivery/ci-pipelines) there's no window to schedule into, so migrations have to be safe on a live system.
 
 ## Expand and Contract
 
@@ -22,7 +22,7 @@ Every breaking schema change is split into steps that are each backward compatib
 5. **Stop writing old.** Deploy code that no longer touches the old structure.
 6. **Contract.** Drop the old structure.
 
-Each step is its own deploy, and each can be rolled back without undoing the one before. That's the property that matters: at no point is there a version of the code that the current schema can't serve. It costs more deploys than a one-shot change, and in exchange none of them can take the site down.
+Each step is its own deploy, and each can be rolled back without undoing the one before. At no point is there a version of the code the current schema can't serve. It costs more deploys than a one-shot change, and in exchange none of them can take the site down.
 
 ### Example: Renaming a Column
 
@@ -40,18 +40,18 @@ WHERE id IN (SELECT id FROM users WHERE full_name IS NULL LIMIT 1000);
 ALTER TABLE users DROP COLUMN name;
 ```
 
-A single `ALTER TABLE users RENAME COLUMN` takes effect instantly, and every running instance of the old code starts failing on its next query. On a rolling deploy, that's every request served by old instances until they're replaced.
+A single `ALTER TABLE users RENAME COLUMN` takes effect instantly, and every old instance still running fails on its next query until it's replaced.
 
 ## Backfills
 
-- **Batch it.** Small batches (hundreds to low thousands of rows), each in its own transaction, with a short pause between. One `UPDATE` across 50 million rows holds row locks for its whole duration, generates a burst of write-ahead log that replicas have to replay, and leaves a table full of dead tuples for vacuum to clean up.
+- **Batch it.** Hundreds to low thousands of rows per batch, each in its own transaction, with a short pause between. One `UPDATE` across 50 million rows holds row locks for its whole duration, floods replicas with write-ahead log, and leaves a table full of dead tuples for vacuum.
 - **Make it resumable.** Key off `WHERE new_column IS NULL` or an ID cursor, so a backfill interrupted at 60% resumes at 60%, not zero.
 - **Run it as a job, not a migration.** Schema migrations should finish in seconds, inside the deploy. Data work that takes hours runs separately, with progress you can watch and a way to pause it.
-- **Verify before you contract.** Count the rows that still differ. Zero, then drop. Dropping a column with data you didn't copy is the one step in this process you can't roll back.
+- **Verify before you contract.** Count the rows that still differ; drop only at zero. Dropping a column with data you didn't copy is the one step here you can't roll back.
 
 ## Lock-Aware DDL
 
-Some DDL takes an `ACCESS EXCLUSIVE` lock that blocks every read and write on the table for as long as it runs. On a big table, a statement that's instant in development can stall production for minutes. On Postgres:
+Some DDL takes an `ACCESS EXCLUSIVE` lock that blocks every read and write on the table while it runs, so a statement that's instant in development can stall production for minutes. On Postgres:
 
 | Change | Safe approach |
 | ------ | ------------- |
@@ -63,17 +63,17 @@ Some DDL takes an `ACCESS EXCLUSIVE` lock that blocks every read and write on th
 
 `NOT VALID` is the general trick: add the constraint for new rows immediately, under a brief lock, and validate existing rows later under a lock that doesn't block writes.
 
-**Set a [`lock_timeout`](https://www.postgresql.org/docs/current/runtime-config-client.html)** on migration sessions, a few seconds. The dangerous case isn't the DDL itself; it's DDL waiting for a lock behind one long-running query. While it waits in the queue, every other query on the table queues behind it, and a 10-second report becomes a site-wide stall. With a timeout, the migration fails fast and retries, instead of taking production down while it waits.
+**Set a [`lock_timeout`](https://www.postgresql.org/docs/current/runtime-config-client.html)** of a few seconds on migration sessions. The dangerous case isn't the DDL itself; it's DDL waiting for a lock behind one long-running query, while every other query on the table queues behind it, so a 10-second report becomes a site-wide stall. With a timeout, the migration fails fast and retries instead.
 
 ## Shipping Order
 
-- **Migrations run before the code that needs them,** as their own step in the deploy pipeline. The expanded schema is always in place before any code relies on it.
-- **No deploy depends on migration and code landing at the same instant.** If the migration has run but the code hasn't, or the reverse, nothing breaks. That's what makes the deploy itself safe to roll back.
-- **Destructive steps ship last and alone.** A `DROP` is never bundled with other changes, and it waits at least one full deploy cycle after the last code that used the column, so a rollback never lands on code that expects a column that's gone.
+- **Migrations run before the code that needs them,** as their own pipeline step, so the expanded schema is in place before any code relies on it.
+- **No deploy depends on migration and code landing at the same instant.** Either can be ahead of the other and nothing breaks, which is what makes the deploy safe to roll back.
+- **Destructive steps ship last and alone.** A `DROP` is never bundled with other changes, and waits at least one full deploy cycle after the last code that used the column, so a rollback never lands on code that expects a column that's gone.
 
 ## Financial Tables
 
-On ledger and payment tables the bar is higher. Backfills never modify existing financial rows in place, because those rows are [append-only](/docs/payments/payment-states) and an in-place backfill is exactly the kind of untraceable edit the ledger exists to prevent. New derived columns are filled from the append-only history, and reconciliation runs before and after to prove that no balance changed.
+On ledger and payment tables the bar is higher. Backfills never modify existing financial rows in place: those rows are [append-only](/docs/payments/payment-states), and an in-place backfill is exactly the untraceable edit the ledger exists to prevent. New derived columns are filled from the history, and reconciliation runs before and after to prove no balance changed.
 
 ## References
 

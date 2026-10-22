@@ -1,15 +1,13 @@
 +++
 title = "Rate Limiting"
 description = "Why every endpoint is rate limited, what to key limits on, the headers that report them, enforcing them in Redis, and staying up when the limiter fails."
-category = "Operations"
-order = 5
+category = "Requests & Responses"
+order = 307
 tags = ["api", "rate-limiting", "headers"]
-aliases = ["rate-limiting"]
+aliases = ["rate-limiting", "operations/rate-limiting"]
 +++
 
-Every endpoint is rate limited. No exceptions, including the cheap ones.
-
-A rate limit isn't a punishment for heavy users. It's how a shared system stays shared: one buggy client in a retry loop, one scraper, or one customer's runaway cron job shouldn't be able to take capacity from everyone else. Without a limit, your capacity plan is whatever your noisiest client decides it is. The cheap endpoints need it too, because "cheap" stops being true at a million requests a minute, and an unlimited endpoint is the first one an attacker finds.
+Every endpoint is rate limited, including the cheap ones. A rate limit isn't a punishment for heavy users; it's how a shared system stays shared. One buggy client in a retry loop, one scraper, or one customer's runaway cron job shouldn't take capacity from everyone else, and without a limit your capacity plan is whatever your noisiest client decides. "Cheap" stops being true at a million requests a minute, and an unlimited endpoint is the first one an attacker finds.
 
 ## Limits
 
@@ -43,7 +41,7 @@ Clients shouldn't have to discover the limit by hitting it. Every response says 
 | `X-RateLimit-Reset` | UTC epoch seconds when the window resets (legacy) |
 | `Retry-After` | Seconds until retry is allowed (only on `429` responses) |
 
-`RateLimit-Policy` and `RateLimit` come from the [IETF RateLimit header fields draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/). It's still a draft, but it's the only attempt at a standard, and its structured fields (a named policy, then parameters) can describe several policies at once, which the `X-` headers can't. The `X-RateLimit-*` trio carries the same state for clients that already parse it, because that's what most APIs have shipped for a decade. Dropping them would break those clients for no gain.
+`RateLimit-Policy` and `RateLimit` come from the [IETF RateLimit header fields draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/). It's still a draft, but it's the only attempt at a standard, and its structured fields can describe several policies at once, which the `X-` headers can't. The `X-RateLimit-*` trio carries the same state for clients that already parse it, since that's what most APIs have shipped for a decade.
 
 ### Example Headers
 
@@ -65,17 +63,11 @@ Over the limit, the response is `429 Too Many Requests` with a `Retry-After` hea
 }
 ```
 
-As a client:
-
-1. **Read `Retry-After` and wait that long.** The server knows when your window resets; your backoff formula is a guess.
-2. **Don't retry in a tight loop.** Every rejected request still costs the server something, and a client hammering a `429` can keep itself blocked indefinitely.
-3. **Watch `RateLimit` before you hit zero.** A batch job that sees `r` dropping can slow itself down instead of failing halfway through.
-
-See [Retries & Timeouts](/docs/operations/retries-and-timeouts) for the full retry policy.
+A client waits for `Retry-After`, because the server knows when the window resets and a backoff formula is a guess, and it watches `RateLimit` before reaching zero, so a batch job can slow itself down instead of failing halfway. [Retries & Timeouts](/docs/architecture/retries-and-timeouts) has the full retry policy.
 
 ## How It's Enforced
 
-A limit only means something if every server agrees on the count. Serverless functions and horizontally scaled services don't share memory, so a per-instance counter quietly multiplies the real limit by the number of instances that happen to be warm. The counter has to live in a shared store, and Redis is the standard tool for it: atomic increments, keys that expire on their own, and fast enough to sit in front of every request.
+A limit only means something if every server agrees on the count. Serverless functions and scaled-out services don't share memory, so a per-instance counter quietly multiplies the limit by the number of warm instances. The counter lives in a shared store, and Redis is the standard one: atomic increments, keys that expire on their own, fast enough to sit in front of every request.
 
 ### The Redis Pattern
 
@@ -89,9 +81,9 @@ end
 return { count, redis.call("PTTL", KEYS[1]) }
 ```
 
-- `INCR` counts the request. The first one in a window sets the expiry, so counters clean themselves up and the store never fills with stale keys.
-- Running it as one script removes the race between the increment and the expiry. Two separate commands can crash between them and leave a counter that never expires, which blocks that client forever.
-- `PTTL` gives the time until reset, for the `RateLimit` and `Retry-After` headers. One command per request keeps the limiter's cost flat.
+- `INCR` counts the request, and the first one in a window sets the expiry, so counters clean themselves up.
+- One script removes the race between increment and expiry. Two separate commands can crash between them and leave a counter that never expires, blocking that client forever.
+- `PTTL` gives the time until reset, for the `RateLimit` and `Retry-After` headers.
 
 ### Choosing an Algorithm
 
@@ -101,21 +93,21 @@ return { count, redis.call("PTTL", KEYS[1]) }
 | **Sliding window** | A log of timestamps, or two weighted fixed windows | Smooth, no boundary burst; more storage or more commands |
 | **Token bucket** | Tokens refill at a rate; requests spend them | Allows controlled bursts with a steady average; more state per client |
 
-Start with a fixed window. The boundary burst (a client spends its whole budget at the end of one window and again at the start of the next) matters at a limit of ten per second. At five thousand an hour it doesn't, and the fixed window's simplicity is worth more than the smoothness. Move to a sliding window or token bucket when bursts are the thing you're protecting against. Libraries like [Upstash Ratelimit](https://upstash.com/docs/redis/sdks/ratelimit-ts/overview) package all three.
+Start with a fixed window. The boundary burst (a whole budget spent at the end of one window and again at the start of the next) matters at ten per second; at five thousand an hour it doesn't, and simplicity is worth more than smoothness. Move to a sliding window or token bucket when bursts are the thing you're protecting against. Libraries like [Upstash Ratelimit](https://upstash.com/docs/redis/sdks/ratelimit-ts/overview) package all three.
 
 ### When the Store Is Down
 
-The rate limiter must never be the reason the API is down. If Redis errors or doesn't answer within a second, fall back to an in-memory count on each instance: limits get looser for a while, but requests keep flowing. The alternative, failing closed, turns a cache outage into a full outage for every client, to protect against abuse that probably isn't happening at that moment.
+The rate limiter must never be the reason the API is down. If Redis errors or doesn't answer within a second, fall back to an in-memory count per instance: limits get looser for a while, but requests keep flowing. Failing closed would turn a cache outage into a full outage, to protect against abuse that probably isn't happening at that moment. (An [idempotency](/docs/payments/idempotency) store makes the opposite call, because there a looser check means a duplicate write.)
 
-Remember clients that are already over the limit in memory too. A blocked client keeps sending requests, and checking Redis for each one spends the store's capacity (and, on a metered plan, money) on traffic you've already decided to refuse.
+Remember clients already over the limit in memory too. A blocked client keeps sending requests, and checking Redis for each one spends the store's capacity, and on a metered plan money, on traffic you've already refused.
 
-### This API
+## This Site
 
 The syntaqx API runs this script on [Upstash Redis](https://upstash.com/docs/redis/sdks/ts/developing), keyed on the client IP, with the in-memory fallback after a one-second timeout. Locally, `compose.yml` runs Redis behind the same REST API Upstash serves, and with no Redis configured at all the limiter uses a no-op store that sends the headers but never blocks, so `npm run dev` needs nothing else running.
 
 It deliberately doesn't use Upstash's own rate-limit library: its scripts carry an Upstash-only Lua flag that stock Redis rejects, so local and CI runs against plain Redis would quietly fall back to memory and test nothing. Five lines of portable Lua are a better trade than a dependency that only works in production.
 
-Revalidations are free: when an endpoint answers `If-None-Match` with a `304`, it refunds the request, so a client polling politely never runs out of quota. See [Caching & Conditional Requests](/docs/requests/caching).
+Revalidations are free: a `304` refunds the request, so a client polling politely never runs out of quota ([Caching & Conditional Requests](/docs/requests/caching)).
 
 ## References
 

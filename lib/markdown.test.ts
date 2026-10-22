@@ -38,7 +38,7 @@ describe("renderMarkdownPage()", () => {
     expect(renderMarkdownPage("/docs/api").body).toContain(
       "## Versioning and deprecation",
     );
-    const versioning = renderMarkdownPage("/docs/operations/versioning").body;
+    const versioning = renderMarkdownPage("/docs/api-design/versioning").body;
     expect(versioning).toContain("## The Lifecycle");
     // Header versioning is the primary recommendation; the URL is the fallback.
     expect(versioning.indexOf("## Header Versioning")).toBeGreaterThan(0);
@@ -131,7 +131,7 @@ describe("llms.txt", () => {
     expect(guidance).toBeLessThan(body.indexOf("\n## "));
     expect(body).toContain("**How to call it.**");
     expect(body).toContain("**When not to use it.**");
-    expect(body).toContain("https://www.syntaqx.com/docs/operations/versioning");
+    expect(body).toContain("https://www.syntaqx.com/docs/api-design/versioning");
   });
 
   it("is served as text/plain", async () => {

@@ -2,17 +2,17 @@
 title = "Threat Modeling"
 description = "A lightweight threat model for every new service or trust boundary: four questions, a data flow diagram, a STRIDE pass, and mitigations tracked as work."
 category = "Security"
-order = 9
+order = 701
 tags = ["security", "threat-modeling", "stride", "design"]
 +++
 
-A threat model is a design review with an attacker in the room. Its value is timing: the flaws it finds cost a sentence to fix on a whiteboard and a migration to fix in production. A webhook receiver designed without signature verification is a one-line change in the design doc; the same receiver shipped, integrated with by partners and processing money is a breaking change, a coordination problem and possibly an incident.
+Security starts before the code: a threat model is a design review with an attacker in the room. Its value is timing. The flaws it finds cost a sentence to fix on a whiteboard and a migration to fix in production: a webhook receiver designed without signature verification is a one-line change in the design doc, and the same receiver shipped, integrated by partners and moving money is a breaking change and possibly an incident.
 
-It doesn't need a specialist or a week. It needs an hour with the people building the thing, at the moment the design is still cheap to change.
+It doesn't need a specialist or a week, just an hour with the people building the thing while the design is still cheap to change.
 
 ## When to Do One
 
-Not every change needs one. Spending an hour modeling a copy change teaches the team that threat modeling is ceremony. Do one when a change:
+Not every change needs one; modeling a copy change teaches the team that threat modeling is ceremony. Do one when a change:
 
 - **Adds a way in:** a new service, a public endpoint, a webhook receiver, a queue consumer. Every entry point is something an attacker will try.
 - **Creates or moves a trust boundary:** data crosses from a less trusted zone into a more trusted one. That's where assumptions break.
@@ -23,7 +23,7 @@ It lives in the [design doc](/docs/engineering/design-docs) as its own section a
 
 ## Four Questions
 
-The whole process fits in four questions, a framing from Adam Shostack that works because it's small enough that teams actually do it:
+The process fits in four questions, Adam Shostack's framing, small enough that teams actually do it:
 
 1. **What are we working on?** Draw it.
 2. **What can go wrong?** Walk it, systematically.
@@ -43,13 +43,13 @@ A data flow diagram, with four kinds of things:
 | Data store | Postgres, Redis, an S3 bucket, a log index |
 | Data flow | An HTTPS request, a queue message, a webhook |
 
-Then draw the **trust boundaries**: a dashed line wherever trust changes. The internet and your edge. Your API and a vendor's. One tenant's data and another's. User-supplied text and the model that reads it.
+Then draw the **trust boundaries**, a dashed line wherever trust changes: the internet and your edge, your API and a vendor's, one tenant's data and another's, user-supplied text and the model that reads it.
 
-The boundaries are the point of the drawing. Attacks happen where data crosses from something you don't control into something you do, so every flow crossing a dashed line gets examined, and flows that stay inside one zone mostly don't.
+The boundaries are the point. Attacks happen where data crosses from something you don't control into something you do, so every flow crossing a dashed line gets examined, and flows inside one zone mostly don't.
 
 ## What Can Go Wrong: STRIDE
 
-Brainstorming threats finds the ones people already worry about and misses the rest. STRIDE turns it into a checklist: for every element and every flow across a boundary, ask six questions, one for each security property.
+Brainstorming finds the threats people already worry about and misses the rest. STRIDE makes it a checklist: for every element and every flow across a boundary, ask six questions, one per security property.
 
 | Threat | Violates | Ask | Typical mitigation |
 | ------ | -------- | --- | ------------------ |
@@ -57,10 +57,10 @@ Brainstorming threats finds the ones people already worry about and misses the r
 | **T**ampering | Integrity | Can data be changed in transit or at rest? | TLS, signatures, append-only records |
 | **R**epudiation | Non-repudiation | Can someone deny an action we can't prove they took? | Audit logs with [request IDs](/docs/operations/observability) |
 | **I**nformation disclosure | Confidentiality | Can data reach someone who shouldn't see it? | Authorization, [redaction](/docs/payments/sensitive-data), encryption |
-| **D**enial of service | Availability | Can someone exhaust a resource? | [Rate limits](/docs/operations/rate-limiting), size limits, timeouts |
+| **D**enial of service | Availability | Can someone exhaust a resource? | [Rate limits](/docs/requests/rate-limiting), size limits, timeouts |
 | **E**levation of privilege | Authorization | Can someone do more than they're allowed? | Object-level checks, least privilege, [tenant isolation](/docs/architecture/multi-tenancy) |
 
-Not every letter applies to every element. A data store can't spoof anyone, but it can be tampered with, leaked or filled up. Skipping the letters that don't apply is fine; skipping the ones that are uncomfortable is how breaches happen.
+Not every letter applies to every element: a data store can't spoof anyone, but it can be tampered with, leaked or filled up. Skipping letters that don't apply is fine; skipping uncomfortable ones is how breaches happen.
 
 ### A Worked Example
 
@@ -71,13 +71,13 @@ A webhook receiver that takes payment events from a processor:
 - **Denial of service:** a flood of junk requests ties up workers that verify signatures. Mitigation: cheap rejections first, rate limits, a queue in front of processing.
 - **Information disclosure:** error responses that echo the payload leak card data into the sender's logs. Mitigation: return a bare status.
 
-Four rows, an hour of discussion, and every one of them is far cheaper now than after launch.
+Four rows, an hour of discussion, each far cheaper now than after launch.
 
 ## Rate and Decide
 
 Score each threat by **likelihood times impact**, each from 1 (low) to 3 (high). Anything at 6 or above gets a mitigation before launch. A 3 or 4 gets a ticket. Below that, write down that you accept it and why.
 
-The scale is deliberately coarse. The score exists to sort the list so the team spends its effort on the top, not to be precise, and a finer scale invites arguments about whether something is a 6.5 or a 7 instead of fixing it.
+The scale is deliberately coarse. The score only sorts the list so effort goes to the top; a finer scale invites arguing over 6.5 versus 7 instead of fixing it.
 
 ## The Output Is Work
 
@@ -105,7 +105,7 @@ A threat model that ends as a document has failed. It ends as work:
 
 ## Keep It Alive
 
-Revisit the model when the design changes, after a security incident (see [Postmortems](/docs/engineering/postmortems)), and whenever an [AI system](/docs/security/ai-security) gains a new tool or data source. A stale threat model is worse than none, because people trust it: the team believes a risk was handled when the design it was handled for no longer exists.
+Revisit the model when the design changes, after a security incident (see [Incident Response](/docs/operations/incident-response)), and whenever an [AI system](/docs/security/ai-security) gains a new tool or data source. A stale model is worse than none, because people trust it: the risk was handled for a design that no longer exists.
 
 ## References
 

@@ -2,11 +2,11 @@
 title = "Disputes & Chargebacks"
 description = "How a dispute moves from inquiry to arbitration, what it does to the ledger, the monitoring thresholds that end merchant accounts, and who pays on a platform."
 category = "Payments"
-order = 7.5
+order = 809
 tags = ["payments", "disputes", "chargebacks", "risk"]
 +++
 
-A dispute is the cardholder asking their bank to take money back, and the bank doing it before anyone has proven anything. The funds leave the merchant's balance the day the dispute opens, a fee is charged on top, and the merchant then has a short, fixed window to argue for the money back. Everything about how you handle disputes follows from that asymmetry: the money moves first, the argument comes later, and missing a deadline loses by default.
+The fraud that [risk checks](/docs/payments/fraud-and-risk) miss comes back as a dispute, and so do unrecognized charges, missing deliveries and unhappy customers. A dispute is the cardholder asking their bank to take money back, and the bank doing it before anyone has proven anything. The funds leave the merchant's balance the day the dispute opens, a fee is charged on top, and the merchant then has a short, fixed window to argue for the money back. Everything about how you handle disputes follows from that asymmetry: the money moves first, the argument comes later, and missing a deadline loses by default.
 
 ## The Lifecycle
 
@@ -27,9 +27,7 @@ inquiry ──► dispute ──► response ──► won | lost
 
 Cardholders generally have **120 days** from the payment to file, and longer for things paid for in advance: for a ticket or a booking, the clock starts at the event, not the purchase. A dispute can therefore arrive months after the money looked settled, which is why disputes are never a state on the payment (see below).
 
-An unanswered inquiry is the most expensive mistake in this table. It's free to resolve, either with evidence or a refund, and ignoring it can escalate to a chargeback the issuer treats as accepted. Route inquiries to the same queue and the same urgency as disputes.
-
-Arbitration is rarely worth it. The losing side pays the network's arbitration fee, which runs to hundreds of dollars, so it only makes sense for large amounts with evidence that's unambiguous.
+An unanswered inquiry is the most expensive mistake in this table: it's free to resolve with evidence or a refund, and ignoring it can escalate to a chargeback the issuer treats as accepted. Route inquiries to the same queue, with the same urgency, as disputes. Arbitration is rarely worth it: the loser pays the network's fee, which runs to hundreds of dollars, so it only makes sense for large amounts with unambiguous evidence.
 
 ## Reason Codes Decide the Evidence
 
@@ -42,7 +40,7 @@ Every dispute carries a reason code, and the code decides what evidence can win.
 | Processing error | "Charged twice" or "wrong amount" | Records showing distinct transactions, or the correct amount |
 | Consumer dispute | "Never arrived" or "not as described" | Delivery confirmation with signature, the product description, the refund policy the customer accepted |
 
-The consequence for system design: evidence has to be captured at payment time, not reconstructed when a dispute lands. Delivery tracking, the customer's IP and device, the 3-D Secure result, the terms shown at checkout and accepted: if they weren't stored with the payment, they don't exist two months later. Sending the issuer a pile of everything you have is a weaker response than the three documents that answer the specific claim.
+The consequence for system design: evidence is captured at payment time, not reconstructed when a dispute lands. Delivery tracking, IP and device, the 3-D Secure result, the terms accepted at checkout: if they weren't stored with the payment, they don't exist two months later. And three documents that answer the specific claim beat a pile of everything you have.
 
 ## Disputes in the Ledger
 
@@ -55,15 +53,15 @@ A dispute is its own object with its own state machine, referencing the payment 
 | Lost | The held amount moves to the issuer, permanently. |
 | Accepted without contest | Same as lost, without the response fee. |
 
-Modeling the hold as a transfer to a holding account, instead of just marking the payment, is what makes the merchant's balance explainable at every point in a two-month process. It also handles the cases that break simpler models: the disputed amount can differ from the charge (currency conversion between purchase and dispute, a partial dispute, a bank bundling three disputed subscription charges into one), and a single payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts.
+Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts.
 
-Fees are business decisions encoded in the ledger, so they stay explicit. Stripe, for example, charges a fee when a dispute is received that isn't returned even if you win, and a separate fee for countering that is returned on a win. Whatever your processor's terms, post each fee as its own entry, so "why is this merchant down a fee on a dispute they won" has an answer.
+Post each fee as its own entry too. Stripe, for example, charges one fee when a dispute is received that isn't returned on a win, and a separate countering fee that is; explicit entries are what answer "why is this merchant down a fee on a dispute they won".
 
 Once a dispute is open, the payment can't be refunded through the normal path. A refund issued anyway would pay the customer twice: once from the dispute, once from the refund. Enforce this in the refund state machine, not in the UI.
 
 ## Monitoring Programs: The Threshold That Ends Accounts
 
-Networks watch every merchant's fraud and dispute rates, and exceeding the thresholds brings fines, mandatory remediation, and eventually the loss of the ability to accept cards. For a platform, this is existential: one merchant over the line affects the acquirer relationship that every other merchant depends on.
+Networks watch every merchant's fraud and dispute rates, and exceeding the thresholds brings fines, mandatory remediation and eventually the loss of card acceptance. For a platform it's existential: one merchant over the line affects the acquirer relationship every other merchant depends on.
 
 Visa's program, VAMP, combines fraud reports and disputes into one count-based ratio on card-not-present transactions:
 
@@ -78,28 +76,26 @@ VAMP ratio = (fraud reports (TC40) + disputes (TC15)) / settled transactions (TC
 | Excessive merchant (CEMEA) | 220 basis points |
 | Minimum volume | 1,500 fraud reports and disputes in the month |
 
-Two details make this harder than it looks. Fraud reports count even when no dispute follows, so a card-testing attack can push a merchant over the line without a single chargeback. And the ratio counts disputes, not losses: winning a dispute doesn't remove it from the numerator. Prevention matters more than winning.
-
-Track each merchant's rate daily against these thresholds, with alerts at half of them. By the time a monthly report shows an excessive ratio, it's already too late to change the month.
+Two details make it harder than it looks. Fraud reports count even when no dispute follows, so a [card-testing attack](/docs/payments/fraud-and-risk) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
 
 ## Prevention Beats Winning
 
-Every dispute costs a fee, staff time, and ratio, win or lose. The cheapest dispute is the one that's never filed.
+Every dispute costs a fee, staff time and ratio, win or lose; the cheapest one is never filed.
 
-- **Clear statement descriptors.** "Friendly fraud" is often a customer who doesn't recognize the charge. `SQ *JOES BKRY 4421` gets disputed; the business name the customer actually knows doesn't.
-- **Refund before they dispute.** A refund costs the amount. A dispute costs the amount, a fee, and ratio. When a customer complains, refunding is usually cheaper than winning. The same math applies to early fraud warnings: refunding small flagged payments before they become disputes protects the ratio.
-- **Authenticate high-risk payments.** A payment authenticated with 3-D Secure generally shifts fraud liability to the issuer, which takes the most common dispute reason off the merchant. See [Strong Customer Authentication](/docs/payments/strong-customer-authentication).
+- **Clear statement descriptors.** "Friendly fraud" is often a customer who doesn't recognize the charge: `SQ *JOES BKRY 4421` gets disputed; the name the customer knows doesn't.
+- **Refund before they dispute.** A refund costs the amount; a dispute costs the amount, a fee and ratio. Refunding a complaint, or a small payment with an early fraud warning, is usually cheaper than winning.
+- **Authenticate high-risk payments.** The [3-D Secure liability shift](/docs/payments/strong-customer-authentication) takes the most common dispute reason off the merchant.
 - **Make cancellation easy.** Subscriptions with a hidden cancel button turn into disputes. A visible cancel flow is cheaper than the disputes it prevents.
 
 ## On a Platform: Who Pays
 
-When a platform processes payments for many merchants, a lost dispute has to land on someone's balance. The platform decides, and it has to decide before the first dispute:
+On a platform, a lost dispute has to land on someone's balance, and the platform decides whose before the first one arrives:
 
-- **The merchant bears the loss,** debited from their balance, which is the default and the fair one. The merchant made the sale and holds the evidence.
-- **The platform is the backstop.** If the merchant's balance can't cover the loss (they've been paid out, or they've disappeared), the platform's own funds cover it. With Stripe Connect, for example, this is an explicit setting on each connected account that decides whether the platform or Stripe covers negative balances.
-- **Reserves bridge the gap.** Holding back a share of a risky merchant's payouts means a dispute can be paid from the merchant's own money even after they stop processing. See [Payouts & Settlement](/docs/payments/payouts-and-settlement).
+- **The merchant bears the loss,** debited from their balance: the default and the fair one, since the merchant made the sale and holds the evidence.
+- **The platform is the backstop** when the merchant's balance can't cover it. With Stripe Connect, an explicit setting per connected account decides whether the platform or Stripe covers negative balances.
+- **Reserves bridge the gap,** so a dispute can be paid from the merchant's own held money after they stop processing ([Payouts & Settlement](/docs/payments/payouts-and-settlement)).
 
-The failure to design for: a merchant takes a large volume of payments, is paid out, and disappears. The disputes arrive over the following 120 days, and the platform covers every one. Reserves sized to the merchant's risk, payout delays for new merchants, and [onboarding that knows who they are](/docs/payments/merchant-onboarding) are what stop that from being a loss.
+The failure to design for: a merchant takes a large volume of payments, is paid out and disappears, and the disputes arrive over the following 120 days. Reserves sized to risk, payout delays for new merchants and [onboarding that knows who they are](/docs/payments/merchant-onboarding) are what stop that from being the platform's loss.
 
 Every dispute event reaches merchants through [webhooks](/docs/payments/webhooks) (`dispute.created`, `dispute.closed`), with the evidence deadline in the payload, because the deadline is the one thing they can't miss.
 

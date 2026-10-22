@@ -2,12 +2,12 @@
 title = "Payment States & Ledgers"
 description = "Explicit state machines for financial objects, append-only records, and a double-entry ledger, so every balance can be explained and nothing is ever edited."
 category = "Payments"
-order = 7.2
+order = 803
 tags = ["payments", "state-machines", "ledger", "database"]
 aliases = ["payment-states"]
 +++
 
-Financial data has two rules: every change of state is explicit, and nothing that happened is ever rewritten. Mistakes are corrected with new entries, the same way accountants have done it for centuries. The reason is the same for them as for us: the most important question about money is never "what is the balance?", it's "why is that the balance?", and you can only answer it if the history is intact.
+With amounts represented exactly and every write [idempotent](/docs/payments/idempotency), the next question is what a payment *is* over its life. Financial data has two rules: every change of state is explicit, and nothing that happened is ever rewritten. Mistakes are corrected with new entries, as accountants have done for centuries, and for the same reason: the most important question about money is never "what is the balance?", it's "why is that the balance?", and only an intact history can answer it.
 
 ## Explicit State Machines
 
@@ -35,17 +35,17 @@ pending ───┴─────────────────► autho
 | `authorized` | `voided` | Merchant cancels, or the authorization expires uncaptured |
 | `captured` | `settled` | Funds arrive in the settlement batch |
 
-The alternative, a status column any code path can set to anything, fails in ways that are hard to see. A late webhook marks a voided payment as captured. A retry captures a payment twice. A support tool "fixes" a failed payment by setting it to settled. Each one is a single `UPDATE` that looked reasonable to whoever wrote it. A transition table makes the invalid ones impossible instead of merely unlikely.
+The alternative, a status column any code path can set to anything, fails quietly. A late webhook marks a voided payment as captured. A retry captures twice. A support tool "fixes" a failed payment by setting it to settled. Each is a single `UPDATE` that looked reasonable to whoever wrote it; a transition table makes them impossible instead of merely unlikely.
 
 - **Terminal states are terminal.** `failed`, `voided` and `settled` never transition again. A refund after settlement isn't a state change on the payment; it's a new object (below).
-- **Transitions are guarded in the database,** not only in code: `UPDATE payments SET status = 'captured' WHERE id = $1 AND status = 'authorized'`. Zero rows updated means someone else got there first, perhaps a concurrent void or a duplicate webhook, and the second actor stops instead of overwriting. Checking in application code and then writing has a race window between the read and the write; the guarded update doesn't.
+- **Transitions are guarded in the database,** not only in code: `UPDATE payments SET status = 'captured' WHERE id = $1 AND status = 'authorized'`. Zero rows updated means someone else got there first, a concurrent void or a duplicate webhook, and the second actor stops instead of overwriting. Read-then-write in application code has a race window; the guarded update doesn't (see [Transactions & Concurrency](/docs/database/transactions-and-concurrency)).
 - **Every transition is recorded** with when it happened, what triggered it and the processor's reference. When a customer disputes a charge six months later, "it's captured" isn't enough; you need the path it took.
 
 ### Authorizations Expire
 
 An authorization only holds funds for a limited time, set by the card networks. Plan on **7 days** for online card payments and **2 days** for in-person payments; Visa shortened merchant-initiated transactions to **5 days**. [Stripe's capture-later guide](https://docs.stripe.com/payments/capture-later) documents the same windows.
 
-Ignore this and an order that ships on day 8 tries to capture an authorization that no longer exists. The capture fails, the goods are gone, and the customer was never charged. Store the deadline as `capture_before` when the authorization succeeds, alert before it passes, and have a scheduled job move anything past it to `voided`, so the state reflects reality instead of a hold that silently lapsed.
+Ignore this and an order that ships on day 8 tries to capture an authorization that no longer exists: the goods are gone and the customer was never charged. Store the deadline as `capture_before` when the authorization succeeds, alert before it passes, and have a scheduled job move anything past it to `voided`, so the state reflects reality instead of a hold that silently lapsed.
 
 ### Refunds and Disputes Are Their Own Objects
 
@@ -83,7 +83,7 @@ Money movement is recorded as a **transaction** made of two or more **entries** 
 | 2 | `merchant_payable` | `+4855` |
 | 3 | `platform_fees` | `+145` |
 
-Why bother, instead of a single `balance` column per merchant? Because a single balance can be wrong silently. If a bug credits the merchant $48.55 but forgets the fee, a balance column just holds the wrong number. In a double-entry ledger, the transaction doesn't sum to zero, and the database refuses it. Errors show up as imbalances you can detect, instead of balances you have to trust.
+Why not a single `balance` column per merchant? Because a single balance can be wrong silently. If a bug credits the merchant $48.55 but forgets the fee, a balance column just holds the wrong number; in a double-entry ledger the transaction doesn't sum to zero, and the database refuses it. Errors become imbalances you can detect instead of balances you have to trust.
 
 - **Entries are written atomically,** and a constraint rejects any transaction that doesn't balance.
 - **Account balances are the sum of their entries.** A cached balance is fine for reads, but it's derived, and it can always be rebuilt from the entries.
@@ -92,7 +92,7 @@ Why bother, instead of a single `balance` column per merchant? Because a single 
 
 ## Reconciliation
 
-Every external system is wrong sometimes, including yours. Processors drop transactions from settlement files, banks post late, and your own code has bugs. Reconciliation is how you find out before a merchant does.
+Every external system is wrong sometimes, including yours: processors drop transactions from settlement files, banks post late, and your own code has bugs. Reconciliation is how you find out before a merchant does. The settlement side of this, matching processor files and bank deposits to payouts, is in [Payouts & Settlement](/docs/payments/payouts-and-settlement).
 
 - **Reconcile daily,** matching ledger entries against processor settlement files and bank statements. A break found the next day has one day of context. One found at month end has thirty.
 - **Breaks are tracked, not patched.** A mismatch becomes a record with an owner, and it's resolved with a correcting entry, so the fix is as auditable as the mistake.

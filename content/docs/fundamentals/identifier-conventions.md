@@ -2,27 +2,18 @@
 title = "Identifier Conventions"
 description = "UUID v7 as the default key, when integers, v4, v5 or ULIDs are the better choice, and what each format reveals, costs, and breaks when you get it wrong."
 category = "Fundamentals"
-order = -0.25
+order = 103
 tags = ["ids", "uuid", "ulid", "database"]
 aliases = ["identifier-conventions"]
 +++
 
 An identifier ends up everywhere: foreign keys, URLs, logs, caches, webhook payloads, other companies' databases. Changing its format later means migrating all of them, so it's one of the few decisions worth getting right on day one.
 
-My default is **UUID v7**. The rest of this doc is why, and when something else is better.
-
-## What an ID Has to Do
-
-Four questions decide the format:
-
-1. **Who generates it?** One database, or many services and clients without coordinating?
-2. **What does it reveal?** How many rows exist, how fast they're created, when each was made?
-3. **How does it index?** Random keys scatter inserts across a B-tree; ordered keys append to the end.
-4. **Who reads it?** Humans in support tickets, URLs, other systems?
+My default is **UUID v7**. Four questions decide the format, and v7 answers them best for most data: who generates the ID (one database, or anyone without coordinating), what it reveals (row counts, growth, creation time), how it indexes (random keys scatter inserts across a B-tree, ordered keys append), and who reads it (support tickets, URLs, other systems).
 
 ## Auto-Increment Integers
 
-`BIGSERIAL` keys are small (8 bytes), fast, ordered, and easy to read aloud. Their problems all come from being a single counter:
+`BIGSERIAL` keys are small (8 bytes), fast, ordered and easy to read aloud. Their problems all come from being a single counter:
 
 - **They leak.** `/invoices/10482` tells a competitor how many invoices you've issued, and two invoices a week apart tell them your growth rate. Sequential IDs also make enumeration attacks trivial: increment and try the next one.
 - **They need one writer.** Only the database can hand them out, so a client can't create an ID before the insert, and two databases (a sharded table, a merger, an offline client) will collide.
@@ -37,13 +28,13 @@ A [UUID v7](https://datatracker.ietf.org/doc/html/rfc9562#section-5.7) is 128 bi
 01932c6c-7616-7590-a8db-cb4b0e4d1c8a
 ```
 
-- **Generated anywhere.** Services, clients and batch jobs create IDs without asking anyone, which also means a client can know an object's ID before the insert, and an import can be retried without duplicating.
+- **Generated anywhere.** Services, clients and batch jobs create IDs without asking anyone, so a client knows an object's ID before the insert.
 - **Index-friendly.** New IDs sort after old ones, so inserts append to the B-tree instead of splitting pages all over it. On large tables that's the difference that matters most against v4.
 - **Sorted by creation.** Sorting by `id` is sorting by creation time, which makes cursor pagination simple ([Pagination](/docs/requests/pagination)).
 
 What it costs:
 
-- **It reveals when it was created,** to the millisecond. Usually that's fine, since `created_at` is in the response anyway. When creation time is itself sensitive (an anonymous report, a signup that shouldn't be correlated with an event), use v4. [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562#section-8) recommends v4 for security-sensitive uses for the same reason.
+- **It reveals when it was created,** to the millisecond. Usually that's fine, since `created_at` is in the response anyway. When creation time is itself sensitive (an anonymous report, a signup that shouldn't be correlated with an event), use v4, as [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562#section-8) recommends for security-sensitive uses.
 - **Order within a millisecond isn't guaranteed** unless the generator uses one of RFC 9562's monotonic methods (a counter or extra clock precision). If two IDs from the same millisecond must sort in creation order, use a generator that does, or don't depend on it.
 
 ```sql
@@ -55,11 +46,11 @@ CREATE TABLE posts (
 );
 ```
 
-PostgreSQL 18 generates v7 natively with `uuidv7()`. On older versions, generate it in the application; it's a few lines (timestamp into the first 48 bits, random bytes for the rest, then the version and variant bits).
+PostgreSQL 18 generates v7 natively with `uuidv7()`. On older versions, generate it in the application: a timestamp in the first 48 bits, random bytes for the rest, then the version and variant bits.
 
 ## UUID v4: Pure Randomness
 
-122 random bits, nothing else. Use v4 when the ID must reveal nothing, including when it was made. The cost is index locality: random inserts touch pages all over the index, which on a large, write-heavy table means more page splits, more cache misses and more write amplification.
+122 random bits, nothing else. Use v4 when the ID must reveal nothing, including when it was made. The cost is index locality: on a large, write-heavy table, random inserts mean more page splits, cache misses and write amplification.
 
 ## UUID v5: Derived From a Name
 
@@ -75,7 +66,7 @@ uuid.uuid5(uuid.NAMESPACE_URL, "https://example.com/users/42")
 - **Shared identity without a mapping table.** Two systems that agree on a namespace compute the same ID for the same entity independently.
 - **Stable test fixtures.** `uuid5(ns, "user-admin")` is the same on every run, so fixtures don't hard-code UUIDs ([Testing Strategy](/docs/engineering/testing)).
 
-Don't use v5 for anything a user can guess the input of. Anyone who knows the namespace and the name can compute the ID, so it's not an access control, and it can leak the input it was derived from.
+Don't use v5 where a user can guess the input. Anyone who knows the namespace and the name can compute the ID, so it's no access control, and it can leak the input it was derived from.
 
 ## v1, v6 and ULID
 
@@ -95,7 +86,7 @@ Don't use v5 for anything a user can guess the input of. Anyone who knows the na
 
 ## Conventions
 
-- **The ID is opaque to clients.** It's a string to them, even though it's time-ordered. Parsing timestamps out of IDs couples clients to the format.
+- **The ID is opaque to clients.** It's a string to them, even though it's time-ordered; parsing timestamps out of IDs couples clients to the format.
 - **Public IDs never change.** If an internal key has to change, the public one doesn't.
 - **Column names describe roles, not types:** `id`, `user_id`, `stripe_charge_xid` for external IDs. See [Database Naming Conventions](/docs/database/naming-conventions).
 

@@ -1,52 +1,60 @@
 +++
-title = "CI Pipelines"
-description = "Fast, trustworthy continuous integration: parallel jobs, cached dependencies, local parity with real services, least privilege, and pinned actions."
+title = "CI & Continuous Deployment"
+nav_title = "CI & Deployment"
+description = "Fast, trustworthy CI with parallel jobs and real services, then every merge to main deployed on its own, and what must be true before that is safe."
 category = "Delivery"
-order = 11
-tags = ["ci", "devops", "delivery", "github-actions"]
-aliases = ["ci-pipelines"]
+order = 1101
+tags = ["ci", "cd", "devops", "delivery", "github-actions", "deployment"]
+aliases = ["ci-pipelines", "delivery/continuous-deployment", "continuous-deployment"]
 +++
 
-Continuous integration is a promise: anything on `main` works. The pipeline is how you keep it, and it only keeps it if people trust it and don't wait on it. Both failures are behavioral, not technical. A slow pipeline teaches people to batch changes and context-switch while they wait. A flaky one teaches them that red doesn't mean broken, so they rerun until it's green, and one day the red is real.
+Continuous integration is a promise that anything on `main` works. Continuous deployment cashes it: every merge to `main` goes to production automatically, without a person pressing a button. That's the default I work toward on every team, and it only holds if people trust the pipeline and don't wait on it. Both failures are behavioral. A slow pipeline teaches people to batch changes; a flaky one teaches them that red doesn't mean broken, so they rerun until it's green, and one day the red is real.
 
 ## Fast
 
-- **Under 10 minutes,** from push to green. Past that, people stop waiting for it: they open the next change, stack work on an unverified base, and batch changes to avoid paying the wait twice. Batches are exactly what CI exists to prevent, because a failing batch takes longer to diagnose than the sum of its parts.
-- **Parallel jobs.** Lint, typecheck and test don't depend on each other, so they run side by side and the pipeline takes as long as the slowest one, not the sum.
-- **Parallel tests.** Test runners split files across workers. Keep tests independent (no shared state, no ordering) so they can run that way. See [Testing Strategy](/docs/engineering/testing).
-- **Fail fast.** Cheap checks first within a job, and cancel superseded runs: a new push to a pull request cancels the run for the old one.
+- **Under 10 minutes** from push to green. Past that, people open the next change, stack work on an unverified base, and batch changes to avoid paying the wait twice, which is exactly what CI exists to prevent.
+- **Parallel jobs.** Lint, typecheck and test don't depend on each other, so the pipeline takes as long as the slowest, not the sum. Test runners split files across workers too, as long as tests share no state.
+- **Fail fast.** Cheap checks first, and a new push cancels the run for the old one.
 
-### Parallelism Costs Setup
-
-Every parallel job installs dependencies on its own. Split a pipeline into three jobs without caching and you pay for the install three times, which can wipe out the gain. Measure before splitting: if the install is 27 seconds and the tests are 2, the install is the problem.
-
-- **Cache the dependency directory** (`node_modules`, not just the package manager's download cache). Caching downloads still leaves the install step; caching the installed directory skips it.
-- **Key the cache on what actually changes the result:** the lockfile and the runtime's major version. Keying on the exact patch version sounds safer but fragments the cache, because hosted runners resolve "Node 24" to different patch releases, and every miss pays the full install.
-- **Share setup in one place.** A reusable or composite action keeps every job's setup identical.
+Parallelism costs setup: every job installs dependencies on its own, so splitting into three jobs without caching pays for the install three times. Cache the installed directory (`node_modules`, not just the download cache), keyed on the lockfile and the runtime's *major* version; keying on the patch version fragments the cache, because hosted runners resolve "Node 24" to different patch releases. Put shared setup in one composite action.
 
 ## Trustworthy
 
-- **Deterministic.** Same commit, same result. No network calls to services you don't control, no clock or ordering dependencies. Every source of nondeterminism is a future flaky test, and every flaky test erodes the one thing the pipeline sells: that red means broken.
-- **Flaky tests are bugs.** Quarantine and fix them; never retry automatically to hide them. See [Testing Strategy](/docs/engineering/testing#flaky-tests).
-- **Real services, not mocks.** If production talks to Postgres or Redis, CI runs Postgres or Redis as service containers, the same images developers run locally from `compose.yml`. Mocks test your assumptions about a dependency; real services test the dependency. The bugs that matter live in the gap between the two: a query that works on the mock but not on the real engine, a script the real server rejects.
-- **Required checks.** Branch protection lists the checks that must pass before a merge. A check that isn't required eventually gets ignored.
+- **Deterministic.** Same commit, same result: no calls to services you don't control, no clock or ordering dependencies. [Flaky tests are bugs](/docs/engineering/testing#flaky-tests), quarantined and fixed, never retried to hide them.
+- **Real services, not mocks.** If production talks to Postgres or Redis, CI runs them as service containers, the same images developers run from `compose.yml`.
+- **Required checks.** Branch protection lists the checks that must pass. A check that isn't required eventually gets ignored.
 
 ## Secure
 
-- **Least privilege.** Workflows default to `permissions: contents: read` and request more per job, only when a step needs it.
-- **Pin third-party actions to a full commit SHA,** with the version in a comment. A tag is a pointer the action's owner (or whoever compromises them) can move. In March 2025 attackers did exactly that to `tj-actions/changed-files`, a widely used action: they [repointed its version tags](https://github.com/advisories/GHSA-mrrh-fwg8-r2c3) to a malicious commit that printed CI secrets into build logs. Workflows pinned to a SHA kept running the code they'd reviewed. See [Dependency Management](/docs/engineering/dependencies).
-- **No secrets in pull requests from forks.** A fork's pull request runs code anyone on the internet wrote. Triggers that run that code with your repository's secrets, like `pull_request_target` checking out the fork's branch, are the classic ["pwn request"](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/). Jobs that need secrets run only on trusted events.
-- **Secrets come from the platform's secret store,** scoped to the environment that needs them. See [Configuration & Secrets](/docs/operations/configuration).
+- **Least privilege.** Workflows default to `permissions: contents: read` and request more per job.
+- **Third-party actions pinned to a full commit SHA,** because a tag can be moved by whoever compromises its owner. See [Dependencies & Upgrades](/docs/engineering/dependencies#supply-chain).
+- **No secrets for fork pull requests.** A fork's PR runs code anyone wrote; `pull_request_target` checking out the fork's branch with your secrets is the classic ["pwn request"](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/). Jobs that need secrets run only on trusted events, with secrets scoped per [environment](/docs/operations/environments).
 
-## What CI Is Not
+## Delivery vs. Deployment
 
-CI tells you a change is safe to ship. It doesn't ship it. What happens after green is [Continuous Deployment](/docs/delivery/continuous-deployment).
+| | Continuous Delivery | Continuous Deployment |
+| --- | --- | --- |
+| Every green build is | Releasable | Released |
+| Getting to production | A person decides when | The merge decides |
+| Batch size | Whatever accumulated | One change |
+
+Continuous delivery is a real achievement, but the manual step quietly rebuilds what CI removed. Picture a weekly release: thirty pull requests from eight people go out Thursday afternoon, and error rates climb. Which one did it? The authors have moved on, and rolling back means rolling back all thirty, including the fix a customer was waiting for, so the team debugs forward under pressure. None of that happens when each change went out alone, minutes after merging, with its author still watching.
+
+One change per deploy means one place to look and a revert that undoes exactly one thing. Rollback is routine, so it gets used. There are no release trains or code freezes, and nothing can hide on `main` when `main` is production. The intuition that shipping more often breaks more is backwards: [DORA's research](https://dora.dev/guides/dora-metrics-four-keys/) found teams that deploy more frequently, with shorter lead times, also have lower change failure rates and recover faster.
+
+## Deploy Is Not Release
+
+Deploying puts code in production; releasing puts a feature in front of users. "This feature isn't ready" isn't an objection, because unready code can be in production as long as nobody can reach it: it ships dark behind a [feature flag](/docs/delivery/feature-flags) and rolls out progressively, and [schema changes stay backward compatible](/docs/database/zero-downtime-migrations) so each deploy works alongside the previous one.
+
+Continuous deployment is the result of good practice, not a substitute for it. Before turning it on you need: CI you trust; small pull requests on short-lived branches ([Commits, PRs & Code Review](/docs/engineering/commits-and-reviews)); a preview deployment of every change; [observability](/docs/operations/observability) that alerts on its own; and a one-step rollback that's been practiced.
+
+Some releases genuinely need a human gate: app store submissions ([Mobile Releases](/docs/delivery/mobile-releases)), software on customers' machines, regulated changes needing a recorded sign-off. You can't take those back quickly, or someone outside the team must approve. Use continuous delivery there, with the gate as thin as the rules allow. For a web service you run yourself, a manual gate mostly adds a person who can't tell a safe change from an unsafe one any better than the tests can.
 
 ## This Site
 
-[syntaqx.com's pipeline](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/ci.yml) runs lint, typecheck and test as parallel jobs. A composite setup action restores `node_modules` from a cache keyed on `.nvmrc` and the lockfile, so jobs skip `npm ci` when dependencies haven't changed. The test job starts the same Redis and REST proxy containers as `compose.yml`, every action is pinned to a SHA, and superseded runs are cancelled. A separate [weekly job](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/doc-links.yml) checks every source the playbook cites and opens an issue for any that have died, since a citation that 404s quietly weakens the doc that leans on it.
+[syntaqx.com's pipeline](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/ci.yml) runs lint, typecheck and test as parallel jobs. A composite setup action restores `node_modules` from a cache keyed on `.nvmrc` and the lockfile; the test job starts the same Redis containers as `compose.yml`; every action is pinned to a SHA. The numbers make the setup-cost point: the old serial job took about 57 seconds, 27 of them installing dependencies and 2 running tests. Parallel jobs alone would have paid that install three times; with the cache warm, the pipeline finishes in about 36. A [weekly job](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/doc-links.yml) checks every source the playbook cites and opens an issue for any that died.
 
-The numbers make the setup-cost point. The single serial job took about 57 seconds, of which installing dependencies was 27 and the tests themselves 2. Splitting into parallel jobs alone would have paid that install three times; with the cache warm, the parallel pipeline finishes in about 36.
+Every pull request gets a Vercel preview deployment. When CI is green it merges, and `main` deploys to production in about a minute, with no release step. Rollback is Vercel's instant rollback, or reverting the commit.
 
 ## References
 
@@ -57,10 +65,13 @@ The numbers make the setup-cost point. The single serial job took about 57 secon
 - [GitHub Actions: Concurrency](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs), cancelling superseded runs
 - [GitHub Actions: Creating a composite action](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action), shared setup across jobs
 - [GitHub: Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions), least privilege and SHA pinning
-- [GitHub Advisory: tj-actions/changed-files (GHSA-mrrh-fwg8-r2c3)](https://github.com/advisories/GHSA-mrrh-fwg8-r2c3), version tags repointed to a malicious commit
 - [GitHub Security Lab: Preventing pwn requests](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/), secrets and untrusted code from forks
+- [Vercel: Preview deployments](https://vercel.com/docs/deployments/preview-deployments), a deployment for every pull request
+- [Vercel: Instant rollback](https://vercel.com/docs/instant-rollback), one-step rollback to a previous deployment
 
 **In practice**
 
 - [Martin Fowler: Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html), integrate often, keep the build fast and green
-- [DORA: Four keys](https://dora.dev/guides/dora-metrics-four-keys/), lead time for changes and why pipeline speed matters
+- [Martin Fowler: Continuous Delivery](https://martinfowler.com/bliki/ContinuousDelivery.html), the distinction between delivery and deployment
+- [Jez Humble: Continuous Delivery](https://continuousdelivery.com/), principles and the case for small batches
+- [DORA: Four keys](https://dora.dev/guides/dora-metrics-four-keys/), deployment frequency, lead time, change failure rate and time to restore

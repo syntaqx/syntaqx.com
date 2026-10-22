@@ -2,12 +2,12 @@
 title = "Testing Strategy"
 description = "The test pyramid and why it has that shape, what each test type covers, real databases over mocks, deterministic fixtures, and zero tolerance for flaky tests."
 category = "Engineering Practice"
-order = 12.2
+order = 1004
 tags = ["testing", "quality", "process", "ci"]
 aliases = ["testing"]
 +++
 
-Tests exist so you can change code with confidence. A test suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
+Tests exist so you can change code with confidence, and everything downstream, from [code review](/docs/engineering/commits-and-reviews) to deploying every merge, leans on them. A suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
 
 ## The Pyramid
 
@@ -63,7 +63,7 @@ A mock encodes your belief about how a dependency behaves. When the belief is wr
 When one service calls another, each side's tests can pass while the integration breaks. Contract tests catch that.
 
 - **Consumer-driven:** the consumer records what it relies on (endpoints, fields, status codes), and the provider's CI verifies every consumer's contract. [Pact](https://docs.pact.io/) is the common tool.
-- **Schema-driven:** for public APIs, the OpenAPI document is the contract. CI fails on breaking changes to it, per [Versioning & Deprecation](/docs/operations/versioning).
+- **Schema-driven:** for public APIs, the OpenAPI document is the contract. CI fails on breaking changes to it, per [Versioning & Deprecation](/docs/api-design/versioning).
 - **Events too.** Event schemas between producers and consumers are contracts. See [Events & Async Messaging](/docs/architecture/events).
 
 ## Deterministic Fixtures
@@ -85,8 +85,7 @@ A flaky test is a failing test. The damage isn't the one false alarm; it's what 
 
 ## In CI
 
-- The full suite runs on every pull request and blocks the merge. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
-- Keep it under about 10 minutes. Parallelize before you start skipping.
+- The full suite runs on every pull request and blocks the merge, in under about 10 minutes. Parallelize before you start skipping. See [CI & Continuous Deployment](/docs/delivery/ci-pipelines).
 - Coverage is a signal for finding untested code, not a target to hit. Make it a target and people write tests that execute lines without asserting anything; 100% coverage of the wrong assertions proves nothing.
 
 ## This Site

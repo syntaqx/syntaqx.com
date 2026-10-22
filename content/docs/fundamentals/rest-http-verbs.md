@@ -2,14 +2,14 @@
 title = "REST & HTTP Verbs"
 description = "What GET, QUERY, POST, PUT, PATCH and DELETE promise to clients, caches and retries, and why breaking those promises causes real outages."
 category = "Fundamentals"
-order = -1
+order = 101
 tags = ["api", "rest", "http"]
 aliases = ["rest-http-verbs"]
 +++
 
 An HTTP method isn't a naming style. It's a promise, and software you don't control acts on it. Caches store the responses to `GET`. Browsers, link previewers and crawlers follow `GET` links on their own. HTTP clients and proxies retry idempotent requests after a dropped connection without asking you. If an endpoint's method lies about what it does, that machinery does the wrong thing on your behalf.
 
-That's the practical case for REST ([Fielding's dissertation](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) is the theory): resources have URLs, methods say what you're doing to them, and status codes say how it went. Everything else in this playbook builds on those promises.
+That's the practical case for REST ([Fielding's dissertation](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) is the theory): resources have URLs, methods say what you're doing to them, and status codes say how it went. The rest of the playbook builds on those promises.
 
 ## The Two Properties That Matter
 
@@ -26,11 +26,11 @@ That's the practical case for REST ([Fielding's dissertation](https://ics.uci.ed
 | `PATCH` | No | Only if the patch format makes it so | Yes |
 | `POST` | No | No | Yes |
 
-These come from [RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2) and [RFC 5789](https://datatracker.ietf.org/doc/html/rfc5789), but the reason to follow them is the table's last consequence: everything in the "No" column needs its own retry story ([Idempotency](/docs/payments/idempotency)), and everything in the "Yes" column gets one for free.
+The definitions come from [RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2) and [RFC 5789](https://datatracker.ietf.org/doc/html/rfc5789). The practical consequence: everything in the idempotent "No" column needs its own retry story ([Idempotency](/docs/payments/idempotency)), and everything in the "Yes" column gets one for free.
 
 ## GET: Read
 
-Retrieve a resource or a collection. It must never change anything, not even "harmless" things like marking a notification read. A `GET /emails/{id}/unsubscribe` link gets fired by mail scanners and link previewers before a human ever sees it.
+Retrieve a resource or a collection, and never change anything, not even "harmless" things like marking a notification read. A `GET /emails/{id}/unsubscribe` link gets fired by mail scanners and link previewers before a human ever sees it.
 
 ```http
 GET /users/01932c6c-7616-7590-a8db-cb4b0e4d1c8a
@@ -55,7 +55,7 @@ Collections return an array, even with one item. A client that has to check whet
 
 ## QUERY: Read With a Body
 
-A search whose criteria travel in the body: safe and idempotent like `GET`, defined by [RFC 10008](https://datatracker.ietf.org/doc/html/rfc10008). Use it when filters are too long, too structured, or too sensitive for a URL that ends up in logs.
+A search whose criteria travel in the body, safe and idempotent like `GET` ([RFC 10008](https://datatracker.ietf.org/doc/html/rfc10008)). Use it when filters are too long, too structured, or too sensitive for a URL that ends up in logs.
 
 ```http
 QUERY /users
@@ -82,9 +82,7 @@ HTTP/1.1 201 Created
 Location: /users/01932c6c-7616-7590-a8db-cb4b0e4d1c8a
 ```
 
-Return `201` with a `Location` pointing at the new resource, and the resource itself in the body so the client doesn't need a second request.
-
-Actions that aren't naturally a field update get their own sub-resource, still as a noun-like path:
+Return `201`, a `Location` for the new resource, and the resource itself in the body so the client doesn't need a second request. Actions that aren't naturally a field update get their own noun-like sub-resource:
 
 ```http
 POST /users/01932c6c-7616-7590-a8db-cb4b0e4d1c8a/password-resets
@@ -94,13 +92,13 @@ POST /users/01932c6c-7616-7590-a8db-cb4b0e4d1c8a/password-resets
 HTTP/1.1 202 Accepted
 ```
 
-`202` says the work was accepted, not finished. If the client needs to follow it, return a status resource ([Long-Running Operations](/docs/requests/long-running-operations)).
+`202` says the work was accepted, not finished; a client that needs to follow it gets a status resource ([Long-Running Operations](/docs/requests/long-running-operations)).
 
-`POST` is the one method nobody can safely retry blind. A timed-out `POST /payments` might have charged the card. That's why every `POST` accepts an `Idempotency-Key`.
+`POST` is the one method nobody can safely retry blind. A timed-out `POST /payments` might have charged the card, which is why every `POST` accepts an `Idempotency-Key`.
 
 ## PUT: Replace at a Known URL
 
-`PUT` replaces the whole resource at a URL the client already knows. Send it five times and the result is the same as once, which is exactly why it's retry-safe.
+`PUT` replaces the whole resource at a URL the client already knows. Send it five times and the result is the same as once, so it's retry-safe.
 
 ```http
 PUT /users/01932c6c-7616-7590-a8db-cb4b0e4d1c8a/preferences
@@ -136,21 +134,11 @@ DELETE /users/01932c6c-7616-7590-a8db-cb4b0e4d1c8a
 HTTP/1.1 204 No Content
 ```
 
-Deleting something that's already gone returns `204` again, not `404`. The scenario that decides it: a client sends `DELETE`, the connection drops, it retries. The first request did the work. If the retry returns `404`, the client reports a failure for a delete that succeeded. The state the client asked for, "this doesn't exist", is true, so say so.
+Deleting something that's already gone returns `204` again, not `404`. A client sends `DELETE`, the connection drops, and it retries; the first request did the work. A `404` on the retry reports a failure for a delete that succeeded. The state the client asked for, "this doesn't exist", is true, so say so.
 
-## Choosing
+## When No Method Fits
 
-| You want to... | Use |
-| -------------- | --- |
-| Read something by its URL | `GET` |
-| Search with criteria too big or sensitive for a URL | `QUERY` |
-| Create something the server names | `POST` to the collection |
-| Create or replace something at a known URL | `PUT` |
-| Change a few fields | `PATCH` (merge patch) |
-| Trigger a process | `POST` to an action sub-resource |
-| Remove something | `DELETE` |
-
-When none of them fits, that's usually a sign the resource is wrong, not the method. "Approve this invoice" isn't a missing verb; it's `POST /invoices/{id}/approvals`, a record that the approval happened.
+When none of the methods fits, it's usually a sign the resource is wrong, not the method. "Approve this invoice" isn't a missing verb; it's `POST /invoices/{id}/approvals`, a record that the approval happened.
 
 ## References
 

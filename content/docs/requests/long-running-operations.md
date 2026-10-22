@@ -2,18 +2,18 @@
 title = "Long-Running Operations"
 description = "Work that outlives a request: 202 Accepted with an operation resource to poll, Retry-After pacing, webhooks on completion, cancellation, and result retention."
 category = "Requests & Responses"
-order = 6.4
+order = 308
 tags = ["api", "async", "operations", "http"]
 aliases = ["long-running-operations"]
 +++
 
 Some work takes longer than a client should wait on an open connection: exports, imports, bulk jobs, anything that calls slow third parties. Holding the request open and hoping fails in predictable ways:
 
-- **Something in the middle gives up first.** Load balancers, proxies and serverless platforms all cap how long a request may run, usually well under the time a large export takes. The client gets a timeout while the work is still running.
-- **The client retries, and now the work runs twice.** A timeout doesn't say whether the work finished, so a reasonable client tries again and starts a second export, or a second import.
+- **Something in the middle gives up first.** Load balancers, proxies and serverless platforms cap how long a request may run, usually well under what a large export takes.
+- **The client retries, and the work runs twice.** A timeout doesn't say whether the work finished, so a reasonable client starts a second export.
 - **Nobody can see progress.** A spinning request is a black box until it ends.
 
-So accept the work, give it an address, and let the client check back. A good rule of thumb, and the one [Google AIP-151](https://google.aip.dev/151) uses, is that anything that can take more than about 10 seconds is long-running.
+So accept the work, give it an address, and let the client check back. [Google AIP-151](https://google.aip.dev/151)'s rule of thumb is a good one: anything that can take more than about 10 seconds is long-running. The work itself runs as a [background job](/docs/architecture/background-jobs); this is the API in front of it.
 
 ## Accepting the Work
 
@@ -58,11 +58,11 @@ The response body is the operation resource (below), so the client doesn't need 
 | `failed` | Done; `error` uses the standard [error format](/docs/requests/error-responses) |
 | `canceled` | Stopped at the client's request |
 
-The terminal states are terminal, the same rule as in [Payment States & Ledgers](/docs/payments/payment-states): a client that has seen `succeeded` never has to wonder whether it might change. Errors that stop the work from being accepted at all (validation, auth) are ordinary `4xx` responses to the original request, never a `failed` operation. Validate everything you can before returning `202`, so a client finds out about a typo in seconds instead of after polling a job that was doomed from the start.
+Terminal states are terminal, as in [Payment States & Ledgers](/docs/payments/payment-states): a client that has seen `succeeded` never wonders whether it might change. Errors that stop the work being accepted at all (validation, auth) are ordinary `4xx` responses to the original request, never a `failed` operation. Validate everything you can before returning `202`, so a typo surfaces in seconds, not after polling a job that was doomed from the start.
 
 ### Operation or Pending Resource?
 
-When the work produces a resource of its own, consider skipping the generic operation and creating that resource immediately in a pending state: `POST /exports` returns `201` with an export whose `status` is `running` and whose `file_url` fills in when it's done. The client then polls the thing it actually wants. A generic `/operations` resource earns its place when the work has no natural resource to hang off (a reindex, a bulk update across many resources), or when many kinds of jobs should share one polling and cancellation model.
+When the work produces a resource of its own, consider creating that resource immediately in a pending state instead: `POST /exports` returns `201` with an export whose `status` is `running` and whose `file_url` fills in when it's done, so the client polls the thing it actually wants. A generic `/operations` resource earns its place when the work has no natural resource (a reindex, a bulk update), or when many kinds of jobs should share one polling and cancellation model.
 
 ## Polling
 
@@ -70,9 +70,9 @@ When the work produces a resource of its own, consider skipping the generic oper
 GET /operations/019a0b70-1e2f-7a3b-8c4d-5e6f7a8b9c0d
 ```
 
-- While the operation is running, the response includes `Retry-After` with the suggested seconds until the next poll. Clients honor it.
-- Polls support `If-None-Match` and return `304` when nothing changed (see [Caching](/docs/requests/caching)), so polling is cheap.
-- On success, the response is `200` with the finished operation. The client follows `result_url` to fetch the result, which is a normal resource (an export file, a created object).
+- While the operation runs, responses include `Retry-After`, the suggested seconds until the next poll, and clients honor it.
+- Polls support `If-None-Match` and return `304` when nothing changed ([Caching](/docs/requests/caching)), so polling is cheap.
+- On success, the client follows `result_url` to the result, which is a normal resource.
 
 ## Webhooks on Completion
 
@@ -90,11 +90,11 @@ POST /operations/019a0b70-1e2f-7a3b-8c4d-5e6f7a8b9c0d/cancel
 
 ## Retention
 
-Completed operations and their results are kept for **30 days**, then expire. That's long enough for a client to come back after a weekend or an incident and still find its results, and short enough that exported files (which often contain customer data) don't accumulate forever; see [Data Retention & Deletion](/docs/architecture/data-retention). AIP-151 suggests the same window. A `GET` on an expired operation returns `404`. Results that need to live longer belong in a real resource, not an operation.
+Completed operations and their results are kept for **30 days**, the window AIP-151 suggests: long enough to come back after a weekend or an incident, short enough that exported files, which often contain customer data, don't accumulate forever ([Data Retention & Deletion](/docs/architecture/data-retention)). A `GET` on an expired operation returns `404`. Results that need to live longer belong in a real resource, not an operation.
 
 ## When Not to Use This
 
-If the work reliably finishes in a second or two, keep it synchronous. An async API costs every client a polling loop, a webhook handler or both, plus the states in between. Reach for operations when the work is slow, variable, or depends on systems you don't control, because those are the cases where a synchronous request eventually times out in production.
+If the work reliably finishes in a second or two, keep it synchronous. An async API costs every client a polling loop, a webhook handler or both. Reach for operations when the work is slow, variable, or depends on systems you don't control, the cases where a synchronous request eventually times out in production.
 
 ## References
 

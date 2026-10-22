@@ -3,33 +3,24 @@ title = "Kubernetes Operations"
 nav_title = "Kubernetes"
 description = "Running services on Kubernetes without the classic outages: requests and limits, probes, disruption budgets, graceful shutdown, secrets, GitOps and upgrades."
 category = "Operations"
-order = 5.995
+order = 1208
 tags = ["kubernetes", "operations", "reliability", "security", "gitops"]
 +++
 
-Kubernetes is a good platform with sharp defaults. Most of the outages I've seen on it weren't exotic: a liveness probe that restarted every pod when the database slowed down, a deploy that dropped requests because nothing waited for the load balancer, a node drain that took down every replica at once. Each one has a well-known fix. This page is those fixes, in the order you'll need them.
+Kubernetes is a good platform with sharp defaults. Most of the outages I've seen on it weren't exotic: a liveness probe that restarted every pod when the database slowed down, a deploy that dropped requests because nothing waited for the load balancer, a node drain that took down every replica at once. Each has a well-known fix, and these are those fixes, in the order you'll need them.
 
 ## When Not to Run It
 
-Start with the question most teams skip. Kubernetes is an operating system for a fleet: you get scheduling, self-healing, service discovery and a uniform deploy API, and you pay with a control plane to upgrade every few months, a networking and security model to learn, and at least one person who understands it deeply.
-
-That trade is worth it when you have many services, long-running workloads, specific hardware or network needs, or a platform team that can make it a product for everyone else. It's not worth it for a handful of stateless web services, where a managed container platform or serverless functions give you the same immutable deploys with none of the cluster. If you do adopt it, use a managed control plane (EKS, GKE, AKS); running your own etcd is rarely where your advantage is.
-
-The [container practices](/docs/delivery/containers) apply either way. Kubernetes is one place to run good images, not a substitute for them.
+Kubernetes is an operating system for a fleet: scheduling, self-healing, service discovery and a uniform deploy API, paid for with a control plane to upgrade every few months, a networking and security model to learn, and at least one person who understands it deeply. That's worth it for many services, long-running workloads, specific hardware or network needs, or a platform team that runs it as a product for everyone else. It isn't for a handful of stateless web services, where a managed container platform or serverless functions give the same immutable deploys with none of the cluster. If you adopt it, use a managed control plane (EKS, GKE, AKS); running your own etcd is rarely where your advantage is. Either way, it's one place to run good [container images](/docs/delivery/containers), not a substitute for them.
 
 ## Requests and Limits
 
-Every container should declare what it needs. These two numbers do different jobs, and confusing them causes most resource problems.
+The two numbers do different jobs, and confusing them causes most resource problems. **Requests** are a reservation: the scheduler places a pod only where that much capacity is unreserved, and the container can use more when the node has room. **Limits** are a ceiling: exceed the memory limit and the kernel OOM-kills the container; exceed the CPU limit and it's throttled, not killed, just slowed.
 
-- **Requests** are a reservation. The scheduler places a pod only on a node with that much unreserved capacity, and the kubelet guarantees it. A container can use more than its request when the node has room.
-- **Limits** are a ceiling. Exceed the memory limit and the kernel OOM-kills the container. Exceed the CPU limit and the container is throttled: not killed, just slowed.
-
-My defaults:
-
-- **Always set requests**, for CPU and memory, based on measured usage (p95 under normal load is a good start). Without them, the scheduler packs blind, autoscaling by utilization doesn't work, and noisy neighbors win.
-- **Set the memory limit equal to the memory request.** Memory isn't compressible: a container that bursts above its request can be killed when the node runs short, at a time you didn't choose. Equal values make memory behavior predictable, and an OOM kill points at your process rather than its neighbors.
-- **Be careful with CPU limits.** CPU limits are enforced as a quota per scheduling period, so a latency-sensitive service can be throttled in bursts even when its average usage is well under the limit and the node has idle cores. That shows up as unexplained p99 latency. Many teams set CPU requests and no CPU limits for latency-critical services, relying on requests for fair sharing. Keep limits where you need hard isolation (multi-tenant clusters, batch jobs that would otherwise starve everything else), and watch the throttling metric (`container_cpu_cfs_throttled_periods_total`) wherever you set them.
-- **Enforce defaults per namespace** with a LimitRange and ResourceQuota, so a manifest that forgets requests gets sane ones instead of none.
+- **Always set requests** for CPU and memory, from measured usage (p95 under normal load is a good start). Without them the scheduler packs blind, utilization autoscaling doesn't work, and noisy neighbors win.
+- **Memory limit equals memory request.** Memory isn't compressible: a container bursting above its request can be killed when the node runs short, at a time you didn't choose. Equal values make OOM kills predictable and point them at your own process.
+- **Be careful with CPU limits.** They're enforced as a quota per scheduling period, so a latency-sensitive service can be throttled in bursts while its average is well under the limit and the node has idle cores, which shows up as unexplained p99 latency. Many teams set CPU requests and no CPU limit for latency-critical services. Keep limits where you need hard isolation (multi-tenant clusters, batch jobs that would starve everything else) and watch `container_cpu_cfs_throttled_periods_total` wherever you set them.
+- **Enforce defaults per namespace** with a LimitRange and ResourceQuota, so a manifest that forgets requests gets sane ones.
 
 ## Probes, and the Classic Mistakes
 
@@ -43,10 +34,10 @@ Kubernetes has three probes, and each failure does something different:
 
 The mistakes are almost always in liveness:
 
-- **Checking dependencies in a liveness probe.** The probe calls the database; the database has a slow minute; every pod fails liveness and restarts at once; the restart storm reconnects to an already struggling database. You turned a slow dependency into a full outage. Liveness should check only the process itself: is the event loop responding, is a worker thread deadlocked. The Kubernetes docs say it plainly: liveness probes should indicate unrecoverable application failure, and getting them wrong leads to cascading failures.
-- **Using the same endpoint for liveness and readiness.** They answer different questions. Readiness can reasonably include "my critical dependency is reachable" (stop sending me traffic); liveness shouldn't (don't kill me for it).
-- **Aggressive timing on a slow starter.** A liveness probe with a 10-second budget on an app that takes 40 seconds to boot restarts it forever. Use a startup probe instead of inflating `initialDelaySeconds`.
-- **No readiness probe.** The pod gets traffic the moment the container starts, before it has loaded config or opened connections. Every deploy produces a burst of errors.
+- **Checking dependencies in a liveness probe.** The database has a slow minute, every pod fails liveness and restarts at once, and the restart storm reconnects to an already struggling database: a slow dependency became a full outage. Liveness checks only the process itself (is the event loop responding, is a worker deadlocked). The Kubernetes docs say liveness probes should indicate unrecoverable application failure, and that getting them wrong leads to cascading failures.
+- **One endpoint for liveness and readiness.** Readiness can reasonably include "my critical dependency is reachable" (stop sending me traffic); liveness shouldn't (don't kill me for it).
+- **Aggressive timing on a slow starter.** A 10-second liveness budget on an app that takes 40 seconds to boot restarts it forever. Use a startup probe, not a bigger `initialDelaySeconds`.
+- **No readiness probe.** The pod gets traffic before it has loaded config or opened connections, and every deploy produces a burst of errors.
 
 If you're unsure whether a liveness probe helps, leave it out. A missing liveness probe costs you a stuck pod that someone has to notice; a bad one costs you the fleet.
 
@@ -66,13 +57,9 @@ Workers need the same care: stop pulling new jobs, finish or release the current
 
 ## Rollouts and Disruptions
 
-A Deployment's rolling update replaces pods gradually, controlled by `maxSurge` and `maxUnavailable`. For a service with real traffic, `maxUnavailable: 0` with a surge of one or more keeps full capacity during the deploy, at the cost of temporary extra pods. Readiness probes are what make this safe: a new pod that never becomes ready stops the rollout instead of replacing healthy ones. The broader choice between rolling, blue-green and canary is in [Deployment Strategies](/docs/delivery/deployment-strategies).
+For a service with real traffic, a rolling update with `maxUnavailable: 0` and a surge of one or more keeps full capacity during the deploy. Readiness probes make it safe: a new pod that never becomes ready stops the rollout instead of replacing healthy ones. Rolling versus blue-green versus canary is [Deployment Strategies](/docs/delivery/deployment-strategies).
 
-**PodDisruptionBudgets** protect you from the other kind of termination: voluntary disruptions like node drains during cluster upgrades. A PDB says "at most one of these may be down at a time," and drains respect it by evicting slowly. Without one, a drain can evict every replica of a service at once, because they happened to be on the same node or the drain moved faster than the replacements started.
-
-Two things PDBs don't do: they don't protect against involuntary failures (a node dying), and they don't limit rolling updates, which are governed by the Deployment's own strategy. Pair PDBs with **topology spread constraints** so replicas land on different nodes and zones in the first place.
-
-Every service with more than one replica gets a PDB. Never set one that allows zero disruptions (`maxUnavailable: 0` on a PDB); it blocks node drains forever, and cluster upgrades stall until someone deletes it.
+**PodDisruptionBudgets** cover voluntary disruptions like node drains during upgrades. A PDB says "at most one of these may be down at a time", and drains respect it. Without one, a drain can evict every replica at once. PDBs don't protect against a node dying and don't limit rolling updates, so pair them with **topology spread constraints** that put replicas on different nodes and zones in the first place. Every service with more than one replica gets a PDB, and never one that allows zero disruptions: that blocks node drains forever, and cluster upgrades stall until someone deletes it.
 
 ## Autoscaling
 
@@ -80,7 +67,7 @@ The HorizontalPodAutoscaler adds and removes replicas based on a metric. For CPU
 
 CPU is a decent default signal for stateless services. Better signals are the ones tied to the work: requests per second per pod, queue depth for workers, or concurrency. Scale on what saturates first.
 
-Set `minReplicas` high enough to survive losing a zone and to absorb a burst while new pods start. Scaling up takes the time to schedule, pull and pass readiness, so a service that needs 60 seconds to become ready can't autoscale its way out of a spike that peaks in 30. Keep the scale-down stabilization window long enough that replicas don't flap.
+Set `minReplicas` high enough to survive losing a zone and to absorb a burst while new pods start: a service that needs 60 seconds to become ready can't autoscale out of a spike that peaks in 30. Keep the scale-down stabilization window long enough that replicas don't flap.
 
 ## Namespaces and RBAC
 
@@ -108,7 +95,7 @@ A Kubernetes Secret is base64-encoded, which is an encoding, not encryption. By 
 - **Enable encryption at rest** for Secrets in etcd. Managed providers support this with a KMS key; turn it on.
 - **Don't commit Secret manifests to Git**, even in a private repo. Keep the values in a real secret manager (Vault, AWS Secrets Manager, GCP Secret Manager) and sync them in with the External Secrets Operator or the Secrets Store CSI driver. The manifest in Git references the secret; it never contains it.
 - **Restrict who can read Secrets** with RBAC, and remember that "create pods" implies "read secrets" in that namespace.
-- **Rotate** as described in [Configuration & Secrets](/docs/operations/configuration). External stores make rotation a change in one place instead of a redeploy of every manifest.
+- **Rotate** per [Environments & Configuration](/docs/operations/environments); an external store makes rotation one change instead of a redeploy of every manifest.
 
 ## Image Policy
 
@@ -120,32 +107,19 @@ The build side, minimal base images, scanning, signing and SBOMs, is in [Contain
 
 Don't `kubectl apply` to production. Keep the desired state of every cluster in Git, and let an agent in the cluster (Argo CD or Flux) pull it and continuously reconcile the cluster to match. OpenGitOps names the four principles: declarative, versioned and immutable, pulled automatically, continuously reconciled.
 
-What you get:
-
-- **Every change is a commit**, reviewed and auditable, which is also the change-management evidence an auditor will ask for. [Infrastructure as Code](/docs/delivery/infrastructure-as-code) makes the same argument for the cloud resources around the cluster.
-- **Drift is detected and reverted.** A manual hotfix in the cluster shows up as out-of-sync, then gets overwritten by what Git says, which is exactly the pressure you want against unrecorded changes.
-- **Rollback is `git revert`.**
-- **CI doesn't need cluster credentials.** The pipeline builds an image and updates a manifest; the agent inside the cluster applies it. A compromised CI system can't write to production directly.
-
-Keep the application's source repo and the deployment config separate, or at least keep image tags updated by automation, so a deploy is a small, machine-made commit.
+Every change is a reviewed, auditable commit, which is also the change-management evidence an auditor asks for ([Infrastructure as Code](/docs/delivery/infrastructure-as-code) makes the same argument for the resources around the cluster). Drift is detected and overwritten by what Git says, exactly the pressure you want against unrecorded hotfixes. Rollback is `git revert`. And CI never needs cluster credentials: the pipeline builds an image and updates a manifest, and the agent inside the cluster applies it, so a compromised CI system can't write to production directly.
 
 ## Upgrades and Version Skew
 
-Kubernetes ships a minor release roughly three times a year and patches each for about a year, so you upgrade at least once a year, more realistically every release or two. Falling behind is the most common way clusters become unmaintainable: each skipped version adds removed APIs to deal with, and eventually the managed provider forces the upgrade on its schedule.
+Kubernetes ships a minor release roughly three times a year and patches each for about a year, so you upgrade at least yearly. Falling behind is the most common way clusters become unmaintainable: each skipped version adds removed APIs, and eventually the managed provider forces the upgrade on its schedule. The control plane goes first, one minor at a time; nodes may lag it by up to three minors and must never be newer. Before each upgrade, scan manifests and Helm charts for APIs removed in the target version (Pluto or kubent do this).
 
-The constraints:
-
-- **The control plane goes first, one minor version at a time.** The API server can't skip minors.
-- **Nodes can lag the control plane** by up to three minor versions, and must never be newer than it.
-- **Deprecated APIs get removed.** Before each upgrade, scan manifests and Helm charts for APIs removed in the target version (tools like Pluto or kubent do this), and fix them first.
-
-Treat upgrades as routine, scheduled work, the same posture as [Staying Current](/docs/delivery/staying-current): upgrade a non-production cluster first, run the workload's tests against it, then roll node pools with surge capacity and PDBs in place. Clusters you're afraid to upgrade are clusters you'll be forced to upgrade at a bad time.
+Treat upgrades as routine work, the posture of [Dependencies & Upgrades](/docs/engineering/dependencies): a non-production cluster first, the workload's tests against it, then node pools rolled with surge capacity and PDBs in place. Clusters you're afraid to upgrade are clusters you'll be forced to upgrade at a bad time.
 
 ## Observability and Cost
 
-Beyond your application's own [telemetry](/docs/operations/observability), watch the platform signals that predict outages: OOM kills and restart counts per container, CPU throttling, pods pending for lack of capacity, readiness failures during deploys, and node pressure conditions. Alert on symptoms tied to your [SLOs](/docs/operations/slos), and keep these as dashboards for diagnosis.
+Beyond your application's own [telemetry](/docs/operations/observability), dashboard the platform signals that predict outages: OOM kills and restarts per container, CPU throttling, pods pending for capacity, readiness failures during deploys, node pressure. Alert on [SLO](/docs/operations/slos) symptoms, not these.
 
-For [cost](/docs/operations/cost-and-finops), the waste is almost always the gap between requests and usage: every pod reserving twice what it uses means half your nodes are paid for and idle. Compare requests to actual usage per workload regularly, right-size, and let the cluster autoscaler remove the nodes that frees up. Label every workload with its owning team so the bill can be split.
+The [cost](/docs/operations/cost-and-finops) waste is almost always the gap between requests and usage: pods reserving twice what they use means half your nodes are paid for and idle. Compare requests to usage regularly, right-size, let the cluster autoscaler remove the freed nodes, and label every workload with its owning team.
 
 ## This Site
 

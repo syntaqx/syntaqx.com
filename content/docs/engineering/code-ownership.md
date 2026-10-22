@@ -2,11 +2,11 @@
 title = "Code Ownership"
 description = "Every service and directory has an owning team: CODEOWNERS for reviews, a catalog entry for operations, and a README that gets anyone running in one command."
 category = "Engineering Practice"
-order = 12.6
+order = 1003
 tags = ["ownership", "process", "documentation", "codeowners"]
 +++
 
-Code without an owner decays. Nobody upgrades its dependencies, nobody answers its alerts, and the first person to touch it in a year inherits every surprise. Ownership is cheap to write down and expensive to reconstruct, so it's written down from the first commit.
+Code without an owner decays. Nobody [upgrades its dependencies](/docs/engineering/dependencies), nobody answers its alerts, and the first person to touch it in a year inherits every surprise. Ownership is cheap to write down and expensive to reconstruct, so it's written down from the first commit, and it's what makes the review rules in [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews) enforceable.
 
 ## Every Path Has an Owner
 
@@ -53,7 +53,7 @@ An entry that's wrong is worse than none, so the catalog file lives next to the 
 
 ## What Every README Contains
 
-A README is the front door. Someone new should go from clone to running in minutes, without asking anyone.
+Someone new should go from clone to running in minutes, without asking anyone.
 
 1. **What it is,** in two sentences, and who owns it.
 2. **Run it locally, in one command,** with every dependency it needs (`docker compose up`, `npm run dev`). If it takes a wiki page, it's a bug.
@@ -68,8 +68,8 @@ Anything longer than a screen belongs in linked docs, not the README.
 Shared libraries are where ownership quietly disappears: everyone uses them, so nobody owns them.
 
 - **Shared code still has one owning team.** Other teams contribute through pull requests that the owner reviews.
-- **Prefer copying over premature sharing.** Two services with similar code can diverge freely; a shared library couples their release schedules, and every change now needs every consumer's agreement. Share once the third copy appears and the abstraction is obvious, not on the second.
-- **A shared library is a product.** It has versions, a changelog and a deprecation policy, like any API. See [Versioning & Deprecation](/docs/operations/versioning).
+- **Prefer copying over premature sharing.** Two services with similar code can diverge freely; a shared library couples their release schedules. Share once the third copy appears and the abstraction is obvious.
+- **A shared library is a product.** It has versions, a changelog and a deprecation policy, like any API. See [Versioning & Deprecation](/docs/api-design/versioning).
 
 ## Changing Owners
 
@@ -83,7 +83,7 @@ Code no team will accept is a candidate for deletion, not for a "shared" label. 
 
 ## This Site
 
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) has one owner, so a `CODEOWNERS` file would only list one name; review is enforced by required CI checks instead. Its README covers what the site is and who it belongs to, `npm run dev` to run it with nothing else required, `docker compose up -d` for the optional local Redis, the test commands, and a link to the ADR index. It also says that every merge to `main` deploys and how to roll back, which completes the checklist.
+[syntaqx.com](https://github.com/syntaqx/syntaqx.com) has one owner, so a `CODEOWNERS` file would list one name; required CI checks enforce review instead. Its README covers what the site is and who owns it, `npm run dev` with nothing else required, `docker compose up -d` for the optional local Redis, the test commands, the ADR index, and that every merge to `main` deploys and how to roll back.
 
 ## References
 

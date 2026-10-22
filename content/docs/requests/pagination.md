@@ -2,23 +2,23 @@
 title = "Pagination"
 description = "Cursor pagination by default, page numbers only for small stable lists, metadata in the Link header, and why offsets break on data that keeps changing."
 category = "Requests & Responses"
-order = 4
+order = 303
 tags = ["api", "pagination", "standards"]
 aliases = ["pagination"]
 +++
 
-Any list that can grow gets split into pages. The questions are how a client asks for the next page, where the navigation lives, and what happens when rows are added or deleted while someone is paging through. Most pagination bugs come from the last one.
+Any list that can grow gets split into pages. The questions are how a client asks for the next page, where the navigation lives, and what happens when rows change while someone is paging through. Most pagination bugs come from the last one.
 
 ## Navigation Lives in the Link Header
 
-The body of a list response is the list: an array, nothing else ([JSON Field Conventions](/docs/requests/json-conventions)). Where to go next lives in the `Link` header:
+The body of a list response is a bare array, with [no envelope](/docs/requests/json-conventions) to hold a cursor. Where to go next lives in the `Link` header, a standard every HTTP library already parses:
 
 ```http
 HTTP/1.1 200 OK
 Link: <https://api.syntaqx.com/payments?cursor=eyJpZCI6IjEyMyJ9&limit=25>; rel="next"
 ```
 
-Putting navigation in the body means wrapping the array in an object, with the items under a `data` key and the cursor beside them, and then every client has to unwrap every list. Headers keep the body a plain array and use a standard every HTTP library already parses. Clients follow the URL in `rel="next"` as-is and never build page URLs themselves, so the server can change the scheme without breaking anyone.
+Clients follow the URL in `rel="next"` as-is and never build page URLs themselves, so the server can change the scheme without breaking anyone.
 
 | Rel | Meaning |
 | --- | ------- |
@@ -46,11 +46,11 @@ GET /payments?cursor=eyJpZCI6IjEyMyJ9&limit=25
 
 A cursor encodes *where you are* (the sort values and `id` of the last item returned) instead of *how many to skip*. The next query is `WHERE (created_at, id) < (…) ORDER BY created_at DESC, id DESC LIMIT 25`, which an index answers at the same speed on any page, and inserts elsewhere in the list don't move the reader. The `id` tiebreaker matters: without it, two items with the same `created_at` can be skipped or repeated at a page boundary.
 
-The cost is real: a cursor can't jump to page 40, and it can't tell you how many pages there are. For APIs that's the right trade. Machine clients walk lists front to back, and correctness under change matters more than random access.
+The cost is real: a cursor can't jump to page 40 or say how many pages there are. For APIs that's the right trade, because machine clients walk lists front to back, and correctness under change matters more than random access.
 
 ### Cursors Are Opaque
 
-The example cursor happens to be base64-encoded JSON, but clients must treat it as an opaque string: never decode it, build it, or store it long term. That's what lets the server change what's inside (add a sort key, switch the index) without a breaking change. The server validates every cursor it receives, and one that's malformed, expired, or used with different filters than it was issued for returns `422` with the standard [error format](/docs/requests/error-responses).
+The example cursor happens to be base64-encoded JSON, but clients treat it as an opaque string: never decode it, build it, or store it long term. That lets the server change what's inside (add a sort key, switch the index) without a breaking change. The server validates every cursor, and one that's malformed, expired, or used with different filters than it was issued for returns `422` with the standard [error format](/docs/requests/error-responses).
 
 ## Page Numbers for Small, Stable Lists
 
@@ -74,7 +74,7 @@ If the list can grow without bound, or a client will walk all of it, use a curso
 | `limit` (cursor) | `25` | `100` |
 | `per_page` (page-based) | `25` | `100` |
 
-- **A ceiling on every list.** Without one, a single `?limit=1000000` is a denial of service against your own database. 100 keeps any one response small enough to be fast and cheap, while making a full walk only a handful of requests per thousand items.
+- **A ceiling on every list.** Without one, a single `?limit=1000000` is a denial of service against your own database. 100 keeps each response fast while a full walk stays at ten requests per thousand items.
 - **Over the maximum is a `422`, not a silent clamp.** A client that asked for 500 and quietly got 100 will believe it has everything.
 - **No total count by default.** `COUNT(*)` over a large, filtered table can cost more than the page itself, and the number is stale by the time the client reads it. Endpoints where a total is cheap and genuinely useful can document one.
 

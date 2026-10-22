@@ -2,24 +2,22 @@
 title = "Webhooks"
 description = "Signed, at-least-once webhook delivery: payload shape, signature verification, retry schedule, and how consumers should dedupe and process events."
 category = "Payments"
-order = 7.3
+order = 804
 tags = ["api", "webhooks", "events", "payments"]
 aliases = ["webhooks"]
 +++
 
-Webhooks tell a client that something happened without making it poll. In payments they're not optional: a bank transfer settles days later, a dispute arrives weeks later, and a customer finishes 3-D Secure in a browser tab the client never sees. Webhooks are how those facts reach the systems that need them.
-
-They're also an API you call, into servers you don't control, over a network that fails. Every rule below follows from that.
+The [state machine](/docs/payments/payment-states) changes long after the API call that started it: a bank transfer settles days later, a dispute arrives weeks later, and a customer finishes 3-D Secure in a browser tab the client never sees. Webhooks are how those transitions reach the systems that need them, without polling. They're also an API you call, into servers you don't control, over a network that fails, and every rule below follows from that.
 
 ## Delivery Guarantees
 
-- **At least once.** If a delivery times out, I can't know whether the receiver processed it, so I send it again. The same event can arrive more than once, and consumers dedupe by event ID. The alternative, at most once, means a dropped event is simply lost, and for "payment succeeded" that's an order that never ships.
-- **No ordering guarantee.** Retries, parallel delivery and network paths mean `payment.captured` can arrive before `payment.authorized`. Guaranteeing order would require sending one event at a time per receiver, so one slow event would block everything behind it. Consumers decide based on the object's state, not arrival order.
+- **At least once.** If a delivery times out, I can't know whether the receiver processed it, so I send it again, and consumers dedupe by event ID. At most once would mean a dropped event is simply lost, and for "payment succeeded" that's an order that never ships.
+- **No ordering guarantee.** Retries and parallel delivery mean `payment.captured` can arrive before `payment.authorized`. Guaranteeing order would mean one event at a time per receiver, so one slow event blocks everything behind it. Consumers decide based on the object's state, not arrival order.
 - **Retries until acknowledged,** or until the retry schedule runs out.
 
 ## Payload
 
-Each event carries a **snapshot** of the resource as it was when the event happened. The resource sits under its own name, never a generic `data` wrapper, consistent with [API Design Principles](/docs/api-design/principles#response-format). [GitHub's webhooks](https://docs.github.com/en/webhooks/webhook-events-and-payloads) are shaped the same way.
+Each event carries a **snapshot** of the resource as it was when the event happened. The resource sits under its own name, never a generic `data` wrapper, consistent with [API Design Principles](/docs/api-design/principles#bodies-carry-resources-headers-carry-metadata). [GitHub's webhooks](https://docs.github.com/en/webhooks/webhook-events-and-payloads) are shaped the same way.
 
 ```json
 {
@@ -37,7 +35,7 @@ Each event carries a **snapshot** of the resource as it was when the event happe
 ```
 
 - `type` is `resource.event`, past tense: `payment.captured`, `refund.failed`. Past tense because it's a fact, not a request; see [Events & Async Messaging](/docs/architecture/events).
-- The resource key matches the first part of `type`, and it's the same shape `GET /payments/{paymentId}` returns for the event's `api_version` ([Versioning & Deprecation](/docs/operations/versioning)). A consumer reuses its existing types instead of learning a second schema. Events are never changed after they're created.
+- The resource key matches the first part of `type`, and it's the same shape `GET /payments/{paymentId}` returns for the event's `api_version` ([Versioning & Deprecation](/docs/api-design/versioning)). A consumer reuses its existing types instead of learning a second schema. Events are never changed after they're created.
 - A snapshot can be stale by the time it's processed. If the current state matters, fetch it. That's the only safe answer when events arrive out of order.
 - New event types and new fields can be added at any time, so consumers ignore what they don't recognize.
 
@@ -55,7 +53,7 @@ The signed content is `{Webhook-Id}.{Webhook-Timestamp}.{raw body}`. Each retry 
 
 ### Verifying
 
-1. **Use the raw request body.** Parsing and re-serializing JSON can change whitespace or key order, and then a valid signature fails. Worse, it tempts people to disable verification "temporarily".
+1. **Use the raw request body.** Re-serialized JSON can change whitespace or key order and fail a valid signature, which tempts people to disable verification "temporarily".
 2. **Compare in constant time.** An ordinary string comparison returns as soon as a byte differs, and that timing difference is enough to guess a signature one byte at a time.
 3. **Reject timestamps more than 5 minutes from now.** The timestamp is inside the signature, so it can't be altered. Without a window, a captured request can be replayed forever. Five minutes tolerates realistic clock skew and queueing while keeping the replay window short. Keep the clock synced with NTP.
 4. **Accept any of several signatures.** When a secret is rolled, the old one stays valid for **24 hours** and every delivery is signed with both, so the receiver can deploy the new secret without a gap. 24 hours is enough because the receiver is one system its owner can redeploy in a day.
@@ -89,7 +87,7 @@ Failed deliveries retry with exponential backoff for **up to 3 days**:
 | 8 | 24 hours |
 | 9 | 24 hours |
 
-The shape matters. Early retries are close together because most failures are blips: a deploy, a restart. Later ones spread out so a receiver that's down isn't hammered while it recovers. Three days is long enough to survive an outage that starts Friday evening and gets fixed Monday morning, and short enough that an event isn't delivered so late it's useless. Stripe retries live events for up to three days as well.
+Early retries are close together because most failures are blips; later ones spread out so a receiver that's down isn't hammered while it recovers (the general case is in [Retries & Timeouts](/docs/architecture/retries-and-timeouts)). Three days survives an outage that starts Friday evening and gets fixed Monday morning, without delivering events so late they're useless. Stripe retries live events for up to three days as well.
 
 After the last attempt the event is marked failed, the account owner is notified when an endpoint keeps failing, and a disabled endpoint gets no further retries.
 
