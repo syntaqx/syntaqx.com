@@ -9,6 +9,8 @@ interface PageHeaderProps {
   /** Optional live illustration beside the title. */
   scene?: SceneName;
   sceneLabel?: string;
+  /** Hide the illustration on small screens, where it pushes content down. */
+  hideSceneOnMobile?: boolean;
 }
 
 export function PageHeader({
@@ -17,6 +19,7 @@ export function PageHeader({
   children,
   scene,
   sceneLabel,
+  hideSceneOnMobile = false,
 }: PageHeaderProps) {
   return (
     <header className="relative isolate mb-14 grid items-center gap-x-12 gap-y-8 border-b border-border pb-12 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
@@ -36,7 +39,7 @@ export function PageHeader({
       {scene && (
         <SceneArt
           scene={scene}
-          className="aspect-square max-w-88 justify-self-center md:justify-self-end"
+          className={`aspect-square max-w-88 justify-self-center md:justify-self-end ${hideSceneOnMobile ? "max-md:hidden" : ""}`}
           label={sceneLabel ?? ""}
         />
       )}
