@@ -36,7 +36,7 @@ describe("/openapi.json", () => {
       url: "https://www.syntaqx.com/contact",
       email: "syntaqx@gmail.com",
     });
-    expect(doc.info.description).toContain("https://www.syntaqx.com/docs/versioning");
+    expect(doc.info.description).toContain("https://www.syntaqx.com/docs/operations/versioning");
   });
 
   it("documents the Api-Version header on every operation", async () => {

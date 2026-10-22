@@ -55,7 +55,7 @@ export function generateOpenApiSpec(origin = "http://localhost:3000") {
       // The newest dated API version this document describes.
       version: versions[versions.length - 1],
       description:
-        "Public API for syntaqx.com. Pick a dated version with the Api-Version request header (without it, the oldest supported version is used). Breaking changes never ship in place; deprecations are announced with Deprecation and Sunset headers at least 30 days before removal. See https://www.syntaqx.com/docs/versioning.",
+        "Public API for syntaqx.com. Pick a dated version with the Api-Version request header (without it, the oldest supported version is used). Breaking changes never ship in place; deprecations are announced with Deprecation and Sunset headers at least 30 days before removal. See https://www.syntaqx.com/docs/operations/versioning.",
       contact: {
         name: "Chase Pierce",
         url: "https://www.syntaqx.com/contact",

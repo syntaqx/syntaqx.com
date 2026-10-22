@@ -14,11 +14,9 @@ export interface DocsIndexEntry {
 
 export interface DocsIndexCategory {
   name: string;
+  /** The section folder (/docs/<section>/...), used as the anchor. */
+  section: string;
   docs: DocsIndexEntry[];
-}
-
-function anchorFor(name: string): string {
-  return name.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 export function DocsIndex({ categories }: { categories: DocsIndexCategory[] }) {
@@ -65,7 +63,7 @@ export function DocsIndex({ categories }: { categories: DocsIndexCategory[] }) {
           {visible.map((c) => (
             <a
               key={c.name}
-              href={`#${anchorFor(c.name)}`}
+              href={`#${c.section}`}
               className="inst inline-flex items-center gap-2 border border-border px-2.5 py-1.5 text-muted transition-colors hover:border-accent hover:text-accent"
             >
               <span>{c.name}</span>
@@ -90,7 +88,7 @@ export function DocsIndex({ categories }: { categories: DocsIndexCategory[] }) {
 
       <div className="space-y-14">
         {visible.map((category) => (
-          <section key={category.name} id={anchorFor(category.name)} className="scroll-mt-24">
+          <section key={category.name} id={category.section} className="scroll-mt-24">
             <div className="mb-4 flex items-baseline justify-between gap-4">
               <h2 className="eyebrow">{category.name}</h2>
               <span className="inst text-dim">

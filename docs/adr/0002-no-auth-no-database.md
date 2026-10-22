@@ -16,7 +16,7 @@ Remove authentication, user identity, and the database entirely (`3e7cd3d`, 2026
 
 ## Consequences
 
-- No user data, so no privacy, retention or breach obligations for it. See [Sensitive Data](https://www.syntaqx.com/docs/sensitive-data) and [Data Retention & Deletion](https://www.syntaqx.com/docs/data-retention).
+- No user data, so no privacy, retention or breach obligations for it. See [Sensitive Data](https://www.syntaqx.com/docs/payments/sensitive-data) and [Data Retention & Deletion](https://www.syntaqx.com/docs/architecture/data-retention).
 - API endpoints must be stateless. Rate limiting is in-memory per instance and resets on deploy, which is acceptable at this scale.
 - Features that need state can't be added casually. [HTTP QUERY](0006-http-query-in-the-proxy.md) on `/hash` returns no stored-query `Location`, because there's nowhere to store one.
 - Practices the playbook documents (API keys, idempotency keys, webhooks) are described, not implemented here. The docs say so where it matters.

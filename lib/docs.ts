@@ -4,7 +4,12 @@ import path from "path";
 const docsDirectory = path.join(process.cwd(), "content/docs");
 
 export interface DocData {
+  /** Path under /docs, e.g. "payments/idempotency": the section folder, then the file. */
   slug: string;
+  /** The section folder ("payments"), or "" for a doc at the root. */
+  section: string;
+  /** Former slugs, permanently redirected to this doc. */
+  aliases: string[];
   title: string;
   description: string;
   category: string;
@@ -15,6 +20,8 @@ export interface DocData {
 
 export interface DocCategory {
   name: string;
+  /** The section folder, also the category's anchor on /docs. */
+  section: string;
   docs: DocData[];
 }
 
@@ -71,20 +78,30 @@ function parseTomlFrontmatter(fileContents: string): {
   return { data, content };
 }
 
+/** Every Markdown file under content/docs, as POSIX paths relative to it. */
+function docFiles(dir = docsDirectory): string[] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) return docFiles(full);
+    return entry.name.endsWith(".md")
+      ? [path.relative(docsDirectory, full).split(path.sep).join("/")]
+      : [];
+  });
+}
+
 export function getAllDocs(): DocData[] {
   if (!fs.existsSync(docsDirectory)) return [];
 
-  return fs
-    .readdirSync(docsDirectory)
-    .filter((f) => f.endsWith(".md"))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, "");
-      const fullPath = path.join(docsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, "utf8");
+  return docFiles()
+    .map((file) => {
+      const slug = file.replace(/\.md$/, "");
+      const fileContents = fs.readFileSync(path.join(docsDirectory, file), "utf8");
       const { data, content } = parseTomlFrontmatter(fileContents);
 
       return {
         slug,
+        section: slug.includes("/") ? slug.split("/")[0] : "",
+        aliases: (data.aliases as string[]) ?? [],
         title: (data.title as string) ?? slug,
         description: (data.description as string) ?? "",
         category: (data.category as string) ?? "General",
@@ -97,8 +114,7 @@ export function getAllDocs(): DocData[] {
 }
 
 export function getDocBySlug(slug: string): DocData | undefined {
-  const docs = getAllDocs();
-  return docs.find((d) => d.slug === slug);
+  return getAllDocs().find((d) => d.slug === slug);
 }
 
 export function getDocsByCategory(): DocCategory[] {
@@ -113,6 +129,7 @@ export function getDocsByCategory(): DocCategory[] {
 
   return Array.from(categoryMap.entries()).map(([name, docs]) => ({
     name,
+    section: docs[0].section || "start-here",
     docs,
   }));
 }

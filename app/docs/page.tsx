@@ -51,6 +51,7 @@ export default function DocsPage() {
         categories={[
           ...categories.map((c) => ({
             name: c.name,
+            section: c.section,
             docs: c.docs.map((d) => ({
               href: `/docs/${d.slug}`,
               title: d.title,
@@ -60,6 +61,7 @@ export default function DocsPage() {
           })),
           {
             name: "Reference",
+            section: "reference",
             docs: [
               {
                 href: "/docs/api",

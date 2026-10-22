@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-Why this site is built the way it is. Each record captures one significant decision: the context, what was decided, and what it costs. They follow [Design Docs & ADRs](https://www.syntaqx.com/docs/design-docs): numbered, about a page, and never edited once accepted. A changed decision gets a new record that supersedes the old one. Add an ADR in the same pull request as the change it describes.
+Why this site is built the way it is. Each record captures one significant decision: the context, what was decided, and what it costs. They follow [Design Docs & ADRs](https://www.syntaqx.com/docs/engineering/design-docs): numbered, about a page, and never edited once accepted. A changed decision gets a new record that supersedes the old one. Add an ADR in the same pull request as the change it describes.
 
 | # | Decision | Status | Date |
 | - | -------- | ------ | ---- |
@@ -15,3 +15,4 @@ Why this site is built the way it is. Each record captures one significant decis
 | [0009](0009-playbook-docs-enforced-in-ci.md) | Playbook docs as Markdown, checked in CI | Accepted | 2026-10-22 |
 | [0010](0010-datastores-allowed-no-user-identity.md) | Datastores are allowed; still no authentication or user identity | Accepted | 2026-10-22 |
 | [0011](0011-rate-limiting-in-upstash-redis.md) | Rate limiting in Upstash Redis, with memory and noop stores | Accepted | 2026-10-22 |
+| [0012](0012-docs-in-section-folders.md) | Docs grouped into section folders, with the section in the URL | Accepted | 2026-10-22 |

@@ -8,7 +8,7 @@ tags = ["architecture", "standards", "principles"]
 
 This is the playbook I bring to every team: the decisions I've already made, written down, so they don't have to be re-argued in every new codebase. None of it is novel. Most of it is a published standard (an RFC, a spec, a practice from Stripe, GitHub or Google) applied consistently. The value is in the consistency.
 
-Every doc states a default. Defaults can be overridden, but the override is a decision, and it gets written down ([Design Docs & ADRs](/docs/design-docs)). This site's own decisions are recorded as [ADRs](https://github.com/syntaqx/syntaqx.com/tree/main/docs/adr), and CI fails any doc here that drops its references, links to a doc that doesn't exist, or wraps JSON in an envelope.
+Every doc states a default. Defaults can be overridden, but the override is a decision, and it gets written down ([Design Docs & ADRs](/docs/engineering/design-docs)). This site's own decisions are recorded as [ADRs](https://github.com/syntaqx/syntaqx.com/tree/main/docs/adr), and CI fails any doc here that drops its references, links to a doc that doesn't exist, or wraps JSON in an envelope.
 
 ## Principles
 
@@ -27,22 +27,22 @@ These are the rules the rest of the playbook is built from.
 
 | Area | What it covers |
 | ---- | -------------- |
-| **Fundamentals** | [REST & HTTP Verbs](/docs/rest-http-verbs), [Time & Date Formats](/docs/time), [Identifier Conventions](/docs/identifier-conventions) |
-| **API Design** | [Principles](/docs/api-design-principles), [Naming](/docs/naming-conventions), [Relationships](/docs/resource-relationships), [Authentication](/docs/api-authentication) |
-| **Requests & Responses** | [Errors](/docs/error-responses), [JSON Fields](/docs/json-conventions), [Pagination](/docs/pagination), [Filtering & Sorting](/docs/filtering-and-sorting), [HTTP QUERY](/docs/http-query), [Expanding](/docs/expanding-responses), [Caching](/docs/caching), [Long-Running Operations](/docs/long-running-operations), [Bulk Operations](/docs/bulk-operations) |
-| **Operations** | [Rate Limiting](/docs/rate-limiting), [Versioning](/docs/versioning), [Retries & Timeouts](/docs/retries-and-timeouts), [Observability](/docs/observability), [SLOs](/docs/slos), [On-Call](/docs/on-call), [Configuration & Secrets](/docs/configuration) |
-| **Payments** | [Money](/docs/money), [Idempotency](/docs/idempotency), [Payment States & Ledgers](/docs/payment-states), [Webhooks](/docs/webhooks), [Sensitive Data](/docs/sensitive-data) |
-| **Architecture** | [Service Boundaries](/docs/service-boundaries), [Events](/docs/events), [Multi-Tenancy](/docs/multi-tenancy), [Data Retention](/docs/data-retention) |
-| **Database** | [Naming](/docs/database-naming-conventions), [Zero-Downtime Migrations](/docs/zero-downtime-migrations) |
-| **Delivery** | [CI Pipelines](/docs/ci-pipelines), [Continuous Deployment](/docs/continuous-deployment) |
-| **Engineering Practice** | [Design Docs & ADRs](/docs/design-docs), [Commits & Review](/docs/commits-and-reviews), [Testing](/docs/testing), [Feature Flags](/docs/feature-flags), [Dependencies](/docs/dependencies), [Postmortems](/docs/postmortems) |
+| **Fundamentals** | [REST & HTTP Verbs](/docs/fundamentals/rest-http-verbs), [Time & Date Formats](/docs/fundamentals/time), [Identifier Conventions](/docs/fundamentals/identifier-conventions) |
+| **API Design** | [Principles](/docs/api-design/principles), [Naming](/docs/api-design/naming-conventions), [Relationships](/docs/api-design/resource-relationships), [Authentication](/docs/api-design/authentication) |
+| **Requests & Responses** | [Errors](/docs/requests/error-responses), [JSON Fields](/docs/requests/json-conventions), [Pagination](/docs/requests/pagination), [Filtering & Sorting](/docs/requests/filtering-and-sorting), [HTTP QUERY](/docs/requests/http-query), [Expanding](/docs/requests/expanding-responses), [Caching](/docs/requests/caching), [Long-Running Operations](/docs/requests/long-running-operations), [Bulk Operations](/docs/requests/bulk-operations) |
+| **Operations** | [Rate Limiting](/docs/operations/rate-limiting), [Versioning](/docs/operations/versioning), [Retries & Timeouts](/docs/operations/retries-and-timeouts), [Observability](/docs/operations/observability), [SLOs](/docs/operations/slos), [On-Call](/docs/operations/on-call), [Configuration & Secrets](/docs/operations/configuration) |
+| **Payments** | [Money](/docs/payments/money), [Idempotency](/docs/payments/idempotency), [Payment States & Ledgers](/docs/payments/payment-states), [Webhooks](/docs/payments/webhooks), [Sensitive Data](/docs/payments/sensitive-data) |
+| **Architecture** | [Service Boundaries](/docs/architecture/service-boundaries), [Events](/docs/architecture/events), [Multi-Tenancy](/docs/architecture/multi-tenancy), [Data Retention](/docs/architecture/data-retention) |
+| **Database** | [Naming](/docs/database/naming-conventions), [Zero-Downtime Migrations](/docs/database/zero-downtime-migrations) |
+| **Delivery** | [CI Pipelines](/docs/delivery/ci-pipelines), [Continuous Deployment](/docs/delivery/continuous-deployment) |
+| **Engineering Practice** | [Design Docs & ADRs](/docs/engineering/design-docs), [Commits & Review](/docs/engineering/commits-and-reviews), [Testing](/docs/engineering/testing), [Feature Flags](/docs/engineering/feature-flags), [Dependencies](/docs/engineering/dependencies), [Postmortems](/docs/engineering/postmortems) |
 
 ## Where to Start
 
-- **Designing an API?** [API Design Principles](/docs/api-design-principles), then [Errors](/docs/error-responses), [Pagination](/docs/pagination) and [Versioning](/docs/versioning).
-- **Moving money?** [Money](/docs/money) and [Idempotency](/docs/idempotency) before writing a line of code.
-- **Splitting a system?** [Service Boundaries](/docs/service-boundaries) and [Events](/docs/events).
-- **Running it in production?** [Observability](/docs/observability), [SLOs](/docs/slos) and [Postmortems](/docs/postmortems).
+- **Designing an API?** [API Design Principles](/docs/api-design/principles), then [Errors](/docs/requests/error-responses), [Pagination](/docs/requests/pagination) and [Versioning](/docs/operations/versioning).
+- **Moving money?** [Money](/docs/payments/money) and [Idempotency](/docs/payments/idempotency) before writing a line of code.
+- **Splitting a system?** [Service Boundaries](/docs/architecture/service-boundaries) and [Events](/docs/architecture/events).
+- **Running it in production?** [Observability](/docs/operations/observability), [SLOs](/docs/operations/slos) and [Postmortems](/docs/engineering/postmortems).
 
 ## References
 

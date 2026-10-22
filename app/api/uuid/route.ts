@@ -17,7 +17,7 @@ registry.registerPath({
   operationId: "generateUuids",
   summary: "Generate UUIDs",
   description:
-    "Generate one or more UUIDs. Returns an array of UUID v7s by default (sortable, per https://www.syntaqx.com/docs/identifier-conventions), or v4 with `?version=4`. Use `?count=N` (max 100) to control how many.",
+    "Generate one or more UUIDs. Returns an array of UUID v7s by default (sortable, per https://www.syntaqx.com/docs/fundamentals/identifier-conventions), or v4 with `?version=4`. Use `?count=N` (max 100) to control how many.",
   tags: ["Utilities"],
   request: {
     query: z.object({

@@ -4,7 +4,7 @@ Status: Accepted (2026-10-22)
 
 ## Context
 
-[Rate Limiting](https://www.syntaqx.com/docs/rate-limiting) promises 5,000 requests per hour per IP. The limiter kept its counts in memory, so each serverless instance had its own count, and the real limit was 5,000 times however many instances were warm. [0010](0010-datastores-allowed-no-user-identity.md) allows a datastore for this.
+[Rate Limiting](https://www.syntaqx.com/docs/operations/rate-limiting) promises 5,000 requests per hour per IP. The limiter kept its counts in memory, so each serverless instance had its own count, and the real limit was 5,000 times however many instances were warm. [0010](0010-datastores-allowed-no-user-identity.md) allows a datastore for this.
 
 Options considered:
 

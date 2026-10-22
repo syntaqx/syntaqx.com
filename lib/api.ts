@@ -38,7 +38,7 @@ export function json<T>(data: T, init?: ResponseInit): Response {
   return Response.json(data, { ...init, headers });
 }
 
-/** Cache-Control values from /docs/caching. */
+/** Cache-Control values from /docs/requests/caching. */
 export const CACHE = {
   /** Per-client or changing data: revalidate with the ETag before reuse. */
   revalidate: "private, no-cache",
@@ -60,7 +60,7 @@ function etagMatches(ifNoneMatch: string | null, etag: string): boolean {
 
 /**
  * JSON with a strong ETag (a hash of the body) and Cache-Control. A matching
- * If-None-Match gets an empty 304, per /docs/caching.
+ * If-None-Match gets an empty 304, per /docs/requests/caching.
  */
 export async function cacheableJson(
   request: Request,
@@ -188,7 +188,7 @@ export function rateLimit(key: string): RateLimitResult {
 }
 
 // ---------------------------------------------------------------------------
-// API versioning (see content/docs/versioning.md)
+// API versioning (see content/docs/operations/versioning.md)
 // ---------------------------------------------------------------------------
 
 export interface ApiVersion {
@@ -202,7 +202,7 @@ export interface ApiVersion {
 /** Every dated version, oldest first. */
 export const API_VERSIONS: ApiVersion[] = [{ version: "2026-10-22" }];
 
-const VERSION_POLICY_URL = "https://www.syntaqx.com/docs/versioning";
+const VERSION_POLICY_URL = "https://www.syntaqx.com/docs/operations/versioning";
 
 export type ApiVersionResult =
   | { ok: true; version: string; headers: Record<string, string> }

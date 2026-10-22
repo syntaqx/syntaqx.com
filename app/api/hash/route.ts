@@ -58,7 +58,7 @@ registry.registerPath({
   operationId: "hashString",
   summary: "Hash a string",
   description:
-    "Compute a cryptographic hash of the provided input. Supported algorithms: MD5, SHA-1, SHA-256, SHA-384, SHA-512. Hashing is a safe, read-only operation, so prefer the QUERY method on this path; POST with `X-HTTP-Method-Override: QUERY` is the fallback for clients that can't send QUERY. See https://www.syntaqx.com/docs/http-query.",
+    "Compute a cryptographic hash of the provided input. Supported algorithms: MD5, SHA-1, SHA-256, SHA-384, SHA-512. Hashing is a safe, read-only operation, so prefer the QUERY method on this path; POST with `X-HTTP-Method-Override: QUERY` is the fallback for clients that can't send QUERY. See https://www.syntaqx.com/docs/requests/http-query.",
   tags: ["Utilities"],
   request: {
     headers: z.object({
@@ -83,7 +83,7 @@ registry.registerPath({
   operationId: "queryHash",
   summary: "Hash a string with QUERY",
   description:
-    "The same hash as POST /hash, sent with the HTTP QUERY method (RFC 10008): safe, idempotent and cacheable. A digest never changes for the same input, so successful responses are `immutable`. Query content is limited to 64 KB. See https://www.syntaqx.com/docs/http-query.",
+    "The same hash as POST /hash, sent with the HTTP QUERY method (RFC 10008): safe, idempotent and cacheable. A digest never changes for the same input, so successful responses are `immutable`. Query content is limited to 64 KB. See https://www.syntaqx.com/docs/requests/http-query.",
   tags: ["Utilities"],
   request: { body: hashBody },
   responses: {

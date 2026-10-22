@@ -1,5 +1,6 @@
 import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
+import { docRedirects } from "./lib/doc-redirects";
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -27,7 +28,7 @@ const wantsMarkdown = {
 };
 
 export const markdownRewrites = {
-  beforeFiles: ["/", "/posts", "/posts/:slug", "/docs", "/docs/:slug", "/contact"].map(
+  beforeFiles: ["/", "/posts", "/posts/:slug", "/docs", "/docs/:path*", "/contact"].map(
     (source) => ({
       source,
       destination: source === "/" ? "/md" : `/md${source}`,
@@ -52,6 +53,7 @@ const nextConfig: NextConfig = {
     },
   ],
   rewrites: async () => markdownRewrites,
+  redirects: async () => docRedirects(),
   // The Markdown route reads content/ at request time.
   outputFileTracingIncludes: {
     "/md/[[...path]]": ["./content/**/*"],
