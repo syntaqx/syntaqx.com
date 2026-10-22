@@ -74,11 +74,12 @@ export async function cacheableJson(
   request: Request,
   data: unknown,
   cacheControl: string,
+  extraHeaders: Record<string, string> = {},
 ): Promise<Response> {
   const body = new TextEncoder().encode(JSON.stringify(data));
   const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", body));
   const etag = `"${Array.from(digest.slice(0, 16), (b) => b.toString(16).padStart(2, "0")).join("")}"`;
-  const headers = { ETag: etag, "Cache-Control": cacheControl };
+  const headers = { ...extraHeaders, ETag: etag, "Cache-Control": cacheControl };
 
   const ifNoneMatch =
     request.headers.get("if-none-match") ?? request.headers.get(FORWARDED_IF_NONE_MATCH);

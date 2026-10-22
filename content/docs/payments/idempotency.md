@@ -97,6 +97,21 @@ Exactly-once delivery doesn't exist across a network. At-least-once delivery plu
 4. On `400` for a key mismatch, you've reused a key for a different operation. Fix the client.
 5. To change the parameters, first confirm the original didn't succeed and isn't still running, then use a new key.
 
+## This Site
+
+The syntaqx API's `POST /echo` exists to show this working. Every call creates a new echo with its own `id` and timestamp, so without a key, two identical requests make two echoes:
+
+```bash
+curl -X POST https://api.syntaqx.com/echo \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: f47ac10b-58cc-4372-a567-0e02b2c3d479" \
+  -d '{"hello": "world"}'
+```
+
+Run it twice and the second response is the first one again, byte for byte, with `Idempotent-Replayed: true`. Change the body and keep the key, and it's a `400`. Keys live in Redis for 24 hours, scoped to the caller's IP since the API has no accounts, and a claim is a single `SET NX`, so two simultaneous first requests can't both run.
+
+The echo exists only in its stored response, so recording the key and the side effect is one write, the property this doc asks for. And unlike the [rate limiter](/docs/operations/rate-limiting), which keeps serving when Redis is down, this fails closed: if the key store is unreachable, the request gets a `503` and nothing is created, because running a write without its protection is exactly what the key exists to prevent.
+
 ## References
 
 **Specifications**

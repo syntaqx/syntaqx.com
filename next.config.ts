@@ -87,6 +87,8 @@ const nextConfig: NextConfig = {
   // The Markdown route reads content/ at request time.
   outputFileTracingIncludes: {
     "/md/[[...path]]": ["./content/**/*"],
+    "/api/docs": ["./content/docs/**/*"],
+    "/api/docs/[...slug]": ["./content/docs/**/*"],
   },
 };
 

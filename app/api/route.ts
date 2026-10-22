@@ -14,6 +14,8 @@ export function GET() {
       flaky_url: `${baseUrl}/flaky`,
       random_url: `${baseUrl}/random`,
       useragent_url: `${baseUrl}/useragent`,
+      docs_url: `${baseUrl}/docs`,
+      echo_url: `${baseUrl}/echo`,
       openapi_url: `${baseUrl}/openapi`,
     },
     {
