@@ -101,6 +101,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
         title="Documentation"
         scene="spec"
         sceneLabel="A spec sheet lifted off its index, with one teal row highlighted"
+        hideSceneOnMobile
       >
         {intro}
         <label className="mt-7 flex items-center gap-3 border border-border bg-background/80 px-3.5 py-3 backdrop-blur-sm transition-colors focus-within:border-accent/60">
