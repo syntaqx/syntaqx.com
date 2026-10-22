@@ -14,6 +14,8 @@ const h2s = (content: string) => [...content.matchAll(/^## (.+)$/gm)].map((m) =>
 describe("playbook docs", () => {
   it.each(docs.map((d) => [d.slug, d] as const))("%s has complete frontmatter", (_, doc) => {
     expect(doc.title).toBeTruthy();
+    // Sidebars are narrow: anything longer wraps. Set a shorter nav_title.
+    expect(doc.navTitle.length, `nav label "${doc.navTitle}"`).toBeLessThanOrEqual(30);
     expect(doc.category).not.toBe("General");
     expect(doc.order).not.toBe(99);
     expect(doc.tags.length).toBeGreaterThan(0);

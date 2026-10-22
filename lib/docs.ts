@@ -6,6 +6,8 @@ const docsDirectory = path.join(process.cwd(), "content/docs");
 export interface DocData {
   /** Path under /docs, e.g. "payments/idempotency": the section folder, then the file. */
   slug: string;
+  /** Short label for sidebars: frontmatter `nav_title`, or the title. */
+  navTitle: string;
   /** The section folder ("payments"), or "" for a doc at the root. */
   section: string;
   /** Former slugs, permanently redirected to this doc. */
@@ -103,6 +105,7 @@ export function getAllDocs(): DocData[] {
         section: slug.includes("/") ? slug.split("/")[0] : "",
         aliases: (data.aliases as string[]) ?? [],
         title: (data.title as string) ?? slug,
+        navTitle: (data.nav_title as string) ?? (data.title as string) ?? slug,
         description: (data.description as string) ?? "",
         category: (data.category as string) ?? "General",
         order: (data.order as number) ?? 99,

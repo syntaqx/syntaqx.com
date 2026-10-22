@@ -8,6 +8,8 @@ import { PageHeader } from "@/components/page-header";
 export interface DocsIndexEntry {
   href: string;
   title: string;
+  /** Short label for the section rail. */
+  navTitle: string;
   description: string;
   tags: string[];
 }
@@ -234,7 +236,7 @@ function SectionRail({
                         href={doc.href}
                         className="-ml-px block border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim transition-colors hover:border-border-hover hover:text-foreground"
                       >
-                        {doc.title}
+                        {doc.navTitle}
                       </Link>
                     </li>
                   ))}

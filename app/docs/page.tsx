@@ -47,6 +47,7 @@ export default function DocsPage() {
             docs: c.docs.map((d) => ({
               href: `/docs/${d.slug}`,
               title: d.title,
+              navTitle: d.navTitle,
               description: d.description,
               tags: d.tags,
             })),
@@ -58,6 +59,7 @@ export default function DocsPage() {
               {
                 href: "/docs/api",
                 title: "API Reference",
+                navTitle: "API Reference",
                 description:
                   "Interactive reference for the syntaqx API, generated from its OpenAPI description, with a live console to send requests and inspect responses.",
                 tags: ["api", "openapi", "reference"],
