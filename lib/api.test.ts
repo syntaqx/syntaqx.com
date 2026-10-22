@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { json, errorResponse, resolveApiVersion, API_VERSIONS } from "./api";
+import { json, errorResponse, invalidField, resolveApiVersion, API_VERSIONS } from "./api";
 
 describe("json()", () => {
   it("attaches an Request-Id header when none is provided", () => {
@@ -54,6 +54,17 @@ describe("errorResponse()", () => {
       headers: { "Request-Id": "trace-xyz" },
     });
     expect(res.headers.get("Request-Id")).toBe("trace-xyz");
+  });
+});
+
+describe("invalidField()", () => {
+  it("returns a 422 with field-level errors", async () => {
+    const res = invalidField("count", "count must be an integer between 1 and 100.");
+    expect(res.status).toBe(422);
+    expect(await res.json()).toEqual({
+      message: "count must be an integer between 1 and 100.",
+      errors: { count: ["count must be an integer between 1 and 100."] },
+    });
   });
 });
 

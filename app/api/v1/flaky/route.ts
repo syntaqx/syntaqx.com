@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse } from "@/lib/api";
+import { json, errorResponse, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -65,6 +65,14 @@ registry.registerPath({
         },
       },
     },
+    422: {
+      description: "Invalid parameters",
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/Error" },
+        },
+      },
+    },
     429: {
       description: "Rate limited",
       content: {
@@ -106,15 +114,15 @@ export async function GET(request: NextRequest) {
   const rawRate = searchParams.get("rate");
   const rate = rawRate !== null ? parseFloat(rawRate) : 50;
   if (isNaN(rate) || rate < 0 || rate > 100) {
-    return errorResponse(400, "rate must be a number between 0 and 100.");
+    return invalidField("rate", "rate must be a number between 0 and 100.");
   }
 
   // Failure status code
   const rawStatus = searchParams.get("status");
   const failStatus = rawStatus !== null ? parseInt(rawStatus, 10) : 500;
   if (isNaN(failStatus) || failStatus < 400 || failStatus > 599) {
-    return errorResponse(
-      400,
+    return invalidField(
+      "status",
       "status must be an integer between 400 and 599.",
     );
   }
@@ -123,8 +131,8 @@ export async function GET(request: NextRequest) {
   const rawDelay = searchParams.get("delay");
   const maxDelay = rawDelay !== null ? parseInt(rawDelay, 10) : 0;
   if (isNaN(maxDelay) || maxDelay < 0 || maxDelay > 10000) {
-    return errorResponse(
-      400,
+    return invalidField(
+      "delay",
       "delay must be an integer between 0 and 10000.",
     );
   }

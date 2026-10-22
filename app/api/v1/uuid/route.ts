@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse } from "@/lib/api";
+import { json, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -35,7 +35,7 @@ registry.registerPath({
         },
       },
     },
-    400: {
+    422: {
       description: "Invalid parameters",
       content: {
         "application/json": {
@@ -64,7 +64,7 @@ export function GET(request: NextRequest) {
   const count = rawCount ? parseInt(rawCount, 10) : 1;
 
   if (isNaN(count) || count < 1 || count > 100) {
-    return errorResponse(400, "count must be an integer between 1 and 100.");
+    return invalidField("count", "count must be an integer between 1 and 100.");
   }
 
   const uuids = Array.from({ length: count }, () => crypto.randomUUID());

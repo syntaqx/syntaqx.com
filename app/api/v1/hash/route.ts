@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse } from "@/lib/api";
+import { json, errorResponse, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -59,6 +59,14 @@ registry.registerPath({
       content: { "application/json": { schema: HashResponse } },
     },
     400: {
+      description: "Malformed JSON",
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/Error" },
+        },
+      },
+    },
+    422: {
       description: "Invalid input",
       content: {
         "application/json": {
@@ -173,7 +181,7 @@ export async function POST(request: NextRequest) {
 
   const parsed = HashRequest.safeParse(body);
   if (!parsed.success) {
-    return errorResponse(400, "Invalid request body.", {
+    return errorResponse(422, "The given data was invalid.", {
       errors: Object.fromEntries(
         parsed.error.issues.map((i) => [i.path.join("."), [i.message]]),
       ),
@@ -183,7 +191,7 @@ export async function POST(request: NextRequest) {
   const { input, algorithm } = parsed.data;
 
   if (input.length > MAX_INPUT_LENGTH) {
-    return errorResponse(400, "input must not exceed 1 MB.");
+    return invalidField("input", "input must not exceed 1 MB.");
   }
 
   let digest: string;

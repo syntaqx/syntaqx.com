@@ -93,21 +93,6 @@ export async function handleQuery(
     new NextRequest(request.url, { method: "POST", headers: request.headers, body }),
   );
 
-  // RFC 10008: well-formed content holding a query that can't run is a 422.
-  // Handlers report field-level failures as 400 with `errors` (the legacy
-  // POST contract), so QUERY surfaces those as 422; malformed JSON stays 400.
-  let status = response.status;
-  let responseBody: BodyInit | null = response.body;
-  if (status === 400) {
-    const text = await response.text();
-    responseBody = text;
-    try {
-      if ((JSON.parse(text) as { errors?: unknown }).errors) status = 422;
-    } catch {
-      // Not JSON; leave it as a 400.
-    }
-  }
-
   const headers = new Headers(response.headers);
   // Intermediaries see an overridden request as a POST, so only the native
   // method's response is offered to caches.
@@ -115,5 +100,5 @@ export async function handleQuery(
     "Cache-Control",
     kind === "native" && response.ok ? route.cacheControl : "private, no-store",
   );
-  return new Response(responseBody, { status, headers });
+  return new Response(response.body, { status: response.status, headers });
 }

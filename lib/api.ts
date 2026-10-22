@@ -38,6 +38,11 @@ export function json<T>(data: T, init?: ResponseInit): Response {
   return Response.json(data, { ...init, headers });
 }
 
+/** Return a 422 for one invalid field, with field-level `errors`. */
+export function invalidField(field: string, message: string): Response {
+  return errorResponse(422, message, { errors: { [field]: [message] } });
+}
+
 /** Return a normalized JSON error response. */
 export function errorResponse(
   status: number,
