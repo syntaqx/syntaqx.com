@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/card";
 import { PageHeader } from "@/components/page-header";
+import { JsonLd } from "@/components/json-ld";
+import { itemList } from "@/lib/schema";
 import { tools, patterns, converters, type MiscTool } from "@/lib/misc-tools";
 import type { Metadata } from "next";
 
@@ -49,6 +51,15 @@ function ToolGrid({ items }: { items: MiscTool[] }) {
 export default function PlaygroundPage() {
   return (
     <div>
+      <JsonLd
+        data={itemList("Tools & Experiments", "/misc", [
+          ...[...tools, ...converters, ...patterns].map((t) => ({
+            name: t.title,
+            path: t.href,
+          })),
+          { name: "Converters", path: "/misc/convert" },
+        ])}
+      />
       <PageHeader
         label="misc"
         title="Tools & toys"

@@ -1,6 +1,6 @@
 # syntaqx.com
 
-Personal site for [Chase Pierce](https://syntaqx.com), built with [Next.js](https://nextjs.org), [Tailwind CSS](https://tailwindcss.com), and deployed on [Vercel](https://vercel.com).
+Personal site for [Chase Pierce](https://www.syntaqx.com), built with [Next.js](https://nextjs.org), [Tailwind CSS](https://tailwindcss.com), and deployed on [Vercel](https://vercel.com).
 
 ## Stack
 

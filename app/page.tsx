@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { getAllPosts, getNewestPostSlug } from "@/lib/posts";
-import { bio, socials, SITE_URL } from "@/lib/constants";
+import { bio, socials } from "@/lib/constants";
+import { siteGraph } from "@/lib/schema";
+import { JsonLd } from "@/components/json-ld";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/button";
 import { PostList } from "@/components/post-list";
@@ -24,36 +26,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      "@id": `${SITE_URL}/#website`,
-      name: "syntaqx",
-      url: SITE_URL,
-      description:
-        "Personal site of Chase Pierce: writing on engineering, systems, and craft, API design docs, and a public developer API.",
-      inLanguage: "en",
-      author: { "@id": `${SITE_URL}/#person` },
-    },
-    {
-      "@type": "Person",
-      "@id": `${SITE_URL}/#person`,
-      name: "Chase Pierce",
-      alternateName: "syntaqx",
-      url: SITE_URL,
-      jobTitle: "Software Engineering Leader",
-      description: bio[0].text,
-      sameAs: socials.map((s) => s.href),
-      contactPoint: {
-        "@type": "ContactPoint",
-        contactType: "professional inquiries",
-        url: `${SITE_URL}/contact`,
-      },
-    },
-  ],
-};
+const jsonLd = siteGraph({
+  description:
+    "Personal site of Chase Pierce: writing on engineering, systems, and craft, API design docs, and a public developer API.",
+  personDescription: bio[0].text,
+});
 
 export default function Home() {
   const posts = getAllPosts();
@@ -61,10 +38,7 @@ export default function Home() {
 
   return (
     <div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <section className="relative isolate grid items-center gap-x-10 gap-y-12 pb-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
         <div
           aria-hidden="true"

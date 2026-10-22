@@ -12,6 +12,8 @@ import { SceneArt } from "@/components/scene-art";
 import { PostToc } from "@/components/post-toc";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/constants";
+import { personRef } from "@/lib/schema";
+import { JsonLd } from "@/components/json-ld";
 import type { Metadata } from "next";
 
 interface Props {
@@ -76,16 +78,9 @@ export default async function PostPage({ params }: Props) {
     description: post.description,
     datePublished: post.date,
     url: `${SITE_URL}/posts/${post.slug}`,
-    author: {
-      "@type": "Person",
-      name: "Chase Pierce",
-      url: SITE_URL,
-    },
-    publisher: {
-      "@type": "Person",
-      name: "Chase Pierce",
-      url: SITE_URL,
-    },
+    mainEntityOfPage: `${SITE_URL}/posts/${post.slug}`,
+    author: personRef,
+    publisher: personRef,
     ...(post.tags?.length && { keywords: post.tags.join(", ") }),
   };
 
@@ -98,10 +93,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <article>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       {feature ? (
         <header className="relative -mx-6 -mt-12 border-b border-border">
           <SceneArt

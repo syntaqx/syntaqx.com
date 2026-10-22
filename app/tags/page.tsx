@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getAllTags } from "@/lib/posts";
 import { TagChips } from "@/components/tag-chips";
 import { PageHeader } from "@/components/page-header";
+import { JsonLd } from "@/components/json-ld";
+import { itemList } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Browse Posts by Topic",
@@ -14,6 +16,13 @@ export default function TagsPage() {
 
   return (
     <div>
+      <JsonLd
+        data={itemList(
+          "Browse Posts by Topic",
+          "/tags",
+          tags.map((tag) => ({ name: tag.label, path: `/tags/${tag.slug}` })),
+        )}
+      />
       <PageHeader label="tags" title="Topics">
         <p>
           Browse posts by topic. {tags.length} tag

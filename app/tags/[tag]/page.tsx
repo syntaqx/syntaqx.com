@@ -6,6 +6,7 @@ import {
   getNewestPostSlug,
   getPostsByTag,
   getTagLabel,
+  tagDescription,
 } from "@/lib/posts";
 import { PostList } from "@/components/post-list";
 import { PageHeader } from "@/components/page-header";
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = `${SITE_URL}/tags/${tag}`;
   return {
     title: `Posts tagged "${label}"`,
-    description: `All posts tagged ${label}.`,
+    description: tagDescription(label, getPostsByTag(tag)),
     alternates: { canonical: url },
     // Thin archive pages: keep them browsable, but don't ask Google to index
     // them. Also excluded from the sitemap (see app/sitemap.ts).

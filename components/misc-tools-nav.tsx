@@ -19,6 +19,15 @@ export function MiscToolsNav() {
 
   const others = allMiscTools.filter((tool) => tool.href !== pathname);
   if (others.length === 0) return null;
+  // Converter pages link back up to their hub too.
+  if (pathname.startsWith("/misc/convert/")) {
+    others.unshift({
+      title: "All converters",
+      description: "",
+      href: "/misc/convert",
+      tags: [],
+    });
+  }
 
   return (
     <nav aria-label="More tools" className="mt-16 border-t border-border pt-8">

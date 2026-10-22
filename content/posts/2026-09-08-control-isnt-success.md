@@ -1,7 +1,7 @@
 +++
 title = "Control Isn't Success"
 date = 2026-09-08T19:04:00Z
-description = "I walked into a dying CRM rebuild welded to a legacy vendor, turned it into a real platform, and shipped a year early. Then we found out the products were solving problems nobody had, so I started fixing the problem statements myself. That fixed the products and broke everything else."
+description = "I turned a dying CRM rebuild into a real platform and shipped a year early. Then I started fixing the problem statements myself, which broke everything else."
 categories = ["Software Engineering", "Engineering Leadership"]
 tags = ["Engineering Culture", "Developer Experience", "Team Velocity", "Leadership"]
 layout = "feature"
