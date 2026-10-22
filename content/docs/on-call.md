@@ -88,3 +88,14 @@ Toil is manual, repetitive, automatable work that grows with the system and leav
 - **Track it.** Every manual intervention on shift gets a tally in the handoff.
 - **Fix the top item every rotation.** Automate it, or make the alert that caused it go away.
 - **Delete noisy alerts.** An alert that's acknowledged and ignored twice gets fixed or removed.
+
+## References
+
+**In practice**
+
+- [Google SRE Book: Being On-Call](https://sre.google/sre-book/being-on-call/), rotation size and load
+- [Google SRE Workbook: On-Call](https://sre.google/workbook/on-call/), handoffs and sustainable rotations
+- [Google SRE Book: Managing Incidents](https://sre.google/sre-book/managing-incidents/), incident roles
+- [Google SRE Workbook: Incident Response](https://sre.google/workbook/incident-response/), running an incident
+- [Google SRE Book: Eliminating Toil](https://sre.google/sre-book/eliminating-toil/), the 50% toil cap
+- [PagerDuty: Incident Response Documentation](https://response.pagerduty.com/), severity levels and the incident commander role

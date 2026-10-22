@@ -67,3 +67,15 @@ GET /enums/subscription-tiers
 | Enum-like Resource      | `/comment-statuses`               |
 | Parent-child Resource   | `/posts/{postId}/comments`        |
 | Optional Enum Prefix    | `/enums/comment-statuses`         |
+
+## References
+
+**Specifications**
+
+- [RFC 3986: URI Generic Syntax](https://datatracker.ietf.org/doc/html/rfc3986), the rules every path segment lives within
+
+**In practice**
+
+- [Google AIP-122: Resource names](https://google.aip.dev/122), collection identifiers and parent-child naming
+- [Microsoft Azure REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md), URL structure and casing rules at scale
+- [Zalando RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/), kebab-case paths and pluralized resource names

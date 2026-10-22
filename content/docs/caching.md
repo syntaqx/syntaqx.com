@@ -86,3 +86,24 @@ Vary: Accept, Api-Version, Accept-Encoding
 ## Don't Cache Errors by Accident
 
 `4xx` and `5xx` responses get `Cache-Control: no-store` unless the error is genuinely stable (a `404` on an ID that can never exist, a `410` after [sunset](/docs/versioning)). A cached `503` turns a ten-second blip into a ten-minute outage.
+
+## References
+
+**Specifications**
+
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), validators, conditional requests and `412`
+- [RFC 9111: HTTP Caching](https://datatracker.ietf.org/doc/html/rfc9111), `Cache-Control` and cache keys
+- [RFC 6585: Additional HTTP Status Codes](https://datatracker.ietf.org/doc/html/rfc6585), `428 Precondition Required`
+
+**Reference**
+
+- [MDN: HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching), how browsers and shared caches behave
+- [MDN: HTTP conditional requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Conditional_requests), revalidation and lost-update prevention
+- [MDN: Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control), every directive in one place
+- [MDN: ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag), strong and weak validators
+
+**In practice**
+
+- [GitHub Docs: Best practices for using the REST API](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api), conditional requests that don't count against the rate limit
+- [Google AIP-154: Resource freshness validation](https://google.aip.dev/154), ETags on resources
+- [Microsoft: Azure REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md), conditional requests and optimistic concurrency

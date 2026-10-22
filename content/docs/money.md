@@ -24,7 +24,7 @@ That's $19.99. Not `19.99`, not `"19.99"`, not `1999.0`.
 ### Why Not Decimals?
 
 - **Floats can't represent most decimal fractions.** `0.1 + 0.2` is `0.30000000000000004` in every IEEE 754 language. Sum enough line items and the total drifts.
-- **JSON has no decimal type.** A `19.99` in JSON is parsed as a float by most clients, whatever the server meant.
+- **JSON has no decimal type.** [RFC 8259](https://datatracker.ietf.org/doc/html/rfc8259#section-6) leaves number precision to each parser. A `19.99` in JSON is parsed as a float by most clients, whatever the server meant.
 - **Integers compare exactly.** Reconciliation is equality, not "close enough".
 
 ## Currency Is Always Explicit
@@ -81,3 +81,20 @@ Name columns for what they hold: `amount` and `currency`, or `fee_amount` and `f
 ## Negative Amounts
 
 Amounts in requests are always positive. Direction is expressed by the operation (a refund, a payout), not by a sign. Signed amounts only appear in ledger entries, where a debit and a credit have to balance to zero. See [Payment States & Ledgers](/docs/payment-states).
+
+## References
+
+**Specifications**
+
+- [SIX: ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html), the maintenance agency's current code and exponent lists
+- [RFC 8259: The JSON Data Interchange Format](https://datatracker.ietf.org/doc/html/rfc8259), section 6 on number precision
+
+**Reference**
+
+- [PostgreSQL: Numeric types](https://www.postgresql.org/docs/current/datatype-numeric.html), `BIGINT` and `NUMERIC`
+- [The Floating-Point Guide](https://floating-point-gui.de/), why `0.1 + 0.2` isn't `0.3`
+
+**In practice**
+
+- [Stripe: Supported currencies](https://docs.stripe.com/currencies), minor units, zero-decimal and three-decimal rules
+- [Martin Fowler: Money](https://martinfowler.com/eaaCatalog/money.html), amount plus currency as one value, and allocation

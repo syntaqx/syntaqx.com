@@ -146,3 +146,24 @@ The method is standardized. Support isn't. Each of these has a workaround, and t
 2. Treat `QUERY` like `GET`: retry it freely, and don't expect it to change anything.
 3. On `405` or `501`, retry as `POST` with `X-HTTP-Method-Override: QUERY`.
 4. Keep the `Location` from the response, and `GET` it to re-run or cache the query.
+
+## References
+
+**Specifications**
+
+- [RFC 10008: The HTTP QUERY Method](https://datatracker.ietf.org/doc/html/rfc10008), the method, `Accept-Query`, and equivalent resources
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), safe and idempotent methods, status codes and `Allow`
+- [RFC 9111: HTTP Caching](https://datatracker.ietf.org/doc/html/rfc9111), the cache model QUERY responses extend
+- [RFC 9651: Structured Field Values for HTTP](https://datatracker.ietf.org/doc/html/rfc9651), the syntax of `Accept-Query`
+- [WHATWG: Fetch Standard](https://fetch.spec.whatwg.org/#cors-safelisted-method), CORS-safelisted methods and preflights
+- [OpenAPI Specification 3.2](https://spec.openapis.org/oas/v3.2.0.html), the `query` operation
+
+**Reference**
+
+- [MDN: QUERY](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/QUERY), browser-side behavior of the method
+- [MDN: Preflight request](https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request), why cross-origin QUERY calls need one
+- [Node.js: HTTP](https://nodejs.org/api/http.html#httpmethods), `http.METHODS` lists what the parser accepts
+
+**In practice**
+
+- [OpenAPI Initiative: HTTP Methods](https://learn.openapis.org/specification/http-methods), describing QUERY operations in an API description

@@ -55,7 +55,7 @@ Logs are JSON, one event per line, with a consistent set of fields:
 
 ## Metrics
 
-Start with the four golden signals for every service and every dependency:
+Start with the [four golden signals](https://sre.google/sre-book/monitoring-distributed-systems/) for every service and every dependency:
 
 | Signal | Example |
 | ------ | ------- |
@@ -73,3 +73,18 @@ Keep label cardinality bounded. Route templates (`/payments/{id}`), never raw pa
 - **Alert on symptoms, not causes.** Customers seeing errors or slow responses, measured against an SLO. A CPU spike that nobody notices isn't a page.
 - **Every alert has a runbook link** and an owner.
 - **Every page is actionable.** An alert that's routinely acknowledged and ignored gets fixed or deleted.
+
+## References
+
+**Specifications**
+
+- [W3C: Trace Context](https://www.w3.org/TR/trace-context/), the `traceparent` and `tracestate` headers
+- [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/), spans and context propagation
+- [OpenTelemetry: Semantic conventions](https://opentelemetry.io/docs/specs/semconv/), standard attribute names
+- [RFC 6648: Deprecating the "X-" Prefix](https://datatracker.ietf.org/doc/html/rfc6648), `Request-Id` without `X-`
+
+**In practice**
+
+- [Stripe: Request IDs](https://docs.stripe.com/api/request_ids), the `Request-Id` header
+- [Google SRE Book: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/), the four golden signals and symptom-based alerting
+- [OWASP: Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html), what not to log

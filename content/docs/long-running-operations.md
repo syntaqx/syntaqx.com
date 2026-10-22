@@ -10,7 +10,7 @@ Some work takes longer than a client should wait on an open connection: exports,
 
 ## Accepting the Work
 
-The request returns `202 Accepted` right away, with a `Location` pointing at an **operation** resource:
+The request returns [`202 Accepted`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/202) right away, with a `Location` pointing at an **operation** resource:
 
 ```http
 POST /exports
@@ -84,3 +84,20 @@ Completed operations and their results are kept for **30 days**, the window AIP-
 ## When Not to Use This
 
 If the work reliably finishes in a second or two, keep it synchronous. An async API is more code for every client. Reach for operations when the work is slow, variable, or depends on systems you don't control.
+
+## References
+
+**Specifications**
+
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), `202 Accepted`, `Location` and `Retry-After`
+
+**Reference**
+
+- [MDN: 202 Accepted](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/202), accepting work that isn't done yet
+- [MDN: Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After), pacing polls
+- [MDN: Location](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Location), pointing at the operation
+
+**In practice**
+
+- [Google AIP-151: Long-running operations](https://google.aip.dev/151), the operation resource and its retention
+- [Microsoft: Azure REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md), long-running operations and jobs

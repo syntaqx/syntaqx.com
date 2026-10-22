@@ -53,3 +53,22 @@ When you hit the limit:
   "message": "Too many requests. Please try again later."
 }
 ```
+
+## References
+
+**Specifications**
+
+- [IETF: RateLimit header fields for HTTP (draft)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/), the `RateLimit-Policy` and `RateLimit` fields
+- [RFC 6585: Additional HTTP Status Codes](https://datatracker.ietf.org/doc/html/rfc6585), defines `429 Too Many Requests`
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), the `Retry-After` field
+
+**Reference**
+
+- [MDN: 429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/429), status code behavior
+- [MDN: Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After), header syntax
+
+**In practice**
+
+- [GitHub: Rate limits for the REST API](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api), the `X-RateLimit-*` headers kept for compatibility
+- [Stripe: Rate limits](https://docs.stripe.com/rate-limits), handling 429s with backoff and jitter
+- [Stripe: Scaling your API with rate limiters](https://stripe.com/blog/rate-limiters), why every endpoint is limited

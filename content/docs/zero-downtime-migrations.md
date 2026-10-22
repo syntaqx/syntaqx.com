@@ -10,7 +10,7 @@ During a deploy, old and new versions of the code run against the same database 
 
 ## Expand and Contract
 
-Every breaking schema change is split into steps that are each backward compatible:
+Every breaking schema change is split, as a [parallel change](https://martinfowler.com/bliki/ParallelChange.html), into steps that are each backward compatible:
 
 1. **Expand.** Add the new structure alongside the old one. Nothing reads it yet.
 2. **Write both.** Deploy code that writes to old and new.
@@ -58,7 +58,7 @@ Some DDL takes locks that block every read and write on the table. On Postgres:
 | Add a column with a default | Safe on Postgres 11+ for constant defaults |
 | Change a column type | Usually a rewrite. Use expand and contract with a new column |
 
-Set a `lock_timeout` on migration sessions (a few seconds). A migration that can't get its lock should fail and be retried, not queue behind a long transaction while every other query queues behind it.
+Set a [`lock_timeout`](https://www.postgresql.org/docs/current/runtime-config-client.html) on migration sessions (a few seconds). A migration that can't get its lock should fail and be retried, not queue behind a long transaction while every other query queues behind it.
 
 ## Shipping Order
 
@@ -69,3 +69,18 @@ Set a `lock_timeout` on migration sessions (a few seconds). A migration that can
 ## Financial Tables
 
 On ledger and payment tables the bar is higher: backfills never modify existing financial rows in place (see [Payment States & Ledgers](/docs/payment-states)). New derived columns are filled from the append-only history, and reconciliation runs before and after to prove nothing changed.
+
+## References
+
+**Reference**
+
+- [PostgreSQL: CREATE INDEX](https://www.postgresql.org/docs/current/sql-createindex.html), `CONCURRENTLY`
+- [PostgreSQL: ALTER TABLE](https://www.postgresql.org/docs/current/sql-altertable.html), `NOT VALID` and `VALIDATE CONSTRAINT`
+- [PostgreSQL: Explicit locking](https://www.postgresql.org/docs/current/explicit-locking.html), which DDL takes which lock
+- [PostgreSQL: Client connection defaults](https://www.postgresql.org/docs/current/runtime-config-client.html), `lock_timeout`
+
+**In practice**
+
+- [Martin Fowler: Parallel Change](https://martinfowler.com/bliki/ParallelChange.html), the expand and contract pattern
+- [Stripe: Online migrations at scale](https://stripe.com/blog/online-migrations), dual writes and backfills on live data
+- [strong_migrations](https://github.com/ankane/strong_migrations), a catalog of unsafe migrations and safe alternatives

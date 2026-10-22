@@ -104,3 +104,17 @@ ALTER TABLE payments  ADD COLUMN stripe_charge_xid VARCHAR(255);
 | `has_` | Boolean possession | `has_logged_in` |
 | `can_` | Boolean capability | `can_export` |
 | `do_` | Boolean action flag | `do_notify` |
+
+## References
+
+**Specifications**
+
+- [RFC 9562: Universally Unique IDentifiers](https://datatracker.ietf.org/doc/html/rfc9562), UUID formats behind `_id` and `_uid`
+
+**Reference**
+
+- [PostgreSQL: Lexical structure](https://www.postgresql.org/docs/current/sql-syntax-lexical.html), why unquoted lowercase identifiers
+
+**In practice**
+
+- [SQL Style Guide](https://www.sqlstyle.guide/), naming and casing conventions

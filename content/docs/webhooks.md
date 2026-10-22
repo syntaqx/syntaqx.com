@@ -46,7 +46,7 @@ Every delivery carries three headers:
 | ------ | ----------- |
 | `Webhook-Id` | The event ID, stable across retries |
 | `Webhook-Timestamp` | Unix seconds when this attempt was sent |
-| `Webhook-Signature` | `v1,` + base64 HMAC-SHA256 of the signed content |
+| `Webhook-Signature` | `v1,` + base64 [HMAC](https://datatracker.ietf.org/doc/html/rfc2104)-SHA256 of the signed content |
 
 The signed content is `{Webhook-Id}.{Webhook-Timestamp}.{raw body}`. Each retry gets a new timestamp and signature.
 
@@ -105,3 +105,20 @@ POST /events/{eventId}/redeliver
 ```
 
 Redelivery sends the same `Webhook-Id`, so a correct consumer handles it as a no-op if it already processed it.
+
+## References
+
+**Specifications**
+
+- [Standard Webhooks](https://www.standardwebhooks.com/), the header and signature format
+- [RFC 2104: HMAC](https://datatracker.ietf.org/doc/html/rfc2104), keyed-hash signatures
+
+**Reference**
+
+- [Node.js: crypto.timingSafeEqual](https://nodejs.org/api/crypto.html), constant-time comparison
+
+**In practice**
+
+- [Stripe: Receive Stripe events in your webhook endpoint](https://docs.stripe.com/webhooks), retries, tolerance, rollover and retention we match
+- [GitHub: Validating webhook deliveries](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries), HMAC verification
+- [GitHub: Best practices for using webhooks](https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks), respond fast, process async

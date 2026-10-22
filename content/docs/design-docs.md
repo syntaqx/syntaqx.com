@@ -85,3 +85,11 @@ B-tree inserts stay sequential. Existing auto-increment tables are not migrated.
 ## After It Ships
 
 Close the loop. Mark the doc implemented, note where reality diverged from the plan, and link the ADRs it produced. A design doc that's wrong about the shipped system is worse than none.
+
+## References
+
+**In practice**
+
+- [Michael Nygard: Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions), the original ADR format
+- [ADR GitHub Organization](https://adr.github.io/), ADR templates and tooling
+- [Malte Ubl: Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/), what goes in a design doc and when to skip one

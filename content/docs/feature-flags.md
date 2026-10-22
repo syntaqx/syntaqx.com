@@ -43,7 +43,7 @@ const useNewRouting = await client.getBooleanValue("processor-routing-v2", false
 New behavior earns its traffic:
 
 1. **Internal:** employees and test accounts.
-2. **Canary:** 1% of traffic, or a few low-risk customers, watched against the [SLOs](/docs/slos).
+2. **[Canary](https://sre.google/workbook/canarying-releases/):** 1% of traffic, or a few low-risk customers, watched against the [SLOs](/docs/slos).
 3. **Ramp:** 5%, 25%, 50%, 100%, with a pause at each step long enough to see real traffic.
 4. **Done:** the flag is removed and the old path deleted.
 
@@ -65,3 +65,14 @@ Every risky integration has an ops flag that turns it off and falls back to some
 - **Expired flags fail a check.** CI or a weekly report lists flags past their date, and the owner removes them.
 - **Removal is part of the feature.** The ticket isn't done until the flag and the dead branch of code are gone.
 - **Changes are audited.** Who flipped what, when, and why, because a flag flip is a production change. See [Configuration & Secrets](/docs/configuration).
+
+## References
+
+**Specifications**
+
+- [OpenFeature Specification](https://openfeature.dev/specification/), the vendor-neutral evaluation API
+
+**In practice**
+
+- [Pete Hodgson: Feature Toggles](https://martinfowler.com/articles/feature-toggles.html), flag categories and lifetimes
+- [Google SRE Workbook: Canarying Releases](https://sre.google/workbook/canarying-releases/), canary rollouts watched against SLOs

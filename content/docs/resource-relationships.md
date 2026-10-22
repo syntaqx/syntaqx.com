@@ -87,3 +87,12 @@ Nest the endpoint when the child resource only exists in the context of its pare
 | Categories (global taxonomy) | Flat: `GET /categories` |
 
 For guidance on flat vs. nested naming in general, see [Naming Conventions](/docs/naming-conventions).
+
+## References
+
+**In practice**
+
+- [Google AIP-122: Resource names](https://google.aip.dev/122), when a resource has a parent and when it stands alone
+- [Google AIP-124: Resource association](https://google.aip.dev/124), modeling many-to-many relationships
+- [Martin Fowler: Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.html), resources with their own URIs as the foundation
+- [Zalando RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/), limits on nesting depth and sub-resources

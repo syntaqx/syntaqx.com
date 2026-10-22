@@ -10,7 +10,7 @@ Most architecture pain comes from boundaries drawn in the wrong place, not from 
 
 ## Start With a Modular Monolith
 
-One deployable, many modules. Each module has:
+One deployable, many modules ([MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html)). Each module has:
 
 - **Its own directory and public interface.** Other modules call its exported functions, never its internals.
 - **Its own tables.** Other modules don't join against them or write to them.
@@ -67,3 +67,14 @@ Every boundary has an explicit contract, versioned like a public API, whether it
 - Contract tests run in CI on both sides. See [Testing Strategy](/docs/testing).
 
 Write the decision down. Splitting or merging a service is exactly the kind of choice that gets an [ADR](/docs/design-docs).
+
+## References
+
+**In practice**
+
+- [Martin Fowler: MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html), the modular-monolith default
+- [Martin Fowler & James Lewis: Microservices](https://martinfowler.com/articles/microservices.html), the trade-offs of splitting into services
+- [Martin Fowler: Bounded Context](https://martinfowler.com/bliki/BoundedContext.html), drawing boundaries around a domain model
+- [microservices.io: Database per Service](https://microservices.io/patterns/data/database-per-service.html), one owner per piece of data, no shared databases
+- [Melvin Conway: How Do Committees Invent?](https://www.melconway.com/Home/Committees_Paper.html), the original statement of Conway's law
+- [Team Topologies: Key Concepts](https://teamtopologies.com/key-concepts), aligning service ownership with teams

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DocsIndex } from "@/components/docs-index";
 import { getDocsByCategory } from "@/lib/docs";
 import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
@@ -6,7 +7,7 @@ import { itemList } from "@/lib/schema";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Architectural Playbook & API Reference",
+  title: "Documentation",
   description:
     "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.",
 };
@@ -17,7 +18,7 @@ export default function DocsPage() {
   return (
     <div>
       <JsonLd
-        data={itemList("Architectural Playbook & API Reference", "/docs", [
+        data={itemList("Documentation", "/docs", [
           ...categories.flatMap((c) =>
             c.docs.map((d) => ({ name: d.title, path: `/docs/${d.slug}` })),
           ),
@@ -26,7 +27,7 @@ export default function DocsPage() {
       />
       <PageHeader
         label="docs"
-        title="Playbook"
+        title="Documentation"
         scene="spec"
         sceneLabel="A spec sheet lifted off its index, with one teal row highlighted"
       >
@@ -46,65 +47,31 @@ export default function DocsPage() {
         </p>
       </PageHeader>
 
-      <div className="grid gap-x-12 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((category) => (
-          <DocGroup key={category.name} name={category.name}>
-            {category.docs.map((doc) => (
-              <DocLink
-                key={doc.slug}
-                href={`/docs/${doc.slug}`}
-                title={doc.title}
-                description={doc.description}
-              />
-            ))}
-          </DocGroup>
-        ))}
-        <DocGroup name="Reference">
-          <DocLink
-            href="/docs/api"
-            title="API Reference"
-            description="Interactive API documentation with live request testing."
-          />
-        </DocGroup>
-      </div>
+      <DocsIndex
+        categories={[
+          ...categories.map((c) => ({
+            name: c.name,
+            docs: c.docs.map((d) => ({
+              href: `/docs/${d.slug}`,
+              title: d.title,
+              description: d.description,
+              tags: d.tags,
+            })),
+          })),
+          {
+            name: "Reference",
+            docs: [
+              {
+                href: "/docs/api",
+                title: "API Reference",
+                description:
+                  "Interactive reference for the syntaqx API, generated from its OpenAPI description, with a live console to send requests and inspect responses.",
+                tags: ["api", "openapi", "reference"],
+              },
+            ],
+          },
+        ]}
+      />
     </div>
-  );
-}
-
-function DocGroup({
-  name,
-  children,
-}: {
-  name: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section>
-      <h2 className="eyebrow mb-4">{name}</h2>
-      <ul className="border-t border-border">{children}</ul>
-    </section>
-  );
-}
-
-function DocLink({
-  href,
-  title,
-  description,
-}: {
-  href: string;
-  title: string;
-  description?: string;
-}) {
-  return (
-    <li className="border-b border-border">
-      <Link href={href} className="group block py-4">
-        <span className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
-          {title}
-        </span>
-        {description && (
-          <p className="mt-1 text-xs leading-relaxed text-dim">{description}</p>
-        )}
-      </Link>
-    </li>
   );
 }

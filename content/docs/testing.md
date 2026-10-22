@@ -29,7 +29,7 @@ Most confidence per minute of CI comes from tests that exercise real behavior th
 
 ## Real Dependencies Over Mocks
 
-- **Test against real Postgres,** in a container, with migrations applied. Mocked repositories pass while the real query fails on a constraint.
+- **Test against real Postgres,** in a container ([Testcontainers](https://testcontainers.com/)), with migrations applied. Mocked repositories pass while the real query fails on a constraint.
 - **Isolate per test** with a transaction rolled back at the end, or a fresh schema per worker for parallel runs.
 - **Mock only what you don't own,** at the network edge: processors, email providers, third-party APIs. Use recorded responses or the vendor's sandbox, not hand-written guesses.
 
@@ -45,7 +45,7 @@ When one service calls another, each side's tests can pass while the integration
 
 Tests produce the same result every run, on every machine.
 
-- **Stable IDs.** Derive fixture IDs with UUID v5 from readable names (`uuid5(ns, "merchant-with-expired-card")`), as described in [Identifier Conventions](/docs/identifier-conventions). Failures are reproducible and IDs are recognizable in output.
+- **Stable IDs.** Derive fixture IDs with [UUID v5](https://www.rfc-editor.org/rfc/rfc9562.html#section-5.5) from readable names (`uuid5(ns, "merchant-with-expired-card")`), as described in [Identifier Conventions](/docs/identifier-conventions). Failures are reproducible and IDs are recognizable in output.
 - **Controlled time.** Inject a clock. Never assert against "now". Tests for authorization expiry or [idempotency key](/docs/idempotency) retention set the clock explicitly.
 - **Seeded randomness.** If a test uses random data, it logs the seed so a failure can be replayed.
 - **Builders, not shared fixtures.** Each test builds the data it needs, with defaults for everything else, so one test's setup can't break another.
@@ -63,3 +63,20 @@ A flaky test is a failing test. Teams learn to rerun red builds, and then they r
 - The full suite runs on every pull request and blocks the merge. See [Commits, PRs & Code Review](/docs/commits-and-reviews).
 - Keep it under about 10 minutes. Parallelize before you start skipping.
 - Coverage is a signal for finding untested code, not a target to hit. 100% coverage of the wrong assertions proves nothing.
+
+## References
+
+**Specifications**
+
+- [RFC 9562: UUIDs](https://www.rfc-editor.org/rfc/rfc9562.html), name-based UUID v5 for stable fixtures
+
+**Reference**
+
+- [Pact Docs](https://docs.pact.io/), consumer-driven contract testing
+- [Testcontainers](https://testcontainers.com/), real Postgres in tests
+
+**In practice**
+
+- [Kent C. Dodds: The Testing Trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications), weighting toward integration tests
+- [Ham Vocke: The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html), what to test at each level
+- [Martin Fowler: Eradicating Non-Determinism in Tests](https://martinfowler.com/articles/nonDeterminism.html), quarantining and fixing flaky tests

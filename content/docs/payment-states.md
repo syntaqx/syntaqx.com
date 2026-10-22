@@ -88,3 +88,17 @@ Every external system is wrong sometimes, including yours.
 ## Timestamps
 
 Each transition records the time it happened at the source (`authorized_at` from the processor) and the time it was recorded (`created_at`), both in UTC per [Time & Date Formats](/docs/time). They are often different, and reconciliation depends on both.
+
+## References
+
+**Reference**
+
+- [PostgreSQL: Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html), guarding transitions and balanced entries
+- [Wikipedia: Double-entry bookkeeping](https://en.wikipedia.org/wiki/Double-entry_bookkeeping), the accounting model
+
+**In practice**
+
+- [Stripe: Place a hold on a payment method](https://docs.stripe.com/payments/capture-later), authorization validity windows
+- [Stripe: How Payment Intents and Setup Intents work](https://docs.stripe.com/payments/paymentintents/lifecycle), an explicit payment state machine
+- [Modern Treasury: Accounting for Developers](https://www.moderntreasury.com/journal/accounting-for-developers-part-i), ledgers, accounts and entries for engineers
+- [Martin Fowler: Accounting Narrative](https://martinfowler.com/eaaDev/AccountingNarrative.html), corrections as reversing entries

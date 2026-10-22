@@ -6,7 +6,7 @@ order = 5.5
 tags = ["api", "versioning", "deprecation", "headers"]
 +++
 
-APIs change. Integrations shouldn't break without warning. Versions are selected with a request header and named by date, with a version in the URL path as the fallback, and anything being removed is announced on the wire with the `Deprecation` header (RFC 9745) and `Sunset` header (RFC 8594) before it goes away.
+APIs change. Integrations shouldn't break without warning. Versions are selected with a request header and named by date, with a version in the URL path as the fallback, and anything being removed is announced on the wire with the `Deprecation` header ([RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745)) and `Sunset` header ([RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594)) before it goes away.
 
 ## Header Versioning
 
@@ -131,3 +131,23 @@ Content-Type: application/json
 2. Treat any `Deprecation` header as a signal to log or alert on.
 3. Follow the `rel="deprecation"` link for the replacement.
 4. Move to a newer version before the `Sunset` date.
+
+## References
+
+**Specifications**
+
+- [RFC 9745: The Deprecation HTTP Response Header Field](https://datatracker.ietf.org/doc/html/rfc9745), the `Deprecation` header
+- [RFC 8594: The Sunset HTTP Header Field](https://datatracker.ietf.org/doc/html/rfc8594), the `Sunset` header
+- [RFC 8288: Web Linking](https://datatracker.ietf.org/doc/html/rfc8288), the `rel="deprecation"` link
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), `Vary`, `400` and `410`
+
+**Reference**
+
+- [MDN: Vary](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Vary), caching per `Api-Version`
+- [MDN: 410 Gone](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/410), retired endpoints
+- [MDN: Link](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link), header syntax
+
+**In practice**
+
+- [Stripe: APIs as infrastructure](https://stripe.com/blog/api-versioning), dated, header-selected versions
+- [GitHub: API versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions), dated versions selected by header

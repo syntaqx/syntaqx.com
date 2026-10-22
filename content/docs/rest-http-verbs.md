@@ -6,7 +6,7 @@ order = -1
 tags = ["api", "rest", "http"]
 +++
 
-REST (Representational State Transfer) is an architectural style for web services that communicate over HTTP. Resources are identified by URIs, and HTTP methods define what you can do with them.
+REST ([Representational State Transfer](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)) is an architectural style for web services that communicate over HTTP. Resources are identified by URIs, and HTTP methods define what you can do with them.
 
 Following REST keeps APIs predictable: every team member, every client library, and every integration knows the shape of a request before reading a single line of docs.
 
@@ -148,3 +148,23 @@ See [HTTP QUERY](/docs/http-query) for discovery, caching, and the `POST` fallba
 | PUT | Replace a user's full profile, overwrite a config |
 | PATCH | Update an email address, toggle a setting |
 | DELETE | Remove a user, revoke a token |
+
+## References
+
+**Specifications**
+
+- [Roy Fielding: Architectural Styles and the Design of Network-based Software Architectures, Chapter 5](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm), the dissertation that defines REST
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), method definitions, safety and idempotency
+- [RFC 5789: PATCH Method for HTTP](https://datatracker.ietf.org/doc/html/rfc5789), partial updates
+- [RFC 10008: The HTTP QUERY Method](https://datatracker.ietf.org/doc/html/rfc10008), safe reads with a request body
+
+**Reference**
+
+- [MDN: HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods), every method with browser behavior
+- [MDN: Idempotent](https://developer.mozilla.org/en-US/docs/Glossary/Idempotent), what idempotency does and doesn't promise
+- [MDN: Safe (HTTP Methods)](https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP), which methods never change state
+- [MDN: Location](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Location), pointing at a newly created resource
+
+**In practice**
+
+- [Martin Fowler: Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.html), why resources plus verbs beat RPC over HTTP

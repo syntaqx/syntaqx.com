@@ -86,3 +86,23 @@ Exactly-once delivery doesn't exist. At-least-once delivery plus idempotent hand
 3. On `409`, back off and retry the same key. A new key could start a second operation.
 4. On `400` for a key mismatch, you've reused a key for a different operation. That's a client bug.
 5. To change the parameters, first confirm the original didn't succeed and isn't still running, then use a new key.
+
+## References
+
+**Specifications**
+
+- [IETF: The Idempotency-Key HTTP Header Field (draft)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/), the header and its semantics
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), which methods are idempotent by definition
+
+**Reference**
+
+- [MDN: Idempotency-Key](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Idempotency-Key), header syntax
+- [MDN: 409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/409), concurrent requests with the same key
+
+**In practice**
+
+- [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests), the behavior we match
+- [Stripe: Advanced error handling](https://docs.stripe.com/error-low-level), the 24-hour retry window and reconciliation
+- [Stripe: Designing robust and predictable APIs with idempotency](https://stripe.com/blog/idempotency), why keys exist
+- [Brandur Leach: Implementing Stripe-like Idempotency Keys in Postgres](https://brandur.org/idempotency-keys), storing keys alongside the side effect
+- [AWS Builders' Library: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/), idempotency across internal hops

@@ -56,7 +56,7 @@ Most responses are JSON, but some endpoints support alternative formats via the 
 
 ### vCard Example
 
-If the endpoint supports vcard format (media type `text/vcard`), a client can request it by setting:
+If the endpoint supports [vCard](https://datatracker.ietf.org/doc/html/rfc6350) format (media type `text/vcard`), a client can request it by setting:
 
 ```
 Accept: text/vcard
@@ -78,7 +78,7 @@ END:VCARD
 
 ### CSV Example
 
-If the endpoint supports CSV output (media type `text/csv`), a client can request it by setting:
+If the endpoint supports [CSV](https://datatracker.ietf.org/doc/html/rfc4180) output (media type `text/csv`), a client can request it by setting:
 
 ```
 Accept: text/csv
@@ -98,7 +98,7 @@ id,name,created_at
 
 ## Pagination
 
-All pagination is handled via the `Link` header (RFC 8288), never in the response body. See [Pagination](/docs/pagination) for full details on page-based and cursor-based approaches.
+All pagination is handled via the `Link` header ([RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288)), never in the response body. See [Pagination](/docs/pagination) for full details on page-based and cursor-based approaches.
 
 ## Versioning
 
@@ -123,3 +123,23 @@ Request-Id: 019a0b6e-4c2d-7f31-9b8e-2d5a6c7e8f90
 ```
 
 `X-Request-ID` carries the same value and stays for existing clients. Prefer `Request-Id`.
+
+## References
+
+**Specifications**
+
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), methods, status codes and content negotiation
+- [RFC 8288: Web Linking](https://datatracker.ietf.org/doc/html/rfc8288), the `Link` header used for pagination
+- [RFC 6648: Deprecating the "X-" Prefix](https://datatracker.ietf.org/doc/html/rfc6648), why `Request-Id` has no `X-`
+
+**Reference**
+
+- [MDN: Content negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation), how `Accept` picks a response format
+- [MDN: HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status), what each status code means
+
+**In practice**
+
+- [GitHub REST API: Getting started](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api), bare arrays and objects with metadata in headers, the model for no `data` wrappers
+- [Stripe: Request IDs](https://docs.stripe.com/api/request_ids), the `Request-Id` response header
+- [Google AIP-121: Resource-oriented design](https://google.aip.dev/121), resources as nouns with standard methods
+- [Zalando RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/), a thorough public rulebook to compare against

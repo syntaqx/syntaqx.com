@@ -67,3 +67,23 @@ Asynchronous jobs get more patience, and a place to land when patience runs out.
 
 - **Never retry a decline.** A `402` decline is an answer, not a failure. Retrying declines can get a merchant flagged by the card networks.
 - **Reconcile unknowns.** When a processor call times out and the outcome is unknown, record the payment as `pending`, then resolve it by querying the processor with the same idempotency key, not by charging again.
+
+## References
+
+**Specifications**
+
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), idempotent methods and `Retry-After`
+
+**Reference**
+
+- [MDN: Idempotent](https://developer.mozilla.org/en-US/docs/Glossary/Idempotent), which methods are safe to repeat
+- [MDN: Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After), header syntax
+- [MDN: 503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/503), a retryable server error
+
+**In practice**
+
+- [Stripe: Advanced error handling](https://docs.stripe.com/error-low-level), the timeout, backoff, 409 and 500 rules we match
+- [AWS Builders' Library: Timeouts, retries, and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/), retrying at one layer, retry budgets
+- [AWS Architecture Blog: Exponential backoff and jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/), the full jitter formula
+- [AWS Builders' Library: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/), why retries need idempotency
+- [Google SRE Book: Addressing Cascading Failures](https://sre.google/sre-book/addressing-cascading-failures/), retry amplification and deadlines
