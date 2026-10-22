@@ -154,6 +154,20 @@ function SectionRail({
   categories: DocsIndexCategory[];
   active?: string;
 }) {
+  const railRef = useRef<HTMLDivElement>(null);
+
+  // Keep the highlighted section in view as the page scrolls, by scrolling
+  // the rail itself (never the page).
+  useEffect(() => {
+    const rail = railRef.current;
+    const item = rail?.querySelector<HTMLElement>(`[data-section="${active}"]`);
+    if (!rail || !item) return;
+    const top = item.offsetTop - rail.offsetTop;
+    if (top < rail.scrollTop || top + item.offsetHeight > rail.scrollTop + rail.clientHeight) {
+      rail.scrollTo({ top: Math.max(0, top - 24), behavior: "smooth" });
+    }
+  }, [active]);
+
   return (
     <nav aria-label="Documentation sections" className="mb-10 lg:mb-0">
       {/* Mobile: the sections as one scrollable row. */}
@@ -173,12 +187,15 @@ function SectionRail({
 
       {/* Desktop: the same shape as the doc pages' sidebar, every section with
           its docs, scrolling within the rail when it's taller than the screen. */}
-      <div className="sticky top-24 hidden max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-2 scrollbar-none lg:block">
+      <div
+        ref={railRef}
+        className="sticky top-24 hidden max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-2 scrollbar-none lg:block"
+      >
         <div className="space-y-7">
           {categories.map((c) => {
             const isActive = c.section === active;
             return (
-              <div key={c.section}>
+              <div key={c.section} data-section={c.section}>
                 <a
                   href={`#${c.section}`}
                   aria-current={isActive ? "true" : undefined}
