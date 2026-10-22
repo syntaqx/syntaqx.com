@@ -75,7 +75,16 @@
     "@eslint/eslintrc": {
       "js-yaml": "^4.3.2"
     },
-    "postcss-selector-parser": "^7.1.6"
+    "postcss-selector-parser": "^7.1.6",
+    "eslint-plugin-import": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-react": {
+      "eslint": "$eslint"
+    }
   },
   "allowScripts": {
     "@sentry/cli@2.58.6": true,
