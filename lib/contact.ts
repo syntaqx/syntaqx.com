@@ -1,10 +1,16 @@
 // Shared by the /contact page and its Markdown representation so the two
 // can't drift.
+import { CONTACT_EMAIL } from "@/lib/constants";
 
 export const contactIntro =
   "The fastest way to reach me depends on what you need. I don't run a contact form or a mailing list, so pick the channel below that fits and I'll see it there.";
 
 export const contactChannels = [
+  {
+    label: "Email",
+    href: `mailto:${CONTACT_EMAIL}`,
+    description: `Write to ${CONTACT_EMAIL} for anything that doesn't fit a public channel: questions, introductions, or a longer note.`,
+  },
   {
     label: "Book time",
     href: "https://calendly.com/syntaqx",

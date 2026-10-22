@@ -90,6 +90,13 @@ describe("schema builders", () => {
       founder: { "@id": byType.Person["@id"] },
     });
     expect(byType.Organization.sameAs).toContain("https://github.com/syntaqx");
+    for (const node of [byType.Organization, byType.Person]) {
+      expect(node.contactPoint).toMatchObject({
+        "@type": "ContactPoint",
+        contactType: "professional inquiries",
+        email: "syntaqx@gmail.com",
+      });
+    }
     expect(byType.Person).toMatchObject({
       name: "Chase Pierce",
       jobTitle: "Software Engineering Leader",

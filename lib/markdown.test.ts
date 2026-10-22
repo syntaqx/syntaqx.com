@@ -36,6 +36,9 @@ describe("renderMarkdownPage()", () => {
     );
     expect(renderMarkdownPage("/docs/api").body).toContain("# syntaqx API");
     expect(renderMarkdownPage("/contact").body).toContain("# Contact");
+    expect(renderMarkdownPage("/contact").body).toContain(
+      "mailto:syntaqx@gmail.com",
+    );
     expect(renderMarkdownPage("/posts").status).toBe(200);
   });
 

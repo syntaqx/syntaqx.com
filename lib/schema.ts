@@ -3,7 +3,7 @@
  * components/json-ld.tsx). Nodes reference each other by `@id`; references
  * also carry a name so they still read correctly on their own page.
  */
-import { SITE_URL, socials } from "@/lib/constants";
+import { CONTACT_EMAIL, SITE_URL, socials } from "@/lib/constants";
 
 const CONTEXT = "https://schema.org";
 
@@ -38,6 +38,12 @@ export function siteGraph({
   personDescription: string;
 }) {
   const sameAs = socials.map((s) => s.href);
+  const contactPoint = {
+    "@type": "ContactPoint",
+    contactType: "professional inquiries",
+    email: CONTACT_EMAIL,
+    url: `${SITE_URL}/contact`,
+  };
   return {
     "@context": CONTEXT,
     "@graph": [
@@ -56,6 +62,7 @@ export function siteGraph({
         description,
         sameAs,
         founder: { "@id": PERSON_ID },
+        contactPoint,
       },
       {
         ...personRef,
@@ -63,11 +70,7 @@ export function siteGraph({
         jobTitle: "Software Engineering Leader",
         description: personDescription,
         sameAs,
-        contactPoint: {
-          "@type": "ContactPoint",
-          contactType: "professional inquiries",
-          url: `${SITE_URL}/contact`,
-        },
+        contactPoint,
       },
     ],
   };

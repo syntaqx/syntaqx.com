@@ -28,8 +28,10 @@ export default function ContactPage() {
           >
             <a
               href={c.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(c.href.startsWith("http") && {
+                target: "_blank",
+                rel: "noopener noreferrer",
+              })}
               className="inline-flex items-center gap-1.5 self-start font-semibold text-foreground transition-colors hover:text-accent"
             >
               {c.label}
