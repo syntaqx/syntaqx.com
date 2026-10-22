@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { json, errorResponse } from "./api";
+import { json, errorResponse, resolveApiVersion, API_VERSIONS } from "./api";
 
 describe("json()", () => {
   it("attaches an X-Request-ID header when none is provided", () => {
@@ -47,5 +47,61 @@ describe("errorResponse()", () => {
       headers: { "X-Request-ID": "trace-xyz" },
     });
     expect(res.headers.get("X-Request-ID")).toBe("trace-xyz");
+  });
+});
+
+describe("resolveApiVersion()", () => {
+  const versions = [
+    { version: "2026-01-01", deprecatedAt: "2026-11-01T00:00:00Z", sunsetAt: "2026-12-15T00:00:00Z" },
+    { version: "2026-06-01" },
+  ];
+  const now = new Date("2026-11-10T00:00:00Z");
+
+  it("defaults to the oldest supported version when no header is sent", () => {
+    const r = resolveApiVersion(null, now, versions);
+    expect(r.ok && r.version).toBe("2026-01-01");
+  });
+
+  it("echoes the requested version with Vary: Api-Version", () => {
+    const r = resolveApiVersion("2026-06-01", now, versions);
+    expect(r).toEqual({
+      ok: true,
+      version: "2026-06-01",
+      headers: { "Api-Version": "2026-06-01", Vary: "Api-Version" },
+    });
+  });
+
+  it("adds RFC 9745 Deprecation, RFC 8594 Sunset and Link for deprecated versions", () => {
+    const r = resolveApiVersion("2026-01-01", now, versions);
+    expect(r.ok && r.headers).toEqual({
+      "Api-Version": "2026-01-01",
+      Vary: "Api-Version",
+      Deprecation: `@${Date.parse("2026-11-01T00:00:00Z") / 1000}`,
+      Sunset: "Tue, 15 Dec 2026 00:00:00 GMT",
+      Link: '<https://www.syntaqx.com/docs/versioning>; rel="deprecation"',
+    });
+  });
+
+  it("rejects unknown versions, listing the supported ones", () => {
+    const r = resolveApiVersion("2020-01-01", now, versions);
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.body.message).toContain("2026-01-01, 2026-06-01");
+      expect(r.body.errors?.["Api-Version"]).toEqual([
+        "must be one of: 2026-01-01, 2026-06-01",
+      ]);
+    }
+  });
+
+  it("stops serving a version after its sunset, and moves the default on", () => {
+    const later = new Date("2026-12-15T00:00:00Z");
+    expect(resolveApiVersion("2026-01-01", later, versions).ok).toBe(false);
+    const r = resolveApiVersion(null, later, versions);
+    expect(r.ok && r.version).toBe("2026-06-01");
+  });
+
+  it("ships at least one supported version", () => {
+    expect(API_VERSIONS.length).toBeGreaterThan(0);
+    for (const v of API_VERSIONS) expect(v.version).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 });

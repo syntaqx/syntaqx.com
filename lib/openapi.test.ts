@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { GET as openapiJson } from "@/app/openapi.json/route";
 import { GET as v1Openapi } from "@/app/api/v1/openapi/route";
+import { API_VERSIONS } from "@/lib/api";
 
 type Operation = {
   operationId?: string;
@@ -33,6 +34,29 @@ describe("/openapi.json", () => {
       email: "syntaqx@gmail.com",
     });
     expect(doc.info.description).toContain("https://www.syntaqx.com/docs/versioning");
+  });
+
+  it("documents the Api-Version header on every operation", async () => {
+    const doc = (await spec()) as unknown as {
+      info: { version: string };
+      components: { parameters: Record<string, Record<string, unknown>> };
+      paths: Record<string, Record<string, { parameters?: unknown[] }>>;
+    };
+    const versions = API_VERSIONS.map((v) => v.version);
+    expect(doc.info.version).toBe(versions[versions.length - 1]);
+    expect(doc.components.parameters.ApiVersion).toMatchObject({
+      name: "Api-Version",
+      in: "header",
+      required: false,
+      schema: { type: "string", enum: versions, default: versions[0] },
+    });
+    for (const [path, ops] of Object.entries(doc.paths)) {
+      for (const op of Object.values(ops)) {
+        expect(op.parameters, path).toContainEqual({
+          $ref: "#/components/parameters/ApiVersion",
+        });
+      }
+    }
   });
 
   it("gives every operation a unique operationId, a description and responses", async () => {

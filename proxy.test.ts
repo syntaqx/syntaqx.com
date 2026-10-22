@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { NextRequest } from "next/server";
 import { proxy } from "./proxy";
+import { API_VERSIONS } from "@/lib/api";
 
 /**
  * Build a NextRequest with a unique IP so each test gets its own
@@ -9,13 +10,19 @@ import { proxy } from "./proxy";
 let ipCounter = 0;
 function makeRequest(
   url: string,
-  init: { method?: string; host?: string; ip?: string } = {},
+  init: {
+    method?: string;
+    host?: string;
+    ip?: string;
+    headers?: Record<string, string>;
+  } = {},
 ): NextRequest {
   const ip = init.ip ?? `10.0.0.${++ipCounter}`;
   const headers = new Headers({
     "x-forwarded-for": ip,
   });
   if (init.host) headers.set("host", init.host);
+  for (const [k, v] of Object.entries(init.headers ?? {})) headers.set(k, v);
   return new NextRequest(url, { method: init.method ?? "GET", headers });
 }
 
@@ -113,6 +120,58 @@ describe("proxy: rate limiting enforcement", () => {
 
     const body = await res.json();
     expect(body).toEqual({ message: "Too many requests. Please try again later." });
+  });
+});
+
+describe("proxy: Api-Version", () => {
+  const current = API_VERSIONS[0].version;
+
+  it("defaults and echoes Api-Version with Vary on API responses", () => {
+    const res = proxy(makeRequest("http://localhost/api/v1/healthz")) as Response;
+    expect(res.headers.get("Api-Version")).toBe(current);
+    expect(res.headers.get("Vary")).toContain("Api-Version");
+  });
+
+  it("honors a supported Api-Version header", () => {
+    const res = proxy(
+      makeRequest("http://localhost/api/v1/healthz", {
+        headers: { "Api-Version": current },
+      }),
+    ) as Response;
+    expect(res.status).toBe(200);
+    expect(res.headers.get("Api-Version")).toBe(current);
+  });
+
+  it("returns 400 with the error envelope for an unsupported version", async () => {
+    const res = proxy(
+      makeRequest("http://localhost/api/v1/healthz", {
+        headers: { "Api-Version": "1999-01-01" },
+      }),
+    ) as Response;
+    expect(res.status).toBe(400);
+    expect(res.headers.get("X-Request-ID")).toBeTruthy();
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    const body = await res.json();
+    expect(body.message).toContain('Unsupported Api-Version "1999-01-01"');
+    expect(body.errors["Api-Version"][0]).toContain(current);
+  });
+
+  it("allows and exposes the versioning headers for browsers", () => {
+    const res = proxy(
+      makeRequest("http://localhost/api/v1/healthz", { method: "OPTIONS" }),
+    ) as Response;
+    expect(res.headers.get("Access-Control-Allow-Headers")).toContain("Api-Version");
+    for (const h of ["Api-Version", "Deprecation", "Sunset", "RateLimit"]) {
+      expect(res.headers.get("Access-Control-Expose-Headers")).toContain(h);
+    }
+  });
+
+  it("leaves non-API pages alone", () => {
+    const res = proxy(
+      makeRequest("http://localhost/about", { headers: { "Api-Version": "bogus" } }),
+    ) as Response;
+    expect(res.status).toBe(200);
+    expect(res.headers.get("Api-Version")).toBeNull();
   });
 });
 

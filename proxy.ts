@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { rateLimit } from "@/lib/api";
+import { rateLimit, resolveApiVersion } from "@/lib/api";
 
 function corsHeaders(): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, Api-Version",
+    "Access-Control-Expose-Headers":
+      "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, X-Request-ID",
   };
 }
 
@@ -22,19 +24,22 @@ function clientIp(request: NextRequest): string {
  *   - X-RateLimit-Limit / -Remaining / -Reset
  *   - RateLimit-Policy / RateLimit (IETF draft-ietf-httpapi-ratelimit-headers)
  *   - Retry-After (when limited)
+ *   - Api-Version / Vary, plus Deprecation / Sunset / Link for deprecated
+ *     versions; an unknown Api-Version short-circuits with a 400
  *
- * Returns either a short-circuit 429 response, or a header bag to merge
+ * Returns either a short-circuit response (429 rate limited, 400 bad
+ * Api-Version), or a header bag to merge
  * into the downstream response.
  */
 function applyApiHeaders(
   request: NextRequest,
-): { limited: true; response: Response } | { limited: false; headers: Record<string, string> } {
+): { blocked: true; response: Response } | { blocked: false; headers: Record<string, string> } {
   const rl = rateLimit(clientIp(request));
   const requestId = crypto.randomUUID();
 
   if (rl.limited) {
     return {
-      limited: true,
+      blocked: true,
       response: Response.json(
         { message: "Too many requests. Please try again later." },
         {
@@ -50,11 +55,27 @@ function applyApiHeaders(
     };
   }
 
+  const version = resolveApiVersion(request.headers.get("api-version"));
+  if (!version.ok) {
+    return {
+      blocked: true,
+      response: Response.json(version.body, {
+        status: 400,
+        headers: {
+          "X-Request-ID": requestId,
+          ...rl.headers,
+          ...corsHeaders(),
+        },
+      }),
+    };
+  }
+
   return {
-    limited: false,
+    blocked: false,
     headers: {
       "X-Request-ID": requestId,
       ...rl.headers,
+      ...version.headers,
     },
   };
 }
@@ -79,7 +100,7 @@ export function proxy(request: NextRequest) {
   }
 
   const result = applyApiHeaders(request);
-  if (result.limited) return result.response;
+  if (result.blocked) return result.response;
   const apiHeaders = result.headers;
 
   // Production: api.syntaqx.com root → /api (single source of truth for the index)
