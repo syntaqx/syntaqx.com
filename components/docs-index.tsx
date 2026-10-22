@@ -122,7 +122,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       {q ? (
         <SearchResults query={query} results={results} onClear={() => setQuery("")} />
       ) : (
-        <div className="lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14">
+        <div className="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
           <SectionRail categories={categories} active={active ?? featured?.section} />
 
           <div className="min-w-0 space-y-16">
@@ -171,7 +171,7 @@ function SectionRail({
                     : "border-border text-muted hover:text-foreground lg:border-transparent lg:hover:border-border-hover"
                 }`}
               >
-                <span>{c.name}</span>
+                <span className="whitespace-nowrap">{c.name}</span>
                 <span className="text-dim">{c.docs.length}</span>
               </a>
             </li>
