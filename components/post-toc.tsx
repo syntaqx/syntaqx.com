@@ -5,9 +5,17 @@ import type { Heading } from "@/lib/posts";
 
 /**
  * Sticky contents rail that follows along: highlights the section you're
- * reading and shows how far through the post you are.
+ * reading and shows how far through the page you are. Progress is measured
+ * against the element marked `data-toc-body`. Used by posts and docs;
+ * `className` sets where it shows (posts from lg, docs from xl).
  */
-export function PostToc({ headings }: { headings: Heading[] }) {
+export function PostToc({
+  headings,
+  className = "hidden self-start lg:sticky lg:top-24 lg:grid",
+}: {
+  headings: Heading[];
+  className?: string;
+}) {
   const [active, setActive] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
@@ -15,7 +23,7 @@ export function PostToc({ headings }: { headings: Heading[] }) {
     const els = headings
       .map((h) => document.getElementById(h.id))
       .filter((el): el is HTMLElement => el !== null);
-    const body = document.querySelector<HTMLElement>("[data-post-body]");
+    const body = document.querySelector<HTMLElement>("[data-toc-body]");
 
     const update = () => {
       // At the bottom of the page the last headings can never scroll up to
@@ -50,10 +58,7 @@ export function PostToc({ headings }: { headings: Heading[] }) {
   }, [headings]);
 
   return (
-    <nav
-      aria-label="Contents"
-      className="hidden self-start lg:sticky lg:top-24 lg:grid"
-    >
+    <nav aria-label="Contents" className={className}>
       <p className="inst mb-3 flex justify-between text-foreground">
         contents
         <span className="text-dim tabular-nums">

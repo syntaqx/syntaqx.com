@@ -135,7 +135,7 @@ export default async function PostPage({ params }: Props) {
         ) : (
           <div className="hidden lg:block" />
         )}
-        <div className="min-w-0" data-post-body>
+        <div className="min-w-0" data-toc-body>
           {post.description && (
             <p
               className={`mb-8 max-w-[40rem] leading-snug ${

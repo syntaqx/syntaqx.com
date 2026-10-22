@@ -6,7 +6,7 @@ order = 5.5
 tags = ["api", "versioning", "deprecation", "headers"]
 +++
 
-APIs change. Integrations shouldn't break without warning. Versions are selected with a request header and named by date, the URL carries at most a coarse major version, and anything being removed is announced on the wire with the `Deprecation` header (RFC 9745) and `Sunset` header (RFC 8594) before it goes away.
+APIs change. Integrations shouldn't break without warning. Versions are selected with a request header and named by date, with a version in the URL path as the fallback, and anything being removed is announced on the wire with the `Deprecation` header (RFC 9745) and `Sunset` header (RFC 8594) before it goes away.
 
 ## Header Versioning
 
@@ -15,7 +15,7 @@ Clients pick a version with the `Api-Version` request header. Versions are named
 ### Example Request
 
 ```http
-GET /v1/resources
+GET /resources
 Api-Version: 2026-10-01
 ```
 
@@ -49,15 +49,13 @@ GitHub, Stripe and others started with versions in the URL and moved to dated he
 
 ## URL Versioning (Fallback)
 
-The URL still carries a major version as its first path segment:
+When a client can't set request headers, the version goes in the first path segment instead:
 
 ```http
 GET /v1/resources
 ```
 
-It's reserved for a wholesale redesign that dated versions can't express: a new resource model, a new authentication scheme, a different error envelope. Expect it to change rarely, if ever. Within a URL major version, the `Api-Version` header selects the dated revision.
-
-URL versioning remains valid for clients that can't set headers. Those clients get the default (oldest supported) dated version for that major version.
+URL versioning is still valid, but it's the fallback, not the recommendation. Path versions are coarse: every breaking change means a new prefix, every URL a client has stored changes with it, and clients migrate everything at once. Prefer the header wherever you control the client.
 
 ## Breaking and Non-Breaking Changes
 
