@@ -2,7 +2,7 @@
 title = "Becoming a Payment Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
 category = "Payments"
-order = 812
+order = 813
 tags = ["payments", "compliance", "pci", "licensing"]
 +++
 
@@ -42,12 +42,12 @@ Being sponsored also isn't being known to the networks. Both major networks regi
 
 A merchant has a PCI DSS obligation for its own systems. A provider is a **service provider**, storing, processing or transmitting card data on behalf of others, and its customers' compliance depends on it. The standard, levels and assessments are in [PCI DSS](/docs/compliance/pci-dss); what changes for a provider:
 
-- **Plan for the top level from day one.** At Level 1 a service provider validates with a Report on Compliance from a Qualified Security Assessor plus quarterly external scans, and that's where a credible competitor to the large processors sits (Stripe states it is certified as a PCI Service Provider Level 1). The brands set the thresholds, so confirm the current figures with them.
+- **Plan for Level 1 from day one.** Visa puts a service provider at Level 1 above 300,000 transactions a year, and Mastercard puts every processor and merchant payment gateway there regardless of volume. Level 1 means an annual Report on Compliance from a Qualified Security Assessor plus quarterly external scans, and it's where a credible competitor to the large processors sits (Stripe states it is certified as a PCI Service Provider Level 1). Service providers also carry extra requirements merchants don't, like scope and segmentation checks every six months; [PCI DSS](/docs/compliance/pci-dss#what-a-service-provider-adds) lists them.
 - **It's annual.** Visa requires acquirers to ensure their service providers demonstrate compliance at least every 12 months, so the assessment is a standing program, not a launch milestone.
 - **Your customers will ask for the AOC.** The Attestation of Compliance is what merchants, acquirers and enterprise buyers see, and enterprise deals stall without a current one.
 - **Your design decides your scope.** Isolate card data in a small vault and hand everything else tokens, as in [Sensitive Data](/docs/payments/sensitive-data). A provider whose whole platform is in scope assesses its whole platform, every year.
 
-Other PCI standards follow from what you build. **PIN Security** applies when you process PIN transactions, at the discretion of the brands and acquirers. **P2PE** covers encrypting card data from the point of acceptance; PCI SSC notes that merchants using a listed solution have fewer DSS requirements, which makes it a selling point for terminals. **3DS Core** applies if you run an access control server, directory server or 3DS server, assessed by a qualified 3DS Assessor; most providers integrate a certified 3DS server instead of building one.
+Other PCI standards follow from what you build. **PIN Security** applies when you process PIN transactions, at the discretion of the brands and acquirers. **P2PE** covers encrypting card data from the point of acceptance; PCI SSC notes that merchants using a listed solution have fewer DSS requirements, which makes it a selling point for terminals. **3DS Core** applies if you run an access control server, directory server or 3DS server, assessed by a qualified 3DS Assessor (Mastercard requires it of service providers performing 3DS functions, revalidated every two years); most providers integrate a certified 3DS server instead of building one. Software you sell for others to run in their payment flow falls under the **Secure Software** and **Secure Software Lifecycle** standards, which replaced PA-DSS when it retired in October 2022. And in September 2026 the Council published **Key Management and Operations (KMO) v1.0**, which covers how cryptographic keys protecting account data are managed across their life, starting with the key management behind PIN and P2PE.
 
 Enterprise customers and partner banks will also ask about everything PCI doesn't cover: access control, change management, availability. That's a [SOC 2](/docs/compliance/soc-2) Type II report (Stripe states it produces SOC 1 and SOC 2 Type II reports annually). The two programs share most of their evidence, so build one control set and assess it twice.
 
@@ -112,11 +112,15 @@ Stage 3 is where most companies that call themselves payment providers live, and
 - [PCI SSC: PIN Security](https://www.pcisecuritystandards.org/standards/pin-security/), audience of acquirers and their agents, and applicability decided by payment brands and acquirers
 - [PCI SSC: Point-to-Point Encryption](https://www.pcisecuritystandards.org/standards/point-to-point-encryption-p2pe/), encryption from the point of acceptance and reduced DSS requirements for merchants using listed solutions
 - [PCI SSC: 3DS Core Security Standard](https://www.pcisecuritystandards.org/standards/pci-3ds/), scope of ACS, DS and 3DS server environments and assessment by qualified 3DS Assessors
+- [PCI SSC: PA-DSS](https://www.pcisecuritystandards.org/standards/pa-dss/), retired October 28, 2022 and superseded by the Secure Software and Secure Software Lifecycle standards
+- [PCI SSC Blog: Just Published: PCI Key Management and Operations (KMO) Standard v1.0](https://blog.pcisecuritystandards.org/just-published-pci-key-management-operations-kmo-standard-v1.0), September 2026, key lifecycle requirements starting with PIN and P2PE keys
 - [AICPA: SOC 2, Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2), SOC 2 as an examination of controls relevant to security, availability, processing integrity, confidentiality or privacy
 
 **Reference**
 
 - [Visa: Security and compliance](https://corporate.visa.com/en/resources/security-compliance.html), the requirement that acquirers ensure service providers demonstrate PCI DSS compliance at least every 12 months
+- [Visa: Validation of Compliance](https://caribbean.visa.com/run-your-business/small-business/information-security/compliance-validation.html), Visa's service provider levels and the 300,000-transaction line (a Visa regional page)
+- [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](http://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), service provider levels by type and volume, 3DS Core revalidation every two years, and registration completing only once compliance is validated
 - [Visa: Global Registry of Service Providers](https://www.visa.com/splisting/), Visa's listing of registered and compliant agents
 - [CSBS: Money Transmission Modernization Act](https://www.csbs.org/csbs-money-transmission-modernization-act-mtma), nationwide standards for net worth, surety bonds and permissible investments, and the number of enacting states
 - [FCA: Apply to become an e-money or payment institution](https://www.fca.org.uk/firms/apply-emoney-payment-institution), the PSRs 2017 and EMRs 2011 and the €3m and €5m thresholds for full authorization

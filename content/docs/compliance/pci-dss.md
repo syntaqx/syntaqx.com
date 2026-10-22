@@ -1,122 +1,131 @@
 +++
 title = "PCI DSS"
-description = "What PCI DSS v4.0.1 demands of engineering: merchant and service provider levels, SAQs versus a QSA's report, and shrinking scope until most systems are out."
+description = "What PCI DSS v4.0.1 demands of engineering: merchant and service provider levels, which SAQ or assessment you land on, and shrinking scope."
 category = "Compliance"
-order = 901
+order = 902
 tags = ["compliance", "pci", "payments", "security"]
 +++
 
-A card number is a bearer credential: whoever holds it can try to spend it, and the bank that issued it eats the fraud. PCI DSS is how the card networks make thousands of companies they don't control protect it the same way. Visa, Mastercard, American Express, Discover and JCB founded the PCI Security Standards Council to write one standard instead of five, then made compliance a condition of accepting their cards. So it's a contract, not a law: the networks enforce it through acquiring banks, acquirers push it onto merchants, and merchants push it onto their vendors.
+A card number is a bearer credential: whoever holds it can try to spend it, and the bank that issued it eats the fraud. PCI DSS is how the card networks make thousands of companies they don't control protect it the same way. Visa, Mastercard, American Express, Discover and JCB founded the PCI Security Standards Council to write one standard instead of five, then made compliance a condition of accepting their cards. So it's a contract, not a law: the brands enforce it through the banks they license, acquirers push it onto merchants, and merchants push it onto their vendors. [The Payments Rulebook](/docs/compliance/payments-rulebook) shows where it sits among the other rules.
 
-For engineering it asks two questions. Which systems can see card data, or affect the security of the ones that do? And can you prove to an outsider that those systems meet hundreds of detailed requirements? The first is a design decision you control. The second is the bill for getting the first one wrong.
-
-This describes how the regime works and what it asks of a design. It isn't assessment advice: your acquirer, and at higher levels your assessor, decide what applies to you.
+For engineering it asks two questions. Which systems can see card data, or affect the security of the ones that do? And can you prove to an outsider that those systems meet the standard? The first is a design decision you control. The second is the bill for getting the first one wrong. This describes how the regime works, not assessment advice: your acquirer, the brands and at higher levels your assessor decide what applies to you.
 
 ## The Current Standard
 
-The current version is **PCI DSS v4.0.1**, published June 11, 2024 as a limited revision of v4.0 that clarified wording and added or removed no requirements. v4.0 was retired at the end of 2024. What changed engineering work was v4.0's **future-dated requirements**, mandatory since **March 31, 2025**: multi-factor authentication for all access into the cardholder data environment (not just remote), an inventory and integrity check of every script on a payment page, automated log review, and a targeted risk analysis to justify the frequency of any control the standard lets you set.
+The current version is **PCI DSS v4.0.1**, published in June 2024 as a limited revision of v4.0 (March 2022) that fixed errors and clarified intent without adding or deleting requirements. v3.2.1 retired on March 31, 2024 and v4.0 on December 31, 2024, so as of October 2026 v4.0.1 is the only version you can be assessed against, and the Council hasn't announced a successor.
 
-v4 also added the **customized approach**: state a requirement's objective, design your own control, and have the assessor test that it meets the objective. It suits mature organizations whose architecture doesn't fit the defined wording, and it costs more evidence, not less.
+What changed engineering work was v4.0's **future-dated requirements**, mandatory since **March 31, 2025**: multi-factor authentication for all non-console access into the cardholder data environment, not just remote (8.4.2); an inventory, authorization and integrity check for every script on a payment page, plus detection of unauthorized changes to the page and its headers (6.4.3, 11.6.1); automated audit log review (10.4.1.1); and a written **targeted risk analysis** for every requirement that lets you choose a frequency, naming the asset, the threat and why your frequency is enough (12.3.1).
+
+v4 also added the **customized approach**: instead of the defined requirement, you show how your control meets the requirement's stated objective, and the assessor derives tests for it. The standard aims it at risk-mature organizations, warns it takes more documentation and effort, and it can't be used on an SAQ, only in a Report on Compliance. Some requirements, like never storing sensitive authentication data, can't be customized at all.
 
 ## Merchant or Service Provider
 
-The standard covers anyone who stores, processes or transmits cardholder data, or can affect its security, in one of two roles. The role matters more than any level.
+The standard covers anyone who stores, processes or transmits cardholder data, or can affect its security, in one of two roles, and the role matters more than any level.
 
 - **A merchant** accepts cards for its own goods or services. Its obligation runs to its acquirer.
 - **A service provider** handles card data on behalf of another business, or manages systems that can affect its security: gateways, processors, payment facilitators, tokenization vaults, hosts with access to a cardholder data environment. Its obligation runs to every customer that relies on it.
 
-One company can be both: Stripe is a merchant when it bills you for its own subscription, and a service provider for every business that sends it payments. Touch another company's card data and you're a service provider, with more requirements, a lower bar for the top level, and customers who want your Attestation of Compliance before they sign. [Becoming a Payment Provider](/docs/payments/becoming-a-payment-provider) covers that path end to end.
+One company can be both: Stripe is a merchant when it bills you for its own subscription, and a service provider for every business that sends it payments. Touch another company's card data and you're a service provider, with extra requirements, a lower bar for the top level, and customers who want your Attestation of Compliance before they sign. [Becoming a Payment Provider](/docs/payments/becoming-a-payment-provider) covers that path end to end.
 
 ## Levels
 
-The Council doesn't define levels. Each network sets thresholds by annual transaction volume, your acquirer tells you which level you validate at, and a breach can move you up regardless. Visa's program is the most cited:
+The Council doesn't define levels. Each brand sets its own by annual transaction volume, your acquirer tells you which you validate at, and a brand can move you up at its discretion, which Mastercard's rules say may follow a confirmed breach. Visa and Mastercard use the same merchant bands, and Mastercard puts any merchant at the level Visa assigns it:
 
-| Level | Merchants (Visa transactions per year) | Service providers |
+| Level | Merchants (transactions per year, per brand) | How they validate |
 | --- | --- | --- |
-| 1 | Over 6 million, or any merchant Visa names Level 1 | Over 300,000, plus all VisaNet processors |
-| 2 | 1 million to 6 million | Under 300,000 |
-| 3 | 20,000 to 1 million e-commerce | |
-| 4 | Under 20,000 e-commerce, and all others up to 1 million | |
+| 1 | Over 6 million, or designated by the brand | An annual Report on Compliance (ROC) and quarterly ASV scans |
+| 2 | 1 million to 6 million | An annual SAQ and quarterly ASV scans; Mastercard requires an assessor for SAQ A, A-EP or D |
+| 3 | 20,000 to 1 million e-commerce | An annual SAQ and quarterly ASV scans |
+| 4 | Under 20,000 e-commerce, and all others up to 1 million | Set by the acquirer, usually an SAQ |
 
-The service provider line is low. A payments startup crosses 300,000 transactions quickly, and Visa lets a Level 2 provider validate as Level 1 to appear on its public registry, which large customers check. A serious service provider plans for Level 1 from the start.
+Service providers have two levels, and the line is low. Visa's Level 1 is VisaNet processors and any provider handling over 300,000 Visa transactions a year; Mastercard's is every processor, merchant payment gateway, token service provider and several other types **regardless of volume**, plus payment facilitators above 300,000 Mastercard transactions. Level 1 means an annual ROC by a Qualified Security Assessor, quarterly ASV scans and an Attestation of Compliance, and on Visa's side a listing on its registry of compliant providers, which acquirers and large customers check. Everyone under the line validates with SAQ D for Service Providers, and Visa lets them validate as Level 1 anyway to get listed. A gateway is Mastercard Level 1 from its first transaction, so a serious service provider plans for Level 1 from the start.
 
-What the level changes is **who checks your work**:
+The vocabulary:
 
-- **Level 1** is assessed annually by a **Qualified Security Assessor (QSA)**, who samples systems, reads configurations, interviews engineers, and writes a **Report on Compliance (ROC)**.
-- **Lower levels** usually self-assess with a **Self-Assessment Questionnaire (SAQ)**, though an acquirer can require more.
-- **Internet-facing systems in scope** pass quarterly external scans by an **Approved Scanning Vendor (ASV)**.
-- **Every assessment** ends in an **Attestation of Compliance (AOC)**, the short signed summary your acquirer and customers actually ask for.
+- **QSA:** a Qualified Security Assessor, an outside assessor certified by the Council. Mastercard also accepts a Level 1 merchant's ROC from a certified Internal Security Assessor (ISA) or signed by an executive officer.
+- **ROC:** the Report on Compliance, the assessor's full report, built by sampling systems, reading configurations and interviewing engineers.
+- **SAQ:** a Self-Assessment Questionnaire, one of several cut-down versions of the standard.
+- **ASV scan:** a quarterly external vulnerability scan by an Approved Scanning Vendor, with rescans until it passes (11.3.2). Even SAQ A includes it, for the page that hosts the redirect or iframe.
+- **AOC:** the Attestation of Compliance, the signed summary that ends every assessment. It's what acquirers and customers ask for, and the standard expects service providers to share theirs.
 
 ## Which SAQ: Architecture Decides
 
-Which SAQ you're eligible for depends on how your integration handles card data, which makes it the clearest proof that architecture is a compliance decision. Card-present setups have their own SAQs; these are the e-commerce ones engineering chooses between:
+A merchant's SAQ depends on how its integration touches card data, the clearest proof that architecture is a compliance decision. Service providers don't get a choice: SAQ D for Service Providers is the only SAQ they can use.
 
-| SAQ | Who it's for | What you answer |
-| --- | --- | --- |
-| **A** | Every element of the payment page comes from a compliant provider: a redirect, or the provider's iframe | The smallest set: vendor management and a few access and policy controls |
-| **A-EP** | Processing is outsourced, but your site controls how the payment page reaches the browser (direct post, or the provider's JavaScript on your page) | Much more: your web servers are in scope for hardening, patching, logging and testing |
-| **D** | Everything else, including anyone who stores card numbers. **SAQ D for Service Providers** is the only SAQ a service provider can use | The whole standard |
+| SAQ | Who's eligible |
+| --- | --- |
+| **A** | Card-not-present only, all processing outsourced to compliant providers, no electronic card data on your systems. Online, every element of the payment page comes only and directly from the provider: a redirect, or the provider's iframe |
+| **A-EP** | E-commerce only. Your site never receives card data but controls how customers or their data reach the provider: direct post, or the provider's JavaScript building the form on your page |
+| **B, B-IP, C, C-VT, P2PE, SPoC** | Card-present and phone-order setups: dial-out or IP terminals, an isolated point-of-sale system, manual entry into a virtual terminal, a validated point-to-point encryption solution, or a phone with a secure card reader. None apply to e-commerce |
+| **D for Merchants** | Everyone else, including any merchant that accepts card data on its own website or stores it: the whole standard |
 
-The line between A and A-EP moves with a single integration choice. In January 2025 the Council revised SAQ A, removing the payment-page script requirements and adding an eligibility criterion instead: the merchant confirms its site isn't susceptible to script attacks that could affect its e-commerce system. The script requirements still apply in full to A-EP, D and assessed entities. "We use the provider's iframe" doesn't end the conversation: the page hosting the iframe can still be modified to show a fake form.
+For e-commerce the choice is A, A-EP or D, and it moves with a single integration decision. Hosted fields or a redirect keep you on A. Your own JavaScript building the form puts your web servers in scope for hardening, patching, logging and testing under A-EP. Card numbers reaching your servers puts you on D.
+
+In January 2025 the Council revised SAQ A, effective March 31, 2025: it removed 6.4.3, 11.6.1 and 12.3.1 and added an eligibility criterion that the merchant confirms "their site is not susceptible to attacks from scripts that could affect the merchant's e-commerce system(s)." The requirements themselves aren't diminished; only how SAQ A merchants report them changed. "We use the provider's iframe" doesn't end the conversation: the page hosting it can still be modified to show a fake form, and you're attesting it can't be.
 
 ## Shrink the Scope
 
-PCI DSS applies to the **cardholder data environment** (CDE), every system that stores, processes or transmits card data, and to every system connected to it or able to affect it. Scope is the cost driver, so the most valuable PCI work is making the CDE small.
+PCI DSS applies to the **cardholder data environment** (CDE), every system that stores, processes or transmits card data, and every system connected to it or able to affect it. Scope is the cost driver, so the most valuable PCI work is making the CDE small.
 
 - **Tokenize at the edge,** so your servers only ever see a token. [Sensitive Data](/docs/payments/sensitive-data) covers the pattern and the small vault behind it.
-- **Segment the network.** Segmentation isn't required, but without it the whole network is in scope. If you rely on it, penetration-test it: every 12 months for merchants, every six months for service providers (requirements 11.4.5 and 11.4.6).
-- **Never store sensitive authentication data** (full track data, the card verification code, PINs) after authorization, even encrypted.
+- **Segment the network.** It isn't required, but without it the whole network is in scope. If you rely on it, penetration-test it at least every 12 months as a merchant and every six months as a service provider, and after any change to it (11.4.5, 11.4.6).
+- **Never store sensitive authentication data** (full track data, the card verification code, PINs and PIN blocks) after authorization, even encrypted (3.3.1).
 
 ## The Twelve Requirements
 
-The twelve top-level requirements are stable across versions; v4 changed the detail beneath them. Read them as an engineering checklist for the CDE:
+The twelve requirements sit under six goals: build and maintain a secure network and systems (1, 2), protect account data (3, 4), maintain a vulnerability management program (5, 6), implement strong access control (7 to 9), regularly monitor and test networks (10, 11), and maintain an information security policy (12). Read them as an engineering checklist for the CDE:
 
-| # | Requirement | For engineering |
+| # | Requirement (v4.0.1, shortened) | For engineering |
 | --- | --- | --- |
-| 1 | Network security controls | Documented, reviewed rules; deny by default |
-| 2 | Secure configurations | No vendor defaults, hardened images |
+| 1 | Install and maintain network security controls | Documented, reviewed rules; deny by default |
+| 2 | Apply secure configurations | No vendor defaults, hardened images |
 | 3 | Protect stored account data | Don't store it; if you must, make it unreadable and manage the keys |
-| 4 | Strong cryptography in transit | TLS wherever card data crosses an open network |
-| 5 | Protect against malware | Anti-malware where it applies, a documented reason where it doesn't |
-| 6 | Secure systems and software | Secure development, code review, patching windows, payment-page script integrity |
-| 7 | Restrict access by need to know | Least privilege, reviewed on a schedule |
-| 8 | Identify and authenticate users | Unique IDs, MFA into the CDE, no shared accounts |
-| 9 | Restrict physical access | Mostly your cloud provider's AOC, plus your offices and devices |
-| 10 | Log and monitor access | Audit logs on every CDE component, reviewed automatically, kept a year |
-| 11 | Test security regularly | ASV scans, internal scans, penetration tests, payment-page change detection |
-| 12 | Policies and programs | Risk analysis, incident response, vendor management, training |
+| 4 | Protect cardholder data with strong cryptography in transit over open networks | TLS wherever card data crosses an open network |
+| 5 | Protect systems and networks from malicious software | Anti-malware, or a documented analysis of why a system doesn't need it |
+| 6 | Develop and maintain secure systems and software | Secure development, code review, patching, payment-page script integrity |
+| 7 | Restrict access by business need to know | Least privilege, reviewed on a schedule |
+| 8 | Identify users and authenticate access | Unique IDs, MFA into the CDE, no shared accounts |
+| 9 | Restrict physical access to cardholder data | Mostly your cloud provider's AOC, plus your offices and devices |
+| 10 | Log and monitor all access | Audit logs on every CDE component, reviewed automatically, kept 12 months with three immediately available |
+| 11 | Test security of systems and networks regularly | Scans, penetration tests, payment-page change detection |
+| 12 | Support information security with policies and programs | Risk analyses, incident response, vendor management, training |
 
-Most of this is what a good platform team does anyway. What PCI adds is **evidence**: the rule written down, the review dated, the exception approved. A pipeline that enforces review, keeps an audit trail and deploys only from main is worth more to an assessor than any policy document.
+Most of this is what a good platform team does anyway. What PCI adds is **evidence**: the rule written down, the review dated, the exception approved. A pipeline that enforces review, keeps an audit trail and deploys only from main is worth more to an assessor than any policy document. **Compensating controls** cover a requirement you can't meet as written for a documented constraint, re-validated by the assessor every year; an assessment full of them means the architecture is fighting the standard.
 
-**Compensating controls** cover a requirement you legitimately can't meet as written: the alternative must meet the original's intent, go beyond what other requirements already demand, and be re-validated yearly. An assessment full of them means the architecture is fighting the standard.
+## What a Service Provider Adds
 
-The Council publishes a family beyond DSS (PIN Security, P2PE, 3DS Core, the Secure Software standards that replaced PA-DSS); [Becoming a Payment Provider](/docs/payments/becoming-a-payment-provider) covers when each applies.
+Requirements marked "additional requirement for service providers only" come on top of everything a merchant does. The ones that shape engineering and operations:
 
-## Checklist
+- **Scope confirmed every six months** and after significant change (12.5.2.1), and segmentation tested on the same cycle (11.4.6).
+- **Quarterly reviews,** by someone other than the person doing the work, that log reviews, network control reviews, configuration standards, alert response and change management actually happened (12.4.2).
+- **A written split of responsibilities** acknowledged to each customer, and the information they need to manage you as a vendor (12.9.1, 12.9.2): the responsibility matrix every enterprise customer asks for.
+- **Customer passwords:** if a password is the only factor, give customers guidance and force a change every 90 days unless you analyze account risk dynamically (8.3.10, 8.3.10.1). Offering MFA avoids both.
+- **Multi-tenant hosting** adds Appendix A1, including supporting your customers' own penetration tests (11.4.7).
 
-- Know your role for each flow: merchant, service provider, or both.
-- Draw the CDE. If you can't, it's larger than you think.
-- Choose the integration with the smallest SAQ the business can live with, and treat the page hosting the payment form as in scope for tampering.
-- Keep a current AOC from every service provider in your card flow, with a written split of who owns which requirement.
-- Make the pipeline produce evidence as a side effect: reviewed changes, audit logs, access reviews, scan results.
-- Put scans, penetration tests and risk analyses on a calendar with owners. Missed dates are the most common finding.
+Mastercard also recommends its Level 1 and 2 service providers validate against the **Designated Entities Supplemental Validation** (Appendix A3), extra controls the brands can require of entities they consider high risk.
+
+## Enforcement
+
+The Council writes the standard and certifies assessors; it doesn't fine anyone. The brands do, and they fine the banks they license. Visa may levy non-compliance assessments on the issuer or acquirer. Mastercard's rules list assessments from up to USD 25,000 for a first violation to up to USD 200,000 for a fourth in a calendar year for Level 1 and 2 merchants and service providers, plus merchant termination or deregistration of a provider. How much reaches you depends on your contract with the acquirer. A breach costs more than a missed attestation: Mastercard's rules for account data compromises call for an independent forensic investigation and let issuers partially recover their costs through the acquirer.
 
 ## References
 
 **Specifications**
 
-- [PCI Security Standards Council: Document Library](https://www.pcisecuritystandards.org/document_library/), the standard, SAQs, AOC templates and supplemental guidance
-- [PCI Security Standards Council: Standards overview](https://www.pcisecuritystandards.org/standards/), the family of PCI standards and their status
+- [PCI SSC: PCI DSS v4.0.1 Requirements and Testing Procedures (PDF, university-hosted copy)](https://www.middlebury.edu/sites/default/files/2025-01/PCI-DSS-v4_0_1.pdf), the requirements and goals, version dates, defined and customized approaches, and every requirement number cited here
+- [PCI SSC: SAQ A v4.0.1 Revision 1 (PDF, state treasurer's copy)](https://treasurer.nebraska.gov/tm/pci-dss/documents/PCI_DSS_v4_0_1_SAQ_A_r1.pdf), SAQ A eligibility, the script-attack criterion, and ASV scans in SAQ A; the same site hosts every v4.0.1 SAQ whose eligibility the table summarizes
+- [PCI SSC: SAQ D for Service Providers v4.0.1 (PDF, state treasurer's copy)](https://treasurer.nebraska.gov/tm/pci-dss/documents/PCI_DSS_v4_0_1_SAQ_D_Service_Provider_r2.pdf), the only SAQ option for service providers
+- [PCI Security Standards Council: Document Library](https://www.pcisecuritystandards.org/document_library/), the official home of the standard and SAQs
 
 **Reference**
 
-- [PCI SSC Blog: Just Published: PCI DSS v4.0.1](https://blog.pcisecuritystandards.org/just-published-pci-dss-v4-0-1), the June 2024 limited revision, v4.0 retirement and the March 31, 2025 date for future-dated requirements
-- [PCI SSC Blog: Important Updates Announced for Merchants Validating to SAQ A](https://blog.pcisecuritystandards.org/important-updates-announced-for-merchants-validating-to-self-assessment-questionnaire-a), the January 2025 SAQ A revision and its new eligibility criterion
-- [Visa: Data Security Program, Keeping Cardholder Data Safe (PDF)](https://in.review.visa.com/content/dam/VCOM/download/merchants/Visa-Data-Security-Program-Keeping-Cardholder-Data-Safe-VOL-02.06.13.pdf), Visa's merchant and service provider level thresholds (dated 2013; confirm current levels with your acquirer)
-- [Visa: Account Information Security Program and PCI](https://corporate.visa.com/en/resources/security-compliance.html), levels set by annual volume and enforced through acquirers
-- [Wikipedia: Payment Card Industry Data Security Standard](https://en.wikipedia.org/wiki/Payment_Card_Industry_Data_Security_Standard), the twelve v4.0.1 requirements, citing the standard
-- [Cloudaware: PCI DSS v4.0.1 Requirement 11.4.6](https://ce.prod.cloudaware.com/frameworks/pci-dss-v4.0.1/11/04/06), segmentation penetration tests every six months for service providers
+- [PCI SSC Blog: Just Published: PCI DSS v4.0.1](https://blog.pcisecuritystandards.org/just-published-pci-dss-v4-0-1), a limited revision with no added or deleted requirements, and the March 31, 2025 date
+- [PCI SSC Blog: Important Updates for Merchants Validating to SAQ A](https://blog.pcisecuritystandards.org/important-updates-announced-for-merchants-validating-to-self-assessment-questionnaire-a), the January 2025 SAQ A revision
+- [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), merchant and service provider levels, validation, DESV, noncompliance assessments and account data compromise rules
+- [Visa: Validation of Compliance](https://caribbean.visa.com/run-your-business/small-business/information-security/compliance-validation.html), Visa's merchant and service provider levels and validation (a Visa regional page)
+- [Visa: Account Information Security Program and PCI](https://corporate.visa.com/en/resources/security-compliance.html), levels by 12-month volume and non-compliance assessments on issuers and acquirers
 
 **In practice**
 
-- [Stripe: Integration security guide](https://docs.stripe.com/security/guide), how integration choice determines which SAQ a merchant qualifies for
+- [Stripe: Integration security guide](https://docs.stripe.com/security/guide), how integration choice determines a merchant's SAQ
+- [Stripe: Security at Stripe](https://docs.stripe.com/security), a provider certified as PCI Service Provider Level 1, with its card vault in a separate environment
