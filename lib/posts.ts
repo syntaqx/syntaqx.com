@@ -216,6 +216,23 @@ export function getTagLabel(
   return null;
 }
 
+/**
+ * Meta description for a tag archive: the count plus as many post titles as
+ * fit in ~160 characters.
+ */
+export function tagDescription(label: string, posts: PostData[]): string {
+  const n = posts.length;
+  let text = `Posts about ${label} by Chase Pierce: ${n} article${n === 1 ? "" : "s"}`;
+  const titles: string[] = [];
+  for (const post of posts) {
+    const next = `${text}, including ${[...titles, `"${post.title}"`].join(", ")}.`;
+    if (next.length > 160) break;
+    titles.push(`"${post.title}"`);
+  }
+  if (titles.length) text += `, including ${titles.join(", ")}`;
+  return `${text}.`;
+}
+
 export function getPostBySlug(slug: string): PostData | undefined {
   const fileNames = fs
     .readdirSync(postsDirectory)

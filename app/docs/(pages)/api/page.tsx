@@ -374,6 +374,29 @@ function Endpoint({
 // Page
 // ---------------------------------------------------------------------------
 
+function ApiHeader({
+  title = "syntaqx API",
+  description = "Public API for syntaqx.com",
+  meta,
+}: {
+  title?: string;
+  description?: string;
+  meta?: string;
+}) {
+  return (
+    <header className="mb-8 border-b border-border pb-8">
+      <p className="eyebrow mb-5">api reference</p>
+      <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">{title}</h1>
+      <p className="max-w-2xl text-dim">{description}</p>
+      {meta ? (
+        <p className="inst mt-5 text-dim">{meta}</p>
+      ) : (
+        <div className="mt-5 h-3 w-56 bg-border/40 animate-pulse" />
+      )}
+    </header>
+  );
+}
+
 export default function ApiDocsPage() {
   const [spec, setSpec] = useState<OpenApiSpec | null>(null);
   const [serverIdx, setServerIdx] = useState<number | null>(null);
@@ -408,10 +431,10 @@ export default function ApiDocsPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!spec) {
+    // Server-rendered before the spec loads, so the page always has its H1.
     return (
-      <div className="space-y-4">
-        <div className="h-6 w-48 bg-border/40 animate-pulse" />
-        <div className="h-4 w-96 bg-border/40 animate-pulse" />
+      <div>
+        <ApiHeader />
         <div className="h-32 bg-border/20 animate-pulse" />
       </div>
     );
@@ -436,18 +459,11 @@ export default function ApiDocsPage() {
 
   return (
     <div>
-      {/* Header */}
-      <header className="mb-8 border-b border-border pb-8">
-        <p className="eyebrow mb-5">api reference</p>
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          {spec.info.title}
-        </h1>
-        <p className="max-w-2xl text-dim">{spec.info.description}</p>
-        <p className="inst mt-5 text-dim">
-          v{spec.info.version} · openapi {spec.openapi} ·{" "}
-          {Object.values(grouped).flat().length} endpoints
-        </p>
-      </header>
+      <ApiHeader
+        title={spec.info.title}
+        description={spec.info.description}
+        meta={`v${spec.info.version} · openapi ${spec.openapi} · ${Object.values(grouped).flat().length} endpoints`}
+      />
 
       {/* Base URL */}
       {servers.length > 0 && (

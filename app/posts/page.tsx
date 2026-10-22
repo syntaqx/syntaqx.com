@@ -3,6 +3,9 @@ import { PostList } from "@/components/post-list";
 import { TagChips } from "@/components/tag-chips";
 import { SimpleIcon } from "@/components/simple-icon";
 import { PageHeader } from "@/components/page-header";
+import { JsonLd } from "@/components/json-ld";
+import { itemList } from "@/lib/schema";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,6 +21,13 @@ export default function PostsPage() {
 
   return (
     <div>
+      <JsonLd
+        data={itemList(
+          "All Posts",
+          "/posts",
+          posts.map((post) => ({ name: post.title, path: `/posts/${post.slug}` })),
+        )}
+      />
       <PageHeader label="posts" title="Writing">
         <p>
           Thoughts on building products, leading teams, and everything in
@@ -34,7 +44,11 @@ export default function PostsPage() {
       </PageHeader>
       {tags.length > 0 && (
         <div className="mb-12">
-          <h2 className="eyebrow mb-4">browse by tag</h2>
+          <Link href="/tags" className="group">
+            <h2 className="eyebrow mb-4 transition-colors group-hover:text-accent">
+              browse by topic
+            </h2>
+          </Link>
           <div className="-mx-6 overflow-x-auto px-6 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
             <TagChips tags={tags} className="max-sm:w-max max-sm:flex-nowrap" />
           </div>

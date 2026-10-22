@@ -169,6 +169,18 @@ export default function RootLayout({
                   contact
                 </Link>
                 <Link
+                  href="/tags"
+                  className="transition-colors hover:text-accent"
+                >
+                  tags
+                </Link>
+                <Link
+                  href="/legal"
+                  className="transition-colors hover:text-accent"
+                >
+                  legal
+                </Link>
+                <Link
                   href="/legal/terms"
                   className="transition-colors hover:text-accent"
                 >

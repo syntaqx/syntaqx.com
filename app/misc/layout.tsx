@@ -1,3 +1,4 @@
+import { MiscJsonLd } from "@/components/misc-json-ld";
 import { MiscToolsNav } from "@/components/misc-tools-nav";
 
 export default function MiscLayout({
@@ -7,6 +8,7 @@ export default function MiscLayout({
 }) {
   return (
     <>
+      <MiscJsonLd />
       {children}
       <MiscToolsNav />
     </>

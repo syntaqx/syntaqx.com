@@ -2,7 +2,7 @@
 date = "2024-07-01"
 title = "Hello, world, again!"
 description = "We're back. Round and round we go. Why I keep rebuilding this blog, why I keep abandoning it, and why this time I'm betting I'll actually stick with writing."
-tags = ["hello-world"]
+tags = ["Hello World"]
 +++
 
 Hello, world, again!

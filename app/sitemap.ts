@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/posts";
+import { getAllDocs } from "@/lib/docs";
 import { SITE_URL } from "@/lib/constants";
 
 /** Recursively find all static page routes under app/. */
@@ -33,11 +34,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
   const appDir = path.join(process.cwd(), "app");
 
-  const staticPages = discoverStaticRoutes(appDir)
-    .map((route) => ({
-      url: `${baseUrl}${route === "/" ? "" : route}`,
-      lastModified: new Date(),
-    }));
+  // No lastModified for static pages or docs: there's no real date for
+  // them, and a build timestamp would claim every page changed on deploy.
+  const staticPages = discoverStaticRoutes(appDir).map((route) => ({
+    url: `${baseUrl}${route === "/" ? "" : route}`,
+  }));
+
+  // Same source as the docs route's generateStaticParams.
+  const docs = getAllDocs().map((doc) => ({
+    url: `${baseUrl}/docs/${doc.slug}`,
+  }));
 
   const allPosts = getAllPosts();
 
@@ -48,5 +54,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Per-tag archive pages are noindex (thin content — see app/tags/[tag]),
   // so they're intentionally omitted here. The /tags index stays.
-  return [...staticPages, ...posts];
+  return [...staticPages, ...docs, ...posts];
 }

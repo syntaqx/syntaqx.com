@@ -1,40 +1,20 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/card";
-
-const converters = [
-  {
-    title: "Base64 Decode / Encode",
-    description: "Decode or encode Base64 strings directly in your browser.",
-    href: "/misc/convert/base64",
-    tags: ["encoding", "base64"],
-  },
-  {
-    title: "Text Format Converter",
-    description:
-      "Convert between JSON, YAML, TOML, XML, TOON, CSV, ENV, and query strings.",
-    href: "/misc/convert/text",
-    tags: ["json", "yaml", "toml", "xml"],
-  },
-  {
-    title: "Favicon Generator",
-    description:
-      "Convert SVG, PNG, JPG, GIF, WebP, and other images to ICO files.",
-    href: "/misc/convert/favicon",
-    tags: ["svg", "png", "ico"],
-  },
-  {
-    title: "Image / Base64 Converter",
-    description:
-      "Convert images to Base64 data URIs, or decode Base64 back into an image.",
-    href: "/misc/convert/image-base64",
-    tags: ["image", "base64", "data-uri"],
-  },
-];
+import { JsonLd } from "@/components/json-ld";
+import { converters } from "@/lib/misc-tools";
+import { itemList } from "@/lib/schema";
 
 export default function ConvertIndexPage() {
   return (
     <div>
+      <JsonLd
+        data={itemList(
+          "Converters",
+          "/misc/convert",
+          converters.map((t) => ({ name: t.title, path: t.href })),
+        )}
+      />
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Converters</h1>
         <p className="max-w-2xl text-dim">

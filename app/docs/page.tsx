@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getDocsByCategory } from "@/lib/docs";
 import { PageHeader } from "@/components/page-header";
+import { JsonLd } from "@/components/json-ld";
+import { itemList } from "@/lib/schema";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,6 +16,14 @@ export default function DocsPage() {
 
   return (
     <div>
+      <JsonLd
+        data={itemList("Docs & API Reference", "/docs", [
+          ...categories.flatMap((c) =>
+            c.docs.map((d) => ({ name: d.title, path: `/docs/${d.slug}` })),
+          ),
+          { name: "API Reference", path: "/docs/api" },
+        ])}
+      />
       <PageHeader
         label="docs"
         title="Conventions"
