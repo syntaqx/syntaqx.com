@@ -314,6 +314,41 @@ function rehypeSectionIds(toc?: Heading[]) {
   };
 }
 
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/**
+ * Inline diagrams. A paragraph that is only `![alt](/diagrams/x.svg "caption")`
+ * becomes a figure with the SVG inlined, so it inherits the theme's colors and
+ * fonts (styled under `.diagram` in globals.css). The Markdown keeps a plain
+ * image, which is what agents and other Markdown readers see.
+ */
+function rehypeDiagrams() {
+  return (tree: HastNode) => {
+    const walk = (n: HastNode) => {
+      n.children = n.children?.map((child) => {
+        const only = child.tagName === "p" ? child.children?.filter((c) => c.type !== "text" || c.value?.trim()) : undefined;
+        const img = only?.length === 1 && only[0].tagName === "img" ? only[0] : undefined;
+        const src = String(img?.properties?.src ?? "");
+        if (!img || !/^\/diagrams\/[\w-]+\.svg$/.test(src)) {
+          walk(child);
+          return child;
+        }
+        const alt = escapeHtml(String(img.properties?.alt ?? ""));
+        // The caption's first sentence is its lead, set in bold.
+        const [lead, rest] = escapeHtml(String(img.properties?.title ?? "")).split(/(?<=\.)\s+([\s\S]*)/);
+        const caption = lead ? `<figcaption><strong>${lead}</strong>${rest ? ` ${rest}` : ""}</figcaption>` : "";
+        const svg = fs
+          .readFileSync(path.join(process.cwd(), "public", src), "utf8")
+          .replace(/^<\?xml[^>]*>\s*/, "")
+          .replace("<svg ", `<svg role="img" aria-label="${alt}" `);
+        return { type: "raw", value: `<figure class="diagram">${svg}${caption}</figure>` };
+      });
+    };
+    walk(tree);
+  };
+}
+
 export async function markdownToHtml(
   markdown: string,
   toc?: Heading[],
@@ -322,6 +357,7 @@ export async function markdownToHtml(
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeSectionIds(toc))
+    .use(rehypeDiagrams)
     .use(rehypeShiki, {
       themes: {
         dark: "vitesse-dark",

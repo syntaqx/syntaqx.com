@@ -77,5 +77,5 @@ Much of [syntaqx.com](https://github.com/syntaqx/syntaqx.com) was built with an 
 
 - [Spracklen et al.: We Have a Package for You! (USENIX Security 2025)](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen), how often code models invent package names
 - [OWASP: LLM09:2025 Misinformation](https://genai.owasp.org/llmrisk/llm092025-misinformation/), hallucinated packages and unsafe code suggestions
-- [OWASP: Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/), the wider set of risks when building with models
+- [OWASP: Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications), the wider set of risks when building with models
 - [Socket: Slopsquatting](https://www.socket.dev/blog/slopsquatting-how-ai-hallucinations-are-fueling-a-new-class-of-supply-chain-attacks), registering package names that AI assistants invent

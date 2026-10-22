@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 196">
+  <defs>
+    <marker id="achn-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="achn-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="achn-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Entries travel one way -->
+  <text class="cap hl" x="40" y="20">entries</text>
+  <path class="ln hl" d="M40,32H678" marker-end="url(#achn-ah-hl)"/>
+
+  <!-- The five parties -->
+  <rect class="cell" x="40" y="44" width="128" height="26"/>
+  <text class="t b" x="104" y="57" text-anchor="middle" dominant-baseline="central">Originator</text>
+  <rect class="cell" x="168" y="44" width="128" height="26"/>
+  <text class="t b" x="232" y="57" text-anchor="middle" dominant-baseline="central">ODFI</text>
+  <rect class="cell" x="296" y="44" width="128" height="26"/>
+  <text class="t b" x="360" y="57" text-anchor="middle" dominant-baseline="central">ACH Operator</text>
+  <rect class="cell" x="424" y="44" width="128" height="26"/>
+  <text class="t b" x="488" y="57" text-anchor="middle" dominant-baseline="central">RDFI</text>
+  <rect class="cell" x="552" y="44" width="128" height="26"/>
+  <text class="t b" x="616" y="57" text-anchor="middle" dominant-baseline="central">Receiver</text>
+
+  <text class="n" x="104" y="88" text-anchor="middle">has the authorization</text>
+  <text class="n" x="232" y="88" text-anchor="middle">submits, and is liable</text>
+  <text class="n" x="360" y="88" text-anchor="middle">FedACH or EPN</text>
+  <text class="n" x="488" y="88" text-anchor="middle">posts the entry</text>
+  <text class="n" x="616" y="88" text-anchor="middle">credited or debited</text>
+
+  <!-- What comes back -->
+  <text class="cap" x="40" y="114">returns and notifications of change</text>
+  <path class="ln dash" d="M680,124H42" marker-end="url(#achn-ah)"/>
+
+  <!-- Which way the money goes -->
+  <text class="cap ink" x="40" y="148">credit: money moves with the entry</text>
+  <text class="n" x="680" y="148" text-anchor="end">payroll, payouts, refunds</text>
+  <path class="ln ink" d="M40,158H678" marker-end="url(#achn-ah-ink)"/>
+  <text class="cap ink" x="40" y="180">debit: money moves against it</text>
+  <text class="n" x="680" y="180" text-anchor="end">subscriptions, invoices</text>
+  <path class="ln ink" d="M680,190H42" marker-end="url(#achn-ah-ink)"/>
+</svg>

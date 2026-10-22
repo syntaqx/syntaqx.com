@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 244">
+  <defs>
+    <marker id="dsp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="dsp-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="dsp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Inquiry: only some networks -->
+  <rect class="zone" x="30" y="80" width="120" height="46"/>
+  <text class="cap" x="30" y="70">some networks only</text>
+  <text class="n" x="30" y="144">answer it and many go away</text>
+
+  <!-- No response loses by default -->
+  <path class="ln dash" d="M275,90C275,30 650,30 650,52" marker-end="url(#dsp-ah)"/>
+  <text class="n" x="462" y="26" text-anchor="middle">no response by the deadline loses by default</text>
+
+  <!-- Main path -->
+  <path class="ln ink" d="M140,103H218" marker-end="url(#dsp-ah-ink)"/>
+  <text class="n" x="184" y="95" text-anchor="middle">unanswered</text>
+  <path class="ln hl" d="M330,103H398" marker-end="url(#dsp-ah-hl)"/>
+  <text class="n hl" x="364" y="83" text-anchor="middle">evidence,</text>
+  <text class="n hl" x="364" y="96" text-anchor="middle">7 to 21 days</text>
+  <text class="n" x="275" y="136" text-anchor="middle">amount and fee debited at once</text>
+
+  <!-- Outcomes of the response -->
+  <path class="ln hl" d="M510,103C556,103 552,139 598,139" marker-end="url(#dsp-ah-hl)"/>
+  <text class="n hl" x="548" y="158" text-anchor="end">accepted</text>
+  <path class="ln dash" d="M510,103C556,103 552,67 598,67" marker-end="url(#dsp-ah)"/>
+  <text class="n" x="544" y="64" text-anchor="end">rejected</text>
+
+  <!-- Escalation -->
+  <path class="ln dash" d="M455,116V188" marker-end="url(#dsp-ah)"/>
+  <text class="n" x="447" y="156" text-anchor="end">if rejected,</text>
+  <text class="n" x="447" y="170" text-anchor="end">either side escalates</text>
+  <path class="ln dash" d="M510,203H598" marker-end="url(#dsp-ah)"/>
+  <text class="n" x="554" y="195" text-anchor="middle">unresolved</text>
+  <path class="ln" d="M650,190V154" marker-end="url(#dsp-ah)"/>
+  <path class="ln" d="M700,203C736,203 736,67 702,67" marker-end="url(#dsp-ah)"/>
+  <text class="n" x="700" y="234" text-anchor="end">the network rules; the loser pays its fee</text>
+
+  <!-- States -->
+  <rect class="cell" x="40" y="90" width="100" height="26"/>
+  <text class="t" x="90" y="103" text-anchor="middle" dominant-baseline="central">inquiry</text>
+  <rect class="cell" x="220" y="90" width="110" height="26"/>
+  <text class="t" x="275" y="103" text-anchor="middle" dominant-baseline="central">dispute</text>
+  <rect class="cell" x="400" y="90" width="110" height="26"/>
+  <text class="t" x="455" y="103" text-anchor="middle" dominant-baseline="central">response</text>
+  <rect class="cell ghost end" x="600" y="54" width="100" height="26"/>
+  <text class="t dim" x="650" y="67" text-anchor="middle" dominant-baseline="central">lost</text>
+  <rect class="cell hl end" x="600" y="126" width="100" height="26"/>
+  <text class="t hl" x="650" y="139" text-anchor="middle" dominant-baseline="central">won</text>
+  <rect class="cell" x="400" y="190" width="110" height="26"/>
+  <text class="t" x="455" y="203" text-anchor="middle" dominant-baseline="central">pre-arbitration</text>
+  <rect class="cell" x="600" y="190" width="100" height="26"/>
+  <text class="t" x="650" y="203" text-anchor="middle" dominant-baseline="central">arbitration</text>
+</svg>

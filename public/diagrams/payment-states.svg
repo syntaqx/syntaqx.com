@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 236">
+  <defs>
+    <marker id="ps-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ps-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ps-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="80" y="20">card payment</text>
+  <text class="cap hl" x="700" y="20" text-anchor="end">the path a payment should take</text>
+
+  <!-- The happy path -->
+  <path class="ln hl" d="M200,123H268" marker-end="url(#ps-ah-hl)"/>
+  <text class="n" x="234" y="115" text-anchor="middle">approved</text>
+  <path class="ln hl" d="M390,123H438" marker-end="url(#ps-ah-hl)"/>
+  <text class="n" x="414" y="115" text-anchor="middle">capture</text>
+  <path class="ln hl" d="M550,123H598" marker-end="url(#ps-ah-hl)"/>
+  <text class="n" x="574" y="115" text-anchor="middle">settles</text>
+
+  <!-- 3-D Secure detour -->
+  <path class="ln ink" d="M118,110V68" marker-end="url(#ps-ah-ink)"/>
+  <path class="ln ink" d="M162,66V108" marker-end="url(#ps-ah-ink)"/>
+  <text class="n" x="212" y="57">a 3-D Secure challenge, then back to pending</text>
+
+  <!-- Ways it ends early -->
+  <path class="ln dash" d="M80,53C44,53 44,203 78,203" marker-end="url(#ps-ah)"/>
+  <text class="n" transform="translate(30 128) rotate(-90)" text-anchor="middle">abandoned or expired</text>
+  <path class="ln dash" d="M140,136V188" marker-end="url(#ps-ah)"/>
+  <text class="n" x="148" y="166">declined</text>
+  <path class="ln dash" d="M330,136V188" marker-end="url(#ps-ah)"/>
+  <text class="n" x="338" y="166">cancelled, or expired uncaptured</text>
+
+  <!-- States -->
+  <rect class="cell" x="80" y="40" width="120" height="26"/>
+  <text class="t" x="140" y="53" text-anchor="middle" dominant-baseline="central">requires_action</text>
+  <rect class="cell" x="80" y="110" width="120" height="26"/>
+  <text class="t" x="140" y="123" text-anchor="middle" dominant-baseline="central">pending</text>
+  <rect class="cell" x="270" y="110" width="120" height="26"/>
+  <text class="t" x="330" y="123" text-anchor="middle" dominant-baseline="central">authorized</text>
+  <rect class="cell" x="440" y="110" width="110" height="26"/>
+  <text class="t" x="495" y="123" text-anchor="middle" dominant-baseline="central">captured</text>
+  <rect class="cell hl end" x="600" y="110" width="100" height="26"/>
+  <text class="t hl" x="650" y="123" text-anchor="middle" dominant-baseline="central">settled</text>
+  <rect class="cell ghost end" x="80" y="190" width="120" height="26"/>
+  <text class="t dim" x="140" y="203" text-anchor="middle" dominant-baseline="central">failed</text>
+  <rect class="cell ghost end" x="270" y="190" width="120" height="26"/>
+  <text class="t dim" x="330" y="203" text-anchor="middle" dominant-baseline="central">voided</text>
+</svg>

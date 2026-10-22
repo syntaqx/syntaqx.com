@@ -453,6 +453,61 @@ body {
   margin: 1.75em 0;
 }
 
+/* Diagrams: SVGs inlined by rehypeDiagrams (lib/posts.ts), drawn only with
+   these classes so they follow the theme. The structure is drawn as itself:
+   cells that share edges, mono labels, one teal accent for the path that
+   matters, gray for everything else, dashes for what can go wrong. */
+.diagram {
+  --fig-paper: var(--background);
+  --fig-shade: color-mix(in oklab, var(--foreground) 4%, var(--background));
+  --fig-shade-2: color-mix(in oklab, var(--foreground) 9%, var(--background));
+  --fig-ink: color-mix(in oklab, var(--foreground) 82%, var(--background));
+  --fig-line: var(--dim);
+  --fig-accent: var(--accent);
+  --fig-accent-fill: color-mix(in oklab, var(--accent) 14%, var(--background));
+}
+.prose figure.diagram {
+  margin: 2.25em 0;
+  overflow-x: auto;
+}
+.prose figure.diagram svg {
+  display: block;
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+}
+.prose figure.diagram figcaption {
+  margin-top: 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.prose figure.diagram figcaption strong { color: var(--foreground); font-weight: 600; }
+.diagram .frame { fill: var(--fig-paper); stroke: var(--fig-ink); stroke-width: 1.4; }
+.diagram .cell { fill: var(--fig-shade); stroke: var(--fig-ink); stroke-width: 1; }
+.diagram .cell.band { fill: var(--fig-shade-2); }
+.diagram .cell.hl { fill: var(--fig-accent-fill); stroke: var(--fig-accent); }
+.diagram .cell.ghost { fill: var(--fig-paper); stroke: var(--fig-line); stroke-dasharray: 4 3; }
+.diagram .cell.end { stroke-width: 2; }
+.diagram .zone { fill: var(--fig-paper); stroke: var(--fig-line); stroke-width: 1; stroke-dasharray: 4 3; }
+.diagram .t { font-family: var(--font-mono); font-size: 10px; fill: var(--fig-ink); }
+.diagram .t.hl { fill: var(--fig-accent); }
+.diagram .t.dim { fill: var(--fig-line); }
+.diagram .t.b { font-weight: 600; }
+.diagram .cap { font-family: var(--font-inst); font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; fill: var(--fig-line); }
+.diagram .cap.ink { fill: var(--fig-ink); }
+.diagram .cap.hl { fill: var(--fig-accent); }
+.diagram .n { font-family: var(--font-sans); font-size: 11px; fill: var(--fig-line); }
+.diagram .n.ink { fill: var(--fig-ink); }
+.diagram .n.hl { fill: var(--fig-accent); }
+.diagram .ln { fill: none; stroke: var(--fig-line); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+.diagram .ln.ink { stroke: var(--fig-ink); }
+.diagram .ln.hl { stroke: var(--fig-accent); stroke-width: 1.4; }
+.diagram .ln.dash { stroke-dasharray: 4 3; }
+.diagram .ah { fill: var(--fig-line); }
+.diagram .ah.ink { fill: var(--fig-ink); }
+.diagram .ah.hl { fill: var(--fig-accent); }
+
 /* GFM tables */
 .prose table {
   width: 100%;

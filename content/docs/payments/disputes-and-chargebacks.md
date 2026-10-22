@@ -12,11 +12,7 @@ The fraud that [risk checks](/docs/payments/fraud-and-risk) miss comes back as a
 
 Networks name the stages differently, but the shape is the same:
 
-```text
-inquiry ──► dispute ──► response ──► won | lost
-  (some networks)          │
-                           └─► pre-arbitration ──► arbitration
-```
+![Dispute lifecycle: an inquiry, used by only some networks, escalates to a dispute if unanswered, and answering it makes many go away. The dispute debits the amount and a fee at once. The merchant's response with evidence within 7 to 21 days is accepted (won) or rejected (lost); no response by the deadline loses by default. If the response is rejected, either side can escalate to pre-arbitration and then arbitration, where the network rules and the loser pays its fee.](/diagrams/dispute-lifecycle.svg "The money moves first; the argument comes later. A dispute debits the merchant at once, a response with evidence is the only way back, and missing the deadline loses by default.")
 
 | Stage | What happens | Who decides |
 | ----- | ------------ | ----------- |

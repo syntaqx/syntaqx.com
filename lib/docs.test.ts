@@ -45,6 +45,16 @@ describe("playbook docs", () => {
     expect(doc.content).not.toMatch(/"data"\s*:/);
   });
 
+  it.each(docs.map((d) => [d.slug, d] as const))("%s draws diagrams as SVGs with alt text and a caption", (_, doc) => {
+    // Box-drawing characters mean an ASCII diagram; those are SVGs in public/diagrams.
+    expect(doc.content).not.toMatch(/[─-╿▶►▼◄]/);
+    for (const [, alt, src, caption] of doc.content.matchAll(/!\[([^\]]*)\]\((\/diagrams\/[^\s)]+)(?: "([^"]*)")?\)/g)) {
+      expect(fs.existsSync(path.join("public", src)), src).toBe(true);
+      expect(alt.length, `${src} alt text`).toBeGreaterThan(40);
+      expect(caption, `${src} caption`).toBeTruthy();
+    }
+  });
+
   it("groups docs into section folders that share one category", () => {
     const bySection = new Map<string, Set<string>>();
     for (const doc of docs) {

@@ -85,7 +85,7 @@ Anyone with a pull request gets a preview, automatically. Production deploys com
 
 - [The Twelve-Factor App: Dev/prod parity](https://12factor.net/dev-prod-parity), keeping environments alike
 - [The Twelve-Factor App: Config](https://12factor.net/config), config in the environment, separate from code
-- [Vercel: Preview deployments](https://vercel.com/docs/deployments/preview-deployments), a deployment for every pull request
+- [Vercel: Preview deployments](https://vercel.com/docs/deployments/environments#preview-environment-pre-production), a deployment for every pull request
 - [GitHub Actions: Managing environments](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment), environment-scoped secrets and deployment protection rules
 - [GitHub: About secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning), push protection and scanning
 

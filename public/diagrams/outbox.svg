@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 20 740 178">
+  <defs>
+    <marker id="ob-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ob-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ob-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- The service writes state and event together -->
+  <rect class="cell" x="40" y="75" width="80" height="26"/>
+  <text class="t b" x="80" y="88" text-anchor="middle" dominant-baseline="central">service</text>
+  <path class="ln ink" d="M120,88H158" marker-end="url(#ob-ah-ink)"/>
+
+  <rect class="frame" x="160" y="52" width="240" height="72"/>
+  <rect class="cell band" x="160" y="52" width="240" height="24"/>
+  <text class="cap ink" x="170" y="64" dominant-baseline="central">one transaction, one commit</text>
+  <rect class="cell" x="160" y="76" width="110" height="24"/>
+  <text class="t b" x="170" y="88" dominant-baseline="central">payments</text>
+  <rect class="cell" x="270" y="76" width="130" height="24"/>
+  <text class="t" x="280" y="88" dominant-baseline="central">status = captured</text>
+  <rect class="cell" x="160" y="100" width="110" height="24"/>
+  <text class="t b" x="170" y="112" dominant-baseline="central">outbox_events</text>
+  <rect class="cell hl" x="270" y="100" width="130" height="24"/>
+  <text class="t hl" x="280" y="112" dominant-baseline="central">payment.captured</text>
+
+  <!-- The event's way out -->
+  <path class="ln hl" d="M400,112H474" marker-end="url(#ob-ah-hl)"/>
+  <text class="n" x="437" y="104" text-anchor="middle">read in order</text>
+  <rect class="cell" x="476" y="99" width="90" height="26"/>
+  <text class="t b" x="521" y="112" text-anchor="middle" dominant-baseline="central">relay</text>
+  <path class="ln hl" d="M566,112H618" marker-end="url(#ob-ah-hl)"/>
+  <text class="n" x="592" y="104" text-anchor="middle">publish</text>
+  <rect class="cell" x="620" y="99" width="80" height="26"/>
+  <text class="t b" x="660" y="112" text-anchor="middle" dominant-baseline="central">broker</text>
+  <path class="ln hl" d="M660,99V64" marker-end="url(#ob-ah-hl)"/>
+  <text class="n" x="652" y="84" text-anchor="end">at least once</text>
+  <rect class="cell" x="620" y="36" width="80" height="26"/>
+  <text class="t b" x="660" y="49" text-anchor="middle" dominant-baseline="central">consumers</text>
+  <text class="n" x="610" y="53" text-anchor="end">dedupe by event ID</text>
+  <text class="n" x="521" y="90" text-anchor="middle">polling or CDC</text>
+
+  <!-- Marking it published, and where duplicates come from -->
+  <path class="ln dash" d="M521,125C521,166 335,166 335,126" marker-end="url(#ob-ah)"/>
+  <text class="n" x="408" y="176" text-anchor="middle">mark published after the broker's ack;</text>
+  <text class="n" x="408" y="190" text-anchor="middle">a crash before marking publishes it twice</text>
+</svg>
