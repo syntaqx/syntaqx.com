@@ -60,11 +60,11 @@ export default async function DocPage({ params }: Props) {
               {doc.title}
             </h1>
             {doc.description && (
-              <p className="max-w-2xl text-dim">{doc.description}</p>
+              <p className="max-w-3xl text-dim">{doc.description}</p>
             )}
           </header>
           <div
-            className="prose"
+            className="prose prose-docs"
             data-toc-body
             dangerouslySetInnerHTML={{ __html: content }}
           />

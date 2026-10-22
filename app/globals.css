@@ -286,6 +286,11 @@ body {
   color: var(--muted);
   counter-reset: section;
 }
+/* Docs fill their column beside the contents rail (about 45rem at xl), and
+   stay at a readable measure where the rail is hidden and the column grows. */
+.prose-docs {
+  max-width: 48rem;
+}
 .prose h1,
 .prose h2,
 .prose h3,

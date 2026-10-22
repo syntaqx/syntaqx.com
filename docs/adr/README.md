@@ -16,3 +16,4 @@ Why this site is built the way it is. Each record captures one significant decis
 | [0010](0010-datastores-allowed-no-user-identity.md) | Datastores are allowed; still no authentication or user identity | Accepted | 2026-10-22 |
 | [0011](0011-rate-limiting-in-upstash-redis.md) | Rate limiting in Upstash Redis, with memory and noop stores | Accepted | 2026-10-22 |
 | [0012](0012-docs-in-section-folders.md) | Docs grouped into section folders, with the section in the URL | Accepted | 2026-10-22 |
+| [0013](0013-csp-report-only-first.md) | Content-Security-Policy, report-only first | Accepted | 2026-10-22 |
