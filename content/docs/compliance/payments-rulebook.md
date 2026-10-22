@@ -14,7 +14,7 @@ This chapter is the map; the chapters after it go deep on the frameworks themsel
 
 **Network rules travel by contract, downhill.** Visa and Mastercard publish rules that bind their member banks. The acquiring bank that sponsors you signs those rules and then writes them into your merchant or payfac agreement; you write them into your sub-merchants' terms. PCI DSS reaches you the same way: the brands founded the PCI Security Standards Council to write one security standard, and made compliance a condition of acceptance ([PCI DSS](/docs/compliance/pci-dss)). ACH works identically: Nacha's Operating Rules bind every bank on the network, and your bank's origination agreement binds you to them ([ACH & Bank Transfers](/docs/payments/ach)).
 
-Enforcement follows the same path in reverse. A brand fines the acquirer; the acquirer passes the fine down and can terminate you. Nacha's enforcement process runs through the ODFI, which has 30 days to bring an Originator's excessive return rate down before fines. Termination has a long tail: merchants terminated for cause are added to terminated-merchant lists such as Mastercard's MATCH, which every acquirer checks at onboarding.
+Enforcement follows the same path in reverse. A brand fines the acquirer; the acquirer passes the fine down and can terminate you. Nacha's enforcement process runs through the ODFI, which has 30 days to bring an Originator's excessive return rate down before fines. Termination has a long tail: merchants terminated for cause are added to terminated-merchant lists such as Mastercard's MATCH, which Mastercard's rules require every acquirer to check before signing a merchant.
 
 **Law applies whether or not you signed anything.** It is enforced by regulators (in the US: the CFPB, FinCEN, OFAC, state financial regulators, the FTC), and its penalties include fines, consent orders and, for licensing failures, being told to stop. Law also reaches you through your bank, because banks are examined on how they supervise the companies they serve, so a bank partner will often impose legal obligations on you contractually before any regulator would.
 
@@ -32,7 +32,7 @@ Enforcement follows the same path in reverse. A brand fines the acquirer; the ac
 | BSA/AML | FinCEN | Law; your bank's program | KYC, beneficial owners, suspicious activity, recordkeeping; [Merchant Onboarding](/docs/payments/merchant-onboarding) |
 | Sanctions | OFAC | Law, every US person | Screening parties and payments before they move |
 | Money transmission | States, harmonized by the MTMA | Law, if you hold others' money | Licenses, net worth, bonds, permissible investments; [Becoming a Payment Provider](/docs/payments/becoming-a-payment-provider) |
-| GLBA Safeguards Rule | FTC for non-banks | Law, financial customer data | A security program with a written risk assessment, MFA, and FTC notice of breaches affecting 500 or more |
+| GLBA Safeguards Rule | FTC for non-banks | Law, non-bank financial institutions | A written security program and risk assessment, MFA, an incident response plan, and FTC notice within 30 days of a breach affecting 500 or more |
 | UDAAP | CFPB | Law, consumer financial products | Disclosures and flows that don't mislead |
 | PSD2, PSD3 and the PSR | EU | Law, EU payment services | Strong customer authentication, licensing; [SCA](/docs/payments/strong-customer-authentication) |
 | GDPR | EU, UK | Law, personal data | Lawful basis, rights, breach notice; [GDPR](/docs/compliance/gdpr) |
@@ -49,7 +49,7 @@ The engineering consequence is the same on every rail: a consumer payment isn't 
 
 ## The Financial Crime Layer
 
-**The Bank Secrecy Act** is the root of KYC. Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers. If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting. Many payment companies aren't MSBs because FinCEN's payment processor exemption covers a business that facilitates purchases or bill payments, under an agreement with the seller, settling only through systems limited to BSA-regulated institutions. Whether you fit is fact-specific, and FinCEN's rulings on it are worth reading before the business model is set, not after.
+**The Bank Secrecy Act** is the root of KYC. Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers: anyone holding 25% or more of the equity. If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting. Many payment companies aren't MSBs because FinCEN's payment processor exemption covers a business that facilitates purchases or bill payments, under an agreement with the seller, settling only through systems limited to BSA-regulated institutions. Whether you fit is fact-specific, and FinCEN's rulings on it are worth reading before the business model is set, not after.
 
 **OFAC sanctions** apply to every US person, with no threshold and no exemption. Screening happens at onboarding and again on payments, against the SDN list and against entities 50% or more owned by blocked persons. A match isn't a fraud signal to be weighed; it's a stop.
 
@@ -61,7 +61,7 @@ The same business moves through these rulebooks as it takes on more of the stack
 
 | Stage | Network rules | Law | Assurance |
 | ----- | ------------- | --- | --------- |
-| **Merchant on a provider** (hosted fields, Checkout) | PCI DSS through the simplest SAQ; brand rules through the provider's terms | UDAAP, GLBA if financial data, GDPR for EU users | Rarely needed |
+| **Merchant on a provider** (hosted fields, Checkout) | PCI DSS through the simplest SAQ; brand rules through the provider's terms | UDAAP if you offer consumer financial products, GLBA if you are a financial institution under it, GDPR for EU users | Rarely needed |
 | **Platform on Connect-style accounts** | Same, plus brand rules on how sub-merchants are presented | KYC data collection on the provider's behalf; licensing usually carried by the provider | SOC 2 once customers ask |
 | **Payment facilitator** | Registered with the brands through a sponsor; PCI as a service provider; liable for sub-merchants | BSA/AML program, OFAC screening, state licensing or an exemption | SOC 1 for customers' auditors, SOC 2 |
 | **Processor or provider** | Direct brand and Nacha obligations, PCI DSS Level 1 with a QSA, PIN and 3DS standards if in scope | Everything above, often MSB registration and licenses in most states | SOC 1 and SOC 2 Type II, often ISO 27001 |
@@ -70,7 +70,7 @@ The useful question at each stage is not "are we compliant?" but "which contract
 
 ## Outside the US
 
-In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/docs/payments/strong-customer-authentication). Its successor is agreed in principle: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025. Check where formal adoption and the application dates stand before planning against them; the obligations bite well after adoption, not on it. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
+In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/docs/payments/strong-customer-authentication). Its successor is agreed but not yet law: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, and the Council's member-state representatives confirmed it on April 22, 2026. As of the Council's October 2026 status report, formal adoption was still pending. Check where adoption and the application dates stand before planning against them; the obligations bite well after adoption, not on it. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
 
 ## References
 
@@ -80,13 +80,16 @@ In the EU, **PSD2** is law, not contract, and it covers both licensing (payment 
 - [CFPB: Regulation Z, 12 CFR 1026.13](https://www.consumerfinance.gov/rules-policy/regulations/1026/13/), credit card billing-error notice, acknowledgment and resolution deadlines
 - [31 CFR 1022.380](https://www.law.cornell.edu/cfr/text/31/1022.380), MSB registration within 180 days and renewal every two years
 - [31 CFR 1010.100](https://www.law.cornell.edu/cfr/text/31/1010.100), the money transmitter definition and its payment processor exclusion
-- [16 CFR 314.4](https://www.law.cornell.edu/cfr/text/16/314.4), the GLBA Safeguards Rule's elements: written risk assessment, MFA, and FTC notice for events affecting 500 or more consumers
+- [31 CFR 1010.230](https://www.law.cornell.edu/cfr/text/31/1010.230), beneficial ownership identification for legal entity customers and the 25 percent threshold
+- [16 CFR 314.4](https://www.law.cornell.edu/cfr/text/16/314.4), the GLBA Safeguards Rule's elements: written risk assessment, MFA, a written incident response plan, and FTC notice within 30 days for events affecting 500 or more consumers
+- [Council of the EU: Current financial services legislative proposals, 2 October 2026](https://data.consilium.europa.eu/doc/document/ST-13589-2026-INIT/en/pdf), PSD3 and PSR: provisional agreement on November 27, 2025 and COREPER confirmation on April 22, 2026
 - [12 U.S.C. 5531](https://www.law.cornell.edu/uscode/text/12/5531), the prohibition on unfair, deceptive or abusive acts or practices
 
 **Reference**
 
 - [Nacha: How ACH Works](https://achdevguide.nacha.org/how-ach-works), the Nacha Rules binding every participant, and the parties they bind
 - [Nacha: Risk and Quality Rules fact sheet](https://www.nacha.org/system/files/2019-05/Risk-and-Quality-Rules-Fact-Sheet.pdf), enforcement through the ODFI and the 30-day reduction period
+- [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), section 11.6: acquirers must check MATCH before signing a merchant
 - [Visa: Security and compliance](https://corporate.visa.com/en/resources/security-compliance.html), the brands requiring acquirers to ensure PCI DSS compliance of their merchants and agents
 - [FinCEN: FIN-2014-R009](https://www.fincen.gov/sites/default/files/administrative_ruling/FIN-2014-R009.pdf), the four conditions of the payment processor exemption
 - [FinCEN: MSB Registration](https://www.fincen.gov/money-services-business-msb-registration), who registers and how
@@ -97,4 +100,4 @@ In the EU, **PSD2** is law, not contract, and it covers both licensing (payment 
 **In practice**
 
 - [Stripe: Connect risk management](https://docs.stripe.com/connect/risk-management), how a provider splits MATCH checks, licensing and negative balance liability with platforms
-- [Hogan Lovells: Final texts for PSD3 and PSR awaited](https://www.hlc.com/en/publications/final-texts-for-psd3-and-psr-awaited-as-european-parliament-and-council-of-eu-announce-provisional), the November 27, 2025 provisional agreement on PSD3 and the PSR
+- [Hogan Lovells Cadwalader: Final texts for PSD3 and PSR awaited](https://www.hlc.com/en/publications/final-texts-for-psd3-and-psr-awaited-as-european-parliament-and-council-of-eu-announce-provisional), what the provisional agreement covers and its expected implementation period
