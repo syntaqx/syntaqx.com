@@ -303,7 +303,7 @@ export function GitHubActivity({
                         partial month at the start) can't fit three letters,
                         so it keeps its column but not its label. */}
                     <span className="inst mb-1.5 text-center text-[0.5rem] text-dim">
-                      {group.weeks.length >= 2 ? group.label : "00a0"}
+                      {group.weeks.length >= 2 ? group.label : "\u00a0"}
                     </span>
                     {/* Weeks in this month */}
                     <div
