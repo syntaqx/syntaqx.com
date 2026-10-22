@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse } from "@/lib/api";
+import { json, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -43,7 +43,7 @@ registry.registerPath({
       description: "Timestamp in multiple formats",
       content: { "application/json": { schema: TimestampResponse } },
     },
-    400: {
+    422: {
       description: "Invalid timestamp",
       content: {
         "application/json": {
@@ -113,7 +113,7 @@ export function GET(request: NextRequest) {
     const ms = num < 1e12 ? num * 1000 : num;
     const d = new Date(ms);
     if (isNaN(d.getTime())) {
-      return errorResponse(400, "Invalid timestamp value.");
+      return invalidField("t", "Invalid timestamp value.");
     }
     return json(formatTimestamp(d));
   }
@@ -121,8 +121,8 @@ export function GET(request: NextRequest) {
   // Try ISO 8601 / RFC 3339
   const d = new Date(t);
   if (isNaN(d.getTime())) {
-    return errorResponse(
-      400,
+    return invalidField(
+      "t",
       "Invalid timestamp. Provide a Unix timestamp or RFC 3339 string.",
     );
   }

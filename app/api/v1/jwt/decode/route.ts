@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse } from "@/lib/api";
+import { json, errorResponse, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -46,6 +46,14 @@ registry.registerPath({
       content: { "application/json": { schema: JwtDecodeResponse } },
     },
     400: {
+      description: "Malformed JSON",
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/Error" },
+        },
+      },
+    },
+    422: {
       description: "Invalid token",
       content: {
         "application/json": {
@@ -87,7 +95,7 @@ export async function POST(request: NextRequest) {
 
   const parsed = JwtDecodeRequest.safeParse(body);
   if (!parsed.success) {
-    return errorResponse(400, "Invalid request body.", {
+    return errorResponse(422, "The given data was invalid.", {
       errors: Object.fromEntries(
         parsed.error.issues.map((i) => [i.path.join("."), [i.message]]),
       ),
@@ -98,7 +106,7 @@ export async function POST(request: NextRequest) {
   const parts = token.split(".");
 
   if (parts.length !== 3) {
-    return errorResponse(400, "Token must have three dot-separated parts.");
+    return invalidField("token", "Token must have three dot-separated parts.");
   }
 
   let header: Record<string, unknown>;
@@ -107,13 +115,13 @@ export async function POST(request: NextRequest) {
   try {
     header = JSON.parse(decodeBase64Url(parts[0]));
   } catch {
-    return errorResponse(400, "Invalid JWT header.");
+    return invalidField("token", "Invalid JWT header.");
   }
 
   try {
     payload = JSON.parse(decodeBase64Url(parts[1]));
   } catch {
-    return errorResponse(400, "Invalid JWT payload.");
+    return invalidField("token", "Invalid JWT payload.");
   }
 
   let expired: boolean | null = null;

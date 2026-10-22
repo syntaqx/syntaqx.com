@@ -162,7 +162,7 @@ How it's built:
 - **QUERY is served in the proxy layer.** Next.js route handlers answer a native `QUERY` with an empty `400`, so the proxy recognizes both doors, applies the checks above (`Content-Type`, the 64 KB limit, override rules), and calls the endpoint's read-only handler directly.
 - **Native responses are cacheable for a year.** A digest never changes for the same input, so a successful `QUERY` returns `Cache-Control: public, max-age=31536000, immutable`. Overridden requests return `private, no-store`.
 - **No stored query.** The API has no database, and a digest is already the complete, permanent answer, so responses don't include a `Location`.
-- **Plain `POST /v1/hash` still works** for existing clients. It returns `400` for invalid fields, and `QUERY` returns `422`, as RFC 10008 specifies.
+- **Plain `POST /v1/hash` still works** for existing clients. Every path returns `400` for malformed JSON and `422` for a well-formed query that can't run, as RFC 10008 and [Error Responses](/docs/error-responses) specify.
 
 ## Client Expectations
 

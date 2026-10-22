@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse } from "@/lib/api";
+import { json, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -52,7 +52,7 @@ registry.registerPath({
         },
       },
     },
-    400: {
+    422: {
       description: "Invalid parameters",
       content: {
         "application/json": {
@@ -88,15 +88,15 @@ export function GET(request: NextRequest) {
   const rawLength = searchParams.get("length");
   const length = rawLength ? parseInt(rawLength, 10) : 32;
   if (isNaN(length) || length < 1 || length > 1024) {
-    return errorResponse(400, "length must be an integer between 1 and 1024.");
+    return invalidField("length", "length must be an integer between 1 and 1024.");
   }
 
   // Charset
   const charsetName = searchParams.get("charset") || "alphanumeric";
   const chars = CHARSETS[charsetName];
   if (!chars) {
-    return errorResponse(
-      400,
+    return invalidField(
+      "charset",
       `charset must be one of: ${CHARSET_NAMES.join(", ")}.`,
     );
   }
@@ -106,7 +106,7 @@ export function GET(request: NextRequest) {
   const count = rawCount ? parseInt(rawCount, 10) : 1;
 
   if (isNaN(count) || count < 1 || count > 100) {
-    return errorResponse(400, "count must be an integer between 1 and 100.");
+    return invalidField("count", "count must be an integer between 1 and 100.");
   }
 
   const strings = Array.from({ length: count }, () =>
