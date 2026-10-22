@@ -20,6 +20,19 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+Nothing else is required: without Redis, the API's rate limiter sends its headers but never blocks. To run the real limiter ([ADR 0011](docs/adr/0011-rate-limiting-in-upstash-redis.md)), start Redis and its Upstash-compatible REST proxy, then point `.env.local` at it (see [.env.example](.env.example)):
+
+```bash
+docker compose up -d
+```
+
+```bash
+UPSTASH_REDIS_REST_URL=http://localhost:8079
+UPSTASH_REDIS_REST_TOKEN=local_dev_token
+```
+
+The Redis integration tests in `lib/ratelimit.test.ts` run whenever this stack is up, and always in CI.
+
 ## Build
 
 ```bash

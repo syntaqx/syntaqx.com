@@ -5,7 +5,7 @@ Why this site is built the way it is. Each record captures one significant decis
 | # | Decision | Status | Date |
 | - | -------- | ------ | ---- |
 | [0001](0001-record-architecture-decisions.md) | Record architecture decisions | Accepted | 2026-10-22 |
-| [0002](0002-no-auth-no-database.md) | No authentication, user identity, or database | Accepted | 2026-09-16 |
+| [0002](0002-no-auth-no-database.md) | No authentication, user identity, or database | Superseded by [0010](0010-datastores-allowed-no-user-identity.md) | 2026-09-16 |
 | [0003](0003-standards-first-api-conventions.md) | Standards-first API conventions | Accepted | 2026-05-10 |
 | [0004](0004-header-based-dated-versioning.md) | Header-based dated versioning | Accepted | 2026-10-22 |
 | [0005](0005-request-id-uuid-v7-with-legacy-aliases.md) | Request-Id as UUID v7, with legacy X- aliases | Accepted | 2026-10-22 |
@@ -13,3 +13,5 @@ Why this site is built the way it is. Each record captures one significant decis
 | [0007](0007-uuid-v7-default-identifier.md) | UUID v7 as the default identifier | Accepted | 2026-05-10 |
 | [0008](0008-400-malformed-422-validation.md) | 400 for malformed requests, 422 for validation failures | Accepted | 2026-10-22 |
 | [0009](0009-playbook-docs-enforced-in-ci.md) | Playbook docs as Markdown, checked in CI | Accepted | 2026-10-22 |
+| [0010](0010-datastores-allowed-no-user-identity.md) | Datastores are allowed; still no authentication or user identity | Accepted | 2026-10-22 |
+| [0011](0011-rate-limiting-in-upstash-redis.md) | Rate limiting in Upstash Redis, with memory and noop stores | Accepted | 2026-10-22 |

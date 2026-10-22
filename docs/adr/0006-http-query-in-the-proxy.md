@@ -23,6 +23,6 @@ Successful native responses use the endpoint's cache policy (immutable for hash)
 
 - The playbook's `QUERY` guidance runs in production, not just on paper.
 - Endpoints are added explicitly. There's no accidental `QUERY` support.
-- No stored-query `Location`, since there's no database ([0002](0002-no-auth-no-database.md)).
+- No stored-query `Location`: a digest is already the complete, permanent answer, so there's nothing to re-run.
 - Plain `POST /hash` keeps working.
 - If Next.js gains native `QUERY` routing, this layer can shrink to just handling the override.

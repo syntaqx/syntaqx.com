@@ -3,10 +3,12 @@
 3. Touch only what you must. Clean up only your own mess.
 4. Define success criteria. Loop until verified.
 
-There is no authentication, user identity, or database. That layer
-(Better Auth, Neon, Drizzle) was intentionally removed; the site is
-static content plus stateless API tools. Don't reintroduce auth or a
-database without being asked.
+There is no authentication or user identity, and no user data. That layer
+(Better Auth, Neon, Drizzle) was intentionally removed; don't reintroduce it
+without being asked. Datastores are allowed when they earn their place
+(managed, free tier, no personal data, and the site keeps working when
+they're down): see docs/adr/0010. Upstash Redis backs rate limiting
+(docs/adr/0011); `compose.yml` runs it locally.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
