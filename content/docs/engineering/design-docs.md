@@ -62,28 +62,36 @@ What's undecided, and who decides it.
 
 ## Architecture Decision Records
 
-An ADR records one decision, in about a page, in the repository it affects. Based on [Michael Nygard's format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions):
+An ADR records one decision, in about a page, in the repository it affects. Based on [Michael Nygard's format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions).
+
+### Record Departures, Not Defaults
+
+A team with written standards doesn't need an ADR for every choice. When the code does what the playbook says, the playbook is the explanation, and an ADR restating it is noise that buries the records that matter.
+
+An ADR earns its place when a system **departs** from the standard: a different ID format for one warehouse, no deprecation window for an API nobody uses yet, a security header weaker than the default. Those are the choices a new engineer will reasonably assume are mistakes, so the reasoning has to be findable. If a departure keeps turning out to be right, that's a sign the standard should change, and the ADR goes away with it.
+
+Teams without written standards are in a different position: every significant decision is effectively a departure from nothing, and ADRs are how the standard gets built up in the first place.
 
 ```markdown
-# 0007. Use UUID v7 for primary keys
+# 0007. Integer keys for the reporting warehouse
 
 Status: Accepted (2026-03-14)
 
 ## Context
-IDs are generated on several services and must sort by creation time...
+The playbook defaults to UUID v7 keys. The warehouse joins billions of rows on keys and is never written by more than one service...
 
 ## Decision
-All new tables use UUID v7 primary keys...
+Warehouse tables use BIGINT keys, mapped from source UUIDs at load time...
 
 ## Consequences
-B-tree inserts stay sequential. Existing auto-increment tables are not migrated...
+Joins and indexes are a quarter the size. Keys can't be generated outside the loader...
 ```
 
 - **Numbered and immutable.** An ADR is never edited after it's accepted. A changed decision is a new ADR that supersedes the old one, and the old one links forward.
 - **Stored with the code** (`docs/adr/`), so they're reviewed in pull requests and found by people reading the code.
-- **Small decisions count.** "Why is this a separate service?" is exactly the question a new engineer asks in year three.
+- **Say what it departs from.** Link the standard it overrides, so a reader can weigh the exception against the rule.
 
-This site keeps its own: [syntaqx.com's ADRs](https://github.com/syntaqx/syntaqx.com/tree/main/docs/adr) cover decisions like serving HTTP QUERY in the proxy layer and keeping legacy `X-` headers as aliases, and CI checks that every record is numbered, indexed and complete.
+This site keeps its own: [syntaqx.com's ADRs](https://github.com/syntaqx/syntaqx.com/tree/main/docs/adr) are short because the site mostly follows this playbook. The few that exist are the departures, like serving the API with header-only versioning and a Content-Security-Policy that still allows inline scripts.
 
 ## After It Ships
 

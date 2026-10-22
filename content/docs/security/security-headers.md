@@ -76,7 +76,7 @@ CORS relaxes the browser's same-origin policy; it doesn't protect your server. `
 
 ## This Site
 
-syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-site` so `www` and the `api` subdomain can share resources. Its Content Security Policy is in Report-Only mode, reporting violations to Sentry through `report-uri` and the Reporting API, and switches to enforcing once the reports are clean ([ADR 0013](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0013-csp-report-only-first.md)). Its `script-src` still allows inline scripts, because Next.js bootstraps with them; moving to nonces and `'strict-dynamic'` is the step after enforcement.
+syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-site` so `www` and the `api` subdomain can share resources. Its Content Security Policy is in Report-Only mode, reporting violations to Sentry through `report-uri` and the Reporting API, and switches to enforcing once the reports are clean. Its `script-src` still allows inline scripts, because nonces would mean rendering every page per request; that departure from the policy above is recorded in [ADR 0004](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0004-csp-allows-inline-scripts.md).
 
 ## References
 

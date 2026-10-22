@@ -83,7 +83,7 @@ The rate limiter must never be the reason the API is down. If Redis errors or do
 
 ### This API
 
-The syntaqx API runs exactly this script on [Upstash Redis](https://upstash.com/docs/redis/sdks/ts/developing), with the in-memory fallback. Locally, `compose.yml` runs Redis behind the same REST API Upstash serves, and without it the limiter sends the headers but never blocks. The reasoning, and the alternatives that lost, are in [ADR 0011](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0011-rate-limiting-in-upstash-redis.md).
+The syntaqx API runs exactly this script on [Upstash Redis](https://upstash.com/docs/redis/sdks/ts/developing), with the in-memory fallback. Locally, `compose.yml` runs Redis behind the same REST API Upstash serves, and without it the limiter sends the headers but never blocks. It deliberately doesn't use Upstash's own rate-limit library: its scripts carry an Upstash-only Lua flag that stock Redis rejects, so local and CI runs against plain Redis would quietly fall back to memory and test nothing. Twelve lines of portable Lua are a better trade than a dependency that only works in production.
 
 ## References
 

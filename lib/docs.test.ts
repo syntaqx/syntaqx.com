@@ -4,7 +4,7 @@ import { describe, it, expect } from "vitest";
 import { getAllDocs } from "./docs";
 import { docRedirects } from "./doc-redirects";
 
-// The playbook's own guardrails (docs/adr/0009). A doc that breaks one of
+// The playbook's own guardrails (see /docs/delivery/ci-pipelines). A doc that breaks one of
 // these fails CI with the doc's slug in the message.
 
 const docs = getAllDocs();
