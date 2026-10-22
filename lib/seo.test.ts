@@ -84,7 +84,9 @@ describe("sitemap", () => {
     for (const entry of sitemap()) {
       expect(entry.url.startsWith("https://www.syntaqx.com")).toBe(true);
       if (entry.lastModified) {
-        expect(entry.url).toContain("/posts/");
+        // Only posts (publish date) and docs (last commit) have real dates.
+        expect(entry.url).toMatch(/\/(posts|docs)\//);
+        expect(Number.isNaN(new Date(entry.lastModified).getTime())).toBe(false);
       }
     }
   });
