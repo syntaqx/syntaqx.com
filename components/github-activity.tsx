@@ -260,21 +260,7 @@ export function GitHubActivity({
       </div>
 
       <div className="min-w-0">
-        <div className="flex min-w-0 items-start gap-1.5">
-          <div aria-hidden="true" className="flex shrink-0 flex-col py-0.5">
-            <span className="inst invisible mb-1.5 block text-[0.5rem]">S</span>
-            <div className="flex flex-col gap-0.75">
-              {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
-                <span
-                  key={`${day}-${index}`}
-                  className="flex h-2.5 w-3 items-center justify-end text-[0.5rem] leading-none text-dim sm:h-3 md:h-3.25"
-                >
-                  {day}
-                </span>
-              ))}
-            </div>
-          </div>
-
+        <div className="flex min-w-0 items-start">
           {/* Grid — scrollable when content overflows */}
           <div
             className="relative min-w-0 flex-1 overflow-x-auto"
@@ -288,15 +274,36 @@ export function GitHubActivity({
                 marginLeft: "auto",
               }}
             >
+              {/* Weekday labels sit beside the grid (not in a separate
+                  column, which drifts away when the grid is narrower than
+                  its container) and stay pinned left while it scrolls. */}
+              <div
+                aria-hidden="true"
+                className="sticky left-0 z-10 flex shrink-0 flex-col bg-background pr-1.5"
+              >
+                <span className="inst invisible mb-1.5 block text-[0.5rem]">S</span>
+                <div className="flex flex-col gap-0.75">
+                  {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
+                    <span
+                      key={`${day}-${index}`}
+                      className="inst flex h-2.5 w-3 items-center justify-center text-[0.5rem] leading-none text-dim sm:h-3 md:h-3.25"
+                    >
+                      {day}
+                    </span>
+                  ))}
+                </div>
+              </div>
               <ActivityGridTooltips days={dayInfo}>
                 {monthGroups.map((group, gi) => (
                   <div
                     key={gi}
                     className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
                   >
-                    {/* Month label */}
+                    {/* Month label. A month only one week wide (usually the
+                        partial month at the start) can't fit three letters,
+                        so it keeps its column but not its label. */}
                     <span className="inst mb-1.5 text-center text-[0.5rem] text-dim">
-                      {group.label}
+                      {group.weeks.length >= 2 ? group.label : " "}
                     </span>
                     {/* Weeks in this month */}
                     <div
