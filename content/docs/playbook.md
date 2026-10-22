@@ -34,6 +34,7 @@ These are the rules the rest of the playbook is built from.
 | **Payments** | [Money](/docs/money), [Idempotency](/docs/idempotency), [Payment States & Ledgers](/docs/payment-states), [Webhooks](/docs/webhooks), [Sensitive Data](/docs/sensitive-data) |
 | **Architecture** | [Service Boundaries](/docs/service-boundaries), [Events](/docs/events), [Multi-Tenancy](/docs/multi-tenancy), [Data Retention](/docs/data-retention) |
 | **Database** | [Naming](/docs/database-naming-conventions), [Zero-Downtime Migrations](/docs/zero-downtime-migrations) |
+| **Delivery** | [CI Pipelines](/docs/ci-pipelines), [Continuous Deployment](/docs/continuous-deployment) |
 | **Engineering Practice** | [Design Docs & ADRs](/docs/design-docs), [Commits & Review](/docs/commits-and-reviews), [Testing](/docs/testing), [Feature Flags](/docs/feature-flags), [Dependencies](/docs/dependencies), [Postmortems](/docs/postmortems) |
 
 ## Where to Start
