@@ -362,7 +362,7 @@ function Endpoint({
           <ChevronRight size={14} className="text-dim shrink-0" />
         )}
         <span
-          className={`inst w-14 shrink-0 border py-1 text-center ${METHOD_COLORS[method] || "text-dim"}`}
+          className={`inst w-19 shrink-0 border py-1 text-center ${METHOD_COLORS[method] || "text-dim"}`}
         >
           {method}
         </span>
