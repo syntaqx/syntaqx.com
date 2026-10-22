@@ -1,6 +1,6 @@
 +++
 title = "Testing Strategy"
-description = "What to test at each level, contract tests between services, deterministic fixtures, real databases over mocks, and a zero-tolerance policy for flaky tests."
+description = "The test pyramid and why it has that shape, what each test type covers, real databases over mocks, deterministic fixtures, and zero tolerance for flaky tests."
 category = "Engineering Practice"
 order = 12.2
 tags = ["testing", "quality", "process", "ci"]
@@ -9,24 +9,44 @@ aliases = ["testing"]
 
 Tests exist so you can change code with confidence. A test suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
 
-## The Shape
+## The Pyramid
 
-The classic test pyramid says most tests should be unit tests, because they're fast. For service code, that optimizes the wrong thing. Most production bugs in a service aren't in a pure function; they're in the wiring: a validation rule that never runs because the route isn't registered, a query that violates a constraint, an error mapped to the wrong status. A thousand unit tests over mocks pass straight through all of those.
+Tests come in layers, and every layer up costs more to write, run and keep passing, while telling you less about where the bug is. So a healthy suite is shaped like a pyramid, the shape Mike Cohn described in *Succeeding with Agile*: a broad base of unit tests, fewer integration tests above them, and a handful of end-to-end tests at the top.
 
-So I weight toward integration tests, the shape Kent C. Dodds calls the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications). They're slower than unit tests, but containers have made "a real database in a test" cost seconds rather than minutes, and the confidence per minute of CI is far higher:
+The shape follows from four properties that all get worse as you go up:
 
-| Level | What it covers | Share |
-| ----- | -------------- | ----- |
-| Static | Types, linting, formatting | Everything, free |
-| Unit | Pure logic: money math, state transitions, parsers | Many |
-| Integration | One service end to end through its API, with a real database | The most |
-| Contract | The agreement between a service and its consumers | Every boundary |
-| End to end | A few critical journeys across the deployed system | A handful |
+- **Speed is feedback.** A unit test runs in milliseconds, so thousands run on every save, while the code is still in your head. An integration test takes tens of milliseconds to seconds, and an end-to-end test seconds to minutes. The slow layers run in CI, after you've moved on, and every failure there costs a context switch.
+- **Precision.** A failing unit test names the function and the input that broke it. A failing end-to-end test says "checkout is broken" and leaves you to work out which of a dozen components did it.
+- **Reliability.** Each layer up adds a network, timing, shared data and an environment, and each is a source of flakes. A unit test of a pure function can't be flaky.
+- **Combinatorics.** Edge cases multiply: currency, times rounding rule, times refund state. At the unit level that's a table of cases in one test. End to end, it's a full journey per combination, so in practice most combinations never get tested at all.
+
+The rule that falls out: **test each behavior at the lowest level that can catch its bug**, and go up a level only for what the lower one can't see. A rounding error belongs in a unit test. A missing database constraint belongs in an integration test. "A customer can pay and get a receipt" belongs in one end-to-end test.
+
+## Test Types
+
+| Type | What it exercises | Runs in | How many |
+| ---- | ----------------- | ------- | -------- |
+| Static | Types, linting, formatting | Instant | Everything |
+| Unit | One function or module, no I/O | Milliseconds | Most |
+| Integration | One service with its real dependencies (database, cache, queue), through its API | Tens of ms to seconds | Fewer |
+| Contract | The agreement between a service and its consumers | Milliseconds | Every boundary |
+| End to end | Critical journeys across the deployed system, through the UI or public API | Seconds to minutes | A handful |
+
+The names vary by team. *Functional*, *acceptance* and *behavior* tests usually mean the top of the pyramid: a feature checked from the user's side, as a black box. Behavior-driven development (given, when, then) is a way of writing tests, not a layer; it works at any level. Load and security testing sit outside the pyramid altogether, because they answer different questions: see [Load Testing](/docs/operations/load-testing) and [Vulnerability Management](/docs/security/vulnerability-management).
+
+## Where the Pyramid Goes Wrong
+
+The pyramid counts tests; it doesn't excuse bad ones. It fails in two familiar ways.
+
+- **The ice-cream cone.** The inverted shape: mostly end-to-end and manual tests, few unit tests. It's slow, flaky, and every failure is an investigation. It usually means the code can't be tested in pieces, because business logic lives inside request handlers and UI components. The fix is design, pulling the logic out into plain functions, not more end-to-end tests.
+- **Unit tests of wiring.** A test that mocks the database, the router and the validator, then asserts the handler called them in order, is a pyramid by count and tests nothing that can break. Most service bugs live in exactly that wiring: a route that isn't registered, a query that violates a constraint, an error mapped to the wrong status. Kent C. Dodds' [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) is a reaction to suites like that, and its point stands: wiring gets integration tests against real dependencies, never mocks.
+
+So the base is wide because the logic is extracted and unit-testable, not because every handler has a mock-heavy test. Units for logic, integration for wiring, end to end to prove the journeys hold together.
 
 ## What to Test Where
 
 - **Unit test the logic that's easy to get wrong.** Rounding and remainder allocation from [Money & Amounts](/docs/payments/money), every allowed and rejected transition in [Payment States](/docs/payments/payment-states), signature verification in [Webhooks](/docs/payments/webhooks).
-- **Integration test through the HTTP interface.** Send a request, assert on the response and the resulting state. This tests routing, validation, [error format](/docs/requests/error-responses), and the database together, which is where real bugs live.
+- **Integration test through the HTTP interface.** Send a request, assert on the response and the resulting state. This tests routing, validation, [error format](/docs/requests/error-responses), and the database together, which is where wiring bugs live.
 - **Test behavior, not implementation.** A test that breaks when you rename a private function is a test of the wrong thing.
 - **Test the failure paths.** Timeouts, duplicate requests, a replayed [idempotency key](/docs/payments/idempotency), a webhook delivered twice. Payments bugs live in the unhappy paths.
 
@@ -86,6 +106,7 @@ A flaky test is a failing test. The damage isn't the one false alarm; it's what 
 
 **In practice**
 
-- [Kent C. Dodds: The Testing Trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications), weighting toward integration tests
+- [Martin Fowler: TestPyramid](https://martinfowler.com/bliki/TestPyramid.html), the shape and the ice-cream cone it guards against
 - [Ham Vocke: The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html), what to test at each level
+- [Kent C. Dodds: The Testing Trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications), the counterpoint on mock-heavy unit tests
 - [Martin Fowler: Eradicating Non-Determinism in Tests](https://martinfowler.com/articles/nonDeterminism.html), quarantining and fixing flaky tests
