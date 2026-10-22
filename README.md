@@ -33,6 +33,16 @@ UPSTASH_REDIS_REST_TOKEN=local_dev_token
 
 The Redis integration tests in `lib/ratelimit.test.ts` run whenever this stack is up, and always in CI.
 
+## Test
+
+```bash
+npm test           # unit, integration and docs checks (Vitest)
+npm run lint
+npm run typecheck
+```
+
+CI runs all three in parallel on every pull request; see [.github/workflows/ci.yml](.github/workflows/ci.yml).
+
 ## Build
 
 ```bash
@@ -41,14 +51,22 @@ npm run build
 
 This runs the Next.js build and then generates the Pagefind search index from the static output.
 
+## Decisions
+
+Why the site is built the way it is lives in [Architecture Decision Records](docs/adr/README.md).
+
 ## Project Structure
 
 ```sh
-app/            → Pages and layouts (App Router)
+app/            → Pages, layouts and the API (App Router)
 components/     → React components
 content/posts/  → Blog posts (Markdown with TOML frontmatter)
-lib/            → Utilities (post parsing, constants)
+content/docs/   → The playbook, one folder per section (/docs/<section>/<slug>)
+docs/adr/       → Architecture Decision Records
+lib/            → Utilities: docs and posts, API helpers, rate limiting, QUERY
+proxy.ts        → API headers, rate limiting, HTTP QUERY routing
 public/         → Static assets
+compose.yml     → Optional local Redis for the rate limiter
 ```
 
 ## License

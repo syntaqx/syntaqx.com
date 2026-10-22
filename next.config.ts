@@ -2,10 +2,40 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 import { docRedirects } from "./lib/doc-redirects";
 
+// Content-Security-Policy, in Report-Only mode first: it lists what the
+// site loads today, and anything else is reported to Sentry instead of
+// blocked. Enforce once reports are quiet, then tighten scripts to nonces.
+// See /docs/security/security-headers.
+const SENTRY_CSP_REPORT_URI =
+  "https://o463483.ingest.us.sentry.io/api/4511368166572032/security/?sentry_key=83053c7854f5d2501223a9d596b331ff";
+
+export const contentSecurityPolicy = [
+  "default-src 'self'",
+  // Next.js bootstraps with inline scripts; dev also needs eval for HMR.
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://vercel.live`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "connect-src 'self' https://api.syntaqx.com https://*.ingest.us.sentry.io https://vercel.live wss://ws-us3.pusher.com",
+  "frame-src 'self' https://vercel.live",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'self'",
+  "upgrade-insecure-requests",
+  `report-uri ${SENTRY_CSP_REPORT_URI}`,
+  "report-to csp",
+].join("; ");
+
 const securityHeaders = [
+  { key: "Content-Security-Policy-Report-Only", value: contentSecurityPolicy },
+  { key: "Reporting-Endpoints", value: `csp="${SENTRY_CSP_REPORT_URI}"` },
   { key: "X-DNS-Prefetch-Control", value: "on" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  // same-site, not same-origin: www and the api subdomain share resources.
+  { key: "Cross-Origin-Resource-Policy", value: "same-site" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
