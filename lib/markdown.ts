@@ -135,7 +135,7 @@ function apiBullets(): string {
     bullet(
       "Versioning & deprecation",
       url("/docs/versioning"),
-      "breaking-change rules and Deprecation/Sunset headers",
+      "Api-Version header versions, breaking-change rules and Deprecation/Sunset headers",
     ),
   ].join("\n");
 }
@@ -147,7 +147,7 @@ function apiReference(): string {
     `The full machine-readable description is the OpenAPI 3.1 document at ${url("/openapi.json")}. Every operation has an \`operationId\`, typed request and response schemas, and a description.`,
     `## Rate limits\n\n5,000 requests per hour per IP. Every response carries \`RateLimit-Policy\` and \`RateLimit\` headers (IETF draft-ietf-httpapi-ratelimit-headers), and a \`429\` includes \`Retry-After\`. Details: ${url("/docs/rate-limiting")}`,
     `## When to use it\n\n${WHEN_TO_USE}`,
-    `## Versioning and deprecation\n\nThe major version is in the URL (\`/v1\`), and breaking changes only ship in a new major version. Deprecations are announced with \`Deprecation\` and \`Sunset\` response headers at least 30 days before removal. Policy: ${url("/docs/versioning")}`,
+    `## Versioning and deprecation\n\nThe API is on URL major version \`/v1\` and doesn't read an \`Api-Version\` header yet. Breaking changes never ship in place. Deprecations are announced with \`Deprecation\` and \`Sunset\` response headers at least 30 days before removal. Policy: ${url("/docs/versioning")}`,
     `## Errors\n\nErrors use a JSON envelope: \`{"message": "...", "errors": {"field": ["..."]}}\`. Details: ${url("/docs/error-responses")}`,
     `## Links\n\n${apiBullets()}`,
   ].join("\n\n");

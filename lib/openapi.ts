@@ -47,7 +47,7 @@ export function generateOpenApiSpec() {
       title: "syntaqx API",
       version: "1.0.0",
       description:
-        "Public API for syntaqx.com. Breaking changes only ship in a new major version (the /v1 path segment); deprecations are announced with Deprecation and Sunset headers at least 30 days before removal. See https://www.syntaqx.com/docs/versioning.",
+        "Public API for syntaqx.com. Breaking changes never ship in place; deprecations are announced with Deprecation and Sunset headers at least 30 days before removal. See https://www.syntaqx.com/docs/versioning.",
       contact: {
         name: "Chase Pierce",
         url: "https://www.syntaqx.com/contact",
