@@ -63,6 +63,12 @@ export function siteGraph({
         sameAs,
         founder: { "@id": PERSON_ID },
         contactPoint,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "South Jordan",
+          addressRegion: "UT",
+          addressCountry: "US",
+        },
       },
       {
         ...personRef,

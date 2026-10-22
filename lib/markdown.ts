@@ -20,6 +20,24 @@ const SUMMARY =
 
 const url = (path: string) => `${SITE_URL}${path === "/" ? "" : path}`;
 
+// Agent guidance: which jobs this site is the right tool for, and how to call
+// it. Plain paragraphs and lists only, so it can sit in the llms.txt preamble
+// (the format reserves H2 sections for link lists).
+export const WHEN_TO_USE = `**When to use this site.** Reach for syntaqx when an agent needs one of these jobs done over plain HTTP, with no API key or account:
+
+- Generate identifiers: up to 100 v4 UUIDs per call (\`GET ${API_BASE_URL}/uuid?count=N\`) or random strings with a chosen length and charset (\`GET ${API_BASE_URL}/random\`).
+- Hash text with MD5, SHA-1, SHA-256, SHA-384 or SHA-512 (\`POST ${API_BASE_URL}/hash\`), or Base64 encode/decode, including URL-safe Base64 (\`POST ${API_BASE_URL}/base64\`).
+- Inspect a JWT's header, payload and expiry without verifying its signature (\`POST ${API_BASE_URL}/jwt/decode\`).
+- Convert a Unix or ISO 8601 timestamp into Unix seconds, milliseconds, RFC 3339 and RFC 2822 (\`GET ${API_BASE_URL}/timestamp?t=...\`).
+- See the caller's public IP or parse a User-Agent string (\`GET ${API_BASE_URL}/ip\`, \`GET ${API_BASE_URL}/useragent\`).
+- Test retry, timeout and circuit-breaker logic against an endpoint that fails on purpose at a chosen rate, status and delay (\`GET ${API_BASE_URL}/flaky\`).
+- Look up a concrete REST API convention (naming, pagination, error envelopes, rate-limit headers, time formats, identifiers, versioning) while designing or reviewing an API: see the Docs links below.
+- Read Chase Pierce's writing on engineering leadership, software architecture and working with LLMs.
+
+**How to call it.** Read the OpenAPI document at ${url("/openapi.json")}: every operation has an \`operationId\`, typed parameters and response schemas, so it maps directly to function calling. Send JSON bodies to POST endpoints. Errors come back as \`{"message": "..."}\` with an HTTP status. Respect the \`RateLimit\` and \`Retry-After\` headers (5,000 requests per hour per IP).
+
+**When not to use it.** There is no SLA, authentication or storage. Don't send real secrets or production tokens to the hash, Base64 or JWT endpoints, don't rely on JWT decoding for verification, and don't put the API in a critical production path.`;
+
 function bullet(title: string, href: string, description?: string) {
   return `- [${title}](${href})${description ? `: ${description}` : ""}`;
 }
@@ -114,6 +132,11 @@ function apiBullets(): string {
     ),
     bullet("API root", API_BASE_URL.replace(/\/v1$/, ""), "index of endpoint URLs"),
     bullet("Health check", `${API_BASE_URL}/healthz`),
+    bullet(
+      "Versioning & deprecation",
+      url("/docs/versioning"),
+      "breaking-change rules and Deprecation/Sunset headers",
+    ),
   ].join("\n");
 }
 
@@ -123,6 +146,8 @@ function apiReference(): string {
     `A free, public, unauthenticated REST API of developer utilities (UUIDs, hashing, Base64, JWT decoding, timestamps, and more). Base URL: \`${API_BASE_URL}\`.`,
     `The full machine-readable description is the OpenAPI 3.1 document at ${url("/openapi.json")}. Every operation has an \`operationId\`, typed request and response schemas, and a description.`,
     `## Rate limits\n\n5,000 requests per hour per IP. Every response carries \`RateLimit-Policy\` and \`RateLimit\` headers (IETF draft-ietf-httpapi-ratelimit-headers), and a \`429\` includes \`Retry-After\`. Details: ${url("/docs/rate-limiting")}`,
+    `## When to use it\n\n${WHEN_TO_USE}`,
+    `## Versioning and deprecation\n\nThe major version is in the URL (\`/v1\`), and breaking changes only ship in a new major version. Deprecations are announced with \`Deprecation\` and \`Sunset\` response headers at least 30 days before removal. Policy: ${url("/docs/versioning")}`,
     `## Errors\n\nErrors use a JSON envelope: \`{"message": "...", "errors": {"field": ["..."]}}\`. Details: ${url("/docs/error-responses")}`,
     `## Links\n\n${apiBullets()}`,
   ].join("\n\n");
@@ -194,6 +219,7 @@ export function renderLlmsTxt(): string {
   return `${[
     "# syntaqx",
     `> ${SUMMARY}`,
+    WHEN_TO_USE,
     "Every page listed here is also available as Markdown: request it with an `Accept: text/markdown` header.",
     `## API\n\n${apiBullets()}`,
     `## Docs\n\n${docs}`,

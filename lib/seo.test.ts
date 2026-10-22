@@ -90,6 +90,12 @@ describe("schema builders", () => {
       founder: { "@id": byType.Person["@id"] },
     });
     expect(byType.Organization.sameAs).toContain("https://github.com/syntaqx");
+    expect(byType.Organization.address).toEqual({
+      "@type": "PostalAddress",
+      addressLocality: "South Jordan",
+      addressRegion: "UT",
+      addressCountry: "US",
+    });
     for (const node of [byType.Organization, byType.Person]) {
       expect(node.contactPoint).toMatchObject({
         "@type": "ContactPoint",

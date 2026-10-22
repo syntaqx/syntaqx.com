@@ -23,6 +23,18 @@ describe("/openapi.json", () => {
     expect(await spec()).toEqual(await v1Openapi().json());
   });
 
+  it("publishes a contact and the versioning/deprecation policy", async () => {
+    const doc = (await spec()) as unknown as {
+      info: { description: string; contact: Record<string, string> };
+    };
+    expect(doc.info.contact).toEqual({
+      name: "Chase Pierce",
+      url: "https://www.syntaqx.com/contact",
+      email: "syntaqx@gmail.com",
+    });
+    expect(doc.info.description).toContain("https://www.syntaqx.com/docs/versioning");
+  });
+
   it("gives every operation a unique operationId, a description and responses", async () => {
     const doc = await spec();
     expect(doc.openapi).toBe("3.1.0");

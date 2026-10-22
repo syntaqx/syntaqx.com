@@ -15,7 +15,7 @@ import { Nav, MobileMenu } from "@/components/nav";
 import { TopProgressBar } from "@/components/top-progress-bar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { nav, socials, SITE_URL } from "@/lib/constants";
+import { footerNav, socials, SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
 const bigShoulders = Big_Shoulders({
@@ -138,88 +138,63 @@ export default function RootLayout({
           {children}
         </main>
         <footer data-pagefind-ignore className="mt-auto border-t border-border">
-          <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 md:grid-cols-[1fr_auto] md:items-end">
-            <div className="grid gap-4">
+          <div className="mx-auto grid max-w-7xl gap-10 px-6 py-10 md:grid-cols-[1fr_auto] md:gap-16">
+            <div className="grid content-start gap-4">
               <Link
                 href="/"
                 className="font-inst text-base lowercase tracking-wide text-foreground hover:text-accent"
               >
                 syntaqx
               </Link>
-              <nav className="inst flex flex-wrap gap-x-6 gap-y-2 text-dim">
-                {nav.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="transition-colors hover:text-accent"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <Link
-                  href="/docs/api"
-                  className="transition-colors hover:text-accent"
-                >
-                  api
-                </Link>
-                <Link
-                  href="/contact"
-                  className="transition-colors hover:text-accent"
-                >
-                  contact
-                </Link>
-                <Link
-                  href="/tags"
-                  className="transition-colors hover:text-accent"
-                >
-                  tags
-                </Link>
-                <Link
-                  href="/legal"
-                  className="transition-colors hover:text-accent"
-                >
-                  legal
-                </Link>
-                <Link
-                  href="/legal/terms"
-                  className="transition-colors hover:text-accent"
-                >
-                  terms
-                </Link>
-                <Link
-                  href="/legal/privacy"
-                  className="transition-colors hover:text-accent"
-                >
-                  privacy
-                </Link>
-              </nav>
-            </div>
-            <div className="grid gap-4 md:justify-items-end">
-              <div className="flex items-center gap-4">
-                <a
-                  href="/feed.xml"
-                  className="text-dim transition-colors hover:text-accent"
-                  aria-label="RSS feed"
-                >
-                  <SimpleIcon name="rss" size={18} />
-                </a>
+              <div className="-ml-2.5 flex items-center">
                 {socials.map((s) => (
                   <a
                     key={s.href}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-dim transition-colors hover:text-accent"
+                    className="flex size-10 items-center justify-center text-dim transition-colors hover:text-accent"
                     aria-label={s.label}
                   >
                     <SimpleIcon name={s.icon} size={18} />
                   </a>
                 ))}
               </div>
-              <p className="inst text-dim">
-                &copy; {new Date().getFullYear()} Chase Pierce
-              </p>
             </div>
+            <nav
+              aria-label="Footer"
+              className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 sm:gap-x-12"
+            >
+              {footerNav.map((group) => (
+                <div key={group.label}>
+                  <p className="eyebrow mb-3">{group.label}</p>
+                  <ul className="inst text-dim">
+                    {group.links.map((link) => {
+                      const className =
+                        "block py-2 transition-colors hover:text-accent sm:py-1.5";
+                      return (
+                        <li key={link.href}>
+                          {link.file ? (
+                            <a href={link.href} className={className}>
+                              {link.label}
+                            </a>
+                          ) : (
+                            <Link href={link.href} className={className}>
+                              {link.label}
+                            </Link>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </nav>
+          </div>
+          <div className="border-t border-border">
+            <p className="inst mx-auto max-w-7xl px-6 py-5 text-dim">
+              &copy; {new Date().getFullYear()} Chase Pierce
+            </p>
           </div>
         </footer>
         <Analytics />

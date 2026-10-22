@@ -35,6 +35,12 @@ describe("renderMarkdownPage()", () => {
       `https://www.syntaqx.com/docs/${doc.slug}`,
     );
     expect(renderMarkdownPage("/docs/api").body).toContain("# syntaqx API");
+    expect(renderMarkdownPage("/docs/api").body).toContain(
+      "## Versioning and deprecation",
+    );
+    expect(renderMarkdownPage("/docs/versioning").body).toContain(
+      "## Timing Windows",
+    );
     expect(renderMarkdownPage("/contact").body).toContain("# Contact");
     expect(renderMarkdownPage("/contact").body).toContain(
       "mailto:syntaqx@gmail.com",
@@ -106,10 +112,22 @@ describe("llms.txt", () => {
     for (const h of ["## API", "## Docs", "## Posts", "## Optional"]) {
       expect(body).toContain(`\n${h}\n`);
     }
-    // Every list item is a Markdown link, optionally followed by ": notes".
-    for (const line of lines.filter((l) => l.startsWith("- "))) {
+    // Every list item in an H2 section is a Markdown link, optionally
+    // followed by ": notes". The preamble before the first H2 is free-form.
+    const sections = lines.slice(lines.findIndex((l) => l.startsWith("## ")));
+    for (const line of sections.filter((l) => l.startsWith("- "))) {
       expect(line).toMatch(/^- \[[^\]]+\]\(https:\/\/[^)\s]+\)(: .+)?$/);
     }
+  });
+
+  it("tells agents when to use the site, before the link sections", () => {
+    const body = renderLlmsTxt();
+    const guidance = body.indexOf("**When to use this site.**");
+    expect(guidance).toBeGreaterThan(0);
+    expect(guidance).toBeLessThan(body.indexOf("\n## "));
+    expect(body).toContain("**How to call it.**");
+    expect(body).toContain("**When not to use it.**");
+    expect(body).toContain("https://www.syntaqx.com/docs/versioning");
   });
 
   it("is served as text/plain", async () => {
