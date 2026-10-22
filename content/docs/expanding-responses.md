@@ -6,7 +6,7 @@ order = 6
 tags = ["api", "expand", "rest"]
 +++
 
-By default, only top-level resource fields are returned. Use the `expand` parameter to include related objects inline within the response.
+By default, only top-level resource fields are returned. Use the `expand` parameter to include related objects inline within the response, the pattern [Stripe's API](https://docs.stripe.com/api/expanding_objects) made familiar.
 
 ## Using the `expand` Parameter
 
@@ -105,3 +105,11 @@ GET /v1/orders/49b2a928-c215-43fc-a022-9ac49143ab07?expand[]=customer&expand[]=r
 - **Syntax consistency**: Use `expand[]=field_name` for multiple expansions to avoid ambiguity.
 - **Validation**: The server validates `expand` values. Only valid, authorized relationships are expanded. Unsupported expansions return a [standard error response](/docs/error-responses).
 - **Performance**: Expanding relationships increases response size. Clients should expand only what they need.
+
+## References
+
+**In practice**
+
+- [Stripe: Expanding Responses](https://docs.stripe.com/api/expanding_objects), the `expand[]` parameter this doc follows
+- [JSON:API: Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes), the `include` alternative
+- [Microsoft: Graph REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/graph/GuidelinesGraph.md), `$expand` on navigation properties

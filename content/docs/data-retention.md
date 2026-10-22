@@ -60,3 +60,12 @@ Backups are the place deleted data goes to hide.
 - **Don't restore deleted data back into production.** After a restore, replay the erasure log so anything erased since the backup is erased again.
 - **Crypto-shredding covers backups for free.** Once the key is gone, the copies in old backups are unreadable as well.
 - **Test restores regularly.** A backup that has never been restored is a hope, not a backup.
+
+## References
+
+**Specifications**
+
+- [GDPR Article 17: Right to Erasure](https://gdpr-info.eu/art-17-gdpr/), erasure "without undue delay" and its exceptions
+- [GDPR Article 12: Transparent Information](https://gdpr-info.eu/art-12-gdpr/), the one-month response deadline
+- [GDPR Article 5: Principles](https://gdpr-info.eu/art-5-gdpr/), storage limitation and data minimization
+- [GDPR Article 4: Definitions](https://gdpr-info.eu/art-4-gdpr/), what counts as personal data and pseudonymization

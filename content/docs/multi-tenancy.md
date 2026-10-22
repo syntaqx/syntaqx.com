@@ -44,7 +44,7 @@ SET LOCAL app.tenant_id = '01932c6c-7616-7590-a8db-cb4b0e4d1c8a';
 ```
 
 - `FORCE` applies the policy to the table owner too. Superusers and roles with `BYPASSRLS` still skip it, so the application never connects as one.
-- `SET LOCAL` scopes the setting to the transaction, so a pooled connection can't leak one tenant's context into the next request.
+- [`SET LOCAL`](https://www.postgresql.org/docs/current/sql-set.html) scopes the setting to the transaction, so a pooled connection can't leak one tenant's context into the next request.
 - If the setting is missing, `current_setting` raises an error. Failing closed is the point.
 
 ## Tenant Context
@@ -73,3 +73,18 @@ Isolation is a feature, so it has tests:
 - A test fails if any tenant-owned table is missing an RLS policy.
 
 See [Testing Strategy](/docs/testing).
+
+## References
+
+**Reference**
+
+- [PostgreSQL: Row Security Policies](https://www.postgresql.org/docs/current/ddl-rowsecurity.html), RLS behavior, `FORCE` and `BYPASSRLS`
+- [PostgreSQL: CREATE POLICY](https://www.postgresql.org/docs/current/sql-createpolicy.html), policy syntax
+- [PostgreSQL: SET](https://www.postgresql.org/docs/current/sql-set.html), transaction-scoped `SET LOCAL`
+
+**In practice**
+
+- [AWS: SaaS Tenant Isolation Strategies](https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/saas-tenant-isolation-strategies.html), silo, pool and bridge isolation models
+- [AWS: SaaS Lens](https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html), tenant context and noisy neighbors
+- [Amazon Builders' Library: Fairness in Multi-Tenant Systems](https://aws.amazon.com/builders-library/fairness-in-multi-tenant-systems/), per-tenant limits and quotas
+- [Microsoft: Architect Multitenant Solutions](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview), isolation trade-offs across the stack

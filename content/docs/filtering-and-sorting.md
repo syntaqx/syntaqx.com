@@ -18,7 +18,7 @@ GET /payments?status=captured&currency=USD
 
 - **Multiple parameters are AND.** `status=captured&currency=USD` matches both.
 - **Comma-separated values are OR** within one field: `status=captured,settled`.
-- **Values use the field's JSON format:** RFC 3339 for times ([Time](/docs/time)), minor units for amounts ([Money](/docs/money)), lowercase strings for enums ([JSON Field Conventions](/docs/json-conventions)).
+- **Values use the field's JSON format:** [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) for times ([Time](/docs/time)), minor units for amounts ([Money](/docs/money)), lowercase strings for enums ([JSON Field Conventions](/docs/json-conventions)).
 
 ### Ranges
 
@@ -50,7 +50,7 @@ An open-ended filter on any column is an unindexed query waiting to happen.
 
 ## Sorting
 
-One `sort` parameter, a comma-separated list of fields. A leading `-` means descending:
+One `sort` parameter, a comma-separated list of fields. A leading `-` means descending, as in [JSON:API](https://jsonapi.org/format/#fetching-sorting):
 
 ```http
 GET /payments?sort=-created_at
@@ -84,3 +84,22 @@ Query parameters stop working well when:
 - The values are sensitive and shouldn't land in access logs.
 
 At that point, don't invent a filter language for the query string. Accept a structured query in the body with [HTTP QUERY](/docs/http-query), which stays safe, idempotent and cacheable like `GET`.
+
+## References
+
+**Specifications**
+
+- [RFC 3986: Uniform Resource Identifier (URI): Generic Syntax](https://datatracker.ietf.org/doc/html/rfc3986), the query component filters live in
+- [RFC 3339: Date and Time on the Internet: Timestamps](https://datatracker.ietf.org/doc/html/rfc3339), the format for time filters
+
+**Reference**
+
+- [MDN: 422 Unprocessable Content](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/422), rejecting filters on fields that aren't allowlisted
+
+**In practice**
+
+- [JSON:API: Sorting](https://jsonapi.org/format/#fetching-sorting), the `sort=-field` convention
+- [Google AIP-132: Standard methods: List](https://google.aip.dev/132), filtering and ordering on list methods
+- [Google AIP-160: Filtering](https://google.aip.dev/160), a full filter language, and why it belongs outside the query string
+- [Stripe: Search](https://docs.stripe.com/search), a dedicated search syntax kept separate from list filters
+- [Zalando: RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/), query parameter and sorting conventions

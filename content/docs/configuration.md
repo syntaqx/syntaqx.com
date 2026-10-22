@@ -67,3 +67,12 @@ Every secret will need rotating eventually, usually at the worst moment. Design 
 ## Changing Config
 
 Config changes are deploys. They go through review, they're recorded, and they can be rolled back. "I just tweaked an environment variable in the console" shows up in more [postmortems](/docs/postmortems) than any bug.
+
+## References
+
+**In practice**
+
+- [The Twelve-Factor App: Config](https://12factor.net/config), config in the environment
+- [OWASP: Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html), storage, access and rotation
+- [GitHub: About secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning), push protection and scanning
+- [Stripe: API keys](https://docs.stripe.com/keys), key rotation with a 7-day grace period

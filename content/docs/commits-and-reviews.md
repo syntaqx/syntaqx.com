@@ -49,7 +49,7 @@ BREAKING CHANGE: `amount` is now an integer, see /docs/money.
 
 - **Small.** Aim for under about 400 changed lines. Big changes ship as a stack of small PRs, or behind a [feature flag](/docs/feature-flags).
 - **One concern per PR.** A refactor and a behavior change in one diff means nobody can review either.
-- **Squash merge.** One PR is one commit on `main`, with the PR title as the message. `main` stays bisectable and readable.
+- **[Squash merge](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests).** One PR is one commit on `main`, with the PR title as the message. `main` stays bisectable and readable.
 - **Green before review.** Reviewers' time goes to design and correctness, not to finding what CI would have.
 
 ### Description Template
@@ -103,3 +103,22 @@ praise: the migration plan in the description is excellent.
 | `thought` | An idea worth considering. Never blocking |
 
 Decorations `(blocking)` and `(non-blocking)` remove the guesswork. Unlabeled comments are treated as non-blocking.
+
+## References
+
+**Specifications**
+
+- [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/), commit message format
+- [SemVer 2.0.0](https://semver.org/), how commit types map to version bumps
+
+**Reference**
+
+- [GitHub: Configuring Commit Squashing](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests), squash merges
+- [GitHub: Pull Request Templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository), the PR description template
+
+**In practice**
+
+- [Google Engineering Practices: Speed of Code Reviews](https://google.github.io/eng-practices/review/reviewer/speed.html), the one-business-day turnaround
+- [Google Engineering Practices: Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html), why PRs stay small
+- [Google Engineering Practices: The Standard of Code Review](https://google.github.io/eng-practices/review/reviewer/standard.html), approving changes that improve the code
+- [Conventional Comments](https://conventionalcomments.org/), labeled review comments

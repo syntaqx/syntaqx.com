@@ -95,6 +95,21 @@ The same breaking-change rules as [Versioning & Deprecation](/docs/versioning), 
 ## When Processing Fails
 
 - **Retry with backoff** for transient failures. See [Retries & Timeouts](/docs/retries-and-timeouts).
-- **Dead-letter after a limit.** A message that keeps failing moves to a dead-letter queue with the error attached, so it can't block its partition forever.
+- **Dead-letter after a limit.** A message that keeps failing moves to a [dead-letter queue](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html) with the error attached, so it can't block its partition forever.
 - **Alert on dead letters, then replay deliberately** once the bug is fixed. A dead-letter queue nobody watches is just a slower way to lose data.
 - **Watch consumer lag.** How far behind a consumer is matters more than how fast it is. It belongs on the dashboard next to the [SLOs](/docs/slos).
+
+## References
+
+**Specifications**
+
+- [CloudEvents 1.0](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md), event attributes
+- [CloudEvents HTTP Protocol Binding](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/bindings/http-protocol-binding.md), binary content mode with attributes as headers
+
+**In practice**
+
+- [microservices.io: Transactional Outbox](https://microservices.io/patterns/data/transactional-outbox.html), publishing events atomically with the state change
+- [Enterprise Integration Patterns: Idempotent Receiver](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html), consumers that tolerate duplicates
+- [Enterprise Integration Patterns: Dead Letter Channel](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html), where messages go when processing keeps failing
+- [Martin Fowler: What do you mean by "Event-Driven"?](https://martinfowler.com/articles/201701-event-driven.html), commands vs events and event-carried state
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/), partition keys and per-partition ordering

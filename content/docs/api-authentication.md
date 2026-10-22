@@ -81,3 +81,24 @@ Every credential can be replaced without downtime.
 - **Watch usage, then expire.** Expire the old key once its traffic has been at zero for a while, not on a timer alone.
 - **Rotate on departure.** When someone with access leaves or changes roles, the keys they could see get rotated.
 - **Last used, everywhere.** Every key shows when and from where it was last used, so unused keys can be found and deleted.
+
+## References
+
+**Specifications**
+
+- [RFC 6750: OAuth 2.0 Bearer Token Usage](https://datatracker.ietf.org/doc/html/rfc6750), the `Authorization: Bearer` header and `WWW-Authenticate` errors
+- [RFC 6749: The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749), grants and tokens
+- [RFC 7636: PKCE](https://datatracker.ietf.org/doc/html/rfc7636), protecting the authorization code grant
+- [RFC 8628: OAuth 2.0 Device Authorization Grant](https://datatracker.ietf.org/doc/html/rfc8628), sign-in for devices without a browser
+- [RFC 9700: OAuth 2.0 Security Best Current Practice](https://datatracker.ietf.org/doc/html/rfc9700), why the implicit and password grants are out
+
+**Reference**
+
+- [MDN: HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication), the challenge and response framework
+- [MDN: WWW-Authenticate](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/WWW-Authenticate), the header sent with every `401`
+
+**In practice**
+
+- [Stripe: API keys](https://docs.stripe.com/keys), key prefixes, restricted keys and rotation
+- [GitHub: Behind GitHub's new authentication token formats](https://github.blog/engineering/platform-security/behind-githubs-new-authentication-token-formats/), prefixed tokens that secret scanners can find
+- [GitHub REST API: Troubleshooting](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api), returning `404` instead of `403` so private resources aren't confirmed

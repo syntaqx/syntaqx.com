@@ -42,3 +42,24 @@ These are the rules the rest of the playbook is built from.
 - **Moving money?** [Money](/docs/money) and [Idempotency](/docs/idempotency) before writing a line of code.
 - **Splitting a system?** [Service Boundaries](/docs/service-boundaries) and [Events](/docs/events).
 - **Running it in production?** [Observability](/docs/observability), [SLOs](/docs/slos) and [Postmortems](/docs/postmortems).
+
+## References
+
+**Specifications**
+
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), the foundation for methods, status codes and headers
+- [RFC 9205: Building Protocols with HTTP](https://datatracker.ietf.org/doc/html/rfc9205), the IETF's best practice for HTTP APIs
+
+**Reference**
+
+- [MDN: HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP), the most readable reference for every header, method and status code
+
+**In practice**
+
+- [Stripe: API Reference](https://docs.stripe.com/api), the benchmark for payments APIs: idempotency, expansion, versioning
+- [GitHub Docs: REST API](https://docs.github.com/en/rest), unwrapped responses, `Link` pagination and conditional requests
+- [Google: API Improvement Proposals](https://google.aip.dev/), design guidance written as numbered, citable decisions
+- [Microsoft: Azure REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md), long-running operations, paging and concurrency at scale
+- [Zalando: RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/), a public, opinionated rulebook in the same spirit
+- [Heroku: HTTP API Design Guide](https://github.com/interagent/http-api-design), concise conventions from the Heroku Platform API
+- [Google: Site Reliability Engineering](https://sre.google/sre-book/table-of-contents/), SLOs, error budgets and blameless postmortems

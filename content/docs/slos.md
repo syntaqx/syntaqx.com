@@ -67,3 +67,13 @@ The [Workbook's recommended alerts](https://sre.google/workbook/alerting-on-slos
 An alert fires only when **both** windows are over the burn rate. The long window keeps it from paging on a blip, and the short window (one-twelfth of the long one) makes it stop firing soon after the problem is fixed.
 
 These replace threshold alerts like "error rate above 1% for 5 minutes", which page on short spikes that don't matter and miss slow leaks that do. The supporting signals are covered in [Observability](/docs/observability), and what happens after a page in [On-Call & Runbooks](/docs/on-call).
+
+## References
+
+**In practice**
+
+- [Google SRE Book: Service Level Objectives](https://sre.google/sre-book/service-level-objectives/), SLIs, SLOs and SLAs
+- [Google SRE Workbook: Implementing SLOs](https://sre.google/workbook/implementing-slos/), choosing SLIs and targets
+- [Google SRE Workbook: Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/), multiwindow burn-rate alerts
+- [Google SRE Workbook: Error Budget Policy](https://sre.google/workbook/error-budget-policy/), what happens when the budget is spent
+- [Google SRE Book: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/), alerting on symptoms

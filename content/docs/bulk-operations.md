@@ -65,7 +65,7 @@ Where items must succeed or fail together (moving money between accounts, a [led
 
 ## Limits
 
-- **At most 100 items per batch,** the same cap GitHub puts on `per_page`. Bigger inputs are split by the client, or uploaded as a file to an async import.
+- **At most 100 items per batch,** the same cap [GitHub puts on `per_page`](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api). Bigger inputs are split by the client, or uploaded as a file to an async import.
 - **A batch counts as one request per item** against [rate limits](/docs/rate-limiting). Batching saves round trips, not quota.
 - **Items are validated before any work starts** when it's cheap, so obvious mistakes fail fast.
 
@@ -76,3 +76,20 @@ The whole batch takes one [Idempotency-Key](/docs/idempotency). A retry replays 
 ## When to Go Async
 
 If a batch can't reliably finish in a few seconds, make it a [long-running operation](/docs/long-running-operations): return `202 Accepted` with an operation to poll, and put the per-item results at the operation's `result_url` when it's done. Imports of thousands of rows always go this way.
+
+## References
+
+**Specifications**
+
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), the status codes each item result reuses
+
+**Reference**
+
+- [MDN: 422 Unprocessable Content](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/422), item-level validation failures
+
+**In practice**
+
+- [Google AIP-233: Batch methods: Create](https://google.aip.dev/233), batch create semantics
+- [Google AIP-234: Batch methods: Update](https://google.aip.dev/234), batch update semantics
+- [GitHub Docs: Using pagination in the REST API](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api), the 100-item `per_page` cap the batch limit matches
+- [Stripe: API Reference](https://docs.stripe.com/api), the counterpoint: one object per request, no bulk updates

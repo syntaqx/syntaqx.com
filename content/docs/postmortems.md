@@ -19,7 +19,7 @@ Draft within 2 business days, while memory is fresh. Review within a week.
 
 ## Blameless, Not Accountability-Free
 
-People make reasonable decisions with the information they have. If a person could take the system down by running one command, the problem is that the command existed, not the person who ran it.
+People make reasonable decisions with the information they have ([Google SRE: Postmortem Culture](https://sre.google/sre-book/postmortem-culture/)). If a person could take the system down by running one command, the problem is that the command existed, not the person who ran it.
 
 - Describe actions, not character. "The deploy was run without the migration step", not "Alex forgot the migration".
 - Ask "what made this the reasonable thing to do at the time?"
@@ -78,3 +78,12 @@ Each layer usually produces at least one action item. Fixing only the trigger le
 ## Sharing
 
 Postmortems are shared widely by default. Other teams learn more from your incident than from their own docs. For payment incidents, the impact section also feeds customer communication and any required reporting to partners.
+
+## References
+
+**In practice**
+
+- [Google SRE Book: Postmortem Culture](https://sre.google/sre-book/postmortem-culture/), blameless postmortems and when to write one
+- [PagerDuty: Postmortem Documentation](https://postmortems.pagerduty.com/), template, timeline and action items
+- [Atlassian: Blameless Postmortems](https://www.atlassian.com/incident-management/postmortem/blameless), blameless without being accountability-free
+- [Richard Cook: How Complex Systems Fail](https://how.complexsystems.fail/), why incidents have contributing factors, not a single root cause

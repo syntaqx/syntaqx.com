@@ -44,7 +44,7 @@ New fields default to **Sensitive** until someone decides otherwise.
 - **Redact by default.** Logging goes through a serializer that drops or masks classified fields. Allow-lists, not deny-lists: a new field isn't logged until it's marked safe.
 - **No request bodies in logs** for endpoints that accept sensitive data. Log the [request ID](/docs/observability), the route and the outcome.
 - **Errors never echo input.** `"The card number is invalid."`, not `"4242 4242 4242 4241 is invalid."` The [error format](/docs/error-responses) keys `errors` by field name for exactly this reason.
-- **Scan for leaks.** CI and log pipelines run a PAN detector (Luhn-valid 13 to 19 digit runs) and fail or alert on a match.
+- **Scan for leaks.** CI and log pipelines run a PAN detector ([Luhn](https://en.wikipedia.org/wiki/Luhn_algorithm)-valid 13 to 19 digit runs) and fail or alert on a match.
 
 ## Secrets
 
@@ -58,3 +58,21 @@ New fields default to **Sensitive** until someone decides otherwise.
 - Production access to sensitive data is just-in-time, approved, and time-boxed.
 - Every read of sensitive data through support tooling is an audited event: who, what, when, and why.
 - Test and staging use synthetic data. Production data is never copied down.
+
+## References
+
+**Specifications**
+
+- [PCI Security Standards Council: Document Library](https://www.pcisecuritystandards.org/document_library/), PCI DSS requirements and scope
+
+**Reference**
+
+- [Wikipedia: Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), detecting card numbers in logs
+
+**In practice**
+
+- [Stripe: Integration security guide](https://docs.stripe.com/security/guide), reducing PCI scope and what card data is safe to store
+- [Stripe: API keys](https://docs.stripe.com/keys), key prefixes, restricted keys, show-once
+- [OWASP: Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html), data to exclude from logs
+- [OWASP: Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html), storing and rotating secrets
+- [GitHub: About secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning), prefixed keys that scanners can find

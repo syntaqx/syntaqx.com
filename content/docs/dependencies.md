@@ -51,6 +51,26 @@ Before adding one, ask:
 
 - **Pin CI actions to a full commit SHA,** not a tag. GitHub's [security hardening guide](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions) recommends it, since tags can be moved. Renovate and Dependabot keep the SHAs updated. Where GitHub's workflow dependency lockfile is available, it supersedes SHA pinning.
 - **Least-privilege CI tokens.** Set `permissions:` explicitly on every workflow, read-only by default.
-- **Provenance for what you publish.** Build artifacts on hosted CI and attach signed provenance (for example `npm publish --provenance`, or [artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations)).
+- **Provenance for what you publish.** Build artifacts on hosted CI and attach signed provenance (for example [`npm publish --provenance`](https://docs.npmjs.com/generating-provenance-statements), or [artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations)).
 - **Aim for [SLSA](https://slsa.dev/spec/v1.0/levels) Build L2 or higher:** builds run on a hosted platform that generates signed provenance, so a consumer can verify what was built, from which source, by which workflow.
 - **Scan continuously.** Vulnerability alerts on every repository, triaged like any other bug, with severity deciding the deadline.
+
+## References
+
+**Specifications**
+
+- [SemVer 2.0.0](https://semver.org/), version numbers and what they promise
+- [SLSA: Security Levels](https://slsa.dev/spec/v1.0/levels), Build L2 and signed provenance
+
+**Reference**
+
+- [npm: package-lock.json](https://docs.npmjs.com/cli/v10/configuring-npm/package-lock-json), committed lockfiles
+- [npm: Generating Provenance Statements](https://docs.npmjs.com/generating-provenance-statements), `npm publish --provenance`
+- [GitHub: Security Hardening for GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions), pinning actions to a full commit SHA
+- [GitHub: Artifact Attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations), provenance for build artifacts
+- [GitHub: Dependabot](https://docs.github.com/en/code-security/dependabot), automated upgrade PRs and alerts
+- [Renovate Docs](https://docs.renovatebot.com/), scheduled, batched upgrades
+
+**In practice**
+
+- [OpenSSF Scorecard](https://openssf.org/projects/scorecard/), signals for vetting a new dependency

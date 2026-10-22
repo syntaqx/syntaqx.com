@@ -118,3 +118,21 @@ In practice, these show up as:
 ```
 
 Fields ending in `_at` are always RFC 3339 datetimes. Fields ending in `_on` are date-only values (`2025-03-14`). See [Database Naming Conventions](/docs/database-naming-conventions) for the full suffix reference.
+
+## References
+
+**Specifications**
+
+- [RFC 3339: Date and Time on the Internet](https://datatracker.ietf.org/doc/html/rfc3339), the datetime format used everywhere
+- [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601), the standard RFC 3339 profiles, and the source of the duration format
+- [RFC 5545: iCalendar](https://datatracker.ietf.org/doc/html/rfc5545), `RRULE`, `EXDATE`, `RDATE` and `DTSTART`
+
+**Reference**
+
+- [MDN: Date.prototype.toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString), producing UTC timestamps in JavaScript
+- [MDN: Temporal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal), JavaScript's modern date API, including ISO 8601 durations
+- [PostgreSQL: Date/Time Types](https://www.postgresql.org/docs/current/datatype-datetime.html), storing timestamps with `TIMESTAMPTZ`
+
+**In practice**
+
+- [GitHub REST API: Getting started](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api), UTC timestamps in ISO 8601 format on every response

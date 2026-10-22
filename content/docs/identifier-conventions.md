@@ -129,3 +129,21 @@ See [Database Naming Conventions](/docs/database-naming-conventions) for how col
 ## Tools
 
 Generate, validate, and inspect UUIDs and ULIDs with the [UUID/ULID Generator](/misc/uuid).
+
+## References
+
+**Specifications**
+
+- [RFC 9562: Universally Unique IDentifiers (UUIDs)](https://datatracker.ietf.org/doc/html/rfc9562), every UUID version, including v7
+- [ULID specification](https://github.com/ulid/spec), the format, Crockford Base32 encoding and sort order
+
+**Reference**
+
+- [MDN: UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID), a short primer
+- [MDN: Crypto.randomUUID()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID), generating v4 UUIDs in the browser and Node
+- [PostgreSQL: UUID Type](https://www.postgresql.org/docs/current/datatype-uuid.html), native storage as 16 bytes
+- [PostgreSQL: UUID Functions](https://www.postgresql.org/docs/current/functions-uuid.html), generating UUIDs in the database
+
+**In practice**
+
+- [Buildkite: Goodbye to sequential integers, hello UUIDv7](https://www.buildkite.com/resources/blog/goodbye-integers-hello-uuids/), a production migration to time-ordered UUIDs

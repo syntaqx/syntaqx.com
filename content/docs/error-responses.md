@@ -52,3 +52,22 @@ The HTTP status code tells you what happened. There's no `success` boolean in th
 | `422` | Unprocessable Entity | Validation failed |
 | `429` | Too Many Requests | [Rate limit](/docs/rate-limiting) exceeded |
 | `500` | Internal Server Error | Something broke server-side |
+
+## References
+
+**Specifications**
+
+- [RFC 9110: HTTP Semantics, Status Codes](https://datatracker.ietf.org/doc/html/rfc9110#section-15), the meaning of every status code used here
+- [RFC 6585: Additional HTTP Status Codes](https://datatracker.ietf.org/doc/html/rfc6585), `429 Too Many Requests`
+- [RFC 9457: Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc9457), the IETF's richer error format, which this one deliberately keeps simpler than
+
+**Reference**
+
+- [MDN: HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status), every code with examples
+- [MDN: 422 Unprocessable Content](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/422), validation failures
+- [IANA: HTTP Status Code Registry](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml), the authoritative list
+
+**In practice**
+
+- [Laravel: Validation error response format](https://laravel.com/docs/validation#validation-error-response-format), the `message` and `errors` shape this format follows
+- [Stripe: Errors](https://docs.stripe.com/api/errors), status codes in payments, including `402` for declines and `409` for idempotency conflicts
