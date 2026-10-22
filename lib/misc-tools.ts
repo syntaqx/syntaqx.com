@@ -92,3 +92,18 @@ export const converters: MiscTool[] = [
 
 /** Every leaf tool page, used to cross-link tools to their siblings. */
 export const allMiscTools: MiscTool[] = [...tools, ...converters, ...patterns];
+
+/**
+ * The "More tools" links shown on a tool page (components/misc-tools-nav.tsx)
+ * and listed in its structured data: every other tool, plus the converters
+ * hub on converter pages.
+ */
+export function moreToolsFor(pathname: string): { title: string; href: string }[] {
+  const others: { title: string; href: string }[] = allMiscTools.filter(
+    (tool) => tool.href !== pathname,
+  );
+  if (pathname.startsWith("/misc/convert/")) {
+    others.unshift({ title: "All converters", href: "/misc/convert" });
+  }
+  return others;
+}

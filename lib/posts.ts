@@ -230,7 +230,21 @@ export function tagDescription(label: string, posts: PostData[]): string {
     titles.push(`"${post.title}"`);
   }
   if (titles.length) text += `, including ${titles.join(", ")}`;
-  return `${text}.`;
+  text += ".";
+
+  // Short archives (one or two posts) read thin, and crawlers flag
+  // descriptions under ~110 characters. Borrow the newest post's own
+  // description, cut at a word boundary to stay within 160.
+  const extra = posts[0]?.description;
+  if (text.length < 120 && extra) {
+    const room = 160 - text.length - 1;
+    let tail = extra;
+    if (tail.length > room) {
+      tail = tail.slice(0, room - 1).replace(/\s+\S*$/, "") + "…";
+    }
+    text += ` ${tail}`;
+  }
+  return text;
 }
 
 export function getPostBySlug(slug: string): PostData | undefined {

@@ -104,8 +104,15 @@ export function itemList(
   path: string,
   items: { name: string; path: string }[],
 ) {
+  return { "@context": CONTEXT, ...itemListNode(name, path, items) };
+}
+
+function itemListNode(
+  name: string,
+  path: string,
+  items: { name: string; path: string }[],
+) {
   return {
-    "@context": CONTEXT,
     "@type": "ItemList",
     name,
     url: abs(path),
@@ -140,7 +147,9 @@ export function article({
     "@context": CONTEXT,
     "@graph": [
       {
-        "@type": type,
+        // TechArticle is also typed Article: some crawlers (Ahrefs) only
+        // recognize the parent type.
+        "@type": type === "TechArticle" ? ["TechArticle", "Article"] : type,
         headline,
         description,
         url,
@@ -155,23 +164,28 @@ export function article({
   };
 }
 
-/** Free, in-browser developer tools. */
+/** Free, in-browser developer tools. `related` lists the sibling tools the
+ * page links to, emitted as an ItemList. */
 export function webApplication({
   name,
   description,
   path,
   crumbs,
+  related = [],
 }: {
   name: string;
   description: string;
   path: string;
   crumbs: Crumb[];
+  related?: { name: string; path: string }[];
 }) {
   return {
     "@context": CONTEXT,
     "@graph": [
       {
-        "@type": "WebApplication",
+        // Product too, for crawlers that classify tool pages as products;
+        // the free Offer below keeps it accurate.
+        "@type": ["WebApplication", "Product"],
         name,
         description,
         url: abs(path),
@@ -184,6 +198,7 @@ export function webApplication({
         publisher: orgRef,
       },
       breadcrumbList(crumbs),
+      ...(related.length ? [itemListNode("More tools", path, related)] : []),
     ],
   };
 }

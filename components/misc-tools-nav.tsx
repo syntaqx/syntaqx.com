@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { allMiscTools } from "@/lib/misc-tools";
+import { moreToolsFor } from "@/lib/misc-tools";
 
 // Hub/index pages already list everything, so don't repeat the nav there.
 const HUB_PATHS = new Set(["/misc", "/misc/convert"]);
@@ -17,17 +17,8 @@ export function MiscToolsNav() {
   const pathname = usePathname();
   if (HUB_PATHS.has(pathname)) return null;
 
-  const others = allMiscTools.filter((tool) => tool.href !== pathname);
+  const others = moreToolsFor(pathname);
   if (others.length === 0) return null;
-  // Converter pages link back up to their hub too.
-  if (pathname.startsWith("/misc/convert/")) {
-    others.unshift({
-      title: "All converters",
-      description: "",
-      href: "/misc/convert",
-      tags: [],
-    });
-  }
 
   return (
     <nav aria-label="More tools" className="mt-16 border-t border-border pt-8">

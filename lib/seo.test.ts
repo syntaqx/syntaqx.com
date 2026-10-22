@@ -3,6 +3,7 @@ import { getAllPosts, getAllTags, slugifyTag, tagDescription } from "./posts";
 import { getAllDocs } from "./docs";
 import { article, breadcrumbList, itemList, siteGraph, webApplication } from "./schema";
 import sitemap from "@/app/sitemap";
+import { allMiscTools, moreToolsFor } from "./misc-tools";
 
 const MAX_DESCRIPTION = 160;
 
@@ -24,7 +25,8 @@ describe("meta descriptions", () => {
       );
       const d = tagDescription(tag.label, tagged);
       expect(d.startsWith(`Posts about ${tag.label} by Chase Pierce`)).toBe(true);
-      expect(d.length, tag.slug).toBeGreaterThan(50);
+      // Crawlers flag descriptions under ~110 characters as too short.
+      expect(d.length, `${tag.slug}: ${d}`).toBeGreaterThanOrEqual(110);
       expect(d.length, tag.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);
     }
   });
@@ -47,6 +49,19 @@ describe("tags", () => {
       expect(tag.label, tag.slug).toMatch(/^[A-Z]/);
       expect(tag.label, tag.slug).not.toContain("-");
     }
+  });
+});
+
+describe("moreToolsFor()", () => {
+  it("lists every other tool, plus the converters hub on converter pages", () => {
+    const md = moreToolsFor("/misc/markdown").map((t) => t.href);
+    expect(md).not.toContain("/misc/markdown");
+    expect(md).toHaveLength(allMiscTools.length - 1);
+    expect(md).not.toContain("/misc/convert");
+
+    const b64 = moreToolsFor("/misc/convert/base64").map((t) => t.href);
+    expect(b64[0]).toBe("/misc/convert");
+    expect(b64).not.toContain("/misc/convert/base64");
   });
 });
 
@@ -140,20 +155,29 @@ describe("schema builders", () => {
       path: "/docs/h",
       crumbs: [],
     })["@graph"][0] as Record<string, unknown>;
-    expect(node["@type"]).toBe("TechArticle");
+    expect(node["@type"]).toEqual(["TechArticle", "Article"]);
     expect(node).not.toHaveProperty("datePublished");
     expect(node.mainEntityOfPage).toBe("https://www.syntaqx.com/docs/h");
   });
 
-  it("marks tools as free developer web apps", () => {
-    const node = webApplication({
+  it("marks tools as free developer web apps (and Products) with related tools", () => {
+    const graph = webApplication({
       name: "T",
       description: "D",
       path: "/misc/t",
       crumbs: [],
-    })["@graph"][0] as Record<string, unknown>;
+      related: [{ name: "Other", path: "/misc/other" }],
+    })["@graph"] as Record<string, unknown>[];
+    expect(graph[2]).toMatchObject({
+      "@type": "ItemList",
+      name: "More tools",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Other", url: "https://www.syntaqx.com/misc/other" },
+      ],
+    });
+    const node = graph[0];
     expect(node).toMatchObject({
-      "@type": "WebApplication",
+      "@type": ["WebApplication", "Product"],
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Any",
       isAccessibleForFree: true,
