@@ -16,6 +16,28 @@ const securityHeaders = [
   },
 ];
 
+// Markdown content negotiation: requests whose Accept header asks for
+// text/markdown are served by app/md/[[...path]]. Pages with a Markdown
+// representation are rewritten up front; anything that would otherwise 404
+// falls back to the same route, which answers with a Markdown 404. Other
+// pages keep serving HTML. Never applies on the API subdomain.
+const wantsMarkdown = {
+  has: [{ type: "header" as const, key: "accept", value: ".*text/markdown.*" }],
+  missing: [{ type: "host" as const, value: "api.syntaqx.com" }],
+};
+
+export const markdownRewrites = {
+  beforeFiles: ["/", "/posts", "/posts/:slug", "/docs", "/docs/:slug", "/contact"].map(
+    (source) => ({
+      source,
+      destination: source === "/" ? "/md" : `/md${source}`,
+      ...wantsMarkdown,
+    }),
+  ),
+  afterFiles: [],
+  fallback: [{ source: "/:path*", destination: "/md/:path*", ...wantsMarkdown }],
+};
+
 const nextConfig: NextConfig = {
   // Pin the workspace root to this project. A stray, empty package-lock.json
   // in the parent directory otherwise makes Next infer the wrong root, which
@@ -29,6 +51,11 @@ const nextConfig: NextConfig = {
       headers: securityHeaders,
     },
   ],
+  rewrites: async () => markdownRewrites,
+  // The Markdown route reads content/ at request time.
+  outputFileTracingIncludes: {
+    "/md/[[...path]]": ["./content/**/*"],
+  },
 };
 
 export default withSentryConfig(nextConfig, {

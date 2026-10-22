@@ -191,6 +191,15 @@ body {
   }
 }
 
+/* A post list row and its title (components/post-list.tsx). Kept here, not
+   inline, so a long list doesn't repeat these classes on every row. */
+@utility post-row {
+  @apply relative grid gap-x-8 gap-y-2 px-0 py-5 transition-colors before:absolute before:top-1/2 before:-left-4 before:size-1.5 before:-translate-y-1/2 before:scale-0 before:bg-accent before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-surface hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4;
+}
+@utility post-row-title {
+  @apply text-xl leading-none text-foreground transition-[color,translate] duration-200 ease-[steps(4)] group-hover:translate-x-1.5 group-hover:text-accent sm:text-[1.4rem];
+}
+
 /* Four square handles on the corners of a box, like a selected layer. */
 @utility handles {
   background-image:

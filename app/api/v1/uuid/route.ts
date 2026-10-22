@@ -13,6 +13,7 @@ const UuidArrayResponse = z.array(UuidResponse).openapi("UuidArray");
 registry.registerPath({
   method: "get",
   path: "/uuid",
+  operationId: "generateUuids",
   summary: "Generate UUIDs",
   description:
     "Generate one or more UUIDs. Returns an array of v4 UUIDs. Use `?count=N` (max 100) to control how many.",

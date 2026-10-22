@@ -36,6 +36,7 @@ const HashResponse = z
 registry.registerPath({
   method: "post",
   path: "/hash",
+  operationId: "hashString",
   summary: "Hash a string",
   description:
     "Compute a cryptographic hash of the provided input. Supported algorithms: MD5, SHA-1, SHA-256, SHA-384, SHA-512.",

@@ -56,6 +56,7 @@ interface RateLimitEntry {
 const store = new Map<string, RateLimitEntry>();
 
 const WINDOW_SECONDS = 3600; // 1 hour
+const RATE_LIMIT_POLICY = "hourly";
 
 /**
  * Per-IP request ceiling per window.
@@ -105,6 +106,10 @@ export function rateLimit(key: string): RateLimitResult {
   const limited = entry.count > MAX_REQUESTS;
 
   const headers: Record<string, string> = {
+    // IETF draft-ietf-httpapi-ratelimit-headers (Structured Fields).
+    "RateLimit-Policy": `"${RATE_LIMIT_POLICY}";q=${MAX_REQUESTS};w=${WINDOW_SECONDS}`,
+    RateLimit: `"${RATE_LIMIT_POLICY}";r=${remaining};t=${entry.reset - now}`,
+    // Legacy X-RateLimit-* kept for existing clients.
     "X-RateLimit-Limit": String(MAX_REQUESTS),
     "X-RateLimit-Remaining": String(remaining),
     "X-RateLimit-Reset": String(entry.reset),

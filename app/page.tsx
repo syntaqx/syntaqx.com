@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { getAllPosts, getNewestPostSlug } from "@/lib/posts";
-import { socials } from "@/lib/constants";
+import { bio, socials, SITE_URL } from "@/lib/constants";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/button";
 import { PostList } from "@/components/post-list";
@@ -12,21 +12,48 @@ import {
   GitHubActivityAsync,
   GitHubActivitySkeleton,
 } from "@/components/github-activity";
+import type { Metadata } from "next";
 
-const bio = [
-  {
-    label: "currently",
-    text: "I lead software engineering orgs, own architecture and delivery, and still write code. The architecture needs to be right to enable building the right products. Without it, you're fighting the system instead of building on it. Problem clarity tells you what to build. Then the architecture circles back to provide the right solution, and when requirements change, that should be a configuration change, not a bug.",
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+    // Restated: a page-level `alternates` replaces the layout one wholesale.
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: "syntaqx RSS feed" }],
+    },
   },
-  {
-    label: "previously",
-    text: "Writing code since I was 11. Over 20 years across gaming, social media, fintech, e-commerce, proptech, hosting, travel, sports tech, and more. The problems are universal. The fun part is solving them.",
-  },
-  {
-    label: "otherwise",
-    text: "Open sorcerer. Perpetually online. Obsessed with technology, hooked on shipping. Your favorite internet junkie with a love of all things digital and bacon-based.",
-  },
-];
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: "syntaqx",
+      url: SITE_URL,
+      description:
+        "Personal site of Chase Pierce: writing on engineering, systems, and craft, API design docs, and a public developer API.",
+      inLanguage: "en",
+      author: { "@id": `${SITE_URL}/#person` },
+    },
+    {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#person`,
+      name: "Chase Pierce",
+      alternateName: "syntaqx",
+      url: SITE_URL,
+      jobTitle: "Software Engineering Leader",
+      description: bio[0].text,
+      sameAs: socials.map((s) => s.href),
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "professional inquiries",
+        url: `${SITE_URL}/contact`,
+      },
+    },
+  ],
+};
 
 export default function Home() {
   const posts = getAllPosts();
@@ -34,6 +61,10 @@ export default function Home() {
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="relative isolate grid items-center gap-x-10 gap-y-12 pb-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
         <div
           aria-hidden="true"

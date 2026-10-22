@@ -29,6 +29,7 @@ const JwtDecodeResponse = z
 registry.registerPath({
   method: "post",
   path: "/jwt/decode",
+  operationId: "decodeJwt",
   summary: "Decode a JWT",
   description:
     "Decode a JSON Web Token without signature verification. Returns the header, payload, and whether the token is expired.",

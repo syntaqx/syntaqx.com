@@ -1,5 +1,8 @@
 import { TodayHighlight } from "@/components/today-highlight";
-import { ActivityCell, ActivityGridTooltips } from "@/components/activity-cell";
+import {
+  ActivityGridTooltips,
+  type ActivityDayInfo,
+} from "@/components/activity-cell";
 import { OWNER_TZ, vacations } from "@/lib/constants";
 
 export interface ContributionDay {
@@ -202,6 +205,16 @@ export function GitHubActivity({
 
   if (recentDays.length === 0) return null;
 
+  // Tooltip data, keyed by date, for the single delegated grid tooltip.
+  const dayInfo: Record<string, ActivityDayInfo> = {};
+  for (const d of recentDays) {
+    const vacation = vacationFor(d.date);
+    dayInfo[d.date] = {
+      count: d.count,
+      label: vacation ? `Vacation (${vacation})` : holidayFor(d.date),
+    };
+  }
+
   // Organize into columns (weeks) of 7 rows (days)
   const weeks: ContributionDay[][] = [];
   for (let i = 0; i < recentDays.length; i += 7) {
@@ -275,7 +288,7 @@ export function GitHubActivity({
                 marginLeft: "auto",
               }}
             >
-              <ActivityGridTooltips>
+              <ActivityGridTooltips days={dayInfo}>
                 {monthGroups.map((group, gi) => (
                   <div
                     key={gi}
@@ -287,7 +300,7 @@ export function GitHubActivity({
                     </span>
                     {/* Weeks in this month */}
                     <div
-                      className="grid grid-flow-col auto-cols-2.5 sm:auto-cols-3 md:auto-cols-3.25 gap-0.75"
+                      className="grid grid-flow-col auto-cols-2.5 sm:auto-cols-3 md:auto-cols-3.25 gap-0.75 *:aspect-square *:rounded-xs"
                       style={{ gridTemplateRows: "repeat(7, 1fr)" }}
                     >
                       {group.weeks.map((week) =>
@@ -302,18 +315,11 @@ export function GitHubActivity({
                             : holiday
                               ? `${base} ${HOLIDAY_DOT}`
                               : base;
-                          const label = vacation
-                            ? `Vacation (${vacation})`
-                            : holiday
-                              ? holiday
-                              : null;
                           return (
-                            <ActivityCell
+                            <div
                               key={day.date}
-                              date={day.date}
-                              count={day.count}
-                              label={label}
-                              className={`aspect-square rounded-xs ${className}`}
+                              data-date={day.date}
+                              className={className}
                             />
                           );
                         }),
