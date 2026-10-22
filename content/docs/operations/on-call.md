@@ -11,9 +11,9 @@ On-call exists so customers get help fast. It only works long term if it's susta
 
 ## Rotations
 
-- **The team that ships the service carries its pager.** Ownership and on-call are the same thing.
-- **One-week shifts,** primary and secondary, handed off on a weekday morning, never on a Friday evening.
-- **At least 6 people per rotation.** Fewer than that and people are on call too often to recover between shifts.
+- **The team that ships the service carries its pager.** Ownership and on-call are the same thing. A team that gets paged for its own bugs fixes them; a team that hands the pager to someone else ships them.
+- **One-week shifts,** primary and secondary, handed off on a weekday morning, never on a Friday evening. A week is long enough to build context on what's been flaky, short enough to recover from.
+- **Enough people to make it sustainable.** For a round-the-clock rotation at one site, that's about eight engineers; with two sites in different time zones splitting the day, about six per site. Fewer than that and each person is on call too often to recover between shifts, and burned-out on-call engineers make slow, bad decisions at exactly the wrong time. The [Google SRE Book](https://sre.google/sre-book/being-on-call/) arrives at the same numbers.
 - **Follow the sun when you can.** Nights are the exception, not the job.
 - **On-call is the shift's main work.** Feature work is a bonus. The rest of the shift goes to toil reduction and alert hygiene.
 
@@ -25,12 +25,12 @@ On-call exists so customers get help fast. It only works long term if it's susta
 | SEV2 | Major degradation, or an [SLO](/docs/operations/slos) burning fast | Page, fix during the shift |
 | SEV3 | Minor or contained impact | Ticket, fix within the week |
 
-Declare early and downgrade later. A SEV1 that turns out to be a SEV3 costs an hour. A SEV3 that was really a SEV1 costs customers.
+Declare early and downgrade later. A SEV1 that turns out to be a SEV3 costs an hour of a few people's time. A SEV3 that was really a SEV1 costs customers, and the hours lost before anyone realized it are the hardest to explain afterward.
 
 ## During an Incident
 
-- **One incident commander.** They coordinate and decide; they don't debug. Everyone else works the problem.
-- **Mitigate first, diagnose later.** Roll back, fail over, flip the [kill switch](/docs/engineering/feature-flags). Understanding why can wait until customers are fine.
+- **One incident commander.** They coordinate and decide; they don't debug. Everyone else works the problem. The person deepest in the logs is the worst person to also track who's doing what, what's been tried, and when to update customers.
+- **Mitigate first, diagnose later.** Roll back, fail over, flip the [kill switch](/docs/engineering/feature-flags). Understanding why can wait until customers are fine. Root-causing a live outage feels productive, but every minute of it is a minute of impact a rollback would have ended.
 - **One channel, one timeline.** Decisions and actions go in the incident channel with timestamps. It becomes the [postmortem](/docs/engineering/postmortems) timeline.
 - **Communicate on a schedule.** Status updates every 30 minutes for SEV1, even when the update is "still investigating".
 
@@ -84,7 +84,7 @@ Runbooks are kept next to the code, reviewed in pull requests, and updated after
 
 ## Toil
 
-Toil is manual, repetitive, automatable work that grows with the system and leaves nothing behind. The [Google SRE Book](https://sre.google/sre-book/eliminating-toil/) caps it at 50% of an SRE's time, and that's a ceiling, not a target.
+Toil is manual, repetitive, automatable work that grows with the system and leaves nothing behind. It's dangerous because it scales with traffic while the team doesn't: left alone, it eventually consumes all the time that would have gone into making it go away. Google's SRE teams cap it at [50% of an engineer's time](https://sre.google/sre-book/eliminating-toil/), and that's a ceiling, not a target.
 
 - **Track it.** Every manual intervention on shift gets a tally in the handoff.
 - **Fix the top item every rotation.** Automate it, or make the alert that caused it go away.

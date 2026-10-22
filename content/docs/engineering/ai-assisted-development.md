@@ -6,7 +6,7 @@ order = 12.8
 tags = ["ai", "agents", "process", "security"]
 +++
 
-Coding agents write a lot of code, fast, and most of it is plausible. Plausible isn't correct. The practices that make agents productive are the same ones that make any team productive, held to a higher standard because the agent never gets tired of producing confident output.
+Coding agents write a lot of code, fast, and most of it is plausible. Plausible isn't correct. The danger isn't that an agent makes mistakes; people do too. It's that its mistakes look exactly like its successes: same confidence, same tidy formatting, same "done". The practices that make agents productive are the same ones that make any team productive, held to a higher standard because review fatigue sets in long before the agent's output slows down.
 
 ## A Human Owns Every Change
 
@@ -21,7 +21,7 @@ The agent proposes; a person ships. The engineer who merges a change owns it exa
 An agent only follows rules it can read. Write them down where it looks:
 
 - **An agent instructions file** ([`AGENTS.md`](https://agents.md/), or a tool-specific one like `CLAUDE.md`) with the project's commands, conventions and hard constraints: what not to reintroduce, what needs a human, how to verify.
-- **The playbook and ADRs** in or linked from the repository, so "how we do things here" is a file, not tribal knowledge.
+- **The playbook and ADRs** in or linked from the repository, so "how we do things here" is a file, not tribal knowledge. A written playbook pays off twice here: the agent follows the defaults without being told, and the short list of ADRs tells it exactly where this codebase departs from them.
 - **Correct the instructions, not just the output.** When an agent gets something wrong twice, the fix is a sentence in the instructions file, so every future session gets it right.
 
 ## CI Enforces, Review Confirms
@@ -46,8 +46,8 @@ The most common agent failure is claiming success without checking. Every change
 Models produce code that looks right and isn't. The usual suspects:
 
 - **APIs that don't exist,** or existed two versions ago. Check the docs for the version you actually have installed.
-- **Packages that don't exist.** Attackers register package names that models commonly invent and wait for someone to install them, an attack known as [slopsquatting](https://www.socket.dev/blog/slopsquatting-how-ai-hallucinations-are-fueling-a-new-class-of-supply-chain-attacks). Every new dependency is vetted by a person. See [Dependency Management](/docs/engineering/dependencies).
-- **Insecure defaults:** string-built SQL, disabled certificate checks, secrets in code, permissive CORS. The [OWASP Top 10 for LLM applications](https://genai.owasp.org/llmrisk/llm092025-misinformation/) lists unsafe code generation among the risks of over-relying on model output.
+- **Packages that don't exist.** This happens often enough to be an attack surface. A [USENIX Security 2025 study](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen) of 16 code models found hallucinated package names in at least 5.2% of commercial models' suggestions and 21.7% of open-source models', over 200,000 unique fake names in all. Because models repeat the same inventions, attackers can register those names with malicious code and wait, an attack known as [slopsquatting](https://www.socket.dev/blog/slopsquatting-how-ai-hallucinations-are-fueling-a-new-class-of-supply-chain-attacks). Every new dependency is vetted by a person. See [Dependency Management](/docs/engineering/dependencies).
+- **Insecure defaults:** string-built SQL, disabled certificate checks, secrets in code, permissive CORS. Models learn from public code, and public code is full of these, so the most common pattern in training isn't the safe one. [OWASP](https://genai.owasp.org/llmrisk/llm092025-misinformation/) lists unsafe code generation as a consequence of over-relying on model output.
 - **Licensing and provenance.** Generated code that closely mirrors an existing project carries that project's license. Treat long verbatim-looking blocks with suspicion.
 
 ## Least Privilege for Agents
@@ -79,6 +79,7 @@ Much of [syntaqx.com](https://github.com/syntaqx/syntaqx.com) was built with an 
 
 **In practice**
 
+- [Spracklen et al.: We Have a Package for You! (USENIX Security 2025)](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen), how often code models invent package names
 - [OWASP: LLM09:2025 Misinformation](https://genai.owasp.org/llmrisk/llm092025-misinformation/), hallucinated packages and unsafe code suggestions
 - [OWASP: Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/), the wider set of risks when building with models
 - [Socket: Slopsquatting](https://www.socket.dev/blog/slopsquatting-how-ai-hallucinations-are-fueling-a-new-class-of-supply-chain-attacks), registering package names that AI assistants invent

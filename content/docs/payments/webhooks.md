@@ -7,17 +7,19 @@ tags = ["api", "webhooks", "events", "payments"]
 aliases = ["webhooks"]
 +++
 
-Webhooks tell you that something happened without polling. Signatures follow the [Standard Webhooks](https://www.standardwebhooks.com/) spec, so any compliant library can verify them, and delivery behaves like [Stripe's](https://docs.stripe.com/webhooks).
+Webhooks tell a client that something happened without making it poll. In payments they're not optional: a bank transfer settles days later, a dispute arrives weeks later, and a customer finishes 3-D Secure in a browser tab the client never sees. Webhooks are how those facts reach the systems that need them.
+
+They're also an API you call, into servers you don't control, over a network that fails. Every rule below follows from that.
 
 ## Delivery Guarantees
 
-- **At least once.** The same event can arrive more than once. Dedupe by event ID.
-- **No ordering guarantee.** `payment.captured` can arrive before `payment.authorized`. Don't use arrival order or `created_at` to decide what happened first.
-- **Retries until acknowledged** or the retry schedule runs out.
+- **At least once.** If a delivery times out, I can't know whether the receiver processed it, so I send it again. The same event can arrive more than once, and consumers dedupe by event ID. The alternative, at most once, means a dropped event is simply lost, and for "payment succeeded" that's an order that never ships.
+- **No ordering guarantee.** Retries, parallel delivery and network paths mean `payment.captured` can arrive before `payment.authorized`. Guaranteeing order would require sending one event at a time per receiver, so one slow event would block everything behind it. Consumers decide based on the object's state, not arrival order.
+- **Retries until acknowledged,** or until the retry schedule runs out.
 
 ## Payload
 
-Each event carries a **snapshot** of the resource as it was when the event happened. Like [GitHub's webhooks](https://docs.github.com/en/webhooks/webhook-events-and-payloads), the resource sits under its own name, never under a generic `data` wrapper (see [API Design Principles](/docs/api-design/principles#response-format)).
+Each event carries a **snapshot** of the resource as it was when the event happened. The resource sits under its own name, never a generic `data` wrapper, consistent with [API Design Principles](/docs/api-design/principles#response-format). [GitHub's webhooks](https://docs.github.com/en/webhooks/webhook-events-and-payloads) are shaped the same way.
 
 ```json
 {
@@ -34,14 +36,14 @@ Each event carries a **snapshot** of the resource as it was when the event happe
 }
 ```
 
-- `type` is `resource.event`, past tense: `payment.captured`, `refund.failed`.
-- The resource key matches the first part of `type`: `payment` for `payment.*`, `refund` for `refund.*`. It's the same shape `GET /payments/{paymentId}` returns, for the event's `api_version` (see [Versioning & Deprecation](/docs/operations/versioning)). Events are never changed after they're created.
-- If you need the current state, fetch it. That's the only safe answer when events arrive out of order.
-- New event types and new fields can be added at any time.
+- `type` is `resource.event`, past tense: `payment.captured`, `refund.failed`. Past tense because it's a fact, not a request; see [Events & Async Messaging](/docs/architecture/events).
+- The resource key matches the first part of `type`, and it's the same shape `GET /payments/{paymentId}` returns for the event's `api_version` ([Versioning & Deprecation](/docs/operations/versioning)). A consumer reuses its existing types instead of learning a second schema. Events are never changed after they're created.
+- A snapshot can be stale by the time it's processed. If the current state matters, fetch it. That's the only safe answer when events arrive out of order.
+- New event types and new fields can be added at any time, so consumers ignore what they don't recognize.
 
 ## Signatures
 
-Every delivery carries three headers:
+A webhook endpoint is a public URL. Without a signature, anyone who finds it can post `payment.succeeded` and get goods shipped for free. Every delivery is signed using the [Standard Webhooks](https://www.standardwebhooks.com/) format, so receivers can verify it with an off-the-shelf library instead of hand-rolled crypto:
 
 | Header | Description |
 | ------ | ----------- |
@@ -53,10 +55,10 @@ The signed content is `{Webhook-Id}.{Webhook-Timestamp}.{raw body}`. Each retry 
 
 ### Verifying
 
-1. Use the **raw request body**. Don't parse and re-serialize JSON first.
-2. Compute the HMAC with your endpoint's secret and compare with a **constant-time** comparison.
-3. Reject timestamps more than **5 minutes** from now, so a captured request can't be replayed later. Keep your clock synced with NTP.
-4. The header can list several signatures (space separated). When a secret is rolled, the old one stays valid for up to **24 hours** and every delivery is signed with both. Accept if any match.
+1. **Use the raw request body.** Parsing and re-serializing JSON can change whitespace or key order, and then a valid signature fails. Worse, it tempts people to disable verification "temporarily".
+2. **Compare in constant time.** An ordinary string comparison returns as soon as a byte differs, and that timing difference is enough to guess a signature one byte at a time.
+3. **Reject timestamps more than 5 minutes from now.** The timestamp is inside the signature, so it can't be altered. Without a window, a captured request can be replayed forever. Five minutes tolerates realistic clock skew and queueing while keeping the replay window short. Keep the clock synced with NTP.
+4. **Accept any of several signatures.** When a secret is rolled, the old one stays valid for **24 hours** and every delivery is signed with both, so the receiver can deploy the new secret without a gap. 24 hours is enough because the receiver is one system its owner can redeploy in a day.
 
 ```ts
 const signed = `${id}.${timestamp}.${rawBody}`;
@@ -71,7 +73,9 @@ const ok = header.split(" ").some((sig) => {
 
 ## Retries
 
-Only a `2xx` counts as delivered. Redirects, `4xx`, `5xx`, TLS errors and timeouts are all failures, and the event is retried with exponential backoff for **up to 3 days**:
+Only a `2xx` counts as delivered. Redirects, `4xx`, `5xx`, TLS errors and timeouts are all failures. A redirect counts as a failure because following one would send signed payment data to wherever a misconfigured or compromised endpoint points.
+
+Failed deliveries retry with exponential backoff for **up to 3 days**:
 
 | Attempt | Delay after previous |
 | ------- | -------------------- |
@@ -85,16 +89,18 @@ Only a `2xx` counts as delivered. Redirects, `4xx`, `5xx`, TLS errors and timeou
 | 8 | 24 hours |
 | 9 | 24 hours |
 
-After the last attempt the event is marked failed. The account owner is notified when an endpoint keeps failing, and a disabled endpoint gets no further retries.
+The shape matters. Early retries are close together because most failures are blips: a deploy, a restart. Later ones spread out so a receiver that's down isn't hammered while it recovers. Three days is long enough to survive an outage that starts Friday evening and gets fixed Monday morning, and short enough that an event isn't delivered so late it's useless. Stripe retries live events for up to three days as well.
+
+After the last attempt the event is marked failed, the account owner is notified when an endpoint keeps failing, and a disabled endpoint gets no further retries.
 
 ## Consumer Expectations
 
-1. **Verify the signature** before anything else.
-2. **Acknowledge fast.** Store the event and return `200`, then process it from a queue. Slow work causes timeouts, and timeouts cause duplicate deliveries.
-3. **Dedupe by `Webhook-Id`.** A unique constraint on processed event IDs is the simplest version. See [Idempotency](/docs/payments/idempotency).
+1. **Verify the signature** before anything else, including parsing.
+2. **Acknowledge fast.** Store the event and return `200`, then process it from a queue. If processing happens inside the request and takes longer than the timeout, the sender retries, and now you're processing it twice, concurrently.
+3. **Dedupe by `Webhook-Id`.** A unique constraint on processed event IDs, written in the same transaction as the side effect, is the simplest correct version. See [Idempotency](/docs/payments/idempotency).
 4. **Don't trust order.** Fetch the current object when the transition matters.
-5. **Subscribe only to the event types you handle.**
-6. **Don't rely on webhooks alone.** Run a periodic job that lists recent objects and catches anything a missed webhook would have told you.
+5. **Subscribe only to the event types you handle.** Every extra subscription is load and noise for nothing.
+6. **Don't rely on webhooks alone.** Endpoints get misconfigured and secrets expire. A periodic job that lists recent objects catches anything a missed webhook would have told you.
 
 ## Replay
 
@@ -105,7 +111,7 @@ GET /events?type=payment.captured&created_after=2026-10-21T00:00:00Z
 POST /events/{eventId}/redeliver
 ```
 
-Redelivery sends the same `Webhook-Id`, so a correct consumer handles it as a no-op if it already processed it.
+Thirty days covers a consumer that discovers a bug at month-end close and needs to reprocess the month. Redelivery sends the same `Webhook-Id`, so a correct consumer treats anything it already processed as a no-op.
 
 ## References
 
@@ -120,6 +126,6 @@ Redelivery sends the same `Webhook-Id`, so a correct consumer handles it as a no
 
 **In practice**
 
-- [Stripe: Receive Stripe events in your webhook endpoint](https://docs.stripe.com/webhooks), retries, tolerance, rollover and retention we match
+- [Stripe: Receive Stripe events in your webhook endpoint](https://docs.stripe.com/webhooks), three-day retries, a five-minute signature tolerance and a 24-hour secret rollover
 - [GitHub: Validating webhook deliveries](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries), HMAC verification
-- [GitHub: Best practices for using webhooks](https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks), respond fast, process async
+- [GitHub: Best practices for using webhooks](https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks), respond fast, process asynchronously

@@ -7,7 +7,7 @@ tags = ["architecture", "events", "messaging", "cloudevents"]
 aliases = ["events"]
 +++
 
-Events decouple services in time: the producer says what happened and moves on, and consumers react when they can. That only works if publishing is reliable and consuming is safe to repeat.
+Events decouple services in time. The producer says what happened and moves on, and consumers react when they can, even if they were down when it happened. That's what makes asynchronous systems resilient, but only if publishing is reliable and consuming is safe to repeat. Get either wrong and you have a system that silently loses facts or applies them twice, which is worse than a synchronous call that at least fails loudly.
 
 ## Commands vs Events
 
@@ -18,13 +18,13 @@ Events decouple services in time: the producer says what happened and moves on, 
 | Receivers | Exactly one handler | Zero or more subscribers |
 | Can be rejected | Yes | No, it already happened |
 
-Don't disguise commands as events. If the producer needs a specific thing to happen, that's a command, and it should fail loudly when it can't.
+The distinction matters because the failure modes differ. A command that can't be executed should fail loudly to its sender. An event has no sender waiting; if a subscriber can't handle it, that's the subscriber's problem to retry. Disguising a command as an event ("`invoice.should_be_sent`") hides the failure: the producer believes the work is in hand, and nothing tells it otherwise.
 
 ## The Transactional Outbox
 
-The classic bug: write to the database, then publish to the broker. If the process dies between the two, the database says the payment was captured and nobody else ever hears about it. Publish first and you get the opposite.
+The classic bug is the dual write. The service updates its database, then publishes to the broker. If the process dies between the two, the database says the payment was captured and no other service ever hears about it. Reverse the order and you announce a capture that was then rolled back. No amount of retry logic fixes this, because the two writes go to two systems that can't commit together.
 
-The fix is the [transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html):
+The [transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html) turns two writes into one:
 
 1. In the **same transaction** as the state change, insert the event into an `outbox_events` table.
 2. A relay reads unpublished rows in order and publishes them to the broker.
@@ -38,29 +38,33 @@ VALUES ($2, 'payment.captured', $1, $3, NOW());
 COMMIT;
 ```
 
-The relay can crash after publishing and before marking, so it will sometimes publish twice. That's fine, because consumers are idempotent. A change-data-capture stream (like Debezium reading the write-ahead log) is an equivalent relay.
+Now the event exists if and only if the capture committed. The relay can crash after publishing and before marking the row, so an event is occasionally published twice. That's the trade: the outbox converts "sometimes lost" into "sometimes duplicated", and duplicates are a problem consumers can solve. Lost events aren't.
+
+A change-data-capture stream (Debezium reading the database's write-ahead log, for example) is an equivalent relay. It needs no polling and adds no load to the tables, at the cost of running and operating the CDC pipeline.
 
 ## Consumers Are Idempotent
 
-Every broker worth using delivers **at least once**. Exactly-once delivery doesn't exist across a network.
+Every broker worth using delivers **at least once**, because the only way to guarantee delivery over a network is to resend when unsure. Exactly-once delivery doesn't exist across a network; exactly-once **processing** does, and it's the consumer's job.
 
-- **Dedupe by event ID.** Record processed IDs in the same transaction as the side effect, with a unique constraint.
-- **Or make the handler naturally idempotent.** "Set status to captured" is safe to repeat. "Add 100 to the balance" is not.
-- **Acknowledge after the work commits,** never before.
+- **Dedupe by event ID.** Record processed IDs in the same transaction as the side effect, with a unique constraint. If the side effect commits, so does the record of it.
+- **Or make the handler naturally idempotent.** "Set status to captured" is safe to repeat. "Add 100 to the balance" is not, and it's the kind of handler that looks fine in testing and double-credits in production.
+- **Acknowledge after the work commits,** never before. Acknowledging first turns a crash mid-handler into a lost event.
 
 See [Idempotency](/docs/payments/idempotency) for the same rule at the API boundary, and [Webhooks](/docs/payments/webhooks) for it across organizations.
 
 ## Ordering
 
-Global ordering is expensive and almost never needed. Order **per entity** instead.
+Global ordering means a single sequence, which means a single consumer at a time: no parallelism, and one slow message blocks everything. It's almost never what you need. Order **per entity** instead.
 
-- **Partition by the entity ID.** All events for payment `01932c6c-...` go to the same partition (Kafka) or message group (SQS FIFO), so they're consumed in order.
-- **Don't assume order across entities.** Events for different payments can interleave any way.
-- **Carry a version.** Each event includes the entity's version number, and a consumer ignores anything older than what it already applied.
+- **Partition by the entity ID.** All events for one payment go to the same partition (Kafka) or message group (SQS FIFO), so they're consumed in order, while different payments are processed in parallel.
+- **Don't assume order across entities.** Events for different payments interleave any way they like.
+- **Carry a version.** Each event includes the entity's version number, and a consumer ignores anything older than what it already applied. Partitioning makes reordering rare; versions make it harmless, including after a replay.
 
 ## Envelope: CloudEvents, Binary Mode
 
-Event metadata follows [CloudEvents 1.0](https://cloudevents.io/), using **binary content mode**: attributes travel as headers, and the body is the event payload itself. No `data` wrapper, the same rule as [API Design Principles](/docs/api-design/principles) and [Webhooks](/docs/payments/webhooks).
+Event metadata follows [CloudEvents 1.0](https://cloudevents.io/), using **binary content mode**: attributes travel as headers, and the body is the event payload itself.
+
+Two reasons. First, a standard envelope means brokers, routers and tooling can filter and route on `type` or `source` without understanding every payload, and a consumer written against one producer understands the next. Second, binary mode keeps the body as the resource itself, with no `data` wrapper, the same rule as [API Design Principles](/docs/api-design/principles) and [Webhooks](/docs/payments/webhooks). CloudEvents' structured mode would nest the payload under `data`; binary mode doesn't.
 
 ```http
 POST /events HTTP/1.1
@@ -85,20 +89,20 @@ Kafka and AMQP bindings map the same attributes to message headers. Event IDs ar
 
 ## Schema Evolution
 
-Events outlive the code that produced them. They're replayed, archived, and read by consumers you've never met.
+Events outlive the code that produced them. They're replayed, archived and read by consumers you've never met, sometimes years later. An API response is consumed once; an event is a record.
 
-- **Every event type has a schema** (JSON Schema, Avro or Protobuf) in a registry or the repository, checked in CI.
-- **Additive changes only.** New optional fields are fine. Removing, renaming or retyping a field is a new event type (`payment.captured.v2`) published alongside the old one until consumers move.
-- **Consumers ignore unknown fields.** That's what makes additive changes safe.
+- **Every event type has a schema** (JSON Schema, Avro or Protobuf) in a registry or the repository, checked in CI so a breaking change fails a build instead of a consumer.
+- **Additive changes only.** New optional fields are fine. Removing, renaming or retyping a field is a new event type (`payment.captured.v2`), published alongside the old one until every consumer has moved.
+- **Consumers ignore unknown fields.** That's the other half of the bargain, and what makes additive changes safe.
 
-The same breaking-change rules as [Versioning & Deprecation](/docs/operations/versioning), applied to messages.
+It's the same breaking-change discipline as [Versioning & Deprecation](/docs/operations/versioning), applied to messages, with less room for error because you can't see who's listening.
 
 ## When Processing Fails
 
 - **Retry with backoff** for transient failures. See [Retries & Timeouts](/docs/operations/retries-and-timeouts).
-- **Dead-letter after a limit.** A message that keeps failing moves to a [dead-letter queue](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html) with the error attached, so it can't block its partition forever.
+- **Dead-letter after a limit.** A message that fails every time (a "poison message") would otherwise block its partition forever, and every event behind it for that entity. Move it to a [dead-letter queue](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html) with the error attached, and let the rest flow.
 - **Alert on dead letters, then replay deliberately** once the bug is fixed. A dead-letter queue nobody watches is just a slower way to lose data.
-- **Watch consumer lag.** How far behind a consumer is matters more than how fast it is. It belongs on the dashboard next to the [SLOs](/docs/operations/slos).
+- **Watch consumer lag.** How far behind a consumer is matters more than how fast it is: a consumer an hour behind means customers see hour-old state. Lag belongs on the dashboard next to the [SLOs](/docs/operations/slos).
 
 ## References
 

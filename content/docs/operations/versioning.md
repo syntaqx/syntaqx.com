@@ -1,26 +1,24 @@
 +++
 title = "Versioning & Deprecation"
-description = "Header-based, date-named API versions with a URL fallback, what counts as a breaking change, and the Deprecation and Sunset headers that announce removals."
+description = "Header-selected, date-named API versions, what counts as a breaking change, and announcing removals on the wire with the Deprecation and Sunset headers."
 category = "Operations"
 order = 5.5
 tags = ["api", "versioning", "deprecation", "headers"]
 aliases = ["versioning"]
 +++
 
-APIs change. Integrations shouldn't break without warning. Versions are selected with a request header and named by date, with a version in the URL path as the fallback, and anything being removed is announced on the wire with the `Deprecation` header ([RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745)) and `Sunset` header ([RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594)) before it goes away.
+An API is a promise to code you'll never see. Someone wrote an integration against it, shipped it, and moved on; if a response changes shape, their code breaks at 3 a.m. and they find out from their customers. Versioning is how the API keeps changing without breaking that promise.
+
+The approach: versions are chosen with a request header and named by date, breaking changes only ever ship in a new version, and anything being removed is announced in the responses themselves, with the [`Deprecation`](https://datatracker.ietf.org/doc/html/rfc9745) and [`Sunset`](https://datatracker.ietf.org/doc/html/rfc8594) headers, well before it goes away.
 
 ## Header Versioning
 
 Clients pick a version with the `Api-Version` request header. Versions are named by their release date, in the `YYYY-MM-DD` form from [Time & Date Formats](/docs/fundamentals/time).
 
-### Example Request
-
 ```http
 GET /resources
 Api-Version: 2026-10-01
 ```
-
-### Example Response
 
 ```http
 HTTP/1.1 200 OK
@@ -28,43 +26,53 @@ Api-Version: 2026-10-01
 Vary: Api-Version
 ```
 
-The response always echoes the version that served it, and `Vary: Api-Version` keeps caches from mixing versions.
+The response echoes the version that served it, so a client can confirm what it got instead of assuming. `Vary: Api-Version` matters as much: without it, a cache can serve a response shaped for one version to a client that asked for another.
+
+### Why a Header
+
+The version describes how the client wants to talk, not which resource it wants, and the URL is for the resource. That distinction has practical consequences:
+
+- **URLs stay stable.** Links, bookmarks, stored IDs and webhook targets keep working across versions. A `/v1/` in the URL bakes the version into every URL a client has ever saved.
+- **Versions can be small.** When the version lives in the URL, each new one is a new tree of routes, so APIs batch years of breaking changes into one painful `/v2`. A header version costs nothing to add, so each breaking change can be its own version, and clients upgrade one change at a time.
+- **The pin is in one place.** A client's version is a single header, set once in its HTTP client, not scattered across every URL it builds.
+
+The cost is visibility: a header doesn't show up when someone pastes a URL into a browser or a chat. That's why the response echoes it, and why errors about versions say which versions exist.
+
+### Why Dates
+
+Dates sort, they say how old a version is at a glance, and they map directly to the changelog entry that introduced them. `2026-10-01` tells you more than `v7`, and nobody argues about whether a change deserves a major or minor bump.
 
 ### Missing or Unknown Versions
 
 | Request | Result |
 | ------- | ------ |
-| No `Api-Version` header | Served by the **oldest supported** version, so existing clients never shift underneath |
+| No `Api-Version` header | Served by the **oldest supported** version |
 | A supported version | Served by that version |
 | An unknown or retired version | `400` with the standard [error format](/docs/requests/error-responses), listing the supported versions |
 
-Pin a version explicitly. Relying on the default works, but it means your integration moves whenever the oldest version is retired.
+Defaulting to the oldest version, not the newest, is deliberate. A client that never sent the header was built against whatever existed when it was written; serving it the newest version would break it the day a new version ships. The oldest supported version only changes when one is retired, and that's announced in advance.
 
-### Why Headers First
-
-GitHub, Stripe and others started with versions in the URL and moved to dated header versions. The lessons are the same:
-
-- **URLs stay stable.** A resource's URL identifies the resource, not a revision of the API. Links, bookmarks and stored URLs keep working across versions.
-- **Small, frequent versions.** Each breaking change ships as its own dated version. Clients upgrade one change at a time instead of migrating everything in one `/v2` rewrite.
-- **Explicit pinning.** The version a client was built against is written down in one place, its request headers, and the response confirms it.
+Still, pin a version explicitly. An unpinned client moves whenever the oldest version is retired, and it can't tell from its own code which behavior it depends on.
 
 ## URL Versioning (Fallback)
 
-When a client can't set request headers, the version goes in the first path segment instead:
+When a client genuinely can't set request headers, the version goes in the first path segment instead:
 
 ```http
 GET /v1/resources
 ```
 
-URL versioning is still valid, but it's the fallback, not the recommendation. Path versions are coarse: every breaking change means a new prefix, every URL a client has stored changes with it, and clients migrate everything at once. Prefer the header wherever you control the client.
+It's a fallback, not the recommendation, for all the reasons above: coarse versions, URLs that change, and big-bang migrations. Prefer the header wherever you control the client.
 
-The syntaqx API skips the fallback entirely: endpoints live at the root of `api.syntaqx.com`, and the version is only ever the header.
+The syntaqx API skips the fallback entirely: endpoints live at the root of `api.syntaqx.com`, and the version is only ever the header. Every client it has can send headers, so the fallback would cost two versioning mechanisms for no benefit. That departure is recorded in [ADR 0002](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0002-header-only-api-versioning.md).
 
 ## Breaking and Non-Breaking Changes
 
+The test is whether correct client code, written against the documented contract, can break.
+
 ### Non-Breaking Changes
 
-These ship in every supported version, without a new version. Clients must tolerate them:
+These ship into every supported version without a new one. Clients are expected to tolerate them, and that expectation is part of the contract:
 
 - New endpoints
 - New optional query parameters or request fields
@@ -72,40 +80,41 @@ These ship in every supported version, without a new version. Clients must toler
 - New response headers
 - New values in a field documented as open-ended
 
+That last line is why enums are documented as open-ended where they can grow (see [JSON Field Conventions](/docs/requests/json-conventions)): a client that switches exhaustively over every value breaks the day a new one appears, and the documentation is what makes handling unknown values the client's job.
+
 ### Breaking Changes
 
 These never ship in place. Each one ships in a new dated version:
 
 - Removing or renaming an endpoint, parameter, or response field
 - Changing a field's type, format, or meaning
-- Making an optional parameter required
-- Changing status codes or the error envelope for existing behavior
+- Making an optional parameter required, or tightening validation on an existing one
+- Changing a default (sort order, page size, which version is served)
+- Changing status codes or the error format for existing behavior
 
-## Timing Windows
+The subtle ones are behavior changes with the same shape: a stricter validation rule, a different default, a field that used to be `null` and is now omitted. The JSON looks compatible and the client still breaks. Treat them as breaking.
 
-Every version, and every endpoint, follows the same lifecycle:
+## The Lifecycle
 
 | Phase | Starts | What clients see |
 | ----- | ------ | ---------------- |
 | Active | Release | Normal responses |
 | Deprecated | Deprecation date | Normal responses, plus `Deprecation`, `Sunset` and `Link` headers |
-| Sunset | Sunset date, **at least 30 days** after deprecation | `410 Gone` for a retired endpoint, `400` for a retired `Api-Version` |
+| Sunset | Sunset date | `410 Gone` for a retired endpoint, `400` for a retired `Api-Version` |
 
-- The deprecation window is never shorter than 30 days.
-- The `Sunset` date is set when deprecation starts, and it never moves earlier.
-- A dated version isn't deprecated until its successor has been released.
+- **At least 30 days between deprecation and sunset.** That's the floor, long enough for a team on a monthly release cycle to notice and ship a fix. APIs with many consumers should give far longer: GitHub supports a previous REST version for at least 24 months after its successor ships.
+- **The sunset date is set when deprecation starts,** and it never moves earlier. Clients plan around it; pulling it in breaks the plan.
+- **Nothing is deprecated until its replacement exists.** A deprecation with nowhere to go is just a removal with a delay.
 
 ## Deprecation Headers
 
-Every response served by a deprecated version or endpoint carries these headers for the whole deprecation window:
+Every response served by a deprecated version or endpoint carries these headers for the whole deprecation window. Announcing it in the response, and not only in a changelog, reaches the integration that nobody has looked at in a year, through the logs and alerts its owners already watch.
 
 | Header | Format | Description |
 | ------ | ------ | ----------- |
 | `Deprecation` | `@` + Unix seconds (RFC 9745) | When the version or endpoint was deprecated |
-| `Sunset` | HTTP-date (RFC 8594) | When it stops being served |
+| `Sunset` | HTTP-date (RFC 8594) | When it stops being served; never earlier than `Deprecation` |
 | `Link` | `rel="deprecation"` | Where to read about the change and how to migrate |
-
-### Example Deprecated Response
 
 ```http
 HTTP/1.1 200 OK
@@ -115,9 +124,11 @@ Sunset: Mon, 01 Feb 2027 00:00:00 GMT
 Link: <https://www.syntaqx.com/docs/operations/versioning>; rel="deprecation"
 ```
 
+The two date formats differ for historical reasons: `Deprecation` is a newer Structured Field date, `Sunset` predates them and uses the classic HTTP-date.
+
 ## After the Sunset
 
-Once the `Sunset` date passes, a retired endpoint returns `410 Gone` and a retired `Api-Version` returns `400`, both with the standard [error format](/docs/requests/error-responses).
+Once the sunset passes, a retired endpoint returns `410 Gone` and a retired `Api-Version` returns `400`, both with the standard [error format](/docs/requests/error-responses). `410` instead of `404` tells the client the thing existed and was removed on purpose, so it's a migration to do, not a typo to debug.
 
 ```http
 HTTP/1.1 410 Gone
@@ -131,7 +142,7 @@ Content-Type: application/json
 ## Client Expectations
 
 1. Send `Api-Version` on every request.
-2. Treat any `Deprecation` header as a signal to log or alert on.
+2. Alert on any `Deprecation` header. It's the earliest warning you'll get.
 3. Follow the `rel="deprecation"` link for the replacement.
 4. Move to a newer version before the `Sunset` date.
 
@@ -139,7 +150,7 @@ Content-Type: application/json
 
 **Specifications**
 
-- [RFC 9745: The Deprecation HTTP Response Header Field](https://datatracker.ietf.org/doc/html/rfc9745), the `Deprecation` header
+- [RFC 9745: The Deprecation HTTP Response Header Field](https://datatracker.ietf.org/doc/html/rfc9745), the `Deprecation` header and its relation to `Sunset`
 - [RFC 8594: The Sunset HTTP Header Field](https://datatracker.ietf.org/doc/html/rfc8594), the `Sunset` header
 - [RFC 8288: Web Linking](https://datatracker.ietf.org/doc/html/rfc8288), the `rel="deprecation"` link
 - [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110), `Vary`, `400` and `410`
@@ -152,5 +163,5 @@ Content-Type: application/json
 
 **In practice**
 
-- [Stripe: APIs as infrastructure](https://stripe.com/blog/api-versioning), dated, header-selected versions
-- [GitHub: API versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions), dated versions selected by header
+- [Stripe: APIs as infrastructure](https://stripe.com/blog/api-versioning), small dated versions selected by header
+- [GitHub: API versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions), dated header versions and a 24-month support window

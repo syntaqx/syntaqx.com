@@ -1,6 +1,15 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { Redis } from "@upstash/redis";
-import { noopStore, redisCredentials, redisStore, selectStore } from "./ratelimit";
+import {
+  checkRateLimit,
+  memoryStore,
+  noopStore,
+  redisCredentials,
+  redisStore,
+  selectStore,
+  setRateLimitStore,
+} from "./ratelimit";
+import { CACHE, cacheableJson } from "./api";
 
 describe("selectStore()", () => {
   it("uses noop without Redis credentials", () => {
@@ -28,6 +37,39 @@ describe("noop store", () => {
       expect(r.remaining).toBe(5000);
       expect(r.headers["RateLimit-Policy"]).toBe('"hourly";q=5000;w=3600');
       expect(r.headers.RateLimit).toMatch(/^"hourly";r=5000;t=\d+$/);
+    }
+  });
+});
+
+describe("304 refunds", () => {
+  it("gives a request back in the memory store, never below zero", async () => {
+    const key = `10.9.2.${Date.now() % 250}`;
+    await memoryStore.limit(key);
+    const second = await memoryStore.limit(key);
+    await memoryStore.refund(key);
+    expect((await memoryStore.limit(key)).remaining).toBe(second.remaining);
+    await memoryStore.refund("never-seen");
+  });
+
+  it("refunds a revalidation that matched, so polling with If-None-Match is free", async () => {
+    setRateLimitStore(memoryStore);
+    try {
+      const ip = `10.9.3.${Date.now() % 250}`;
+      const url = "http://localhost/api/healthz";
+      const first = await cacheableJson(new Request(url), { status: "ok" }, CACHE.revalidate);
+      const etag = first.headers.get("ETag")!;
+
+      const before = await checkRateLimit(ip); // counted as the proxy would
+      const revalidated = await cacheableJson(
+        new Request(url, { headers: { "If-None-Match": etag, "X-Forwarded-For": ip } }),
+        { status: "ok" },
+        CACHE.revalidate,
+      );
+      expect(revalidated.status).toBe(304);
+      // The 304 gave its request back, so the next request sees the same quota.
+      expect((await checkRateLimit(ip)).remaining).toBe(before.remaining);
+    } finally {
+      setRateLimitStore(undefined);
     }
   });
 });
@@ -82,6 +124,17 @@ describe("redis store against a real Redis", () => {
     expect(first.headers["X-RateLimit-Reset"]).toBe(third.headers["X-RateLimit-Reset"]);
     // Prove Redis did the counting, not the in-memory fallback.
     expect(await new Redis(LOCAL).get(`syntaqx:ratelimit:${key}`)).toBe(3);
+  });
+
+  it("refunds in Redis without going below zero", async (ctx) => {
+    if (!redisUp) ctx.skip();
+    const key = `test-${crypto.randomUUID()}`;
+    const store = redisStore(new Redis(LOCAL));
+    await store.limit(key);
+    await store.limit(key);
+    await store.refund(key);
+    expect(await new Redis(LOCAL).get(`syntaqx:ratelimit:${key}`)).toBe(1);
+    await store.refund(`test-${crypto.randomUUID()}`);
   });
 
   it("expires the window in Redis, so counters never pile up", async (ctx) => {

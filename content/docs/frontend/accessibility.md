@@ -6,11 +6,13 @@ order = 13
 tags = ["accessibility", "a11y", "wcag", "frontend"]
 +++
 
-Accessibility is part of "done", not a later pass. Fixing it afterward means redesigning components people already depend on; building it in mostly means using the platform the way it was designed.
+About [1 in 6 people](https://www.who.int/news-room/fact-sheets/detail/disability-and-health) worldwide live with a significant disability, and far more are situationally impaired at any moment: a broken arm, a phone in direct sunlight, a noisy train. Accessibility isn't a feature for a niche audience. It's whether a large share of your users can use the product at all.
+
+It's also part of "done", not a later pass, for a practical reason: retrofitting means redesigning components people already depend on, while building it in mostly means using the platform the way it was designed. Most of the work below costs nothing if it's done first.
 
 ## The Baseline: WCAG 2.2 AA
 
-[WCAG 2.2](https://www.w3.org/TR/WCAG22/) at level AA is the target for everything we ship. It's what regulators, procurement teams and courts reference, and AA is achievable without compromising design.
+I target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) at level AA for everything I ship. Level A alone leaves real barriers, like insufficient contrast, in place. AAA can't be met by all content (some of its criteria rule out entire kinds of material), so it works as an aspiration for specific pages, not a baseline. AA is the level that's achievable everywhere without compromising design, and it's the one regulators, procurement teams and courts reference.
 
 WCAG 2.2 added criteria worth knowing by name ([what's new](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/)):
 
@@ -28,7 +30,7 @@ WCAG 2.2 added criteria worth knowing by name ([what's new](https://www.w3.org/W
 The browser already knows how to make a `<button>` focusable, keyboard-operable and announced correctly. A `<div>` with a click handler knows none of that.
 
 - **Use the element that means what you're building:** `<button>` for actions, `<a href>` for navigation, `<nav>`, `<main>`, `<label>`, `<table>` for tabular data, headings in order.
-- **ARIA only when HTML can't do it.** The [first rule of ARIA](https://www.w3.org/TR/using-aria/) is to use a native element instead whenever one exists. ARIA changes what's announced, not how anything behaves, so a wrong role is worse than none.
+- **ARIA only when HTML can't do it.** ARIA changes what's announced, not how anything behaves. `role="button"` on a `<div>` makes a screen reader say "button", but the div still ignores Enter and Space and can't receive focus, so it's now a broken button that claims to work. A wrong role is worse than none, which is why the W3C's [first rule of ARIA](https://www.w3.org/TR/using-aria/) is to use a native element whenever one exists.
 - **Custom widgets** (tabs, comboboxes, dialogs) follow the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) patterns, including their keyboard behavior.
 
 ## Keyboard and Focus
@@ -66,7 +68,7 @@ Respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/
 
 ## Testing
 
-Automated tools are necessary and nowhere near sufficient. [axe-core](https://github.com/dequelabs/axe-core), the engine behind most of them, reports finding about 57% of WCAG issues on average. The rest takes a person:
+Automated tools are necessary and nowhere near sufficient. They can tell that an image has `alt` text, but not whether it describes the image; that a button has a name, but not whether the name makes sense. [axe-core](https://github.com/dequelabs/axe-core), the engine behind most of them, reports finding about 57% of WCAG issues on average. A clean automated report means the easy half is done. The rest takes a person:
 
 1. **Automated checks in CI** with axe on key pages, failing the build on new violations.
 2. **A keyboard pass** on every new flow: unplug the mouse and finish the task.
@@ -93,5 +95,6 @@ In the US, the Department of Justice's position is that the ADA applies to the w
 
 **In practice**
 
+- [WHO: Disability and health](https://www.who.int/news-room/fact-sheets/detail/disability-and-health), 1.3 billion people, about 1 in 6, with significant disability
 - [ADA.gov: Guidance on Web Accessibility and the ADA](https://www.ada.gov/resources/web-guidance/), how the ADA applies to websites
 - [European Commission: European Accessibility Act](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en), scope of the EU requirements

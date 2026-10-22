@@ -1,0 +1,7 @@
+# Security contact for syntaqx.com (RFC 9116).
+# Found a vulnerability? Please report it privately through the contact page
+# rather than opening a public issue. Thank you.
+Contact: https://www.syntaqx.com/contact
+Expires: 2027-10-22T00:00:00Z
+Preferred-Languages: en
+Canonical: https://www.syntaqx.com/.well-known/security.txt

@@ -7,7 +7,9 @@ tags = ["operations", "configuration", "secrets", "security"]
 aliases = ["configuration"]
 +++
 
-The same build runs everywhere. What changes between local, staging and production is configuration, and how you handle it decides whether a deploy is boring or a guessing game. The baseline is [The Twelve-Factor App](https://12factor.net/config): config lives in the environment, strictly separate from code.
+The same build runs everywhere. What changes between environments is configuration, and how you handle it decides whether a deploy is boring or a guessing game.
+
+Config lives in the environment, strictly separate from code. The test is simple: could you open-source the repository right now without leaking a credential? If the code has a production hostname or an API key in it, the answer is no, and the same build can't run in two places without a code change. Keeping config in environment variables, the rule [The Twelve-Factor App](https://12factor.net/config) made famous, is what lets one artifact be promoted from preview to production unchanged.
 
 ## What Counts as Config
 
@@ -40,15 +42,15 @@ export const config = Config.parse(process.env);
 - **Defaults only for safe values.** A default timeout is fine. A default database URL is a production incident waiting for a typo.
 - **Units in the name.** `PROCESSOR_TIMEOUT_MS`, never `PROCESSOR_TIMEOUT`.
 
-## Environments
+## Across Environments
 
-- **Few, and as alike as possible.** Local, staging, production. Every extra environment drifts.
-- **Staging mirrors production's shape,** not its data. Synthetic data only, per [Sensitive Data](/docs/payments/sensitive-data).
-- **Every variable is listed** in a committed `.env.example` with a comment, and no real values.
+- **Same variables everywhere, different values.** Every environment reads the same set of variables, validated the same way, so a misconfigured preview fails the same way production would. Which environments to have at all is covered in [Environments](/docs/operations/environments).
+- **Lower environments never hold production data,** so their config never points at production systems. Synthetic data only, per [Sensitive Data](/docs/payments/sensitive-data).
+- **Every variable is listed** in a committed `.env.example` with a comment, and no real values. It's the documentation a new engineer reads first, and the checklist for a new environment.
 
 ## Secrets
 
-Secrets are config with a higher bar:
+Secrets are config with a higher bar, because a leaked secret is an incident even if nothing has happened yet: you have to assume someone has it.
 
 - **Never in the repository.** Not in code, not in `.env` files, not in CI YAML, not in history. Push protection and [secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning) run on every repository.
 - **Stored in a secrets manager** (cloud KMS-backed stores, Vault, or the platform's encrypted environment variables), and injected at runtime.
@@ -67,7 +69,11 @@ Every secret will need rotating eventually, usually at the worst moment. Design 
 
 ## Changing Config
 
-Config changes are deploys. They go through review, they're recorded, and they can be rolled back. "I just tweaked an environment variable in the console" shows up in more [postmortems](/docs/engineering/postmortems) than any bug.
+Config changes are deploys. They go through review, they're recorded, and they can be rolled back. "I just tweaked an environment variable in the console" shows up in more [postmortems](/docs/engineering/postmortems) than any bug, precisely because it skipped everything that catches mistakes in code.
+
+## This Site
+
+Every variable syntaqx.com reads is optional and documented in a committed `.env.example`: the Redis connection for rate limiting (either Upstash's own names or the `KV_REST_API_*` names the Vercel integration sets), a store override, and the rate-limit ceiling. Missing values degrade instead of failing: with no Redis configured, the limiter uses a no-op store. Production values live in Vercel's encrypted environment variables, never in the repository.
 
 ## References
 

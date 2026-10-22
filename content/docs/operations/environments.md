@@ -37,7 +37,7 @@ The only environment users see, and the only one whose data matters. Changes rea
 
 ## Parity
 
-[Dev/prod parity](https://12factor.net/dev-prod-parity) is what makes a green preview mean something:
+Parity is what makes a green preview mean something. Every difference between environments is a place a bug can pass in one and fail in the next, and the differences that bite are the ones nobody remembers exist. The [Twelve-Factor](https://12factor.net/dev-prod-parity) framing names three gaps to close: time, people and tools.
 
 - **Same artifact.** The build that passed CI is the build that runs everywhere. Environments differ in configuration, never in code. See [Containers & Immutable Infrastructure](/docs/delivery/containers).
 - **Same backing services.** Postgres locally if Postgres in production, not SQLite "because it's easier". The same major versions, from the same images.

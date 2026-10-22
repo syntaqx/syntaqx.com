@@ -7,7 +7,9 @@ tags = ["reliability", "slo", "alerting", "operations"]
 aliases = ["slos"]
 +++
 
-"Is it reliable enough?" needs a number, agreed on before the incident, not argued about during it. Service level objectives give you that number, and error budgets turn it into a decision rule. The approach follows the [Google SRE Book](https://sre.google/sre-book/service-level-objectives/) and [Workbook](https://sre.google/workbook/implementing-slos/).
+"Is it reliable enough?" needs a number, agreed on before the incident, not argued about during it. Service level objectives give you that number, and error budgets turn it into a decision rule.
+
+The point isn't to be as reliable as possible. 100% is the wrong target for nearly everything: users can't tell 99.99% from 100% through their own flaky Wi-Fi, and chasing the difference costs releases you could have shipped. An SLO says how much unreliability is acceptable, which turns the rest into a budget you can spend on moving fast. The vocabulary and the burn-rate math below come from Google's [SRE Book](https://sre.google/sre-book/service-level-objectives/) and [Workbook](https://sre.google/workbook/implementing-slos/), and they've become the industry's common language for this.
 
 ## Terms
 
@@ -37,7 +39,7 @@ Measure what users feel, as close to them as you can (the load balancer or the c
 ## Setting Targets
 
 - **Start from today's performance,** then tighten as you earn it. An SLO you miss every month is ignored; one you beat by miles is wasted budget.
-- **Every extra nine costs about 10x.** 99.99% allows 4 minutes a month. That rules out manual responses to anything.
+- **Each extra nine is a different kind of system.** 99.9% allows 43 minutes a month: a human can be paged, look, and roll back. 99.99% allows 4: that only works if failover and rollback are automatic, because a person can't get to a laptop in time. As a rule of thumb, each nine costs roughly ten times the last.
 - **Critical paths get stricter targets.** Authorizing a payment and rendering a settings page don't deserve the same objective.
 - **Rolling 30-day windows,** reviewed quarterly.
 
@@ -52,6 +54,8 @@ The budget only matters if spending it changes behavior. Write the policy down b
 | Exhausted | Feature releases freeze for that service. Work goes to reliability until the budget recovers |
 
 Exceptions (a security fix, a regulatory deadline) are allowed, and written down. Any single incident that burns more than 20% of the budget gets a [postmortem](/docs/engineering/postmortems), even if nobody noticed.
+
+The policy is what keeps the SLO honest. Without it, the budget is a dashboard: feature work continues while reliability burns, and the conversation happens after the outage. With it, the tradeoff between shipping and stability is decided by a rule everyone agreed to in advance, not by whoever argues loudest during the incident.
 
 ## Alerting on Burn Rate
 

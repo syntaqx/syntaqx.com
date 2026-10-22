@@ -17,7 +17,7 @@ Martin Fowler's [technical debt quadrant](https://martinfowler.com/bliki/Technic
 | **Deliberate** | Skipping design because there's "no time" | Shipping now, knowing the cost, with a plan to pay it back |
 | **Inadvertent** | Not knowing good design in the first place | Learning, after building it, how it should have been built |
 
-- **Deliberate and prudent** is a business decision. Record it, with what it'll take to pay back. An [ADR](/docs/engineering/design-docs) is the right place.
+- **Deliberate and prudent** is a business decision. Record it as a backlog item with what it'll take to pay back, so the loan has terms. If the shortcut departs from the playbook (skipping the deprecation window, say), it also gets an [ADR](/docs/engineering/design-docs), because that's exactly the choice someone will later mistake for an accident.
 - **Inadvertent and prudent** is inevitable. You learn the domain by building in it. Pay it down as understanding improves.
 - **Reckless** debt in either row is a process problem. Fix the process (reviews, design docs, mentoring), not just the code.
 
@@ -33,7 +33,7 @@ Debt described as interest gets prioritized against features. Debt described as 
 
 ## Budget for It Continuously
 
-Reserve a steady share of every team's capacity for paying down debt and keeping things current, around 20%, and spend it every cycle.
+Reserve a steady share of every team's capacity for paying down debt and keeping things current, and spend it every cycle. I start around 20%. The exact number matters less than its being fixed: a share that's renegotiated every planning meeting loses to every feature, because each feature has a sponsor and the debt doesn't.
 
 - **Not debt sprints.** A quarterly "cleanup sprint" lets interest compound for three months, then gets cancelled the first time a deadline slips.
 - **The team chooses** what to spend it on. They know where the interest hurts.
@@ -43,7 +43,7 @@ Reserve a steady share of every team's capacity for paying down debt and keeping
 
 The cheapest time to fix a piece of code is when you're already changing it: the context is loaded, the tests are running, and the reviewer is already looking. Leave the code a little better than you found it.
 
-- **Refactor in its own commit** within the pull request, so the behavior change stays reviewable. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
+- **Land the refactor first,** as its own pull request, then the behavior change on top. Mixed into one diff, a reviewer can't tell which lines change behavior. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
 - **Don't go wandering.** Improve what you touch; a drive-by rewrite of an unrelated module belongs in its own change.
 
 ## When to Stop and Pay
@@ -58,7 +58,7 @@ At that point it becomes the priority, planned and staffed like any other projec
 
 ## Rewrite or Strangle
 
-Big rewrites are the riskiest way to repay debt. They stop delivery for months, rebuild years of edge cases from memory, and ship all at once.
+Big rewrites are the riskiest way to repay debt. They stop delivery for months, rebuild years of edge cases from memory, and ship all at once. The old system's ugliest code is often its most valuable: each odd branch is a bug someone hit in production and fixed. A rewrite throws that knowledge away and has to rediscover it, one incident at a time.
 
 Prefer the **[strangler fig](https://martinfowler.com/bliki/StranglerFigApplication.html):** build the replacement beside the old system, route one capability at a time to it, and delete the old code as each piece moves. Every step ships, every step can be rolled back, and the work can pause without leaving anything half-done. The same idea works at every scale, from a service down to a module, and it's how [Zero-Downtime Migrations](/docs/database/zero-downtime-migrations) handle schemas.
 

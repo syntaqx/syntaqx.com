@@ -11,7 +11,9 @@ Tests exist so you can change code with confidence. A test suite that's slow, fl
 
 ## The Shape
 
-Most confidence per minute of CI comes from tests that exercise real behavior through a stable interface. The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) shape fits service code better than a strict pyramid:
+The classic test pyramid says most tests should be unit tests, because they're fast. For service code, that optimizes the wrong thing. Most production bugs in a service aren't in a pure function; they're in the wiring: a validation rule that never runs because the route isn't registered, a query that violates a constraint, an error mapped to the wrong status. A thousand unit tests over mocks pass straight through all of those.
+
+So I weight toward integration tests, the shape Kent C. Dodds calls the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications). They're slower than unit tests, but containers have made "a real database in a test" cost seconds rather than minutes, and the confidence per minute of CI is far higher:
 
 | Level | What it covers | Share |
 | ----- | -------------- | ----- |
@@ -30,7 +32,9 @@ Most confidence per minute of CI comes from tests that exercise real behavior th
 
 ## Real Dependencies Over Mocks
 
-- **Test against real Postgres,** in a container ([Testcontainers](https://testcontainers.com/)), with migrations applied. Mocked repositories pass while the real query fails on a constraint.
+A mock encodes your belief about how a dependency behaves. When the belief is wrong, the test is wrong in exactly the same way as the code, and both pass together.
+
+- **Test against real Postgres,** in a container ([Testcontainers](https://testcontainers.com/), or CI service containers), with migrations applied. A mocked repository happily accepts a duplicate key that the real unique constraint rejects.
 - **Isolate per test** with a transaction rolled back at the end, or a fresh schema per worker for parallel runs.
 - **Mock only what you don't own,** at the network edge: processors, email providers, third-party APIs. Use recorded responses or the vendor's sandbox, not hand-written guesses.
 
@@ -53,17 +57,21 @@ Tests produce the same result every run, on every machine.
 
 ## Flaky Tests
 
-A flaky test is a failing test. Teams learn to rerun red builds, and then they rerun the real failure too.
+A flaky test is a failing test. The damage isn't the one false alarm; it's what the team learns from it. Once "just rerun it" is a habit, a red build stops meaning anything, and the next real failure gets rerun until it happens to pass. Flakes are also often real bugs: a race condition that shows up in CI one time in fifty shows up in production too.
 
-- **Quarantine within a day.** Move it out of the required suite, and open a ticket with an owner.
-- **Fix or delete within a week.** A quarantined test that nobody fixes is deleted, and the gap is written down.
-- **Never retry in CI to hide it.** Automatic retries turn a flaky test into a slow, silent one.
+- **Quarantine within a day.** Move it out of the required suite, and open a ticket with an owner. A day is long enough to look, and short enough that nobody learns to ignore red.
+- **Fix or delete within a week.** A quarantined test protects nothing, so it can't live there indefinitely. If nobody fixes it, delete it and write down the gap it leaves.
+- **Never retry in CI to hide it.** Automatic retries turn a flaky test into a slow, silent one, and hide the race condition behind it.
 
 ## In CI
 
 - The full suite runs on every pull request and blocks the merge. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
 - Keep it under about 10 minutes. Parallelize before you start skipping.
-- Coverage is a signal for finding untested code, not a target to hit. 100% coverage of the wrong assertions proves nothing.
+- Coverage is a signal for finding untested code, not a target to hit. Make it a target and people write tests that execute lines without asserting anything; 100% coverage of the wrong assertions proves nothing.
+
+## This Site
+
+[syntaqx.com](https://github.com/syntaqx/syntaqx.com) runs its suite with Vitest on every pull request. The API's proxy tests go through the real request handling (headers, rate limits, `QUERY` routing) rather than calling functions in isolation, and the rate limiter's integration tests run against a real Redis: `compose.yml` locally, CI service containers in the pipeline. One of those tests checks the key inside Redis itself, because an earlier version passed while silently falling back to the in-memory store. The docs have tests too: `lib/docs.test.ts` fails the build on a broken link or a missing References section.
 
 ## References
 

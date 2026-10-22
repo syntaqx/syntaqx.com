@@ -1,4 +1,6 @@
 import { describe, it, expect } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
 import { GET as openapiJson } from "@/app/openapi.json/route";
 import { GET as apiOpenapi } from "@/app/api/openapi/route";
 import { API_VERSIONS } from "@/lib/api";
@@ -95,5 +97,26 @@ describe("generateOpenApiSpec()", () => {
     expect(generateOpenApiSpec("http://localhost:3127").servers).toEqual([
       { url: "https://api.syntaqx.com", description: "Production" },
     ]);
+  });
+});
+
+describe("OpenAPI and routes stay in sync", () => {
+  // /docs/security/api-security: an endpoint missing from the spec is an
+  // endpoint nobody reviews, versions or deprecates.
+  const apiDir = path.join(process.cwd(), "app", "api");
+  const routes = (dir: string, prefix = ""): string[] =>
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+      if (!e.isDirectory() || e.name.startsWith("[")) return [];
+      const route = `${prefix}/${e.name}`;
+      const here = fs.existsSync(path.join(dir, e.name, "route.ts")) ? [route] : [];
+      return [...here, ...routes(path.join(dir, e.name), route)];
+    });
+
+  it("documents every API route, and every documented path has a route", async () => {
+    const res = await openapiJson(new Request("http://localhost/openapi.json"));
+    const documented = Object.keys(((await res.json()) as { paths: object }).paths).sort();
+    // The spec describes itself by URL, not as an operation.
+    const served = routes(apiDir).filter((r) => r !== "/openapi").sort();
+    expect(documented).toEqual(served);
   });
 });

@@ -6,11 +6,13 @@ order = 13.1
 tags = ["performance", "core-web-vitals", "frontend", "budgets"]
 +++
 
-Speed is a feature people notice only when it's missing. It's also one of the few that degrades on its own: every dependency, image and script added for a good reason makes the page a little slower, so performance is held with budgets, not fixed in one big project.
+Speed is a feature people notice only when it's missing, and it shows up directly in revenue. In a [Deloitte study](https://web.dev/case-studies/milliseconds-make-millions) of mobile sites, improving load speed by a tenth of a second across the journey lifted retail conversions by 8.4%.
+
+It's also one of the few features that degrades on its own. Every dependency, image and script is added for a good reason, and each makes the page a little slower. Nobody decides to make the site slow; it just happens one reasonable change at a time. So performance is held with budgets that fail the build, not fixed in a big project every couple of years.
 
 ## Targets: Core Web Vitals
 
-The [Core Web Vitals](https://web.dev/articles/vitals) are the targets, each measured at the **75th percentile** of real page loads, separately for mobile and desktop:
+I use the [Core Web Vitals](https://web.dev/articles/vitals) as targets because they measure what users feel (does the main content show up, does the page respond, does it stop jumping around) rather than what's convenient to measure, like total bytes. Each is judged at the **75th percentile** of real page loads, separately for mobile and desktop. The 75th is a deliberate middle: the median hides the slower devices and networks where people give up, while the 99th is dominated by outliers you can't fix.
 
 | Metric | Measures | Good |
 | --- | --- | --- |
@@ -24,7 +26,7 @@ The [Core Web Vitals](https://web.dev/articles/vitals) are the targets, each mea
 
 - **Field data decides.** Real-user monitoring (RUM) and the [Chrome UX Report](https://developer.chrome.com/docs/crux) show what people actually experience, on their devices and networks.
 - **Lab data explains.** Lighthouse and DevTools traces are for finding why a number is bad and checking a fix, not for declaring victory. A fast laptop on office Wi-Fi is not your median user.
-- **Watch the 75th percentile, not the average.** Averages hide the slow tail where people leave.
+- **Watch the 75th percentile, not the average.** An average blends a fast majority with a slow minority into a number that describes nobody, and hides the slow tail where people leave.
 
 ## Budgets in CI
 
@@ -84,6 +86,7 @@ Every tag, widget and pixel runs on your users' devices and counts against your 
 
 **In practice**
 
+- [web.dev: Milliseconds make millions](https://web.dev/case-studies/milliseconds-make-millions), Deloitte's study of 0.1 s speed improvements and conversions
 - [Google: Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci), asserting performance budgets in CI
 - [Vercel: Speed Insights](https://vercel.com/docs/speed-insights), real-user performance data at the 75th percentile
 - [Next.js: Font optimization](https://nextjs.org/docs/app/getting-started/fonts), self-hosted fonts with no layout shift

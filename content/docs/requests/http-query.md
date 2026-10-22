@@ -80,7 +80,7 @@ Why not a separate `POST /payments/search` endpoint? Because it's a second URL f
 
 ## Discovery
 
-Resources that support `QUERY` advertise it, as RFC 10008 defines:
+A client shouldn't have to try `QUERY` and see what breaks. Resources that support it say so, with the headers RFC 10008 defines:
 
 ```http
 HTTP/1.1 200 OK
@@ -135,7 +135,7 @@ The method is standardized. Support isn't. Each of these has a workaround, and t
 | Layer | Limitation | What we do |
 | ----- | ---------- | ---------- |
 | Browsers | `fetch()` can send `QUERY`, but it isn't [CORS-safelisted](https://fetch.spec.whatwg.org/#cors-safelisted-method), so every cross-origin call needs a preflight. HTML forms can't send it at all. | List `QUERY` in `Access-Control-Allow-Methods` and cache preflights with `Access-Control-Max-Age` |
-| Frameworks | Many routers only dispatch the classic methods. Next.js route handlers, for example, only export `GET`, `HEAD`, `OPTIONS`, `POST`, `PUT`, `DELETE` and `PATCH`, so a native `QUERY` gets a `405`. | Route `QUERY` at the server or proxy layer where possible, and the `POST` override always works |
+| Frameworks | Many routers only dispatch the classic methods. Next.js route handlers, for example, only export `GET`, `HEAD`, `OPTIONS`, `POST`, `PUT`, `DELETE` and `PATCH`, and a native `QUERY` to a route handler is rejected (Next.js 16 answers with an empty `400`). | Route `QUERY` at the server or proxy layer where possible, and the `POST` override always works |
 | CDNs, WAFs, load balancers | Some reject unknown methods outright, and most don't cache `QUERY` with a body-aware key yet | Allow `QUERY` explicitly in edge rules, and cache through stored-query `GET` URLs |
 | Runtimes | Older HTTP parsers reject the method. Node.js parses it in current releases (`http.METHODS` includes `QUERY` in Node 24). | Check the runtime before relying on native support |
 | API descriptions | [OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html) has a `query` operation. 3.1 and older tooling doesn't. | Describe `QUERY` in 3.2 where tooling supports it, and document the `POST` override alongside it |
@@ -163,6 +163,7 @@ How it's built:
 - **QUERY is served in the proxy layer.** Next.js route handlers answer a native `QUERY` with an empty `400`, so the proxy recognizes both doors, applies the checks above (`Content-Type`, the 64 KB limit, override rules), and calls the endpoint's read-only handler directly.
 - **Native responses are cacheable for a year.** A digest never changes for the same input, so a successful `QUERY` returns `Cache-Control: public, max-age=31536000, immutable`. Overridden requests return `private, no-store`.
 - **No stored query.** A digest is already the complete, permanent answer, so there's nothing to re-run and responses don't include a `Location`.
+- **The OpenAPI document describes it natively,** as a `query` operation on `/hash` in [OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html), next to the `POST` with its override header.
 - **Plain `POST /hash` still works** for existing clients. Every path returns `400` for malformed JSON and `422` for a well-formed query that can't run, as RFC 10008 and [Error Responses](/docs/requests/error-responses) specify.
 
 ## Client Expectations

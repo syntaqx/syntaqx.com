@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { errorResponse, requestIdHeaders, resolveApiVersion } from "@/lib/api";
-import { checkRateLimit } from "@/lib/ratelimit";
+import { checkRateLimit, clientKey } from "@/lib/ratelimit";
 import { uuidv7 } from "@/lib/uuid";
 import {
   METHOD_OVERRIDE_HEADER,
@@ -21,12 +21,6 @@ function corsHeaders(): Record<string, string> {
   };
 }
 
-function clientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
-  );
-}
-
 /**
  * Apply per-request API headers required by the API design docs:
  *   - Request-Id (UUID v7), plus the legacy X-Request-ID alias
@@ -43,7 +37,7 @@ function clientIp(request: NextRequest): string {
 async function applyApiHeaders(
   request: NextRequest,
 ): Promise<{ blocked: true; response: Response } | { blocked: false; headers: Record<string, string> }> {
-  const rl = await checkRateLimit(clientIp(request));
+  const rl = await checkRateLimit(clientKey(request));
   const requestId = uuidv7();
 
   if (rl.limited) {
