@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/pagefind.mjs",
+    "build": "node scripts/git-history.mjs && next build && node scripts/pagefind.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
