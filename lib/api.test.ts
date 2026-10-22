@@ -1,5 +1,13 @@
 import { describe, it, expect } from "vitest";
-import { json, errorResponse, invalidField, resolveApiVersion, API_VERSIONS } from "./api";
+import {
+  json,
+  errorResponse,
+  invalidField,
+  cacheableJson,
+  CACHE,
+  resolveApiVersion,
+  API_VERSIONS,
+} from "./api";
 
 describe("json()", () => {
   it("attaches an Request-Id header when none is provided", () => {
@@ -54,6 +62,43 @@ describe("errorResponse()", () => {
       headers: { "Request-Id": "trace-xyz" },
     });
     expect(res.headers.get("Request-Id")).toBe("trace-xyz");
+  });
+});
+
+describe("cacheableJson()", () => {
+  const url = "http://localhost/api/healthz";
+
+  it("sends a strong ETag and the given Cache-Control", async () => {
+    const res = await cacheableJson(new Request(url), { status: "ok" }, CACHE.revalidate);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("ETag")).toMatch(/^"[0-9a-f]{32}"$/);
+    expect(res.headers.get("Cache-Control")).toBe("private, no-cache");
+    expect(await res.json()).toEqual({ status: "ok" });
+  });
+
+  it("answers a matching If-None-Match (strong, weak, listed or *) with an empty 304", async () => {
+    const first = await cacheableJson(new Request(url), { status: "ok" }, CACHE.revalidate);
+    const etag = first.headers.get("ETag")!;
+    for (const inm of [etag, `W/${etag}`, `"nope", ${etag}`, "*"]) {
+      const res = await cacheableJson(
+        new Request(url, { headers: { "If-None-Match": inm } }),
+        { status: "ok" },
+        CACHE.revalidate,
+      );
+      expect(res.status, inm).toBe(304);
+      expect(res.headers.get("ETag")).toBe(etag);
+      expect(res.headers.get("Request-Id")).toBeTruthy();
+      expect(await res.text()).toBe("");
+    }
+  });
+
+  it("returns 200 when the ETag doesn't match", async () => {
+    const res = await cacheableJson(
+      new Request(url, { headers: { "If-None-Match": '"stale"' } }),
+      { status: "ok" },
+      CACHE.revalidate,
+    );
+    expect(res.status).toBe(200);
   });
 });
 

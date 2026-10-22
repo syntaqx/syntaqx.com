@@ -33,13 +33,32 @@ const HashResponse = z
   })
   .openapi("HashResponse");
 
+const hashBody = {
+  required: true,
+  content: { "application/json": { schema: HashRequest } },
+};
+
+const errorDoc = (description: string) => ({
+  description,
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/Error" },
+    },
+  },
+});
+
+const hashResult = {
+  description: "Hash result",
+  content: { "application/json": { schema: HashResponse } },
+};
+
 registry.registerPath({
   method: "post",
   path: "/hash",
   operationId: "hashString",
   summary: "Hash a string",
   description:
-    "Compute a cryptographic hash of the provided input. Supported algorithms: MD5, SHA-1, SHA-256, SHA-384, SHA-512. Hashing is a safe, read-only operation, so this endpoint also accepts the HTTP QUERY method (RFC 10008) with the same body, or POST with `X-HTTP-Method-Override: QUERY` for clients that can't send QUERY. See https://www.syntaqx.com/docs/http-query.",
+    "Compute a cryptographic hash of the provided input. Supported algorithms: MD5, SHA-1, SHA-256, SHA-384, SHA-512. Hashing is a safe, read-only operation, so prefer the QUERY method on this path; POST with `X-HTTP-Method-Override: QUERY` is the fallback for clients that can't send QUERY. See https://www.syntaqx.com/docs/http-query.",
   tags: ["Utilities"],
   request: {
     headers: z.object({
@@ -48,40 +67,32 @@ registry.registerPath({
         .optional()
         .openapi({ description: "Send `QUERY` to have this POST handled as an HTTP QUERY." }),
     }),
-    body: {
-      required: true,
-      content: { "application/json": { schema: HashRequest } },
-    },
+    body: hashBody,
   },
   responses: {
-    200: {
-      description: "Hash result",
-      content: { "application/json": { schema: HashResponse } },
-    },
-    400: {
-      description: "Malformed JSON",
-      content: {
-        "application/json": {
-          schema: { $ref: "#/components/schemas/Error" },
-        },
-      },
-    },
-    422: {
-      description: "Invalid input",
-      content: {
-        "application/json": {
-          schema: { $ref: "#/components/schemas/Error" },
-        },
-      },
-    },
-    429: {
-      description: "Rate limited",
-      content: {
-        "application/json": {
-          schema: { $ref: "#/components/schemas/Error" },
-        },
-      },
-    },
+    200: hashResult,
+    400: errorDoc("Malformed JSON"),
+    422: errorDoc("Invalid input"),
+    429: errorDoc("Rate limited"),
+  },
+});
+
+registry.registerPath({
+  method: "query",
+  path: "/hash",
+  operationId: "queryHash",
+  summary: "Hash a string with QUERY",
+  description:
+    "The same hash as POST /hash, sent with the HTTP QUERY method (RFC 10008): safe, idempotent and cacheable. A digest never changes for the same input, so successful responses are `immutable`. Query content is limited to 64 KB. See https://www.syntaqx.com/docs/http-query.",
+  tags: ["Utilities"],
+  request: { body: hashBody },
+  responses: {
+    200: hashResult,
+    400: errorDoc("Missing Content-Type, or malformed JSON"),
+    413: errorDoc("Query content over 64 KB"),
+    415: errorDoc("Unsupported query format; see the Accept-Query header"),
+    422: errorDoc("Invalid input"),
+    429: errorDoc("Rate limited"),
   },
 });
 

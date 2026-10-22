@@ -1,7 +1,7 @@
 import {
   extendZodWithOpenApi,
   OpenAPIRegistry,
-  OpenApiGeneratorV31,
+  OpenApiGeneratorV32,
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { CONTACT_EMAIL } from "@/lib/constants";
@@ -38,13 +38,13 @@ registry.register("Error", ErrorSchema);
 export function generateOpenApiSpec() {
   const isDev = process.env.NODE_ENV === "development";
   const server = isDev
-    ? { url: "http://localhost:3000/api/v1", description: "Local development" }
-    : { url: "https://api.syntaqx.com/v1", description: "Production" };
+    ? { url: "http://localhost:3000/api", description: "Local development" }
+    : { url: "https://api.syntaqx.com", description: "Production" };
 
   const versions = API_VERSIONS.map((v) => v.version);
-  const generator = new OpenApiGeneratorV31(registry.definitions);
+  const generator = new OpenApiGeneratorV32(registry.definitions);
   const doc = generator.generateDocument({
-    openapi: "3.1.0",
+    openapi: "3.2.0",
     info: {
       title: "syntaqx API",
       // The newest dated API version this document describes.

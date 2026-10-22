@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, invalidField } from "@/lib/api";
+import { CACHE, cacheableJson, json, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -103,7 +103,7 @@ export function GET(request: NextRequest) {
   const t = request.nextUrl.searchParams.get("t");
 
   if (t === null) {
-    return json(formatTimestamp(new Date()));
+    return json(formatTimestamp(new Date()), { headers: { "Cache-Control": CACHE.none } });
   }
 
   // Try parsing as a number (unix seconds or ms)
@@ -115,7 +115,7 @@ export function GET(request: NextRequest) {
     if (isNaN(d.getTime())) {
       return invalidField("t", "Invalid timestamp value.");
     }
-    return json(formatTimestamp(d));
+    return cacheableJson(request, formatTimestamp(d), CACHE.immutable);
   }
 
   // Try ISO 8601 / RFC 3339
@@ -126,5 +126,5 @@ export function GET(request: NextRequest) {
       "Invalid timestamp. Provide a Unix timestamp or RFC 3339 string.",
     );
   }
-  return json(formatTimestamp(d));
+  return cacheableJson(request, formatTimestamp(d), CACHE.immutable);
 }

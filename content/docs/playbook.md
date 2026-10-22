@@ -8,7 +8,7 @@ tags = ["architecture", "standards", "principles"]
 
 This is the playbook I bring to every team: the decisions I've already made, written down, so they don't have to be re-argued in every new codebase. None of it is novel. Most of it is a published standard (an RFC, a spec, a practice from Stripe, GitHub or Google) applied consistently. The value is in the consistency.
 
-Every doc states a default. Defaults can be overridden, but the override is a decision, and it gets written down ([Design Docs & ADRs](/docs/design-docs)).
+Every doc states a default. Defaults can be overridden, but the override is a decision, and it gets written down ([Design Docs & ADRs](/docs/design-docs)). This site's own decisions are recorded as [ADRs](https://github.com/syntaqx/syntaqx.com/tree/main/docs/adr), and CI fails any doc here that drops its references, links to a doc that doesn't exist, or wraps JSON in an envelope.
 
 ## Principles
 

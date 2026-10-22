@@ -28,7 +28,7 @@ function makeRequest(
 
 describe("proxy: API header guarantees", () => {
   it("attaches Request-Id and X-RateLimit-* headers to /api/* requests", () => {
-    const res = proxy(makeRequest("http://localhost/api/v1/healthz"));
+    const res = proxy(makeRequest("http://localhost/api/healthz"));
     expect(res).toBeDefined();
     const r = res as Response;
     expect(r.headers.get("Request-Id")).toMatch(
@@ -40,7 +40,7 @@ describe("proxy: API header guarantees", () => {
   });
 
   it("attaches IETF RateLimit-Policy and RateLimit structured fields", () => {
-    const r = proxy(makeRequest("http://localhost/api/v1/healthz")) as Response;
+    const r = proxy(makeRequest("http://localhost/api/healthz")) as Response;
     expect(r.headers.get("RateLimit-Policy")).toBe('"hourly";q=5000;w=3600');
     expect(r.headers.get("RateLimit")).toMatch(/^"hourly";r=4999;t=\d+$/);
     const t = Number(r.headers.get("RateLimit")!.split("t=")[1]);
@@ -48,12 +48,12 @@ describe("proxy: API header guarantees", () => {
     expect(t).toBeLessThanOrEqual(3600);
   });
 
-  it("attaches headers to non-/v1 API paths too (root, catch-all, auth, openapi)", () => {
+  it("attaches headers to every API path (root, catch-all, auth, openapi)", () => {
     for (const path of [
       "/api",
       "/api/whatever",
       "/api/auth/sign-in/email",
-      "/api/v1/openapi",
+      "/api/openapi",
       "/api/sentry-example-api",
     ]) {
       const res = proxy(makeRequest(`http://localhost${path}`)) as Response;
@@ -70,8 +70,8 @@ describe("proxy: API header guarantees", () => {
 
   it("decrements X-RateLimit-Remaining for repeated requests from the same IP", () => {
     const ip = `10.1.0.${++ipCounter}`;
-    const a = proxy(makeRequest("http://localhost/api/v1/healthz", { ip })) as Response;
-    const b = proxy(makeRequest("http://localhost/api/v1/healthz", { ip })) as Response;
+    const a = proxy(makeRequest("http://localhost/api/healthz", { ip })) as Response;
+    const b = proxy(makeRequest("http://localhost/api/healthz", { ip })) as Response;
     expect(a.headers.get("X-RateLimit-Remaining")).toBe("4999");
     expect(b.headers.get("X-RateLimit-Remaining")).toBe("4998");
   });
@@ -85,7 +85,7 @@ describe("proxy: API header guarantees", () => {
 
   it("returns 204 with CORS headers for OPTIONS preflight on /api/*", () => {
     const res = proxy(
-      makeRequest("http://localhost/api/v1/healthz", { method: "OPTIONS" }),
+      makeRequest("http://localhost/api/healthz", { method: "OPTIONS" }),
     ) as Response;
     expect(res.status).toBe(204);
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
@@ -101,7 +101,7 @@ describe("proxy: rate limiting enforcement", () => {
     // MAX_REQUESTS = 5000, so the 5001st call should be limited.
     for (let i = 0; i < 5001; i++) {
       const res = proxy(
-        makeRequest("http://localhost/api/v1/healthz", { ip }),
+        makeRequest("http://localhost/api/healthz", { ip }),
       ) as Response;
       if (res.status === 429) {
         limitedResponse = res;
@@ -127,14 +127,14 @@ describe("proxy: Api-Version", () => {
   const current = API_VERSIONS[0].version;
 
   it("defaults and echoes Api-Version with Vary on API responses", () => {
-    const res = proxy(makeRequest("http://localhost/api/v1/healthz")) as Response;
+    const res = proxy(makeRequest("http://localhost/api/healthz")) as Response;
     expect(res.headers.get("Api-Version")).toBe(current);
     expect(res.headers.get("Vary")).toContain("Api-Version");
   });
 
   it("honors a supported Api-Version header", () => {
     const res = proxy(
-      makeRequest("http://localhost/api/v1/healthz", {
+      makeRequest("http://localhost/api/healthz", {
         headers: { "Api-Version": current },
       }),
     ) as Response;
@@ -144,7 +144,7 @@ describe("proxy: Api-Version", () => {
 
   it("returns 400 with the error envelope for an unsupported version", async () => {
     const res = proxy(
-      makeRequest("http://localhost/api/v1/healthz", {
+      makeRequest("http://localhost/api/healthz", {
         headers: { "Api-Version": "1999-01-01" },
       }),
     ) as Response;
@@ -158,7 +158,7 @@ describe("proxy: Api-Version", () => {
 
   it("allows and exposes the versioning headers for browsers", () => {
     const res = proxy(
-      makeRequest("http://localhost/api/v1/healthz", { method: "OPTIONS" }),
+      makeRequest("http://localhost/api/healthz", { method: "OPTIONS" }),
     ) as Response;
     expect(res.headers.get("Access-Control-Allow-Headers")).toContain("Api-Version");
     for (const h of ["Api-Version", "Deprecation", "Sunset", "RateLimit"]) {
@@ -186,14 +186,12 @@ describe("proxy: api subdomain", () => {
     expect(res.headers.get("x-middleware-rewrite")).toBe("http://api.syntaqx.com/api");
   });
 
-  it("returns 404 with envelope on non-/v1 paths under api subdomain", async () => {
+  it("serves endpoints at the root of the api subdomain, with no /v1 prefix", () => {
     const res = proxy(
-      makeRequest("http://api.syntaqx.com/random", { host: "api.syntaqx.com" }),
+      makeRequest("http://api.syntaqx.com/hash", { host: "api.syntaqx.com" }),
     ) as Response;
-    expect(res.status).toBe(404);
+    expect(res.headers.get("x-middleware-rewrite")).toBe("http://api.syntaqx.com/api/hash");
     expect(res.headers.get("Request-Id")).toBeTruthy();
-    const body = await res.json();
-    expect(body).toEqual({ message: "Not found." });
   });
 });
 
@@ -218,7 +216,7 @@ describe("proxy: HTTP QUERY", () => {
   }
 
   it("serves a native QUERY with cacheable, discoverable responses", async () => {
-    const res = await proxy(queryRequest("http://localhost/api/v1/hash"));
+    const res = await proxy(queryRequest("http://localhost/api/hash"));
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ algorithm: "SHA-256", digest: HELLO_SHA256 });
     expect(res.headers.get("Cache-Control")).toBe("public, max-age=31536000, immutable");
@@ -229,7 +227,7 @@ describe("proxy: HTTP QUERY", () => {
 
   it("serves POST + X-HTTP-Method-Override: QUERY without caching", async () => {
     const res = await proxy(
-      queryRequest("http://localhost/api/v1/hash", {
+      queryRequest("http://localhost/api/hash", {
         method: "POST",
         headers: { "X-HTTP-Method-Override": "query" },
       }),
@@ -242,7 +240,7 @@ describe("proxy: HTTP QUERY", () => {
   it("rejects any override other than POST to QUERY", async () => {
     for (const [method, value] of [["POST", "DELETE"], ["GET", "QUERY"]]) {
       const res = await proxy(
-        makeRequest("http://localhost/api/v1/hash", {
+        makeRequest("http://localhost/api/hash", {
           method,
           headers: { "X-HTTP-Method-Override": value },
         }),
@@ -253,7 +251,7 @@ describe("proxy: HTTP QUERY", () => {
 
   it("returns 415 with Accept-Query for unsupported query formats", async () => {
     const res = await proxy(
-      queryRequest("http://localhost/api/v1/hash", { headers: { "content-type": "text/plain" } }),
+      queryRequest("http://localhost/api/hash", { headers: { "content-type": "text/plain" } }),
     );
     expect(res.status).toBe(415);
     expect(res.headers.get("Accept-Query")).toBe("application/json");
@@ -261,7 +259,7 @@ describe("proxy: HTTP QUERY", () => {
 
   it("returns 413 for query content over 64 KB", async () => {
     const res = await proxy(
-      queryRequest("http://localhost/api/v1/hash", {
+      queryRequest("http://localhost/api/hash", {
         body: JSON.stringify({ input: "a".repeat(70_000) }),
       }),
     );
@@ -270,29 +268,29 @@ describe("proxy: HTTP QUERY", () => {
 
   it("returns 422 for a well-formed query that can't run, 400 for malformed JSON", async () => {
     const invalid = await proxy(
-      queryRequest("http://localhost/api/v1/hash", { body: JSON.stringify({ algorithm: "nope" }) }),
+      queryRequest("http://localhost/api/hash", { body: JSON.stringify({ algorithm: "nope" }) }),
     );
     expect(invalid.status).toBe(422);
     expect((await invalid.json()).errors).toBeTruthy();
 
-    const malformed = await proxy(queryRequest("http://localhost/api/v1/hash", { body: "{" }));
+    const malformed = await proxy(queryRequest("http://localhost/api/hash", { body: "{" }));
     expect(malformed.status).toBe(400);
   });
 
   it("returns 405 for QUERY on endpoints that don't support it", async () => {
-    const res = await proxy(queryRequest("http://localhost/api/v1/uuid"));
+    const res = await proxy(queryRequest("http://localhost/api/uuid"));
     expect(res.status).toBe(405);
   });
 
   it("works on the api subdomain path too", async () => {
-    const req = queryRequest("https://api.syntaqx.com/v1/hash");
+    const req = queryRequest("https://api.syntaqx.com/hash");
     req.headers.set("host", "api.syntaqx.com");
     const res = await proxy(req);
     expect(res.status).toBe(200);
   });
 
   it("advertises QUERY on OPTIONS", () => {
-    const res = proxy(makeRequest("http://localhost/api/v1/hash", { method: "OPTIONS" })) as Response;
+    const res = proxy(makeRequest("http://localhost/api/hash", { method: "OPTIONS" })) as Response;
     expect(res.headers.get("Allow")).toBe("POST, QUERY, OPTIONS");
     expect(res.headers.get("Access-Control-Allow-Methods")).toContain("QUERY");
     expect(res.headers.get("Access-Control-Allow-Headers")).toContain("X-HTTP-Method-Override");

@@ -82,6 +82,8 @@ B-tree inserts stay sequential. Existing auto-increment tables are not migrated.
 - **Stored with the code** (`docs/adr/`), so they're reviewed in pull requests and found by people reading the code.
 - **Small decisions count.** "Why is this a separate service?" is exactly the question a new engineer asks in year three.
 
+This site keeps its own: [syntaqx.com's ADRs](https://github.com/syntaqx/syntaqx.com/tree/main/docs/adr) cover decisions like serving HTTP QUERY in the proxy layer and keeping legacy `X-` headers as aliases, and CI checks that every record is numbered, indexed and complete.
+
 ## After It Ships
 
 Close the loop. Mark the doc implemented, note where reality diverged from the plan, and link the ADRs it produced. A design doc that's wrong about the shipped system is worse than none.

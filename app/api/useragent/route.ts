@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse } from "@/lib/api";
+import { CACHE, cacheableJson, errorResponse } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -135,5 +135,6 @@ export function GET(request: NextRequest) {
 
   const parsed = parseUA(raw);
 
-  return json({ raw, ...parsed });
+  // The same User-Agent always parses the same way.
+  return cacheableJson(request, { raw, ...parsed }, CACHE.revalidate);
 }

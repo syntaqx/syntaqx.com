@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { GET as openapiJson } from "@/app/openapi.json/route";
-import { GET as v1Openapi } from "@/app/api/v1/openapi/route";
+import { GET as apiOpenapi } from "@/app/api/openapi/route";
 import { API_VERSIONS } from "@/lib/api";
 
 type Operation = {
@@ -10,7 +10,7 @@ type Operation = {
 };
 
 async function spec() {
-  const res = openapiJson();
+  const res = await openapiJson(new Request("http://localhost/openapi.json"));
   expect(res.status).toBe(200);
   expect(res.headers.get("Content-Type")).toContain("application/json");
   return (await res.json()) as {
@@ -20,8 +20,10 @@ async function spec() {
 }
 
 describe("/openapi.json", () => {
-  it("serves the same document as /api/v1/openapi", async () => {
-    expect(await spec()).toEqual(await v1Openapi().json());
+  it("serves the same document as /api/openapi", async () => {
+    expect(await spec()).toEqual(
+      await (await apiOpenapi(new Request("http://localhost/api/openapi"))).json(),
+    );
   });
 
   it("publishes a contact and the versioning/deprecation policy", async () => {
@@ -61,7 +63,7 @@ describe("/openapi.json", () => {
 
   it("gives every operation a unique operationId, a description and responses", async () => {
     const doc = await spec();
-    expect(doc.openapi).toBe("3.1.0");
+    expect(doc.openapi).toBe("3.2.0");
     const ops = Object.values(doc.paths).flatMap((p) => Object.values(p));
     expect(ops.length).toBeGreaterThanOrEqual(10);
     const ids = ops.map((op) => op.operationId);

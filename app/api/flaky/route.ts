@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { json, errorResponse, invalidField } from "@/lib/api";
+import { CACHE, json, errorResponse, invalidField } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import type { NextRequest } from "next/server";
 
@@ -147,11 +147,14 @@ export async function GET(request: NextRequest) {
   const succeeded = Math.random() * 100 < rate;
 
   if (succeeded) {
-    return json({ attempt_id: attemptId, latency_ms: actualDelay });
+    return json(
+      { attempt_id: attemptId, latency_ms: actualDelay },
+      { headers: { "Cache-Control": CACHE.none } },
+    );
   }
 
   const message =
     STATUS_MESSAGES[failStatus] || `Error ${failStatus} (simulated)`;
 
-  return errorResponse(failStatus, message);
+  return errorResponse(failStatus, message, { headers: { "Cache-Control": CACHE.none } });
 }

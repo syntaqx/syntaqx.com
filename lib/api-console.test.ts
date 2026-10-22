@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { buildRequest, jsonError, paramKey } from "./api-console";
 
-const base = "https://api.syntaqx.com/v1";
+const base = "https://api.syntaqx.com";
 
 describe("buildRequest()", () => {
   it("adds only filled-in query params and header params", () => {

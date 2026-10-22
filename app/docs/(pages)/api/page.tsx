@@ -83,6 +83,7 @@ const METHOD_COLORS: Record<string, string> = {
   put: "text-amber-400 bg-amber-400/10 border-amber-400/20",
   patch: "text-orange-400 bg-orange-400/10 border-orange-400/20",
   delete: "text-red-400 bg-red-400/10 border-red-400/20",
+  query: "text-violet-400 bg-violet-400/10 border-violet-400/20",
 };
 
 function resolveRef(spec: OpenApiSpec, schema: SchemaObject): SchemaObject {
@@ -270,7 +271,7 @@ function Endpoint({
     ),
   );
 
-  const hasBody = ["post", "put", "patch"].includes(method);
+  const hasBody = ["post", "put", "patch", "query"].includes(method);
   const reqBodySchema = op.requestBody?.content?.["application/json"]?.schema;
   const resolvedReqBody = reqBodySchema
     ? resolveRef(spec, reqBodySchema)
@@ -644,7 +645,7 @@ export default function ApiDocsPage() {
 
   useEffect(() => {
     const load = () =>
-      fetch("/api/v1/openapi")
+      fetch("/api/openapi")
         .then((r) => r.json())
         .then((data: OpenApiSpec) => {
           setSpec(data);

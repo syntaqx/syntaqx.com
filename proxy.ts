@@ -131,11 +131,11 @@ export function proxy(request: NextRequest) {
     );
   }
 
-  // Production: api.syntaqx.com root → /api (single source of truth for the index)
-  // Production: api.syntaqx.com/v1/* → /api/v1/*
-  if (isApiSubdomain && (pathname === "/" || pathname === "" || pathname.startsWith("/v1"))) {
+  // Production: api.syntaqx.com/<path> → /api/<path>, with the root serving
+  // the endpoint index. Unknown paths reach the /api catch-all (404).
+  if (isApiSubdomain) {
     const url = request.nextUrl.clone();
-    url.pathname = pathname.startsWith("/v1") ? `/api${pathname}` : "/api";
+    url.pathname = pathname === "/" || pathname === "" ? "/api" : `/api${pathname}`;
     const response = NextResponse.rewrite(url);
     for (const [k, v] of Object.entries({ ...apiHeaders, ...corsHeaders() })) {
       response.headers.set(k, v);
@@ -143,27 +143,12 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
-  // Block non-API traffic on the api subdomain
-  if (isApiSubdomain) {
-    return Response.json(
-      { message: "Not found." },
-      {
-        status: 404,
-        headers: {
-          "Content-Type": "application/json",
-          ...apiHeaders,
-          ...corsHeaders(),
-        },
-      },
-    );
-  }
-
   // Main domain: any /api/* request — attach API headers and pass through.
   const response = NextResponse.next();
   for (const [k, v] of Object.entries(apiHeaders)) {
     response.headers.set(k, v);
   }
-  if (pathname.startsWith("/api/v1")) {
+  if (pathname.startsWith("/api")) {
     for (const [k, v] of Object.entries(corsHeaders())) {
       response.headers.set(k, v);
     }
@@ -174,9 +159,8 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/api/:path*",
-    "/v1/:path*",
-    // Match root only on api subdomain — uses has condition to avoid
-    // intercepting the main site homepage or Vercel preview bots.
-    { source: "/", has: [{ type: "host", value: "api.syntaqx.com" }] },
+    // Every path on the api subdomain. The host condition keeps the main
+    // site's pages out of the proxy.
+    { source: "/:path*", has: [{ type: "host", value: "api.syntaqx.com" }] },
   ],
 };
