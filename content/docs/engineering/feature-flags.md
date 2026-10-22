@@ -1,5 +1,6 @@
 +++
 title = "Feature Flags & Progressive Rollout"
+nav_title = "Feature Flags"
 description = "Separating deploy from release: flag types and lifetimes, OpenFeature for vendor-neutral evaluation, percentage and canary rollouts, kill switches, and cleanup."
 category = "Engineering Practice"
 order = 12.3

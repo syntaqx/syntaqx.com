@@ -1,5 +1,6 @@
 +++
 title = "API Design Principles"
+nav_title = "Principles"
 description = "The rules every endpoint follows: resources and methods, bare JSON with metadata in headers, status codes that mean something, and a Request-Id on all of it."
 category = "API Design"
 order = 0

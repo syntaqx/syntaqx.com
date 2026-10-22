@@ -1,5 +1,6 @@
 +++
 title = "Database Naming Conventions"
+nav_title = "Naming Conventions"
 description = "Naming and typing conventions for tables, columns, keys, constraints and indexes, so a schema is predictable enough to guess and safe to change."
 category = "Database"
 order = 10

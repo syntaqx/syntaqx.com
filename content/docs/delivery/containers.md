@@ -1,5 +1,6 @@
 +++
 title = "Containers & Immutable Infrastructure"
+nav_title = "Containers"
 description = "Why you rebuild and redeploy the whole artifact instead of maintaining servers, and how to build container images that are small, patched, signed and safe."
 category = "Delivery"
 order = 11.2

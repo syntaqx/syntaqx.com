@@ -34,7 +34,7 @@ export function DocsSidebar({ categories }: DocsSidebarProps) {
                         : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
                     }`}
                   >
-                    {doc.title}
+                    {doc.navTitle}
                   </Link>
                 </li>
               );
@@ -72,7 +72,7 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
   for (const cat of categories) {
     for (const doc of cat.docs) {
       if (pathname === `/docs/${doc.slug}`) {
-        currentTitle = doc.title;
+        currentTitle = doc.navTitle;
       }
     }
   }
@@ -112,7 +112,7 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
                               : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
                           }`}
                         >
-                          {doc.title}
+                          {doc.navTitle}
                         </Link>
                       </li>
                     );
