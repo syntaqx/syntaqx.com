@@ -38,8 +38,12 @@ describe("renderMarkdownPage()", () => {
     expect(renderMarkdownPage("/docs/api").body).toContain(
       "## Versioning and deprecation",
     );
-    expect(renderMarkdownPage("/docs/versioning").body).toContain(
-      "## Timing Windows",
+    const versioning = renderMarkdownPage("/docs/versioning").body;
+    expect(versioning).toContain("## Timing Windows");
+    // Header versioning is the primary recommendation; the URL is the fallback.
+    expect(versioning.indexOf("## Header Versioning")).toBeGreaterThan(0);
+    expect(versioning.indexOf("## Header Versioning")).toBeLessThan(
+      versioning.indexOf("## URL Versioning (Fallback)"),
     );
     expect(renderMarkdownPage("/contact").body).toContain("# Contact");
     expect(renderMarkdownPage("/contact").body).toContain(

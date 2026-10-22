@@ -1,26 +1,69 @@
 +++
 title = "Versioning & Deprecation"
-description = "URL-based major versions, what counts as a breaking change, and the timing windows and Deprecation and Sunset headers that announce a removal."
+description = "Header-based, date-named API versions with a URL fallback, what counts as a breaking change, and the Deprecation and Sunset headers that announce removals."
 category = "Operations"
 order = 5.5
 tags = ["api", "versioning", "deprecation", "headers"]
 +++
 
-APIs change. Integrations shouldn't break without warning. The major version lives in the URL, breaking changes only ship in a new major version, and anything being removed is announced on the wire with the `Deprecation` header (RFC 9745) and `Sunset` header (RFC 8594) before it goes away.
+APIs change. Integrations shouldn't break without warning. Versions are selected with a request header and named by date, the URL carries at most a coarse major version, and anything being removed is announced on the wire with the `Deprecation` header (RFC 9745) and `Sunset` header (RFC 8594) before it goes away.
 
-## Versioning
+## Header Versioning
 
-The major version is the first path segment:
+Clients pick a version with the `Api-Version` request header. Versions are named by their release date, in the `YYYY-MM-DD` form from [Time & Date Formats](/docs/time).
+
+### Example Request
+
+```http
+GET /v1/resources
+Api-Version: 2026-10-01
+```
+
+### Example Response
+
+```http
+HTTP/1.1 200 OK
+Api-Version: 2026-10-01
+Vary: Api-Version
+```
+
+The response always echoes the version that served it, and `Vary: Api-Version` keeps caches from mixing versions.
+
+### Missing or Unknown Versions
+
+| Request | Result |
+| ------- | ------ |
+| No `Api-Version` header | Served by the **oldest supported** version, so existing clients never shift underneath |
+| A supported version | Served by that version |
+| An unknown or retired version | `400` with the standard [error format](/docs/error-responses), listing the supported versions |
+
+Pin a version explicitly. Relying on the default works, but it means your integration moves whenever the oldest version is retired.
+
+### Why Headers First
+
+GitHub, Stripe and others started with versions in the URL and moved to dated header versions. The lessons are the same:
+
+- **URLs stay stable.** A resource's URL identifies the resource, not a revision of the API. Links, bookmarks and stored URLs keep working across versions.
+- **Small, frequent versions.** Each breaking change ships as its own dated version. Clients upgrade one change at a time instead of migrating everything in one `/v2` rewrite.
+- **Explicit pinning.** The version a client was built against is written down in one place, its request headers, and the response confirms it.
+
+## URL Versioning (Fallback)
+
+The URL still carries a major version as its first path segment:
 
 ```http
 GET /v1/resources
 ```
 
-Only the major version appears in the URL. There are no minor or patch versions in paths or headers: non-breaking changes ship in place.
+It's reserved for a wholesale redesign that dated versions can't express: a new resource model, a new authentication scheme, a different error envelope. Expect it to change rarely, if ever. Within a URL major version, the `Api-Version` header selects the dated revision.
+
+URL versioning remains valid for clients that can't set headers. Those clients get the default (oldest supported) dated version for that major version.
+
+## Breaking and Non-Breaking Changes
 
 ### Non-Breaking Changes
 
-These ship in the current version without notice. Clients must tolerate them:
+These ship in every supported version, without a new version. Clients must tolerate them:
 
 - New endpoints
 - New optional query parameters or request fields
@@ -30,7 +73,7 @@ These ship in the current version without notice. Clients must tolerate them:
 
 ### Breaking Changes
 
-These never ship in place. They require a new major version (`/v2`):
+These never ship in place. Each one ships in a new dated version:
 
 - Removing or renaming an endpoint, parameter, or response field
 - Changing a field's type, format, or meaning
@@ -39,40 +82,41 @@ These never ship in place. They require a new major version (`/v2`):
 
 ## Timing Windows
 
-Every removal follows the same timeline:
+Every version, and every endpoint, follows the same lifecycle:
 
 | Phase | Starts | What clients see |
 | ----- | ------ | ---------------- |
 | Active | Release | Normal responses |
 | Deprecated | Deprecation date | Normal responses, plus `Deprecation`, `Sunset` and `Link` headers |
-| Sunset | Sunset date, **at least 30 days** after deprecation | `410 Gone` |
+| Sunset | Sunset date, **at least 30 days** after deprecation | `410 Gone` for a retired endpoint, `400` for a retired `Api-Version` |
 
 - The deprecation window is never shorter than 30 days.
 - The `Sunset` date is set when deprecation starts, and it never moves earlier.
-- When a new major version replaces an old one, the old version stays active until its own deprecation window ends.
+- A dated version isn't deprecated until its successor has been released.
 
 ## Deprecation Headers
 
-Every response from a deprecated endpoint carries these headers for the whole deprecation window:
+Every response served by a deprecated version or endpoint carries these headers for the whole deprecation window:
 
 | Header | Format | Description |
 | ------ | ------ | ----------- |
-| `Deprecation` | `@` + Unix seconds (RFC 9745) | When the endpoint was deprecated |
-| `Sunset` | HTTP-date (RFC 8594) | When the endpoint stops responding |
+| `Deprecation` | `@` + Unix seconds (RFC 9745) | When the version or endpoint was deprecated |
+| `Sunset` | HTTP-date (RFC 8594) | When it stops being served |
 | `Link` | `rel="deprecation"` | Where to read about the change and how to migrate |
 
-### Example Response
+### Example Deprecated Response
 
 ```http
 HTTP/1.1 200 OK
+Api-Version: 2026-10-01
 Deprecation: @1798761600
-Sunset: Thu, 01 Feb 2027 00:00:00 GMT
+Sunset: Mon, 01 Feb 2027 00:00:00 GMT
 Link: <https://www.syntaqx.com/docs/versioning>; rel="deprecation"
 ```
 
 ## After the Sunset
 
-Once the `Sunset` date passes, the endpoint returns `410 Gone` with the standard [error format](/docs/error-responses).
+Once the `Sunset` date passes, a retired endpoint returns `410 Gone` and a retired `Api-Version` returns `400`, both with the standard [error format](/docs/error-responses).
 
 ```http
 HTTP/1.1 410 Gone
@@ -85,6 +129,7 @@ Content-Type: application/json
 
 ## Client Expectations
 
-1. Treat any `Deprecation` header as a signal to log or alert on.
-2. Follow the `rel="deprecation"` link for the replacement.
-3. Migrate before the `Sunset` date.
+1. Send `Api-Version` on every request.
+2. Treat any `Deprecation` header as a signal to log or alert on.
+3. Follow the `rel="deprecation"` link for the replacement.
+4. Move to a newer version before the `Sunset` date.
