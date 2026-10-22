@@ -130,7 +130,7 @@ Define each important metric once, in code: a semantic or metrics layer, or at m
 - [dbt: Data tests](https://docs.getdbt.com/docs/build/data-tests), the `unique`, `not_null`, `accepted_values` and `relationships` tests, and tests as queries for failing rows
 - [dbt: Incremental models](https://docs.getdbt.com/docs/build/incremental-models), processing only new data on each run
 - [Apache Airflow: DAGs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html), pipelines as dependency graphs of tasks
-- [Dagster](https://docs.dagster.io/), orchestration around data assets
+- [Dagster](https://dagster.io/docs), orchestration around data assets
 - [Apache Iceberg](https://iceberg.apache.org/), an open table format for lakehouses
 
 **In practice**

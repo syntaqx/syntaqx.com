@@ -20,6 +20,8 @@ Five parties touch every entry:
 | **RDFI** | The receiving bank, which posts the entry to its customer's account |
 | **Receiver** | The person or business whose account is credited or debited |
 
+![Entries flow from the Originator to the ODFI, the ACH Operator (FedACH or EPN), the RDFI and the Receiver; returns and notifications of change flow back the same way. A credit pushes money from the Originator to the Receiver; a debit pulls money from the Receiver to the Originator.](/diagrams/ach-network.svg "Five parties touch every ACH entry. Entries always travel from Originator to Receiver and returns travel back; for a credit the money moves with the entry, for a debit against it.")
+
 A **credit** pushes money from the Originator to the Receiver (payroll, payouts, refunds). A **debit** pulls money from the Receiver to the Originator (subscriptions, invoices, loan payments). The asymmetry matters: a returned credit is almost always administrative (a closed or invalid account), while a debit takes money from someone who can later say they never agreed to it.
 
 Nacha, the association that writes the rules, doesn't move money; its Operating Rules bind everyone who does. You join that chain by contract: your ODFI agreement obliges you to follow the Rules, and if you send entries on behalf of others through your own bank relationship, you are a **Third-Party Sender**, which the ODFI must register with Nacha and which carries its own risk and monitoring duties. Most platforms reach ACH through a provider precisely so that someone else holds that role. See [The Payments Rulebook](/docs/compliance/payments-rulebook) for how these contracts stack.
@@ -65,11 +67,7 @@ The 60-day codes are what make consumer ACH debits risky. The administrative fai
 
 So I model an ACH debit's states through the return windows, not the submission:
 
-```text
-pending ──► submitted ──► settled ──► available ──► final
-                              │            │
-                              └──► returned ◄┘
-```
+![ACH debit states: pending, submitted when sent in a file, settled on the settlement date, available after 2 banking days with no return, final after 60 calendar days. An administrative return within 2 banking days moves a settled debit to returned; an unauthorized return within 60 calendar days moves an available debit to returned. Final and returned are terminal.](/diagrams/ach-states.svg "A settled debit isn't money you have yet. It's probably good once the 2-banking-day window for administrative returns closes, and final only after 60 calendar days; until then a return can take it back.")
 
 - **Never release value at submission.** A digital good, a wallet balance or a payout funded by an ACH debit waits at least for the two-day window, and for a new customer, longer.
 - **Size exposure to the 60-day tail.** For consumer debits the unauthorized-return risk is a credit decision: a hold period, a limit per new account, or a reserve, exactly as [Fraud & Risk](/docs/payments/fraud-and-risk) and [Payouts & Settlement](/docs/payments/payouts-and-settlement) treat card risk.
@@ -84,7 +82,7 @@ The Nacha Operating Rules reach you through your bank, and the ones engineering 
 - **Account validation for WEB debits.** Since March 19, 2021, the "commercially reasonable fraudulent transaction detection system" required for WEB debits must include validating the account on its first use and whenever the account number changes. Instant verification through a bank-data provider, a prenote, or micro-deposits all qualify; skipping it does not.
 - **Account numbers are protected data.** Under the Supplementing Data Security Requirements rule, non-consumer Originators, Third-Party Service Providers and Third-Party Senders above 2 million ACH entries a year must render account numbers unreadable wherever they're stored electronically, including in stored authorizations; access controls alone don't count. It phased in for the largest parties on June 30, 2021 and at 2 million on June 30, 2022, and anyone crossing the line has until June 30 of the next year. I apply it at any volume: bank account numbers get the same treatment as card numbers in [Sensitive Data](/docs/payments/sensitive-data).
 - **Fraud monitoring, including credits.** The 2026 Risk Management rules require risk-based processes to identify entries that are unauthorized or "authorized under False Pretenses," the business email compromise and impersonation cases where the payer was tricked into a real credit. Phase 1 took effect March 20, 2026 for all ODFIs, for non-consumer Originators, Third-Party Service Providers and Third-Party Senders with 6 million or more originations in 2023, and for RDFIs with 10 million or more receipts in 2023; Phase 2 extended it to everyone else on June 19, 2026, a federal holiday, so in practice June 22. The procedures must be reviewed at least annually. For a platform that means monitoring outbound credits (a vendor's bank details changed yesterday, a first payout to a new account) as seriously as inbound debits.
-- **Notifications of Change.** When account details are outdated, the RDFI may post the entry and send a NOC (C01 incorrect account number, C02 incorrect routing number, and so on) instead of returning it. The Originator must apply the correction within six banking days of receiving it or before the next entry to that account, whichever is later (one-time payments are exempt). Apply NOCs automatically; ignoring them is a rules violation that eventually turns into returns.
+- **Notifications of Change.** When account details are outdated, the RDFI may post the entry and send a NOC (C01 incorrect account number, C02 incorrect routing number, and so on) instead of returning it. The Originator must apply the correction within six banking days of receiving it or before the next entry to that account, whichever is later (since June 2024, acting on a NOC for a one-time payment is at the Originator's discretion). Apply NOCs automatically; ignoring them is a rules violation that eventually turns into returns.
 
 ## Consumer Law: Regulation E
 
@@ -140,5 +138,6 @@ Account verification sits beside all of them. Instant verification through an op
 
 - [The Clearing House: RTP Network](https://www.theclearinghouse.org/payment-systems/rtp), instant settlement that is final, any time, every day
 - [Column: ACH Returns](https://docs.column.com/ach/returns), return codes with their windows, and a bank modeling debits as completed only after 60 days
-- [Lead Bank: Notification of Change](https://docs.lead.bank/api-integrations/ach/notification-of-change), the six-banking-day correction window and the one-time payment exemption
+- [Nacha: Minor Rules Topics (June 21, 2024)](https://www.nacha.org/rules/minor-rules-topics-2), Originator discretion over NOC changes for any single entry
+- [Cape Cod 5: ACH Reference Guide (PDF)](https://www.capecodfive.com/sites/default/files/documents/2025.12.30%20CC5%20ACH%20Reference%20Guide.pdf), a bank's statement of the six-banking-day NOC rule, whichever is later
 - [The Clearing House: Higher $10 Million RTP Network Transaction Limit](https://www.theclearinghouse.org/payment-systems/Articles/2024/12/Higher_10_Million_RTP_Network_Transaction_Limit_Empowers_New_Uses_12-04-2024), the limit raised from $1 million to $10 million effective February 9, 2025

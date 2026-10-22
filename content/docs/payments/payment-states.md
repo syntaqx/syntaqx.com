@@ -15,14 +15,7 @@ Every financial object has a `status` with a closed set of values and a document
 
 ### Example: Payment
 
-```text
-           ┌──► requires_action ──┐
-           │                      ▼
-pending ───┴─────────────────► authorized ──► captured ──► settled
-   │                              │
-   ▼                              ▼
- failed                         voided
-```
+![Payment state machine: pending moves to authorized when approved, to requires_action for a 3-D Secure challenge and back to pending when completed, or to failed when declined; requires_action fails when abandoned or expired; authorized moves to captured or to voided when cancelled or expired; captured moves to settled in the settlement batch. failed, voided and settled are terminal.](/diagrams/payment-states.svg "Every payment is in exactly one state, and only these moves exist. Teal is the path a payment should take; the dashed exits end it, and failed, voided and settled never change again.")
 
 | From | To | Trigger |
 | ---- | -- | ------- |

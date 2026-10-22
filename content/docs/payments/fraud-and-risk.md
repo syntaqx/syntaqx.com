@@ -106,4 +106,4 @@ Backtest rule changes against stored history before shipping them. A rule that w
 
 **In practice**
 
-- [OWASP Automated Threats to Web Applications](https://owasp.org/www-project-automated-threats-to-web-applications/), the wider catalog of scripted attacks payment endpoints attract
+- [OWASP Automated Threats to Web Applications](https://owasp.org/www-project-automated-threats-to-web-applications), the wider catalog of scripted attacks payment endpoints attract

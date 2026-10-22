@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getAllPosts } from "./posts";
+import { getAllPosts, markdownToHtml } from "./posts";
 import { POST_SCENES } from "./scene/scenes";
 import { REST } from "./scene/iso";
 import { scenes } from "./scene/scenes";
@@ -37,5 +37,20 @@ describe("scene rasterizer", () => {
         name,
       ).toBe(true);
     }
+  });
+});
+
+describe("markdownToHtml diagrams", () => {
+  it("inlines a /diagrams SVG as a labelled figure with its caption", async () => {
+    const html = await markdownToHtml('![Payment states, from pending to settled](/diagrams/payment-states.svg "Payment states. Teal is the happy path.")');
+    expect(html).toMatch(/^<figure class="diagram"><svg role="img" aria-label="Payment states, from pending to settled" /);
+    expect(html).toContain("<figcaption><strong>Payment states.</strong> Teal is the happy path.</figcaption>");
+    expect(html).not.toContain("<img");
+    // The first render loads the syntax highlighter, which can take seconds.
+  }, 30_000);
+
+  it("leaves other images alone", async () => {
+    const html = await markdownToHtml("![A photo](/images/photo.png)");
+    expect(html).toContain('<img src="/images/photo.png" alt="A photo">');
   });
 });

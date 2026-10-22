@@ -23,7 +23,7 @@ The tool records what it created in a **state** file, which maps your definition
 - **Keep it remote,** in a backend shared by everyone and by CI ([remote state](https://developer.hashicorp.com/terraform/language/state/remote)). State on a laptop means the next person to apply works from a different picture of reality.
 - **Lock it.** Two applies at once can corrupt state. Supported backends [lock automatically](https://developer.hashicorp.com/terraform/language/state/locking) on every operation that could write it. `force-unlock` exists for a lock left behind by a crash, and the docs warn to be very careful with it: unlocking while someone else holds the lock means two writers.
 - **Never edit it by hand.** Moving a resource, importing one, or forgetting one are all commands. A hand-edited state file is a lie the next plan will act on.
-- **Treat it as secret.** State stores attribute values in plain text, [including secrets](https://developer.hashicorp.com/terraform/language/state/sensitive-data); marking a variable `sensitive` hides it from output but still writes it to state. Encrypt state at rest, restrict who can read it, and prefer ephemeral values and write-only arguments so secrets never land in state at all.
+- **Treat it as secret.** State stores attribute values in plain text, [including secrets](https://developer.hashicorp.com/terraform/language/manage-sensitive-data); marking a variable `sensitive` hides it from output but still writes it to state. Encrypt state at rest, restrict who can read it, and prefer ephemeral values and write-only arguments so secrets never land in state at all.
 
 ## Plan in CI, Apply from CI
 
@@ -76,7 +76,7 @@ Data isn't infrastructure. The state backend and the CI identity that runs every
 
 - [Terraform: Remote state](https://developer.hashicorp.com/terraform/language/state/remote), sharing state through a backend
 - [Terraform: State locking](https://developer.hashicorp.com/terraform/language/state/locking), automatic locking and the force-unlock warning
-- [Terraform: Sensitive data in state](https://developer.hashicorp.com/terraform/language/state/sensitive-data), why state holds secrets in plain text, and ephemeral values
+- [Terraform: Sensitive data in state](https://developer.hashicorp.com/terraform/language/manage-sensitive-data), why state holds secrets in plain text, and ephemeral values
 - [Terraform: plan command](https://developer.hashicorp.com/terraform/cli/commands/plan), `-detailed-exitcode` for drift detection
 - [OpenTofu](https://opentofu.org/), the open-source, drop-in Terraform fork under the Linux Foundation
 - [OpenTofu on GitHub](https://github.com/opentofu/opentofu), licensed MPL-2.0

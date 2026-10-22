@@ -67,7 +67,7 @@ In the US, ACH payouts can be **returned** after they appear to succeed, typical
 | R03 | No account, or unable to locate | Bank details are wrong; ask for new ones |
 | R04 | Invalid account number | Same as R03 |
 
-So a payout's state machine doesn't end at `paid`. It goes `pending ──► in_transit ──► paid`, and from `paid` it can still become `failed` when the return arrives. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
+So a payout's state machine doesn't end at `paid`. It goes `pending` → `in_transit` → `paid`, and from `paid` it can still become `failed` when the return arrives. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
 
 Bank details are where fraud concentrates too: a changed payout account shortly before a large payout is the classic account-takeover cash-out, so a change re-verifies the account and can reasonably delay the next payout ([Merchant Onboarding](/docs/payments/merchant-onboarding)).
 

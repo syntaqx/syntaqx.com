@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 212">
+  <defs>
+    <marker id="mst-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="mst-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="mst-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Transitions -->
+  <path class="ln hl" d="M208,80C208,52 330,52 330,78" marker-end="url(#mst-ah-hl)"/>
+  <text class="n hl" x="262" y="48" text-anchor="middle">verified</text>
+  <path class="ln dash" d="M354,80C354,52 466,52 466,78" marker-end="url(#mst-ah)"/>
+  <text class="n" x="410" y="72" text-anchor="middle">overdue</text>
+  <path class="ln ink" d="M490,80C490,20 318,20 318,78" marker-end="url(#mst-ah-ink)"/>
+  <text class="n" x="404" y="24" text-anchor="middle">requirement met</text>
+
+  <!-- State by capability -->
+  <text class="cap" x="40" y="118" dominant-baseline="central">payments</text>
+  <text class="cap" x="40" y="142" dominant-baseline="central">payouts</text>
+
+  <rect class="cell band" x="140" y="80" width="135" height="26"/>
+  <text class="t b" x="207" y="93" text-anchor="middle" dominant-baseline="central">pending</text>
+  <rect class="cell band" x="410" y="80" width="135" height="26"/>
+  <text class="t b" x="477" y="93" text-anchor="middle" dominant-baseline="central">restricted</text>
+  <rect class="cell ghost end" x="545" y="80" width="135" height="26"/>
+  <text class="t dim" x="612" y="93" text-anchor="middle" dominant-baseline="central">rejected</text>
+
+  <rect class="cell" x="140" y="106" width="135" height="24"/>
+  <text class="t" x="207" y="118" text-anchor="middle" dominant-baseline="central">limited or no</text>
+  <rect class="cell" x="140" y="130" width="135" height="24"/>
+  <text class="t dim" x="207" y="142" text-anchor="middle" dominant-baseline="central">no</text>
+  <rect class="cell" x="410" y="106" width="135" height="24"/>
+  <text class="t" x="477" y="118" text-anchor="middle" dominant-baseline="central">yes or limited</text>
+  <rect class="cell" x="410" y="130" width="135" height="24"/>
+  <text class="t dim" x="477" y="142" text-anchor="middle" dominant-baseline="central">no</text>
+  <rect class="cell" x="545" y="106" width="135" height="24"/>
+  <text class="t dim" x="612" y="118" text-anchor="middle" dominant-baseline="central">no</text>
+  <rect class="cell" x="545" y="130" width="135" height="24"/>
+  <text class="t" x="612" y="142" text-anchor="middle" dominant-baseline="central">balance, after a hold</text>
+
+  <rect class="cell hl" x="275" y="80" width="135" height="26"/>
+  <text class="t hl b" x="342" y="93" text-anchor="middle" dominant-baseline="central">active</text>
+  <rect class="cell hl" x="275" y="106" width="135" height="24"/>
+  <text class="t hl" x="342" y="118" text-anchor="middle" dominant-baseline="central">yes</text>
+  <rect class="cell hl" x="275" y="130" width="135" height="24"/>
+  <text class="t hl" x="342" y="142" text-anchor="middle" dominant-baseline="central">yes</text>
+
+  <!-- Any state can be rejected -->
+  <path class="ln dash" d="M342,154V176M477,154V176"/>
+  <path class="ln dash" d="M207,154V176H612V158" marker-end="url(#mst-ah)"/>
+  <text class="n" x="410" y="196" text-anchor="middle">from any state: failed verification, a prohibited business, or confirmed fraud</text>
+</svg>

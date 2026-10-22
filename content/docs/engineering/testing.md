@@ -13,6 +13,8 @@ Tests exist so you can change code with confidence, and everything downstream, f
 
 Tests come in layers, and every layer up costs more to write, run and keep passing, while telling you less about where the bug is. So a healthy suite is shaped like a pyramid, the shape Mike Cohn described in *Succeeding with Agile*: a broad base of unit tests, fewer integration tests above them, and a handful of end-to-end tests at the top.
 
+![The test pyramid: static checks on everything as the foundation, then most tests as unit tests whose failures name the function and input, fewer integration tests whose failures name a service and its wiring, and a handful of end-to-end tests whose failures name only a broken journey. A ruler shows time to run rising from instant at the base to minutes at the top. Contract tests sit beside the pyramid, at every boundary.](/diagrams/test-pyramid.svg "Most tests belong at the bottom. Each level up takes longer to run and its failures say less about where the bug is, so each behavior is tested at the lowest level that can catch it.")
+
 The shape follows from four properties that all get worse as you go up:
 
 - **Speed is feedback.** A unit test runs in milliseconds, so thousands run on every save, while the code is still in your head. An integration test takes tens of milliseconds to seconds, and an end-to-end test seconds to minutes. The slow layers run in CI, after you've moved on, and every failure there costs a context switch.

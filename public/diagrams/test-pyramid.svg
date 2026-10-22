@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240">
+  <!-- Ruler: time to run -->
+  <text class="t dim" x="40" y="22">minutes</text>
+  <path class="ln" d="M56,30V190M50,30H62M50,190H62"/>
+  <text class="t dim" x="40" y="206">instant</text>
+  <text class="cap" transform="translate(76 110) rotate(-90)" text-anchor="middle">time to run</text>
+
+  <!-- The pyramid, with static checks as its foundation -->
+  <polygon class="cell" points="260,30 314,76 206,76"/>
+  <text class="t" x="260" y="62" text-anchor="middle" dominant-baseline="central">end to end</text>
+  <polygon class="cell" points="206,76 314,76 368,122 152,122"/>
+  <text class="t" x="260" y="99" text-anchor="middle" dominant-baseline="central">integration</text>
+  <polygon class="cell hl" points="152,122 368,122 420,166 100,166"/>
+  <text class="t hl b" x="260" y="144" text-anchor="middle" dominant-baseline="central">unit</text>
+  <rect class="cell band" x="92" y="166" width="336" height="24"/>
+  <text class="t" x="260" y="178" text-anchor="middle" dominant-baseline="central">static: types, linting, formatting</text>
+  <rect class="zone" x="92" y="204" width="336" height="24"/>
+  <text class="t" x="260" y="216" text-anchor="middle" dominant-baseline="central">contract: beside it, at every boundary</text>
+
+  <!-- What each level costs and tells you -->
+  <text class="cap" x="456" y="22">how many</text>
+  <text class="cap" x="548" y="22">a failure names</text>
+  <path class="ln" d="M300,58H446M346,99H446M400,144H446M434,178H446M434,216H446"/>
+  <text class="n" x="456" y="62">a handful</text>
+  <text class="n" x="548" y="62">a broken journey</text>
+  <text class="n" x="456" y="103">fewer</text>
+  <text class="n" x="548" y="103">a service's wiring</text>
+  <text class="n hl" x="456" y="148">most</text>
+  <text class="n hl" x="548" y="148">the function and input</text>
+  <text class="n" x="456" y="182">everything</text>
+  <text class="n" x="548" y="182">a line and a rule</text>
+  <text class="n" x="456" y="220">every boundary</text>
+  <text class="n" x="548" y="220">a broken agreement</text>
+</svg>

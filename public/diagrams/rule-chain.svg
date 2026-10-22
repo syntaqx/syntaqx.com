@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 212">
+  <defs>
+    <marker id="rc-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="rc-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Rules travel down, by contract -->
+  <path class="ln hl" d="M48,26V142" marker-end="url(#rc-ah-hl)"/>
+  <text class="cap hl" x="40" y="14">rules, fines, termination</text>
+
+  <!-- Evidence travels up -->
+  <path class="ln ink" d="M672,144V28" marker-end="url(#rc-ah-ink)"/>
+  <text class="cap" x="680" y="14" text-anchor="end">evidence: aoc, proof of authorization</text>
+
+  <!-- Cards -->
+  <text class="cap ink" x="265" y="32" text-anchor="middle">cards</text>
+  <rect class="cell band" x="200" y="40" width="130" height="26"/>
+  <text class="t b" x="265" y="53" text-anchor="middle" dominant-baseline="central">Visa, Mastercard</text>
+  <rect class="cell" x="200" y="66" width="130" height="26"/>
+  <text class="t" x="265" y="79" text-anchor="middle" dominant-baseline="central">acquiring bank</text>
+  <rect class="cell" x="200" y="92" width="130" height="26"/>
+  <text class="t" x="265" y="105" text-anchor="middle" dominant-baseline="central">payfac or platform</text>
+  <rect class="cell" x="200" y="118" width="130" height="26"/>
+  <text class="t" x="265" y="131" text-anchor="middle" dominant-baseline="central">merchant</text>
+  <text class="n" x="190" y="57" text-anchor="end">brand rules, PCI DSS</text>
+  <text class="n" x="190" y="83" text-anchor="end">acquirer agreement</text>
+  <text class="n" x="190" y="109" text-anchor="end">payfac agreement</text>
+  <text class="n" x="190" y="135" text-anchor="end">merchant terms; MATCH</text>
+
+  <!-- ACH -->
+  <text class="cap ink" x="455" y="32" text-anchor="middle">ach</text>
+  <rect class="cell band" x="390" y="40" width="130" height="26"/>
+  <text class="t b" x="455" y="53" text-anchor="middle" dominant-baseline="central">Nacha</text>
+  <rect class="cell" x="390" y="66" width="130" height="26"/>
+  <text class="t" x="455" y="79" text-anchor="middle" dominant-baseline="central">ODFI</text>
+  <rect class="cell" x="390" y="92" width="130" height="26"/>
+  <text class="t" x="455" y="105" text-anchor="middle" dominant-baseline="central">third-party sender</text>
+  <rect class="cell" x="390" y="118" width="130" height="26"/>
+  <text class="t" x="455" y="131" text-anchor="middle" dominant-baseline="central">originator</text>
+  <text class="n" x="530" y="57">Operating Rules</text>
+  <text class="n" x="530" y="83">origination agreement</text>
+  <text class="n" x="530" y="109">registered by the ODFI</text>
+  <text class="n" x="530" y="135">origination terms</text>
+
+  <!-- Law, at every level -->
+  <rect class="cell band" x="40" y="160" width="640" height="42"/>
+  <text class="cap ink" x="360" y="175" text-anchor="middle" dominant-baseline="central">law applies at every level, signed or not</text>
+  <text class="n" x="360" y="192" text-anchor="middle" dominant-baseline="central">CFPB, FinCEN, OFAC, state regulators, the FTC</text>
+</svg>

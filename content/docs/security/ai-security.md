@@ -70,7 +70,7 @@ Attackers use the same models to find vulnerabilities, write exploits and person
 **Specifications**
 
 - [OWASP: Top 10 for LLM Applications (2025)](https://genai.owasp.org/llm-top-10/), the ten risks and their names
-- [Model Context Protocol: Security Best Practices](https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices), token passthrough, confused deputy, SSRF and local server risks
+- [Model Context Protocol: Security Best Practices](https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices), token passthrough, confused deputy, SSRF and local server risks
 
 **Reference**
 

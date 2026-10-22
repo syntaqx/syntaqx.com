@@ -66,7 +66,7 @@ Every pull request gets a Vercel preview deployment. When CI is green it merges,
 - [GitHub Actions: Creating a composite action](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action), shared setup across jobs
 - [GitHub: Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions), least privilege and SHA pinning
 - [GitHub Security Lab: Preventing pwn requests](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/), secrets and untrusted code from forks
-- [Vercel: Preview deployments](https://vercel.com/docs/deployments/preview-deployments), a deployment for every pull request
+- [Vercel: Preview deployments](https://vercel.com/docs/deployments/environments#preview-environment-pre-production), a deployment for every pull request
 - [Vercel: Instant rollback](https://vercel.com/docs/instant-rollback), one-step rollback to a previous deployment
 
 **In practice**

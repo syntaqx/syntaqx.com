@@ -110,4 +110,4 @@ syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-s
 
 - [web.dev: Mitigate XSS with a strict CSP](https://web.dev/articles/strict-csp), the nonce and `strict-dynamic` approach
 - [OWASP: Content Security Policy Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html), directive guidance
-- [OWASP: Secure Headers Project](https://owasp.org/www-project-secure-headers/), recommended headers and values
+- [OWASP: Secure Headers Project](https://owasp.org/www-project-secure-headers), recommended headers and values
