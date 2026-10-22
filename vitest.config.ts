@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["**/*.test.ts"],
-    exclude: ["node_modules/**", ".next/**"],
+    exclude: ["node_modules/**", ".next/**", ".claude/**"],
     // Pin the rate-limit ceiling so tests assert against a known boundary
     // regardless of NODE_ENV (which is "test" under vitest).
     env: {

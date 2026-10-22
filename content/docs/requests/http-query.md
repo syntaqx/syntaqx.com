@@ -166,6 +166,8 @@ How it's built:
 - **The OpenAPI document describes it natively,** as a `query` operation on `/hash` in [OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html), next to the `POST` with its override header.
 - **Plain `POST /hash` still works** for existing clients. Every path returns `400` for malformed JSON and `422` for a well-formed query that can't run, as RFC 10008 and [Error Responses](/docs/requests/error-responses) specify.
 
+`QUERY /docs` takes the [playbook list's](/docs/requests/filtering-and-sorting) filters as a JSON body (`{"section": ["payments"], "sort": "title"}`) and returns the same results as the equivalent `GET`. Its `Link` header points the next page at that `GET` URL, so paging past the first response is a plain request every cache understands.
+
 ## Client Expectations
 
 1. Use `GET` for simple filters, `QUERY` for anything structured, long, or sensitive.

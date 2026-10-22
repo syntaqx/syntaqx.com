@@ -28,6 +28,11 @@ const queryRoutes: Record<string, QueryRoute> = {
     // A digest never changes for the same input.
     cacheControl: "public, max-age=31536000, immutable",
   },
+  "/docs": {
+    load: () => import("@/lib/docs-api").then((m) => m.queryDocsHandler),
+    // The playbook changes with each deploy, not each request.
+    cacheControl: "public, max-age=300",
+  },
 };
 
 function routeKey(pathname: string): string {
