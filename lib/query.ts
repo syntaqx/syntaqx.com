@@ -1,5 +1,5 @@
 /**
- * HTTP QUERY (RFC 10008) support, per /docs/http-query.
+ * HTTP QUERY (RFC 10008) support, per /docs/requests/http-query.
  *
  * Next.js route handlers only dispatch the classic methods, so QUERY is
  * routed here, in the proxy layer, for both doors: a native `QUERY`, and

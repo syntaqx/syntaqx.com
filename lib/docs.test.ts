@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { getAllDocs } from "./docs";
+import { docRedirects } from "./doc-redirects";
 
 // The playbook's own guardrails (docs/adr/0009). A doc that breaks one of
 // these fails CI with the doc's slug in the message.
@@ -34,7 +35,7 @@ describe("playbook docs", () => {
   });
 
   it.each(docs.map((d) => [d.slug, d] as const))("%s only links to docs that exist", (_, doc) => {
-    const linked = [...doc.content.matchAll(/\]\(\/docs\/([a-z0-9-]+)/g)].map((m) => m[1]);
+    const linked = [...doc.content.matchAll(/\]\(\/docs\/([a-z0-9/-]+)/g)].map((m) => m[1]);
     for (const slug of linked) expect(slugs, `/docs/${slug}`).toContain(slug);
   });
 
@@ -42,9 +43,58 @@ describe("playbook docs", () => {
     expect(doc.content).not.toMatch(/"data"\s*:/);
   });
 
+  it("groups docs into section folders that share one category", () => {
+    const bySection = new Map<string, Set<string>>();
+    for (const doc of docs) {
+      bySection.set(doc.section, (bySection.get(doc.section) ?? new Set()).add(doc.category));
+    }
+    for (const [section, categories] of bySection) {
+      expect([...categories], section || "(root)").toHaveLength(1);
+    }
+    expect(docs.filter((d) => !d.section).map((d) => d.slug)).toEqual(["playbook"]);
+  });
+
+  it("keeps old URLs as unique aliases that never shadow a real doc", () => {
+    const aliases = docs.flatMap((d) => d.aliases);
+    expect(new Set(aliases).size).toBe(aliases.length);
+    for (const alias of aliases) expect(slugs, alias).not.toContain(alias);
+  });
+
+  it("redirects every alias and section folder to a page that exists", () => {
+    const redirects = docRedirects();
+    for (const doc of docs) {
+      for (const alias of doc.aliases) {
+        expect(redirects, alias).toContainEqual({
+          source: `/docs/${alias}`,
+          destination: `/docs/${doc.slug}`,
+          permanent: true,
+        });
+      }
+    }
+    for (const { destination } of redirects) {
+      const [target, section] = destination.replace("/docs/", "").split("#");
+      if (section) expect(docs.some((d) => d.section === section), destination).toBe(true);
+      else expect(slugs, destination).toContain(target);
+    }
+  });
+
   it("gives every doc a unique order, so the index is stable", () => {
     const orders = docs.map((d) => d.order);
     expect(new Set(orders).size).toBe(orders.length);
+  });
+});
+
+describe("links from outside the site", () => {
+  // ADRs and the README live on GitHub, so they link to the site absolutely
+  // and the site's redirects can't fix them if they break.
+  const files = [
+    "README.md",
+    ...fs.readdirSync(path.join(process.cwd(), "docs", "adr")).map((f) => path.join("docs", "adr", f)),
+  ];
+  it.each(files)("%s only links to docs that exist", (file) => {
+    const text = fs.readFileSync(path.join(process.cwd(), file), "utf8");
+    const linked = [...text.matchAll(/syntaqx\.com\/docs\/([a-z0-9/-]+)/g)].map((m) => m[1]);
+    for (const slug of linked) expect(slugs, slug).toContain(slug);
   });
 });
 

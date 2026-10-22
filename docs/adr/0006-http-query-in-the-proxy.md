@@ -10,7 +10,7 @@ Next.js route handlers only dispatch `GET`, `HEAD`, `OPTIONS`, `POST`, `PUT`, `D
 
 ## Decision
 
-Serve `QUERY` from the proxy layer (`lib/query.ts`), with two ways in, as [HTTP QUERY](https://www.syntaqx.com/docs/http-query) describes:
+Serve `QUERY` from the proxy layer (`lib/query.ts`), with two ways in, as [HTTP QUERY](https://www.syntaqx.com/docs/requests/http-query) describes:
 
 - **Native `QUERY`.**
 - **`POST` + `X-HTTP-Method-Override: QUERY`** as the fallback. This is the **only** override allowed. Any other value or method gets `400`, because an override that turns a read into a write is a security hole. That's what gave the older overrides used to tunnel `PUT` and `DELETE` their reputation.

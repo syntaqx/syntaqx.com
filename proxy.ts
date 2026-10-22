@@ -118,7 +118,7 @@ export async function proxy(request: NextRequest): Promise<Response> {
   const apiHeaders = { ...result.headers, ...queryDiscoveryHeaders(pathname) };
 
   // HTTP QUERY: native, or POST + X-HTTP-Method-Override. Route handlers
-  // can't dispatch it, so it's served here. See /docs/http-query.
+  // can't dispatch it, so it's served here. See /docs/requests/http-query.
   const kind = queryKind(request);
   if (kind === "invalid") {
     return withHeaders(

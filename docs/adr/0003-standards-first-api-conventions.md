@@ -10,12 +10,12 @@ Common choices like `{ "data": ..., "meta": ... }` envelopes and `success: true`
 
 ## Decision
 
-Follow published standards and the conventions GitHub's REST API uses, written down in [API Design Principles](https://www.syntaqx.com/docs/api-design-principles) and [JSON Field Conventions](https://www.syntaqx.com/docs/json-conventions):
+Follow published standards and the conventions GitHub's REST API uses, written down in [API Design Principles](https://www.syntaqx.com/docs/api-design/principles) and [JSON Field Conventions](https://www.syntaqx.com/docs/requests/json-conventions):
 
 - **No envelopes.** A single resource is a JSON object, a list is a JSON array. Never a `data` wrapper.
 - **Metadata goes in headers.** Pagination in `Link` ([RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288)), rate limits in `RateLimit` and `RateLimit-Policy`, version in `Api-Version`, tracing in `Request-Id`.
 - **Status codes carry the outcome.** No `success` booleans.
-- **One error format** everywhere: `message`, plus field-level `errors` when there are any ([Error Responses](https://www.syntaqx.com/docs/error-responses)). `lib/api.ts` provides `json()` and `errorResponse()` so routes can't drift from it.
+- **One error format** everywhere: `message`, plus field-level `errors` when there are any ([Error Responses](https://www.syntaqx.com/docs/requests/error-responses)). `lib/api.ts` provides `json()` and `errorResponse()` so routes can't drift from it.
 
 ## Consequences
 

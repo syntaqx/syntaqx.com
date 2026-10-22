@@ -8,7 +8,7 @@ Identifiers are hard to change later. Auto-increment integers leak record counts
 
 ## Decision
 
-UUID v7 ([RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562)) is the default for new identifiers: a 48-bit millisecond timestamp, then randomness. The reasoning and the alternatives are in [Identifier Conventions](https://www.syntaqx.com/docs/identifier-conventions).
+UUID v7 ([RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562)) is the default for new identifiers: a 48-bit millisecond timestamp, then randomness. The reasoning and the alternatives are in [Identifier Conventions](https://www.syntaqx.com/docs/fundamentals/identifier-conventions).
 
 In this codebase:
 
@@ -18,5 +18,5 @@ In this codebase:
 
 ## Consequences
 
-- IDs sort by creation time, so sorting by `id` doubles as a creation-time tiebreaker ([Filtering & Sorting](https://www.syntaqx.com/docs/filtering-and-sorting)).
+- IDs sort by creation time, so sorting by `id` doubles as a creation-time tiebreaker ([Filtering & Sorting](https://www.syntaqx.com/docs/requests/filtering-and-sorting)).
 - The creation time can be read from the ID itself. Don't use v7 where that's sensitive. Use v4 there.

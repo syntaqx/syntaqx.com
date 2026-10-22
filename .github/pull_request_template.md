@@ -1,7 +1,7 @@
 <!--
 Title: Conventional Commits, e.g. `feat(api): add QUERY to /hash`.
 It becomes the squash commit message. Use `!` for breaking changes.
-See https://www.syntaqx.com/docs/commits-and-reviews
+See https://www.syntaqx.com/docs/engineering/commits-and-reviews
 -->
 
 ## Why

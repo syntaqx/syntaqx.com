@@ -141,7 +141,7 @@ describe("resolveApiVersion()", () => {
       Vary: "Api-Version",
       Deprecation: `@${Date.parse("2026-11-01T00:00:00Z") / 1000}`,
       Sunset: "Tue, 15 Dec 2026 00:00:00 GMT",
-      Link: '<https://www.syntaqx.com/docs/versioning>; rel="deprecation"',
+      Link: '<https://www.syntaqx.com/docs/operations/versioning>; rel="deprecation"',
     });
   });
 

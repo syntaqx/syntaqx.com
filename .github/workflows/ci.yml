@@ -16,7 +16,7 @@ permissions:
 # Lint, typecheck and test run as parallel jobs, so the pipeline takes as
 # long as the slowest one. Each job restores node_modules from a cache keyed
 # on the lockfile, so parallelism doesn't mean paying for `npm ci` three
-# times. See https://www.syntaqx.com/docs/ci-pipelines
+# times. See https://www.syntaqx.com/docs/delivery/ci-pipelines
 
 jobs:
   lint:

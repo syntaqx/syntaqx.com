@@ -4,7 +4,7 @@ Status: Accepted (2026-10-22)
 
 ## Context
 
-Since May 2026 the API has sent `X-Request-ID` (a random UUID v4) and `X-RateLimit-Limit`, `-Remaining` and `-Reset`. [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) deprecates the `X-` prefix for new headers, and the playbook names the request ID `Request-Id`, the header Stripe uses ([Observability](https://www.syntaqx.com/docs/observability)). The rate-limit state now also has standard names: `RateLimit` and `RateLimit-Policy` from the IETF httpapi draft.
+Since May 2026 the API has sent `X-Request-ID` (a random UUID v4) and `X-RateLimit-Limit`, `-Remaining` and `-Reset`. [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) deprecates the `X-` prefix for new headers, and the playbook names the request ID `Request-Id`, the header Stripe uses ([Observability](https://www.syntaqx.com/docs/operations/observability)). The rate-limit state now also has standard names: `RateLimit` and `RateLimit-Policy` from the IETF httpapi draft.
 
 The site's own API disagreed with its own docs.
 
@@ -19,7 +19,7 @@ One exception to dropping `X-`: `X-HTTP-Method-Override` keeps its prefix, becau
 
 ## Consequences
 
-- The API matches [API Design Principles](https://www.syntaqx.com/docs/api-design-principles) and [Rate Limiting](https://www.syntaqx.com/docs/rate-limiting).
+- The API matches [API Design Principles](https://www.syntaqx.com/docs/api-design/principles) and [Rate Limiting](https://www.syntaqx.com/docs/operations/rate-limiting).
 - No client that reads the old headers breaks. Removing a response header is treated as a breaking change.
 - Request IDs sort by time, which helps when reading logs.
 - Two headers per value until the aliases are retired. Retiring them needs a new dated version.

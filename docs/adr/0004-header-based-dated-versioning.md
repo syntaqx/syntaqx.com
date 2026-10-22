@@ -8,7 +8,7 @@ The API started with the version only in the URL (`/v1/...`). Path versions are 
 
 ## Decision
 
-Versions are selected with the `Api-Version` request header and named by release date (`YYYY-MM-DD`). There is no version in the URL: endpoints live at the root of `api.syntaqx.com` (`/hash`, not `/v1/hash`). The playbook allows a path version as a fallback for clients that can't set headers, but this API has no such clients, so the `/v1` prefix was removed outright rather than deprecated. Policy: [Versioning & Deprecation](https://www.syntaqx.com/docs/versioning) (`#114`). Implementation: `resolveApiVersion()` in `lib/api.ts`, applied to all API traffic by `proxy.ts` (`#115`).
+Versions are selected with the `Api-Version` request header and named by release date (`YYYY-MM-DD`). There is no version in the URL: endpoints live at the root of `api.syntaqx.com` (`/hash`, not `/v1/hash`). The playbook allows a path version as a fallback for clients that can't set headers, but this API has no such clients, so the `/v1` prefix was removed outright rather than deprecated. Policy: [Versioning & Deprecation](https://www.syntaqx.com/docs/operations/versioning) (`#114`). Implementation: `resolveApiVersion()` in `lib/api.ts`, applied to all API traffic by `proxy.ts` (`#115`).
 
 - No header: served by the **oldest** supported version, so existing clients never shift underneath.
 - Unknown or retired version: `400` in the standard error format, listing the supported versions.

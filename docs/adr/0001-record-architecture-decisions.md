@@ -8,7 +8,7 @@ This site publishes an [architectural playbook](https://www.syntaqx.com/docs/pla
 
 ## Decision
 
-Significant decisions about this site are recorded as Architecture Decision Records in `docs/adr/`, in [Michael Nygard's format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions), as described in [Design Docs & ADRs](https://www.syntaqx.com/docs/design-docs).
+Significant decisions about this site are recorded as Architecture Decision Records in `docs/adr/`, in [Michael Nygard's format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions), as described in [Design Docs & ADRs](https://www.syntaqx.com/docs/engineering/design-docs).
 
 - One decision per file, numbered, about a page.
 - `Status`, then Context, Decision, Consequences.

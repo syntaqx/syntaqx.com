@@ -18,6 +18,6 @@ Supersede 0002 with a narrower rule:
 
 ## Consequences
 
-- The playbook's practices that need state (stored queries for [HTTP QUERY](https://www.syntaqx.com/docs/http-query), idempotency keys, webhook delivery) become possible here, each through its own ADR.
-- Rate-limit counters are keyed by IP address, which is personal data in some jurisdictions. They expire within an hour and are never logged or joined to anything else, in line with [Data Retention & Deletion](https://www.syntaqx.com/docs/data-retention).
+- The playbook's practices that need state (stored queries for [HTTP QUERY](https://www.syntaqx.com/docs/requests/http-query), idempotency keys, webhook delivery) become possible here, each through its own ADR.
+- Rate-limit counters are keyed by IP address, which is personal data in some jurisdictions. They expire within an hour and are never logged or joined to anything else, in line with [Data Retention & Deletion](https://www.syntaqx.com/docs/architecture/data-retention).
 - Local development needs no datastore by default: features fall back to in-process behavior, and `compose.yml` runs the real thing when you want it.
