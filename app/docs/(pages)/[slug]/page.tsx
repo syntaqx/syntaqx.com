@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getAllDocs, getDocBySlug, markdownToHtml } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
+import { PostToc } from "@/components/post-toc";
+import type { Heading } from "@/lib/posts";
 import { JsonLd } from "@/components/json-ld";
 import { article } from "@/lib/schema";
 import type { Metadata } from "next";
@@ -29,7 +31,8 @@ export default async function DocPage({ params }: Props) {
   const doc = getDocBySlug(slug);
   if (!doc) notFound();
 
-  const content = await markdownToHtml(doc.content);
+  const toc: Heading[] = [];
+  const content = await markdownToHtml(doc.content, toc);
 
   return (
     <article>
@@ -44,16 +47,30 @@ export default async function DocPage({ params }: Props) {
           ],
         })}
       />
-      <header className="mb-10 border-b border-border pb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl wrap-break-word">
-          {doc.title}
-        </h1>
-        {doc.description && (
-          <p className="max-w-2xl text-dim">{doc.description}</p>
+      {/* Content column (header + body) | contents rail from the top (xl+). */}
+      <div className="grid gap-12 xl:grid-cols-[minmax(0,1fr)_13rem]">
+        <div className="min-w-0">
+          <header className="mb-10 border-b border-border pb-8">
+            <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl wrap-break-word">
+              {doc.title}
+            </h1>
+            {doc.description && (
+              <p className="max-w-2xl text-dim">{doc.description}</p>
+            )}
+          </header>
+          <div
+            className="prose"
+            data-toc-body
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </div>
+        {toc.length > 1 && (
+          <PostToc
+            headings={toc}
+            className="hidden self-start xl:sticky xl:top-[6.5rem] xl:grid"
+          />
         )}
-      </header>
-
-      <div className="prose" dangerouslySetInnerHTML={{ __html: content }} />
+      </div>
       <CopyCodeScript />
     </article>
   );

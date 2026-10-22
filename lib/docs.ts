@@ -1,10 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
-import rehypeStringify from "rehype-stringify";
-import rehypeShiki from "@shikijs/rehype";
 
 const docsDirectory = path.join(process.cwd(), "content/docs");
 
@@ -122,18 +117,5 @@ export function getDocsByCategory(): DocCategory[] {
   }));
 }
 
-export async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark()
-    .use(remarkGfm)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeShiki, {
-      themes: {
-        dark: "vitesse-dark",
-        light: "vitesse-light",
-      },
-      defaultColor: false,
-    })
-    .use(rehypeStringify, { allowDangerousHtml: true })
-    .process(markdown);
-  return result.toString();
-}
+// Same pipeline as posts, including h2 ids for the contents rail.
+export { markdownToHtml } from "@/lib/posts";
