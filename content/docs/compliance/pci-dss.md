@@ -29,20 +29,21 @@ One company can be both: Stripe is a merchant when it bills you for its own subs
 
 ## Levels
 
-The Council doesn't define levels. Each brand sets its own by annual transaction volume, your acquirer tells you which you validate at, and a brand can move you up at its discretion, which Mastercard's rules say may follow a confirmed breach. Visa and Mastercard use the same merchant bands, and Mastercard puts any merchant at the level Visa assigns it:
+The Council doesn't define levels. Each brand sets its own by annual transaction volume on that brand, your acquirer tells you which you validate at, and every brand can move you up at its discretion, which Mastercard's rules say may follow a confirmed breach. Visa and Mastercard draw the same top two lines, and Mastercard puts any merchant at the level Visa assigns it:
 
 | Level | Merchants (transactions per year, per brand) | How they validate |
 | --- | --- | --- |
-| 1 | Over 6 million, or designated by the brand | An annual Report on Compliance (ROC) and quarterly ASV scans |
-| 2 | 1 million to 6 million | An annual SAQ and quarterly ASV scans; Mastercard requires an assessor for SAQ A, A-EP or D |
-| 3 | 20,000 to 1 million e-commerce | An annual SAQ and quarterly ASV scans |
-| 4 | Under 20,000 e-commerce, and all others up to 1 million | Set by the acquirer, usually an SAQ |
+| 1 | Over 6 million, or designated by a brand | An annual Report on Compliance (ROC) by a QSA, or by internal staff with an officer's signature, plus an Attestation of Compliance |
+| 2 | 1 million to 6 million | An annual SAQ; Mastercard requires a QSA or ISA to be involved for SAQ A, A-EP or D |
+| 3 and below | Under 1 million | An annual SAQ, which the acquirer decides how to collect |
 
-Service providers have two levels, and the line is low. Visa's Level 1 is VisaNet processors and any provider handling over 300,000 Visa transactions a year; Mastercard's is every processor, merchant payment gateway, token service provider and several other types **regardless of volume**, plus payment facilitators above 300,000 Mastercard transactions. Level 1 means an annual ROC by a Qualified Security Assessor, quarterly ASV scans and an Attestation of Compliance, and on Visa's side a listing on its registry of compliant providers, which acquirers and large customers check. Everyone under the line validates with SAQ D for Service Providers, and Visa lets them validate as Level 1 anyway to get listed. A gateway is Mastercard Level 1 from its first transaction, so a serious service provider plans for Level 1 from the start.
+Below Level 2 the brands diverge. Visa's current program page lists three merchant levels, the third being everyone under 1 million e-commerce transactions. Mastercard's rules keep four: Level 3 is 20,000 to 1 million e-commerce transactions, Level 4 everyone else, and neither has to validate to Mastercard directly. Discover publishes three levels on the same 6 million and 1 million lines. American Express counts differently: Level 1 starts at 2.5 million Amex transactions, Level 2 at 50,000, Level 3 at 10,000, and Levels 3 and 4 submit documents only when Amex asks. Quarterly ASV scans aren't a level perk either way; they come from the standard itself (11.3.2) for whatever you expose to the internet in scope.
+
+Service providers have two levels, and the line is low. Visa's Level 1 is VisaNet processors and any provider handling over 300,000 Visa transactions a year; Mastercard's is every processor, merchant payment gateway, token service provider and several other types **regardless of volume**, plus payment facilitators above 300,000 Mastercard transactions. American Express puts its service provider line at 2.5 million. Level 1 means an annual ROC by a Qualified Security Assessor and an Attestation of Compliance signed by both the provider and the assessor. Everyone under the line validates with SAQ D for Service Providers, but Visa only lists a provider on its Global Registry of Service Providers, which acquirers and large customers check, once a QSA has validated it. A gateway is Mastercard Level 1 from its first transaction, so a serious service provider plans for a QSA from the start.
 
 The vocabulary:
 
-- **QSA:** a Qualified Security Assessor, an outside assessor certified by the Council. Mastercard also accepts a Level 1 merchant's ROC from a certified Internal Security Assessor (ISA) or signed by an executive officer.
+- **QSA:** a Qualified Security Assessor, an outside assessor certified by the Council. For Level 1 merchants, Visa and Mastercard also accept a ROC done internally and signed by an officer, and Mastercard names the Council's certified Internal Security Assessors (ISAs) for it.
 - **ROC:** the Report on Compliance, the assessor's full report, built by sampling systems, reading configurations and interviewing engineers.
 - **SAQ:** a Self-Assessment Questionnaire, one of several cut-down versions of the standard.
 - **ASV scan:** a quarterly external vulnerability scan by an Approved Scanning Vendor, with rescans until it passes (11.3.2). Even SAQ A includes it, for the page that hosts the redirect or iframe.
@@ -122,8 +123,9 @@ The Council writes the standard and certifies assessors; it doesn't fine anyone.
 - [PCI SSC Blog: Just Published: PCI DSS v4.0.1](https://blog.pcisecuritystandards.org/just-published-pci-dss-v4-0-1), a limited revision with no added or deleted requirements, and the March 31, 2025 date
 - [PCI SSC Blog: Important Updates for Merchants Validating to SAQ A](https://blog.pcisecuritystandards.org/important-updates-announced-for-merchants-validating-to-self-assessment-questionnaire-a), the January 2025 SAQ A revision
 - [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), merchant and service provider levels, validation, DESV, noncompliance assessments and account data compromise rules
-- [Visa: Validation of Compliance](https://caribbean.visa.com/run-your-business/small-business/information-security/compliance-validation.html), Visa's merchant and service provider levels and validation (a Visa regional page)
-- [Visa: Account Information Security Program and PCI](https://corporate.visa.com/en/resources/security-compliance.html), levels by 12-month volume and non-compliance assessments on issuers and acquirers
+- [Visa: Account Information Security Program and PCI](https://corporate.visa.com/en/resources/security-compliance.html), Visa's three merchant levels and two service provider levels, QSA validation for the Global Registry, and non-compliance assessments on issuers and acquirers
+- [American Express: Data Security Operating Policy, United States, October 2026](https://www.americanexpress.com/content/dam/amex/us/merchant/new-data-security/DSOP_United_States_EN.pdf), Amex merchant and service provider levels and validation documents
+- [Discover Global Network: Identify Your Merchant Level](https://www.discoverglobalnetwork.com/solutions/pci-compliance/identify-merchant-level/), Discover's three merchant levels
 
 **In practice**
 

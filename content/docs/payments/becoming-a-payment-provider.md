@@ -118,8 +118,7 @@ Stage 3 is where most companies that call themselves payment providers live, and
 
 **Reference**
 
-- [Visa: Security and compliance](https://corporate.visa.com/en/resources/security-compliance.html), the requirement that acquirers ensure service providers demonstrate PCI DSS compliance at least every 12 months
-- [Visa: Validation of Compliance](https://caribbean.visa.com/run-your-business/small-business/information-security/compliance-validation.html), Visa's service provider levels and the 300,000-transaction line (a Visa regional page)
+- [Visa: Account Information Security Program and PCI](https://corporate.visa.com/en/resources/security-compliance.html), Visa's service provider levels and the 300,000-transaction line, and acquirers ensuring service providers demonstrate compliance at least every 12 months
 - [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](http://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), service provider levels by type and volume, 3DS Core revalidation every two years, and registration completing only once compliance is validated
 - [Visa: Global Registry of Service Providers](https://www.visa.com/splisting/), Visa's listing of registered and compliant agents
 - [CSBS: Money Transmission Modernization Act](https://www.csbs.org/csbs-money-transmission-modernization-act-mtma), nationwide standards for net worth, surety bonds and permissible investments, and the number of enacting states
