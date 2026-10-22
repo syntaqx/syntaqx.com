@@ -44,8 +44,11 @@ The HTTP status code tells you what happened. There's no `success` boolean in th
 | `200` | OK | Request succeeded |
 | `400` | Bad Request | Malformed or unservable request |
 | `401` | Unauthorized | Authentication required |
+| `402` | Payment Required | Valid request, but the payment was declined |
 | `403` | Forbidden | Understood, but not allowed |
 | `404` | Not Found | Resource doesn't exist |
+| `409` | Conflict | Another request with the same [idempotency key](/docs/idempotency) is still running |
+| `410` | Gone | Endpoint retired after its [sunset](/docs/versioning) |
 | `422` | Unprocessable Entity | Validation failed |
 | `429` | Too Many Requests | [Rate limit](/docs/rate-limiting) exceeded |
 | `500` | Internal Server Error | Something broke server-side |

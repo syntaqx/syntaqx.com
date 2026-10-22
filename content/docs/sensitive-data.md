@@ -49,8 +49,9 @@ New fields default to **Sensitive** until someone decides otherwise.
 ## Secrets
 
 - API keys are shown **once**, at creation. Afterward only a prefix is displayed (`sk_live_4f2a...`), and only a hash is stored.
-- Keys are prefixed by type and environment (`sk_live_`, `sk_test_`) so a leaked key is easy to identify and secret scanners can find it.
-- Every secret can be rotated without downtime: two can be valid at once while clients switch over.
+- Keys are prefixed by type and environment, the way Stripe's are (`sk_live_`, `sk_test_`, `rk_live_` for restricted keys, `whsec_` for webhook secrets), so a leaked key is easy to identify and secret scanners can find it.
+- Prefer restricted keys with only the permissions a caller needs.
+- Every secret can be rotated without downtime: the old one stays valid for up to 24 hours while clients switch over.
 
 ## Access
 

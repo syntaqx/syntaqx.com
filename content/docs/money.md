@@ -54,7 +54,7 @@ Not every currency has two decimal places. The minor unit comes from the ISO 421
 | `KWD` | 3 | 1.000 KWD |
 | `BHD` | 3 | 1.000 BHD |
 
-Keep the exponent table in one place in code, and convert to a display value only at the edge (UI, receipts, exports).
+Keep the exponent table in one place in code, and convert to a display value only at the edge (UI, receipts, exports). As [Stripe](https://docs.stripe.com/currencies) does, three-decimal amounts must end in `0` (`5120`, not `5124`), since most card networks can't settle the last digit.
 
 ## Rounding
 

@@ -102,7 +102,7 @@ All pagination is handled via the `Link` header (RFC 8288), never in the respons
 
 ## Versioning
 
-The API is versioned via the URL path: `/v1/`. Breaking changes will result in a new version (`/v2/`). Non-breaking additions (new fields, new endpoints) are added to the current version.
+Versions are selected with the `Api-Version` request header and named by date, with a version in the URL path (`/v1/`) as the fallback. Breaking changes ship in a new version. Non-breaking additions (new fields, new endpoints) ship in every supported version. See [Versioning & Deprecation](/docs/versioning).
 
 ## Request Headers
 
@@ -111,11 +111,13 @@ The API is versioned via the URL path: `/v1/`. Breaking changes will result in a
 | `Content-Type` | `application/json` for request bodies |
 | `Accept` | Desired response format (defaults to `application/json`) |
 | `User-Agent` | Identifies the calling client |
+| `Api-Version` | The dated API version to use (see [Versioning & Deprecation](/docs/versioning)) |
+| `Idempotency-Key` | Makes a `POST` safe to retry (see [Idempotency](/docs/idempotency)) |
 
-## X-Request-ID
+## Request-Id
 
-Every response carries a unique `X-Request-ID`. Log it on your end. When something goes wrong, this is the fastest way to trace a request across services. It's a foundational piece of any observability and traceability strategy.
+Every response carries a unique `Request-Id`. Log it on your end. When something goes wrong, this is the fastest way to trace a request across services. It's a foundational piece of any observability and traceability strategy. See [Observability](/docs/observability).
 
 ```http
-X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
+Request-Id: 019a0b6e-4c2d-7f31-9b8e-2d5a6c7e8f90
 ```

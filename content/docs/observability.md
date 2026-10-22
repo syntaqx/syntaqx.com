@@ -14,10 +14,10 @@ Every response carries a `Request-Id` header:
 
 ```http
 HTTP/1.1 422 Unprocessable Entity
-Request-Id: req_01J9Z8K3V7Q4N2M6X5R8T0B1C3
+Request-Id: 019a0b6e-4c2d-7f31-9b8e-2d5a6c7e8f90
 ```
 
-- Generated at the edge, unique per request, prefixed so it's recognizable in a ticket.
+- Generated at the edge as a [UUID v7](/docs/identifier-conventions), unique per request. The name matches Stripe's `Request-Id`, without the deprecated `X-` prefix.
 - Returned on **every** response, successes and [errors](/docs/error-responses) alike.
 - Written on every log line and span produced while handling the request.
 - Clients should log it alongside their own errors. It's the fastest way to get help.
@@ -39,10 +39,10 @@ Logs are JSON, one event per line, with a consistent set of fields:
   "time": "2026-10-22T14:23:45.123Z",
   "level": "error",
   "message": "processor call failed",
-  "request_id": "req_01J9Z8K3V7Q4N2M6X5R8T0B1C3",
+  "request_id": "019a0b6e-4c2d-7f31-9b8e-2d5a6c7e8f90",
   "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",
   "service": "payments",
-  "payment_id": "01J9Z8K3V7Q4N2M6X5R8T0B1C3",
+  "payment_id": "01932c6c-7616-7590-a8db-cb4b0e4d1c8a",
   "processor": "acme",
   "duration_ms": 10003
 }
