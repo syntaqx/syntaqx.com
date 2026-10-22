@@ -10,6 +10,9 @@ export default defineConfig({
     // regardless of NODE_ENV (which is "test" under vitest).
     env: {
       API_RATE_LIMIT_MAX: "5000",
+      // Count in memory so limiter tests are deterministic and never touch
+      // a real Redis, whatever the developer's .env.local holds.
+      RATE_LIMIT_STORE: "memory",
     },
   },
   resolve: {

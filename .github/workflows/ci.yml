@@ -17,6 +17,24 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    # The same Redis + Upstash-compatible REST proxy as compose.yml, so the
+    # rate limiter's integration tests run against a real Redis.
+    services:
+      redis:
+        image: redis:8-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+      redis-http:
+        image: hiett/serverless-redis-http:0.0.10
+        ports:
+          - 8079:80
+        env:
+          SRH_MODE: env
+          SRH_TOKEN: local_dev_token
+          SRH_CONNECTION_STRING: redis://redis:6379
     steps:
       - uses: actions/checkout@v7
 

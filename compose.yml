@@ -1,0 +1,29 @@
+# Local services for development. Start with `docker compose up -d`.
+#
+# The app talks to Redis through Upstash's REST API (@upstash/redis), not
+# the Redis protocol, so locally it needs serverless-redis-http in front of
+# Redis: the same API Upstash serves in production.
+# https://upstash.com/docs/redis/sdks/ts/developing
+
+services:
+  redis:
+    image: redis:8-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis-http:
+    image: hiett/serverless-redis-http:0.0.10
+    ports:
+      - "8079:80"
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: local_dev_token
+      SRH_CONNECTION_STRING: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy

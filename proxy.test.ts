@@ -27,8 +27,8 @@ function makeRequest(
 }
 
 describe("proxy: API header guarantees", () => {
-  it("attaches Request-Id and X-RateLimit-* headers to /api/* requests", () => {
-    const res = proxy(makeRequest("http://localhost/api/healthz"));
+  it("attaches Request-Id and X-RateLimit-* headers to /api/* requests", async () => {
+    const res = await proxy(makeRequest("http://localhost/api/healthz"));
     expect(res).toBeDefined();
     const r = res as Response;
     expect(r.headers.get("Request-Id")).toMatch(
@@ -39,8 +39,8 @@ describe("proxy: API header guarantees", () => {
     expect(r.headers.get("X-RateLimit-Reset")).toMatch(/^\d+$/);
   });
 
-  it("attaches IETF RateLimit-Policy and RateLimit structured fields", () => {
-    const r = proxy(makeRequest("http://localhost/api/healthz")) as Response;
+  it("attaches IETF RateLimit-Policy and RateLimit structured fields", async () => {
+    const r = (await proxy(makeRequest("http://localhost/api/healthz")));
     expect(r.headers.get("RateLimit-Policy")).toBe('"hourly";q=5000;w=3600');
     expect(r.headers.get("RateLimit")).toMatch(/^"hourly";r=4999;t=\d+$/);
     const t = Number(r.headers.get("RateLimit")!.split("t=")[1]);
@@ -48,7 +48,7 @@ describe("proxy: API header guarantees", () => {
     expect(t).toBeLessThanOrEqual(3600);
   });
 
-  it("attaches headers to every API path (root, catch-all, auth, openapi)", () => {
+  it("attaches headers to every API path (root, catch-all, auth, openapi)", async () => {
     for (const path of [
       "/api",
       "/api/whatever",
@@ -56,7 +56,7 @@ describe("proxy: API header guarantees", () => {
       "/api/openapi",
       "/api/sentry-example-api",
     ]) {
-      const res = proxy(makeRequest(`http://localhost${path}`)) as Response;
+      const res = (await proxy(makeRequest(`http://localhost${path}`)));
       expect(
         res.headers.get("Request-Id"),
         `${path} should set Request-Id`,
@@ -68,23 +68,23 @@ describe("proxy: API header guarantees", () => {
     }
   });
 
-  it("decrements X-RateLimit-Remaining for repeated requests from the same IP", () => {
+  it("decrements X-RateLimit-Remaining for repeated requests from the same IP", async () => {
     const ip = `10.1.0.${++ipCounter}`;
-    const a = proxy(makeRequest("http://localhost/api/healthz", { ip })) as Response;
-    const b = proxy(makeRequest("http://localhost/api/healthz", { ip })) as Response;
+    const a = (await proxy(makeRequest("http://localhost/api/healthz", { ip })));
+    const b = (await proxy(makeRequest("http://localhost/api/healthz", { ip })));
     expect(a.headers.get("X-RateLimit-Remaining")).toBe("4999");
     expect(b.headers.get("X-RateLimit-Remaining")).toBe("4998");
   });
 
-  it("does not touch non-API paths", () => {
-    const res = proxy(makeRequest("http://localhost/about")) as Response;
+  it("does not touch non-API paths", async () => {
+    const res = (await proxy(makeRequest("http://localhost/about")));
     // NextResponse.next() — no rate-limit headers, no request id.
     expect(res.headers.get("X-RateLimit-Limit")).toBeNull();
     expect(res.headers.get("Request-Id")).toBeNull();
   });
 
-  it("returns 204 with CORS headers for OPTIONS preflight on /api/*", () => {
-    const res = proxy(
+  it("returns 204 with CORS headers for OPTIONS preflight on /api/*", async () => {
+    const res = await proxy(
       makeRequest("http://localhost/api/healthz", { method: "OPTIONS" }),
     ) as Response;
     expect(res.status).toBe(204);
@@ -100,7 +100,7 @@ describe("proxy: rate limiting enforcement", () => {
 
     // MAX_REQUESTS = 5000, so the 5001st call should be limited.
     for (let i = 0; i < 5001; i++) {
-      const res = proxy(
+      const res = await proxy(
         makeRequest("http://localhost/api/healthz", { ip }),
       ) as Response;
       if (res.status === 429) {
@@ -126,14 +126,14 @@ describe("proxy: rate limiting enforcement", () => {
 describe("proxy: Api-Version", () => {
   const current = API_VERSIONS[0].version;
 
-  it("defaults and echoes Api-Version with Vary on API responses", () => {
-    const res = proxy(makeRequest("http://localhost/api/healthz")) as Response;
+  it("defaults and echoes Api-Version with Vary on API responses", async () => {
+    const res = (await proxy(makeRequest("http://localhost/api/healthz")));
     expect(res.headers.get("Api-Version")).toBe(current);
     expect(res.headers.get("Vary")).toContain("Api-Version");
   });
 
-  it("honors a supported Api-Version header", () => {
-    const res = proxy(
+  it("honors a supported Api-Version header", async () => {
+    const res = await proxy(
       makeRequest("http://localhost/api/healthz", {
         headers: { "Api-Version": current },
       }),
@@ -143,7 +143,7 @@ describe("proxy: Api-Version", () => {
   });
 
   it("returns 400 with the error envelope for an unsupported version", async () => {
-    const res = proxy(
+    const res = await proxy(
       makeRequest("http://localhost/api/healthz", {
         headers: { "Api-Version": "1999-01-01" },
       }),
@@ -156,8 +156,8 @@ describe("proxy: Api-Version", () => {
     expect(body.errors["Api-Version"][0]).toContain(current);
   });
 
-  it("allows and exposes the versioning headers for browsers", () => {
-    const res = proxy(
+  it("allows and exposes the versioning headers for browsers", async () => {
+    const res = await proxy(
       makeRequest("http://localhost/api/healthz", { method: "OPTIONS" }),
     ) as Response;
     expect(res.headers.get("Access-Control-Allow-Headers")).toContain("Api-Version");
@@ -166,8 +166,8 @@ describe("proxy: Api-Version", () => {
     }
   });
 
-  it("leaves non-API pages alone", () => {
-    const res = proxy(
+  it("leaves non-API pages alone", async () => {
+    const res = await proxy(
       makeRequest("http://localhost/about", { headers: { "Api-Version": "bogus" } }),
     ) as Response;
     expect(res.status).toBe(200);
@@ -176,8 +176,8 @@ describe("proxy: Api-Version", () => {
 });
 
 describe("proxy: api subdomain", () => {
-  it("rewrites api.syntaqx.com root to /api so the route handler is the source of truth", () => {
-    const res = proxy(
+  it("rewrites api.syntaqx.com root to /api so the route handler is the source of truth", async () => {
+    const res = await proxy(
       makeRequest("http://api.syntaqx.com/", { host: "api.syntaqx.com" }),
     ) as Response;
     expect(res.status).toBe(200);
@@ -186,8 +186,8 @@ describe("proxy: api subdomain", () => {
     expect(res.headers.get("x-middleware-rewrite")).toBe("http://api.syntaqx.com/api");
   });
 
-  it("serves endpoints at the root of the api subdomain, with no /v1 prefix", () => {
-    const res = proxy(
+  it("serves endpoints at the root of the api subdomain, with no /v1 prefix", async () => {
+    const res = await proxy(
       makeRequest("http://api.syntaqx.com/hash", { host: "api.syntaqx.com" }),
     ) as Response;
     expect(res.headers.get("x-middleware-rewrite")).toBe("http://api.syntaqx.com/api/hash");
@@ -289,8 +289,8 @@ describe("proxy: HTTP QUERY", () => {
     expect(res.status).toBe(200);
   });
 
-  it("advertises QUERY on OPTIONS", () => {
-    const res = proxy(makeRequest("http://localhost/api/hash", { method: "OPTIONS" })) as Response;
+  it("advertises QUERY on OPTIONS", async () => {
+    const res = (await proxy(makeRequest("http://localhost/api/hash", { method: "OPTIONS" })));
     expect(res.headers.get("Allow")).toBe("POST, QUERY, OPTIONS");
     expect(res.headers.get("Access-Control-Allow-Methods")).toContain("QUERY");
     expect(res.headers.get("Access-Control-Allow-Headers")).toContain("X-HTTP-Method-Override");

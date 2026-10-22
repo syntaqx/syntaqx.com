@@ -1,6 +1,6 @@
 # 0002. No authentication, user identity, or database
 
-Status: Accepted (2026-09-16)
+Status: Superseded by [0010](0010-datastores-allowed-no-user-identity.md)
 
 ## Context
 

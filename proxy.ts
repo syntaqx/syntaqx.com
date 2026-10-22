@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { errorResponse, rateLimit, requestIdHeaders, resolveApiVersion } from "@/lib/api";
+import { errorResponse, requestIdHeaders, resolveApiVersion } from "@/lib/api";
+import { checkRateLimit } from "@/lib/ratelimit";
 import { uuidv7 } from "@/lib/uuid";
 import {
   METHOD_OVERRIDE_HEADER,
@@ -39,10 +40,10 @@ function clientIp(request: NextRequest): string {
  * Api-Version), or a header bag to merge
  * into the downstream response.
  */
-function applyApiHeaders(
+async function applyApiHeaders(
   request: NextRequest,
-): { blocked: true; response: Response } | { blocked: false; headers: Record<string, string> } {
-  const rl = rateLimit(clientIp(request));
+): Promise<{ blocked: true; response: Response } | { blocked: false; headers: Record<string, string> }> {
+  const rl = await checkRateLimit(clientIp(request));
   const requestId = uuidv7();
 
   if (rl.limited) {
@@ -93,7 +94,7 @@ function withHeaders(response: Response, headers: Record<string, string>): Respo
   return response;
 }
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest): Promise<Response> {
   const host = request.headers.get("host") || "";
   const { pathname } = request.nextUrl;
   const isApiSubdomain = host.startsWith("api.");
@@ -112,7 +113,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const result = applyApiHeaders(request);
+  const result = await applyApiHeaders(request);
   if (result.blocked) return result.response;
   const apiHeaders = { ...result.headers, ...queryDiscoveryHeaders(pathname) };
 
