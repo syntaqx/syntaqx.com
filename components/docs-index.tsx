@@ -66,8 +66,14 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
   // Highlight the section being read in the rail.
   useEffect(() => {
     if (q) return;
+    const last = categories[categories.length - 1]?.section;
+    const atBottom = () =>
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
     const observer = new IntersectionObserver(
       (entries) => {
+        // The last sections can't scroll high enough to cross the line, so
+        // the bottom of the page always means the last section.
+        if (atBottom()) return setActive(last);
         const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length) setActive(visible[0].target.id);
       },
@@ -77,7 +83,15 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       const el = document.getElementById(c.section);
       if (el) observer.observe(el);
     }
-    return () => observer.disconnect();
+    const onScroll = () => {
+      if (atBottom()) setActive(last);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [categories, q]);
 
   return (
@@ -122,7 +136,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       {q ? (
         <SearchResults query={query} results={results} onClear={() => setQuery("")} />
       ) : (
-        <div className="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
+        <div className="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
           <SectionRail categories={categories} active={active ?? featured?.section} />
 
           <div className="min-w-0 space-y-16">
@@ -154,30 +168,81 @@ function SectionRail({
   categories: DocsIndexCategory[];
   active?: string;
 }) {
+  const railRef = useRef<HTMLDivElement>(null);
+
+  // Keep the highlighted section in view as the page scrolls, by scrolling
+  // the rail itself (never the page).
+  useEffect(() => {
+    const rail = railRef.current;
+    const item = rail?.querySelector<HTMLElement>(`[data-section="${active}"]`);
+    if (!rail || !item) return;
+    // Measure against what's on screen: near the end of the page the sticky
+    // rail is pushed up, and part of it is off-screen.
+    const box = rail.getBoundingClientRect();
+    const visibleTop = Math.max(box.top, 0);
+    const visibleBottom = Math.min(box.bottom, window.innerHeight);
+    const heading = item.getBoundingClientRect().top;
+    const comfortable = visibleTop + (visibleBottom - visibleTop) * 0.6;
+    if (heading < visibleTop || heading > comfortable) {
+      rail.scrollBy({ top: heading - visibleTop - 16, behavior: "smooth" });
+    }
+  }, [active]);
+
   return (
     <nav aria-label="Documentation sections" className="mb-10 lg:mb-0">
-      {/* Mobile: one scrollable row. Desktop: a sticky rail. */}
-      <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 scrollbar-none lg:sticky lg:top-24 lg:mx-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:border-l lg:border-border lg:px-0 [&::-webkit-scrollbar]:hidden">
-        {categories.map((c) => {
-          const isActive = c.section === active;
-          return (
-            <li key={c.section} className="shrink-0">
-              <a
-                href={`#${c.section}`}
-                aria-current={isActive ? "true" : undefined}
-                className={`inst flex items-center justify-between gap-3 border px-2.5 py-1.5 transition-colors lg:-ml-px lg:border-0 lg:border-l lg:py-2 lg:pl-4 ${
-                  isActive
-                    ? "border-accent text-accent"
-                    : "border-border text-muted hover:text-foreground lg:border-transparent lg:hover:border-border-hover"
-                }`}
-              >
-                <span className="whitespace-nowrap">{c.name}</span>
-                <span className="text-dim">{c.docs.length}</span>
-              </a>
-            </li>
-          );
-        })}
+      {/* Mobile: the sections as one scrollable row. */}
+      <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 scrollbar-none lg:hidden">
+        {categories.map((c) => (
+          <li key={c.section} className="shrink-0">
+            <a
+              href={`#${c.section}`}
+              className="inst inline-flex items-center gap-2 border border-border px-2.5 py-1.5 text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              <span className="whitespace-nowrap">{c.name}</span>
+              <span className="text-dim">{c.docs.length}</span>
+            </a>
+          </li>
+        ))}
       </ul>
+
+      {/* Desktop: the same shape as the doc pages' sidebar, every section with
+          its docs, scrolling within the rail when it's taller than the screen. */}
+      <div
+        ref={railRef}
+        className="sticky top-24 hidden max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-2 scrollbar-none lg:block"
+      >
+        <div className="space-y-7">
+          {categories.map((c) => {
+            const isActive = c.section === active;
+            return (
+              <div key={c.section} data-section={c.section}>
+                <a
+                  href={`#${c.section}`}
+                  aria-current={isActive ? "true" : undefined}
+                  className={`inst mb-2.5 flex items-baseline justify-between gap-3 text-[0.55rem] transition-colors ${
+                    isActive ? "text-accent" : "text-dim hover:text-foreground"
+                  }`}
+                >
+                  <span>{c.name}</span>
+                  <span className="shrink-0">{c.docs.length}</span>
+                </a>
+                <ul className={`border-l ${isActive ? "border-accent/50" : "border-border"}`}>
+                  {c.docs.map((doc) => (
+                    <li key={doc.href}>
+                      <Link
+                        href={doc.href}
+                        className="-ml-px block border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim transition-colors hover:border-border-hover hover:text-foreground"
+                      >
+                        {doc.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </nav>
   );
 }
