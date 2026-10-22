@@ -10,10 +10,10 @@ This site renders most pages statically. Next.js bootstraps with inline scripts,
 
 ## Decision
 
-Ship the policy in report-only mode with `script-src 'self' 'unsafe-inline'`, reporting violations to Sentry. Every other directive follows the playbook: `default-src 'self'`, `object-src 'none'`, `base-uri 'none'`, `frame-ancestors 'none'`, `form-action 'self'`. `lib/csp.test.ts` keeps those from loosening.
+Enforce the policy with `script-src 'self' 'unsafe-inline'`, reporting violations to Sentry. It ran report-only first; before enforcing, every page type and the interactive tools were exercised against it, which found four origins and `data:` the tools genuinely need (`connect-src`), now listed. Every other directive follows the playbook: `default-src 'self'`, `object-src 'none'`, `base-uri 'none'`, `frame-ancestors 'none'`, `form-action 'self'`. `lib/csp.test.ts` keeps those from loosening.
 
 ## Consequences
 
-- The policy can't break the site, and its reports show anything loading that shouldn't.
+- The policy blocks anything outside its list, and its reports show what tried.
 - It doesn't stop injected inline scripts. The site renders no user input, which keeps that risk low, but it's the gap between this policy and the playbook's.
-- Next steps, in order: enforce once reports are quiet, then move to nonces if the site ever renders untrusted content.
+- Next step: move to nonces if the site ever renders untrusted content.

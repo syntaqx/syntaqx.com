@@ -17,6 +17,21 @@ describe("Content-Security-Policy", () => {
     expect(directives["form-action"]).toEqual(["'self'"]);
   });
 
+  it("allows exactly the outside origins the site's own tools call", () => {
+    expect(directives["connect-src"]).toEqual([
+      "'self'",
+      "https://api.syntaqx.com",
+      "https://*.ingest.us.sentry.io",
+      "https://vercel.live",
+      "wss://ws-us3.pusher.com",
+      "https://api.ipify.org",
+      "https://api64.ipify.org",
+      "https://ipinfo.io",
+      "https://api.github.com",
+      "data:",
+    ]);
+  });
+
   it("allows the API console to reach the API, and Sentry to receive events", () => {
     expect(directives["connect-src"]).toContain("https://api.syntaqx.com");
     expect(directives["connect-src"]).toContain("https://*.ingest.us.sentry.io");

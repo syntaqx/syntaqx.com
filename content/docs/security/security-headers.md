@@ -91,7 +91,7 @@ Keep `Access-Control-Allow-Origin` to the origins that need it. Never reflect wh
 
 ## This Site
 
-syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-site` so `www` and the `api` subdomain can share resources. Its Content Security Policy is in Report-Only mode, reporting violations to Sentry through `report-uri` and the Reporting API, and switches to enforcing once the reports are clean. Its `script-src` still allows inline scripts, because nonces would mean rendering every page per request; that departure from the policy above is recorded in [ADR 0004](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0004-csp-allows-inline-scripts.md).
+syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-site` so `www` and the `api` subdomain can share resources. Its Content Security Policy ran in Report-Only mode first, and before switching to enforcing, every page type was loaded and every interactive tool exercised against it, reading violations from the browser console. That found what page loads alone wouldn't have: the IP lookup and the hover-card demo call third-party APIs only when used, and the favicon tool reads uploads back from `data:` URLs. Those are listed explicitly, and the policy is now enforced, still reporting to Sentry. Its `script-src` still allows inline scripts, because nonces would mean rendering every page per request; that departure from the policy above is recorded in [ADR 0004](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0004-csp-allows-inline-scripts.md).
 
 ## References
 
