@@ -1,4 +1,4 @@
-# 0002. Header-only API versioning, no URL version
+# 0001. Header-only API versioning, no URL version
 
 Status: Accepted (2026-10-22)
 

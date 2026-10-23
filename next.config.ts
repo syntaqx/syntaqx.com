@@ -5,7 +5,7 @@ import { docRedirects } from "./lib/doc-redirects";
 // Content-Security-Policy, enforced. It lists exactly what the site loads,
 // found by running it report-only and loading every page type plus the
 // interactive tools; anything else is blocked and reported to Sentry.
-// See /docs/security/security-headers and docs/adr/0004.
+// See /docs/security/security-headers and docs/adr/0003.
 const SENTRY_CSP_REPORT_URI =
   "https://o463483.ingest.us.sentry.io/api/4511368166572032/security/?sentry_key=83053c7854f5d2501223a9d596b331ff";
 

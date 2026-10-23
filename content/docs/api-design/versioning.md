@@ -60,7 +60,7 @@ When a client genuinely can't set request headers, the version goes in the first
 GET /v1/resources
 ```
 
-It's a fallback, for all the reasons above. The syntaqx API skips it entirely: endpoints live at the root of `api.syntaqx.com` and the version is only ever the header, since every client it has can send one. That departure is [ADR 0002](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0002-header-only-api-versioning.md).
+It's a fallback, for all the reasons above. The syntaqx API skips it entirely: endpoints live at the root of `api.syntaqx.com` and the version is only ever the header, since every client it has can send one. That departure is [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-header-only-api-versioning.md).
 
 ## Breaking and Non-Breaking Changes
 
