@@ -41,7 +41,7 @@ Each event carries a **snapshot** of the resource as it was when the event happe
 
 ## Signatures
 
-A webhook endpoint is a public URL. Without a signature, anyone who finds it can post `payment.succeeded` and get goods shipped for free. Every delivery is signed using the [Standard Webhooks](https://www.standardwebhooks.com/) format, so receivers can verify it with an off-the-shelf library instead of hand-rolled crypto:
+A webhook endpoint is a public URL. Without a signature, anyone who finds it can post `payment.captured` and get goods shipped for free. Every delivery is signed using the [Standard Webhooks](https://www.standardwebhooks.com/) format, so receivers can verify it with an off-the-shelf library instead of hand-rolled crypto:
 
 | Header | Description |
 | ------ | ----------- |

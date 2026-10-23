@@ -44,7 +44,7 @@ Online PIN is the one with engineering consequences, because a PIN in transit is
 
 ## The Liability Shift
 
-EMV adoption in the US wasn't driven by regulation. It was driven by moving the cost of fraud. In August 2011 Visa announced that from **October 1, 2015**, liability for counterfeit card-present fraud could shift to the acquirer of a merchant that hadn't adopted chip terminals, when the customer presented a chip card. Acquirers passed that to merchants, and the rational response was to buy chip terminals. Automated fuel dispensers got longer: an original date of October 1, 2017, later extended, with Visa finally setting **April 17, 2021**.
+EMV adoption in the US wasn't driven by regulation. It was driven by moving the cost of fraud. In August 2011 Visa announced that from **October 1, 2015**, liability for counterfeit card-present fraud could shift to the acquirer of a merchant that hadn't adopted chip terminals, when the customer presented a chip card. Acquirers passed that to merchants, and the rational response was to buy chip terminals. Automated fuel dispensers got more time: an original date of October 1, 2017, later extended, with Visa finally setting **April 17, 2021**.
 
 The engineering lesson isn't the dates. It's that the rule is "whoever invested less in security pays", and it applies per transaction. A chip card swiped on a chip-capable terminal because the chip read failed (**fallback**) is a stripe transaction for liability purposes. A platform that can't report entry mode per payment can't tell a merchant why it lost a counterfeit dispute, or why its fallback rate is a fraud signal worth alerting on.
 
@@ -92,7 +92,7 @@ A platform that ships terminals runs a hardware fleet, and the work doesn't end 
 
 A terminal that can't reach the network can still take a card, store the transaction and forward it later (**store and forward**). Sometimes the chip approves it offline with a TC; often the terminal simply stores it and attempts authorization when connectivity returns. Either way, the issuer hasn't said yes.
 
-Stripe's documentation states the consequence without softening it: when you operate offline, you assume all decline and tamper-related risks, and if the issuer later declines, there's no way to recover the funds. It also caps a single offline payment at 10,000 USD and won't accept magnetic stripe offline at all, because stripe data is too easy to spoof.
+Stripe's documentation states the consequence without softening it: when you operate offline, you assume all decline and tamper-related risks, and if the issuer later declines, there's no way to recover the funds. It also caps a single offline payment at $10,000 and won't accept magnetic stripe offline at all, because stripe data is too easy to spoof.
 
 So offline is a risk product, and the platform should treat it like one:
 
@@ -102,7 +102,7 @@ So offline is a risk product, and the platform should treat it like one:
 
 ## Why Card-Present Is Cheaper
 
-Chip and PIN make card-present payments the safest transactions in the system, and interchange reflects it. Visa's exempt debit rates, for example, are 0.80% + $0.15 for card-present retail against 1.65% + $0.15 for basic e-commerce ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing)). That advantage only applies when the data proves the card was there: the right entry mode, the chip data, the terminal capabilities. A payment that falls back to stripe, or that a clerk keys in by hand, loses it.
+Chip and PIN make card-present payments the safest transactions in the system, and interchange reflects it. On Visa's exempt debit table, card-present retail costs about half what basic e-commerce does ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) has the rates). That advantage only applies when the data proves the card was there: the right entry mode, the chip data, the terminal capabilities. A payment that falls back to stripe, or that a clerk keys in by hand, loses it.
 
 ## What This Means for the System You Build
 
@@ -110,7 +110,7 @@ Chip and PIN make card-present payments the safest transactions in the system, a
 - **Keep the POS out of the card data path.** Semi-integrated terminals and a listed P2PE solution keep PCI scope on the terminal and the processor, not on every merchant's install of your software.
 - **Treat terminals as a fleet** with management, key loading, firmware updates, certification and retirement on a schedule, not as a one-time shipment.
 - **Model offline honestly:** a separate state, limits per merchant, and funding only after authorization.
-- **Make Tap to Pay degrade gracefully,** checking device eligibility at runtime and falling back to a reader or a payment link.
+- **Make Tap to Pay degrade gracefully,** checking device eligibility at runtime and falling back to a reader or a [payment link](/docs/industries/payments/phone-payments#send-a-link-instead).
 
 ## References
 

@@ -10,7 +10,7 @@ tags = ["compliance", "payments", "regulation", "pci", "nacha"]
 
 A payments company answers to two kinds of rulebook at once. One is **law**: statutes and regulations, enforced by agencies with subpoenas and penalties. The other is **private network rules**: the card brands' rules, PCI DSS and the Nacha Operating Rules, which no government wrote and which bind you anyway, because every bank that lets you touch the networks made you sign them. Engineers tend to hear "compliance" and picture one checklist. In practice it's a stack of contracts and laws with different enforcers, and knowing which one a requirement comes from tells you who will ask about it, how hard, and what happens if you're wrong.
 
-[How Card Payments Work](/docs/industries/payments/card-payments) and [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) cover how the networks move and price money; this chapter maps who makes the rules. The frameworks themselves have their own chapters in Compliance, starting with [PCI DSS](/docs/compliance/pci-dss), and the rest of this volume shows each rule landing in the engineering. None of it is legal advice: the thresholds and obligations here are where to start a conversation with counsel, not where to end one.
+The chapters before this one cover how money moves, by card, wallet, bank transfer, check and cash, and what it costs; this chapter maps who makes the rules each of them follows. The frameworks themselves have their own chapters in Compliance, starting with [PCI DSS](/docs/compliance/pci-dss), and the rest of this volume shows each rule landing in the engineering. None of it is legal advice: the thresholds and obligations here are where to start a conversation with counsel, not where to end one.
 
 ## Two Kinds of Rules
 
@@ -31,10 +31,15 @@ Enforcement follows the same path in reverse. A brand fines the acquirer; the ac
 | Card brand rules | Visa, Mastercard, others | Acquirer agreement | Dispute handling, descriptors, refunds, data use; [Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks) |
 | PCI DSS | PCI SSC, enforced by the brands | Acquirer agreement | Card data scope, segmentation, assessments; [PCI DSS](/docs/compliance/pci-dss) |
 | Nacha Operating Rules | Nacha | ODFI agreement | Authorization records, return rates, account validation, fraud monitoring; [ACH](/docs/industries/payments/ach) |
-| Regulation E (EFTA) | CFPB | Law, consumer accounts | Unauthorized transfer and error-resolution rights on bank transfers |
-| Regulation Z (TILA) | CFPB | Law, consumer credit | Credit card billing-error disputes behind chargebacks |
+| Regulation E (EFTA) | CFPB | Law, consumer accounts | Unauthorized transfer and error-resolution rights on bank transfers; [ACH](/docs/industries/payments/ach#consumer-law-regulation-e) |
+| Regulation Z (TILA) | CFPB | Law, consumer credit | Credit card billing-error disputes behind chargebacks; [Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks) |
+| Regulation II (Durbin) | Federal Reserve | Law, on issuers and networks | The debit interchange cap and the merchant's routing choice; [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) |
+| Regulation CC, Check 21, UCC Article 4 | Federal Reserve; states | Law, through your bank | Funds availability, check returns and warranty claims; [Accepting Checks](/docs/industries/payments/checks) |
+| State surcharge and fee laws | States | Law | What a merchant may add to a payment; [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees) |
+| Telemarketing Sales Rule | FTC | Law, sales by phone | Banned payment methods and recorded authorizations; [Phone Payments](/docs/industries/payments/phone-payments) |
 | BSA/AML | FinCEN | Law; your bank's program | KYC, beneficial owners, suspicious activity, recordkeeping; [Merchant Onboarding](/docs/industries/payments/merchant-onboarding) |
 | Sanctions | OFAC | Law, every US person | Screening parties and payments before they move |
+| Cash reporting (Form 8300, CTRs) | IRS, FinCEN | Law, cash | Reporting cash over $10,000; [Cash Payments](/docs/industries/payments/cash-payments) |
 | Money transmission | States, harmonized by the MTMA | Law, if you hold others' money | Licenses, net worth, bonds, permissible investments; [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) |
 | GLBA Safeguards Rule | FTC for non-banks | Law, non-bank financial institutions | A written security program and risk assessment, MFA, an incident response plan, and FTC notice within 30 days of a breach affecting 500 or more |
 | UDAAP | CFPB | Law, consumer financial products | Disclosures and flows that don't mislead |
@@ -45,9 +50,9 @@ Enforcement follows the same path in reverse. A brand fines the acquirer; the ac
 
 ## The Consumer Protection Layer
 
-Two regulations decide who absorbs a consumer's disputed payment, and they differ by rail. **Regulation E** covers electronic fund transfers from consumer bank accounts: the consumer has 60 days after the statement to report an error, the bank investigates within 10 business days (or 45 with provisional credit), and the consumer's liability for unauthorized transfers is capped. **Regulation Z** covers credit cards: a billing-error notice within 60 days of the statement, acknowledgment within 30 days, resolution within two billing cycles. The card networks' chargeback systems sit on top of these legal rights and extend them; that's why a cardholder can dispute for reasons the law never mentions, and why the merchant, not the bank, usually ends up paying.
+Two regulations decide who absorbs a consumer's disputed payment, and they differ by rail. **Regulation E** covers electronic fund transfers from consumer bank accounts, with error-resolution deadlines and capped liability ([ACH & Bank Transfers](/docs/industries/payments/ach#consumer-law-regulation-e) has the numbers). **Regulation Z** covers credit cards: a billing-error notice within 60 days of the statement, acknowledgment within 30 days, resolution within two billing cycles. The card networks' chargeback systems sit on top of these legal rights and extend them; that's why a cardholder can dispute for reasons the law never mentions, and why the merchant, not the bank, usually ends up paying.
 
-The engineering consequence is the same on every rail: a consumer payment isn't final when it settles, and the ledger has to model the window in which it can still come back ([Payment States & Ledgers](/docs/payments/payment-states)).
+The engineering consequence is the same on every rail: a consumer payment isn't final when it settles, and the ledger has to model the window in which it can still come back ([Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final)).
 
 **UDAAP**, the Consumer Financial Protection Act's ban on unfair, deceptive or abusive acts or practices, is the catch-all. It has no technical checklist, which is the point: a cancellation flow that's harder than signup, a fee disclosed after the fact, or a "free" trial that quietly converts are product decisions with legal exposure.
 
@@ -57,7 +62,13 @@ The engineering consequence is the same on every rail: a consumer payment isn't 
 
 **OFAC sanctions** apply to every US person, with no threshold and no exemption. Screening happens at onboarding and again on payments, against the SDN list and against entities 50% or more owned by blocked persons. A match isn't a fraud signal to be weighed; it's a stop.
 
-**State money transmission** is the license question. Holding or moving other people's money can require a license in nearly every state, each with net worth, surety bond and permissible-investment requirements; the Money Transmission Modernization Act is the states' effort to make those uniform. Agent-of-payee structures and bank partnerships are how many platforms avoid licensing, and both are questions for counsel, state by state.
+**State money transmission** is the license question. Holding or moving other people's money can require a license in nearly every state, each with net worth, surety bond and permissible-investment requirements; the Money Transmission Modernization Act is the states' effort to make those uniform. Agent-of-payee structures and bank partnerships are how many platforms avoid licensing, and both are questions for counsel, state by state ([Cash Payments](/docs/industries/payments/cash-payments#who-s-a-money-transmitter) walks through what an agent-of-payee contract has to say).
+
+## Outside the US
+
+In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/docs/industries/payments/strong-customer-authentication). Its successor is agreed but not yet law: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, and the Council's member-state representatives confirmed it on April 22, 2026. As of the Council's October 2026 status report, formal adoption was still pending. Check where adoption and the application dates stand before planning against them; the obligations bite well after adoption, not on it. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
+
+Canada is closest to home and still different at every layer: Payments Canada's rules instead of Nacha's, a federal code of conduct for card fees, Bank of Canada supervision of payment providers under the Retail Payment Activities Act since 2025, and FINTRAC registration for anyone paying bills on others' behalf. [Payments in Canada](/docs/industries/payments/canada) covers it.
 
 ## Who Carries What
 
@@ -71,12 +82,6 @@ The same business moves through these rulebooks as it takes on more of the stack
 | **Processor or provider** | Direct brand and Nacha obligations, PCI DSS Level 1 with a QSA, PIN and 3DS standards if in scope | Everything above, often MSB registration and licenses in most states | SOC 1 and SOC 2 Type II, often ISO 27001 |
 
 The useful question at each stage is not "are we compliant?" but "which contract or law put this requirement here, and who will test it?" A PCI requirement gets tested by an assessor once a year. A Nacha return rate gets measured by your bank every day. An OFAC miss gets found by a regulator, in hindsight, with the transaction already gone. Build the controls in proportion to how they fail.
-
-## Outside the US
-
-In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/docs/industries/payments/strong-customer-authentication). Its successor is agreed but not yet law: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, and the Council's member-state representatives confirmed it on April 22, 2026. As of the Council's October 2026 status report, formal adoption was still pending. Check where adoption and the application dates stand before planning against them; the obligations bite well after adoption, not on it. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
-
-Canada is closest to home and still different at every layer: Payments Canada's rules instead of Nacha's, a federal code of conduct for card fees, Bank of Canada supervision of payment providers under the Retail Payment Activities Act since 2025, and FINTRAC registration for anyone paying bills on others' behalf. [Payments in Canada](/docs/industries/payments/canada) covers it.
 
 ## References
 

@@ -44,37 +44,11 @@ Money arrives on the acquirer's schedule and leaves on yours, and the gap betwee
 - **Float has an owner.** Money sits in the custodial account between settlement and payout. Who earns interest on it, if anyone, is a question for your bank agreement and your counsel, not an assumption to build a business model on.
 - **Fees are swept, not skimmed.** Once a day, the ledger computes what you've earned and the system moves exactly that from custodial to operating. The balance in the custodial account is never a number anyone eyeballs to decide what's theirs.
 
-## Bank Reconciliation Is Its Own Discipline
-
-[Ledger reconciliation](/docs/payments/payment-states) asks whether your books balance. Bank reconciliation asks whether the bank agrees, and they fail in different ways: a ledger can balance perfectly while a wire you think you sent never left.
-
-Banks report in two families of formats. In the US, BAI2 files are still everywhere. ISO 20022 replaces them with `camt.053`, the end-of-day statement of booked entries; `camt.052`, an intraday report of the account; and `camt.054`, notifications of individual debits and credits. Expect several versions across your banks and build a parser per bank, not one that assumes the standard means one shape.
-
-Reconciliation is matching, and the shapes are uneven:
-
-- **One to one:** a wire matches a transfer you initiated, by your end-to-end reference.
-- **One to many:** a net settlement deposit matches the thousands of transactions, refunds and fees it settles.
-- **Many to one:** a payout batch leaves as one debit and has to match every payout in it.
-
-What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one. Run it three ways every day, ledger against processor reports against bank statements, and treat an unexplained break as a stop: no payout run until someone knows whether it's a bug or a loss ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) has the merchant-facing side of the same check). Intraday reports earn their keep here too: they tell you whether today's payouts are funded before the bank's cutoff, not after.
-
-## Bank Files
-
-Most bank connections are still files. ACH and wire instructions, positive pay issue files and payment requests go out; acknowledgements, returns, notifications of change, statements, lockbox deposits and processors' settlement and fee files come back. The file pipeline is as critical as any API, and it gets less attention because it runs at night.
-
-- **Transport with keys you rotate.** Host-to-host SFTP is the norm, with AS2 or HTTPS at some banks. J.P. Morgan's, for example, takes 2048-bit RSA keys at minimum, requires every uploaded file to be PGP-signed, encrypts on request, and asks clients to rotate keys and certificates at least annually. Test and production get separate credentials, and the bank's own PGP key changes on its schedule, so its expiry is on your calendar too.
-- **Names are identities.** Every outbound file gets a unique name; J.P. Morgan warns that reusing one "can and will cause file overwrites". Inside the file, the NACHA header's File ID Modifier distinguishes files sent the same day, and Canada's Standard 005 has its file creation number ([Payments in Canada](/docs/industries/payments/canada)). Allocate both from the database.
-- **A file is a state machine:** built, transmitted, acknowledged or rejected, then settled, with a record of exactly which entries went into it. After an ambiguous failure, ask the bank what arrived before sending anything again; a resent file is a duplicate of every payment in it.
-- **Read the acknowledgement.** A FedACH acknowledgement reports the file's status, its batch and entry counts and its debit and credit totals, and lists batch-level errors by edit code; ISO 20022 banks answer a `pain.001` with a `pain.002` status report (accepted, accepted with change, partially accepted, rejected, pending). Compare the counts and totals with what you sent, and alert when no acknowledgement arrives by the time it should. A missing acknowledgement before the cutoff is a phone call; after it, it's a day of late payments.
-- **Inbound files are processed exactly once.** Poll politely (J.P. Morgan asks for no more than four polls an hour, away from the top and bottom of the hour), key each file by name and content hash, move it to processed or failed, and feed returns and NOCs into the ledger the same day. Processor settlement and fee files go through the same pipeline: fees parsed from them become ledger entries, as [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) requires.
-- **Archive everything, encrypted and immutable.** Disputes, returns and examiners all refer back to the original file. Nacha requires ACH records to be kept for years (two years after an authorization ends, longer for entries at the bank), so keep the files themselves, not just what you parsed from them.
-- **Alert on the connection, not just the content.** Repeated connection failures, a file stuck in transmission, or a parser that rejected a file are all reasons to page someone before the bank's cutoff.
-
 ## Reserves and Negative Balances Are Cash
 
 A reserve in the ledger is a promise that the money exists. Whether it's an earmarked part of the custodial account or a separate account the sponsor bank requires, the cash has to be there on the day a [dispute](/docs/industries/payments/disputes-and-chargebacks) or a [risky merchant](/docs/industries/payments/merchant-onboarding) needs it, and its release dates are treasury events: they change what you can pay out that day.
 
-Negative balances are the reverse. When refunds and lost disputes take a merchant below zero and you've already paid them out, the custodial account is short by that amount until you recover it. Fill the gap from operating funds, recorded as a receivable from the merchant, the moment it appears. The alternative, letting other merchants' money cover it, is commingling by another name.
+Negative balances are the reverse. When refunds and lost disputes take a merchant below zero and you've already paid them out, the custodial account is short by that amount until you recover it. Fill the gap from operating funds, recorded as a receivable from the merchant, the moment it appears. The alternative, letting other merchants' money cover it, is commingling by another name. That's cash, not a decision about who bears the loss: the merchant still owes it, recovered in the order [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#negative-balances) sets.
 
 ## Moving Money Safely
 
@@ -98,13 +72,55 @@ Every date that moves money is a banking-day calculation: when a payout lands, w
 - **Every country has its own.** Payments Canada closes on Good Friday, Victoria Day, September 30 and Boxing Day and stays open on US Thanksgiving ([Payments in Canada](/docs/industries/payments/canada)); euro payments follow the TARGET calendar. A platform in two countries keeps two calendars, and a cross-border payout needs both to be open.
 - **Calendar days and banking days are different types.** The ACH windows are two banking days and 60 calendar days; Canadian personal debits get 10 calendar days of notice and business debits 10 business days of claims. Give each its own type in code, so nobody adds the wrong kind of day ([Time](/docs/fundamentals/time) covers the rest).
 
+## Bank Files
+
+Most bank connections are still files. ACH and wire instructions, positive pay issue files and payment requests go out; acknowledgements, returns, notifications of change, statements, lockbox deposits and processors' settlement and fee files come back. The file pipeline is as critical as any API, and it gets less attention because it runs at night.
+
+- **Transport with keys you rotate.** Host-to-host SFTP is the norm, with AS2 or HTTPS at some banks. J.P. Morgan's, for example, takes 2048-bit RSA keys at minimum, requires every uploaded file to be PGP-signed, encrypts on request, and asks clients to rotate keys and certificates at least annually. Test and production get separate credentials, and the bank's own PGP key changes on its schedule, so its expiry is on your calendar too.
+- **Names are identities.** Every outbound file gets a unique name; J.P. Morgan warns that reusing one "can and will cause file overwrites". Inside the file, the NACHA header's File ID Modifier distinguishes files sent the same day, and Canada's Standard 005 has its file creation number ([Payments in Canada](/docs/industries/payments/canada)). Allocate both from the database.
+- **A file is a state machine:** built, transmitted, acknowledged or rejected, then settled, with a record of exactly which entries went into it. After an ambiguous failure, ask the bank what arrived before sending anything again; a resent file is a duplicate of every payment in it.
+- **Read the acknowledgement.** A FedACH acknowledgement reports the file's status, its batch and entry counts and its debit and credit totals, and lists batch-level errors by edit code; ISO 20022 banks answer a `pain.001` with a `pain.002` status report (accepted, accepted with change, partially accepted, rejected, pending). Compare the counts and totals with what you sent, and alert when no acknowledgement arrives by the time it should. A missing acknowledgement before the cutoff is a phone call; after it, it's a day of late payments.
+- **Inbound files are processed exactly once.** Poll politely (J.P. Morgan asks for no more than four polls an hour, away from the top and bottom of the hour), key each file by name and content hash, move it to processed or failed, and feed returns and NOCs into the ledger the same day. Processor settlement and fee files go through the same pipeline: fees parsed from them become ledger entries, as [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) requires.
+- **Archive everything, encrypted and immutable.** Disputes, returns and examiners all refer back to the original file. Authorizations alone must be kept two years after they end, so keep the files themselves, not just what you parsed from them.
+- **Alert on the connection, not just the content.** Repeated connection failures, a file stuck in transmission, or a parser that rejected a file are all reasons to page someone before the bank's cutoff.
+
+## Bank Reconciliation Is Its Own Discipline
+
+[Ledger reconciliation](/docs/payments/payment-states) asks whether your books balance. Bank reconciliation asks whether the bank agrees, and they fail in different ways: a ledger can balance perfectly while a wire you think you sent never left.
+
+Banks report in two families of formats. In the US, BAI2 files are still everywhere. ISO 20022 replaces them with `camt.053`, the end-of-day statement of booked entries; `camt.052`, an intraday report of the account; and `camt.054`, notifications of individual debits and credits. Expect several versions across your banks and build a parser per bank, not one that assumes the standard means one shape.
+
+Reconciliation is matching, and the shapes are uneven:
+
+- **One to one:** a wire matches a transfer you initiated, by your end-to-end reference.
+- **One to many:** a net settlement deposit matches the thousands of transactions, refunds and fees it settles.
+- **Many to one:** a payout batch leaves as one debit and has to match every payout in it.
+
+What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one. Run it three ways every day, ledger against processor reports against bank statements, and treat an unexplained break as a stop, as the closing section below describes. Money that arrives and can't be identified, a credit with no reference, goes to a suspense account with an owner and an age, and back to the sender if nobody can claim it. Intraday reports earn their keep here too: they tell you whether today's payouts are funded before the bank's cutoff, not after.
+
+## Watching the Pipeline
+
+Money movement fails quietly. A job that didn't run throws no errors; it just leaves payments that never left, and the first alert is a customer asking where their money is. So the monitoring watches for absence as carefully as for failure, and every alarm is tied to the deadline that makes it urgent, usually a bank cutoff.
+
+- **Captured but not sent.** Payments still waiting to be batched as the cutoff approaches, per rail: ACH entries, check images for a deposit, card captures and refunds for the day's settlement batch.
+- **A file that should exist and doesn't.** An outbound file not built or not transmitted, and an inbound one that didn't arrive. Returns, acknowledgements and settlement reports come every banking day, even empty; a missing return file doesn't mean there were no returns.
+- **Received but not applied.** A file that arrived but didn't parse, or parsed but whose returns and notifications of change never reached the ledger.
+- **Over the limit.** Your bank caps how much you may originate (for ACH, Nacha makes the ODFI set and monitor exposure limits), and you set a limit per merchant underneath it. Alarm while there's time to act, because the bank will hold or reject a file that breaches it.
+- **Overdue.** A payment past its expected settlement date with neither a settlement nor a return. Silence isn't success: the [ACH states](/docs/industries/payments/ach) advance on the clock, so a payment the bank never received would otherwise turn available on schedule.
+- **Money that should have moved.** A sweep or prefunding transfer not confirmed by the cutoff, and reconciliation breaks by count and age, since a break stops payouts.
+- **Not ready for the bank.** [Check images](/docs/industries/payments/checks) missing an endorsement or a detail record before a deposit file goes out.
+- **Slow or failed jobs,** and a job still running when the next one is due to start.
+- **The monitor itself.** If the alarms go quiet, is everything fine or did the monitor die? It sends a heartbeat on every run, and something outside it pages when the heartbeat stops.
+
+Run the checks on the banking calendar above, so a quiet weekend doesn't page anyone and a quiet Tuesday does. [Observability](/docs/operations/observability) covers the alerting machinery; these are the questions it should be asking.
+
 ## Safeguarding Outside the US
 
 In the UK, payment and e-money institutions don't rely on deposit insurance; they safeguard customers' funds under the FCA's rules, and those rules just got stricter. The FCA published PS25/12 on 7 August 2025, and its Supplementary Regime came into force on 7 May 2026. Firms now reconcile safeguarded funds at least once every reconciliation day (weekends, bank holidays and days when the relevant foreign markets are closed excepted), keep a resolution pack describing where funds are held and how they'd be returned, file a new monthly safeguarding return, and, unless they've safeguarded no more than £100,000 over the past 53 weeks, arrange an annual safeguarding audit by a qualified auditor. A CASS-style end state is planned for after the underlying legislation is repealed.
 
 Read it as the US direction of travel written down: daily reconciliation, records that let someone else return the money if you can't, and an outside party checking.
 
-## The Engineering
+## What This Means for the System You Build
 
 - **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)). The merchant ledger's total liability to merchants, plus anything in transit, equals the cash in custodial accounts; that equation is checked daily and alerts when it doesn't hold.
 - **Per-owner balances on demand.** The file your bank or a regulator would need to pay each owner directly is a scheduled job, not a project you start during a crisis.

@@ -23,7 +23,9 @@ The layers mirror the parties in [How Card Payments Work](/docs/industries/payme
 | 3-D Secure | EMVCo, then the networks | The 3DS Server, ACS or SDK against a specific version of the specification |
 | Network tokens | Each network's token service | Your onboarding as a token requestor, before you can provision tokens |
 
-Most platforms only face the first row: a processor certifies you, and the processor has already done the rest. The further down the stack you build, toward being the processor yourself ([Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider)), the more rows are yours.
+Most platforms face only the first row, plus the last if they provision network tokens themselves ([Processor Routing](/docs/industries/payments/processor-routing#tokens-decide-how-free-you-are)): a processor certifies you, and the processor has already done the rest. The further down the stack you build, toward being the processor yourself ([Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider)), the more rows are yours.
+
+![Certification path: unit and contract tests feed processor certification, then network and EMV certification, then a pilot, then production; a dashed loop returns from production to certification whenever a network release, a new terminal or kernel, or a new message field arrives.](/diagrams/certification-path.svg "Certification never ends at go-live. Every network release, new terminal or new message field sends the change back through the same tests, so the cheapest certification is the one your test suite already runs.")
 
 ## Processor Certification
 
@@ -58,7 +60,7 @@ The 3DS components in [SCA & 3-D Secure](/docs/industries/payments/strong-custom
 
 ## The Calendar You Don't Control
 
-Visa and Mastercard both change their specifications on a fixed rhythm, twice a year, in April and October. Visa calls its releases VisaNet Business Enhancements; Mastercard names its releases by quarter, like 22.Q2 and 22.Q4. Each release carries mandates: new fields, new values, new rules, each with an effective date by which acquirers and processors must support it. Platforms that process cards certify on each release and say so, release by release.
+Visa and Mastercard both change their specifications on a fixed rhythm, twice a year, in April and October. Visa calls its releases VisaNet Business Enhancements; Mastercard names its releases by quarter, like 26.Q2 and 26.Q4. Each release carries mandates: new fields, new values, new rules, each with an effective date by which acquirers and processors must support it. Processors and issuer platforms certify against each release and publish which mandates they support.
 
 That rhythm should shape your own release planning:
 
@@ -76,7 +78,15 @@ Certification goes well when it's the last run of tests you already have, rather
 - **A certification environment that can replay.** A build that passed certification must be reproducible. Record the exact message traffic of every certification run and keep it, because the next question from the processor or the network will be "what did you send on the 14th?"
 - **Changes that touch messages get flagged in review.** A change to a field mapping, an indicator or a transaction type is a certification event. Code ownership on the message layer ([Code Ownership](/docs/engineering/code-ownership)) puts the people who know that in front of it.
 
-![Certification path: unit and contract tests feed processor certification, then network and EMV certification, then a pilot, then production; a dashed loop returns from production to certification whenever a network release, a new terminal or kernel, or a new message field arrives.](/diagrams/certification-path.svg "Certification never ends at go-live. Every network release, new terminal or new message field sends the change back through the same tests, so the cheapest certification is the one your test suite already runs.")
+
+## What This Means for the System You Build
+
+- **Know which rows of the certification table are yours,** and put the certification queue in the schedule.
+- **Every certification script is an automated contract test,** with the host's test cards and amounts in fixtures.
+- **Message definitions are versioned code,** and any change to them is flagged in review as a certification event.
+- **Track network mandates like dependencies with deadlines:** ship early behind a flag, enable on the effective date.
+- **Record and keep every certification run's traffic,** so any build can be reproduced.
+- **Freeze unrelated payment changes around April and October.**
 
 ## References
 
@@ -93,3 +103,4 @@ Certification goes well when it's the last run of tests you already have, rather
 
 - [Marqeta: Card network certifications 2021](https://www.marqeta.com/docs/developer-guides/card-network-certifications-2021), certification on the April and October VisaNet Business Enhancements and Mastercard releases 21.Q2 and 21.Q4
 - [Marqeta: Card network certifications 2022](https://www.marqeta.com/docs/developer-guides/card-network-certifications-2022), the same cadence a year later, and which mandates needed platform changes
+- [Marqeta: Card network certifications](https://www.marqeta.com/docs/developer-guides/card-network-certifications), the 2026 Visa and Mastercard releases and their dates

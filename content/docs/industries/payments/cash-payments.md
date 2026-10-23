@@ -2,7 +2,7 @@
 title = "Cash Payments"
 description = "Letting customers pay in cash: retail bill-pay networks, real-time validation and posting, money orders, money transmitter rules, BSA reporting and vouchers."
 category = "Payments Industry"
-order = 1406
+order = 1407
 part = "How Money Moves"
 tags = ["payments", "cash", "bill-pay", "money-orders", "aml", "vouchers"]
 +++
@@ -24,14 +24,14 @@ The payer identifies the bill one of two ways: a **barcode** tied to their accou
 **Real-time validation at the counter.** The better networks call the biller before taking the cash. PayNearMe documents an order validation callback that checks the account and an authorization callback that accepts or declines the payment, with a 10-second default deadline; it doesn't retry, and a timeout declines the payment. That endpoint is now in the checkout path of a store you've never seen, so it's fast, highly available and decisive:
 
 - Decline an account that's closed, evicted or sent to collections, and an amount over what the account allows.
-- Enforce the payer's allowed methods (an account restricted to certified funds after a bounced check may still be allowed cash; one barred from cash shouldn't be accepted at the counter).
+- Enforce the payer's allowed methods (an account restricted to certified funds after a bounced check may still be allowed cash; one barred from cash shouldn't be accepted at the counter; the restrictions are the ones [ACH & Bank Transfers](/docs/industries/payments/ach#after-a-return-fees-and-blocks) defines).
 - Never decline because the endpoint was slow. Timeouts are lost payments and a customer standing at a register with cash in hand.
 
-**Confirmation is the posting event.** The network's confirmation callback is authoritative; authorization isn't. Retries come every minute, and PayNearMe suspends a callback after 40 consecutive failures, so the handler is idempotent on the network's payment identifier and always answers quickly ([Webhooks](/docs/payments/webhooks) has the consumer side). Networks without callbacks send a nightly file instead (CheckFreePay delivers to some billers that way); reconcile it like any other bank file.
+**The confirmation is authoritative.** The network's confirmation callback is authoritative; authorization isn't. Retries come every minute, and PayNearMe suspends a callback after 40 consecutive failures, so the handler is idempotent on the network's payment identifier and always answers quickly ([Webhooks](/docs/payments/webhooks) has the consumer side). Networks without callbacks send a nightly file instead (CheckFreePay delivers to some billers that way); reconcile it like any other bank file.
 
 **Post the payment on confirmation.** Many billers notify in seconds and post days later; the DC child support agency tells payers to allow three to four business days. There's no reason for the gap. Cash, once handed over, doesn't bounce or get charged back, so the payer's balance should drop when the confirmation arrives, and the late fee shouldn't be charged to someone whose cash was taken on the due date.
 
-**Settlement is a separate, slower event.** The network holds the funds and settles them later, net of its fees, to the biller's bank account. Few networks publish the timing, so measure it, and reconcile three ways: confirmations against your postings, and confirmations net of fees against the settlement deposits ([Treasury](/docs/industries/payments/treasury)). The confirmation payload usually tells you the gross amount, the fee, the net and the store, which is everything the reconciliation needs.
+**Settlement is a separate, slower event.** The network holds the funds and settles them later, net of its fees, to the biller's bank account. Few networks publish the timing, so measure it, and reconcile in two steps: confirmations against your postings, then confirmations net of fees against the settlement deposits ([Treasury](/docs/industries/payments/treasury)). The confirmation payload usually tells you the gross amount, the fee, the net and the store, which is everything the reconciliation needs.
 
 **Fees and limits are per biller and per store.** The payer typically pays a fee of $1.50 to $5.99, unless the biller absorbs it. Limits vary: some retailers cap a payment at $500, others allow $1,500 a day; the IRS's retail cash program allows $500 a payment and $1,000 a day. Rent above the cap means more than one payment or another method, so the product should say so before the customer is at the counter.
 
@@ -59,13 +59,13 @@ Taking someone's money and passing it to someone else is money transmission, whi
 
 - **Form 8300.** Any trade or business that receives more than $10,000 in cash in one transaction, or in related transactions, must report it to the IRS within 15 days. Rental of property is a listed example, and payments within 24 hours are related. A landlord platform that lets a tenant pay a year's rent in cash at a counter is within reach of this rule.
 - **Structuring,** splitting cash to stay under $10,000, is a federal crime regardless of whether the money is clean. A payer making repeated $9,500 cash payments is a pattern to flag, not a convenience to offer.
-- **Networks and banks file the rest:** currency transaction reports for cash over $10,000, records of money order sales between $3,000 and $10,000, and suspicious activity reports. OFAC screening applies to everyone, at any amount.
+- **Networks and banks file the rest:** currency transaction reports for cash over $10,000, records of money order sales between $3,000 and $10,000, and suspicious activity reports. [OFAC screening](/docs/industries/payments/payments-rulebook#the-financial-crime-layer) applies to everyone, at any amount.
 
 ## Where Cash Is Required
 
-Some places require businesses to take cash. New Jersey (2019), New York City (2020), Colorado (2021), Philadelphia and, since March 2026, New York State require in-person retail businesses to accept it, with exceptions that vary. None targets rent, but a platform serving retail can't go cashless there.
+Some places require businesses to take cash. New Jersey (2019), New York City (2020), Colorado (2021), Philadelphia and, since March 21, 2026, New York State require in-person retail businesses to accept it, with exceptions that vary. None targets rent, but a platform serving retail can't go cashless there.
 
-Rent has its own rules. California's Civil Code 1947.3 requires a landlord to accept at least one form of payment that's neither cash nor electronic, lets the landlord demand cash only for up to three months after a check bounces, and forbids requiring cash or electronic payment alone. Rules like these are why a payer's allowed payment methods belong in data, per account and with an expiry, not in code.
+Rent has its own rules: California requires landlords to accept a payment that's neither cash nor electronic, and lets them demand cash only for three months after a bounce ([Accepting Checks](/docs/industries/payments/checks#rent-and-paper)). Rules like these are why a payer's allowed payment methods belong in data, per account and with an expiry, not in code.
 
 ## Cash Around the World
 
@@ -113,6 +113,7 @@ They share a design: the payment is **pending with an expiry**, most customers w
 - [New Jersey P.L.2019 c.50](https://pub.njleg.gov/Bills/2018/AL19/50_.HTM), requiring retail establishments to accept cash
 - [Colorado HB21-1048](https://leg.colorado.gov/bills/hb21-1048), retail businesses must accept cash
 - [California Civil Code 1947.3](https://california.public.law/codes/ca_civ_code_section_1947.3), how landlords may and may not restrict payment methods
+- [New York Senate: S4153A](https://www.nysenate.gov/legislation/bills/2025/S4153/amendment/A), the state law requiring retail businesses to accept cash, Chapter 548 of 2025
 
 **In practice**
 

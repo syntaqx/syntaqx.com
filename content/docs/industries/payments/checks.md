@@ -2,12 +2,12 @@
 title = "Accepting Checks"
 description = "Taking checks as payment: image clearing under Check 21, remote deposit capture, Reg CC holds, returns and late claims, conversion to ACH, lockbox and fraud."
 category = "Payments Industry"
-order = 1405
+order = 1406
 part = "How Money Moves"
 tags = ["payments", "checks", "check-21", "remote-deposit", "reg-cc", "ach"]
 +++
 
-Checks keep shrinking and refuse to disappear. Americans wrote 9.2 billion of them in 2024, worth $24.45 trillion: 4% of noncash payments by number and 17% by value, because the ones that remain are big. Rent, invoices, insurance premiums, and every payment from a payer who won't hand over bank details still arrive on paper. A platform that collects for businesses gets them by mail, at a front desk, or through a lockbox, and has to turn them into money and ledger entries. This chapter is about receiving checks; issuing them, with positive pay and escheatment, is in [Vendor Payouts](/docs/industries/payments/vendor-payouts).
+Checks share ACH's central problem, that money available isn't money final, on an older and slower clock. They keep shrinking and refuse to disappear. Americans wrote 9.2 billion of them in 2024, worth $24.45 trillion: 4% of noncash payments by number and 17% by value, because the ones that remain are big. Rent, invoices, insurance premiums, and every payment from a payer who won't hand over bank details still arrive on paper. A platform that collects for businesses gets them by mail, at a front desk, or through a lockbox, and has to turn them into money and ledger entries. This chapter is about receiving checks; issuing them, with positive pay and escheatment, is in [Vendor Payouts](/docs/industries/payments/vendor-payouts).
 
 ## How a Check Clears Now
 
@@ -15,7 +15,7 @@ Four parties: the **drawer** who writes the check, the **payee** it's written to
 
 The **Check 21 Act**, in force since October 2004, made that possible. A bank can **truncate** a check, capturing its image and data and taking the paper out of the process, and send it onward as an **electronic check** under agreements with the banks downstream. If someone downstream still needs paper, the image is printed as a **substitute check**, which the industry calls an image replacement document: a reproduction of front and back, with the MICR line and the legend "This is a legal copy of your check", and it's the legal equivalent of the original. Every bank that passes one on warrants that it's accurate and that nobody will be asked to pay the same check twice. Since 2018 Regulation CC applies the same warranties to electronic checks.
 
-Banks exchange images directly, through clearing houses, or through the Federal Reserve's FedForward and FedReturn services. The Fed's future in check is an open question: in December 2025 its Board asked for comment on whether to keep investing in check services, maintain them as they are or reduce them, and its separate foreign and Canadian check service ends with 2026. Nothing about that changes your integration soon, but it's one more reason not to build a business that depends on checks growing.
+Banks exchange images directly, through clearing houses, or through the Federal Reserve's FedForward and FedReturn services. The Fed's future in check is an open question: in December 2025 its Board asked for comment on whether to keep investing in check services, maintain them as they are, or significantly reduce or wind them down. Comments closed in March 2026, no strategy had been announced by October 2026, and the Board has said any proposal will go out for comment again. Its separate foreign and Canadian check service ends with 2026. Nothing about that changes your integration soon, but it's one more reason not to build a business that depends on checks growing.
 
 ## The Image and the MICR Line
 
@@ -23,7 +23,7 @@ Everything downstream reads two things: the image and the line of magnetic ink c
 
 **The MICR line** carries, from right to left, an on-us field (the account number, and the serial number on personal checks), the nine-digit routing number between transit symbols, and on business checks an auxiliary on-us field holding the serial number. The amount field is blank when the check is printed; the first bank to process it encodes the amount. That auxiliary field matters later: its presence is how a system tells a business check from a consumer one.
 
-**The image cash letter** is how deposits travel between banks, in the ANSI X9.100-187 format. Like a NACHA file it's a set of typed records: a file header (01), cash letter header (10), bundle header (20), a check detail record (25) with its addenda (26 to 28) and image view records (50, 52) for the front and back images, then bundle (70), cash letter (90) and file (99) controls. Returns use their own detail records (31 to 35). Images are typically black-and-white TIFFs. Your bank's remote deposit system usually builds the file for you; if you integrate with a bank's deposit API or run your own scanning, it's the format the bank will ask for.
+**The image cash letter** is how deposits travel between banks, in the ANSI X9.100-187 format. Like a [NACHA file](/docs/industries/payments/ach#anatomy-of-a-nacha-file) it's a set of typed records: a file header (01), cash letter header (10), bundle header (20), a check detail record (25) with its addenda (26 to 28) and image view records (50, 52) for the front and back images, then bundle (70), cash letter (90) and file (99) controls. Returns use their own detail records (31 to 35). Images are typically black-and-white TIFFs. Your bank's remote deposit system usually builds the file for you; if you integrate with a bank's deposit API or run your own scanning, it's the format the bank will ask for.
 
 ## Remote Deposit Capture
 
@@ -35,6 +35,7 @@ What the capture side owes the bank, and itself:
 
 - **Image quality checks before submission.** Skew, a missing corner, two checks overlapped, too dark or too light, an image file too small to hold a real check. A check the paying bank can't read comes back as an unusable image (X9 return reason U), days later; catching it at the scanner costs a retake.
 - **Both sides, read back.** The amount from the image (courtesy and legal amount) compared with what the user keyed, the MICR line parsed and validated, the payee checked against the account the deposit goes to, and the back checked for an endorsement.
+- **The bank's endorsement travels in the file.** Reg CC 229.35 requires each bank that handles a check to endorse it, and for an electronic check that endorsement is data, not ink: the bank of first deposit's routing number, endorsement date and item sequence ride in the check detail addendum records, and the official commentary says a bank that captures an image before spraying an endorsement should apply it electronically. Your bank adds its own; what it needs from you is an image with the customer's endorsement visible on the back.
 - **A restrictive endorsement.** "For mobile deposit only at [bank]", or whatever the bank's agreement specifies. Under Reg CC 229.34(f), a bank that takes a remote deposit and gets paid indemnifies a later bank that accepted the same paper check, unless the paper carried a restrictive endorsement inconsistent with how it was deposited. The endorsement is what puts the loss on whoever deposited it twice, not on you.
 - **Duplicate detection across every deposit you've ever taken.** The same check scanned twice, by two employees, or by one customer at two properties, is the most common RDC loss. Key on routing number, account number, serial number and amount, and keep the keys forever, not for a rolling window. Duplicates at other institutions you can't see; that's what the indemnity and return reason Y (duplicate presentment) are for.
 - **The paper has a lifecycle.** Mark it as processed when scanned so it can't be scanned again, keep it securely for the period your bank agreement requires, then destroy it. A drawer of uncashed originals in an office is a second deposit waiting to happen.
@@ -127,6 +128,7 @@ Some payers can't be moved off checks, and in rent the law sometimes protects th
 - [12 CFR 229.51: Substitute checks](https://www.law.cornell.edu/cfr/text/12/229.51), legal equivalence and the required legend
 - [UCC 4-301](https://www.law.cornell.edu/ucc/4/4-301) and [UCC 4-406](https://www.law.cornell.edu/ucc/4/4-406), the midnight deadline and the drawer's one year to report forgery or alteration
 - [12 CFR 1005.3](https://www.law.cornell.edu/cfr/text/12/1005.3), check conversion as an electronic fund transfer and the required notice
+- [12 CFR 229.35: Indorsements](https://www.law.cornell.edu/cfr/text/12/229.35), bank indorsement standards for paper, substitute and electronic checks
 
 **Reference**
 
@@ -140,6 +142,7 @@ Some payers can't be moved off checks, and in rent the law sometimes protects th
 - [FinCEN: Analysis of check fraud related to mail theft](https://www.fincen.gov/news/news-releases/fincen-issues-depth-analysis-check-fraud-related-mail-theft), $688 million in six months and how stolen checks are used
 - [Nacha: AFP survey on check fraud](https://www.nacha.org/news/afp-survey-businesses-may-be-misled-risks-check-fraud), 63% of organizations hit in 2024
 - [California Civil Code 1947.3](https://california.public.law/codes/ca_civ_code_section_1947.3), landlords must accept a non-cash, non-electronic payment
+- [Federal Reserve: Request for comment on the future of check services](https://www.federalreserve.gov/newsevents/pressreleases/other20251204b.htm), the December 2025 options, from investing to winding down
 
 **In practice**
 

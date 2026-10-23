@@ -22,6 +22,8 @@ Every method trades cost, speed and finality differently, and the vendor's prefe
 | **RTP or FedNow** | Seconds | Immediately; irrevocable | Network and bank fees | Usually nothing |
 | **Push to card** | Seconds to 30 minutes | Immediately; reversible only for processing errors | Per-payout fees | Usually nothing |
 
+![One approved payable fans out to five payment methods: ACH credit arrives next day and can still return; a virtual card settles when the vendor charges it and expires if unused; a check takes days and must be voided before reissue; a wire and RTP or FedNow arrive the same day and are final with no return path.](/diagrams/vendor-payouts.svg "One payable, one successful disbursement. Each rail has its own timing and its own way to fail, and a new attempt starts only after the last one is definitively dead.")
+
 My default is ACH: cheap, universal and carrying remittance data, with the mechanics in [ACH & Bank Transfers](/docs/industries/payments/ach). Virtual cards come next, where the vendor accepts them, then checks as the fallback for vendors who won't enroll, and instant rails for the payments where speed is worth paying for. Wires are for the rare large or urgent payment, and they get the strictest controls, because a wire sent to a fraudster is gone.
 
 Instant rails changed the calculation for urgent payouts. RTP and FedNow both allow up to $10 million per payment ([ACH & Bank Transfers](/docs/industries/payments/ach#the-alternatives) has the details), but they share the wire's property that matters most here: there's no return path. The speed that pays a contractor tonight also pays an impostor tonight.
@@ -34,6 +36,7 @@ The rebate isn't free money. It comes out of [interchange](/docs/industries/paym
 
 - **Ask, don't assume.** Enrollment records whether a vendor accepts card, and at what price. Sending a card to a vendor that runs it with a 3% fee is worse for the payer than ACH.
 - **Deliver the card number like the card number it is.** It's cardholder data. Either the vendor retrieves it from a portal run by the issuer, or the issuer charges the vendor's terminal directly, and your systems hold a token, never the number ([Sensitive Data](/docs/payments/sensitive-data)).
+- **Single-use or standing.** Most payables cards are single-use, issued for one invoice and amount. Some vendors are paid often enough to justify a standing card per vendor, with its own spending limits, usage caps and merchant restrictions; Payabli calls those ghost cards.
 - **Expire and fall back.** A card the vendor never charges is an unpaid invoice. Track issued, authorized, settled and expired, and when it expires, pay by another method rather than letting the invoice age.
 
 ## Push to Card
@@ -73,7 +76,7 @@ So bank detail changes are the most carefully controlled operation in the system
 - **Hold the first payment.** The first payment to new details waits, or needs a second approval, and the old contact gets a notice that the details changed. A legitimate vendor shrugs at a short delay; a fraud gets caught while the money is still home.
 - **Separate duties.** The person who changes vendor details can't approve payments to that vendor, and large payments need two approvers.
 
-The ACH network now pushes the same way. Nacha's 2026 fraud monitoring rules require ODFIs and non-consumer originators to monitor their entries, credits included, for payments sent under false pretenses, which is exactly what a redirected vendor payment is. The largest came under the rule in March 2026 and everyone else in June ([ACH & Bank Transfers](/docs/industries/payments/ach#the-rules-you-inherit)).
+The ACH network now pushes the same way. Nacha's 2026 fraud monitoring rules require ODFIs and non-consumer originators to monitor their entries, credits included, for payments sent under false pretenses, which is exactly what a redirected vendor payment is. All ODFIs and the largest originators came under the rule on March 20, 2026, and everyone else in June ([ACH & Bank Transfers](/docs/industries/payments/ach#the-rules-you-inherit)).
 
 ## Funding: Whose Money, and When
 
@@ -83,9 +86,13 @@ Someone has to fund a payout before it leaves, and each model moves risk somewhe
 - **Pre-funded balance.** The payer funds a balance, and payouts draw it down. No timing risk, but you're now holding the payer's money until it's paid out.
 - **Pay first, collect later.** Float or credit. That's lending, with credit risk and its own regulation.
 
-Holding funds for others between payer and payee is where [money transmission](/docs/industries/payments/payments-rulebook) comes in. Whether a payables product needs licenses, or fits an exemption such as acting as the payer's agent with funds in accounts its bank controls, depends on the actual flow of funds and the state. That's a question for counsel, decided before the ledger is designed, because the answer decides which accounts the money sits in.
+Holding funds for others between payer and payee is where [money transmission](/docs/industries/payments/becoming-a-payment-provider#holding-other-people-s-money) comes in. Whether a payables product needs licenses, or fits an exemption such as acting as the payer's agent with funds in accounts its bank controls, depends on the actual flow of funds and the state. That's a question for counsel, decided before the ledger is designed, because the answer decides which accounts the money sits in.
 
 Whatever the model, the ledger enforces one rule: never disburse more than the payer has funded and you've reserved. A payable moves through **approved**, **funded** and **paid**, and the funding is a ledger entry, not an assumption.
+
+## Bills Before Payouts
+
+A payout starts as a **bill**: what a vendor says it's owed, entered by hand, imported, or read from an invoice. The bill has its own lifecycle before any money moves: entered, sent for approval, partially approved, approved or rejected, then in transit, partially paid and paid. Approval is where the controls live. Thresholds add approvers as amounts grow, the person who entered a bill can't approve it, and a bill to a vendor whose bank details changed recently waits for the checks in the next section. Only an approved bill becomes a payable, and only a payable becomes a payout, so every dollar out traces back through an approval to an invoice.
 
 ## A Payout Is a State Machine
 
@@ -99,8 +106,6 @@ The payable is the business object; each attempt to pay it is a disbursement on 
 The payable is paid when one disbursement succeeds and stays successful, and the rules from [Payment States & Ledgers](/docs/payments/payment-states) apply: explicit transitions, terminal states that don't move, corrections as new entries.
 
 The rule that matters most is that **a payable is paid once**. Every disbursement is created with an [idempotency key](/docs/payments/idempotency) derived from the payable and the attempt, so a retry after a timeout finds the original instead of creating a second. A new attempt on a different method is allowed only after the previous one is definitively dead: the ACH returned, the card expired unused, the check void confirmed by the bank. "We haven't heard back" is not dead.
-
-![One approved payable fans out to five payment methods: ACH credit arrives next day and can still return; a virtual card settles when the vendor charges it and expires if unused; a check takes days and must be voided before reissue; a wire and RTP or FedNow arrive the same day and are final with no return path.](/diagrams/vendor-payouts.svg "One payable, one successful disbursement. Each rail has its own timing and its own way to fail, and a new attempt starts only after the last one is definitively dead.")
 
 ## Remittance and Reconciliation
 
@@ -118,6 +123,16 @@ Paying vendors in the US makes the payer an information reporter, and the paymen
 - **1099-K, not 1099-NEC, for card payments.** Payments made by credit or payment card, and third-party network transactions, are reported on Form 1099-K by the payment settlement entity, and not by the payer on 1099-NEC or 1099-MISC.
 
 That last rule means the tax totals depend on the method, so track totals per vendor, per year, per method. A vendor paid partly by ACH and partly by virtual card gets a 1099-NEC for the ACH portion only.
+
+## What This Means for the System You Build
+
+- **Bills, approvals and payables as separate records,** so every payout traces to an approved invoice.
+- **One payable, one successful disbursement,** with a new attempt only after the last is definitively dead.
+- **Out-of-band verification and a first-payment hold** on any changed bank account or card.
+- **Separation of duties** between entering, approving and releasing.
+- **Funding recorded as a ledger entry before disbursement.**
+- **Positive pay, void-before-reissue,** and outstanding checks aging toward escheatment.
+- **Remittance data on the rail,** and 1099 totals per vendor, year and method.
 
 ## References
 
@@ -142,3 +157,5 @@ That last rule means the tax totals depend on the method, so track totals per ve
 - [Stripe: Instant Payouts](https://docs.stripe.com/payouts/instant-payouts), limits and timing for payouts to debit cards
 - [Lob: Tracking your mail](https://help.lob.com/print-and-mail/getting-data-and-results/tracking-your-mail), print-and-mail tracking events by Intelligent Mail barcode
 - [FBI: 2025 Internet Crime Report (PDF)](https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf), 24,768 business email compromise complaints and $3.05 billion in reported losses
+- [Payabli: Pay Out status reference](https://docs.payabli.com/guides/pay-out-status-reference.md), bill, payout and batch lifecycles
+- [Payabli: Payables cards](https://docs.payabli.com/guides/pay-out-cards-overview.md), single-use and multi-use vendor cards

@@ -3,14 +3,14 @@ title = "Payments for Software Platforms"
 nav_title = "Software Platforms"
 description = "Embedded payments for vertical software: referral, reseller, managed and registered payfac models, the tenant hierarchy, fund splits, 1099-K and support."
 category = "Payments Industry"
-order = 1421
+order = 1420
 part = "Running a Provider"
 tags = ["payments", "platforms", "payfac", "multi-tenancy", "embedded-payments"]
 +++
 
 A vertical software company, building for gyms, clinics, property managers or school districts, sits where its customers' money moves: invoices, memberships, rent, tuition. Adding payments to that software is the most common way such companies grow revenue without adding customers. The platform earns a share of every dollar processed. Customers who run their payments through the product rarely leave it, and the payment data makes the rest of the product better: who paid late, which locations grow, what to offer next.
 
-It's also where a software company turns into a financial services company, partly or completely, depending on the model. This page is how I'd reason about that choice and what each model asks of engineering. [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) is the far end of the road; most platforms should know where it leads and stop well short of it.
+It's also where a software company turns into a financial services company, partly or completely, depending on the model. This chapter is how I'd reason about that choice and what each model asks of engineering. [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) is the far end of the road; most platforms should know where it leads and stop well short of it.
 
 ## Four Ways In
 
@@ -25,19 +25,28 @@ The question that separates the models is the same one that separates payment pr
 
 Each step down the table buys margin and control with risk and work. A referral partner never sees a chargeback. A registered payfac owns every sub-merchant's losses, its own PCI assessment as a service provider, its own underwriting team and the capital to absorb mistakes, with the requirements in [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) and the rules in [The Payments Rulebook](/docs/industries/payments/payments-rulebook).
 
-Managed payfac, sometimes called payfac-as-a-service, is where most vertical platforms land. The provider is the payment facilitator of record, registered with the networks and holding the sponsor relationship. The platform gets a white-labeled product, a revenue share, and as much of the experience as it wants to build. Stripe Connect's legacy account types show the dial plainly: on Express and Custom accounts the platform carries fraud and dispute liability, and on Standard accounts using direct charges the connected account does. The more the platform hides the provider, the more of the provider's job, and loss, it takes on.
+Managed payfac, sometimes called payfac-as-a-service, is where most vertical platforms land. The provider is the payment facilitator of record, registered with the networks and holding the sponsor relationship. The platform gets a white-labeled product, a revenue share, and as much of the experience as it wants to build. Stripe Connect shows the dial plainly, in its legacy account types and in the controller properties that now replace them: on Express and Custom accounts the platform carries fraud and dispute liability, and on Standard accounts using direct charges the connected account does. The more the platform hides the provider, the more of the provider's job, and loss, it takes on.
 
 My rule: go as far down as your risk team and balance sheet can actually support, not as far as the margin is tempting. The margin on a registered payfac only exists after underwriting, monitoring, chargeback losses and compliance are paid for, and a platform that's good at gym software isn't automatically good at any of those.
 
+## Where the Money Goes
+
+The platform earns from payments in one of two ways, and they have different engineering shapes:
+
+- **A fee taken per transaction.** An application or platform fee is deducted from each payment before the merchant's share settles. It's immediate and simple to explain, and it's a [separate ledger entry](/docs/industries/payments/payouts-and-settlement#fees-are-separate-entries), never netted silently into the merchant's amount. Some merchants want gross settlement instead, with fees collected afterward ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#collecting-your-own-fees)).
+- **A revenue share paid later.** The provider pays the platform a share of the margin it earned, monthly, as residuals. The platform has to reconcile that statement against its own records of volume and pricing, which it can only do if it records both.
+
+The question underneath both is whether the platform ever **holds** the money. If customer payments land in the platform's own bank account and the platform then pays its merchants, it's receiving and transmitting other people's money, which is [money transmission](/docs/industries/payments/becoming-a-payment-provider#holding-other-people-s-money) unless an exemption applies. The structure that avoids the question is the one in the diagram: the provider settles net funds directly to each merchant's bank, and the platform's cut arrives as a fee or a residual. Design the funds flow first, with counsel, and the ledger second.
+
 ## The Hierarchy
 
-Every embedded payments product is a tree. The provider at the top, then the platform, often an organization or partner level (a franchise, a management company, a reseller of the platform), then the merchants that actually take payments, sometimes with locations or terminals below them. In network terms, the merchants are sub-merchants: Mastercard's rules call them sponsored merchants of the payment facilitator, and require the acquirer to screen and monitor them like any other merchant.
+Every embedded payments product is a tree. The provider at the top, then the platform, often an organization or partner level (a franchise, a management company, a reseller of the platform), then the merchants that actually take payments, sometimes with locations or terminals below them. In network terms, the merchants are sub-merchants: Mastercard's rules call them sponsored merchants of the payment facilitator, make the acquirer responsible for both, and require a sponsored merchant above $10 million a year in Mastercard volume to contract with the acquirer directly.
 
 ![A tree of tenants: the payment provider at the top, which underwrites, settles and holds the risk; one software platform below it; two organizations below the platform; and four merchants below the organizations. Configuration such as pricing, fees and permissions inherits down the tree, reporting rolls up it, and the provider settles net funds directly to each merchant's bank.](/diagrams/software-platforms.svg "Configuration flows down, reporting flows up, and money skips the middle. The provider settles each merchant directly, so the platform and its organizations never hold the funds.")
 
 Three things move through that tree, and each needs an explicit model:
 
-- **Configuration inherits down.** Pricing, fee schedules, payout timing, allowed payment methods and risk limits are set at the platform or organization and overridden only where a merchant needs something different. Store overrides explicitly and resolve the effective value by walking up the tree, never by copying parent values into children. Copies drift: change the organization's pricing and half its merchants keep the old price.
+- **Configuration inherits down.** Pricing, fee schedules, payout timing, allowed payment methods and risk limits are set at the platform or organization and overridden only where a merchant needs something different. Providers expose the same shape: Payabli's organizations nest sub-organizations and merchants ("paypoints") without limit, and billing, risk and funding settings cascade down unless overridden. Store overrides explicitly and resolve the effective value by walking up the tree, never by copying parent values into children. Copies drift: change the organization's pricing and half its merchants keep the old price.
 - **Permissions are scoped to a node.** A franchise owner sees all their locations; a location manager sees one; platform support sees everything, with every access logged. This is [multi-tenancy](/docs/architecture/multi-tenancy) with the tenant boundary at every level of the tree, enforced in the data layer, not the UI.
 - **Reporting rolls up.** Every report a merchant gets must sum exactly into its organization's report and the platform's. That only works if every number comes from the same ledger entries, never from a separate reporting pipeline that recomputes fees.
 
@@ -48,6 +57,7 @@ A merchant in the tree often needs more than one merchant account, because it co
 - **The category code belongs to the account.** Visa's rules make the acquirer assign each merchant outlet the merchant category code (MCC) that "most accurately describes its business", and require separate codes when separate lines of business have separate merchant agreements, trade under different names, or sell through e-commerce sites that qualify for different codes. Otherwise the code of the highest-volume line covers everything. The codes that matter for bill payment: 6513 for real estate agents and managers (rent), 6300 for insurance premiums, 4900 for utilities, 9311 for tax payments.
 - **The code changes the money and the rules.** Visa runs interchange programs specific to utilities, real estate, insurance and government payments ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing)); its service fee is open only to government, utility and education codes; and its Rent Payment Program is open only to 6513 merchants ([Surcharging & Fees](/docs/industries/payments/surcharging-and-fees)). Running insurance premiums through a rent merchant account isn't a shortcut, it's miscoding the transactions.
 - **Model accounts as children of the merchant.** Each merchant account carries its code, processor credentials, statement descriptor, pricing and settlement bank account, and settles and reconciles on its own. A payment is routed to an account by what it pays for, the charge type, not by which merchant it belongs to, and reporting rolls the accounts back up to the merchant. Rent and security deposits often have to land in a trust account, separate from the operating account fees go to, so the settlement account per merchant account is a compliance requirement, not a preference.
+- **Moving money between accounts is a real move.** A rent payment that landed in the insurance account, or one owner's trust account instead of another's, isn't fixed by relabeling. Before payout it's a ledger transfer plus a movement of funds between settlement accounts; after payout it's a clawback from one and a payout to the other. Trust-account rules may forbid netting the two, 1099-K reporting follows the account that keeps the money, and refunds and disputes still point at the original payment ([Payment States & Ledgers](/docs/payments/payment-states#append-only-records)).
 - **A country is another account.** A merchant's Canadian locations need a Canadian merchant account and acquirer ([Payments in Canada](/docs/industries/payments/canada)).
 
 ## Onboarding Inside the Product
@@ -60,19 +70,12 @@ What prefill can't do is decide. Underwriting belongs to whoever holds the risk,
 
 A platform chooses how card data reaches the provider, and with it its own [PCI scope](/docs/compliance/pci-dss):
 
-- **Embedded components or hosted fields:** the provider's iframe collects the card, and the platform's servers only see tokens. The platform stays at the simplest SAQ, and the provider maintains the payment form as the networks change their rules.
+- **Embedded components or hosted fields:** the provider's iframe collects the card, and the platform's servers only see tokens. Its scope shrinks to the pages that embed the fields, but because those pages take payments for its merchants, the platform is usually a service provider to them and validates on SAQ D for Service Providers rather than a merchant's SAQ A ([PCI DSS](/docs/compliance/pci-dss#merchant-or-service-provider)): a long questionnaire over a small environment. The provider also maintains the payment form as the networks change their rules.
 - **Raw API with card numbers:** the platform's servers handle card data, and the platform is in scope for the whole standard.
 
-There's almost never a reason for a software platform to touch card numbers. Use the components, style them to match, and spend the engineering on the workflow around the payment instead of the payment form itself.
+There's almost never a reason for a software platform to touch card numbers. Use the components, style them to match, and spend the engineering on the workflow around the payment instead of the payment form itself. Providers ship them in a few shapes: an embedded form for one payment method, a wallet button, a virtual terminal for staff, a hosted page reached by a link, and increasingly no-code builders for pages and reports; Payabli's embedded components, for example, run in an iframe authorized by a public token and report declines through the same callback as approvals, so the integration checks the result, not just the callback.
 
-## Where the Money Goes
-
-The platform earns from payments in one of two ways, and they have different engineering shapes:
-
-- **A fee taken per transaction.** An application or platform fee is deducted from each payment before the merchant's share settles. It's immediate and simple to explain, and it's a [separate ledger entry](/docs/industries/payments/payouts-and-settlement#fees-are-separate-entries), never netted silently into the merchant's amount.
-- **A revenue share paid later.** The provider pays the platform a share of the margin it earned, monthly, as residuals. The platform has to reconcile that statement against its own records of volume and pricing, which it can only do if it records both.
-
-The question underneath both is whether the platform ever **holds** the money. If customer payments land in the platform's own bank account and the platform then pays its merchants, it's receiving and transmitting other people's money, which is [money transmission](/docs/industries/payments/payments-rulebook) unless an exemption applies. The structure that avoids the question is the one in the diagram: the provider settles net funds directly to each merchant's bank, and the platform's cut arrives as a fee or a residual. Design the funds flow first, with counsel, and the ledger second.
+Ask before you sign who owns the stored cards if you leave. A provider's tokens stay with the provider unless the contract gives you an export to another PCI DSS Level 1 processor ([Processor Routing](/docs/industries/payments/processor-routing#tokens-decide-how-free-you-are)), and a platform with years of saved cards is only as portable as that clause.
 
 ## Pricing Per Merchant
 
@@ -102,6 +105,17 @@ When a cardholder disputes a charge, three parties have a stake. The cardholder 
 
 The same goes for every support question about money. "Where's my payout?" has to be answerable by the platform's support team without escalating to the provider, which means the platform's tools show the same ledger states, return codes and settlement dates the provider sees. A support team that can only say "we'll ask our payments partner" is a platform that hasn't finished embedding payments.
 
+## What This Means for the System You Build
+
+- **Choose the model your risk team and balance sheet can carry,** and design the funds flow with counsel before the ledger, so the platform never holds merchants' money by accident.
+- **Model the tenant tree:** configuration resolved by walking up it, permissions scoped to a node in the data layer, every report summed from the same ledger entries.
+- **One merchant account per line of business,** each with its own category code, credentials, descriptor, pricing and settlement account, with payments routed by charge type.
+- **Treat the provider's merchant status as authoritative,** and show what's due inside your product.
+- **Keep card numbers out with the provider's components,** and know who owns the stored cards if you leave.
+- **Version fee schedules with effective dates,** and store every fee's inputs.
+- **Route events by merchant before any logic runs,** and handle each one idempotently.
+- **Give support the provider's view:** ledger states, payout dates, return codes and dispute deadlines.
+
 ## References
 
 **Specifications**
@@ -111,10 +125,13 @@ The same goes for every support question about money. "Where's my payout?" has t
 **Reference**
 
 - [IRS: Understanding Your Form 1099-K](https://www.irs.gov/businesses/understanding-your-form-1099-k), no threshold for card payments, and the threshold for payment apps and marketplaces
-- [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), sponsored merchants of payment facilitators and the acquirer's duty to screen and monitor them
+- [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), screening procedures the payment facilitator rules rely on, and the acquirer's duty to screen and monitor them
 
 - [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), MCC definitions and assigning codes to merchants with several lines of business
 
 **In practice**
 
 - [Stripe: Connected Account Types](https://docs.stripe.com/connect/accounts), how liability for fraud and disputes, onboarding and support shift between provider and platform by account type
+- [Payabli: Organizations](https://docs.payabli.com/guides/pay-ops-organizations-overview.md), a nested organization and merchant hierarchy with settings that inherit unless overridden
+- [Payabli: Embedded components](https://docs.payabli.com/guides/pay-in-components-overview.md), iframe components authorized by a public token
+- [Stripe: Migrate to controller properties](https://docs.stripe.com/connect/migrate-to-controller-properties), who carries losses, collects requirements and pays fees, as settings instead of account types

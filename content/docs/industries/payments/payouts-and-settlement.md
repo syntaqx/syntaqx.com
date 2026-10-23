@@ -8,54 +8,56 @@ aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
 +++
 
-[Disputes](/docs/industries/payments/disputes-and-chargebacks), refunds and [fees](/docs/industries/payments/surcharging-and-fees) are why money can't leave the platform the moment it arrives. A customer pays on Monday and the merchant sees "succeeded" on Monday, but the money reaches their bank on Wednesday, or the following week, or for a new merchant two weeks later. Everything in between is settlement and payouts, the source of most "where's my money?" tickets on a payments platform, and the answer has to be computable from records for every cent.
+Everything so far brings money in; this part sends it out, starting with the merchant's own. [Disputes](/docs/industries/payments/disputes-and-chargebacks) and refunds are why it can't leave the moment it arrives: both take money back after the sale, and the merchant's balance has to be there to pay them. A customer pays on Monday and the merchant sees "succeeded" on Monday, but the money reaches their bank on Wednesday, or the following week, or for a new merchant two weeks later. Everything in between is settlement and payouts, the source of most "where's my money?" tickets on a payments platform, and the answer has to be computable from records for every cent.
 
 ## The Stages
 
-"Paid" means different things at different stages, and conflating them is the root of most confusion:
-
-| Stage | What it means | Money moved? |
-| ----- | ------------- | ------------ |
-| **Authorization** | The issuer approved the amount and placed a hold on the customer's card. | No |
-| **Capture** | The merchant claims the authorized amount. | Not yet |
-| **Clearing** | Captured transactions are submitted to the network in a batch and matched with the issuer. | Being arranged |
-| **Settlement** | The issuer pays the acquirer or processor, net of [interchange](/docs/industries/payments/interchange-and-pricing) and network fees. | Yes, to the processor |
-| **Payout** | The processor or platform pays the merchant's bank account from their balance. | Yes, to the merchant |
-
-Each stage is a separate fact with its own timestamp, and the API says which one a balance reflects. A merchant's balance has at least two buckets, **pending** (captured, not yet settled) and **available** (settled, can be paid out); one number labeled "balance" invites the ticket about why it can't be paid out.
+[How Card Payments Work](/docs/industries/payments/card-payments#five-events-not-one-payment) split a payment into five events: authorization, capture, clearing, settlement and funding. This chapter is the last of them, funding, which a platform calls a **payout**, and the source of most confusion is conflating it with the others. Each is a separate fact with its own timestamp, and the API says which one a balance reflects. A merchant's balance has at least two buckets, **pending** (captured, not yet settled) and **available** (settled, can be paid out); one number labeled "balance" invites the ticket about why it can't be paid out.
 
 ## Settlement Timing
 
-Funds become available on a **rolling** schedule, written T+N: money captured on day T is available N business days later. Two business days is common for established US card accounts, but it varies by country and payment method. Stripe's published timings, for example, run from 2 business days in the United States to 7 calendar days for a first payout in several countries, and bank debits settle more slowly than cards.
+Funds become available on a **rolling** schedule, written T+N: money captured on day T is available N business days later. Two business days is common for established US card accounts, but it varies by country and payment method. Stripe's published standard timing, for example, is 2 business days in the US and longer elsewhere, bank debits settle more slowly than cards, and a first payout waits longer still (below).
 
 Rolling beats "everything on Friday": each day's volume becomes available on its own day, so cash flow tracks sales, and a problem with one batch affects one day.
 
 ## Fees Are Separate Entries
 
-A $50.00 charge with a 2.9% plus 30 cent fee shouldn't be recorded as a $48.25 payment. It's a $50.00 payment and a $1.75 fee, posted together in one [ledger transaction](/docs/payments/payment-states):
+A $50.00 charge with a 2.9% plus 30 cent fee shouldn't be recorded as a $48.25 payment. It's a $50.00 payment and a $1.75 fee, posted together in one [ledger transaction](/docs/payments/payment-states#double-entry-ledger):
 
 | Account | Amount |
 | ------- | ------ |
 | `customer_receivable` | `-5000` |
 | `merchant_balance` | `+4825` |
-| `platform_fees` | `+175` |
+| `processing_costs` | `+110` |
+| `platform_revenue` | `+65` |
+
+The $1.75 the merchant pays is $1.10 the processor charged the platform and $0.65 the platform keeps.
 
 Recording only the net loses what you'll need later: a partial refund needs the gross, tax reporting needs gross volume, a fee dispute needs the rate applied to the gross, and the processor's fees and the platform's markup are two entries to two different accounts.
 
-Platforms that split a payment between several parties (a marketplace paying a seller and a delivery driver, say) post every share as its own entry in the same transaction. The rule from [Money & Amounts](/docs/payments/money) still applies: the shares must sum exactly to the gross, with any rounding remainder assigned deliberately.
+### Collecting Your Own Fees
+
+The platform collects its fees one of two ways. **Net settlement** deducts fees from each payout, so the merchant receives $48.25 and the fee never has to be collected; it's simple, and it's the default for most platforms. **Gross settlement** pays the merchant the full $50.00 and collects fees separately, usually as one monthly debit from the merchant's bank account, which some businesses require so deposits match their sales exactly (property managers holding rent in trust accounts often do). Gross settlement turns fees into receivables that can fail: the monthly debit can come back insufficient or unauthorized, and then it's a collection, handled like the negative balances below. The same ledger serves both; only the payout instruction differs. These are the same words [Treasury](/docs/industries/payments/treasury#funding-the-day) uses for how the acquirer pays you; here they're how you pay the merchant, and the two choices are independent. Fees the platform charges merchants beyond processing (monthly service fees, return and chargeback fees, failed-authorization fees) are entries of their own types, never folded into the processing fee.
+
+Platforms that [split a payment](/docs/industries/payments/software-platforms#where-the-money-goes) between several parties (a marketplace paying a seller and a delivery driver, say) post every share as its own entry in the same transaction. The rule from [Money & Amounts](/docs/payments/money) still applies: the shares must sum exactly to the gross, with any rounding remainder assigned deliberately.
 
 ## Payout Schedules, Holds and Reserves
 
-How soon a merchant can be paid is a risk decision, not a convenience setting: once money leaves the platform, getting it back depends on the merchant's goodwill and bank balance, and disputes arrive up to 120 days later.
+How soon a merchant can be paid is a risk decision, not a convenience setting: once money leaves the platform, getting it back depends on the merchant's goodwill and bank balance, and disputes arrive 120 days later, or more for anything paid in advance.
 
 - **New merchants wait longer.** A first payout delayed a week or two gives fraud and disputes time to surface; it stops the merchant who signs up with stolen cards and pays themselves out the same day. Stripe typically schedules a new account's first payout 7 to 14 days after its first live payment.
 - **Rolling reserves** hold back a percentage of each day's volume for a fixed period, then release it. They're the standard tool for merchants whose risk is real but acceptable: high ticket sizes, delivery months after payment, elevated dispute rates. The reserve exists to pay the disputes and refunds that arrive after the sales that caused them.
-- **The payment method sets the clock.** Card money can come back as a dispute for months, an ACH debit for 60 days ([ACH & Bank Transfers](/docs/industries/payments/ach)), a Canadian pre-authorized debit for 90 ([Payments in Canada](/docs/industries/payments/canada)), and a check through warranty claims long after it cleared ([Accepting Checks](/docs/industries/payments/checks)). Cash confirmed by a retail network doesn't come back at all ([Cash Payments](/docs/industries/payments/cash-payments)). Availability is computed per payment from its method, not per merchant.
-- **Holds are explicit and explained.** Every held amount is a ledger entry into a `reserves` or `holds` account with a release date, never just a smaller "available" number. A merchant who can see "$1,200 held until 12 March, rolling 10% reserve" is a merchant who doesn't open a support ticket.
+- **The payment method sets the clock.** Card money can come back as a dispute for months, a consumer ACH debit for 60 days and a business one for two banking days ([ACH & Bank Transfers](/docs/industries/payments/ach)), a Canadian pre-authorized debit for 90 ([Payments in Canada](/docs/industries/payments/canada)), and a check through warranty claims long after it cleared ([Accepting Checks](/docs/industries/payments/checks)). Cash confirmed by a retail network doesn't come back at all ([Cash Payments](/docs/industries/payments/cash-payments)). Availability is computed per payment from its method, not per merchant.
+- **Instant payouts are a different product.** A payout to a debit card or over RTP or FedNow is final on arrival ([Vendor Payouts](/docs/industries/payments/vendor-payouts#push-to-card)), so it's priced and limited like credit, and paying before settlement lands is a [treasury decision](/docs/industries/payments/treasury#funding-the-day).
+- **Holds are explicit and explained.** Every held amount is a ledger entry into a `reserves` or `holds` account with a release date, never just a smaller "available" number. A merchant who can see "$1,200 held until March 12, rolling 10% reserve" is a merchant who doesn't open a support ticket.
 
 ### Negative Balances
 
 Refunds and lost disputes can take a merchant's balance below zero, and on a platform someone has to cover it. Options, in order: offset against the merchant's future payments, debit their bank account (which requires authorization to debit, collected during [onboarding](/docs/industries/payments/merchant-onboarding)), and finally, absorb it from the platform's own funds. Decide the order up front and tell merchants, because the alternative is discovering the policy in the middle of a loss. While a balance is negative, payouts stop.
+
+### Clawbacks
+
+The bank debit is the part that fails. Pulling funds back from a merchant who's already been paid, after a customer's payment returned or a dispute was lost, is an ACH debit to a business account: a CCD entry, which needs the merchant's agreement to debit (collected at onboarding), and which the merchant's bank can return as unauthorized (R29) within two banking days; a sole proprietor's personal account makes it a PPD debit instead, returnable as unauthorized for 60 days. A clawback that comes back is now a debt with no automatic way to collect it, so its states continue: offset against future payouts, retry within the [reinitiation rules](/docs/industries/payments/ach#returns-when-money-is-really-yours) if it returned for insufficient funds, then collections, and finally termination, with a report to Mastercard's MATCH list where the cause qualifies, and the loss written off by the platform as [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) describes. Track every clawback as its own payout-in-reverse, linked to the payment that caused it, so a merchant can see why money left their account.
 
 ## Payout Failures
 
@@ -65,14 +67,16 @@ In the US, ACH payouts can be **returned** after they appear to succeed, typical
 
 | Code | Meaning | What to do |
 | ---- | ------- | ---------- |
-| R01 | Insufficient funds (on a debit) | Retry once funds are likely, or collect another way |
+| R16 | Account frozen | Stop; it may be a sanctions hit |
 | R02 | Account closed | Stop paying out, ask the merchant for a new account |
 | R03 | No account, or unable to locate | Bank details are wrong; ask for new ones |
 | R04 | Invalid account number | Same as R03 |
 
 So a payout's state machine doesn't end at `paid`. It goes `pending` → `in_transit` → `paid`, and from `paid` it can still become `failed` when the return arrives. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
 
-Bank details are where fraud concentrates too: a changed payout account shortly before a large payout is the classic account-takeover cash-out, so a change re-verifies the account and can reasonably delay the next payout ([Merchant Onboarding](/docs/industries/payments/merchant-onboarding)).
+A changed payout account is where takeovers cash out, so a change re-verifies the account and holds the next payout, with the controls in [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account).
+
+**Unclaimed balances** have an owner too. A merchant who stops processing and never updates a closed bank account leaves money on the platform, and after the state's dormancy period it's unclaimed property, owed to the state with notice to the merchant first, the same rule [Vendor Payouts](/docs/industries/payments/vendor-payouts) describes for uncashed checks.
 
 ## Idempotent Payouts
 
@@ -80,7 +84,16 @@ A payout sent twice is money that's very hard to get back. Payouts carry an [ide
 
 ## Reconciliation
 
-Every payout has to be explained three ways: by your ledger (which balance entries it pays), by the processor's settlement report (which transactions it settles), and by the merchant's bank deposit (what actually arrived). Reconcile all three daily, as [Payment States & Ledgers](/docs/payments/payment-states) describes. The question a merchant asks, "which payments make up this $3,812.40 deposit?", should have an answer you can produce from records in one query: each payout lists the balance transactions it includes.
+Every payout has to be explained three ways: by your ledger (which balance entries it pays), by the processor's settlement report (which transactions it settles), and by the merchant's bank deposit (what actually arrived). Reconcile all three daily, as [Payment States & Ledgers](/docs/payments/payment-states#reconciliation) describes. The question a merchant asks, "which payments make up this $3,812.40 deposit?", should have an answer you can produce from records in one query: each payout lists the balance transactions it includes.
+
+## What This Means for the System You Build
+
+- **Pending and available balances,** each tied to the event it reflects.
+- **Fees and every party's share as separate ledger entries,** with the platform's own fees collected net or gross by choice.
+- **Availability computed per payment from its method,** and holds as dated ledger entries.
+- **A recovery order for negative balances and clawbacks,** decided and published before the first loss.
+- **Payout states that continue past `paid`,** because a payout can still be returned.
+- **Deterministic payout keys,** and every payout listing the balance transactions it pays.
 
 ## References
 

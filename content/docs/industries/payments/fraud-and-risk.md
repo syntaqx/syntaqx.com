@@ -8,13 +8,13 @@ aliases = ["payments/fraud-and-risk"]
 tags = ["payments", "fraud", "risk", "security"]
 +++
 
-[3-D Secure](/docs/industries/payments/strong-customer-authentication) and [stored credentials](/docs/industries/payments/stored-credentials) decide whether a payment can go through; fraud and risk decide whether it should. Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
+The chapters so far decide who may take payments and whether the person paying is the cardholder; fraud and risk decide whether a particular payment should go through at all. This chapter is the payer's side, stolen cards and scripted attacks: a risky merchant is [onboarding's](/docs/industries/payments/merchant-onboarding#ongoing-monitoring) problem, a fraudulent bank debit comes back as an [ACH return](/docs/industries/payments/ach#returns-when-money-is-really-yours), and a payment redirected to an impostor is in [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account). Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
 
 ## The Two Costs
 
 | Mistake | What it costs | How you see it |
 | ------- | ------------- | -------------- |
-| **Fraud approved** | The amount, the goods or service, dispute fees, time spent responding, and a dispute rate that can put you in a card network monitoring program | Disputes and early fraud warnings, weeks later |
+| **Fraud approved** | The amount, the goods or service, dispute fees, time spent responding, and a dispute rate that can put you in a [card network monitoring program](/docs/industries/payments/disputes-and-chargebacks#monitoring-programs-the-threshold-that-ends-accounts) | Disputes and early fraud warnings (the issuer's fraud reports, which count toward network ratios even with no dispute), weeks later |
 | **Legitimate customer declined** | The sale, the customer's lifetime value, support load, and trust | Almost never. A false decline looks like an abandoned checkout |
 
 The asymmetry in visibility is the trap: fraud losses arrive as itemized disputes, and false declines arrive as nothing. So measure both on purpose: track approval rates by segment, sample declined payments for manual review, and watch for customers who retry with another card after a decline (a strong sign the first decline was wrong).
@@ -74,7 +74,7 @@ A model is only as good as its labels, and fraud labels arrive late: a payment i
 
 ## When the Risk Check Fails
 
-The risk service will sometimes be slow or down. Decide in advance what a payment does then, because the decision made in an incident is always "turn it off". Failing open keeps revenue flowing and lets an attack through the gap (attackers watch for this); failing closed turns a risk-service outage into a payment outage. Neither is right everywhere. A reasonable default: fail open for low-value, low-risk segments with a fallback set of simple rules that run locally (velocity limits, blocklists, CVC must match), and fail closed or queue for review for high-value orders that can wait. Put a strict timeout on the risk call so a slow score degrades to the fallback instead of hanging checkout ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)). The same reasoning as the rate limiter applies: the protection must not become the outage.
+The risk service will sometimes be slow or down. Decide in advance what a payment does then, because the decision made in an incident is always "turn it off". Failing open keeps revenue flowing and lets an attack through the gap (attackers watch for this); failing closed turns a risk-service outage into a payment outage. Neither is right everywhere. A reasonable default: fail open for low-value, low-risk segments with a fallback set of simple rules that run locally (velocity limits, blocklists, CVC must match), and fail closed or queue for review for high-value orders that can wait. Put a strict timeout on the risk call so a slow score degrades to the fallback instead of hanging checkout ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)). The same reasoning as the [rate limiter](/docs/requests/rate-limiting) applies: the protection must not become the outage.
 
 ## Auditable Decisions
 
@@ -96,6 +96,16 @@ Every decision is recorded with what produced it:
 - **Append-only,** like the rest of the [payment record](/docs/payments/payment-states): a reviewer approving a payment adds a decision rather than overwriting the original.
 
 Backtest rule changes against stored history before shipping them. A rule that would have stopped last month's attack and 3% of last month's good customers is a bad rule that looks good in a postmortem.
+
+## What This Means for the System You Build
+
+- **Measure false declines as deliberately as fraud,** by segment, with sampled reviews of what you declined.
+- **A model score plus explicit rules,** producing four outcomes: allow, review, challenge, block.
+- **Velocity limits per card, IP, account and device** on every endpoint that tests cards, including setup and phone lines.
+- **Alerts on decline-rate spikes,** the signature of card testing.
+- **A held-out sample** so the model learns from what it would have blocked.
+- **A designed fail-open or fail-closed policy,** with a strict timeout and local fallback rules.
+- **Append-only, versioned decisions,** and rules backtested before they ship.
 
 ## References
 
