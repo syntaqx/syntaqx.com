@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Terms of Service",
-  description:
-    "The terms governing use of syntaqx.com: what you can expect from this site and what I expect from visitors. Plain language, no surprises.",
-};
+export const metadata = pageMetadata(
+  "/legal/terms",
+  "Terms of Service",
+  "The terms governing use of syntaqx.com: what you can expect from this site and what I expect from visitors. Plain language, no surprises.",
+);
 
 const lastUpdated = "September 2026";
 

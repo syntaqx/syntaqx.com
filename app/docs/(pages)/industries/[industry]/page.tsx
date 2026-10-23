@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description: industry.summary,
-    openGraph: { title, description: industry.summary, url: `/docs/industries/${industry.slug}` },
+    openGraph: { title, description: industry.summary, url: `/docs/industries/${industry.slug}`, siteName: "syntaqx", type: "website" },
   };
 }
 

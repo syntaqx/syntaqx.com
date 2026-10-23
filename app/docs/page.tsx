@@ -4,13 +4,13 @@ import { getDocsByCategory } from "@/lib/docs";
 import { industryCards } from "@/lib/industries";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Documentation",
-  description:
-    "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.",
-};
+export const metadata = pageMetadata(
+  "/docs",
+  "Documentation",
+  "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.",
+);
 
 export default function DocsPage() {
   const categories = getDocsByCategory();

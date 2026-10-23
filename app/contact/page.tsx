@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { contactChannels, contactIntro } from "@/lib/contact";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description:
-    "How to reach Chase Pierce (syntaqx): book time, connect on LinkedIn, or open an issue on GitHub for problems with syntaqx.com or its public API.",
-};
+export const metadata = pageMetadata(
+  "/contact",
+  "Contact",
+  "How to reach Chase Pierce (syntaqx): book time, connect on LinkedIn, or open an issue on GitHub for problems with syntaqx.com or its public API.",
+);
 
 export default function ContactPage() {
   return (

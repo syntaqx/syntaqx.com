@@ -5,13 +5,13 @@ import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
 import { tools, patterns, converters, type MiscTool } from "@/lib/misc-tools";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Tools & Experiments",
-  description:
-    "Browser-based developer tools, toys, and experiments built for fun: converters, generators, debuggers, and other things I found useful enough to keep.",
-};
+export const metadata = pageMetadata(
+  "/misc",
+  "Tools & Experiments",
+  "Browser-based developer tools, toys, and experiments built for fun: converters, generators, debuggers, and other things I found useful enough to keep.",
+);
 
 function ToolGrid({ items }: { items: MiscTool[] }) {
   return (

@@ -1,12 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Projects",
-  description:
-    "Open-source projects, tools, and experiments I've built and maintain, from static servers and developer utilities to the occasional community effort.",
-};
+export const metadata = pageMetadata(
+  "/projects",
+  "Projects",
+  "Open-source projects, tools, and experiments I've built and maintain, from static servers and developer utilities to the occasional community effort.",
+);
 
 interface Project {
   title: string;

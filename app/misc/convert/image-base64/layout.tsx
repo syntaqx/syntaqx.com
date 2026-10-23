@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Image / Base64 Converter",
-  description:
-    "Convert images to Base64 data URIs and decode Base64 strings back into images, entirely in your browser: no uploads, no size limits, no server.",
-};
+export const metadata = pageMetadata(
+  "/misc/convert/image-base64",
+  "Image / Base64 Converter",
+  "Convert images to Base64 data URIs and decode Base64 strings back into images, entirely in your browser: no uploads, no size limits, no server.",
+);
 
 export default function ImageBase64Layout({
   children,

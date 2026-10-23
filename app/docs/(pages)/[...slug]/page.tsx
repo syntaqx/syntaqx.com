@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...(modified && { modifiedTime: modified }),
       images: [image],
     },
-    twitter: { card: "summary_large_image", images: [image] },
+    twitter: { card: "summary_large_image", creator: "@syntaqx", images: [image] },
   };
 }
 

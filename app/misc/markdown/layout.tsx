@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Markdown Tools",
-  description:
-    "Convert HTML to Markdown with rich-text paste support, turn Markdown back into HTML, and preview it live, all running entirely in your browser.",
-};
+export const metadata = pageMetadata(
+  "/misc/markdown",
+  "Markdown Tools",
+  "Convert HTML to Markdown with rich-text paste support, turn Markdown back into HTML, and preview it live, all running entirely in your browser.",
+);
 
 export default function MarkdownLayout({
   children,
