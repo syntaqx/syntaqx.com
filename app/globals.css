@@ -279,6 +279,10 @@ body {
 }
 
 /* Scrollbar */
+/* Nav rails (the docs sidebar) scroll quietly: no bar until hovered. */
+.rail-scroll { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.rail-scroll:hover { scrollbar-color: var(--border-hover) transparent; }
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
@@ -41,22 +41,42 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
   const core = categories.filter((c) => !isIndustry(c.section));
   const industries = categories.filter((c) => isIndustry(c.section));
   const current = industries.find((c) => c.docs.some((d) => pathname === `/docs/${d.slug}`));
+  const drilled = Boolean(current && rootOn !== pathname);
+
+  // Keep the current page's link in view: deep in the book it starts below
+  // the fold. Scrolls the rail only, never the page.
+  const navRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const nav = navRef.current;
+    const rail = nav?.closest<HTMLElement>(".rail-scroll");
+    const link = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!rail || !link) return;
+    const top = link.getBoundingClientRect().top - rail.getBoundingClientRect().top + rail.scrollTop;
+    if (top < rail.scrollTop || top > rail.scrollTop + rail.clientHeight - 40) {
+      rail.scrollTop = top - rail.clientHeight / 3;
+    }
+  }, [pathname, drilled]);
 
   const docLinks = (category: DocCategory) =>
     category.docs.map((doc) => {
       const href = `/docs/${doc.slug}`;
       return (
         <li key={doc.slug}>
-          <Link href={href} onClick={onNavigate} className={linkClass(pathname === href)}>
+          <Link
+            href={href}
+            onClick={onNavigate}
+            aria-current={pathname === href ? "page" : undefined}
+            className={linkClass(pathname === href)}
+          >
             {doc.navTitle}
           </Link>
         </li>
       );
     });
 
-  if (current && rootOn !== pathname) {
+  if (current && drilled) {
     return (
-      <nav key={current.section} aria-label={current.name} className="sidebar-in-right space-y-4">
+      <nav ref={navRef} key={current.section} aria-label={current.name} className="sidebar-in-right space-y-4">
         <button
           type="button"
           onClick={() => setRootOn(pathname)}
@@ -72,7 +92,7 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
   }
 
   return (
-    <nav key="playbook" aria-label="Documentation" className={`${current ? "sidebar-in-left " : ""}space-y-7`}>
+    <nav ref={navRef} key="playbook" aria-label="Documentation" className={`${current ? "sidebar-in-left " : ""}space-y-7`}>
       {core.map((category) => (
         <Group key={category.name} title={category.name}>
           {docLinks(category)}
