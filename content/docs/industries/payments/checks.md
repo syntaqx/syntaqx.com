@@ -40,7 +40,7 @@ What the capture side owes the bank, and itself:
 - **Duplicate detection across every deposit you've ever taken.** The same check scanned twice, by two employees, or by one customer at two properties, is the most common RDC loss. Key on routing number, account number, serial number and amount, and keep the keys forever, not for a rolling window. Duplicates at other institutions you can't see; that's what the indemnity and return reason Y (duplicate presentment) are for.
 - **The paper has a lifecycle.** Mark it as processed when scanned so it can't be scanned again, keep it securely for the period your bank agreement requires, then destroy it. A drawer of uncashed originals in an office is a second deposit waiting to happen.
 
-The bank side is set out in the FFIEC's guidance on RDC risk, issued in 2009 and revised in June 2026: customer suitability reviews, deposit limits, multi-factor authentication, and monitoring for duplicates, velocity and limit breaches. Expect your bank to impose all of it on you, and build the limits and reports into the product so its review is a formality.
+The bank side is set out in the FFIEC's guidance on RDC risk, issued in 2009: customer suitability reviews, deposit limits, multi-factor authentication, and monitoring for duplicates, velocity and limit breaches. Expect your bank to impose all of it on you, and build the limits and reports into the product so its review is a formality.
 
 ## When the Money Is Available
 
