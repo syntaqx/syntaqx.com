@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { UPCOMING_INDUSTRIES } from "@/lib/industries";
 import { ArrowRight, Search, X } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 
@@ -244,6 +245,17 @@ function SectionRail({
               </div>
             );
           })}
+          <div>
+            <p className="inst mb-2.5 text-[0.55rem] text-dim">More industries</p>
+            <ul className="border-l border-border">
+              {UPCOMING_INDUSTRIES.map((name) => (
+                <li key={name} className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70">
+                  {name}
+                  <span className="inst ml-auto border border-border px-1.5 py-px text-[0.45rem] text-dim">Soon</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </nav>

@@ -3,79 +3,127 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import type { DocCategory } from "@/lib/docs";
+import { UPCOMING_INDUSTRIES, industryName, isIndustry } from "@/lib/industries";
 
 interface DocsSidebarProps {
   categories: DocCategory[];
 }
 
-export function DocsSidebar({ categories }: DocsSidebarProps) {
+const linkClass = (active: boolean) =>
+  `-ml-px flex items-center gap-2 border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
+    active
+      ? "border-accent font-semibold text-foreground"
+      : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
+  }`;
+
+function Group({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h3 className="inst mb-2.5 text-[0.55rem] text-dim">{title}</h3>
+      <ul className="border-l border-border">{children}</ul>
+    </div>
+  );
+}
+
+/**
+ * The playbook's sections, as they are. An industry volume is one row with a
+ * caret, and opening it drills the sidebar into that volume's chapters, the
+ * way Vercel's dashboard opens Settings. The back caret returns to the
+ * sections without leaving the page. Each view slides in from the side it
+ * came from.
+ */
+function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: () => void }) {
   const pathname = usePathname();
+  // The page the reader pressed "back" on; navigating anywhere resets it.
+  const [rootOn, setRootOn] = useState<string | null>(null);
+  const core = categories.filter((c) => !isIndustry(c.section));
+  const industries = categories.filter((c) => isIndustry(c.section));
+  const current = industries.find((c) => c.docs.some((d) => pathname === `/docs/${d.slug}`));
+
+  const docLinks = (category: DocCategory) =>
+    category.docs.map((doc) => {
+      const href = `/docs/${doc.slug}`;
+      return (
+        <li key={doc.slug}>
+          <Link href={href} onClick={onNavigate} className={linkClass(pathname === href)}>
+            {doc.navTitle}
+          </Link>
+        </li>
+      );
+    });
+
+  if (current && rootOn !== pathname) {
+    return (
+      <nav key={current.section} aria-label={current.name} className="sidebar-in-right space-y-4">
+        <button
+          type="button"
+          onClick={() => setRootOn(pathname)}
+          className="group flex w-full items-center gap-2 text-left text-sm font-semibold text-foreground"
+        >
+          <ChevronLeft size={15} aria-hidden className="text-dim transition-colors group-hover:text-accent" />
+          {industryName(current.name)}
+          <span className="sr-only">: back to all sections</span>
+        </button>
+        <ul className="border-l border-border">{docLinks(current)}</ul>
+      </nav>
+    );
+  }
 
   return (
-    <nav className="space-y-7">
-      {categories.map((category) => (
-        <div key={category.name}>
-          <h3 className="inst mb-2.5 text-[0.55rem] text-dim">
-            {category.name}
-          </h3>
-          <ul className="border-l border-border">
-            {category.docs.map((doc) => {
-              const href = `/docs/${doc.slug}`;
-              const active = pathname === href;
-              return (
-                <li key={doc.slug}>
-                  <Link
-                    href={href}
-                    className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
-                      active
-                        ? "border-accent font-semibold text-foreground"
-                        : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
-                    }`}
-                  >
-                    {doc.navTitle}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+    <nav key="playbook" aria-label="Documentation" className={`${current ? "sidebar-in-left " : ""}space-y-7`}>
+      {core.map((category) => (
+        <Group key={category.name} title={category.name}>
+          {docLinks(category)}
+        </Group>
       ))}
-      <div>
-        <h3 className="inst mb-2.5 text-[0.55rem] text-dim">Reference</h3>
-        <ul className="border-l border-border">
-          <li>
+      <Group title="Industries">
+        {industries.map((c) => (
+          <li key={c.section}>
             <Link
-              href="/docs/api"
-              className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
-                pathname === "/docs/api"
-                  ? "border-accent font-semibold text-foreground"
-                  : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
-              }`}
+              href={c === current ? pathname : `/docs/${c.docs[0].slug}`}
+              onClick={() => {
+                setRootOn(null);
+                onNavigate?.();
+              }}
+              className={`group ${linkClass(c === current)}`}
             >
-              API Reference
+              {industryName(c.name)}
+              <ChevronRight size={13} aria-hidden className="ml-auto text-dim transition-colors group-hover:text-accent" />
             </Link>
           </li>
-        </ul>
-      </div>
+        ))}
+        {UPCOMING_INDUSTRIES.map((name) => (
+          <li
+            key={name}
+            className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70"
+          >
+            {name}
+            <span className="inst ml-auto border border-border px-1.5 py-px text-[0.45rem] text-dim">Soon</span>
+          </li>
+        ))}
+      </Group>
+      <Group title="Reference">
+        <li>
+          <Link href="/docs/api" onClick={onNavigate} className={linkClass(pathname === "/docs/api")}>
+            API Reference
+          </Link>
+        </li>
+      </Group>
     </nav>
   );
+}
+
+export function DocsSidebar({ categories }: DocsSidebarProps) {
+  return <SidebarTree categories={categories} />;
 }
 
 export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  // Find current doc title
-  let currentTitle = "API Reference";
-  for (const cat of categories) {
-    for (const doc of cat.docs) {
-      if (pathname === `/docs/${doc.slug}`) {
-        currentTitle = doc.navTitle;
-      }
-    }
-  }
+  const currentTitle =
+    categories.flatMap((c) => c.docs).find((d) => pathname === `/docs/${d.slug}`)?.navTitle ?? "API Reference";
 
   return (
     <div className="lg:hidden mb-6">
@@ -91,54 +139,7 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
       </button>
       {open && (
         <div className="mt-2 border border-border bg-surface p-3">
-          <nav className="space-y-4">
-            {categories.map((category) => (
-              <div key={category.name}>
-                <h3 className="inst mb-2 text-[0.55rem] text-dim">
-                  {category.name}
-                </h3>
-                <ul className="border-l border-border">
-                  {category.docs.map((doc) => {
-                    const href = `/docs/${doc.slug}`;
-                    const active = pathname === href;
-                    return (
-                      <li key={doc.slug}>
-                        <Link
-                          href={href}
-                          onClick={() => setOpen(false)}
-                          className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
-                            active
-                              ? "border-accent font-semibold text-foreground"
-                              : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
-                          }`}
-                        >
-                          {doc.navTitle}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
-            <div>
-              <h3 className="inst mb-2 text-[0.55rem] text-dim">Reference</h3>
-              <ul className="border-l border-border">
-                <li>
-                  <Link
-                    href="/docs/api"
-                    onClick={() => setOpen(false)}
-                    className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
-                      pathname === "/docs/api"
-                        ? "border-accent font-semibold text-foreground"
-                        : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
-                    }`}
-                  >
-                    API Reference
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
+          <SidebarTree categories={categories} onNavigate={() => setOpen(false)} />
         </div>
       )}
     </div>
