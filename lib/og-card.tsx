@@ -8,6 +8,8 @@ import type { SceneName } from "@/lib/scene/scenes";
 // description, its scene on the right, and where it lives along the bottom.
 
 const ART = 520;
+// The text column's width, kept clear of the art.
+const TEXT = 1200 - ART - 72 - 16;
 
 type Card = {
   kicker: string;
@@ -21,8 +23,13 @@ type Card = {
 
 export function ogCard({ kicker, title, description, scene, path, stat }: Card) {
   const art = sceneImage(scene, ART, OG_SIZE.height, { pitch: 6 });
-  const titleSize = title.length > 40 ? 76 : title.length > 22 ? 94 : 120;
+  // Size by length, then shrink until the longest word fits the column
+  // (Big Shoulders caps run about 0.41em wide), since a word can't wrap.
+  const longest = Math.max(...title.split(/\s+/).map((w) => w.length));
+  const titleSize = Math.min(title.length > 40 ? 76 : title.length > 22 ? 94 : 120, Math.floor(TEXT / (0.41 * longest)));
   const host = `syntaqx.com${path === "/" ? "" : path}`;
+  // Tighten the footer's tracking so even the longest doc address fits.
+  const tracking = host.length + (stat?.length ?? 0) > 60 ? 1.6 : 2.5;
 
   return new ImageResponse(
     <div style={{ width: "100%", height: "100%", display: "flex", backgroundColor: C.bg, position: "relative" }}>
@@ -34,7 +41,7 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "56px 0 112px 72px",
-          width: 1200 - ART + 40,
+          width: 72 + TEXT,
         }}
       >
         <div style={{ display: "flex", fontFamily: "Michroma", fontSize: 18, letterSpacing: 2.5, color: C.fg }}>
@@ -74,7 +81,6 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
                 lineHeight: 1.35,
                 color: C.dim,
                 marginTop: 24,
-                paddingRight: 24,
               }}
             >
               {description}
@@ -92,7 +98,7 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
           alignItems: "center",
           fontFamily: "Michroma",
           fontSize: 12,
-          letterSpacing: 2.5,
+          letterSpacing: tracking,
           color: C.dim,
         }}
       >
