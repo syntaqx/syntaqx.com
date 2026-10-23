@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { UPCOMING_INDUSTRIES, industryName, isIndustry } from "@/lib/industries";
+import { UPCOMING_INDUSTRIES, isIndustry } from "@/lib/industries";
 import { ArrowRight, ChevronRight, Search, X } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
+import { IndustryCards, type IndustryCard } from "@/components/industry-cards";
 
 export interface DocsIndexEntry {
   href: string;
@@ -23,23 +24,32 @@ export interface DocsIndexCategory {
 }
 
 interface DocsIndexProps {
+  /** Every doc, by section; industry chapters are searchable but not listed. */
   categories: DocsIndexCategory[];
+  /** The industry volumes, listed as one section of cards. */
+  industries: IndustryCard[];
   /** The intro paragraph under the title. */
   intro: ReactNode;
 }
 
+/** The Industries section's anchor on /docs. */
+const INDUSTRIES_ANCHOR = "industries";
+
 const matches = (q: string, doc: DocsIndexEntry, category: string) =>
   [doc.title, doc.description, category, ...doc.tags].some((s) => s.toLowerCase().includes(q));
 
-export function DocsIndex({ categories, intro }: DocsIndexProps) {
+export function DocsIndex({ categories, industries, intro }: DocsIndexProps) {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState<string | undefined>();
   const inputRef = useRef<HTMLInputElement>(null);
   const total = categories.reduce((n, c) => n + c.docs.length, 0);
   const q = query.trim().toLowerCase();
 
-  // The first section is the featured "start here" strip; the rest are lists.
-  const [featured, ...sections] = categories;
+  // The first section is the featured "start here" strip; the rest are lists,
+  // with the industry volumes as one Industries section before Reference.
+  const listed = categories.filter((c) => !isIndustry(c.section));
+  const [featured, ...sections] = listed;
+  const anchors = [...listed.slice(0, -1).map((c) => c.section), INDUSTRIES_ANCHOR, listed[listed.length - 1].section];
 
   const results = useMemo(
     () =>
@@ -69,7 +79,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
   // Highlight the section being read in the rail.
   useEffect(() => {
     if (q) return;
-    const last = categories[categories.length - 1]?.section;
+    const last = anchors[anchors.length - 1];
     const atBottom = () =>
       window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
     const observer = new IntersectionObserver(
@@ -82,8 +92,8 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       },
       { rootMargin: "-120px 0px -65% 0px" },
     );
-    for (const c of categories) {
-      const el = document.getElementById(c.section);
+    for (const id of anchors) {
+      const el = document.getElementById(id);
       if (el) observer.observe(el);
     }
     const onScroll = () => {
@@ -95,6 +105,8 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
       observer.disconnect();
       window.removeEventListener("scroll", onScroll);
     };
+    // anchors is derived from categories, which only change with the page.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categories, q]);
 
   return (
@@ -141,12 +153,22 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
         <SearchResults query={query} results={results} onClear={() => setQuery("")} />
       ) : (
         <div className="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
-          <SectionRail categories={categories} active={active ?? featured?.section} />
+          <SectionRail categories={listed} industries={industries} active={active ?? featured?.section} />
 
           <div className="min-w-0 space-y-16">
             {featured && <Featured category={featured} />}
             {sections.map((category) => (
-              <section key={category.section} id={category.section} className="scroll-mt-24">
+              <Fragment key={category.section}>
+              {category === listed[listed.length - 1] && (
+                <section id={INDUSTRIES_ANCHOR} className="scroll-mt-24">
+                  <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-3">
+                    <h2 className="eyebrow">Industries</h2>
+                    <span className="inst text-dim">{industries.length}</span>
+                  </div>
+                  <IndustryCards industries={industries} />
+                </section>
+              )}
+              <section id={category.section} className="scroll-mt-24">
                 <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
                   <h2 className="eyebrow">{category.name}</h2>
                   <span className="inst text-dim">{category.docs.length}</span>
@@ -157,6 +179,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
                   ))}
                 </ul>
               </section>
+              </Fragment>
             ))}
           </div>
         </div>
@@ -167,12 +190,17 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
 
 function SectionRail({
   categories,
+  industries,
   active,
 }: {
+  /** The listed sections, Reference last. */
   categories: DocsIndexCategory[];
+  industries: IndustryCard[];
   active?: string;
 }) {
   const railRef = useRef<HTMLDivElement>(null);
+  const reference = categories[categories.length - 1];
+  const sections = categories.slice(0, -1);
 
   // Keep the highlighted section in view as the page scrolls, by scrolling
   // the rail itself (never the page).
@@ -192,87 +220,93 @@ function SectionRail({
     }
   }, [active]);
 
+  const chip = (href: string, name: string, count: number) => (
+    <li key={href} className="shrink-0">
+      <a
+        href={href}
+        className="inst inline-flex items-center gap-2 border border-border px-2.5 py-1.5 text-muted transition-colors hover:border-accent hover:text-accent"
+      >
+        <span className="whitespace-nowrap">{name}</span>
+        <span className="text-dim">{count}</span>
+      </a>
+    </li>
+  );
+
+  const heading = (anchor: string, name: string, count: number) => (
+    <a
+      href={`#${anchor}`}
+      aria-current={anchor === active ? "true" : undefined}
+      className={`inst mb-2.5 flex items-baseline justify-between gap-3 text-[0.55rem] transition-colors ${
+        anchor === active ? "text-accent" : "text-dim hover:text-foreground"
+      }`}
+    >
+      <span>{name}</span>
+      <span className="shrink-0">{count}</span>
+    </a>
+  );
+
+  const group = (c: DocsIndexCategory) => (
+    <div key={c.section} data-section={c.section}>
+      {heading(c.section, c.name, c.docs.length)}
+      <ul className={`border-l ${c.section === active ? "border-accent/50" : "border-border"}`}>
+        {c.docs.map((doc) => (
+          <li key={doc.href}>
+            <Link
+              href={doc.href}
+              className="-ml-px block border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim transition-colors hover:border-border-hover hover:text-foreground"
+            >
+              {doc.navTitle}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
   return (
     <nav aria-label="Documentation sections" className="mb-10 lg:mb-0">
       {/* Mobile: the sections as one scrollable row. */}
       <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 scrollbar-none lg:hidden">
-        {categories.map((c) => (
-          <li key={c.section} className="shrink-0">
-            <a
-              href={`#${c.section}`}
-              className="inst inline-flex items-center gap-2 border border-border px-2.5 py-1.5 text-muted transition-colors hover:border-accent hover:text-accent"
-            >
-              <span className="whitespace-nowrap">{c.name}</span>
-              <span className="text-dim">{c.docs.length}</span>
-            </a>
-          </li>
-        ))}
+        {sections.map((c) => chip(`#${c.section}`, c.name, c.docs.length))}
+        {chip(`#${INDUSTRIES_ANCHOR}`, "Industries", industries.length)}
+        {chip(`#${reference.section}`, reference.name, reference.docs.length)}
       </ul>
 
       {/* Desktop: the same shape as the doc pages' sidebar, every section with
-          its docs, scrolling within the rail when it's taller than the screen. */}
+          its docs, and the industry volumes as one group of covers. Scrolls
+          within the rail when it's taller than the screen. */}
       <div
         ref={railRef}
         className="rail-scroll sticky top-24 hidden max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-3 lg:block"
       >
         <div className="space-y-7">
-          {categories.filter((c) => !isIndustry(c.section)).map((c) => {
-            const isActive = c.section === active;
-            return (
-              <div key={c.section} data-section={c.section}>
-                <a
-                  href={`#${c.section}`}
-                  aria-current={isActive ? "true" : undefined}
-                  className={`inst mb-2.5 flex items-baseline justify-between gap-3 text-[0.55rem] transition-colors ${
-                    isActive ? "text-accent" : "text-dim hover:text-foreground"
-                  }`}
-                >
-                  <span>{c.name}</span>
-                  <span className="shrink-0">{c.docs.length}</span>
-                </a>
-                <ul className={`border-l ${isActive ? "border-accent/50" : "border-border"}`}>
-                  {c.docs.map((doc) => (
-                    <li key={doc.href}>
-                      <Link
-                        href={doc.href}
-                        className="-ml-px block border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim transition-colors hover:border-border-hover hover:text-foreground"
-                      >
-                        {doc.navTitle}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
-          <div>
-            <p className="inst mb-2.5 text-[0.55rem] text-dim">Industries</p>
-            <ul className="border-l border-border">
-              {categories.filter((c) => isIndustry(c.section)).map((c) => (
-                <li key={c.section} data-section={c.section}>
+          {sections.map(group)}
+          <div data-section={INDUSTRIES_ANCHOR}>
+            {heading(INDUSTRIES_ANCHOR, "Industries", industries.length)}
+            <ul className={`border-l ${active === INDUSTRIES_ANCHOR ? "border-accent/50" : "border-border"}`}>
+              {industries.map((industry) => (
+                <li key={industry.href}>
                   <Link
-                    href={`/docs/${c.docs[0].href.split("/").slice(2, -1).join("/")}`}
-                    aria-current={c.section === active ? "true" : undefined}
-                    className={`group -ml-px flex items-center gap-2 border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
-                      c.section === active
-                        ? "border-accent text-foreground"
-                        : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
-                    }`}
+                    href={industry.href}
+                    className="group -ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim transition-colors hover:border-border-hover hover:text-foreground"
                   >
-                    {industryName(c.name)}
-                    <span className="inst text-[0.5rem] text-dim">{c.docs.length}</span>
+                    {industry.name}
                     <ChevronRight size={13} aria-hidden className="ml-auto text-dim transition-colors group-hover:text-accent" />
                   </Link>
                 </li>
               ))}
               {UPCOMING_INDUSTRIES.map((name) => (
-                <li key={name} className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70">
+                <li
+                  key={name}
+                  className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70"
+                >
                   {name}
                   <span className="inst ml-auto border border-border px-1.5 py-px text-[0.45rem] text-dim">Soon</span>
                 </li>
               ))}
             </ul>
           </div>
+          {group(reference)}
         </div>
       </div>
     </nav>

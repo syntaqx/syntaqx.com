@@ -50,3 +50,17 @@ export const isIndustry = (section: string) => section.startsWith("industries-")
 
 /** "Payments Industry" reads as "Payments" in a list of industries. */
 export const industryName = (category: string) => category.replace(/ Industry$/, "");
+
+/** The card data for every written volume, from its chapters. */
+export function industryCards(categories: { section: string; docs: { readingMinutes: number }[] }[]) {
+  return INDUSTRIES.map((industry) => {
+    const docs = categories.find((c) => c.section === industrySection(industry.slug))?.docs ?? [];
+    return {
+      href: `/docs/industries/${industry.slug}`,
+      name: industry.name,
+      summary: industry.summary,
+      chapters: docs.length,
+      readingTime: formatMinutes(docs.reduce((sum, d) => sum + d.readingMinutes, 0)),
+    };
+  });
+}
