@@ -96,7 +96,7 @@ The engineering follows from that table:
 - [KPMG: Instant Payment Regulation](https://kpmg.com/de/en/industries/financial-services/banking/instant-payment-regulation.html), receiving instant euro payments from January 2025 and sending from October 2025
 - [Mason Hayes & Curran: Instant Payments Regulation update](https://mhc.ie/latest/insights/instant-payments-regulation-update), free Verification of Payee from October 9, 2025
 - [Dutch Payments Association: Next phase of iDEAL migration to Wero](https://www.betaalvereniging.nl/en/?p=5309), banks connected by October 2026 and migration finished by December 31, 2027
-- [Wikipedia: Pix](https://en.wikipedia.org/wiki/Pix_(payment_system)), run by Brazil's central bank since November 2020, with keys and QR codes
+- [Wikipedia: Pix](https://en.wikipedia.org/wiki/Pix_%28payment_system%29), run by Brazil's central bank since November 2020, with keys and QR codes
 - [Banco Central do Brasil: Fórum Pix, June 2025 (PDF)](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Forum_Pix_Plenaria/20252606-Forum_Pix.pdf), Pix Automático rules in force from June 16, 2025, and the return mechanism (MED)
 - [Wikipedia: Unified Payments Interface](https://en.wikipedia.org/wiki/Unified_Payments_Interface), developed and run by NPCI, UPI IDs and AutoPay mandates
 - [Direct Debit: The Direct Debit Guarantee](https://www.directdebit.co.uk/direct-debit-explained/direct-debit-guarantee/), advance notice and an immediate refund on error
