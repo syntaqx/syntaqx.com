@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DocsIndex } from "@/components/docs-index";
 import { getDocsByCategory } from "@/lib/docs";
+import { industryCards } from "@/lib/industries";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
 import type { Metadata } from "next";
@@ -26,6 +27,7 @@ export default function DocsPage() {
       />
 
       <DocsIndex
+        industries={industryCards(categories)}
         intro={
           <p>
             The architectural playbook I bring to every team: the standards I&apos;ve

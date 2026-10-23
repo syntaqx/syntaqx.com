@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getDocsByCategory } from "@/lib/docs";
-import { INDUSTRIES, UPCOMING_INDUSTRIES, formatMinutes, industrySection } from "@/lib/industries";
+import { industryCards } from "@/lib/industries";
+import { IndustryCards } from "@/components/industry-cards";
 
 export const metadata: Metadata = {
   title: "Industries",
@@ -11,8 +12,6 @@ export const metadata: Metadata = {
 
 /** Every industry volume, and the ones still to come. */
 export default function IndustriesPage() {
-  const categories = getDocsByCategory();
-
   return (
     <article>
       <header className="mb-12 border-b border-border pb-10">
@@ -28,34 +27,7 @@ export default function IndustriesPage() {
         </p>
       </header>
 
-      <ul className="grid gap-4 sm:grid-cols-2">
-        {INDUSTRIES.map((industry) => {
-          const volume = categories.find((c) => c.section === industrySection(industry.slug));
-          const minutes = volume?.docs.reduce((sum, d) => sum + d.readingMinutes, 0) ?? 0;
-          return (
-            <li key={industry.slug}>
-              <Link
-                href={`/docs/industries/${industry.slug}`}
-                className="group block h-full border border-border p-5 transition-colors hover:border-accent"
-              >
-                <span className="inst block text-dim">
-                  {volume?.docs.length ?? 0} chapters · {formatMinutes(minutes)} read
-                </span>
-                <span className="mt-2 block text-xl font-semibold text-foreground transition-colors group-hover:text-accent">
-                  {industry.name}
-                </span>
-                <span className="mt-2 block text-sm leading-relaxed text-dim">{industry.summary}</span>
-              </Link>
-            </li>
-          );
-        })}
-        {UPCOMING_INDUSTRIES.map((name) => (
-          <li key={name} className="flex items-center justify-between border border-dashed border-border p-5 text-dim">
-            {name}
-            <span className="inst border border-border px-1.5 py-px text-[0.5rem]">Soon</span>
-          </li>
-        ))}
-      </ul>
+      <IndustryCards industries={industryCards(getDocsByCategory())} />
     </article>
   );
 }
