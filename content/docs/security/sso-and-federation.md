@@ -66,10 +66,6 @@ The dependable control is still on your side: short sessions, revocation that wo
 
 Services, jobs and CI pipelines need identities too, and they shouldn't borrow a person's. Give them their own credentials, scoped and rotated as in [API Authentication](/docs/api-design/authentication), and prefer workload identity federation to stored secrets: a pipeline proves who it is with a short-lived token from its platform ([GitHub Actions' OIDC tokens](https://docs.github.com/en/actions/concepts/security/openid-connect), for example) and exchanges it for cloud credentials that expire with the job, so there's no long-lived key to leak ([Environments & Configuration](/docs/operations/environments)).
 
-## This Site
-
-syntaqx.com has no user accounts, so it federates nothing, by design: [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md). Everything here is what I'd configure the day it needed sign-in.
-
 ## References
 
 **Specifications**

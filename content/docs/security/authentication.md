@@ -115,10 +115,6 @@ A session that's hours old shouldn't be enough to change the account's email, ad
 
 Sign-ins, failures, factor changes, recoveries, new devices, session revocations and step-ups each become a structured event with the user, method, device, IP, outcome and request ID ([Observability](/docs/operations/observability)). They answer "was this account taken over, and when?", feed detection for impossible travel and stuffing waves, and give users a security page that shows what happened on their account.
 
-## This Site
-
-syntaqx.com has no user accounts at all, so none of this runs here: no passwords to store, no sessions to steal and no recovery flow to attack. That's a deliberate departure, recorded in [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md), and the cheapest authentication system is the one you don't need.
-
 ## References
 
 **Specifications**

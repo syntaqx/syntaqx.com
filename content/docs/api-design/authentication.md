@@ -95,10 +95,6 @@ Every credential can be replaced without downtime, because one day it will have 
 - **Rotate on departure.** When someone with access leaves or changes roles, the keys they could see get rotated.
 - **Show last use.** Every key shows when and from where it was last used, so forgotten keys can be found and deleted before they leak.
 
-## This Site
-
-The syntaqx API is a set of public, stateless tools with no accounts, so it has no authentication at all, a deliberate departure recorded in [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md). Abuse is handled by per-IP [rate limiting](/docs/requests/rate-limiting) instead.
-
 ## References
 
 **Specifications**
