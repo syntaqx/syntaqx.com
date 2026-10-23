@@ -100,7 +100,7 @@ That is a different machine from card [disputes](/docs/industries/payments/dispu
 | RTP | Seconds, 24/7 | Yes | Push | $10M since February 9, 2025 |
 | FedNow | Seconds, 24/7 | Yes | Push | $10M, raised from $1M effective November 2025 |
 
-RTP and FedNow are credit push only: the payer's bank sends the money, so there's no debit to claw back, and no return window to wait out. That's the right rail for payouts that must arrive now and for anything where finality matters more than cost. Participating banks may set lower limits than the network maximum, and not every account can receive them, so instant payouts need a fallback to ACH. Wires remain the tool for large, one-off, business-hours transfers.
+RTP and FedNow are credit push only: the payer's bank sends the money, so there's no debit to claw back, and no return window to wait out. That's the right rail for payouts that must arrive now and for anything where finality matters more than cost. Choosing a rail for each payee, beside virtual cards and checks, is [Vendor Payouts](/docs/industries/payments/vendor-payouts). Participating banks may set lower limits than the network maximum, and not every account can receive them, so instant payouts need a fallback to ACH. Wires remain the tool for large, one-off, business-hours transfers.
 
 Account verification sits beside all of them. Instant verification through an open-banking aggregator confirms the account exists and belongs to the customer in seconds; micro-deposits take days and a round trip but need no third party. Either satisfies the WEB rule. Instant verification is the better product, and it also gives you a balance check at the moment of authorization that ACH itself never will.
 

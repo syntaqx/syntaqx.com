@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 222">
+  <!-- Ruler: $0 to $3.50 at 100px per dollar, from x=310 -->
+  <text class="cap" x="40" y="20">visa interchange on a $100 card-not-present payment</text>
+  <text class="t dim" x="310" y="42" text-anchor="middle">$0</text>
+  <text class="t dim" x="410" y="42" text-anchor="middle">$1</text>
+  <text class="t dim" x="510" y="42" text-anchor="middle">$2</text>
+  <text class="t dim" x="610" y="42" text-anchor="middle">$3</text>
+  <path class="ln" d="M310,48V54M410,48V54M510,48V54M610,48V54M310,54H660"/>
+  <path class="ln" d="M310,188V194M410,188V194M510,188V194M610,188V194M310,188H660"/>
+
+  <!-- Labels share edges, like a table -->
+  <rect class="cell" x="40" y="56" width="260" height="26"/>
+  <text class="t" x="50" y="69" dominant-baseline="central">debit, regulated issuer</text>
+  <rect class="cell" x="40" y="82" width="260" height="26"/>
+  <text class="t" x="50" y="95" dominant-baseline="central">debit, exempt issuer, e-commerce</text>
+  <rect class="cell hl" x="40" y="108" width="260" height="26"/>
+  <text class="t hl" x="50" y="121" dominant-baseline="central">commercial, Level 3 data</text>
+  <rect class="cell" x="40" y="134" width="260" height="26"/>
+  <text class="t" x="50" y="147" dominant-baseline="central">commercial, card not present</text>
+  <rect class="cell" x="40" y="160" width="260" height="26"/>
+  <text class="t" x="50" y="173" dominant-baseline="central">commercial, non-qualified</text>
+
+  <!-- Bars, to scale -->
+  <rect class="cell" x="310" y="61" width="27" height="16"/>
+  <text class="t" x="345" y="69" dominant-baseline="central">$0.27</text>
+  <rect class="cell" x="310" y="87" width="180" height="16"/>
+  <text class="t" x="498" y="95" dominant-baseline="central">$1.80</text>
+  <rect class="cell hl" x="310" y="113" width="185" height="16"/>
+  <text class="t hl" x="503" y="121" dominant-baseline="central">$1.85</text>
+  <rect class="cell" x="310" y="139" width="280" height="16"/>
+  <text class="t" x="598" y="147" dominant-baseline="central">$2.80</text>
+  <rect class="cell" x="310" y="165" width="305" height="16"/>
+  <text class="t" x="623" y="173" dominant-baseline="central">$3.05</text>
+
+  <text class="n" x="40" y="214">Rates: 0.05% + $0.21 + $0.01; 1.65% + $0.15; 1.75% + $0.10; 2.70% + $0.10; 2.95% + $0.10. Effective October 24, 2026.</text>
+</svg>

@@ -7,7 +7,7 @@ aliases = ["payments/becoming-a-payment-provider"]
 tags = ["payments", "compliance", "pci", "licensing"]
 +++
 
-Every chapter before this one is about building on a payment provider. Becoming one is a regulated business that happens to need a lot of engineering, and the API is the smallest part of it. Underneath sit a bank that lets you into the card networks, an annual security assessment your customers will ask to see, licenses or exemptions for holding other people's money, and a balance sheet that absorbs whatever your merchants can't pay back. Every company that sells payments as a product, from Stripe and Adyen to a vertical software platform that started as a payfac, built or rented each of those layers.
+[Payments for Software Platforms](/docs/industries/payments/software-platforms) is about selling payments inside your product on top of a provider. Becoming one is a regulated business that happens to need a lot of engineering, and the API is the smallest part of it. Underneath sit a bank that lets you into the card networks, an annual security assessment your customers will ask to see, licenses or exemptions for holding other people's money, and a balance sheet that absorbs whatever your merchants can't pay back. Every company that sells payments as a product, from Stripe and Adyen to a vertical software platform that started as a payfac, built or rented each of those layers.
 
 This page covers what each layer is, why it exists and who pays when it fails, then the order companies usually acquire them in. **It is not legal advice:** licensing in particular turns on facts a lawyer has to look at. Where it names a threshold or a rule, it has a source; where the answer is "it depends", it says so.
 
@@ -82,14 +82,14 @@ Funds settle from the network to the acquirer and onward, and where they land ne
 
 ## The Platform It Implies
 
-The rest of this section becomes requirements a merchant integration never sees:
+The engineering in [Payments](/docs/payments/money) becomes requirements a merchant integration never sees:
 
 - **A double-entry ledger** ([Payment States & Ledgers](/docs/payments/payment-states)) is the source of truth for every balance, fee, reserve and payout, and at provider scale it's what auditors, the sponsor bank and regulators examine.
 - **Idempotency end to end** ([Idempotency](/docs/payments/idempotency)): merchants retry, and so do you toward networks and banks, and a charge or payout that runs twice is real money.
 - **Reconciliation as a product:** daily matching of network settlement files, bank statements and the ledger, with exceptions routed to people, and the same view offered to merchants for their own money.
 - **Webhooks as a contract** ([Webhooks](/docs/payments/webhooks)): merchants build their businesses on your events.
 - **Hardware security modules** for card encryption keys, and PIN keys if you touch PINs, under dual control with documented key ceremonies. The PCI assessment spends much of its time here.
-- **Availability as revenue.** When a provider is down, every merchant on it stops taking money: redundant connections to acquirers and banks, no single region whose loss stops authorization, and status communication merchants can rely on.
+- **Availability as revenue.** When a provider is down, every merchant on it stops taking money: redundant connections to acquirers and banks ([Processor Routing](/docs/industries/payments/processor-routing)), no single region whose loss stops authorization, and status communication merchants can rely on.
 
 ## The Realistic Path
 

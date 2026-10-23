@@ -7,7 +7,7 @@ aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
 +++
 
-[Disputes](/docs/industries/payments/disputes-and-chargebacks) are why money can't leave the platform the moment it arrives. A customer pays on Monday and the merchant sees "succeeded" on Monday, but the money reaches their bank on Wednesday, or the following week, or for a new merchant two weeks later. Everything in between is settlement and payouts, the source of most "where's my money?" tickets on a payments platform, and the answer has to be computable from records for every cent.
+[Disputes](/docs/industries/payments/disputes-and-chargebacks), refunds and [fees](/docs/industries/payments/surcharging-and-fees) are why money can't leave the platform the moment it arrives. A customer pays on Monday and the merchant sees "succeeded" on Monday, but the money reaches their bank on Wednesday, or the following week, or for a new merchant two weeks later. Everything in between is settlement and payouts, the source of most "where's my money?" tickets on a payments platform, and the answer has to be computable from records for every cent.
 
 ## The Stages
 
@@ -18,7 +18,7 @@ tags = ["payments", "payouts", "settlement", "ledger"]
 | **Authorization** | The issuer approved the amount and placed a hold on the customer's card. | No |
 | **Capture** | The merchant claims the authorized amount. | Not yet |
 | **Clearing** | Captured transactions are submitted to the network in a batch and matched with the issuer. | Being arranged |
-| **Settlement** | The issuer pays the acquirer or processor, net of interchange and network fees. | Yes, to the processor |
+| **Settlement** | The issuer pays the acquirer or processor, net of [interchange](/docs/industries/payments/interchange-and-pricing) and network fees. | Yes, to the processor |
 | **Payout** | The processor or platform pays the merchant's bank account from their balance. | Yes, to the merchant |
 
 Each stage is a separate fact with its own timestamp, and the API says which one a balance reflects. A merchant's balance has at least two buckets, **pending** (captured, not yet settled) and **available** (settled, can be paid out); one number labeled "balance" invites the ticket about why it can't be paid out.

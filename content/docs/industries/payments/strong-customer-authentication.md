@@ -95,9 +95,9 @@ A customer-initiated (on-session) payment has the customer in your checkout, abl
 1. **Authenticate when you save the card.** Run SCA on the first payment, or on a zero-amount setup if there's no payment yet. That authenticated setup is what later off-session charges reference.
 2. **Get and keep the mandate:** that you may charge them later, how often, and how the amount is set. It's your evidence the charge was authorized ([Stripe's SCA guide](https://docs.stripe.com/strong-customer-authentication) lists what it should cover).
 3. **Flag every later charge as off-session,** telling the issuer there's no customer to challenge and the payment relies on the mandate.
-4. **Plan for the issuer asking anyway.** Even a correct off-session payment can soft-decline: email the customer a link to complete it on-session, and leave the subscription in a grace state rather than cancelling it.
+4. **Plan for the issuer asking anyway.** Even a correct off-session payment can soft-decline, and only the customer, back on-session, can complete it.
 
-A saved card that skipped step 1 is a liability: every off-session charge on it risks a soft decline you can't resolve without the customer, which shows up as involuntary churn months after the integration shipped.
+A saved card that skipped step 1 is a liability: every off-session charge on it risks a soft decline you can't resolve without the customer, which shows up as involuntary churn months after the integration shipped. The rest of a saved card's life, from network tokens and account updates to retrying a declined renewal, is [Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials).
 
 ## References
 

@@ -7,7 +7,7 @@ aliases = ["payments/fraud-and-risk"]
 tags = ["payments", "fraud", "risk", "security"]
 +++
 
-[3-D Secure](/docs/industries/payments/strong-customer-authentication) is one tool for deciding whether to trust a payment; fraud and risk is the whole decision. Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
+[3-D Secure](/docs/industries/payments/strong-customer-authentication) and [stored credentials](/docs/industries/payments/stored-credentials) decide whether a payment can go through; fraud and risk decide whether it should. Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
 
 ## The Two Costs
 

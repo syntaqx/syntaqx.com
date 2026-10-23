@@ -9,7 +9,7 @@ tags = ["compliance", "payments", "regulation", "pci", "nacha"]
 
 A payments company answers to two kinds of rulebook at once. One is **law**: statutes and regulations, enforced by agencies with subpoenas and penalties. The other is **private network rules**: the card brands' rules, PCI DSS and the Nacha Operating Rules, which no government wrote and which bind you anyway, because every bank that lets you touch the networks made you sign them. Engineers tend to hear "compliance" and picture one checklist. In practice it's a stack of contracts and laws with different enforcers, and knowing which one a requirement comes from tells you who will ask about it, how hard, and what happens if you're wrong.
 
-This chapter is the map; the chapters after it go deep on the frameworks themselves. None of it is legal advice: the thresholds and obligations here are where to start a conversation with counsel, not where to end one.
+[How Card Payments Work](/docs/industries/payments/card-payments) and [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) cover how the networks move and price money; this chapter maps who makes the rules. The frameworks themselves have their own chapters in Compliance, starting with [PCI DSS](/docs/compliance/pci-dss), and the rest of this volume shows each rule landing in the engineering. None of it is legal advice: the thresholds and obligations here are where to start a conversation with counsel, not where to end one.
 
 ## Two Kinds of Rules
 
@@ -60,7 +60,7 @@ The engineering consequence is the same on every rail: a consumer payment isn't 
 
 ## Who Carries What
 
-The same business moves through these rulebooks as it takes on more of the stack:
+The same business moves through these rulebooks as it takes on more of the stack ([Payments for Software Platforms](/docs/industries/payments/software-platforms) and [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) cover the business side):
 
 | Stage | Network rules | Law | Assurance |
 | ----- | ------------- | --- | --------- |

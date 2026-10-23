@@ -6,7 +6,7 @@ order = 806
 tags = ["payments", "currency", "fx", "money"]
 +++
 
-Everything up to [payouts](/docs/industries/payments/payouts-and-settlement) works in one currency. Selling in the customer's own currency raises conversion and approval rates, and it's what customers expect, but it means a payment now has two amounts, a rate between them, and a question single-currency systems never face: when the rate moves between the charge and the refund, whose money is that? Every rule here builds on [Money & Amounts](/docs/payments/money).
+The chapters before this one hold for a single currency. Selling in the customer's own currency raises conversion and approval rates, and it's what customers expect, but it means a payment now has two amounts, a rate between them, and a question single-currency systems never face: when the rate moves between the charge and the refund, whose money is that? Every rule here builds on [Money & Amounts](/docs/payments/money).
 
 ## Two Currencies, Two Names
 

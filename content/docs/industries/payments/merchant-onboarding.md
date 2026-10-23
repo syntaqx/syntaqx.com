@@ -7,7 +7,7 @@ aliases = ["payments/merchant-onboarding"]
 tags = ["payments", "onboarding", "kyc", "compliance"]
 +++
 
-Everything so far assumes you know who's on the other end of a payment. A platform that lets businesses accept payments is lending them its acquirer relationship, and if one of them turns out to be a front for stolen cards, a sanctioned entity or a scheme that never ships anything, the platform carries the disputes, the fines and the regulatory exposure. Onboarding is where that risk is decided, between two failures: let a bad merchant through and you pay for their fraud; make onboarding painful and good merchants leave before their first payment.
+Every rule in [the rulebook](/docs/industries/payments/payments-rulebook) assumes you know who's on the other end of a payment. A platform that lets businesses accept payments is lending them its acquirer relationship, and if one of them turns out to be a front for stolen cards, a sanctioned entity or a scheme that never ships anything, the platform carries the disputes, the fines and the regulatory exposure. Onboarding is where that risk is decided, between two failures: let a bad merchant through and you pay for their fraud; make onboarding painful and good merchants leave before their first payment.
 
 ## Know Who You're Paying
 
