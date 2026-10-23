@@ -46,7 +46,7 @@ Two more families of codes live in other chapters: the check conversion codes (A
 
 ## Timing
 
-Entries settle on a business-day schedule: same day if submitted in a Same Day ACH window, otherwise the next banking day or a future date you choose. Same Day ACH settles at 1:00, 5:00 and 6:00 p.m. ET, and since March 18, 2022 a single Same Day entry can be up to $1 million (international entries (the IAT SEC code) aren't eligible at all). An entry over the limit isn't rejected; it settles next day, and restructuring a payment to get under the cap isn't allowed. The submission deadline that matters is your bank's, which comes before the Operator's.
+Entries settle on a business-day schedule: same day if submitted in a Same Day ACH window, otherwise the next banking day or a future date you choose. Same Day ACH settles at 1:00, 5:00 and 6:00 p.m. ET, and since March 18, 2022 a single Same Day entry can be up to $1 million ; international entries (the IAT SEC code) aren't eligible at all. An entry over the limit isn't rejected; it settles next day, and restructuring a payment to get under the cap isn't allowed. The submission deadline that matters is your bank's, which comes before the Operator's.
 
 There is no real-time leg. Nothing checks the Receiver's balance before settlement, and nothing tells you the account exists until it comes back. That's the core design fact: **settlement is when the money moves, not when it's yours.**
 
@@ -62,12 +62,15 @@ The RDFI rejects an entry by sending a **return** with a reason code. The codes 
 | R04 | Invalid account number | 2 banking days |
 | R16 | Account frozen, including by OFAC instruction (the Treasury's Office of Foreign Assets Control, which runs US sanctions) | 2 banking days |
 | R29 | Business says the debit wasn't authorized | 2 banking days |
+| R09 | Uncollected funds: the balance exists but isn't yet available | 2 banking days |
+| R17 | Entry rejected, including an improper reversal to a business account | 2 banking days |
 | R05 | Consumer account debited with a business SEC code | 60 calendar days |
 | R07 | Authorization revoked | 60 calendar days |
 | R10 | Consumer says the debit wasn't authorized | 60 calendar days |
 | R11 | Authorized, but the entry was wrong (amount, date) | 60 calendar days |
+| R51 | A converted check that wasn't eligible for conversion, or was converted improperly | 60 calendar days |
 
-The 60-day codes are what make consumer ACH debits risky. The administrative failures surface within two banking days, so that's the earliest point to treat a debit as probably good. But a consumer can claim it unauthorized for 60 calendar days after settlement, and the RDFI returns it on the consumer's written statement. Banks that offer ACH APIs model this directly: Column, a bank that offers ACH through an API, for example, marks a debit settled when no return arrives within two business days and only marks it completed after the 60 days pass.
+The 60-day codes are what make consumer ACH debits risky. The administrative failures surface within two banking days, so that's the earliest point to treat a debit as probably good. But a consumer can claim it unauthorized for 60 calendar days after settlement, and the RDFI returns it on the consumer's written statement. Banks that offer ACH through an API model this directly: Column, for example, marks a debit settled when no return arrives within two business days and only marks it completed after the 60 days pass.
 
 So I model an ACH debit's states through the return windows, not the submission:
 
@@ -91,7 +94,7 @@ A return is the RDFI rejecting an entry. A **reversal** is the Originator undoin
 
 A returned debit leaves two decisions: whether to charge the payer for it, and whether to let them pay from that account again.
 
-**Return fees.** Nacha lets an Originator collect a returned-item fee by ACH as a **Return Fee Entry**, but only for insufficient or uncollected funds returns (R01, R09), only when the payer was told about the fee when they authorized the original payment, as its own entry (never added to a reinitiated one), with `RETURN FEE` in the Company Entry Description, and once per returned item however it's collected. The amount is state law, and the caps differ in what they cover:
+**Return fees.** Nacha lets an Originator collect a returned-item fee by ACH as a **Return Fee Entry**, with conditions. It's only for insufficient or uncollected funds returns (R01, R09), and only when the payer was told about the fee when they authorized the original payment. It goes as its own entry (never added to a reinitiated one), with `RETURN FEE` in the Company Entry Description, once per returned item however it's collected. The amount is state law, and the caps differ in what they cover:
 
 | State | Cap | Applies to |
 | --- | --- | --- |
@@ -109,7 +112,9 @@ Canada's Rule H1 lets a dishonoured debit be re-presented only for the same amou
 - **R05, R07, R10, R29** (unauthorized or revoked): stop debiting under that authorization at once, and don't debit the account again without a new one. These, with R11 and R51, count toward Nacha's 0.5% unauthorized return threshold ([below](#the-rules-you-inherit)), so a second debit to the same account is the most expensive mistake on the list.
 - **R16** (frozen): stop, and treat it as a possible sanctions hit.
 
-Build these as **payment method restrictions**: a record with the reason, what it covers (one account number, one payer, every bank payment, or, used sparingly and reviewed, a whole routing number when fraud concentrates at one bank or prepaid program), when it started, when it expires and who lifted it, checked whenever a payment is authorized, including at a cash counter ([Cash Payments](/docs/industries/payments/cash-payments)). Match blocked accounts by a keyed hash of the account number, so the block survives the payer entering it again under a new profile, and tell the payer why they're restricted and when it ends.
+Build these as **payment method restrictions**: a record with the reason, what it covers (one account number, one payer, every bank payment, or, used sparingly and reviewed, a whole routing number when fraud concentrates at one bank or prepaid program), when it started, when it expires and who lifted it, checked whenever a payment is authorized, including at a cash counter ([Cash Payments](/docs/industries/payments/cash-payments)).
+
+Match blocked accounts by a keyed hash of the account number, so the block survives the payer entering it again under a new profile, and tell the payer why they're restricted and when it ends.
 
 ## The Rules You Inherit
 
@@ -130,7 +135,7 @@ Nothing in ACH tells you an account exists before you debit it, so you check fir
 - **Instant verification** through an open-banking aggregator confirms the account exists and belongs to the customer in seconds, and gives you a balance check at the moment of authorization that ACH itself never will. It's the better product where customers will log in to their bank.
 - **Database checks** from providers like Early Warning and GIACT report an account's status, and sometimes its owner, without the customer logging in: the fallback for people who won't link a bank.
 - **Micro-entries** prove control of the account: credits under $1 each, optionally with an offsetting debit no larger than them, sent together, with `ACCTVERIFY` in the description and the same company name as future payments. Since March 2023, Originators must also monitor micro-entry volumes for fraud.
-- **Prenotes** are zero-dollar entries that come back as a return if the account is bad. You still wait three banking days before sending live entries, and since June 2024 you may send one at any time, for example to re-check a dormant account.
+- **Prenotes** are zero-dollar entries that come back as a return if the account is bad. After one, wait three banking days before sending live entries; since June 2024 you may send one at any time, for example to re-check a dormant account.
 
 All of them satisfy the WEB rule; none of them prove the customer has the money next week. Validation reduces administrative returns, not unauthorized ones.
 
@@ -151,7 +156,7 @@ That is a different machine from card [disputes](/docs/industries/payments/dispu
 
 RTP and FedNow are credit push only: the payer's bank sends the money, so there's no debit to claw back, and no return window to wait out. That's the right rail for payouts that must arrive now and for anything where finality matters more than cost. Choosing a rail for each payee, beside virtual cards and checks, is [Vendor Payouts](/docs/industries/payments/vendor-payouts). Participating banks may set lower limits than the network maximum, and not every account can receive them, so instant payouts need a fallback to ACH. Wires remain the tool for large, one-off, business-hours transfers.
 
-## Anatomy of a NACHA File
+## Anatomy of a Nacha File
 
 Here is a complete, valid file: a property manager collecting November rent from three tenants by WEB debit, one of them with a remittance addenda. Every routing number in it is fictional, with a valid check digit, and every control total is real.
 

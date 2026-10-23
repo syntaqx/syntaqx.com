@@ -8,7 +8,7 @@ part = "How Money Moves"
 tags = ["payments", "wallets", "apple-pay", "google-pay", "bnpl", "sepa", "pix", "upi", "open-banking"]
 +++
 
-[How Card Payments Work](/docs/industries/payments/card-payments) describes one shape of payment: a card number goes in, an authorization comes back in seconds, and money follows days later. Most of the world doesn't pay that way, and a growing share of card payments don't look like that at the checkout either. A wallet puts a token where the card number was. A buy now, pay later provider puts a lender in the middle. And in much of Europe, Brazil and India the default isn't a card at all but a push from the customer's bank account, confirmed by a redirect or a QR code and finished whenever the bank says so.
+[How Card Payments Work](/docs/industries/payments/card-payments) describes one shape of payment: a card number goes in, an authorization comes back in seconds, and money follows days later. The cash vouchers at the end of [Cash Payments](/docs/industries/payments/cash-payments#cash-around-the-world) were already a different shape. Most of the world doesn't pay that way, and a growing share of card payments don't look like that at the checkout either. A wallet puts a token where the card number was. A buy now, pay later provider puts a lender in the middle. And in much of Europe, Brazil and India the default isn't a card at all but a push from the customer's bank account, confirmed by a redirect or a QR code and finished whenever the bank says so.
 
 Each method is a different contract about three things: when you know the payment happened, when it can no longer be taken back, and how a customer gets their money back. Get those three right per method, and adding the next one is configuration. Get them wrong, and every new method is a new class of incident.
 
@@ -21,7 +21,7 @@ The token is a **device account number** (DPAN), issued by the network's token s
 Two things are different from a card form:
 
 - **Merchant validation.** On the web, Apple Pay requires your server to request a payment session from Apple over mutual TLS, with your merchant identity certificate, for every transaction, and only from Apple's own validation URLs. The session lasts five minutes. Domains must be registered against the merchant ID first. A platform registering merchants does this per merchant, which makes Apple Pay a provisioning step in [Merchant Onboarding](/docs/industries/payments/merchant-onboarding), not a button.
-- **Who decrypts.** The payment token arrives encrypted to a key you or your processor hold. Let the processor decrypt it. Decrypting yourself means verifying Apple's signature chain, checking the signing time against replays, restoring the symmetric key, and then holding a real card credential in your systems, which is everything [PCI DSS](/docs/compliance/pci-dss) scopes. Google states the line explicitly: its direct integration, where you decrypt on your own servers, requires PCI DSS compliance validated by a QSA. Google Pay also returns two kinds of credentials: a device token with a 3-D Secure cryptogram, or a plain card number stored in the user's Google account. The second is just a card and gets treated like one, including for [Strong Customer Authentication (SCA)](/docs/industries/payments/strong-customer-authentication).
+- **Who decrypts.** The payment token arrives encrypted to a key you or your processor hold. Let the processor decrypt it. Decrypting yourself means verifying Apple's signature chain, checking the signing time against replays, restoring the symmetric key, and then holding a real card credential in your systems, which is everything [PCI DSS](/docs/compliance/pci-dss) scopes. Google states the line explicitly: its direct integration, where you decrypt on your own servers, requires PCI DSS compliance validated by a Qualified Security Assessor (QSA). Google Pay also returns two kinds of credentials: a device token with a 3-D Secure cryptogram, or a plain card number stored in the user's Google account. The second is just a card and gets treated like one, including for [Strong Customer Authentication (SCA)](/docs/industries/payments/strong-customer-authentication).
 
 **Click to Pay** is the networks' answer for browsers without a wallet: EMVCo's Secure Remote Commerce specification, under a common consumer brand, letting a cardholder pick a card enrolled with their network instead of typing it. It's another way a network token arrives, and the same rules apply.
 
@@ -45,7 +45,7 @@ Most of the rest of the world's local methods move money between bank accounts d
 - **iDEAL**, the Netherlands' dominant online method, is a redirect to the customer's bank that confirms a push. It's being folded into **Wero**, the European Payments Initiative's wallet: co-branding started in early 2026, all Dutch banks were scheduled to connect to Wero in October 2026, and the banks and payment providers aim to finish the migration by December 31, 2027. An integration built against iDEAL today needs a plan for Wero.
 - **Pix**, run by Brazil's central bank since November 2020, settles instantly at any hour, addressed by a key (a tax ID, phone number, email or random identifier) or a QR code. **Pix Automático**, for recurring payments, took effect on June 16, 2025, and Pix has its own return mechanism (MED, Mecanismo Especial de Devolução) for fraud claims, not a chargeback.
 - **UPI**, developed and run by India's National Payments Corporation, is a real-time push-and-pull system addressed by a UPI ID, with AutoPay mandates for recurring payments.
-- **Faster Payments** in the UK has been instant since 2008, and it's what UK "pay by bank" runs on: an open banking provider initiates the push from the customer's bank with their approval. Since October 7, 2024, UK payment firms must reimburse victims of authorised push payment scams on Faster Payments, up to £85,000 per claim, which makes fraud on a push rail the paying bank's problem and therefore yours to help prevent.
+- **Faster Payments** in the UK has been instant since 2008, and it's what UK "pay by bank" runs on: an open banking provider initiates the push from the customer's bank with their approval. Since October 7, 2024, UK payment firms must reimburse victims of authorized push payment scams on Faster Payments, up to £85,000 per claim, with the cost split equally between the payer's bank and the payee's. That gives both banks a reason to question who receives a push, including a platform's merchants.
 
 **Pull** methods have you collect from the customer's account under a mandate they signed. They feel like cards, but they're slow, and they stay reversible for a long time.
 
@@ -62,10 +62,10 @@ Most of the rest of the world's local methods move money between bank accounts d
 | BNPL | When the provider approves | Paid out by the provider | Through the provider | The provider's process |
 | SEPA Instant, Faster Payments, Pix, UPI | When the push arrives, seconds | On arrival | You send a new transfer | No chargeback; fraud schemes (reimbursement for authorized push payment scams, MED) |
 | SEPA Credit Transfer, iDEAL | When the push arrives | On arrival | You send a new transfer | No chargeback |
-| SEPA Direct Debit, Bacs Direct Debit | Days later | 8 weeks (SEPA), longer if unauthorised | You refund, or their bank does | Scheme refund rights |
+| SEPA Direct Debit, Bacs Direct Debit | Days later | 8 weeks (SEPA), longer if unauthorized | You refund, or their bank does | Scheme refund rights |
 | Cash vouchers: Boleto, OXXO, Konbini | When the payer pays: immediately (Konbini) to the next business day (Boleto, OXXO) | On payment | Over another rail | No chargeback |
 
-Cash vouchers, where the customer pays a reference at a store or ATM, have the same asynchronous shape and their own quirks; [Cash Payments](/docs/industries/payments/cash-payments) covers them with the US retail cash networks.
+Cash vouchers, covered with the US retail networks in [Cash Payments](/docs/industries/payments/cash-payments#cash-around-the-world), have the same asynchronous shape; the last row of the table is there for comparison.
 
 ## What This Means for the System You Build
 
@@ -78,7 +78,6 @@ The engineering follows from that table:
 - **Every method needs its own states.** A card is authorized and then captured; a push is awaiting funds and then received; a debit is submitted, settled and then final weeks later. Forcing them into one card-shaped state machine is how a returned direct debit becomes a shipped order that nobody paid for. [Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final) holds the rule: each method's states are explicit, and the ledger records the difference between settled and final.
 - **Refunds are a new payment.** On a push rail there's nothing to reverse; a refund is a credit you send, with its own failure modes (a closed account, a wrong IBAN that Verification of Payee would have caught).
 - **Currency is part of the method.** Pix is reais, UPI is rupees, SEPA is euros. [Multi-Currency & FX](/docs/payments/multi-currency) covers what presenting and settling in each costs.
-
 
 ## References
 

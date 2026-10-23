@@ -7,6 +7,8 @@ part = "Running a Provider"
 tags = ["payments", "security", "cryptography", "hsm", "pci", "keys"]
 +++
 
+[Running a Card Vault](/docs/industries/payments/card-vault) treated its key service as a box: wrap this data key, unwrap that one. This chapter opens the box.
+
 Most engineering teams meet cryptography as a library call: pick AES-GCM, get a key from a key management service, move on. Payments cryptography doesn't work like that. The keys that protect PINs and card data are governed by their own standards (PCI PIN, ANSI X9, ISO 9564), they live in certified hardware that does nothing else, they're exchanged between companies under procedures written for auditors, and the algorithms are decades old because every terminal and every bank on the other end of the wire has to agree on them. A provider that gets this wrong doesn't get a bug report. It fails a PCI PIN assessment, or it can't connect to a network at all.
 
 This chapter is the working knowledge: what an HSM is for, how a key hierarchy is built, which formats the industry has settled on, and what a platform needs even if it never sees a PIN.
@@ -29,7 +31,7 @@ Payment keys are arranged in layers, each protecting the one below. Only the top
 ![A payment key hierarchy: the master key never leaves the HSM; under it, a zone master key shared with a partner protects zone PIN keys, a terminal key-encrypting key loads terminals and their DUKPT keys, and a vault key-encrypting key wraps the data keys that encrypt card numbers.](/diagrams/key-hierarchy.svg "Every key is protected by the one above it. Only the master key stays inside the HSM; the rest are stored as key blocks, and the teal path is the one a PIN from a terminal takes.")
 
 - **The master key** (Thales calls it the LMK, Atalla the MFK) never leaves the HSM. Every other key your HSM manages is stored encrypted under it.
-- **Key-encrypting keys** protect keys in transit between parties. A **zone master key** (ZMK) is the one you share with a network or partner, exchanged once, in components, under the procedures below.
+- **Key-encrypting keys** protect keys in transit between parties. A **zone master key** (ZMK) is the one you share with a network or partner, exchanged once, in components, under the procedures in [Key Ceremonies](#key-ceremonies-split-knowledge-and-dual-control).
 - **Working keys** do the actual work and change often. A **zone PIN key** (ZPK) encrypts PINs on one link between you and a network, and is itself sent to the other side encrypted under the ZMK. **Data keys** encrypt card numbers at rest. A **base derivation key** (BDK) is the root of a terminal estate's DUKPT keys.
 
 The design rule underneath is separation: a key has one purpose, and the system enforces it. A PIN key that can also be used to decrypt data is a PIN key someone can use to decrypt PINs.
@@ -55,22 +57,6 @@ Every phase is now in effect. If you're building a provider today, key blocks ar
 A terminal can't hold one key for its whole life: steal the device, extract the key, and every PIN it ever encrypted is exposed. **DUKPT** (Derived Unique Key Per Transaction) gives each terminal an initial key derived from the estate's BDK, and derives a fresh key for every transaction from that, so compromising one transaction's key reveals neither earlier nor later ones. The current specification, ANSI X9.24-3-2017, is AES-based; the older TDES variant survives in an annex for the estates still running it.
 
 The PIN itself travels as a **PIN block**, defined by ISO 9564. **Format 0**, the long-standing default for TDES, combines the PIN with the card number into an 8-byte block. **Format 4**, added for 128-bit block ciphers in a 2015 amendment, is the one for AES. Whatever the format, the provider's servers only ever hold the encrypted block, and the only operation they perform on it is asking the HSM to translate it from the terminal's key to the network's key. AWS's documentation states the rule an HSM enforces: the card number on both sides of a translation must match, so a PIN can't be moved to a different card.
-
-## Where the HSMs Run
-
-Running payment HSMs used to mean racks in two data centers, smart cards in safes, and quarterly trips for key ceremonies. The cloud options now cover most of it, with different trade-offs:
-
-| Option | What you get | What you still own |
-| ------ | ------------ | ------------------ |
-| **AWS Payment Cryptography** | A managed, elastic payment crypto API on PCI PTS HSM V3 and FIPS 140-2 Level 3 hardware, with TR-31 and TR-34 key exchange, DUKPT, PIN translation and EMV cryptogram validation | Key policy, key exchange with partners, and how your application uses it; no raw access to the hardware |
-| **Azure Payment HSM** | Single-tenant Thales payShield 10K devices (FIPS 140-2 Level 3, PCI HSM v3) in your virtual network, under your sole administrative control | Everything a payShield owner does, including capacity, backup and key ceremonies, just without the data center |
-| **AWS CloudHSM** | Single-tenant, general-purpose HSMs validated at FIPS 140-2 or 140-3 Level 3 | You build the payment functions; it's the right tool for vault and signing keys, not PIN processing |
-| **Google Cloud HSM** | A managed cluster of FIPS 140-2 Level 3 HSMs behind Cloud KMS | General-purpose keys only; not a payment HSM |
-| **On-premises payment HSMs** | Full control, any vendor feature | Hardware lifecycle, physical security, secure rooms and every procedure around them |
-
-The FIPS levels above are what each service's documentation states. NIST moved every FIPS 140-2 certificate to its historical list in September 2026; modules on it can stay in existing systems, but new procurements, federal ones especially, should look for FIPS 140-3 validation.
-
-My default for a new provider is a managed payment crypto service for PIN and EMV work and a general-purpose HSM-backed KMS for everything else. The question to ask any option is the one the assessor will ask: where does the clear key exist, and who can make it exist?
 
 ## Leaving TDES
 
@@ -99,9 +85,25 @@ Every key has a **cryptoperiod**: how long it may be used, set by its strength, 
 
 Rotation is easy to promise and hard to do, so design for it:
 
-- **Every ciphertext records which key made it** (a key ID beside the data), so old and new keys can coexist during a rotation.
+- **Every ciphertext records which key made it** (a key ID beside the data), so old and new keys can coexist during a rotation; [Running a Card Vault](/docs/industries/payments/card-vault#storing-the-number) shows the re-wrap and re-encrypt jobs that follow.
 - **Rotation is a routine job,** run on a schedule and rehearsed, not a project that happens when someone remembers.
 - **Revocation is a runbook.** If a key is suspected compromised, the steps to replace it with every partner should already be written down and tested, because that's the day nobody has time to work them out.
+
+## Where the HSMs Run
+
+Running payment HSMs used to mean racks in two data centers, smart cards in safes, and quarterly trips for key ceremonies. The cloud options now cover most of it, with different trade-offs:
+
+| Option | What you get | What you still own |
+| ------ | ------------ | ------------------ |
+| **AWS Payment Cryptography** | A managed, elastic payment crypto API on PCI PTS HSM V3 and FIPS 140-2 Level 3 hardware, with TR-31 and TR-34 key exchange, DUKPT, PIN translation and EMV cryptogram validation | Key policy, key exchange with partners, and how your application uses it; no raw access to the hardware |
+| **Azure Payment HSM** | Single-tenant Thales payShield 10K devices (FIPS 140-2 Level 3, PCI HSM v3) in your virtual network, under your sole administrative control | Everything a payShield owner does, including capacity, backup and key ceremonies, just without the data center |
+| **AWS CloudHSM** | Single-tenant, general-purpose HSMs validated at FIPS 140-2 or 140-3 Level 3 | You build the payment functions; it's the right tool for vault and signing keys, not PIN processing |
+| **Google Cloud HSM** | A managed cluster of FIPS 140-2 Level 3 HSMs behind Cloud KMS | General-purpose keys only; not a payment HSM |
+| **On-premises payment HSMs** | Full control, any vendor feature | Hardware lifecycle, physical security, secure rooms and every procedure around them |
+
+The FIPS levels above are what each service's documentation states. NIST moved every FIPS 140-2 certificate to its historical list in September 2026; modules on it can stay in existing systems, but new procurements, federal ones especially, should look for FIPS 140-3 validation.
+
+My default for a new provider is a managed payment crypto service for PIN and EMV work and a general-purpose HSM-backed KMS for everything else. The question to ask any option is the one the assessor will ask: where does the clear key exist, and who can make it exist?
 
 ## What a Platform That Never Sees a PIN Still Needs
 

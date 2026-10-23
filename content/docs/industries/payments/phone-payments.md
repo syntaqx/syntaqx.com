@@ -27,7 +27,7 @@ tags = ["payments", "pci", "moto", "ivr", "contact-center", "ach"]
 
 ## The Phone System Is in Scope
 
-PCI SSC's information supplement on telephone payments (version 3.0, November 2018) lists what card data on a call can reach: the SIP trunk or carrier link, the PBX, the IVR, call recording and its storage and backups, speech analytics, the agent's desktop and softphone, screen recording, and a remote agent's home network. Voice and data share networks now, so without segmentation a single phone call can bring the whole office network into scope. A call from a customer isn't in scope until it reaches your infrastructure (FAQ 1153); from that moment, everything it touches is.
+PCI SSC's information supplement on telephone payments (version 3.0, November 2018) lists what card data on a call can reach: the SIP trunk or carrier link, the PBX (the office phone switch), the IVR, call recording and its storage and backups, speech analytics, the agent's desktop and softphone, screen recording, and a remote agent's home network. Voice and data share networks now, so without segmentation a single phone call can bring the whole office network into scope. A call from a customer isn't in scope until it reaches your infrastructure (FAQ 1153); from that moment, everything it touches is.
 
 You can secure each of those systems to [PCI DSS](/docs/compliance/pci-dss) or you can design so card data never enters them. The supplement prefers the second, and I'd choose it too: securing an agent's desktop, a recording archive and an analytics pipeline to the standards of a cardholder data environment (CDE: every system that stores, processes or transmits card data, plus whatever can reach them) is an endless project, and the controls are only as good as the least careful agent.
 
@@ -59,8 +59,13 @@ The simplest way to keep card data out of a call is to take the payment out of t
 - **It's an online payment now, not MOTO.** The customer is entering their own card in a browser, so 3-D Secure applies and its liability shift is available: the legitimate version of what the EBA criticized above.
 - **The link is a bearer token.** Anyone holding it can pay, and some links show a name and balance, so it's single-use, bound to one amount and payee, expiring, and carries no personal data in the URL. Behind it is a payment in `pending`, created with an [idempotency key](/docs/payments/idempotency), so a customer tapping twice pays once. Providers set their own bounds; Stripe's checkout sessions, for example, expire between 30 minutes and 24 hours after creation.
 - **The page is hosted, never the message.** PCI DSS forbids sending unprotected card numbers by end-user messaging, and PCI SSC's FAQ 1085 names email, SMS, chat and instant messaging (requirement 4.2.2). The link opens your [hosted fields](/docs/industries/payments/card-vault#getting-the-card-in); nobody ever replies with card details.
+
+### The Rules for Texting
+
+Sending payment links by text brings its own rules:
+
 - **Texting consumers needs consent.** Under the TCPA, automated texts to a mobile number need the consumer's prior express consent, and marketing texts need prior express written consent. Since April 11, 2025 a consumer can revoke consent by any reasonable means, honored within ten business days; the FCC's September 30, 2026 order narrowed what an opt-out covers (stopping one kind of informational message no longer stops them all) once it takes effect. A payment reminder to a customer who gave their number for account messages is informational; add a coupon and it's marketing.
-- **Carriers have rules too.** Business texting from ordinary 10-digit numbers requires A2P 10DLC registration of your brand and each campaign, and US carriers have blocked texts from unregistered numbers since September 2023. CTIA's messaging principles, the industry's guidance, expect an opt-in for each purpose and a working opt-out.
+- **Carriers have rules too.** Business texting from ordinary 10-digit numbers requires A2P 10DLC registration (the carriers' system for application-to-person texts from 10-digit numbers) of your brand and each campaign, and US carriers have blocked texts from unregistered numbers since September 2023. CTIA's messaging principles, the industry's guidance, expect an opt-in for each purpose and a working opt-out.
 - **Assume impostors.** Fake payment texts are among the most common scams, and the FTC tells consumers that legitimate companies don't ask for account details by text. Send from one recognizable sender and domain, never ask for a reply with payment details, put the amount and what it's for in the message, and tell customers what a real link looks like, so the next fake one stands out.
 
 ## Recordings

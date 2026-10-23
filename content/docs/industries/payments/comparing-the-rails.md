@@ -7,7 +7,7 @@ part = "How Money Moves"
 tags = ["payments", "rails", "settlement", "ledger", "treasury"]
 +++
 
-The chapters before this one take one way of paying at a time: [cards](/docs/industries/payments/card-payments) online and [in person](/docs/industries/payments/card-present), [ACH](/docs/industries/payments/ach), [checks](/docs/industries/payments/checks), [cash](/docs/industries/payments/cash-payments), and the [wallets and local methods](/docs/industries/payments/wallets-and-local-methods) the rest of the world uses. A provider runs all of them through one platform, and the platform's job is to treat each honestly: not as a card that happens to be slower, but as a rail with its own answers to the same few questions. This chapter puts those answers side by side.
+The chapters before this one take one way of paying at a time: [cards](/docs/industries/payments/card-payments) online and [in person](/docs/industries/payments/card-present), [ACH](/docs/industries/payments/ach), [checks](/docs/industries/payments/checks), [cash](/docs/industries/payments/cash-payments), and the [wallets and local methods](/docs/industries/payments/wallets-and-local-methods) the rest of the world uses. A provider runs all of them through one platform, and the platform's job is to treat each honestly: not as a card that happens to be slower, but as a rail with its own answers to the same few questions. This chapter puts those answers side by side. It also includes two rails that come later, Canadian pre-authorized debits and pushes to a debit card, so the comparison is complete.
 
 ## The Questions Every Rail Answers
 
@@ -17,17 +17,17 @@ The chapters before this one take one way of paying at a time: [cards](/docs/ind
 | **Card, in person** | The merchant, at a terminal | Seconds, unless the terminal was offline | Same as online | Same as online; an offline payment can still be declined when it's forwarded | A chargeback |
 | **Wallet** (Apple Pay, Google Pay) | The merchant, with a network token | Seconds | Same as a card | Same as a card | A chargeback |
 | **ACH debit** | The originator, under the payer's authorization | Only when no return arrives, 2 banking days for most reasons | Same day or next banking day | 60 calendar days for a consumer's unauthorized claim, 2 banking days for a business | A return with a reason code, not contested inside the network |
-| **ACH credit** | The payer, pushing | When it settles | Same day or next banking day | On settlement, though it can return as undeliverable | A return (closed or invalid account) |
+| **ACH credit** | The payer, pushing | When it settles | Same day or next banking day | On settlement for the payee, though the originator can reverse an erroneous one within five banking days | A reversal by the originator; a credit you send can come back as a return (closed or invalid account) |
 | **RTP, FedNow, wire** | The payer, pushing | Seconds (RTP, FedNow) or hours (wire) | Immediately | Immediately | Nothing; a mistake needs a new transfer back |
 | **Check** | The payer writes it; the payee deposits it | Only when the paying bank's return window passes, about two business days after presentment | Through image clearing, days | Ordinary returns within days, warranty and forgery claims long after | A return, then possibly a claim |
 | **Retail cash** | The payer, at a store counter | Seconds, at the network's confirmation | Days later, net of fees | At confirmation | Nothing; refunds go by another rail |
-| **Canadian pre-authorized debit** | The payee, under a PAD agreement | When no dishonour arrives by the next business day | Next business day | 90 calendar days for a personal debit's claim | A dishonour or a reimbursement claim |
+| **Canadian pre-authorized debit** ([Payments in Canada](/docs/industries/payments/canada#pre-authorized-debits-rule-h1)) | The payee, under a PAD agreement | When no dishonour arrives by the next business day | Next business day | 90 calendar days for a personal debit's claim | A dishonour or a reimbursement claim |
 | **SEPA or Bacs Direct Debit** | The payee, under a mandate | Days later | Days | Eight weeks for SEPA's no-questions refund, 13 months if there was no valid mandate; Bacs refunds under its guarantee | A scheme refund through the payer's bank |
 | **Instant push abroad** (SEPA Instant, Faster Payments, Pix, UPI) | The payer, from their bank | Seconds | Immediately | Immediately, except fraud reimbursement schemes like the UK's for scams and Pix's MED | A new transfer, or a fraud claim outside the payment |
 | **Buy now, pay later** | The merchant, via the lender | When the lender approves | Paid out by the lender | The lender's terms | The lender's dispute process |
-| **Push to card** (a payout) | The platform, pushing to a debit card | Seconds to 30 minutes | Immediately for Fast Funds | Immediately; reversible only for processing errors | Nothing, in practice |
+| **Push to card** (a payout, [Vendor Payouts](/docs/industries/payments/vendor-payouts#push-to-card)) | The platform, pushing to a debit card | Seconds to 30 minutes | Immediately, if the card's issuer is in Visa's Fast Funds program | Immediately; reversible only for processing errors | Nothing, in practice |
 
-Two columns matter more than the rest. **"You know it worked"** is when to tell the customer the payment went through. **"Final"** is when it's safe to release value you can't take back: ship the goods, pay out the merchant, credit the wallet. Most losses on a payments platform happen in the gap between those two moments, by a system that treated the first as the second. [Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final) turns the gap into states, and [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#payout-schedules-holds-and-reserves) into holds.
+Two columns matter more than the rest. **"You know it worked"** is when to tell the customer the payment went through. **"Final"** is when it's safe to release value you can't take back: ship the goods, pay out the merchant, credit the wallet. Most losses on a payments platform happen in the gap between those two moments, caused by a system that treated the first as the second. [Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final) turns the gap into states, and [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#payout-schedules-holds-and-reserves) into holds.
 
 ## How Refunds Differ
 
@@ -49,7 +49,7 @@ The tables describe timing. The money also physically crosses bank accounts, and
 
 - **Card money** settles from issuers to the network, then to the acquirer, which for most providers is a **sponsor bank**: the network member that lets a non-bank participate. From there it lands in an account the provider controls but doesn't own.
 - **Bank money** arrives through the provider's ODFI, usually the same bank, into the same account.
-- **That account is held for the merchants,** a for-benefit-of (FBO) account, and the provider's ledger says who owns what inside it ([Treasury & Bank Operations](/docs/industries/payments/treasury#fbo-accounts-and-pass-through-insurance)). Only the provider's earned fees leave it for the provider's own operating account.
+- **That account is held for the merchants,** a for-benefit-of (FBO) account, and the provider's ledger says who owns what inside it ([Treasury & Bank Operations](/docs/industries/payments/treasury#fbo-accounts-and-pass-through-insurance)). Apart from payouts, and what network settlement nets out for refunds and chargebacks, only the provider's earned fees leave it, for the provider's own operating account.
 - **Payouts leave it** by ACH, instant rails or push to card, to each merchant's bank ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement)).
 
 Whether the provider ever holds that money in its own name is the question [money transmission](/docs/industries/payments/becoming-a-payment-provider#holding-other-people-s-money) law turns on, which is why this picture is drawn with counsel before the ledger is designed.
@@ -69,3 +69,6 @@ Whether the provider ever holds that money in its own name is the question [mone
 - [Payments Canada: Rule H1, Pre-Authorized Debits](https://www.payments.ca/sites/default/files/h1eng.pdf), the 90-day reimbursement window for personal debits
 - [Deutsche Bundesbank: SEPA Direct Debit](https://www.bundesbank.de/en/tasks/payment-systems/services/sepa/content/sepa-direct-debit-626654), the eight-week and 13-month refund rights
 - [12 CFR 330.5](https://www.law.cornell.edu/cfr/text/12/330.5), the conditions for pass-through insurance on custodial accounts
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the 120-day dispute window and Fast Funds
+- [12 CFR 229.31](https://www.law.cornell.edu/cfr/text/12/229.31), when a returned check must reach the depositary bank
+- [Lewis Silkin: PSR confirms maximum reimbursement for APP fraud](https://www.lewissilkin.com/en/insights/2024/09/psr-confirms-maximum-reimbursement-for-app-fraud)

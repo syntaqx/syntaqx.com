@@ -48,9 +48,26 @@ The Council doesn't define levels. Each brand sets its own by annual transaction
 | 2 | 1 million to 6 million | An annual SAQ; Mastercard requires a QSA or ISA to be involved for SAQ A, A-EP or D |
 | 3 and below | Under 1 million | An annual SAQ, which the acquirer decides how to collect |
 
-Below Level 2 the brands diverge. Visa's current program page lists three merchant levels, the third being everyone under 1 million e-commerce transactions. Mastercard's rules keep four: Level 3 is 20,000 to 1 million e-commerce transactions, Level 4 everyone else, and neither has to validate to Mastercard directly. Discover publishes three levels on the same 6 million and 1 million lines. American Express counts differently: Level 1 starts at 2.5 million Amex transactions, Level 2 at 50,000, Level 3 at 10,000, and Levels 3 and 4 submit documents only when Amex asks. Quarterly ASV scans aren't a level perk either way; they come from the standard itself (11.3.2) for whatever you expose to the internet in scope.
+Below Level 2 the brands diverge:
 
-Service providers have two levels, and the line is low. Visa's Level 1 is VisaNet processors and any provider handling over 300,000 Visa transactions a year; Mastercard's is every processor, merchant payment gateway, token service provider and several other types **regardless of volume**, plus payment facilitators above 300,000 Mastercard transactions. American Express puts its service provider line at 2.5 million. Level 1 means an annual ROC by a Qualified Security Assessor and an Attestation of Compliance signed by both the provider and the assessor. Everyone under the line validates with SAQ D for Service Providers, but Visa only lists a provider on its Global Registry of Service Providers, which acquirers and large customers check, once a QSA has validated it. A gateway is Mastercard Level 1 from its first transaction, so a serious service provider plans for a QSA from the start.
+| Brand | Lower merchant levels |
+| --- | --- |
+| Visa | Three levels in all; Level 3 is everyone under 1 million e-commerce transactions |
+| Mastercard | Four: Level 3 is 20,000 to 1 million e-commerce transactions, Level 4 everyone else, and neither validates to Mastercard directly |
+| Discover | Three levels, on the same 6 million and 1 million lines |
+| American Express | Counted differently: Level 1 from 2.5 million Amex transactions, Level 2 from 50,000, Level 3 from 10,000; Levels 3 and 4 submit documents only when Amex asks |
+
+Quarterly ASV scans aren't a level perk either way; they come from the standard itself (11.3.2) for whatever you expose to the internet in scope.
+
+Service providers have two levels, and the line is low:
+
+| Brand | Service provider Level 1 |
+| --- | --- |
+| Visa | VisaNet processors, and any provider handling over 300,000 Visa transactions a year |
+| Mastercard | Every processor, merchant payment gateway, token service provider and several other types **regardless of volume**, plus payment facilitators above 300,000 Mastercard transactions |
+| American Express | Above 2.5 million Amex transactions |
+
+Level 1 means an annual ROC by a Qualified Security Assessor and an Attestation of Compliance signed by both the provider and the assessor. Everyone under the line validates with SAQ D for Service Providers, but Visa only lists a provider on its Global Registry of Service Providers, which acquirers and large customers check, once a QSA has validated it. A gateway is Mastercard Level 1 from its first transaction, so a serious service provider plans for a QSA from the start.
 
 ## Which SAQ: Architecture Decides
 

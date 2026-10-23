@@ -7,6 +7,8 @@ part = "Running a Provider"
 tags = ["payments", "routing", "processors", "debit", "architecture"]
 +++
 
+[Payments for Software Platforms](/docs/industries/payments/software-platforms) ended with what a provider builds for its platforms; the next thing a growing provider adds is a second processor.
+
 A platform's first processor is a vendor. Its second is an architecture decision. Once payments run through two, every charge needs a decision about where it goes, every failure needs a decision about whether it may go somewhere else, and every dollar needs reconciling against two sets of books. Done well, routing buys resilience, lower costs and better approval rates. Done casually, it buys duplicate charges and a reconciliation team.
 
 I treat the second processor as something you earn. Start with one, build the abstractions that make a second possible (your own payment model, your own tokens, your own ledger), and add it when one of the reasons below is real.
@@ -80,7 +82,7 @@ The dangerous moment in routing is the timeout. A processor that returns an erro
 So failover follows rules:
 
 - **Fail over only on a known outcome.** A connection that was refused before anything was sent, or an explicit "not processed" response, is safe to route elsewhere. A timeout after the request was sent is not.
-- **Resolve the unknown first.** Query processor A for the payment by its [idempotency key](/docs/payments/idempotency), and if the result is an approval you no longer want, reverse it. Only then is the payment free to try elsewhere. Until it's resolved, it's `authorizing` (in flight, outcome unknown), as [Retries & Timeouts](/docs/architecture/retries-and-timeouts) describes.
+- **Resolve the unknown first.** Query processor A for the payment by its [idempotency key](/docs/payments/idempotency), and if the result is an approval you no longer want, reverse it. Only then is the payment free to try elsewhere. Until it's resolved, it's `authorizing` (in flight, outcome unknown; [Payment States & Ledgers](/docs/payments/payment-states#in-flight-states)), as [Retries & Timeouts](/docs/architecture/retries-and-timeouts) describes.
 - **Fail over the route, not the request.** When a processor's health score drops (error rate up, latency up), a circuit breaker stops sending *new* payments there and routes them to the next healthy option. In-flight payments stay where they were and get resolved, not duplicated.
 - **Never fail over a decline.** An issuer that declined through processor A will usually decline through B, and resending it counts against the networks' retry limits ([Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials)). A decline is an answer, not an outage.
 

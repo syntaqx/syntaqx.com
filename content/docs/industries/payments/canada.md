@@ -25,7 +25,7 @@ The **ACSS** (Automated Clearing Settlement System) is the workhorse: 10.6 billi
 
 ## EFT Files: Standard 005
 
-An EFT file in Canada is a **CPA Standard 005** (CPA being the Canadian Payments Association, Payments Canada's former name) file, and it shares nothing with NACHA's but the idea:
+An EFT file in Canada is a **CPA Standard 005** (CPA being the Canadian Payments Association, Payments Canada's former name) file, and it shares nothing with Nacha's but the idea:
 
 - **1,464-character records.** An `A` header, then `C` credits, `D` debits, `E` and `F` reversals of each, `I` and `J` returned credits and debits, and a `Z` trailer with control totals. Each detail record carries up to six 240-character transaction segments after a 24-character prefix, so one record holds six payments. Notices of change travel separately, as 208-character `S`, `U` and `V` records.
 - **Banks vary.** That's the interbank format; what your bank accepts from you may be a 1,464- or 264-byte variant with its own restrictions (some allow only credits in a file). Build a writer per bank, the same way [Treasury](/docs/industries/payments/treasury) builds a parser per bank.
@@ -87,9 +87,9 @@ The networks are familiar, but the rules around them aren't.
 - Complaints are acknowledged within 5 business days and resolved within 20.
 - Merchants may accept a network's credit cards without its debit cards or the reverse, and may discount by payment method or network.
 
-[Software Platforms](/docs/industries/payments/software-platforms) covers per-merchant pricing; in Canada the notice periods are part of the pricing system.
+[Interchange & Pricing](/docs/industries/payments/interchange-and-pricing#a-pricing-engine) covers per-merchant pricing; in Canada the notice periods are part of the pricing engine.
 
-**Interchange** is lower for small merchants by government agreement: from October 19, 2024, Visa and Mastercard cut rates for businesses under $300,000 of annual Visa volume or $175,000 of Mastercard volume, to a weighted average of 0.95% in store. The thresholds are already moving: Visa raised its threshold to $750,000 of annual Visa volume, with lower rates, effective October 24, 2026, while Mastercard's stayed at $175,000, so treat them as data with an effective date, as [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) recommends for every rate.
+**Interchange** is lower for small merchants by government agreement: from October 19, 2024, Visa and Mastercard cut rates for businesses under $300,000 of annual Visa volume or $175,000 of Mastercard volume, to a weighted average of 0.95% in store. The thresholds are already moving: Visa raises its threshold to $750,000 of annual Visa volume, with lower rates, on October 24, 2026, while Mastercard's stayed at $175,000, so treat them as data with an effective date, as [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) recommends for every rate.
 
 **Surcharging** has been allowed since October 2022, within limits the [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees) engine has to encode per country: credit cards only, at most 2.4% and no more than the merchant's actual cost, disclosed before the payment, with notice to the acquirer, never combined with a convenience fee, and never in Quebec, whose consumer protection law prohibits it. Debit and prepaid cards can't be surcharged.
 

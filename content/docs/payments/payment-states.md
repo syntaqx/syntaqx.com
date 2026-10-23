@@ -15,7 +15,7 @@ Every financial object has a `status` with a closed set of values and a document
 
 ### Example: Payment
 
-![Payment state machine: pending moves to authorized when approved, to requires_action for a 3-D Secure challenge and back to pending when completed, or to failed when declined; requires_action fails when abandoned or expired; authorized moves to captured or to voided when cancelled or expired; captured moves to settled in the settlement batch. failed, voided and settled are terminal.](/diagrams/payment-states.svg "Every payment is in exactly one state, and only these moves exist. Teal is the path a payment should take; the dashed exits end it, and failed, voided and settled never change again.")
+![Payment state machine: pending moves to authorized when approved, to requires_action for a 3-D Secure challenge and back to pending when completed, or to failed when declined; requires_action fails when abandoned or expired; authorized moves to captured or to voided when cancelled or expired; captured moves to settled in the settlement batch. failed, voided and settled are terminal.](/diagrams/payment-states.svg "Every payment is in exactly one state, and only these moves exist. Teal is the path a payment should take; the dashed exits end it, and failed, voided and settled never change again. The in-flight states below sit on each arrow that calls a processor.")
 
 | From | To | Trigger |
 | ---- | -- | ------- |
@@ -48,10 +48,10 @@ For a card, settlement ends the payment's own state machine; a dispute months la
 | ACH debit | As a return, ending the payment | 2 banking days for most reasons, 60 calendar days for a consumer's unauthorized claim ([ACH & Bank Transfers](/docs/industries/payments/ach)) |
 | Canadian pre-authorized debit | As a reimbursement claim | 90 calendar days for a personal debit ([Payments in Canada](/docs/industries/payments/canada)) |
 | Check | As a return, then as warranty or forgery claims | Days for the return; claims long after ([Accepting Checks](/docs/industries/payments/checks)) |
-| SEPA Direct Debit, Bacs Direct Debit | As a scheme refund through the payer's bank | Eight weeks for SEPA, 13 months without a valid mandate; Bacs under its guarantee ([Wallets & Local Methods](/docs/industries/payments/wallets-and-local-methods)) |
+| SEPA Direct Debit, Bacs Direct Debit | As a scheme refund through the payer's bank | Eight weeks for SEPA, 13 months without a valid mandate; Bacs under its guarantee ([Wallets & Local Payment Methods](/docs/industries/payments/wallets-and-local-methods)) |
 | Instant push, wire, retail cash | No, except fraud reimbursement schemes like the UK's for scams and Pix's MED, which run outside the payment | Final when confirmed |
 
-So a bank debit runs `submitted`, `settled`, `available` once the administrative return window closes, and `final` when the last window does, with `returned` as a terminal branch from any of them. A card payment collected while a terminal was offline is `collected_offline` until it's forwarded and authorized, because it may yet be declined ([Card-Present Payments](/docs/industries/payments/card-present)). What these states drive is when value is released: a payout, a shipped order, a cleared balance waits for the state that makes the risk acceptable, never for `settled` alone.
+So a bank debit runs `submitted`, `settled`, `available` once the administrative return window closes, and `final` when the last window does, with `returned` as a terminal branch from any state before `final`. A card payment collected while a terminal was offline is `collected_offline` until it's forwarded and authorized, because it may yet be declined ([Card-Present Payments](/docs/industries/payments/card-present)). What these states drive is when value is released: a payout, a shipped order, a cleared balance waits for the state that makes the risk acceptable, never for `settled` alone.
 
 ### Authorizations Expire
 
@@ -66,7 +66,7 @@ Not every authorization is for the final amount, and the network rules make each
 - **Estimated and incremental authorizations.** When the final amount isn't known yet (a hotel stay, a rental, a tab), Visa lets any merchant send an **estimated** authorization, flagged as one and disclosed to the cardholder, and add **incremental** authorizations under the same transaction identifier when the estimate runs short. Increments don't extend the hold's validity window. Mastercard calls the estimate a **pre-authorization**, cleared within 30 days, against a **final** authorization, which must clear for exactly its amount within 7.
 - **Partial capture.** Capture less than was authorized, and reverse the rest. Visa requires the unused difference to be reversed within 24 hours of completing the transaction, and an uncompleted one reversed in full within 24 hours of cancellation or the window closing; processors pass on fees for authorizations left hanging.
 - **Multiple captures.** A split shipment captures one authorization in pieces. Visa allows it for card-absent merchants that disclose the possibility and notify the cardholder of each shipment, with a sequence number on each clearing, and for airlines and cruise lines; the last capture is marked final and releases whatever remains.
-- **Capturing more than authorized.** Visa tolerates clearing above the authorized amount only in named cases: up to 20% for taxis, bars and beauty services, 15% for lodging and cruises, the greater of 15% or $75 for car rental, and, from February 2026, up to 30% for US restaurants, where tips arrive after the authorization. Everything else captures at or below the authorized amount, or authorizes again.
+- **Capturing more than authorized.** Visa tolerates clearing above the authorized amount only within set limits: up to 20% for taxis, bars and beauty services (and, outside the US, restaurants), 15% for lodging, cruises and any other card-absent purchase the cardholder started, the greater of 15% or $75 for car rental, and, from February 21, 2026, up to 30% for US restaurants, where tips arrive after the authorization. After a partial approval, and for transactions inside the EEA, the amounts must match exactly. Everything else captures at or below the authorized amount, or authorizes again.
 
 In the state machine, each of these is a recorded event on the payment (`authorization_incremented`, `partially_captured`, `remainder_released`) with the amounts it moved, and the payment's capturable amount is derived from them, never stored as a number someone updates.
 
@@ -94,8 +94,8 @@ Half the confusion in payments is five words for money going back, each a differ
 | --- | --- | --- | --- |
 | **Void** (authorization reversal) | The hold is released before capture; no money moved | Merchant | Card |
 | **Refund** | A new credit back to the payer after the money moved | Merchant | Both |
-| **Reversal** | The originator corrects its own erroneous entry, for a short list of reasons, within days | Merchant or originator | Bank ([ACH](/docs/industries/payments/ach#reversals)) |
-| **Return** | The payer's bank rejects or claws back a debit, with a reason code | Payer's bank | Bank |
+| **Reversal** (ACH) | The originator corrects its own erroneous entry, for a short list of reasons, within days | Merchant or originator | Bank ([ACH](/docs/industries/payments/ach#reversals)) |
+| **Return** | The receiving bank sends an entry back, a debit it won't honor or a credit it can't post, with a reason code | Receiving bank (RDFI) | Bank |
 | **Chargeback** (dispute) | The cardholder's bank takes the money back and the merchant may contest it | Cardholder, through the issuer | Card ([Disputes](/docs/industries/payments/disputes-and-chargebacks)) |
 
 Each is its own object or entry in the ledger, and none is ever an edit to the original payment.

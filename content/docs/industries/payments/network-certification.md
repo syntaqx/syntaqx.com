@@ -7,6 +7,8 @@ part = "Running a Provider"
 tags = ["payments", "certification", "emv", "iso-8583", "testing", "release-management"]
 +++
 
+[Inside a Processor](/docs/industries/payments/inside-a-processor) ended with the certification every message type needs before it carries traffic.
+
 Most software ships when its tests pass. Payment software that talks to a card network ships when someone else's tests pass. Before a new gateway, processor or terminal integration carries a single real transaction, a processor, a card network or both run scripted cases against it and sign off. After it's live, the networks change their message formats and rules on a fixed calendar, and every change is a deadline you didn't set.
 
 I treat certification as an engineering discipline, not a paperwork phase. A team that plans for it builds a system that can replay a certification script on any build, ships network changes like dependency upgrades, and knows its next mandate date the way it knows its next release. A team that doesn't discovers in month eleven that its "finished" integration has a six-week certification queue in front of it.
@@ -18,7 +20,7 @@ The layers mirror the parties in [How Card Payments Work](/docs/industries/payme
 | You connect to | Who certifies | What they test |
 | -------------- | ------------- | -------------- |
 | A processor's API or host | The processor | Their message format and fields, every transaction type you'll send, error and reversal handling |
-| A card network, as an acquirer processor | The network | The host interface itself: [ISO 8583](/docs/industries/payments/card-payments) authorization and clearing messages, chip data, each host platform |
+| A card network, as an acquirer processor | The network | The host interface itself: [ISO 8583](/docs/industries/payments/inside-a-processor#one-authorization-end-to-end) authorization and clearing messages, chip data, each host platform |
 | A payment terminal | EMVCo, then the network and acquirer | The device's chip and contactless interfaces (Level 1), its kernel (Level 2), and its integration end to end (Level 3) |
 | 3-D Secure | EMVCo, then the networks | The 3DS Server, ACS or SDK against a specific version of the specification |
 | Network tokens | Each network's token service | Your onboarding as a token requestor, before you can provision tokens |
@@ -77,7 +79,6 @@ Certification goes well when it's the last run of tests you already have, rather
 - **Deterministic test fixtures.** Certification hosts react to specific test card numbers and amounts (one amount approves, another declines with a given code). Keep them in fixtures, never in someone's notes.
 - **A certification environment that can replay.** A build that passed certification must be reproducible. Record the exact message traffic of every certification run and keep it, because the next question from the processor or the network will be "what did you send on the 14th?"
 - **Changes that touch messages get flagged in review.** A change to a field mapping, an indicator or a transaction type is a certification event. Code ownership on the message layer ([Code Ownership](/docs/engineering/code-ownership)) puts the people who know that in front of it.
-
 
 ## What This Means for the System You Build
 

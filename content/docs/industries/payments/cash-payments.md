@@ -27,7 +27,7 @@ The payer identifies the bill one of two ways: a **barcode** tied to their accou
 - Enforce the payer's allowed methods (an account restricted to certified funds after a bounced check may still be allowed cash; one barred from cash shouldn't be accepted at the counter; the restrictions are the ones [ACH & Bank Transfers](/docs/industries/payments/ach#after-a-return-fees-and-blocks) defines).
 - Never decline because the endpoint was slow. Timeouts are lost payments and a customer standing at a register with cash in hand.
 
-**The confirmation is authoritative.** The network's confirmation callback is authoritative; authorization isn't. Retries come every minute, and PayNearMe suspends a callback after 40 consecutive failures, so the handler is idempotent on the network's payment identifier and always answers quickly ([Webhooks](/docs/payments/webhooks) has the consumer side). Networks without callbacks send a nightly file instead (CheckFreePay delivers to some billers that way); reconcile it like any other bank file.
+**The confirmation is what counts.** The network's confirmation callback is authoritative; the authorization callback isn't. Retries come every minute, and PayNearMe suspends a callback after 40 consecutive failures, so the handler is idempotent on the network's payment identifier and always answers quickly ([Webhooks](/docs/payments/webhooks) has the consumer side). Networks without callbacks send a nightly file instead (CheckFreePay delivers to some billers that way); reconcile it like any other bank file.
 
 **Post the payment on confirmation.** Many billers notify in seconds and post days later; the DC child support agency tells payers to allow three to four business days. There's no reason for the gap. Cash, once handed over, doesn't bounce or get charged back, so the payer's balance should drop when the confirmation arrives, and the late fee shouldn't be charged to someone whose cash was taken on the due date.
 
@@ -65,11 +65,11 @@ Taking someone's money and passing it to someone else is money transmission, whi
 
 Some places require businesses to take cash. New Jersey (2019), New York City (2020), Colorado (2021), Philadelphia and, since March 21, 2026, New York State require in-person retail businesses to accept it, with exceptions that vary. None targets rent, but a platform serving retail can't go cashless there.
 
-Rent has its own rules: California requires landlords to accept a payment that's neither cash nor electronic, and lets them demand cash only for three months after a bounce ([Accepting Checks](/docs/industries/payments/checks#rent-and-paper)). Rules like these are why a payer's allowed payment methods belong in data, per account and with an expiry, not in code.
+Rent has its own rules, like California's ([Accepting Checks](/docs/industries/payments/checks#rent-and-paper)). Rules like these are why a payer's allowed payment methods belong in data, per account and with an expiry, not in code.
 
 ## Cash Around the World
 
-In much of the world, cash vouchers are a mainstream way to pay online. The customer gets a reference or barcode at checkout and pays it at a store, bank or ATM, and the merchant learns the result asynchronously, which is the same shape as the bank redirects in [Wallets & Local Methods](/docs/industries/payments/wallets-and-local-methods).
+In much of the world, cash vouchers are a mainstream way to pay online. The customer gets a reference or barcode at checkout and pays it at a store, bank or ATM, and the merchant learns the result asynchronously, which is the same asynchronous shape as the bank redirects in the [next chapter](/docs/industries/payments/wallets-and-local-methods#bank-push-and-bank-pull).
 
 | Method | Where | Payer pays at | Expires | Confirmed | Refunds |
 | --- | --- | --- | --- | --- | --- |

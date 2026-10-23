@@ -308,10 +308,10 @@ body {
   color: var(--muted);
   counter-reset: section;
 }
-/* Docs fill their column beside the contents rail (about 45rem at xl), and
-   stay at a readable measure where the rail is hidden and the column grows. */
+/* Docs fill their whole column, beside the sidebar: their tables, code and
+   diagrams need the width more than a narrow measure. */
 .prose-docs {
-  max-width: 48rem;
+  max-width: none;
 }
 .prose h1,
 .prose h2,
