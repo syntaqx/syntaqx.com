@@ -56,10 +56,6 @@ A suite where every endpoint proves it says no is the cheapest defense against t
 
 Authorization checks sit on the hot path, so caching them is tempting, but a cached "yes" outlives the permission behind it: a user removed from a team keeps access until it expires. Keep the time to live short, invalidate when roles or memberships change, and never cache a decision across tenants or without the full (caller, action, resource) in the key. Responses that vary by caller must be `private` so a shared cache can't serve one user's data to another ([Caching](/docs/requests/caching)).
 
-## This Site
-
-syntaqx.com has no accounts, so it makes no authorization decisions: every endpoint is public and identical for every caller. That's a deliberate departure from the playbook, recorded in [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md). The one place it scopes by caller is `POST /echo`, whose idempotency keys are scoped to the caller's IP so one client can't replay another's response ([Idempotency](/docs/payments/idempotency)).
-
 ## References
 
 **Specifications**
