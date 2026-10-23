@@ -79,7 +79,7 @@ In much of the world, cash vouchers are a mainstream way to pay online. The cust
 | **Multibanco** | Portugal | ATM or online banking | Set by the merchant | Can take days | Up to 365 days |
 | **Paysafecash** | Europe | Partner stores, by barcode | 72 hours by default | Minutes | Only to a Paysafecash account |
 
-They share a design: the payment is **pending with an expiry**, most customers who abandon it simply never pay, and the order can't ship until the confirmation arrives. They also shift: in Brazil, Pix carried 54.7% of transactions in the second half of 2025 against boleto's 7.6%, and Pix Automático, launched in June 2025, goes after boleto's recurring bills. Offer vouchers where customers expect them, and expect the instant rails to take their place.
+They share a design: the payment is **pending with an expiry**, most customers who abandon it simply never pay, and the order can't ship until the confirmation arrives. They also shift: in Brazil, Pix has become the dominant way to pay, and Pix Automático, launched in June 2025, goes after boleto's recurring bills ([Wallets & Local Methods](/docs/industries/payments/wallets-and-local-methods)). Offer vouchers where customers expect them, and expect the instant rails to take their place.
 
 ## What This Means for the System You Build
 
@@ -123,3 +123,7 @@ They share a design: the payment is **pending with an expiry**, most customers w
 - [CheckFreePay](https://www.checkfreepay.com/), a walk-in bill payment network
 - [Stripe: Boleto](https://docs.stripe.com/payments/boleto), [OXXO](https://docs.stripe.com/payments/oxxo), [Konbini](https://docs.stripe.com/payments/konbini) and [Multibanco](https://docs.stripe.com/payments/multibanco), voucher expiry, confirmation, settlement and refunds
 - [Paysafe: Paysafecash](https://developer.paysafe.com/en/api-docs/payments-api/add-payment-methods/paysafecash/), barcode validity and limits
+- [DC Office of the Attorney General: PayNearMe FAQ (PDF)](https://oag.dc.gov/sites/default/files/2022-09/CSSD%20PayNearMe%20FAQs.pdf), a biller's cash fee, limit and three-to-four-day posting
+- [Payments Dive: Walmart makes cash payment options more efficient](https://www.paymentsdive.com/news/walmart-makes-cash-payment-options-more-efficient/601406/), retail cash bill payment fees from $2.99 up to $5.99
+- [LG&E and KU: Want to pay cash?](https://lge-ku.com/newsroom/articles/2023/09/21/want-pay-cash), barcode and desk payments, a $1.95 fee, and retailers capping payments at $500
+- [EWEB: Walmart bill pay FAQ (PDF)](https://www.eweb.org/documents/walmart_pay_customer_faq.pdf), a $1,500 daily limit per customer

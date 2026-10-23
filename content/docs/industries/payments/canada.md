@@ -145,10 +145,12 @@ The networks are familiar, but the rules around them aren't.
 - [Department of Finance: Credit card fees reduced for small businesses](https://www.canada.ca/en/department-finance/news/2024/10/government-reduces-credit-card-fees-by-27-per-cent-for-small-business-owners.html), the October 2024 reductions and eligibility thresholds
 - [Canada Gazette: Consumer-driven banking regulations](https://gazette.gc.ca/rp-pr/p1/2026/2026-06-27/html/reg3-eng.html), the draft regulations of June 2026
 - [Interac: e-Transfer for Business](https://www.interac.ca/en/payments/business/send-receive-money-with-interac-e-transfer-for-business/), limits, bulk payments and remittance data
-- [Interac: Interac Direct](https://www.interac.ca/en/payments/personal/interac-direct/), the account-based online payment that replaced Interac Online
+- [Interac: Interac Direct](https://www.interac.ca/en/payments/personal/interac-direct/), the account-based online payment, launched under the Konek brand, that replaced Interac Online
 - [Visa Canada: Upcoming changes to interchange rates](https://www.visa.ca/content/dam/VCOM/regional/na/canada/Support/Documents/visa-canada-upcoming-changes-to-interchange-rates.pdf), the $750,000 small-merchant threshold effective October 24, 2026
 - [Interac: Contactless payments](https://www.interac.ca/en/business/our-solutions/contactless-payments/), per-tap limits set by each issuer, typically $250
 - [Commission d'accès à l'information: Principaux changements de la Loi 25](https://www.cai.gouv.qc.ca/protection-renseignements-personnels/sujets-et-domaines-dinteret/principaux-changements-loi-25), the three phases and the penalties
+- [Interac: Interac Debit online and in-app with Stripe](https://www.interac.ca/en/content/news/interac-debit-is-now-available-for-online-and-in-app-payments-with-stripes-customers/), Interac Debit through a payment provider, February 2026
+- [FINTRAC: Payment service providers and MSB registration (2022)](https://fintrac-canafe.canada.ca/notices-avis/2022-07-21-eng), payment providers registering as money services businesses
 
 **In practice**
 
@@ -156,3 +158,4 @@ The networks are familiar, but the rules around them aren't.
 - [CFIB: Visa lowers interchange fees for small businesses](https://www.cfib-fcei.ca/en/media/visa-lowers-interchange-fees-for-tens-of-thousands-of-small-businesses-but-new-credit-card-fees-are-on-the-horizon), the October 2026 threshold change and new network fees
 - [Chase Canada: Surcharging](https://www.chase.ca/en/help/surcharge), an acquirer's statement of which cards can be surcharged
 - [DLA Piper: The new Consumer-Driven Banking Act explained](https://www.dlapiper.com/en/insights/publications/2026/04/the-new-consumer-driven-banking-act-explained), Bill C-15, Bank of Canada oversight and the phases
+- [Stripe: Pricing](https://stripe.com/pricing), the added fees for international cards and currency conversion
