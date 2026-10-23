@@ -9,7 +9,7 @@ aliases = ["payments/strong-customer-authentication"]
 tags = ["payments", "sca", "3ds", "psd2", "authentication"]
 +++
 
-[Onboarding](/docs/industries/payments/merchant-onboarding) establishes who the merchant is; the other side of a card payment is whether the person paying is really the cardholder. A card number, an expiry and a CVC prove only that someone has seen a card. Strong Customer Authentication (SCA) closes that gap for online payments in Europe, and 3-D Secure (3DS) is how card payments do it. Treat it as a regulation to bolt on later and you get the worst of it: legitimate European customers declined for "authentication required" with no way to complete the step, and fraud disputes you could have shifted to the bank.
+[Designing the Payments API](/docs/industries/payments/payments-api) gave a payment a `requires_action` state and said Strong Customer Authentication is the reason. This chapter is that step. [Onboarding](/docs/industries/payments/merchant-onboarding) established who the merchant is; authentication asks whether the person paying is really the cardholder. A card number, an expiry and a CVC prove only that someone has seen a card. Strong Customer Authentication (SCA) closes that gap for online payments in Europe, and 3-D Secure (3DS) is how card payments do it. Treat it as a regulation to bolt on later and you get the worst of it: legitimate European customers declined for "authentication required" with no way to complete the step, and fraud disputes you could have shifted to the bank.
 
 ## What SCA Requires
 
@@ -46,7 +46,7 @@ The data is the lever: the more context you send, the more often the issuer deci
 
 The messages come in pairs. The 3DS Server asks the Directory Server which card ranges participate (PReq/PRes) and caches the answer; it sends the authentication request (AReq), the ACS answers (ARes) frictionlessly or with a challenge; the challenge runs in the customer's browser or app (CReq/CRes); and the ACS reports the outcome to the 3DS Server (RReq/RRes). A data-only variant shares the context with the issuer without authenticating, to improve approval rates where a challenge isn't wanted.
 
-**The result has to reach the authorization.** A successful authentication returns an authentication value (Visa calls it the CAVV) and an e-commerce indicator, and the authorization carries both. On Visa, ECI 05 means fully authenticated, 06 an attempt, 07 not authenticated, and Visa's rules make a fraud dispute invalid only when the authenticated or attempted result and its CAVV were in the authorization request. A 3DS integration that authenticates but drops the CAVV on the way to the processor gets the friction and none of the protection. Mastercard uses its own ECI values (02 authenticated, 01 attempted).
+**The result has to reach the authorization.** A successful authentication returns an authentication value (Visa calls it the CAVV) and an **electronic commerce indicator** (ECI), and the authorization carries both. On Visa, ECI 05 means fully authenticated, 06 an attempt, 07 not authenticated, and Visa's rules make a fraud dispute invalid only when the authenticated or attempted result and its CAVV were in the authorization request. A 3DS integration that authenticates but drops the CAVV on the way to the processor gets the friction and none of the protection. Mastercard uses its own ECI values (02 authenticated, 01 attempted).
 
 **Buy the 3DS Server, usually.** EMVCo approves 3DS Servers, SDKs and ACSs against specific versions of the specification and its test suites, and a provider that operates a 3DS Server, Directory Server or ACS falls under PCI's 3DS Core Security Standard ([Network Certification](/docs/industries/payments/network-certification#3-d-secure-and-tokens)). Most providers integrate an approved server instead. Version 2.3.1 replaced 2.3.0 in 2022, and EMVCo recommends 2.2 or higher.
 
@@ -56,7 +56,7 @@ Outside Europe, nothing requires 3-D Secure. Merchants in the US use it for the 
 
 By default the merchant bears the loss on a fraud dispute. When a payment was successfully authenticated with 3DS, the liability typically shifts to the issuer: the bank approved the cardholder's identity, so the bank owns that mistake. That's the business case for 3DS beyond compliance: a merchant selling high-value goods can request authentication on risky orders even where SCA doesn't require it, to move fraud losses off its books.
 
-It's not a guarantee. [Stripe's documentation](https://docs.stripe.com/payments/3d-secure/authentication-flow) is explicit that networks exempt some business types, merchants in fraud monitoring programs can lose it, and it never covers non-fraud disputes such as "item not received". Record the authentication result and the Electronic Commerce Indicator (ECI) on the payment so the evidence exists when a [dispute](/docs/industries/payments/disputes-and-chargebacks) arrives.
+It's not a guarantee. [Stripe's documentation](https://docs.stripe.com/payments/3d-secure/authentication-flow) is explicit that networks exempt some business types, merchants in fraud monitoring programs can lose it, and it never covers non-fraud disputes such as "item not received". Record the authentication result and the ECI on the payment so the evidence exists when a [dispute](/docs/industries/payments/disputes-and-chargebacks) arrives.
 
 ## Exemptions: When You Can Skip the Step
 
@@ -83,7 +83,7 @@ A customer-initiated (on-session) payment has the customer in your checkout, abl
 
 ## Modeling the Extra Step in an API
 
-A payment can't always finish in one request: the customer may need to complete a challenge in their banking app first. The API represents "waiting on the customer" as a real state, not a timeout: `requires_action` in the [payment state machine](/docs/payments/payment-states), carrying what the client has to do next:
+[Designing the Payments API](/docs/industries/payments/payments-api#the-objects) explained why payments are intents; this is what the intent looks like while it waits on the customer. The API represents "waiting on the customer" as a real state, not a timeout: `requires_action` in the [payment state machine](/docs/payments/payment-states), carrying what the client has to do next:
 
 ```json
 {

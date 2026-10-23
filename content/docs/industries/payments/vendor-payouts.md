@@ -7,17 +7,17 @@ part = "Paying Out"
 tags = ["payments", "payouts", "accounts-payable", "fraud", "tax"]
 +++
 
-[Settlement](/docs/industries/payments/payouts-and-settlement) pays a merchant the money its own customers paid it. A vendor payout is the other direction: a business paying the people it owes, its suppliers, contractors and landlords, out of its own money. It looks like the same "send money to a bank account" problem, and the differences are where the work is. The payer chooses the recipient, so the main fraud is getting the payer to choose the wrong one. The vendor chooses how it wants to be paid, so one payable can leave by five different rails with five different timelines and failure modes. And the payer owes the IRS a record of who got paid what.
+[Settlement](/docs/industries/payments/payouts-and-settlement) pays a merchant the money its own customers paid it. A vendor payout is the other direction: a business paying the people it owes, its suppliers, contractors and landlords, out of its own money. It looks like the same "send money to a bank account" problem, and the differences are where the work is. The payer chooses the recipient, so the main fraud is getting the payer to choose the wrong one. The vendor chooses how it wants to be paid, so one payable can leave by any of six methods with six different timelines and failure modes. And the payer owes the IRS a record of who got paid what.
 
 ## Bills Before Payouts
 
-A payout starts as a **bill**: what a vendor says it's owed, entered by hand, imported, or read from an invoice. The bill has its own lifecycle before any money moves: entered, sent for approval, partially approved, approved or rejected, then in transit, partially paid and paid. Approval is where the controls live. Thresholds add approvers as amounts grow, the person who entered a bill can't approve it, and a bill to a vendor whose bank details changed recently waits for the checks in [Stopping the Changed Bank Account](#stopping-the-changed-bank-account). Only an approved bill becomes a payable, and only a payable becomes a payout, so every dollar out traces back through an approval to an invoice.
+A payout starts as a **bill**: what a vendor says it's owed, entered by hand, imported, or read from an invoice. The bill has its own lifecycle before any money moves: entered, sent for approval, partially approved, then approved or rejected. Approval is where the controls live. Thresholds add approvers as amounts grow, the person who entered a bill can't approve it, and a bill to a vendor whose bank details changed recently waits for the checks in [Stopping the Changed Bank Account](#stopping-the-changed-bank-account). Only an approved bill becomes a payable, and only a payable becomes a payout, so every dollar out traces back through an approval to an invoice.
 
 ## Enrollment and Method Choice
 
 Vendor onboarding is a small version of [merchant onboarding](/docs/industries/payments/merchant-onboarding): collect the legal name and taxpayer ID on a W-9, the payment method and its details, and a remittance contact. Screen vendors against sanctions lists like any other payee ([The Payments Rulebook](/docs/industries/payments/payments-rulebook)).
 
-Let vendors choose their method in a portal, with the payer able to set defaults and restrictions. Each vendor has a primary method and a fallback, and a payable records which method actually paid it. The portal is also the most valuable thing an attacker can reach, which is the next section.
+Let vendors choose their method in a portal, with the payer able to set defaults and restrictions. Each vendor has a primary method and a fallback, and a payable records which method actually paid it. The portal is also the most valuable thing an attacker can reach, which is why any change made in it gets the controls in [Stopping the Changed Bank Account](#stopping-the-changed-bank-account).
 
 ## The Methods
 
@@ -32,7 +32,7 @@ Every method trades cost, speed and finality differently, and the vendor's prefe
 | **RTP or FedNow** | Seconds | Immediately; irrevocable | Network and bank fees | Usually nothing |
 | **Push to card** | Seconds to 30 minutes | Immediately; reversible only for processing errors | Per-payout fees | Usually nothing |
 
-![One approved payable fans out to five payment methods: ACH credit arrives next day and can still return; a virtual card settles when the vendor charges it and expires if unused; a check takes days and must be voided before reissue; a wire and RTP or FedNow arrive the same day and are final with no return path.](/diagrams/vendor-payouts.svg "One payable, one successful disbursement. Each rail has its own timing and its own way to fail, and a new attempt starts only after the last one is definitively dead.")
+![One approved payable fans out to five of its payment methods: ACH credit arrives next day and can still return; a virtual card settles when the vendor charges it and expires if unused; a check takes days and must be voided before reissue; a wire and RTP or FedNow arrive the same day and are final with no return path.](/diagrams/vendor-payouts.svg "One payable, one successful disbursement. Each rail has its own timing and its own way to fail, and a new attempt starts only after the last one is definitively dead.")
 
 My default is ACH: cheap, universal and carrying remittance data, with the mechanics in [ACH & Bank Transfers](/docs/industries/payments/ach). Virtual cards come next, where the vendor accepts them, then checks as the fallback for vendors who won't enroll, and instant rails for the payments where speed is worth paying for. Wires are for the rare large or urgent payment, and they get the strictest controls, because a wire sent to a fraudster is gone.
 
@@ -92,7 +92,7 @@ Someone has to fund a payout before it leaves, and each model moves risk somewhe
 
 Holding funds for others between payer and payee is where [money transmission](/docs/industries/payments/becoming-a-payment-provider#holding-other-people-s-money) comes in. Whether a payables product needs licenses, or fits an exemption such as acting as the payer's agent with funds in accounts its bank controls, depends on the actual flow of funds and the state. That's a question for counsel, decided before the ledger is designed, because the answer decides which accounts the money sits in.
 
-Whatever the model, the ledger enforces one rule: never disburse more than the payer has funded and you've reserved. A payable moves through **approved**, **funded** and **paid**, and the funding is a ledger entry, not an assumption.
+Whatever the model, the ledger enforces one rule: never disburse more than the payer has funded and you've reserved. A payable moves from **approved** to **funded** to **in transit** to **paid** (or **partially paid** when only some of it has gone), and the funding is a ledger entry, not an assumption.
 
 ## A Payout Is a State Machine
 

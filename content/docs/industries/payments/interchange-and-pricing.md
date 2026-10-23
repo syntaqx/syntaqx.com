@@ -41,9 +41,9 @@ The tables change. Visa publishes revisions with effective dates, so interchange
 
 In the US, debit interchange from large issuers is capped by law. The Durbin Amendment directed the Federal Reserve to set the cap, and Regulation II has held it at **21 cents plus 5 basis points (hundredths of a percent)** of the transaction, plus a **1-cent fraud-prevention adjustment** for issuers that meet the Fed's fraud standards. It applies to issuers that, with their affiliates, have **$10 billion or more** in assets; smaller issuers are exempt and earn the network's ordinary debit rates, which is why the same $100 online purchase can carry $0.27 or $1.80 of interchange depending on which bank issued the card.
 
-The cap itself is unsettled. The Fed proposed lowering it in November 2023 to 14.4 cents, 4.0 basis points and a 1.3-cent fraud adjustment, recalculated every two years; no final rule had been adopted as of October 2026. Separately, on August 6, 2025, a federal court in North Dakota (*Corner Post v. Board of Governors*) held Regulation II contrary to the statute and vacated it, then stayed its own ruling pending appeal, and the Fed appealed to the Eighth Circuit on October 6, 2025, which heard argument in May 2026 and hadn't ruled by October. Until those resolve, the 2011 numbers still apply, and a pricing system that hard-codes them is one ruling away from wrong.
+The cap itself is unsettled. The Fed proposed lowering it in November 2023 to 14.4 cents, 4.0 basis points and a 1.3-cent fraud adjustment, recalculated every two years; no final rule had been adopted as of October 2026. Separately, on August 6, 2025, a federal court in North Dakota (*Corner Post v. Board of Governors*) held Regulation II contrary to the statute and vacated it, then stayed its own ruling pending appeal. The Fed appealed to the Eighth Circuit on October 6, 2025; the court heard argument in May 2026 and hadn't ruled by October. Until those resolve, the 2011 numbers still apply, and a pricing system that hard-codes them is one ruling away from wrong.
 
-Regulation II also governs **routing**: every debit card must be able to run over at least two unaffiliated networks, and since July 1, 2023, that includes card-not-present payments. The merchant, not the issuer, chooses among them. That choice is money, and [Processor Routing](/docs/industries/payments/processor-routing) covers how to make it.
+Regulation II also governs **routing**: every debit card must be able to run over at least two unaffiliated networks (the card brand's own and a PIN debit network such as Star, NYCE, Pulse or Accel), and since July 1, 2023, that includes card-not-present payments. The merchant, not the issuer, chooses among them. That choice is money, and [Processor Routing](/docs/industries/payments/processor-routing) covers how to make it.
 
 ### Downgrades
 
@@ -60,7 +60,7 @@ The fix is to treat the qualification rate as a production metric: compute it fr
 
 ## Level 2 and Level 3 Data
 
-Commercial cards carry the highest interchange, and they're also where data earns the most back. **Level 2** data historically added the tax amount, a customer reference such as a purchase order number, and the merchant's tax ID. **Level 3** adds line items (and since April 2026 is the only level Visa rewards, apart from fleet): product codes, descriptions, quantities, unit prices, freight and duty. Business card issuers want it because their customers reconcile purchases against it, and the networks reward merchants who send it.
+Commercial cards carry the highest interchange, and they're also where data earns the most back. **Level 2** data historically added the tax amount, a customer reference such as a purchase order number, and the merchant's tax ID. **Level 3** (no relation to the EMV Level 3 terminal certification in [Card-Present Payments](/docs/industries/payments/card-present#running-a-fleet)) adds line items: product codes, descriptions, quantities, unit prices, freight and duty. Business card issuers want it because their customers reconcile purchases against it, and the networks reward merchants who send it.
 
 Visa reorganized this in 2025 as its **Commercial Enhanced Data Program**. Its current schedule prices the top commercial category, "Commercial Product 3", at 1.75% + $0.10, against 2.70% + $0.10 for an ordinary card-not-present commercial payment and 2.95% + $0.10 when a transaction doesn't qualify at all. Processors describe the program's terms: from October 17, 2025, the line items must add up exactly to the authorized amount (quantity times unit price, plus tax and shipping), Visa charges a 5-basis-point participation fee on enhanced-data volume, and Level 2 rates were retired in April 2026 except for fleet fuel. Mastercard runs its own enhanced-data programs with their own tables.
 
@@ -80,6 +80,8 @@ How the merchant is charged decides who carries the variability of interchange.
 | **Subscription** | A monthly fee, with interchange and network fees at cost | The merchant | Good for high-volume merchants; the provider's revenue no longer scales with the merchant's |
 
 Large providers usually offer more than one: Stripe lists interchange-plus among its custom pricing options alongside the flat rate. A platform should be able to represent every model, because it will end up selling different ones to different merchants.
+
+American Express and Discover price on their own terms, as three-party networks. Most small merchants now accept them through their ordinary acquirer, which contracts with each network (American Express's OptBlue program is the arrangement for smaller merchants), and see them on the same statement, priced by the acquirer rather than by an interchange table.
 
 Passing some of this cost on to the payer is a separate question, with its own rules: [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees).
 
@@ -102,7 +104,7 @@ A software company that embeds payments earns on the spread. An ISO or referral 
 - **Store the cost of every transaction, by layer.** From the processor's interchange and fee detail: the interchange category and amount, each network fee, and the markup, linked to the payment they belong to.
 - **Money in minor units, rates as exact decimals.** Basis points or decimal strings, never floats, with the rounding rule written down ([Money & Amounts](/docs/payments/money)). A fraction of a cent per transaction is a reconciliation break at scale.
 - **Rate tables as effective-dated data.** Interchange schedules, fee schedules and each merchant's contracted price all change on known dates, and a transaction is priced by the version in force when it happened.
-- **Estimate at authorization, true up at settlement.** Show the expected cost when the payment is made, then replace the estimate with the actual from the processor's files, and report on the difference.
+- **Estimate at capture, true up at settlement.** Show the expected cost when the payment is captured, then replace the estimate with the actual from the processor's files, and report on the difference.
 - **Reconcile statements.** Each month, the processor's statement should equal the sum of the per-transaction costs you recorded. When it doesn't, the difference is either a fee you didn't know about or a transaction you didn't record.
 - **Watch qualification and margin.** Downgrade rate by merchant and category, and margin by merchant, as dashboards someone owns.
 

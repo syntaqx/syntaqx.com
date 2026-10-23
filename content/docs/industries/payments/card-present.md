@@ -50,7 +50,7 @@ The engineering lesson isn't the dates. It's that the rule is "whoever invested 
 
 ## Contactless and Tap to Pay
 
-Contactless is EMV over radio: the same cryptogram, the same issuer validation, a shorter exchange. Phone wallets add a layer, presenting a device-specific token instead of the card number, which the network maps back to the real card.
+Contactless is EMV over radio: the same cryptogram, the same issuer validation, a shorter exchange. Phone wallets add a layer, presenting a device-specific token (a [DPAN](/docs/industries/payments/card-payments#card-numbers-and-tokens)) instead of the card number, which the network maps back to the real card.
 
 Two things here are newer than most platforms' assumptions:
 
@@ -102,7 +102,7 @@ So offline is a risk product, and the platform should treat it like one:
 
 ## Why Card-Present Is Cheaper
 
-Chip and PIN make card-present payments the safest transactions in the system, and interchange reflects it. On Visa's exempt debit table, card-present retail costs about half what basic e-commerce does ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) has the rates). That advantage only applies when the data proves the card was there: the right entry mode, the chip data, the terminal capabilities. A payment that falls back to stripe, or that a clerk keys in by hand, loses it.
+Chip and PIN make card-present payments the safest transactions in the system, and interchange reflects it. On Visa's table for debit cards from smaller issuers (the "exempt" ones Regulation II's cap doesn't reach), card-present retail costs about half what basic e-commerce does ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) has the rates). That advantage only applies when the data proves the card was there: the right entry mode, the chip data, the terminal capabilities. A payment that falls back to stripe, or that a clerk keys in by hand, loses it.
 
 ## What This Means for the System You Build
 

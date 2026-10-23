@@ -8,7 +8,9 @@ part = "Running a Provider"
 tags = ["payments", "platforms", "payfac", "multi-tenancy", "embedded-payments"]
 +++
 
-A vertical software company, building for gyms, clinics, property managers or school districts, sits where its customers' money moves: invoices, memberships, rent, tuition. Adding payments to that software is the most common way such companies grow revenue without adding customers. The platform earns a share of every dollar processed. Customers who run their payments through the product rarely leave it, and the payment data makes the rest of the product better: who paid late, which locations grow, what to offer next.
+The chapters so far describe a provider's machinery from the merchant's side. This part is about running it, and it starts with the customers most providers grow on: software companies that embed payments for their own merchants.
+
+A vertical software company (an independent software vendor, or ISV), building for gyms, clinics, property managers or school districts, sits where its customers' money moves: invoices, memberships, rent, tuition. Adding payments to that software is the most common way such companies grow revenue without adding customers. The platform earns a share of every dollar processed. Customers who run their payments through the product rarely leave it, and the payment data makes the rest of the product better: who paid late, which locations grow, what to offer next.
 
 It's also where a software company turns into a financial services company, partly or completely, depending on the model. This chapter is how I'd reason about that choice and what each model asks of engineering, from the platform's side and, at the end, from the side of the provider serving it. [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) is the far end of the road; most platforms should know where it leads and stop well short of it.
 
@@ -19,7 +21,7 @@ The question that separates the models is the same one that separates payment pr
 | Model | Underwrites merchants | Holds the loss | Owns the merchant relationship | Platform earns | Engineering surface |
 | --- | --- | --- | --- | --- | --- |
 | **Referral** | The processor | The processor | The processor | A referral fee or small share | A link and an integration |
-| **Reseller (ISV, independent software vendor, as agent)** | The processor | The processor, unless the contract shifts it | Shared | A share of the margin, as residuals | Onboarding handoff, reporting |
+| **Reseller (ISV as agent)** | The processor | The processor, unless the contract shifts it | Shared | A share of the margin, as residuals | Onboarding handoff, reporting |
 | **Managed payfac** | The provider, often with the platform's input | The provider first, then the platform by contract | The platform, under its brand | A larger share; sometimes pricing control | Embedded onboarding, payments and payouts, support |
 | **Registered payfac** | The platform | The platform, with its sponsor acquirer behind it | The platform | The most margin | All of it, plus risk, compliance and capital |
 
@@ -36,7 +38,7 @@ The platform earns from payments in one of two ways, and they have different eng
 - **A fee taken per transaction.** An application or platform fee is deducted from each payment before the merchant's share settles. It's immediate and simple to explain, and it's a [separate ledger entry](/docs/industries/payments/payouts-and-settlement#fees-are-separate-entries), never netted silently into the merchant's amount. Some merchants want gross settlement instead, with fees collected afterward ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#collecting-your-own-fees)).
 - **A revenue share paid later.** The provider pays the platform a share of the margin it earned, monthly, as residuals. The platform has to reconcile that statement against its own records of volume and pricing, which it can only do if it records both.
 
-The question underneath both is whether the platform ever **holds** the money. If customer payments land in the platform's own bank account and the platform then pays its merchants, it's receiving and transmitting other people's money, which is [money transmission](/docs/industries/payments/becoming-a-payment-provider#holding-other-people-s-money) unless an exemption applies. The structure that avoids the question is the one in the diagram: the provider settles net funds directly to each merchant's bank, and the platform's cut arrives as a fee or a residual. Design the funds flow first, with counsel, and the ledger second.
+The question underneath both is whether the platform ever **holds** the money. If customer payments land in the platform's own bank account and the platform then pays its merchants, it's receiving and transmitting other people's money, which is [money transmission](/docs/industries/payments/becoming-a-payment-provider#holding-other-people-s-money) unless an exemption applies. The structure that avoids the question is the one in the hierarchy diagram below: the provider settles net funds directly to each merchant's bank, and the platform's cut arrives as a fee or a residual. Design the funds flow first, with counsel, and the ledger second.
 
 ## The Hierarchy
 
@@ -91,15 +93,15 @@ A merchant reconciles its payouts to its sales: every payout traces to the payme
 
 ## 1099-K and Taxpayer Data
 
-In the US, card payments to merchants are reported to the IRS on Form 1099-K by the payment settlement entity: the merchant acquiring entity for card transactions, with no minimum threshold. When a payment facilitator makes the settlement payments on the acquirer's behalf, the IRS instructions say the facilitator files the 1099-K in its place. Third-party network transactions, such as marketplaces and payment apps, are reportable above $20,000 and 200 transactions a year.
+In the US, card payments to merchants are reported to the IRS on Form 1099-K by the payment settlement entity: the merchant acquiring entity for card transactions, with no minimum threshold. When a payment facilitator makes the settlement payments on the acquirer's behalf, the IRS instructions say the facilitator files the 1099-K in its place. Third-party network transactions, such as marketplaces and payment apps, are reportable above $20,000 and 200 transactions a year, the threshold the One Big Beautiful Bill Act restored in 2025.
 
-So whoever settles to the merchant needs a correct legal name and taxpayer ID for every merchant, collected in onboarding and matched against the IRS before the year ends. The filer's obligations run on a calendar:
+So whoever settles to the merchant needs a correct legal name and taxpayer ID for every merchant, collected in onboarding and matched against the IRS before the year ends. In a managed model the provider usually owns that filing; a registered payfac owns it outright. Either way, the platform's onboarding is where the data comes from, and the filer's obligations run on a calendar:
 
-- **Report gross.** Box 1a is the gross amount, without subtracting refunds, fees or chargebacks, which is why the ledger keeps gross volume ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#fees-are-separate-entries)). The $20,000 and 200-transaction threshold applies only to third-party networks; card payments have no threshold, and the One Big Beautiful Bill Act restored the $20,000 threshold in 2025.
+- **Report gross.** Box 1a is the gross amount, without subtracting refunds, fees or chargebacks, which is why the ledger keeps gross volume ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#fees-are-separate-entries)).
 - **Deadlines.** Copies to merchants by January 31, and to the IRS by February 28 on paper or March 31 electronically; filing 10 or more information returns of any kind requires filing electronically.
 - **Backup withholding.** A merchant whose name and TIN don't match gets a B-notice when the IRS sends a CP2100 listing, and if a corrected Form W-9 doesn't come back within 30 business days, the filer withholds 24% of payouts until it does. A second mismatch within three years needs proof from the Social Security Administration or the IRS, not just a new form.
 - **States** have their own thresholds, some as low as $600, and filing through the Combined Federal/State Filing program covers some of them.
-- **Keep copies** for three years, or four if backup withholding applied. In a managed model the provider usually owns that filing; a registered payfac owns it outright. Either way, the platform's onboarding is where the data comes from.
+- **Keep copies** for three years, or four if backup withholding applied.
 
 ## Events to the Platform
 

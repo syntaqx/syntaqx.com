@@ -47,13 +47,15 @@ Asking for everything up front (ID documents, ownership structure, bank statemen
 
 A merchant who has processed $500 can't do much damage; one who has processed $500,000 has earned, and needs, a full review. Each requirement has a deadline, and missing it moves the merchant to `restricted`: payouts stop until it's resolved.
 
+**Approval provisions the merchant; it doesn't just flag it.** An approved application becomes accounts elsewhere: a MID and MCC at the acquirer ([How Card Payments Work](/docs/industries/payments/card-payments#merchant-identity)), a statement descriptor, Apple Pay domain registration ([Wallets & Local Payment Methods](/docs/industries/payments/wallets-and-local-methods#wallets-are-cards-in-disguise)), ACH origination limits ([ACH & Bank Transfers](/docs/industries/payments/ach#the-rules-you-inherit)), and any fee program the merchant's category needs, such as surcharge notice or Visa service-fee registration ([Surcharging & Fees](/docs/industries/payments/surcharging-and-fees)). A Canadian merchant adds Canada's registrations ([Payments in Canada](/docs/industries/payments/canada#who-regulates-you)). Each is a separate step that can fail, so track them as requirements on the merchant, not as a script that ran once.
+
 ## The Application Is Not the Merchant
 
 Model the **application** and the **merchant** as separate objects. An application is a request, with its own states (draft, submitted, verifying, pending documents, in review, approved, declined, withdrawn) and a history of what was asked and answered; a merchant is what an approved application creates, with capabilities that change over its whole life. Keeping them apart lets a merchant reapply, add a line of business, or change ownership without rewriting the record of how it was first approved. The **legal entity** is a third object, linked to the people who own and control it, and one person can be behind several businesses, which is exactly the link fraud reviews want to see. Payabli's boarding model makes the same split: applications, merchants, businesses and people are distinct records, and an application submitted through a hosted form or the API produces the same application and the same merchant.
 
 Templates belong here too. A platform rarely onboards every merchant the same way: a template decides which fields an application asks for and which pricing it carries, by segment or vertical, so a small landlord and a national management company answer different questions on the way to the same kind of merchant.
 
-Onboarding collects some of the most sensitive data a platform holds: government ID numbers, document images, dates of birth, bank account numbers. All of it follows [Sensitive Data](/docs/payments/sensitive-data) in full, and raw document images are kept only as long as verification or the law requires. So does the taxpayer data a platform needs for 1099-K reporting, a legal name and taxpayer identification number (TIN) matched against the IRS before the year ends ([Software Platforms](/docs/industries/payments/software-platforms#1099-k-and-taxpayer-data)).
+Onboarding collects some of the most sensitive data a platform holds: government ID numbers, document images, dates of birth, bank account numbers. All of it follows [Sensitive Data](/docs/payments/sensitive-data) in full, and raw document images are kept only as long as verification or the law requires. The taxpayer data a platform needs for 1099-K reporting (the IRS form for payment volume) gets the same treatment: a legal name and taxpayer identification number (TIN), matched against the IRS before the year ends ([Software Platforms](/docs/industries/payments/software-platforms#1099-k-and-taxpayer-data)).
 
 ## Underwriting and Risk Tiers
 
@@ -86,6 +88,10 @@ Onboarding is a moment; risk is continuous. A merchant who was fine in March can
 - **Re-verify on material change.** A new owner, a new bank account for payouts, a new business name. A changed payout account re-verifies before the next payout, with the controls in [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account).
 - **Expire documents.** An ID that expires is a requirement that comes due again.
 
+## The Merchant Agreement
+
+Every merchant signs terms, and the networks dictate part of them: Visa's rules, for example, require merchant agreements to ban laundering transactions for other businesses. The engineering cares about the terms that become behavior: authorization to debit the merchant's bank account for fees and negative balances, the reserve and payout rights the platform can exercise, notice periods for price changes, data use, and termination, including what happens to the balance afterward. Store which version of the terms each merchant accepted, when and how, because a dispute with a merchant turns on exactly that.
+
 ## An API That Says What's Due
 
 A merchant's requirements change by country, business type, volume and whatever a reviewer asked for. Hard-coding the onboarding form in every client makes every rule change a client release, and some clients never update. The better pattern is for the API to say what's needed and the client to render it:
@@ -115,7 +121,7 @@ A merchant's requirements change by country, business type, volume and whatever 
 
 - `currently_due` is what has to be resolved by `current_deadline` to stay active. `eventually_due` is what will be needed if the merchant grows. `past_due` is what already caused a restriction. `pending_verification` is what's submitted and being checked.
 - Errors name the requirement they belong to, so the client can show the message next to the right field. Validation failures on submitted fields are `422`s in the [standard error format](/docs/requests/error-responses).
-- Every change to requirements emits a `merchant.updated` [webhook](/docs/payments/webhooks), so platforms building on the API can prompt the merchant before a deadline instead of after a restriction.
+- Every change to requirements emits a `account.updated` [webhook](/docs/payments/webhooks), so platforms building on the API can prompt the merchant before a deadline instead of after a restriction.
 
 Verification rules can then change per country or risk tier without any client knowing in advance. Stripe Connect's `requirements` hash works the same way.
 
@@ -140,3 +146,7 @@ Verification rules can then change per country or risk tier without any client k
 - [Stripe: Handle verification with the API](https://docs.stripe.com/connect/handling-api-verification), a requirements list with currently due, eventually due and past due fields, and what happens at the deadline
 - [Stripe: Prohibited and restricted businesses](https://stripe.com/legal/restricted-businesses), an example of the categories a platform has to screen for
 - [Payabli: Boarding object model](https://docs.payabli.com/guides/pay-ops-boarding-object-model-overview.md), applications, merchants, businesses and people as separate records
+
+**Reference**
+
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), required merchant agreement terms

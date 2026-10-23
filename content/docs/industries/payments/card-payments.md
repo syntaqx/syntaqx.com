@@ -59,7 +59,7 @@ Read end to end, the volume describes the components of a payment provider. Each
 | **ISO or payfac** | Sells acquiring on an acquirer's behalf. (ISO here is an independent sales organization, not the standards body behind ISO 8583.) An ISO signs merchants to the acquirer; a payment facilitator signs them as its own sub-merchants under one master account ([Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider)) |
 | **Payment provider** | What this volume calls a company like Stripe, Adyen or Payabli that bundles gateway, processing and often acquiring or payfac services behind one API |
 
-Visa and Mastercard are **four-party** networks: the network sits between issuers and acquirers it doesn't own. American Express and Discover grew up as **three-party** networks that largely issue and acquire themselves, which is why their pricing and rules differ from Visa's and Mastercard's, and it shows up in surcharging and dispute rules later in the volume.
+Visa and Mastercard are **four-party** networks: the network sits between issuers and acquirers it doesn't own. American Express and Discover grew up as **three-party** networks that largely issue and acquire themselves, which is why their pricing and rules differ from Visa's and Mastercard's, as later chapters on pricing, surcharging and disputes show.
 
 Where you sit among these parties is a choice with a price. A software company can refer merchants to a provider, resell one, embed one as a managed payment facilitator, become a registered payfac, or go further and become a processor or acquirer itself. Each step takes on more of the risk and more of the work; [Payments for Software Platforms](/docs/industries/payments/software-platforms#four-ways-in) covers the first rungs and [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) the rest.
 
@@ -80,10 +80,12 @@ Hold windows depend on the brand, the channel and who started the payment: a **c
 | Brand | Authorization | Must be captured within |
 | --- | --- | --- |
 | Visa | Card-absent, customer-initiated | 10 days |
+| Visa | Card-absent, customer-initiated, flagged as an extended authorization | 30 days |
 | Visa | Card-present, or merchant-initiated | 5 days |
 | Visa | Estimated, at hotels, car rentals and cruise lines | 30 days |
 | Mastercard | Final authorization | 7 days |
 | Mastercard | Pre-authorization | 30 days |
+| Visa | Automated fuel pump | 2 hours |
 
 Not every authorization is a purchase for a final amount. A **zero-amount verification** checks a card is valid without holding money, when a card is saved; a **partial approval** approves less than requested (common on prepaid cards) and leaves the merchant to collect the rest another way; **estimated** and **incremental** authorizations hold an amount that may change ([Payment States & Ledgers](/docs/payments/payment-states#holds-that-change-size)); and a refund can itself be authorized before it's sent.
 
@@ -117,7 +119,7 @@ Your system has the same problem one layer up. A timeout from your processor is 
 
 The same card behaves differently depending on whether it was physically there.
 
-- **Card-present** payments read the chip, which generates a one-time cryptogram the issuer verifies, so a copied card number alone is useless. Fraud is low, interchange is lower, and liability for counterfeit fraud follows whoever didn't support chip.
+- **Card-present** payments read the chip, which generates a one-time cryptogram the issuer verifies, so a copied card number alone is useless. Fraud is low and interchange is lower.
 - **Card-not-present** payments (online, in-app, by phone) carry only what the customer typed. The issuer leans on the card verification code (CVV2 on Visa, CVC2 on Mastercard, CID on Amex), address verification (AVS, a match result returned in the authorization) and [3-D Secure](/docs/industries/payments/strong-customer-authentication) instead. Fraud is higher, interchange is higher, and the merchant carries the fraud loss unless authentication shifted it. There are two **liability shifts**, and they're different: the chip shift moves counterfeit fraud in person onto whoever didn't support chip ([Card-Present Payments](/docs/industries/payments/card-present#the-liability-shift)), and the 3-D Secure shift moves fraud online onto the issuer when the cardholder was authenticated.
 - **Key-entered** card-present payments, where the clerk types the number, get the worst of both: present in name, priced and risked like an online payment.
 
@@ -176,6 +178,7 @@ The card number is the **PAN**, the primary account number, and almost everythin
 - [Cornell LII: 15 U.S.C. § 1693o-2](https://www.law.cornell.edu/uscode/text/15/1693o-2), the Durbin Amendment behind regulated debit
 - [Federal Register: Debit Card Interchange Fees and Routing (2022)](https://www.federalregister.gov/documents/2022/10/11/2022-21838/debit-card-interchange-fees-and-routing), card-not-present debit routable over two unaffiliated networks from July 1, 2023
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), authorization types, approval validity windows (5.7.3.5) and the reversal requirement (5.7.3.6)
+- [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), merchant category codes such as 5411, 6513 and 4900
 
 **In practice**
 

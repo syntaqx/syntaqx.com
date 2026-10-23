@@ -55,7 +55,7 @@ A dispute is its own object with its own state machine, referencing the payment 
 | Dispute opened | Disputed amount moves from the merchant's balance to a `disputes_held` account. The fee moves to `dispute_fees`. |
 | Won | The held amount returns to the merchant's balance. The fee usually stays charged. |
 | Lost | The held amount leaves for good, through the acquirer's settlement (`acquirer_settlement_clearing`), because the issuer kept it. |
-| Accepted without contest | Same as lost, without the response fee. |
+| Accepted without contest | Same as lost, without the countering fee. |
 
 Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts.
 
@@ -75,14 +75,14 @@ VAMP ratio = (fraud reports (TC40, in Visa's transaction codes) + disputes (TC15
 
 | | Threshold |
 | --- | --------- |
-| Excessive merchant (Asia Pacific, Canada, Europe, US) | 150 basis points (1.5%) from 1 April 2026, down from 220 |
+| Excessive merchant (Asia Pacific, Canada, Europe, US) | 150 basis points (1.5%) from April 1, 2026, down from 220 |
 | Excessive merchant (Latin America) | 150 basis points |
 | Excessive merchant (CEMEA) | 220 basis points |
 | Minimum volume | 1,500 fraud reports and disputes in the month |
 
 Mastercard runs its own programs by merchant. Its Excessive Chargeback Program flags a merchant with at least 100 chargebacks and a 1.5% ratio in a month, and a high-excessive tier at 300 chargebacks and 3%, with assessments that start at $1,000 and climb to $100,000 a month or more the longer a merchant stays in; its Excessive Fraud Merchant program targets e-commerce merchants with high fraud chargebacks and low use of 3-D Secure. Acquirers' summaries of these are the public source; Mastercard's rule text isn't public.
 
-Two details make it harder than it looks. Fraud reports count even when no dispute follows, so a [card-testing attack](/docs/industries/payments/fraud-and-risk#card-testing) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
+Two details make it harder than it looks. Fraud reports (the early fraud warnings of [Fraud & Risk](/docs/industries/payments/fraud-and-risk#the-two-costs)) count even when no dispute follows, so a [card-testing attack](/docs/industries/payments/fraud-and-risk#card-testing) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
 
 ## Prevention Beats Winning
 

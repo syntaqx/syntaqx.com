@@ -48,7 +48,7 @@ Money arrives on the acquirer's schedule and leaves on yours, and the gap betwee
 
 A reserve in the ledger is a promise that the money exists. Whether it's an earmarked part of the custodial account or a separate account the sponsor bank requires, the cash has to be there on the day a [dispute](/docs/industries/payments/disputes-and-chargebacks) or a [risky merchant](/docs/industries/payments/merchant-onboarding) needs it, and its release dates are treasury events: they change what you can pay out that day.
 
-Negative balances are the reverse. When refunds and lost disputes take a merchant below zero and you've already paid them out, the custodial account is short by that amount until you recover it. Fill the gap from operating funds, recorded as a receivable from the merchant, the moment it appears. The alternative, letting other merchants' money cover it, is commingling by another name. That's cash, not a decision about who bears the loss: the merchant still owes it, recovered in the order [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#negative-balances) sets.
+Negative balances are the reverse. When refunds and lost disputes take a merchant below zero and you've already paid them out, the custodial account is short by that amount until you recover it. Fill the gap from operating funds, recorded as a receivable from the merchant, the moment it appears. Letting other merchants' money cover it instead is commingling by another name. Filling the gap is a cash move, not a decision about who bears the loss: the merchant still owes the money, recovered in the order [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#negative-balances) sets.
 
 ## Moving Money Safely
 
@@ -60,7 +60,6 @@ Every transfer out of a custodial account is irreversible enough to deserve cere
 - **Lock what shouldn't move.** Positive pay on any account that issues checks, and ACH debit blocks or filters on accounts nobody should be debiting, which is usually all of them.
 - **Initiate idempotently.** A transfer instruction carries a key derived from what it represents, like the date and purpose of a sweep ([Idempotency](/docs/payments/idempotency)). Many bank APIs don't honor idempotency keys, so store the intent before sending, put your own end-to-end reference on the payment, and after a timeout ask the bank about that reference before sending anything again ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)).
 - **Plan for a second bank.** One sponsor bank is one point of failure for every payout you make. A second relationship gives you somewhere to go, at the price of splitting custodial funds and doubling reconciliation, the same trade [Processor Routing](/docs/industries/payments/processor-routing) makes for card processing.
-- **Unclaimed money still has an owner.** Uncashed checks and abandoned balances eventually belong to a state, not to you; [Vendor Payouts](/docs/industries/payments/vendor-payouts) covers escheatment.
 
 ## The Banking Calendar
 
@@ -77,12 +76,11 @@ Every date that moves money is a banking-day calculation: when a payout lands, w
 Most bank connections are still files. ACH and wire instructions, positive pay issue files and payment requests go out; acknowledgements, returns, notifications of change, statements, lockbox deposits and processors' settlement and fee files come back. The file pipeline is as critical as any API, and it gets less attention because it runs at night.
 
 - **Transport with keys you rotate.** Host-to-host SFTP is the norm, with AS2 or HTTPS at some banks. J.P. Morgan's, for example, takes 2048-bit RSA keys at minimum, requires every uploaded file to be PGP-signed, encrypts on request, and asks clients to rotate keys and certificates at least annually. Test and production get separate credentials, and the bank's own PGP key changes on its schedule, so its expiry is on your calendar too.
-- **Names are identities.** Every outbound file gets a unique name; J.P. Morgan warns that reusing one "can and will cause file overwrites". Inside the file, the NACHA header's File ID Modifier distinguishes files sent the same day, and Canada's Standard 005 has its file creation number ([Payments in Canada](/docs/industries/payments/canada)). Allocate both from the database.
+- **Names are identities.** Every outbound file gets a unique name; J.P. Morgan warns that reusing one "can and will cause file overwrites". Inside the file, the Nacha header's File ID Modifier distinguishes files sent the same day, and Canada's Standard 005 has its file creation number ([Payments in Canada](/docs/industries/payments/canada)). Allocate both from the database.
 - **A file is a state machine:** built, transmitted, acknowledged or rejected, then settled, with a record of exactly which entries went into it. After an ambiguous failure, ask the bank what arrived before sending anything again; a resent file is a duplicate of every payment in it.
 - **Read the acknowledgement.** A FedACH acknowledgement reports the file's status, its batch and entry counts and its debit and credit totals, and lists batch-level errors by edit code; ISO 20022 banks answer a `pain.001` with a `pain.002` status report (accepted, accepted with change, partially accepted, rejected, pending). Compare the counts and totals with what you sent, and alert when no acknowledgement arrives by the time it should. A missing acknowledgement before the cutoff is a phone call; after it, it's a day of late payments.
 - **Inbound files are processed exactly once.** Poll politely (J.P. Morgan asks for no more than four polls an hour, away from the top and bottom of the hour), key each file by name and content hash, move it to processed or failed, and feed returns and NOCs into the ledger the same day. Processor settlement and fee files go through the same pipeline: fees parsed from them become ledger entries, as [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) requires.
-- **Archive everything, encrypted and immutable.** Disputes, returns and examiners all refer back to the original file. Authorizations alone must be kept two years after they end, so keep the files themselves, not just what you parsed from them.
-- **Alert on the connection, not just the content.** Repeated connection failures, a file stuck in transmission, or a parser that rejected a file are all reasons to page someone before the bank's cutoff.
+- **Archive everything, encrypted and immutable.** Disputes, returns and examiners all refer back to the original file. ACH debit authorizations alone must be kept two years after they're revoked or end ([ACH & Bank Transfers](/docs/industries/payments/ach)), so keep the files themselves, not just what you parsed from them.
 
 ## Bank Reconciliation Is Its Own Discipline
 
@@ -96,9 +94,11 @@ Reconciliation is matching, and the shapes are uneven:
 - **One to many:** a net settlement deposit matches the thousands of transactions, refunds and fees it settles.
 - **Many to one:** a payout batch leaves as one debit and has to match every payout in it.
 
-What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one. Run it three ways every day, ledger against processor reports against bank statements, and treat an unexplained break as a stop, as the closing section below describes. Money that arrives and can't be identified, a credit with no reference, goes to a suspense account with an owner and an age, and back to the sender if nobody can claim it. Intraday reports earn their keep here too: they tell you whether today's payouts are funded before the bank's cutoff, not after.
+What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Money that arrives and can't be identified, a credit with no reference, is one of those items: it sits in a suspense account until someone claims it, and goes back to the sender if nobody does. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one.
 
-Monitoring this file pipeline, the alarms for files and payments that should have moved and didn't, is in [Operating the Platform](/docs/industries/payments/operating-the-platform#watching-the-pipeline).
+An unexplained break is a stop, not a ticket: it holds the next payout run until someone explains it. Intraday reports earn their keep here: they tell you whether today's payouts are funded before the bank's cutoff, not after.
+
+Monitoring this pipeline, from a failed connection or a missing acknowledgement to a file that arrived and never reached the ledger, is in [Operating the Platform](/docs/industries/payments/operating-the-platform#watching-the-pipeline).
 
 ## Safeguarding Outside the US
 
@@ -108,7 +108,7 @@ Read it as the US direction of travel written down: daily reconciliation, record
 
 ## What This Means for the System You Build
 
-- **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)). The cash in custodial accounts equals what you owe merchants (pending and available balances), plus reserves you hold for them, plus fees you've earned but not yet swept, adjusted for money in transit either way. That equation is checked daily and alerts when it doesn't hold.
+- **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)). The cash in custodial accounts equals what you owe merchants (pending and available balances), plus reserves you hold for them, plus fees you've earned but not yet swept, adjusted for money in transit either way (`acquirer_settlement_clearing` coming in, `payouts_in_transit` going out). That equation is checked daily and alerts when it doesn't hold.
 - **Per-owner balances on demand.** The file your bank or a regulator would need to pay each owner directly is a scheduled job, not a project you start during a crisis.
 - **Every movement is a record before it's a transfer.** Intent stored, approvals attached, bank reference captured, bank confirmation matched. A transfer that exists at the bank and not in your records is the worst finding a reconciliation can produce.
 - **Breaks stop payouts.** A reconciliation job that only reports is a dashboard. One that holds the next payout run on an unexplained difference is a control.

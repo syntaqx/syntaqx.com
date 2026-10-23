@@ -6,8 +6,8 @@ import type { Heading } from "@/lib/posts";
 /**
  * Sticky contents rail that follows along: highlights the section you're
  * reading and shows how far through the page you are. Progress is measured
- * against the element marked `data-toc-body`. Used by posts and docs;
- * `className` sets where it shows (posts from lg, docs from xl).
+ * against the element marked `data-toc-body`. Used by posts; `className`
+ * sets where it shows.
  */
 export function PostToc({
   headings,

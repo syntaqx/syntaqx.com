@@ -34,7 +34,7 @@ Each is in [PCI scope](/docs/compliance/pci-dss), whoever runs it. On a platform
 - **Protect the tokenize endpoint from card testing:** a short-lived, origin-bound session token from the page, rate limits per merchant and per IP, and the signals in [Fraud & Risk](/docs/industries/payments/fraud-and-risk). An open tokenizer is a free card-checking service.
 - **Validate on both sides.** Luhn and brand checks in the field for fast feedback, again on the server as the authority, and a check that the brand matches what the merchant accepts.
 
-**Other doors** each need the same care: a server-to-server API for partners that are themselves PCI compliant; file imports when a merchant migrates its cards in from another provider, encrypted to your key and deleted after loading; [phone payments](/docs/industries/payments/phone-payments), which have their own capture problem; and [card-present](/docs/industries/payments/card-present#p2pe-encrypt-at-the-glass) data encrypted at the terminal and decrypted in your environment under DUKPT-derived keys ([HSMs & Key Management](/docs/industries/payments/key-management#dukpt-and-pin-blocks)), where track data is deleted the moment the authorization returns.
+**Other doors** each need the same care: a server-to-server API for partners that are themselves PCI compliant; file imports when a merchant migrates its cards in from another provider, encrypted to your key and deleted after loading; [phone payments](/docs/industries/payments/phone-payments), which have their own capture problem; and [card-present](/docs/industries/payments/card-present#p2pe-encrypt-at-the-glass) data encrypted at the terminal and decrypted in your environment under DUKPT keys (a fresh key per transaction, derived from one root) ([HSMs & Key Management](/docs/industries/payments/key-management#dukpt-and-pin-blocks)), where track data is deleted the moment the authorization returns.
 
 **Keep the number out of logs.** The classic leak isn't the vault's database; it's a debug log of a raw processor request, so the forwarder never logs bodies and the security code field is redacted everywhere it can appear. The general rules, allowlist serializers and a card-number scanner, are in [Sensitive Data](/docs/payments/sensitive-data#logging-and-errors). Then assume something will slip and write the procedure for finding a number where it shouldn't be: retrieve or delete it, check whether a security code is with it, find the source and close it (12.10.7).
 
@@ -67,6 +67,8 @@ A token is what the rest of your system stores, logs and passes around, so its d
 
 **Retention is a decision with a job behind it.** Requirement 3.2.1 asks for a retention period with a business reason, and a check at least every three months that anything past it has been deleted. A reasonable rule: purge the number when the customer or merchant deletes the card, when the merchant leaves the platform, and when a card hasn't been used for a period just longer than your longest billing cycle (13 months covers annual renewals). Keep the token record and its BIN and last four so history still reads; delete the ciphertext, or with a data key per record, destroy the key. "Unused for seven years" is not a retention policy, it's an inventory.
 
+**Bank accounts belong in the vault too.** An ACH platform stores account and routing numbers for every payer and payee, and they're as useful to a thief as a card number. Nacha requires large originators and third parties to render stored account numbers unreadable ([ACH & Bank Transfers](/docs/industries/payments/ach#the-rules-you-inherit)), and the same tokens, encryption, forwarder and reveal controls apply: the bank file builder is the forwarder for ACH, the one place an account number is decrypted on its way out. Providers do the same, and open-banking aggregators hand out processor tokens for bank accounts so the account number never reaches the platform at all.
+
 ## Who Gets the Number Back
 
 Detokenization is the whole risk of a vault, so it gets the narrowest interface you can build.
@@ -86,8 +88,6 @@ Detokenization is the whole risk of a vault, so it gets the narrowest interface 
 - **Two people for anything in bulk,** like an export to another processor when a merchant leaves. [Processor Routing](/docs/industries/payments/processor-routing) describes those migrations, encrypted to the recipient's published key.
 
 **No back doors.** No magic token that returns a test card in production, no unauthenticated maintenance or deploy endpoint, no shared admin login. Each is convenient once and in scope forever.
-
-**Bank accounts belong in the vault too.** An ACH platform stores account and routing numbers for every payer and payee, and they're as useful to a thief as a card number. Nacha requires large originators and third parties to render stored account numbers unreadable ([ACH & Bank Transfers](/docs/industries/payments/ach#the-rules-you-inherit)), and the same tokens, encryption, forwarder and reveal controls apply: the bank file builder is the forwarder for ACH, the one place an account number is decrypted on its way out. Providers do the same, and open-banking aggregators hand out processor tokens for bank accounts so the account number never reaches the platform at all.
 
 ## BIN Data
 

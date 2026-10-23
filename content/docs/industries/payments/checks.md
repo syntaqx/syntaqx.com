@@ -7,7 +7,7 @@ part = "How Money Moves"
 tags = ["payments", "checks", "check-21", "remote-deposit", "reg-cc", "ach"]
 +++
 
-Checks share ACH's central problem, that money available isn't money final, on an older and slower clock. They keep shrinking and refuse to disappear. Americans wrote 9.2 billion of them in 2024, worth $24.45 trillion: 4% of noncash payments by number and 17% by value, because the ones that remain are big. Rent, invoices, insurance premiums, and every payment from a payer who won't hand over bank details still arrive on paper. A platform that collects for businesses gets them by mail, at a front desk, or through a lockbox, and has to turn them into money and ledger entries. This chapter is about receiving checks; issuing them, with positive pay and escheatment, is in [Vendor Payouts](/docs/industries/payments/vendor-payouts).
+Checks have ACH's central problem (money available isn't money final) on an older, slower clock. They keep shrinking and refuse to disappear. Americans wrote 9.2 billion of them in 2024, worth $24.45 trillion: 4% of noncash payments by number and 17% by value, because the ones that remain are big. Rent, invoices, insurance premiums, and every payment from a payer who won't hand over bank details still arrive on paper. A platform that collects for businesses gets them by mail, at a front desk, or through a lockbox, and has to turn them into money and ledger entries. This chapter is about receiving checks; issuing them, with positive pay and escheatment, is in [Vendor Payouts](/docs/industries/payments/vendor-payouts).
 
 ## How a Check Clears Now
 
@@ -23,7 +23,7 @@ Everything downstream reads two things: the image and the line of magnetic ink c
 
 **The MICR line** carries, from right to left, an on-us field (the account number, and the serial number on personal checks), the nine-digit routing number between transit symbols, and on business checks an auxiliary on-us field holding the serial number. The amount field is blank when the check is printed; the first bank to process it encodes the amount. That auxiliary field matters later: its presence is how a system tells a business check from a consumer one.
 
-**The image cash letter** is how deposits travel between banks, in the ANSI X9.100-187 format. Like a [NACHA file](/docs/industries/payments/ach#anatomy-of-a-nacha-file) it's a set of typed records: a file header (01), cash letter header (10), bundle header (20), a check detail record (25) with its addenda (26 to 28) and image view records (50, 52) for the front and back images, then bundle (70), cash letter (90) and file (99) controls. Returns use their own detail records (31 to 35). Images are typically black-and-white TIFFs. Your bank's remote deposit system usually builds the file for you; if you integrate with a bank's deposit API or run your own scanning, it's the format the bank will ask for.
+**The image cash letter** is how deposits travel between banks, in the ANSI X9.100-187 format. Like a [Nacha file](/docs/industries/payments/ach#anatomy-of-a-nacha-file) it's a set of typed records: a file header (01), cash letter header (10), bundle header (20), a check detail record (25) with its addenda (26 to 28) and image view records (50, 52) for the front and back images, then bundle (70), cash letter (90) and file (99) controls. Returns use their own detail records (31 to 35). Images are typically black-and-white TIFFs. Your bank's remote deposit system usually builds the file for you; if you integrate with a bank's deposit API or run your own scanning, it's the format the bank will ask for.
 
 ## Remote Deposit Capture
 
@@ -55,7 +55,7 @@ Availability is not finality. Funds become available on a legal schedule, while 
 
 ## Returns, Fast and Slow
 
-The ordinary return is fast. The paying bank must act by its **midnight deadline**, midnight of the banking day after it receives the check (Uniform Commercial Code 4-104, 4-301), or it's accountable for the amount (4-302). Reg CC adds that the return must reach the depositary bank by 2:00 p.m. on the second business day after presentment, and for a check of $5,000 or more, the paying bank must also send notice of nonpayment on the same clock. The reasons are coded:
+The ordinary return is fast. The paying bank must act by its **midnight deadline**, midnight of the banking day after it receives the check (Uniform Commercial Code 4-104, 4-301), or it's accountable for the amount (4-302). Reg CC adds that the return must reach the depositary bank by 2:00 p.m. on the second business day after presentment (delivery of the check to the paying bank), and for a check of $5,000 or more, the paying bank must also send notice of nonpayment on the same clock. The reasons are coded:
 
 | Code | Reason | Code | Reason |
 | --- | --- | --- | --- |
@@ -91,7 +91,7 @@ The conversion makes the payment an electronic fund transfer, which brings [Regu
 
 A **lockbox** is a bank (or a vendor) opening your mail: payments go to a post office box the bank empties, the bank deposits the checks, and you receive a file. A **retail lockbox** handles high volumes of consumer payments with a standard coupon whose scan line holds the account number and amount; a **wholesale lockbox** handles business payments without a standard coupon, with more keying of invoice numbers. Eligible consumer checks are often converted to ARC entries on the way.
 
-The integration is a file per deposit, as BAI2 or an X12 823 remittance, plus images of each check and its remittance slip. Match each item to an open invoice or account by the coupon's scan line first, then by amount and payer, and send everything else to an exceptions queue a person works, with the images attached. The deposit totals reconcile to the bank statement the same way [Treasury](/docs/industries/payments/treasury) reconciles everything else.
+The integration is a file per deposit, as BAI2 (the common bank reporting format, see [Treasury & Bank Operations](/docs/industries/payments/treasury)) or an X12 823 remittance, plus images of each check and its remittance slip. Match each item to an open invoice or account by the coupon's scan line first, then by amount and payer, and send everything else to an exceptions queue a person works, with the images attached. The deposit totals reconcile to the bank statement the same way [Treasury](/docs/industries/payments/treasury) reconciles everything else.
 
 ## Check Fraud
 
@@ -105,7 +105,7 @@ Check fraud grew while check volume fell. FinCEN, the Treasury bureau that enfor
 
 ## Rent and Paper
 
-Some payers can't be moved off checks, and in rent the law sometimes protects them. In California, Civil Code 1947.3 requires a landlord to accept at least one form of payment that is neither cash nor electronic, and forbids charging extra for paying by check: a rent platform there can't go electronic-only. The same statute lets a landlord demand cash for up to three months after a check bounces, with written notice, which a platform has to model as a temporary restriction on a payer's allowed methods. Returned-check fees are capped state by state; [ACH & Bank Transfers](/docs/industries/payments/ach#after-a-return-fees-and-blocks) collects those rules, since most apply to bounced electronic payments too.
+Some payers can't be moved off checks, and in rent the law sometimes protects them. In California, Civil Code 1947.3 requires a landlord to accept at least one form of payment that is neither cash nor electronic, and forbids charging extra for paying by check: a rent platform there can't go electronic-only. The same statute lets a landlord demand cash for up to three months after a check bounces, with written notice, which a platform has to model as a temporary restriction on a payer's allowed methods. Returned-check fees are capped state by state; [ACH & Bank Transfers](/docs/industries/payments/ach#after-a-return-fees-and-blocks) collects those rules, since some caps cover bounced electronic payments too.
 
 ## What This Means for the System You Build
 

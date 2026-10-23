@@ -8,7 +8,9 @@ aliases = ["payments/fraud-and-risk"]
 tags = ["payments", "fraud", "risk", "security"]
 +++
 
-The chapters so far decide who may take payments and whether the person paying is the cardholder; fraud and risk decide whether a particular payment should go through at all. This chapter is the payer's side, stolen cards and scripted attacks: a risky merchant is [onboarding's](/docs/industries/payments/merchant-onboarding#ongoing-monitoring) problem, a fraudulent bank debit comes back as an [ACH return](/docs/industries/payments/ach#returns-when-money-is-really-yours), and a payment redirected to an impostor is in [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account). Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
+The chapters so far decide who may take payments and whether the person paying is the cardholder; fraud and risk decide whether a particular payment should go through at all. Most of this chapter is the payer's side (stolen cards and scripted attacks), plus the merchant who is the fraud. Other rails have their own versions: a fraudulent bank debit comes back as an [ACH return](/docs/industries/payments/ach#returns-when-money-is-really-yours), and a payment redirected to an impostor is in [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account).
+
+Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
 
 ## The Two Costs
 
@@ -49,10 +51,12 @@ A risk check doesn't return yes or no. Four outcomes keep the system from choosi
 | ------- | ---- | ---- |
 | **Allow** | Low risk | Nothing |
 | **Challenge** | Uncertain, and the customer is present | A moment of friction; a fraudster usually can't pass [3-D Secure](/docs/industries/payments/strong-customer-authentication), and success typically shifts liability to the issuer |
-| **Review** | Uncertain, high value, and the goods haven't shipped | A human's time and a delay; only viable where fulfilment can wait |
+| **Review** | Uncertain, high value, and the goods haven't shipped | A human's time and a delay; only viable where fulfillment can wait |
 | **Block** | High risk | A false decline when the model is wrong |
 
 A challenge is the most underused outcome: on an uncertain on-session payment it converts most legitimate customers and stops most fraud, where blocking loses the first group and allowing pays for the second.
+
+**Where the check runs.** Before authorization, on everything checkout knows, so a challenge can be requested in the same flow. A second, cheaper check after authorization can use what the issuer returned (the address and security code match results) to hold fulfillment or refund before anything ships.
 
 ## Merchant Fraud
 

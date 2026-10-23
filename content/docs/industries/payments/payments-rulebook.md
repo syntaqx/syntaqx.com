@@ -16,7 +16,7 @@ The chapters before this one cover how money moves, by card, wallet, bank transf
 
 **Network rules travel by contract, downhill.** Visa and Mastercard publish rules that bind their member banks. The acquiring bank that sponsors you signs those rules and then writes them into your merchant or payfac agreement; you write them into your sub-merchants' terms. PCI DSS reaches you the same way: the brands founded the PCI Security Standards Council to write one security standard, and made compliance a condition of acceptance ([PCI DSS](/docs/compliance/pci-dss)). ACH works identically: Nacha's Operating Rules bind every bank on the network, and your bank's origination agreement binds you to them ([ACH & Bank Transfers](/docs/industries/payments/ach)).
 
-Enforcement follows the same path in reverse. A brand fines the acquirer; the acquirer passes the fine down and can terminate you. Nacha's enforcement process runs through the ODFI, which has 30 days to bring an Originator's excessive return rate down before fines. Termination has a long tail: merchants terminated for cause are added to terminated-merchant lists such as Mastercard's MATCH, which Mastercard's rules require every acquirer to check before signing a merchant.
+Enforcement follows the same path in reverse. A brand fines the acquirer; the acquirer passes the fine down and can terminate you. Nacha's enforcement process runs through the ODFI, which has 30 days to bring an Originator's excessive return rate down before fines. Termination has a long tail: merchants terminated for cause are added to terminated-merchant lists such as Mastercard's MATCH (Member Alert to Control High-risk Merchants), which Mastercard's rules require every acquirer to check before signing a merchant.
 
 ![Network rules flow down by contract. For cards: Visa and Mastercard (brand rules and PCI DSS) bind the acquiring bank, which binds the payment facilitator or platform, which binds the merchant, who can be added to MATCH if terminated. For ACH: Nacha's Operating Rules bind the ODFI, which binds a registered Third-Party Sender, which binds the Originator. Rules, fines and termination flow down; evidence such as a PCI Attestation of Compliance or proof of authorization flows up. Law applies at every level, signed or not: the CFPB, FinCEN, OFAC, state regulators and the FTC.](/diagrams/rule-chain.svg "Network rules travel down by contract. Each party binds the next and fines follow the same chain, evidence flows back up, and law applies at every level whether you signed anything or not.")
 
@@ -26,27 +26,51 @@ Enforcement follows the same path in reverse. A brand fines the acquirer; the ac
 
 ## The Map
 
+The rules fall into a few families. Each row names who sets the rule, how it reaches you, and what it means in engineering.
+
+### Network contracts
+
 | Rule | Who sets it | How it reaches you | What it means in engineering |
 | ---- | ----------- | ------------------ | ---------------------------- |
 | Card brand rules | Visa, Mastercard, others | Acquirer agreement | Dispute handling, descriptors, refunds, data use; [Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks) |
 | PCI DSS | PCI SSC, enforced by the brands | Acquirer agreement | Card data scope, segmentation, assessments; [PCI DSS](/docs/compliance/pci-dss) |
 | Nacha Operating Rules | Nacha | ODFI agreement | Authorization records, return rates, account validation, fraud monitoring; [ACH](/docs/industries/payments/ach) |
+
+### US payment law
+
+| Rule | Who sets it | How it reaches you | What it means in engineering |
+| ---- | ----------- | ------------------ | ---------------------------- |
 | Regulation E (EFTA) | CFPB | Law, consumer accounts | Unauthorized transfer and error-resolution rights on bank transfers; [ACH](/docs/industries/payments/ach#consumer-law-regulation-e) |
 | Regulation Z (TILA) | CFPB | Law, consumer credit | Credit card billing-error disputes behind chargebacks; [Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks) |
 | Regulation II (Durbin) | Federal Reserve | Law, on issuers and networks | The debit interchange cap and the merchant's routing choice; [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) |
 | Regulation CC, Check 21, UCC Article 4 | Federal Reserve; states | Law, through your bank | Funds availability, check returns and warranty claims; [Accepting Checks](/docs/industries/payments/checks) |
 | State surcharge and fee laws | States | Law | What a merchant may add to a payment; [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees) |
 | Telemarketing Sales Rule | FTC | Law, sales by phone | Banned payment methods and recorded authorizations; [Phone Payments](/docs/industries/payments/phone-payments) |
+| UDAAP | CFPB | Law, consumer financial products | Disclosures and flows that don't mislead |
+
+### Financial crime and licensing
+
+| Rule | Who sets it | How it reaches you | What it means in engineering |
+| ---- | ----------- | ------------------ | ---------------------------- |
 | BSA/AML | FinCEN | Law; your bank's program | KYC, beneficial owners, suspicious activity, recordkeeping; [Merchant Onboarding](/docs/industries/payments/merchant-onboarding) |
 | Sanctions | OFAC | Law, every US person | Screening parties and payments before they move |
 | Cash reporting (Form 8300, CTRs) | IRS, FinCEN | Law, cash | Reporting cash over $10,000; [Cash Payments](/docs/industries/payments/cash-payments) |
 | Money transmission | States, harmonized by the MTMA | Law, if you hold others' money | Licenses, net worth, bonds, permissible investments; [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) |
+
+### Security, privacy and assurance
+
+| Rule | Who sets it | How it reaches you | What it means in engineering |
+| ---- | ----------- | ------------------ | ---------------------------- |
 | GLBA Safeguards Rule | FTC for non-banks | Law, non-bank financial institutions | A written security program and risk assessment, MFA, an incident response plan, and FTC notice within 30 days of a breach affecting 500 or more |
-| UDAAP | CFPB | Law, consumer financial products | Disclosures and flows that don't mislead |
-| PSD2, PSD3 and the PSR | EU | Law, EU payment services | Strong customer authentication, licensing; [SCA](/docs/industries/payments/strong-customer-authentication) |
 | GDPR | EU, UK | Law, personal data | Lawful basis, rights, breach notice; [GDPR](/docs/compliance/gdpr) |
 | HIPAA | HHS | Law, health data | Only if you process health information; [HIPAA](/docs/compliance/hipaa) |
 | SOC 1, SOC 2, ISO 27001 | AICPA, ISO | Customer and partner contracts | Evidence that controls operate; [SOC 2](/docs/compliance/soc-2) |
+
+### International
+
+| Rule | Who sets it | How it reaches you | What it means in engineering |
+| ---- | ----------- | ------------------ | ---------------------------- |
+| PSD2, PSD3 and the PSR | EU | Law, EU payment services | Strong customer authentication, licensing; [SCA](/docs/industries/payments/strong-customer-authentication) |
 
 ## The Consumer Protection Layer
 
@@ -76,10 +100,10 @@ The same business moves through these rulebooks as it takes on more of the stack
 
 | Stage | Network rules | Law | Assurance |
 | ----- | ------------- | --- | --------- |
-| **Merchant on a provider** (hosted fields, Checkout) | PCI DSS through the simplest SAQ; brand rules through the provider's terms | UDAAP if you offer consumer financial products, GLBA if you are a financial institution under it, GDPR for EU users | Rarely needed |
-| **Platform on Connect-style accounts** | Same, plus brand rules on how sub-merchants are presented | KYC data collection on the provider's behalf; licensing usually carried by the provider | SOC 2 once customers ask |
+| **Merchant on a provider** (hosted fields or a hosted checkout page) | PCI DSS through the shortest self-assessment questionnaire (SAQ); brand rules through the provider's terms | UDAAP if you offer consumer financial products, GLBA if you are a financial institution under it, GDPR for EU users | Rarely needed |
+| **Platform on a provider's connected accounts (Stripe Connect and similar)** | Same, plus brand rules on how sub-merchants are presented | KYC data collection on the provider's behalf; licensing usually carried by the provider | SOC 2 once customers ask |
 | **Payment facilitator** | Registered with the brands through a sponsor; PCI as a service provider; liable for sub-merchants | BSA/AML program, OFAC screening, state licensing or an exemption | SOC 1 for customers' auditors, SOC 2 |
-| **Processor or provider** | Direct brand and Nacha obligations, PCI DSS Level 1 with a QSA, PIN and 3DS standards if in scope | Everything above, often MSB registration and licenses in most states | SOC 1 and SOC 2 Type II, often ISO 27001 |
+| **Processor or provider** | Direct brand and Nacha obligations, PCI DSS Level 1 assessed by a Qualified Security Assessor (QSA), and the PIN and 3-D Secure standards if in scope | Everything above, often MSB registration and licenses in most states | SOC 1 and SOC 2 Type II, often ISO 27001 |
 
 The useful question at each stage is not "are we compliant?" but "which contract or law put this requirement here, and who will test it?" A PCI requirement gets tested by an assessor once a year. A Nacha return rate gets measured by your bank every day. An OFAC miss gets found by a regulator, in hindsight, with the transaction already gone. Build the controls in proportion to how they fail.
 
