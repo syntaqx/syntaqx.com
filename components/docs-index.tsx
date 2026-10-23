@@ -250,8 +250,8 @@ function SectionRail({
             <ul className="border-l border-border">
               {categories.filter((c) => isIndustry(c.section)).map((c) => (
                 <li key={c.section} data-section={c.section}>
-                  <a
-                    href={`#${c.section}`}
+                  <Link
+                    href={`/docs/${c.docs[0].href.split("/").slice(2, -1).join("/")}`}
                     aria-current={c.section === active ? "true" : undefined}
                     className={`group -ml-px flex items-center gap-2 border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
                       c.section === active
@@ -262,7 +262,7 @@ function SectionRail({
                     {industryName(c.name)}
                     <span className="inst text-[0.5rem] text-dim">{c.docs.length}</span>
                     <ChevronRight size={13} aria-hidden className="ml-auto text-dim transition-colors group-hover:text-accent" />
-                  </a>
+                  </Link>
                 </li>
               ))}
               {UPCOMING_INDUSTRIES.map((name) => (

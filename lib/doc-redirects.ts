@@ -6,8 +6,8 @@ import path from "node:path";
  * renders (a page-level redirect streams as a 200 with a meta refresh):
  *
  *   - each doc's former slugs, from its `aliases` frontmatter, to its URL
- *   - a bare section folder, like /docs/payments, to its group on /docs, and a
- *     parent folder, like /docs/industries, to its first group
+ *   - a bare section folder, like /docs/payments, to its group on /docs
+ *     (industry folders are pages: the Industries list and each cover)
  *
  * next.config.ts imports this, so it reads files directly and imports no
  * app code.
@@ -36,9 +36,10 @@ export function docRedirects(root = process.cwd()) {
   }
 
   // A section folder goes to its group on /docs; a parent of nested sections
-  // (like /docs/industries) goes to its first one.
+  // goes to its first one. Industry folders are pages of their own (the
+  // Industries list and each volume's cover), so they're left alone.
   const anchors = new Map<string, string>();
-  for (const section of [...sections].sort()) {
+  for (const section of [...sections].filter((s) => !s.startsWith("industries")).sort()) {
     const parts = section.split("/");
     for (let i = 1; i <= parts.length; i++) {
       const folder = parts.slice(0, i).join("/");

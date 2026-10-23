@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { estimateReadingTime } from "@/lib/posts";
 
 const docsDirectory = path.join(process.cwd(), "content/docs");
 
@@ -17,6 +18,8 @@ export interface DocData {
   category: string;
   order: number;
   tags: string[];
+  /** Minutes to read, not counting code or the References list. */
+  readingMinutes: number;
   content: string;
 }
 
@@ -111,6 +114,7 @@ export function getAllDocs(): DocData[] {
         category: (data.category as string) ?? "General",
         order: (data.order as number) ?? 99,
         tags: (data.tags as string[]) ?? [],
+        readingMinutes: estimateReadingTime(content.split(/^## References$/m)[0]),
         content,
       };
     })

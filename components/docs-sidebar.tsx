@@ -7,6 +7,9 @@ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import type { DocCategory } from "@/lib/docs";
 import { UPCOMING_INDUSTRIES, industryName, isIndustry } from "@/lib/industries";
 
+/** An industry volume's cover, e.g. /docs/industries/payments. */
+const coverHref = (category: DocCategory) => `/docs/${category.docs[0].slug.slice(0, category.docs[0].slug.lastIndexOf("/"))}`;
+
 interface DocsSidebarProps {
   categories: DocCategory[];
 }
@@ -40,7 +43,9 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
   const [rootOn, setRootOn] = useState<string | null>(null);
   const core = categories.filter((c) => !isIndustry(c.section));
   const industries = categories.filter((c) => isIndustry(c.section));
-  const current = industries.find((c) => c.docs.some((d) => pathname === `/docs/${d.slug}`));
+  const current = industries.find(
+    (c) => pathname === coverHref(c) || c.docs.some((d) => pathname === `/docs/${d.slug}`),
+  );
   const drilled = Boolean(current && rootOn !== pathname);
 
   // Keep the current page's link in view: deep in the book it starts below
@@ -86,7 +91,19 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
           {industryName(current.name)}
           <span className="sr-only">: back to all sections</span>
         </button>
-        <ul className="border-l border-border">{docLinks(current)}</ul>
+        <ul className="border-l border-border">
+          <li>
+            <Link
+              href={coverHref(current)}
+              onClick={onNavigate}
+              aria-current={pathname === coverHref(current) ? "page" : undefined}
+              className={linkClass(pathname === coverHref(current))}
+            >
+              Overview
+            </Link>
+          </li>
+          {docLinks(current)}
+        </ul>
       </nav>
     );
   }
@@ -102,7 +119,7 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
         {industries.map((c) => (
           <li key={c.section}>
             <Link
-              href={c === current ? pathname : `/docs/${c.docs[0].slug}`}
+              href={c === current ? pathname : coverHref(c)}
               onClick={() => {
                 setRootOn(null);
                 onNavigate?.();
@@ -142,8 +159,10 @@ export function DocsSidebar({ categories }: DocsSidebarProps) {
 export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const currentTitle =
-    categories.flatMap((c) => c.docs).find((d) => pathname === `/docs/${d.slug}`)?.navTitle ?? "API Reference";
+  const cover = categories.find((c) => isIndustry(c.section) && pathname === coverHref(c));
+  const currentTitle = cover
+    ? `${industryName(cover.name)} overview`
+    : (categories.flatMap((c) => c.docs).find((d) => pathname === `/docs/${d.slug}`)?.navTitle ?? "Documentation");
 
   return (
     <div className="lg:hidden mb-6">

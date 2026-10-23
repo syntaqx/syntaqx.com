@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 270">
+  <defs>
+    <marker id="cpe-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="cpe-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="cpe-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- The parties -->
+  <text class="cap" x="40" y="20">a chip transaction</text>
+  <rect class="cell band" x="40" y="32" width="128" height="26"/>
+  <text class="t b" x="104" y="45" text-anchor="middle" dominant-baseline="central">chip card</text>
+  <rect class="cell" x="168" y="32" width="128" height="26"/>
+  <text class="t b" x="232" y="45" text-anchor="middle" dominant-baseline="central">terminal</text>
+  <rect class="cell" x="296" y="32" width="128" height="26"/>
+  <text class="t b" x="360" y="45" text-anchor="middle" dominant-baseline="central">acquirer</text>
+  <rect class="cell" x="424" y="32" width="128" height="26"/>
+  <text class="t b" x="488" y="45" text-anchor="middle" dominant-baseline="central">network</text>
+  <rect class="cell band" x="552" y="32" width="128" height="26"/>
+  <text class="t b" x="616" y="45" text-anchor="middle" dominant-baseline="central">issuer</text>
+
+  <text class="n" x="104" y="76" text-anchor="middle">a key it never reveals</text>
+  <text class="n" x="232" y="76" text-anchor="middle">asks for a cryptogram</text>
+  <text class="n" x="360" y="76" text-anchor="middle">and its processor</text>
+  <text class="n" x="488" y="76" text-anchor="middle">routes it</text>
+  <text class="n" x="616" y="76" text-anchor="middle">holds the same key</text>
+
+  <!-- 1. The card signs -->
+  <text class="cap ink" x="40" y="108">1. the card signs this transaction</text>
+  <path class="ln ink" d="M104,122H230" marker-end="url(#cpe-ah-ink)"/>
+  <text class="t" x="110" y="138">ARQC</text>
+  <text class="n" x="244" y="126">over the amount, date, a counter and the terminal's random number</text>
+
+  <!-- 2. Online -->
+  <text class="cap hl" x="40" y="166">2. online: only the issuer can check it</text>
+  <path class="ln hl" d="M232,180H614" marker-end="url(#cpe-ah-hl)"/>
+  <text class="n" x="244" y="196">the authorization carries the cryptogram (DE 55); the issuer recomputes it</text>
+  <path class="ln hl" d="M616,208H234" marker-end="url(#cpe-ah-hl)"/>
+  <text class="t hl" x="610" y="224" text-anchor="end">approved + ARPC</text>
+  <text class="n" x="490" y="224" text-anchor="end">proof the answer came from the real issuer</text>
+
+  <!-- Offline -->
+  <text class="cap" x="40" y="250">offline</text>
+  <path class="ln dash" d="M104,258H230" marker-end="url(#cpe-ah)"/>
+  <text class="n" x="244" y="262">TC approves or AAC declines at the terminal; the issuer only sees it in clearing</text>
+</svg>

@@ -2,7 +2,7 @@
 title = "Merchant Onboarding"
 description = "Knowing who processes payments on a platform: KYC and KYB, a verification state machine, progressive onboarding, underwriting, and an API that says what's due."
 category = "Payments Industry"
-order = 1404
+order = 1406
 aliases = ["payments/merchant-onboarding"]
 tags = ["payments", "onboarding", "kyc", "compliance"]
 +++
