@@ -18,10 +18,10 @@
   <text class="n" x="285" y="148" text-anchor="middle">in the call path</text>
 
   <!-- Flat tones to agent and recorder -->
-  <path class="ln" d="M285,104C285,70 360,62 418,62" marker-end="url(#ph-ah)"/>
-  <path class="ln" d="M285,130C285,166 360,176 418,176" marker-end="url(#ph-ah)"/>
-  <text class="n" x="300" y="80">flat tones</text>
-  <text class="n" x="300" y="166">flat tones</text>
+  <path class="ln" d="M350,110C386,110 382,62 418,62" marker-end="url(#ph-ah)"/>
+  <path class="ln" d="M350,124C386,124 382,176 418,176" marker-end="url(#ph-ah)"/>
+  <text class="n" x="380" y="54" text-anchor="middle">flat tones</text>
+  <text class="n" x="380" y="194" text-anchor="middle">flat tones</text>
   <rect class="cell" x="420" y="49" width="120" height="26"/>
   <text class="t" x="480" y="62" text-anchor="middle" dominant-baseline="central">agent</text>
   <text class="n" x="480" y="93" text-anchor="middle">sees **** filling in</text>
