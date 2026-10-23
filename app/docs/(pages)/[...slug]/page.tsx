@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { docLastModified } from "@/lib/doc-dates";
 import { getAllDocs, getDocBySlug, getDocsByCategory, markdownToHtml } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
+import { ChapterKeys } from "@/components/chapter-keys";
 import { PostToc } from "@/components/post-toc";
 import type { Heading } from "@/lib/posts";
 import { JsonLd } from "@/components/json-ld";
@@ -102,6 +103,7 @@ export default async function DocPage({ params }: Props) {
               <p className="max-w-3xl text-dim">{doc.description}</p>
             )}
             <div className="inst mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
+              <span>{doc.readingMinutes} min read</span>
               {modified && (
                 <span>
                   Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
@@ -128,7 +130,7 @@ export default async function DocPage({ params }: Props) {
           />
           {(prev || next) && (
             <nav
-              aria-label="Previous and next"
+              aria-label="Previous and next (or use the arrow keys)"
               className="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2"
             >
               {prev && (
@@ -160,6 +162,7 @@ export default async function DocPage({ params }: Props) {
         )}
       </div>
       <CopyCodeScript />
+      <ChapterKeys prev={prev && `/docs/${prev.slug}`} next={next && `/docs/${next.slug}`} />
     </article>
   );
 }

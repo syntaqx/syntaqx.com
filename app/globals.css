@@ -338,6 +338,17 @@ body {
   letter-spacing: 0.14em;
   color: var(--accent);
 }
+/* Hover a section heading to get its deep link (rehypeSectionIds). */
+.prose .heading-anchor {
+  margin-left: 0.4em;
+  color: var(--dim);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 150ms, color 150ms;
+}
+.prose h2:hover .heading-anchor,
+.prose .heading-anchor:focus-visible { opacity: 1; }
+.prose .heading-anchor:hover { color: var(--accent); }
 .prose h3,
 .prose h4 {
   font-family: var(--font-sans);

@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { getAllDocs } from "./docs";
 import { docRedirects } from "./doc-redirects";
+import { INDUSTRIES, industrySection, isIndustry } from "./industries";
 
 // The playbook's own guardrails (see /docs/delivery/ci-pipelines). A doc that breaks one of
 // these fails CI with the doc's slug in the message.
@@ -64,6 +65,11 @@ describe("playbook docs", () => {
       expect([...categories], section || "(root)").toHaveLength(1);
     }
     expect(docs.filter((d) => !d.section).map((d) => d.slug)).toEqual(["playbook"]);
+  });
+
+  it("gives every industry volume a cover, and every cover a volume", () => {
+    const volumes = [...new Set(docs.map((d) => d.section).filter(isIndustry))].sort();
+    expect(INDUSTRIES.map((i) => industrySection(i.slug)).sort()).toEqual(volumes);
   });
 
   it("keeps old URLs as unique aliases that never shadow a real doc", () => {

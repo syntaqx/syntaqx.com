@@ -25,7 +25,7 @@ export interface PostData {
   readingTimeMinutes: number;
 }
 
-function estimateReadingTime(markdown: string): number {
+export function estimateReadingTime(markdown: string): number {
   // Strip code fences and inline code so they don't inflate the count.
   const stripped = markdown
     .replace(/```[\s\S]*?```/g, " ")
@@ -307,6 +307,16 @@ function rehypeSectionIds(toc?: Heading[]) {
         const id = count ? `${base}-${count}` : base;
         n.properties = { ...n.properties, id };
         toc?.push({ id, text });
+        // A link to this section, shown on hover, for sharing a deep link.
+        n.children = [
+          ...(n.children ?? []),
+          {
+            type: "element",
+            tagName: "a",
+            properties: { href: `#${id}`, className: ["heading-anchor"], ariaLabel: `Link to ${text}` },
+            children: [{ type: "text", value: "#" }],
+          },
+        ];
       }
       n.children?.forEach(walk);
     };

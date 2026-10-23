@@ -4,6 +4,7 @@ import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/posts";
 import { getAllDocs } from "@/lib/docs";
 import { docLastModified } from "@/lib/doc-dates";
+import { INDUSTRIES } from "@/lib/industries";
 import { SITE_URL } from "@/lib/constants";
 
 /** Recursively find all static page routes under app/. */
@@ -60,5 +61,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Per-tag archive pages are noindex (thin content — see app/tags/[tag]),
   // so they're intentionally omitted here. The /tags index stays.
-  return [...staticPages, ...docs, ...posts];
+  // Each industry volume's cover (a dynamic route, so not discovered above).
+  const covers = INDUSTRIES.map((i) => ({ url: `${baseUrl}/docs/industries/${i.slug}` }));
+
+  return [...staticPages, ...docs, ...covers, ...posts];
 }
