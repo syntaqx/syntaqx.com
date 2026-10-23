@@ -2,7 +2,8 @@
 title = "Payouts & Settlement"
 description = "How a card payment becomes money in a merchant's bank: settlement timing, fees as ledger entries, payout schedules and reserves, failures, and reconciliation."
 category = "Payments Industry"
-order = 1412
+order = 1417
+part = "Paying Out"
 aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
 +++
@@ -49,6 +50,7 @@ How soon a merchant can be paid is a risk decision, not a convenience setting: o
 
 - **New merchants wait longer.** A first payout delayed a week or two gives fraud and disputes time to surface; it stops the merchant who signs up with stolen cards and pays themselves out the same day. Stripe typically schedules a new account's first payout 7 to 14 days after its first live payment.
 - **Rolling reserves** hold back a percentage of each day's volume for a fixed period, then release it. They're the standard tool for merchants whose risk is real but acceptable: high ticket sizes, delivery months after payment, elevated dispute rates. The reserve exists to pay the disputes and refunds that arrive after the sales that caused them.
+- **The payment method sets the clock.** Card money can come back as a dispute for months, an ACH debit for 60 days ([ACH & Bank Transfers](/docs/industries/payments/ach)), a Canadian pre-authorized debit for 90 ([Payments in Canada](/docs/industries/payments/canada)), and a check through warranty claims long after it cleared ([Accepting Checks](/docs/industries/payments/checks)). Cash confirmed by a retail network doesn't come back at all ([Cash Payments](/docs/industries/payments/cash-payments)). Availability is computed per payment from its method, not per merchant.
 - **Holds are explicit and explained.** Every held amount is a ledger entry into a `reserves` or `holds` account with a release date, never just a smaller "available" number. A merchant who can see "$1,200 held until 12 March, rolling 10% reserve" is a merchant who doesn't open a support ticket.
 
 ### Negative Balances

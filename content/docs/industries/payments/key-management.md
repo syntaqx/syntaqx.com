@@ -2,7 +2,8 @@
 title = "HSMs & Key Management"
 description = "Payments cryptography as its own discipline: HSMs, key hierarchies, key blocks, DUKPT and PIN blocks, the move off TDES, key ceremonies and cryptoperiods."
 category = "Payments Industry"
-order = 1418
+order = 1423
+part = "Running a Provider"
 tags = ["payments", "security", "cryptography", "hsm", "pci", "keys"]
 +++
 
@@ -103,7 +104,7 @@ Rotation is easy to promise and hard to do, so design for it:
 
 Most software platforms never touch a PIN: their terminals talk to a processor, and their online payments are tokenized before they reach the platform's servers. They still have keys worth this discipline:
 
-- **Vault keys.** If you hold card numbers at all, encrypt them with **envelope encryption**: a data key per record or batch encrypts the data, and an HSM-backed key-encrypting key encrypts the data keys. PCI DSS allows exactly that pattern, with the key-encrypting key at least as strong as the data key and stored separately (requirement 3.6.1.2). [Sensitive Data](/docs/payments/sensitive-data) covers the vault around it.
+- **Vault keys.** If you hold card numbers at all, encrypt them with **envelope encryption**: a data key per record or batch encrypts the data, and an HSM-backed key-encrypting key encrypts the data keys. PCI DSS allows exactly that pattern, with the key-encrypting key at least as strong as the data key and stored separately (requirement 3.6.1.2). [Running a Card Vault](/docs/industries/payments/card-vault) covers the vault around it, including the re-encryption a rotation still leaves you to do.
 - **Signing keys.** [Webhook](/docs/payments/webhooks) signing secrets, API request signing, and the keys behind any token you issue are credentials an attacker can use to impersonate you. They get owners, rotation and storage in a secret manager or KMS, never in source.
 - **Partner credentials.** Processor API keys and certificates for mutual TLS are keys too, with the same lifecycle.
 

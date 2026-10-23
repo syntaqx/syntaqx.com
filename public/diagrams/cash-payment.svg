@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 230">
+  <defs>
+    <marker id="cash-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="cash-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="22">a cash payment at a store</text>
+  <text class="cap hl" x="680" y="22" text-anchor="end">seconds</text>
+
+  <!-- Parties across the top -->
+  <rect class="cell" x="40" y="50" width="110" height="26"/>
+  <text class="t" x="95" y="63" text-anchor="middle" dominant-baseline="central">payer</text>
+  <rect class="cell" x="210" y="50" width="110" height="26"/>
+  <text class="t" x="265" y="63" text-anchor="middle" dominant-baseline="central">store register</text>
+  <rect class="cell" x="380" y="50" width="110" height="26"/>
+  <text class="t" x="435" y="63" text-anchor="middle" dominant-baseline="central">network</text>
+  <rect class="cell hl" x="570" y="50" width="110" height="26"/>
+  <text class="t hl" x="625" y="63" text-anchor="middle" dominant-baseline="central">platform</text>
+
+  <!-- Lifelines -->
+  <path class="ln dash" d="M95,76V206M265,76V206M435,76V206M625,76V206"/>
+
+  <!-- Messages -->
+  <path class="ln" d="M95,98H263" marker-end="url(#cash-ah)"/>
+  <text class="n" x="180" y="92" text-anchor="middle">barcode and cash</text>
+  <path class="ln" d="M265,118H433" marker-end="url(#cash-ah)"/>
+  <text class="n" x="350" y="112" text-anchor="middle">authorize</text>
+  <path class="ln hl" d="M435,140H623" marker-end="url(#cash-ah-hl)"/>
+  <text class="n hl" x="530" y="134" text-anchor="middle">validate account and amount</text>
+  <path class="ln hl" d="M625,164H437" marker-end="url(#cash-ah-hl)"/>
+  <text class="n hl" x="530" y="158" text-anchor="middle">accept, within the deadline</text>
+  <path class="ln hl" d="M435,194H623" marker-end="url(#cash-ah-hl)"/>
+  <text class="n hl" x="530" y="188" text-anchor="middle">confirmed: post it</text>
+
+  <!-- Settlement, much later -->
+  <text class="n" x="680" y="224" text-anchor="end">settlement, net of fees: days later</text>
+</svg>

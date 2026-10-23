@@ -2,7 +2,8 @@
 title = "Surcharging & Fees"
 description = "Passing card costs to the payer: surcharges, convenience and service fees, cash discounts, the network caps and state laws behind them, and safe fee math."
 category = "Payments Industry"
-order = 1411
+order = 1409
+part = "The Rules"
 tags = ["payments", "surcharging", "convenience-fees", "compliance", "pricing"]
 +++
 
@@ -50,6 +51,8 @@ Visa's own rules describe a convenience fee as a flat fee, clearly disclosed, fo
 
 **Service fees** are the exception for the public sector. Visa allows certain merchants, government and education among them, to assess fixed or variable service fees, under a program that requires registration and is limited to specific merchant category codes: taxes, courts and fines, government services, colleges and schools. A service fee can be a percentage, can apply in person and on recurring payments, must be the same for every card brand, and must be disclosed before the payment completes so the payer can cancel. When a third party charges it on a card-not-present payment, processors describe it going through as a separate transaction from the payment itself.
 
+**Rent has its own program.** Visa's US Rent Payment Program is open only to merchants coded as real estate agents and managers (MCC 6513) and registered with Visa. It allows a fee on debit cards of up to $10, card-not-present only, and treats a fee on credit cards as a surcharge, under the surcharge rules above. A rent platform's fee engine needs the merchant account's category code as an input, which is one reason [Software Platforms](/docs/industries/payments/software-platforms) gives each line of business its own merchant account.
+
 ## What State Law Allows
 
 Network rules are a contract; state law overrides them, and it varies more than the rules do. Visa's merchant guidance names **Connecticut, Maine, Massachusetts and Oklahoma** as states that prohibit or limit surcharging. Some examples of what the statutes actually say:
@@ -96,6 +99,7 @@ A platform serving these verticals sells fee handling as a feature. It's only a 
 - [Mastercard: Merchant Surcharge Rules](https://www.mastercard.com/us/en/business/support/merchant-surcharge-rules.html), the 4% maximum, brand-level and product-level caps, notice to Mastercard and the acquirer, and disclosure
 - [Connecticut Department of Consumer Protection: Credit Card Surcharge](https://portal.ct.gov/DCP/Legal/Credit-Card-Surcharge), the surcharge prohibition and the cash discount allowance
 - [Erie County Consumer Protection: NYS General Business Law § 518 Changes](https://www3.erie.gov/consumerprotection/nys-general-business-law-ss518-changes-february-11-2024), the February 11, 2024 effective date
+- [Visa Core Rules and Visa Product and Service Rules (PDF)](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the US Rent Payment Program for MCC 6513 merchants and its debit fee limit
 
 **In practice**
 

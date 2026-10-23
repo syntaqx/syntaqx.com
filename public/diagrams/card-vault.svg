@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 290">
+  <defs>
+    <marker id="cv-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="cv-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="cv-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="22">a card vault</text>
+  <text class="cap hl" x="680" y="22" text-anchor="end">where the card number travels</text>
+
+  <!-- The boundary -->
+  <rect class="zone" x="200" y="36" width="360" height="236"/>
+  <text class="cap" x="212" y="52">cardholder data environment</text>
+
+  <!-- Outside: browser and platform -->
+  <rect class="cell" x="40" y="60" width="120" height="26"/>
+  <text class="t" x="100" y="73" text-anchor="middle" dominant-baseline="central">browser</text>
+  <rect class="cell" x="40" y="176" width="120" height="26"/>
+  <text class="t" x="100" y="189" text-anchor="middle" dominant-baseline="central">platform</text>
+  <text class="n" x="100" y="224" text-anchor="middle">tokens in, tokens out,</text>
+  <text class="n" x="100" y="239" text-anchor="middle">never a card number</text>
+
+  <!-- Inside: capture, tokenizer, forwarder, keys, reveal -->
+  <rect class="cell hl" x="230" y="60" width="150" height="26"/>
+  <text class="t hl" x="305" y="73" text-anchor="middle" dominant-baseline="central">capture iframe</text>
+  <rect class="cell hl" x="230" y="130" width="150" height="26"/>
+  <text class="t hl" x="305" y="143" text-anchor="middle" dominant-baseline="central">tokenizer + store</text>
+  <rect class="cell hl" x="230" y="220" width="150" height="26"/>
+  <text class="t hl" x="305" y="233" text-anchor="middle" dominant-baseline="central">forwarder</text>
+  <rect class="cell" x="420" y="130" width="120" height="26"/>
+  <text class="t" x="480" y="143" text-anchor="middle" dominant-baseline="central">key service</text>
+  <text class="n" x="480" y="174" text-anchor="middle">KMS or HSM wraps</text>
+  <text class="n" x="480" y="189" text-anchor="middle">the data keys</text>
+  <rect class="cell" x="420" y="60" width="120" height="26"/>
+  <text class="t" x="480" y="73" text-anchor="middle" dominant-baseline="central">reveal console</text>
+
+  <!-- Card number in -->
+  <path class="ln hl" d="M160,73H228" marker-end="url(#cv-ah-hl)"/>
+  <path class="ln hl" d="M305,86V128" marker-end="url(#cv-ah-hl)"/>
+
+  <!-- Token out to the platform, charge request back in -->
+  <path class="ln ink" d="M230,150C196,150 196,182 162,182" marker-end="url(#cv-ah-ink)"/>
+  <path class="ln ink" d="M160,196C196,196 196,233 228,233" marker-end="url(#cv-ah-ink)"/>
+  <path class="ln hl" d="M305,156V218" marker-end="url(#cv-ah-hl)"/>
+
+  <!-- Keys and reveal -->
+  <path class="ln" d="M382,143H418" marker-start="url(#cv-ah)" marker-end="url(#cv-ah)"/>
+  <path class="ln dash" d="M440,86C440,112 404,112 384,130" marker-end="url(#cv-ah)"/>
+  <text class="n" x="452" y="106">role, reason, MFA</text>
+
+  <!-- Card number out, to processors only -->
+  <rect class="cell end" x="590" y="220" width="100" height="26"/>
+  <text class="t" x="640" y="233" text-anchor="middle" dominant-baseline="central">processors</text>
+  <path class="ln hl" d="M380,233H588" marker-end="url(#cv-ah-hl)"/>
+  <text class="n hl" x="404" y="260">card number, allowlist only</text>
+</svg>

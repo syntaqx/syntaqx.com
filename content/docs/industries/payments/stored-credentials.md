@@ -3,7 +3,8 @@ title = "Stored Cards & Recurring Billing"
 nav_title = "Stored Cards & Recurring"
 description = "Saving a card and charging it later: the stored credential framework, network transaction IDs, network tokens, account updater, retry rules and dunning."
 category = "Payments Industry"
-order = 1408
+order = 1413
+part = "Taking Payments"
 tags = ["payments", "cards", "recurring", "subscriptions", "tokens"]
 +++
 
