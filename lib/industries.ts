@@ -23,7 +23,7 @@ export const INDUSTRIES: Industry[] = [
       "How the payments industry works, from a card tap to running a provider, and what each of its rules means for the systems you build.",
     intro: [
       "The playbook's Payments section is about handling money correctly anywhere: amounts, idempotency, state machines and ledgers. This volume is about the industry those systems plug into. Card networks, banks, processors and regulators each set rules, and almost every hard problem in a payments platform is one of them doing exactly what it's supposed to.",
-      "It reads in order: how a payment moves, whether by card, terminal, wallet or bank, and what it costs; who sets the rules; taking payments in, keeping cards on file, and defending against fraud and disputes; moving money out and the bank accounts behind it; and finally what it takes to become, secure and certify the provider everyone else builds on.",
+      "It reads in five parts. How Money Moves: a payment by card, terminal, wallet, bank transfer, check or cash, and what it costs. The Rules: who sets them, what you may pass on to the payer, and how they change across the border in Canada. Taking Payments: onboarding merchants, authenticating cardholders, keeping cards on file, taking payments by phone, and defending against fraud and disputes. Paying Out: moving money to merchants and vendors, and the bank accounts behind it. Running a Provider: routing, embedding payments in software, running a card vault and its keys, certification, and becoming the provider everyone else builds on.",
     ],
   },
 ];

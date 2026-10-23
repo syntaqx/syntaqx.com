@@ -1,6 +1,6 @@
 +++
 title = "Vendor Payouts"
-description = "Paying vendors and suppliers: ACH, virtual cards, checks and instant rails, vendor enrollment, stopping redirect fraud, funding, 1099s and reconciliation."
+description = "Paying vendors and suppliers: ACH, virtual cards, push to card, checks and instant rails, enrollment, stopping redirect fraud, funding, 1099s."
 category = "Payments Industry"
 order = 1418
 part = "Paying Out"
@@ -20,6 +20,7 @@ Every method trades cost, speed and finality differently, and the vendor's prefe
 | **Check** | Days, through the mail | Cleared, which can take weeks | Printing, postage, handling | Depositing it |
 | **Wire** | Same day | Immediately; irrevocable | Bank wire fees | Sometimes an incoming fee |
 | **RTP or FedNow** | Seconds | Immediately; irrevocable | Network and bank fees | Usually nothing |
+| **Push to card** | Seconds to 30 minutes | Immediately; reversible only for processing errors | Per-payout fees | Usually nothing |
 
 My default is ACH: cheap, universal and carrying remittance data, with the mechanics in [ACH & Bank Transfers](/docs/industries/payments/ach). Virtual cards come next, where the vendor accepts them, then checks as the fallback for vendors who won't enroll, and instant rails for the payments where speed is worth paying for. Wires are for the rare large or urgent payment, and they get the strictest controls, because a wire sent to a fraudster is gone.
 
@@ -35,10 +36,22 @@ The rebate isn't free money. It comes out of [interchange](/docs/industries/paym
 - **Deliver the card number like the card number it is.** It's cardholder data. Either the vendor retrieves it from a portal run by the issuer, or the issuer charges the vendor's terminal directly, and your systems hold a token, never the number ([Sensitive Data](/docs/payments/sensitive-data)).
 - **Expire and fall back.** A card the vendor never charges is an unpaid invoice. Track issued, authorized, settled and expired, and when it expires, pay by another method rather than letting the invoice age.
 
+## Push to Card
+
+A payout can also go to a debit card: Visa Direct and Mastercard Send move money onto a card as an **original credit transaction** (OCT), a card payment running backward. It reaches people who won't give you bank details but will type a card number, and it's how most "instant payout" buttons work.
+
+- **Speed depends on the card's issuer.** Visa requires issuers to post an OCT within two business days, but issuers in its Fast Funds program must make the money available within 30 minutes, and in the US within 60 seconds for a domestic OCT. Check eligibility before promising speed: Visa's account attributes inquiry and Mastercard's account information API say whether a card can receive a push and how fast. Debit and reloadable prepaid cards are the usual targets; an OCT to a credit card posts as a payment on it.
+- **It doesn't come back.** Visa forbids reversing an OCT sent as an online financial transaction, and allows other reversals only within one business day, for a wrong card, a wrong amount, a duplicate or a wrong transaction code; anything else needs the issuer's agreement. That makes it final like an instant bank payment, with the same exposure to paying an impostor, so the controls in [Stopping the Changed Bank Account](#stopping-the-changed-bank-account) apply to a changed card too.
+- **The card number is cardholder data.** Collect it through your [card vault](/docs/industries/payments/card-vault) and hold a token; the payout goes out through the vault like any card payment.
+- **Pulling from a card is a different transaction.** Loading a wallet or funding a transfer from a card is an **account funding transaction** (AFT), flagged as such, not a purchase. Visa and Mastercard have been tightening those rules since 2025, so a product that pulls from cards to fund payouts needs its processor's current requirements.
+
+Providers wrap it with their own limits: Stripe's US instant payouts, for one, run from $0.50 to $9,999 per payout, at most ten a day, typically arriving within 30 minutes.
+
 ## Checks Are Still Here
 
 Many vendors still get paid by check, often because nobody ever enrolled them in anything else. Checks are slow and expensive, and they fail in ways electronic payments don't:
 
+- **Print and mail is a vendor, and a file.** Most platforms don't print checks; they send an issue file to a print-and-mail service or their bank's outsourcing program, which prints, mails and tracks each piece (by the Postal Service's Intelligent Mail barcode) and reports back what it mailed. The check still clears against your account, so the issued-check record, the positive pay file and the mailing confirmation all have to agree.
 - **Positive pay.** Send the bank a file of every check issued, with number and amount. The bank rejects any presented check that doesn't match, which stops altered and counterfeit checks. A check program without it is relying on the forger making a mistake.
 - **Voids and reissues are a two-step state change.** A lost check is voided at the bank first, confirmed, and only then reissued. Reissuing before the void lands is how a vendor gets paid twice.
 - **Uncashed checks become someone else's problem, then the state's.** After a dormancy period with no activity, unclaimed property must be turned over to the state, and uncashed checks are a classic form of it. The holder owes outreach to the payee and a report to each state on its schedule. An outstanding check is therefore a ledger state with an aging clock, not a dead record.
@@ -121,6 +134,11 @@ That last rule means the tax totals depend on the method, so track totals per ve
 - [NAUPA: What Is Unclaimed Property](https://www.unclaimed.org/what-is-unclaimed-property/), dormancy periods, uncashed checks, and turning property over to the state
 - [Nacha: Fraud Monitoring Phase 1](https://www.nacha.org/rules/risk-management-topics-fraud-monitoring-phase-1), monitoring credit entries for payments sent under false pretenses
 
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), original credit transactions, Fast Funds timing, OCT reversals and account funding transactions
+- [Mastercard Send: At a glance](https://developer.mastercard.com/mastercard-send/documentation/send-at-a-glance/), funding and payment transactions and the account information API
+
 **In practice**
 
+- [Stripe: Instant Payouts](https://docs.stripe.com/payouts/instant-payouts), limits and timing for payouts to debit cards
+- [Lob: Tracking your mail](https://help.lob.com/print-and-mail/getting-data-and-results/tracking-your-mail), print-and-mail tracking events by Intelligent Mail barcode
 - [FBI: 2025 Internet Crime Report (PDF)](https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf), 24,768 business email compromise complaints and $3.05 billion in reported losses

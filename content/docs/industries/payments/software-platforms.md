@@ -41,6 +41,15 @@ Three things move through that tree, and each needs an explicit model:
 - **Permissions are scoped to a node.** A franchise owner sees all their locations; a location manager sees one; platform support sees everything, with every access logged. This is [multi-tenancy](/docs/architecture/multi-tenancy) with the tenant boundary at every level of the tree, enforced in the data layer, not the UI.
 - **Reporting rolls up.** Every report a merchant gets must sum exactly into its organization's report and the platform's. That only works if every number comes from the same ledger entries, never from a separate reporting pipeline that recomputes fees.
 
+## One Merchant, Several Merchant Accounts
+
+A merchant in the tree often needs more than one merchant account, because it collects for more than one kind of thing. A property manager collects rent, application fees and renters insurance premiums; a city collects taxes, utility bills and parking fines. Each of those can need its own merchant account.
+
+- **The category code belongs to the account.** Visa's rules make the acquirer assign each merchant outlet the merchant category code (MCC) that "most accurately describes its business", and require separate codes when separate lines of business have separate merchant agreements, trade under different names, or sell through e-commerce sites that qualify for different codes. Otherwise the code of the highest-volume line covers everything. The codes that matter for bill payment: 6513 for real estate agents and managers (rent), 6300 for insurance premiums, 4900 for utilities, 9311 for tax payments.
+- **The code changes the money and the rules.** Visa runs interchange programs specific to utilities, real estate, insurance and government payments ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing)); its service fee is open only to government, utility and education codes; and its Rent Payment Program is open only to 6513 merchants ([Surcharging & Fees](/docs/industries/payments/surcharging-and-fees)). Running insurance premiums through a rent merchant account isn't a shortcut, it's miscoding the transactions.
+- **Model accounts as children of the merchant.** Each merchant account carries its code, processor credentials, statement descriptor, pricing and settlement bank account, and settles and reconciles on its own. A payment is routed to an account by what it pays for, the charge type, not by which merchant it belongs to, and reporting rolls the accounts back up to the merchant. Rent and security deposits often have to land in a trust account, separate from the operating account fees go to, so the settlement account per merchant account is a compliance requirement, not a preference.
+- **A country is another account.** A merchant's Canadian locations need a Canadian merchant account and acquirer ([Payments in Canada](/docs/industries/payments/canada)).
+
 ## Onboarding Inside the Product
 
 The whole point of embedding is that a merchant gets payments without leaving the software, so [merchant onboarding](/docs/industries/payments/merchant-onboarding) happens in the platform's own interface. The platform already knows a lot about the merchant: name, address, industry, sometimes years of transaction history. Prefill everything it can, because each field a merchant types costs conversion.
@@ -103,6 +112,8 @@ The same goes for every support question about money. "Where's my payout?" has t
 
 - [IRS: Understanding Your Form 1099-K](https://www.irs.gov/businesses/understanding-your-form-1099-k), no threshold for card payments, and the threshold for payment apps and marketplaces
 - [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), sponsored merchants of payment facilitators and the acquirer's duty to screen and monitor them
+
+- [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), MCC definitions and assigning codes to merchants with several lines of business
 
 **In practice**
 

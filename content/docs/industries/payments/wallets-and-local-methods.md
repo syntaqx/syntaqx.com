@@ -63,6 +63,9 @@ Most of the rest of the world's local methods move money between bank accounts d
 | SEPA Instant, Faster Payments, Pix, UPI | When the push arrives, seconds | On arrival | You send a new transfer | No chargeback; fraud schemes (APP reimbursement, MED) |
 | SEPA Credit Transfer, iDEAL | When the push arrives | On arrival | You send a new transfer | No chargeback |
 | SEPA Direct Debit, Bacs Direct Debit | Days later | 8 weeks (SEPA), longer if unauthorised | You refund, or their bank does | Scheme refund rights |
+| Cash vouchers: Boleto, OXXO, Konbini | When the payer pays, often the next business day | On payment | Over another rail | No chargeback |
+
+Cash vouchers, where the customer pays a reference at a store or ATM, have the same asynchronous shape and their own quirks; [Cash Payments](/docs/industries/payments/cash-payments) covers them with the US retail cash networks.
 
 The engineering follows from that table:
 

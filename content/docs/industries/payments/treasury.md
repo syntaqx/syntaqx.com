@@ -1,6 +1,6 @@
 +++
 title = "Treasury & Bank Operations"
-description = "The bank accounts behind a payments ledger: custodial FBO accounts, pass-through insurance, funding and prefunding, bank reconciliation, moving money safely."
+description = "The bank accounts behind a payments ledger: FBO accounts, pass-through insurance, funding, bank files, the banking calendar and reconciliation."
 category = "Payments Industry"
 order = 1419
 part = "Paying Out"
@@ -58,6 +58,18 @@ Reconciliation is matching, and the shapes are uneven:
 
 What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one. Run it three ways every day, ledger against processor reports against bank statements, and treat an unexplained break as a stop: no payout run until someone knows whether it's a bug or a loss ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) has the merchant-facing side of the same check). Intraday reports earn their keep here too: they tell you whether today's payouts are funded before the bank's cutoff, not after.
 
+## Bank Files
+
+Most bank connections are still files. ACH and wire instructions, positive pay issue files and payment requests go out; acknowledgements, returns, notifications of change, statements, lockbox deposits and processors' settlement and fee files come back. The file pipeline is as critical as any API, and it gets less attention because it runs at night.
+
+- **Transport with keys you rotate.** Host-to-host SFTP is the norm, with AS2 or HTTPS at some banks. J.P. Morgan's, for example, takes 2048-bit RSA keys at minimum, requires every uploaded file to be PGP-signed, encrypts on request, and asks clients to rotate keys and certificates at least annually. Test and production get separate credentials, and the bank's own PGP key changes on its schedule, so its expiry is on your calendar too.
+- **Names are identities.** Every outbound file gets a unique name; J.P. Morgan warns that reusing one "can and will cause file overwrites". Inside the file, the NACHA header's File ID Modifier distinguishes files sent the same day, and Canada's Standard 005 has its file creation number ([Payments in Canada](/docs/industries/payments/canada)). Allocate both from the database.
+- **A file is a state machine:** built, transmitted, acknowledged or rejected, then settled, with a record of exactly which entries went into it. After an ambiguous failure, ask the bank what arrived before sending anything again; a resent file is a duplicate of every payment in it.
+- **Read the acknowledgement.** A FedACH acknowledgement reports the file's status, its batch and entry counts and its debit and credit totals, and lists batch-level errors by edit code; ISO 20022 banks answer a `pain.001` with a `pain.002` status report (accepted, accepted with change, partially accepted, rejected, pending). Compare the counts and totals with what you sent, and alert when no acknowledgement arrives by the time it should. A missing acknowledgement before the cutoff is a phone call; after it, it's a day of late payments.
+- **Inbound files are processed exactly once.** Poll politely (J.P. Morgan asks for no more than four polls an hour, away from the top and bottom of the hour), key each file by name and content hash, move it to processed or failed, and feed returns and NOCs into the ledger the same day. Processor settlement and fee files go through the same pipeline: fees parsed from them become ledger entries, as [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) requires.
+- **Archive everything, encrypted and immutable.** Disputes, returns and examiners all refer back to the original file. Nacha requires ACH records to be kept for years (two years after an authorization ends, longer for entries at the bank), so keep the files themselves, not just what you parsed from them.
+- **Alert on the connection, not just the content.** Repeated connection failures, a file stuck in transmission, or a parser that rejected a file are all reasons to page someone before the bank's cutoff.
+
 ## Reserves and Negative Balances Are Cash
 
 A reserve in the ledger is a promise that the money exists. Whether it's an earmarked part of the custodial account or a separate account the sponsor bank requires, the cash has to be there on the day a [dispute](/docs/industries/payments/disputes-and-chargebacks) or a [risky merchant](/docs/industries/payments/merchant-onboarding) needs it, and its release dates are treasury events: they change what you can pay out that day.
@@ -75,6 +87,16 @@ Every transfer out of a custodial account is irreversible enough to deserve cere
 - **Initiate idempotently.** A transfer instruction carries a key derived from what it represents, like the date and purpose of a sweep ([Idempotency](/docs/payments/idempotency)). Many bank APIs don't honor idempotency keys, so store the intent before sending, put your own end-to-end reference on the payment, and after a timeout ask the bank about that reference before sending anything again ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)).
 - **Plan for a second bank.** One sponsor bank is one point of failure for every payout you make. A second relationship gives you somewhere to go, at the price of splitting custodial funds and doubling reconciliation, the same trade [Processor Routing](/docs/industries/payments/processor-routing) makes for card processing.
 - **Unclaimed money still has an owner.** Uncashed checks and abandoned balances eventually belong to a state, not to you; [Vendor Payouts](/docs/industries/payments/vendor-payouts) covers escheatment.
+
+## The Banking Calendar
+
+Every date that moves money is a banking-day calculation: when a payout lands, when an ACH debit's two-day return window closes, when a check's funds are available, when a pre-authorized debit's notice must go out. One service should own those calculations, because a calendar duplicated in five jobs is five calendars.
+
+- **Holidays follow rules, and the rules have exceptions.** The Federal Reserve observes a Sunday holiday on Monday, but when a holiday falls on a Saturday, the Reserve Banks open the Friday before. In 2026, July 4 is a Saturday and July 3 is a banking day; in 2027, Juneteenth repeats the pattern. Load the published schedule as data, years ahead, rather than computing it.
+- **Effective date isn't settlement date.** The Originator picks an ACH entry's effective date; the ACH Operator assigns the settlement date, and an effective date that's stale or not a banking day settles at the next opportunity. Model both, and base return windows on the settlement date the bank reports.
+- **Your bank's calendar and cutoffs are the ones that bind,** and they're per rail: ACH windows, wire cutoffs, check deposit deadlines. Store them per bank, in Eastern Time where the rails run, and schedule jobs backward from them.
+- **Every country has its own.** Payments Canada closes on Good Friday, Victoria Day, September 30 and Boxing Day and stays open on US Thanksgiving ([Payments in Canada](/docs/industries/payments/canada)); euro payments follow the TARGET calendar. A platform in two countries keeps two calendars, and a cross-border payout needs both to be open.
+- **Calendar days and banking days are different types.** The ACH windows are two banking days and 60 calendar days; Canadian personal debits get 10 calendar days of notice and business debits 10 business days of claims. Give each its own type in code, so nobody adds the wrong kind of day ([Time](/docs/fundamentals/time) covers the rest).
 
 ## Safeguarding Outside the US
 
@@ -105,4 +127,8 @@ Read it as the US direction of travel written down: daily reconciliation, record
 **In practice**
 
 - [CMS: FCA strengthens safeguarding regime for payments and e-money firms](https://cms.law/en/int/legal-updates/fca-strengthens-safeguarding-regime-for-payments-and-e-money-firms), daily reconciliations, the resolution pack, the monthly return and the audit exemption
+- [Federal Reserve: Holiday schedules](https://www.federalreserve.gov/aboutthefed/k8.htm), the Fed's holidays and its Saturday and Sunday rules
+- [Federal Reserve Financial Services: FedACH acknowledgement example](https://www.frbservices.org/binaries/content/assets/crsocms/resources/resource-centers/fedach-platform-modernization/achfahk691000134ain20200512085211959.ack), file status, counts, totals and batch edit codes
+- [J.P. Morgan: Host-to-Host recommended best practices](https://www.jpmorgan.com/payments/client-resource-center/h2h/recommended-best-practices), unique file names, resending, polling and key rotation
+- [SIX: Swiss Payment Standards, status report](https://www.six-group.com/dam/download/banking-services/standardization/sps/ig-status-report-sps2021-en.pdf), `pain.002` status codes in an implementation guide
 - [SEPA for Corporates: The difference between camt.052, camt.053 and camt.054](https://www.sepaforcorporates.com/swift-for-corporates/the-difference-between-a-camt052-camt053-and-camt054/), intraday reports, statements and notifications

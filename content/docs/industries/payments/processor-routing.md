@@ -69,7 +69,7 @@ The deepest lock-in in payments isn't the API. It's the cards. If customers' car
 
 The alternative is owning the credential layer:
 
-- **A processor-agnostic vault,** your own or a vault provider's, holding card numbers and handing your systems tokens that any route can use. It's the design that makes routing real, and it puts the vault in [PCI scope](/docs/compliance/pci-dss) as a service provider would be, whoever runs it. [Sensitive Data](/docs/payments/sensitive-data) is the case for keeping that vault small.
+- **A processor-agnostic vault,** your own or a vault provider's, holding card numbers and handing your systems tokens that any route can use. It's the design that makes routing real, and it puts the vault in [PCI scope](/docs/compliance/pci-dss) as a service provider would be, whoever runs it. [Sensitive Data](/docs/payments/sensitive-data) is the case for keeping that vault small, and [Running a Card Vault](/docs/industries/payments/card-vault) is how to build and operate it.
 - **Network tokens** you provision as the token requestor, or through a vault that does, can travel with you between processors that support them. Provisioned by a processor on your behalf, they may stay with that processor.
 
 Decide this before you have a million stored cards, not after. The cost of the decision grows with every card saved.

@@ -76,6 +76,8 @@ The useful question at each stage is not "are we compliant?" but "which contract
 
 In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/docs/industries/payments/strong-customer-authentication). Its successor is agreed but not yet law: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, and the Council's member-state representatives confirmed it on April 22, 2026. As of the Council's October 2026 status report, formal adoption was still pending. Check where adoption and the application dates stand before planning against them; the obligations bite well after adoption, not on it. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
 
+Canada is closest to home and still different at every layer: Payments Canada's rules instead of Nacha's, a federal code of conduct for card fees, Bank of Canada supervision of payment providers under the Retail Payment Activities Act since 2025, and FINTRAC registration for anyone paying bills on others' behalf. [Payments in Canada](/docs/industries/payments/canada) covers it.
+
 ## References
 
 **Specifications**
