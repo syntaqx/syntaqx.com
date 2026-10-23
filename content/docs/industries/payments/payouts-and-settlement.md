@@ -1,12 +1,13 @@
 +++
 title = "Payouts & Settlement"
 description = "How a card payment becomes money in a merchant's bank: settlement timing, fees as ledger entries, payout schedules and reserves, failures, and reconciliation."
-category = "Payments"
-order = 810
+category = "Payments Industry"
+order = 1410
+aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
 +++
 
-[Disputes](/docs/payments/disputes-and-chargebacks) are why money can't leave the platform the moment it arrives. A customer pays on Monday and the merchant sees "succeeded" on Monday, but the money reaches their bank on Wednesday, or the following week, or for a new merchant two weeks later. Everything in between is settlement and payouts, the source of most "where's my money?" tickets on a payments platform, and the answer has to be computable from records for every cent.
+[Disputes](/docs/industries/payments/disputes-and-chargebacks) are why money can't leave the platform the moment it arrives. A customer pays on Monday and the merchant sees "succeeded" on Monday, but the money reaches their bank on Wednesday, or the following week, or for a new merchant two weeks later. Everything in between is settlement and payouts, the source of most "where's my money?" tickets on a payments platform, and the answer has to be computable from records for every cent.
 
 ## The Stages
 
@@ -52,13 +53,13 @@ How soon a merchant can be paid is a risk decision, not a convenience setting: o
 
 ### Negative Balances
 
-Refunds and lost disputes can take a merchant's balance below zero, and on a platform someone has to cover it. Options, in order: offset against the merchant's future payments, debit their bank account (which requires authorization to debit, collected during [onboarding](/docs/payments/merchant-onboarding)), and finally, absorb it from the platform's own funds. Decide the order up front and tell merchants, because the alternative is discovering the policy in the middle of a loss. While a balance is negative, payouts stop.
+Refunds and lost disputes can take a merchant's balance below zero, and on a platform someone has to cover it. Options, in order: offset against the merchant's future payments, debit their bank account (which requires authorization to debit, collected during [onboarding](/docs/industries/payments/merchant-onboarding)), and finally, absorb it from the platform's own funds. Decide the order up front and tell merchants, because the alternative is discovering the policy in the middle of a loss. While a balance is negative, payouts stop.
 
 ## Payout Failures
 
 Payouts fail, and they fail days later than you'd expect, because bank transfers report problems asynchronously.
 
-In the US, ACH payouts can be **returned** after they appear to succeed, typically within two banking days, with a standardized Nacha reason code ([ACH & Bank Transfers](/docs/payments/ach) covers the rail, the longer windows on debits, and instant alternatives):
+In the US, ACH payouts can be **returned** after they appear to succeed, typically within two banking days, with a standardized Nacha reason code ([ACH & Bank Transfers](/docs/industries/payments/ach) covers the rail, the longer windows on debits, and instant alternatives):
 
 | Code | Meaning | What to do |
 | ---- | ------- | ---------- |
@@ -69,7 +70,7 @@ In the US, ACH payouts can be **returned** after they appear to succeed, typical
 
 So a payout's state machine doesn't end at `paid`. It goes `pending` → `in_transit` → `paid`, and from `paid` it can still become `failed` when the return arrives. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
 
-Bank details are where fraud concentrates too: a changed payout account shortly before a large payout is the classic account-takeover cash-out, so a change re-verifies the account and can reasonably delay the next payout ([Merchant Onboarding](/docs/payments/merchant-onboarding)).
+Bank details are where fraud concentrates too: a changed payout account shortly before a large payout is the classic account-takeover cash-out, so a change re-verifies the account and can reasonably delay the next payout ([Merchant Onboarding](/docs/industries/payments/merchant-onboarding)).
 
 ## Idempotent Payouts
 

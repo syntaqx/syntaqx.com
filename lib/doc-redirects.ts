@@ -6,7 +6,8 @@ import path from "node:path";
  * renders (a page-level redirect streams as a 200 with a meta refresh):
  *
  *   - each doc's former slugs, from its `aliases` frontmatter, to its URL
- *   - a bare section folder, like /docs/payments, to its group on /docs
+ *   - a bare section folder, like /docs/payments, to its group on /docs, and a
+ *     parent folder, like /docs/industries, to its first group
  *
  * next.config.ts imports this, so it reads files directly and imports no
  * app code.
@@ -26,7 +27,7 @@ export function docRedirects(root = process.cwd()) {
 
   for (const file of files(docsDir)) {
     const slug = path.relative(docsDir, file).split(path.sep).join("/").replace(/\.md$/, "");
-    if (slug.includes("/")) sections.add(slug.split("/")[0]);
+    if (slug.includes("/")) sections.add(slug.slice(0, slug.lastIndexOf("/")));
 
     const aliases = fs.readFileSync(file, "utf8").match(/^aliases\s*=\s*\[([^\]]*)\]/m)?.[1] ?? "";
     for (const alias of aliases.match(/"[^"]+"/g) ?? []) {
@@ -34,8 +35,18 @@ export function docRedirects(root = process.cwd()) {
     }
   }
 
-  for (const section of sections) {
-    redirects.push({ source: `/docs/${section}`, destination: `/docs#${section}`, permanent: true });
+  // A section folder goes to its group on /docs; a parent of nested sections
+  // (like /docs/industries) goes to its first one.
+  const anchors = new Map<string, string>();
+  for (const section of [...sections].sort()) {
+    const parts = section.split("/");
+    for (let i = 1; i <= parts.length; i++) {
+      const folder = parts.slice(0, i).join("/");
+      if (!anchors.has(folder)) anchors.set(folder, section.replace(/\//g, "-"));
+    }
+  }
+  for (const [folder, anchor] of anchors) {
+    redirects.push({ source: `/docs/${folder}`, destination: `/docs#${anchor}`, permanent: true });
   }
 
   return redirects;

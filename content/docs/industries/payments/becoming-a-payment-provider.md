@@ -1,8 +1,9 @@
 +++
 title = "Becoming a Payment Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
-category = "Payments"
-order = 813
+category = "Payments Industry"
+order = 1415
+aliases = ["payments/becoming-a-payment-provider"]
 tags = ["payments", "compliance", "pci", "licensing"]
 +++
 
@@ -65,12 +66,12 @@ Either way, the cost isn't the application: it's capital and safeguarding requir
 
 ## Gatekeeping: Sanctions, AML and Losses
 
-A provider is a gatekeeper for the financial system. [Merchant Onboarding](/docs/payments/merchant-onboarding) covers how to build KYC, KYB, underwriting and monitoring; at the provider level, the difference is who you answer to.
+A provider is a gatekeeper for the financial system. [Merchant Onboarding](/docs/industries/payments/merchant-onboarding) covers how to build KYC, KYB, underwriting and monitoring; at the provider level, the difference is who you answer to.
 
 - **Sanctions screening is not optional.** OFAC is direct: all US persons must comply, and an entity owned 50% or more by blocked persons is itself blocked even if it isn't named on a list. Screen the business, its owners and its payout destinations, at onboarding and whenever the lists change.
 - **AML is a program, not a check.** Your sponsor, and any regulator that licenses you, will expect a written anti-money-laundering program with a named officer, risk assessment, transaction monitoring and suspicious activity reporting. A vendor that "does KYC" is one input to it.
 - **Terminated merchant lists** such as Mastercard's MATCH are checked at onboarding, and merchants you terminate for cause get added.
-- **Losses move up the chain.** When a merchant can't cover its refunds and [chargebacks](/docs/payments/disputes-and-chargebacks), the loss goes to the payfac, then the acquirer, and each protects itself by holding back money it owes the party below: underwriting limits, [reserves](/docs/payments/payouts-and-settlement), and finally your own capital. Losses are lumpy: a provider can run clean for a year and then lose a quarter's margin to one merchant that collapses with a large prepaid order book. Price for that.
+- **Losses move up the chain.** When a merchant can't cover its refunds and [chargebacks](/docs/industries/payments/disputes-and-chargebacks), the loss goes to the payfac, then the acquirer, and each protects itself by holding back money it owes the party below: underwriting limits, [reserves](/docs/industries/payments/payouts-and-settlement), and finally your own capital. Losses are lumpy: a provider can run clean for a year and then lose a quarter's margin to one merchant that collapses with a large prepaid order book. Price for that.
 
 ## How the Money Moves
 

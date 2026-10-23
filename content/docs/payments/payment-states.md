@@ -21,7 +21,7 @@ Every financial object has a `status` with a closed set of values and a document
 | ---- | -- | ------- |
 | `pending` | `authorized` | Issuer approves the authorization |
 | `pending` | `failed` | Issuer declines, or the request errors |
-| `pending` | `requires_action` | Issuer asks the customer to authenticate ([3-D Secure](/docs/payments/strong-customer-authentication)) |
+| `pending` | `requires_action` | Issuer asks the customer to authenticate ([3-D Secure](/docs/industries/payments/strong-customer-authentication)) |
 | `requires_action` | `pending` | Customer completes the challenge; the payment resumes |
 | `requires_action` | `failed` | Customer fails or abandons the challenge, or it expires |
 | `authorized` | `captured` | Merchant captures (full or partial) |
@@ -85,7 +85,7 @@ Why not a single `balance` column per merchant? Because a single balance can be 
 
 ## Reconciliation
 
-Every external system is wrong sometimes, including yours: processors drop transactions from settlement files, banks post late, and your own code has bugs. Reconciliation is how you find out before a merchant does. The settlement side of this, matching processor files and bank deposits to payouts, is in [Payouts & Settlement](/docs/payments/payouts-and-settlement).
+Every external system is wrong sometimes, including yours: processors drop transactions from settlement files, banks post late, and your own code has bugs. Reconciliation is how you find out before a merchant does. The settlement side of this, matching processor files and bank deposits to payouts, is in [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement).
 
 - **Reconcile daily,** matching ledger entries against processor settlement files and bank statements. A break found the next day has one day of context. One found at month end has thirty.
 - **Breaks are tracked, not patched.** A mismatch becomes a record with an owner, and it's resolved with a correcting entry, so the fix is as auditable as the mistake.

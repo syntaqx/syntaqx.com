@@ -2,12 +2,13 @@
 title = "Strong Customer Authentication & 3-D Secure"
 nav_title = "SCA & 3-D Secure"
 description = "When a card payment needs the cardholder to authenticate, the exemptions that skip it, why the liability shift matters, and how an API models the extra step."
-category = "Payments"
-order = 807
+category = "Payments Industry"
+order = 1405
+aliases = ["payments/strong-customer-authentication"]
 tags = ["payments", "sca", "3ds", "psd2", "authentication"]
 +++
 
-[Onboarding](/docs/payments/merchant-onboarding) establishes who the merchant is; the other side of a card payment is whether the person paying is really the cardholder. A card number, an expiry and a CVC prove only that someone has seen a card. Strong Customer Authentication (SCA) closes that gap for online payments in Europe, and 3-D Secure (3DS) is how card payments do it. Treat it as a regulation to bolt on later and you get the worst of it: legitimate European customers declined for "authentication required" with no way to complete the step, and fraud disputes you could have shifted to the bank.
+[Onboarding](/docs/industries/payments/merchant-onboarding) establishes who the merchant is; the other side of a card payment is whether the person paying is really the cardholder. A card number, an expiry and a CVC prove only that someone has seen a card. Strong Customer Authentication (SCA) closes that gap for online payments in Europe, and 3-D Secure (3DS) is how card payments do it. Treat it as a regulation to bolt on later and you get the worst of it: legitimate European customers declined for "authentication required" with no way to complete the step, and fraud disputes you could have shifted to the bank.
 
 ## What SCA Requires
 
@@ -55,7 +56,7 @@ The data is the lever: the more context you send, the more often the issuer deci
 
 By default the merchant bears the loss on a fraud dispute. When a payment was successfully authenticated with 3DS, the liability typically shifts to the issuer: the bank approved the cardholder's identity, so the bank owns that mistake. That's the business case for 3DS beyond compliance: a merchant selling high-value goods can request authentication on risky orders even where SCA doesn't require it, to move fraud losses off its books.
 
-It's not a guarantee. [Stripe's documentation](https://docs.stripe.com/payments/3d-secure/authentication-flow) is explicit that networks exempt some business types, merchants in fraud monitoring programs can lose it, and it never covers non-fraud disputes such as "item not received". Record the authentication result and the Electronic Commerce Indicator (ECI) on the payment so the evidence exists when a [dispute](/docs/payments/disputes-and-chargebacks) arrives.
+It's not a guarantee. [Stripe's documentation](https://docs.stripe.com/payments/3d-secure/authentication-flow) is explicit that networks exempt some business types, merchants in fraud monitoring programs can lose it, and it never covers non-fraud disputes such as "item not received". Record the authentication result and the Electronic Commerce Indicator (ECI) on the payment so the evidence exists when a [dispute](/docs/industries/payments/disputes-and-chargebacks) arrives.
 
 ## Modeling the Extra Step in an API
 

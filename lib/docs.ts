@@ -102,7 +102,8 @@ export function getAllDocs(): DocData[] {
 
       return {
         slug,
-        section: slug.includes("/") ? slug.split("/")[0] : "",
+        // The folder path, hyphenated: "payments", or "industries-payments" for a nested one.
+        section: slug.includes("/") ? slug.slice(0, slug.lastIndexOf("/")).replace(/\//g, "-") : "",
         aliases: (data.aliases as string[]) ?? [],
         title: (data.title as string) ?? slug,
         navTitle: (data.nav_title as string) ?? (data.title as string) ?? slug,
