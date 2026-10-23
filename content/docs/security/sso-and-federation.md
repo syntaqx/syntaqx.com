@@ -3,7 +3,7 @@ title = "SSO & Identity Federation"
 nav_title = "SSO & Federation"
 description = "Signing people in through someone else's identity provider: OIDC with PKCE, validating ID tokens, SAML for enterprises, per-tenant SSO, SCIM and logout."
 category = "Security"
-order = 703
+order = 704
 tags = ["security", "authentication", "sso", "oidc", "saml", "scim"]
 +++
 
@@ -37,7 +37,7 @@ Large customers often still run [SAML 2.0](https://docs.oasis-open.org/security/
 
 ## SSO for Business Customers
 
-B2B SSO is mostly a multi-tenancy problem ([Multi-Tenancy](/docs/architecture/multi-tenancy)): each customer brings its own identity provider, and the application has to send the right people to the right one.
+B2B SSO is mostly a multi-tenancy problem ([Multi-Tenancy](/docs/architecture/multi-tenancy)): each customer brings its own identity provider, and the application has to send the right people to the right one. Building all of it is a lot; [Choosing an Identity Provider](/docs/security/identity-providers) covers the products and libraries that do it for you.
 
 - **Per-tenant configuration.** Each organization gets its own OIDC or SAML connection: issuer, client credentials or certificates, and the claims to read.
 - **Verify domains before trusting them.** A tenant claims `acme.com` by proving control (a DNS record), so a stranger can't configure SSO for someone else's domain and capture their employees' sign-ins.

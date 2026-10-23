@@ -11,7 +11,7 @@ tags = ["security", "authentication", "sessions", "passkeys", "mfa", "jwt"]
 
 ## Buy Before You Build
 
-I don't write a login system from scratch for a product whose business is something else. A managed identity provider (Auth0, Okta, Cognito, Clerk, WorkOS, or a mature open-source server like Keycloak) has already built passkeys, MFA, breached-password checks, bot defenses, enterprise SSO and the hundred edge cases in between, and it gets audited for them. Signing in through it over OpenID Connect is covered in [SSO & Identity Federation](/docs/security/sso-and-federation).
+I don't write a login system from scratch for a product whose business is something else. A managed identity provider (Auth0, Okta, Cognito, Clerk, WorkOS, or a mature open-source server like Keycloak) has already built passkeys, MFA, breached-password checks, bot defenses, enterprise SSO and the hundred edge cases in between, and it gets audited for them. Signing in through it over OpenID Connect is covered in [SSO & Identity Federation](/docs/security/sso-and-federation), and which one to pick, hosted, self-hosted or a library like Better Auth, in [Choosing an Identity Provider](/docs/security/identity-providers).
 
 Buying moves the work; it doesn't remove it. You still own the session your application creates after the provider says yes, what counts as a sensitive action, the recovery policy, the audit trail, and what happens when the provider is down. The rest of this chapter applies either way: it's what to configure if you buy, and what to build if you can't.
 
