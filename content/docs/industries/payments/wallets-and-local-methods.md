@@ -4,6 +4,7 @@ nav_title = "Wallets & Local Methods"
 description = "Apple Pay and Google Pay as network tokens, PayPal, BNPL, and the bank rails other countries pay with: SEPA, iDEAL and Wero, Pix, UPI and UK pay-by-bank."
 category = "Payments Industry"
 order = 1403
+part = "How Money Moves"
 tags = ["payments", "wallets", "apple-pay", "google-pay", "bnpl", "sepa", "pix", "upi", "open-banking"]
 +++
 

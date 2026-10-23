@@ -3,7 +3,8 @@ title = "Strong Customer Authentication & 3-D Secure"
 nav_title = "SCA & 3-D Secure"
 description = "When a card payment needs the cardholder to authenticate, the exemptions that skip it, why the liability shift matters, and how an API models the extra step."
 category = "Payments Industry"
-order = 1407
+order = 1412
+part = "Taking Payments"
 aliases = ["payments/strong-customer-authentication"]
 tags = ["payments", "sca", "3ds", "psd2", "authentication"]
 +++

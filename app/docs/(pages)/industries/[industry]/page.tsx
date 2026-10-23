@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getDocsByCategory } from "@/lib/docs";
-import { INDUSTRIES, formatMinutes, industrySection } from "@/lib/industries";
+import { INDUSTRIES, formatMinutes, industryParts, industrySection } from "@/lib/industries";
 
 interface Props {
   params: Promise<{ industry: string }>;
@@ -63,27 +63,35 @@ export default async function IndustryCover({ params }: Props) {
         </Link>
       </header>
 
-      <ol className="divide-y divide-border border-b border-border">
-        {volume.docs.map((doc, i) => (
-          <li key={doc.slug}>
-            <Link
-              href={`/docs/${doc.slug}`}
-              className="group grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto]"
-            >
-              <span className="inst pt-1 text-accent">{String(i + 1).padStart(2, "0")}</span>
-              <span>
-                <span className="block font-semibold text-foreground transition-colors group-hover:text-accent">
-                  {doc.title}
-                </span>
-                <span className="mt-1 block text-sm leading-relaxed text-dim">{doc.description}</span>
-              </span>
-              <span className="inst col-start-2 mt-2 text-dim sm:col-start-3 sm:mt-0 sm:pt-1">
-                {doc.readingMinutes} min
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ol>
+      {industryParts(volume.docs).map((part) => (
+        <section key={part.title || "chapters"}>
+          {part.title && <h2 className="inst border-b border-border pt-10 pb-3 text-[0.6rem] text-dim">{part.title}</h2>}
+          <ol className="divide-y divide-border border-b border-border">
+            {part.docs.map((doc) => {
+              const i = volume.docs.indexOf(doc);
+              return (
+                <li key={doc.slug}>
+                  <Link
+                    href={`/docs/${doc.slug}`}
+                    className="group grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto]"
+                  >
+                    <span className="inst pt-1 text-accent">{String(i + 1).padStart(2, "0")}</span>
+                    <span>
+                      <span className="block font-semibold text-foreground transition-colors group-hover:text-accent">
+                        {doc.title}
+                      </span>
+                      <span className="mt-1 block text-sm leading-relaxed text-dim">{doc.description}</span>
+                    </span>
+                    <span className="inst col-start-2 mt-2 text-dim sm:col-start-3 sm:mt-0 sm:pt-1">
+                      {doc.readingMinutes} min
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
     </article>
   );
 }

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import type { DocCategory } from "@/lib/docs";
-import { UPCOMING_INDUSTRIES, industryName, isIndustry } from "@/lib/industries";
+import { UPCOMING_INDUSTRIES, industryName, industryParts, isIndustry } from "@/lib/industries";
 
 /** An industry volume's cover, e.g. /docs/industries/payments. */
 const coverHref = (category: DocCategory) => `/docs/${category.docs[0].slug.slice(0, category.docs[0].slug.lastIndexOf("/"))}`;
@@ -62,8 +62,8 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
     }
   }, [pathname, drilled]);
 
-  const docLinks = (category: DocCategory) =>
-    category.docs.map((doc) => {
+  const docLinks = (docs: DocCategory["docs"]) =>
+    docs.map((doc) => {
       const href = `/docs/${doc.slug}`;
       return (
         <li key={doc.slug}>
@@ -102,8 +102,18 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
               Overview
             </Link>
           </li>
-          {docLinks(current)}
         </ul>
+        {industryParts(current.docs).map((part) =>
+          part.title ? (
+            <Group key={part.title} title={part.title}>
+              {docLinks(part.docs)}
+            </Group>
+          ) : (
+            <ul key="chapters" className="border-l border-border">
+              {docLinks(part.docs)}
+            </ul>
+          ),
+        )}
       </nav>
     );
   }
@@ -112,7 +122,7 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
     <nav ref={navRef} key="playbook" aria-label="Documentation" className={`${current ? "sidebar-in-left " : ""}space-y-7`}>
       {core.map((category) => (
         <Group key={category.name} title={category.name}>
-          {docLinks(category)}
+          {docLinks(category.docs)}
         </Group>
       ))}
       <Group title="Industries">

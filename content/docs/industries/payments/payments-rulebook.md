@@ -2,7 +2,8 @@
 title = "The Payments Rulebook"
 description = "How payments rules fit together: network contracts like PCI DSS and Nacha, the laws behind them, who enforces each, and which apply from merchant to provider."
 category = "Payments Industry"
-order = 1405
+order = 1408
+part = "The Rules"
 aliases = ["compliance/payments-rulebook"]
 tags = ["compliance", "payments", "regulation", "pci", "nacha"]
 +++

@@ -3,6 +3,7 @@ title = "How Card Payments Work"
 description = "The parties behind a card payment, why authorization, capture, clearing, settlement and funding are separate events, and the ISO 8583 underneath it all."
 category = "Payments Industry"
 order = 1401
+part = "How Money Moves"
 tags = ["payments", "cards", "iso-8583", "authorization", "settlement"]
 +++
 

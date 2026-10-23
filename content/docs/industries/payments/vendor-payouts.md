@@ -2,7 +2,8 @@
 title = "Vendor Payouts"
 description = "Paying vendors and suppliers: ACH, virtual cards, checks and instant rails, vendor enrollment, stopping redirect fraud, funding, 1099s and reconciliation."
 category = "Payments Industry"
-order = 1415
+order = 1418
+part = "Paying Out"
 tags = ["payments", "payouts", "accounts-payable", "fraud", "tax"]
 +++
 

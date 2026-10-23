@@ -2,7 +2,8 @@
 title = "Treasury & Bank Operations"
 description = "The bank accounts behind a payments ledger: custodial FBO accounts, pass-through insurance, funding and prefunding, bank reconciliation, moving money safely."
 category = "Payments Industry"
-order = 1413
+order = 1419
+part = "Paying Out"
 tags = ["payments", "treasury", "banking", "reconciliation", "ledger"]
 +++
 

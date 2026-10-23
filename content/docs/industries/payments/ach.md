@@ -2,7 +2,8 @@
 title = "ACH & Bank Transfers"
 description = "How ACH really moves money: the parties, SEC codes and files, why settled isn't final, return windows, the Nacha rules you inherit, and when RTP or FedNow fit."
 category = "Payments Industry"
-order = 1414
+order = 1404
+part = "How Money Moves"
 aliases = ["payments/ach"]
 tags = ["payments", "ach", "nacha", "bank-transfers", "ledger"]
 +++

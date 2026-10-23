@@ -2,7 +2,8 @@
 title = "Fraud & Risk"
 description = "Deciding which payments to allow, review, challenge or block: the cost of both mistakes, rules and models together, card testing, and auditable decisions."
 category = "Payments Industry"
-order = 1409
+order = 1415
+part = "Taking Payments"
 aliases = ["payments/fraud-and-risk"]
 tags = ["payments", "fraud", "risk", "security"]
 +++

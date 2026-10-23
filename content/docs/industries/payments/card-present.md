@@ -3,6 +3,7 @@ title = "Card-Present Payments"
 description = "How in-person card payments work: EMV chip cryptograms, cardholder verification, contactless, Tap to Pay, terminals, P2PE, and the risk of going offline."
 category = "Payments Industry"
 order = 1402
+part = "How Money Moves"
 tags = ["payments", "cards", "emv", "terminals", "card-present", "p2pe"]
 +++
 

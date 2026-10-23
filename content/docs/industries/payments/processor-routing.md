@@ -2,7 +2,8 @@
 title = "Processor Routing"
 description = "Running payments over more than one processor: when it pays, routing by card, cost and approval rate, US debit, safe failover, tokens and reconciliation."
 category = "Payments Industry"
-order = 1416
+order = 1420
+part = "Running a Provider"
 tags = ["payments", "routing", "processors", "debit", "architecture"]
 +++
 

@@ -46,6 +46,20 @@ export const UPCOMING_INDUSTRIES = [
   "E-commerce",
 ];
 
+/**
+ * A volume's chapters, in order, as runs of the same frontmatter `part`. The
+ * docs tests keep each part's chapters contiguous, so a part is one run.
+ */
+export function industryParts<T extends { part?: string }>(docs: T[]) {
+  const parts: { title: string; docs: T[] }[] = [];
+  for (const doc of docs) {
+    const title = doc.part ?? "";
+    if (parts.at(-1)?.title !== title) parts.push({ title, docs: [] });
+    parts.at(-1)!.docs.push(doc);
+  }
+  return parts;
+}
+
 export const isIndustry = (section: string) => section.startsWith("industries-");
 
 /** "Payments Industry" reads as "Payments" in a list of industries. */

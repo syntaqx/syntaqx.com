@@ -17,6 +17,8 @@ export interface DocData {
   description: string;
   category: string;
   order: number;
+  /** An industry chapter's part of the volume, e.g. "How Money Moves". */
+  part?: string;
   tags: string[];
   /** Minutes to read, not counting code or the References list. */
   readingMinutes: number;
@@ -113,6 +115,7 @@ export function getAllDocs(): DocData[] {
         description: (data.description as string) ?? "",
         category: (data.category as string) ?? "General",
         order: (data.order as number) ?? 99,
+        part: data.part as string | undefined,
         tags: (data.tags as string[]) ?? [],
         readingMinutes: estimateReadingTime(content.split(/^## References$/m)[0]),
         content,
