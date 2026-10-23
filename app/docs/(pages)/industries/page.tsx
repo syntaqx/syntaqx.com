@@ -16,7 +16,11 @@ export default function IndustriesPage() {
   return (
     <article>
       <header className="mb-12 border-b border-border pb-10">
-        <p className="inst mb-4 text-accent">Industries</p>
+        <p className="inst mb-4">
+          <Link href="/docs" className="text-accent transition-colors hover:text-foreground">
+            Docs
+          </Link>
+        </p>
         <h1 className="mb-6 text-4xl leading-[0.95] sm:text-5xl">Industries</h1>
         <p className="max-w-3xl text-muted">
           The core of the playbook applies anywhere. Each volume here takes one industry and shows how its rules, its

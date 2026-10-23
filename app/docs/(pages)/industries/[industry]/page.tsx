@@ -38,7 +38,7 @@ export default async function IndustryCover({ params }: Props) {
 
   return (
     <article>
-      <header className="mb-12 border-b border-border pb-10">
+      <header className="border-b border-border pb-10">
         <p className="inst mb-4 text-dim">
           <Link href="/docs/industries" className="text-accent transition-colors hover:text-foreground">
             Industries
@@ -63,7 +63,7 @@ export default async function IndustryCover({ params }: Props) {
         </Link>
       </header>
 
-      <ol className="divide-y divide-border border-y border-border">
+      <ol className="divide-y divide-border border-b border-border">
         {volume.docs.map((doc, i) => (
           <li key={doc.slug}>
             <Link
