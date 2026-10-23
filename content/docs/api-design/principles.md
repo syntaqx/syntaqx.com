@@ -82,7 +82,7 @@ The header has no `X-` prefix: [RFC 6648](https://datatracker.ietf.org/doc/html/
 
 ## This Site
 
-The syntaqx API at `api.syntaqx.com` follows every rule above, with the version only in the header ([ADR 0002](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0002-header-only-api-versioning.md)). Every response carries `Request-Id`, plus a legacy `X-Request-ID` with the same value for older clients. The site itself does content negotiation: request a post, a doc or the home page with `Accept: text/markdown` and you get its Markdown instead of HTML, from the same URL.
+The syntaqx API at `api.syntaqx.com` follows every rule above, with the version only in the header ([ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-header-only-api-versioning.md)). Every response carries `Request-Id`, plus a legacy `X-Request-ID` with the same value for older clients. The site itself does content negotiation: request a post, a doc or the home page with `Accept: text/markdown` and you get its Markdown instead of HTML, from the same URL.
 
 ## References
 

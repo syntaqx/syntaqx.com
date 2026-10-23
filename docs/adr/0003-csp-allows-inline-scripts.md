@@ -1,4 +1,4 @@
-# 0004. Content-Security-Policy allows inline scripts, for now
+# 0003. Content-Security-Policy allows inline scripts, for now
 
 Status: Accepted (2026-10-22)
 

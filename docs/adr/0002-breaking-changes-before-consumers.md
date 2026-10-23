@@ -1,4 +1,4 @@
-# 0003. Breaking changes without a deprecation window, while there are no consumers
+# 0002. Breaking changes without a deprecation window, while there are no consumers
 
 Status: Accepted (2026-10-22)
 
@@ -9,7 +9,7 @@ Status: Accepted (2026-10-22)
 Two changes the API needed were breaking:
 
 - Validation failures returned `400`, while [Error Responses](https://www.syntaqx.com/docs/requests/error-responses) says `400` is for malformed requests and `422` for invalid values (`#123`).
-- The `/v1` path prefix was removed ([0002](0002-header-only-api-versioning.md)), so every old URL stopped working (`#124`).
+- The `/v1` path prefix was removed ([0001](0001-header-only-api-versioning.md)), so every old URL stopped working (`#124`).
 
 ## Decision
 
