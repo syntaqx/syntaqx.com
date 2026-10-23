@@ -26,10 +26,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!label) return { title: "Tag not found", robots: { index: false } };
 
   const url = `${SITE_URL}/tags/${tag}`;
+  const title = `Posts tagged "${label}"`;
+  const description = tagDescription(label, getPostsByTag(tag));
   return {
-    title: `Posts tagged "${label}"`,
-    description: tagDescription(label, getPostsByTag(tag)),
+    title,
+    description,
     alternates: { canonical: url },
+    openGraph: { title, description, url, siteName: "syntaqx", type: "website" },
     // Thin archive pages: keep them browsable, but don't ask Google to index
     // them. Also excluded from the sitemap (see app/sitemap.ts).
     robots: { index: false, follow: true },

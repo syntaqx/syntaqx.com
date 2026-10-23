@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Text Format Converter",
-  description:
-    "Convert between JSON, YAML, TOML, and more in real time: edit any format and the others update instantly, all locally in your browser.",
-};
+export const metadata = pageMetadata(
+  "/misc/convert/text",
+  "Text Format Converter",
+  "Convert between JSON, YAML, TOML, and more in real time: edit any format and the others update instantly, all locally in your browser.",
+);
 
 export default function TextConvertLayout({
   children,

@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Privacy",
-  description:
-    "How syntaqx.com handles your data: what's collected, what isn't, and the choices you have. I try to collect as little as possible.",
-};
+export const metadata = pageMetadata(
+  "/legal/privacy",
+  "Privacy",
+  "How syntaqx.com handles your data: what's collected, what isn't, and the choices you have. I try to collect as little as possible.",
+);
 
 const lastUpdated = "September 2026";
 

@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Base64 Decode / Encode",
-  description:
-    "Decode or encode Base64 strings directly in your browser: paste text or Base64 and convert instantly, with nothing ever sent to a server.",
-};
+export const metadata = pageMetadata(
+  "/misc/convert/base64",
+  "Base64 Decode / Encode",
+  "Decode or encode Base64 strings directly in your browser: paste text or Base64 and convert instantly, with nothing ever sent to a server.",
+);
 
 export default function Base64Layout({
   children,

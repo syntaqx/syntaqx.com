@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
 import { AvatarDemo, TimeDemo, UserDemo } from "./demos";
 import { DemoSection } from "../_components/demo-section";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Hover Cards",
-  description:
-    "Defer expensive context to intent: reveal extra detail on hover without bloating the initial render. A pattern demo with real, interactive examples.",
-};
+export const metadata = pageMetadata(
+  "/misc/hover-cards",
+  "Hover Cards",
+  "Defer expensive context to intent: reveal extra detail on hover without bloating the initial render. A pattern demo with real, interactive examples.",
+);
 
 export default function HoverCardsPage() {
   return (

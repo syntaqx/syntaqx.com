@@ -6,13 +6,13 @@ import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
 import Link from "next/link";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "All Posts",
-  description:
-    "Essays and notes on software engineering, architecture, engineering leadership, and building with LLMs: everything I write, gathered in one place.",
-};
+export const metadata = pageMetadata(
+  "/posts",
+  "All Posts",
+  "Essays and notes on software engineering, architecture, engineering leadership, and building with LLMs: everything I write, gathered in one place.",
+);
 
 export default function PostsPage() {
   const posts = getAllPosts();

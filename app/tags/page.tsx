@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
 import { getAllTags } from "@/lib/posts";
 import { TagChips } from "@/components/tag-chips";
 import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Browse Posts by Topic",
-  description:
-    "Browse every topic I write about: from software engineering and architecture to LLMs, DevOps, and career growth. Find posts by tag.",
-};
+export const metadata = pageMetadata(
+  "/tags",
+  "Browse Posts by Topic",
+  "Browse every topic I write about: from software engineering and architecture to LLMs, DevOps, and career growth. Find posts by tag.",
+);
 
 export default function TagsPage() {
   const tags = getAllTags();

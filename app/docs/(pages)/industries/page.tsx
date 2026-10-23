@@ -1,14 +1,14 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { getDocsByCategory } from "@/lib/docs";
 import { industryCards } from "@/lib/industries";
 import { IndustryCards } from "@/components/industry-cards";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Industries",
-  description:
-    "The playbook applied to one industry at a time: how its rules, money and regulators shape the systems you build, one volume per industry.",
-};
+export const metadata = pageMetadata(
+  "/docs/industries",
+  "Industries",
+  "The playbook applied to one industry at a time: how its rules, money and regulators shape the systems you build, one volume per industry.",
+);
 
 /** Every industry volume, and the ones still to come. */
 export default function IndustriesPage() {

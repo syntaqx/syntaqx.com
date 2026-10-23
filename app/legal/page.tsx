@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/card";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Legal",
-  description:
-    "Legal information for syntaqx.com: the Terms of Service that govern using the site, and the Privacy policy covering how your data is handled.",
-};
+export const metadata = pageMetadata(
+  "/legal",
+  "Legal",
+  "Legal information for syntaqx.com: the Terms of Service that govern using the site, and the Privacy policy covering how your data is handled.",
+);
 
 const pages = [
   {

@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
 import { DemoSection } from "../_components/demo-section";
 import { CopyDemo, GuardDemo, OptimisticDemo, SkeletonDemo } from "./demos";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Feedback & Affordance",
-  description:
-    "Patterns for telling users what just happened, what they can do next, and what to be careful about: a practical tour of feedback and affordance in UI.",
-};
+export const metadata = pageMetadata(
+  "/misc/feedback",
+  "Feedback & Affordance",
+  "Patterns for telling users what just happened, what they can do next, and what to be careful about: a practical tour of feedback and affordance in UI.",
+);
 
 export default function FeedbackPage() {
   return (

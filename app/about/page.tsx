@@ -2,13 +2,13 @@ import { ArrowRight } from "lucide-react";
 import { SimpleIcon } from "@/components/simple-icon";
 import { Button } from "@/components/button";
 import { socials } from "@/lib/constants";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "The people, principles, and hard-won opinions behind syntaqx: how I think about architecture, engineering leadership, and building software that lasts.",
-};
+export const metadata = pageMetadata(
+  "/about",
+  "About",
+  "The people, principles, and hard-won opinions behind syntaqx: how I think about architecture, engineering leadership, and building software that lasts.",
+);
 
 export default function AboutPage() {
   return (
