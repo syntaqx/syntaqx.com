@@ -7,11 +7,11 @@
 /** Industries with a volume planned but not written yet, shown as "Soon". */
 export const UPCOMING_INDUSTRIES = [
   "Field Service",
-  "Property Management",
+  "Property Tech",
   "Marketplaces",
   "Consumer Fintech",
   "Gaming",
-  "User-Generated Media",
+  "Media & UGC",
   "Web Hosting",
   "E-commerce",
 ];
