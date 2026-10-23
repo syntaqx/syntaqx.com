@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296">
+  <defs>
+    <marker id="sp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="sp-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="sp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Level labels -->
+  <text class="cap" x="40" y="53" dominant-baseline="central">provider</text>
+  <text class="cap" x="40" y="113" dominant-baseline="central">platform</text>
+  <text class="cap" x="40" y="173" dominant-baseline="central">organization</text>
+  <text class="cap" x="40" y="233" dominant-baseline="central">merchant</text>
+
+  <!-- Tree -->
+  <path class="ln ink" d="M395,66V100"/>
+  <text class="n" x="403" y="86">fees or revenue share</text>
+  <path class="ln ink" d="M395,126C395,143 290,143 290,160"/>
+  <path class="ln ink" d="M395,126C395,143 500,143 500,160"/>
+  <path class="ln ink" d="M290,186C290,203 237.5,203 237.5,220"/>
+  <path class="ln ink" d="M290,186C290,203 342.5,203 342.5,220"/>
+  <path class="ln ink" d="M500,186C500,203 447.5,203 447.5,220"/>
+  <path class="ln ink" d="M500,186C500,203 552.5,203 552.5,220"/>
+
+  <!-- Money: the provider settles each merchant directly -->
+  <path class="ln hl" d="M215,53C160,53 160,233 183,233" marker-end="url(#sp-ah-hl)"/>
+  <text class="n hl" x="185" y="268">the provider settles net funds directly to each merchant's bank</text>
+
+  <!-- Nodes -->
+  <rect class="cell band" x="215" y="40" width="360" height="26"/>
+  <text class="t" x="395" y="53" text-anchor="middle" dominant-baseline="central">payment provider: underwrites, settles, holds the risk</text>
+  <rect class="cell" x="335" y="100" width="120" height="26"/>
+  <text class="t" x="395" y="113" text-anchor="middle" dominant-baseline="central">platform</text>
+  <rect class="cell" x="230" y="160" width="120" height="26"/>
+  <text class="t" x="290" y="173" text-anchor="middle" dominant-baseline="central">organization</text>
+  <rect class="cell" x="440" y="160" width="120" height="26"/>
+  <text class="t" x="500" y="173" text-anchor="middle" dominant-baseline="central">organization</text>
+  <rect class="cell hl" x="185" y="220" width="105" height="26"/>
+  <text class="t hl" x="237.5" y="233" text-anchor="middle" dominant-baseline="central">merchant</text>
+  <rect class="cell" x="290" y="220" width="105" height="26"/>
+  <text class="t" x="342.5" y="233" text-anchor="middle" dominant-baseline="central">merchant</text>
+  <rect class="cell" x="395" y="220" width="105" height="26"/>
+  <text class="t" x="447.5" y="233" text-anchor="middle" dominant-baseline="central">merchant</text>
+  <rect class="cell" x="500" y="220" width="105" height="26"/>
+  <text class="t" x="552.5" y="233" text-anchor="middle" dominant-baseline="central">merchant</text>
+
+  <!-- What flows through the tree -->
+  <path class="ln ink" d="M664,92V244" marker-end="url(#sp-ah-ink)"/>
+  <text class="n ink" transform="translate(654 172) rotate(-90)" text-anchor="middle">config inherits down</text>
+  <path class="ln" d="M708,246V94" marker-end="url(#sp-ah)"/>
+  <text class="n" transform="translate(698 172) rotate(-90)" text-anchor="middle">reporting rolls up</text>
+</svg>

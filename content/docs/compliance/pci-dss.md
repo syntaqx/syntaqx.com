@@ -6,7 +6,7 @@ order = 902
 tags = ["compliance", "pci", "payments", "security"]
 +++
 
-A card number is a bearer credential: whoever holds it can try to spend it, and the bank that issued it eats the fraud. PCI DSS is how the card networks make thousands of companies they don't control protect it the same way. Visa, Mastercard, American Express, Discover and JCB founded the PCI Security Standards Council to write one standard instead of five, then made compliance a condition of accepting their cards. So it's a contract, not a law: the brands enforce it through the banks they license, acquirers push it onto merchants, and merchants push it onto their vendors. [The Payments Rulebook](/docs/compliance/payments-rulebook) shows where it sits among the other rules.
+A card number is a bearer credential: whoever holds it can try to spend it, and the bank that issued it eats the fraud. PCI DSS is how the card networks make thousands of companies they don't control protect it the same way. Visa, Mastercard, American Express, Discover and JCB founded the PCI Security Standards Council to write one standard instead of five, then made compliance a condition of accepting their cards. So it's a contract, not a law: the brands enforce it through the banks they license, acquirers push it onto merchants, and merchants push it onto their vendors. [The Payments Rulebook](/docs/industries/payments/payments-rulebook) shows where it sits among the other rules.
 
 For engineering it asks two questions. Which systems can see card data, or affect the security of the ones that do? And can you prove to an outsider that those systems meet the standard? The first is a design decision you control. The second is the bill for getting the first one wrong. This describes how the regime works, not assessment advice: your acquirer, the brands and at higher levels your assessor decide what applies to you.
 
@@ -25,7 +25,7 @@ The standard covers anyone who stores, processes or transmits cardholder data, o
 - **A merchant** accepts cards for its own goods or services. Its obligation runs to its acquirer.
 - **A service provider** handles card data on behalf of another business, or manages systems that can affect its security: gateways, processors, payment facilitators, tokenization vaults, hosts with access to a cardholder data environment. Its obligation runs to every customer that relies on it.
 
-One company can be both: Stripe is a merchant when it bills you for its own subscription, and a service provider for every business that sends it payments. Touch another company's card data and you're a service provider, with extra requirements, a lower bar for the top level, and customers who want your Attestation of Compliance before they sign. [Becoming a Payment Provider](/docs/payments/becoming-a-payment-provider) covers that path end to end.
+One company can be both: Stripe is a merchant when it bills you for its own subscription, and a service provider for every business that sends it payments. Touch another company's card data and you're a service provider, with extra requirements, a lower bar for the top level, and customers who want your Attestation of Compliance before they sign. [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) covers that path end to end.
 
 ## Levels
 

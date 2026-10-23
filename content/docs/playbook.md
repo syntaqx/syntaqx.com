@@ -1,6 +1,6 @@
 +++
 title = "The Playbook"
-description = "How to read the playbook, the principles behind every standard in it, and a map of the whole book, from HTTP fundamentals to leadership."
+description = "How to read the playbook, the principles behind every standard in it, and a map of the whole book, from HTTP fundamentals to industry volumes."
 category = "Start Here"
 order = 1
 tags = ["architecture", "standards", "principles"]
@@ -14,7 +14,7 @@ Defaults can be overridden, but an override is a decision, and it gets written d
 
 ## How to Read It
 
-It reads front to back. The sections run from how HTTP and APIs work, through building and protecting the system and the money it moves, to how the work ships, how it runs, and how the team behind it grows. Every doc links to the one before and after it.
+It reads front to back. The sections run from how HTTP and APIs work, through building and protecting the system and the money it moves, to how the work ships, how it runs, and how the team behind it grows. Industry volumes come last, starting with payments. Every doc links to the one before and after it.
 
 It also reads by chapter. Each doc stands on its own and links back to anything it builds on, so you can start wherever your problem is.
 
@@ -42,17 +42,26 @@ The rest of the playbook is built from these.
 | **Database** | Schemas, queries and changes that hold up under load | [Naming](/docs/database/naming-conventions), [Transactions & Concurrency](/docs/database/transactions-and-concurrency), [Performance](/docs/database/performance), [Zero-Downtime Migrations](/docs/database/zero-downtime-migrations) |
 | **Frontend** | Interfaces that work for everyone, fast | [Accessibility](/docs/frontend/accessibility), [Web Performance](/docs/frontend/web-performance), [Design Tokens](/docs/frontend/design-tokens), [Forms & Validation](/docs/frontend/forms), [Error & Empty States](/docs/frontend/error-states), [Internationalization](/docs/frontend/internationalization) |
 | **Security** | Deciding what to defend, then defending it | [Threat Modeling](/docs/security/threat-modeling), [Authorization](/docs/security/authorization), [API Security](/docs/security/api-security), [Security Headers & CSP](/docs/security/security-headers), [Vulnerability Management](/docs/security/vulnerability-management), [AI & LLM Security](/docs/security/ai-security) |
-| **Payments** | Moving money correctly, from one charge to running a provider | [Money](/docs/payments/money), [Idempotency](/docs/payments/idempotency), [Payment States & Ledgers](/docs/payments/payment-states), [Webhooks](/docs/payments/webhooks), [Sensitive Data](/docs/payments/sensitive-data), [Merchant Onboarding](/docs/payments/merchant-onboarding), [SCA & 3-D Secure](/docs/payments/strong-customer-authentication), [Fraud & Risk](/docs/payments/fraud-and-risk), [Disputes & Chargebacks](/docs/payments/disputes-and-chargebacks), [Payouts & Settlement](/docs/payments/payouts-and-settlement), [ACH & Bank Transfers](/docs/payments/ach), [Multi-Currency & FX](/docs/payments/multi-currency), [Becoming a Payment Provider](/docs/payments/becoming-a-payment-provider) |
-| **Compliance** | Who sets the rules for moving money and data, and what meeting them takes | [The Payments Rulebook](/docs/compliance/payments-rulebook), [PCI DSS](/docs/compliance/pci-dss), [SOC 2](/docs/compliance/soc-2), [GDPR & Privacy](/docs/compliance/gdpr), [HIPAA](/docs/compliance/hipaa) |
+| **Payments** | The engineering of money, for anyone who handles it | [Money](/docs/payments/money), [Idempotency](/docs/payments/idempotency), [Payment States & Ledgers](/docs/payments/payment-states), [Webhooks](/docs/payments/webhooks), [Sensitive Data](/docs/payments/sensitive-data), [Multi-Currency & FX](/docs/payments/multi-currency) |
+| **Compliance** | The frameworks auditors and regulators hold you to, and what meeting them takes | [PCI DSS](/docs/compliance/pci-dss), [SOC 2](/docs/compliance/soc-2), [GDPR & Privacy](/docs/compliance/gdpr), [HIPAA](/docs/compliance/hipaa) |
 | **Engineering Practice** | How code gets decided, written, reviewed and kept healthy | [Decisions & Design Docs](/docs/engineering/design-docs), [Commits & Review](/docs/engineering/commits-and-reviews), [Code Ownership](/docs/engineering/code-ownership), [Testing](/docs/engineering/testing), [Dependencies & Upgrades](/docs/engineering/dependencies), [Tech Debt](/docs/engineering/tech-debt), [AI-Assisted Development](/docs/engineering/ai-assisted-development) |
 | **Delivery** | Getting a change from merge to production safely | [CI & Continuous Deployment](/docs/delivery/ci-pipelines), [Feature Flags](/docs/delivery/feature-flags), [Deployment Strategies](/docs/delivery/deployment-strategies), [Containers](/docs/delivery/containers), [Infrastructure as Code](/docs/delivery/infrastructure-as-code), [Mobile Releases](/docs/delivery/mobile-releases) |
 | **Operations** | Running it, seeing it, and recovering when it breaks | [Environments & Configuration](/docs/operations/environments), [Observability](/docs/operations/observability), [SLOs](/docs/operations/slos), [On-Call](/docs/operations/on-call), [Incidents & Postmortems](/docs/operations/incident-response), [Disaster Recovery](/docs/operations/disaster-recovery), [Load Testing](/docs/operations/load-testing), [Kubernetes](/docs/operations/kubernetes), [Cost & FinOps](/docs/operations/cost-and-finops) |
 | **Leadership** | Hiring, growing and organizing the people who do all of this | [Hiring & Interviews](/docs/leadership/hiring), [Onboarding](/docs/leadership/onboarding), [1:1s & Feedback](/docs/leadership/one-on-ones), [Career Ladders](/docs/leadership/career-ladders), [Performance Reviews](/docs/leadership/performance-reviews), [Team Structure](/docs/leadership/team-structure), [Growing Managers](/docs/leadership/growing-managers) |
 
+### Industries
+
+The core of the book applies anywhere. Each industry volume shows how one industry's networks, rules and economics shape the engineering.
+
+| Volume | What it's for | Chapters |
+| ------ | ------------- | -------- |
+| **Payments Industry** | How money moves through networks, banks and platforms, and what building on them takes | [How Card Payments Work](/docs/industries/payments/card-payments), [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing), [The Payments Rulebook](/docs/industries/payments/payments-rulebook), [Merchant Onboarding](/docs/industries/payments/merchant-onboarding), [SCA & 3-D Secure](/docs/industries/payments/strong-customer-authentication), [Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials), [Fraud & Risk](/docs/industries/payments/fraud-and-risk), [Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks), [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees), [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement), [ACH & Bank Transfers](/docs/industries/payments/ach), [Vendor Payouts](/docs/industries/payments/vendor-payouts), [Processor Routing](/docs/industries/payments/processor-routing), [Payments for Software Platforms](/docs/industries/payments/software-platforms), [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) |
+
 ## Where to Start
 
 - **Designing an API?** [API Design Principles](/docs/api-design/principles), then [Errors](/docs/requests/error-responses), [Pagination](/docs/requests/pagination) and [Versioning](/docs/api-design/versioning).
 - **Moving money?** [Money](/docs/payments/money) and [Idempotency](/docs/payments/idempotency) before writing a line of code.
+- **Building payments into a product?** [How Card Payments Work](/docs/industries/payments/card-payments), [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) and [Payments for Software Platforms](/docs/industries/payments/software-platforms).
 - **Splitting a system?** [Service Boundaries](/docs/architecture/service-boundaries) and [Events](/docs/architecture/events).
 - **Running it in production?** [Observability](/docs/operations/observability), [SLOs](/docs/operations/slos) and [Incidents & Postmortems](/docs/operations/incident-response).
 

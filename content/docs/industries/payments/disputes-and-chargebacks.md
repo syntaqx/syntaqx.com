@@ -1,12 +1,13 @@
 +++
 title = "Disputes & Chargebacks"
 description = "How a dispute moves from inquiry to arbitration, what it does to the ledger, the monitoring thresholds that end merchant accounts, and who pays on a platform."
-category = "Payments"
-order = 809
+category = "Payments Industry"
+order = 1408
+aliases = ["payments/disputes-and-chargebacks"]
 tags = ["payments", "disputes", "chargebacks", "risk"]
 +++
 
-The fraud that [risk checks](/docs/payments/fraud-and-risk) miss comes back as a dispute, and so do unrecognized charges, missing deliveries and unhappy customers. A dispute is the cardholder asking their bank to take money back, and the bank doing it before anyone has proven anything. The funds leave the merchant's balance the day the dispute opens, a fee is charged on top, and the merchant then has a short, fixed window to argue for the money back. Everything about how you handle disputes follows from that asymmetry: the money moves first, the argument comes later, and missing a deadline loses by default.
+The fraud that [risk checks](/docs/industries/payments/fraud-and-risk) miss comes back as a dispute, and so do unrecognized charges, missing deliveries and unhappy customers. A dispute is the cardholder asking their bank to take money back, and the bank doing it before anyone has proven anything. The funds leave the merchant's balance the day the dispute opens, a fee is charged on top, and the merchant then has a short, fixed window to argue for the money back. Everything about how you handle disputes follows from that asymmetry: the money moves first, the argument comes later, and missing a deadline loses by default.
 
 ## The Lifecycle
 
@@ -72,7 +73,7 @@ VAMP ratio = (fraud reports (TC40) + disputes (TC15)) / settled transactions (TC
 | Excessive merchant (CEMEA) | 220 basis points |
 | Minimum volume | 1,500 fraud reports and disputes in the month |
 
-Two details make it harder than it looks. Fraud reports count even when no dispute follows, so a [card-testing attack](/docs/payments/fraud-and-risk) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
+Two details make it harder than it looks. Fraud reports count even when no dispute follows, so a [card-testing attack](/docs/industries/payments/fraud-and-risk) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
 
 ## Prevention Beats Winning
 
@@ -80,7 +81,7 @@ Every dispute costs a fee, staff time and ratio, win or lose; the cheapest one i
 
 - **Clear statement descriptors.** "Friendly fraud" is often a customer who doesn't recognize the charge: `SQ *JOES BKRY 4421` gets disputed; the name the customer knows doesn't.
 - **Refund before they dispute.** A refund costs the amount; a dispute costs the amount, a fee and ratio. Refunding a complaint, or a small payment with an early fraud warning, is usually cheaper than winning.
-- **Authenticate high-risk payments.** The [3-D Secure liability shift](/docs/payments/strong-customer-authentication) takes the most common dispute reason off the merchant.
+- **Authenticate high-risk payments.** The [3-D Secure liability shift](/docs/industries/payments/strong-customer-authentication) takes the most common dispute reason off the merchant.
 - **Make cancellation easy.** Subscriptions with a hidden cancel button turn into disputes. A visible cancel flow is cheaper than the disputes it prevents.
 
 ## On a Platform: Who Pays
@@ -89,9 +90,9 @@ On a platform, a lost dispute has to land on someone's balance, and the platform
 
 - **The merchant bears the loss,** debited from their balance: the default and the fair one, since the merchant made the sale and holds the evidence.
 - **The platform is the backstop** when the merchant's balance can't cover it. With Stripe Connect, an explicit setting per connected account decides whether the platform or Stripe covers negative balances.
-- **Reserves bridge the gap,** so a dispute can be paid from the merchant's own held money after they stop processing ([Payouts & Settlement](/docs/payments/payouts-and-settlement)).
+- **Reserves bridge the gap,** so a dispute can be paid from the merchant's own held money after they stop processing ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement)).
 
-The failure to design for: a merchant takes a large volume of payments, is paid out and disappears, and the disputes arrive over the following 120 days. Reserves sized to risk, payout delays for new merchants and [onboarding that knows who they are](/docs/payments/merchant-onboarding) are what stop that from being the platform's loss.
+The failure to design for: a merchant takes a large volume of payments, is paid out and disappears, and the disputes arrive over the following 120 days. Reserves sized to risk, payout delays for new merchants and [onboarding that knows who they are](/docs/industries/payments/merchant-onboarding) are what stop that from being the platform's loss.
 
 Every dispute event reaches merchants through [webhooks](/docs/payments/webhooks) (`dispute.created`, `dispute.closed`), with the evidence deadline in the payload, because the deadline is the one thing they can't miss.
 

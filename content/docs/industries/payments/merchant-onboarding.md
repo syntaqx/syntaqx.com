@@ -1,12 +1,13 @@
 +++
 title = "Merchant Onboarding"
 description = "Knowing who processes payments on a platform: KYC and KYB, a verification state machine, progressive onboarding, underwriting, and an API that says what's due."
-category = "Payments"
-order = 806
+category = "Payments Industry"
+order = 1404
+aliases = ["payments/merchant-onboarding"]
 tags = ["payments", "onboarding", "kyc", "compliance"]
 +++
 
-Everything so far assumes you know who's on the other end of a payment. A platform that lets businesses accept payments is lending them its acquirer relationship, and if one of them turns out to be a front for stolen cards, a sanctioned entity or a scheme that never ships anything, the platform carries the disputes, the fines and the regulatory exposure. Onboarding is where that risk is decided, between two failures: let a bad merchant through and you pay for their fraud; make onboarding painful and good merchants leave before their first payment.
+Every rule in [the rulebook](/docs/industries/payments/payments-rulebook) assumes you know who's on the other end of a payment. A platform that lets businesses accept payments is lending them its acquirer relationship, and if one of them turns out to be a front for stolen cards, a sanctioned entity or a scheme that never ships anything, the platform carries the disputes, the fines and the regulatory exposure. Onboarding is where that risk is decided, between two failures: let a bad merchant through and you pay for their fraud; make onboarding painful and good merchants leave before their first payment.
 
 ## Know Who You're Paying
 
@@ -30,7 +31,7 @@ The people behind a business matter most, because a company is easy to create an
 | `restricted` | Yes, or limited | No | Something new is due (a document, a re-verification, a review) and its deadline passed |
 | `rejected` | No | Remaining balance only, after a hold | Failed verification, prohibited business, or confirmed fraud |
 
-Separating **accepting payments** from **receiving payouts** is the key design choice. Money taken in while a merchant is restricted stays on the platform, where it can still cover refunds and disputes; money paid out is gone. So when something is uncertain, the safe lever is to keep accepting payments and stop payouts, which protects the platform without breaking checkout. A rejected merchant's balance is still theirs, released after the [dispute window](/docs/payments/disputes-and-chargebacks) has run.
+Separating **accepting payments** from **receiving payouts** is the key design choice. Money taken in while a merchant is restricted stays on the platform, where it can still cover refunds and disputes; money paid out is gone. So when something is uncertain, the safe lever is to keep accepting payments and stop payouts, which protects the platform without breaking checkout. A rejected merchant's balance is still theirs, released after the [dispute window](/docs/industries/payments/disputes-and-chargebacks) has run.
 
 ## Progressive Onboarding
 
@@ -51,7 +52,7 @@ Verification answers "who is this?"; underwriting answers "how much can go wrong
 
 Underwriting assigns a **risk tier**, and the tier sets the controls:
 
-- **Payout timing and reserves.** Higher risk means a longer delay before funds can be paid out and a [rolling reserve](/docs/payments/payouts-and-settlement), sized to the disputes and refunds the business is likely to see.
+- **Payout timing and reserves.** Higher risk means a longer delay before funds can be paid out and a [rolling reserve](/docs/industries/payments/payouts-and-settlement), sized to the disputes and refunds the business is likely to see.
 - **Volume limits** that trigger review before they're exceeded.
 - **Review frequency.** Higher tiers are re-reviewed more often.
 

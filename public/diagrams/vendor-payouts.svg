@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 196">
+  <defs>
+    <marker id="vp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="vp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- The payable -->
+  <text class="cap" x="40" y="88">one payable</text>
+  <rect class="cell" x="40" y="96" width="100" height="26"/>
+  <text class="t" x="90" y="109" text-anchor="middle" dominant-baseline="central">payable</text>
+  <text class="n" x="90" y="140" text-anchor="middle">approved, funded</text>
+
+  <!-- Fan out to the rails -->
+  <path class="ln hl" d="M140,109C166,109 164,57 188,57" marker-end="url(#vp-ah-hl)"/>
+  <path class="ln" d="M140,109C166,109 164,83 188,83" marker-end="url(#vp-ah)"/>
+  <path class="ln" d="M140,109H188" marker-end="url(#vp-ah)"/>
+  <path class="ln" d="M140,109C166,109 164,135 188,135" marker-end="url(#vp-ah)"/>
+  <path class="ln" d="M140,109C166,109 164,161 188,161" marker-end="url(#vp-ah)"/>
+
+  <!-- Column heads -->
+  <text class="cap" x="200" y="34">method</text>
+  <text class="cap" x="320" y="34">arrives</text>
+  <text class="cap" x="460" y="34">final</text>
+  <text class="cap" x="570" y="34">how it fails</text>
+
+  <!-- ACH credit: the default -->
+  <rect class="cell hl" x="190" y="44" width="120" height="26"/>
+  <text class="t hl" x="200" y="57" dominant-baseline="central">ACH credit</text>
+  <rect class="cell" x="310" y="44" width="140" height="26"/>
+  <text class="t" x="320" y="57" dominant-baseline="central">next or same day</text>
+  <rect class="cell" x="450" y="44" width="110" height="26"/>
+  <text class="t" x="460" y="57" dominant-baseline="central">at settlement</text>
+  <rect class="cell" x="560" y="44" width="160" height="26"/>
+  <text class="t dim" x="570" y="57" dominant-baseline="central">returns, undeliverable</text>
+
+  <!-- Virtual card -->
+  <rect class="cell" x="190" y="70" width="120" height="26"/>
+  <text class="t" x="200" y="83" dominant-baseline="central">virtual card</text>
+  <rect class="cell" x="310" y="70" width="140" height="26"/>
+  <text class="t" x="320" y="83" dominant-baseline="central">when charged</text>
+  <rect class="cell" x="450" y="70" width="110" height="26"/>
+  <text class="t" x="460" y="83" dominant-baseline="central">card settles</text>
+  <rect class="cell" x="560" y="70" width="160" height="26"/>
+  <text class="t dim" x="570" y="83" dominant-baseline="central">expires unused</text>
+
+  <!-- Check -->
+  <rect class="cell" x="190" y="96" width="120" height="26"/>
+  <text class="t" x="200" y="109" dominant-baseline="central">check</text>
+  <rect class="cell" x="310" y="96" width="140" height="26"/>
+  <text class="t" x="320" y="109" dominant-baseline="central">days, by mail</text>
+  <rect class="cell" x="450" y="96" width="110" height="26"/>
+  <text class="t" x="460" y="109" dominant-baseline="central">when cleared</text>
+  <rect class="cell" x="560" y="96" width="160" height="26"/>
+  <text class="t dim" x="570" y="109" dominant-baseline="central">void before reissue</text>
+
+  <!-- Wire -->
+  <rect class="cell" x="190" y="122" width="120" height="26"/>
+  <text class="t" x="200" y="135" dominant-baseline="central">wire</text>
+  <rect class="cell" x="310" y="122" width="140" height="26"/>
+  <text class="t" x="320" y="135" dominant-baseline="central">same day</text>
+  <rect class="cell" x="450" y="122" width="110" height="26"/>
+  <text class="t" x="460" y="135" dominant-baseline="central">immediately</text>
+  <rect class="cell" x="560" y="122" width="160" height="26"/>
+  <text class="t dim" x="570" y="135" dominant-baseline="central">no return path</text>
+
+  <!-- RTP or FedNow -->
+  <rect class="cell" x="190" y="148" width="120" height="26"/>
+  <text class="t" x="200" y="161" dominant-baseline="central">RTP or FedNow</text>
+  <rect class="cell" x="310" y="148" width="140" height="26"/>
+  <text class="t" x="320" y="161" dominant-baseline="central">seconds</text>
+  <rect class="cell" x="450" y="148" width="110" height="26"/>
+  <text class="t" x="460" y="161" dominant-baseline="central">immediately</text>
+  <rect class="cell" x="560" y="148" width="160" height="26"/>
+  <text class="t dim" x="570" y="161" dominant-baseline="central">no return path</text>
+
+  <text class="n hl" x="720" y="188" text-anchor="end">the default: cheap, universal, carries remittance data</text>
+</svg>

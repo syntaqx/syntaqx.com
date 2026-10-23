@@ -70,7 +70,7 @@ Asynchronous work gets more patience, retrying over minutes or hours and then la
 
 ## Payments Specifics
 
-- **Don't retry a decline as if it were an outage.** A `402` decline is an answer: the issuer said no. Some declines can never succeed (a lost, stolen or closed card), and retrying them looks like card testing. Others (insufficient funds) may clear later, on a schedule of days, not seconds. Card networks enforce this: [Visa's excessive reattempts rule](https://www.payway.com/visa-excessive-reattempts-rule-fees) charges merchants for any retry of a never-approve decline, and for more than 15 retries of a card in 30 days.
+- **Don't retry a decline as if it were an outage.** A `402` decline is an answer: the issuer said no. Some declines can never succeed (a lost, stolen or closed card), and retrying them looks like card testing. Others (insufficient funds) may clear later, on a schedule of days, not seconds. Card networks enforce this: Visa and Mastercard charge merchants for retrying a decline that can never succeed, and cap how often one card can be retried; [Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials) has the current limits.
 - **Reconcile unknowns.** When a processor call times out and the outcome is unknown, record the payment as `pending`, then resolve it by querying the processor with the same idempotency key, not by charging again.
 
 ## References
@@ -94,4 +94,3 @@ Asynchronous work gets more patience, retrying over minutes or hours and then la
 - [Martin Fowler: CircuitBreaker](https://martinfowler.com/bliki/CircuitBreaker.html), closed, open and half-open states
 - [Stripe: Advanced error handling](https://docs.stripe.com/error-low-level), timeouts, `409`, `500` and reconciliation for a payments API
 - [stripe-node](https://github.com/stripe/stripe-node), the 80-second default request timeout
-- [Payway: Visa excessive reattempts rule](https://www.payway.com/visa-excessive-reattempts-rule-fees), which declines may never be retried, and the 15-in-30-days limit

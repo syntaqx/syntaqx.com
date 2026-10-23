@@ -1,12 +1,13 @@
 +++
 title = "Fraud & Risk"
 description = "Deciding which payments to allow, review, challenge or block: the cost of both mistakes, rules and models together, card testing, and auditable decisions."
-category = "Payments"
-order = 808
+category = "Payments Industry"
+order = 1407
+aliases = ["payments/fraud-and-risk"]
 tags = ["payments", "fraud", "risk", "security"]
 +++
 
-[3-D Secure](/docs/payments/strong-customer-authentication) is one tool for deciding whether to trust a payment; fraud and risk is the whole decision. Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
+[3-D Secure](/docs/industries/payments/strong-customer-authentication) and [stored credentials](/docs/industries/payments/stored-credentials) decide whether a payment can go through; fraud and risk decide whether it should. Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. A fraud system that only counts the first mistake drives fraud to zero by declining everyone slightly unusual, and the dashboard looks great while revenue quietly leaks. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors.
 
 ## The Two Costs
 
@@ -46,7 +47,7 @@ A risk check doesn't return yes or no. Four outcomes keep the system from choosi
 | Outcome | When | Cost |
 | ------- | ---- | ---- |
 | **Allow** | Low risk | Nothing |
-| **Step up** | Uncertain, and the customer is present | A moment of friction; a fraudster usually can't pass [3-D Secure](/docs/payments/strong-customer-authentication), and success typically shifts liability to the issuer |
+| **Step up** | Uncertain, and the customer is present | A moment of friction; a fraudster usually can't pass [3-D Secure](/docs/industries/payments/strong-customer-authentication), and success typically shifts liability to the issuer |
 | **Review** | Uncertain, high value, and the goods haven't shipped | A human's time and a delay; only viable where fulfilment can wait |
 | **Block** | High risk | A false decline when the model is wrong |
 
@@ -68,7 +69,7 @@ Defenses, layered because each one alone is easy to route around:
 
 ## Feedback Loops
 
-A model is only as good as its labels, and fraud labels arrive late: a payment is confirmed fraudulent when the cardholder [disputes](/docs/payments/disputes-and-chargebacks) it, weeks or months later. Disputes, early fraud warnings and manual review outcomes all feed back into training and rule review. Blocked payments are the gap: you never learn whether they were fraud. Hold out a small random share of borderline traffic for review instead of blocking, or the system grades its own homework, and everything it blocked "was fraud" because nothing proves otherwise.
+A model is only as good as its labels, and fraud labels arrive late: a payment is confirmed fraudulent when the cardholder [disputes](/docs/industries/payments/disputes-and-chargebacks) it, weeks or months later. Disputes, early fraud warnings and manual review outcomes all feed back into training and rule review. Blocked payments are the gap: you never learn whether they were fraud. Hold out a small random share of borderline traffic for review instead of blocking, or the system grades its own homework, and everything it blocked "was fraud" because nothing proves otherwise.
 
 ## When the Risk Check Fails
 

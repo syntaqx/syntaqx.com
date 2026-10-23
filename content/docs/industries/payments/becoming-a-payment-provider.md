@@ -1,12 +1,13 @@
 +++
 title = "Becoming a Payment Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
-category = "Payments"
-order = 813
+category = "Payments Industry"
+order = 1415
+aliases = ["payments/becoming-a-payment-provider"]
 tags = ["payments", "compliance", "pci", "licensing"]
 +++
 
-Every chapter before this one is about building on a payment provider. Becoming one is a regulated business that happens to need a lot of engineering, and the API is the smallest part of it. Underneath sit a bank that lets you into the card networks, an annual security assessment your customers will ask to see, licenses or exemptions for holding other people's money, and a balance sheet that absorbs whatever your merchants can't pay back. Every company that sells payments as a product, from Stripe and Adyen to a vertical software platform that started as a payfac, built or rented each of those layers.
+[Payments for Software Platforms](/docs/industries/payments/software-platforms) is about selling payments inside your product on top of a provider. Becoming one is a regulated business that happens to need a lot of engineering, and the API is the smallest part of it. Underneath sit a bank that lets you into the card networks, an annual security assessment your customers will ask to see, licenses or exemptions for holding other people's money, and a balance sheet that absorbs whatever your merchants can't pay back. Every company that sells payments as a product, from Stripe and Adyen to a vertical software platform that started as a payfac, built or rented each of those layers.
 
 This page covers what each layer is, why it exists and who pays when it fails, then the order companies usually acquire them in. **It is not legal advice:** licensing in particular turns on facts a lawyer has to look at. Where it names a threshold or a rule, it has a source; where the answer is "it depends", it says so.
 
@@ -65,12 +66,12 @@ Either way, the cost isn't the application: it's capital and safeguarding requir
 
 ## Gatekeeping: Sanctions, AML and Losses
 
-A provider is a gatekeeper for the financial system. [Merchant Onboarding](/docs/payments/merchant-onboarding) covers how to build KYC, KYB, underwriting and monitoring; at the provider level, the difference is who you answer to.
+A provider is a gatekeeper for the financial system. [Merchant Onboarding](/docs/industries/payments/merchant-onboarding) covers how to build KYC, KYB, underwriting and monitoring; at the provider level, the difference is who you answer to.
 
 - **Sanctions screening is not optional.** OFAC is direct: all US persons must comply, and an entity owned 50% or more by blocked persons is itself blocked even if it isn't named on a list. Screen the business, its owners and its payout destinations, at onboarding and whenever the lists change.
 - **AML is a program, not a check.** Your sponsor, and any regulator that licenses you, will expect a written anti-money-laundering program with a named officer, risk assessment, transaction monitoring and suspicious activity reporting. A vendor that "does KYC" is one input to it.
 - **Terminated merchant lists** such as Mastercard's MATCH are checked at onboarding, and merchants you terminate for cause get added.
-- **Losses move up the chain.** When a merchant can't cover its refunds and [chargebacks](/docs/payments/disputes-and-chargebacks), the loss goes to the payfac, then the acquirer, and each protects itself by holding back money it owes the party below: underwriting limits, [reserves](/docs/payments/payouts-and-settlement), and finally your own capital. Losses are lumpy: a provider can run clean for a year and then lose a quarter's margin to one merchant that collapses with a large prepaid order book. Price for that.
+- **Losses move up the chain.** When a merchant can't cover its refunds and [chargebacks](/docs/industries/payments/disputes-and-chargebacks), the loss goes to the payfac, then the acquirer, and each protects itself by holding back money it owes the party below: underwriting limits, [reserves](/docs/industries/payments/payouts-and-settlement), and finally your own capital. Losses are lumpy: a provider can run clean for a year and then lose a quarter's margin to one merchant that collapses with a large prepaid order book. Price for that.
 
 ## How the Money Moves
 
@@ -81,14 +82,14 @@ Funds settle from the network to the acquirer and onward, and where they land ne
 
 ## The Platform It Implies
 
-The rest of this section becomes requirements a merchant integration never sees:
+The engineering in [Payments](/docs/payments/money) becomes requirements a merchant integration never sees:
 
 - **A double-entry ledger** ([Payment States & Ledgers](/docs/payments/payment-states)) is the source of truth for every balance, fee, reserve and payout, and at provider scale it's what auditors, the sponsor bank and regulators examine.
 - **Idempotency end to end** ([Idempotency](/docs/payments/idempotency)): merchants retry, and so do you toward networks and banks, and a charge or payout that runs twice is real money.
 - **Reconciliation as a product:** daily matching of network settlement files, bank statements and the ledger, with exceptions routed to people, and the same view offered to merchants for their own money.
 - **Webhooks as a contract** ([Webhooks](/docs/payments/webhooks)): merchants build their businesses on your events.
 - **Hardware security modules** for card encryption keys, and PIN keys if you touch PINs, under dual control with documented key ceremonies. The PCI assessment spends much of its time here.
-- **Availability as revenue.** When a provider is down, every merchant on it stops taking money: redundant connections to acquirers and banks, no single region whose loss stops authorization, and status communication merchants can rely on.
+- **Availability as revenue.** When a provider is down, every merchant on it stops taking money: redundant connections to acquirers and banks ([Processor Routing](/docs/industries/payments/processor-routing)), no single region whose loss stops authorization, and status communication merchants can rely on.
 
 ## The Realistic Path
 

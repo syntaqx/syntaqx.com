@@ -1,12 +1,13 @@
 +++
 title = "ACH & Bank Transfers"
 description = "How ACH really moves money: the parties, SEC codes and files, why settled isn't final, return windows, the Nacha rules you inherit, and when RTP or FedNow fit."
-category = "Payments"
-order = 811
+category = "Payments Industry"
+order = 1411
+aliases = ["payments/ach"]
 tags = ["payments", "ach", "nacha", "bank-transfers", "ledger"]
 +++
 
-Cards dominate checkout, but bank transfers move payroll, rent, invoices, subscriptions and nearly every payout a platform sends. In the US that mostly means ACH. It is cheap and universal, and it behaves nothing like a card: there is no authorization step, nothing tells you the account has the money, and a debit that "settled" can come back two months later. Engineers who model ACH like a card payment release value they don't have yet. This doc is about building on ACH without doing that, with [Payouts & Settlement](/docs/payments/payouts-and-settlement) covering the payout side and [Payment States & Ledgers](/docs/payments/payment-states) the bookkeeping.
+Cards dominate checkout, but bank transfers move payroll, rent, invoices, subscriptions and nearly every payout a platform sends. In the US that mostly means ACH. It is cheap and universal, and it behaves nothing like a card: there is no authorization step, nothing tells you the account has the money, and a debit that "settled" can come back two months later. Engineers who model ACH like a card payment release value they don't have yet. This doc is about building on ACH without doing that, with [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) covering the payout side and [Payment States & Ledgers](/docs/payments/payment-states) the bookkeeping.
 
 ## How It Moves
 
@@ -24,7 +25,7 @@ Five parties touch every entry:
 
 A **credit** pushes money from the Originator to the Receiver (payroll, payouts, refunds). A **debit** pulls money from the Receiver to the Originator (subscriptions, invoices, loan payments). The asymmetry matters: a returned credit is almost always administrative (a closed or invalid account), while a debit takes money from someone who can later say they never agreed to it.
 
-Nacha, the association that writes the rules, doesn't move money; its Operating Rules bind everyone who does. You join that chain by contract: your ODFI agreement obliges you to follow the Rules, and if you send entries on behalf of others through your own bank relationship, you are a **Third-Party Sender**, which the ODFI must register with Nacha and which carries its own risk and monitoring duties. Most platforms reach ACH through a provider precisely so that someone else holds that role. See [The Payments Rulebook](/docs/compliance/payments-rulebook) for how these contracts stack.
+Nacha, the association that writes the rules, doesn't move money; its Operating Rules bind everyone who does. You join that chain by contract: your ODFI agreement obliges you to follow the Rules, and if you send entries on behalf of others through your own bank relationship, you are a **Third-Party Sender**, which the ODFI must register with Nacha and which carries its own risk and monitoring duties. Most platforms reach ACH through a provider precisely so that someone else holds that role. See [The Payments Rulebook](/docs/industries/payments/payments-rulebook) for how these contracts stack.
 
 ## Files, Batches and SEC Codes
 
@@ -70,7 +71,7 @@ So I model an ACH debit's states through the return windows, not the submission:
 ![ACH debit states: pending, submitted when sent in a file, settled on the settlement date, available after 2 banking days with no return, final after 60 calendar days. An administrative return within 2 banking days moves a settled debit to returned; an unauthorized return within 60 calendar days moves an available debit to returned. Final and returned are terminal.](/diagrams/ach-states.svg "A settled debit isn't money you have yet. It's probably good once the 2-banking-day window for administrative returns closes, and final only after 60 calendar days; until then a return can take it back.")
 
 - **Never release value at submission.** A digital good, a wallet balance or a payout funded by an ACH debit waits at least for the two-day window, and for a new customer, longer.
-- **Size exposure to the 60-day tail.** For consumer debits the unauthorized-return risk is a credit decision: a hold period, a limit per new account, or a reserve, exactly as [Fraud & Risk](/docs/payments/fraud-and-risk) and [Payouts & Settlement](/docs/payments/payouts-and-settlement) treat card risk.
+- **Size exposure to the 60-day tail.** For consumer debits the unauthorized-return risk is a credit decision: a hold period, a limit per new account, or a reserve, exactly as [Fraud & Risk](/docs/industries/payments/fraud-and-risk) and [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) treat card risk.
 - **A return is a ledger event,** reversing the original entry, never an edit to it. The returned debit's value comes back out of whatever balance it funded.
 - **Retry only what the rules allow.** A returned entry may be reinitiated at most twice, with the same company name, company ID and amount, marked `RETRY PYMT` in the Company Entry Description; that's for insufficient-funds returns, not a general retry loop. An unauthorized return (R05, R07, R10, R29) is never retried: it needs a new authorization. R11 is different: the authorization stands but the entry was wrong, so you may correct the error and send a new entry matching the authorization within 60 days.
 
@@ -88,7 +89,7 @@ The Nacha Operating Rules reach you through your bank, and the ones engineering 
 
 ACH debits from consumer accounts are electronic fund transfers under the Electronic Fund Transfer Act and Regulation E, which gives consumers rights that sit above the Nacha Rules. A consumer has 60 days after the statement showing an error to report it, and the bank must investigate within 10 business days, or within 45 days if it provisionally credits the account. Liability for unauthorized transfers is capped at $50 if the consumer reports a lost credential within two business days and $500 after that, and becomes unlimited only for transfers after the 60-day statement window that a timely report would have prevented.
 
-That is a different machine from card [disputes](/docs/payments/disputes-and-chargebacks). A chargeback is a network process with reason codes, evidence and a representment you can win. An unauthorized ACH return is the RDFI acting on its customer's statement; you don't get to submit evidence into the return, and your remedy, if you have a valid authorization, is to pursue the customer outside the network. That asymmetry is why authorization records and account validation are worth so much more for ACH than for cards.
+That is a different machine from card [disputes](/docs/industries/payments/disputes-and-chargebacks). A chargeback is a network process with reason codes, evidence and a representment you can win. An unauthorized ACH return is the RDFI acting on its customer's statement; you don't get to submit evidence into the return, and your remedy, if you have a valid authorization, is to pursue the customer outside the network. That asymmetry is why authorization records and account validation are worth so much more for ACH than for cards.
 
 ## The Alternatives
 
@@ -99,7 +100,7 @@ That is a different machine from card [disputes](/docs/payments/disputes-and-cha
 | RTP | Seconds, 24/7 | Yes | Push | $10M since February 9, 2025 |
 | FedNow | Seconds, 24/7 | Yes | Push | $10M, raised from $1M effective November 2025 |
 
-RTP and FedNow are credit push only: the payer's bank sends the money, so there's no debit to claw back, and no return window to wait out. That's the right rail for payouts that must arrive now and for anything where finality matters more than cost. Participating banks may set lower limits than the network maximum, and not every account can receive them, so instant payouts need a fallback to ACH. Wires remain the tool for large, one-off, business-hours transfers.
+RTP and FedNow are credit push only: the payer's bank sends the money, so there's no debit to claw back, and no return window to wait out. That's the right rail for payouts that must arrive now and for anything where finality matters more than cost. Choosing a rail for each payee, beside virtual cards and checks, is [Vendor Payouts](/docs/industries/payments/vendor-payouts). Participating banks may set lower limits than the network maximum, and not every account can receive them, so instant payouts need a fallback to ACH. Wires remain the tool for large, one-off, business-hours transfers.
 
 Account verification sits beside all of them. Instant verification through an open-banking aggregator confirms the account exists and belongs to the customer in seconds; micro-deposits take days and a round trip but need no third party. Either satisfies the WEB rule. Instant verification is the better product, and it also gives you a balance check at the moment of authorization that ACH itself never will.
 
@@ -107,7 +108,7 @@ Account verification sits beside all of them. Instant verification through an op
 
 - **Generate files idempotently.** Every entry has a stable internal ID and a trace number, and a file is built from entries not yet submitted, so rebuilding it can't double them. See [Idempotency](/docs/payments/idempotency).
 - **Never resubmit a file blindly.** If a transmission fails ambiguously, ask the bank what it received before sending again. A duplicate file debits every customer in it twice, and every one of those comes back as a return against your rates.
-- **Reconcile daily against the bank's return and NOC files,** and against settlement, as [Payouts & Settlement](/docs/payments/payouts-and-settlement) describes. An entry that never settled and never returned is a bug, not a delay.
+- **Reconcile daily against the bank's return and NOC files,** and against settlement, as [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) describes. An entry that never settled and never returned is a bug, not a delay.
 - **Store authorizations as records:** what the customer agreed to, when, how (the SEC code's justification), and the revocation terms. Producing it in 10 days is the requirement; producing it in 10 seconds is the goal.
 - **Screen before you originate.** An OFAC-blocked Receiver is your problem before it's the RDFI's R16.
 

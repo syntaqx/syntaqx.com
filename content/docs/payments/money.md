@@ -7,7 +7,7 @@ tags = ["payments", "money", "currency", "standards"]
 aliases = ["money"]
 +++
 
-Everything in a payments system rests on how it writes down an amount, so that's where this section starts. Money is never a float: every amount is an integer count of the currency's smallest unit, and every amount travels with its currency. It's the one decision you can't cheaply change later, because by the time it's wrong it's wrong in every row, every API response, every report and every client that ever parsed one.
+Any system that handles money, whether it charges cards, pays invoices or just keeps a balance, rests on how it writes down an amount, so that's where Payments starts. Money is never a float: every amount is an integer count of the currency's smallest unit, and every amount travels with its currency. It's the one decision you can't cheaply change later, because by the time it's wrong it's wrong in every row, every API response, every report and every client that ever parsed one.
 
 ## Integer Minor Units
 
