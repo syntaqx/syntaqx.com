@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360">
+  <defs>
+    <marker id="ap-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ap-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ap-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="20">a redirect payment, top to bottom in time</text>
+
+  <!-- Participants -->
+  <rect class="cell" x="40" y="32" width="170" height="26"/>
+  <text class="t b" x="125" y="45" text-anchor="middle" dominant-baseline="central">your checkout</text>
+  <rect class="cell" x="210" y="32" width="170" height="26"/>
+  <text class="t b" x="295" y="45" text-anchor="middle" dominant-baseline="central">customer's bank</text>
+  <rect class="cell" x="380" y="32" width="170" height="26"/>
+  <text class="t b" x="465" y="45" text-anchor="middle" dominant-baseline="central">payment provider</text>
+  <rect class="cell" x="550" y="32" width="170" height="26"/>
+  <text class="t b" x="635" y="45" text-anchor="middle" dominant-baseline="central">your server</text>
+
+  <!-- Lifelines -->
+  <path class="ln dash" d="M125,58V330"/>
+  <path class="ln dash" d="M295,58V330"/>
+  <path class="ln dash" d="M465,58V330"/>
+  <path class="ln dash" d="M635,58V304"/>
+
+  <!-- 1. Redirect -->
+  <text class="n" x="210" y="84" text-anchor="middle">redirect to the bank or app</text>
+  <path class="ln ink" d="M125,92H293" marker-end="url(#ap-ah-ink)"/>
+
+  <!-- 2. Approve -->
+  <rect class="cell" x="245" y="106" width="100" height="24"/>
+  <text class="t" x="295" y="118" text-anchor="middle" dominant-baseline="central">approve</text>
+
+  <!-- 3. Return, maybe -->
+  <text class="n" x="210" y="152" text-anchor="middle">back, if they return</text>
+  <path class="ln dash" d="M295,160H127" marker-end="url(#ap-ah)"/>
+  <text class="t dim" x="133" y="178">order: pending</text>
+
+  <!-- 4. Money moves -->
+  <text class="n" x="380" y="204" text-anchor="middle">the push settles</text>
+  <path class="ln ink" d="M295,212H463" marker-end="url(#ap-ah-ink)"/>
+
+  <!-- 5. Webhook -->
+  <text class="n hl" x="550" y="244" text-anchor="middle">webhook: received</text>
+  <path class="ln hl" d="M465,252H633" marker-end="url(#ap-ah-hl)"/>
+
+  <!-- 6. Status check fallback -->
+  <text class="n" x="550" y="282" text-anchor="middle">status check, if late</text>
+  <path class="ln" d="M635,290H467" marker-end="url(#ap-ah)"/>
+
+  <!-- Result -->
+  <rect class="cell hl end" x="575" y="304" width="120" height="26"/>
+  <text class="t hl" x="635" y="317" text-anchor="middle" dominant-baseline="central">order: paid</text>
+</svg>

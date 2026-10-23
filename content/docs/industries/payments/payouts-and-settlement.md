@@ -2,7 +2,7 @@
 title = "Payouts & Settlement"
 description = "How a card payment becomes money in a merchant's bank: settlement timing, fees as ledger entries, payout schedules and reserves, failures, and reconciliation."
 category = "Payments Industry"
-order = 1410
+order = 1412
 aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
 +++

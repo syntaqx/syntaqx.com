@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 276">
+  <defs>
+    <marker id="kh-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="kh-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="kh-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Inside the HSM -->
+  <text class="cap" x="40" y="20">inside the hsm</text>
+  <rect class="cell band" x="40" y="32" width="640" height="26"/>
+  <text class="t b" x="54" y="45" dominant-baseline="central">master key (LMK / MFK)</text>
+  <text class="n" x="666" y="49" text-anchor="end">never leaves; every key below is stored encrypted under it</text>
+
+  <!-- Key-encrypting keys -->
+  <path class="ln ink" d="M56,58V101" marker-end="url(#kh-ah-ink)"/>
+  <path class="ln hl" d="M269,58V101" marker-end="url(#kh-ah-hl)"/>
+  <path class="ln ink" d="M483,58V101" marker-end="url(#kh-ah-ink)"/>
+  <text class="cap" x="680" y="90" text-anchor="end">key-encrypting keys</text>
+  <rect class="cell" x="40" y="102" width="213" height="26"/>
+  <text class="t" x="68" y="115" dominant-baseline="central">zone master key (ZMK)</text>
+  <rect class="cell" x="253" y="102" width="214" height="26"/>
+  <text class="t" x="281" y="115" dominant-baseline="central">terminal KEK</text>
+  <rect class="cell" x="467" y="102" width="213" height="26"/>
+  <text class="t" x="495" y="115" dominant-baseline="central">vault KEK</text>
+  <text class="n" x="68" y="148">shared with a partner, in parts</text>
+  <text class="n" x="281" y="148">loads terminals remotely (TR-34)</text>
+  <text class="n" x="495" y="148">wraps the data keys</text>
+
+  <!-- Working keys -->
+  <path class="ln ink" d="M56,128V185" marker-end="url(#kh-ah-ink)"/>
+  <path class="ln hl" d="M269,128V185" marker-end="url(#kh-ah-hl)"/>
+  <path class="ln ink" d="M483,128V185" marker-end="url(#kh-ah-ink)"/>
+  <text class="cap" x="680" y="174" text-anchor="end">working keys</text>
+  <rect class="cell" x="40" y="186" width="213" height="26"/>
+  <text class="t" x="68" y="199" dominant-baseline="central">zone PIN key (ZPK)</text>
+  <rect class="cell hl" x="253" y="186" width="214" height="26"/>
+  <text class="t hl" x="281" y="199" dominant-baseline="central">DUKPT: BDK to device keys</text>
+  <rect class="cell" x="467" y="186" width="213" height="26"/>
+  <text class="t" x="495" y="199" dominant-baseline="central">data keys (DEKs)</text>
+  <text class="n" x="68" y="232">PINs on one link; changed often</text>
+  <text class="n hl" x="281" y="232">a new key every transaction</text>
+  <text class="n" x="495" y="232">card numbers at rest, envelope-style</text>
+
+  <!-- Key blocks -->
+  <rect class="zone" x="40" y="246" width="640" height="24"/>
+  <text class="cap" x="54" y="258" dominant-baseline="central">stored and exchanged as key blocks (x9.143): each key bound to one purpose</text>
+</svg>

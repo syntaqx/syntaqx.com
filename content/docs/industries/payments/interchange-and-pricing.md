@@ -2,7 +2,7 @@
 title = "Interchange & Pricing"
 description = "What a card payment costs and why: interchange, regulated debit, network fees, downgrades, Level 3 data, pricing models, and how platforms earn on payments."
 category = "Payments Industry"
-order = 1402
+order = 1404
 tags = ["payments", "interchange", "pricing", "durbin", "level-3"]
 +++
 

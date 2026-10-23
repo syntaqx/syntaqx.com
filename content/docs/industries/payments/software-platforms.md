@@ -3,7 +3,7 @@ title = "Payments for Software Platforms"
 nav_title = "Software Platforms"
 description = "Embedded payments for vertical software: referral, reseller, managed and registered payfac models, the tenant hierarchy, fund splits, 1099-K and support."
 category = "Payments Industry"
-order = 1414
+order = 1417
 tags = ["payments", "platforms", "payfac", "multi-tenancy", "embedded-payments"]
 +++
 

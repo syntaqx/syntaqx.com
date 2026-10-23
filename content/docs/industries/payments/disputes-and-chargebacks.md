@@ -2,7 +2,7 @@
 title = "Disputes & Chargebacks"
 description = "How a dispute moves from inquiry to arbitration, what it does to the ledger, the monitoring thresholds that end merchant accounts, and who pays on a platform."
 category = "Payments Industry"
-order = 1408
+order = 1410
 aliases = ["payments/disputes-and-chargebacks"]
 tags = ["payments", "disputes", "chargebacks", "risk"]
 +++
