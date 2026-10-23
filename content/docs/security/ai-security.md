@@ -2,7 +2,7 @@
 title = "AI & LLM Security"
 description = "Building with LLMs and agents safely: the OWASP Top 10 for LLM Applications, why prompt injection is unsolved, and designing so it can't do damage."
 category = "Security"
-order = 706
+order = 708
 tags = ["security", "ai", "llm", "agents"]
 +++
 

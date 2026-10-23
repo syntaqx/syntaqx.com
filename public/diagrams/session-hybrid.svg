@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 248">
+  <defs>
+    <marker id="sh-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="sh-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="30">a session at the edge</text>
+  <text class="cap hl" x="680" y="30" text-anchor="end">short-lived tokens inside</text>
+
+  <!-- The browser holds nothing it could leak but an opaque cookie -->
+  <rect class="cell" x="40" y="127" width="120" height="26"/>
+  <text class="t" x="100" y="140" text-anchor="middle" dominant-baseline="central">browser</text>
+  <text class="n" x="100" y="172" text-anchor="middle">opaque HttpOnly cookie</text>
+  <path class="ln hl" d="M160,140H208" marker-end="url(#sh-ah-hl)"/>
+  <text class="n" x="184" y="129" text-anchor="middle">cookie</text>
+
+  <!-- The BFF or gateway owns the session and mints tokens -->
+  <rect class="frame" x="210" y="56" width="200" height="136"/>
+  <rect class="cell band" x="210" y="56" width="200" height="24"/>
+  <text class="cap ink" x="222" y="68" dominant-baseline="central">bff or gateway</text>
+  <rect class="cell" x="210" y="80" width="200" height="56"/>
+  <text class="t" x="222" y="99" dominant-baseline="central">session store</text>
+  <text class="n" x="222" y="117" dominant-baseline="central">who signed in, how, and when</text>
+  <rect class="cell" x="210" y="136" width="200" height="56"/>
+  <text class="t" x="222" y="155" dominant-baseline="central">token minting</text>
+  <text class="n" x="222" y="173" dominant-baseline="central">a signed JWT, minutes long</text>
+
+  <!-- Services verify the token locally -->
+  <text class="n" x="600" y="60" text-anchor="middle">each checks the signature, no lookup</text>
+  <path class="ln hl" d="M410,158C462,158 466,95 518,95" marker-end="url(#sh-ah-hl)"/>
+  <path class="ln hl" d="M410,164C462,164 466,145 518,145" marker-end="url(#sh-ah-hl)"/>
+  <path class="ln hl" d="M410,170C462,170 466,195 518,195" marker-end="url(#sh-ah-hl)"/>
+  <rect class="cell" x="520" y="82" width="160" height="26"/>
+  <text class="t" x="600" y="95" text-anchor="middle" dominant-baseline="central">orders</text>
+  <rect class="cell" x="520" y="132" width="160" height="26"/>
+  <text class="t" x="600" y="145" text-anchor="middle" dominant-baseline="central">payments</text>
+  <rect class="cell" x="520" y="182" width="160" height="26"/>
+  <text class="t" x="600" y="195" text-anchor="middle" dominant-baseline="central">accounts</text>
+
+  <!-- Revocation happens in one place -->
+  <rect class="cell ghost" x="40" y="74" width="120" height="26"/>
+  <text class="t dim" x="100" y="87" text-anchor="middle" dominant-baseline="central">logout or revoke</text>
+  <path class="ln dash" d="M160,87C184,87 184,104 208,104" marker-end="url(#sh-ah)"/>
+  <text class="n" x="310" y="214" text-anchor="middle">delete the session, and the next token</text>
+  <text class="n" x="310" y="230" text-anchor="middle">is never minted</text>
+</svg>
