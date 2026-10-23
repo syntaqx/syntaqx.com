@@ -1,7 +1,7 @@
 +++
 title = "Choosing an Identity Provider"
 nav_title = "Identity Providers"
-description = "Hosted platforms, self-hosted servers and in-app libraries for sign-in: Auth0, Clerk, WorkOS, Cognito, Keycloak, Zitadel, FusionAuth, Better Auth, and how to choose."
+description = "Hosted platforms, self-hosted servers and in-app libraries for sign-in: Auth0, Clerk, WorkOS, Cognito, Keycloak, FusionAuth, Better Auth, and how to choose."
 category = "Security"
 order = 703
 tags = ["security", "authentication", "identity", "sso", "keycloak", "better-auth"]
