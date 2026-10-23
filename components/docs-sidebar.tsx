@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import type { DocCategory } from "@/lib/docs";
 import { UPCOMING_INDUSTRIES, industryName, isIndustry } from "@/lib/industries";
 
@@ -28,12 +28,16 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 }
 
 /**
- * The playbook's sidebar, or an industry's own: inside an industry volume the
- * tree swaps to that volume's chapters with a way back, and fades in on the
- * switch (the key change remounts it, which replays .sidebar-in).
+ * The playbook's sections, as they are. An industry volume is one row with a
+ * caret, and opening it drills the sidebar into that volume's chapters, the
+ * way Vercel's dashboard opens Settings. The back caret returns to the
+ * sections without leaving the page. Each view slides in from the side it
+ * came from.
  */
 function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: () => void }) {
   const pathname = usePathname();
+  // The page the reader pressed "back" on; navigating anywhere resets it.
+  const [rootOn, setRootOn] = useState<string | null>(null);
   const core = categories.filter((c) => !isIndustry(c.section));
   const industries = categories.filter((c) => isIndustry(c.section));
   const current = industries.find((c) => c.docs.some((d) => pathname === `/docs/${d.slug}`));
@@ -50,55 +54,56 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
       );
     });
 
-  const industryList = (
-    <Group title={current ? "Other industries" : "Industries"}>
-      {industries
-        .filter((c) => c !== current)
-        .map((c) => (
-          <li key={c.section}>
-            <Link href={`/docs/${c.docs[0].slug}`} onClick={onNavigate} className={linkClass(false)}>
-              {industryName(c.name)}
-            </Link>
-          </li>
-        ))}
-      {UPCOMING_INDUSTRIES.map((name) => (
-        <li key={name} className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70">
-          {name}
-          <span className="inst ml-auto border border-border px-1.5 py-px text-[0.45rem] text-dim">Soon</span>
-        </li>
-      ))}
-    </Group>
-  );
-
-  if (current) {
+  if (current && rootOn !== pathname) {
     return (
-      <nav key={current.section} className="sidebar-in space-y-7">
-        <div>
-          <Link
-            href="/docs/playbook"
-            onClick={onNavigate}
-            className="inst inline-flex items-center gap-1.5 text-[0.55rem] text-dim transition-colors hover:text-accent"
-          >
-            <ArrowLeft size={11} aria-hidden />
-            The Playbook
-          </Link>
-          <p className="mt-4 inst text-[0.55rem] text-accent">Industry</p>
-          <p className="mt-1 text-lg font-semibold leading-tight text-foreground">{industryName(current.name)}</p>
-        </div>
-        <Group title="Chapters">{docLinks(current)}</Group>
-        {industryList}
+      <nav key={current.section} aria-label={current.name} className="sidebar-in-right space-y-4">
+        <button
+          type="button"
+          onClick={() => setRootOn(pathname)}
+          className="group flex w-full items-center gap-2 text-left text-sm font-semibold text-foreground"
+        >
+          <ChevronLeft size={15} aria-hidden className="text-dim transition-colors group-hover:text-accent" />
+          {industryName(current.name)}
+          <span className="sr-only">: back to all sections</span>
+        </button>
+        <ul className="border-l border-border">{docLinks(current)}</ul>
       </nav>
     );
   }
 
   return (
-    <nav key="playbook" className="sidebar-in space-y-7">
+    <nav key="playbook" aria-label="Documentation" className={`${current ? "sidebar-in-left " : ""}space-y-7`}>
       {core.map((category) => (
         <Group key={category.name} title={category.name}>
           {docLinks(category)}
         </Group>
       ))}
-      {industryList}
+      <Group title="Industries">
+        {industries.map((c) => (
+          <li key={c.section}>
+            <Link
+              href={c === current ? pathname : `/docs/${c.docs[0].slug}`}
+              onClick={() => {
+                setRootOn(null);
+                onNavigate?.();
+              }}
+              className={`group ${linkClass(c === current)}`}
+            >
+              {industryName(c.name)}
+              <ChevronRight size={13} aria-hidden className="ml-auto text-dim transition-colors group-hover:text-accent" />
+            </Link>
+          </li>
+        ))}
+        {UPCOMING_INDUSTRIES.map((name) => (
+          <li
+            key={name}
+            className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70"
+          >
+            {name}
+            <span className="inst ml-auto border border-border px-1.5 py-px text-[0.45rem] text-dim">Soon</span>
+          </li>
+        ))}
+      </Group>
       <Group title="Reference">
         <li>
           <Link href="/docs/api" onClick={onNavigate} className={linkClass(pathname === "/docs/api")}>
