@@ -222,6 +222,17 @@ body {
   stroke-linecap: square;
 }
 
+/* The docs sidebar fades in when it swaps between the playbook and an
+   industry volume (components/docs-sidebar.tsx). */
+@keyframes sidebar-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: none; }
+}
+.sidebar-in { animation: sidebar-in 220ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-in { animation: none; }
+}
+
 @keyframes pulse-step {
   50% {
     opacity: 0.25;
