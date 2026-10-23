@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 262">
+  <text class="cap" x="40" y="20">who runs what</text>
+
+  <!-- Column headers -->
+  <rect class="cell band" x="40" y="32" width="180" height="26"/>
+  <rect class="cell band" x="220" y="32" width="160" height="26"/>
+  <text class="cap ink" x="300" y="45" text-anchor="middle" dominant-baseline="central">hosted</text>
+  <rect class="cell band" x="380" y="32" width="160" height="26"/>
+  <text class="cap ink" x="460" y="45" text-anchor="middle" dominant-baseline="central">self-hosted</text>
+  <rect class="cell band" x="540" y="32" width="160" height="26"/>
+  <text class="cap ink" x="620" y="45" text-anchor="middle" dominant-baseline="central">library</text>
+
+  <!-- Row: sign-in pages -->
+  <rect class="cell" x="40" y="58" width="180" height="26"/>
+  <text class="t" x="50" y="71" dominant-baseline="central">sign-in pages</text>
+  <rect class="cell" x="220" y="58" width="160" height="26"/>
+  <text class="t dim" x="300" y="71" text-anchor="middle" dominant-baseline="central">vendor, themed</text>
+  <rect class="cell" x="380" y="58" width="160" height="26"/>
+  <text class="t dim" x="460" y="71" text-anchor="middle" dominant-baseline="central">server, themed</text>
+  <rect class="cell" x="540" y="58" width="160" height="26"/>
+  <text class="t dim" x="620" y="71" text-anchor="middle" dominant-baseline="central">you</text>
+
+  <!-- Row: user records -->
+  <rect class="cell" x="40" y="84" width="180" height="26"/>
+  <text class="t" x="50" y="97" dominant-baseline="central">user records</text>
+  <rect class="cell" x="220" y="84" width="160" height="26"/>
+  <text class="t dim" x="300" y="97" text-anchor="middle" dominant-baseline="central">vendor</text>
+  <rect class="cell" x="380" y="84" width="160" height="26"/>
+  <text class="t dim" x="460" y="97" text-anchor="middle" dominant-baseline="central">your server's db</text>
+  <rect class="cell" x="540" y="84" width="160" height="26"/>
+  <text class="t dim" x="620" y="97" text-anchor="middle" dominant-baseline="central">your db</text>
+
+  <!-- Row: MFA and passkeys -->
+  <rect class="cell" x="40" y="110" width="180" height="26"/>
+  <text class="t" x="50" y="123" dominant-baseline="central">mfa, passkeys</text>
+  <rect class="cell" x="220" y="110" width="160" height="26"/>
+  <text class="t dim" x="300" y="123" text-anchor="middle" dominant-baseline="central">vendor</text>
+  <rect class="cell" x="380" y="110" width="160" height="26"/>
+  <text class="t dim" x="460" y="123" text-anchor="middle" dominant-baseline="central">server</text>
+  <rect class="cell" x="540" y="110" width="160" height="26"/>
+  <text class="t dim" x="620" y="123" text-anchor="middle" dominant-baseline="central">plugins you wire</text>
+
+  <!-- Row: enterprise SSO and SCIM -->
+  <rect class="cell" x="40" y="136" width="180" height="26"/>
+  <text class="t" x="50" y="149" dominant-baseline="central">enterprise sso, scim</text>
+  <rect class="cell" x="220" y="136" width="160" height="26"/>
+  <text class="t dim" x="300" y="149" text-anchor="middle" dominant-baseline="central">vendor, often extra</text>
+  <rect class="cell" x="380" y="136" width="160" height="26"/>
+  <text class="t dim" x="460" y="149" text-anchor="middle" dominant-baseline="central">server</text>
+  <rect class="cell" x="540" y="136" width="160" height="26"/>
+  <text class="t dim" x="620" y="149" text-anchor="middle" dominant-baseline="central">plugins, or you</text>
+
+  <!-- Row: upgrades and on-call -->
+  <rect class="cell" x="40" y="162" width="180" height="26"/>
+  <text class="t" x="50" y="175" dominant-baseline="central">upgrades, on-call</text>
+  <rect class="cell" x="220" y="162" width="160" height="26"/>
+  <text class="t dim" x="300" y="175" text-anchor="middle" dominant-baseline="central">vendor</text>
+  <rect class="cell" x="380" y="162" width="160" height="26"/>
+  <text class="t dim" x="460" y="175" text-anchor="middle" dominant-baseline="central">you</text>
+  <rect class="cell" x="540" y="162" width="160" height="26"/>
+  <text class="t dim" x="620" y="175" text-anchor="middle" dominant-baseline="central">you</text>
+
+  <!-- Row: the one thing that never moves -->
+  <rect class="cell" x="40" y="188" width="180" height="26"/>
+  <text class="t b" x="50" y="201" dominant-baseline="central">your app's session</text>
+  <rect class="cell hl" x="220" y="188" width="160" height="26"/>
+  <text class="t hl" x="300" y="201" text-anchor="middle" dominant-baseline="central">you</text>
+  <rect class="cell hl" x="380" y="188" width="160" height="26"/>
+  <text class="t hl" x="460" y="201" text-anchor="middle" dominant-baseline="central">you</text>
+  <rect class="cell hl" x="540" y="188" width="160" height="26"/>
+  <text class="t hl" x="620" y="201" text-anchor="middle" dominant-baseline="central">you</text>
+
+  <!-- Where the users live -->
+  <text class="n" x="300" y="234" text-anchor="middle">users live with the vendor</text>
+  <text class="n" x="460" y="234" text-anchor="middle">users live in your infrastructure</text>
+  <text class="n" x="620" y="234" text-anchor="middle">users live in your database</text>
+  <text class="n hl" x="40" y="234">always yours</text>
+</svg>
