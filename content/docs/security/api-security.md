@@ -2,7 +2,7 @@
 title = "API Security"
 description = "The OWASP API Security Top 10 (2023), risk by risk, and the playbook practice that prevents each one, so security is designed in rather than bolted on."
 category = "Security"
-order = 703
+order = 705
 tags = ["security", "api", "owasp", "authorization"]
 +++
 

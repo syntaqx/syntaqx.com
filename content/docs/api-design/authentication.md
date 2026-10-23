@@ -8,7 +8,7 @@ tags = ["api", "authentication", "oauth", "security"]
 aliases = ["api-authentication"]
 +++
 
-Authentication answers "who is calling?"; [authorization](/docs/security/authorization) answers "are they allowed to do this?". They fail differently, so keep them separate in code, status codes and error messages. Most API breaches aren't broken cryptography but a valid credential reaching data it shouldn't, an authorization bug ([API Security](/docs/security/api-security)). This doc is about the first question: the credential.
+Authentication answers "who is calling?"; [authorization](/docs/security/authorization) answers "are they allowed to do this?". They fail differently, so keep them separate in code, status codes and error messages. Most API breaches aren't broken cryptography but a valid credential reaching data it shouldn't, an authorization bug ([API Security](/docs/security/api-security)). This doc is about the first question for programs calling an API: the credential. People signing in to an application are covered in [Authentication & Sessions](/docs/security/authentication) and [SSO & Identity Federation](/docs/security/sso-and-federation).
 
 ## Credentials Go in the Authorization Header
 

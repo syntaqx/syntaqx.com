@@ -2,11 +2,11 @@
 title = "Authorization"
 description = "Deciding what an authenticated caller may do: RBAC, ABAC and relationship-based models, where checks belong, object-level access, and testing deny-by-default."
 category = "Security"
-order = 702
+order = 704
 tags = ["security", "authorization", "access-control", "api"]
 +++
 
-[Authentication](/docs/api-design/authentication) answers "who is this?", and it's mostly solved: a standard and a well-tested library. Authorization answers "may they do this, to this, right now?", and it's specific to your product, written by your team and spread across every endpoint, which is why it's where the breaches are. Broken object-level authorization has led the OWASP API Security Top 10 in both editions ([API Security](/docs/security/api-security)), and it's rarely a sophisticated attack: someone changes an ID in a URL and gets another customer's data.
+Authentication, [for people](/docs/security/authentication) or [for API callers](/docs/api-design/authentication), answers "who is this?", and it's mostly solved: a standard and a well-tested library. Authorization answers "may they do this, to this, right now?", and it's specific to your product, written by your team and spread across every endpoint, which is why it's where the breaches are. Broken object-level authorization has led the OWASP API Security Top 10 in both editions ([API Security](/docs/security/api-security)), and it's rarely a sophisticated attack: someone changes an ID in a URL and gets another customer's data.
 
 ## Choosing a Model
 
