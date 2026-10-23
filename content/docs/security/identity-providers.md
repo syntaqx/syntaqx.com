@@ -116,10 +116,6 @@ Every identity choice is a migration later, and the expensive part is passwords,
 
 Whatever you pick, the list in [Authentication & Sessions](/docs/security/authentication) still applies: your application's own session, what counts as a sensitive action, recovery policy, audit events, and what happens when the provider is down. Buying moves the work; it doesn't remove it.
 
-## This Site
-
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) has no user accounts. It started with Better Auth for sign-in, and removed it along with accounts and the database behind them, as [ADR 0001](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md) records. The decision was about not holding user data at all, not about the library.
-
 ## References
 
 **Specifications**
@@ -176,7 +172,3 @@ Whatever you pick, the list in [Authentication & Sessions](/docs/security/authen
 - [Rails Security Guide](https://guides.rubyonrails.org/security.html), the Rails 8 authentication generator
 - [django-allauth](https://docs.allauth.org/en/latest/), accounts, social providers, MFA and its OIDC identity provider
 - [Laravel: Starter Kits](https://laravel.com/docs/12.x/starter-kits), Fortify authentication and the WorkOS AuthKit variant
-
-**In practice**
-
-- [ADR 0001: No authentication or user identity](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md), why this site removed Better Auth with its accounts
