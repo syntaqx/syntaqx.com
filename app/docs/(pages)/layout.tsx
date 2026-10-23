@@ -11,7 +11,7 @@ export default function DocsLayout({
   return (
     <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
       <aside className="hidden lg:block">
-        <div className="sticky top-[6.5rem] max-h-[calc(100vh-7.5rem)] overflow-y-auto">
+        <div className="rail-scroll sticky top-[6.5rem] max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-3">
           <DocsSidebar categories={categories} />
         </div>
       </aside>

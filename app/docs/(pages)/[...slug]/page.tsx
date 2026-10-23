@@ -82,6 +82,19 @@ export default async function DocPage({ params }: Props) {
       <div className="grid gap-12 xl:grid-cols-[minmax(0,1fr)_13rem]">
         <div className="min-w-0">
           <header className="mb-10 border-b border-border pb-8">
+            {category && category.docs.length > 1 && (
+              <p className="inst mb-4 text-dim">
+                <Link href={`/docs#${category.section}`} className="text-accent transition-colors hover:text-foreground">
+                  {category.name}
+                </Link>
+                <span aria-hidden> · </span>
+                <span className="sr-only">, chapter </span>
+                {String(category.docs.findIndex((d) => d.slug === doc.slug) + 1).padStart(2, "0")}
+                <span aria-hidden> / </span>
+                <span className="sr-only"> of </span>
+                {String(category.docs.length).padStart(2, "0")}
+              </p>
+            )}
             <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl wrap-break-word">
               {doc.title}
             </h1>

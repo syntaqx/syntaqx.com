@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { UPCOMING_INDUSTRIES } from "@/lib/industries";
-import { ArrowRight, Search, X } from "lucide-react";
+import { UPCOMING_INDUSTRIES, industryName, isIndustry } from "@/lib/industries";
+import { ArrowRight, ChevronRight, Search, X } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 
 export interface DocsIndexEntry {
@@ -213,10 +213,10 @@ function SectionRail({
           its docs, scrolling within the rail when it's taller than the screen. */}
       <div
         ref={railRef}
-        className="sticky top-24 hidden max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-2 scrollbar-none lg:block"
+        className="rail-scroll sticky top-24 hidden max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-3 lg:block"
       >
         <div className="space-y-7">
-          {categories.map((c) => {
+          {categories.filter((c) => !isIndustry(c.section)).map((c) => {
             const isActive = c.section === active;
             return (
               <div key={c.section} data-section={c.section}>
@@ -246,8 +246,25 @@ function SectionRail({
             );
           })}
           <div>
-            <p className="inst mb-2.5 text-[0.55rem] text-dim">More industries</p>
+            <p className="inst mb-2.5 text-[0.55rem] text-dim">Industries</p>
             <ul className="border-l border-border">
+              {categories.filter((c) => isIndustry(c.section)).map((c) => (
+                <li key={c.section} data-section={c.section}>
+                  <a
+                    href={`#${c.section}`}
+                    aria-current={c.section === active ? "true" : undefined}
+                    className={`group -ml-px flex items-center gap-2 border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
+                      c.section === active
+                        ? "border-accent text-foreground"
+                        : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
+                    }`}
+                  >
+                    {industryName(c.name)}
+                    <span className="inst text-[0.5rem] text-dim">{c.docs.length}</span>
+                    <ChevronRight size={13} aria-hidden className="ml-auto text-dim transition-colors group-hover:text-accent" />
+                  </a>
+                </li>
+              ))}
               {UPCOMING_INDUSTRIES.map((name) => (
                 <li key={name} className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70">
                   {name}
