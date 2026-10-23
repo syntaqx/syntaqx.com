@@ -28,8 +28,11 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
   const longest = Math.max(...title.split(/\s+/).map((w) => w.length));
   const titleSize = Math.min(title.length > 40 ? 76 : title.length > 22 ? 94 : 120, Math.floor(TEXT / (0.41 * longest)));
   const host = `syntaqx.com${path === "/" ? "" : path}`;
-  // Tighten the footer's tracking so even the longest doc address fits.
-  const tracking = host.length + (stat?.length ?? 0) > 60 ? 1.6 : 2.5;
+  // Tighten the footer's tracking, then its size, so the whole address fits
+  // (Michroma caps run about 0.96em wide; the strip has about 1000px).
+  const perChar = 1000 / (host.length + (stat?.length ?? 0));
+  const footerSize = perChar - 0.96 * 12 >= 0.5 ? 12 : 11;
+  const tracking = Math.max(0, Math.min(2.5, perChar - 0.96 * footerSize));
 
   return new ImageResponse(
     <div style={{ width: "100%", height: "100%", display: "flex", backgroundColor: C.bg, position: "relative" }}>
@@ -97,7 +100,7 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
           display: "flex",
           alignItems: "center",
           fontFamily: "Michroma",
-          fontSize: 12,
+          fontSize: footerSize,
           letterSpacing: tracking,
           color: C.dim,
         }}
