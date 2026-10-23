@@ -4,7 +4,7 @@ nav_title = "Identity Providers"
 description = "Hosted platforms, self-hosted servers and in-app libraries for sign-in: Auth0, Clerk, WorkOS, Cognito, Keycloak, FusionAuth, Better Auth, and how to choose."
 category = "Security"
 order = 703
-tags = ["security", "authentication", "identity", "sso", "keycloak", "better-auth"]
+tags = ["security", "authentication", "identity", "sso", "keycloak", "better-auth", "go"]
 +++
 
 [Authentication & Sessions](/docs/security/authentication) argues for buying sign-in instead of writing it. This chapter is about what to buy, or run, or install. The choice isn't one product against another so much as one shape against another: a hosted platform that keeps your users for you, an identity server you run yourself, or a library that lives inside your application and stores users in your database. Each shape moves a different set of problems off your plate and leaves a different set on it, and the products inside a shape differ less than the shapes do.
@@ -35,9 +35,13 @@ Everything here is a snapshot as of October 2026. Products in this space merge, 
 
 - **Keycloak** is the reference open-source identity server: Apache 2.0, a CNCF incubating project, with realms for isolation, OIDC and SAML as both provider and broker, user federation to LDAP and Active Directory, and an admin console for all of it. Red Hat ships a supported build (26.6 as of this writing). It's heavyweight: a Java server with a database, themes to maintain for custom sign-in pages, and upgrades you have to plan. Teams that run it well treat it as a product with an owner.
 - **Zitadel** is newer, written in Go, with multi-tenancy built in as organizations under an instance, OIDC (certified), SAML, a SCIM 2.0 server and passkeys. It's AGPL-3.0 with exceptions for some directories, and Zitadel Cloud runs the same codebase if you want it hosted later.
-- **Ory** is a set of Apache 2.0 services you compose: Kratos for identities, credentials and self-service flows, Hydra as a certified OAuth 2.0 and OIDC provider, Keto for relationship-based permissions, Oathkeeper as an access proxy. Ory Network is the managed version. The split is powerful and means more assembly.
+- **Ory** is a set of Apache 2.0 services, written in Go, that you compose: Kratos for identities, credentials and self-service flows, Hydra as a certified OAuth 2.0 and OIDC provider, Keto for relationship-based permissions, Oathkeeper as an access proxy. Ory Network is the managed version. The split is powerful and means more assembly.
 - **Authentik** is an open-source IdP aimed at self-hosting, speaking SAML, OAuth2 and OIDC, LDAP and RADIUS. Its core is MIT, with enterprise features under a separate license. It's common in internal and homelab setups and capable in production.
-- **Authelia** is different in kind: an authentication portal that sits beside a reverse proxy and adds 2FA and SSO in front of applications. It has no sign-up; users live in a file or LDAP. Right for protecting internal tools, wrong as a customer user store.
+- **Authelia** is different in kind: an authentication portal, written in Go, that sits beside a reverse proxy and adds 2FA and SSO in front of applications. It has no sign-up; users live in a file or LDAP. Right for protecting internal tools, wrong as a customer user store.
+- **Casdoor** is an Apache 2.0 identity server in Go with a React admin UI. It's an OIDC and OAuth 2.0 provider, SAML 2.0 as both IdP and SP, CAS for legacy applications, LDAP in both directions and a SCIM 2.0 server: wide protocol coverage in a single binary.
+- **Hanko** is passkey-first, with passwords, passcodes, social login, TOTP and SAML enterprise SSO behind drop-in web components. The Go backend is AGPL-3.0 (the frontend packages are MIT), and Hanko Cloud runs it for you.
+- **Dex** is a CNCF sandbox project (Apache 2.0, Go) that isn't a user store at all: it's an OIDC provider in front of other identity sources, through connectors for LDAP, GitHub, Google, Microsoft, generic OIDC and more. It's common for Kubernetes and internal tools. Its SAML connector is marked unmaintained, so don't lean on it for business-customer SSO.
+- **Pocket ID** is a small OIDC provider (BSD-2-Clause, Go) that signs users in with passkeys only, no passwords. It's aimed at self-hosted services and simple setups where Keycloak is more than you need.
 
 ## Free to Run, Paid to Grow
 
@@ -58,7 +62,13 @@ The thing to model is what you'll need in a year, not today. A free tier that co
   - Django has `django.contrib.auth`; django-allauth adds local accounts, a long list of social providers, WebAuthn-based MFA and an OIDC identity provider.
   - Laravel's starter kits use Fortify for login, registration, reset, email verification and TOTP 2FA, with a WorkOS AuthKit variant; Sanctum covers API tokens.
   - Spring Security in Java and ASP.NET Core Identity in .NET are their platforms' defaults, and Passport.js is the long-standing Node strategy library.
-  - Go has no default. Teams typically combine a session library with an OIDC client against one of the servers above, which is usually the better design anyway.
+  - Go has no default, and the standard library leaves the pieces to you. Teams typically combine a session library with an OIDC client against one of the servers above, which is usually the better design anyway. The pieces worth knowing:
+    - `golang.org/x/oauth2` with **go-oidc** (`coreos/go-oidc`) for the OIDC client side: discovery, and verifying ID tokens' signature, issuer, audience and expiry.
+    - **SCS** (`alexedwards/scs`) for server-side sessions with pluggable stores (Postgres, Redis and others).
+    - **go-webauthn** for passkeys, BSD-3-Clause, continuing Duo Labs' original library.
+    - **crewjam/saml** for SAML as a service provider or identity provider, if you take on [business-customer SSO](/docs/security/sso-and-federation) yourself.
+    - **Goth** for social login, with sixty-odd OAuth providers behind one interface (MIT).
+    - **Authboss** (`aarondl/authboss`, MIT) is the closest Go gets to Devise: registration, confirmation, recovery, lockout, remember-me, OAuth2 and TOTP or SMS 2FA as modules. It ships no storage; you implement its storer interfaces against your own database.
 
 ## Side by Side
 
@@ -73,6 +83,9 @@ The thing to model is what you'll need in a year, not today. A free tier that co
 | Keycloak | Self-hosted | OIDC and SAML, LDAP/AD federation | Your database | Apache 2.0 | Yours |
 | Zitadel | Self-hosted or cloud | OIDC, SAML, SCIM server | Yours, or theirs on cloud | AGPL-3.0 | Yours when self-hosted |
 | Ory | Self-hosted or network | OIDC via Hydra | Yours, or theirs on network | Apache 2.0 | Yours when self-hosted |
+| Casdoor | Self-hosted | OIDC, SAML, CAS, LDAP, SCIM server | Your database | Apache 2.0 | Yours |
+| Hanko | Self-hosted or cloud | SAML | Yours, or theirs on cloud | AGPL-3.0 | Yours when self-hosted |
+| Dex | Self-hosted | Federates to LDAP, OIDC and social; SAML unmaintained | Upstream providers | Apache 2.0 | Nothing to move |
 | FusionAuth | Self-hosted or cloud | OIDC and SAML; SCIM on Enterprise | Yours, or theirs on cloud | Closed source, free Community edition | Yours when self-hosted; cloud by ticket |
 | SuperTokens | Self-hosted or managed | SAML; multi-tenancy paid | Yours, or theirs managed | Apache 2.0 core, paid add-ons | Yours when self-hosted |
 | Logto | Self-hosted or cloud | OIDC and SAML; SSO per connector on cloud | Yours, or theirs on cloud | MPL-2.0; cloud free to 50K MAU | Yours when self-hosted |
@@ -127,6 +140,17 @@ Whatever you pick, the list in [Authentication & Sessions](/docs/security/authen
 - [SuperTokens core on GitHub](https://github.com/supertokens/supertokens-core), Apache 2.0 with a separately licensed `ee` directory
 - [Logto on GitHub](https://github.com/logto-io/logto), MPL-2.0 license and protocols
 - [Logto: Pricing](https://logto.io/pricing), the cloud free tier, Pro plan and enterprise SSO connectors
+- [Casdoor on GitHub](https://github.com/casdoor/casdoor), Apache 2.0 license and protocols
+- [Hanko on GitHub](https://github.com/teamhanko/hanko), AGPL-3.0 backend, MIT frontend packages and Hanko Cloud
+- [Dex on GitHub](https://github.com/dexidp/dex), connectors and their maintenance status
+- [CNCF: Dex](https://www.cncf.io/projects/dex/), sandbox maturity level
+- [Pocket ID on GitHub](https://github.com/pocket-id/pocket-id), passkey-only OIDC provider
+- [go-oidc](https://github.com/coreos/go-oidc), OIDC client and ID token verification for Go
+- [SCS](https://github.com/alexedwards/scs), Go session management with pluggable stores
+- [go-webauthn](https://github.com/go-webauthn/webauthn), WebAuthn and passkeys for Go
+- [crewjam/saml](https://github.com/crewjam/saml), SAML service provider and identity provider for Go
+- [Goth](https://github.com/markbates/goth), multi-provider social login for Go
+- [Authboss](https://github.com/aarondl/authboss), modular authentication for Go web applications
 - [authentik on GitHub](https://github.com/goauthentik/authentik), protocols and the MIT and enterprise license split
 - [Authelia: First Factor](https://www.authelia.com/configuration/first-factor/introduction/), file and LDAP backends and no registration
 - [Better Auth: Introduction](https://www.better-auth.com/docs/introduction), what it is and its plugin ecosystem
