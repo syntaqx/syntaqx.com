@@ -202,12 +202,32 @@ function SectionRail({
   const reference = categories[categories.length - 1];
   const sections = categories.slice(0, -1);
 
-  // Keep the highlighted section in view as the page scrolls, by scrolling
-  // the rail itself (never the page).
+  // Once the reader scrolls the rail themselves, it stays where they put it
+  // until they pick something from it.
+  const heldRef = useRef(false);
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const hold = () => (heldRef.current = true);
+    const release = (e: MouseEvent) => {
+      if ((e.target as Element).closest("a")) heldRef.current = false;
+    };
+    // pointerdown covers dragging the scrollbar.
+    const events = ["wheel", "touchmove", "keydown", "pointerdown"] as const;
+    events.forEach((e) => rail.addEventListener(e, hold, { passive: true }));
+    rail.addEventListener("click", release);
+    return () => {
+      events.forEach((e) => rail.removeEventListener(e, hold));
+      rail.removeEventListener("click", release);
+    };
+  }, []);
+
+  // Otherwise keep the highlighted section in view as the page scrolls, by
+  // scrolling the rail itself (never the page).
   useEffect(() => {
     const rail = railRef.current;
     const item = rail?.querySelector<HTMLElement>(`[data-section="${active}"]`);
-    if (!rail || !item) return;
+    if (!rail || !item || heldRef.current) return;
     // Measure against what's on screen: near the end of the page the sticky
     // rail is pushed up, and part of it is off-screen.
     const box = rail.getBoundingClientRect();
