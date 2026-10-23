@@ -2,7 +2,7 @@
 title = "Disputes & Chargebacks"
 description = "How a dispute moves from inquiry to arbitration, what it does to the ledger, the monitoring thresholds that end merchant accounts, and who pays on a platform."
 category = "Payments Industry"
-order = 1416
+order = 1418
 part = "Taking Payments"
 aliases = ["payments/disputes-and-chargebacks"]
 tags = ["payments", "disputes", "chargebacks", "risk"]
@@ -20,12 +20,18 @@ Networks name the stages differently, but the shape is the same:
 | ----- | ------------ | ----------- |
 | **Inquiry** (retrieval, request for information) | The issuer asks for transaction details before filing. American Express, Discover and Mastercard still use them; Visa retired its retrieval requests in the US in October 2020 in favor of issuer-to-merchant collaboration. | Nobody yet. Answer it and many go away. |
 | **Dispute** (chargeback) | The issuer files. The disputed amount and a fee are debited from the merchant immediately. | The issuer, provisionally |
-| **Response** (representment, second presentment) | The merchant submits evidence, usually within **7 to 21 days** depending on the network. | The issuer reviews it, typically over **60 to 75 days** |
+| **Response** (representment, second presentment) | The merchant submits evidence. Visa's rules give the acquirer 30 days, and Mastercard's windows are similar; providers give merchants less, usually **7 to 21 days**, to leave room for their own review. | The issuer reviews it, typically over **60 to 75 days** |
 | **Pre-arbitration and arbitration** | If the issuer rejects the evidence, either side can escalate, and the network itself rules. | The card network |
 
 Cardholders generally have **120 days** from the payment to file, and longer for things paid for in advance: for a ticket or a booking, the clock starts at the event, not the purchase. A dispute can therefore arrive months after the money looked settled, which is why disputes are never a state on the payment (see below).
 
 An unanswered inquiry is the most expensive mistake in this table: it's free to resolve with evidence or a refund, and ignoring it can escalate to a chargeback the issuer treats as accepted. Route inquiries to the same queue, with the same urgency, as disputes. Arbitration is rarely worth it: the loser pays the network's fee, which runs to hundreds of dollars, so it only makes sense for large amounts with unambiguous evidence.
+
+### The Dispute Object
+
+A provider exposes each dispute as an object with its own states, and the states follow the network process: an early warning or inquiry that needs a response, then a dispute that **needs a response**, **under review** once evidence is submitted, and finally **won**, **lost**, or **prevented** if a pre-dispute service resolved it. Stripe's API is a good model, with separate states for inquiries ("warnings") and an evidence block that says when it's due, whether any has been submitted, and whether the deadline passed.
+
+Two deadlines matter, and they're different: the network's deadline for the acquirer, and the provider's earlier deadline for the merchant. The merchant sees only the second, in the event that announces the dispute ([Designing the Payments API](/docs/industries/payments/payments-api#events)). Evidence is uploaded through the API as files and fields, so platforms can collect it inside their own products.
 
 ## Reason Codes Decide the Evidence
 
@@ -48,7 +54,7 @@ A dispute is its own object with its own state machine, referencing the payment 
 | ----- | ------------------ |
 | Dispute opened | Disputed amount moves from the merchant's balance to a `disputes_held` account. The fee moves to `dispute_fees`. |
 | Won | The held amount returns to the merchant's balance. The fee usually stays charged. |
-| Lost | The held amount moves to the issuer, permanently. |
+| Lost | The held amount leaves for good, through the acquirer's settlement (`acquirer_settlement_clearing`), because the issuer kept it. |
 | Accepted without contest | Same as lost, without the response fee. |
 
 Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts.
@@ -64,7 +70,7 @@ Networks watch every merchant's fraud and dispute rates, and exceeding the thres
 Visa's program, VAMP, combines fraud reports and disputes into one count-based ratio on card-not-present transactions:
 
 ```text
-VAMP ratio = (fraud reports (TC40) + disputes (TC15)) / settled transactions (TC05)
+VAMP ratio = (fraud reports (TC40, in Visa's transaction codes) + disputes (TC15)) / settled transactions (TC05)
 ```
 
 | | Threshold |
@@ -73,6 +79,8 @@ VAMP ratio = (fraud reports (TC40) + disputes (TC15)) / settled transactions (TC
 | Excessive merchant (Latin America) | 150 basis points |
 | Excessive merchant (CEMEA) | 220 basis points |
 | Minimum volume | 1,500 fraud reports and disputes in the month |
+
+Mastercard runs its own programs by merchant. Its Excessive Chargeback Program flags a merchant with at least 100 chargebacks and a 1.5% ratio in a month, and a high-excessive tier at 300 chargebacks and 3%, with assessments that start at $1,000 and climb to $100,000 a month or more the longer a merchant stays in; its Excessive Fraud Merchant program targets e-commerce merchants with high fraud chargebacks and low use of 3-D Secure. Acquirers' summaries of these are the public source; Mastercard's rule text isn't public.
 
 Two details make it harder than it looks. Fraud reports count even when no dispute follows, so a [card-testing attack](/docs/industries/payments/fraud-and-risk#card-testing) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
 
@@ -84,7 +92,7 @@ Every dispute costs a fee, staff time and ratio, win or lose; the cheapest one i
 - **Refund before they dispute.** A refund costs the amount; a dispute costs the amount, a fee and ratio. Refunding a complaint, or a small payment with an early fraud warning, is usually cheaper than winning.
 - **Authenticate high-risk payments.** The [3-D Secure liability shift](/docs/industries/payments/strong-customer-authentication) takes the most common dispute reason off the merchant.
 - **Answer the issuer before the dispute exists.** The networks now run services that put the merchant in front of the issuer while the cardholder is still asking questions:
-  - **Visa Order Insight** (through Verifi) sends purchase details to the issuer's app or call center, so a cardholder who doesn't recognize a charge sees what it was.
+  - **Visa Order Insight** (through Verifi, Visa's dispute-services subsidiary) sends purchase details to the issuer's app or call center, so a cardholder who doesn't recognize a charge sees what it was.
   - **Compelling Evidence 3.0** answers a card-absent fraud claim with history: if the same card paid at least twice before, undisputed, between 120 and 365 days earlier, and the device or IP address matches plus one more element (login ID, delivery address), the liability moves to the issuer. Supplied through Order Insight before a dispute is filed, it blocks the dispute and keeps it out of the merchant's ratio. From October 24, 2026, the history can come from more than one merchant.
   - **Rapid Dispute Resolution** lets the merchant pre-approve rules (say, refund anything under $25) so the issuer resolves those disputes as refunds before they become chargebacks, and they don't count toward the ratio.
   - **Mastercard's Ethoca** sends alerts when an issuer confirms fraud or receives a dispute, so the merchant can stop fulfillment and refund first; **Consumer Clarity** and **First-Party Trust** play the roles of Order Insight and Compelling Evidence on Mastercard.
@@ -121,6 +129,7 @@ Every dispute event reaches merchants through [webhooks](/docs/payments/webhooks
 - [Visa: Evolution of Compelling Evidence FAQ](https://usa.visa.com/content/dam/VCOM/regional/na/us/support-legal/documents/evolution-of-compelling-evidence-external-faqs.pdf), Compelling Evidence 3.0 qualification and Order Insight
 - [Visa: Sunset of retrieval requests](https://usa.visa.com/content/dam/VCOM/regional/na/us/support-legal/documents/sunset-of-retrieval-requests-and-impact-on-healthcare-auto-substantiation-transaction-receipt-requests.pdf), the end of US retrieval requests in October 2020
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), Compelling Evidence 3.0 conditions (11.7.5.6) and Rapid Dispute Resolution
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), dispute response and pre-arbitration time limits (Tables 11-1 and 11-2)
 
 **In practice**
 
@@ -128,3 +137,6 @@ Every dispute event reaches merchants through [webhooks](/docs/payments/webhooks
 - [Stripe: Understanding Connect account balances](https://docs.stripe.com/connect/account-balances), who covers negative balances on a platform, and reserves
 - [Verifi: Rapid Dispute Resolution](https://www.verifi.com/rdr-is-here.html), merchant-defined rules that resolve disputes before they're chargebacks
 - [Mastercard Developers: Ethoca Consumer Clarity](https://developer.mastercard.com/ethoca-consumer-clarity-for-merchants/documentation), purchase details and First-Party Trust over the merchant transaction API
+- [Stripe: The Dispute object](https://docs.stripe.com/api/disputes/object), dispute statuses and evidence deadlines
+- [Chase: Mastercard Excessive Chargeback Program FAQ (PDF)](https://merchantservices.chase.com/content/dam/jpm/merchant-services/documents/payment-network-updates/MC_ExcessiveChargebacks_FAQ_02092022.pdf), thresholds and assessments, as an acquirer summarizes them
+- [Chase: Mastercard Excessive Fraud Merchant FAQ (PDF)](https://merchantservices.chase.com/content/dam/jpm/merchant-services/documents/payment-network-updates/MC_ExcessiveFraud_FAQ_02092022.pdf), the fraud program's criteria, including 3-D Secure use

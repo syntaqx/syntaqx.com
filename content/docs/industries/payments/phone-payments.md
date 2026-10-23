@@ -2,7 +2,7 @@
 title = "Phone Payments"
 description = "Taking payments by phone and by link: MOTO and TEL rules, telephony in PCI scope, DTMF masking, text-to-pay, recordings, IVR design, remote agents."
 category = "Payments Industry"
-order = 1414
+order = 1416
 part = "Taking Payments"
 tags = ["payments", "pci", "moto", "ivr", "contact-center", "ach"]
 +++
@@ -13,7 +13,7 @@ tags = ["payments", "pci", "moto", "ivr", "contact-center", "ach"]
 
 **Cards: mail order and telephone order (MOTO).** Visa defines it as a card-absent purchase ordered "by telephone, mail, or other means of telecommunication". The authorization carries a MOTO indicator (single, recurring or installment; a card taken by phone for recurring use starts a [stored credential](/docs/industries/payments/stored-credentials)) instead of the e-commerce indicators that 3-D Secure produces, and there's no liability shift: fraud on a MOTO payment is the merchant's. You may ask for the card verification code, and should, but never store it after authorization, the same rule as everywhere else (PCI DSS 3.3.1.2, restated for phone orders in PCI SSC's FAQ 1319).
 
-**Strong Customer Authentication doesn't apply,** in Europe, to genuine mail and telephone orders. PSD2 excludes them because the payer isn't initiating an electronic payment, and the EBA treats an IVR order the same as a call to an agent, unless the IVR is really initiating the payment over the internet. That gap has been abused: the EBA's 2022 advice on the PSD2 review found that some merchants "unlawfully qualified remote electronic payment transactions, initiated by the payer online, as MOTO in order to circumvent the application of SCA", and that MOTO fraud runs much higher than other payments. Flag a payment as MOTO only when it actually came by phone or mail; [SCA & 3-D Secure](/docs/industries/payments/strong-customer-authentication) covers the online alternative.
+**Strong Customer Authentication doesn't apply,** in Europe, to genuine mail and telephone orders. PSD2 excludes them because the payer isn't initiating an electronic payment, and the EBA treats an IVR (interactive voice response, the automated phone menu) order the same as a call to an agent, unless the IVR is really initiating the payment over the internet. That gap has been abused: the EBA's 2022 advice on the PSD2 review found that some merchants "unlawfully qualified remote electronic payment transactions, initiated by the payer online, as MOTO in order to circumvent the application of SCA", and that MOTO fraud runs much higher than other payments. Flag a payment as MOTO only when it actually came by phone or mail; [SCA & 3-D Secure](/docs/industries/payments/strong-customer-authentication) covers the online alternative.
 
 **Bank debits: TEL.** An ACH debit authorized by phone is a `TEL` entry ([ACH & Bank Transfers](/docs/industries/payments/ach)), and Nacha's rules are specific:
 
@@ -29,7 +29,7 @@ tags = ["payments", "pci", "moto", "ivr", "contact-center", "ach"]
 
 PCI SSC's information supplement on telephone payments (version 3.0, November 2018) lists what card data on a call can reach: the SIP trunk or carrier link, the PBX, the IVR, call recording and its storage and backups, speech analytics, the agent's desktop and softphone, screen recording, and a remote agent's home network. Voice and data share networks now, so without segmentation a single phone call can bring the whole office network into scope. A call from a customer isn't in scope until it reaches your infrastructure (FAQ 1153); from that moment, everything it touches is.
 
-You can secure each of those systems to [PCI DSS](/docs/compliance/pci-dss) or you can design so card data never enters them. The supplement prefers the second, and I'd choose it too: securing an agent's desktop, a recording archive and an analytics pipeline to CDE standards is an endless project, and the controls are only as good as the least careful agent.
+You can secure each of those systems to [PCI DSS](/docs/compliance/pci-dss) or you can design so card data never enters them. The supplement prefers the second, and I'd choose it too: securing an agent's desktop, a recording archive and an analytics pipeline to the standards of a cardholder data environment (CDE: every system that stores, processes or transmits card data, plus whatever can reach them) is an endless project, and the controls are only as good as the least careful agent.
 
 ## Keep the Digits Away From People
 

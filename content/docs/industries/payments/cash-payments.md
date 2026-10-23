@@ -2,7 +2,7 @@
 title = "Cash Payments"
 description = "Letting customers pay in cash: retail bill-pay networks, real-time validation and posting, money orders, money transmitter rules, BSA reporting and vouchers."
 category = "Payments Industry"
-order = 1407
+order = 1406
 part = "How Money Moves"
 tags = ["payments", "cash", "bill-pay", "money-orders", "aml", "vouchers"]
 +++
@@ -50,7 +50,7 @@ Money orders are the cash customer's check, and they're deposited like checks ([
 
 Taking someone's money and passing it to someone else is money transmission, which is licensed in nearly every state and registered federally. Bill payment avoids that through two exemptions, and the integration has to fit them.
 
-- **Federally, the payment processor exemption.** FinCEN's rules exclude a business that only facilitates the purchase of goods or services or the payment of bills "through a clearance and settlement system by agreement with the creditor or seller". FinCEN reads that as four conditions: it facilitates purchases or bill payments, it operates through clearance and settlement systems that admit only BSA-regulated institutions, under a formal agreement, with the seller or creditor receiving the funds. A 2008 ruling found a gift shop collecting cash as a utility's authorized agent wasn't a money transmitter, because it took payments only for the utilities it contracted with.
+- **Federally, the payment processor exemption.** FinCEN's rules exclude a business that only facilitates the purchase of goods or services or the payment of bills "through a clearance and settlement system by agreement with the creditor or seller". FinCEN reads that as four conditions: it facilitates purchases or bill payments, it operates through clearance and settlement systems that admit only Bank Secrecy Act-regulated institutions, under a formal agreement, with the seller or creditor receiving the funds. A 2008 ruling found a gift shop collecting cash as a utility's authorized agent wasn't a money transmitter, because it took payments only for the utilities it contracted with.
 - **In the states, the agent-of-payee exemption.** The Money Transmission Modernization Act, enacted in full or in part by 31 states by September 2026, exempts an agent collecting for a payee when there's a written agreement directing the agent to collect, the payee holds the agent out as accepting payments on its behalf, and the payer's obligation is extinguished when the agent receives the money. That last condition is a product requirement: the moment the network confirms a cash payment, the payer has paid, whether or not the money has reached the biller.
 
 [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) covers the licensing question in general; for cash, the network usually holds the licenses and the biller's contract with the network carries the exemption.

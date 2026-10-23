@@ -30,7 +30,7 @@ Network fees deserve a closer look than they usually get, because they're where 
 Visa and Mastercard publish their US interchange tables, and Visa's latest schedule takes effect on October 24, 2026. A transaction's rate depends on which category it qualifies for, and the category depends on:
 
 - **Card type.** Regulated debit, exempt debit, prepaid, consumer credit (with higher rates for premium rewards products), and commercial cards each have their own tables.
-- **Channel.** Card-present beats card-not-present, and a key-entered card-present payment is priced closer to online. Visa's exempt debit table charges 0.80% + $0.15 for card-present retail and 1.65% + $0.15 for basic e-commerce.
+- **Channel.** Card-present beats card-not-present, and a key-entered card-present payment is priced closer to online. Visa's exempt debit table charges 0.80% + $0.15 for card-present retail and 1.65% + $0.15 for basic e-commerce, both qualified categories; the downgrades below are what happens when a transaction misses them.
 - **Merchant category.** Some industries get their own rates, often flat: Visa prices exempt debit for utility bill payment at $0.65, and for recurring utility payments at $0.45.
 - **Data and timing.** Each category has qualification rules: authorization and settlement within time limits, matching amounts, address verification, and for business cards, line-item data. Miss one and the transaction falls to a costlier category.
 - **Merchant size.** Visa's credit tables have performance tiers for the largest retail and supermarket merchants, with volume and dispute-ratio thresholds updated on their own schedule (the current ones took effect April 18, 2026).
@@ -39,7 +39,7 @@ The tables change. Visa publishes revisions with effective dates, so interchange
 
 ### Regulated Debit
 
-In the US, debit interchange from large issuers is capped by law. The Durbin Amendment directed the Federal Reserve to set the cap, and Regulation II has held it at **21 cents plus 5 basis points** of the transaction, plus a **1-cent fraud-prevention adjustment** for issuers that meet the Fed's fraud standards. It applies to issuers that, with their affiliates, have **$10 billion or more** in assets; smaller issuers are exempt and earn the network's ordinary debit rates, which is why the same $100 online purchase can carry $0.27 or $1.80 of interchange depending on which bank issued the card.
+In the US, debit interchange from large issuers is capped by law. The Durbin Amendment directed the Federal Reserve to set the cap, and Regulation II has held it at **21 cents plus 5 basis points (hundredths of a percent)** of the transaction, plus a **1-cent fraud-prevention adjustment** for issuers that meet the Fed's fraud standards. It applies to issuers that, with their affiliates, have **$10 billion or more** in assets; smaller issuers are exempt and earn the network's ordinary debit rates, which is why the same $100 online purchase can carry $0.27 or $1.80 of interchange depending on which bank issued the card.
 
 The cap itself is unsettled. The Fed proposed lowering it in November 2023 to 14.4 cents, 4.0 basis points and a 1.3-cent fraud adjustment, recalculated every two years; no final rule had been adopted as of October 2026. Separately, on August 6, 2025, a federal court in North Dakota (*Corner Post v. Board of Governors*) held Regulation II contrary to the statute and vacated it, then stayed its own ruling pending appeal, and the Fed appealed to the Eighth Circuit on October 6, 2025, which heard argument in May 2026 and hadn't ruled by October. Until those resolve, the 2011 numbers still apply, and a pricing system that hard-codes them is one ruling away from wrong.
 
@@ -47,7 +47,7 @@ Regulation II also governs **routing**: every debit card must be able to run ove
 
 ### Downgrades
 
-A transaction that misses its category's requirements doesn't fail; it **downgrades** to a costlier one, silently, and the merchant finds out on the statement. On Visa's exempt debit table, the same online purchase costs 1.60% + $0.15 if it qualifies for the preferred e-commerce rate, 1.75% + $0.20 at the electronic fallback (EIRF), and 1.90% + $0.25 at the standard rate.
+A transaction that misses its category's requirements doesn't fail; it **downgrades** to a costlier one, silently, and the merchant finds out on the statement. On Visa's exempt debit table, the same online purchase costs 1.60% + $0.15 if it qualifies for the preferred e-commerce rate, 1.75% + $0.20 at the electronic fallback (EIRF, the electronic interchange reimbursement fee), and 1.90% + $0.25 at the standard rate.
 
 Most downgrades are engineering failures:
 
@@ -60,7 +60,7 @@ The fix is to treat the qualification rate as a production metric: compute it fr
 
 ## Level 2 and Level 3 Data
 
-Commercial cards carry the highest interchange, and they're also where data earns the most back. **Level 2** data adds the tax amount, a customer reference such as a purchase order number, and the merchant's tax ID. **Level 3** adds line items: product codes, descriptions, quantities, unit prices, freight and duty. Business card issuers want it because their customers reconcile purchases against it, and the networks reward merchants who send it.
+Commercial cards carry the highest interchange, and they're also where data earns the most back. **Level 2** data historically added the tax amount, a customer reference such as a purchase order number, and the merchant's tax ID. **Level 3** adds line items (and since April 2026 is the only level Visa rewards, apart from fleet): product codes, descriptions, quantities, unit prices, freight and duty. Business card issuers want it because their customers reconcile purchases against it, and the networks reward merchants who send it.
 
 Visa reorganized this in 2025 as its **Commercial Enhanced Data Program**. Its current schedule prices the top commercial category, "Commercial Product 3", at 1.75% + $0.10, against 2.70% + $0.10 for an ordinary card-not-present commercial payment and 2.95% + $0.10 when a transaction doesn't qualify at all. Processors describe the program's terms: from October 17, 2025, the line items must add up exactly to the authorized amount (quantity times unit price, plus tax and shipping), Visa charges a 5-basis-point participation fee on enhanced-data volume, and Level 2 rates were retired in April 2026 except for fleet fuel. Mastercard runs its own enhanced-data programs with their own tables.
 
@@ -82,6 +82,16 @@ How the merchant is charged decides who carries the variability of interchange.
 Large providers usually offer more than one: Stripe lists interchange-plus among its custom pricing options alongside the flat rate. A platform should be able to represent every model, because it will end up selling different ones to different merchants.
 
 Passing some of this cost on to the payer is a separate question, with its own rules: [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees).
+
+## A Pricing Engine
+
+Every model above is a rule over the same inputs, and a provider needs an engine that can express all of them, per merchant, with history:
+
+- **Plans are rules, versioned with effective dates.** A rate is selected by card brand, card type (credit, regulated or exempt debit, prepaid, commercial), channel (card-present, online, keyed), region (domestic or cross-border), merchant category and currency, then applied as a percentage, a fixed amount, or both. A merchant's price on any date is whatever plan was in force that day.
+- **Two passes for interchange-plus.** At capture the engine estimates the fee from the BIN and the expected category; when the processor's settlement and fee files arrive, the actual interchange and network fees replace the estimate, and the difference posts as an adjustment. Networks can bill fees up to two months after a transaction ([Inside a Processor](/docs/industries/payments/inside-a-processor#billing-merchants)), so the true-up isn't a one-day job.
+- **Daily or monthly collection.** Fees are taken from each day's funding (net) or billed monthly and debited (gross); the engine computes the same numbers either way, and the payout instruction decides when they're collected ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#collecting-your-own-fees)).
+- **Payer fees are a separate calculation,** with their own legal limits by state and network ([Surcharging & Fees](/docs/industries/payments/surcharging-and-fees)), never mixed into what the merchant pays.
+- **Every fee keeps its inputs:** plan version, category, rates and amounts, so a merchant can reproduce any line of their statement.
 
 ## How a Platform Earns
 

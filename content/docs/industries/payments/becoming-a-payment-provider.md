@@ -2,7 +2,7 @@
 title = "Becoming a Payment Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
 category = "Payments Industry"
-order = 1425
+order = 1429
 part = "Running a Provider"
 aliases = ["payments/becoming-a-payment-provider"]
 tags = ["payments", "compliance", "pci", "licensing"]
@@ -99,7 +99,7 @@ A provider is a gatekeeper for the financial system. [Merchant Onboarding](/docs
 Funds settle from the network to the acquirer and onward, and where they land next has legal weight. A common arrangement is a **for-benefit-of (FBO) account**: an account at the sponsor bank, in the provider's name, held for the benefit of the merchants whose money it is. The bank holds the pooled balance; the provider's ledger says who owns what inside it. The structure is often what the licensing analysis turns on, and it decides what happens to merchants' money if the provider fails; [Treasury & Bank Operations](/docs/industries/payments/treasury#fbo-accounts-and-pass-through-insurance) covers the accounts and the FDIC's conditions for pass-through insurance. Two rules hold regardless:
 
 - **Merchant funds are not operating funds.** Never pay your own expenses from the pool, even briefly, and keep your revenue in a separate account. Commingling turns a contract dispute into a regulatory one.
-- **The ledger reconciles to the bank, daily.** Every merchant balance in the ledger plus your own fees equals what the bank says the account holds. A difference is a bug or a loss, and you need to know which before the next payout run.
+- **The ledger reconciles to the bank, daily.** Every merchant balance, every reserve and your unswept fees add up to what the bank says the account holds, the equation [Treasury & Bank Operations](/docs/industries/payments/treasury#what-this-means-for-the-system-you-build) checks daily. A difference is a bug or a loss, and you need to know which before the next payout run.
 
 ## What This Means for the System You Build
 

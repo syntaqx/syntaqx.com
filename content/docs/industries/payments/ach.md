@@ -2,7 +2,7 @@
 title = "ACH & Bank Transfers"
 description = "How ACH really moves money: SEC codes and files, why settled isn't final, returns, reversals and fees, validating accounts, the Nacha rules, RTP and FedNow."
 category = "Payments Industry"
-order = 1405
+order = 1404
 part = "How Money Moves"
 aliases = ["payments/ach"]
 tags = ["payments", "ach", "nacha", "bank-transfers", "ledger"]
@@ -30,7 +30,7 @@ Nacha, the association that writes the rules, doesn't move money; its Operating 
 
 ## Files, Batches and SEC Codes
 
-ACH is batch and store-and-forward, and the file format shows it: fixed-width text, every line exactly 94 characters, taken apart record by record [below](#anatomy-of-a-nacha-file). Each batch carries a **Standard Entry Class** code, and the SEC code is a legal statement about how you got permission:
+ACH is batch and store-and-forward, and the file format shows it: fixed-width text, every line exactly 94 characters, taken apart record by record at the [end of this chapter](#anatomy-of-a-nacha-file). Each batch carries a **Standard Entry Class** code, and the SEC code is a legal statement about how you got permission:
 
 | SEC | Used for | Authorization it implies |
 | --- | -------- | ------------------------ |
@@ -44,81 +44,9 @@ Pick the code from how the customer actually authorized you, not from what the b
 
 Two more families of codes live in other chapters: the check conversion codes (ARC, BOC, POP and RCK) in [Accepting Checks](/docs/industries/payments/checks), and the oral authorization rules behind TEL in [Phone Payments](/docs/industries/payments/phone-payments). Canada's equivalent of all of this, pre-authorized debits under Payments Canada's Rule H1, is in [Payments in Canada](/docs/industries/payments/canada).
 
-## Anatomy of a NACHA File
-
-Here is a complete, valid file: a property manager collecting November rent from three tenants by WEB debit, one of them with a remittance addenda. Every routing number in it is fictional, with a valid check digit, and every control total is real.
-
-```text
-101 12345678012345678902610301405A094101FIRST EXAMPLE BANK     EXAMPLE PROPERTIES LLC         
-5225EXAMPLE PROPERTI                    1234567890WEBRENT      NOV 26261102   1123456780000001
-627987654320000123456789     0000185000LEASE-4471     JORDAN RIVERA         R 0123456780000001
-6275555555509876543          0000142500LEASE-4502     SAM OKAFOR            R 1123456780000002
-705RENT NOV 2026 UNIT 12B                                                          00010000002
-63798765432055500012         0000097500LEASE-4519     ALEX CHEN             R 0123456780000003
-822500000402530864190000004250000000000000001234567890                         123456780000001
-9000001000001000000040253086419000000425000000000000000                                       
-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
-```
-
-Each line is one record, identified by its first character. Field positions are fixed, numeric fields are right-justified and zero-filled, and text fields are left-justified, upper case and space-filled.
-
-**File header (`1`)**, one per file:
-
-| Positions | Field | In the example |
-| --- | --- | --- |
-| 2-3 | Priority code | `01`, always |
-| 4-13 | Immediate destination | ` 123456780`: the ODFI's routing number, with a leading space |
-| 14-23 | Immediate origin | `1234567890`: the originator, as the bank assigned it |
-| 24-33 | Creation date and time | `261030 1405`: October 30, 2026, 14:05 |
-| 34 | File ID modifier | `A`: the first file today; the next is `B`, so the bank can tell them apart |
-| 35-40 | Record size, blocking factor, format | `094`, `10`, `1`: fixed values |
-| 41-86 | Destination and origin names | The bank's name and yours |
-
-**Batch header (`5`)**, one per batch:
-
-| Positions | Field | In the example |
-| --- | --- | --- |
-| 2-4 | Service class | `225`: debits only (`220` credits only, `200` mixed) |
-| 5-20 | Company name | `EXAMPLE PROPERTI`: 16 characters, and what appears on the tenant's statement |
-| 41-50 | Company identification | `1234567890`: usually `1` plus the originator's EIN |
-| 51-53 | SEC code | `WEB`: authorized online |
-| 54-63 | Company entry description | `RENT`: also on the statement, and where `REVERSAL`, `RETURN FEE`, `RETRY PYMT` and `ACCTVERIFY` go |
-| 64-69 | Descriptive date | `NOV 26`: free text, shown on the statement |
-| 70-75 | Effective entry date | `261102`: the banking day you want it to settle |
-| 76-78 | Settlement date | Blank: the ACH Operator fills it in |
-| 80-94 | ODFI and batch number | `12345678`, batch `0000001` |
-
-**Entry detail (`6`)**, one per payment, the record you'll build most:
-
-| Positions | Field | In the example (first entry) |
-| --- | --- | --- |
-| 2-3 | Transaction code | `27`: debit to a checking account (`37` savings, `22` and `32` credits, `28` and `38` prenotes) |
-| 4-12 | RDFI routing number | `98765432` and check digit `0` |
-| 13-29 | Account number | `000123456789`, left-justified |
-| 30-39 | Amount | `0000185000`: $1,850.00, in cents, never with a decimal point |
-| 40-54 | Individual ID | `LEASE-4471`: your own reference, echoed back on returns |
-| 55-76 | Individual name | `JORDAN RIVERA` |
-| 77-78 | Payment type code | `R`: recurring (`S` single), required on WEB and TEL debits |
-| 79 | Addenda indicator | `0`, or `1` when an addenda follows |
-| 80-94 | Trace number | `123456780000001`: the ODFI's 8 digits and a sequence, unique per file |
-
-**Addenda (`7`)** carries 80 characters of payment information after type code `05` (`RENT NOV 2026 UNIT 12B`), then its own sequence number and the last seven digits of its entry's trace number, which ties it to the second entry.
-
-**Batch control (`8`)** and **file control (`9`)** are where banks catch mistakes. Each carries the count of entry and addenda records (4), the debit and credit totals in cents ($4,250.00 and $0.00), and an **entry hash**: the sum of every entry's 8-digit RDFI routing number, keeping the rightmost ten digits. Here that's 98765432 + 55555555 + 98765432 = 253086419. The file control adds the batch count and the **block count**: the number of 10-line blocks, which is why the file ends in lines of 9s padding it to a multiple of ten. A file whose controls don't add up is rejected whole, and the acknowledgement says which check failed ([Treasury & Bank Operations](/docs/industries/payments/treasury#bank-files)).
-
-If the first tenant's account is short, a return comes back from the RDFI in its own file a day or two later, as an entry and an addenda:
-
-```text
-626123456780000123456789     0000185000LEASE-4471     JORDAN RIVERA           1987654320000001
-799R01123456780000001      98765432                                            987654320000001
-```
-
-The return's entry uses transaction code `26` (return of a checking debit), is addressed to the ODFI, and carries the same account, amount and individual ID. Its addenda (`799`) holds the reason code `R01`, the original entry's trace number `123456780000001`, and the original RDFI's identification. Match returns on that original trace number, never on name or amount: it's the one field guaranteed to point at exactly one entry you sent.
-
 ## Timing
 
-Entries settle on a business-day schedule: same day if submitted in a Same Day ACH window, otherwise the next banking day or a future date you choose. Same Day ACH settles at 1:00, 5:00 and 6:00 p.m. ET, and since March 18, 2022 a single Same Day entry can be up to $1 million (international IAT entries aren't eligible at all). An entry over the limit isn't rejected; it settles next day, and restructuring a payment to get under the cap isn't allowed. The submission deadline that matters is your bank's, which comes before the Operator's.
+Entries settle on a business-day schedule: same day if submitted in a Same Day ACH window, otherwise the next banking day or a future date you choose. Same Day ACH settles at 1:00, 5:00 and 6:00 p.m. ET, and since March 18, 2022 a single Same Day entry can be up to $1 million (international entries (the IAT SEC code) aren't eligible at all). An entry over the limit isn't rejected; it settles next day, and restructuring a payment to get under the cap isn't allowed. The submission deadline that matters is your bank's, which comes before the Operator's.
 
 There is no real-time leg. Nothing checks the Receiver's balance before settlement, and nothing tells you the account exists until it comes back. That's the core design fact: **settlement is when the money moves, not when it's yours.**
 
@@ -132,14 +60,14 @@ The RDFI rejects an entry by sending a **return** with a reason code. The codes 
 | R02 | Account closed | 2 banking days |
 | R03 | No account, or can't locate it | 2 banking days |
 | R04 | Invalid account number | 2 banking days |
-| R16 | Account frozen, including by OFAC instruction | 2 banking days |
+| R16 | Account frozen, including by OFAC instruction (the Treasury's Office of Foreign Assets Control, which runs US sanctions) | 2 banking days |
 | R29 | Business says the debit wasn't authorized | 2 banking days |
 | R05 | Consumer account debited with a business SEC code | 60 calendar days |
 | R07 | Authorization revoked | 60 calendar days |
 | R10 | Consumer says the debit wasn't authorized | 60 calendar days |
 | R11 | Authorized, but the entry was wrong (amount, date) | 60 calendar days |
 
-The 60-day codes are what make consumer ACH debits risky. The administrative failures surface within two banking days, so that's the earliest point to treat a debit as probably good. But a consumer can claim it unauthorized for 60 calendar days after settlement, and the RDFI returns it on the consumer's written statement. Banks that offer ACH APIs model this directly: Column, for example, marks a debit settled when no return arrives within two business days and only marks it completed after the 60 days pass.
+The 60-day codes are what make consumer ACH debits risky. The administrative failures surface within two banking days, so that's the earliest point to treat a debit as probably good. But a consumer can claim it unauthorized for 60 calendar days after settlement, and the RDFI returns it on the consumer's written statement. Banks that offer ACH APIs model this directly: Column, a bank that offers ACH through an API, for example, marks a debit settled when no return arrives within two business days and only marks it completed after the 60 days pass.
 
 So I model an ACH debit's states through the return windows, not the submission:
 
@@ -178,7 +106,7 @@ Canada's Rule H1 lets a dishonoured debit be re-presented only for the same amou
 
 - **R02, R03, R04** (closed, no account, invalid number): the account number is dead. Stop using it for that payer and ask for a new one; don't retry.
 - **R01, R09** (insufficient or uncollected funds): reinitiate within the rules above. After repeated returns, many leases and billing terms move the payer to certified funds or another method for a period, and some states let a landlord demand cash or certified funds for a period after a bounce ([Accepting Checks](/docs/industries/payments/checks#rent-and-paper)).
-- **R05, R07, R10, R29** (unauthorized or revoked): stop debiting under that authorization at once, and don't debit the account again without a new one. These count toward Nacha's 0.5% unauthorized return threshold ([below](#the-rules-you-inherit)), so a second debit to the same account is the most expensive mistake on the list.
+- **R05, R07, R10, R29** (unauthorized or revoked): stop debiting under that authorization at once, and don't debit the account again without a new one. These, with R11 and R51, count toward Nacha's 0.5% unauthorized return threshold ([below](#the-rules-you-inherit)), so a second debit to the same account is the most expensive mistake on the list.
 - **R16** (frozen): stop, and treat it as a possible sanctions hit.
 
 Build these as **payment method restrictions**: a record with the reason, what it covers (one account number, one payer, every bank payment, or, used sparingly and reviewed, a whole routing number when fraud concentrates at one bank or prepaid program), when it started, when it expires and who lifted it, checked whenever a payment is authorized, including at a cash counter ([Cash Payments](/docs/industries/payments/cash-payments)). Match blocked accounts by a keyed hash of the account number, so the block survives the payer entering it again under a new profile, and tell the payer why they're restricted and when it ends.
@@ -222,6 +150,78 @@ That is a different machine from card [disputes](/docs/industries/payments/dispu
 | FedNow | Seconds, 24/7 | Yes | Push | $10M, raised from $1M effective November 2025 |
 
 RTP and FedNow are credit push only: the payer's bank sends the money, so there's no debit to claw back, and no return window to wait out. That's the right rail for payouts that must arrive now and for anything where finality matters more than cost. Choosing a rail for each payee, beside virtual cards and checks, is [Vendor Payouts](/docs/industries/payments/vendor-payouts). Participating banks may set lower limits than the network maximum, and not every account can receive them, so instant payouts need a fallback to ACH. Wires remain the tool for large, one-off, business-hours transfers.
+
+## Anatomy of a NACHA File
+
+Here is a complete, valid file: a property manager collecting November rent from three tenants by WEB debit, one of them with a remittance addenda. Every routing number in it is fictional, with a valid check digit, and every control total is real.
+
+```text
+101 12345678012345678902610301405A094101FIRST EXAMPLE BANK     EXAMPLE PROPERTIES LLC         
+5225EXAMPLE PROPERTI                    1234567890WEBRENT      NOV 26261102   1123456780000001
+627987654320000123456789     0000185000LEASE-4471     JORDAN RIVERA         R 0123456780000001
+6275555555509876543          0000142500LEASE-4502     SAM OKAFOR            R 1123456780000002
+705RENT NOV 2026 UNIT 12B                                                          00010000002
+63798765432055500012         0000097500LEASE-4519     ALEX CHEN             R 0123456780000003
+822500000402530864190000004250000000000000001234567890                         123456780000001
+9000001000001000000040253086419000000425000000000000000                                       
+9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+```
+
+Each line is one record, identified by its first character. Field positions are fixed, numeric fields are right-justified and zero-filled, and text fields are left-justified, upper case and space-filled.
+
+**File header (`1`)**, one per file:
+
+| Positions | Field | In the example |
+| --- | --- | --- |
+| 2-3 | Priority code | `01`, always |
+| 4-13 | Immediate destination | ` 123456780`: the ODFI's routing number, with a leading space |
+| 14-23 | Immediate origin | `1234567890`: the originator, as the bank assigned it |
+| 24-33 | Creation date and time | `261030 1405`: October 30, 2026, 14:05 |
+| 34 | File ID modifier | `A`: the first file today; the next is `B`, so the bank can tell them apart |
+| 35-40 | Record size, blocking factor, format | `094`, `10`, `1`: fixed values |
+| 41-86 | Destination and origin names | The bank's name and yours |
+
+**Batch header (`5`)**, one per batch:
+
+| Positions | Field | In the example |
+| --- | --- | --- |
+| 2-4 | Service class | `225`: debits only (`220` credits only, `200` mixed) |
+| 5-20 | Company name | `EXAMPLE PROPERTI`: 16 characters, and what appears on the tenant's statement |
+| 41-50 | Company identification | `1234567890`: usually `1` plus the originator's EIN (employer identification number, the federal tax ID) |
+| 51-53 | SEC code | `WEB`: authorized online |
+| 54-63 | Company entry description | `RENT`: also on the statement, and where `REVERSAL`, `RETURN FEE`, `RETRY PYMT` and `ACCTVERIFY` go |
+| 64-69 | Descriptive date | `NOV 26`: free text, shown on the statement |
+| 70-75 | Effective entry date | `261102`: the banking day you want it to settle |
+| 76-78 | Settlement date | Blank: the ACH Operator fills it in |
+| 80-94 | ODFI and batch number | `12345678`, batch `0000001` |
+
+**Entry detail (`6`)**, one per payment, the record you'll build most:
+
+| Positions | Field | In the example (first entry) |
+| --- | --- | --- |
+| 2-3 | Transaction code | `27`: debit to a checking account (`37` savings, `22` and `32` credits, `28` and `38` prenotes) |
+| 4-12 | RDFI routing number | `98765432` and check digit `0` |
+| 13-29 | Account number | `000123456789`, left-justified |
+| 30-39 | Amount | `0000185000`: $1,850.00, in cents, never with a decimal point |
+| 40-54 | Individual ID | `LEASE-4471`: your own reference, echoed back on returns |
+| 55-76 | Individual name | `JORDAN RIVERA` |
+| 77-78 | Payment type code | `R`: recurring (`S` single), required on WEB and TEL debits |
+| 79 | Addenda indicator | `0`, or `1` when an addenda follows |
+| 80-94 | Trace number | `123456780000001`: the ODFI's 8 digits and a sequence, unique per file |
+
+**Addenda (`7`)** carries 80 characters of payment information after type code `05` (`RENT NOV 2026 UNIT 12B`), then its own sequence number and the last seven digits of its entry's trace number, which ties it to the second entry.
+
+**Batch control (`8`)** and **file control (`9`)** are where banks catch mistakes. Each carries the count of entry and addenda records (4), the debit and credit totals in cents ($4,250.00 and $0.00), and an **entry hash**: the sum of every entry's 8-digit RDFI routing number, keeping the rightmost ten digits. Here that's 98765432 + 55555555 + 98765432 = 253086419. The file control adds the batch count and the **block count**: the number of 10-line blocks, which is why the file ends in lines of 9s padding it to a multiple of ten. A file whose controls don't add up is rejected whole, and the acknowledgement says which check failed ([Treasury & Bank Operations](/docs/industries/payments/treasury#bank-files)).
+
+If the first tenant's account is short, a return comes back from the RDFI in its own file a day or two later, as an entry and an addenda:
+
+```text
+626123456780000123456789     0000185000LEASE-4471     JORDAN RIVERA           1987654320000001
+799R01123456780000001      98765432                                            987654320000001
+```
+
+The return's entry uses transaction code `26` (return of a checking debit), is addressed to the ODFI, and carries the same account, amount and individual ID. Its addenda (`799`) holds the reason code `R01`, the original entry's trace number `123456780000001`, and the original RDFI's identification. Match returns on that original trace number, never on name or amount: it's the one field guaranteed to point at exactly one entry you sent.
 
 ## What This Means for the System You Build
 

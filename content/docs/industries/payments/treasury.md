@@ -2,7 +2,7 @@
 title = "Treasury & Bank Operations"
 description = "The bank accounts behind a payments ledger: FBO accounts, pass-through insurance, funding, bank files, the banking calendar and reconciliation."
 category = "Payments Industry"
-order = 1419
+order = 1420
 part = "Paying Out"
 tags = ["payments", "treasury", "banking", "reconciliation", "ledger"]
 +++
@@ -98,31 +98,17 @@ Reconciliation is matching, and the shapes are uneven:
 
 What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one. Run it three ways every day, ledger against processor reports against bank statements, and treat an unexplained break as a stop, as the closing section below describes. Money that arrives and can't be identified, a credit with no reference, goes to a suspense account with an owner and an age, and back to the sender if nobody can claim it. Intraday reports earn their keep here too: they tell you whether today's payouts are funded before the bank's cutoff, not after.
 
-## Watching the Pipeline
-
-Money movement fails quietly. A job that didn't run throws no errors; it just leaves payments that never left, and the first alert is a customer asking where their money is. So the monitoring watches for absence as carefully as for failure, and every alarm is tied to the deadline that makes it urgent, usually a bank cutoff.
-
-- **Captured but not sent.** Payments still waiting to be batched as the cutoff approaches, per rail: ACH entries, check images for a deposit, card captures and refunds for the day's settlement batch.
-- **A file that should exist and doesn't.** An outbound file not built or not transmitted, and an inbound one that didn't arrive. Returns, acknowledgements and settlement reports come every banking day, even empty; a missing return file doesn't mean there were no returns.
-- **Received but not applied.** A file that arrived but didn't parse, or parsed but whose returns and notifications of change never reached the ledger.
-- **Over the limit.** Your bank caps how much you may originate (for ACH, Nacha makes the ODFI set and monitor exposure limits), and you set a limit per merchant underneath it. Alarm while there's time to act, because the bank will hold or reject a file that breaches it.
-- **Overdue.** A payment past its expected settlement date with neither a settlement nor a return. Silence isn't success: the [ACH states](/docs/industries/payments/ach) advance on the clock, so a payment the bank never received would otherwise turn available on schedule.
-- **Money that should have moved.** A sweep or prefunding transfer not confirmed by the cutoff, and reconciliation breaks by count and age, since a break stops payouts.
-- **Not ready for the bank.** [Check images](/docs/industries/payments/checks) missing an endorsement or a detail record before a deposit file goes out.
-- **Slow or failed jobs,** and a job still running when the next one is due to start.
-- **The monitor itself.** If the alarms go quiet, is everything fine or did the monitor die? It sends a heartbeat on every run, and something outside it pages when the heartbeat stops.
-
-Run the checks on the banking calendar above, so a quiet weekend doesn't page anyone and a quiet Tuesday does. [Observability](/docs/operations/observability) covers the alerting machinery; these are the questions it should be asking.
+Monitoring this file pipeline, the alarms for files and payments that should have moved and didn't, is in [Operating the Platform](/docs/industries/payments/operating-the-platform#watching-the-pipeline).
 
 ## Safeguarding Outside the US
 
-In the UK, payment and e-money institutions don't rely on deposit insurance; they safeguard customers' funds under the FCA's rules, and those rules just got stricter. The FCA published PS25/12 on 7 August 2025, and its Supplementary Regime came into force on 7 May 2026. Firms now reconcile safeguarded funds at least once every reconciliation day (weekends, bank holidays and days when the relevant foreign markets are closed excepted), keep a resolution pack describing where funds are held and how they'd be returned, file a new monthly safeguarding return, and, unless they've safeguarded no more than £100,000 over the past 53 weeks, arrange an annual safeguarding audit by a qualified auditor. A CASS-style end state is planned for after the underlying legislation is repealed.
+In the UK, payment and e-money institutions don't rely on deposit insurance; they safeguard customers' funds under the FCA's rules, and those rules just got stricter. The FCA published PS25/12 on 7 August 2025, and its Supplementary Regime came into force on 7 May 2026. Firms now reconcile safeguarded funds at least once every reconciliation day (weekends, bank holidays and days when the relevant foreign markets are closed excepted), keep a resolution pack describing where funds are held and how they'd be returned, file a new monthly safeguarding return, and, unless they've safeguarded no more than £100,000 over the past 53 weeks, arrange an annual safeguarding audit by a qualified auditor. An end state modeled on the FCA's client assets rules (CASS) is planned for after the underlying legislation is repealed.
 
 Read it as the US direction of travel written down: daily reconciliation, records that let someone else return the money if you can't, and an outside party checking.
 
 ## What This Means for the System You Build
 
-- **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)). The merchant ledger's total liability to merchants, plus anything in transit, equals the cash in custodial accounts; that equation is checked daily and alerts when it doesn't hold.
+- **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)). The cash in custodial accounts equals what you owe merchants (pending and available balances), plus reserves you hold for them, plus fees you've earned but not yet swept, adjusted for money in transit either way. That equation is checked daily and alerts when it doesn't hold.
 - **Per-owner balances on demand.** The file your bank or a regulator would need to pay each owner directly is a scheduled job, not a project you start during a crisis.
 - **Every movement is a record before it's a transfer.** Intent stored, approvals attached, bank reference captured, bank confirmation matched. A transfer that exists at the bank and not in your records is the worst finding a reconciliation can produce.
 - **Breaks stop payouts.** A reconciliation job that only reports is a dashboard. One that holds the next payout run on an unexplained difference is a control.

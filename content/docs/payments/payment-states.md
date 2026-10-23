@@ -7,7 +7,7 @@ tags = ["payments", "state-machines", "ledger", "database"]
 aliases = ["payment-states"]
 +++
 
-With amounts represented exactly and every write [idempotent](/docs/payments/idempotency), the next question is what a payment *is* over its life. Financial data has two rules: every change of state is explicit, and nothing that happened is ever rewritten. Mistakes are corrected with new entries, as accountants have done for centuries, and for the same reason: the most important question about money is never "what is the balance?", it's "why is that the balance?", and only an intact history can answer it.
+With amounts represented exactly and every write [idempotent](/docs/payments/idempotency), the next question is what a payment *is* over its life. This chapter uses card vocabulary (issuer, authorization, capture, clearing, settlement); if it's new, [How Card Payments Work](/docs/industries/payments/card-payments) introduces it and the [Payments Glossary](/docs/industries/payments/glossary) defines it. Financial data has two rules: every change of state is explicit, and nothing that happened is ever rewritten. Mistakes are corrected with new entries, as accountants have done for centuries, and for the same reason: the most important question about money is never "what is the balance?", it's "why is that the balance?", and only an intact history can answer it.
 
 ## Explicit State Machines
 
@@ -26,7 +26,7 @@ Every financial object has a `status` with a closed set of values and a document
 | `requires_action` | `failed` | Customer fails or abandons the challenge, or it expires |
 | `authorized` | `captured` | Merchant captures (full or partial) |
 | `authorized` | `voided` | Merchant cancels, or the authorization expires uncaptured |
-| `captured` | `settled` | Funds arrive in the settlement batch |
+| `captured` | `settled` | The processor's settlement report includes it and its funding is matched |
 
 The alternative, a status column any code path can set to anything, fails quietly. A late webhook marks a voided payment as captured. A retry captures twice. A support tool "fixes" a failed payment by setting it to settled. Each is a single `UPDATE` that looked reasonable to whoever wrote it; a transition table makes them impossible instead of merely unlikely.
 
@@ -48,7 +48,8 @@ For a card, settlement ends the payment's own state machine; a dispute months la
 | ACH debit | As a return, ending the payment | 2 banking days for most reasons, 60 calendar days for a consumer's unauthorized claim ([ACH & Bank Transfers](/docs/industries/payments/ach)) |
 | Canadian pre-authorized debit | As a reimbursement claim | 90 calendar days for a personal debit ([Payments in Canada](/docs/industries/payments/canada)) |
 | Check | As a return, then as warranty or forgery claims | Days for the return; claims long after ([Accepting Checks](/docs/industries/payments/checks)) |
-| Instant push, wire, retail cash | No | Final when confirmed |
+| SEPA Direct Debit, Bacs Direct Debit | As a scheme refund through the payer's bank | Eight weeks for SEPA, 13 months without a valid mandate; Bacs under its guarantee ([Wallets & Local Methods](/docs/industries/payments/wallets-and-local-methods)) |
+| Instant push, wire, retail cash | No, except fraud reimbursement schemes like the UK's for scams and Pix's MED, which run outside the payment | Final when confirmed |
 
 So a bank debit runs `submitted`, `settled`, `available` once the administrative return window closes, and `final` when the last window does, with `returned` as a terminal branch from any of them. A card payment collected while a terminal was offline is `collected_offline` until it's forwarded and authorized, because it may yet be declined ([Card-Present Payments](/docs/industries/payments/card-present)). What these states drive is when value is released: a payout, a shipped order, a cleared balance waits for the state that makes the risk acceptable, never for `settled` alone.
 
@@ -56,7 +57,7 @@ So a bank debit runs `submitted`, `settled`, `available` once the administrative
 
 An authorization only holds funds for a limited time, set by the card networks and varying by brand and channel ([How Card Payments Work](/docs/industries/payments/card-payments) lists the windows).
 
-Ignore this and an order that ships on day 8 tries to capture an authorization that no longer exists: the goods are gone and the customer was never charged. Store the deadline as `capture_before` when the authorization succeeds, alert before it passes, and have a scheduled job move anything past it to `voided`, so the state reflects reality instead of a hold that silently lapsed.
+Ignore this and an order that ships after the window, on day 11 for a Visa online authorization, tries to capture an authorization that no longer exists: the goods are gone and the customer was never charged. Store the deadline as `capture_before` when the authorization succeeds, alert before it passes, and have a scheduled job move anything past it to `voided`, so the state reflects reality instead of a hold that silently lapsed.
 
 ### Holds That Change Size
 
@@ -107,7 +108,7 @@ Financial rows are inserted, never updated in place, and never deleted.
 - **Status history is a table,** not an overwritten column. The current `status` is a cached projection of the latest transition, convenient for queries, never the source of truth.
 - **Moving a misapplied payment is a transfer.** A tenant's rent posted to the wrong unit, or a customer's payment to the wrong invoice, is corrected by moving the money between accounts in the ledger, with a reason, never by editing the payment's account. The payment keeps its original payer of record, because a return, dispute or refund still belongs to the instrument it came from.
 - **Refunds go back where the money came from.** A card refund is a credit to the same card, which Visa's rules require "to the extent possible", falling back to another method only when that card is closed or declines the credit, and an ACH payment is refunded by a credit to the account it was debited from. Paying a refund to a different instrument is a payout, with a payout's checks and its fraud risk.
-- **No hard deletes.** Retention is applied by archiving, with an audit trail. See [Data Retention & Deletion](/docs/architecture/data-retention) for how that coexists with privacy erasure.
+- **No hard deletes.** Retention is applied by archiving, with an audit trail. (Destroying a card number's encryption key in a [vault](/docs/industries/payments/card-vault#storing-the-number) isn't deleting a financial row: the payment and its ledger entries stay.) See [Data Retention & Deletion](/docs/architecture/data-retention) for how that coexists with privacy erasure.
 
 The test: given any balance, you can list every row that produced it. If an `UPDATE` ever changed an amount, you can't.
 
@@ -119,15 +120,35 @@ Money movement is recorded as a **transaction** made of two or more **entries** 
 | ----- | ------- | ------ |
 | 1 | `customer_receivable` | `-5000` |
 | 2 | `merchant_balance` | `+4825` |
-| 3 | `platform_fees` | `+175` |
+| 3 | `processing_costs` | `+110` |
+| 4 | `platform_revenue` | `+65` |
 
 Why not a single `balance` column per merchant? Because a single balance can be wrong silently. If a bug credits the merchant $48.25 but forgets the fee, a balance column just holds the wrong number; in a double-entry ledger the transaction doesn't sum to zero, and the database refuses it. Errors become imbalances you can detect instead of balances you have to trust.
 
 - **Entries are written atomically,** and a constraint rejects any transaction that doesn't balance.
 - **Account balances are the sum of their entries.** A cached balance is fine for reads, but it's derived, and it can always be rebuilt from the entries.
 - **Postings are idempotent.** Each ledger transaction carries the ID of the event that caused it (a capture, a refund), with a unique constraint, so a retried event can't post twice. See [Idempotency](/docs/payments/idempotency).
-- **Entries have a lifecycle too.** As Modern Treasury's ledgers model it, a transaction is **pending** when it's expected but not yet certain (a capture awaiting settlement, a payout sent but not confirmed) and **posted** when it's final enough to count, and a pending transaction that never happens is archived, not deleted. That split is where a merchant's pending and available balances come from: the posted balance, less any pending outflows, is the available balance, what can safely be paid out ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement)).
+- **Entries have a lifecycle too.** As Modern Treasury's ledgers model it, a transaction is **pending** when it's expected but not yet certain (a capture awaiting settlement, a payout sent but not confirmed) and **posted** when it's final enough to count, and a pending transaction that never happens is archived, not deleted. That split is where a merchant's pending and available balances come from: the posted balance is the starting point for the available balance, what can safely be paid out, which [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) defines.
 - **Amounts follow [Money & Amounts](/docs/payments/money):** integer minor units, explicit currency. Signs live here and only here.
+
+### A Chart of Accounts
+
+Every chapter of the payments volume posts to the same accounts, and naming them once keeps reports from disagreeing:
+
+| Account | Holds |
+| --- | --- |
+| `customer_receivable` | What payers owe, until a payment settles |
+| `merchant_balance` | What the platform owes each merchant, split into pending and available |
+| `reserves` | Merchant funds held back against future disputes and refunds |
+| `disputes_held` | Amounts withdrawn by an open dispute |
+| `dispute_fees`, `refund_fees` | Fees charged to merchants for those events |
+| `processing_costs` | What processors and networks charge: interchange, network fees, processor markup |
+| `platform_revenue` | What the platform keeps |
+| `acquirer_settlement_clearing` | Money in flight between the processor's settlement and the bank account |
+| `payouts_in_transit` | Payouts sent and not yet confirmed |
+| `unapplied_cash` | Money received from a customer and not yet applied to a charge |
+
+A real platform has more, one per bank account and per currency among them ([Treasury & Bank Operations](/docs/industries/payments/treasury)), but every entry lands in an account with a name like these, and every report sums the same ones.
 
 ### Payments Are Applied, Not Assigned
 

@@ -2,7 +2,7 @@
 title = "Processor Routing"
 description = "Running payments over more than one processor: when it pays, routing by card, cost and approval rate, US debit, safe failover, tokens and reconciliation."
 category = "Payments Industry"
-order = 1421
+order = 1423
 part = "Running a Provider"
 tags = ["payments", "routing", "processors", "debit", "architecture"]
 +++
@@ -80,7 +80,7 @@ The dangerous moment in routing is the timeout. A processor that returns an erro
 So failover follows rules:
 
 - **Fail over only on a known outcome.** A connection that was refused before anything was sent, or an explicit "not processed" response, is safe to route elsewhere. A timeout after the request was sent is not.
-- **Resolve the unknown first.** Query processor A for the payment by its [idempotency key](/docs/payments/idempotency), and if the result is an approval you no longer want, reverse it. Only then is the payment free to try elsewhere. Until it's resolved, it's `pending`, as [Retries & Timeouts](/docs/architecture/retries-and-timeouts) describes.
+- **Resolve the unknown first.** Query processor A for the payment by its [idempotency key](/docs/payments/idempotency), and if the result is an approval you no longer want, reverse it. Only then is the payment free to try elsewhere. Until it's resolved, it's `authorizing` (in flight, outcome unknown), as [Retries & Timeouts](/docs/architecture/retries-and-timeouts) describes.
 - **Fail over the route, not the request.** When a processor's health score drops (error rate up, latency up), a circuit breaker stops sending *new* payments there and routes them to the next healthy option. In-flight payments stay where they were and get resolved, not duplicated.
 - **Never fail over a decline.** An issuer that declined through processor A will usually decline through B, and resending it counts against the networks' retry limits ([Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials)). A decline is an answer, not an outage.
 

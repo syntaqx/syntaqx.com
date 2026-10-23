@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300">
+  <defs>
+    <marker id="ff-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ff-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="22">where the money goes</text>
+  <text class="cap hl" x="680" y="22" text-anchor="end">held for merchants</text>
+
+  <!-- Card road -->
+  <text class="cap" x="40" y="58">card</text>
+  <rect class="cell" x="40" y="66" width="110" height="26"/>
+  <text class="t" x="95" y="79" text-anchor="middle" dominant-baseline="central">issuer</text>
+  <path class="ln" d="M150,79H186" marker-end="url(#ff-ah)"/>
+  <rect class="cell" x="188" y="66" width="110" height="26"/>
+  <text class="t" x="243" y="79" text-anchor="middle" dominant-baseline="central">network</text>
+  <path class="ln" d="M298,79C320,79 320,130 338,130" marker-end="url(#ff-ah)"/>
+
+  <!-- Bank road -->
+  <text class="cap" x="40" y="168">ach</text>
+  <rect class="cell" x="40" y="176" width="110" height="26"/>
+  <text class="t" x="95" y="189" text-anchor="middle" dominant-baseline="central">payer's bank</text>
+  <path class="ln" d="M150,189H186" marker-end="url(#ff-ah)"/>
+  <rect class="cell" x="188" y="176" width="110" height="26"/>
+  <text class="t" x="243" y="189" text-anchor="middle" dominant-baseline="central">ACH operator</text>
+  <path class="ln" d="M298,189C320,189 320,140 338,140" marker-end="url(#ff-ah)"/>
+
+  <!-- Sponsor bank, then FBO -->
+  <rect class="cell" x="340" y="122" width="120" height="26"/>
+  <text class="t" x="400" y="135" text-anchor="middle" dominant-baseline="central">sponsor bank</text>
+  <text class="n" x="400" y="166" text-anchor="middle">acquirer and ODFI</text>
+  <path class="ln hl" d="M460,135H498" marker-end="url(#ff-ah-hl)"/>
+  <rect class="cell hl end" x="500" y="122" width="180" height="26"/>
+  <text class="t hl" x="590" y="135" text-anchor="middle" dominant-baseline="central">FBO account</text>
+  <text class="n" x="590" y="104" text-anchor="middle">ledger says who owns what</text>
+
+  <!-- Out: payouts and fees -->
+  <path class="ln hl" d="M560,148V228" marker-end="url(#ff-ah-hl)"/>
+  <rect class="cell" x="500" y="230" width="120" height="26"/>
+  <text class="t" x="560" y="243" text-anchor="middle" dominant-baseline="central">merchant banks</text>
+  <text class="n" x="560" y="276" text-anchor="middle">payouts</text>
+  <path class="ln dash" d="M650,148V228" marker-end="url(#ff-ah)"/>
+  <rect class="cell ghost" x="630" y="230" width="80" height="26"/>
+  <text class="t dim" x="670" y="243" text-anchor="middle" dominant-baseline="central">operating</text>
+  <text class="n" x="670" y="276" text-anchor="middle">earned fees</text>
+</svg>

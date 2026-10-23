@@ -3,7 +3,7 @@ title = "Payments in Canada"
 nav_title = "Canada"
 description = "Extending a US payments platform to Canada: ACSS and Standard 005 files, pre-authorized debits under Rule H1, Interac, card rules, RPAA and FINTRAC."
 category = "Payments Industry"
-order = 1410
+order = 1411
 part = "The Rules"
 tags = ["payments", "canada", "pad", "interac", "eft", "compliance"]
 +++
@@ -21,11 +21,11 @@ Payments Canada runs the clearing systems; the Bank of Canada settles them and, 
 | **Interac e-Transfer** | Person-to-person and business push payments, by email or phone | Minutes | Yes, once deposited |
 | **Real-Time Rail** | Account-to-account instant payments | Not live: launch targeted for late 2026 | Yes |
 
-The **ACSS** is the workhorse: 10.6 billion items in 2025, about 42 million a day, including every direct deposit and pre-authorized debit. US-dollar items between Canadian institutions clear separately, through a parallel system that settles through New York correspondents, so a Canadian customer's USD account is its own integration. **Lynx** finished moving to ISO 20022 messages in November 2025. The **Real-Time Rail** has been promised since 2019; its rules took effect in August 2026, and Payments Canada is targeting a launch with its first participants in the fourth quarter of 2026, with phased onboarding through 2027 as Interac e-Transfer's clearing moves onto it. It's built with confirmation of payee and shared fraud services from the start, which will matter for payouts once it's real. Until then, plan around ACSS and e-Transfer.
+The **ACSS** (Automated Clearing Settlement System) is the workhorse: 10.6 billion items in 2025, about 42 million a day, including every direct deposit and pre-authorized debit. US-dollar items between Canadian institutions clear separately, through a parallel system that settles through New York correspondents, so a Canadian customer's USD account is its own integration. **Lynx** finished moving to ISO 20022 messages in November 2025. The **Real-Time Rail** has been promised since 2019; its rules took effect in August 2026, and Payments Canada is targeting a launch with its first participants in the fourth quarter of 2026, with phased onboarding through 2027 as Interac e-Transfer's clearing moves onto it. It's built with confirmation of payee and shared fraud services from the start, which will matter for payouts once it's real. Until then, plan around ACSS and e-Transfer.
 
 ## EFT Files: Standard 005
 
-An EFT file in Canada is a **CPA Standard 005** file, and it shares nothing with NACHA's but the idea:
+An EFT file in Canada is a **CPA Standard 005** (CPA being the Canadian Payments Association, Payments Canada's former name) file, and it shares nothing with NACHA's but the idea:
 
 - **1,464-character records.** An `A` header, then `C` credits, `D` debits, `E` and `F` reversals of each, `I` and `J` returned credits and debits, and a `Z` trailer with control totals. Each detail record carries up to six 240-character transaction segments after a 24-character prefix, so one record holds six payments. Notices of change travel separately, as 208-character `S`, `U` and `V` records.
 - **Banks vary.** That's the interbank format; what your bank accepts from you may be a 1,464- or 264-byte variant with its own restrictions (some allow only credits in a file). Build a writer per bank, the same way [Treasury](/docs/industries/payments/treasury) builds a parser per bank.
@@ -104,11 +104,11 @@ The networks are familiar, but the rules around them aren't.
 - **Safeguard end-user funds** in a trust account, or a segregated account backed by insurance or a guarantee: Canada's version of [Treasury](/docs/industries/payments/treasury)'s FBO and safeguarding problem.
 - **Notify significant changes** and new activities at least five business days ahead, and file an annual report by March 31.
 
-**FINTRAC** registers money services businesses, and its definition explicitly includes services that pay invoices for others: rent, utilities, payroll, tuition. Payment providers have had to register since 2022, foreign ones included. The obligations are anti-money-laundering ones: records of electronic funds transfers of $1,000 or more, large cash records at $10,000, reports of international transfers of $10,000 or more, travel-rule information on transfers, and five years of retention. The [Payments Rulebook](/docs/industries/payments/payments-rulebook) covers the US equivalents.
+**FINTRAC** registers money services businesses, and its definition explicitly includes services that pay invoices for others: rent, utilities, payroll, tuition. Payment providers have had to register since 2022, foreign ones included. The obligations are anti-money-laundering ones: records of electronic funds transfers of $1,000 or more, large cash records at $10,000, reports of international transfers of $10,000 or more, travel-rule information (the sender's and recipient's details that must accompany a transfer) on transfers, and five years of retention. The [Payments Rulebook](/docs/industries/payments/payments-rulebook) covers the US equivalents.
 
 **Open banking** is coming but not here. A Consumer-Driven Banking Act was first enacted in June 2024; Bill C-15 replaced it in March 2026 with a new Act that moves oversight to the Bank of Canada and makes screen scraping an offence. Draft regulations followed in June 2026 for a first, read-only phase, and payment initiation (write access) is targeted for mid-2027, tied to the Real-Time Rail.
 
-**Privacy and language** are provincial as well as federal. PIPEDA governs personal data federally; Quebec's Law 25, phased in from 2022 to September 2024, is stricter, with administrative penalties up to $10 million or 2% of worldwide turnover and penal fines up to $25 million or 4%. Quebec's Charter of the French Language requires contracts of adhesion, the kind every payment terms page and PAD agreement is, to be given in French first. Build the French version into the product, not a translation step afterward; [Internationalization](/docs/frontend/internationalization) covers the mechanics.
+**Privacy and language** are provincial as well as federal. PIPEDA (the Personal Information Protection and Electronic Documents Act) governs personal data federally; Quebec's Law 25, phased in from 2022 to September 2024, is stricter, with administrative penalties up to $10 million or 2% of worldwide turnover and penal fines up to $25 million or 4%. Quebec's Charter of the French Language requires contracts of adhesion, the kind every payment terms page and PAD agreement is, to be given in French first. Build the French version into the product, not a translation step afterward; [Internationalization](/docs/frontend/internationalization) covers the mechanics.
 
 ## What This Means for the System You Build
 

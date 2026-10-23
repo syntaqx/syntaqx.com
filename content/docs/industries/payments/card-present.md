@@ -13,7 +13,7 @@ This chapter is what changes when the card is physically there, and what it mean
 
 ## Why the Chip Exists
 
-The magnetic stripe is a static recording. Copy it once, at a compromised gas pump or a skimmer on an ATM, and you can write it onto any blank card and spend it anywhere that reads stripes. Counterfeit fraud was the problem EMV was built to end.
+The magnetic stripe is a static recording. Copy it once, at a compromised gas pump or a skimmer on an ATM, and you can write it onto any blank card and spend it anywhere that reads stripes. Counterfeit fraud was the problem EMV (named for Europay, Mastercard and Visa, and now run by their joint standards body, EMVCo) was built to end.
 
 The chip fixes it by doing cryptography for every transaction. It holds a secret key the issuer put there and never reveals it. When the terminal asks it to authorize, the chip signs the transaction details (amount, currency, date, a terminal-supplied random number, a counter that increases every time) into an **application cryptogram**. The issuer, which has the same key, recomputes the cryptogram and checks it. A copied card can't produce a valid cryptogram for a new transaction, and a recorded cryptogram is useless for any other one.
 
@@ -55,7 +55,7 @@ Contactless is EMV over radio: the same cryptogram, the same issuer validation, 
 Two things here are newer than most platforms' assumptions:
 
 - **Kernels.** The software on the terminal that runs a contactless transaction has historically been one kernel per network, each certified separately. In October 2022 EMVCo published a common EMV Contactless Kernel Specification (Kernel 8), with a testing process available from October 2024, intended to reduce how many kernels terminals have to carry. Each network decides whether to adopt it, so for now, assume your terminal vendor still ships several.
-- **The phone as the terminal.** Tap to Pay on iPhone and on Android lets a merchant accept contactless cards on an ordinary phone, with no reader. The PCI Security Standards Council published **Mobile Payments on COTS** (MPoC) in November 2022 to cover exactly this: PIN and contactless card data entry on the same commercial device. The platform constraints are real. Stripe's Android implementation, for example, refuses rooted devices, requires Android 13 or later with a security patch from the past year and hardware-backed key storage, and won't collect a PIN while screen recording or an accessibility service is running. On iPhone it requires an entitlement from Apple and an app review. And PIN on a phone isn't universal: Stripe notes that many cards in Canada and Finland are offline PIN only, which a tap can't satisfy.
+- **The phone as the terminal.** Tap to Pay on iPhone and on Android lets a merchant accept contactless cards on an ordinary phone, with no reader. The PCI Security Standards Council published **Mobile Payments on COTS** (MPoC, COTS being commercial off-the-shelf devices like phones) in November 2022 to cover exactly this: PIN and contactless card data entry on the same commercial device. The platform constraints are real. Stripe's Android implementation, for example, refuses rooted devices, requires Android 13 or later with a security patch from the past year and hardware-backed key storage, and won't collect a PIN while screen recording or an accessibility service is running. On iPhone it requires an entitlement from Apple and an app review. And PIN on a phone isn't universal: Stripe notes that many cards in Canada and Finland are offline PIN only, which a tap can't satisfy.
 
 Tap to Pay is the fastest way for a software platform to put card-present acceptance in front of small merchants, because there's no hardware to ship. It's also a fleet you don't control: OS versions, device lists and attestation rules change under you, so the app has to check eligibility at runtime and fall back gracefully.
 
@@ -97,7 +97,7 @@ Stripe's documentation states the consequence without softening it: when you ope
 So offline is a risk product, and the platform should treat it like one:
 
 - **Per-transaction and cumulative limits,** set per merchant: no offline payments above an amount, and none at all once the stored total crosses a threshold.
-- **A distinct state.** An offline payment is `collected_offline`, not `succeeded`, until it's forwarded and authorized ([Payment States & Ledgers](/docs/payments/payment-states)). Don't fund the merchant against it, and show the merchant which payments are still at risk.
+- **A distinct state.** An offline payment is `collected_offline`, not `authorized`, until it's forwarded and authorized ([Payment States & Ledgers](/docs/payments/payment-states)). Don't fund the merchant against it, and show the merchant which payments are still at risk.
 - **Fast forwarding,** and an alert when a device holds stored payments for too long, because a terminal that dies with unforwarded payments in it can mean lost money.
 
 ## Why Card-Present Is Cheaper

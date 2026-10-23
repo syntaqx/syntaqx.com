@@ -3,14 +3,14 @@ title = "Payments for Software Platforms"
 nav_title = "Software Platforms"
 description = "Embedded payments for vertical software: referral, reseller, managed and registered payfac models, the tenant hierarchy, fund splits, 1099-K and support."
 category = "Payments Industry"
-order = 1420
+order = 1422
 part = "Running a Provider"
 tags = ["payments", "platforms", "payfac", "multi-tenancy", "embedded-payments"]
 +++
 
 A vertical software company, building for gyms, clinics, property managers or school districts, sits where its customers' money moves: invoices, memberships, rent, tuition. Adding payments to that software is the most common way such companies grow revenue without adding customers. The platform earns a share of every dollar processed. Customers who run their payments through the product rarely leave it, and the payment data makes the rest of the product better: who paid late, which locations grow, what to offer next.
 
-It's also where a software company turns into a financial services company, partly or completely, depending on the model. This chapter is how I'd reason about that choice and what each model asks of engineering. [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) is the far end of the road; most platforms should know where it leads and stop well short of it.
+It's also where a software company turns into a financial services company, partly or completely, depending on the model. This chapter is how I'd reason about that choice and what each model asks of engineering, from the platform's side and, at the end, from the side of the provider serving it. [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) is the far end of the road; most platforms should know where it leads and stop well short of it.
 
 ## Four Ways In
 
@@ -19,7 +19,7 @@ The question that separates the models is the same one that separates payment pr
 | Model | Underwrites merchants | Holds the loss | Owns the merchant relationship | Platform earns | Engineering surface |
 | --- | --- | --- | --- | --- | --- |
 | **Referral** | The processor | The processor | The processor | A referral fee or small share | A link and an integration |
-| **Reseller (ISV as agent)** | The processor | The processor, unless the contract shifts it | Shared | A share of the margin, as residuals | Onboarding handoff, reporting |
+| **Reseller (ISV, independent software vendor, as agent)** | The processor | The processor, unless the contract shifts it | Shared | A share of the margin, as residuals | Onboarding handoff, reporting |
 | **Managed payfac** | The provider, often with the platform's input | The provider first, then the platform by contract | The platform, under its brand | A larger share; sometimes pricing control | Embedded onboarding, payments and payouts, support |
 | **Registered payfac** | The platform | The platform, with its sponsor acquirer behind it | The platform | The most margin | All of it, plus risk, compliance and capital |
 
@@ -93,7 +93,13 @@ A merchant reconciles its payouts to its sales: every payout traces to the payme
 
 In the US, card payments to merchants are reported to the IRS on Form 1099-K by the payment settlement entity: the merchant acquiring entity for card transactions, with no minimum threshold. When a payment facilitator makes the settlement payments on the acquirer's behalf, the IRS instructions say the facilitator files the 1099-K in its place. Third-party network transactions, such as marketplaces and payment apps, are reportable above $20,000 and 200 transactions a year.
 
-So whoever settles to the merchant needs a correct legal name and taxpayer ID for every merchant, collected in onboarding and matched against the IRS before the year ends. In a managed model the provider usually owns that filing; a registered payfac owns it outright. Either way, the platform's onboarding is where the data comes from.
+So whoever settles to the merchant needs a correct legal name and taxpayer ID for every merchant, collected in onboarding and matched against the IRS before the year ends. The filer's obligations run on a calendar:
+
+- **Report gross.** Box 1a is the gross amount, without subtracting refunds, fees or chargebacks, which is why the ledger keeps gross volume ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#fees-are-separate-entries)). The $20,000 and 200-transaction threshold applies only to third-party networks; card payments have no threshold, and the One Big Beautiful Bill Act restored the $20,000 threshold in 2025.
+- **Deadlines.** Copies to merchants by January 31, and to the IRS by February 28 on paper or March 31 electronically; filing 10 or more information returns of any kind requires filing electronically.
+- **Backup withholding.** A merchant whose name and TIN don't match gets a B-notice when the IRS sends a CP2100 listing, and if a corrected Form W-9 doesn't come back within 30 business days, the filer withholds 24% of payouts until it does. A second mismatch within three years needs proof from the Social Security Administration or the IRS, not just a new form.
+- **States** have their own thresholds, some as low as $600, and filing through the Combined Federal/State Filing program covers some of them.
+- **Keep copies** for three years, or four if backup withholding applied. In a managed model the provider usually owns that filing; a registered payfac owns it outright. Either way, the platform's onboarding is where the data comes from.
 
 ## Events to the Platform
 
@@ -104,6 +110,17 @@ The platform's software needs to know what happened to its merchants' money as i
 When a cardholder disputes a charge, three parties have a stake. The cardholder sees the merchant's name on the statement. The merchant calls the platform, because that's the software they use. And the provider holds the dispute and its deadline. Who answers depends on the model: the platform owns it in a managed or registered model, so the platform's product needs the [dispute workflow](/docs/industries/payments/disputes-and-chargebacks) inside it, with deadlines visible, evidence uploads, and the outcome recorded.
 
 The same goes for every support question about money. "Where's my payout?" has to be answerable by the platform's support team without escalating to the provider, which means the platform's tools show the same ledger states, return codes and settlement dates the provider sees. A support team that can only say "we'll ask our payments partner" is a platform that hasn't finished embedding payments.
+
+## What a Provider Builds for Platforms
+
+Everything above is what a platform needs. A provider that wants platforms as customers builds the other half:
+
+- **Connected accounts.** An API to create and manage merchants under a platform, with the platform's own key acting on behalf of any of them, and requirements, capabilities and status exposed per merchant ([Designing the Payments API](/docs/industries/payments/payments-api#acting-for-platforms)).
+- **Embedded onboarding and dashboards,** as components a platform drops into its product, authorized by short-lived sessions, so the platform never handles identity documents or long-lived merchant credentials.
+- **Liability and fee configuration per platform.** Who bears losses (provider or platform), who pays processing fees, and who collects requirements are settings on the platform's account, not separate products; Stripe's controller properties are one model of exactly this.
+- **Application fees and splits** on each payment, posted as their own ledger entries, and **residual statements** for revenue-share platforms, each tracing to the merchants and transactions behind it.
+- **Platform-scoped keys and reporting.** Keys and reports that cover a platform's whole subtree, and nothing outside it, with per-merchant reports that sum exactly into the platform's.
+- **Events for the whole tree,** delivered to one platform endpoint with the merchant attached.
 
 ## What This Means for the System You Build
 
@@ -128,6 +145,9 @@ The same goes for every support question about money. "Where's my payout?" has t
 - [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), screening procedures the payment facilitator rules rely on, and the acquirer's duty to screen and monitor them
 
 - [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), MCC definitions and assigning codes to merchants with several lines of business
+- [IRS: Form 1099-K threshold under the One Big Beautiful Bill](https://irs.gov/newsroom/irs-issues-faqs-on-form-1099-k-threshold-under-the-one-big-beautiful-bill-dollar-limit-reverts-to-20000), the restored $20,000 and 200-transaction threshold
+- [IRS: Publication 1099](https://www.irs.gov/publications/p1099), filing deadlines, electronic filing and retention
+- [IRS: Publication 1281 (PDF)](https://www.irs.gov/pub/irs-pdf/p1281.pdf), backup withholding and the first and second B-notice
 
 **In practice**
 
@@ -135,3 +155,4 @@ The same goes for every support question about money. "Where's my payout?" has t
 - [Payabli: Organizations](https://docs.payabli.com/guides/pay-ops-organizations-overview.md), a nested organization and merchant hierarchy with settings that inherit unless overridden
 - [Payabli: Embedded components](https://docs.payabli.com/guides/pay-in-components-overview.md), iframe components authorized by a public token
 - [Stripe: Migrate to controller properties](https://docs.stripe.com/connect/migrate-to-controller-properties), who carries losses, collects requirements and pays fees, as settings instead of account types
+- [Stripe: 1099-K for Connect platforms](https://docs.stripe.com/connect/1099-k), state thresholds and filing

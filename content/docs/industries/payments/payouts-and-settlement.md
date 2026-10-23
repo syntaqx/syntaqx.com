@@ -2,7 +2,7 @@
 title = "Payouts & Settlement"
 description = "How a card payment becomes money in a merchant's bank: settlement timing, fees as ledger entries, payout schedules and reserves, failures, and reconciliation."
 category = "Payments Industry"
-order = 1417
+order = 1419
 part = "Paying Out"
 aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
@@ -12,7 +12,7 @@ Everything so far brings money in; this part sends it out, starting with the mer
 
 ## The Stages
 
-[How Card Payments Work](/docs/industries/payments/card-payments#five-events-not-one-payment) split a payment into five events: authorization, capture, clearing, settlement and funding. This chapter is the last of them, funding, which a platform calls a **payout**, and the source of most confusion is conflating it with the others. Each is a separate fact with its own timestamp, and the API says which one a balance reflects. A merchant's balance has at least two buckets, **pending** (captured, not yet settled) and **available** (settled, can be paid out); one number labeled "balance" invites the ticket about why it can't be paid out.
+[How Card Payments Work](/docs/industries/payments/card-payments#five-events-not-one-payment) split a payment into five events: authorization, capture, clearing, settlement and funding. This chapter is the last of them, funding, which a platform calls a **payout**, and the source of most confusion is conflating it with the others. Each is a separate fact with its own timestamp, and the API says which one a balance reflects. A merchant's balance has at least two buckets, **pending** (captured, not yet settled) and **available** (posted, past the availability date its payment method allows, less holds, reserves and pending outflows: what can be paid out); one number labeled "balance" invites the ticket about why it can't be paid out.
 
 ## Settlement Timing
 
@@ -31,7 +31,7 @@ A $50.00 charge with a 2.9% plus 30 cent fee shouldn't be recorded as a $48.25 p
 | `processing_costs` | `+110` |
 | `platform_revenue` | `+65` |
 
-The $1.75 the merchant pays is $1.10 the processor charged the platform and $0.65 the platform keeps.
+The $1.75 the merchant pays is $1.10 the processor charged the platform and $0.65 the platform keeps. At capture the $1.10 is an estimate, because the real interchange and network fees are only known when the processor's settlement and fee files arrive; post it as pending and true it up from the file, so the platform's margin is measured on actual cost ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing)).
 
 Recording only the net loses what you'll need later: a partial refund needs the gross, tax reporting needs gross volume, a fee dispute needs the rate applied to the gross, and the processor's fees and the platform's markup are two entries to two different accounts.
 
@@ -46,6 +46,7 @@ Platforms that [split a payment](/docs/industries/payments/software-platforms#wh
 How soon a merchant can be paid is a risk decision, not a convenience setting: once money leaves the platform, getting it back depends on the merchant's goodwill and bank balance, and disputes arrive 120 days later, or more for anything paid in advance.
 
 - **New merchants wait longer.** A first payout delayed a week or two gives fraud and disputes time to surface; it stops the merchant who signs up with stolen cards and pays themselves out the same day. Stripe typically schedules a new account's first payout 7 to 14 days after its first live payment.
+- **Reserves come in a few shapes.** A **hold** is a fixed amount released on a date. A **rolling reserve** holds back a percentage of each payment for a set number of days, then releases it; Stripe's examples include 30% held for 60 days. A **fixed reserve** holds a percentage until one release date. Stripe caps any reserve at 180 days, and releases a hold early once refunds or disputes have used it.
 - **Rolling reserves** hold back a percentage of each day's volume for a fixed period, then release it. They're the standard tool for merchants whose risk is real but acceptable: high ticket sizes, delivery months after payment, elevated dispute rates. The reserve exists to pay the disputes and refunds that arrive after the sales that caused them.
 - **The payment method sets the clock.** Card money can come back as a dispute for months, a consumer ACH debit for 60 days and a business one for two banking days ([ACH & Bank Transfers](/docs/industries/payments/ach)), a Canadian pre-authorized debit for 90 ([Payments in Canada](/docs/industries/payments/canada)), and a check through warranty claims long after it cleared ([Accepting Checks](/docs/industries/payments/checks)). Cash confirmed by a retail network doesn't come back at all ([Cash Payments](/docs/industries/payments/cash-payments)). Availability is computed per payment from its method, not per merchant.
 - **Instant payouts are a different product.** A payout to a debit card or over RTP or FedNow is final on arrival ([Vendor Payouts](/docs/industries/payments/vendor-payouts#push-to-card)), so it's priced and limited like credit, and paying before settlement lands is a [treasury decision](/docs/industries/payments/treasury#funding-the-day).
@@ -72,7 +73,7 @@ In the US, ACH payouts can be **returned** after they appear to succeed, typical
 | R03 | No account, or unable to locate | Bank details are wrong; ask for new ones |
 | R04 | Invalid account number | Same as R03 |
 
-So a payout's state machine doesn't end at `paid`. It goes `pending` → `in_transit` → `paid`, and from `paid` it can still become `failed` when the return arrives. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
+So a payout's state machine doesn't end at `paid`. It goes `pending`, then `in_transit`, then `paid`, and from `paid` it can still become `failed` when the return arrives. On ACH those map onto the rail's own states: `in_transit` while the credit is submitted, `paid` at settlement, `failed` on a return. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
 
 A changed payout account is where takeovers cash out, so a change re-verifies the account and holds the next payout, with the controls in [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account).
 
@@ -80,11 +81,29 @@ A changed payout account is where takeovers cash out, so a change re-verifies th
 
 ## Idempotent Payouts
 
-A payout sent twice is money that's very hard to get back. Payouts carry an [idempotency key](/docs/payments/idempotency) derived from what they represent (the merchant and the balance period), so a retry after a timeout can't create a second transfer, and a scheduled payout job uses the same deterministic key so a crash and restart can't pay twice.
+A payout sent twice is money that's very hard to get back. Payouts carry an [idempotency key](/docs/payments/idempotency) derived from what they represent and the attempt (the merchant, the balance period, attempt 1), so a retry after a timeout can't create a second transfer, and a scheduled payout job uses the same deterministic key so a crash and restart can't pay twice. A payout re-sent after a return is a new attempt, with a new key, to the corrected account.
 
 ## Reconciliation
 
 Every payout has to be explained three ways: by your ledger (which balance entries it pays), by the processor's settlement report (which transactions it settles), and by the merchant's bank deposit (what actually arrived). Reconcile all three daily, as [Payment States & Ledgers](/docs/payments/payment-states#reconciliation) describes. The question a merchant asks, "which payments make up this $3,812.40 deposit?", should have an answer you can produce from records in one query: each payout lists the balance transactions it includes.
+
+## One Payment, Traced
+
+Every chapter so far describes one layer. Here is a single $100 online card payment through all of them, with illustrative fees: the merchant pays 2.9% plus 30 cents, and the costs are the interchange chapter's example rate ($1.80) plus 14 cents of network fees.
+
+| When | What happens | Where it's explained |
+| --- | --- | --- |
+| At checkout | The customer's card goes from hosted fields to the vault; the merchant's server creates a payment with an idempotency key and confirms it with a token | [Running a Card Vault](/docs/industries/payments/card-vault), [Designing the Payments API](/docs/industries/payments/payments-api) |
+| Seconds later | Risk allows it; the vault's forwarder sends it to the processor, which sends an ISO 8583 `0100` through the network to the issuer; a `0110` comes back approved, and the payment is `authorized` | [Fraud & Risk](/docs/industries/payments/fraud-and-risk), [Inside a Processor](/docs/industries/payments/inside-a-processor) |
+| Same day | The merchant captures; the payment is `captured`, a `payment.captured` event goes to the merchant, and the ledger posts the customer receivable, the merchant's $96.80, an estimated $1.94 of processing costs, and the platform's $1.26 | [Payment States & Ledgers](/docs/payments/payment-states), [Webhooks](/docs/payments/webhooks) |
+| That night | The capture goes to the network in a clearing file, gets an acquirer reference number, and qualifies for its interchange category | [Inside a Processor](/docs/industries/payments/inside-a-processor#clearing), [Interchange & Pricing](/docs/industries/payments/interchange-and-pricing) |
+| Next business day | The network settles; the processor's settlement file arrives, the payment is `settled`, and the actual interchange and network fees replace the estimate | [Inside a Processor](/docs/industries/payments/inside-a-processor#settlement) |
+| Two business days later | The merchant's $96.80 becomes available and goes out in that day's ACH payout, which the bank statement later confirms | [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement), [Treasury & Bank Operations](/docs/industries/payments/treasury) |
+| For 120 days | The payment can still be disputed; if it is, a dispute object holds the $100 and a fee from the merchant's balance | [Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks) |
+| Month end | The statement shows the payment, its fees and its payout | [Operating the Platform](/docs/industries/payments/operating-the-platform#statements-and-reports) |
+| Next January | The merchant's 1099-K includes the full $100, gross | [Payments for Software Platforms](/docs/industries/payments/software-platforms#1099-k-and-taxpayer-data) |
+
+Every row is a record somebody can find later, and the ledger ties them together: the $100 in, the $3.20 of fees split between costs and revenue, the $96.80 out, and the bank deposit that proves it.
 
 ## What This Means for the System You Build
 
@@ -106,3 +125,4 @@ Every payout has to be explained three ways: by your ledger (which balance entri
 
 - [Stripe: Payouts](https://docs.stripe.com/payouts), settlement timing by country, first-payout delay and negative balances
 - [Stripe: Understanding Connect account balances](https://docs.stripe.com/connect/account-balances), pending and available balances, platform reserves and negative balances
+- [Stripe: Connected account reserves](https://docs.stripe.com/connect/connected-account-reserves), holds, rolling and fixed reserves, and exposure

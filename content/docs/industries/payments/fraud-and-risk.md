@@ -2,7 +2,7 @@
 title = "Fraud & Risk"
 description = "Deciding which payments to allow, review, challenge or block: the cost of both mistakes, rules and models together, card testing, and auditable decisions."
 category = "Payments Industry"
-order = 1415
+order = 1417
 part = "Taking Payments"
 aliases = ["payments/fraud-and-risk"]
 tags = ["payments", "fraud", "risk", "security"]
@@ -48,11 +48,22 @@ A risk check doesn't return yes or no. Four outcomes keep the system from choosi
 | Outcome | When | Cost |
 | ------- | ---- | ---- |
 | **Allow** | Low risk | Nothing |
-| **Step up** | Uncertain, and the customer is present | A moment of friction; a fraudster usually can't pass [3-D Secure](/docs/industries/payments/strong-customer-authentication), and success typically shifts liability to the issuer |
+| **Challenge** | Uncertain, and the customer is present | A moment of friction; a fraudster usually can't pass [3-D Secure](/docs/industries/payments/strong-customer-authentication), and success typically shifts liability to the issuer |
 | **Review** | Uncertain, high value, and the goods haven't shipped | A human's time and a delay; only viable where fulfilment can wait |
 | **Block** | High risk | A false decline when the model is wrong |
 
-Step-up is the most underused: on an uncertain on-session payment it converts most legitimate customers and stops most fraud, where blocking loses the first group and allowing pays for the second.
+A challenge is the most underused outcome: on an uncertain on-session payment it converts most legitimate customers and stops most fraud, where blocking loses the first group and allowing pays for the second.
+
+## Merchant Fraud
+
+Everything above is about the payer. On a platform, the merchant can be the fraud, and it's the more expensive kind, because the platform pays for everything the merchant can't:
+
+- **Bust-out.** A merchant builds a normal history, then runs a burst of large or fake transactions, takes the payout, and disappears before the refunds and disputes arrive. The defenses are payout delays for new merchants, reserves sized to exposure, and alerts on sudden changes in volume, ticket size or refund rate ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement#payout-schedules-holds-and-reserves)).
+- **Transaction laundering.** A merchant processes payments for another business that couldn't get a merchant account, often a prohibited one. Visa's rules ban presenting transactions that didn't come from a sale between the cardholder and that merchant, and the networks fine acquirers who let it through, so monitoring compares what's actually sold (descriptors, websites, ticket sizes, card origins) with what was underwritten ([Operating the Platform](/docs/industries/payments/operating-the-platform#compliance-operations)).
+- **Collusion and self-dealing.** A merchant charging its own or accomplices' stolen cards, or cycling money through refunds to cards that never paid. Refunds without a matching earlier payment on the same card are a signal on their own, which is also why the networks require refunds to go to the original card.
+- **Account takeover.** Someone else controlling a legitimate merchant's account changes the payout bank account and cashes out, the case [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account) defends against.
+
+Merchant fraud signals feed the same [onboarding](/docs/industries/payments/merchant-onboarding#ongoing-monitoring) tiers and payout controls as underwriting, and a merchant terminated for fraud goes on the networks' terminated-merchant lists.
 
 ## Card Testing
 
