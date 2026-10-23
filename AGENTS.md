@@ -7,7 +7,7 @@ There is no authentication or user identity, and no user data. That layer
 (Better Auth, Neon, Drizzle) was intentionally removed; don't reintroduce it
 without being asked. Datastores are allowed when they earn their place
 (managed, free tier, no personal data, and the site keeps working when
-they're down): see docs/adr/0001. Upstash Redis backs rate limiting;
+they're down). Upstash Redis backs rate limiting;
 `compose.yml` runs it locally. ADRs record departures from the playbook
 only; don't write one for a choice the playbook already makes.
 

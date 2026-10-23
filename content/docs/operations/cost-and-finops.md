@@ -54,7 +54,7 @@ The [FinOps Foundation framework](https://www.finops.org/framework/phases/) desc
 
 ## This Site
 
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) is deliberately built to run on free tiers, and treats that as a design constraint. Its [decision record on datastores](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0001-no-authentication-or-user-identity.md) allows one only if it's managed, on a free tier and never on the critical path. The rate limiter's Upstash Redis free tier includes 500K commands a month (per [Upstash's pricing](https://upstash.com/pricing/redis)), so the limiter uses one script per request and caches blocked clients in memory to stay well inside it, and it falls back to in-memory counting if Redis stops answering. The cliff is designed in: crossing it makes rate limits per-instance for a while, not an outage.
+[syntaqx.com](https://github.com/syntaqx/syntaqx.com) is deliberately built to run on free tiers, and treats that as a design constraint. It allows a datastore only if it's managed, on a free tier and never on the critical path. The rate limiter's Upstash Redis free tier includes 500K commands a month (per [Upstash's pricing](https://upstash.com/pricing/redis)), so the limiter uses one script per request and caches blocked clients in memory to stay well inside it, and it falls back to in-memory counting if Redis stops answering. The cliff is designed in: crossing it makes rate limits per-instance for a while, not an outage.
 
 ## References
 
