@@ -42,10 +42,18 @@ Asking for everything up front (ID documents, ownership structure, bank statemen
 | ------- | --------------- |
 | Sign up | Business type, name, email, country |
 | First payment | Legal entity details, representative identity, terms accepted |
-| First payout | Bank account, verified identity for owners and controllers |
+| First payout | Bank account, with authorization to debit it for negative balances and fees, and verified identity for owners and controllers |
 | Volume thresholds | Documents, ownership verification, deeper review |
 
 A merchant who has processed $500 can't do much damage; one who has processed $500,000 has earned, and needs, a full review. Each requirement has a deadline, and missing it moves the merchant to `restricted`: payouts stop until it's resolved.
+
+## The Application Is Not the Merchant
+
+Model the **application** and the **merchant** as separate objects. An application is a request, with its own states (draft, submitted, verifying, pending documents, in review, approved, declined, withdrawn) and a history of what was asked and answered; a merchant is what an approved application creates, with capabilities that change over its whole life. Keeping them apart lets a merchant reapply, add a line of business, or change ownership without rewriting the record of how it was first approved. The **legal entity** is a third object, linked to the people who own and control it, and one person can be behind several businesses, which is exactly the link fraud reviews want to see. Payabli's boarding model makes the same split: applications, merchants, businesses and people are distinct records, and an application submitted through a hosted form or the API produces the same application and the same merchant.
+
+Templates belong here too. A platform rarely onboards every merchant the same way: a template decides which fields an application asks for and which pricing it carries, by segment or vertical, so a small landlord and a national management company answer different questions on the way to the same kind of merchant.
+
+Onboarding collects some of the most sensitive data a platform holds: government ID numbers, document images, dates of birth, bank account numbers. All of it follows [Sensitive Data](/docs/payments/sensitive-data) in full, and raw document images are kept only as long as verification or the law requires. So does the taxpayer data a platform needs for 1099-K reporting, a legal name and TIN matched against the IRS before the year ends ([Software Platforms](/docs/industries/payments/software-platforms#1099-k-and-taxpayer-data)).
 
 ## Underwriting and Risk Tiers
 
@@ -53,11 +61,13 @@ Verification answers "who is this?"; underwriting answers "how much can go wrong
 
 Underwriting assigns a **risk tier**, and the tier sets the controls:
 
-- **Payout timing and reserves.** Higher risk means a longer delay before funds can be paid out and a [rolling reserve](/docs/industries/payments/payouts-and-settlement), sized to the disputes and refunds the business is likely to see.
+- **Payout timing and reserves.** Higher risk means a longer delay before funds can be paid out and a [rolling reserve](/docs/industries/payments/payouts-and-settlement#payout-schedules-holds-and-reserves), sized to the disputes and refunds the business is likely to see.
 - **Volume limits** that trigger review before they're exceeded.
 - **Review frequency.** Higher tiers are re-reviewed more often.
 
 Some businesses aren't a matter of tier at all: card networks, acquirers and the law prohibit or restrict whole categories (illegal goods, some financial services, unlicensed gambling and others). Check **prohibited and restricted business lists** at onboarding against the description, website and category code, and treat a restricted category as a requirement for extra diligence such as licenses, not an automatic rejection.
+
+Check **terminated-merchant lists** too. Mastercard's MATCH list records merchants an acquirer terminated for cause (excessive chargebacks, fraud, laundering), and a merchant on it is one some other acquirer already learned about the hard way. The duty runs both ways: merchants you terminate for a listed reason go on the list.
 
 ## Ongoing Monitoring
 
@@ -65,12 +75,8 @@ Onboarding is a moment; risk is continuous. A merchant who was fine in March can
 
 - **Screen continuously.** Sanctions lists change; re-screen people and entities when lists update, not only at sign-up.
 - **Watch for drift.** Sudden volume spikes, a jump in average ticket size, a new country mix, rising dispute or refund rates: each is a reason for review, and any of them can move a merchant back to `restricted`.
-- **Re-verify on material change.** A new owner, a new bank account for payouts, a new business name. A changed payout account shortly before a large payout is a classic account-takeover cash-out.
+- **Re-verify on material change.** A new owner, a new bank account for payouts, a new business name. A changed payout account re-verifies before the next payout, with the controls in [Vendor Payouts](/docs/industries/payments/vendor-payouts#stopping-the-changed-bank-account).
 - **Expire documents.** An ID that expires is a requirement that comes due again.
-
-## Sensitive Data
-
-Onboarding collects some of the most sensitive data a platform holds: government ID numbers, document images, dates of birth, bank account numbers. All of it follows [Sensitive Data](/docs/payments/sensitive-data) in full, and raw document images are kept only as long as verification or the law requires.
 
 ## An API That Says What's Due
 
@@ -105,6 +111,16 @@ A merchant's requirements change by country, business type, volume and whatever 
 
 Verification rules can then change per country or risk tier without any client knowing in advance. Stripe Connect's `requirements` hash works the same way.
 
+## What This Means for the System You Build
+
+- **Merchant state as a state machine,** with capabilities derived from it and payouts stoppable independently of acceptance.
+- **Application, merchant and legal entity as separate records,** with templates deciding what each segment is asked.
+- **Requirements by exposure,** each with a deadline, collected progressively.
+- **A risk tier that sets payout delay, reserve, limits and review cadence.**
+- **Continuous sanctions and terminated-merchant screening,** and re-verification on any owner, bank or name change.
+- **Sensitive data and document images kept only as long as required.**
+- **An API and webhooks that say what's due,** so the platform can show it in its own product.
+
 ## References
 
 **Specifications**
@@ -115,3 +131,4 @@ Verification rules can then change per country or risk tier without any client k
 
 - [Stripe: Handle verification with the API](https://docs.stripe.com/connect/handling-api-verification), a requirements list with currently due, eventually due and past due fields, and what happens at the deadline
 - [Stripe: Prohibited and restricted businesses](https://stripe.com/legal/restricted-businesses), an example of the categories a platform has to screen for
+- [Payabli: Boarding object model](https://docs.payabli.com/guides/pay-ops-boarding-object-model-overview.md), applications, merchants, businesses and people as separate records

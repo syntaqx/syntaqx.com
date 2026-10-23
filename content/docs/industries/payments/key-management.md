@@ -34,6 +34,8 @@ Running payment HSMs used to mean racks in two data centers, smart cards in safe
 | **Google Cloud HSM** | A managed cluster of FIPS 140-2 Level 3 HSMs behind Cloud KMS | General-purpose keys only; not a payment HSM |
 | **On-premises payment HSMs** | Full control, any vendor feature | Hardware lifecycle, physical security, secure rooms and every procedure around them |
 
+The FIPS levels above are what each service's documentation states. NIST moved every FIPS 140-2 certificate to its historical list in September 2026; modules on it can stay in existing systems, but new procurements, federal ones especially, should look for FIPS 140-3 validation.
+
 My default for a new provider is a managed payment crypto service for PIN and EMV work and a general-purpose HSM-backed KMS for everything else. The question to ask any option is the one the assessor will ask: where does the clear key exist, and who can make it exist?
 
 ## The Key Hierarchy
@@ -72,7 +74,7 @@ The PIN itself travels as a **PIN block**, defined by ISO 9564. **Format 0**, th
 
 ## Leaving TDES
 
-Most of the installed base of payment cryptography still runs on Triple DES, and the rest of the world is leaving it. NIST's SP 800-131A Rev. 2 (2019) disallows two-key TDEA for encryption and disallowed three-key TDEA for encryption after December 31, 2023. The PCI Council stopped treating two-key TDEA as strong cryptography years ago and recommends AES.
+Most of the installed base of payment cryptography still runs on Triple DES, and the rest of the world is leaving it. NIST's SP 800-131A Rev. 2 (2019) disallows two-key TDEA for encryption, and three-key TDEA has been disallowed for encryption since the end of 2023. The PCI Council stopped treating two-key TDEA as strong cryptography years ago and recommends AES.
 
 Payments moves slower than that, because every terminal, HSM and network link has to change together, and a terminal estate can take years to replace. AWS's own example of PIN translation shows the in-between state: a terminal encrypts an AES Format 4 PIN block under DUKPT, and the HSM translates it to a TDES Format 0 block for a downstream link that doesn't support AES yet. The practical stance for a new provider: build on AES (AES DUKPT, Format 4 PIN blocks, AES key blocks) from the start, support TDES only at the edges where a partner still requires it, and track every TDES key as a dated liability with an owner.
 
@@ -84,7 +86,7 @@ Some keys have to be moved by people: the first ZMK with a network, the master k
 - **Dual control:** no sensitive key operation can be performed by one person alone.
 - **Ceremonies:** a scripted, witnessed, logged procedure in a controlled room, where custodians enter their components, every step is recorded, and the record is signed.
 
-PCI DSS requires split knowledge and dual control for any manual cleartext key operation on keys that protect stored card data (requirement 3.7.6), and PCI PIN applies the same principles to every PIN key. The engineering goal is to need ceremonies as rarely as possible: remote key loading and electronic key exchange replace most of them, which is why they're worth the effort.
+PCI DSS requires split knowledge and dual control for any manual cleartext key operation on keys that protect stored card data (requirement 3.7.6), and PCI PIN applies the same principles to every PIN key. The engineering goal is to need ceremonies as rarely as possible: remote key loading and electronic key exchange replace most of them, which is why they're worth the effort. In September 2026 the Council published **Key Management and Operations (KMO) v1.0**, a standard of its own for the lifecycle of keys protecting account data, starting with the key management behind PIN and P2PE; expect assessors to start asking against it.
 
 ### Loading Terminals
 
@@ -104,8 +106,8 @@ Rotation is easy to promise and hard to do, so design for it:
 
 Most software platforms never touch a PIN: their terminals talk to a processor, and their online payments are tokenized before they reach the platform's servers. They still have keys worth this discipline:
 
-- **Vault keys.** If you hold card numbers at all, encrypt them with **envelope encryption**: a data key per record or batch encrypts the data, and an HSM-backed key-encrypting key encrypts the data keys. PCI DSS allows exactly that pattern, with the key-encrypting key at least as strong as the data key and stored separately (requirement 3.6.1.2). [Running a Card Vault](/docs/industries/payments/card-vault) covers the vault around it, including the re-encryption a rotation still leaves you to do.
-- **Signing keys.** [Webhook](/docs/payments/webhooks) signing secrets, API request signing, and the keys behind any token you issue are credentials an attacker can use to impersonate you. They get owners, rotation and storage in a secret manager or KMS, never in source.
+- **Vault keys.** The key-encrypting key at the top of a card vault's envelope encryption belongs in this hierarchy, with a cryptoperiod and a rehearsed rotation like any other. [Running a Card Vault](/docs/industries/payments/card-vault#storing-the-number) covers the data keys beneath it and the re-encryption that rotation still leaves you to do.
+- **Signing keys.** [Webhook](/docs/payments/webhooks) signing secrets, API request signing, and the keys behind any token you issue are credentials an attacker can use to impersonate you. They get owners, rotation and storage in a secret manager or KMS, never in source ([Sensitive Data](/docs/payments/sensitive-data#secrets)).
 - **Partner credentials.** Processor API keys and certificates for mutual TLS are keys too, with the same lifecycle.
 
 The same three questions apply to all of them: where can the clear key exist, who can cause that, and how long until it's replaced?
@@ -125,7 +127,7 @@ The same three questions apply to all of them: where can the clear key exist, wh
 - [NIST: FIPS 140-3](https://csrc.nist.gov/pubs/fips/140-3/final), four increasing levels of security for cryptographic modules
 - [NIST: SP 800-131A Rev. 2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf), two-key TDEA disallowed for encryption, three-key TDEA disallowed for encryption after 2023
 - [NIST: SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), general guidance on managing cryptographic keys
-- [PCI SSC: PCI DSS v4.0.1 (PDF, university-hosted copy)](https://www.middlebury.edu/sites/default/files/2025-01/PCI-DSS-v4_0_1.pdf), requirements 3.6.1.1, 3.6.1.2, 3.7.4 and 3.7.6 on key architecture, storage, cryptoperiods, split knowledge and dual control
+- [PCI SSC: PCI DSS v4.0.1](https://www.pcisecuritystandards.org/document_library/), requirements 3.6.1.1, 3.6.1.2, 3.7.4 and 3.7.6 on key architecture, storage, cryptoperiods, split knowledge and dual control
 
 **Reference**
 
@@ -134,6 +136,7 @@ The same three questions apply to all of them: where can the clear key exist, wh
 - [PCI SSC Blog: Key Blocks 104](https://blog.pcisecuritystandards.org/key-blocks-104), why key blocks protect a key's intended use
 - [Wikipedia: Derived unique key per transaction](https://en.wikipedia.org/wiki/Derived_unique_key_per_transaction), AES DUKPT in ANSI X9.24-3-2017 and the TDES variant in its annex
 - [Wikipedia: ISO 9564](https://en.wikipedia.org/wiki/ISO_9564), PIN block format 0, and the 2015 amendment adding an extended block for 128-bit ciphers
+- [NIST: FIPS 140-3 transition](https://csrc.nist.gov/projects/fips-140-3-transition-effort), FIPS 140-2 validations moved to the historical list in September 2026
 
 **In practice**
 

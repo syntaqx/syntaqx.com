@@ -113,7 +113,7 @@ The Council writes the standard and certifies assessors; it doesn't fine anyone.
 
 **Specifications**
 
-- [PCI SSC: PCI DSS v4.0.1 Requirements and Testing Procedures (PDF, university-hosted copy)](https://www.middlebury.edu/sites/default/files/2025-01/PCI-DSS-v4_0_1.pdf), the requirements and goals, version dates, defined and customized approaches, and every requirement number cited here
+- [PCI SSC: PCI DSS v4.0.1 Requirements and Testing Procedures](https://www.pcisecuritystandards.org/document_library/), the requirements and goals, version dates, defined and customized approaches, and every requirement number cited here
 - [PCI SSC: SAQ A v4.0.1 Revision 1 (PDF, state treasurer's copy)](https://treasurer.nebraska.gov/tm/pci-dss/documents/PCI_DSS_v4_0_1_SAQ_A_r1.pdf), SAQ A eligibility, the script-attack criterion, and ASV scans in SAQ A; the same site hosts every v4.0.1 SAQ whose eligibility the table summarizes
 - [PCI SSC: SAQ D for Service Providers v4.0.1 (PDF, state treasurer's copy)](https://treasurer.nebraska.gov/tm/pci-dss/documents/PCI_DSS_v4_0_1_SAQ_D_Service_Provider_r2.pdf), the only SAQ option for service providers
 - [PCI Security Standards Council: Document Library](https://www.pcisecuritystandards.org/document_library/), the official home of the standard and SAQs

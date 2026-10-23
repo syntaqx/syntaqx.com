@@ -22,7 +22,21 @@ A vault is a handful of components behind one boundary, and nothing outside the 
 - **Forwarder:** the only path a number takes out, toward processors.
 - **Reveal:** the rare, audited way a person sees a number.
 
-Each is in [PCI scope](/docs/compliance/pci-dss) as a service provider's systems are, whoever runs them. The rest of the platform stays out of scope only if it holds no credentials that can authenticate to any of them, which is the line the guidance draws.
+Each is in [PCI scope](/docs/compliance/pci-dss), whoever runs it. On a platform the vault holds cards for other businesses' customers, which makes you a service provider to them, so this chapter includes the requirements PCI DSS adds for service providers; a merchant vaulting only its own customers' cards is assessed as a merchant and can drop those. The rest of the platform stays out of scope only if it holds no credentials that can authenticate to any of these components, which is the line the guidance draws.
+
+## Getting the Card In
+
+**Hosted fields** are the main door: an iframe served from the vault's origin, so the card is typed into your page, not the merchant's. The iframe's security is now the merchant's compliance too. Since SAQ A's revision (published January 2025, effective March 31, 2025), a merchant validating with it must confirm its site isn't susceptible to script attacks, and PCI SSC's FAQ 1588 lets an embedding merchant meet that by relying on the provider's confirmation that its iframe protects against them when implemented as instructed. If you ship the iframe, you're making that promise:
+
+- **`postMessage` with an exact target origin,** never `*`, and check `event.origin` on everything received. MDN is blunt that not checking enables cross-site scripting.
+- **`frame-ancestors`** in the iframe's Content Security Policy lists the origins allowed to embed it, set as a header (it's ignored in a `<meta>` tag). See [Security Headers](/docs/security/security-headers).
+- **A strict CSP inside the iframe,** nonce-based, and no third-party scripts at all. Where your own payment pages must load one, pin it with Subresource Integrity, keep the inventory and justification requirement 6.4.3 asks for, and run the change and tamper detection on scripts and headers that 11.6.1 requires.
+- **Protect the tokenize endpoint from card testing:** a short-lived, origin-bound session token from the page, rate limits per merchant and per IP, and the signals in [Fraud & Risk](/docs/industries/payments/fraud-and-risk). An open tokenizer is a free card-checking service.
+- **Validate on both sides.** Luhn and brand checks in the field for fast feedback, again on the server as the authority, and a check that the brand matches what the merchant accepts.
+
+**Other doors** each need the same care: a server-to-server API for partners that are themselves PCI compliant; file imports when a merchant migrates its cards in from another provider, encrypted to your key and deleted after loading; [phone payments](/docs/industries/payments/phone-payments), which have their own capture problem; and [card-present](/docs/industries/payments/card-present#p2pe-encrypt-at-the-glass) data encrypted at the terminal and decrypted in your environment under DUKPT-derived keys ([HSMs & Key Management](/docs/industries/payments/key-management#dukpt-and-pin-blocks)), where track data is deleted the moment the authorization returns.
+
+**Keep the number out of logs.** The classic leak isn't the vault's database; it's a debug log of a raw processor request, so the forwarder never logs bodies and the security code field is redacted everywhere it can appear. The general rules, allowlist serializers and a card-number scanner, are in [Sensitive Data](/docs/payments/sensitive-data#logging-and-errors). Then assume something will slip and write the procedure for finding a number where it shouldn't be: retrieve or delete it, check whether a security code is with it, find the source and close it (12.10.7).
 
 ## Designing the Token
 
@@ -42,7 +56,7 @@ A token is what the rest of your system stores, logs and passes around, so its d
 
 **Envelope encryption.** Each record, or each batch, is encrypted under its own data key with an authenticated cipher such as AES-256-GCM. The data key is stored beside the ciphertext, wrapped by a key-encrypting key that lives in a KMS or HSM and never leaves it. PCI DSS accepts exactly this, with the key-encrypting key at least as strong as the data key and stored separately (3.6.1, 3.6.1.2); it accepts keys inside a KMS built on secure cryptographic devices, and it doesn't accept a key "simply split into two parts" and kept in two files. The key-encrypting key never sits in the database it protects, in a config file, or in source. [HSMs & Key Management](/docs/industries/payments/key-management) covers the hierarchy above it.
 
-**Every ciphertext names its key version,** so old and new keys can coexist. That matters because rotation in a KMS doesn't do what it sounds like. AWS states it plainly: rotating a KMS key "has no effect on the data that the KMS key protects. It does not rotate the data keys... or re-encrypt any data." Google and Azure say the same in their own words. So a vault runs two jobs:
+**Every ciphertext names its key version,** as [HSMs & Key Management](/docs/industries/payments/key-management#cryptoperiods-and-rotation) requires of every key, so old and new keys can coexist. That matters because rotation in a KMS doesn't do what it sounds like. AWS states it plainly: rotating a KMS key "has no effect on the data that the KMS key protects. It does not rotate the data keys... or re-encrypt any data." Google and Azure say the same in their own words. So a vault runs two jobs:
 
 - **Re-wrap** data keys under the new key-encrypting key after it rotates. Cheap: the data keys are small and the card numbers are untouched.
 - **Re-encrypt** card numbers when a data key reaches the end of its cryptoperiod or is suspected compromised (3.7.4, 3.7.5). This one touches every affected record, so build it as a resumable job: work in batches, checkpoint progress, decrypt the new ciphertext and compare before committing each batch, and keep the retired key able to decrypt but never to encrypt until the job reports zero records left. NIST SP 800-57 suggests a data-encryption key be used to encrypt for up to two years, less for large volumes.
@@ -73,19 +87,7 @@ Detokenization is the whole risk of a vault, so it gets the narrowest interface 
 
 **No back doors.** No magic token that returns a test card in production, no unauthenticated maintenance or deploy endpoint, no shared admin login. Each is convenient once and in scope forever.
 
-## Getting the Card In
-
-**Hosted fields** are the main door: an iframe served from the vault's origin, so the card is typed into your page, not the merchant's. The iframe's security is now the merchant's compliance too. Since January 2025, a merchant validating with SAQ A must confirm its site isn't susceptible to script attacks, and PCI SSC's FAQ 1588 lets an embedding merchant meet that by relying on the provider's confirmation that its iframe protects against them when implemented as instructed. If you ship the iframe, you're making that promise:
-
-- **`postMessage` with an exact target origin,** never `*`, and check `event.origin` on everything received. MDN is blunt that not checking enables cross-site scripting.
-- **`frame-ancestors`** in the iframe's Content Security Policy lists the origins allowed to embed it, set as a header (it's ignored in a `<meta>` tag). See [Security Headers](/docs/security/security-headers).
-- **A strict CSP inside the iframe,** nonce-based, and no third-party scripts at all. Where your own payment pages must load one, pin it with Subresource Integrity, keep the inventory and justification requirement 6.4.3 asks for, and run the change and tamper detection on scripts and headers that 11.6.1 requires.
-- **Protect the tokenize endpoint from card testing:** a short-lived, origin-bound session token from the page, rate limits per merchant and per IP, and the signals in [Fraud & Risk](/docs/industries/payments/fraud-and-risk). An open tokenizer is a free card-checking service.
-- **Validate on both sides.** Luhn and brand checks in the field for fast feedback, again on the server as the authority, and a check that the brand matches what the merchant accepts.
-
-**Other doors** each need the same care: a server-to-server API for partners that are themselves PCI compliant; file imports when a merchant migrates its cards in from another provider, encrypted to your key and deleted after loading; [phone payments](/docs/industries/payments/phone-payments), which have their own capture problem; and [card-present](/docs/industries/payments/card-present) data decrypted from terminals under keys described in [HSMs & Key Management](/docs/industries/payments/key-management), where track data is deleted the moment the authorization returns.
-
-**Keep the number out of logs.** The classic leak isn't the vault's database; it's a debug log of a raw processor request. Log structured fields from an allowlist rather than whole payloads. Redact by field name, and as a backstop by pattern, and make the pattern cover 13 to 19 digits with separators, not a list of brand prefixes that misses Mastercard's 2-series. Redact the security code field everywhere it can appear. Then assume something will slip and write the procedure for finding a number where it shouldn't be: retrieve or delete it, check whether a security code is with it, find the source and close it (12.10.7).
+**Bank accounts belong in the vault too.** An ACH platform stores account and routing numbers for every payer and payee, and they're as useful to a thief as a card number. Nacha requires large originators and third parties to render stored account numbers unreadable ([ACH & Bank Transfers](/docs/industries/payments/ach#the-rules-you-inherit)), and the same tokens, encryption, forwarder and reveal controls apply: the bank file builder is the forwarder for ACH, the one place an account number is decrypted on its way out. Providers do the same, and open-banking aggregators hand out processor tokens for bank accounts so the account number never reaches the platform at all.
 
 ## BIN Data
 
@@ -93,7 +95,7 @@ The BIN table is how a vault answers "what kind of card is this?" without the ca
 
 - **The data comes from your processor or the networks,** as files on a schedule. Visa's published attributes include funding source (credit, debit, prepaid, charge), consumer or commercial platform, country and currency, and a regulated indicator for Durbin-covered debit; PINless debit eligibility comes from the debit networks' own tables.
 - **Load it atomically.** Build the new table beside the old one and swap; a delete-then-insert load leaves a window where every lookup misses.
-- **Match on eight digits.** Visa has assigned only 8-digit BINs since April 2022, so match the longest prefix the data gives you. Store the BIN on the token record at tokenization, so later lookups don't need the number.
+- **Match on eight digits.** Visa has assigned only 8-digit BINs since April 2022, so match the longest prefix the data gives you. Store the BIN on the token record at tokenization, so later lookups don't need the number, and record which version of the table answered each decision it fed ([How Card Payments Work](/docs/industries/payments/card-payments#bins)).
 - **Masking follows the BIN.** With an 8-digit BIN, showing the first eight and last four is allowed (FAQ 1492); truncation for storage has its own maximum formats (FAQ 1091), and different truncations of the same card must never be stored where they can be combined.
 
 ## Running the Environment
@@ -150,3 +152,4 @@ The vault's code is a small part of its security. Most of what PCI DSS checks is
 - [Evervault: Relay](https://docs.evervault.com/primitives/relay), decrypting fields on the way to a processor
 - [AWS Well-Architected: Implement break-glass procedures](https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.5-implement-break-glass-procedures.html), hardware MFA and alerts on emergency access
 - [AWS Systems Manager: Session Manager logging](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-logging.html), recording administrative sessions
+- [Plaid: Auth](https://plaid.com/docs/auth/), tokenized account numbers and processor tokens for bank accounts

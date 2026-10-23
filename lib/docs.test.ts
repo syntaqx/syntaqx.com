@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { getAllDocs } from "./docs";
 import { docRedirects } from "./doc-redirects";
+import { slugifyTag } from "./posts";
 import { INDUSTRIES, industryParts, industrySection, isIndustry } from "./industries";
 
 // The playbook's own guardrails (see /docs/delivery/ci-pipelines). A doc that breaks one of
@@ -11,6 +12,17 @@ import { INDUSTRIES, industryParts, industrySection, isIndustry } from "./indust
 const docs = getAllDocs();
 const slugs = new Set([...docs.map((d) => d.slug), "api"]);
 const h2s = (content: string) => [...content.matchAll(/^## (.+)$/gm)].map((m) => m[1].trim());
+
+/** The ids the renderer gives h2 and h3 headings (lib/posts.ts), outside code blocks. */
+function headingIds(content: string) {
+  const seen = new Map<string, number>();
+  return [...content.replace(/^```[\s\S]*?^```/gm, "").matchAll(/^###? (.+)$/gm)].map((m) => {
+    const base = slugifyTag(m[1].replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")) || "section";
+    const count = seen.get(base) ?? 0;
+    seen.set(base, count + 1);
+    return count ? `${base}-${count}` : base;
+  });
+}
 
 describe("playbook docs", () => {
   it.each(docs.map((d) => [d.slug, d] as const))("%s has complete frontmatter", (_, doc) => {
@@ -40,6 +52,13 @@ describe("playbook docs", () => {
   it.each(docs.map((d) => [d.slug, d] as const))("%s only links to docs that exist", (_, doc) => {
     const linked = [...doc.content.matchAll(/\]\(\/docs\/([a-z0-9/-]+)/g)].map((m) => m[1]);
     for (const slug of linked) expect(slugs, `/docs/${slug}`).toContain(slug);
+  });
+
+  it.each(docs.map((d) => [d.slug, d] as const))("%s only links to sections that exist", (_, doc) => {
+    for (const [, slug, anchor] of doc.content.matchAll(/\]\(\/docs\/([a-z0-9/-]+)#([a-z0-9-]+)\)/g)) {
+      const target = docs.find((d) => d.slug === slug);
+      if (target) expect(headingIds(target.content), `/docs/${slug}#${anchor}`).toContain(anchor);
+    }
   });
 
   it.each(docs.map((d) => [d.slug, d] as const))("%s never wraps JSON in a data envelope", (_, doc) => {

@@ -7,9 +7,9 @@ part = "The Rules"
 tags = ["payments", "surcharging", "convenience-fees", "compliance", "pricing"]
 +++
 
-Every card payment costs the merchant something ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing)), and more merchants now pass that cost to the payer. For a county collecting property tax, a university collecting tuition, a utility or a property manager collecting rent, it's often the deciding factor in whether they take cards at all: their margins can't absorb 2 or 3 percent of a large payment. So a platform serving those verticals will be asked for fees on day one.
+Every card payment costs the merchant something ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing)), and more merchants now pass that cost to the payer. For a county collecting property tax, a university collecting tuition, a utility or a property manager collecting rent, it's often the deciding factor in whether they take cards at all: their margins can't absorb 2 or 3 percent of a large payment. So a platform serving those verticals will be asked for fees on day one, and it only sells fee handling as a feature if it's right. The verticals differ: government and education use service fee programs because statutory amounts leave no margin, utilities can't put convenience fees on their autopay payments, and property managers weigh surcharges and convenience fees against steering payers to [ACH](/docs/industries/payments/ach).
 
-The trouble is that "a card fee" is four different things, each allowed under different conditions by different rulebooks: the card networks' rules, which bind through the merchant's contract, and state law, which binds regardless. Get the category wrong and a merchant is charging an illegal fee on every payment your system processes. This chapter is the map, and the engineering that keeps a platform inside it. None of it is legal advice; the specifics change, and a merchant's counsel and acquirer have the last word.
+The trouble is that "a card fee" is four different things, each allowed under different conditions by different rulebooks: the card networks' rules, which bind through the merchant's contract, and state law, which binds regardless ([The Payments Rulebook](/docs/industries/payments/payments-rulebook) explains why the two differ). Get the category wrong and a merchant is charging an illegal fee on every payment your system processes. This chapter is the map, and the engineering that keeps a platform inside it. None of it is legal advice; the specifics change, and a merchant's counsel and acquirer have the last word.
 
 ## Four Ways to Pass On the Cost
 
@@ -43,7 +43,7 @@ Surcharging on Visa and Mastercard credit cards has been allowed in the US since
 
 Mastercard's rules add that a merchant accepting other networks, such as American Express or Discover, may face further conditions depending on those networks' costs and restrictions; both publish their own terms. In practice a platform applies the strictest rule that covers every card the merchant accepts, which today usually means **3%**, credit only, notice to everyone.
 
-Two federal rules frame all of this. The Durbin Amendment forbids networks from stopping merchants offering a **discount** for paying by cash, check, debit or credit, as long as it doesn't vary by issuer or network, and lets merchants set a **minimum** for credit card purchases of up to **$10**.
+Federal law frames all of this. The Durbin Amendment forbids networks from stopping merchants offering a **discount** for paying by cash, check, debit or credit, as long as it doesn't vary by issuer or network, and lets merchants set a **minimum** for credit card purchases of up to **$10**.
 
 ### Convenience and Service Fees
 
@@ -51,7 +51,7 @@ Visa's own rules describe a convenience fee as a flat fee, clearly disclosed, fo
 
 **Service fees** are the exception for the public sector. Visa allows certain merchants, government and education among them, to assess fixed or variable service fees, under a program that requires registration and is limited to specific merchant category codes: taxes, courts and fines, government services, colleges and schools. A service fee can be a percentage, can apply in person and on recurring payments, must be the same for every card brand, and must be disclosed before the payment completes so the payer can cancel. When a third party charges it on a card-not-present payment, processors describe it going through as a separate transaction from the payment itself.
 
-**Rent has its own program.** Visa's US Rent Payment Program is open only to merchants coded as real estate agents and managers (MCC 6513) and registered with Visa. It allows a fee on debit cards of up to $10, card-not-present only, and treats a fee on credit cards as a surcharge, under the surcharge rules above. A rent platform's fee engine needs the merchant account's category code as an input, which is one reason [Software Platforms](/docs/industries/payments/software-platforms) gives each line of business its own merchant account.
+**Rent has its own program.** Visa's US Rent Payment Program is open only to merchants coded as real estate agents and managers (MCC 6513) and registered with Visa. It allows a flat fee of up to $10 on debit cards (a program fee, not a surcharge), card-not-present only, and treats a fee on credit cards as a surcharge, under the surcharge rules above. A rent platform's fee engine needs the merchant account's category code as an input, which is one reason [Software Platforms](/docs/industries/payments/software-platforms) gives each line of business its own merchant account.
 
 ## What State Law Allows
 
@@ -64,16 +64,7 @@ Network rules are a contract; state law overrides them, and it varies more than 
 
 Those examples will age. The durable lesson is structural: the rules are per jurisdiction, they change by statute and court ruling, and they sometimes apply only to some merchant types, so they belong in data a compliance owner maintains, not in code.
 
-## Who Relies on This
-
-- **Government** collects taxes, fines and permits: amounts set by statute, with no margin to absorb a card fee. Service fee programs exist for exactly this.
-- **Education** collects tuition in large amounts where a percentage fee is significant, again under service fee programs.
-- **Utilities** take many payments online and on autopay, where convenience fees don't apply to the recurring ones; Visa prices exempt utility debit at a low flat interchange of its own.
-- **Property management** collects rent, a large recurring payment, where surcharges, convenience fees and steering payers to [ACH](/docs/industries/payments/ach) all compete.
-
-A platform serving these verticals sells fee handling as a feature. It's only a feature if it's right.
-
-## The Engineering
+## What This Means for the System You Build
 
 - **Decide the fee on the server, from the card.** Look up the BIN before authorization and classify credit, debit or prepaid. Never surcharge debit or prepaid, even when the customer picked "credit" or the card network is ambiguous; when classification fails, charge no surcharge. Record the BIN data version used ([How Card Payments Work](/docs/industries/payments/card-payments)).
 - **Make eligibility configuration, per merchant.** Fee type, rate or flat amount, which channels and card types, the merchant's category, its jurisdiction, and dates: when it notified its acquirer and the networks, and when it may start. A surcharge can't switch on before its notice period has passed.

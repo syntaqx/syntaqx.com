@@ -2,13 +2,13 @@
 title = "ACH & Bank Transfers"
 description = "How ACH really moves money: SEC codes and files, why settled isn't final, returns, reversals and fees, validating accounts, the Nacha rules, RTP and FedNow."
 category = "Payments Industry"
-order = 1404
+order = 1405
 part = "How Money Moves"
 aliases = ["payments/ach"]
 tags = ["payments", "ach", "nacha", "bank-transfers", "ledger"]
 +++
 
-Cards dominate checkout, but bank transfers move payroll, rent, invoices, subscriptions and nearly every payout a platform sends. In the US that mostly means ACH. It is cheap and universal, and it behaves nothing like a card: there is no authorization step, nothing tells you the account has the money, and a debit that "settled" can come back two months later. Engineers who model ACH like a card payment release value they don't have yet. This doc is about building on ACH without doing that, with [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) covering the payout side and [Payment States & Ledgers](/docs/payments/payment-states) the bookkeeping.
+Cards dominate checkout, but bank transfers move payroll, rent, invoices, subscriptions and nearly every payout a platform sends. In the US that mostly means ACH. It is cheap and universal, and it behaves nothing like a card: there is no authorization step, nothing tells you the account has the money, and a debit that "settled" can come back two months later. Engineers who model ACH like a card payment release value they don't have yet. This chapter is about building on ACH without doing that, with [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement) covering the payout side and [Payment States & Ledgers](/docs/payments/payment-states) the bookkeeping.
 
 ## How It Moves
 
@@ -30,7 +30,7 @@ Nacha, the association that writes the rules, doesn't move money; its Operating 
 
 ## Files, Batches and SEC Codes
 
-ACH is batch and store-and-forward, and the file format shows it. A NACHA file is fixed-width text, every line exactly 94 characters, with a record type in the first column: a file header (1), batch headers (5), entry details (6), optional addenda (7), batch controls (8) and a file control (9), padded with lines of 9s to a multiple of ten lines. Each batch carries a **Standard Entry Class** code, and the SEC code is a legal statement about how you got permission:
+ACH is batch and store-and-forward, and the file format shows it: fixed-width text, every line exactly 94 characters, taken apart record by record [below](#anatomy-of-a-nacha-file). Each batch carries a **Standard Entry Class** code, and the SEC code is a legal statement about how you got permission:
 
 | SEC | Used for | Authorization it implies |
 | --- | -------- | ------------------------ |
@@ -40,9 +40,81 @@ ACH is batch and store-and-forward, and the file format shows it. A NACHA file i
 | **CCD** | Business-to-business credits and debits | An agreement between the businesses, one addenda record |
 | **CTX** | Business-to-business with remittance detail | Same, with up to 9,999 addenda records |
 
-Pick the code from how the customer actually authorized you, not from what the bank accepts. A debit sent as PPD when the customer clicked a button in your app is a misrepresented entry, and the authorization you can produce on request is what decides a dispute. Nacha's guide says Originators must be able to produce proof of authorization within 10 days of a request, and recurring consumer debits need terms that tell the customer how to revoke.
+Pick the code from how the customer actually authorized you, not from what the bank accepts. A debit sent as PPD when the customer clicked a button in your app is a misrepresented entry, and the authorization you can produce on request is what decides a dispute. Nacha's guide says Originators must be able to produce proof of authorization within ten banking days of a request, and recurring consumer debits need terms that tell the customer how to revoke.
 
 Two more families of codes live in other chapters: the check conversion codes (ARC, BOC, POP and RCK) in [Accepting Checks](/docs/industries/payments/checks), and the oral authorization rules behind TEL in [Phone Payments](/docs/industries/payments/phone-payments). Canada's equivalent of all of this, pre-authorized debits under Payments Canada's Rule H1, is in [Payments in Canada](/docs/industries/payments/canada).
+
+## Anatomy of a NACHA File
+
+Here is a complete, valid file: a property manager collecting November rent from three tenants by WEB debit, one of them with a remittance addenda. Every routing number in it is fictional, with a valid check digit, and every control total is real.
+
+```text
+101 12345678012345678902610301405A094101FIRST EXAMPLE BANK     EXAMPLE PROPERTIES LLC         
+5225EXAMPLE PROPERTI                    1234567890WEBRENT      NOV 26261102   1123456780000001
+627987654320000123456789     0000185000LEASE-4471     JORDAN RIVERA         R 0123456780000001
+6275555555509876543          0000142500LEASE-4502     SAM OKAFOR            R 1123456780000002
+705RENT NOV 2026 UNIT 12B                                                          00010000002
+63798765432055500012         0000097500LEASE-4519     ALEX CHEN             R 0123456780000003
+822500000402530864190000004250000000000000001234567890                         123456780000001
+9000001000001000000040253086419000000425000000000000000                                       
+9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+```
+
+Each line is one record, identified by its first character. Field positions are fixed, numeric fields are right-justified and zero-filled, and text fields are left-justified, upper case and space-filled.
+
+**File header (`1`)**, one per file:
+
+| Positions | Field | In the example |
+| --- | --- | --- |
+| 2-3 | Priority code | `01`, always |
+| 4-13 | Immediate destination | ` 123456780`: the ODFI's routing number, with a leading space |
+| 14-23 | Immediate origin | `1234567890`: the originator, as the bank assigned it |
+| 24-33 | Creation date and time | `261030 1405`: October 30, 2026, 14:05 |
+| 34 | File ID modifier | `A`: the first file today; the next is `B`, so the bank can tell them apart |
+| 35-40 | Record size, blocking factor, format | `094`, `10`, `1`: fixed values |
+| 41-86 | Destination and origin names | The bank's name and yours |
+
+**Batch header (`5`)**, one per batch:
+
+| Positions | Field | In the example |
+| --- | --- | --- |
+| 2-4 | Service class | `225`: debits only (`220` credits only, `200` mixed) |
+| 5-20 | Company name | `EXAMPLE PROPERTI`: 16 characters, and what appears on the tenant's statement |
+| 41-50 | Company identification | `1234567890`: usually `1` plus the originator's EIN |
+| 51-53 | SEC code | `WEB`: authorized online |
+| 54-63 | Company entry description | `RENT`: also on the statement, and where `REVERSAL`, `RETURN FEE`, `RETRY PYMT` and `ACCTVERIFY` go |
+| 64-69 | Descriptive date | `NOV 26`: free text, shown on the statement |
+| 70-75 | Effective entry date | `261102`: the banking day you want it to settle |
+| 76-78 | Settlement date | Blank: the ACH Operator fills it in |
+| 80-94 | ODFI and batch number | `12345678`, batch `0000001` |
+
+**Entry detail (`6`)**, one per payment, the record you'll build most:
+
+| Positions | Field | In the example (first entry) |
+| --- | --- | --- |
+| 2-3 | Transaction code | `27`: debit to a checking account (`37` savings, `22` and `32` credits, `28` and `38` prenotes) |
+| 4-12 | RDFI routing number | `98765432` and check digit `0` |
+| 13-29 | Account number | `000123456789`, left-justified |
+| 30-39 | Amount | `0000185000`: $1,850.00, in cents, never with a decimal point |
+| 40-54 | Individual ID | `LEASE-4471`: your own reference, echoed back on returns |
+| 55-76 | Individual name | `JORDAN RIVERA` |
+| 77-78 | Payment type code | `R`: recurring (`S` single), required on WEB and TEL debits |
+| 79 | Addenda indicator | `0`, or `1` when an addenda follows |
+| 80-94 | Trace number | `123456780000001`: the ODFI's 8 digits and a sequence, unique per file |
+
+**Addenda (`7`)** carries 80 characters of payment information after type code `05` (`RENT NOV 2026 UNIT 12B`), then its own sequence number and the last seven digits of its entry's trace number, which ties it to the second entry.
+
+**Batch control (`8`)** and **file control (`9`)** are where banks catch mistakes. Each carries the count of entry and addenda records (4), the debit and credit totals in cents ($4,250.00 and $0.00), and an **entry hash**: the sum of every entry's 8-digit RDFI routing number, keeping the rightmost ten digits. Here that's 98765432 + 55555555 + 98765432 = 253086419. The file control adds the batch count and the **block count**: the number of 10-line blocks, which is why the file ends in lines of 9s padding it to a multiple of ten. A file whose controls don't add up is rejected whole, and the acknowledgement says which check failed ([Treasury & Bank Operations](/docs/industries/payments/treasury#bank-files)).
+
+If the first tenant's account is short, a return comes back from the RDFI in its own file a day or two later, as an entry and an addenda:
+
+```text
+626123456780000123456789     0000185000LEASE-4471     JORDAN RIVERA           1987654320000001
+799R01123456780000001      98765432                                            987654320000001
+```
+
+The return's entry uses transaction code `26` (return of a checking debit), is addressed to the ODFI, and carries the same account, amount and individual ID. Its addenda (`799`) holds the reason code `R01`, the original entry's trace number `123456780000001`, and the original RDFI's identification. Match returns on that original trace number, never on name or amount: it's the one field guaranteed to point at exactly one entry you sent.
 
 ## Timing
 
@@ -100,26 +172,39 @@ A returned debit leaves two decisions: whether to charge the payer for it, and w
 | Texas (Bus. & Com. Code 3.506) | $30 | Paper or electronic payments |
 | New York (General Obligations Law 5-328) | $20, or a landlord's actual costs if higher and the lease provides for it | Checks |
 
-Canada goes further and forbids adding fees to a re-presented debit ([Payments in Canada](/docs/industries/payments/canada)). Keep return fees as data per jurisdiction with effective dates, the same way [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
+Canada's Rule H1 lets a dishonoured debit be re-presented only for the same amount, with no fee added ([Payments in Canada](/docs/industries/payments/canada)). Keep return fees as data per jurisdiction with effective dates, the same way [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
 
 **Blocks.** The return code decides what happens to the account:
 
 - **R02, R03, R04** (closed, no account, invalid number): the account number is dead. Stop using it for that payer and ask for a new one; don't retry.
-- **R01, R09** (insufficient or uncollected funds): reinitiate within the rules above. After repeated returns, many leases and billing terms move the payer to certified funds or another method for a period, and in California a landlord may demand cash for up to three months after a bounced payment, with written notice.
-- **R05, R07, R10, R29** (unauthorized or revoked): stop debiting under that authorization at once, and don't debit the account again without a new one. These count toward the 0.5% threshold, so a second debit to the same account is the most expensive mistake on the list.
+- **R01, R09** (insufficient or uncollected funds): reinitiate within the rules above. After repeated returns, many leases and billing terms move the payer to certified funds or another method for a period, and some states let a landlord demand cash or certified funds for a period after a bounce ([Accepting Checks](/docs/industries/payments/checks#rent-and-paper)).
+- **R05, R07, R10, R29** (unauthorized or revoked): stop debiting under that authorization at once, and don't debit the account again without a new one. These count toward Nacha's 0.5% unauthorized return threshold ([below](#the-rules-you-inherit)), so a second debit to the same account is the most expensive mistake on the list.
 - **R16** (frozen): stop, and treat it as a possible sanctions hit.
 
-Build these as **payment method restrictions**: a record with the reason, what it covers (one account number, one payer, or every bank payment), when it started, when it expires and who lifted it, checked whenever a payment is authorized, including at a cash counter ([Cash Payments](/docs/industries/payments/cash-payments)). Match blocked accounts by a keyed hash of the account number, so the block survives the payer entering it again under a new profile, and tell the payer why they're restricted and when it ends.
+Build these as **payment method restrictions**: a record with the reason, what it covers (one account number, one payer, every bank payment, or, used sparingly and reviewed, a whole routing number when fraud concentrates at one bank or prepaid program), when it started, when it expires and who lifted it, checked whenever a payment is authorized, including at a cash counter ([Cash Payments](/docs/industries/payments/cash-payments)). Match blocked accounts by a keyed hash of the account number, so the block survives the payer entering it again under a new profile, and tell the payer why they're restricted and when it ends.
 
 ## The Rules You Inherit
 
 The Nacha Operating Rules reach you through your bank, and the ones engineering owns are concrete:
 
-- **Return rate thresholds.** Unauthorized returns (R05, R07, R10, R11, R29, R51) above 0.5% of an Originator's debits break the Rules. Administrative returns (R02, R03, R04) above 3.0%, or all debit returns above 15.0%, aren't violations by themselves but open a Nacha inquiry. All three are measured over the preceding 60 days or two calendar months. Once a case is opened, the ODFI must bring the rate down within 30 days and keep it there for 180, or the case moves to Nacha's fines, and the ODFI will pass that pressure on to you as a suspended origination account. Monitor these rates per Originator yourself, daily; your bank's report arrives too late.
+- **Return rate thresholds.** Unauthorized returns (R05, R07, R10, R11, R29, and R51 for a misused check conversion) above 0.5% of an Originator's debits break the Rules. Administrative returns (R02, R03, R04) above 3.0%, or all debit returns above 15.0%, aren't violations by themselves but open a Nacha inquiry. All three are measured over the preceding 60 days or two calendar months. Once a case is opened, the ODFI must bring the rate down within 30 days and keep it there for 180, or the case moves to Nacha's fines, and the ODFI will pass that pressure on to you as a suspended origination account. Monitor these rates per Originator yourself, daily; your bank's report arrives too late.
+- **Exposure limits.** Your ODFI must set limits on the dollar value of credits and debits you may originate over a period, monitor your origination and returns across multiple settlement dates, and enforce them (Subsection 2.2.3); a Third-Party Sender must do the same for each originator it serves. Prefunding doesn't count as a limit. For a platform that means per-merchant credit and debit limits, per day and across days, sitting under the bank's limit for you, with debit exposure counted until the return window closes.
 - **Account validation for WEB debits.** Since March 19, 2021, the "commercially reasonable fraudulent transaction detection system" required for WEB debits must include validating the account on its first use and whenever the account number changes. Instant verification through a bank-data provider, a prenote, or micro-deposits all qualify; skipping it does not.
-- **Account numbers are protected data.** Under the Supplementing Data Security Requirements rule, non-consumer Originators, Third-Party Service Providers and Third-Party Senders above 2 million ACH entries a year must render account numbers unreadable wherever they're stored electronically, including in stored authorizations; access controls alone don't count. It phased in for the largest parties on June 30, 2021 and at 2 million on June 30, 2022, and anyone crossing the line has until June 30 of the next year. I apply it at any volume: bank account numbers get the same treatment as card numbers in [Sensitive Data](/docs/payments/sensitive-data).
+- **Account numbers are protected data.** Under the Supplementing Data Security Requirements rule, non-consumer Originators, Third-Party Service Providers and Third-Party Senders above 2 million ACH entries a year must render account numbers unreadable wherever they're stored electronically, including in stored authorizations; access controls alone don't count. It phased in for parties above 6 million entries on June 30, 2021 and above 2 million on June 30, 2022, and anyone crossing the line has until June 30 of the next year. I apply it at any volume: bank account numbers get the same treatment as card numbers in [Sensitive Data](/docs/payments/sensitive-data).
 - **Fraud monitoring, including credits.** The 2026 Risk Management rules require risk-based processes to identify entries that are unauthorized or "authorized under False Pretenses," the business email compromise and impersonation cases where the payer was tricked into a real credit. Phase 1 took effect March 20, 2026 for all ODFIs, for non-consumer Originators, Third-Party Service Providers and Third-Party Senders with 6 million or more originations in 2023, and for RDFIs with 10 million or more receipts in 2023; Phase 2 extended it to everyone else on June 19, 2026, a federal holiday, so in practice June 22. The procedures must be reviewed at least annually. For a platform that means monitoring outbound credits (a vendor's bank details changed yesterday, a first payout to a new account) as seriously as inbound debits.
 - **Notifications of Change.** When account details are outdated, the RDFI may post the entry and send a NOC (C01 incorrect account number, C02 incorrect routing number, and so on) instead of returning it. The Originator must apply the correction within six banking days of receiving it or before the next entry to that account, whichever is later (since June 2024, acting on a NOC for a one-time payment is at the Originator's discretion). Apply NOCs automatically; ignoring them is a rules violation that eventually turns into returns.
+
+## Validating the Account
+
+Nothing in ACH tells you an account exists before you debit it, so you check first. The WEB rule above requires it on first use and whenever the account number changes; it asks only that the account is open and can take ACH entries, not who owns it, and it exempts accounts with a successful payment history and changes made because of a NOC. The methods, roughly cheapest first:
+
+- **The routing number.** Its ninth digit is a check digit (the digits weighted 3, 7, 1, repeating, must sum to a multiple of ten), which catches most typos for free. Then look it up in the Federal Reserve's **E-Payments Routing Directory**, synchronized daily with FedACH, to confirm it's ACH-eligible and current; the FedACH file names the new routing number when banks merge. Several hundred routing numbers are added or retired a year, and Nacha's December 2024 bulletin is blunt that for WEB and TEL debits "it is not commercially reasonable to do nothing." A non-bank gets the full file through its bank, under terms that forbid reselling it.
+- **Instant verification** through an open-banking aggregator confirms the account exists and belongs to the customer in seconds, and gives you a balance check at the moment of authorization that ACH itself never will. It's the better product where customers will log in to their bank.
+- **Database checks** from providers like Early Warning and GIACT report an account's status, and sometimes its owner, without the customer logging in: the fallback for people who won't link a bank.
+- **Micro-entries** prove control of the account: credits under $1 each, optionally with an offsetting debit no larger than them, sent together, with `ACCTVERIFY` in the description and the same company name as future payments. Since March 2023, Originators must also monitor micro-entry volumes for fraud.
+- **Prenotes** are zero-dollar entries that come back as a return if the account is bad. You still wait three banking days before sending live entries, and since June 2024 you may send one at any time, for example to re-check a dormant account.
+
+All of them satisfy the WEB rule; none of them prove the customer has the money next week. Validation reduces administrative returns, not unauthorized ones.
 
 ## Consumer Law: Regulation E
 
@@ -138,19 +223,7 @@ That is a different machine from card [disputes](/docs/industries/payments/dispu
 
 RTP and FedNow are credit push only: the payer's bank sends the money, so there's no debit to claw back, and no return window to wait out. That's the right rail for payouts that must arrive now and for anything where finality matters more than cost. Choosing a rail for each payee, beside virtual cards and checks, is [Vendor Payouts](/docs/industries/payments/vendor-payouts). Participating banks may set lower limits than the network maximum, and not every account can receive them, so instant payouts need a fallback to ACH. Wires remain the tool for large, one-off, business-hours transfers.
 
-## Validating the Account
-
-Nothing in ACH tells you an account exists before you debit it, so you check first. The WEB rule above requires it on first use and whenever the account number changes; it asks only that the account is open and can take ACH entries, not who owns it, and it exempts accounts with a successful payment history and changes made because of a NOC. The methods, roughly cheapest first:
-
-- **The routing number.** Its ninth digit is a check digit (the digits weighted 3, 7, 1, repeating, must sum to a multiple of ten), which catches most typos for free. Then look it up in the Federal Reserve's **E-Payments Routing Directory**, synchronized daily with FedACH, to confirm it's ACH-eligible and current; the FedACH file names the new routing number when banks merge. Several hundred routing numbers are added or retired a year, and Nacha's December 2024 bulletin is blunt that for WEB and TEL debits "it is not commercially reasonable to do nothing." A non-bank gets the full file through its bank, under terms that forbid reselling it.
-- **Instant verification** through an open-banking aggregator confirms the account exists and belongs to the customer in seconds, and gives you a balance check at the moment of authorization that ACH itself never will. It's the better product where customers will log in to their bank.
-- **Database checks** from providers like Early Warning and GIACT report an account's status, and sometimes its owner, without the customer logging in: the fallback for people who won't link a bank.
-- **Micro-entries** prove control of the account: credits under $1 each, optionally with an offsetting debit no larger than them, sent together, with `ACCTVERIFY` in the description and the same company name as future payments. Since March 2023, Originators must also monitor micro-entry volumes for fraud.
-- **Prenotes** are zero-dollar entries that come back as a return if the account is bad. You still wait three banking days before sending live entries, and since June 2024 you may send one at any time, for example to re-check a dormant account.
-
-All of them satisfy the WEB rule; none of them prove the customer has the money next week. Validation reduces administrative returns, not unauthorized ones.
-
-## Building on ACH
+## What This Means for the System You Build
 
 - **Generate files idempotently.** Every entry has a stable internal ID and a trace number, and a file is built from entries not yet submitted, so rebuilding it can't double them. See [Idempotency](/docs/payments/idempotency).
 - **Never resubmit a file blindly.** If a transmission fails ambiguously, ask the bank what it received before sending again. A duplicate file debits every customer in it twice, and every one of those comes back as a return against your rates.
@@ -190,6 +263,8 @@ All of them satisfy the WEB rule; none of them prove the customer has the money 
 - [Florida Statutes 68.065](https://www.flsenate.gov/Laws/Statutes/2025/68.065), service charges on dishonored checks and electronic payments
 - [Texas Business and Commerce Code 3.506](https://texas.public.law/statutes/tex._bus._and_com._code_section_3.506), the $30 processing fee for a dishonored payment device
 - [New York General Obligations Law 5-328](https://www.nysenate.gov/legislation/laws/GOB/5-328), dishonored check charges and the landlord exception
+- [Nacha: Why exposure limits are so important](https://www.nacha.org/news/why-are-exposure-limits-so-important-rmag-sees-several-reasons), establishing, monitoring and enforcing limits for originators and Third-Party Senders
+- [Nacha: Originator Essentials (PDF)](https://www.nacha.org/sites/default/files/2024-10/RMAG_Originator_Essentials.pdf), exposure limits under Subsection 2.2.3, and why prefunding isn't one
 
 **In practice**
 

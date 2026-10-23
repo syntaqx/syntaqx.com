@@ -2,14 +2,14 @@
 title = "Interchange & Pricing"
 description = "What a card payment costs and why: interchange, regulated debit, network fees, downgrades, Level 3 data, pricing models, and how platforms earn on payments."
 category = "Payments Industry"
-order = 1407
+order = 1403
 part = "How Money Moves"
 tags = ["payments", "interchange", "pricing", "durbin", "level-3"]
 +++
 
 Accepting a card costs money, and how much is decided by rules most engineers never see: tables of interchange categories, a federal cap on debit, data requirements for business cards, and a markup set in a contract. For a merchant it's a cost on every sale. For a software platform that offers payments, the gap between what acceptance costs and what it charges is the business model. Either way, the cost of every transaction is computed somewhere, and a payments system that doesn't record it can't tell anyone whether a merchant is profitable, why last month's fees jumped, or what a pricing change will do.
 
-[How Card Payments Work](/docs/industries/payments/card-payments) showed where in the flow the money moves. This chapter is about how much of it each party keeps.
+[How Card Payments Work](/docs/industries/payments/card-payments) showed where in the flow the money moves, and [Card-Present Payments](/docs/industries/payments/card-present) why a chip read costs less than a typed number. This chapter is about how much of the money each party keeps.
 
 ## Three Layers of Cost
 
@@ -23,9 +23,11 @@ What the merchant pays, usually quoted as one **merchant discount rate**, is thr
 
 Interchange is the largest layer on most consumer credit transactions, and it isn't the acquirer's to give away: the network deducts it at settlement. Network fees are smaller and arrive as a long list of line items on the acquirer's bill. Only the markup is a price anyone in the merchant's chain actually sets, which is why every pricing model below is really a statement about how the first two layers are passed through.
 
+Network fees deserve a closer look than they usually get, because they're where cross-border costs live. They include assessments charged as a percentage of volume, per-transaction access and processing fees, and extra fees when the card was issued in a different country from the merchant's acquirer, or when a currency conversion happens. A platform that adds international customers or merchants sees its effective rate rise even though interchange tables didn't change; [Payments in Canada](/docs/industries/payments/canada) shows the effect at the nearest border. Model each line from the acquirer's bill, not one blended number.
+
 ## What Sets Interchange
 
-Visa and Mastercard publish their US interchange tables, and Visa's current schedule took effect on October 24, 2026. A transaction's rate depends on which category it qualifies for, and the category depends on:
+Visa and Mastercard publish their US interchange tables, and Visa's latest schedule takes effect on October 24, 2026. A transaction's rate depends on which category it qualifies for, and the category depends on:
 
 - **Card type.** Regulated debit, exempt debit, prepaid, consumer credit (with higher rates for premium rewards products), and commercial cards each have their own tables.
 - **Channel.** Card-present beats card-not-present, and a key-entered card-present payment is priced closer to online. Visa's exempt debit table charges 0.80% + $0.15 for card-present retail and 1.65% + $0.15 for basic e-commerce.
@@ -39,7 +41,7 @@ The tables change. Visa publishes revisions with effective dates, so interchange
 
 In the US, debit interchange from large issuers is capped by law. The Durbin Amendment directed the Federal Reserve to set the cap, and Regulation II has held it at **21 cents plus 5 basis points** of the transaction, plus a **1-cent fraud-prevention adjustment** for issuers that meet the Fed's fraud standards. It applies to issuers that, with their affiliates, have **$10 billion or more** in assets; smaller issuers are exempt and earn the network's ordinary debit rates, which is why the same $100 online purchase can carry $0.27 or $1.80 of interchange depending on which bank issued the card.
 
-The cap itself is unsettled. The Fed proposed lowering it in November 2023 to 14.4 cents, 4.0 basis points and a 1.3-cent fraud adjustment, recalculated every two years; the Federal Register's Regulation II filings through January 2026 show no final rule. Separately, on August 6, 2025, a federal court in North Dakota (*Corner Post v. Board of Governors*) held Regulation II contrary to the statute and vacated it, then stayed its own ruling pending appeal, and the Fed appealed to the Eighth Circuit on October 6, 2025. Until those resolve, the 2011 numbers still apply, and a pricing system that hard-codes them is one ruling away from wrong.
+The cap itself is unsettled. The Fed proposed lowering it in November 2023 to 14.4 cents, 4.0 basis points and a 1.3-cent fraud adjustment, recalculated every two years; no final rule had been adopted as of October 2026. Separately, on August 6, 2025, a federal court in North Dakota (*Corner Post v. Board of Governors*) held Regulation II contrary to the statute and vacated it, then stayed its own ruling pending appeal, and the Fed appealed to the Eighth Circuit on October 6, 2025, which heard argument in May 2026 and hadn't ruled by October. Until those resolve, the 2011 numbers still apply, and a pricing system that hard-codes them is one ruling away from wrong.
 
 Regulation II also governs **routing**: every debit card must be able to run over at least two unaffiliated networks, and since July 1, 2023, that includes card-not-present payments. The merchant, not the issuer, chooses among them. That choice is money, and [Processor Routing](/docs/industries/payments/processor-routing) covers how to make it.
 
@@ -79,11 +81,13 @@ How the merchant is charged decides who carries the variability of interchange.
 
 Large providers usually offer more than one: Stripe lists interchange-plus among its custom pricing options alongside the flat rate. A platform should be able to represent every model, because it will end up selling different ones to different merchants.
 
+Passing some of this cost on to the payer is a separate question, with its own rules: [Surcharging & Fees](/docs/industries/payments/surcharging-and-fees).
+
 ## How a Platform Earns
 
 A software company that embeds payments earns on the spread. An ISO or referral partner usually receives **residuals**: a share of the markup on its merchants' volume, paid monthly from the processor's reports. A [payment facilitator](/docs/industries/payments/becoming-a-payment-provider), which signs merchants as its own sub-merchants, sets their price itself and keeps the difference between that and its own cost. Either way, revenue is a function of interchange the platform doesn't control, so its margin per merchant swings with that merchant's card mix: a flat-rate merchant whose customers move from debit to rewards credit can go from profitable to loss-making without changing anything. [Payments for Software Platforms](/docs/industries/payments/software-platforms) covers the platform model; the point here is that the platform can't see its margin without the cost data below.
 
-## The Engineering
+## What This Means for the System You Build
 
 - **Store the cost of every transaction, by layer.** From the processor's interchange and fee detail: the interchange category and amount, each network fee, and the markup, linked to the payment they belong to.
 - **Money in minor units, rates as exact decimals.** Basis points or decimal strings, never floats, with the rounding rule written down ([Money & Amounts](/docs/payments/money)). A fraction of a cent per transaction is a reconciliation break at scale.

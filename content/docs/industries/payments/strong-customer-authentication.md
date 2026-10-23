@@ -21,28 +21,11 @@ Under PSD2, an electronic payment the payer initiates must be authenticated with
 | Possession | A phone that receives a one-time code, or a banking app |
 | Inherence | A fingerprint or face scan |
 
-It applies to customer-initiated online payments in the European Economic Area, and the UK kept equivalent rules (the [FCA's SCA rules](https://www.fca.org.uk/firms/strong-customer-authentication) have applied since 14 September 2019). If you take payments from European cards, expect issuers to ask for it, whatever your integration assumes.
+It applies to customer-initiated online payments in the European Economic Area, and the UK kept equivalent rules (the [FCA's SCA rules](https://www.fca.org.uk/firms/strong-customer-authentication) applied from 14 September 2019, with full compliance for online card payments expected by 14 March 2022; across the EEA, supervisors' flexibility for card e-commerce ended on 31 December 2020). If you take payments from European cards, expect issuers to ask for it, whatever your integration assumes.
 
 Two factors from different categories means one stolen thing isn't enough: a phished password without the phone fails, and so does a stolen phone without the PIN. That's why SCA moves fraud economics: stolen card data alone stops being sufficient.
 
-The EU agreed a successor package in November 2025, the Payment Services Regulation (PSR) and PSD3, which keeps strong customer authentication as a core duty ([summary from William Fry](https://www.williamfry.com/knowledge/psr-psd3-eu-payment-services-legislation-is-agreed/)); its application dates were still being finalized at the time of writing. Build for SCA as it works today; nothing in the new package makes authentication optional.
-
-## Exemptions: When You Can Skip the Step
-
-Authenticating every payment would add friction to low-risk ones that never needed it, so the rules carve out exemptions, and using them well is most of the work of a good integration. The important ones, with thresholds as [Stripe's SCA guide](https://stripe.com/guides/strong-customer-authentication) summarizes them:
-
-| Exemption | Applies when | Why it exists |
-| --------- | ------------ | ------------- |
-| **Low value** | Under €30 (£25), until five exempted payments or €100 (£85) in total since the cardholder last authenticated | Small payments carry small losses; the counters stop a fraudster splitting a big purchase into small ones |
-| **Transaction risk analysis** | The payment provider's fraud rate is under 0.13% for payments up to €100, under 0.06% up to €250, under 0.01% up to €500 | Providers that prove low fraud earn the right to skip authentication on more of their traffic |
-| **Fixed-amount recurring** | The same amount to the same merchant, after the first payment was authenticated | The customer authenticated the agreement once; asking again every month adds nothing |
-| **Merchant-initiated** | The customer isn't present, under a mandate they authenticated when the card was saved | Out of scope rather than exempt: there's nobody to authenticate |
-
-Three things make exemptions less straightforward than the table suggests:
-
-- **Exemptions are requests, not rights.** You (or your provider) ask; the issuer can refuse and demand authentication anyway, and an integration that can't handle that will decline real customers.
-- **Exemptions trade away the liability shift.** An exempted payment wasn't authenticated, so if it turns out to be fraud, the dispute is yours (below). Skipping friction on a €480 order to save one tap is a bet on your fraud rate.
-- **The counters belong to the issuer.** You can't know whether this €20 payment is the cardholder's sixth exempted one this week. Design for the issuer to ask, always.
+The EU agreed a successor package in November 2025, the Payment Services Regulation (PSR) and PSD3, which keeps strong customer authentication as a core duty ([summary from William Fry](https://www.williamfry.com/knowledge/psr-psd3-eu-payment-services-legislation-is-agreed/)); its application dates were still pending as of October 2026. Build for SCA as it works today; nothing in the new package makes authentication optional.
 
 ## How 3-D Secure Works
 
@@ -58,6 +41,29 @@ The data is the lever: the more context you send, the more often the issuer deci
 By default the merchant bears the loss on a fraud dispute. When a payment was successfully authenticated with 3DS, the liability typically shifts to the issuer: the bank approved the cardholder's identity, so the bank owns that mistake. That's the business case for 3DS beyond compliance: a merchant selling high-value goods can request authentication on risky orders even where SCA doesn't require it, to move fraud losses off its books.
 
 It's not a guarantee. [Stripe's documentation](https://docs.stripe.com/payments/3d-secure/authentication-flow) is explicit that networks exempt some business types, merchants in fraud monitoring programs can lose it, and it never covers non-fraud disputes such as "item not received". Record the authentication result and the Electronic Commerce Indicator (ECI) on the payment so the evidence exists when a [dispute](/docs/industries/payments/disputes-and-chargebacks) arrives.
+
+## Exemptions: When You Can Skip the Step
+
+Authenticating every payment would add friction to low-risk ones that never needed it, so the rules carve out exemptions, and using them well is most of the work of a good integration. The important ones, with thresholds as [Stripe's SCA guide](https://stripe.com/guides/strong-customer-authentication) summarizes them:
+
+| Exemption | Applies when | Why it exists |
+| --------- | ------------ | ------------- |
+| **Low value** | Under €30 (£25), until five exempted payments or €100 (£85) in total since the cardholder last authenticated | Small payments carry small losses; the counters stop a fraudster splitting a big purchase into small ones |
+| **Transaction risk analysis** | The payment provider's fraud rate is under 0.13% for payments up to €100, under 0.06% up to €250, under 0.01% up to €500 | Providers that prove low fraud earn the right to skip authentication on more of their traffic |
+| **Fixed-amount recurring** | The same amount to the same merchant, after the first payment was authenticated | The customer authenticated the agreement once; asking again every month adds nothing |
+| **Merchant-initiated** | The customer isn't present, under a mandate they authenticated when the card was saved | Out of scope rather than exempt: there's nobody to authenticate |
+
+Three things make exemptions less straightforward than the table suggests:
+
+- **Exemptions are requests, not rights.** You (or your provider) ask; the issuer can refuse and demand authentication anyway, and an integration that can't handle that will decline real customers.
+- **Exemptions trade away the liability shift.** An exempted payment wasn't authenticated, so if it turns out to be fraud, the dispute is yours ([above](#the-liability-shift)). Skipping friction on a €480 order to save one tap is a bet on your fraud rate.
+- **The counters belong to the issuer.** You can't know whether this €20 payment is the cardholder's sixth exempted one this week. Design for the issuer to ask, always.
+
+## On-Session and Off-Session Payments
+
+The hardest SCA problems aren't at checkout; they're in subscriptions, saved cards and anything charged after the customer has left.
+
+A customer-initiated (on-session) payment has the customer in your checkout, able to complete a challenge, and the flow above handles it. A merchant-initiated (off-session) payment charges a saved card later, with the customer absent: a renewal, a usage bill, a no-show fee. Nobody can complete a challenge, so these are out of scope, but only if the card was saved properly: authenticated when it was saved (on the first payment, or a zero-amount setup if there's none), under a mandate the customer agreed to, and with every later charge flagged as off-session. Even then the issuer can ask, and only the customer, back on-session, can answer. How to save a card that keeps working, from the first transaction to network tokens, account updaters and retrying a declined renewal, is [Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials).
 
 ## Modeling the Extra Step in an API
 
@@ -83,22 +89,18 @@ A payment can't always finish in one request: the customer may need to complete 
 - **The response is `200` with a status, not an error.** Needing authentication is a normal outcome of a valid request; a `402` makes every client treat a recoverable step as a failure. Reserve `402` for real declines.
 - **Webhooks report the transition,** so a client that loses its connection mid-challenge learns the outcome from `payment.authorized` or `payment.failed` ([Webhooks](/docs/payments/webhooks)).
 
-### Soft Declines
+### Authentication-Required Declines
 
-An issuer can also decline an unauthenticated attempt with a code meaning "try again with authentication" (a soft decline, such as Stripe's [`authentication_required`](https://docs.stripe.com/declines/codes)). If the customer is present, run 3DS and retry once, which turns a decline into a sale. If not (below), the payment fails and the customer has to come back on-session. Retrying without authentication is a hard decline in waiting, and repeated unauthenticated retries are exactly what card networks penalize.
+One kind of soft decline ([Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials#declines-and-the-rules-on-retrying) covers the rest) means "try again with authentication" ( such as Stripe's [`authentication_required`](https://docs.stripe.com/declines/codes)). If the customer is present, run 3DS and retry once, which turns a decline into a sale. If not ([off-session](#on-session-and-off-session-payments)), the payment fails and the customer has to come back on-session. Retrying without authentication is a hard decline in waiting, and repeated unauthenticated retries are exactly what card networks penalize.
 
-## On-Session and Off-Session Payments
+## What This Means for the System You Build
 
-The hardest SCA problems aren't at checkout; they're in subscriptions, saved cards and anything charged after the customer has left.
-
-A customer-initiated (on-session) payment has the customer in your checkout, able to complete a challenge, and the flow above handles it. A merchant-initiated (off-session) payment charges a saved card later, with the customer absent: a renewal, a usage bill, a no-show fee. Nobody can complete a challenge, so these are out of scope, but only if the card was set up properly, which comes down to the first transaction:
-
-1. **Authenticate when you save the card.** Run SCA on the first payment, or on a zero-amount setup if there's no payment yet. That authenticated setup is what later off-session charges reference.
-2. **Get and keep the mandate:** that you may charge them later, how often, and how the amount is set. It's your evidence the charge was authorized ([Stripe's SCA guide](https://docs.stripe.com/strong-customer-authentication) lists what it should cover).
-3. **Flag every later charge as off-session,** telling the issuer there's no customer to challenge and the payment relies on the mandate.
-4. **Plan for the issuer asking anyway.** Even a correct off-session payment can soft-decline, and only the customer, back on-session, can complete it.
-
-A saved card that skipped step 1 is a liability: every off-session charge on it risks a soft decline you can't resolve without the customer, which shows up as involuntary churn months after the integration shipped. The rest of a saved card's life, from network tokens and account updates to retrying a declined renewal, is [Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials).
+- **Send rich 3-D Secure data** so most authentications stay frictionless.
+- **Request exemptions, but always handle a challenge,** because the issuer decides.
+- **Record the authentication result and ECI on the payment,** since they decide who holds a fraud dispute.
+- **`requires_action` as a real, expiring state,** with the webhook, not the redirect, as the source of truth.
+- **Authenticate when a card is saved,** and flag every later charge as off-session.
+- **Handle authentication-required declines** by bringing the customer back, never by retrying blind.
 
 ## References
 

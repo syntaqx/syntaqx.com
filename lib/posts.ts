@@ -294,18 +294,22 @@ interface HastNode {
 const textOf = (n: HastNode): string =>
   n.type === "text" ? (n.value ?? "") : (n.children ?? []).map(textOf).join("");
 
-/** Give every h2 a slug id (for deep links and the feature contents rail). */
+/**
+ * Give every h2 and h3 a slug id (for deep links); h2s also feed the feature
+ * contents rail. The docs tests mirror this to check anchor links.
+ */
 function rehypeSectionIds(toc?: Heading[]) {
   return () => (tree: HastNode) => {
     const seen = new Map<string, number>();
     const walk = (n: HastNode) => {
-      if (n.type === "element" && n.tagName === "h2") {
+      if (n.type === "element" && (n.tagName === "h2" || n.tagName === "h3")) {
         const text = textOf(n).trim();
         const base = slugifyTag(text) || "section";
         const count = seen.get(base) ?? 0;
         seen.set(base, count + 1);
         const id = count ? `${base}-${count}` : base;
         n.properties = { ...n.properties, id };
+        if (n.tagName === "h3") return;
         toc?.push({ id, text });
         // A link to this section, shown on hover, for sharing a deep link.
         n.children = [

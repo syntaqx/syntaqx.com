@@ -1,17 +1,17 @@
 +++
 title = "Phone Payments"
-description = "Taking cards and bank payments over the phone: MOTO and TEL rules, why telephony is in PCI scope, DTMF masking, recordings, IVR design and remote agents."
+description = "Taking payments by phone and by link: MOTO and TEL rules, telephony in PCI scope, DTMF masking, text-to-pay, recordings, IVR design, remote agents."
 category = "Payments Industry"
 order = 1414
 part = "Taking Payments"
 tags = ["payments", "pci", "moto", "ivr", "contact-center", "ach"]
 +++
 
-A payment taken over the phone is card-not-present, but it's worse than a web checkout in one specific way: the card number passes through a person's ears and a phone system's plumbing before it reaches anything built to protect it. Call centers take rent, premiums, utility bills, collections and every payment from a customer who won't use the app, and each one can leave a card number in a recording, a transcript, a log line or an agent's notebook. This chapter covers the rules for phone payments and the architecture that keeps card data out of the call.
+[Stored cards](/docs/industries/payments/stored-credentials) are charged with nobody there. A phone payment has the customer present but not online, which puts it outside [3-D Secure](/docs/industries/payments/strong-customer-authentication) and inside rules of its own. It's card-not-present, but it's worse than a web checkout in one specific way: the card number passes through a person's ears and a phone system's plumbing before it reaches anything built to protect it. Call centers take rent, premiums, utility bills, collections and every payment from a customer who won't use the app, and each one can leave a card number in a recording, a transcript, a log line or an agent's notebook. This chapter covers the rules for phone payments and the architecture that keeps card data out of the call.
 
 ## The Rules for Taking a Payment by Phone
 
-**Cards: mail order and telephone order (MOTO).** Visa defines it as a card-absent purchase ordered "by telephone, mail, or other means of telecommunication". The authorization carries a MOTO indicator (single, recurring or installment) instead of the e-commerce indicators that 3-D Secure produces, and there's no liability shift: fraud on a MOTO payment is the merchant's. You may ask for the card verification code, and should, but never store it after authorization, the same rule as everywhere else (PCI DSS 3.3.1.2, restated for phone orders in PCI SSC's FAQ 1319).
+**Cards: mail order and telephone order (MOTO).** Visa defines it as a card-absent purchase ordered "by telephone, mail, or other means of telecommunication". The authorization carries a MOTO indicator (single, recurring or installment; a card taken by phone for recurring use starts a [stored credential](/docs/industries/payments/stored-credentials)) instead of the e-commerce indicators that 3-D Secure produces, and there's no liability shift: fraud on a MOTO payment is the merchant's. You may ask for the card verification code, and should, but never store it after authorization, the same rule as everywhere else (PCI DSS 3.3.1.2, restated for phone orders in PCI SSC's FAQ 1319).
 
 **Strong Customer Authentication doesn't apply,** in Europe, to genuine mail and telephone orders. PSD2 excludes them because the payer isn't initiating an electronic payment, and the EBA treats an IVR order the same as a call to an agent, unless the IVR is really initiating the payment over the internet. That gap has been abused: the EBA's 2022 advice on the PSD2 review found that some merchants "unlawfully qualified remote electronic payment transactions, initiated by the payer online, as MOTO in order to circumvent the application of SCA", and that MOTO fraud runs much higher than other payments. Flag a payment as MOTO only when it actually came by phone or mail; [SCA & 3-D Secure](/docs/industries/payments/strong-customer-authentication) covers the online alternative.
 
@@ -29,7 +29,7 @@ A payment taken over the phone is card-not-present, but it's worse than a web ch
 
 PCI SSC's information supplement on telephone payments (version 3.0, November 2018) lists what card data on a call can reach: the SIP trunk or carrier link, the PBX, the IVR, call recording and its storage and backups, speech analytics, the agent's desktop and softphone, screen recording, and a remote agent's home network. Voice and data share networks now, so without segmentation a single phone call can bring the whole office network into scope. A call from a customer isn't in scope until it reaches your infrastructure (FAQ 1153); from that moment, everything it touches is.
 
-You can secure each of those systems to [PCI DSS](/docs/compliance/pci-dss) or you can design so card data never enters them. The supplement prefers the second, and so do I: securing an agent's desktop, a recording archive and an analytics pipeline to CDE standards is an endless project, and the controls are only as good as the least careful agent.
+You can secure each of those systems to [PCI DSS](/docs/compliance/pci-dss) or you can design so card data never enters them. The supplement prefers the second, and I'd choose it too: securing an agent's desktop, a recording archive and an analytics pipeline to CDE standards is an endless project, and the controls are only as good as the least careful agent.
 
 ## Keep the Digits Away From People
 
@@ -52,12 +52,23 @@ Cloud contact centers have built-in versions, and each has a trap:
 
 Whichever you use, what comes out of the capture should be what a web checkout produces: a token from your [card vault](/docs/industries/payments/card-vault), the brand and the last four digits, and nothing the contact center platform can replay.
 
+## Send a Link Instead
+
+The simplest way to keep card data out of a call is to take the payment out of the call: the agent, or an automated message, sends the customer a link, and the customer pays on a hosted payment page on their own phone. The same link works by text or email for a bill that's due, a balance after a call, or an invoice, which is why "text to pay" is a product of its own.
+
+- **It's an online payment now, not MOTO.** The customer is entering their own card in a browser, so 3-D Secure applies and its liability shift is available: the legitimate version of what the EBA criticized above.
+- **The link is a bearer token.** Anyone holding it can pay, and some links show a name and balance, so it's single-use, bound to one amount and payee, expiring, and carries no personal data in the URL. Behind it is a payment in `pending`, created with an [idempotency key](/docs/payments/idempotency), so a customer tapping twice pays once. Providers set their own bounds; Stripe's checkout sessions, for example, expire between 30 minutes and 24 hours after creation.
+- **The page is hosted, never the message.** PCI DSS forbids sending unprotected card numbers by end-user messaging, and PCI SSC's FAQ 1085 names email, SMS, chat and instant messaging (requirement 4.2.2). The link opens your [hosted fields](/docs/industries/payments/card-vault#getting-the-card-in); nobody ever replies with card details.
+- **Texting consumers needs consent.** Under the TCPA, automated texts to a mobile number need the consumer's prior express consent, and marketing texts need prior express written consent. Since April 11, 2025 a consumer can revoke consent by any reasonable means, honored within ten business days; the FCC's September 30, 2026 order narrowed what an opt-out covers (stopping one kind of informational message no longer stops them all) once it takes effect. A payment reminder to a customer who gave their number for account messages is informational; add a coupon and it's marketing.
+- **Carriers have rules too.** Business texting from ordinary 10-digit numbers requires A2P 10DLC registration of your brand and each campaign, and US carriers have blocked texts from unregistered numbers since September 2023. CTIA's messaging principles, the industry's guidance, expect an opt-in for each purpose and a working opt-out.
+- **Assume impostors.** Fake payment texts are among the most common scams, and the FTC tells consumers that legitimate companies don't ask for account details by text. Send from one recognizable sender and domain, never ask for a reply with payment details, put the amount and what it's for in the message, and tell customers what a real link looks like, so the next fake one stands out.
+
 ## Recordings
 
 Call recordings are where phone payments most often break PCI DSS, because they're made by default, kept for years, and copied to backups and analytics.
 
 - **Pause and resume is a weak control.** Stopping the recording during payment takes the recorder out of scope at best and leaves the agent and their desktop in. Manual pausing fails when an agent forgets to pause (card data recorded) or forgets to resume (the rest of the call lost, which can break your own retention obligations). Automated pausing, triggered when the agent opens the payment screen, can be bypassed by an agent who takes the number another way. If you rely on it, check recordings for card data regularly; the supplement suggests weekly.
-- **The security code must never persist in a recording.** PCI SSC's FAQ 1210, updated June 2025, says storing a card verification code in a digital audio recording after authorization violates requirement 3.3.1, even encrypted. Prevent it from being recorded, redact it if your platform can, or delete it once the authorization completes. Only where none of that is technically possible does the FAQ allow compensating controls, documented, risk-assessed every year and validated by your assessor. Backups and archives are recordings too.
+- **The security code must never persist in a recording.** PCI SSC's FAQ 1210, updated June 2025, says storing a card verification code in a digital audio recording after authorization violates requirement 3.3.1.2, even encrypted. Prevent it from being recorded, redact it if your platform can, or delete it once the authorization completes. Only where none of that is technically possible does the FAQ allow compensating controls, documented, risk-assessed every year and validated by your assessor. Backups and archives are recordings too.
 - **Consent to record** is a separate law. Federal law needs one party's consent, but around a dozen states, California, Florida, Illinois, Massachusetts, Pennsylvania and Washington among them, require everyone's, and on a call across states the strictest rule generally applies. Announce recording at the start of every call.
 
 ## Speech, Transcripts and AI
@@ -71,6 +82,7 @@ So card digits are collected by keypad, never by speech recognition, and transcr
 - **Validate before submitting.** Card length, brand prefix and the Luhn check digit run in the flow, so a mistyped number is caught while the caller is still on the line, and the expiry and security code are checked for shape. A decline from the processor costs the call; a validation prompt costs a second.
 - **Read back the last four digits only,** and never the security code. PCI DSS caps a displayed number at the BIN and last four (3.4.1), and a read-back is a display.
 - **Timeouts that fit fumbling for a card.** Amazon Connect defaults to five seconds between digits and lets the first entry wait longer; give people time to find the card, and let a key (often `*`) clear and restart.
+- **Rate-limit the line.** A keypad payment line is a card-testing endpoint with no CAPTCHA; apply the same per-card and per-caller limits as [Fraud & Risk](/docs/industries/payments/fraud-and-risk#card-testing).
 - **Don't transfer mid-capture.** Digits a caller types ahead during a transfer between flows can be dropped, and a partial number gets submitted.
 - **Charge idempotently.** The flow may retry after a timeout; the payment request carries an [idempotency key](/docs/payments/idempotency) so a retry can't charge twice. Twilio's agent-assisted payment API requires one.
 - **Plan the failure paths.** When masking or the IVR is down, the fallback must still keep card data out of recordings and agents' hands, and callers who can't use a keypad need a spoken path, handled by trained staff with recording off and the data destroyed after use. A fallback nobody designed becomes the agent writing the number down.
@@ -84,6 +96,7 @@ A home agent who hears card numbers puts a home network, a personal room and wha
 - **MOTO flagged only for real phone and mail orders,** with the security code requested and never stored.
 - **TEL debits with recorded oral authorization** and the required elements, kept two years, and no telemarketing payment methods the TSR bans.
 - **DTMF masking or a payment IVR** so card digits never reach agents, recordings or the CRM, with tone bleed and signaling events tested.
+- **Payment links** that are single-use, expiring and hosted, sent with consent from a registered sender, so the payment leaves the call entirely.
 - **Contact-center traps closed:** encrypted capture, no card data in attributes or logs, PCI modes enabled where they exist.
 - **Recordings that can't hold a security code,** consent announced on every call, and keypad entry, never speech, for card digits.
 - **An IVR that validates, reads back four digits, charges idempotently** and has a designed fallback.
@@ -98,6 +111,8 @@ A home agent who hears card numbers puts a home network, a personal room and wha
 - [PCI SSC: FAQ 1153](https://www.pcisecuritystandards.org/faqs/1153/), how PCI DSS applies to VoIP
 - [16 CFR Part 310: Telemarketing Sales Rule](https://www.ecfr.gov/current/title-16/chapter-I/subchapter-C/part-310), express verifiable authorization and the bans on remotely created payment orders and cash-to-cash transfers
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the mail/phone order definition and card-absent disputes
+- [47 CFR 64.1200](https://www.ecfr.gov/current/title-47/section-64.1200), TCPA consent for texts and revocation by any reasonable means
+- [PCI SSC: FAQ 1085](https://www.pcisecuritystandards.org/faqs/1085), card numbers over email, SMS, chat and other end-user messaging
 
 **Reference**
 
@@ -107,6 +122,9 @@ A home agent who hears card numbers puts a home network, a personal room and wha
 - [Nacha: Comment letter on recurring TEL debits (2013)](https://www.ftc.gov/sites/default/files/documents/public_comments/2013/08/00028-86275.pdf), recurring telephone authorizations allowed since 2011
 - [RFC 4733: RTP Payload for DTMF Digits](https://www.rfc-editor.org/rfc/rfc4733), keypad digits carried as telephony events
 - [18 U.S.C. 2511](https://www.law.cornell.edu/uscode/text/18/2511), the federal one-party consent rule for recording
+- [FCC 26-67: TCPA consent revocation order](https://docs.fcc.gov/public/attachments/FCC-26-67A1.pdf), opt-out scope and designated opt-out methods, adopted September 30, 2026
+- [CTIA: Messaging Principles and Best Practices](https://api.ctia.org/wp-content/uploads/2023/05/230523-CTIA-Messaging-Principles-and-Best-Practices-FINAL.pdf), consent per messaging purpose and opt-out handling
+- [FTC: How to recognize and report spam text messages](https://consumer.ftc.gov/articles/how-recognize-and-report-spam-text-messages), fake payment and account texts
 
 **In practice**
 
@@ -118,3 +136,5 @@ A home agent who hears card numbers puts a home network, a personal room and wha
 - [Twilio: PCI workflows](https://www.twilio.com/docs/voice/pci-workflows), PCI Mode and why it can't be disabled
 - [Genesys Cloud: Secure flows](https://help.genesys.cloud/110267), hiding input from agents and recordings, and the protocol capture warning
 - [Kilpatrick: Wiretap laws in the United States](https://ktslaw.com/en/Insights/Alert/2024/7/Wiretap-Laws-in-the-United-States), one-party and all-party consent states
+- [Twilio: Shutdown of unregistered 10DLC messaging](https://support.twilio.com/hc/en-us/articles/14910496447771-Shutdown-of-Unregistered-10DLC-Messaging), carrier blocking of unregistered numbers since September 2023
+- [Stripe: Checkout session expiration](https://docs.stripe.com/payments/checkout/managing-limited-inventory), payment sessions that expire between 30 minutes and 24 hours
