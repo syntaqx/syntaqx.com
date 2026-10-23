@@ -2,7 +2,7 @@
 title = "Merchant Onboarding"
 description = "Knowing who processes payments on a platform: KYC and KYB, a verification state machine, progressive onboarding, underwriting, and an API that says what's due."
 category = "Payments Industry"
-order = 1411
+order = 1412
 part = "Taking Payments"
 aliases = ["payments/merchant-onboarding"]
 tags = ["payments", "onboarding", "kyc", "compliance"]
@@ -32,7 +32,7 @@ The people behind a business matter most, because a company is easy to create an
 | `restricted` | Yes, or limited | No | Something new is due (a document, a re-verification, a review) and its deadline passed |
 | `rejected` | No | Remaining balance only, after a hold | Failed verification, prohibited business, or confirmed fraud |
 
-Separating **accepting payments** from **receiving payouts** is the key design choice. Money taken in while a merchant is restricted stays on the platform, where it can still cover refunds and disputes; money paid out is gone. So when something is uncertain, the safe lever is to keep accepting payments and stop payouts, which protects the platform without breaking checkout. A rejected merchant's balance is still theirs, released after the [dispute window](/docs/industries/payments/disputes-and-chargebacks) has run.
+Separating **accepting payments** from **receiving payouts** is the key design choice. Money taken in while a merchant is restricted stays on the platform, where it can still cover refunds and disputes; money paid out is gone. So when something is uncertain, the safe lever is to keep accepting payments and stop payouts, which protects the platform without breaking checkout. A rejected merchant's balance is still theirs, released after the [dispute window](/docs/industries/payments/disputes-and-chargebacks#the-lifecycle) has run, or the longest delivery horizon of what it sold, whichever is later.
 
 ## Progressive Onboarding
 
@@ -53,11 +53,19 @@ Model the **application** and the **merchant** as separate objects. An applicati
 
 Templates belong here too. A platform rarely onboards every merchant the same way: a template decides which fields an application asks for and which pricing it carries, by segment or vertical, so a small landlord and a national management company answer different questions on the way to the same kind of merchant.
 
-Onboarding collects some of the most sensitive data a platform holds: government ID numbers, document images, dates of birth, bank account numbers. All of it follows [Sensitive Data](/docs/payments/sensitive-data) in full, and raw document images are kept only as long as verification or the law requires. So does the taxpayer data a platform needs for 1099-K reporting, a legal name and TIN matched against the IRS before the year ends ([Software Platforms](/docs/industries/payments/software-platforms#1099-k-and-taxpayer-data)).
+Onboarding collects some of the most sensitive data a platform holds: government ID numbers, document images, dates of birth, bank account numbers. All of it follows [Sensitive Data](/docs/payments/sensitive-data) in full, and raw document images are kept only as long as verification or the law requires. So does the taxpayer data a platform needs for 1099-K reporting, a legal name and taxpayer identification number (TIN) matched against the IRS before the year ends ([Software Platforms](/docs/industries/payments/software-platforms#1099-k-and-taxpayer-data)).
 
 ## Underwriting and Risk Tiers
 
 Verification answers "who is this?"; underwriting answers "how much can go wrong?" A verified, legitimate business can still be risky: a travel agency takes payment months before the flight, a subscription with an awkward cancel flow generates disputes, and a high-ticket electronics seller is a fraud magnet.
+
+What underwriting looks at, beyond identity:
+
+- **What's sold and how,** from the description, the website and the merchant category code: some categories carry more disputes and fraud by nature.
+- **When it's delivered.** Money taken today for goods or services delivered months later (travel, events, furniture, subscriptions paid annually) is exposure: if the merchant fails before delivering, every customer disputes, and the platform pays. Stripe defines a merchant's exposure as unfulfilled volume still subject to refunds and disputes.
+- **History,** from prior processing statements: volume, average ticket, refund and dispute rates.
+- **Financial strength,** for larger or riskier merchants: financial statements, credit, and how long the business has operated.
+- **Policies:** refund and cancellation terms, and whether they're visible to customers.
 
 Underwriting assigns a **risk tier**, and the tier sets the controls:
 

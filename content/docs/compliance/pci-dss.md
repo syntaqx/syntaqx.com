@@ -18,6 +18,17 @@ What changed engineering work was v4.0's **future-dated requirements**, mandator
 
 v4 also added the **customized approach**: instead of the defined requirement, you show how your control meets the requirement's stated objective, and the assessor derives tests for it. The standard aims it at risk-mature organizations, warns it takes more documentation and effort, and it can't be used on an SAQ, only in a Report on Compliance. Some requirements, like never storing sensitive authentication data, can't be customized at all.
 
+## The Vocabulary
+
+A few terms run through everything below:
+
+- **CDE:** the cardholder data environment, every system that stores, processes or transmits card data, plus whatever can reach those systems. It's what's in scope.
+- **QSA:** a Qualified Security Assessor, an outside assessor certified by the Council. For Level 1 merchants, Visa and Mastercard also accept a ROC done internally and signed by an officer, and Mastercard names the Council's certified Internal Security Assessors (ISAs) for it.
+- **ROC:** the Report on Compliance, the assessor's full report, built by sampling systems, reading configurations and interviewing engineers.
+- **SAQ:** a Self-Assessment Questionnaire, one of several cut-down versions of the standard.
+- **ASV scan:** a quarterly external vulnerability scan by an Approved Scanning Vendor, with rescans until it passes (11.3.2). Even SAQ A includes it, for the page that hosts the redirect or iframe.
+- **AOC:** the Attestation of Compliance, the signed summary that ends every assessment. It's what acquirers and customers ask for, and the standard expects service providers to share theirs.
+
 ## Merchant or Service Provider
 
 The standard covers anyone who stores, processes or transmits cardholder data, or can affect its security, in one of two roles, and the role matters more than any level.
@@ -40,14 +51,6 @@ The Council doesn't define levels. Each brand sets its own by annual transaction
 Below Level 2 the brands diverge. Visa's current program page lists three merchant levels, the third being everyone under 1 million e-commerce transactions. Mastercard's rules keep four: Level 3 is 20,000 to 1 million e-commerce transactions, Level 4 everyone else, and neither has to validate to Mastercard directly. Discover publishes three levels on the same 6 million and 1 million lines. American Express counts differently: Level 1 starts at 2.5 million Amex transactions, Level 2 at 50,000, Level 3 at 10,000, and Levels 3 and 4 submit documents only when Amex asks. Quarterly ASV scans aren't a level perk either way; they come from the standard itself (11.3.2) for whatever you expose to the internet in scope.
 
 Service providers have two levels, and the line is low. Visa's Level 1 is VisaNet processors and any provider handling over 300,000 Visa transactions a year; Mastercard's is every processor, merchant payment gateway, token service provider and several other types **regardless of volume**, plus payment facilitators above 300,000 Mastercard transactions. American Express puts its service provider line at 2.5 million. Level 1 means an annual ROC by a Qualified Security Assessor and an Attestation of Compliance signed by both the provider and the assessor. Everyone under the line validates with SAQ D for Service Providers, but Visa only lists a provider on its Global Registry of Service Providers, which acquirers and large customers check, once a QSA has validated it. A gateway is Mastercard Level 1 from its first transaction, so a serious service provider plans for a QSA from the start.
-
-The vocabulary:
-
-- **QSA:** a Qualified Security Assessor, an outside assessor certified by the Council. For Level 1 merchants, Visa and Mastercard also accept a ROC done internally and signed by an officer, and Mastercard names the Council's certified Internal Security Assessors (ISAs) for it.
-- **ROC:** the Report on Compliance, the assessor's full report, built by sampling systems, reading configurations and interviewing engineers.
-- **SAQ:** a Self-Assessment Questionnaire, one of several cut-down versions of the standard.
-- **ASV scan:** a quarterly external vulnerability scan by an Approved Scanning Vendor, with rescans until it passes (11.3.2). Even SAQ A includes it, for the page that hosts the redirect or iframe.
-- **AOC:** the Attestation of Compliance, the signed summary that ends every assessment. It's what acquirers and customers ask for, and the standard expects service providers to share theirs.
 
 ## Which SAQ: Architecture Decides
 

@@ -3,7 +3,7 @@ title = "Strong Customer Authentication & 3-D Secure"
 nav_title = "SCA & 3-D Secure"
 description = "When a card payment needs the cardholder to authenticate, the exemptions that skip it, why the liability shift matters, and how an API models the extra step."
 category = "Payments Industry"
-order = 1412
+order = 1414
 part = "Taking Payments"
 aliases = ["payments/strong-customer-authentication"]
 tags = ["payments", "sca", "3ds", "psd2", "authentication"]
@@ -13,7 +13,7 @@ tags = ["payments", "sca", "3ds", "psd2", "authentication"]
 
 ## What SCA Requires
 
-Under PSD2, an electronic payment the payer initiates must be authenticated with at least two independent factors from different categories:
+Under PSD2 (the EU's second Payment Services Directive), an electronic payment the payer initiates must be authenticated with at least two independent factors from different categories:
 
 | Category | Example |
 | -------- | ------- |
@@ -35,6 +35,22 @@ The EU agreed a successor package in November 2025, the Payment Services Regulat
 - **Challenge:** the issuer wants proof and shows the customer a step: a code by SMS, approval in the banking app, a biometric.
 
 The data is the lever: the more context you send, the more often the issuer decides frictionlessly, which gets the authenticated outcome without the conversion cost of a challenge. Sending the minimum and getting challenged on everything is how 3DS earns its reputation for hurting checkout.
+
+### The Three Domains
+
+3-D Secure is named for the three domains it spans, and a provider needs to know which parts are its own:
+
+- **The merchant and acquirer domain:** the merchant's **3DS Requestor**, the **3DS SDK** in a mobile app, and the **3DS Server** that builds the authentication messages. This is the provider's side.
+- **The interoperability domain:** each network's **Directory Server**, which routes a request to the right issuer and knows which card ranges take part.
+- **The issuer domain:** the issuer's **Access Control Server** (ACS), which decides frictionless or challenge and runs the challenge.
+
+The messages come in pairs. The 3DS Server asks the Directory Server which card ranges participate (PReq/PRes) and caches the answer; it sends the authentication request (AReq), the ACS answers (ARes) frictionlessly or with a challenge; the challenge runs in the customer's browser or app (CReq/CRes); and the ACS reports the outcome to the 3DS Server (RReq/RRes). A data-only variant shares the context with the issuer without authenticating, to improve approval rates where a challenge isn't wanted.
+
+**The result has to reach the authorization.** A successful authentication returns an authentication value (Visa calls it the CAVV) and an e-commerce indicator, and the authorization carries both. On Visa, ECI 05 means fully authenticated, 06 an attempt, 07 not authenticated, and Visa's rules make a fraud dispute invalid only when the authenticated or attempted result and its CAVV were in the authorization request. A 3DS integration that authenticates but drops the CAVV on the way to the processor gets the friction and none of the protection. Mastercard uses its own ECI values (02 authenticated, 01 attempted).
+
+**Buy the 3DS Server, usually.** EMVCo approves 3DS Servers, SDKs and ACSs against specific versions of the specification and its test suites, and a provider that operates a 3DS Server, Directory Server or ACS falls under PCI's 3DS Core Security Standard ([Network Certification](/docs/industries/payments/network-certification#3-d-secure-and-tokens)). Most providers integrate an approved server instead. Version 2.3.1 replaced 2.3.0 in 2022, and EMVCo recommends 2.2 or higher.
+
+Outside Europe, nothing requires 3-D Secure. Merchants in the US use it for the liability shift on risky payments, and an issuer may still ask for it on any payment.
 
 ## The Liability Shift
 
@@ -115,6 +131,10 @@ One kind of soft decline ([Stored Cards & Recurring Billing](/docs/industries/pa
 - [Stripe: SCA readiness](https://docs.stripe.com/strong-customer-authentication), saving cards for off-session use and the mandate agreement
 - [Stripe: Authenticate with 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow), the `requires_action` flow, frictionless vs challenge, and the limits of the liability shift
 - [Stripe: Decline codes](https://docs.stripe.com/declines/codes), `authentication_required` and other soft declines
+- [PCI SSC: 3DS Core Security Standard FAQ (PDF)](https://listings.pcisecuritystandards.org/documents/FAQs_for_PCI_3DS_Core_Security_Standard.pdf), the three domains and the 3DS Server, Directory Server and ACS
+- [Visa: Visa Secure processing requirements (PDF)](https://usa.visa.com/dam/VCOM/global/support-legal/documents/visa-secure-vbn-visa-public.pdf), PReq/PRes, the CAVV in authorization and ECI 05
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), fraud disputes invalid when the CAVV was in an authenticated authorization
+- [EMVCo: EMV 3-D Secure 2.3.1 (PDF)](https://emvco.com/wp-content/uploads/2022/11/EMV-3DS-2.3.1-press-release.pdf), version 2.3.1 replacing 2.3.0
 
 **In practice**
 

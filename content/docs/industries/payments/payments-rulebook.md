@@ -2,7 +2,7 @@
 title = "The Payments Rulebook"
 description = "How payments rules fit together: network contracts like PCI DSS and Nacha, the laws behind them, who enforces each, and which apply from merchant to provider."
 category = "Payments Industry"
-order = 1408
+order = 1409
 part = "The Rules"
 aliases = ["compliance/payments-rulebook"]
 tags = ["compliance", "payments", "regulation", "pci", "nacha"]
@@ -58,9 +58,9 @@ The engineering consequence is the same on every rail: a consumer payment isn't 
 
 ## The Financial Crime Layer
 
-**The Bank Secrecy Act** is the root of KYC. Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers: anyone holding 25% or more of the equity. If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting. Many payment companies aren't MSBs because FinCEN's payment processor exemption covers a business that facilitates purchases or bill payments, under an agreement with the seller, settling only through systems limited to BSA-regulated institutions. Whether you fit is fact-specific, and FinCEN's rulings on it are worth reading before the business model is set, not after.
+**The Bank Secrecy Act** is the root of KYC (know your customer: verifying who a customer is). Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers: anyone holding 25% or more of the equity. If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting. Many payment companies aren't MSBs because FinCEN's payment processor exemption covers a business that facilitates purchases or bill payments, under an agreement with the seller, settling only through systems limited to BSA-regulated institutions. Whether you fit is fact-specific, and FinCEN's rulings on it are worth reading before the business model is set, not after.
 
-**OFAC sanctions** apply to every US person, with no threshold and no exemption. Screening happens at onboarding and again on payments, against the SDN list and against entities 50% or more owned by blocked persons. A match isn't a fraud signal to be weighed; it's a stop.
+**OFAC sanctions** apply to every US person, with no threshold and no exemption. Screening happens at onboarding and again on payments, against the Specially Designated Nationals (SDN) list and against entities 50% or more owned by blocked persons. A match isn't a fraud signal to be weighed; it's a stop.
 
 **State money transmission** is the license question. Holding or moving other people's money can require a license in nearly every state, each with net worth, surety bond and permissible-investment requirements; the Money Transmission Modernization Act is the states' effort to make those uniform. Agent-of-payee structures and bank partnerships are how many platforms avoid licensing, and both are questions for counsel, state by state ([Cash Payments](/docs/industries/payments/cash-payments#who-s-a-money-transmitter) walks through what an agent-of-payee contract has to say).
 

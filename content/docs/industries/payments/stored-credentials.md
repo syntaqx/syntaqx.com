@@ -3,7 +3,7 @@ title = "Stored Cards & Recurring Billing"
 nav_title = "Stored Cards & Recurring"
 description = "Saving a card and charging it later: the stored credential framework, network transaction IDs, network tokens, account updater, retry rules and dunning."
 category = "Payments Industry"
-order = 1413
+order = 1415
 part = "Taking Payments"
 tags = ["payments", "cards", "recurring", "subscriptions", "tokens"]
 +++
@@ -89,7 +89,7 @@ A subscription charges a fixed price on a schedule. Bills don't work that way: r
 - **Compute the amount at execution, not at scheduling.** The customer who paid half by phone this morning owes half tonight. Read the balance in the same transaction that creates the payment, and skip the cycle, recording why, when the balance is zero or in credit.
 - **Cap it.** The customer agreed to pay their bill, not any amount at all. Store a maximum with the authorization, and route anything above it to the customer for approval instead of charging it.
 - **Tell consumers when the amount varies.** For a preauthorized debit from a consumer's bank account whose amount changes, Regulation E requires notice of the amount at least 10 days before the transfer, unless the consumer chose to be told only when it falls outside a range they set; Canada's pre-authorized debit rules require the same 10 days ([Payments in Canada](/docs/industries/payments/canada)). On cards, the same notice is good practice and good dispute evidence.
-- **One payment per cycle.** The autopay's idempotency key is the account and the billing period, so a rerun after a crash can't charge twice, and a failed run feeds the same [dunning](#dunning) as any renewal.
+- **One payment per cycle.** The autopay's idempotency key is the account, the billing period and the attempt, and a unique constraint allows one successful payment per period, so a rerun after a crash can't charge twice, and a failed run feeds the same [dunning](#dunning) as any renewal.
 - **Returns turn autopay off.** A bank autopay that comes back unauthorized ends the authorization, and repeated insufficient-funds returns should pause it and tell the customer, under the restrictions in [ACH & Bank Transfers](/docs/industries/payments/ach#after-a-return-fees-and-blocks).
 
 Providers model both shapes. Payabli's autopays, for example, run either on an interval until an end date or against the open balance on a fixed day of the month, skipping the cycle when nothing is owed. Recurring bank debits have their own authorization rules: [ACH](/docs/industries/payments/ach) standing and recurring authorizations, recurring [TEL](/docs/industries/payments/phone-payments) authorizations by phone, and Canadian pre-authorized debits. On the bank side, notifications of change do the account updater's job.
@@ -125,7 +125,7 @@ A stored card is more than a token. Keep the agreement with it:
 
 ## Renewal Jobs
 
-Recurring billing is a scheduled job charging money, which makes it the place an at-least-once [background job](/docs/architecture/background-jobs) can double-charge someone. Derive the [idempotency key](/docs/payments/idempotency) from the billing period, not the run: `subscription_0193d2c4:2026-11`. A job that crashes and reruns, or two workers that pick up the same renewal, send the same key and get the same payment back. Record the outcome on the period before moving on, so a retry schedule always knows which attempt it's on and never exceeds the networks' limits because a counter lived only in memory.
+Recurring billing is a scheduled job charging money, which makes it the place an at-least-once [background job](/docs/architecture/background-jobs) can double-charge someone. Derive the [idempotency key](/docs/payments/idempotency) from the billing period and the attempt, not the run: `subscription_0193d2c4:2026-11:attempt-1`. A job that crashes and reruns, or two workers that pick up the same renewal, send the same key and get the same payment back, while a retry days later after a soft decline is attempt 2, a new key, and a real second try instead of a replay of the first decline. The rule that a period is charged successfully at most once is a unique constraint on the period's record in the database, not something an idempotency key, which expires, can promise. Record the outcome on the period before moving on, so a retry schedule always knows which attempt it's on and never exceeds the networks' limits because a counter lived only in memory.
 
 ## What This Means for the System You Build
 
@@ -133,7 +133,7 @@ Recurring billing is a scheduled job charging money, which makes it the place an
 - **Account updater and network tokens** to keep saved cards alive.
 - **Hard and soft declines classified from the raw codes,** with per-card retry counters persisted and capped below the network limits.
 - **Dunning as states,** and trial reminders sent before the first charge.
-- **Renewal and autopay keys derived from the billing period,** with balance autopay computed at execution and capped.
+- **Renewal and autopay keys derived from the billing period and attempt,** one successful payment per period enforced by the database, and balance autopay computed at execution and capped.
 
 ## References
 

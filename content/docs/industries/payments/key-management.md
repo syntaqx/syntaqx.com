@@ -2,7 +2,7 @@
 title = "HSMs & Key Management"
 description = "Payments cryptography as its own discipline: HSMs, key hierarchies, key blocks, DUKPT and PIN blocks, the move off TDES, key ceremonies and cryptoperiods."
 category = "Payments Industry"
-order = 1423
+order = 1425
 part = "Running a Provider"
 tags = ["payments", "security", "cryptography", "hsm", "pci", "keys"]
 +++
@@ -21,22 +21,6 @@ Two certifications matter:
 - **PCI PTS HSM**, the card industry's own approval for HSMs used in payment functions. PCI publishes the approved devices and when each approval expires.
 
 A **payment HSM** is not a general-purpose one with a different label. It implements payment-specific commands (PIN translation, PIN verification, card verification values, EMV cryptograms, DUKPT) and enforces payment-specific rules, like refusing to move a PIN block from one card number to another.
-
-### Cloud or On-Premises
-
-Running payment HSMs used to mean racks in two data centers, smart cards in safes, and quarterly trips for key ceremonies. The cloud options now cover most of it, with different trade-offs:
-
-| Option | What you get | What you still own |
-| ------ | ------------ | ------------------ |
-| **AWS Payment Cryptography** | A managed, elastic payment crypto API on PCI PTS HSM V3 and FIPS 140-2 Level 3 hardware, with TR-31 and TR-34 key exchange, DUKPT, PIN translation and EMV cryptogram validation | Key policy, key exchange with partners, and how your application uses it; no raw access to the hardware |
-| **Azure Payment HSM** | Single-tenant Thales payShield 10K devices (FIPS 140-2 Level 3, PCI HSM v3) in your virtual network, under your sole administrative control | Everything a payShield owner does, including capacity, backup and key ceremonies, just without the data center |
-| **AWS CloudHSM** | Single-tenant, general-purpose HSMs validated at FIPS 140-2 or 140-3 Level 3 | You build the payment functions; it's the right tool for vault and signing keys, not PIN processing |
-| **Google Cloud HSM** | A managed cluster of FIPS 140-2 Level 3 HSMs behind Cloud KMS | General-purpose keys only; not a payment HSM |
-| **On-premises payment HSMs** | Full control, any vendor feature | Hardware lifecycle, physical security, secure rooms and every procedure around them |
-
-The FIPS levels above are what each service's documentation states. NIST moved every FIPS 140-2 certificate to its historical list in September 2026; modules on it can stay in existing systems, but new procurements, federal ones especially, should look for FIPS 140-3 validation.
-
-My default for a new provider is a managed payment crypto service for PIN and EMV work and a general-purpose HSM-backed KMS for everything else. The question to ask any option is the one the assessor will ask: where does the clear key exist, and who can make it exist?
 
 ## The Key Hierarchy
 
@@ -72,6 +56,22 @@ A terminal can't hold one key for its whole life: steal the device, extract the 
 
 The PIN itself travels as a **PIN block**, defined by ISO 9564. **Format 0**, the long-standing default for TDES, combines the PIN with the card number into an 8-byte block. **Format 4**, added for 128-bit block ciphers in a 2015 amendment, is the one for AES. Whatever the format, the provider's servers only ever hold the encrypted block, and the only operation they perform on it is asking the HSM to translate it from the terminal's key to the network's key. AWS's documentation states the rule an HSM enforces: the card number on both sides of a translation must match, so a PIN can't be moved to a different card.
 
+## Where the HSMs Run
+
+Running payment HSMs used to mean racks in two data centers, smart cards in safes, and quarterly trips for key ceremonies. The cloud options now cover most of it, with different trade-offs:
+
+| Option | What you get | What you still own |
+| ------ | ------------ | ------------------ |
+| **AWS Payment Cryptography** | A managed, elastic payment crypto API on PCI PTS HSM V3 and FIPS 140-2 Level 3 hardware, with TR-31 and TR-34 key exchange, DUKPT, PIN translation and EMV cryptogram validation | Key policy, key exchange with partners, and how your application uses it; no raw access to the hardware |
+| **Azure Payment HSM** | Single-tenant Thales payShield 10K devices (FIPS 140-2 Level 3, PCI HSM v3) in your virtual network, under your sole administrative control | Everything a payShield owner does, including capacity, backup and key ceremonies, just without the data center |
+| **AWS CloudHSM** | Single-tenant, general-purpose HSMs validated at FIPS 140-2 or 140-3 Level 3 | You build the payment functions; it's the right tool for vault and signing keys, not PIN processing |
+| **Google Cloud HSM** | A managed cluster of FIPS 140-2 Level 3 HSMs behind Cloud KMS | General-purpose keys only; not a payment HSM |
+| **On-premises payment HSMs** | Full control, any vendor feature | Hardware lifecycle, physical security, secure rooms and every procedure around them |
+
+The FIPS levels above are what each service's documentation states. NIST moved every FIPS 140-2 certificate to its historical list in September 2026; modules on it can stay in existing systems, but new procurements, federal ones especially, should look for FIPS 140-3 validation.
+
+My default for a new provider is a managed payment crypto service for PIN and EMV work and a general-purpose HSM-backed KMS for everything else. The question to ask any option is the one the assessor will ask: where does the clear key exist, and who can make it exist?
+
 ## Leaving TDES
 
 Most of the installed base of payment cryptography still runs on Triple DES, and the rest of the world is leaving it. NIST's SP 800-131A Rev. 2 (2019) disallows two-key TDEA for encryption, and three-key TDEA has been disallowed for encryption since the end of 2023. The PCI Council stopped treating two-key TDEA as strong cryptography years ago and recommends AES.
@@ -85,6 +85,7 @@ Some keys have to be moved by people: the first ZMK with a network, the master k
 - **Split knowledge:** the key is divided into components, and no one person ever holds enough to reconstruct it. Each component has its own **key custodian**.
 - **Dual control:** no sensitive key operation can be performed by one person alone.
 - **Ceremonies:** a scripted, witnessed, logged procedure in a controlled room, where custodians enter their components, every step is recorded, and the record is signed.
+- **Key check values:** each component, and the assembled key, is verified by its check value, a short fingerprint made by encrypting a block of zeros with the key. Custodians compare check values to confirm they entered the right component and the parties built the same key, without anyone revealing the key itself. A component whose check value doesn't match is never used.
 
 PCI DSS requires split knowledge and dual control for any manual cleartext key operation on keys that protect stored card data (requirement 3.7.6), and PCI PIN applies the same principles to every PIN key. The engineering goal is to need ceremonies as rarely as possible: remote key loading and electronic key exchange replace most of them, which is why they're worth the effort. In September 2026 the Council published **Key Management and Operations (KMO) v1.0**, a standard of its own for the lifecycle of keys protecting account data, starting with the key management behind PIN and P2PE; expect assessors to start asking against it.
 

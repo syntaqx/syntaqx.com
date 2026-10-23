@@ -2,12 +2,22 @@
 title = "Vendor Payouts"
 description = "Paying vendors and suppliers: ACH, virtual cards, push to card, checks and instant rails, enrollment, stopping redirect fraud, funding, 1099s."
 category = "Payments Industry"
-order = 1418
+order = 1421
 part = "Paying Out"
 tags = ["payments", "payouts", "accounts-payable", "fraud", "tax"]
 +++
 
 [Settlement](/docs/industries/payments/payouts-and-settlement) pays a merchant the money its own customers paid it. A vendor payout is the other direction: a business paying the people it owes, its suppliers, contractors and landlords, out of its own money. It looks like the same "send money to a bank account" problem, and the differences are where the work is. The payer chooses the recipient, so the main fraud is getting the payer to choose the wrong one. The vendor chooses how it wants to be paid, so one payable can leave by five different rails with five different timelines and failure modes. And the payer owes the IRS a record of who got paid what.
+
+## Bills Before Payouts
+
+A payout starts as a **bill**: what a vendor says it's owed, entered by hand, imported, or read from an invoice. The bill has its own lifecycle before any money moves: entered, sent for approval, partially approved, approved or rejected, then in transit, partially paid and paid. Approval is where the controls live. Thresholds add approvers as amounts grow, the person who entered a bill can't approve it, and a bill to a vendor whose bank details changed recently waits for the checks in [Stopping the Changed Bank Account](#stopping-the-changed-bank-account). Only an approved bill becomes a payable, and only a payable becomes a payout, so every dollar out traces back through an approval to an invoice.
+
+## Enrollment and Method Choice
+
+Vendor onboarding is a small version of [merchant onboarding](/docs/industries/payments/merchant-onboarding): collect the legal name and taxpayer ID on a W-9, the payment method and its details, and a remittance contact. Screen vendors against sanctions lists like any other payee ([The Payments Rulebook](/docs/industries/payments/payments-rulebook)).
+
+Let vendors choose their method in a portal, with the payer able to set defaults and restrictions. Each vendor has a primary method and a fallback, and a payable records which method actually paid it. The portal is also the most valuable thing an attacker can reach, which is the next section.
 
 ## The Methods
 
@@ -59,12 +69,6 @@ Many vendors still get paid by check, often because nobody ever enrolled them in
 - **Voids and reissues are a two-step state change.** A lost check is voided at the bank first, confirmed, and only then reissued. Reissuing before the void lands is how a vendor gets paid twice.
 - **Uncashed checks become someone else's problem, then the state's.** After a dormancy period with no activity, unclaimed property must be turned over to the state, and uncashed checks are a classic form of it. The holder owes outreach to the payee and a report to each state on its schedule. An outstanding check is therefore a ledger state with an aging clock, not a dead record.
 
-## Enrollment and Method Choice
-
-Vendor onboarding is a small version of [merchant onboarding](/docs/industries/payments/merchant-onboarding): collect the legal name and taxpayer ID on a W-9, the payment method and its details, and a remittance contact. Screen vendors against sanctions lists like any other payee ([The Payments Rulebook](/docs/industries/payments/payments-rulebook)).
-
-Let vendors choose their method in a portal, with the payer able to set defaults and restrictions. Each vendor has a primary method and a fallback, and a payable records which method actually paid it. The portal is also the most valuable thing an attacker can reach, which is the next section.
-
 ## Stopping the Changed Bank Account
 
 The defining fraud in payables is business email compromise: an email, apparently from a vendor or an executive, asking to send the next payment somewhere new. The FBI's 2025 Internet Crime Report counts 24,768 BEC complaints and $3.05 billion in reported losses, second only to investment fraud. The attacker doesn't need to break anything. They only need the payer to update a bank account.
@@ -89,10 +93,6 @@ Someone has to fund a payout before it leaves, and each model moves risk somewhe
 Holding funds for others between payer and payee is where [money transmission](/docs/industries/payments/becoming-a-payment-provider#holding-other-people-s-money) comes in. Whether a payables product needs licenses, or fits an exemption such as acting as the payer's agent with funds in accounts its bank controls, depends on the actual flow of funds and the state. That's a question for counsel, decided before the ledger is designed, because the answer decides which accounts the money sits in.
 
 Whatever the model, the ledger enforces one rule: never disburse more than the payer has funded and you've reserved. A payable moves through **approved**, **funded** and **paid**, and the funding is a ledger entry, not an assumption.
-
-## Bills Before Payouts
-
-A payout starts as a **bill**: what a vendor says it's owed, entered by hand, imported, or read from an invoice. The bill has its own lifecycle before any money moves: entered, sent for approval, partially approved, approved or rejected, then in transit, partially paid and paid. Approval is where the controls live. Thresholds add approvers as amounts grow, the person who entered a bill can't approve it, and a bill to a vendor whose bank details changed recently waits for the checks in the next section. Only an approved bill becomes a payable, and only a payable becomes a payout, so every dollar out traces back through an approval to an invoice.
 
 ## A Payout Is a State Machine
 

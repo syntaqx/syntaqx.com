@@ -1,0 +1,148 @@
++++
+title = "Inside a Processor"
+description = "What an acquiring processor runs: the authorization switch, network connections, stand-in, clearing files, settlement, exceptions, merchant setup and billing."
+category = "Payments Industry"
+order = 1426
+part = "Running a Provider"
+tags = ["payments", "processing", "iso-8583", "clearing", "settlement", "networks"]
++++
+
+Most providers never connect to Visa or Mastercard themselves: an acquiring processor does it for them, and the provider's integration ends at the processor's API. This chapter is what's on the other side of that API, the machinery you'd run if you became the processor. Even if you never do, it explains every timeout, decline code, late file and surprise fee you'll meet. One caution: the networks' detailed specifications (message field layouts, clearing record formats, settlement report contents) are licensed to members and their processors, not published. What follows is drawn from the networks' public rules and from processors' published documentation, and it says where the detail stops being public.
+
+## One Authorization, End to End
+
+[How Card Payments Work](/docs/industries/payments/card-payments#iso-8583-what-s-on-the-wire) introduced ISO 8583's vocabulary. Here is one card-not-present authorization traveling through every system that touches it:
+
+![An authorization's path: checkout calls the provider's API, which checks risk and swaps the token for the card number in the vault; the acquiring processor turns the request into an ISO 8583 0100 message and sends it over a dedicated connection to the network's switch, which routes it to the issuer's processor; the 0110 response returns the same way. If the issuer doesn't answer in time, the network's stand-in service answers for it.](/diagrams/auth-path.svg "Five systems in a few seconds. Each hop has its own timeout, and the network will answer for an issuer that doesn't.")
+
+1. **Checkout to provider.** A JSON request with a token, an amount and an idempotency key. The provider checks risk, decides routing, and detokenizes through the vault's forwarder ([Running a Card Vault](/docs/industries/payments/card-vault#who-gets-the-number-back)).
+2. **Provider to acquiring processor.** The processor's front end maps the request onto an ISO 8583 `0100` authorization request and holds a persistent connection to each network.
+3. **Processor to network.** Over a dedicated circuit, framed with a length header, to Visa's VisaNet Integrated Payment (V.I.P.) system or Mastercard's switch.
+4. **Network to issuer.** The network routes by BIN to the issuer's processor, which checks the account, its fraud models and any authentication, and answers with a `0110`.
+5. **Back the same way,** with an authorization code and a response code.
+
+The clocks are set by the rules. In the US, Visa requires issuers to answer in an average of no more than 5 seconds over each month, and forbids an acquirer or merchant from timing out a point-of-sale transaction in less than 15 seconds; an approval that arrives after a merchant timed out must be reversed. Your own timeouts sit inside those numbers, and every one of them produces the unknown outcome [Retries & Timeouts](/docs/architecture/retries-and-timeouts) warns about.
+
+**What the provider's request becomes.** Every field a merchant sends lands in a data element:
+
+| From the API | ISO 8583 data element |
+| --- | --- |
+| Card number (after detokenizing) | 2 (PAN) |
+| Purchase, refund, verification | 3 (processing code) |
+| Amount, currency | 4, 49 |
+| Card-present or online, chip or keyed | 22 (POS entry mode) |
+| Terminal and merchant | 41 (terminal ID), 42 (merchant ID) |
+| Statement descriptor and location | 43 (card acceptor name and location) |
+| Chip data from the terminal | 55 (EMV data) |
+| The processor's trace for this message | 11 (STAN), 37 (RRN) |
+| The original, on a reversal | 90 (original data elements) |
+
+Network-specific fields carry the rest: the authentication result from [3-D Secure](/docs/industries/payments/strong-customer-authentication), stored-credential flags and the network transaction ID ([Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials)), and the identifiers that link every later message to this one (Mastercard has required a transaction link identifier in every lifecycle message since October 2025). Their exact positions are in the networks' licensed specifications.
+
+**What comes back,** and what the provider should pass through: the authorization code (38), the response code (39) in the network's raw form beside your own classification, address and security code match results, the approved amount when it's a partial approval, and the network transaction ID.
+
+## Dual Message and Single Message
+
+The networks run two kinds of system, and a processor speaks both:
+
+- **Dual message:** authorization online (`0100`) now, clearing by file later. Credit cards and signature debit work this way, and it's what makes capture a separate step.
+- **Single message:** one `0200` financial message that authorizes and clears together, typical of PIN debit and ATMs. Visa's Single Message System and Mastercard's equivalent settle these without a separate clearing record, so there's nothing to capture later, and a reversal undoes the money, not just a hold.
+
+The difference reaches all the way to reconciliation: dual-message transactions are matched by the clearing record's reference, single-message ones by the authorization's.
+
+## Connecting to the Networks
+
+A processor's connection to a network is infrastructure, not an API key:
+
+- **Dedicated circuits, twice over.** Mastercard requires a circuit "equipped with back-up service" and testing and certification before any processing. Visa requires members that have Visa Extended Access, its on-premises access equipment, to send their traffic through it. Increase, an issuer processor, has described connecting each of its data centers to each of Visa's two active-active US data centers through at least two circuits from different carriers, over Visa's private network rather than the internet.
+- **Network management messages.** `0800` messages sign a connection on and off and test it with echoes, and carry dynamic key exchange: new PIN-encryption working keys sent under a zone master key established in a [key ceremony](/docs/industries/payments/key-management#key-ceremonies-split-knowledge-and-dual-control).
+- **Reference data with deadlines.** Routing tables and account-range files arrive from the networks and must be loaded on their schedule; Mastercard's rules give processors days, not weeks.
+- **Change control with the network.** Visa expects 45 days' notice of changes to a member's access setup, and Mastercard 24 hours' notice of scheduled downtime. The certification calendar in [Network Certification](/docs/industries/payments/network-certification) sits on top.
+
+## When the Issuer Doesn't Answer
+
+**Stand-in processing** is the network answering on the issuer's behalf. Visa's Stand-In Processing (STIP) steps in when an issuer or its processor is unavailable, too slow, or has asked Visa to answer for it, using the issuer's own parameters; Mastercard's stand-in service is mandatory for every card program, with parameters at or above Mastercard's defaults. Either way the issuer is liable for what stand-in approves, and learns about it afterward. That's why a response code `91` (issuer unavailable) is rarer than issuer outages: the network usually answers instead.
+
+Acquirers have their own version. Mastercard recognizes approvals made at the acquirer's interface when the issuer path is down, up to limits it sets, with the issuer liable within those limits. Terminals that approve offline do something similar at the edge, and there the merchant usually carries the risk: Stripe's offline mode, for one, puts every later decline on the merchant ([Card-Present Payments](/docs/industries/payments/card-present#offline-approved-isn-t-paid)).
+
+## Clearing
+
+In the dual-message world, captured transactions travel to the network as **clearing records** in files:
+
+- **Visa's BASE II** is the file-based service that collects, clears and settles between Visa and its members. Processors' documentation describes its transaction codes, such as `TC05` for a sales draft, `TC06` for a credit voucher (a refund) and `TC25` for a sale's reversal; the full record layouts are in Visa's licensed manuals.
+- **Mastercard's Global Clearing Management System** exchanges IPM files, in which a first presentment is a `1240` message, a chargeback a `1442`, administrative messages `1644` and fee collections `1740`. Processors report six clearing cycles a day.
+
+Clearing has deadlines measured from the authorization. Visa's rules allow 5 calendar days for card-present and merchant-initiated transactions, 10 for card-absent ones the cardholder started, 30 for extended and estimated authorizations at hotels, cruise lines and car rentals, and 2 hours for a fuel pump. Mastercard allows 30 days after a pre-authorization and 7 after a final one. A late presentment can be disputed, and it's one more reason capture deadlines are states, not hopes ([Payment States & Ledgers](/docs/payments/payment-states#authorizations-expire)).
+
+**Interchange is decided at clearing.** The network prices each record from the data it carries: on Visa's exempt debit table, the same retail purchase clears at 0.80% + $0.15 when it carries what the custom payment service program requires, 1.75% + $0.20 at the electronic rate, and 1.90% + $0.25 at the standard rate when it doesn't ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing#downgrades)). The exact data elements each category needs are in the networks' manuals; the processor's job is to send them every time.
+
+**A refund is a clearing record too.** It flows from acquirer to issuer as a credit, the money moves the other way at settlement, and the merchant's funding is reduced by it. A refund can also be authorized first, so the issuer can reject a credit to a closed card before it's sent.
+
+**The acquirer reference number** (ARN) identifies each clearing record, and it's the key for everything after: disputes cite it, and cardholders' banks use it to trace a refund. Reconcile dual-message transactions by ARN and single-message ones by RRN.
+
+## Settlement
+
+Clearing says what happened; settlement moves the money. Visa's VisaNet Settlement Service computes each member's net position per settlement service and currency and delivers settlement reports (processors describe the daily summary as VSS-110, delivered in machine-readable and printable report records); Mastercard settles through its Settlement Account Management system, with clearing and settlement report files. Each member settles through a settlement bank in the settlement currency's country, and a member that submits clearing "must be ready to settle".
+
+The reconciliation is three-way at the network level just as it is at the bank ([Treasury & Bank Operations](/docs/industries/payments/treasury#bank-reconciliation-is-its-own-discipline)): the clearing you sent, summed by cycle, against the network's settlement report, against the transfer that arrived, which comes as a separate bank transfer per settlement service and currency. Only then does the acquirer fund merchants, which Visa's rules require "promptly", net of refunds, disputes, fees and reserves ([Payouts & Settlement](/docs/industries/payments/payouts-and-settlement)).
+
+## Exceptions
+
+Disputes have their own systems. Visa requires members to process disputes, responses, pre-arbitration and arbitration through Visa Resolve Online, and treats a missed response deadline as closing the case against the party that missed it. Mastercard runs its cycle (first chargeback, second presentment, pre-arbitration, arbitration) through Mastercom. Issuers report confirmed fraud through Visa's fraud reporting system, within 60 days of the transaction, and to Mastercard's Fraud and Loss Database; those reports are what the networks' monitoring programs count ([Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks#monitoring-programs-the-threshold-that-ends-accounts)). A processor turns all of it into the dispute objects and events a provider exposes to merchants.
+
+## Setting Up a Merchant
+
+Before the first authorization, the processor and acquirer register the merchant with the networks' identifiers:
+
+- **The acquirer's own identifiers:** a Visa acquiring identifier and a Mastercard ICA, licensed to the member, with a sponsor liable for any it licenses to members it sponsors.
+- **The merchant's MCC and name.** The acquirer must assign the MCC that most accurately describes the business, and the name the merchant primarily uses with its customers, corrected if it confuses cardholders ([How Card Payments Work](/docs/industries/payments/card-payments#merchant-identity)).
+- **Payment facilitators and agents.** A payment facilitator gets an identifier from the network through its acquirer and assigns sub-merchant identifiers of its own, and both travel in every transaction. Visa requires members to register third-party agents before they provide any services, and from October 24, 2026 to disclose those agents' identifiers in the US and Canada; Mastercard's payment facilitators are registered by their acquirers.
+- **Terminated-merchant screening.** Mastercard's MATCH system is mandatory for acquirers: inquire before signing a merchant, and add one within 5 days of terminating it for cause; Visa's terminated merchant file must be updated by the next business day ([Merchant Onboarding](/docs/industries/payments/merchant-onboarding#underwriting-and-risk-tiers)).
+
+## Billing Merchants
+
+Merchants don't pay interchange; they pay their acquirer a merchant discount, and how that's built is the pricing model ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing#pricing-models)). Two operational facts shape the billing system. Networks can bill fees for a transaction up to two months after it was processed, so an interchange-plus statement is an estimate trued up later. And fees are either deducted from each day's funding or billed monthly and debited from the merchant's account, as Payabli's statements describe, which makes the monthly statement the document a merchant reconciles against ([Operating the Platform](/docs/industries/payments/operating-the-platform#statements-and-reports)). The acquiring entity also files each merchant's 1099-K, reporting gross amounts without deducting refunds or fees ([Payments for Software Platforms](/docs/industries/payments/software-platforms#1099-k-and-taxpayer-data)).
+
+## Becoming the Processor
+
+Visa calls a company directly connected to VisaNet that provides authorization, clearing or settlement services a VisaNet processor; a non-member signs an agreement with Visa to become one. The rules then ask for what this chapter describes: authorization service 24 hours a day, contingency plans for processor failure, certified connections with backup, a settlement bank, PCI DSS validation at the service provider's highest level, PIN security for any PIN traffic, and network certification of every message type you send ([Network Certification](/docs/industries/payments/network-certification)). Capital and membership requirements come through the sponsor or the network and aren't published; [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider) covers the path.
+
+Instant payments have the same structure with different names: a FedNow participant can authorize a service provider to send and receive messages and operate its connection, under an agreement the Federal Reserve approves.
+
+## What This Means for the System You Build
+
+- **Timeouts inside the networks' clocks,** with every late approval reversed and every unknown outcome resolved by query.
+- **A mapping from your API to ISO 8583,** versioned, with network-specific fields owned by someone who has the specifications.
+- **Redundant, certified network connections,** network management traffic, and reference data loaded on the networks' deadlines.
+- **Stand-in and offline approvals as distinct outcomes,** with the liability each carries recorded.
+- **Clearing within the presentment deadlines,** with the data that qualifies each transaction for its interchange.
+- **Three-way settlement reconciliation** by cycle, service and currency, before merchants are funded.
+- **Merchant setup with the right MCC, name and identifiers,** MATCH checked, and agents registered before they work.
+- **Billing that expects fees to arrive late,** and statements merchants can reconcile.
+
+## References
+
+**Specifications**
+
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), V.I.P. and BASE II, response times and timeouts (7.3), stand-in, processing timeframes (5.7.3.5), settlement (7.7), dispute processing in VROL (11.3), merchant MCC and name rules (1.5.1), third-party agent registration (1.9.8) and the terminated merchant file
+- [Mastercard Transaction Processing Rules (copy hosted by Moneris)](https://www.moneris.com/-/media/files/terms-and-conditions/card-brands/mastercard/mastercard-transaction-processing-rules.pdf), the Interchange System, connectivity and certification, stand-in, presentment timeframes and lifecycle identifiers
+- [Visa USA Interchange Reimbursement Fees](https://usa.visa.com/content/dam/VCOM/download/merchants/visa-usa-interchange-reimbursement-fees.pdf), the categories clearing qualifies for, and merchant discount versus interchange
+- [Federal Reserve: Operating Circular 8](https://www.frbservices.org/wp-content/uploads/040126-operating-circular-8.pdf), FedNow participants and their service providers
+
+**Reference**
+
+- [Wikipedia: ISO 8583](https://en.wikipedia.org/wiki/ISO_8583), message type indicators, data elements and bitmaps
+- [Mastercard Developers: MATCH](https://developer.mastercard.com/match/documentation/), mandatory inquiry and listing of terminated merchants
+- [Mastercard Developers: Dispute resolution cycle](https://developer.mastercard.com/mastercom/documentation/dispute-resolution-cycle/), first chargeback through arbitration in Mastercom
+- [IRS: Instructions for Form 1099-K](https://www.irs.gov/instructions/i1099k), the payment settlement entity and gross reporting
+
+**In practice**
+
+- [Increase: Visa redundancy](https://www.increase.com/articles/visa-redundancy), dedicated circuits to Visa's data centers and the connection protocol
+- [Paymentology: Visa clearing and settlement samples](https://developer.paymentology.com/docs/data-clearing-settlement-samples-visa), BASE II transaction codes and VSS reports
+- [Paymentology: Clearing, settlement and reconciliation](https://developer.paymentology.com/bankinglive/docs/txn-clearing-settlement-reconciliation), IPM message types and Mastercard clearing cycles
+- [Silverflow: Network funds transfers report](https://docs.silverflow.com/guides/network-funds-transfers-report), one transfer per settlement service and currency
+- [PayNet: MyDebit ISO 8583 specifications](https://docs.developer.paynet.my/mydebit/mydebit-cnp/mydebit-iso8583-specifications), sign-on, echo, key exchange and late-response reversals in a published network spec
+- [Adyen: Raw acquirer responses](https://docs.adyen.com/development-resources/raw-acquirer-responses), network response codes as a provider maps them
+- [Stripe: Interchange-plus fees and network costs](https://support.stripe.com/questions/reviewing-ic-fees-stripe-fees-and-network-costs?locale=en-GB), network fees billed up to two months later
+- [Payabli: Fees and statements](https://docs.payabli.com/guides/pay-ops-fees-statements-overview), monthly statements and fee debits

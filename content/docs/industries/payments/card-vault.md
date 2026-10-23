@@ -3,7 +3,7 @@ title = "Running a Card Vault"
 nav_title = "Card Vault"
 description = "Building the one service that holds card numbers: token design, envelope encryption, who may detokenize, capture iframes, BIN data and the CDE around it."
 category = "Payments Industry"
-order = 1422
+order = 1424
 part = "Running a Provider"
 tags = ["payments", "pci", "tokenization", "security", "cryptography", "vault"]
 +++
@@ -107,6 +107,11 @@ The vault's code is a small part of its security. Most of what PCI DSS checks is
 - **No standing access.** MFA for every non-console access into the CDE (8.4.2), on top of the MFA for reaching the network remotely. Shell access through a session broker that records the session, not through SSH keys handed out to people. A **break-glass** role with hardware MFA, an alert on every use, and a test on a schedule, because an emergency path nobody has tried is a second outage. Passwords for any local accounts use a modern password hash ([Authentication & Sessions](/docs/security/authentication)), and nothing hard-codes a credential in a script, config file or source (8.6.2): processor keys and database passwords live in a secret manager.
 - **Logs that someone reads.** Every access to card data, every admin action, every reveal and detokenization, shipped to storage the CDE can't modify (10.2, 10.3), reviewed by automation rather than a person skimming email (10.4.1.1), and kept 12 months with three immediately available (10.5.1).
 - **Change goes through one door.** A reviewed pull request by someone other than the author, a [CI pipeline](/docs/delivery/ci-pipelines) whose tests actually run, and a deploy from the pipeline only. No `git pull` on a production host, no deploy triggered by an unauthenticated request, and infrastructure changes planned in review and applied with approval, not auto-applied on merge. Pre-production uses test cards, never live ones (6.5.5), and never production keys (3.6.1.1).
+- **A defense in front of every public endpoint.** Since March 31, 2025, public-facing web applications in scope need an automated technical solution that detects and prevents web attacks, a web application firewall or equivalent, running continuously (6.4.2). The capture iframe and tokenize endpoint are exactly those applications.
+- **TLS everywhere, verified everywhere.** Card data crosses networks only over strong cryptography with trusted, valid certificates (4.2.1), and nothing turns certificate verification off, not a staging flag, not a test client pointed at production. A disabled check that ships is a man-in-the-middle waiting for a route.
+- **The cloud's own audit log.** Changes to the CDE's accounts, networks, keys and roles are recorded by the cloud provider's control-plane log, sent to the same protected store as everything else. Most cloud breaches are a configuration change nobody saw.
+- **Scanned and tested on a schedule.** Internal vulnerability scans and external scans by an approved scanning vendor every three months (11.3.1, 11.3.2), internal and external penetration tests at least once a year and after significant change (11.4), and dependency and infrastructure-as-code scanning in CI; [Vulnerability Management](/docs/security/vulnerability-management) has the program around it.
+- **Accounts that lock.** The reveal console and every admin login lock after no more than ten failed attempts, for at least 30 minutes or until an administrator unlocks them (8.3.4).
 - **Scope reviewed every six months** as a service provider (12.5.2.1): where card data flows, where it's stored, including backups, and what can reach it.
 
 ## What This Means for the System You Build

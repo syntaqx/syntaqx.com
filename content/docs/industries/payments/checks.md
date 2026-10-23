@@ -2,7 +2,7 @@
 title = "Accepting Checks"
 description = "Taking checks as payment: image clearing under Check 21, remote deposit capture, Reg CC holds, returns and late claims, conversion to ACH, lockbox and fraud."
 category = "Payments Industry"
-order = 1406
+order = 1405
 part = "How Money Moves"
 tags = ["payments", "checks", "check-21", "remote-deposit", "reg-cc", "ach"]
 +++
@@ -40,13 +40,13 @@ What the capture side owes the bank, and itself:
 - **Duplicate detection across every deposit you've ever taken.** The same check scanned twice, by two employees, or by one customer at two properties, is the most common RDC loss. Key on routing number, account number, serial number and amount, and keep the keys forever, not for a rolling window. Duplicates at other institutions you can't see; that's what the indemnity and return reason Y (duplicate presentment) are for.
 - **The paper has a lifecycle.** Mark it as processed when scanned so it can't be scanned again, keep it securely for the period your bank agreement requires, then destroy it. A drawer of uncashed originals in an office is a second deposit waiting to happen.
 
-The bank side is set out in the FFIEC's guidance on RDC risk, issued in 2009: customer suitability reviews, deposit limits, multi-factor authentication, and monitoring for duplicates, velocity and limit breaches. Expect your bank to impose all of it on you, and build the limits and reports into the product so its review is a formality.
+The bank side is set out in the Federal Financial Institutions Examination Council's (FFIEC) guidance on RDC risk, issued in 2009: customer suitability reviews, deposit limits, multi-factor authentication, and monitoring for duplicates, velocity and limit breaches. Expect your bank to impose all of it on you, and build the limits and reports into the product so its review is a formality.
 
 ## When the Money Is Available
 
 **Regulation CC** governs how long a bank may hold deposited checks, and its dollar amounts were adjusted for inflation on July 1, 2025. Your bank applies it to your deposits; you should apply the same thinking to the merchants or landlords you credit.
 
-- **Next business day:** cash deposited in person, electronic payments, US Treasury checks, on-us checks, and in-person deposits of cashier's, certified and government checks and USPS money orders. Deposited remotely, those official checks wait until the second business day.
+- **Next business day:** cash deposited in person, electronic payments, US Treasury checks, on-us checks (drawn on the same bank they're deposited at; the MICR line's "on-us field" is a different use of the word), and in-person deposits of cashier's, certified and government checks and USPS money orders. Deposited remotely, those official checks wait until the second business day.
 - **The first $275** of other check deposits on a day, by the next business day.
 - **Everything else by the second business day.**
 - **Exception holds** for new accounts in their first 30 days, deposits over $6,725 in a day, redeposited checks, accounts repeatedly overdrawn, and reasonable doubt that a check will be paid, each requiring a written notice with the reason and the release date, and generally limited to about five extra business days.
@@ -55,7 +55,7 @@ Availability is not finality. Funds become available on a legal schedule, while 
 
 ## Returns, Fast and Slow
 
-The ordinary return is fast. The paying bank must act by its **midnight deadline**, midnight of the banking day after it receives the check (UCC 4-104, 4-301), or it's accountable for the amount (4-302). Reg CC adds that the return must reach the depositary bank by 2:00 p.m. on the second business day after presentment, and for a check of $5,000 or more, the paying bank must also send notice of nonpayment on the same clock. The reasons are coded:
+The ordinary return is fast. The paying bank must act by its **midnight deadline**, midnight of the banking day after it receives the check (Uniform Commercial Code 4-104, 4-301), or it's accountable for the amount (4-302). Reg CC adds that the return must reach the depositary bank by 2:00 p.m. on the second business day after presentment, and for a check of $5,000 or more, the paying bank must also send notice of nonpayment on the same clock. The reasons are coded:
 
 | Code | Reason | Code | Reason |
 | --- | --- | --- | --- |
@@ -95,7 +95,7 @@ The integration is a file per deposit, as BAI2 or an X12 823 remittance, plus im
 
 ## Check Fraud
 
-Check fraud grew while check volume fell. FinCEN's February 2023 alert on mail theft counted more than 680,000 suspicious activity reports about check fraud in 2022, nearly double the year before; its 2024 analysis found $688 million in reports over six months of 2023, with 44% of stolen checks altered and deposited. In the AFP's 2025 survey, 63% of organizations reported check fraud in 2024, more than any other payment method. The patterns a receiving platform sees:
+Check fraud grew while check volume fell. FinCEN, the Treasury bureau that enforces anti-money-laundering law, in its February 2023 alert on mail theft counted more than 680,000 suspicious activity reports about check fraud in 2022, nearly double the year before; its 2024 analysis found $688 million in reports over six months of 2023, with 44% of stolen checks altered and deposited. In the AFP's 2025 survey, 63% of organizations reported check fraud in 2024, more than any other payment method. The patterns a receiving platform sees:
 
 - **Deposit and run.** Checks deposited remotely into a new account, followed by rapid withdrawal, FinCEN's first red flag. On a platform it's a new payee receiving check deposits and asking for an instant payout.
 - **Altered and counterfeit checks,** harder to spot from an image than from paper.

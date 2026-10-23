@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220">
+  <defs>
+    <marker id="ap-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="ap-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="22">one authorization</text>
+  <text class="cap hl" x="680" y="22" text-anchor="end">0100 out, 0110 back</text>
+
+  <!-- Five systems -->
+  <rect class="cell" x="40" y="70" width="100" height="26"/>
+  <text class="t" x="90" y="83" text-anchor="middle" dominant-baseline="central">checkout</text>
+  <rect class="cell" x="175" y="70" width="100" height="26"/>
+  <text class="t" x="225" y="83" text-anchor="middle" dominant-baseline="central">provider</text>
+  <text class="n" x="225" y="118" text-anchor="middle">risk, vault</text>
+  <rect class="cell hl" x="310" y="70" width="100" height="26"/>
+  <text class="t hl" x="360" y="83" text-anchor="middle" dominant-baseline="central">processor</text>
+  <text class="n" x="360" y="118" text-anchor="middle">JSON to ISO 8583</text>
+  <rect class="cell hl" x="445" y="70" width="100" height="26"/>
+  <text class="t hl" x="495" y="83" text-anchor="middle" dominant-baseline="central">network</text>
+  <rect class="cell" x="580" y="70" width="100" height="26"/>
+  <text class="t" x="630" y="83" text-anchor="middle" dominant-baseline="central">issuer</text>
+
+  <!-- Requests above, responses below -->
+  <path class="ln" d="M140,76H173" marker-end="url(#ap-ah)"/>
+  <path class="ln" d="M275,76H308" marker-end="url(#ap-ah)"/>
+  <path class="ln hl" d="M410,76H443" marker-end="url(#ap-ah-hl)"/>
+  <path class="ln hl" d="M545,76H578" marker-end="url(#ap-ah-hl)"/>
+  <path class="ln" d="M173,90H142" marker-end="url(#ap-ah)"/>
+  <path class="ln" d="M308,90H277" marker-end="url(#ap-ah)"/>
+  <path class="ln hl" d="M443,90H412" marker-end="url(#ap-ah-hl)"/>
+  <path class="ln hl" d="M578,90H547" marker-end="url(#ap-ah-hl)"/>
+
+  <!-- Stand-in -->
+  <path class="ln dash" d="M495,96V160"/>
+  <rect class="cell ghost" x="435" y="162" width="120" height="26"/>
+  <text class="t dim" x="495" y="175" text-anchor="middle" dominant-baseline="central">stand-in</text>
+  <text class="n" x="570" y="171">answers if the issuer</text>
+  <text class="n" x="570" y="186">is down or too slow</text>
+
+  <!-- Clocks -->
+  <text class="n" x="90" y="118" text-anchor="middle">timeout 15 s or more</text>
+  <text class="n" x="630" y="118" text-anchor="middle">averages 5 s or less</text>
+</svg>

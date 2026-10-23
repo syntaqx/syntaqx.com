@@ -2,7 +2,7 @@
 title = "Surcharging & Fees"
 description = "Passing card costs to the payer: surcharges, convenience and service fees, cash discounts, the network caps and state laws behind them, and safe fee math."
 category = "Payments Industry"
-order = 1409
+order = 1410
 part = "The Rules"
 tags = ["payments", "surcharging", "convenience-fees", "compliance", "pricing"]
 +++
