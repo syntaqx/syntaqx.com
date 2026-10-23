@@ -1,7 +1,7 @@
 +++
 title = "Choosing an Identity Provider"
 nav_title = "Identity Providers"
-description = "Hosted platforms, self-hosted servers and in-app libraries for sign-in: Auth0, Clerk, WorkOS, Cognito, Keycloak, Zitadel, Better Auth, and how to choose."
+description = "Hosted platforms, self-hosted servers and in-app libraries for sign-in: Auth0, Clerk, WorkOS, Cognito, Keycloak, Zitadel, FusionAuth, Better Auth, and how to choose."
 category = "Security"
 order = 703
 tags = ["security", "authentication", "identity", "sso", "keycloak", "better-auth"]
@@ -39,6 +39,16 @@ Everything here is a snapshot as of October 2026. Products in this space merge, 
 - **Authentik** is an open-source IdP aimed at self-hosting, speaking SAML, OAuth2 and OIDC, LDAP and RADIUS. Its core is MIT, with enterprise features under a separate license. It's common in internal and homelab setups and capable in production.
 - **Authelia** is different in kind: an authentication portal that sits beside a reverse proxy and adds 2FA and SSO in front of applications. It has no sign-up; users live in a file or LDAP. Right for protecting internal tools, wrong as a customer user store.
 
+## Free to Run, Paid to Grow
+
+Between "pay per user" and "free and yours" sits a pricing model worth comparing directly: the software is free to self-host, often without a user cap, and the vendor charges for hosting, support and a set of features held back for paid plans. Zitadel, Ory and Authentik above already work this way. Three more are built around it:
+
+- **FusionAuth** is a full identity server (OIDC, SAML, MFA, passkeys, multi-tenancy) whose Community edition is free to self-host with no user limit. It isn't open source: the core is closed, with client libraries and examples under Apache 2.0. Paid plans start around $160 a month, include hosting, and unlock IdP-initiated SAML, SMS and email MFA, breached-password detection and custom hashing; a SCIM server is Enterprise only. It imports password hashes, and self-hosted, the database is yours to read.
+- **SuperTokens** has an Apache 2.0 core, free to self-host without limits, and a managed service free under 5,000 monthly active users, then $0.02 each. The catch is in the add-ons: MFA ($0.01 per user, $100 a month minimum), account linking and multi-tenancy are paid even when you self-host, under a separate enterprise license.
+- **Logto** is MPL-2.0, written in TypeScript on Postgres, with OIDC, SAML, organizations and MFA. Logto Cloud is free to 50,000 monthly active users, its Pro plan starts at $24 a month, and enterprise SSO is $48 per connector.
+
+The thing to model is what you'll need in a year, not today. A free tier that covers sign-in rarely covers SCIM, advanced MFA or a support contract, and those are what a B2B customer asks for first.
+
 ## Libraries in Your App
 
 - **Better Auth** is a framework-agnostic TypeScript library, MIT-licensed, that stores users and sessions in your own database through adapters (a built-in Kysely adapter for Postgres, MySQL, SQLite and MSSQL, and Drizzle, Prisma and MongoDB adapters). Its plugin model covers 2FA, passkeys, organizations and multi-session; an SSO plugin adds OIDC, OAuth2 and SAML 2.0 with domain verification and automatic organization membership, and a separate SCIM plugin serves inbound SCIM 2.0. In September 2025 Auth.js (formerly NextAuth.js) came under the Better Auth team's maintenance; it still gets security fixes, and the team recommends Better Auth for new projects.
@@ -63,6 +73,9 @@ Everything here is a snapshot as of October 2026. Products in this space merge, 
 | Keycloak | Self-hosted | OIDC and SAML, LDAP/AD federation | Your database | Apache 2.0 | Yours |
 | Zitadel | Self-hosted or cloud | OIDC, SAML, SCIM server | Yours, or theirs on cloud | AGPL-3.0 | Yours when self-hosted |
 | Ory | Self-hosted or network | OIDC via Hydra | Yours, or theirs on network | Apache 2.0 | Yours when self-hosted |
+| FusionAuth | Self-hosted or cloud | OIDC and SAML; SCIM on Enterprise | Yours, or theirs on cloud | Closed source, free Community edition | Yours when self-hosted; cloud by ticket |
+| SuperTokens | Self-hosted or managed | SAML; multi-tenancy paid | Yours, or theirs managed | Apache 2.0 core, paid add-ons | Yours when self-hosted |
+| Logto | Self-hosted or cloud | OIDC and SAML; SSO per connector on cloud | Yours, or theirs on cloud | MPL-2.0; cloud free to 50K MAU | Yours when self-hosted |
 | Better Auth | Library | SSO and SCIM plugins | Your database | MIT | Yours |
 | Framework-native | Library | Add a library or a server | Your database | Your framework's license | Yours |
 
@@ -108,6 +121,12 @@ Whatever you pick, the list in [Authentication & Sessions](/docs/security/authen
 - [Red Hat build of Keycloak](https://docs.redhat.com/en/documentation/red_hat_build_of_keycloak/), the supported distribution and current version
 - [Zitadel on GitHub](https://github.com/zitadel/zitadel), AGPL-3.0 licensing, organizations, protocols and Zitadel Cloud
 - [Ory: Projects](https://www.ory.com/docs/ecosystem/projects), Kratos, Hydra, Keto, Oathkeeper, licensing and Ory Network
+- [FusionAuth: Pricing](https://fusionauth.io/pricing), the free Community edition and what each paid plan unlocks
+- [FusionAuth: License FAQ](https://fusionauth.io/license-faq), the closed core, open-source components and data export
+- [SuperTokens: Pricing](https://supertokens.com/pricing), free self-hosting, managed per-user pricing and paid add-ons
+- [SuperTokens core on GitHub](https://github.com/supertokens/supertokens-core), Apache 2.0 with a separately licensed `ee` directory
+- [Logto on GitHub](https://github.com/logto-io/logto), MPL-2.0 license and protocols
+- [Logto: Pricing](https://logto.io/pricing), the cloud free tier, Pro plan and enterprise SSO connectors
 - [authentik on GitHub](https://github.com/goauthentik/authentik), protocols and the MIT and enterprise license split
 - [Authelia: First Factor](https://www.authelia.com/configuration/first-factor/introduction/), file and LDAP backends and no registration
 - [Better Auth: Introduction](https://www.better-auth.com/docs/introduction), what it is and its plugin ecosystem
