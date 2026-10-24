@@ -12,7 +12,8 @@ const SENTRY_CSP_REPORT_URI =
 export const contentSecurityPolicy = [
   "default-src 'self'",
   // Next.js bootstraps with inline scripts; dev also needs eval for HMR.
-  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://vercel.live`,
+  // Search (Pagefind) compiles WebAssembly, which needs 'wasm-unsafe-eval'.
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://vercel.live`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",

@@ -37,6 +37,11 @@ describe("Content-Security-Policy", () => {
     expect(directives["connect-src"]).toContain("https://*.ingest.us.sentry.io");
   });
 
+  it("lets search compile its WebAssembly without allowing eval", () => {
+    expect(directives["script-src"]).toContain("'wasm-unsafe-eval'");
+    expect(directives["script-src"]).not.toContain("'unsafe-eval'");
+  });
+
   it("reports violations to Sentry", () => {
     expect(directives["report-uri"]?.[0]).toMatch(/^https:\/\/.+\.ingest\.us\.sentry\.io\/api\/\d+\/security\/\?sentry_key=/);
     expect(directives["report-to"]).toEqual(["csp"]);

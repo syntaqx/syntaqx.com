@@ -10,7 +10,7 @@ This site renders most pages statically. Next.js bootstraps with inline scripts,
 
 ## Decision
 
-Enforce the policy with `script-src 'self' 'unsafe-inline'`, reporting violations to Sentry. It ran report-only first; before enforcing, every page type and the interactive tools were exercised against it, which found four origins and `data:` the tools genuinely need (`connect-src`), now listed. Every other directive follows the playbook: `default-src 'self'`, `object-src 'none'`, `base-uri 'none'`, `frame-ancestors 'none'`, `form-action 'self'`. `lib/csp.test.ts` keeps those from loosening.
+Enforce the policy with `script-src 'self' 'unsafe-inline'`, reporting violations to Sentry. It ran report-only first; before enforcing, every page type and the interactive tools were exercised against it, which found four origins and `data:` the tools genuinely need (`connect-src`), now listed. Search was missed in that pass: Pagefind compiles WebAssembly, so `script-src` also carries `'wasm-unsafe-eval'` (WebAssembly only; JavaScript `eval` stays blocked). Every other directive follows the playbook: `default-src 'self'`, `object-src 'none'`, `base-uri 'none'`, `frame-ancestors 'none'`, `form-action 'self'`. `lib/csp.test.ts` keeps those from loosening.
 
 ## Consequences
 
