@@ -114,7 +114,7 @@ export function DocsIndex({ categories, industries, intro }: DocsIndexProps) {
       <PageHeader
         label="docs"
         title="Documentation"
-        scene="spec"
+        scene="shelf"
         sceneLabel="A spec sheet lifted off its index, with one teal row highlighted"
         hideSceneOnMobile
       >

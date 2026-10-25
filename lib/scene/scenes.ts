@@ -254,30 +254,94 @@ const stack: SceneFn = (s) => {
   return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [3.4, 3.4, next + 3.2]], axes: ground() };
 };
 
-/** Projects: modules on a grid, one being placed. */
+/**
+ * Projects: what I've built as modules on a grid (Flagon the tower, the
+ * community the round one), wired together along the gutters, with the
+ * next one being lowered into the empty slot the wiring runs to.
+ */
 const modules: SceneFn = (s) => {
-  const lift = 5.5 + s.spread * 2 + bob(s);
-  const heights = [2.4, 1.2, 3, 1.6, 0, 0.8, 0.6, 2, 1.4];
-  const parts: Part[] = [{ kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 }];
-  parts.push({ kind: "plane", pts: quad(4, 4, 0, 2, 2), v: 0, dashed: true });
-  heights.forEach((h, k) => {
-    if (!h) return;
-    parts.push({ kind: "box", box: box(1 + (k % 3) * 3, 1 + Math.floor(k / 3) * 3, 0, 2, 2, h) });
-  });
-  [[4, 4], [6, 4], [4, 6], [6, 6]].forEach(([x, y]) => parts.push({ kind: "line", a: [x, y, 0], b: [x, y, lift], dashed: true, alpha: 0.35 }));
-  parts.push({ kind: "box", box: box(4, 4, lift, 2, 2, 2), accent: true, handles: true });
-  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [4, 4, lift + 2.4], [7, 1, 3]], axes: ground(10) };
+  const lift = 4.6 + s.spread * 2 + bob(s);
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "cable", pts: [[3, 2, 0], [3.5, 2, 0], [3.5, 5, 0], [4, 5, 0]], speed: 0.3 },
+    { kind: "cable", pts: [[8, 3, 0], [8, 3.5, 0], [5, 3.5, 0], [5, 4, 0]], speed: 0.25 },
+    { kind: "cable", pts: [[2, 7, 0], [2, 6.5, 0], [6.5, 6.5, 0], [6.5, 5, 0], [6, 5, 0]], speed: 0.2 },
+    { kind: "plane", pts: quad(4, 4, 0, 2, 2), v: 0, dashed: true },
+    { kind: "box", box: box(1, 1, 0, 2, 2, 1.1) },
+    { kind: "box", box: box(4, 1, 0, 2, 2, 1.8), slots: true },
+    { kind: "box", box: box(1, 4, 0, 2, 2, 2.2), vents: true },
+    { kind: "box", box: box(7, 1, 0, 2, 2, 3.4), vents: true },
+    { kind: "box", box: box(1, 7, 0, 2, 2, 1.3) },
+    { kind: "box", box: box(7, 4, 0, 2, 2, 0.9) },
+    { kind: "box", box: box(4, 7, 0, 2, 2, 0.6), small: true },
+    { kind: "cyl", cx: 8, cy: 8, z: 0, r: 0.95, h: 1.2 },
+    { kind: "label", at: [9, 1, 3.4], text: "flagon", dx: 1.4, dy: -1 },
+    { kind: "label", at: [1, 6, 1.6], text: "serve", dx: -1.4, dy: 0.4 },
+    { kind: "label", at: [9, 5, 0.9], text: "cookie", dx: 1.2, dy: 0.2 },
+    { kind: "label", at: [8.7, 8.7, 0.6], text: "slc devs", dx: 1, dy: 1 },
+    ...[[4, 4], [6, 4], [4, 6], [6, 6]].map(([x, y]): Part => ({ kind: "line", a: [x, y, 0], b: [x, y, lift], dashed: true, alpha: 0.35 })),
+    { kind: "box", box: box(4, 4, lift, 2, 2, 2), accent: true, handles: true },
+    { kind: "label", at: [6, 4, lift + 2], text: "next", dx: 1.4, dy: -1.2, accent: true },
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [4, 4, lift + 2.4], [7, 1, 3.6]], axes: ground(10) };
 };
 
-/** Docs: a spec sheet lifted off its index. */
-const spec: SceneFn = (s) => {
-  const z = 4 + s.spread * 2 + bob(s, 0.1);
-  const parts: Part[] = [
-    { kind: "plane", pts: quad(0, 0, 0, 8, 10), v: 0.09, rows: { lengths: [4, 3, 5, 3.4, 4.4, 2.6, 4.8, 3.6, 4] } },
-    { kind: "plane", pts: quad(1, 1, z, 6, 8), v: 0.2, handles: true, window: true, drops: { at: [[1, 1], [7, 1], [1, 9], [7, 9]], from: 0 }, rows: { lengths: [6, 4.2, 7, 5, 6.4, 3.4, 7.4, 5.6, 6.2, 4.6], accentRow: 4 } },
-    { kind: "box", box: box(5.6, 0.4, z, 0.7, 1.4, 0.18), accent: true },
+/**
+ * Docs: the playbook as a stack of bound volumes, with one lifted off the
+ * top and floating open, turning its own pages.
+ */
+const shelf: SceneFn = (s) => {
+  // [x, y, length, depth, thickness, name]: lying flat, spines facing right
+  const vols: [number, number, number, number, number, string?][] = [
+    [2.6, 2.4, 5, 3.6, 0.7, "industries"],
+    [2.9, 2.6, 4.4, 3.2, 0.5],
+    [2.7, 2.5, 4.8, 3.4, 0.6, "security"],
+    [3.1, 2.8, 4.2, 3, 0.45],
+    [2.8, 2.6, 4.6, 3.3, 0.55, "fundamentals"],
   ];
-  return { parts, ext: [[0, 10, 0], [8, 0, 0], [8, 10, 0], [0, 0, 0], [1, 1, z + 1]], axes: ground(10) };
+  const parts: Part[] = [{ kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 }];
+  const labels: Part[] = [];
+  let top = 0;
+  vols.forEach(([x, y, a, b, h, name], i) => {
+    parts.push({ kind: "box", box: box(x, y, top, a, b, h) });
+    // page edges along the front, bands across the spine
+    for (let k = 1; k < 4; k++) parts.push({ kind: "line", a: [x + 0.15, y + b, top + (h * k) / 4], b: [x + a - 0.1, y + b, top + (h * k) / 4], alpha: 0.3 });
+    for (const yy of [y + 0.4, y + b - 0.4]) parts.push({ kind: "line", a: [x + a, yy, top], b: [x + a, yy, top + h], alpha: 0.6 });
+    if (name) labels.push({ kind: "label", at: [x + a, y + b / 2, top + h / 2], text: name, dx: 1.6, dy: (2 - i) * 0.5 });
+    top += h;
+  });
+
+  const z = top + 1.8 + s.spread * 2 + bob(s, 0.12);
+  const [cx, L, w] = [5, 3.2, 2.6];
+  const y0 = 2.5;
+  const gap = y0 + L / 2;
+  const open = 0.32 + s.spread * 0.15;
+  // a page turns in the first third of every few seconds
+  const k = Math.min(1, (s.t % 3.2) / 3.2 / 0.32);
+  const turn = open + (Math.PI - 2 * open) * k * k * (3 - 2 * k);
+  const page = (phi: number): Part[] => {
+    const at = (d: number, yy: number): V3 => [cx + d * Math.cos(phi), yy, z + d * Math.sin(phi)];
+    return [
+      { kind: "plane", pts: [at(0, y0), at(w, y0), at(w, y0 + L), at(0, y0 + L)], v: 0.2 },
+      ...[1.6, 1.2, 1.7, 0.9, 1.5, 1.65, 1.1].map((len, i): Part => ({
+        kind: "line",
+        a: at(0.3, y0 + 0.5 + i * 0.32),
+        b: at(0.3 + len, y0 + 0.5 + i * 0.32),
+        alpha: i === 2 ? 1 : 0.5,
+        accent: i === 2,
+      })),
+    ];
+  };
+  const turning = page(turn);
+  parts.push(
+    ...[y0, y0 + L].map((yy): Part => ({ kind: "line", a: [cx, yy, top], b: [cx, yy, z - 0.25], dashed: true, alpha: 0.35 })),
+    { kind: "box", box: box(cx - 0.12, y0, z - 0.25, 0.24, L, 0.25), accent: true },
+    ...page(Math.PI - open),
+    ...(turn > Math.PI / 2 ? [...turning, ...page(open)] : [...page(open), ...turning]),
+    ...labels,
+    { kind: "label", at: [cx + w * Math.cos(open), y0, z + w * Math.sin(open)], text: "playbook", dx: 1.4, dy: -1.2, accent: true },
+  );
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [cx, y0, z + w + 0.4], [cx, gap, z + w + 0.4]], axes: ground(10) };
 };
 
 /** Posts: a pen writing out a page line by line, lifted off the drafts. */
@@ -309,21 +373,69 @@ const writing: SceneFn = (s) => {
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1, 1, z + 5.6], [7, 3, z + 5.6]], axes: ground(10) };
 };
 
-/** Misc: an opened box of small tools. */
+/**
+ * Misc: an open toolbox. The tools take turns popping up to show their
+ * name, and a top spins beside it, for the toys.
+ */
 const toolbox: SceneFn = (s) => {
-  const lid = 4.6 + s.spread * 2.4 + bob(s);
-  const parts: Part[] = [
-    { kind: "plane", pts: quad(0, 0, 0, 10, 9), v: 0.09, grid: 9 },
-    { kind: "box", box: box(1, 1, 0, 5, 4, 0.4) },
-    { kind: "box", box: box(1.6, 1.6, 0.4, 1.4, 1.4, 1.4), accent: true },
-    { kind: "box", box: box(3.6, 1.6, 0.4, 1.8, 0.8, 0.6), small: true },
-    { kind: "box", box: box(3.6, 3, 0.4, 0.8, 1.4, 1), small: true },
-    { kind: "box", box: box(7, 2, 0, 2, 2, 2.2) },
-    { kind: "box", box: box(2, 6, 0, 3, 2, 0.8) },
-    { kind: "box", box: box(6.5, 6, 0, 2.5, 2, 1.4) },
-    { kind: "plane", pts: quad(1, 1, lid, 5, 4), v: 0.2, handles: true, drops: { at: [[1, 1], [6, 1], [1, 5], [6, 5]], from: 0.4 } },
+  const [x0, y0, A, B, H] = [1.2, 2.6, 6, 3.8, 1.1];
+  const tools: { name: string; at: [number, number]; size: V3; round?: boolean }[] = [
+    { name: "jwt", at: [1.8, 3.1], size: [1.2, 1.2, 1.5] },
+    { name: "uuid", at: [3.9, 3.6], size: [0.5, 0, 1.8], round: true },
+    { name: "whoami", at: [5.4, 3.1], size: [1.2, 1.1, 1.2] },
+    { name: "beautify", at: [1.8, 4.9], size: [1.8, 0.8, 1.3] },
+    { name: "markdown", at: [4.2, 4.9], size: [1.1, 1, 1.6] },
+    { name: "convert", at: [6.3, 5.4], size: [0.45, 0, 1.4], round: true },
   ];
-  return { parts, ext: [[0, 9, 0], [10, 0, 0], [10, 9, 0], [0, 0, 0], [1, 1, lid + 1]], axes: ground(10) };
+  // offset so the resting frame (and the OG image) has a tool up
+  const T = 2.6;
+  const now = s.t + T * 0.5;
+  const up = Math.floor(now / T) % tools.length;
+  const ph = (now % T) / T;
+  const ease = (k: number) => k * k * (3 - 2 * k);
+  const lift = (ph < 0.25 ? ease(ph / 0.25) : ph > 0.8 ? ease((1 - ph) / 0.2) : 1) * (2.2 + s.spread * 1.2);
+  const tool = (i: number, z: number): Part => {
+    const { at: [x, y], size: [a, b, h], round } = tools[i];
+    const accent = i === up;
+    return round
+      ? { kind: "cyl", cx: x, cy: y, z, r: a, h, accent }
+      : { kind: "box", box: box(x, y, z, a, b, h), accent, small: !accent };
+  };
+  // clear of the walls, the raised tool draws over them
+  const out = lift > H;
+  const { at: [ax, ay], size: [aa, ab, ah], round: ar } = tools[up];
+  const [mx, my] = ar ? [ax, ay] : [ax + aa / 2, ay + ab / 2];
+  const lid = 1.8 + s.spread * 0.3;
+  const hinge = (u: number, v: number): V3 => [x0 + u, y0 + v * Math.cos(lid), H + v * Math.sin(lid)];
+  // the top wobbles on its tip; a mark on its crown shows the spin
+  const [tx, ty] = [8.9 + Math.cos(s.t * 2.2) * 0.16, 4.6 + Math.sin(s.t * 2.2) * 0.16];
+  const spin = s.t * 9;
+
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "plane", pts: [hinge(0, 0), hinge(A, 0), hinge(A, B), hinge(0, B)], v: 0.3, handles: true },
+    { kind: "plane", pts: [hinge(0.35, 0.35), hinge(A - 0.35, 0.35), hinge(A - 0.35, B - 0.35), hinge(0.35, B - 0.35)], v: 0.22 },
+    { kind: "line", a: hinge(A / 2 - 0.8, B - 0.18), b: hinge(A / 2 + 0.8, B - 0.18), alpha: 0.9 },
+    { kind: "plane", pts: quad(x0, y0, 0, A, B), v: 0.12 },
+    { kind: "box", box: box(x0, y0, 0, A, 0.15, H) },
+    { kind: "box", box: box(x0, y0, 0, 0.15, B, H) },
+    ...tools.flatMap((_, i) => (out && i === up ? [] : [tool(i, i === up ? lift : 0)])),
+    { kind: "box", box: box(x0, y0 + B - 0.15, 0, A - 0.15, 0.15, H) },
+    { kind: "box", box: box(x0 + A - 0.15, y0, 0, 0.15, B, H) },
+    { kind: "box", box: box(x0 + A / 2 - 0.4, y0 + B, H - 0.5, 0.8, 0.12, 0.35), small: true },
+    { kind: "line", a: [mx, my, H], b: [mx, my, Math.max(H, lift)], dashed: true, alpha: 0.4 },
+    ...(out ? [tool(up, lift)] : []),
+    { kind: "cyl", cx: tx, cy: ty, z: 0, r: 0.04, h: 0.8, rt: 0.9 },
+    { kind: "cyl", cx: tx, cy: ty, z: 0.8, r: 0.9, h: 0.28 },
+    { kind: "line", a: [tx, ty, 1.08], b: [tx + Math.cos(spin) * 0.8, ty + Math.sin(spin) * 0.8, 1.08], alpha: 0.9, accent: true },
+    { kind: "cyl", cx: tx, cy: ty, z: 1.08, r: 0.08, h: 0.6 },
+  ];
+  if (lift > 0.3) parts.push({ kind: "label", at: [ax + aa, ay, lift + ah], text: tools[up].name, dx: 1.4, dy: -1.2, accent: true });
+  return {
+    parts,
+    ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], hinge(0, B + 0.4), hinge(A, B + 0.4), [4, 4, H + 5.4]],
+    axes: ground(10),
+  };
 };
 
 /** 404: the tile that should be here isn't. */
@@ -340,7 +452,7 @@ const missing: SceneFn = (s) => {
   return { parts, ext: [[0, 9, 0], [9, 0, 0], [9, 9, 0], [0, 0, 0], [3, 3, z + 1.5]], axes: ground(9) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, spec, writing, toolbox, missing } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, missing } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */

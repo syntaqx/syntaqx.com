@@ -10,7 +10,7 @@ export const contentType = "image/png";
 export default function Image() {
   return segmentCard(metadata, {
     kicker: "The playbook",
-    scene: "spec",
+    scene: "shelf",
     path: "/docs",
     stat: `${getAllDocs().length} documents`,
   });

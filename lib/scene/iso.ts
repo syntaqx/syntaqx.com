@@ -52,7 +52,7 @@ export type Part =
       ghost?: boolean;
     }
   /** `rt` tapers the top rim (a bucket when wider than `r`). */
-  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number; rt?: number }
+  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number; rt?: number; accent?: boolean }
   | { kind: "cable"; pts: V3[]; speed: number; accent?: boolean }
   | { kind: "line"; a: V3; b: V3; alpha?: number; dashed?: boolean; accent?: boolean }
   | { kind: "label"; at: V3; text: string; dx: number; dy: number; accent?: boolean };

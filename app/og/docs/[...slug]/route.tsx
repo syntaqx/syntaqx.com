@@ -32,7 +32,7 @@ export async function GET(
     kicker: chapter ? `${section}${chapter}` : `The playbook  ·  ${section}`,
     title: doc.title,
     description: doc.description,
-    scene: "spec",
+    scene: "shelf",
     path: `/docs/${doc.slug}`,
     stat: doc.part,
   });

@@ -129,8 +129,8 @@ export function rasterize(
       fill(b.top, p.accent ? 1 : 0.6, p.accent);
     }
     if (p.kind === "cyl") {
-      fill(cylSide(p), 0.34 + light * 0.08);
-      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), 0.58);
+      fill(cylSide(p), p.accent ? 0.6 : 0.34 + light * 0.08, p.accent);
+      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), p.accent ? 1 : 0.58, p.accent);
     }
   }
   return { field: { cols, rows, lum, acc }, P };
