@@ -18,8 +18,9 @@ const ground = (n = 12): [V3, V3][] => [
  * Home: a production system exploded into four tiers: product, the edge
  * (dns, cdn, s3) outside the network, then the app and data subnets. The
  * request path (teal) runs product, the cdn, a load balancer, an app
- * cluster, then postgres. The cdn serves static files from s3; dns is a
- * lookup (dashed), not a hop. The cluster also reads redis and queues work
+ * cluster, then postgres. The cdn serves static files from s3. dns comes
+ * first but is a lookup (dashed), not a hop: the product asks it, it
+ * resolves to the cdn, and traffic goes straight to the cdn. The cluster also reads redis and queues work
  * for a worker, and the primary replicates to a read replica.
  */
 const system: SceneFn = (s) => {
@@ -68,12 +69,14 @@ const system: SceneFn = (s) => {
     // passing the rest to the lb
     { kind: "cable", pts: [[8.4, 8.4, Z.edge], [8.4, 8.4, Z.app + 0.5]], speed: 0.3, accent: true },
     { kind: "plane", pts: quad(2.5, 2.5, Z.edge, 7, 7), v: 0.14 },
-    { kind: "cable", pts: [[7.9, 8.5, Z.edge], [6.2, 8.5, Z.edge]], speed: 0.4 },
+    { kind: "cable", pts: [[7.9, 8.05, Z.edge], [6.5, 8.05, Z.edge]], speed: 0.4 },
+    // dns resolves to the cdn, passing in front of the bucket
+    { kind: "line", a: [4.1, 8.7, Z.edge], b: [7.9, 8.7, Z.edge], dashed: true, alpha: 0.7 },
     { kind: "box", box: box(3, 7.9, Z.edge, 1.1, 1.2, 0.7) },
-    { kind: "cyl", cx: 5.7, cy: 8.5, z: Z.edge, r: 0.42, h: 0.8, rt: 0.6 },
+    { kind: "cyl", cx: 5.9, cy: 7.6, z: Z.edge, r: 0.42, h: 0.8, rt: 0.6 },
     { kind: "box", box: box(7.9, 7.9, Z.edge, 1, 1, 0.5) },
     { kind: "label", at: [3, 9.1, Z.edge + 0.7], text: "dns", dx: -1.4, dy: -0.4 },
-    { kind: "label", at: [5.1, 8.5, Z.edge + 0.8], text: "s3", dx: -2.6, dy: 0.7 },
+    { kind: "label", at: [5.3, 7.6, Z.edge + 0.8], text: "s3", dx: -2.6, dy: 1.2 },
     { kind: "label", at: [8.9, 7.9, Z.edge + 0.5], text: "cdn", dx: 1, dy: -1.4 },
     // product resolves through dns, then sends everything to the cdn
     { kind: "line", a: [3.6, 8.5, Z.product], b: [3.6, 8.5, Z.edge + 0.7], dashed: true, alpha: 0.7 },
