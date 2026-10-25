@@ -18,10 +18,11 @@ const ground = (n = 12): [V3, V3][] => [
  * Home: a production system, exploded into four tiers: product, the edge
  * (dns, cdn, s3) outside the network, then app and data subnets split
  * down the middle into two availability zones. The request path (teal)
- * runs product, dns, a load balancer spanning both zones, an app cluster
- * in each, then postgres: writes to the primary in zone a, reads from the
- * replica in zone b. Static files go product, cdn, s3. Zone b also reads
- * redis; zone a queues work for a worker.
+ * runs product, the cdn, a load balancer spanning both zones, an app
+ * cluster in each, then postgres: writes to the primary in zone a, reads
+ * from the replica in zone b. The cdn serves static files from s3; dns is
+ * a lookup (dashed), not a hop. Zone b also reads redis; zone a queues
+ * work for a worker.
  */
 const system: SceneFn = (s) => {
   const Z = { app: 4.2 + s.spread * 1.8, edge: 7.8 + s.spread * 3.6, product: 11.2 + s.spread * 5.2 };
@@ -65,19 +66,20 @@ const system: SceneFn = (s) => {
     { kind: "label", at: [2, 9.2, Z.app + 0.6], text: "app · zone b", dx: -1.4, dy: 1.2 },
     { kind: "label", at: [10.3, 5.4, Z.app + 0.7], text: "queue", dx: 1.4, dy: -1 },
     { kind: "label", at: [8.9, 8.9, Z.app + 0.5], text: "lb", dx: 1.6, dy: 1.4 },
-    // edge: dns routes to the lb, the cdn serves static files from s3
+    // edge: the cdn takes all traffic, serving static files from s3 and
+    // passing the rest to the lb
     { kind: "cable", pts: [[8.4, 8.4, Z.edge], [8.4, 8.4, Z.app + 0.5]], speed: 0.3, accent: true },
     { kind: "plane", pts: quad(2.5, 2.5, Z.edge, 7, 7), v: 0.14 },
-    { kind: "cable", pts: [[4.1, 8.5, Z.edge], [5.1, 8.5, Z.edge]], speed: 0.4 },
+    { kind: "cable", pts: [[7.9, 8.5, Z.edge], [6.2, 8.5, Z.edge]], speed: 0.4 },
     { kind: "box", box: box(3, 7.9, Z.edge, 1.1, 1.2, 0.7) },
     { kind: "cyl", cx: 5.7, cy: 8.5, z: Z.edge, r: 0.42, h: 0.8, rt: 0.6 },
     { kind: "box", box: box(7.9, 7.9, Z.edge, 1, 1, 0.5) },
-    { kind: "label", at: [3, 9.1, Z.edge + 0.7], text: "cdn", dx: -1.4, dy: -0.4 },
+    { kind: "label", at: [3, 9.1, Z.edge + 0.7], text: "dns", dx: -1.4, dy: -0.4 },
     { kind: "label", at: [5.1, 8.5, Z.edge + 0.8], text: "s3", dx: -2.6, dy: 0.7 },
-    { kind: "label", at: [8.9, 7.9, Z.edge + 0.5], text: "dns", dx: 1, dy: -1.4 },
-    // product, dropping into dns and the cdn
+    { kind: "label", at: [8.9, 7.9, Z.edge + 0.5], text: "cdn", dx: 1, dy: -1.4 },
+    // product resolves through dns, then sends everything to the cdn
+    { kind: "line", a: [3.6, 8.5, Z.product], b: [3.6, 8.5, Z.edge + 0.7], dashed: true, alpha: 0.7 },
     { kind: "cable", pts: [[8.4, 8.4, Z.product], [8.4, 8.4, Z.edge + 0.5]], speed: 0.3, accent: true },
-    { kind: "cable", pts: [[3.6, 8.5, Z.product], [3.6, 8.5, Z.edge + 0.7]], speed: 0.3 },
     {
       kind: "plane",
       pts: quad(3.5, 3.5, Z.product, 5, 5),
