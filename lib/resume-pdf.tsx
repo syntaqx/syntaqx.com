@@ -10,9 +10,7 @@ import {
   Font,
   Link,
   Page,
-  Path,
   StyleSheet,
-  Svg,
   Text,
   View,
   renderToBuffer,
@@ -86,7 +84,9 @@ const s = StyleSheet.create({
   label: {
     fontFamily: "Michroma",
     fontSize: 7,
-    letterSpacing: 1.8,
+    // Wide tracking extracts as "S U M M A R Y", which parsers don't
+    // recognize as a section; keep it tight enough to read as one word.
+    letterSpacing: 0.5,
     color: ACCENT,
     textTransform: "uppercase",
   },
@@ -107,23 +107,12 @@ const s = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "baseline",
   },
-  roles: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    flex: 1,
-  },
-  role: { fontSize: 10.8, fontWeight: 700, color: INK },
-  company: { fontSize: 10.8, fontWeight: 600, color: ACCENT },
+  headline: { flex: 1, fontSize: 10.8 },
+  role: { fontWeight: 700, color: INK },
+  at: { color: MUTED },
+  company: { fontWeight: 600, color: ACCENT },
   dates: { fontSize: 8.6, color: MUTED, marginLeft: 12 },
-  progression: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    marginTop: 2,
-    fontSize: 8.6,
-    color: MUTED,
-  },
+  progression: { marginTop: 2, fontSize: 8.6, color: MUTED },
   bullets: { marginTop: 6 },
   bullet: { flexDirection: "row", marginBottom: 3.5 },
   dot: {
@@ -137,6 +126,7 @@ const s = StyleSheet.create({
   stack: { marginTop: 2, fontSize: 8.8, color: MUTED },
   more: { marginTop: 4, fontSize: 8.8, color: MUTED },
   moreLink: { color: INK, textDecoration: "none" },
+  school: { fontWeight: 700, color: INK, flex: 1 },
   footer: {
     position: "absolute",
     bottom: 28,
@@ -146,42 +136,6 @@ const s = StyleSheet.create({
     color: MUTED,
   },
 });
-
-// None of the brand fonts has "→", so the arrow is drawn.
-function Arrow({ size = 9, color = MUTED }: { size?: number; color?: string }) {
-  return (
-    <Svg
-      width={size}
-      height={size * 0.62}
-      viewBox="0 0 16 10"
-      style={{ marginHorizontal: 5 }}
-    >
-      <Path
-        d="M0 5 H14 M10 1.2 L14 5 L10 8.8"
-        stroke={color}
-        strokeWidth={1.4}
-        fill="none"
-      />
-    </Svg>
-  );
-}
-
-function Steps({
-  steps,
-  style,
-  arrow,
-}: {
-  steps: string[];
-  style?: typeof s.role;
-  arrow?: number;
-}) {
-  return steps.map((step, i) => (
-    <View key={step} style={{ flexDirection: "row", alignItems: "center" }}>
-      {i > 0 && <Arrow size={arrow} />}
-      <Text style={style}>{step}</Text>
-    </View>
-  ));
-}
 
 function Section({
   label,
@@ -211,18 +165,17 @@ function Job({ job }: { job: ResumeJob }) {
     // An entry never splits across pages.
     <View style={s.job} wrap={false}>
       <View style={s.jobHead}>
-        <View style={s.roles}>
-          <Steps steps={job.roles} style={s.role} arrow={10} />
-          <Text style={[s.company, { marginLeft: 6 }]}>{job.company}</Text>
-        </View>
+        {/* One text run with a real "at", so a parser can tell title from company. */}
+        <Text style={s.headline}>
+          <Text style={s.role}>{job.title}</Text> <Text style={s.at}>at</Text>{" "}
+          <Text style={s.company}>{job.company}</Text>
+        </Text>
         <Text style={s.dates}>
           {job.start} – {job.end}
         </Text>
       </View>
       {job.progression && (
-        <View style={s.progression}>
-          <Steps steps={job.progression} arrow={8} />
-        </View>
+        <Text style={s.progression}>{job.progression.join("  ›  ")}</Text>
       )}
       {job.highlights && (
         <View style={s.bullets}>
@@ -263,9 +216,6 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
       subject={resume.title}
     >
       <Page size="LETTER" style={s.page}>
-        <Text style={s.footer} fixed>
-          {resume.name}
-        </Text>
         <Text style={s.name}>{resume.name}</Text>
         <Text style={s.title}>{resume.title}</Text>
         {reach.map((line, l) => (
@@ -319,6 +269,32 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
             </Text>,
           ]}
         </Section>
+
+        <Section label="Education">
+          {[
+            <View key="self-taught" style={{ marginBottom: 10 }} wrap={false}>
+              <Text style={s.role}>{resume.education.selfTaught.title}</Text>
+              <Text>{resume.education.selfTaught.details}</Text>
+            </View>,
+            ...resume.education.schools.map((school) => (
+              <View key={school.name} wrap={false}>
+                <View style={s.jobHead}>
+                  <Text style={s.school}>{school.name}</Text>
+                  <Text style={s.dates}>
+                    {school.start} – {school.end}
+                  </Text>
+                </View>
+                <Text>{school.program}</Text>
+                <Text style={s.stack}>{school.details}</Text>
+              </View>
+            )),
+          ]}
+        </Section>
+
+        {/* Last in the tree, so extracted text starts with the name, not this. */}
+        <Text style={s.footer} fixed>
+          {resume.name}
+        </Text>
       </Page>
     </Document>
   );

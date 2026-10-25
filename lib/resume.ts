@@ -12,8 +12,8 @@ export interface ResumeContact {
 
 export interface ResumeJob {
   company: string;
-  /** One title, or the progression of titles held, first to last. */
-  roles: string[];
+  /** The title held last; earlier titles go in `progression`. */
+  title: string;
   start: string;
   end: string;
   /** Every promotion, with the year it happened. */
@@ -81,7 +81,7 @@ export const resume = {
   experience: [
     {
       company: "Aptive",
-      roles: ["Architect", "VP, Software Engineering"],
+      title: "VP, Software Engineering",
       start: "Sep 2023",
       end: "Sep 2026",
       progression: [
@@ -98,14 +98,14 @@ export const resume = {
     },
     {
       company: "Entrata",
-      roles: ["Software Architect"],
+      title: "Software Architect",
       start: "May 2021",
       end: "Sep 2023",
       stack: "PHP/Laravel, Postgres, AMQP, React, AWS, On-Prem Datacenter",
     },
     {
       company: "TruGolf",
-      roles: ["Principal Software Engineer"],
+      title: "Principal Software Engineer",
       start: "Jan 2020",
       end: "Apr 2021",
       stack:
@@ -113,7 +113,7 @@ export const resume = {
     },
     {
       company: "Outdoorsy",
-      roles: ["Senior Backend Engineer"],
+      title: "Senior Backend Engineer",
       start: "Feb 2019",
       end: "Oct 2019",
       stack:
@@ -121,7 +121,7 @@ export const resume = {
     },
     {
       company: "Even",
-      roles: ["Senior Infrastructure Engineer"],
+      title: "Senior Infrastructure Engineer",
       start: "Jul 2018",
       end: "Dec 2018",
       stack:
@@ -129,7 +129,7 @@ export const resume = {
     },
     {
       company: "Imgur",
-      roles: ["Senior Software Engineer"],
+      title: "Senior Software Engineer",
       start: "Oct 2016",
       end: "May 2018",
       stack:
@@ -137,12 +137,29 @@ export const resume = {
     },
     {
       company: "Riot Games",
-      roles: ["Software Engineer"],
+      title: "Software Engineer",
       start: "May 2014",
       end: "Jul 2016",
       stack: "Go, PHP, MySQL, jQuery, Redis, AWS, Packer, Docker, Hadoop",
     },
   ] satisfies ResumeJob[],
+  education: {
+    selfTaught: {
+      title: "Self-taught software engineer",
+      details:
+        "Writing code since age 11; mentored through a development internship at a local news station as a teenager.",
+    },
+    schools: [
+      {
+        name: "Granite Technical Institute",
+        program: "3D Animation & Modeling, Information Technology",
+        start: "2005",
+        end: "2006",
+        details:
+          "Concurrent enrollment (grade 10): 3D Animation; Computer Programming",
+      },
+    ],
+  },
   more: {
     text: "Full experience available on",
     label: "linkedin.com/in/syntaqx",

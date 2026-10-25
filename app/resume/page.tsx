@@ -74,11 +74,11 @@ export default function ResumePage() {
             <li key={job.company} className="border-b border-border py-6">
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <h3 className="text-lg font-semibold text-foreground">
-                  {job.roles.join(" → ")} <span className="text-muted">at</span>{" "}
+                  {job.title} <span className="text-muted">at</span>{" "}
                   {job.company}
                 </h3>
                 <p className="inst text-dim">
-                  {job.start} - {job.end}
+                  {job.start} – {job.end}
                 </p>
               </div>
               {job.progression && (
@@ -107,6 +107,34 @@ export default function ResumePage() {
             {resume.more.label}
           </a>
         </p>
+      </section>
+
+      <section className="mb-14">
+        <h2 className="eyebrow mb-6">education</h2>
+        <ul className="border-t border-border">
+          <li className="border-b border-border py-6">
+            <h3 className="text-lg font-semibold text-foreground">
+              {resume.education.selfTaught.title}
+            </h3>
+            <p className="mt-1 text-muted">
+              {resume.education.selfTaught.details}
+            </p>
+          </li>
+          {resume.education.schools.map((school) => (
+            <li key={school.name} className="border-b border-border py-6">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                <h3 className="text-lg font-semibold text-foreground">
+                  {school.name}
+                </h3>
+                <p className="inst text-dim">
+                  {school.start} – {school.end}
+                </p>
+              </div>
+              <p className="mt-1 text-muted">{school.program}</p>
+              <p className="mt-2 text-sm text-dim">{school.details}</p>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );
