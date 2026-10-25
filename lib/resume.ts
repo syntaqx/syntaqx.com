@@ -40,8 +40,7 @@ export const resume = {
     { label: "github.com/syntaqx", href: "https://github.com/syntaqx" },
   ],
   summary: [
-    "Software architect and hands-on engineering executive with 15+ years designing distributed systems and the platforms businesses run on. At Aptive I architected Aspyn, a greenfield platform spanning seven business domains, and led its migration of 76 service centers and 1M customer accounts off a legacy vendor with zero rollbacks and zero data loss, then ran the 43-person engineering department that operated it at a 99.95% uptime SLO.",
-    "Engineer first, leader by consequence: still writing code, reviewing PRs, and owning the hard design calls. I invest in the patterns and platforms that make the right thing the easy thing, from consumer platforms serving hundreds of millions of daily users to money-moving systems where correctness isn't negotiable.",
+    "Engineer first and leader by consequence, with 20+ years across consumer platforms, high-growth startups, and the platforms businesses run on. I architect distributed systems that ship faster because the patterns make the right thing the easy thing, and break less because the platform prevents the fires. I've worked every layer of the stack, from the UI users touch to the infrastructure underneath, at both ends of the spectrum: platforms serving hundreds of millions of daily users, and greenfield builds taken from first commit to running the business, including money-moving systems where correctness isn't negotiable. Still in the PRs and the hard design calls, because the title is downstream of the work.",
   ],
   skillsIntro: "Not a wishlist, a working set",
   skills: [
