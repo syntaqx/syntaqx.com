@@ -6,6 +6,8 @@ interface ButtonProps {
   variant?: "primary" | "secondary";
   children: ReactNode;
   external?: boolean;
+  /** Save the target as a file instead of navigating to it. */
+  download?: boolean;
 }
 
 export function Button({
@@ -13,6 +15,7 @@ export function Button({
   variant = "primary",
   children,
   external = false,
+  download = false,
 }: ButtonProps) {
   // The face is a slanted layer behind the label, so the text stays upright.
   const base =
@@ -25,6 +28,14 @@ export function Button({
   };
 
   const className = `${base} ${variants[variant]}`;
+
+  if (download) {
+    return (
+      <a href={href} download className={className}>
+        {children}
+      </a>
+    );
+  }
 
   if (external) {
     return (

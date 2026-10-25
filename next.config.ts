@@ -1,6 +1,7 @@
 import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 import { docRedirects } from "./lib/doc-redirects";
+import { SITE_URL } from "./lib/constants";
 
 // Content-Security-Policy, enforced. It lists exactly what the site loads,
 // found by running it report-only and loading every page type plus the
@@ -67,16 +68,42 @@ const wantsMarkdown = {
 };
 
 export const markdownRewrites = {
-  beforeFiles: ["/", "/posts", "/posts/:slug", "/docs", "/docs/:path*", "/contact"].map(
-    (source) => ({
-      source,
-      destination: source === "/" ? "/md" : `/md${source}`,
-      ...wantsMarkdown,
-    }),
-  ),
+  beforeFiles: [
+    "/",
+    "/posts",
+    "/posts/:slug",
+    "/docs",
+    "/docs/:path*",
+    "/contact",
+    "/resume",
+  ].map((source) => ({
+    source,
+    destination: source === "/" ? "/md" : `/md${source}`,
+    ...wantsMarkdown,
+  })),
   afterFiles: [],
-  fallback: [{ source: "/:path*", destination: "/md/:path*", ...wantsMarkdown }],
+  fallback: [
+    { source: "/:path*", destination: "/md/:path*", ...wantsMarkdown },
+  ],
 };
+
+// resume.syntaqx.com is a short link to the resume on the main site. 307s,
+// so the subdomain can become something else later without stale caches.
+const resumeHost = [{ type: "host" as const, value: "resume.syntaqx.com" }];
+export const resumeHostRedirects = [
+  {
+    source: "/resume.pdf",
+    destination: `${SITE_URL}/resume.pdf`,
+    has: resumeHost,
+    permanent: false,
+  },
+  {
+    source: "/:path*",
+    destination: `${SITE_URL}/resume`,
+    has: resumeHost,
+    permanent: false,
+  },
+];
 
 const nextConfig: NextConfig = {
   // Pin the workspace root to this project. A stray, empty package-lock.json
@@ -92,12 +119,16 @@ const nextConfig: NextConfig = {
     },
   ],
   rewrites: async () => markdownRewrites,
-  redirects: async () => docRedirects(),
+  redirects: async () => [...docRedirects(), ...resumeHostRedirects],
   // The Markdown route reads content/ at request time.
   outputFileTracingIncludes: {
     "/md/[[...path]]": ["./content/**/*"],
     "/api/docs": ["./content/docs/**/*"],
     "/api/docs/[...slug]": ["./content/docs/**/*"],
+    // The PDF renderer reads its font files from node_modules.
+    "/resume.pdf": [
+      "./node_modules/@fontsource/roboto-mono/files/roboto-mono-latin-*-normal.woff",
+    ],
   },
 };
 

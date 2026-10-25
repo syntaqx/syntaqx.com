@@ -6,6 +6,7 @@
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { getAllDocs, getDocBySlug, getDocsByCategory } from "@/lib/docs";
 import { contactChannels, contactIntro } from "@/lib/contact";
+import { PUBLIC_CONTACT, resume as cv } from "@/lib/resume";
 import { bio, socials, SITE_URL } from "@/lib/constants";
 import { API_VERSIONS } from "@/lib/api";
 
@@ -177,6 +178,35 @@ function contact(): string {
   ].join("\n\n");
 }
 
+function resume(): string {
+  const contact = [
+    PUBLIC_CONTACT.location,
+    PUBLIC_CONTACT.email,
+    ...cv.links.map((l) => `[${l.label}](${l.href})`),
+  ].join(" · ");
+  const jobs = cv.experience.map((job) =>
+    [
+      `### ${job.roles.join(" → ")} at ${job.company}`,
+      `${job.start} - ${job.end}`,
+      job.progression?.join(" → "),
+      job.highlights?.map((h) => `- ${h}`).join("\n"),
+      job.stack,
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
+  );
+  return [
+    `# ${cv.name}`,
+    cv.title,
+    contact,
+    `PDF: ${url("/resume.pdf")}`,
+    `## Summary\n\n${cv.summary.join("\n\n")}`,
+    `## Technical Skills\n\n${cv.skillsIntro}\n\n${cv.skills.map((k) => `- **${k.label}:** ${k.items}`).join("\n")}`,
+    `## Experience\n\n${jobs.join("\n\n")}`,
+    `${cv.more.text} [${cv.more.label}](${cv.more.href})`,
+  ].join("\n\n");
+}
+
 export function notFoundMarkdown(path: string): string {
   // Keep the echoed path inert: one line, no backticks, bounded length.
   const safe = path.replace(/[`\r\n]/g, "").slice(0, 200) || "/";
@@ -186,7 +216,11 @@ export function notFoundMarkdown(path: string): string {
     "Try one of these instead:",
     [
       bullet("Home", SITE_URL),
-      bullet("llms.txt", url("/llms.txt"), "a Markdown index of the whole site"),
+      bullet(
+        "llms.txt",
+        url("/llms.txt"),
+        "a Markdown index of the whole site",
+      ),
       bullet("Sitemap", url("/sitemap.xml")),
       bullet("Posts", url("/posts")),
       bullet("Docs", url("/docs")),
@@ -201,11 +235,13 @@ export function renderMarkdownPage(path: string): MarkdownPage {
   let body: string | null = null;
 
   // Docs nest in section folders: /docs/payments/idempotency.
-  if (section === "docs") body = slug ? doc([slug, ...rest].join("/")) : docsIndex();
+  if (section === "docs")
+    body = slug ? doc([slug, ...rest].join("/")) : docsIndex();
   else if (rest.length === 0) {
     if (!section) body = home();
     else if (section === "posts") body = slug ? post(slug) : postsIndex();
     else if (section === "contact" && !slug) body = contact();
+    else if (section === "resume" && !slug) body = resume();
   }
 
   return body === null
@@ -229,6 +265,11 @@ export function renderLlmsTxt(): string {
     `## Optional\n\n${[
       bullet("About", url("/about"), "background on Chase Pierce"),
       bullet("Contact", url("/contact"), "how to get in touch"),
+      bullet(
+        "Resume",
+        url("/resume"),
+        "experience and skills, also as a PDF at /resume.pdf",
+      ),
       bullet("Privacy policy", url("/legal/privacy")),
       bullet("Terms of service", url("/legal/terms")),
       bullet("RSS feed", url("/feed.xml")),

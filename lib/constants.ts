@@ -60,6 +60,7 @@ export const footerNav: {
     label: "connect",
     links: [
       { href: "/contact", label: "contact" },
+      { href: "/resume", label: "resume" },
       { href: "/tags", label: "topics" },
       { href: "/feed.xml", label: "rss", file: true },
     ],

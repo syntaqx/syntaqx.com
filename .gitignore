@@ -49,3 +49,6 @@ next-env.d.ts
 
 # Agent worktrees (separate checkouts)
 .claude/worktrees/
+
+# private resume details and the full PDF (npm run resume:pdf)
+/.private/

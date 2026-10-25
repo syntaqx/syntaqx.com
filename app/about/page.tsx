@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SimpleIcon } from "@/components/simple-icon";
 import { Button } from "@/components/button";
@@ -117,6 +118,17 @@ export default function AboutPage() {
                   </dd>
                 </div>
               ))}
+              <div className="grid grid-cols-[6rem_1fr] gap-4 border-b border-border py-3">
+                <dt className="inst pt-1.5 text-dim">resume</dt>
+                <dd>
+                  <Link
+                    href="/resume"
+                    className="leading-snug font-semibold text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+                  >
+                    View or download
+                  </Link>
+                </dd>
+              </div>
               <div className="grid grid-cols-[6rem_1fr] gap-4 py-3">
                 <dt className="inst pt-1.5 text-dim">connect</dt>
                 <dd className="flex flex-col gap-1">
