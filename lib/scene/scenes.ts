@@ -15,30 +15,28 @@ const ground = (n = 12): [V3, V3][] => [
 ];
 
 /**
- * Home: a production system, exploded into four tiers: product, the edge
- * (dns, cdn, s3) outside the network, then app and data subnets split
- * down the middle into two availability zones. The request path (teal)
- * runs product, the cdn, a load balancer spanning both zones, an app
- * cluster in each, then postgres: writes to the primary in zone a, reads
- * from the replica in zone b. The cdn serves static files from s3; dns is
- * a lookup (dashed), not a hop. Zone b also reads redis; zone a queues
- * work for a worker.
+ * Home: a production system exploded into four tiers: product, the edge
+ * (dns, cdn, s3) outside the network, then the app and data subnets. The
+ * request path (teal) runs product, the cdn, a load balancer, an app
+ * cluster, then postgres. The cdn serves static files from s3; dns is a
+ * lookup (dashed), not a hop. The cluster also reads redis and queues work
+ * for a worker, and the primary replicates to a read replica.
  */
 const system: SceneFn = (s) => {
   const Z = { app: 4.2 + s.spread * 1.8, edge: 7.8 + s.spread * 3.6, product: 11.2 + s.spread * 5.2 };
+  // the app cluster: four instances in a band, leaving the middle clear
+  // for the drop from the cdn to the lb
+  const apps = [-5, -2.4, 2.4, 5].map((u) => [(11.8 + u) / 2 - 0.6, (11.8 - u) / 2 - 0.6] as const);
   const parts: Part[] = [
     // data subnet
     { kind: "plane", pts: quad(0, 0, 0, 12, 12), v: 0.09, grid: 12 },
-    { kind: "line", a: [0, 0, 0], b: [12, 12, 0], dashed: true, alpha: 0.4 },
-    { kind: "cable", pts: [[10, 3.65, 0], [10, 10, 0], [3.4, 10, 0]], speed: 0.16 },
-    { kind: "cyl", cx: 10, cy: 2.4, z: 0, r: 1.25, h: 2.4 },
-    { kind: "cyl", cx: 2.4, cy: 10, z: 0, r: 1, h: 1.8 },
-    { kind: "box", box: box(4.6, 7.2, 0, 1.4, 1.4, 1), slots: true },
-    { kind: "label", at: [11.1, 3.3, 0.6], text: "pg · primary", dx: 1, dy: 1.6 },
-    { kind: "label", at: [1.7, 10.7, 0.9], text: "pg · replica", dx: -0.8, dy: 1.4 },
-    { kind: "label", at: [4.6, 8.6, 0.5], text: "redis", dx: -0.4, dy: 2.6 },
-    // zone b's cache, down through the app floor
-    { kind: "cable", pts: [[4.3, 7.9, Z.app], [5.3, 7.9, Z.app], [5.3, 7.9, 1]], speed: 0.3 },
+    { kind: "cable", pts: [[9.9, 5.75, 0], [9.9, 8.7, 0]], speed: 0.16 },
+    { kind: "cyl", cx: 9.8, cy: 4.6, z: 0, r: 1.15, h: 2.2 },
+    { kind: "cyl", cx: 10.1, cy: 9.6, z: 0, r: 0.9, h: 1.6 },
+    { kind: "box", box: box(2.4, 9.9, 0, 1.4, 1.4, 1), slots: true },
+    { kind: "label", at: [10.6, 3.8, 2.2], text: "pg · primary", dx: 1.2, dy: -1.4 },
+    { kind: "label", at: [11, 9.6, 0.8], text: "pg · replica", dx: 1.2, dy: 0.8 },
+    { kind: "label", at: [2.4, 11.3, 0.5], text: "redis", dx: -1.2, dy: 1 },
     // app subnet
     {
       kind: "plane",
@@ -46,26 +44,26 @@ const system: SceneFn = (s) => {
       v: 0.16,
       drops: { at: [[1.5, 1.5], [10.5, 1.5], [1.5, 10.5], [10.5, 10.5]], from: 0 },
     },
-    { kind: "line", a: [1.5, 1.5, Z.app], b: [10.5, 10.5, Z.app], dashed: true, alpha: 0.4 },
-    { kind: "cable", pts: [[8.3, 7.7, Z.app], [8.3, 4.3, Z.app]], speed: 0.5, accent: true },
-    { kind: "cable", pts: [[7.7, 8.3, Z.app], [4.3, 8.3, Z.app]], speed: 0.5, accent: true },
-    { kind: "cable", pts: [[9.2, 3.8, Z.app], [9.95, 3.8, Z.app], [9.95, 4.7, Z.app]], speed: 0.35 },
-    { kind: "cable", pts: [[9.95, 6.25, Z.app], [9.95, 6.75, Z.app]], speed: 0.35 },
-    { kind: "box", box: box(7.4, 2, Z.app, 1.8, 1, 1.1), vents: true },
-    { kind: "box", box: box(7.4, 3.3, Z.app, 1.8, 1, 1.1), vents: true },
-    { kind: "box", box: box(2, 7.4, Z.app, 1, 1.8, 1.1), vents: true },
-    { kind: "box", box: box(3.3, 7.4, Z.app, 1, 1.8, 1.1), vents: true },
-    { kind: "box", box: box(9.6, 4.7, Z.app, 0.7, 0.7, 0.7), small: true },
-    { kind: "box", box: box(9.6, 5.55, Z.app, 0.7, 0.7, 0.7), small: true },
-    { kind: "box", box: box(9.4, 6.75, Z.app, 1, 1.1, 0.8) },
+    // lb to the cluster, along a bus on each side
+    { kind: "cable", pts: [[7.7, 8.3, Z.app], [apps[0][0] + 1.2, 8.3, Z.app]], speed: 0.5, accent: true },
+    { kind: "cable", pts: [[8.3, 7.7, Z.app], [8.3, apps[3][1] + 1.2, Z.app]], speed: 0.5, accent: true },
+    { kind: "line", a: [apps[1][0] + 0.6, 8.3, Z.app], b: [apps[1][0] + 0.6, apps[1][1] + 1.2, Z.app], accent: true },
+    { kind: "line", a: [8.3, apps[2][1] + 0.6, Z.app], b: [apps[2][0] + 1.2, apps[2][1] + 0.6, Z.app], accent: true },
+    // the cluster queues work for the worker
+    { kind: "cable", pts: [[apps[0][0] + 0.9, apps[0][1] + 1.2, Z.app], [apps[0][0] + 0.9, 9.95, Z.app], [4.3, 9.95, Z.app]], speed: 0.35 },
+    { kind: "cable", pts: [[5.8, 9.95, Z.app], [6.3, 9.95, Z.app]], speed: 0.35 },
+    ...apps.map(([x, y]): Part => ({ kind: "box", box: box(x, y, Z.app, 1.2, 1.2, 1), vents: true })),
+    { kind: "box", box: box(4.3, 9.6, Z.app, 0.7, 0.7, 0.7), small: true },
+    { kind: "box", box: box(5.1, 9.6, Z.app, 0.7, 0.7, 0.7), small: true },
+    { kind: "box", box: box(6.3, 9.4, Z.app, 1, 1.1, 0.8) },
     { kind: "box", box: box(7.7, 7.7, Z.app, 1.2, 1.2, 0.5), accent: true },
-    // zone a writes to the primary, zone b reads the replica
-    { kind: "cable", pts: [[9.2, 2.5, Z.app], [10.2, 2.5, Z.app], [10.2, 2.5, 2.4]], speed: 0.3, accent: true },
-    { kind: "cable", pts: [[2.5, 9.2, Z.app], [2.5, 10.2, Z.app], [2.5, 10.2, 1.8]], speed: 0.3, accent: true },
-    { kind: "label", at: [9.2, 2, Z.app + 1.1], text: "app · zone a", dx: 1.4, dy: -2.6 },
-    { kind: "label", at: [2, 9.2, Z.app + 0.6], text: "app · zone b", dx: -1.4, dy: 1.2 },
-    { kind: "label", at: [10.3, 5.4, Z.app + 0.7], text: "queue", dx: 1.4, dy: -1 },
-    { kind: "label", at: [8.9, 8.9, Z.app + 0.5], text: "lb", dx: 1.6, dy: 1.4 },
+    // down to the data subnet: writes to the primary, cache reads from redis
+    { kind: "cable", pts: [[apps[3][0] + 1.2, 4, Z.app], [9.9, 4, Z.app], [9.9, 4, 2.2]], speed: 0.3, accent: true },
+    { kind: "cable", pts: [[apps[0][0] + 0.3, apps[0][1] + 1.2, Z.app], [apps[0][0] + 0.3, 10.6, Z.app], [apps[0][0] + 0.3, 10.6, 1]], speed: 0.3 },
+    { kind: "label", at: [apps[3][0] + 1.2, apps[3][1], Z.app + 1], text: "apps", dx: 1.4, dy: -1.6 },
+    { kind: "label", at: [4.3, 10.3, Z.app + 0.7], text: "queue", dx: -1.4, dy: 0.4 },
+    { kind: "label", at: [6.3, 10.5, Z.app + 0.4], text: "worker", dx: -1.2, dy: 1.6 },
+    { kind: "label", at: [8.9, 8.9, Z.app + 0.5], text: "lb", dx: 1.6, dy: 1 },
     // edge: the cdn takes all traffic, serving static files from s3 and
     // passing the rest to the lb
     { kind: "cable", pts: [[8.4, 8.4, Z.edge], [8.4, 8.4, Z.app + 0.5]], speed: 0.3, accent: true },

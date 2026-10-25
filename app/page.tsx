@@ -94,7 +94,7 @@ export default function Home() {
         <SceneArt
           scene="system"
           className="aspect-6/5"
-          label="Exploded isometric diagram of a production system in four tiers across two availability zones: a product on top; an edge tier where a CDN takes all traffic and serves static files from an S3 bucket, with DNS beside it; an app tier with a load balancer, an app cluster in each zone, a queue and a worker; and a data tier with a Postgres primary replicating to a read replica, and Redis."
+          label="Exploded isometric diagram of a production system in four tiers: a product on top; an edge tier where a CDN takes all traffic and serves static files from an S3 bucket, with DNS beside it; an app tier where a load balancer feeds a cluster of four app instances, which queue work for a worker; and a data tier with a Postgres primary replicating to a read replica, and Redis."
         />
       </section>
 
