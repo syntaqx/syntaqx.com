@@ -18,6 +18,11 @@ export const socials = [
     label: "Stack Overflow",
   },
   { href: "https://x.com/syntaqx", icon: "x", label: "X" },
+  {
+    href: "https://www.youtube.com/@syntaqx",
+    icon: "youtube",
+    label: "YouTube",
+  },
 ];
 
 // Homepage bio. Also rendered into the Markdown homepage (lib/markdown.ts).

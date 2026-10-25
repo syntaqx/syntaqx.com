@@ -1,6 +1,13 @@
 "use client";
 
-import { siGithub, siGoogle, siX, siStackoverflow, siRss } from "simple-icons";
+import {
+  siGithub,
+  siGoogle,
+  siX,
+  siStackoverflow,
+  siRss,
+  siYoutube,
+} from "simple-icons";
 
 const icons: Record<string, { title: string; path: string }> = {
   github: siGithub,
@@ -8,6 +15,7 @@ const icons: Record<string, { title: string; path: string }> = {
   x: siX,
   stackoverflow: siStackoverflow,
   rss: siRss,
+  youtube: siYoutube,
   // LinkedIn was removed from simple-icons over brand-guideline concerns.
   // Inlining the official "in" brand mark keeps visual parity with the
   // rest of the social row.

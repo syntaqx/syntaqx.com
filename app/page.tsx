@@ -81,7 +81,7 @@ export default function Home() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex size-10 items-center justify-center text-dim transition-colors hover:text-accent"
+                  className="flex size-9 items-center justify-center text-dim transition-colors hover:text-accent"
                   aria-label={s.label}
                   title={s.label}
                 >
