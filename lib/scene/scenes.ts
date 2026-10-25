@@ -280,6 +280,35 @@ const spec: SceneFn = (s) => {
   return { parts, ext: [[0, 10, 0], [8, 0, 0], [8, 10, 0], [0, 0, 0], [1, 1, z + 1]], axes: ground(10) };
 };
 
+/** Posts: a pen writing out a page line by line, lifted off the drafts. */
+const writing: SceneFn = (s) => {
+  const z = 2.4 + s.spread * 2;
+  const lines = [9.6, 8.2, 10, 6.4, 9, 7.6, 4.2];
+  // a line every few seconds; the page starts over once it's full
+  const at = (s.t * 0.3) % lines.length;
+  const done = Math.floor(at);
+  const [px, py] = [1.5 + lines[done] * (at - done) * 0.55, 2.5 + done * 0.55];
+  const tip = z + s.spread * 1.4 + bob(s, 0.04 + s.spread * 0.12);
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "plane", pts: quad(1.6, 1.4, 0.4, 7, 8), v: 0.12, rows: { lengths: [8, 6.4, 9.4, 5, 8.6, 7, 9, 3.6] } },
+    {
+      kind: "plane",
+      pts: quad(1, 1, z, 7, 8),
+      v: 0.2,
+      handles: true,
+      drops: { at: [[1, 1], [8, 1], [1, 9], [8, 9]], from: 0.4 },
+      rows: { lengths: lines.slice(0, done) },
+    },
+    { kind: "line", a: [1.5, py, z], b: [px, py, z], alpha: 1, accent: true },
+    { kind: "line", a: [px, py, z], b: [px, py, tip], dashed: true, alpha: 0.4 },
+    // nib, then barrel
+    { kind: "cyl", cx: px, cy: py, z: tip, r: 0.04, h: 0.8, rt: 0.25 },
+    { kind: "box", box: box(px - 0.25, py - 0.25, tip + 0.8, 0.5, 0.5, 3.6), accent: true, handles: true },
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1, 1, z + 5.6], [7, 3, z + 5.6]], axes: ground(10) };
+};
+
 /** Misc: an opened box of small tools. */
 const toolbox: SceneFn = (s) => {
   const lid = 4.6 + s.spread * 2.4 + bob(s);
@@ -311,7 +340,7 @@ const missing: SceneFn = (s) => {
   return { parts, ext: [[0, 9, 0], [9, 0, 0], [9, 9, 0], [0, 0, 0], [3, 3, z + 1.5]], axes: ground(9) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, spec, toolbox, missing } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, modules, spec, writing, toolbox, missing } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */

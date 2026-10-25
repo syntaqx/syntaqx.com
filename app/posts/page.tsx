@@ -1,11 +1,9 @@
-import { getAllPosts, getAllTags, getNewestPostSlug } from "@/lib/posts";
-import { PostList } from "@/components/post-list";
-import { TagChips } from "@/components/tag-chips";
+import { getAllPosts, getAllTags, getNewestPostSlug, slugifyTag } from "@/lib/posts";
+import { PostsBrowser } from "@/components/posts-browser";
 import { SimpleIcon } from "@/components/simple-icon";
 import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
-import Link from "next/link";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata(
@@ -28,7 +26,13 @@ export default function PostsPage() {
           posts.map((post) => ({ name: post.title, path: `/posts/${post.slug}` })),
         )}
       />
-      <PageHeader label="posts" title="Writing">
+      <PageHeader
+        label="posts"
+        title="Writing"
+        scene="writing"
+        sceneLabel="A pen writing a page line by line, lifted off a stack of drafts"
+        hideSceneOnMobile
+      >
         <p>
           Thoughts on building products, leading teams, and everything in
           between.
@@ -42,19 +46,18 @@ export default function PostsPage() {
           rss
         </a>
       </PageHeader>
-      {tags.length > 0 && (
-        <div className="mb-12">
-          <Link href="/tags" className="group">
-            <h2 className="eyebrow mb-4 transition-colors group-hover:text-accent">
-              browse by topic
-            </h2>
-          </Link>
-          <div className="-mx-6 overflow-x-auto px-6 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
-            <TagChips tags={tags} className="max-sm:w-max max-sm:flex-nowrap" />
-          </div>
-        </div>
-      )}
-      <PostList posts={posts} newestSlug={newestSlug} />
+      <PostsBrowser
+        posts={posts.map((post) => ({
+          slug: post.slug,
+          title: post.title,
+          date: post.date,
+          description: post.description,
+          readingTimeMinutes: post.readingTimeMinutes,
+          tagSlugs: (post.tags ?? []).map(slugifyTag),
+        }))}
+        tags={tags}
+        newestSlug={newestSlug}
+      />
     </div>
   );
 }

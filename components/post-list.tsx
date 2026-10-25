@@ -2,8 +2,13 @@ import Link from "next/link";
 import { format } from "date-fns";
 import type { PostData } from "@/lib/posts";
 
+export type PostSummary = Pick<
+  PostData,
+  "slug" | "title" | "date" | "description" | "readingTimeMinutes"
+>;
+
 interface PostListProps {
-  posts: PostData[];
+  posts: PostSummary[];
   /** Slug of the post that should wear the "New" badge, if any. */
   newestSlug?: string | null;
 }
