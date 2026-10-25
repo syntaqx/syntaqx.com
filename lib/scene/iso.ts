@@ -51,7 +51,8 @@ export type Part =
       handles?: boolean;
       ghost?: boolean;
     }
-  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number }
+  /** `rt` tapers the top rim (a bucket when wider than `r`). */
+  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number; rt?: number }
   | { kind: "cable"; pts: V3[]; speed: number; accent?: boolean }
   | { kind: "line"; a: V3; b: V3; alpha?: number; dashed?: boolean; accent?: boolean }
   | { kind: "label"; at: V3; text: string; dx: number; dy: number; accent?: boolean };
@@ -152,7 +153,7 @@ export function circle(
 /** The silhouette of a cylinder's visible side, between its two rims. */
 export const CYL_FRONT: [number, number] = [-Math.PI / 4, (Math.PI * 3) / 4];
 
-export function cylSide(c: { cx: number; cy: number; z: number; r: number; h: number }): V3[] {
+export function cylSide(c: { cx: number; cy: number; z: number; r: number; h: number; rt?: number }): V3[] {
   const [f0, f1] = CYL_FRONT;
-  return [...circle(c.cx, c.cy, c.z, c.r, f0, f1), ...circle(c.cx, c.cy, c.z + c.h, c.r, f1, f0)];
+  return [...circle(c.cx, c.cy, c.z, c.r, f0, f1), ...circle(c.cx, c.cy, c.z + c.h, c.rt ?? c.r, f1, f0)];
 }

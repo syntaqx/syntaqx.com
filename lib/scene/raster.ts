@@ -130,7 +130,7 @@ export function rasterize(
     }
     if (p.kind === "cyl") {
       fill(cylSide(p), 0.34 + light * 0.08);
-      fill(circle(p.cx, p.cy, p.z + p.h, p.r), 0.58);
+      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), 0.58);
     }
   }
   return { field: { cols, rows, lum, acc }, P };

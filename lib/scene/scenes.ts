@@ -15,76 +15,84 @@ const ground = (n = 12): [V3, V3][] => [
 ];
 
 /**
- * Home: a production system, exploded into tiers and split down the middle
- * into two availability zones. The request path (teal) runs product, cdn,
- * a load balancer spanning both zones, an app cluster in each zone, then
- * postgres: writes to the primary in zone a, reads from the replica in
- * zone b. Zone b also reads redis; zone a queues work for a worker.
+ * Home: a production system, exploded into four tiers: product, the edge
+ * (dns, cdn, s3) outside the network, then app and data subnets split
+ * down the middle into two availability zones. The request path (teal)
+ * runs product, dns, a load balancer spanning both zones, an app cluster
+ * in each, then postgres: writes to the primary in zone a, reads from the
+ * replica in zone b. Static files go product, cdn, s3. Zone b also reads
+ * redis; zone a queues work for a worker.
  */
 const system: SceneFn = (s) => {
-  const Z = { svc: 5.2 + s.spread * 2, app: 10 + s.spread * 4.4 };
-  const cube = Z.app + 0.05 + s.spread * 1.2 + bob(s);
+  const Z = { app: 4.2 + s.spread * 1.8, edge: 7.8 + s.spread * 3.6, product: 11.2 + s.spread * 5.2 };
+  const cube = Z.product + 0.05 + s.spread * 1.2 + bob(s);
   const parts: Part[] = [
+    // data subnet
     { kind: "plane", pts: quad(0, 0, 0, 12, 12), v: 0.09, grid: 12 },
     { kind: "line", a: [0, 0, 0], b: [12, 12, 0], dashed: true, alpha: 0.4 },
     { kind: "cable", pts: [[10, 3.65, 0], [10, 10, 0], [3.4, 10, 0]], speed: 0.16 },
     { kind: "cyl", cx: 10, cy: 2.4, z: 0, r: 1.25, h: 2.4 },
     { kind: "cyl", cx: 2.4, cy: 10, z: 0, r: 1, h: 1.8 },
     { kind: "box", box: box(4.6, 7.2, 0, 1.4, 1.4, 1), slots: true },
-    { kind: "label", at: [6, 8.6, 0], text: "redis", dx: 1.4, dy: 1.4 },
-    // zone b's cache, down through the app floor
-    { kind: "cable", pts: [[4.3, 7.9, Z.svc], [5.3, 7.9, Z.svc], [5.3, 7.9, 1]], speed: 0.3 },
     { kind: "label", at: [11.1, 3.3, 0.6], text: "pg · primary", dx: 1, dy: 1.6 },
-    { kind: "label", at: [1.7, 10.7, 1.8], text: "pg · replica", dx: -1.4, dy: 0.9 },
+    { kind: "label", at: [1.7, 10.7, 0.9], text: "pg · replica", dx: -0.8, dy: 1.4 },
+    { kind: "label", at: [4.6, 8.6, 0.5], text: "redis", dx: -0.4, dy: 2.6 },
+    // zone b's cache, down through the app floor
+    { kind: "cable", pts: [[4.3, 7.9, Z.app], [5.3, 7.9, Z.app], [5.3, 7.9, 1]], speed: 0.3 },
+    // app subnet
     {
       kind: "plane",
-      pts: quad(1.5, 1.5, Z.svc, 9, 9),
+      pts: quad(1.5, 1.5, Z.app, 9, 9),
       v: 0.16,
       drops: { at: [[1.5, 1.5], [10.5, 1.5], [1.5, 10.5], [10.5, 10.5]], from: 0 },
     },
-    { kind: "line", a: [1.5, 1.5, Z.svc], b: [10.5, 10.5, Z.svc], dashed: true, alpha: 0.4 },
-    // lb to the app cluster in each zone
-    { kind: "cable", pts: [[8.3, 7.6, Z.svc], [8.3, 4.3, Z.svc]], speed: 0.5, accent: true },
-    { kind: "cable", pts: [[7.6, 8.3, Z.svc], [4.3, 8.3, Z.svc]], speed: 0.5, accent: true },
-    // apps queue work for the worker
-    { kind: "cable", pts: [[9.2, 3.8, Z.svc], [9.95, 3.8, Z.svc], [9.95, 4.9, Z.svc]], speed: 0.35 },
-    { kind: "cable", pts: [[9.95, 6.55, Z.svc], [9.95, 7.4, Z.svc]], speed: 0.35 },
-    { kind: "box", box: box(7.4, 2, Z.svc, 1.8, 1, 1.1), vents: true },
-    { kind: "box", box: box(7.4, 3.3, Z.svc, 1.8, 1, 1.1), vents: true },
-    { kind: "box", box: box(2, 7.4, Z.svc, 1, 1.8, 1.1), vents: true },
-    { kind: "box", box: box(3.3, 7.4, Z.svc, 1, 1.8, 1.1), vents: true },
-    { kind: "box", box: box(9.6, 4.9, Z.svc, 0.7, 0.7, 0.7), small: true },
-    { kind: "box", box: box(9.6, 5.85, Z.svc, 0.7, 0.7, 0.7), small: true },
-    { kind: "box", box: box(9.3, 7.4, Z.svc, 1.1, 1.4, 0.8) },
-    { kind: "box", box: box(7.6, 7.6, Z.svc, 1.4, 1.4, 0.5) },
-    // down to postgres: zone a writes to the primary, zone b reads the replica
-    { kind: "cable", pts: [[9.2, 2.5, Z.svc], [10.2, 2.5, Z.svc], [10.2, 2.5, 2.4]], speed: 0.3, accent: true },
-    { kind: "cable", pts: [[2.5, 9.2, Z.svc], [2.5, 10.2, Z.svc], [2.5, 10.2, 1.8]], speed: 0.3, accent: true },
-    { kind: "label", at: [9.2, 2, Z.svc + 1.1], text: "app · zone a", dx: 1.4, dy: -1.2 },
-    { kind: "label", at: [2, 9.2, Z.svc + 1.1], text: "app · zone b", dx: -1.4, dy: -1.2 },
-    { kind: "label", at: [10.3, 5.85, Z.svc + 0.7], text: "queue", dx: 1.4, dy: 0.2 },
-    { kind: "label", at: [10.4, 8.8, Z.svc + 0.8], text: "worker", dx: 1.2, dy: 0.9 },
-    { kind: "label", at: [7.6, 9, Z.svc + 0.5], text: "lb", dx: -1.6, dy: 1.6 },
+    { kind: "line", a: [1.5, 1.5, Z.app], b: [10.5, 10.5, Z.app], dashed: true, alpha: 0.4 },
+    { kind: "cable", pts: [[8.3, 7.6, Z.app], [8.3, 4.3, Z.app]], speed: 0.5, accent: true },
+    { kind: "cable", pts: [[7.6, 8.3, Z.app], [4.3, 8.3, Z.app]], speed: 0.5, accent: true },
+    { kind: "cable", pts: [[9.2, 3.8, Z.app], [9.95, 3.8, Z.app], [9.95, 4.9, Z.app]], speed: 0.35 },
+    { kind: "cable", pts: [[9.95, 6.55, Z.app], [9.95, 7.4, Z.app]], speed: 0.35 },
+    { kind: "box", box: box(7.4, 2, Z.app, 1.8, 1, 1.1), vents: true },
+    { kind: "box", box: box(7.4, 3.3, Z.app, 1.8, 1, 1.1), vents: true },
+    { kind: "box", box: box(2, 7.4, Z.app, 1, 1.8, 1.1), vents: true },
+    { kind: "box", box: box(3.3, 7.4, Z.app, 1, 1.8, 1.1), vents: true },
+    { kind: "box", box: box(9.6, 4.9, Z.app, 0.7, 0.7, 0.7), small: true },
+    { kind: "box", box: box(9.6, 5.85, Z.app, 0.7, 0.7, 0.7), small: true },
+    { kind: "box", box: box(9.3, 7.4, Z.app, 1.1, 1.4, 0.8) },
+    { kind: "box", box: box(7.6, 7.6, Z.app, 1.4, 1.4, 0.5) },
+    // zone a writes to the primary, zone b reads the replica
+    { kind: "cable", pts: [[9.2, 2.5, Z.app], [10.2, 2.5, Z.app], [10.2, 2.5, 2.4]], speed: 0.3, accent: true },
+    { kind: "cable", pts: [[2.5, 9.2, Z.app], [2.5, 10.2, Z.app], [2.5, 10.2, 1.8]], speed: 0.3, accent: true },
+    { kind: "label", at: [9.2, 2, Z.app + 1.1], text: "app · zone a", dx: 1.4, dy: -2.6 },
+    { kind: "label", at: [2, 9.2, Z.app + 0.6], text: "app · zone b", dx: -1.4, dy: 1.2 },
+    { kind: "label", at: [10.3, 5.4, Z.app + 0.7], text: "queue", dx: 1.4, dy: -1 },
+    { kind: "label", at: [9, 9, Z.app + 0.5], text: "lb", dx: 1.6, dy: 1.4 },
+    // edge: dns routes to the lb, the cdn serves static files from s3
+    { kind: "cable", pts: [[8.4, 8.4, Z.edge], [8.4, 8.4, Z.app + 0.5]], speed: 0.3, accent: true },
+    { kind: "plane", pts: quad(2.5, 2.5, Z.edge, 7, 7), v: 0.14 },
+    { kind: "cable", pts: [[4.1, 8.5, Z.edge], [5.1, 8.5, Z.edge]], speed: 0.4 },
+    { kind: "box", box: box(3, 7.9, Z.edge, 1.1, 1.2, 0.7) },
+    { kind: "cyl", cx: 5.7, cy: 8.5, z: Z.edge, r: 0.42, h: 0.8, rt: 0.6 },
+    { kind: "box", box: box(7.9, 7.9, Z.edge, 1, 1, 0.5) },
+    { kind: "label", at: [3, 9.1, Z.edge + 0.7], text: "cdn", dx: -1.4, dy: -0.4 },
+    { kind: "label", at: [5.1, 8.5, Z.edge + 0.8], text: "s3", dx: -2.6, dy: 0.7 },
+    { kind: "label", at: [8.9, 7.9, Z.edge + 0.5], text: "dns", dx: 1, dy: -1.4 },
+    // product, dropping into dns and the cdn
+    { kind: "cable", pts: [[8.4, 8.4, Z.product], [8.4, 8.4, Z.edge + 0.5]], speed: 0.3, accent: true },
+    { kind: "cable", pts: [[3.6, 8.5, Z.product], [3.6, 8.5, Z.edge + 0.7]], speed: 0.3 },
     {
       kind: "plane",
-      pts: quad(3, 3, Z.app, 6, 6),
+      pts: quad(3.5, 3.5, Z.product, 5, 5),
       v: 0.2,
       window: true,
-      rows: { lengths: [3.6, 2.4, 4.4, 1.6, 3.2] },
-      drops: { at: [[9, 3], [3, 9]], from: Z.svc + 1.1 },
+      rows: { lengths: [3, 2, 3.6, 1.4] },
       handles: true,
     },
-    // product to the cdn, then down to the lb
-    { kind: "cable", pts: [[6.9, 6.5, Z.app], [8.2, 6.5, Z.app], [8.2, 7.6, Z.app]], speed: 0.4, accent: true },
-    { kind: "cable", pts: [[8.2, 8.2, Z.app], [8.2, 8.2, Z.svc + 0.5]], speed: 0.3, accent: true },
-    { kind: "box", box: box(7.6, 7.6, Z.app, 1.2, 1.2, 0.6) },
-    { kind: "label", at: [8.8, 7.6, Z.app + 0.6], text: "cdn", dx: 1.6, dy: 0.4 },
-    { kind: "box", box: box(5.3, 5.3, cube, 1.6, 1.6, 1), accent: true, handles: true },
-    { kind: "label", at: [6.9, 5.3, cube + 1], text: "product", dx: 1.6, dy: -1.8, accent: true },
+    { kind: "box", box: box(5.3, 5.3, cube, 1.4, 1.4, 0.9), accent: true, handles: true },
+    { kind: "label", at: [6.7, 5.3, cube + 0.9], text: "product", dx: 1.6, dy: -1.6, accent: true },
   ];
   return {
     parts,
-    ext: [[-1.5, 13, 0], [13.5, -1, 0], [12, 12, 0], [0, 0, 0], [4, 4, cube + 2.2]],
+    ext: [[-1.5, 13, 0], [13.5, -1, 0], [12, 12, 0], [0, 0, 0], [4, 4, cube + 2]],
     axes: ground(),
   };
 };

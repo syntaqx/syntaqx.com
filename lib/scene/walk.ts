@@ -76,17 +76,18 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
       }
       case "cyl": {
         const [f0, f1] = CYL_FRONT;
+        const rt = p.rt ?? p.r;
+        const rAt = (k: number) => p.r + (rt - p.r) * k;
         pen.occlude(pts(cylSide(p)), 1);
-        pen.occlude(pts(circle(p.cx, p.cy, p.z + p.h, p.r)), 1);
-        pen.path(pts(circle(p.cx, p.cy, p.z + p.h, p.r)), { alpha: 0.9, ink: "fg", close: false });
+        pen.occlude(pts(circle(p.cx, p.cy, p.z + p.h, rt)), 1);
+        pen.path(pts(circle(p.cx, p.cy, p.z + p.h, rt)), { alpha: 0.9, ink: "fg", close: false });
         pen.path(pts(circle(p.cx, p.cy, p.z, p.r, f0, f1)), { alpha: 0.9, ink: "fg", close: false });
         [0.33, 0.66].forEach((k) =>
-          pen.path(pts(circle(p.cx, p.cy, p.z + p.h * k, p.r, f0, f1)), { alpha: 0.45, ink: "fg", close: false }),
+          pen.path(pts(circle(p.cx, p.cy, p.z + p.h * k, rAt(k), f0, f1)), { alpha: 0.45, ink: "fg", close: false }),
         );
         [f0, f1].forEach((t) => {
-          const x = p.cx + p.r * Math.cos(t);
-          const y = p.cy + p.r * Math.sin(t);
-          seg([x, y, p.z], [x, y, p.z + p.h], 0.9);
+          const [cx, cy] = [Math.cos(t), Math.sin(t)];
+          seg([p.cx + p.r * cx, p.cy + p.r * cy, p.z], [p.cx + rt * cx, p.cy + rt * cy, p.z + p.h], 0.9);
         });
         break;
       }
