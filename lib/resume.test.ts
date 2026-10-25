@@ -1,8 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { extractText } from "unpdf";
 import { GET as resumePdf } from "@/app/resume.pdf/route";
+import { GET as resumeText } from "@/app/resume.txt/route";
 import { renderMarkdownPage } from "@/lib/markdown";
 import { PUBLIC_CONTACT, resume } from "@/lib/resume";
+import { renderResumePdf } from "@/lib/resume-pdf";
+import { renderResumeText } from "@/lib/resume-text";
 import { resumeHostRedirects } from "@/next.config";
 
 // Private details belong in the gitignored .private/resume.json, never in
@@ -48,6 +52,82 @@ describe("resume", () => {
     );
     // Each page is a "/Type /Page" object; "/Type /Pages" is the page tree.
     expect(pdf.match(/\/Type \/Page(?!s)/g)).toHaveLength(2);
+  });
+
+  // What an applicant tracking system gets: the PDF's text, extracted with
+  // pdf.js. Every fact has to come out verbatim, in reading order.
+  it("extracts cleanly for applicant tracking systems", async () => {
+    const pdf = new Uint8Array(await (await resumePdf()).arrayBuffer());
+    const { text } = await extractText(pdf, { mergePages: true });
+    const flat = text.replace(/\s+/g, " ");
+    expect(flat.trimStart().startsWith(resume.name.toUpperCase())).toBe(true);
+    for (const heading of [
+      "SUMMARY",
+      "TECHNICAL SKILLS",
+      "EXPERIENCE",
+      "EDUCATION",
+    ])
+      expect(flat).toContain(` ${heading} `);
+    const facts = [
+      resume.title,
+      PUBLIC_CONTACT.email,
+      ...resume.summary,
+      ...resume.skills.flatMap((k) => [k.label, k.items]),
+      ...[...resume.experience, ...resume.earlier].map(
+        (job) => `${job.start} - ${job.end}`,
+      ),
+      ...resume.experience.flatMap((job) => [
+        ...(job.highlights ?? []),
+        ...(job.stack ? [`Stack: ${job.stack}`] : []),
+      ]),
+      resume.education.selfTaught.details,
+      ...resume.education.schools.flatMap((s) => [s.name, s.program]),
+    ];
+    for (const fact of facts) expect(flat).toContain(fact.replace(/\s+/g, " "));
+    // Parsers find a role by its title and company lines; each must come out
+    // as a clean line of its own, never glued to a neighbor.
+    const lines = text.split("\n").map((l) => l.trim());
+    for (const job of [...resume.experience, ...resume.earlier]) {
+      expect(lines.some((l) => l.startsWith(job.title))).toBe(true);
+      expect(lines).toContain(job.company);
+    }
+    // No header or footer: running text repeated on every page bleeds into
+    // the content around page breaks.
+    expect(flat.match(new RegExp(resume.name, "gi"))).toHaveLength(1);
+  });
+
+  // The private copy (npm run resume:pdf) adds a phone and a full address.
+  // A made-up contact stands in for the real one, which never enters the repo.
+  it("renders private contact details in the private copy", async () => {
+    const contact = {
+      ...PUBLIC_CONTACT,
+      location: "Springfield, IL 62701",
+      phone: "(555) 010-4477",
+    };
+    const pdf = new Uint8Array(await renderResumePdf(contact));
+    const { text } = await extractText(pdf, { mergePages: true });
+    const header = text.split("\n").slice(0, 6).join(" ");
+    expect(header).toContain(contact.location);
+    expect(header).toContain(contact.phone);
+    expect(header).toContain(contact.email);
+    const plain = renderResumeText(contact).split("\n")[2];
+    expect(plain).toBe(
+      `${contact.location} | ${contact.email} | ${contact.phone}`,
+    );
+  });
+
+  it("has a plain-text version", async () => {
+    const res = await resumeText();
+    expect(res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+    const text = await res.text();
+    expect(text.startsWith(resume.name.toUpperCase())).toBe(true);
+    for (const heading of ["SUMMARY", "SKILLS", "EXPERIENCE", "EDUCATION"])
+      expect(text).toContain(`
+${heading}
+`);
+    for (const p of PRIVATE)
+      if (typeof p === "string") expect(text).not.toContain(p);
+      else expect(text).not.toMatch(p);
   });
 
   it("has a Markdown version", () => {

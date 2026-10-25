@@ -49,14 +49,14 @@ const ACCENT = "#00877f";
 const s = StyleSheet.create({
   page: {
     fontFamily: "Hanken Grotesk",
-    fontSize: 9.2,
-    lineHeight: 1.45,
+    fontSize: 9,
+    lineHeight: 1.4,
     color: BODY,
     // Ligatures fuse "fi"/"fl" into one glyph, and text extraction (what an
     // applicant tracking system reads) then drops a letter: "frst".
     fontFeatureSettings: { liga: false, clig: false },
-    paddingTop: 40,
-    paddingBottom: 50,
+    paddingTop: 36,
+    paddingBottom: 36,
     paddingHorizontal: 54,
   },
   name: {
@@ -79,7 +79,7 @@ const s = StyleSheet.create({
   contactLink: { color: INK, textDecoration: "none" },
   sep: { marginHorizontal: 6, color: RULE },
   headerRule: { height: 2, width: 36, backgroundColor: ACCENT, marginTop: 14 },
-  section: { marginTop: 16 },
+  section: { marginTop: 14 },
   sectionHead: { flexDirection: "row", alignItems: "center", marginBottom: 9 },
   label: {
     fontFamily: "Michroma",
@@ -94,13 +94,13 @@ const s = StyleSheet.create({
   para: { marginBottom: 7 },
   skill: {
     flexDirection: "row",
-    paddingVertical: 3,
+    paddingVertical: 2,
     borderBottomWidth: 0.5,
     borderBottomColor: RULE,
   },
   skillLabel: { width: 112, fontWeight: 600, color: INK },
   skillItems: { flex: 1 },
-  job: { marginBottom: 10 },
+  job: { marginBottom: 8 },
   jobHead: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -108,12 +108,12 @@ const s = StyleSheet.create({
   },
   headline: { flex: 1, fontSize: 10.8 },
   role: { fontWeight: 700, color: INK },
-  at: { color: MUTED },
-  company: { fontWeight: 600, color: ACCENT },
+  company: { fontSize: 9.6, fontWeight: 600, color: ACCENT, marginTop: 1 },
   dates: { fontSize: 8.6, color: MUTED, marginLeft: 12 },
   progression: { marginTop: 2, fontSize: 8.6, color: MUTED },
-  bullets: { marginTop: 6 },
-  bullet: { flexDirection: "row", marginBottom: 3 },
+  // Gaps inside an entry stay under 1.4x a line, or parsers split it in two.
+  bullets: { marginTop: 2 },
+  bullet: { flexDirection: "row", marginBottom: 2 },
   dot: {
     width: 3.5,
     height: 3.5,
@@ -124,14 +124,6 @@ const s = StyleSheet.create({
   bulletText: { flex: 1 },
   stack: { marginTop: 2, fontSize: 8.8, color: MUTED },
   school: { fontWeight: 700, color: INK, flex: 1 },
-  footer: {
-    position: "absolute",
-    bottom: 28,
-    left: 54,
-    right: 54,
-    fontSize: 7.5,
-    color: MUTED,
-  },
 });
 
 function SectionHead({ label }: { label: string }) {
@@ -180,16 +172,15 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
           line and first bullet (and any section heading above) stay together. */}
       <View wrap={false}>
         {head}
+        {/* Title and company on their own lines, each a single text run:
+            parsers glue separately styled runs together ("Engineeringat"). */}
         <View style={s.jobHead}>
-          {/* One text run with a real "at", so a parser can tell title from company. */}
-          <Text style={s.headline}>
-            <Text style={s.role}>{job.title}</Text> <Text style={s.at}>at</Text>{" "}
-            <Text style={s.company}>{job.company}</Text>
-          </Text>
+          <Text style={[s.headline, s.role]}>{job.title}</Text>
           <Text style={s.dates}>
-            {job.start} – {job.end}
+            {job.start} - {job.end}
           </Text>
         </View>
+        <Text style={s.company}>{job.company}</Text>
         {job.progression && (
           <Text style={s.progression}>{job.progression.join("  ›  ")}</Text>
         )}
@@ -230,6 +221,7 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
       title={`${resume.name} - Resume`}
       author={resume.name}
       subject={resume.title}
+      keywords={resume.keywords.join(", ")}
     >
       <Page size="LETTER" style={s.page}>
         <Text style={s.name}>{resume.name}</Text>
@@ -284,19 +276,11 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
               head={i === 0 ? <SectionHead label="Experience" /> : undefined}
             />
           ))}
-          <View style={s.job} wrap={false}>
-            <Text style={[s.role, { marginBottom: 2 }]}>Earlier roles</Text>
-            {resume.earlier.map((job) => (
-              <View key={job.company} style={s.jobHead}>
-                <Text style={{ flex: 1, color: INK }}>
-                  {job.title} <Text style={s.at}>at</Text> {job.company}
-                </Text>
-                <Text style={s.dates}>
-                  {job.start} – {job.end}
-                </Text>
-              </View>
-            ))}
-          </View>
+          {/* Same title, dates and company lines as the roles above, so a
+              parser reads each as its own role, not one under a heading. */}
+          {resume.earlier.map((job) => (
+            <Job key={job.company} job={job} />
+          ))}
         </View>
 
         <Section label="Education">
@@ -310,7 +294,7 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
                 <View style={s.jobHead}>
                   <Text style={s.school}>{school.name}</Text>
                   <Text style={s.dates}>
-                    {school.start} – {school.end}
+                    {school.start} - {school.end}
                   </Text>
                 </View>
                 <Text>{school.program}</Text>
@@ -320,9 +304,6 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
         </Section>
 
         {/* Last in the tree, so extracted text starts with the name, not this. */}
-        <Text style={s.footer} fixed>
-          {resume.name}
-        </Text>
       </Page>
     </Document>
   );

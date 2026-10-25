@@ -43,6 +43,26 @@ export const resume = {
     "Engineer first and leader by consequence, with 20+ years across consumer platforms, high-growth startups, and the platforms businesses run on. I architect distributed systems that ship faster because the patterns make the right thing the easy thing, and break less because the platform prevents the fires. I've worked every layer of the stack, from the UI users touch to the infrastructure underneath, at both ends of the spectrum: platforms serving hundreds of millions of daily users, and greenfield builds taken from first commit to running the business, including money-moving systems where correctness isn't negotiable. Still in the PRs and the hard design calls, because the title is downstream of the work.",
   ],
   skillsIntro: "Not a wishlist, a working set",
+  // PDF metadata some parsers index: only titles held and skills used.
+  keywords: [
+    "Software Architect",
+    "Principal Software Architect",
+    "VP of Software Engineering",
+    "Engineering Leadership",
+    "System Design",
+    "Distributed Systems",
+    "Platform Engineering",
+    "Cloud Architecture",
+    "Microservices",
+    "DevOps",
+    "Go",
+    "TypeScript",
+    "PHP",
+    "Postgres",
+    "AWS",
+    "Kubernetes",
+    "Terraform",
+  ],
   skills: [
     {
       label: "Architecture",
@@ -52,7 +72,7 @@ export const resume = {
     {
       label: "Leadership",
       items:
-        "Technical strategy, RFCs and architecture review, incident command, SLOs, engineering KPIs and scorecards, SDLC design, mentoring",
+        "Technical strategy, architecture review (RFCs), incident command, service level objectives (SLOs), engineering KPIs, SDLC design, mentoring",
     },
     {
       label: "Languages",
@@ -61,7 +81,7 @@ export const resume = {
     {
       label: "Databases",
       items:
-        "Postgres, CockroachDB, Timescale, ClickHouse, MySQL/MariaDB, Redis",
+        "Postgres, CockroachDB, Timescale, ClickHouse, MySQL/MariaDB, MongoDB, SQLite, Redis",
     },
     {
       label: "Messaging & APIs",
@@ -70,7 +90,7 @@ export const resume = {
     {
       label: "Platform & Infra",
       items:
-        "Docker, Kubernetes, ECS, microVMs, Nomad, Traefik, the Hashistack",
+        "Docker, Kubernetes, ECS, microVMs, Nomad, Traefik, HashiCorp stack",
     },
     {
       label: "Cloud",
@@ -89,7 +109,8 @@ export const resume = {
   experience: [
     {
       company: "Aptive",
-      title: "VP, Software Engineering",
+      // Spelled out: parsers match "Vice"/"VP" as whole words, and "VP," isn't one.
+      title: "Vice President, Software Engineering",
       start: "Sep 2025",
       end: "Sep 2026",
       progression: [
@@ -124,7 +145,7 @@ export const resume = {
         "Software Architect (Oct 2022)",
       ],
       highlights: [
-        "Led the containerization and CI/CD modernization of the stack, moving teams onto continuous deployment.",
+        "Led containerization and CI/CD modernization, moving teams onto continuous integration and deployment.",
         "Partnered with teams to break services out of the monolithic repository and architecture, modernizing a legacy in-house framework, breaking tight couplings, and paying down decades of tech debt while modernizing the UI and UX with React.",
       ],
       stack: "PHP/Laravel, Postgres, AMQP, React, AWS, on-prem datacenter",
@@ -150,7 +171,7 @@ export const resume = {
         "Built a Docker Swarm platform that moved services off Heroku to stateless, Docker-first architecture; owned CI/CD, repo automation, and security tooling, and trained the team through it.",
       ],
       stack:
-        "Docker (Swarm), Kubernetes, Hashistack, Go, gRPC, Postgres, Heroku, DigitalOcean, AWS, GCP",
+        "Docker (Swarm), Kubernetes, HashiCorp stack, Go, gRPC, Postgres, Heroku, DigitalOcean, AWS, GCP",
     },
     {
       company: "Even",

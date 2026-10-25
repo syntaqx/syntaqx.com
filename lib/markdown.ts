@@ -187,7 +187,7 @@ function resume(): string {
   const jobs = cv.experience.map((job) =>
     [
       `### ${job.title} at ${job.company}`,
-      `${job.start} – ${job.end}`,
+      `${job.start} - ${job.end}`,
       job.progression?.join(" → "),
       job.highlights?.map((h) => `- ${h}`).join("\n"),
       job.stack && `Stack: ${job.stack}`,
@@ -196,10 +196,10 @@ function resume(): string {
       .join("\n\n"),
   );
   const earlier = cv.earlier
-    .map((j) => `- ${j.title} at ${j.company}, ${j.start} – ${j.end}`)
+    .map((j) => `- ${j.title} at ${j.company}, ${j.start} - ${j.end}`)
     .join("\n");
   const schools = cv.education.schools.map(
-    (s) => `### ${s.name}\n\n${s.start} – ${s.end}\n\n${s.program}`,
+    (s) => `### ${s.name}\n\n${s.start} - ${s.end}\n\n${s.program}`,
   );
   return [
     `# ${cv.name}`,

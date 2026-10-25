@@ -1,16 +1,17 @@
 // npm run resume:pdf
 //
-// Builds the full resume PDF, with the private contact details the public
-// site leaves out, into .private/. Both the details and the output are
+// Builds the full resume, as a PDF and as plain text for paste-in forms,
+// with the private contact details the public site leaves out, into .private/. Both the details and the output are
 // gitignored and never deployed. .private/resume.json looks like:
 //
 //   { "location": "City, ST 00000", "phone": "(000) 000-0000" }
 import { readFileSync, writeFileSync } from "node:fs";
 import { PUBLIC_CONTACT, type ResumeContact } from "../lib/resume";
 import { renderResumePdf } from "../lib/resume-pdf";
+import { renderResumeText } from "../lib/resume-text";
 
 const input = ".private/resume.json";
-const output = ".private/Chase Pierce - Resume.pdf";
+const output = ".private/Chase Pierce - Resume";
 
 let details: Partial<ResumeContact>;
 try {
@@ -22,5 +23,7 @@ try {
   process.exit(1);
 }
 
-writeFileSync(output, await renderResumePdf({ ...PUBLIC_CONTACT, ...details }));
-console.log(`Wrote ${output}`);
+const contact = { ...PUBLIC_CONTACT, ...details };
+writeFileSync(`${output}.pdf`, await renderResumePdf(contact));
+writeFileSync(`${output}.txt`, renderResumeText(contact));
+console.log(`Wrote ${output}.pdf and ${output}.txt`);

@@ -40,6 +40,10 @@ export default function ResumePage() {
           View PDF
           <ArrowUpRight size={13} />
         </Button>
+        <Button href="/resume.txt" variant="secondary" external>
+          Plain text
+          <ArrowUpRight size={13} />
+        </Button>
       </div>
 
       <section className="mb-14">
@@ -81,7 +85,7 @@ export default function ResumePage() {
                   {job.company}
                 </h3>
                 <p className="inst text-dim">
-                  {job.start} – {job.end}
+                  {job.start} - {job.end}
                 </p>
               </div>
               {job.progression && (
@@ -118,7 +122,7 @@ export default function ResumePage() {
                     {job.company}
                   </span>
                   <span className="inst text-dim">
-                    {job.start} – {job.end}
+                    {job.start} - {job.end}
                   </span>
                 </li>
               ))}
@@ -151,7 +155,7 @@ export default function ResumePage() {
                   {school.name}
                 </h3>
                 <p className="inst text-dim">
-                  {school.start} – {school.end}
+                  {school.start} - {school.end}
                 </p>
               </div>
               <p className="mt-1 text-muted">{school.program}</p>
