@@ -89,8 +89,7 @@ export const resume = {
     },
     {
       label: "Platform & Infra",
-      items:
-        "Docker, Kubernetes, ECS, microVMs, Nomad, Traefik, HashiCorp stack",
+      items: "Docker, Kubernetes, ECS, microVMs, Traefik, Nomad, Consul, Vault",
     },
     {
       label: "Cloud",
@@ -171,7 +170,7 @@ export const resume = {
         "Built a Docker Swarm platform that moved services off Heroku to stateless, Docker-first architecture; owned CI/CD, repo automation, and security tooling, and trained the team through it.",
       ],
       stack:
-        "Docker (Swarm), Kubernetes, HashiCorp stack, Go, gRPC, Postgres, Heroku, DigitalOcean, AWS, GCP",
+        "Docker (Swarm), Kubernetes, Nomad, Consul, Vault, Go, gRPC, Postgres, Heroku, DigitalOcean, AWS, GCP",
     },
     {
       company: "Even",

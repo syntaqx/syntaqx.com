@@ -46,6 +46,32 @@ describe("resume", () => {
     expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
   });
 
+  // Some parsers (OpenResume, for one) put no line break between pages, so
+  // a page's last line fuses with the next page's first. That's harmless
+  // inside one role, but a page that opens on a new role, company or section
+  // gets that heading swallowed into the entry above it.
+  it("breaks pages inside an entry, never before a heading", async () => {
+    const pdf = new Uint8Array(await (await resumePdf()).arrayBuffer());
+    const { text: pages } = await extractText(pdf, { mergePages: false });
+    const headings = [
+      "SUMMARY",
+      "TECHNICAL SKILLS",
+      "EXPERIENCE",
+      "EDUCATION",
+      ...[...resume.experience, ...resume.earlier].flatMap((j) => [
+        j.title,
+        j.company,
+      ]),
+      ...resume.education.schools.map((s) => s.name),
+      resume.education.selfTaught.title,
+    ];
+    for (const page of pages.slice(1)) {
+      const first = page.trim().split("\n")[0].trim();
+      for (const heading of headings)
+        expect(first.startsWith(heading)).toBe(false);
+    }
+  });
+
   it("fits on two pages", async () => {
     const pdf = Buffer.from(await (await resumePdf()).arrayBuffer()).toString(
       "latin1",

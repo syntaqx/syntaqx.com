@@ -55,7 +55,9 @@ const s = StyleSheet.create({
     // Ligatures fuse "fi"/"fl" into one glyph, and text extraction (what an
     // applicant tracking system reads) then drops a letter: "frst".
     fontFeatureSettings: { liga: false, clig: false },
-    paddingTop: 36,
+    // A 2/3in top margin. It also lands the page break inside a role, never
+    // on a new one (see the page-break test in lib/resume.test.ts).
+    paddingTop: 48,
     paddingBottom: 36,
     paddingHorizontal: 54,
   },
@@ -79,7 +81,7 @@ const s = StyleSheet.create({
   contactLink: { color: INK, textDecoration: "none" },
   sep: { marginHorizontal: 6, color: RULE },
   headerRule: { height: 2, width: 36, backgroundColor: ACCENT, marginTop: 14 },
-  section: { marginTop: 14 },
+  section: { marginTop: 18 },
   sectionHead: { flexDirection: "row", alignItems: "center", marginBottom: 9 },
   label: {
     fontFamily: "Michroma",
@@ -94,7 +96,7 @@ const s = StyleSheet.create({
   para: { marginBottom: 7 },
   skill: {
     flexDirection: "row",
-    paddingVertical: 2,
+    paddingVertical: 2.5,
     borderBottomWidth: 0.5,
     borderBottomColor: RULE,
   },
