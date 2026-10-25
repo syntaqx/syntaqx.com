@@ -155,7 +155,6 @@ export default function ResumePage() {
                 </p>
               </div>
               <p className="mt-1 text-muted">{school.program}</p>
-              <p className="mt-2 text-sm text-dim">{school.details}</p>
             </li>
           ))}
         </ul>

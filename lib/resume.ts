@@ -110,7 +110,7 @@ export const resume = {
       start: "Sep 2023",
       end: "Sep 2025",
       highlights: [
-        "Architected and led Aspyn, a greenfield internal platform spanning seven domains (CRM, Field Service, Pay, Sales, Communications, Licensing, Platform) on Go, PHP/Laravel, React/TypeScript, Postgres/Aurora, RabbitMQ, and AWS ECS/EKS.",
+        "Architected and led Aspyn, a greenfield platform spanning seven domains (CRM, Field Service, Pay, Sales, Communications, Licensing, Platform) on Go, PHP, React, Postgres, RabbitMQ, and AWS.",
         "Delivered a 14-month greenfield-to-GA migration off legacy vendor systems: 76 service centers and 1M customer accounts cut over with zero rollbacks and zero data-loss incidents.",
       ],
     },
@@ -124,6 +124,10 @@ export const resume = {
         "DevOps Architect (Dec 2021)",
         "Software Architect (Oct 2022)",
       ],
+      highlights: [
+        "Led the containerization and CI/CD modernization of the stack, moving teams onto continuous deployment.",
+        "Partnered with teams to break services out of the monolithic repository and architecture, modernizing a legacy in-house framework, breaking tight couplings, and paying down decades of tech debt while modernizing the UI and UX with React.",
+      ],
       stack: "PHP/Laravel, Postgres, AMQP, React, AWS, on-prem datacenter",
     },
     {
@@ -131,8 +135,12 @@ export const resume = {
       title: "Principal Software Engineer",
       start: "Jan 2020",
       end: "Apr 2021",
+      highlights: [
+        "Owned the marketing website and player interactions with E6Connect, stabilizing the existing Go backends.",
+        "Modernized peer-to-peer multiplayer and built an engine-agnostic multiplayer service for E6Golf's online play.",
+      ],
       stack:
-        "Go, Postgres, Vue.js, Docker, Kubernetes, Docker Swarm, Traefik, Terraform, GCP, AWS, DigitalOcean, Cloudflare, GitHub Actions",
+        "Go, Postgres, Vue.js, Docker, Kubernetes, Docker Swarm, Traefik, Terraform, GCP, AWS, DigitalOcean",
     },
     {
       company: "Outdoorsy",
@@ -140,8 +148,7 @@ export const resume = {
       start: "Feb 2019",
       end: "Oct 2019",
       highlights: [
-        "Designed and built a new internally managed cloud infrastructure on Docker Swarm, migrating existing and new services off Heroku to Docker-first, stateless service architecture.",
-        "Owned CI/CD, repository automation, and security tooling for the engineering teams, and trained the team through the move to containerized, service-based design.",
+        "Built a Docker Swarm platform that moved services off Heroku to stateless, Docker-first architecture; owned CI/CD, repo automation, and security tooling, and trained the team through it.",
       ],
       stack:
         "Docker (Swarm), Kubernetes, Hashistack, Go, gRPC, Postgres, Heroku, DigitalOcean, AWS, GCP",
@@ -166,7 +173,7 @@ export const resume = {
         "Designed a scalable microservice architecture to replace the legacy monolith, led the company's migration to Go, and shipped Messaging, Favorite Folders, and Video Upload.",
       ],
       stack:
-        "Go, PHP 7, MySQL, Node.js, AWS, Docker, Chef, Kubernetes, Elasticsearch (ELK), Redis, RabbitMQ, OpenTracing (Jaeger), Datadog, Redshift",
+        "Go, PHP 7, MySQL, Node.js, AWS, Docker, Chef, Kubernetes, Elasticsearch (ELK), Redis, RabbitMQ, Jaeger, Datadog",
     },
     {
       company: "Riot Games",
@@ -207,11 +214,10 @@ export const resume = {
     schools: [
       {
         name: "Granite Technical Institute",
-        program: "3D Animation & Modeling, Information Technology",
+        program:
+          "Concurrent enrollment (grade 10): 3D Animation & Modeling, Computer Programming, Information Technology",
         start: "2005",
         end: "2006",
-        details:
-          "Concurrent enrollment (grade 10): 3D Animation; Computer Programming",
       },
     ],
   },

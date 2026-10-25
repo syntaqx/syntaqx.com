@@ -199,8 +199,7 @@ function resume(): string {
     .map((j) => `- ${j.title} at ${j.company}, ${j.start} – ${j.end}`)
     .join("\n");
   const schools = cv.education.schools.map(
-    (s) =>
-      `### ${s.name}\n\n${s.start} – ${s.end}\n\n${s.program}\n\n${s.details}`,
+    (s) => `### ${s.name}\n\n${s.start} – ${s.end}\n\n${s.program}`,
   );
   return [
     `# ${cv.name}`,

@@ -314,7 +314,6 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
                   </Text>
                 </View>
                 <Text>{school.program}</Text>
-                <Text style={s.stack}>{school.details}</Text>
               </View>
             )),
           ]}
