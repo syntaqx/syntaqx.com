@@ -49,14 +49,14 @@ const ACCENT = "#00877f";
 const s = StyleSheet.create({
   page: {
     fontFamily: "Hanken Grotesk",
-    fontSize: 9.4,
-    lineHeight: 1.5,
+    fontSize: 9.2,
+    lineHeight: 1.45,
     color: BODY,
     // Ligatures fuse "fi"/"fl" into one glyph, and text extraction (what an
     // applicant tracking system reads) then drops a letter: "frst".
     fontFeatureSettings: { liga: false, clig: false },
-    paddingTop: 46,
-    paddingBottom: 54,
+    paddingTop: 40,
+    paddingBottom: 50,
     paddingHorizontal: 54,
   },
   name: {
@@ -79,7 +79,7 @@ const s = StyleSheet.create({
   contactLink: { color: INK, textDecoration: "none" },
   sep: { marginHorizontal: 6, color: RULE },
   headerRule: { height: 2, width: 36, backgroundColor: ACCENT, marginTop: 14 },
-  section: { marginTop: 20 },
+  section: { marginTop: 16 },
   sectionHead: { flexDirection: "row", alignItems: "center", marginBottom: 9 },
   label: {
     fontFamily: "Michroma",
@@ -92,16 +92,15 @@ const s = StyleSheet.create({
   },
   labelRule: { flex: 1, height: 0.75, backgroundColor: RULE, marginLeft: 10 },
   para: { marginBottom: 7 },
-  intro: { color: MUTED, marginBottom: 6 },
   skill: {
     flexDirection: "row",
-    paddingVertical: 4,
+    paddingVertical: 3,
     borderBottomWidth: 0.5,
     borderBottomColor: RULE,
   },
   skillLabel: { width: 112, fontWeight: 600, color: INK },
   skillItems: { flex: 1 },
-  job: { marginBottom: 14 },
+  job: { marginBottom: 10 },
   jobHead: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -114,7 +113,7 @@ const s = StyleSheet.create({
   dates: { fontSize: 8.6, color: MUTED, marginLeft: 12 },
   progression: { marginTop: 2, fontSize: 8.6, color: MUTED },
   bullets: { marginTop: 6 },
-  bullet: { flexDirection: "row", marginBottom: 3.5 },
+  bullet: { flexDirection: "row", marginBottom: 3 },
   dot: {
     width: 3.5,
     height: 3.5,
@@ -124,8 +123,6 @@ const s = StyleSheet.create({
   },
   bulletText: { flex: 1 },
   stack: { marginTop: 2, fontSize: 8.8, color: MUTED },
-  more: { marginTop: 4, fontSize: 8.8, color: MUTED },
-  moreLink: { color: INK, textDecoration: "none" },
   school: { fontWeight: 700, color: INK, flex: 1 },
   footer: {
     position: "absolute",
@@ -136,6 +133,15 @@ const s = StyleSheet.create({
     color: MUTED,
   },
 });
+
+function SectionHead({ label }: { label: string }) {
+  return (
+    <View style={s.sectionHead}>
+      <Text style={s.label}>{label}</Text>
+      <View style={s.labelRule} />
+    </View>
+  );
+}
 
 function Section({
   label,
@@ -149,10 +155,7 @@ function Section({
     <View style={s.section}>
       {/* The heading and its first entry move to a new page together. */}
       <View wrap={false}>
-        <View style={s.sectionHead}>
-          <Text style={s.label}>{label}</Text>
-          <View style={s.labelRule} />
-        </View>
+        <SectionHead label={label} />
         {first}
       </View>
       {rest}
@@ -160,34 +163,47 @@ function Section({
   );
 }
 
-function Job({ job }: { job: ResumeJob }) {
+function Bullet({ text }: { text: string }) {
   return (
-    // An entry never splits across pages.
-    <View style={s.job} wrap={false}>
-      <View style={s.jobHead}>
-        {/* One text run with a real "at", so a parser can tell title from company. */}
-        <Text style={s.headline}>
-          <Text style={s.role}>{job.title}</Text> <Text style={s.at}>at</Text>{" "}
-          <Text style={s.company}>{job.company}</Text>
-        </Text>
-        <Text style={s.dates}>
-          {job.start} – {job.end}
-        </Text>
-      </View>
-      {job.progression && (
-        <Text style={s.progression}>{job.progression.join("  ›  ")}</Text>
-      )}
-      {job.highlights && (
-        <View style={s.bullets}>
-          {job.highlights.map((h) => (
-            <View key={h} style={s.bullet} wrap={false}>
-              <View style={s.dot} />
-              <Text style={s.bulletText}>{h}</Text>
-            </View>
-          ))}
+    <View style={s.bullet} wrap={false}>
+      <View style={s.dot} />
+      <Text style={s.bulletText}>{text}</Text>
+    </View>
+  );
+}
+
+function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
+  const [first, ...rest] = job.highlights ?? [];
+  return (
+    <View style={s.job}>
+      {/* A long entry may break between bullets, but its heading, promotion
+          line and first bullet (and any section heading above) stay together. */}
+      <View wrap={false}>
+        {head}
+        <View style={s.jobHead}>
+          {/* One text run with a real "at", so a parser can tell title from company. */}
+          <Text style={s.headline}>
+            <Text style={s.role}>{job.title}</Text> <Text style={s.at}>at</Text>{" "}
+            <Text style={s.company}>{job.company}</Text>
+          </Text>
+          <Text style={s.dates}>
+            {job.start} – {job.end}
+          </Text>
         </View>
-      )}
-      {job.stack && <Text style={s.stack}>{job.stack}</Text>}
+        {job.progression && (
+          <Text style={s.progression}>{job.progression.join("  ›  ")}</Text>
+        )}
+        {first && (
+          <View style={s.bullets}>
+            <Bullet text={first} />
+          </View>
+        )}
+        {!first && job.stack && <Text style={s.stack}>Stack: {job.stack}</Text>}
+      </View>
+      {rest.map((h) => (
+        <Bullet key={h} text={h} />
+      ))}
+      {first && job.stack && <Text style={s.stack}>Stack: {job.stack}</Text>}
     </View>
   );
 }
@@ -245,30 +261,43 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
         </Section>
 
         <Section label="Technical Skills">
-          <Text style={s.intro}>{resume.skillsIntro}</Text>
-          <View style={{ borderTopWidth: 0.5, borderTopColor: RULE }}>
-            {resume.skills.map((k) => (
-              <View key={k.label} style={s.skill} wrap={false}>
-                <Text style={s.skillLabel}>{k.label}</Text>
-                <Text style={s.skillItems}>{k.items}</Text>
+          {[
+            <View
+              key="skills"
+              style={{ borderTopWidth: 0.5, borderTopColor: RULE }}
+            >
+              {resume.skills.map((k) => (
+                <View key={k.label} style={s.skill} wrap={false}>
+                  <Text style={s.skillLabel}>{k.label}</Text>
+                  <Text style={s.skillItems}>{k.items}</Text>
+                </View>
+              ))}
+            </View>,
+          ]}
+        </Section>
+
+        <View style={s.section}>
+          {resume.experience.map((job, i) => (
+            <Job
+              key={`${job.company} ${job.title}`}
+              job={job}
+              head={i === 0 ? <SectionHead label="Experience" /> : undefined}
+            />
+          ))}
+          <View style={s.job} wrap={false}>
+            <Text style={[s.role, { marginBottom: 2 }]}>Earlier roles</Text>
+            {resume.earlier.map((job) => (
+              <View key={job.company} style={s.jobHead}>
+                <Text style={{ flex: 1, color: INK }}>
+                  {job.title} <Text style={s.at}>at</Text> {job.company}
+                </Text>
+                <Text style={s.dates}>
+                  {job.start} – {job.end}
+                </Text>
               </View>
             ))}
           </View>
-        </Section>
-
-        <Section label="Experience">
-          {[
-            ...resume.experience.map((job) => (
-              <Job key={job.company} job={job} />
-            )),
-            <Text key="more" style={s.more}>
-              {resume.more.text}{" "}
-              <Link src={resume.more.href} style={s.moreLink}>
-                {resume.more.label}
-              </Link>
-            </Text>,
-          ]}
-        </Section>
+        </View>
 
         <Section label="Education">
           {[

@@ -42,6 +42,14 @@ describe("resume", () => {
     expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
   });
 
+  it("fits on two pages", async () => {
+    const pdf = Buffer.from(await (await resumePdf()).arrayBuffer()).toString(
+      "latin1",
+    );
+    // Each page is a "/Type /Page" object; "/Type /Pages" is the page tree.
+    expect(pdf.match(/\/Type \/Page(?!s)/g)).toHaveLength(2);
+  });
+
   it("has a Markdown version", () => {
     const { status, body } = renderMarkdownPage("/resume");
     expect(status).toBe(200);

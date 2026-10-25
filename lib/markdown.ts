@@ -190,11 +190,14 @@ function resume(): string {
       `${job.start} – ${job.end}`,
       job.progression?.join(" → "),
       job.highlights?.map((h) => `- ${h}`).join("\n"),
-      job.stack,
+      job.stack && `Stack: ${job.stack}`,
     ]
       .filter(Boolean)
       .join("\n\n"),
   );
+  const earlier = cv.earlier
+    .map((j) => `- ${j.title} at ${j.company}, ${j.start} – ${j.end}`)
+    .join("\n");
   const schools = cv.education.schools.map(
     (s) =>
       `### ${s.name}\n\n${s.start} – ${s.end}\n\n${s.program}\n\n${s.details}`,
@@ -206,7 +209,7 @@ function resume(): string {
     `PDF: ${url("/resume.pdf")}`,
     `## Summary\n\n${cv.summary.join("\n\n")}`,
     `## Technical Skills\n\n${cv.skillsIntro}\n\n${cv.skills.map((k) => `- **${k.label}:** ${k.items}`).join("\n")}`,
-    `## Experience\n\n${jobs.join("\n\n")}`,
+    `## Experience\n\n${jobs.join("\n\n")}\n\n### Earlier roles\n\n${earlier}`,
     `${cv.more.text} [${cv.more.label}](${cv.more.href})`,
     `## Education\n\n### ${cv.education.selfTaught.title}\n\n${cv.education.selfTaught.details}\n\n${schools.join("\n\n")}`,
   ].join("\n\n");

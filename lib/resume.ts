@@ -30,7 +30,7 @@ export const PUBLIC_CONTACT: ResumeContact = {
 
 export const resume = {
   name: "Chase Pierce",
-  title: "Software Architect · Engineering Leader",
+  title: "Software Architect · Engineering Executive",
   links: [
     { label: "syntaqx.com", href: SITE_URL },
     {
@@ -40,12 +40,21 @@ export const resume = {
     { label: "github.com/syntaqx", href: "https://github.com/syntaqx" },
   ],
   summary: [
-    "Architect at heart, open sorcerer, and your favorite internet junkie. I'm an engineer first and a leader by consequence, with more than two decades across consumer platforms, high-growth startups, and the platforms businesses actually run on. The systems I build ship faster because I invest in the patterns that make the right thing the easy thing, and throw fewer fires because the platform prevents them. The engineers around them grow into leaders because I model the work and give them cover to fail well. I'm still in PRs, still architecting the systems the business runs on, still in the room when a hard design call lands, because the title is downstream of the work, not a replacement for it.",
-    "I've worked on every layer of the stack, from the UI users touch to the infrastructure that keeps it running, and I lead like it. I obsess over what compounds: architecture that enables, developer experience that multiplies, and the operating cadence that lets growth survive scale.",
-    "I've proven it at both ends of the spectrum: platforms serving hundreds of millions of daily users where a bad deployment is a public incident, and greenfield builds taken from first commit to running the business across its core domains and millions of lines of production code, including the money-moving parts where correctness isn't negotiable. Engineering scorecards with quantifiable KPIs across reliability, impact, delivery, leverage, and security, because what gets measured improves. The work changes shape at every scale. The discipline doesn't.",
+    "Software architect and hands-on engineering executive with 15+ years designing distributed systems and the platforms businesses run on. At Aptive I architected Aspyn, a greenfield platform spanning seven business domains, and led its migration of 76 service centers and 1M customer accounts off a legacy vendor with zero rollbacks and zero data loss, then ran the 43-person engineering department that operated it at a 99.95% uptime SLO.",
+    "Engineer first, leader by consequence: still writing code, reviewing PRs, and owning the hard design calls. I invest in the patterns and platforms that make the right thing the easy thing, from consumer platforms serving hundreds of millions of daily users to money-moving systems where correctness isn't negotiable.",
   ],
   skillsIntro: "Not a wishlist, a working set",
   skills: [
+    {
+      label: "Architecture",
+      items:
+        "System design, distributed systems, microservices, event-driven architecture, greenfield platforms, legacy migrations, multi-cloud infrastructure",
+    },
+    {
+      label: "Leadership",
+      items:
+        "Technical strategy, RFCs and architecture review, incident command, SLOs, engineering KPIs and scorecards, SDLC design, mentoring",
+    },
     {
       label: "Languages",
       items: "Go, TypeScript, JavaScript, PHP, Python, Bash",
@@ -82,18 +91,27 @@ export const resume = {
     {
       company: "Aptive",
       title: "VP, Software Engineering",
-      start: "Sep 2023",
+      start: "Sep 2025",
       end: "Sep 2026",
       progression: [
-        "Principal Software Architect (2023)",
-        "Sr. Director (2025)",
-        "VP, Software Engineering (2026)",
+        "Sr. Director, Software Engineering (Sep 2025)",
+        "VP, Software Engineering (Mar 2026)",
       ],
       highlights: [
-        "Architected Aspyn, a greenfield internal platform spanning product domains across the business, including CRM, Field Service, Pay, Sales, Communications, Licensing, Platform, and more. Built on Go, PHP/Laravel, React/TypeScript, Postgres/Aurora, AMQP, and AWS ECS/EKS.",
-        "Led a 14-month greenfield-to-GA migration off an incumbent third-party vendor: 76 service centers and 1M customer accounts cut over with zero rollbacks and zero data-loss incidents.",
-        "Scaled delivery to all 76 service centers and 1M active customers while holding a 99.95% uptime SLO; ran incident command across engineering and DevOps.",
-        "Overhauled the engineering SDLC to cut low-value metawork and let teams ship faster with work they enjoyed more, backed by quantifiable KPIs across reliability, delivery, security, and developer experience.",
+        "Led a 43-person engineering department spanning product engineering, platform engineering, DevOps, and QA.",
+        "Scaled Aspyn's delivery and product offerings to all 76 service centers and 1M active customers while holding a 99.95% uptime SLO; ran incident command across engineering and DevOps.",
+        "Introduced the engineering Forge: scorecards with quantifiable KPIs across reliability, delivery, impact, leverage, and security, holding teams accountable for reviews, rollbacks, and rework, and surfacing engineering health metrics.",
+        "Overhauled the SDLC to cut low-value metawork and let teams ship faster on work they enjoyed more.",
+      ],
+    },
+    {
+      company: "Aptive",
+      title: "Principal Software Architect",
+      start: "Sep 2023",
+      end: "Sep 2025",
+      highlights: [
+        "Architected and led Aspyn, a greenfield internal platform spanning seven domains (CRM, Field Service, Pay, Sales, Communications, Licensing, Platform) on Go, PHP/Laravel, React/TypeScript, Postgres/Aurora, RabbitMQ, and AWS ECS/EKS.",
+        "Delivered a 14-month greenfield-to-GA migration off legacy vendor systems: 76 service centers and 1M customer accounts cut over with zero rollbacks and zero data-loss incidents.",
       ],
     },
     {
@@ -101,7 +119,12 @@ export const resume = {
       title: "Software Architect",
       start: "May 2021",
       end: "Sep 2023",
-      stack: "PHP/Laravel, Postgres, AMQP, React, AWS, On-Prem Datacenter",
+      progression: [
+        "Cloud Architect (May 2021)",
+        "DevOps Architect (Dec 2021)",
+        "Software Architect (Oct 2022)",
+      ],
+      stack: "PHP/Laravel, Postgres, AMQP, React, AWS, on-prem datacenter",
     },
     {
       company: "TruGolf",
@@ -109,13 +132,17 @@ export const resume = {
       start: "Jan 2020",
       end: "Apr 2021",
       stack:
-        "Go, Postgres, Vue.js, Docker, Kubernetes, Docker Swarm, Traefik, Terraform, GCP, AWS, DigitalOcean",
+        "Go, Postgres, Vue.js, Docker, Kubernetes, Docker Swarm, Traefik, Terraform, GCP, AWS, DigitalOcean, Cloudflare, GitHub Actions",
     },
     {
       company: "Outdoorsy",
       title: "Senior Backend Engineer",
       start: "Feb 2019",
       end: "Oct 2019",
+      highlights: [
+        "Designed and built a new internally managed cloud infrastructure on Docker Swarm, migrating existing and new services off Heroku to Docker-first, stateless service architecture.",
+        "Owned CI/CD, repository automation, and security tooling for the engineering teams, and trained the team through the move to containerized, service-based design.",
+      ],
       stack:
         "Docker (Swarm), Kubernetes, Hashistack, Go, gRPC, Postgres, Heroku, DigitalOcean, AWS, GCP",
     },
@@ -124,6 +151,9 @@ export const resume = {
       title: "Senior Infrastructure Engineer",
       start: "Jul 2018",
       end: "Dec 2018",
+      highlights: [
+        "Defined the engineering infrastructure alongside the CTO as the sole DevOps, security, operations, and IT engineer, building a stable, testable, continuously delivered platform as the team grew.",
+      ],
       stack:
         "Go, gRPC, Postgres, Docker, Kubernetes, Terraform, AWS, GCP, CircleCI, Codefresh",
     },
@@ -132,17 +162,42 @@ export const resume = {
       title: "Senior Software Engineer",
       start: "Oct 2016",
       end: "May 2018",
+      highlights: [
+        "Designed a scalable microservice architecture to replace the legacy monolith, led the company's migration to Go, and shipped Messaging, Favorite Folders, and Video Upload.",
+      ],
       stack:
-        "Go, PHP 7, MySQL, Node.js, AWS, Docker, Chef, Kubernetes, ElasticSearch (ELK), Redis, AMQP, OTEL",
+        "Go, PHP 7, MySQL, Node.js, AWS, Docker, Chef, Kubernetes, Elasticsearch (ELK), Redis, RabbitMQ, OpenTracing (Jaeger), Datadog, Redshift",
     },
     {
       company: "Riot Games",
       title: "Software Engineer",
       start: "May 2014",
       end: "Jul 2016",
-      stack: "Go, PHP, MySQL, jQuery, Redis, AWS, Packer, Docker, Hadoop",
+      stack:
+        "Go, PHP, MySQL, AWS, Docker, Packer, MongoDB, Elasticsearch, Redis, RabbitMQ, Hadoop",
     },
   ] satisfies ResumeJob[],
+  // Listed compactly: title, company and dates only.
+  earlier: [
+    {
+      title: "Developer",
+      company: "Bluehost",
+      start: "Nov 2013",
+      end: "May 2014",
+    },
+    {
+      title: "Web Developer",
+      company: "BetterServers",
+      start: "Nov 2012",
+      end: "Jun 2013",
+    },
+    {
+      title: "Head of Information Technology",
+      company: "SoftwareMedia.com",
+      start: "Apr 2011",
+      end: "Oct 2012",
+    },
+  ],
   education: {
     selfTaught: {
       title: "Self-taught software engineer",

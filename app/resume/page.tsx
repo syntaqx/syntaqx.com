@@ -71,7 +71,10 @@ export default function ResumePage() {
         <h2 className="eyebrow mb-6">experience</h2>
         <ol className="border-t border-border">
           {resume.experience.map((job) => (
-            <li key={job.company} className="border-b border-border py-6">
+            <li
+              key={`${job.company} ${job.title}`}
+              className="border-b border-border py-6"
+            >
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <h3 className="text-lg font-semibold text-foreground">
                   {job.title} <span className="text-muted">at</span>{" "}
@@ -95,11 +98,32 @@ export default function ResumePage() {
               )}
               {job.stack && (
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  {job.stack}
+                  <span className="text-dim">Stack:</span> {job.stack}
                 </p>
               )}
             </li>
           ))}
+          <li className="border-b border-border py-6">
+            <h3 className="mb-3 text-lg font-semibold text-foreground">
+              Earlier roles
+            </h3>
+            <ul className="space-y-1.5">
+              {resume.earlier.map((job) => (
+                <li
+                  key={job.company}
+                  className="flex flex-wrap items-baseline justify-between gap-x-6 text-muted"
+                >
+                  <span>
+                    {job.title} <span className="text-dim">at</span>{" "}
+                    {job.company}
+                  </span>
+                  <span className="inst text-dim">
+                    {job.start} – {job.end}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </li>
         </ol>
         <p className="mt-6 text-muted">
           {resume.more.text}{" "}
