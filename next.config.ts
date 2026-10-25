@@ -127,7 +127,7 @@ const nextConfig: NextConfig = {
     "/api/docs/[...slug]": ["./content/docs/**/*"],
     // The PDF renderer reads its font files from node_modules.
     "/resume.pdf": [
-      "./node_modules/@fontsource/roboto-mono/files/roboto-mono-latin-*-normal.woff",
+      "./node_modules/@fontsource/{hanken-grotesk,big-shoulders-display,michroma}/files/*-latin-*-normal.woff",
     ],
   },
 };
