@@ -75,7 +75,7 @@ export const resume = {
     {
       label: "Leadership",
       items:
-        "Technical strategy, architecture review (RFCs), incident command, service level objectives (SLOs), engineering KPIs, AI-native SDLC design, mentoring",
+        "Technical strategy, RFCs, architecture decision records (ADRs), PRDs, incident command, service level objectives (SLOs), engineering KPIs, AI-native SDLC design, mentoring",
     },
     {
       label: "Languages & Frameworks",
