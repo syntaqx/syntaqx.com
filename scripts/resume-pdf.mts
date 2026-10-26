@@ -6,10 +6,14 @@
 //
 //   { "location": "City, ST 00000", "phone": "(000) 000-0000" }
 //
-// Optional "headlines" build one more copy per track you're applying for,
-// each with its own headline under the name, into .private/<track>/:
+// Optional "headlines" build one copy per track you're applying for, each
+// with its own headline under the name, into .private/<track>/ (without
+// them, one copy with the site's headline goes in .private/):
 //
-//   "headlines": { "ic": "Principal Software Engineer · Software Architect" }
+//   "headlines": {
+//     "ic": "Principal Software Engineer · Software Architect",
+//     "management": "Software Architect · Engineering Executive"
+//   }
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { PUBLIC_CONTACT, resume, type ResumeContact } from "../lib/resume";
 import { renderResumePdf } from "../lib/resume-pdf";
@@ -28,12 +32,12 @@ try {
   process.exit(1);
 }
 
-const { headlines = {}, ...rest } = details;
+const { headlines, ...rest } = details;
 const contact = { ...PUBLIC_CONTACT, ...rest };
-for (const [dir, title] of [
-  [".private", resume.title],
-  ...Object.entries(headlines).map(([track, t]) => [`.private/${track}`, t]),
-]) {
+const copies = headlines
+  ? Object.entries(headlines).map(([track, t]) => [`.private/${track}`, t])
+  : [[".private", resume.title]];
+for (const [dir, title] of copies) {
   mkdirSync(dir, { recursive: true });
   writeFileSync(`${dir}/${file}.pdf`, await renderResumePdf(contact, title));
   writeFileSync(`${dir}/${file}.txt`, renderResumeText(contact, title));
