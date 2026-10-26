@@ -3,7 +3,8 @@ import { getAllPosts, getAllTags, slugifyTag, tagDescription } from "./posts";
 import { getAllDocs } from "./docs";
 import { article, breadcrumbList, itemList, siteGraph, webApplication } from "./schema";
 import sitemap from "@/app/sitemap";
-import { allMiscTools, moreToolsFor } from "./misc-tools";
+import { allTools, moreToolsFor } from "./tools";
+import { patterns } from "./ui";
 
 const MAX_DESCRIPTION = 160;
 
@@ -54,14 +55,14 @@ describe("tags", () => {
 
 describe("moreToolsFor()", () => {
   it("lists every other tool, plus the converters hub on converter pages", () => {
-    const md = moreToolsFor("/misc/markdown").map((t) => t.href);
-    expect(md).not.toContain("/misc/markdown");
-    expect(md).toHaveLength(allMiscTools.length - 1);
-    expect(md).not.toContain("/misc/convert");
+    const md = moreToolsFor("/tools/markdown").map((t) => t.href);
+    expect(md).not.toContain("/tools/markdown");
+    expect(md).toHaveLength(allTools.length - 1);
+    expect(md).not.toContain("/tools/convert");
 
-    const b64 = moreToolsFor("/misc/convert/base64").map((t) => t.href);
-    expect(b64[0]).toBe("/misc/convert");
-    expect(b64).not.toContain("/misc/convert/base64");
+    const b64 = moreToolsFor("/tools/convert/base64").map((t) => t.href);
+    expect(b64[0]).toBe("/tools/convert");
+    expect(b64).not.toContain("/tools/convert/base64");
   });
 });
 
@@ -73,6 +74,13 @@ describe("sitemap", () => {
       expect(urls).toContain(`https://www.syntaqx.com/docs/${doc.slug}`);
     }
     expect(urls).toContain("https://www.syntaqx.com/docs/api");
+  });
+
+  it("lists every tool and UI pattern page", () => {
+    for (const page of [...allTools, ...patterns]) {
+      expect(urls).toContain(`https://www.syntaqx.com${page.href}`);
+    }
+    expect(urls).not.toContain("https://www.syntaqx.com/ui/patterns");
   });
 
   it("excludes noindex tag archives but keeps the /tags index", () => {
@@ -166,15 +174,15 @@ describe("schema builders", () => {
     const graph = webApplication({
       name: "T",
       description: "D",
-      path: "/misc/t",
+      path: "/tools/t",
       crumbs: [],
-      related: [{ name: "Other", path: "/misc/other" }],
+      related: [{ name: "Other", path: "/tools/other" }],
     })["@graph"] as Record<string, unknown>[];
     expect(graph[2]).toMatchObject({
       "@type": "ItemList",
       name: "More tools",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Other", url: "https://www.syntaqx.com/misc/other" },
+        { "@type": "ListItem", position: 1, name: "Other", url: "https://www.syntaqx.com/tools/other" },
       ],
     });
     const node = graph[0];

@@ -22,7 +22,7 @@ export const contentSecurityPolicy = [
     "connect-src 'self' https://api.syntaqx.com https://*.ingest.us.sentry.io",
     // Vercel's preview toolbar.
     "https://vercel.live wss://ws-us3.pusher.com",
-    // What's My IP (/misc/whoami) and the hover-cards demo (/misc/hover-cards).
+    // What's My IP (/tools/whoami) and the hover-cards demo (/ui/patterns/hover-cards).
     "https://api.ipify.org https://api64.ipify.org https://ipinfo.io https://api.github.com",
     // The favicon tool reads an uploaded SVG back from its data: URL.
     "data:",
@@ -105,6 +105,16 @@ export const resumeHostRedirects = [
   },
 ];
 
+// /misc split into /tools and /ui (October 2026). The pattern pages moved
+// to /ui; everything else kept its path under /tools. /ui/patterns has no
+// page of its own, so it goes to the /ui index.
+export const sectionRedirects = [
+  { source: "/misc/hover-cards", destination: "/ui/patterns/hover-cards", permanent: true },
+  { source: "/misc/feedback", destination: "/ui/patterns/feedback", permanent: true },
+  { source: "/misc/:path*", destination: "/tools/:path*", permanent: true },
+  { source: "/ui/patterns", destination: "/ui", permanent: true },
+];
+
 const nextConfig: NextConfig = {
   // Pin the workspace root to this project. A stray, empty package-lock.json
   // in the parent directory otherwise makes Next infer the wrong root, which
@@ -119,7 +129,7 @@ const nextConfig: NextConfig = {
     },
   ],
   rewrites: async () => markdownRewrites,
-  redirects: async () => [...docRedirects(), ...resumeHostRedirects],
+  redirects: async () => [...docRedirects(), ...sectionRedirects, ...resumeHostRedirects],
   // The Markdown route reads content/ at request time.
   outputFileTracingIncludes: {
     "/md/[[...path]]": ["./content/**/*"],

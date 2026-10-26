@@ -8,7 +8,7 @@ export default function NotFound() {
       <SceneArt
         scene="missing"
         className="mb-10 aspect-square w-64! sm:w-72!"
-        label="A grid of tiles with the center tile missing, floating high above its empty slot"
+        label="A grid of tiles with the center tile missing. A small search bot circles the hole, shining a flashlight into it, while the missing tile drifts high overhead"
       />
       <p className="eyebrow mb-4">404</p>
       <h1 className="mb-5 max-w-2xl text-3xl leading-[0.95] sm:text-4xl">

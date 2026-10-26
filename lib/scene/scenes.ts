@@ -374,7 +374,7 @@ const writing: SceneFn = (s) => {
 };
 
 /**
- * Misc: an open toolbox. The tools take turns popping up to show their
+ * Tools: an open toolbox. The tools take turns popping up to show their
  * name, and a top spins beside it, for the toys.
  */
 const toolbox: SceneFn = (s) => {
@@ -438,7 +438,61 @@ const toolbox: SceneFn = (s) => {
   };
 };
 
-/** 404: the tile that should be here isn't. */
+/**
+ * UI: an interface exploded into its layers. The layout at the bottom, the
+ * components on it, and the pattern on top: a button that a cursor comes
+ * down to press, every few seconds.
+ */
+const layers: SceneFn = (s) => {
+  const z1 = 2.4 + s.spread * 1.2;
+  const z2 = 5 + s.spread * 2.4;
+  // offset so the resting frame (and the OG image) has the cursor close
+  const T = 3.2;
+  const ph = ((s.t + T * 0.3) % T) / T;
+  const ease = (k: number) => k * k * (3 - 2 * k);
+  const down = ph < 0.4 ? ease(ph / 0.4) : ph < 0.55 ? 1 : ph < 0.9 ? 1 - ease((ph - 0.55) / 0.35) : 0;
+  const pressed = ph >= 0.4 && ph < 0.55;
+  const [bx, by, ba, bb, bh] = [5.2, 6.4, 3, 1.2, 0.4];
+  const bz = z2 - (pressed ? 0.2 : 0);
+  const [cx, cy] = [bx + ba * 0.62, by + bb * 0.5];
+  const tip = bz + bh + (1 - down) * 2.4;
+  const corners = (x: number, y: number, a: number, b: number): [number, number][] => [[x, y], [x + a, y], [x, y + b], [x + a, y + b]];
+
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // layout: the window, its title bar and controls
+    { kind: "plane", pts: quad(0.8, 0.8, 0.3, 8.4, 8.4), v: 0.12 },
+    { kind: "line", a: [0.8, 1.8, 0.3], b: [9.2, 1.8, 0.3], alpha: 0.6 },
+    ...[0, 1, 2].map((i): Part => ({ kind: "cyl", cx: 1.4 + i * 0.5, cy: 1.3, z: 0.3, r: 0.14, h: 0.06 })),
+    // components, lifted off the layout
+    ...corners(1.2, 2.4, 7.6, 6.2).map(([x, y]): Part => ({ kind: "line", a: [x, y, 0.3], b: [x, y, z1], dashed: true, alpha: 0.3 })),
+    { kind: "plane", pts: quad(1.2, 2.4, z1, 2.2, 6.2), v: 0.16, rows: { lengths: [1.5, 1.1, 1.6, 1.3, 0.9, 1.4] } },
+    { kind: "plane", pts: quad(4, 2.4, z1, 4.8, 3.2), v: 0.2, handles: true, rows: { lengths: [3.6, 2.6, 4, 1.8], accentRow: 0 } },
+    { kind: "plane", pts: quad(4, 6.4, z1, 1.2, 1.2), v: 0.16 },
+    // the slot the button composes into
+    { kind: "plane", pts: quad(bx, by, z1, ba, bb), v: 0, dashed: true },
+    // the pattern on top
+    ...corners(bx, by, ba, bb).map(([x, y]): Part => ({ kind: "line", a: [x, y, z1], b: [x, y, bz], dashed: true, alpha: 0.35 })),
+    { kind: "box", box: box(bx, by, bz, ba, bb, bh), accent: true, handles: pressed },
+    // the cursor: a tip, then its tail
+    { kind: "line", a: [cx, cy, tip], b: [cx, cy, tip + 2], dashed: true, alpha: 0.4 },
+    { kind: "cyl", cx, cy, z: tip, r: 0.04, h: 0.9, rt: 0.32 },
+    { kind: "label", at: [0.8, 9.2, 0.3], text: "layout", dx: -1.4, dy: 0.6 },
+    { kind: "label", at: [8.8, 2.4, z1], text: "components", dx: 1.4, dy: -0.4 },
+    { kind: "label", at: [bx + ba, by + bb, bz + bh], text: pressed ? "pressed" : "pattern", dx: 1.4, dy: -1.2, accent: true },
+  ];
+  return {
+    parts,
+    ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [cx, cy, z2 + 5], [bx, by, z2 + 3]],
+    axes: ground(10),
+  };
+};
+
+/**
+ * 404: the tile that should be here isn't. A search bot circles the hole
+ * with a flashlight, looking in it; the tile it's looking for drifts
+ * overhead, just out of view.
+ */
 const missing: SceneFn = (s) => {
   const z = 6 + s.spread * 2 + bob(s);
   const parts: Part[] = [];
@@ -447,12 +501,36 @@ const missing: SceneFn = (s) => {
   tiles.sort((a, b) => a[0] + a[1] - (b[0] + b[1]));
   parts.push({ kind: "plane", pts: quad(3, 3, 0, 2.6, 2.6), v: 0, dashed: true });
   tiles.forEach(([x, y]) => parts.push({ kind: "box", box: box(x, y, 0, 2.6, 2.6, 0.5) }));
-  parts.push({ kind: "line", a: [4.3, 4.3, 0], b: [4.3, 4.3, z], dashed: true, alpha: 0.4 });
-  parts.push({ kind: "box", box: box(3.6, 3.6, z, 1.4, 1.4, 0.5), accent: true, handles: true });
-  return { parts, ext: [[0, 9, 0], [9, 0, 0], [9, 9, 0], [0, 0, 0], [3, 3, z + 1.5]], axes: ground(9) };
+
+  // the bot walks the ring of tiles around the hole, hopping as it goes
+  const a = s.t * 0.45 + 0.6;
+  const [px, py] = [4.3 + Math.cos(a) * 2.75, 4.3 + Math.sin(a) * 2.75];
+  const foot = 0.5 + Math.abs(Math.sin(s.t * 4)) * 0.12;
+  // the beam sweeps the floor of the hole
+  const [hx, hy] = [4.3 + Math.cos(s.t * 1.7) * 0.8, 4.3 + Math.sin(s.t * 1.3) * 0.8];
+  const head = foot + 1.1;
+  const blink = Math.floor(s.t * 2) % 2 === 0;
+  parts.push(
+    // where the light lands
+    { kind: "plane", pts: quad(hx - 0.45, hy - 0.45, 0, 0.9, 0.9), v: 0.55 },
+    { kind: "box", box: box(px - 0.5, py - 0.5, foot, 1, 1, 0.8), small: true },
+    { kind: "box", box: box(px - 0.4, py - 0.4, foot + 0.8, 0.8, 0.8, 0.6), handles: true },
+    { kind: "line", a: [px, py, head + 0.65], b: [px, py, head + 1.3], alpha: 0.8 },
+    { kind: "cyl", cx: px, cy: py, z: head + 1.3, r: 0.14, h: 0.18, accent: blink },
+    { kind: "line", a: [px, py, head], b: [hx, hy, 0], alpha: 0.9, accent: true },
+    { kind: "line", a: [px, py, head], b: [hx + 0.5, hy - 0.3, 0], dashed: true, alpha: 0.35 },
+    { kind: "line", a: [px, py, head], b: [hx - 0.3, hy + 0.5, 0], dashed: true, alpha: 0.35 },
+  );
+
+  // the tile drifts in a slow circle above, never over the hole for long
+  const [tx, ty] = [3.6 + Math.cos(s.t * 0.6) * 0.6, 3.6 + Math.sin(s.t * 0.6) * 0.6];
+  parts.push({ kind: "line", a: [tx + 0.7, ty + 0.7, 0], b: [tx + 0.7, ty + 0.7, z], dashed: true, alpha: 0.25 });
+  parts.push({ kind: "box", box: box(tx, ty, z, 1.4, 1.4, 0.5), accent: true, handles: true });
+  parts.push({ kind: "label", at: [tx + 1.4, ty, z + 0.5], text: "your page", dx: 1.4, dy: -1, accent: true });
+  return { parts, ext: [[0, 9, 0], [9, 0, 0], [9, 9, 0], [0, 0, 0], [3, 3, z + 1.5], [8.6, 4.3, 3]], axes: ground(9) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, missing } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, missing } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { markdownRewrites } from "./next.config";
+import { markdownRewrites, sectionRedirects } from "./next.config";
 
 const all = [...markdownRewrites.beforeFiles, ...markdownRewrites.fallback];
 
@@ -25,5 +25,26 @@ describe("Markdown content negotiation rewrites", () => {
     expect(markdownRewrites.fallback).toEqual([
       expect.objectContaining({ source: "/:path*", destination: "/md/:path*" }),
     ]);
+  });
+});
+
+describe("/misc redirects", () => {
+  // The first rule whose source matches wins, as in Next.js.
+  const destination = (path: string) => {
+    for (const r of sectionRedirects) {
+      const re = new RegExp(`^${r.source.replace("/:path*", "(?:/(.*))?")}$`);
+      const m = path.match(re);
+      if (m) return r.destination.replace("/:path*", m[1] ? `/${m[1]}` : "");
+    }
+  };
+
+  it("send the pattern pages to /ui and everything else to /tools", () => {
+    expect(destination("/misc")).toBe("/tools");
+    expect(destination("/misc/jwt")).toBe("/tools/jwt");
+    expect(destination("/misc/convert/base64")).toBe("/tools/convert/base64");
+    expect(destination("/misc/hover-cards")).toBe("/ui/patterns/hover-cards");
+    expect(destination("/misc/feedback")).toBe("/ui/patterns/feedback");
+    expect(destination("/ui/patterns")).toBe("/ui");
+    expect(sectionRedirects.every((r) => r.permanent)).toBe(true);
   });
 });

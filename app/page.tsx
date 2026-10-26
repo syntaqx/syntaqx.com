@@ -3,9 +3,11 @@ import { Suspense } from "react";
 import { getAllPosts, getNewestPostSlug } from "@/lib/posts";
 import { bio, socials } from "@/lib/constants";
 import { siteGraph } from "@/lib/schema";
+import { featuredTools } from "@/lib/tools";
 import { JsonLd } from "@/components/json-ld";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/button";
+import { Card } from "@/components/card";
 import { PostList } from "@/components/post-list";
 import { SceneArt } from "@/components/scene-art";
 import { SimpleIcon } from "@/components/simple-icon";
@@ -106,6 +108,32 @@ export default function Home() {
         <Suspense fallback={<GitHubActivitySkeleton />}>
           <GitHubActivityAsync username="syntaqx" />
         </Suspense>
+      </section>
+
+      <section className="mb-20">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="eyebrow">tools</h2>
+          <Link
+            href="/tools"
+            className="inst flex items-center gap-1.5 text-dim transition-colors hover:text-accent"
+          >
+            all tools <ArrowRight size={11} />
+          </Link>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {featuredTools.map((tool) => (
+            <Link key={tool.href} href={tool.href} className="group flex flex-col">
+              <Card hover className="flex h-full flex-col">
+                <h3 className="mb-2 text-lg leading-none text-foreground transition-colors group-hover:text-accent">
+                  {tool.title}
+                </h3>
+                <p className="text-xs leading-relaxed text-dim">
+                  {tool.description}
+                </p>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section>
