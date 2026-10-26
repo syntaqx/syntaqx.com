@@ -2,7 +2,7 @@
 title = "Switching Platforms"
 description = "Moving between field service platforms: what imports and what doesn't, card token transfer, phased cutover, reconciliation, audit and data portability."
 category = "Field Operations Industry"
-order = 1531
+order = 1532
 part = "Running the Platform"
 tags = ["field-operations", "migration", "cutover", "data-portability", "payments", "reconciliation"]
 +++

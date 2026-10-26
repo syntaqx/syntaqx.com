@@ -2,7 +2,7 @@
 title = "Signing the Agreement"
 description = "Closing the sale: ESIGN consent at the door, customer-device signing, state templates, cooling-off deadlines, payment timing, B2B contracts and the handoff."
 category = "Field Operations Industry"
-order = 1522
+order = 1523
 part = "Selling"
 tags = ["field-operations", "sales", "e-signature", "consumer-protection", "contracts"]
 +++

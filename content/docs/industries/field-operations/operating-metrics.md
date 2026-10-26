@@ -2,7 +2,7 @@
 title = "Operating Metrics"
 description = "The numbers field operations runs on: first-time fix, arrival windows, SLAs, utilization, job costing, close rate, retention, AR and safety."
 category = "Field Operations Industry"
-order = 1530
+order = 1531
 part = "Running the Platform"
 tags = ["field-operations", "metrics", "analytics", "retention", "data-pipelines", "reporting"]
 +++

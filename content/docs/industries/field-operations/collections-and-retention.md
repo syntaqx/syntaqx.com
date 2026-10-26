@@ -2,7 +2,7 @@
 title = "Collections & Retention"
 description = "Collections and retention: failed payments, retries and dunning, holding service, AR aging and write-offs, agencies and Reg F, cancellations, saves and churn."
 category = "Field Operations Industry"
-order = 1527
+order = 1528
 part = "Customers and Billing"
 tags = ["field-operations", "collections", "dunning", "churn", "retention", "cancellation"]
 +++

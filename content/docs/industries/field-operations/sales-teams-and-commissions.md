@@ -2,7 +2,7 @@
 title = "Sales Teams & Commissions"
 description = "Paying the people who sell: team structures, recruiting and onboarding gates, worker classification, commission plans as data, clawbacks, payroll and disputes."
 category = "Field Operations Industry"
-order = 1523
+order = 1524
 part = "Selling"
 tags = ["field-operations", "sales", "commissions", "payroll", "compliance"]
 +++
@@ -134,7 +134,7 @@ When technicians sell, the commission rides on the job. ServiceTitan's Performan
 
 The generalizable lessons: commission on completed, invoiced work, not on estimates; let each pricebook item declare whether it pays commission and how much; record splits on the invoice, not in someone's spreadsheet; and add a rule that a single invoice line can't generate more than one commission type unless the plan explicitly says so. Because most technicians are non-exempt, every spiff feeds the regular rate for overtime.
 
-Leads passed from technicians to sales reps (a "tech lead") need attribution too. Record the lead's source on the sale so the plan can pay a referral bonus without the technician having to claim it.
+Leads passed from technicians to sales reps (a "tech lead") need attribution too. Record the lead's source on the sale so the plan can pay a referral bonus without the technician having to claim it. How the opportunity is captured, quoted and attributed to both the finder and the seller, and the guardrails against pushy upselling, are in [One-Time Services & Upsells](/docs/industries/field-operations/one-time-services-and-upsells#upselling-as-a-system).
 
 ## Leaderboards and Contests
 

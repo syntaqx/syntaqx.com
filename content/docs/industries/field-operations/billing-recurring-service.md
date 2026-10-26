@@ -2,7 +2,7 @@
 title = "Billing Recurring Service"
 description = "Billing recurring service: per-visit, periodic and prepaid models, the service balance, invoices, autopay, financing, tax on services and accounting sync."
 category = "Field Operations Industry"
-order = 1526
+order = 1527
 part = "Customers and Billing"
 tags = ["field-operations", "billing", "invoicing", "autopay", "sales-tax", "accounting"]
 +++
@@ -63,7 +63,7 @@ Recurring plans are half of field billing. The other half is one-off work, whose
 - **Warranty work has a second payer.** The manufacturer's share is a separate receivable from the customer's, paid late, partially or not at all; a rejected claim becomes a bill to the customer that someone has to explain.
 - **Commercial customers bill on their terms:** a PO number on every invoice, a not-to-exceed cap, monthly consolidation across sites, net 30 or later through the client's accounts-payable portal, and SLA credits computed from the work order's clock events.
 
-Cleaning and delivery sit between: a cleaning company bills recurring visits like a route trade plus one-off deep cleans, and a delivery operator bills shippers per stop on a statement, with redelivery fees as their own lines.
+Cleaning and delivery sit between: a cleaning company bills recurring visits like a route trade plus one-off deep cleans, and a delivery operator bills shippers per stop on a statement, with redelivery fees as their own lines. When the one-off work is for a plan customer (member pricing, folding it into a scheduled visit, which stored-card authorization covers it), see [One-Time Services & Upsells](/docs/industries/field-operations/one-time-services-and-upsells#one-off-work-for-plan-customers).
 
 ## Invoices and Statements
 

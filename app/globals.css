@@ -541,6 +541,40 @@ body {
 .diagram .ah.ink { fill: var(--fig-ink); }
 .diagram .ah.hl { fill: var(--fig-accent); }
 
+/* Dimensional drawings: <svg class="dwg">. Monochrome technical drawing in
+   which line weight, dash and hatch carry the meaning; the accent marks at
+   most one subject. Arrowheads reuse the .ah markers above. Hatched shapes
+   take fill="url(#prefix-hatch)" on the element, so .hatch never sets fill
+   (a CSS fill would beat the attribute). */
+.diagram .dwg .obj { fill: none; stroke: var(--fig-ink); stroke-width: 1.6; }
+.diagram .dwg .obj.fill-1 { fill: var(--fig-shade-2); }
+.diagram .dwg .obj.fill-2 { fill: var(--fig-shade); }
+.diagram .dwg .obj.hl { fill: var(--fig-accent-fill); stroke: var(--fig-accent); }
+.diagram .dwg .dim:not(text) { fill: none; stroke: var(--fig-ink); stroke-width: 0.7; }
+.diagram .dwg .dim.hl:not(text) { stroke: var(--fig-accent); }
+.diagram .dwg .ext { fill: none; stroke: var(--fig-ink); stroke-width: 0.55; }
+.diagram .dwg .slot { fill: none; stroke: var(--fig-ink); stroke-width: 1; stroke-dasharray: 4 3; }
+.diagram .dwg .ctr { fill: none; stroke: var(--fig-line); stroke-width: 0.7; stroke-dasharray: 12 3 2 3; }
+.diagram .dwg .phantom { fill: none; stroke: var(--fig-line); stroke-width: 0.9; stroke-dasharray: 16 5; }
+.diagram .dwg .detail { fill: none; stroke: var(--fig-ink); stroke-width: 0.9; stroke-dasharray: 5 3; }
+.diagram .dwg .leader { fill: none; stroke: var(--fig-ink); stroke-width: 0.7; }
+.diagram .dwg .dot { fill: var(--fig-ink); }
+.diagram .dwg .hatch { stroke: var(--fig-ink); stroke-width: 1; }
+.diagram .dwg .hatch-ln { stroke: var(--fig-line); stroke-width: 0.7; }
+.diagram .dwg .note-box { fill: var(--fig-paper); stroke: var(--fig-line); stroke-width: 0.8; }
+.diagram .dwg .iso * { vector-effect: non-scaling-stroke; }
+.diagram .dwg .vt,
+.diagram .dwg .vs,
+.diagram .dwg .sl { font-family: var(--font-inst); letter-spacing: 0.14em; text-transform: uppercase; fill: var(--fig-line); }
+.diagram .dwg .vt { font-size: 12px; fill: var(--fig-ink); }
+.diagram .dwg .vs { font-size: 9.5px; }
+.diagram .dwg .sl { font-size: 9px; }
+.diagram .dwg .sl.ink { fill: var(--fig-ink); }
+.diagram .dwg .dt { font-family: var(--font-mono); font-size: 11px; fill: var(--fig-ink); }
+.diagram .dwg .dt.hl { fill: var(--fig-accent); }
+.diagram .dwg .dt,
+.diagram .dwg .ko { paint-order: stroke; stroke: var(--fig-paper); stroke-width: 4px; stroke-linejoin: round; }
+
 /* GFM tables */
 .prose table {
   width: 100%;

@@ -2,7 +2,7 @@
 title = "Platform Architecture"
 description = "How field platforms are built: vendor data models, monolith or services, multi-tenancy, webhooks and APIs, geospatial, time zones, sync and extensibility."
 category = "Field Operations Industry"
-order = 1528
+order = 1529
 part = "Running the Platform"
 tags = ["field-operations", "architecture", "data-model", "multi-tenancy", "webhooks", "integrations"]
 +++
