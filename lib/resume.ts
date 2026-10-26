@@ -48,6 +48,7 @@ export const resume = {
     "Principal Software Architect",
     "VP of Software Engineering",
     "Engineering Leadership",
+    "AI-Native SDLC",
     "System Design",
     "Distributed Systems",
     "Platform Engineering",
@@ -72,7 +73,7 @@ export const resume = {
     {
       label: "Leadership",
       items:
-        "Technical strategy, architecture review (RFCs), incident command, service level objectives (SLOs), engineering KPIs, SDLC design, mentoring",
+        "Technical strategy, architecture review (RFCs), incident command, service level objectives (SLOs), engineering KPIs, AI-native SDLC design, mentoring",
     },
     {
       label: "Languages",
@@ -123,8 +124,8 @@ export const resume = {
       highlights: [
         "Led a 43-person department through four direct reports across product engineering, platform engineering, DevOps, and QA; grew the inherited team with six engineering hires.",
         "Scaled Aspyn's delivery and product offerings to all 76 service centers and 1M active customers while holding a 99.95% uptime SLO; ran incident command across engineering and DevOps.",
-        "Introduced the engineering Forge: scorecards with quantifiable KPIs across reliability, delivery, impact, leverage, and security, holding teams accountable for reviews, rollbacks, and rework, and surfacing engineering health metrics.",
-        "Overhauled the SDLC to cut low-value metawork and let teams ship faster on work they enjoyed more.",
+        "Introduced the engineering Forge: KPI scorecards across reliability, delivery, impact, leverage, and security, built on issue and pull request flow, holding teams accountable for reviews, rollbacks, and rework, and tying GitHub spend to change rate.",
+        "Moved the organization to an AI-native, API-first SDLC with AI as a core product feature, cutting low-value metawork.",
       ],
     },
     {
@@ -149,8 +150,8 @@ export const resume = {
         "Software Architect (Oct 2022)",
       ],
       highlights: [
-        "Led containerization and CI/CD modernization, moving teams onto continuous integration and deployment.",
-        "Partnered with teams to break services out of the monolithic repository and architecture, modernizing a legacy in-house framework, breaking tight couplings, and paying down decades of tech debt while modernizing the UI and UX with React.",
+        "Led containerization and moved the core monolithic repository onto GitHub Actions CI/CD.",
+        "Partnered with teams to break services out of the monolith, including the Pay domain, into Laravel services with real continuous deployment, paying down decades of tech debt in a legacy in-house framework and modernizing the UI and UX with React.",
       ],
     },
     {
