@@ -2,7 +2,7 @@
 title = "Dispatch & the Day of Service"
 description = "Running the day: dispatch consoles, visit states, same-day exceptions, live ETA links, geofence arrivals, telematics, weather, customer updates, escalation."
 category = "Field Operations Industry"
-order = 1510
+order = 1511
 part = "Scheduling and Routing"
 tags = ["field-operations", "dispatch", "telematics", "tracking", "operations"]
 +++

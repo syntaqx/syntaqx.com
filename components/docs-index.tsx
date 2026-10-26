@@ -152,7 +152,7 @@ export function DocsIndex({ categories, industries, intro }: DocsIndexProps) {
       {q ? (
         <SearchResults query={query} results={results} onClear={() => setQuery("")} />
       ) : (
-        <div className="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
+        <div className="lg:grid lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-10">
           <SectionRail categories={listed} industries={industries} active={active ?? featured?.section} />
 
           <div className="min-w-0 space-y-16">
@@ -256,7 +256,7 @@ function SectionRail({
     <a
       href={`#${anchor}`}
       aria-current={anchor === active ? "true" : undefined}
-      className={`inst mb-2.5 flex items-baseline justify-between gap-3 text-[0.55rem] transition-colors ${
+      className={`inst mb-2.5 flex items-baseline justify-between gap-3 text-[0.55rem] leading-[1.6] transition-colors ${
         anchor === active ? "text-accent" : "text-dim hover:text-foreground"
       }`}
     >

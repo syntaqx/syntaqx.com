@@ -24,7 +24,7 @@ const linkClass = (active: boolean) =>
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="inst mb-2.5 text-[0.55rem] text-dim">{title}</h3>
+      <h3 className="inst mb-2.5 text-[0.55rem] leading-[1.6] text-dim">{title}</h3>
       <ul className="border-l border-border">{children}</ul>
     </div>
   );
