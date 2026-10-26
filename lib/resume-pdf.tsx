@@ -100,7 +100,7 @@ const s = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: RULE,
   },
-  skillLabel: { width: 112, fontWeight: 600, color: INK },
+  skillLabel: { width: 124, fontWeight: 600, color: INK },
   skillItems: { flex: 1 },
   job: { marginBottom: 8 },
   jobHead: {

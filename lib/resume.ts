@@ -46,6 +46,7 @@ export const resume = {
   keywords: [
     "Software Architect",
     "Principal Software Architect",
+    "Vice President of Software Engineering",
     "VP of Software Engineering",
     "Engineering Leadership",
     "AI-Native SDLC",
@@ -76,12 +77,12 @@ export const resume = {
         "Technical strategy, architecture review (RFCs), incident command, service level objectives (SLOs), engineering KPIs, AI-native SDLC design, mentoring",
     },
     {
-      label: "Languages",
+      label: "Languages & Frameworks",
       items:
         "Go, TypeScript, JavaScript, PHP, Python, Bash, React, Vue.js, Node.js, Laravel",
     },
     {
-      label: "Databases",
+      label: "Data",
       items:
         "Postgres, CockroachDB, Timescale, ClickHouse, MySQL/MariaDB, MongoDB, SQLite, Redis, Elasticsearch, Hadoop",
     },
@@ -118,13 +119,13 @@ export const resume = {
       start: "Sep 2025",
       end: "Sep 2026",
       progression: [
-        "Sr. Director, Software Engineering (Sep 2025)",
-        "VP, Software Engineering (Mar 2026)",
+        "Senior Director, Software Engineering (Sep 2025)",
+        "Vice President, Software Engineering (Mar 2026)",
       ],
       highlights: [
         "Led a 43-person department through four direct reports across product engineering, platform engineering, DevOps, and QA; grew the inherited team with six engineering hires.",
         "Scaled Aspyn's delivery and product offerings to all 76 service centers and 1M active customers while holding a 99.95% uptime SLO; ran incident command across engineering and DevOps.",
-        "Introduced the engineering Forge: KPI scorecards across reliability, delivery, impact, leverage, and security, built on issue and pull request flow, holding teams accountable for reviews, rollbacks, and rework, and tying GitHub spend to change rate.",
+        "Introduced the engineering Forge: KPI scorecards across reliability, delivery, impact, leverage, and security, built on issue and pull request flow, holding teams accountable for reviews, rollbacks, and rework, and estimating GitHub spend per change.",
         "Moved the organization to an AI-native, API-first SDLC with AI as a core product feature, cutting low-value metawork.",
       ],
     },
@@ -151,7 +152,7 @@ export const resume = {
       ],
       highlights: [
         "Led containerization and moved the core monolithic repository onto GitHub Actions CI/CD.",
-        "Partnered with teams to break services out of the monolith, including the Pay domain, into Laravel services with real continuous deployment, paying down decades of tech debt in a legacy in-house framework and modernizing the UI and UX with React.",
+        "Partnered with teams to break services out of the monolith, including the Pay domain, into Laravel services with real continuous deployment, paying down decades of tech debt and modernizing the UI and UX with React.",
       ],
     },
     {
@@ -198,7 +199,7 @@ export const resume = {
       end: "Jul 2016",
       highlights: [
         "Built the Amazon integration that gave players a free champion for claiming League of Legends on Amazon.",
-        "Built the global RiotBar used across every Riot Games website, and the in-house CMS for League of Legends Universe.",
+        "Shipped the global RiotBar used across every Riot Games website, and the in-house CMS for League of Legends Universe.",
         "Worked on the in-game content management and delivery system, and the client's move from legacy Flash to HTML5.",
       ],
     },
