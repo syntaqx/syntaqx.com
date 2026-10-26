@@ -111,7 +111,16 @@ const s = StyleSheet.create({
   headline: { flex: 1, fontSize: 10.8 },
   role: { fontWeight: 700, color: INK },
   company: { fontSize: 9.6, fontWeight: 600, color: ACCENT, marginTop: 1 },
-  dates: { fontSize: 8.6, color: MUTED, marginLeft: 12 },
+  // Nudged onto the title's baseline (react-pdf aligns tops, not baselines).
+  // Off it, pdftotext -layout (OpenCATS) reads the dates as their own column
+  // and pairs the compact roles with the wrong ones.
+  dates: {
+    fontSize: 8.6,
+    color: MUTED,
+    marginLeft: 12,
+    position: "relative",
+    top: 2.2,
+  },
   progression: { marginTop: 2, fontSize: 8.6, color: MUTED },
   // Gaps inside an entry stay under 1.4x a line, or parsers split it in two.
   bullets: { marginTop: 2 },
