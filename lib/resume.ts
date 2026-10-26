@@ -161,8 +161,8 @@ export const resume = {
       start: "Jan 2020",
       end: "Apr 2021",
       highlights: [
-        "Owned the marketing website and player interactions with E6Connect, stabilizing the existing Go backends.",
-        "Modernized peer-to-peer multiplayer and built an engine-agnostic multiplayer service for E6Golf's online play.",
+        "Owned the marketing website and player interactions with E6 Connect (TruGolf's simulator platform, now 350,000+ users), stabilizing the existing Go backends.",
+        "Modernized peer-to-peer multiplayer and built an engine-agnostic multiplayer service for E6 Golf's online play.",
       ],
     },
     {
