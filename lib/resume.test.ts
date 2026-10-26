@@ -11,16 +11,17 @@ import { resumeHostRedirects } from "@/next.config";
 
 // Private details belong in the gitignored .private/resume.json, never in
 // the repo (so not in this test either): phone- and ZIP-shaped text always
-// fails, and where the private file exists, so does any of its values.
+// fails, and where the private file exists, so does its location or phone
+// (its headlines aren't private).
 const PRIVATE: (RegExp | string)[] = [
   /\(?\d{3}\)?[\s.-]?\d{3}[\s.-]\d{4}/,
   /\b\d{5}(-\d{4})?\b/,
 ];
 if (existsSync(".private/resume.json")) {
-  const details: Record<string, string> = JSON.parse(
+  const { location, phone }: Record<string, string | undefined> = JSON.parse(
     readFileSync(".private/resume.json", "utf8"),
   );
-  PRIVATE.push(...Object.values(details).flatMap((v) => v.split(/,\s*/)));
+  PRIVATE.push(...[location, phone].flatMap((v) => (v ? v.split(/,\s*/) : [])));
 }
 
 describe("resume", () => {
@@ -94,7 +95,7 @@ describe("resume", () => {
     ])
       expect(flat).toContain(` ${heading} `);
     const facts = [
-      resume.title,
+      resume.title.replace(" · ", " | "),
       PUBLIC_CONTACT.email,
       ...resume.summary,
       ...resume.skills.flatMap((k) => [k.label, k.items]),
@@ -117,17 +118,22 @@ describe("resume", () => {
     expect(flat.match(new RegExp(resume.name, "gi"))).toHaveLength(1);
   });
 
-  // The private copy (npm run resume:pdf) adds a phone and a full address.
-  // A made-up contact stands in for the real one, which never enters the repo.
+  // The private copy (npm run resume:pdf) adds a phone and a full address,
+  // and can swap the headline for the roles being applied to. A made-up
+  // contact stands in for the real one, which never enters the repo.
   it("renders private contact details in the private copy", async () => {
     const contact = {
       ...PUBLIC_CONTACT,
       location: "Springfield, IL 62701",
       phone: "(555) 010-4477",
     };
-    const pdf = new Uint8Array(await renderResumePdf(contact));
+    const title = "Principal Software Engineer · Software Architect";
+    const pdf = new Uint8Array(await renderResumePdf(contact, title));
     const { text } = await extractText(pdf, { mergePages: true });
     const header = text.split("\n").slice(0, 6).join(" ");
+    expect(header).toContain(
+      "Principal Software Engineer | Software Architect",
+    );
     expect(header).toContain(contact.location);
     expect(header).toContain(contact.phone);
     expect(header).toContain(contact.email);

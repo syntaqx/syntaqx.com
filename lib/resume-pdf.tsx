@@ -189,7 +189,7 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
         </View>
         <Text style={s.company}>{job.company}</Text>
         {job.progression && (
-          <Text style={s.progression}>{job.progression.join("  ›  ")}</Text>
+          <Text style={s.progression}>{job.progression.join("  >  ")}</Text>
         )}
         {first && (
           <View style={s.bullets}>
@@ -204,7 +204,13 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
   );
 }
 
-function ResumeDocument({ contact }: { contact: ResumeContact }) {
+function ResumeDocument({
+  contact,
+  title,
+}: {
+  contact: ResumeContact;
+  title: string;
+}) {
   // Two lines: where you are and how to reach you, then where to look.
   const reach: { label: string; href?: string }[][] = [
     [
@@ -225,12 +231,13 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
     <Document
       title={`${resume.name} - Resume`}
       author={resume.name}
-      subject={resume.title}
+      subject={title}
       keywords={resume.keywords.join(", ")}
     >
       <Page size="LETTER" style={s.page}>
         <Text style={s.name}>{resume.name}</Text>
-        <Text style={s.title}>{resume.title}</Text>
+        {/* ASCII separators: older parsers can garble "·" and "›". */}
+        <Text style={s.title}>{title.replace(" · ", " | ")}</Text>
         {reach.map((line, l) => (
           <View key={l} style={[s.contact, l > 0 ? { marginTop: 2 } : {}]}>
             {line.map((r, i) => (
@@ -303,6 +310,9 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
   );
 }
 
-export function renderResumePdf(contact: ResumeContact): Promise<Buffer> {
-  return renderToBuffer(<ResumeDocument contact={contact} />);
+export function renderResumePdf(
+  contact: ResumeContact,
+  title = resume.title,
+): Promise<Buffer> {
+  return renderToBuffer(<ResumeDocument contact={contact} title={title} />);
 }

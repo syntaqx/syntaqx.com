@@ -4,7 +4,10 @@
 // private copy next to the private PDF.
 import { resume, type ResumeContact, type ResumeJob } from "@/lib/resume";
 
-export function renderResumeText(contact: ResumeContact): string {
+export function renderResumeText(
+  contact: ResumeContact,
+  title = resume.title,
+): string {
   const dates = (j: { start: string; end: string }) => `${j.start} - ${j.end}`;
   const reach = [contact.location, contact.email, contact.phone]
     .filter(Boolean)
@@ -20,7 +23,7 @@ export function renderResumeText(contact: ResumeContact): string {
       .join("\n"),
   );
   return `${[
-    `${resume.name.toUpperCase()}\n${resume.title.replace(" · ", " | ")}\n${reach}\n${resume.links.map((l) => l.href).join(" | ")}`,
+    `${resume.name.toUpperCase()}\n${title.replace(" · ", " | ")}\n${reach}\n${resume.links.map((l) => l.href).join(" | ")}`,
     `SUMMARY\n${resume.summary.join("\n\n")}`,
     `SKILLS\n${resume.skills.map((k) => `${k.label}: ${k.items}`).join("\n")}`,
     `EXPERIENCE\n${jobs.join("\n\n")}`,

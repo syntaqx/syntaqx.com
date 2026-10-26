@@ -46,6 +46,7 @@ export const resume = {
   keywords: [
     "Software Architect",
     "Principal Software Architect",
+    "Principal Software Engineer",
     "Vice President of Software Engineering",
     "VP of Software Engineering",
     "Engineering Leadership",
@@ -123,10 +124,10 @@ export const resume = {
         "Vice President, Software Engineering (Mar 2026)",
       ],
       highlights: [
+        "Moved the organization to an AI-native, API-first SDLC built on agentic development and review, with AI as a core product feature: 5x developer velocity and sharply higher code quality.",
+        "Introduced the engineering Forge (KPI scorecards across reliability, delivery, impact, leverage, and security) and continuous deployment, taking the department from a few pull requests released a day to hundreds merged a day.",
         "Led a 43-person department through four direct reports across product engineering, platform engineering, DevOps, and QA; grew the inherited team with six engineering hires.",
         "Scaled Aspyn's delivery and product offerings to all 76 service centers and 1M active customers while holding a 99.95% uptime SLO; ran incident command across engineering and DevOps.",
-        "Introduced the engineering Forge (KPI scorecards across reliability, delivery, impact, leverage, and security) and continuous deployment, taking the department from a few pull requests released a day to hundreds merged a day.",
-        "Moved the organization to an AI-native, API-first SDLC built on agentic development and review, with AI as a core product feature: 5x developer velocity and sharply higher code quality.",
       ],
     },
     {
