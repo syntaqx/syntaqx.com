@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getDocsByCategory } from "@/lib/docs";
+import { DocsHeader } from "@/components/docs-header";
 import { INDUSTRIES, formatMinutes, industryParts, industrySection } from "@/lib/industries";
 
 interface Props {
@@ -38,34 +39,37 @@ export default async function IndustryCover({ params }: Props) {
 
   return (
     <article>
-      <header className="border-b border-border pb-10">
-        <p className="inst mb-4 text-dim">
-          <Link href="/docs/industries" className="text-accent transition-colors hover:text-foreground">
-            Industries
-          </Link>
-          <span aria-hidden> · </span>
-          {volume.docs.length} chapters
-          <span aria-hidden> · </span>
-          {formatMinutes(minutes)} read
-        </p>
-        <h1 className="mb-6 text-4xl leading-[0.95] sm:text-5xl">{industry.name}</h1>
-        <div className="max-w-3xl space-y-4 text-muted">
+      <DocsHeader
+        title={industry.name}
+        eyebrow={
+          <>
+            <Link href="/docs/industries" className="text-accent transition-colors hover:text-foreground">
+              Industries
+            </Link>
+            <span aria-hidden> · </span>
+            {volume.docs.length} chapters
+            <span aria-hidden> · </span>
+            {formatMinutes(minutes)} read
+          </>
+        }
+      >
+        <div className="max-w-3xl space-y-3 text-muted">
           {industry.intro.map((p) => (
             <p key={p.slice(0, 32)}>{p}</p>
           ))}
         </div>
         <Link
           href={`/docs/${volume.docs[0].slug}`}
-          className="inst group mt-8 inline-flex items-center gap-2 border border-accent px-4 py-2.5 text-accent transition-colors hover:bg-accent hover:text-background"
+          className="inst group mt-5 inline-flex items-center gap-2 border border-accent px-4 py-2.5 text-accent transition-colors hover:bg-accent hover:text-background"
         >
           Start reading
           <ArrowRight size={13} aria-hidden className="transition-transform group-hover:translate-x-0.5" />
         </Link>
-      </header>
+      </DocsHeader>
 
       {industryParts(volume.docs).map((part) => (
         <section key={part.title || "chapters"}>
-          {part.title && <h2 className="inst border-b border-border pt-10 pb-3 text-[0.6rem] text-dim">{part.title}</h2>}
+          {part.title && <h2 className="inst border-b border-border pt-8 pb-3 text-[0.6rem] text-dim">{part.title}</h2>}
           <ol className="divide-y divide-border border-b border-border">
             {part.docs.map((doc) => {
               const i = volume.docs.indexOf(doc);

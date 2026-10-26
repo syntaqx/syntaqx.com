@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getDocsByCategory } from "@/lib/docs";
 import { industryCards } from "@/lib/industries";
 import { IndustryCards } from "@/components/industry-cards";
+import { DocsHeader } from "@/components/docs-header";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata(
@@ -14,18 +15,19 @@ export const metadata = pageMetadata(
 export default function IndustriesPage() {
   return (
     <article>
-      <header className="mb-12 border-b border-border pb-10">
-        <p className="inst mb-4">
+      <DocsHeader
+        title="Industries"
+        eyebrow={
           <Link href="/docs" className="text-accent transition-colors hover:text-foreground">
             Docs
           </Link>
-        </p>
-        <h1 className="mb-6 text-4xl leading-[0.95] sm:text-5xl">Industries</h1>
+        }
+      >
         <p className="max-w-3xl text-muted">
           The core of the playbook applies anywhere. Each volume here takes one industry and shows how its rules, its
           money and its regulators shape the engineering, building on the chapters before it.
         </p>
-      </header>
+      </DocsHeader>
 
       <IndustryCards industries={industryCards(getDocsByCategory())} />
     </article>

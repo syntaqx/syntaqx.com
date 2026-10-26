@@ -5,6 +5,9 @@ import { getAllDocs, getDocBySlug, getDocsByCategory, markdownToHtml } from "@/l
 import { CopyCodeScript } from "@/components/copy-code";
 import { ChapterKeys } from "@/components/chapter-keys";
 import { JsonLd } from "@/components/json-ld";
+import { DocsHeader } from "@/components/docs-header";
+import { DocsToc } from "@/components/docs-toc";
+import type { Heading } from "@/lib/posts";
 import { article } from "@/lib/schema";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -57,10 +60,13 @@ export default async function DocPage({ params }: Props) {
   const modified = docLastModified(doc.slug);
   const source = `content/docs/${doc.slug}.md`;
 
-  const content = await markdownToHtml(doc.content);
+  const toc: Heading[] = [];
+  const content = await markdownToHtml(doc.content, toc);
+  const rail = toc.length > 1;
 
+  // The reading column, and from xl an "On this page" rail beside it.
   return (
-    <article>
+    <article className={rail ? "xl:grid xl:grid-cols-[minmax(0,1fr)_11rem] xl:gap-10" : undefined}>
       <JsonLd
         data={article({
           headline: doc.title,
@@ -77,27 +83,28 @@ export default async function DocPage({ params }: Props) {
         })}
       />
       <div className="min-w-0">
-        <header className="mb-10 border-b border-border pb-8">
-          {category && category.docs.length > 1 && (
-            <p className="inst mb-4 text-dim">
-              <Link href={`/docs#${category.section}`} className="text-accent transition-colors hover:text-foreground">
-                {category.name}
-              </Link>
-              <span aria-hidden> · </span>
-              <span className="sr-only">, chapter </span>
-              {String(category.docs.findIndex((d) => d.slug === doc.slug) + 1).padStart(2, "0")}
-              <span aria-hidden> / </span>
-              <span className="sr-only"> of </span>
-              {String(category.docs.length).padStart(2, "0")}
-            </p>
-          )}
-          <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl wrap-break-word">
-            {doc.title}
-          </h1>
+        <DocsHeader
+          title={doc.title}
+          eyebrow={
+            category && category.docs.length > 1 ? (
+              <>
+                <Link href={`/docs#${category.section}`} className="text-accent transition-colors hover:text-foreground">
+                  {category.name}
+                </Link>
+                <span aria-hidden> · </span>
+                <span className="sr-only">, chapter </span>
+                {String(category.docs.findIndex((d) => d.slug === doc.slug) + 1).padStart(2, "0")}
+                <span aria-hidden> / </span>
+                <span className="sr-only"> of </span>
+                {String(category.docs.length).padStart(2, "0")}
+              </>
+            ) : null
+          }
+        >
           {doc.description && (
             <p className="max-w-3xl text-dim">{doc.description}</p>
           )}
-          <div className="inst mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
+          <div className="inst mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
             <span>{doc.readingMinutes} min read</span>
             {modified && (
               <span>
@@ -117,7 +124,7 @@ export default async function DocPage({ params }: Props) {
               History
             </a>
           </div>
-        </header>
+        </DocsHeader>
         <div
           className="prose prose-docs"
           dangerouslySetInnerHTML={{ __html: content }}
@@ -148,6 +155,14 @@ export default async function DocPage({ params }: Props) {
           </nav>
         )}
       </div>
+      {rail && (
+        <aside className="hidden xl:block">
+          <DocsToc
+            headings={toc}
+            className="rail-scroll sticky top-[6.5rem] max-h-[calc(100vh-7.5rem)] overflow-y-auto"
+          />
+        </aside>
+      )}
       <CopyCodeScript />
       <ChapterKeys prev={prev && `/docs/${prev.slug}`} next={next && `/docs/${next.slug}`} />
     </article>
