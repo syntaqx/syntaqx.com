@@ -185,13 +185,9 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
             parsers glue separately styled runs together ("Engineeringat"). */}
         <View style={s.jobHead}>
           <Text style={[s.headline, s.role]}>{job.title}</Text>
-          {first && <Text style={s.dates}>{dates}</Text>}
+          <Text style={s.dates}>{dates}</Text>
         </View>
         <Text style={s.company}>{job.company}</Text>
-        {/* A role without bullets has nothing full-width between its dates
-            and the next role's, so pdftotext stacks them into a column and
-            pairs them with the wrong roles. Its dates go under the company. */}
-        {!first && <Text style={s.progression}>{dates}</Text>}
         {job.progression && (
           <Text style={s.progression}>{job.progression.join("  ›  ")}</Text>
         )}
