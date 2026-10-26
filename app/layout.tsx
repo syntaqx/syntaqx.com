@@ -22,7 +22,9 @@ const bigShoulders = Big_Shoulders({
   variable: "--font-big-shoulders",
   subsets: ["latin"],
   axes: ["opsz"],
-  // Next has no fallback metrics for this family; skip the override.
+  // Next has no fallback metrics for this family. Naming the fallback
+  // skips the lookup (Turbopack warns on it even with adjustFontFallback off).
+  fallback: ["Hanken Grotesk", "sans-serif"],
   adjustFontFallback: false,
 });
 
