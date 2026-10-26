@@ -57,6 +57,7 @@ export const resume = {
     "DevOps",
     "Go",
     "TypeScript",
+    "React",
     "PHP",
     "Postgres",
     "AWS",
@@ -77,6 +78,10 @@ export const resume = {
     {
       label: "Languages",
       items: "Go, TypeScript, JavaScript, PHP, Python, Bash",
+    },
+    {
+      label: "Frameworks",
+      items: "React, Vue.js, Node.js, Laravel",
     },
     {
       label: "Databases",
@@ -102,7 +107,7 @@ export const resume = {
     },
     {
       label: "IaC & Delivery",
-      items: "Terraform, Pulumi, Packer, GitHub Actions, CircleCI",
+      items: "Terraform, Pulumi, Packer, CI/CD, GitHub Actions, CircleCI",
     },
   ],
   experience: [
@@ -129,7 +134,7 @@ export const resume = {
       start: "Sep 2023",
       end: "Sep 2025",
       highlights: [
-        "Architected and led Aspyn, a greenfield platform spanning seven domains (CRM, Field Service, Pay, Sales, Communications, Licensing, Platform) on Go, PHP, React, Postgres, RabbitMQ, and AWS.",
+        "Architected and led Aspyn, a greenfield platform processing $500M+ in annual recurring revenue (ARR) across seven domains (CRM, Field Service, Pay, Sales, Communications, Licensing, Platform) on Go, PHP, React, Postgres, RabbitMQ, and AWS.",
         "Delivered a 14-month greenfield-to-GA migration off legacy vendor systems: 76 service centers and 1M customer accounts cut over with zero rollbacks and zero data-loss incidents.",
       ],
     },
