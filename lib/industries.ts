@@ -36,14 +36,13 @@ export const formatMinutes = (minutes: number) =>
 
 /** Industries with a volume planned but not written yet, shown as "Soon". */
 export const UPCOMING_INDUSTRIES = [
-  "Field Service",
-  "Property Tech",
-  "Marketplaces",
-  "Consumer Fintech",
+  "Field Operations",
   "Gaming",
-  "Media & UGC",
-  "Web Hosting",
-  "E-commerce",
+  "Property Tech",
+  "Commerce & Marketplaces",
+  "Consumer Fintech",
+  "Social & UGC",
+  "Hosting & Cloud",
 ];
 
 /**
