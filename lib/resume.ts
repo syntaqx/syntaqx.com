@@ -39,7 +39,7 @@ export const resume = {
     { label: "github.com/syntaqx", href: "https://github.com/syntaqx" },
   ],
   summary: [
-    "Engineer first and leader by consequence, with 20+ years across consumer platforms, high-growth startups, and the platforms businesses run on. I architect distributed systems that ship faster because the patterns make the right thing the easy thing, and break less because the platform prevents the fires. I've worked every layer of the stack, from platforms serving hundreds of millions of daily users to greenfield builds taken from first commit to running the business, money-moving systems included. Still in the PRs and the hard design calls, because the title is downstream of the work.",
+    "Engineer first and leader by consequence, with 20+ years across consumer platforms, high-growth startups, and the platforms businesses run on. I architect distributed systems that ship faster because the patterns make the right thing the easy thing, and break less because the platform prevents the fires. I've worked every layer of the stack, from platforms serving hundreds of millions of monthly users to greenfield builds taken from first commit to running the business, money-moving systems included. Still in the PRs and the hard design calls, because the title is downstream of the work.",
   ],
   skillsIntro: "Not a wishlist, a working set",
   // PDF metadata some parsers index: only titles held and skills used.
@@ -84,7 +84,7 @@ export const resume = {
     {
       label: "Data",
       items:
-        "Postgres, CockroachDB, Timescale, ClickHouse, MySQL/MariaDB, MongoDB, SQLite, Redis, Elasticsearch, Hadoop",
+        "Postgres, CockroachDB, Timescale, ClickHouse, MySQL, MongoDB, SQLite, Redis, Hadoop",
     },
     {
       label: "Messaging & APIs",
@@ -103,7 +103,7 @@ export const resume = {
     {
       label: "Observability",
       items:
-        "Prometheus, Elastic (ELK), OpenTelemetry, Jaeger, Datadog, Sentry, PagerDuty",
+        "Prometheus, Elasticsearch (ELK), OpenTelemetry, Jaeger, Datadog, Sentry, PagerDuty",
     },
     {
       label: "IaC & Delivery",
@@ -125,8 +125,8 @@ export const resume = {
       highlights: [
         "Led a 43-person department through four direct reports across product engineering, platform engineering, DevOps, and QA; grew the inherited team with six engineering hires.",
         "Scaled Aspyn's delivery and product offerings to all 76 service centers and 1M active customers while holding a 99.95% uptime SLO; ran incident command across engineering and DevOps.",
-        "Introduced the engineering Forge: KPI scorecards across reliability, delivery, impact, leverage, and security, built on issue and pull request flow, holding teams accountable for reviews, rollbacks, and rework, and estimating GitHub spend per change.",
-        "Moved the organization to an AI-native, API-first SDLC with AI as a core product feature, cutting low-value metawork.",
+        "Introduced the engineering Forge (KPI scorecards across reliability, delivery, impact, leverage, and security) and continuous deployment, taking the department from a few pull requests released a day to hundreds merged a day.",
+        "Moved the organization to an AI-native, API-first SDLC built on agentic development and review, with AI as a core product feature: 5x developer velocity and sharply higher code quality.",
       ],
     },
     {
@@ -189,7 +189,7 @@ export const resume = {
       start: "Oct 2016",
       end: "May 2018",
       highlights: [
-        "Designed a scalable microservice architecture to replace the legacy monolith, led the company's migration to Go, and shipped Messaging, Favorite Folders, and Video Upload.",
+        "Designed a scalable microservice architecture to replace the legacy monolith behind 250M monthly users, led the company's migration to Go, and shipped Messaging, Favorite Folders, and Video Upload.",
       ],
     },
     {
