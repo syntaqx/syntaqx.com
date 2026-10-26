@@ -15,19 +15,15 @@ export function renderResumeText(contact: ResumeContact): string {
       job.company,
       job.progression && `Progression: ${job.progression.join(" > ")}`,
       ...(job.highlights ?? []).map((h) => `- ${h}`),
-      job.stack && `Stack: ${job.stack}`,
     ]
       .filter(Boolean)
       .join("\n"),
-  );
-  const schools = resume.education.schools.map(
-    (s) => `${s.name} | ${dates(s)}\n${s.program}`,
   );
   return `${[
     `${resume.name.toUpperCase()}\n${resume.title.replace(" · ", " | ")}\n${reach}\n${resume.links.map((l) => l.href).join(" | ")}`,
     `SUMMARY\n${resume.summary.join("\n\n")}`,
     `SKILLS\n${resume.skills.map((k) => `${k.label}: ${k.items}`).join("\n")}`,
     `EXPERIENCE\n${jobs.join("\n\n")}`,
-    `EDUCATION\n${resume.education.selfTaught.title}\n${resume.education.selfTaught.details}\n\n${schools.join("\n\n")}`,
+    `EDUCATION\n${resume.education.selfTaught.title}\n${resume.education.selfTaught.details}`,
   ].join("\n\n")}\n`;
 }

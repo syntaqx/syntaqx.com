@@ -100,11 +100,6 @@ export default function ResumePage() {
                   ))}
                 </ul>
               )}
-              {job.stack && (
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  <span className="text-dim">Stack:</span> {job.stack}
-                </p>
-              )}
             </li>
           ))}
           <li className="border-b border-border py-6">
@@ -148,19 +143,6 @@ export default function ResumePage() {
               {resume.education.selfTaught.details}
             </p>
           </li>
-          {resume.education.schools.map((school) => (
-            <li key={school.name} className="border-b border-border py-6">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {school.name}
-                </h3>
-                <p className="inst text-dim">
-                  {school.start} - {school.end}
-                </p>
-              </div>
-              <p className="mt-1 text-muted">{school.program}</p>
-            </li>
-          ))}
         </ul>
       </section>
     </div>

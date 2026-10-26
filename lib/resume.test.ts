@@ -62,7 +62,6 @@ describe("resume", () => {
         j.title,
         j.company,
       ]),
-      ...resume.education.schools.map((s) => s.name),
       resume.education.selfTaught.title,
     ];
     for (const page of pages.slice(1)) {
@@ -102,12 +101,8 @@ describe("resume", () => {
       ...[...resume.experience, ...resume.earlier].map(
         (job) => `${job.start} - ${job.end}`,
       ),
-      ...resume.experience.flatMap((job) => [
-        ...(job.highlights ?? []),
-        ...(job.stack ? [`Stack: ${job.stack}`] : []),
-      ]),
+      ...resume.experience.flatMap((job) => job.highlights ?? []),
       resume.education.selfTaught.details,
-      ...resume.education.schools.flatMap((s) => [s.name, s.program]),
     ];
     for (const fact of facts) expect(flat).toContain(fact.replace(/\s+/g, " "));
     // Parsers find a role by its title and company lines; each must come out

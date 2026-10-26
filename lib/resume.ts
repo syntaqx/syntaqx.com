@@ -19,7 +19,6 @@ export interface ResumeJob {
   /** Every promotion, with the year it happened. */
   progression?: string[];
   highlights?: string[];
-  stack?: string;
 }
 
 /** What the public page and PDF show. */
@@ -40,7 +39,7 @@ export const resume = {
     { label: "github.com/syntaqx", href: "https://github.com/syntaqx" },
   ],
   summary: [
-    "Engineer first and leader by consequence, with 20+ years across consumer platforms, high-growth startups, and the platforms businesses run on. I architect distributed systems that ship faster because the patterns make the right thing the easy thing, and break less because the platform prevents the fires. I've worked every layer of the stack, from the UI users touch to the infrastructure underneath, at both ends of the spectrum: platforms serving hundreds of millions of daily users, and greenfield builds taken from first commit to running the business, including money-moving systems where correctness isn't negotiable. Still in the PRs and the hard design calls, because the title is downstream of the work.",
+    "Engineer first and leader by consequence, with 20+ years across consumer platforms, high-growth startups, and the platforms businesses run on. I architect distributed systems that ship faster because the patterns make the right thing the easy thing, and break less because the platform prevents the fires. I've worked every layer of the stack, from platforms serving hundreds of millions of daily users to greenfield builds taken from first commit to running the business, money-moving systems included. Still in the PRs and the hard design calls, because the title is downstream of the work.",
   ],
   skillsIntro: "Not a wishlist, a working set",
   // PDF metadata some parsers index: only titles held and skills used.
@@ -77,16 +76,13 @@ export const resume = {
     },
     {
       label: "Languages",
-      items: "Go, TypeScript, JavaScript, PHP, Python, Bash",
-    },
-    {
-      label: "Frameworks",
-      items: "React, Vue.js, Node.js, Laravel",
+      items:
+        "Go, TypeScript, JavaScript, PHP, Python, Bash, React, Vue.js, Node.js, Laravel",
     },
     {
       label: "Databases",
       items:
-        "Postgres, CockroachDB, Timescale, ClickHouse, MySQL/MariaDB, MongoDB, SQLite, Redis",
+        "Postgres, CockroachDB, Timescale, ClickHouse, MySQL/MariaDB, MongoDB, SQLite, Redis, Elasticsearch, Hadoop",
     },
     {
       label: "Messaging & APIs",
@@ -94,20 +90,23 @@ export const resume = {
     },
     {
       label: "Platform & Infra",
-      items: "Docker, Kubernetes, ECS, microVMs, Traefik, Nomad, Consul, Vault",
+      items:
+        "Docker, Docker Swarm, Kubernetes, ECS, microVMs, Traefik, Nomad, Consul, Vault",
     },
     {
       label: "Cloud",
-      items: "AWS, Google Cloud, DigitalOcean, Vercel, Cloudflare",
+      items:
+        "AWS, Google Cloud (GCP), DigitalOcean, Heroku, Vercel, Cloudflare, on-prem datacenters",
     },
     {
       label: "Observability",
       items:
-        "Prometheus, Elastic (ELK), OpenTelemetry, Datadog, Sentry, PagerDuty",
+        "Prometheus, Elastic (ELK), OpenTelemetry, Jaeger, Datadog, Sentry, PagerDuty",
     },
     {
       label: "IaC & Delivery",
-      items: "Terraform, Pulumi, Packer, CI/CD, GitHub Actions, CircleCI",
+      items:
+        "Terraform, Pulumi, Packer, Chef, CI/CD, GitHub Actions, CircleCI, Codefresh",
     },
   ],
   experience: [
@@ -122,7 +121,7 @@ export const resume = {
         "VP, Software Engineering (Mar 2026)",
       ],
       highlights: [
-        "Led a 43-person engineering department spanning product engineering, platform engineering, DevOps, and QA.",
+        "Led a 43-person department through four direct reports across product engineering, platform engineering, DevOps, and QA; grew the inherited team with six engineering hires.",
         "Scaled Aspyn's delivery and product offerings to all 76 service centers and 1M active customers while holding a 99.95% uptime SLO; ran incident command across engineering and DevOps.",
         "Introduced the engineering Forge: scorecards with quantifiable KPIs across reliability, delivery, impact, leverage, and security, holding teams accountable for reviews, rollbacks, and rework, and surfacing engineering health metrics.",
         "Overhauled the SDLC to cut low-value metawork and let teams ship faster on work they enjoyed more.",
@@ -136,6 +135,7 @@ export const resume = {
       highlights: [
         "Architected and led Aspyn, a greenfield platform processing $500M+ in annual recurring revenue (ARR) across seven domains (CRM, Field Service, Pay, Sales, Communications, Licensing, Platform) on Go, PHP, React, Postgres, RabbitMQ, and AWS.",
         "Delivered a 14-month greenfield-to-GA migration off legacy vendor systems: 76 service centers and 1M customer accounts cut over with zero rollbacks and zero data-loss incidents.",
+        "Designed Pay as an adapter over Stripe, which held card data and kept PCI DSS scope minimal.",
       ],
     },
     {
@@ -152,7 +152,6 @@ export const resume = {
         "Led containerization and CI/CD modernization, moving teams onto continuous integration and deployment.",
         "Partnered with teams to break services out of the monolithic repository and architecture, modernizing a legacy in-house framework, breaking tight couplings, and paying down decades of tech debt while modernizing the UI and UX with React.",
       ],
-      stack: "PHP/Laravel, Postgres, AMQP, React, AWS, on-prem datacenter",
     },
     {
       company: "TruGolf",
@@ -163,8 +162,6 @@ export const resume = {
         "Owned the marketing website and player interactions with E6Connect, stabilizing the existing Go backends.",
         "Modernized peer-to-peer multiplayer and built an engine-agnostic multiplayer service for E6Golf's online play.",
       ],
-      stack:
-        "Go, Postgres, Vue.js, Docker, Kubernetes, Docker Swarm, Traefik, Terraform, GCP, AWS, DigitalOcean",
     },
     {
       company: "Outdoorsy",
@@ -174,8 +171,6 @@ export const resume = {
       highlights: [
         "Built a Docker Swarm platform that moved services off Heroku to stateless, Docker-first architecture; owned CI/CD, repo automation, and security tooling, and trained the team through it.",
       ],
-      stack:
-        "Docker (Swarm), Kubernetes, Nomad, Consul, Vault, Go, gRPC, Postgres, Heroku, DigitalOcean, AWS, GCP",
     },
     {
       company: "Even",
@@ -185,8 +180,6 @@ export const resume = {
       highlights: [
         "Defined the engineering infrastructure alongside the CTO as the sole DevOps, security, operations, and IT engineer, building a stable, testable, continuously delivered platform as the team grew.",
       ],
-      stack:
-        "Go, gRPC, Postgres, Docker, Kubernetes, Terraform, AWS, GCP, CircleCI, Codefresh",
     },
     {
       company: "Imgur",
@@ -196,16 +189,17 @@ export const resume = {
       highlights: [
         "Designed a scalable microservice architecture to replace the legacy monolith, led the company's migration to Go, and shipped Messaging, Favorite Folders, and Video Upload.",
       ],
-      stack:
-        "Go, PHP 7, MySQL, Node.js, AWS, Docker, Chef, Kubernetes, Elasticsearch (ELK), Redis, RabbitMQ, Jaeger, Datadog",
     },
     {
       company: "Riot Games",
       title: "Software Engineer",
       start: "May 2014",
       end: "Jul 2016",
-      stack:
-        "Go, PHP, MySQL, AWS, Docker, Packer, MongoDB, Elasticsearch, Redis, RabbitMQ, Hadoop",
+      highlights: [
+        "Built the Amazon integration that gave players a free champion for claiming League of Legends on Amazon.",
+        "Built the global RiotBar used across every Riot Games website, and the in-house CMS for League of Legends Universe.",
+        "Worked on the in-game content management and delivery system, and the client's move from legacy Flash to HTML5.",
+      ],
     },
   ] satisfies ResumeJob[],
   // Listed compactly: title, company and dates only.
@@ -235,15 +229,6 @@ export const resume = {
       details:
         "Writing code since age 11; mentored through a development internship at a local news station as a teenager.",
     },
-    schools: [
-      {
-        name: "Granite Technical Institute",
-        program:
-          "Concurrent enrollment (grade 10): 3D Animation & Modeling, Computer Programming, Information Technology",
-        start: "2005",
-        end: "2006",
-      },
-    ],
   },
   more: {
     text: "Full experience available on",

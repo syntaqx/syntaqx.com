@@ -111,9 +111,8 @@ const s = StyleSheet.create({
   headline: { flex: 1, fontSize: 10.8 },
   role: { fontWeight: 700, color: INK },
   company: { fontSize: 9.6, fontWeight: 600, color: ACCENT, marginTop: 1 },
-  // Nudged onto the title's baseline (react-pdf aligns tops, not baselines).
-  // Off it, pdftotext -layout (OpenCATS) reads the dates as their own column
-  // and pairs the compact roles with the wrong ones.
+  // Nudged onto the title's baseline (react-pdf aligns tops, not baselines),
+  // so text extraction reads the title and its dates as one line.
   dates: {
     fontSize: 8.6,
     color: MUTED,
@@ -133,8 +132,6 @@ const s = StyleSheet.create({
     marginRight: 9,
   },
   bulletText: { flex: 1 },
-  stack: { marginTop: 2, fontSize: 8.8, color: MUTED },
-  school: { fontWeight: 700, color: INK, flex: 1 },
 });
 
 function SectionHead({ label }: { label: string }) {
@@ -177,6 +174,7 @@ function Bullet({ text }: { text: string }) {
 
 function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
   const [first, ...rest] = job.highlights ?? [];
+  const dates = `${job.start} - ${job.end}`;
   return (
     <View style={s.job}>
       {/* A long entry may break between bullets, but its heading, promotion
@@ -187,11 +185,13 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
             parsers glue separately styled runs together ("Engineeringat"). */}
         <View style={s.jobHead}>
           <Text style={[s.headline, s.role]}>{job.title}</Text>
-          <Text style={s.dates}>
-            {job.start} - {job.end}
-          </Text>
+          {first && <Text style={s.dates}>{dates}</Text>}
         </View>
         <Text style={s.company}>{job.company}</Text>
+        {/* A role without bullets has nothing full-width between its dates
+            and the next role's, so pdftotext stacks them into a column and
+            pairs them with the wrong roles. Its dates go under the company. */}
+        {!first && <Text style={s.progression}>{dates}</Text>}
         {job.progression && (
           <Text style={s.progression}>{job.progression.join("  ›  ")}</Text>
         )}
@@ -200,12 +200,10 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
             <Bullet text={first} />
           </View>
         )}
-        {!first && job.stack && <Text style={s.stack}>Stack: {job.stack}</Text>}
       </View>
       {rest.map((h) => (
         <Bullet key={h} text={h} />
       ))}
-      {first && job.stack && <Text style={s.stack}>Stack: {job.stack}</Text>}
     </View>
   );
 }
@@ -296,21 +294,10 @@ function ResumeDocument({ contact }: { contact: ResumeContact }) {
 
         <Section label="Education">
           {[
-            <View key="self-taught" style={{ marginBottom: 10 }} wrap={false}>
+            <View key="self-taught" wrap={false}>
               <Text style={s.role}>{resume.education.selfTaught.title}</Text>
               <Text>{resume.education.selfTaught.details}</Text>
             </View>,
-            ...resume.education.schools.map((school) => (
-              <View key={school.name} wrap={false}>
-                <View style={s.jobHead}>
-                  <Text style={s.school}>{school.name}</Text>
-                  <Text style={s.dates}>
-                    {school.start} - {school.end}
-                  </Text>
-                </View>
-                <Text>{school.program}</Text>
-              </View>
-            )),
           ]}
         </Section>
 
