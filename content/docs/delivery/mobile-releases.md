@@ -19,6 +19,8 @@ Four constraints shape everything else:
 - **Version fragmentation.** Users update slowly and some never do. Your backend serves every version still in the wild, simultaneously.
 - **The binary is public.** Anything compiled into the app, including API keys and feature logic, can be extracted. The client is untrusted, exactly as it is on the web.
 
+Apps that have to keep working without a network carry a local database and a queue of unsynced work across every one of those versions; [Offline-First Sync](/docs/architecture/offline-sync) covers how to build them.
+
 ## Release Trains
 
 Ship on a fixed schedule, weekly or every two weeks, regardless of what's ready. On the cut day a release branch is created from main; whatever's merged goes, whatever isn't waits for the next train. Releasing when a feature is done sounds more responsive and works worse: big features hold releases hostage, releases grow riskier as they wait, and nobody can predict when a fix will reach users. A train keeps releases small and predictable, and ends the debate about waiting for one more thing.

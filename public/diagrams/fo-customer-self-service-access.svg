@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 214">
+  <defs>
+    <marker id="fo-cssa-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-cssa-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="34">people who sign in</text>
+  <text class="cap" x="290" y="34">grant: role and scope</text>
+  <text class="cap" x="560" y="34">one account</text>
+
+  <!-- People -->
+  <rect class="cell hl" x="40" y="44" width="150" height="26"/>
+  <text class="t hl b" x="52" y="57" dominant-baseline="central">account owner</text>
+  <rect class="cell" x="40" y="84" width="150" height="26"/>
+  <text class="t" x="52" y="97" dominant-baseline="central">spouse</text>
+  <rect class="cell" x="40" y="124" width="150" height="26"/>
+  <text class="t" x="52" y="137" dominant-baseline="central">tenant</text>
+  <rect class="cell" x="40" y="164" width="150" height="26"/>
+  <text class="t" x="52" y="177" dominant-baseline="central">site auditor</text>
+
+  <!-- Grants -->
+  <rect class="cell hl" x="290" y="44" width="170" height="26"/>
+  <text class="t hl" x="302" y="57" dominant-baseline="central">admin, all properties</text>
+  <rect class="cell" x="290" y="84" width="170" height="26"/>
+  <text class="t" x="302" y="97" dominant-baseline="central">billing, all</text>
+  <rect class="cell" x="290" y="124" width="170" height="26"/>
+  <text class="t" x="302" y="137" dominant-baseline="central">booking, property B</text>
+  <rect class="cell" x="290" y="164" width="170" height="26"/>
+  <text class="t" x="302" y="177" dominant-baseline="central">read-only, site 14</text>
+
+  <path class="ln hl" d="M190,57H289" marker-end="url(#fo-cssa-ah-hl)"/>
+  <path class="ln" d="M190,97H289" marker-end="url(#fo-cssa-ah)"/>
+  <path class="ln" d="M190,137H289" marker-end="url(#fo-cssa-ah)"/>
+  <path class="ln" d="M190,177H289" marker-end="url(#fo-cssa-ah)"/>
+
+  <!-- Account and properties -->
+  <rect class="zone" x="550" y="40" width="180" height="156"/>
+  <rect class="cell band" x="560" y="50" width="160" height="26"/>
+  <text class="t b" x="572" y="63" dominant-baseline="central">bill-to account</text>
+  <rect class="cell" x="560" y="90" width="160" height="26"/>
+  <text class="t" x="572" y="103" dominant-baseline="central">property A</text>
+  <rect class="cell" x="560" y="124" width="160" height="26"/>
+  <text class="t" x="572" y="137" dominant-baseline="central">property B</text>
+  <rect class="cell" x="560" y="158" width="160" height="26"/>
+  <text class="t" x="572" y="171" dominant-baseline="central">site 14</text>
+
+  <path class="ln hl" d="M460,57C510,57 510,63 559,63" marker-end="url(#fo-cssa-ah-hl)"/>
+  <path class="ln" d="M460,97C510,97 510,63 559,63" marker-end="url(#fo-cssa-ah)"/>
+  <path class="ln" d="M460,137H559" marker-end="url(#fo-cssa-ah)"/>
+  <path class="ln" d="M460,177C510,177 510,171 559,171" marker-end="url(#fo-cssa-ah)"/>
+
+  <text class="n" x="40" y="208">a person is not the account: grants are rows, revocable one at a time</text>
+</svg>

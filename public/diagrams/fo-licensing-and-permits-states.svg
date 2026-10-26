@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
+  <defs>
+    <marker id="fo-lp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-lp-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-lp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Transitions -->
+  <path class="ln hl" d="M218,92C218,64 340,64 340,90" marker-end="url(#fo-lp-ah-hl)"/>
+  <text class="n hl" x="279" y="60" text-anchor="middle">verified</text>
+  <path class="ln dash" d="M364,92C364,64 476,64 476,90" marker-end="url(#fo-lp-ah)"/>
+  <text class="n" x="420" y="84" text-anchor="middle">window opens</text>
+  <path class="ln dash" d="M500,92C500,64 610,64 610,90" marker-end="url(#fo-lp-ah)"/>
+  <text class="n" x="555" y="84" text-anchor="middle">date passes</text>
+  <path class="ln ink" d="M488,92C488,30 352,30 352,90" marker-end="url(#fo-lp-ah-ink)"/>
+  <text class="n" x="420" y="58" text-anchor="middle">renewed and verified</text>
+  <path class="ln ink" d="M622,92C622,14 328,14 328,90" marker-end="url(#fo-lp-ah-ink)"/>
+  <text class="n" x="560" y="18" text-anchor="middle">late renewal</text>
+
+  <!-- Row labels -->
+  <text class="cap" x="40" y="105" dominant-baseline="central">state</text>
+  <text class="cap" x="40" y="130" dominant-baseline="central">assign work</text>
+
+  <!-- States -->
+  <rect class="cell band" x="150" y="92" width="135" height="26"/>
+  <text class="t b" x="217" y="105" text-anchor="middle" dominant-baseline="central">pending</text>
+  <rect class="cell hl" x="285" y="92" width="135" height="26"/>
+  <text class="t hl b" x="352" y="105" text-anchor="middle" dominant-baseline="central">active</text>
+  <rect class="cell band" x="420" y="92" width="135" height="26"/>
+  <text class="t b" x="487" y="105" text-anchor="middle" dominant-baseline="central">renewal window</text>
+  <rect class="cell ghost end" x="555" y="92" width="135" height="26"/>
+  <text class="t dim" x="622" y="105" text-anchor="middle" dominant-baseline="central">expired</text>
+
+  <!-- Can it be assigned -->
+  <rect class="cell" x="150" y="118" width="135" height="24"/>
+  <text class="t dim" x="217" y="130" text-anchor="middle" dominant-baseline="central">no</text>
+  <rect class="cell hl" x="285" y="118" width="135" height="24"/>
+  <text class="t hl" x="352" y="130" text-anchor="middle" dominant-baseline="central">yes</text>
+  <rect class="cell" x="420" y="118" width="135" height="24"/>
+  <text class="t" x="487" y="130" text-anchor="middle" dominant-baseline="central">yes, with alerts</text>
+  <rect class="cell" x="555" y="118" width="135" height="24"/>
+  <text class="t dim" x="622" y="130" text-anchor="middle" dominant-baseline="central">no</text>
+
+  <!-- From any state -->
+  <path class="ln dash" d="M217,142V158H622V142M352,142V158M487,142V158"/>
+  <path class="ln dash" d="M420,158V176" marker-end="url(#fo-lp-ah)"/>
+  <rect class="cell ghost end" x="330" y="178" width="180" height="26"/>
+  <text class="t dim" x="420" y="191" text-anchor="middle" dominant-baseline="central">suspended or revoked</text>
+  <text class="n" x="420" y="224" text-anchor="middle">from any state, by the issuer or a failed verification; no work assigned</text>
+</svg>

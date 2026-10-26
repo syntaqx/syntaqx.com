@@ -92,7 +92,7 @@ The API tells merchants what they asked for; events tell them what happened afte
 
 **Missed events can be listed.** Webhooks fail; an events endpoint that returns recent events, filterable by type, lets a merchant catch up without a support ticket (Stripe keeps full event payloads for 30 days).
 
-Delivery is at least once, unordered and signed, as [Webhooks](/docs/payments/webhooks) describes: Stripe retries for up to three days, Adyen for much longer, and both sign every delivery. Two newer choices are worth copying. **Thin events** carry only the event type and the object's ID, and the receiver fetches the current object, so payloads never go stale and don't depend on API version. **Event destinations** beyond webhooks, like a cloud event bus, suit merchants who'd rather not run a public endpoint.
+Delivery is at least once, unordered and signed, as [Webhooks](/docs/api-design/webhooks) describes: Stripe retries for up to three days, Adyen for much longer, and both sign every delivery. Two newer choices are worth copying. **Thin events** carry only the event type and the object's ID, and the receiver fetches the current object, so payloads never go stale and don't depend on API version. **Event destinations** beyond webhooks, like a cloud event bus, suit merchants who'd rather not run a public endpoint.
 
 ## Acting for Platforms
 

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 206">
+  <defs>
+    <marker id="fo-spc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-spc-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="16">one cohort: a branch, a route group or a billing day</text>
+
+  <!-- Phases -->
+  <rect class="cell band" x="40" y="70" width="140" height="28"/>
+  <text class="t b" x="110" y="84" text-anchor="middle" dominant-baseline="central">transitional load</text>
+  <rect class="cell band" x="210" y="70" width="140" height="28"/>
+  <text class="t b" x="280" y="84" text-anchor="middle" dominant-baseline="central">dark launch</text>
+  <rect class="cell hl" x="380" y="70" width="140" height="28"/>
+  <text class="t hl b" x="450" y="84" text-anchor="middle" dominant-baseline="central">canary cutover</text>
+  <rect class="cell band" x="550" y="70" width="140" height="28"/>
+  <text class="t b" x="620" y="84" text-anchor="middle" dominant-baseline="central">retire</text>
+
+  <!-- Happy path -->
+  <path class="ln hl" d="M180,84H208" marker-end="url(#fo-spc-ah-hl)"/>
+  <path class="ln hl" d="M350,84H378" marker-end="url(#fo-spc-ah-hl)"/>
+  <path class="ln hl" d="M520,84H548" marker-end="url(#fo-spc-ah-hl)"/>
+
+  <!-- What each phase means -->
+  <text class="n" x="110" y="116" text-anchor="middle">export archived</text>
+  <text class="n" x="110" y="130" text-anchor="middle">crosswalk, no sends</text>
+  <text class="n" x="280" y="116" text-anchor="middle">computed, not sent</text>
+  <text class="n" x="280" y="130" text-anchor="middle">compared to legacy</text>
+  <text class="n hl" x="450" y="116" text-anchor="middle">new system bills</text>
+  <text class="n" x="450" y="130" text-anchor="middle">legacy stops billing</text>
+  <text class="n" x="620" y="116" text-anchor="middle">last cohort moved</text>
+  <text class="n" x="620" y="130" text-anchor="middle">legacy read-only</text>
+
+  <!-- Break found: back to the load -->
+  <path class="ln dash" d="M270,70C270,44 120,44 120,68" marker-end="url(#fo-spc-ah)"/>
+  <text class="n" x="195" y="36" text-anchor="middle">break: fix mapping, reload</text>
+
+  <!-- Rollback window -->
+  <path class="ln dash" d="M440,70C440,44 300,44 300,68" marker-end="url(#fo-spc-ah)"/>
+  <text class="n" x="385" y="36" text-anchor="middle">rollback window</text>
+
+  <!-- Legacy lane -->
+  <path class="ln" d="M40,146H690"/>
+  <text class="cap" x="40" y="166">legacy system</text>
+  <rect class="cell" x="40" y="176" width="310" height="20"/>
+  <text class="t" x="50" y="186" dominant-baseline="central">still bills and schedules the cohort</text>
+  <rect class="cell ghost" x="380" y="176" width="310" height="20"/>
+  <text class="t dim" x="390" y="186" dominant-baseline="central">read-only archive, kept</text>
+</svg>

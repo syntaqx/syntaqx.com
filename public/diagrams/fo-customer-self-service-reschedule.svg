@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 180">
+  <defs>
+    <marker id="fo-cssr-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-cssr-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="30" y="34">the portal calls the same scheduling service the office uses</text>
+
+  <rect class="cell" x="30" y="46" width="118" height="26"/>
+  <text class="t" x="89" y="59" text-anchor="middle" dominant-baseline="central">customer asks</text>
+  <rect class="cell" x="176" y="46" width="118" height="26"/>
+  <text class="t" x="235" y="59" text-anchor="middle" dominant-baseline="central">policy check</text>
+  <rect class="cell" x="322" y="46" width="118" height="26"/>
+  <text class="t" x="381" y="59" text-anchor="middle" dominant-baseline="central">slot search</text>
+  <rect class="cell" x="468" y="46" width="118" height="26"/>
+  <text class="t" x="527" y="59" text-anchor="middle" dominant-baseline="central">hold the slot</text>
+  <rect class="cell hl" x="614" y="46" width="118" height="26"/>
+  <text class="t hl b" x="673" y="59" text-anchor="middle" dominant-baseline="central">commit</text>
+
+  <path class="ln hl" d="M148,59H175" marker-end="url(#fo-cssr-ah-hl)"/>
+  <path class="ln hl" d="M294,59H321" marker-end="url(#fo-cssr-ah-hl)"/>
+  <path class="ln hl" d="M440,59H467" marker-end="url(#fo-cssr-ah-hl)"/>
+  <path class="ln hl" d="M586,59H613" marker-end="url(#fo-cssr-ah-hl)"/>
+
+  <path class="ln dash" d="M235,72V100" marker-end="url(#fo-cssr-ah)"/>
+  <path class="ln dash" d="M381,72V100" marker-end="url(#fo-cssr-ah)"/>
+  <path class="ln dash" d="M527,72V100" marker-end="url(#fo-cssr-ah)"/>
+  <path class="ln" d="M673,72V100" marker-end="url(#fo-cssr-ah)"/>
+
+  <rect class="cell ghost" x="176" y="102" width="118" height="24"/>
+  <text class="t dim" x="235" y="114" text-anchor="middle" dominant-baseline="central">office request</text>
+  <rect class="cell ghost" x="322" y="102" width="118" height="24"/>
+  <text class="t dim" x="381" y="114" text-anchor="middle" dominant-baseline="central">next open dates</text>
+  <rect class="cell ghost" x="468" y="102" width="118" height="24"/>
+  <text class="t dim" x="527" y="114" text-anchor="middle" dominant-baseline="central">search again</text>
+  <rect class="cell" x="614" y="102" width="118" height="24"/>
+  <text class="t" x="673" y="114" text-anchor="middle" dominant-baseline="central">event, notify</text>
+
+  <text class="n" x="235" y="144" text-anchor="middle">too late, owes, locked</text>
+  <text class="n" x="381" y="144" text-anchor="middle">nothing fits</text>
+  <text class="n" x="527" y="144" text-anchor="middle">hold expired</text>
+  <text class="n" x="673" y="144" text-anchor="middle">audit, confirm</text>
+
+  <text class="n hl" x="732" y="170" text-anchor="end">the portal never writes the visit directly</text>
+</svg>

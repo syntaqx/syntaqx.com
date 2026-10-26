@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 224">
+  <defs>
+    <marker id="fo-brs-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-brs-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Row 1: what comes due -->
+  <text class="cap" x="40" y="38">what comes due</text>
+  <rect class="cell" x="40" y="48" width="145" height="26"/>
+  <text class="t" x="112" y="61" text-anchor="middle" dominant-baseline="central">billing plan</text>
+  <rect class="cell" x="215" y="48" width="145" height="26"/>
+  <text class="t" x="287" y="61" text-anchor="middle" dominant-baseline="central">period comes due</text>
+  <rect class="cell" x="390" y="48" width="145" height="26"/>
+  <text class="t" x="462" y="61" text-anchor="middle" dominant-baseline="central">draft invoice</text>
+  <rect class="cell" x="565" y="48" width="145" height="26"/>
+  <text class="t" x="637" y="61" text-anchor="middle" dominant-baseline="central">tax quote</text>
+
+  <path class="ln hl" d="M185,61H213" marker-end="url(#fo-brs-ah-hl)"/>
+  <path class="ln hl" d="M360,61H388" marker-end="url(#fo-brs-ah-hl)"/>
+  <path class="ln hl" d="M535,61H563" marker-end="url(#fo-brs-ah-hl)"/>
+
+  <!-- Down to row 2 -->
+  <path class="ln hl" d="M637,74V98H112V120" marker-end="url(#fo-brs-ah-hl)"/>
+
+  <!-- Row 2: what gets collected -->
+  <rect class="cell hl" x="40" y="122" width="145" height="26"/>
+  <text class="t hl b" x="112" y="135" text-anchor="middle" dominant-baseline="central">finalize</text>
+  <rect class="cell" x="215" y="122" width="145" height="26"/>
+  <text class="t" x="287" y="135" text-anchor="middle" dominant-baseline="central">autopay charge</text>
+  <rect class="cell" x="390" y="122" width="145" height="26"/>
+  <text class="t" x="462" y="135" text-anchor="middle" dominant-baseline="central">apply payment</text>
+  <rect class="cell" x="565" y="122" width="145" height="26"/>
+  <text class="t" x="637" y="135" text-anchor="middle" dominant-baseline="central">accounting sync</text>
+
+  <path class="ln hl" d="M185,135H213" marker-end="url(#fo-brs-ah-hl)"/>
+  <path class="ln hl" d="M360,135H388" marker-end="url(#fo-brs-ah-hl)"/>
+  <path class="ln hl" d="M535,135H563" marker-end="url(#fo-brs-ah-hl)"/>
+
+  <text class="n" x="112" y="166" text-anchor="middle">numbered, then locked</text>
+  <text class="n" x="462" y="166" text-anchor="middle">balance, then aging</text>
+  <text class="n" x="637" y="166" text-anchor="middle">journal or detail</text>
+
+  <!-- No method on file -->
+  <path class="ln dash" d="M287,148V180" marker-end="url(#fo-brs-ah)"/>
+  <rect class="cell ghost" x="215" y="182" width="145" height="26"/>
+  <text class="t dim" x="287" y="195" text-anchor="middle" dominant-baseline="central">no method: send link</text>
+</svg>

@@ -109,7 +109,7 @@ On a platform, a lost dispute has to land on someone's balance, and the platform
 
 The failure to design for: a merchant takes a large volume of payments, is paid out and disappears, and the disputes arrive over the following 120 days, or longer for services paid in advance. Reserves sized to risk, payout delays for new merchants and [onboarding that knows who they are](/docs/industries/payments/merchant-onboarding) are what stop that from being the platform's loss.
 
-Every dispute event reaches merchants through [webhooks](/docs/payments/webhooks) (`dispute.created`, `dispute.closed`), with the evidence deadline in the payload, because the deadline is the one thing they can't miss.
+Every dispute event reaches merchants through [webhooks](/docs/api-design/webhooks) (`dispute.created`, `dispute.closed`), with the evidence deadline in the payload, because the deadline is the one thing they can't miss.
 
 ## What This Means for the System You Build
 

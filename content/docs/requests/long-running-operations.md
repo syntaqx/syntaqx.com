@@ -76,7 +76,7 @@ GET /operations/019a0b70-1e2f-7a3b-8c4d-5e6f7a8b9c0d
 
 ## Webhooks on Completion
 
-Polling is the fallback. Clients that have a [webhook](/docs/payments/webhooks) endpoint receive `operation.succeeded` or `operation.failed` instead, with the operation in the payload. Good clients use both: the webhook for speed, an occasional poll for anything the webhook missed.
+Polling is the fallback. Clients that have a [webhook](/docs/api-design/webhooks) endpoint receive `operation.succeeded` or `operation.failed` instead, with the operation in the payload. Good clients use both: the webhook for speed, an occasional poll for anything the webhook missed.
 
 ## Cancellation
 

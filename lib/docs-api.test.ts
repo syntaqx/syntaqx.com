@@ -41,7 +41,7 @@ describe("GET /docs", () => {
     expect(tagged.every((d) => d.tags.includes("idempotency"))).toBe(true);
 
     const text = (await (await list("?q=webhook&limit=100")).json()) as Summary[];
-    expect(text.map((d) => d.slug)).toContain("payments/webhooks");
+    expect(text.map((d) => d.slug)).toContain("api-design/webhooks");
   });
 
   it("sorts by title, descending with -, using slug as the tiebreaker", async () => {

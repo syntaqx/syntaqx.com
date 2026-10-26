@@ -36,7 +36,7 @@ Request-Id: 019a0b6e-4c2d-7f31-9b8e-2d5a6c7e8f90
 A trace follows a request through every service it touches, so "the API was slow" becomes "the API waited 2.1 seconds on the processor call". Calls between services propagate [W3C Trace Context](https://www.w3.org/TR/trace-context/) (`traceparent` and `tracestate`), instrumented with [OpenTelemetry](https://opentelemetry.io/), because every library, proxy and vendor on the path already knows how to pass the standard on.
 
 - One trace per incoming request, one span per meaningful unit of work: a database query, an outbound call, a queue publish.
-- Queue messages and [webhooks](/docs/payments/webhooks) carry the trace context too, so asynchronous work links back to the request that caused it.
+- Queue messages and [webhooks](/docs/api-design/webhooks) carry the trace context too, so asynchronous work links back to the request that caused it.
 - Spans record the resource IDs they touched (payment ID, account ID), so you can search by business object, not just by trace.
 
 ## Structured Logs

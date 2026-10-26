@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
+  <defs>
+    <marker id="fo-fob-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-fob-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Renewal loop -->
+  <path class="ln hl" d="M640,90C640,40 580,40 580,88" marker-end="url(#fo-fob-ah-hl)"/>
+  <text class="n hl" x="610" y="34" text-anchor="middle">renewed</text>
+
+  <!-- What each stage records -->
+  <text class="n" x="85" y="74" text-anchor="middle">source, consent</text>
+  <text class="n" x="235" y="74" text-anchor="middle">terms, card, rep</text>
+  <text class="n" x="385" y="74" text-anchor="middle">baseline visit</text>
+  <text class="n" x="490" y="74" text-anchor="middle">visits, bills</text>
+  <text class="n" x="705" y="74" text-anchor="middle">price, term</text>
+
+  <!-- Happy path -->
+  <rect class="cell" x="30" y="90" width="110" height="26"/>
+  <text class="t" x="85" y="103" text-anchor="middle" dominant-baseline="central">lead</text>
+  <path class="ln hl" d="M140,103H178" marker-end="url(#fo-fob-ah-hl)"/>
+  <rect class="cell" x="180" y="90" width="110" height="26"/>
+  <text class="t" x="235" y="103" text-anchor="middle" dominant-baseline="central">sold</text>
+  <path class="ln hl" d="M290,103H328" marker-end="url(#fo-fob-ah-hl)"/>
+  <rect class="cell" x="330" y="90" width="110" height="26"/>
+  <text class="t" x="385" y="103" text-anchor="middle" dominant-baseline="central">initial visit</text>
+  <path class="ln hl" d="M440,103H478" marker-end="url(#fo-fob-ah-hl)"/>
+  <rect class="cell hl" x="480" y="90" width="110" height="26"/>
+  <text class="t hl b" x="535" y="103" text-anchor="middle" dominant-baseline="central">recurring</text>
+  <path class="ln hl" d="M590,103H628" marker-end="url(#fo-fob-ah-hl)"/>
+  <rect class="cell" x="630" y="90" width="110" height="26"/>
+  <text class="t" x="685" y="103" text-anchor="middle" dominant-baseline="central">renewal</text>
+
+  <!-- Exits -->
+  <path class="ln dash" d="M235,116V168" marker-end="url(#fo-fob-ah)"/>
+  <text class="n" x="243" y="146">cooling-off</text>
+  <rect class="cell ghost end" x="180" y="170" width="110" height="26"/>
+  <text class="t dim" x="235" y="183" text-anchor="middle" dominant-baseline="central">cancelled</text>
+
+  <path class="ln dash" d="M535,116V168" marker-end="url(#fo-fob-ah)"/>
+  <text class="n" x="543" y="146">cancel, non-pay</text>
+  <rect class="cell ghost end" x="480" y="170" width="110" height="26"/>
+  <text class="t dim" x="535" y="183" text-anchor="middle" dominant-baseline="central">terminated</text>
+
+  <path class="ln dash" d="M685,116V183H592" marker-end="url(#fo-fob-ah)"/>
+  <text class="n" x="693" y="150">lapsed</text>
+
+  <!-- Win-back -->
+  <path class="ln dash" d="M535,196V214H85V118" marker-end="url(#fo-fob-ah)"/>
+  <text class="n" x="310" y="230" text-anchor="middle">win-back campaign, a new lead with history</text>
+</svg>

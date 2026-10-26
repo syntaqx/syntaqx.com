@@ -89,7 +89,7 @@ Old versions, forgotten staging hosts and undocumented endpoints nobody patches.
 Trusting a third-party API more than user input because it's a "partner". A partner can be compromised, misconfigured or buggy, and their failure becomes yours the moment you act on their data unchecked.
 
 - Validate third-party responses against a schema, with the same rigor as user input.
-- Verify signatures on everything inbound: [webhooks](/docs/payments/webhooks) are rejected unless the HMAC and timestamp check out.
+- Verify signatures on everything inbound: [webhooks](/docs/api-design/webhooks) are rejected unless the HMAC and timestamp check out.
 - Time out and fail closed on third-party calls. See [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
 - Model output is third-party data too. See [AI & LLM Security](/docs/security/ai-security).
 

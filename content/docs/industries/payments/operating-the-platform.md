@@ -11,13 +11,11 @@ A payments platform that's been built is not yet a platform that runs. Every day
 
 ## The Internal Console
 
-Support, risk and finance teams need a tool that sees what the platform sees, with controls the merchant-facing product doesn't have:
+Support, risk and finance teams need a tool that sees what the platform sees, with controls the merchant-facing product doesn't have. The general design (search by any identifier, named actions with reasons and approvals, ledger adjustments only by entries, role scoping, viewing as the merchant on the record) is in [Support Access & Internal Tools](/docs/security/support-access#the-internal-console). What payments adds:
 
-- **Find anything by any identifier.** A merchant quotes a payout amount, a cardholder quotes the acquirer reference number (ARN) their bank gave them, the processor quotes its reference, the bank quotes an ACH trace number. The console finds the payment, refund, payout or return from any of them, and shows its full history across systems ([Inside a Processor](/docs/industries/payments/inside-a-processor#clearing)).
-- **See as the merchant, on the record.** Viewing a merchant's dashboard as they see it is how support answers questions, and it's an access to their data: it requires a reason, it's logged, and it's read-only unless an action is approved separately.
-- **Act on their behalf with approval.** Refunds, holds and releases, payout pauses, reserve changes: each is a recorded action with an actor, a reason and, above a threshold, a second approver.
-- **Adjust the ledger only by entries.** A manual adjustment is a ledger transaction with a reason code and a second approver, never an edit to a balance ([Payment States & Ledgers](/docs/payments/payment-states#append-only-records)). Adjustments get their own report, reviewed by someone outside support.
-- **Scope access by role.** Support sees masked data; only the roles [Running a Card Vault](/docs/industries/payments/card-vault#who-gets-the-number-back) allows can reveal a card number, and nobody can approve their own action.
+- **The identifiers are the industry's.** A merchant quotes a payout amount, a cardholder quotes the acquirer reference number (ARN) their bank gave them, the processor quotes its reference, the bank quotes an ACH trace number. The console finds the payment, refund, payout or return from any of them, and shows its full history across systems ([Inside a Processor](/docs/industries/payments/inside-a-processor#clearing)).
+- **The actions move money.** Refunds, holds and releases, payout pauses and reserve changes are recorded actions with an actor, a reason and, above a threshold, a second approver; a manual ledger adjustment is a transaction with a reason code, never an edit to a balance ([Payment States & Ledgers](/docs/payments/payment-states#append-only-records)).
+- **Revealing a card number is its own permission.** Support sees masked data; only the roles [Running a Card Vault](/docs/industries/payments/card-vault#who-gets-the-number-back) allows can reveal a number, and nobody can approve their own action.
 
 ## Watching the Pipeline
 
@@ -43,7 +41,7 @@ The pipeline alarms above catch money that didn't move. The other quiet failure 
 - **Approval rate, sliced.** By processor, card brand, issuer or BIN range, card type, country, merchant category and channel, compared with the same slice's own history. A drop in one slice is a signal a platform-wide average hides ([Processor Routing](/docs/industries/payments/processor-routing)).
 - **Decline code mix.** A rise in one code (do not honor, invalid transaction, issuer unavailable) usually names the cause before anyone investigates.
 - **Authorization latency,** measured per hop against the networks' clocks, with an [SLO](/docs/operations/slos) well inside the 15-second timeout floor Visa sets for merchants.
-- **Webhook delivery:** success rate, lag and backlog per merchant endpoint, because a merchant whose endpoint is failing is a merchant who thinks payments stopped ([Webhooks](/docs/payments/webhooks)).
+- **Webhook delivery:** success rate, lag and backlog per merchant endpoint, because a merchant whose endpoint is failing is a merchant who thinks payments stopped ([Webhooks](/docs/api-design/webhooks)).
 - **A status page** merchants can read, fed by the same signals, so an incident is announced before the support queue announces it.
 
 ## Statements and Reports
@@ -92,7 +90,7 @@ A payments platform keeps records for many rules at once, and each record's rete
 | Dispute evidence | At least the longest dispute window that could reach the payment | Network dispute rules |
 | Call recordings with payment data | Never containing a card verification code | [Phone Payments](/docs/industries/payments/phone-payments#recordings) |
 
-Where rules collide, the longest wins and deletion is a scheduled job, not a judgment call; [Data Retention & Deletion](/docs/architecture/data-retention) covers how deletion coexists with append-only ledgers.
+Where rules collide, the longest wins and deletion is a scheduled job, not a judgment call; [Data Retention & Deletion](/docs/architecture/data-retention#retention-schedules-by-record-type) covers schedules keyed by record type, legal holds, and how deletion coexists with append-only ledgers.
 
 ## Complaints and Error Resolution
 

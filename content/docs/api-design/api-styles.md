@@ -39,7 +39,7 @@ The costs are tooling and reach. Browsers can't speak native gRPC; gRPC-Web goes
 
 ## Events and Webhooks: Push, Not Pull
 
-When the question is "tell me when something happens", polling is wasteful and slow. Inside the system that's [events](/docs/architecture/events); across the boundary to customers it's [webhooks](/docs/payments/webhooks). Both trade request-and-response simplicity for delivery guarantees you now own: duplicates, ordering, retries and replay. They complement a request API: a webhook says "payment captured", and the client fetches the payment over REST when it needs the details.
+When the question is "tell me when something happens", polling is wasteful and slow. Inside the system that's [events](/docs/architecture/events); across the boundary to customers it's [webhooks](/docs/api-design/webhooks). Both trade request-and-response simplicity for delivery guarantees you now own: duplicates, ordering, retries and replay. They complement a request API: a webhook says "payment captured", and the client fetches the payment over REST when it needs the details.
 
 ## My Defaults
 

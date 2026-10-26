@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 224">
+  <defs>
+    <marker id="fo-sto-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-sto-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Start -->
+  <rect class="cell band" x="40" y="100" width="110" height="26"/>
+  <text class="t b" x="95" y="113" text-anchor="middle" dominant-baseline="central">offer accepted</text>
+  <path class="ln" d="M150,113C170,113 168,53 188,53" marker-end="url(#fo-sto-ah)"/>
+  <path class="ln" d="M150,113H188" marker-end="url(#fo-sto-ah)"/>
+  <path class="ln" d="M150,113C170,113 168,173 188,173" marker-end="url(#fo-sto-ah)"/>
+
+  <!-- Employment eligibility -->
+  <text class="cap" x="190" y="32">eligibility</text>
+  <rect class="cell" x="190" y="40" width="130" height="26"/>
+  <text class="t" x="255" y="53" text-anchor="middle" dominant-baseline="central">I-9 sec 1: day 1</text>
+  <path class="ln" d="M320,53H330"/>
+  <rect class="cell" x="330" y="40" width="130" height="26"/>
+  <text class="t" x="395" y="53" text-anchor="middle" dominant-baseline="central">I-9 sec 2: +3 bd</text>
+  <path class="ln" d="M460,53H470"/>
+  <rect class="cell" x="470" y="40" width="120" height="26"/>
+  <text class="t" x="530" y="53" text-anchor="middle" dominant-baseline="central">E-Verify: +3 bd</text>
+
+  <!-- Tax form -->
+  <text class="cap" x="190" y="94">tax form</text>
+  <rect class="cell" x="190" y="100" width="130" height="26"/>
+  <text class="t" x="255" y="113" text-anchor="middle" dominant-baseline="central">W-4 or W-9</text>
+
+  <!-- Screening and permits -->
+  <text class="cap" x="190" y="154">screening</text>
+  <rect class="cell" x="190" y="160" width="130" height="26"/>
+  <text class="t" x="255" y="173" text-anchor="middle" dominant-baseline="central">FCRA consent</text>
+  <path class="ln" d="M320,173H330"/>
+  <rect class="cell" x="330" y="160" width="130" height="26"/>
+  <text class="t" x="395" y="173" text-anchor="middle" dominant-baseline="central">report, MVR</text>
+  <path class="ln" d="M460,173H470"/>
+  <rect class="cell" x="470" y="160" width="120" height="26"/>
+  <text class="t" x="530" y="173" text-anchor="middle" dominant-baseline="central">permit, badge</text>
+
+  <!-- Join -->
+  <path class="ln hl" d="M590,53C610,53 600,113 618,113" marker-end="url(#fo-sto-ah-hl)"/>
+  <path class="ln hl" d="M320,113H618" marker-end="url(#fo-sto-ah-hl)"/>
+  <path class="ln hl" d="M590,173C610,173 600,113 618,113" marker-end="url(#fo-sto-ah-hl)"/>
+  <rect class="cell hl" x="620" y="100" width="110" height="26"/>
+  <text class="t hl b" x="675" y="113" text-anchor="middle" dominant-baseline="central">cleared to knock</text>
+
+  <text class="n" x="40" y="212">bd: business days after work for pay begins; screening rules vary by state and city</text>
+</svg>

@@ -110,7 +110,7 @@ My default for a new provider is a managed payment crypto service for PIN and EM
 Most software platforms never touch a PIN: their terminals talk to a processor, and their online payments are tokenized before they reach the platform's servers. They still have keys worth this discipline:
 
 - **Vault keys.** The key-encrypting key at the top of a card vault's envelope encryption belongs in this hierarchy, with a cryptoperiod and a rehearsed rotation like any other. [Running a Card Vault](/docs/industries/payments/card-vault#storing-the-number) covers the data keys beneath it and the re-encryption that rotation still leaves you to do.
-- **Signing keys.** [Webhook](/docs/payments/webhooks) signing secrets, API request signing, and the keys behind any token you issue are credentials an attacker can use to impersonate you. They get owners, rotation and storage in a secret manager or KMS, never in source ([Sensitive Data](/docs/payments/sensitive-data#secrets)).
+- **Signing keys.** [Webhook](/docs/api-design/webhooks) signing secrets, API request signing, and the keys behind any token you issue are credentials an attacker can use to impersonate you. They get owners, rotation and storage in a secret manager or KMS, never in source ([Sensitive Data](/docs/payments/sensitive-data#secrets)).
 - **Partner credentials.** Processor API keys and certificates for mutual TLS are keys too, with the same lifecycle.
 
 The same three questions apply to all of them: where can the clear key exist, who can cause that, and how long until it's replaced?

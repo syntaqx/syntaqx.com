@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 196">
+  <defs>
+    <marker id="fo-cpa-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-cpa-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="30" y="34">input</text>
+  <text class="cap" x="176" y="34">USPS form</text>
+  <text class="cap" x="322" y="34">deliverable?</text>
+  <text class="cap" x="468" y="34">where</text>
+  <text class="cap" x="614" y="34">which property</text>
+
+  <rect class="cell" x="30" y="44" width="116" height="26"/>
+  <text class="t" x="88" y="57" text-anchor="middle" dominant-baseline="central">address as typed</text>
+  <text class="n" x="88" y="90" text-anchor="middle">free text, any case</text>
+
+  <path class="ln hl" d="M146,57H174" marker-end="url(#fo-cpa-ah-hl)"/>
+  <rect class="cell" x="176" y="44" width="116" height="26"/>
+  <text class="t" x="234" y="57" text-anchor="middle" dominant-baseline="central">standardize</text>
+  <text class="n" x="234" y="90" text-anchor="middle">Pub 28 form, ZIP+4</text>
+
+  <path class="ln hl" d="M292,57H320" marker-end="url(#fo-cpa-ah-hl)"/>
+  <rect class="cell" x="322" y="44" width="116" height="26"/>
+  <text class="t" x="380" y="57" text-anchor="middle" dominant-baseline="central">validate (DPV)</text>
+  <text class="n" x="380" y="90" text-anchor="middle">Y, S, D or N; RDI</text>
+
+  <path class="ln hl" d="M438,57H466" marker-end="url(#fo-cpa-ah-hl)"/>
+  <rect class="cell" x="468" y="44" width="116" height="26"/>
+  <text class="t" x="526" y="57" text-anchor="middle" dominant-baseline="central">geocode</text>
+  <text class="n" x="526" y="90" text-anchor="middle">rooftop or ZIP</text>
+
+  <path class="ln hl" d="M584,57H612" marker-end="url(#fo-cpa-ah-hl)"/>
+  <rect class="cell hl" x="614" y="44" width="116" height="26"/>
+  <text class="t hl b" x="672" y="57" text-anchor="middle" dominant-baseline="central">property key</text>
+  <text class="n" x="672" y="90" text-anchor="middle">vendor or parcel ID</text>
+
+  <!-- Failure branch -->
+  <path class="ln dash" d="M380,98V128" marker-end="url(#fo-cpa-ah)"/>
+  <path class="ln dash" d="M526,98V128" marker-end="url(#fo-cpa-ah)"/>
+  <rect class="cell ghost" x="322" y="130" width="262" height="26"/>
+  <text class="t dim" x="453" y="143" text-anchor="middle" dominant-baseline="central">no match or low precision: review</text>
+
+  <text class="n hl" x="730" y="184" text-anchor="end">keep the raw input, the result, and which vendor version produced it</text>
+</svg>

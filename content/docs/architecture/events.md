@@ -44,6 +44,8 @@ Now the event exists if and only if the capture committed. The relay can crash a
 
 A change-data-capture stream (Debezium reading the write-ahead log) is an equivalent relay, with no polling, at the cost of operating the CDC pipeline; [Data Pipelines](/docs/architecture/data-pipelines) covers its risks.
 
+The outbox is a delivery queue, not an audit log: its rows are relayed and pruned, and it only holds what's worth announcing. Proof of who did what goes in a separate audit store, often written in the same transaction ([Audit Trails](/docs/architecture/audit-trails#not-logs-not-events)).
+
 ## Consumers Are Idempotent
 
 Every broker worth using delivers **at least once**, because the only way to guarantee delivery over a network is to resend when unsure. Exactly-once delivery doesn't exist across a network; exactly-once **processing** does, and it's the consumer's job.
@@ -52,7 +54,7 @@ Every broker worth using delivers **at least once**, because the only way to gua
 - **Or make the handler naturally idempotent.** "Set status to captured" is safe to repeat. "Add 100 to the balance" looks fine in testing and double-credits in production.
 - **Acknowledge after the work commits,** never before. Acknowledging first turns a crash mid-handler into a lost event.
 
-See [Idempotency](/docs/payments/idempotency) for the same rule at the API boundary, and [Webhooks](/docs/payments/webhooks) for it across organizations.
+See [Idempotency](/docs/payments/idempotency) for the same rule at the API boundary, and [Webhooks](/docs/api-design/webhooks) for it across organizations.
 
 ## Ordering
 

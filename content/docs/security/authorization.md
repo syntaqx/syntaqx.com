@@ -36,7 +36,7 @@ Grant the smallest permission that does the job, and make broader access a delib
 
 ## Staff and Support Access
 
-Internal tools are where least privilege usually breaks, because "support needs to see everything" is easy to justify. Give staff access to customer data its own rules: granted for a reason, scoped to the customer in question, time-limited, and every access logged with who, what, when and why ([Sensitive Data](/docs/payments/sensitive-data)). "Impersonate this customer" features need the strictest version: the session shows the customer's view but records the staff member as the actor, and changes made while impersonating are flagged.
+Internal tools are where least privilege usually breaks, because "support needs to see everything" is easy to justify. Staff access to customer data gets its own rules: delegation rather than impersonation, read-only by default, a reason and a time limit for every session, approvals nobody can give themselves, and every read and write logged. [Support Access & Internal Tools](/docs/security/support-access) covers them.
 
 ## Policy as Code
 

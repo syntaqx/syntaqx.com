@@ -47,7 +47,7 @@ So the base is wide because the logic is extracted and unit-testable, not becaus
 
 ## What to Test Where
 
-- **Unit test the logic that's easy to get wrong.** Rounding and remainder allocation from [Money & Amounts](/docs/payments/money), every allowed and rejected transition in [Payment States](/docs/payments/payment-states), signature verification in [Webhooks](/docs/payments/webhooks).
+- **Unit test the logic that's easy to get wrong.** Rounding and remainder allocation from [Money & Amounts](/docs/payments/money), every allowed and rejected transition in [Payment States](/docs/payments/payment-states), signature verification in [Webhooks](/docs/api-design/webhooks).
 - **Integration test through the HTTP interface.** Send a request, assert on the response and the resulting state. This tests routing, validation, [error format](/docs/requests/error-responses), and the database together, which is where wiring bugs live.
 - **Test behavior, not implementation.** A test that breaks when you rename a private function is a test of the wrong thing.
 - **Test the failure paths.** Timeouts, duplicate requests, a replayed [idempotency key](/docs/payments/idempotency), a webhook delivered twice. Payments bugs live in the unhappy paths.

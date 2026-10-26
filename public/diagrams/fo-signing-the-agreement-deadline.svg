@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 196">
+  <!-- Day columns -->
+  <text class="cap" x="246" y="36" text-anchor="middle">mon</text>
+  <text class="cap" x="298" y="36" text-anchor="middle">tue</text>
+  <text class="cap" x="350" y="36" text-anchor="middle">wed</text>
+  <text class="cap" x="402" y="36" text-anchor="middle">thu</text>
+  <text class="cap" x="454" y="36" text-anchor="middle">fri</text>
+  <text class="cap" x="506" y="36" text-anchor="middle">sat</text>
+  <text class="cap" x="558" y="36" text-anchor="middle">sun</text>
+  <text class="cap" x="610" y="36" text-anchor="middle">mon</text>
+  <text class="cap" x="662" y="36" text-anchor="middle">tue</text>
+  <text class="cap" x="714" y="36" text-anchor="middle">wed</text>
+
+  <!-- Monday sale -->
+  <text class="t" x="40" y="62" dominant-baseline="central">monday sale</text>
+  <rect class="cell band" x="220" y="50" width="52" height="24"/>
+  <text class="t b" x="246" y="62" text-anchor="middle" dominant-baseline="central">sale</text>
+  <rect class="cell" x="272" y="50" width="52" height="24"/>
+  <text class="t" x="298" y="62" text-anchor="middle" dominant-baseline="central">1</text>
+  <rect class="cell" x="324" y="50" width="52" height="24"/>
+  <text class="t" x="350" y="62" text-anchor="middle" dominant-baseline="central">2</text>
+  <rect class="cell hl" x="376" y="50" width="52" height="24"/>
+  <text class="t hl b" x="402" y="62" text-anchor="middle" dominant-baseline="central">3</text>
+
+  <!-- Monday sale, Tuesday holiday -->
+  <text class="t" x="40" y="90" dominant-baseline="central">monday sale, tue holiday</text>
+  <rect class="cell band" x="220" y="78" width="52" height="24"/>
+  <text class="t b" x="246" y="90" text-anchor="middle" dominant-baseline="central">sale</text>
+  <rect class="cell ghost" x="272" y="78" width="52" height="24"/>
+  <text class="t dim" x="298" y="90" text-anchor="middle" dominant-baseline="central">hol</text>
+  <rect class="cell" x="324" y="78" width="52" height="24"/>
+  <text class="t" x="350" y="90" text-anchor="middle" dominant-baseline="central">1</text>
+  <rect class="cell" x="376" y="78" width="52" height="24"/>
+  <text class="t" x="402" y="90" text-anchor="middle" dominant-baseline="central">2</text>
+  <rect class="cell hl" x="428" y="78" width="52" height="24"/>
+  <text class="t hl b" x="454" y="90" text-anchor="middle" dominant-baseline="central">3</text>
+
+  <!-- Friday sale -->
+  <text class="t" x="40" y="118" dominant-baseline="central">friday sale</text>
+  <rect class="cell band" x="428" y="106" width="52" height="24"/>
+  <text class="t b" x="454" y="118" text-anchor="middle" dominant-baseline="central">sale</text>
+  <rect class="cell" x="480" y="106" width="52" height="24"/>
+  <text class="t" x="506" y="118" text-anchor="middle" dominant-baseline="central">1</text>
+  <rect class="cell ghost" x="532" y="106" width="52" height="24"/>
+  <text class="t dim" x="558" y="118" text-anchor="middle" dominant-baseline="central">skip</text>
+  <rect class="cell" x="584" y="106" width="52" height="24"/>
+  <text class="t" x="610" y="118" text-anchor="middle" dominant-baseline="central">2</text>
+  <rect class="cell hl" x="636" y="106" width="52" height="24"/>
+  <text class="t hl b" x="662" y="118" text-anchor="middle" dominant-baseline="central">3</text>
+
+  <!-- Friday sale, Monday holiday -->
+  <text class="t" x="40" y="146" dominant-baseline="central">friday sale, mon holiday</text>
+  <rect class="cell band" x="428" y="134" width="52" height="24"/>
+  <text class="t b" x="454" y="146" text-anchor="middle" dominant-baseline="central">sale</text>
+  <rect class="cell" x="480" y="134" width="52" height="24"/>
+  <text class="t" x="506" y="146" text-anchor="middle" dominant-baseline="central">1</text>
+  <rect class="cell ghost" x="532" y="134" width="52" height="24"/>
+  <text class="t dim" x="558" y="146" text-anchor="middle" dominant-baseline="central">skip</text>
+  <rect class="cell ghost" x="584" y="134" width="52" height="24"/>
+  <text class="t dim" x="610" y="146" text-anchor="middle" dominant-baseline="central">hol</text>
+  <rect class="cell" x="636" y="134" width="52" height="24"/>
+  <text class="t" x="662" y="146" text-anchor="middle" dominant-baseline="central">2</text>
+  <rect class="cell hl" x="688" y="134" width="52" height="24"/>
+  <text class="t hl b" x="714" y="146" text-anchor="middle" dominant-baseline="central">3</text>
+
+  <text class="n" x="40" y="182">the window closes at midnight, buyer's local time, at the end of the teal day</text>
+</svg>

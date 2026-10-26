@@ -59,6 +59,36 @@ The cost is modest: the policy adds a predicate to every query (which the leadin
 
 A resource in another tenant returns `404`, never `403`, which would confirm the ID exists ([Error Responses](/docs/requests/error-responses)).
 
+## Tenant Hierarchies
+
+A flat tenant is rare once customers grow. A game publisher has studios, and studios ship titles. A SaaS customer has an organization with projects ([Google Cloud](https://docs.cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy) nests folders between them). A marketplace has sellers, and sellers run several stores. A field service company has regions, and regions have branches. The tenant is still the isolation boundary, but inside it sits a tree, and three things move through that tree in different directions.
+
+**Configuration inherits down, with explicit overrides.** Prices, fee schedules, feature flags, cancellation windows and payout timing are set high in the tree and overridden only where a node needs something different. Store the override on the node that has it and resolve the effective value by walking up to the nearest ancestor that sets it. Never copy the parent's value into its children at creation: copies drift, so change the region's price list and half its branches keep the old one, with no record that anyone chose that.
+
+```sql
+WITH RECURSIVE ancestors AS (
+  SELECT id, parent_id, 0 AS depth FROM tenant_nodes WHERE id = $1
+  UNION ALL
+  SELECT n.id, n.parent_id, a.depth + 1
+  FROM tenant_nodes n JOIN ancestors a ON n.id = a.parent_id
+)
+SELECT s.value
+FROM ancestors a
+JOIN node_settings s ON s.node_id = a.id AND s.key = 'cancellation_window'
+ORDER BY a.depth
+LIMIT 1;
+```
+
+Show the resolved value and where it came from ("inherited from North Region") in the admin UI, because "why does this branch charge that?" is the first support question a hierarchy produces.
+
+**Permissions are scoped to a node.** A grant is a role at a node, and it covers that node's subtree: a studio lead sees every title in the studio, a store manager sees one store, the publisher's finance team sees everything. Google Cloud works the same way: roles granted on a folder "are inherited by all project and folder resources in that folder." Enforce the scope where you enforce the tenant, in the database, so a branch manager's report can't include the next branch because one query forgot a filter. A materialized path ([`ltree`](https://www.postgresql.org/docs/current/ltree.html)) or a closure table makes "is this row inside the user's subtree" an indexed check instead of a recursive query per row. The authorization model itself is in [Authorization](/docs/security/authorization).
+
+**Reporting rolls up from the same entries.** Every number a store sees must sum exactly into its seller's report and the marketplace's. That only works when every level reads the same underlying rows, each tagged with the leaf node it belongs to, and a parent's report is the sum of its subtree. A separate aggregate pipeline per level recomputes fees slightly differently and the totals stop matching. Decide what happens when a node moves (a branch changes regions, a title moves studios): either history follows the node, or each entry stamps the path it had when it was written. Finance usually wants the second.
+
+**Put the hierarchy key wherever a rule can differ.** `tenant_id` goes on every row; the node key (`branch_id`, `store_id`, `project_id`) goes on every row whose rules, permissions or reports vary below the tenant. Discovering later that invoice numbering, tax or a cancellation window differs by branch, on a table that only knows its tenant, is a backfill across years of data.
+
+For worked examples, see [Payments for Software Platforms](/docs/industries/payments/software-platforms#the-hierarchy) and [The Field Operations Business](/docs/industries/field-operations/field-operations-business#branches-regions-and-the-org-chart).
+
 ## Noisy Neighbors
 
 Shared infrastructure means one tenant's traffic spike can become everyone's outage, so isolation covers performance as well as data.
@@ -79,6 +109,9 @@ Isolation is a feature, so it has [tests](/docs/engineering/testing). Every inte
 - [PostgreSQL: Row Security Policies](https://www.postgresql.org/docs/current/ddl-rowsecurity.html), RLS behavior, `FORCE` and `BYPASSRLS`
 - [PostgreSQL: CREATE POLICY](https://www.postgresql.org/docs/current/sql-createpolicy.html), policy syntax
 - [PostgreSQL: SET](https://www.postgresql.org/docs/current/sql-set.html), transaction-scoped `SET LOCAL`
+- [PostgreSQL: WITH Queries](https://www.postgresql.org/docs/current/queries-with.html), recursive CTEs for walking a tree to the nearest override
+- [PostgreSQL: ltree](https://www.postgresql.org/docs/current/ltree.html), materialized paths for indexed subtree checks
+- [Google Cloud: Resource hierarchy](https://docs.cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy), organization, folders and projects, with policies inherited down the tree
 
 **In practice**
 

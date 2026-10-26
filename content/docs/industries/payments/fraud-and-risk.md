@@ -106,9 +106,7 @@ Every decision is recorded with what produced it:
 }
 ```
 
-- **Why:** when a customer, a support agent or a regulator asks why a payment was declined, "the model said so" isn't an answer; the matched rules and score are.
-- **Which version:** a decision is only explainable against the rules and model that made it.
-- **Append-only,** like the rest of the [payment record](/docs/payments/payment-states): a reviewer approving a payment adds a decision rather than overwriting the original.
+When a customer, a support agent or a regulator asks why a payment was declined, "the model said so" isn't an answer; the matched rules, the score and the model version are, and a decision is only explainable against the version that made it. Decisions are append-only like the rest of the [payment record](/docs/payments/payment-states): a reviewer approving a payment adds a decision rather than overwriting the original. [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions) covers recording automated and AI decisions in general.
 
 Backtest rule changes against stored history before shipping them. A rule that would have stopped last month's attack and 3% of last month's good customers is a bad rule that looks good in a postmortem.
 

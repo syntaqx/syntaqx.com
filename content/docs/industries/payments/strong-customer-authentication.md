@@ -103,7 +103,7 @@ A customer-initiated (on-session) payment has the customer in your checkout, abl
 - **The server resumes; the client never decides.** After the challenge, the client tells the server to continue (or the server hears from the authentication provider), and the server authorizes.
 - **It expires.** A customer who walks away leaves the payment in `requires_action` forever unless it times out to `failed` with a reason.
 - **The response is `200` with a status, not an error.** Needing authentication is a normal outcome of a valid request; a `402` makes every client treat a recoverable step as a failure. Reserve `402` for real declines.
-- **Webhooks report the transition,** so a client that loses its connection mid-challenge learns the outcome from `payment.authorized` or `payment.failed` ([Webhooks](/docs/payments/webhooks)).
+- **Webhooks report the transition,** so a client that loses its connection mid-challenge learns the outcome from `payment.authorized` or `payment.failed` ([Webhooks](/docs/api-design/webhooks)).
 
 ### Authentication-Required Declines
 

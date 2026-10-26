@@ -30,7 +30,7 @@ Measure what users feel, as close to them as you can (the load balancer or the c
 | --------------- | ---- |
 | Request/response API | Availability (non-`5xx` ratio), latency (ratio under a threshold) |
 | Pipelines and jobs | Freshness (age of the newest processed data), correctness |
-| Queues and [webhooks](/docs/payments/webhooks) | Delivery latency, ratio delivered within the retry window |
+| Queues and [webhooks](/docs/api-design/webhooks) | Delivery latency, ratio delivered within the retry window |
 
 - **Ratios, not averages.** "99% of requests under 300ms" is an SLI; "average latency 120ms" hides the slow tail users notice.
 - **`4xx` aren't failures.** A `422` is the API working correctly ([Error Responses](/docs/requests/error-responses)). A `429` is a failure only if you throttled someone below their documented [rate limit](/docs/requests/rate-limiting).

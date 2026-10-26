@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 210">
+  <defs>
+    <marker id="fo-carc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-carc-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="38">any channel the customer signed up through</text>
+
+  <!-- The cancel path -->
+  <rect class="cell" x="40" y="50" width="124" height="26"/>
+  <text class="t" x="102" y="63" text-anchor="middle" dominant-baseline="central">cancel request</text>
+  <rect class="cell" x="179" y="50" width="124" height="26"/>
+  <text class="t" x="241" y="63" text-anchor="middle" dominant-baseline="central">reason, optional</text>
+  <rect class="cell band" x="318" y="50" width="124" height="26"/>
+  <text class="t b" x="380" y="63" text-anchor="middle" dominant-baseline="central">save offer</text>
+  <rect class="cell hl" x="457" y="50" width="124" height="26"/>
+  <text class="t hl b" x="519" y="63" text-anchor="middle" dominant-baseline="central">cancel confirmed</text>
+  <rect class="cell hl" x="596" y="50" width="124" height="26"/>
+  <text class="t hl" x="658" y="63" text-anchor="middle" dominant-baseline="central">final bill, notice</text>
+
+  <path class="ln hl" d="M164,63H177" marker-end="url(#fo-carc-ah-hl)"/>
+  <path class="ln hl" d="M303,63H316" marker-end="url(#fo-carc-ah-hl)"/>
+  <path class="ln hl" d="M442,63H455" marker-end="url(#fo-carc-ah-hl)"/>
+  <path class="ln hl" d="M581,63H594" marker-end="url(#fo-carc-ah-hl)"/>
+
+  <text class="n" x="380" y="96" text-anchor="middle">one click declines</text>
+  <text class="n" x="519" y="96" text-anchor="middle">effective date set</text>
+  <text class="n" x="658" y="96" text-anchor="middle">future visits removed</text>
+
+  <!-- Accepted offer -->
+  <path class="ln dash" d="M380,104V138" marker-end="url(#fo-carc-ah)"/>
+  <rect class="cell ghost" x="318" y="140" width="124" height="26"/>
+  <text class="t dim" x="380" y="153" text-anchor="middle" dominant-baseline="central">offer accepted</text>
+  <text class="n" x="380" y="186" text-anchor="middle">save logged with the offer, request closed</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 262">
+  <defs>
+    <marker id="fo-pos-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-pos-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Evidence captured during the visit -->
+  <text class="cap" x="30" y="30">captured on site</text>
+  <rect class="cell" x="30" y="40" width="140" height="24"/>
+  <text class="t" x="40" y="52" dominant-baseline="central">photos</text>
+  <rect class="cell" x="30" y="68" width="140" height="24"/>
+  <text class="t" x="40" y="80" dominant-baseline="central">signature, name</text>
+  <rect class="cell" x="30" y="96" width="140" height="24"/>
+  <text class="t" x="40" y="108" dominant-baseline="central">notes, answers</text>
+  <rect class="cell" x="30" y="124" width="140" height="24"/>
+  <text class="t" x="40" y="136" dominant-baseline="central">scans, readings</text>
+  <rect class="cell" x="30" y="152" width="140" height="24"/>
+  <text class="t" x="40" y="164" dominant-baseline="central">products applied</text>
+  <path class="ln" d="M170,52H190M170,80H190M170,108H190M170,136H190M170,164H190M190,52V164"/>
+  <path class="ln hl" d="M190,108H218" marker-end="url(#fo-pos-ah-hl)"/>
+
+  <!-- Completion gate -->
+  <rect class="cell" x="220" y="88" width="150" height="40"/>
+  <text class="t b" x="295" y="102" text-anchor="middle" dominant-baseline="central">completion gate</text>
+  <text class="t dim" x="295" y="116" text-anchor="middle" dominant-baseline="central">required per task</text>
+  <path class="ln hl" d="M370,108H408" marker-end="url(#fo-pos-ah-hl)"/>
+  <text class="n hl" x="389" y="98" text-anchor="middle">done</text>
+
+  <!-- Sealed record -->
+  <rect class="cell hl" x="410" y="88" width="170" height="40"/>
+  <text class="t hl b" x="495" y="102" text-anchor="middle" dominant-baseline="central">sealed visit record</text>
+  <text class="t hl" x="495" y="116" text-anchor="middle" dominant-baseline="central">hash, times, place</text>
+  <path class="ln hl" d="M580,108H618" marker-end="url(#fo-pos-ah-hl)"/>
+
+  <!-- Report -->
+  <rect class="cell" x="620" y="88" width="120" height="40"/>
+  <text class="t" x="680" y="102" text-anchor="middle" dominant-baseline="central">service report</text>
+  <text class="t dim" x="680" y="116" text-anchor="middle" dominant-baseline="central">email, portal</text>
+
+  <!-- Not completed -->
+  <path class="ln" d="M295,128V188" marker-end="url(#fo-pos-ah)"/>
+  <text class="n" x="303" y="160">not done</text>
+  <rect class="cell band" x="220" y="190" width="150" height="40"/>
+  <text class="t b" x="295" y="204" text-anchor="middle" dominant-baseline="central">not completed</text>
+  <text class="t dim" x="295" y="218" text-anchor="middle" dominant-baseline="central">reason, photo</text>
+  <path class="ln" d="M370,210H495V130" marker-end="url(#fo-pos-ah)"/>
+
+  <!-- Amendment -->
+  <path class="ln dash" d="M560,128V160H675V188" marker-end="url(#fo-pos-ah)"/>
+  <text class="n" x="618" y="152" text-anchor="middle">edit after close</text>
+  <rect class="cell ghost" x="600" y="190" width="150" height="40"/>
+  <text class="t" x="675" y="204" text-anchor="middle" dominant-baseline="central">amendment</text>
+  <text class="t dim" x="675" y="218" text-anchor="middle" dominant-baseline="central">new version, why</text>
+</svg>

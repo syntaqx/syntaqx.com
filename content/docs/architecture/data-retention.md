@@ -29,11 +29,22 @@ Every table and every log stream has a documented retention period and an automa
 | ---- | ----------------- | --- |
 | Request logs | 30 days | Debugging and abuse investigation rarely need older logs |
 | Idempotency keys | 24 hours | The retry window in [Idempotency](/docs/payments/idempotency) |
-| Webhook events | 30 days | Replay for [Webhooks](/docs/payments/webhooks) consumers |
+| Webhook events | 30 days | Replay for [Webhooks](/docs/api-design/webhooks) consumers |
 | Soft-deleted user content | 30 days | An undo window, then gone |
 | Financial records | Per legal requirement, often years | Tax, audit and anti-money-laundering rules |
 
 The exact numbers come from legal and compliance, by jurisdiction. The engineering rule is that none is "forever by default", and each is short enough to explain to a customer why you still have their data.
+
+## Retention Schedules by Record Type
+
+Business records and [audit trails](/docs/architecture/audit-trails) are the hard case: kept for years, by rules that differ for every kind of record. Retention there isn't one number per table; it's a schedule keyed by **record type**, and one table can hold several types.
+
+- **Each type has a minimum, a rule and a trigger.** Rules start their clocks at different events, and rarely at the row's creation. In the US, FLSA payroll records are kept [at least 3 years from the last date of entry](https://www.law.cornell.edu/cfr/text/29/516.5); the IRS says to keep employment tax records [at least 4 years after the tax is due or paid, whichever is later](https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records); Regulation Z requires a lender to keep evidence of compliance [for 2 years after the date disclosures are required to be made or action is required to be taken](https://www.law.cornell.edu/cfr/text/12/1026.25). Store the trigger date on the record (`closed_on`, `last_activity_on`), not just `created_at`, so the purge job can compute expiry.
+- **The longest applicable rule wins.** A refund is a payment record, a tax record and possibly evidence in a dispute; it's kept until the last of those expires. Model it as a list of applicable rules per record, with expiry computed as the maximum, so adding a jurisdiction can only lengthen retention, never accidentally shorten it.
+- **Schedules are data, not code.** Legal owns the numbers and changes them; each change is versioned and audited, and the purge job reads the current schedule.
+- **Longer than the minimum is a choice.** Many businesses keep core records past every regulatory minimum to cover limitation periods for contract and consumer claims. That's counsel's call, so make it configurable per type.
+
+**Legal holds** override every schedule. Once litigation is reasonably anticipated, the duty to preserve applies, and under [Federal Rule of Civil Procedure 37(e)](https://www.law.cornell.edu/rules/frcp/rule_37), if electronically stored information is lost because a party failed to take reasonable steps to preserve it, a court can order measures to cure the prejudice, and, on finding intent to deprive the other party of it, presume the information was unfavorable, instruct the jury to, or dismiss the case or enter a default judgment. A hold is a record of its own (matter, scope by person, account, date range and record type, who placed it, when) that the purge job checks before every delete, in the database, the archive and the backups. Placing and releasing a hold are audit entries. [Audit Trails](/docs/architecture/audit-trails#producing-records) covers exporting what a hold preserves.
 
 ## Erasure Requests
 
@@ -70,3 +81,10 @@ Backups are the place deleted data goes to hide.
 - [GDPR Article 12: Transparent Information](https://gdpr-info.eu/art-12-gdpr/), the one-month response deadline
 - [GDPR Article 5: Principles](https://gdpr-info.eu/art-5-gdpr/), storage limitation and data minimization
 - [GDPR Article 4: Definitions](https://gdpr-info.eu/art-4-gdpr/), what counts as personal data and pseudonymization
+- [29 CFR 516.5](https://www.law.cornell.edu/cfr/text/29/516.5), three-year retention of FLSA payroll records from the last date of entry
+- [12 CFR 1026.25](https://www.law.cornell.edu/cfr/text/12/1026.25), Regulation Z's two-year retention of compliance evidence
+- [Federal Rule of Civil Procedure 37](https://www.law.cornell.edu/rules/frcp/rule_37), consequences of failing to preserve electronically stored information
+
+**Reference**
+
+- [IRS: How long should I keep records?](https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records), retention periods for tax and employment tax records

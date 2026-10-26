@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250">
+  <defs>
+    <marker id="fo-dsc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-dsc-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Sources -->
+  <text class="cap" x="30" y="34">sources</text>
+  <rect class="cell" x="30" y="44" width="130" height="26"/>
+  <text class="t" x="40" y="57" dominant-baseline="central">property records</text>
+  <rect class="cell" x="30" y="74" width="130" height="26"/>
+  <text class="t" x="40" y="87" dominant-baseline="central">movers</text>
+  <rect class="cell" x="30" y="104" width="130" height="26"/>
+  <text class="t" x="40" y="117" dominant-baseline="central">imagery</text>
+  <rect class="cell hl" x="30" y="134" width="130" height="26"/>
+  <text class="t hl" x="40" y="147" dominant-baseline="central">knocks and sales</text>
+
+  <path class="ln" d="M160,57C180,57 180,102 198,102" marker-end="url(#fo-dsc-ah)"/>
+  <path class="ln" d="M160,87C180,87 180,102 198,102" marker-end="url(#fo-dsc-ah)"/>
+  <path class="ln" d="M160,117C180,117 180,102 198,102" marker-end="url(#fo-dsc-ah)"/>
+  <path class="ln hl" d="M160,147C180,147 180,102 198,102" marker-end="url(#fo-dsc-ah-hl)"/>
+
+  <!-- Match, features, model, roll-up -->
+  <text class="cap" x="200" y="34">per door</text>
+  <rect class="cell" x="200" y="89" width="120" height="26"/>
+  <text class="t" x="260" y="102" text-anchor="middle" dominant-baseline="central">match to key</text>
+  <text class="n" x="260" y="133" text-anchor="middle">validated address</text>
+
+  <path class="ln" d="M320,102H346" marker-end="url(#fo-dsc-ah)"/>
+  <rect class="cell" x="348" y="89" width="100" height="26"/>
+  <text class="t" x="398" y="102" text-anchor="middle" dominant-baseline="central">features</text>
+  <text class="n" x="398" y="133" text-anchor="middle">licensed uses only</text>
+
+  <path class="ln" d="M448,102H474" marker-end="url(#fo-dsc-ah)"/>
+  <rect class="cell" x="476" y="89" width="90" height="26"/>
+  <text class="t" x="521" y="102" text-anchor="middle" dominant-baseline="central">model</text>
+  <text class="n" x="521" y="133" text-anchor="middle">calibrated</text>
+
+  <text class="cap" x="596" y="34">per area</text>
+  <path class="ln" d="M566,102H592" marker-end="url(#fo-dsc-ah)"/>
+  <rect class="cell" x="594" y="89" width="130" height="26"/>
+  <text class="t" x="659" y="102" text-anchor="middle" dominant-baseline="central">area grid roll-up</text>
+  <text class="n" x="659" y="133" text-anchor="middle">neighbor cells</text>
+
+  <!-- Filters run last -->
+  <path class="ln" d="M659,140V178" marker-end="url(#fo-dsc-ah)"/>
+  <rect class="cell band" x="414" y="180" width="310" height="26"/>
+  <text class="t b" x="569" y="193" text-anchor="middle" dominant-baseline="central">filters: no-knock, permits, licenses</text>
+
+  <path class="ln hl" d="M414,193H352" marker-end="url(#fo-dsc-ah-hl)"/>
+  <rect class="cell hl end" x="200" y="180" width="150" height="26"/>
+  <text class="t hl b" x="275" y="193" text-anchor="middle" dominant-baseline="central">rep's map</text>
+
+  <text class="n" x="30" y="236">holdout areas skip the score each season, to measure what it adds</text>
+</svg>

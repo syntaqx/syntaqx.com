@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 206">
+  <defs>
+    <marker id="fo-car-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-car-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- A payment that clears the balance brings the account back -->
+  <text class="n hl" x="400" y="40" text-anchor="middle">a payment that clears the balance returns the account to current</text>
+  <path class="ln hl" d="M250,92V56M390,92V56M530,92V56"/>
+  <path class="ln hl" d="M660,92V56H100V90" marker-end="url(#fo-car-ah-hl)"/>
+
+  <!-- States -->
+  <rect class="cell hl" x="40" y="92" width="120" height="26"/>
+  <text class="t hl b" x="100" y="105" text-anchor="middle" dominant-baseline="central">current</text>
+  <rect class="cell band" x="180" y="92" width="120" height="26"/>
+  <text class="t b" x="240" y="105" text-anchor="middle" dominant-baseline="central">past due</text>
+  <rect class="cell band" x="320" y="92" width="120" height="26"/>
+  <text class="t b" x="380" y="105" text-anchor="middle" dominant-baseline="central">on hold</text>
+  <rect class="cell band" x="460" y="92" width="120" height="26"/>
+  <text class="t b" x="520" y="105" text-anchor="middle" dominant-baseline="central">written off</text>
+  <rect class="cell ghost end" x="600" y="92" width="120" height="26"/>
+  <text class="t dim" x="660" y="105" text-anchor="middle" dominant-baseline="central">with agency</text>
+
+  <!-- Forward transitions -->
+  <path class="ln" d="M160,105H178" marker-end="url(#fo-car-ah)"/>
+  <path class="ln" d="M300,105H318" marker-end="url(#fo-car-ah)"/>
+  <path class="ln" d="M440,105H458" marker-end="url(#fo-car-ah)"/>
+  <path class="ln dash" d="M580,105H598" marker-end="url(#fo-car-ah)"/>
+
+  <!-- What each state means -->
+  <text class="n" x="100" y="138" text-anchor="middle">autopay runs</text>
+  <text class="n" x="100" y="152" text-anchor="middle">visits booked</text>
+  <text class="n" x="240" y="138" text-anchor="middle">retries, notices</text>
+  <text class="n" x="240" y="152" text-anchor="middle">service continues</text>
+  <text class="n" x="380" y="138" text-anchor="middle">no new visits</text>
+  <text class="n" x="380" y="152" text-anchor="middle">billing paused</text>
+  <text class="n" x="520" y="138" text-anchor="middle">bad-debt entry</text>
+  <text class="n" x="520" y="152" text-anchor="middle">still owed</text>
+  <text class="n" x="660" y="138" text-anchor="middle">placement file</text>
+  <text class="n" x="660" y="152" text-anchor="middle">Reg F applies</text>
+
+  <text class="n" x="400" y="186" text-anchor="middle">each forward step fires on a policy day, the same for every account</text>
+</svg>

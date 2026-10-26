@@ -121,7 +121,7 @@ A merchant's requirements change by country, business type, volume and whatever 
 
 - `currently_due` is what has to be resolved by `current_deadline` to stay active. `eventually_due` is what will be needed if the merchant grows. `past_due` is what already caused a restriction. `pending_verification` is what's submitted and being checked.
 - Errors name the requirement they belong to, so the client can show the message next to the right field. Validation failures on submitted fields are `422`s in the [standard error format](/docs/requests/error-responses).
-- Every change to requirements emits a `account.updated` [webhook](/docs/payments/webhooks), so platforms building on the API can prompt the merchant before a deadline instead of after a restriction.
+- Every change to requirements emits a `account.updated` [webhook](/docs/api-design/webhooks), so platforms building on the API can prompt the merchant before a deadline instead of after a restriction.
 
 Verification rules can then change per country or risk tier without any client knowing in advance. Stripe Connect's `requirements` hash works the same way.
 

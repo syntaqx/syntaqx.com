@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250">
+  <defs>
+    <marker id="fo-psw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-psw-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Notes above each stage -->
+  <text class="n" x="85" y="50" text-anchor="middle">margin matrix</text>
+  <text class="n" x="207" y="50" text-anchor="middle">versioned</text>
+  <text class="n" x="314" y="50" text-anchor="middle">or contracted</text>
+  <text class="n" x="421" y="50" text-anchor="middle">scoped, dated</text>
+  <text class="n" x="538" y="50" text-anchor="middle">inside band</text>
+  <text class="n hl" x="665" y="50" text-anchor="middle">final checks last</text>
+
+  <!-- The waterfall -->
+  <rect class="cell" x="30" y="60" width="110" height="26"/>
+  <text class="t" x="85" y="73" text-anchor="middle" dominant-baseline="central">cost, markup</text>
+  <path class="ln" d="M140,73H160" marker-end="url(#fo-psw-ah)"/>
+  <rect class="cell" x="162" y="60" width="90" height="26"/>
+  <text class="t" x="207" y="73" text-anchor="middle" dominant-baseline="central">pricebook</text>
+  <path class="ln" d="M252,73H272" marker-end="url(#fo-psw-ah)"/>
+  <rect class="cell" x="274" y="60" width="80" height="26"/>
+  <text class="t" x="314" y="73" text-anchor="middle" dominant-baseline="central">member</text>
+  <path class="ln" d="M354,73H374" marker-end="url(#fo-psw-ah)"/>
+  <rect class="cell" x="376" y="60" width="90" height="26"/>
+  <text class="t" x="421" y="73" text-anchor="middle" dominant-baseline="central">promotion</text>
+  <path class="ln" d="M466,73H486" marker-end="url(#fo-psw-ah)"/>
+  <rect class="cell" x="488" y="60" width="100" height="26"/>
+  <text class="t" x="538" y="73" text-anchor="middle" dominant-baseline="central">rep discount</text>
+  <path class="ln hl" d="M588,73H608" marker-end="url(#fo-psw-ah-hl)"/>
+  <rect class="cell hl" x="610" y="60" width="110" height="26"/>
+  <text class="t hl b" x="665" y="73" text-anchor="middle" dominant-baseline="central">net price</text>
+
+  <!-- Approval branch -->
+  <path class="ln" d="M538,86V138" marker-end="url(#fo-psw-ah)"/>
+  <text class="n" x="530" y="116" text-anchor="end">below band</text>
+  <rect class="cell band" x="488" y="140" width="100" height="26"/>
+  <text class="t b" x="538" y="153" text-anchor="middle" dominant-baseline="central">approval</text>
+  <path class="ln" d="M588,153C618,153 622,120 622,88" marker-end="url(#fo-psw-ah)"/>
+
+  <!-- Tax, then financing -->
+  <path class="ln hl" d="M690,86V138" marker-end="url(#fo-psw-ah-hl)"/>
+  <rect class="cell" x="640" y="140" width="100" height="26"/>
+  <text class="t" x="690" y="153" text-anchor="middle" dominant-baseline="central">tax</text>
+  <path class="ln hl" d="M690,166V190" marker-end="url(#fo-psw-ah-hl)"/>
+  <rect class="cell" x="640" y="192" width="100" height="26"/>
+  <text class="t" x="690" y="205" text-anchor="middle" dominant-baseline="central">financing</text>
+
+  <text class="n" x="30" y="153">each step records its rule and adjustment</text>
+  <text class="n" x="30" y="171">tax by item code and service location</text>
+  <text class="n" x="30" y="205">financing: the lender's payment, with its disclosure</text>
+</svg>

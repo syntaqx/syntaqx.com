@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 236">
+  <defs>
+    <marker id="fo-omd-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- The clocked-in day -->
+  <text class="cap" x="40" y="30">one clocked-in day, 8.0 h</text>
+  <text class="cap" x="720" y="30" text-anchor="end">clock in to clock out</text>
+
+  <rect class="cell ghost" x="40" y="42" width="42.5" height="28"/>
+  <text class="t dim" x="61" y="56" text-anchor="middle" dominant-baseline="central">load</text>
+  <rect class="cell" x="82.5" y="42" width="42.5" height="28"/>
+  <text class="t" x="104" y="56" text-anchor="middle" dominant-baseline="central">drive</text>
+  <rect class="cell hl" x="125" y="42" width="127.5" height="28"/>
+  <text class="t hl" x="189" y="56" text-anchor="middle" dominant-baseline="central">stop 1, on site</text>
+  <rect class="cell" x="252.5" y="42" width="42.5" height="28"/>
+  <text class="t" x="274" y="56" text-anchor="middle" dominant-baseline="central">drive</text>
+  <rect class="cell hl" x="295" y="42" width="85" height="28"/>
+  <text class="t hl" x="337" y="56" text-anchor="middle" dominant-baseline="central">stop 2</text>
+  <rect class="cell ghost" x="380" y="42" width="42.5" height="28"/>
+  <text class="t dim" x="401" y="56" text-anchor="middle" dominant-baseline="central">break</text>
+  <rect class="cell" x="422.5" y="42" width="63.75" height="28"/>
+  <text class="t" x="454" y="56" text-anchor="middle" dominant-baseline="central">drive</text>
+  <rect class="cell hl" x="486.25" y="42" width="127.5" height="28"/>
+  <text class="t hl" x="550" y="56" text-anchor="middle" dominant-baseline="central">stop 3, on site</text>
+  <rect class="cell" x="613.75" y="42" width="42.5" height="28"/>
+  <text class="t" x="635" y="56" text-anchor="middle" dominant-baseline="central">drive</text>
+  <rect class="cell ghost" x="656.25" y="42" width="63.75" height="28"/>
+  <text class="t dim" x="688" y="56" text-anchor="middle" dominant-baseline="central">unload</text>
+
+  <!-- Totals -->
+  <text class="n hl" x="40" y="92">on site 4.0 h</text>
+  <text class="n" x="250" y="92">drive 2.25 h</text>
+  <text class="n" x="460" y="92">other 1.75 h: load, break, unload</text>
+
+  <!-- The same day, three metrics -->
+  <path class="ln" d="M40,104H720"/>
+  <text class="cap" x="40" y="126">metric</text>
+  <text class="cap" x="250" y="126">numerator / denominator</text>
+  <text class="cap" x="560" y="126">result</text>
+
+  <text class="t hl" x="40" y="148" dominant-baseline="central">utilization</text>
+  <text class="t" x="250" y="148" dominant-baseline="central">on site / clocked in</text>
+  <text class="t hl" x="560" y="148" dominant-baseline="central">4.0 / 8.0 = 50%</text>
+
+  <text class="t" x="40" y="172" dominant-baseline="central">drive share</text>
+  <text class="t" x="250" y="172" dominant-baseline="central">drive / clocked in</text>
+  <text class="t" x="560" y="172" dominant-baseline="central">2.25 / 8.0 = 28%</text>
+
+  <text class="t" x="40" y="196" dominant-baseline="central">stops per hour</text>
+  <text class="t" x="250" y="196" dominant-baseline="central">completed stops / clocked in</text>
+  <text class="t" x="560" y="196" dominant-baseline="central">3 / 8.0 = 0.38</text>
+
+  <text class="n" x="720" y="226" text-anchor="end">change the denominator to paid hours or route hours and every number moves</text>
+</svg>

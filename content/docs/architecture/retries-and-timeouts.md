@@ -7,7 +7,7 @@ tags = ["reliability", "retries", "timeouts", "operations"]
 aliases = ["retries-and-timeouts", "operations/retries-and-timeouts"]
 +++
 
-Once work crosses a [service boundary](/docs/architecture/service-boundaries), every call can fail, hang, or succeed without telling you. A retry policy decides which of those you recover from, and which you turn into an outage by retrying too hard. Done well, retries quietly absorb the blips every distributed system has. Done badly, they're how a ten-second database hiccup becomes an hour-long incident: every client retries at once, the recovering service drowns, and the retries become the load that keeps it down. This is the policy every other chapter refers to, for API clients, [jobs](/docs/architecture/background-jobs), [events](/docs/architecture/events) and [webhooks](/docs/payments/webhooks) alike.
+Once work crosses a [service boundary](/docs/architecture/service-boundaries), every call can fail, hang, or succeed without telling you. A retry policy decides which of those you recover from, and which you turn into an outage by retrying too hard. Done well, retries quietly absorb the blips every distributed system has. Done badly, they're how a ten-second database hiccup becomes an hour-long incident: every client retries at once, the recovering service drowns, and the retries become the load that keeps it down. This is the policy every other chapter refers to, for API clients, [jobs](/docs/architecture/background-jobs), [events](/docs/architecture/events) and [webhooks](/docs/api-design/webhooks) alike.
 
 ## Every Call Has a Timeout
 
@@ -50,7 +50,7 @@ This is "full jitter": a random delay between zero and the exponential ceiling. 
 For synchronous, user-facing calls, start around `base = 500ms` and `cap = 5s`. A user is waiting, so the retries have to fit inside the request's own deadline.
 
 - **Cap the attempts.** For synchronous calls, one or two retries. If each attempt fails independently with probability `p`, two retries take the failure rate from `p` to `p³`: a 1% transient error rate becomes one in a million. Past that, more attempts add latency and load without buying meaningful reliability, and the failure probably isn't independent anymore.
-- **Background jobs can be patient,** retrying over minutes or hours on a schedule like the one in [Webhooks](/docs/payments/webhooks), because nobody is waiting on the response.
+- **Background jobs can be patient,** retrying over minutes or hours on a schedule like the one in [Webhooks](/docs/api-design/webhooks), because nobody is waiting on the response.
 - **Honor `Retry-After`** when the server sends it. The server knows when it will recover; your formula is a guess.
 - **Stop retrying writes after 24 hours.** That's how long idempotency keys are guaranteed to be kept. After that, a retry with the old key can run as a brand-new operation, so an operation still unresolved is reconciled, never retried.
 

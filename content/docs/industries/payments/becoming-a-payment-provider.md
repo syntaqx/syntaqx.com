@@ -117,7 +117,7 @@ The engineering in [Payments](/docs/payments/money) becomes requirements a merch
 - **A double-entry ledger** ([Payment States & Ledgers](/docs/payments/payment-states)) is the source of truth for every balance, fee, reserve and payout, and at provider scale it's what auditors, the sponsor bank and regulators examine.
 - **Idempotency end to end** ([Idempotency](/docs/payments/idempotency)): merchants retry, and so do you toward networks and banks, and a charge or payout that runs twice is real money.
 - **Reconciliation as a product:** daily matching of network settlement files, bank statements and the ledger, with exceptions routed to people, and the same view offered to merchants for their own money.
-- **Webhooks as a contract** ([Webhooks](/docs/payments/webhooks)): merchants build their businesses on your events.
+- **Webhooks as a contract** ([Webhooks](/docs/api-design/webhooks)): merchants build their businesses on your events.
 - **Hardware security modules** for the keys behind your [card vault](/docs/industries/payments/card-vault), and PIN keys if you touch PINs, under dual control with documented key ceremonies ([HSMs & Key Management](/docs/industries/payments/key-management)). The PCI assessment spends much of its time here.
 - **Availability as revenue.** When a provider is down, every merchant on it stops taking money: redundant connections to acquirers and banks ([Processor Routing](/docs/industries/payments/processor-routing)), no single region whose loss stops authorization, and status communication merchants can rely on ([Operating the Platform](/docs/industries/payments/operating-the-platform#watching-approval-rates-and-latency)).
 

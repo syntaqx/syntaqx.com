@@ -67,7 +67,7 @@ The mismatch case is a client bug: the same key was attached to two different op
 
 A result is stored once the endpoint **begins executing**, whatever the outcome. That includes declines and even `500` errors, which surprises people.
 
-A `500` from a payment endpoint doesn't mean nothing happened; it means the server doesn't know what happened. The charge may have gone through before the error, and re-executing on retry could charge the card again. Replaying the stored `500` is the honest answer: "this outcome is uncertain, go and check". The client reconciles by fetching the payment or watching [webhooks](/docs/payments/webhooks) instead of gambling with a second charge.
+A `500` from a payment endpoint doesn't mean nothing happened; it means the server doesn't know what happened. The charge may have gone through before the error, and re-executing on retry could charge the card again. Replaying the stored `500` is the honest answer: "this outcome is uncertain, go and check". The client reconciles by fetching the payment or watching [webhooks](/docs/api-design/webhooks) instead of gambling with a second charge.
 
 Requests rejected **before** execution aren't stored: failed validation, bad authentication, [rate limiting](/docs/requests/rate-limiting) (`429`), or a `409` for a concurrent request. Nothing happened, so the client fixes the problem and retries with the same key.
 
@@ -83,7 +83,7 @@ The header protects the API boundary. The same rule applies at every hop inside 
 
 - **Calls to processors** carry their own idempotency key, derived from ours, so our retry to the card network can't double-charge either.
 - **Queue consumers** dedupe by message ID, because every queue worth using delivers at least once.
-- **Webhook receivers** dedupe by event ID. See [Webhooks](/docs/payments/webhooks).
+- **Webhook receivers** dedupe by event ID. See [Webhooks](/docs/api-design/webhooks).
 
 Exactly-once delivery doesn't exist across a network. At-least-once delivery plus idempotent handling is how you get exactly-once **effects**, and that's the only kind that matters.
 

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256">
+  <defs>
+    <marker id="fo-aic-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-aic-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <text class="cap" x="40" y="26">the conversation</text>
+  <text class="cap" x="310" y="26">tools it may call</text>
+  <text class="cap" x="490" y="26">your code decides</text>
+
+  <rect class="cell" x="40" y="92" width="90" height="26"/>
+  <text class="t" x="85" y="105" text-anchor="middle" dominant-baseline="central">caller</text>
+  <rect class="cell hl" x="160" y="92" width="110" height="26"/>
+  <text class="t hl b" x="215" y="105" text-anchor="middle" dominant-baseline="central">AI agent</text>
+  <path class="ln" d="M132,105H158" marker-start="url(#fo-aic-ah)" marker-end="url(#fo-aic-ah)"/>
+  <text class="n" x="85" y="134" text-anchor="middle">told it is AI</text>
+
+  <!-- Tools -->
+  <rect class="cell" x="310" y="40" width="140" height="26"/>
+  <text class="t" x="320" y="53" dominant-baseline="central">find customer</text>
+  <rect class="cell hl" x="310" y="66" width="140" height="26"/>
+  <text class="t hl" x="320" y="79" dominant-baseline="central">offer slots</text>
+  <rect class="cell hl" x="310" y="92" width="140" height="26"/>
+  <text class="t hl" x="320" y="105" dominant-baseline="central">request booking</text>
+  <rect class="cell" x="310" y="118" width="140" height="26"/>
+  <text class="t" x="320" y="131" dominant-baseline="central">hand off</text>
+  <path class="ln hl" d="M270,105H308" marker-end="url(#fo-aic-ah-hl)"/>
+
+  <!-- Decision -->
+  <text class="n" x="550" y="84" text-anchor="middle">job type, caps, identity</text>
+  <rect class="cell band" x="490" y="92" width="120" height="26"/>
+  <text class="t b" x="550" y="105" text-anchor="middle" dominant-baseline="central">policy check</text>
+  <rect class="cell hl" x="640" y="92" width="90" height="26"/>
+  <text class="t hl" x="685" y="105" text-anchor="middle" dominant-baseline="central">booked</text>
+  <path class="ln hl" d="M450,105H488" marker-end="url(#fo-aic-ah-hl)"/>
+  <path class="ln hl" d="M610,105H638" marker-end="url(#fo-aic-ah-hl)"/>
+  <rect class="cell ghost" x="490" y="150" width="120" height="26"/>
+  <text class="t dim" x="550" y="163" text-anchor="middle" dominant-baseline="central">office queue</text>
+  <path class="ln dash" d="M450,131C470,131 470,163 488,163" marker-end="url(#fo-aic-ah)"/>
+  <path class="ln dash" d="M550,118V148" marker-end="url(#fo-aic-ah)"/>
+  <text class="n" x="558" y="138">denied</text>
+
+  <!-- Audit -->
+  <rect class="cell band" x="160" y="214" width="570" height="26"/>
+  <text class="t" x="445" y="227" text-anchor="middle" dominant-baseline="central">audit: recording, transcript, tool calls, checks, outcome, approver</text>
+  <path class="ln dash" d="M215,118V212" marker-end="url(#fo-aic-ah)"/>
+  <path class="ln dash" d="M380,144V212" marker-end="url(#fo-aic-ah)"/>
+  <path class="ln dash" d="M550,176V212" marker-end="url(#fo-aic-ah)"/>
+  <path class="ln dash" d="M685,118V212" marker-end="url(#fo-aic-ah)"/>
+</svg>

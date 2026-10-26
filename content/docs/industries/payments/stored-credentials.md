@@ -70,11 +70,7 @@ The schedule that works in practice is short and spaced: retry soft declines ove
 
 ## Dunning
 
-Retries recover some soft declines on their own. The rest need the customer, which is what dunning is: telling them, making it easy to fix, and deciding what happens to the service meanwhile.
-
-- **Model it as states,** not a flag: `active`, `past_due` while you retry and notify, then `unpaid` or `canceled` at the end of a stated grace period. Every transition is an event other systems react to, per [Payment States & Ledgers](/docs/payments/payment-states).
-- **Bring the customer back on-session.** An email with a link to update the card, where they can complete any authentication the issuer wants. A new card saved there is a new initial CIT, with a new network transaction ID.
-- **Decide the service policy up front.** Whether a past-due account keeps access during the grace period is a product decision; make it explicit and the same for everyone.
+Retries recover some soft declines on their own. The rest need the customer, which is what dunning is: telling them, making it easy to fix, and deciding what happens to the service meanwhile. The states, notices and grace periods are the same in every industry and live in [Subscriptions & Recurring Billing](/docs/payments/subscriptions#dunning). The card-specific part: bring the customer back on-session, with a link to update the card where they can complete any authentication the issuer wants. A new card saved there is a new initial CIT, with a new network transaction ID.
 
 ## Trials and Cancellation
 
@@ -82,7 +78,7 @@ Subscriptions draw rules from both the networks and the law.
 
 **Visa's trial rules**, in force globally since April 18, 2020, apply to any merchant whose free trial or introductory offer rolls into a subscription. At enrollment the merchant sends the cardholder the terms (that they've agreed to a subscription, the start date, the amount and frequency, and a simple way to cancel online), even when nothing is charged yet. At least seven days before the first full-price charge, or before a change to price or billing period, it sends a reminder with a cancellation link. Receipts state the trial length and that the card will be charged unless the customer cancels. Visa recommends every subscription merchant adopt the same practices, and so do I: they're also what wins the disputes that follow a forgotten trial ([Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks)).
 
-**In US law,** the FTC's 2024 "click-to-cancel" amendments to its Negative Option Rule never took effect: the Eighth Circuit vacated them on July 8, 2025, on procedural grounds, days before compliance was due. The FTC opened a new rulemaking with an advance notice in March 2026, and as of October 2026 there's no final rule. The Restore Online Shoppers' Confidence Act and state automatic renewal laws still apply. Build cancellation to be as easy as sign-up anyway: it's where the regulators are heading, and the card networks already require a simple online cancellation for trials.
+**In US law,** the Restore Online Shoppers' Confidence Act and state automatic renewal laws apply, and the FTC's attempt at a federal "click-to-cancel" rule is still unsettled; [The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal) has the details and what to build. Make cancellation as easy as sign-up either way: the card networks already require a simple online cancellation for trials.
 
 ## Autopay Against a Balance
 
@@ -94,7 +90,7 @@ A subscription charges a fixed price on a schedule. Bills don't work that way: r
 - **One payment per cycle.** The autopay's idempotency key is the account, the billing period and the attempt, and a unique constraint allows one successful payment per period, so a rerun after a crash can't charge twice, and a failed run feeds the same [dunning](#dunning) as any renewal.
 - **Returns turn autopay off.** A bank autopay that comes back unauthorized ends the authorization, and repeated insufficient-funds returns should pause it and tell the customer, under the restrictions in [ACH & Bank Transfers](/docs/industries/payments/ach#after-a-return-fees-and-blocks).
 
-Providers model both shapes. Payabli's autopays, for example, run either on an interval until an end date or against the open balance on a fixed day of the month, skipping the cycle when nothing is owed. Recurring bank debits have their own authorization rules: [ACH](/docs/industries/payments/ach) standing and recurring authorizations, recurring [TEL](/docs/industries/payments/phone-payments) authorizations by phone, and Canadian pre-authorized debits. On the bank side, notifications of change do the account updater's job.
+Providers model both shapes. Payabli's autopays, for example, run either on an interval until an end date or against the open balance on a fixed day of the month, skipping the cycle when nothing is owed. Field service businesses use both, sometimes on one account; the Field Operations volume's [billing chapter](/docs/industries/field-operations/billing-recurring-service) covers autopay against per-visit invoices and service plans. Recurring bank debits have their own authorization rules: [ACH](/docs/industries/payments/ach) standing and recurring authorizations, recurring [TEL](/docs/industries/payments/phone-payments) authorizations by phone, and Canadian pre-authorized debits. On the bank side, notifications of change do the account updater's job.
 
 ## The Credential Record
 
@@ -127,7 +123,7 @@ A stored card is more than a token. Keep the agreement with it:
 
 ## Renewal Jobs
 
-Recurring billing is a scheduled job charging money, which makes it the place an at-least-once [background job](/docs/architecture/background-jobs) can double-charge someone. Derive the [idempotency key](/docs/payments/idempotency) from the billing period and the attempt, not the run: `subscription_0193d2c4:2026-11:attempt-1`. A job that crashes and reruns, or two workers that pick up the same renewal, send the same key and get the same payment back, while a retry days later after a soft decline is attempt 2, a new key, and a real second try instead of a replay of the first decline. The rule that a period is charged successfully at most once is a unique constraint on the period's record in the database, not something an idempotency key, which expires, can promise. Record the outcome on the period before moving on, so a retry schedule always knows which attempt it's on and never exceeds the networks' limits because a counter lived only in memory.
+Recurring billing is a scheduled job charging money, which makes it the place an at-least-once [background job](/docs/architecture/background-jobs) can double-charge someone. The safe shape (period rows created ahead, claimed with a guarded update, charged with an [idempotency key](/docs/payments/idempotency) derived from the period and the attempt, one successful charge per period enforced by a unique constraint) is in [Renewal Jobs](/docs/payments/subscriptions#renewal-jobs). What the card networks add: a retry after a soft decline is a new attempt with a new key, never a replay of the first decline, and the attempt count is recorded on the period, not held in memory, so a restarted job can't push a card past the network retry limits above.
 
 ## What This Means for the System You Build
 
@@ -158,6 +154,4 @@ Recurring billing is a scheduled job charging money, which makes it the place an
 
 **In practice**
 
-- [Latham & Watkins: Eighth Circuit Vacates FTC Click-to-Cancel Rule](https://www.lw.com/en/insights/eighth-circuit-vacates-ftc-click-to-cancel-rule), the July 8, 2025 vacatur and why
-- [Greenberg Traurig: FTC Seeks Comment on Potential Updates to Negative Option Rule](https://www.gtlaw.com/en/insights/2026/3/ftc-seeks-comment-on-potential-updates-to-negative-option-rule), the March 2026 advance notice
 - [Payabli: Autopays](https://docs.payabli.com/guides/pay-in-portal-autopays-create.md), scheduled and balance-driven recurring payments

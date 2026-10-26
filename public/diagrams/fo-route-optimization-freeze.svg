@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 214">
+  <!-- Frozen region -->
+  <rect class="zone" x="36" y="44" width="384" height="84"/>
+  <text class="cap" x="44" y="60">frozen: the past plus the freeze window</text>
+  <text class="cap hl" x="432" y="60">open to the solver</text>
+
+  <!-- One technician's day -->
+  <rect class="cell ghost" x="44" y="76" width="88" height="28"/>
+  <text class="t dim" x="88" y="90" text-anchor="middle" dominant-baseline="central">done</text>
+  <rect class="cell ghost" x="138" y="76" width="88" height="28"/>
+  <text class="t dim" x="182" y="90" text-anchor="middle" dominant-baseline="central">done</text>
+  <rect class="cell band" x="232" y="76" width="88" height="28"/>
+  <text class="t b" x="276" y="90" text-anchor="middle" dominant-baseline="central">on site</text>
+  <rect class="cell band" x="326" y="76" width="88" height="28"/>
+  <text class="t" x="370" y="90" text-anchor="middle" dominant-baseline="central">next, told</text>
+  <rect class="cell" x="432" y="76" width="88" height="28"/>
+  <text class="t" x="476" y="90" text-anchor="middle" dominant-baseline="central">movable</text>
+  <rect class="cell end" x="526" y="76" width="88" height="28"/>
+  <text class="t b" x="570" y="90" text-anchor="middle" dominant-baseline="central">pinned</text>
+  <rect class="cell" x="620" y="76" width="88" height="28"/>
+  <text class="t" x="664" y="90" text-anchor="middle" dominant-baseline="central">movable</text>
+
+  <!-- Now and freeze edge -->
+  <path class="ln ink" d="M276,112V148"/>
+  <text class="n ink" x="276" y="162" text-anchor="middle">now</text>
+  <path class="ln hl dash" d="M423,40V148"/>
+  <text class="n hl" x="423" y="162" text-anchor="middle">now + freeze window</text>
+
+  <!-- Notes -->
+  <text class="n" x="570" y="122" text-anchor="middle">keeps time and tech</text>
+  <text class="n" x="44" y="190">done and on-site work is history; the next stop's customer already has an ETA, so it stays</text>
+  <text class="n hl" x="44" y="206">after the edge, movable stops can be reordered or moved to another technician</text>
+</svg>

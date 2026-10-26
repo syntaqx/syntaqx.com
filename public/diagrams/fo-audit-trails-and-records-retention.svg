@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 434">
+  <!-- Axis: 0 to 5 years, 88px per year from x=260 -->
+  <text class="cap" x="40" y="30">record</text>
+  <text class="cap" x="260" y="30" text-anchor="middle">0</text>
+  <text class="cap" x="348" y="30" text-anchor="middle">1 yr</text>
+  <text class="cap" x="436" y="30" text-anchor="middle">2 yr</text>
+  <text class="cap" x="524" y="30" text-anchor="middle">3 yr</text>
+  <text class="cap" x="612" y="30" text-anchor="middle">4 yr</text>
+  <text class="cap" x="700" y="30" text-anchor="middle">5 yr</text>
+  <path class="ln dash" d="M348,38V386M436,38V386M524,38V386M612,38V386M700,38V386"/>
+  <path class="ln ink" d="M260,38V386"/>
+
+  <text class="t" x="40" y="55" dominant-baseline="central">vehicle inspection reports</text>
+  <rect class="cell band" x="260" y="48" width="22" height="14"/>
+  <text class="n" x="288" y="55" dominant-baseline="central">3 months</text>
+
+  <text class="t" x="40" y="79" dominant-baseline="central">hours-of-service logs</text>
+  <rect class="cell band" x="260" y="72" width="44" height="14"/>
+  <text class="n" x="310" y="79" dominant-baseline="central">6 months</text>
+
+  <text class="t" x="40" y="103" dominant-baseline="central">time cards, billing</text>
+  <rect class="cell band" x="260" y="96" width="176" height="14"/>
+  <text class="n" x="442" y="103" dominant-baseline="central">2 years</text>
+
+  <text class="t" x="40" y="127" dominant-baseline="central">restricted-use pesticide</text>
+  <rect class="cell band" x="260" y="120" width="176" height="14"/>
+  <text class="n" x="442" y="127" dominant-baseline="central">2 years, federal floor</text>
+
+  <text class="t" x="40" y="151" dominant-baseline="central">Regulation Z evidence</text>
+  <rect class="cell band" x="260" y="144" width="176" height="14"/>
+  <text class="n" x="442" y="151" dominant-baseline="central">2 years</text>
+
+  <text class="t" x="40" y="175" dominant-baseline="central">payroll records</text>
+  <rect class="cell band" x="260" y="168" width="264" height="14"/>
+  <text class="n" x="530" y="175" dominant-baseline="central">3 years</text>
+
+  <text class="t" x="40" y="199" dominant-baseline="central">refrigerant leak repair</text>
+  <rect class="cell band" x="260" y="192" width="264" height="14"/>
+  <text class="n" x="530" y="199" dominant-baseline="central">3 years</text>
+
+  <text class="t" x="40" y="223" dominant-baseline="central">collection records, calls</text>
+  <rect class="cell band" x="260" y="216" width="264" height="14"/>
+  <text class="n" x="530" y="223" dominant-baseline="central">3 years</text>
+
+  <text class="t" x="40" y="247" dominant-baseline="central">CA renewal consent</text>
+  <rect class="cell band" x="260" y="240" width="264" height="14"/>
+  <text class="n" x="530" y="247" dominant-baseline="central">3 years or more</text>
+
+  <text class="t" x="40" y="271" dominant-baseline="central">TCPA consent records</text>
+  <rect class="cell band" x="260" y="264" width="352" height="14"/>
+  <text class="n" x="618" y="271" dominant-baseline="central">4 yr after last call</text>
+
+  <text class="t" x="40" y="295" dominant-baseline="central">employment tax</text>
+  <rect class="cell band" x="260" y="288" width="352" height="14"/>
+  <text class="n" x="618" y="295" dominant-baseline="central">4 years</text>
+
+  <text class="t" x="40" y="319" dominant-baseline="central">OSHA injury logs</text>
+  <rect class="cell band" x="260" y="312" width="440" height="14"/>
+  <text class="n" x="706" y="319" dominant-baseline="central">5 yr</text>
+
+  <text class="t hl" x="40" y="343" dominant-baseline="central">MN pest control records</text>
+  <rect class="cell hl" x="260" y="336" width="440" height="14"/>
+  <text class="n hl" x="706" y="343" dominant-baseline="central">5 yr</text>
+
+  <text class="t" x="40" y="367" dominant-baseline="central">do-not-call (honor only)</text>
+  <rect class="cell ghost" x="260" y="360" width="440" height="14"/>
+  <text class="n" x="706" y="367" dominant-baseline="central">5 yr</text>
+
+  <text class="n" x="40" y="408">Minimums. Clocks start at different events; state rules are often longer; holds override all.</text>
+  <text class="n" x="40" y="424">Do-not-call is how long a request is honored, not a retention period.</text>
+</svg>

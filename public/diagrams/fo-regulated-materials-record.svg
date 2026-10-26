@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312">
+  <defs>
+    <marker id="fo-rm-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-rm-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Column heads -->
+  <text class="cap" x="40" y="34">inputs</text>
+  <text class="cap" x="250" y="34">checks at entry</text>
+  <text class="cap" x="500" y="34">saved</text>
+
+  <!-- Inputs -->
+  <rect class="cell" x="40" y="50" width="170" height="26"/>
+  <text class="t" x="125" y="63" text-anchor="middle" dominant-baseline="central">product, label version</text>
+  <rect class="cell" x="40" y="84" width="170" height="26"/>
+  <text class="t" x="125" y="97" text-anchor="middle" dominant-baseline="central">applicator licenses</text>
+  <rect class="cell" x="40" y="118" width="170" height="26"/>
+  <text class="t" x="125" y="131" text-anchor="middle" dominant-baseline="central">jurisdiction rules</text>
+  <rect class="cell" x="40" y="152" width="170" height="26"/>
+  <text class="t" x="125" y="165" text-anchor="middle" dominant-baseline="central">weather, GPS, time</text>
+
+  <!-- Input bus -->
+  <path class="ln" d="M210,63H226M210,97H226M210,131H226M210,165H226M226,63V165"/>
+  <path class="ln" d="M226,63H248" marker-end="url(#fo-rm-ah)"/>
+  <path class="ln" d="M226,97H248" marker-end="url(#fo-rm-ah)"/>
+  <path class="ln" d="M226,131H248" marker-end="url(#fo-rm-ah)"/>
+  <path class="ln" d="M226,165H248" marker-end="url(#fo-rm-ah)"/>
+
+  <!-- Checks -->
+  <rect class="cell band" x="250" y="50" width="190" height="26"/>
+  <text class="t" x="345" y="63" text-anchor="middle" dominant-baseline="central">allowed in jurisdiction</text>
+  <rect class="cell band" x="250" y="84" width="190" height="26"/>
+  <text class="t" x="345" y="97" text-anchor="middle" dominant-baseline="central">certified or supervised</text>
+  <rect class="cell band" x="250" y="118" width="190" height="26"/>
+  <text class="t" x="345" y="131" text-anchor="middle" dominant-baseline="central">rate within label</text>
+  <rect class="cell band" x="250" y="152" width="190" height="26"/>
+  <text class="t" x="345" y="165" text-anchor="middle" dominant-baseline="central">required fields present</text>
+
+  <!-- Checks bus to the record -->
+  <path class="ln hl" d="M440,63H462M440,97H462M440,131H462M440,165H462M462,63V165"/>
+  <path class="ln hl" d="M462,107H498" marker-end="url(#fo-rm-ah-hl)"/>
+  <text class="n hl" x="480" y="100" text-anchor="middle">pass</text>
+
+  <!-- Failure path -->
+  <path class="ln dash" d="M345,178V218" marker-end="url(#fo-rm-ah)"/>
+  <text class="n" x="355" y="202">fails</text>
+  <rect class="cell ghost" x="250" y="220" width="190" height="26"/>
+  <text class="t dim" x="345" y="233" text-anchor="middle" dominant-baseline="central">block, or override + reason</text>
+
+  <!-- The record -->
+  <rect class="cell hl" x="500" y="94" width="220" height="26"/>
+  <text class="t hl b" x="610" y="107" text-anchor="middle" dominant-baseline="central">application record</text>
+  <text class="n" x="610" y="138" text-anchor="middle">product and license snapshot</text>
+
+  <!-- Outputs -->
+  <path class="ln hl" d="M610,144V166" marker-end="url(#fo-rm-ah-hl)"/>
+  <rect class="cell" x="520" y="168" width="180" height="24"/>
+  <text class="t" x="610" y="180" text-anchor="middle" dominant-baseline="central">customer service slip</text>
+  <rect class="cell" x="520" y="192" width="180" height="24"/>
+  <text class="t" x="610" y="204" text-anchor="middle" dominant-baseline="central">state report</text>
+  <rect class="cell" x="520" y="216" width="180" height="24"/>
+  <text class="t" x="610" y="228" text-anchor="middle" dominant-baseline="central">truck inventory</text>
+  <rect class="cell" x="520" y="240" width="180" height="24"/>
+  <text class="t" x="610" y="252" text-anchor="middle" dominant-baseline="central">audit trail</text>
+
+  <!-- Overrides are recorded -->
+  <text class="n" x="380" y="290" text-anchor="middle">overrides are saved on the record; corrections append an amendment, never an edit</text>
+</svg>

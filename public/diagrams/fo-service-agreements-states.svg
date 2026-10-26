@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 248">
+  <defs>
+    <marker id="fo-sas-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-sas-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Happy path -->
+  <rect class="cell" x="40" y="60" width="100" height="26"/>
+  <text class="t" x="90" y="73" text-anchor="middle" dominant-baseline="central">draft</text>
+  <path class="ln hl" d="M140,73H168" marker-end="url(#fo-sas-ah-hl)"/>
+  <text class="n" x="155" y="104" text-anchor="middle">send</text>
+
+  <rect class="cell" x="170" y="60" width="130" height="26"/>
+  <text class="t" x="235" y="73" text-anchor="middle" dominant-baseline="central">out_for_signature</text>
+  <path class="ln hl" d="M300,73H328" marker-end="url(#fo-sas-ah-hl)"/>
+  <text class="n" x="315" y="104" text-anchor="middle">sign</text>
+
+  <rect class="cell" x="330" y="60" width="100" height="26"/>
+  <text class="t" x="380" y="73" text-anchor="middle" dominant-baseline="central">signed</text>
+  <path class="ln hl" d="M430,73H458" marker-end="url(#fo-sas-ah-hl)"/>
+  <text class="n" x="489" y="104" text-anchor="end">cooling-off ends</text>
+
+  <rect class="cell hl" x="460" y="60" width="110" height="26"/>
+  <text class="t hl b" x="515" y="73" text-anchor="middle" dominant-baseline="central">active</text>
+
+  <!-- Renewal loop -->
+  <path class="ln hl" d="M545,60C545,24 485,24 485,58" marker-end="url(#fo-sas-ah-hl)"/>
+  <text class="n hl" x="515" y="16" text-anchor="middle">renew: a new term version</text>
+
+  <!-- End after activation -->
+  <rect class="cell ghost end" x="620" y="60" width="110" height="26"/>
+  <text class="t dim" x="675" y="73" text-anchor="middle" dominant-baseline="central">terminated</text>
+  <path class="ln dash" d="M570,73H618" marker-end="url(#fo-sas-ah)"/>
+  <text class="n" x="675" y="48" text-anchor="middle">ends, with reason</text>
+
+  <!-- Side exits before activation -->
+  <rect class="cell ghost end" x="170" y="150" width="130" height="26"/>
+  <text class="t dim" x="235" y="163" text-anchor="middle" dominant-baseline="central">void</text>
+  <path class="ln dash" d="M235,86V148" marker-end="url(#fo-sas-ah)"/>
+  <text class="n" x="235" y="194" text-anchor="middle">never signed, expired</text>
+
+  <rect class="cell ghost end" x="330" y="150" width="100" height="26"/>
+  <text class="t dim" x="380" y="163" text-anchor="middle" dominant-baseline="central">cancelled</text>
+  <path class="ln dash" d="M380,86V148" marker-end="url(#fo-sas-ah)"/>
+  <text class="n" x="380" y="194" text-anchor="middle">with reason</text>
+
+  <!-- Temporary stops -->
+  <rect class="cell band" x="450" y="150" width="90" height="26"/>
+  <text class="t" x="495" y="163" text-anchor="middle" dominant-baseline="central">paused</text>
+  <path class="ln" d="M495,86V148" marker-start="url(#fo-sas-ah)" marker-end="url(#fo-sas-ah)"/>
+  <text class="n" x="495" y="194" text-anchor="middle">customer asked</text>
+
+  <rect class="cell band" x="560" y="150" width="90" height="26"/>
+  <text class="t" x="605" y="163" text-anchor="middle" dominant-baseline="central">on_hold</text>
+  <path class="ln" d="M545,86C545,118 605,118 605,148" marker-start="url(#fo-sas-ah)" marker-end="url(#fo-sas-ah)"/>
+  <text class="n" x="605" y="194" text-anchor="middle">company stopped</text>
+  <path class="ln dash" d="M640,148C640,118 690,118 690,88" marker-end="url(#fo-sas-ah)"/>
+
+  <text class="n" x="40" y="234">only active bills; paused can also end in terminated; the first visit is a milestone, not a state</text>
+</svg>

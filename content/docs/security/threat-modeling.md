@@ -53,7 +53,7 @@ Brainstorming finds the threats people already worry about and misses the rest. 
 
 | Threat | Violates | Ask | Typical mitigation |
 | ------ | -------- | --- | ------------------ |
-| **S**poofing | Authentication | Can someone pretend to be a user, a service or a webhook sender? | [Authentication](/docs/api-design/authentication), signed [webhooks](/docs/payments/webhooks) |
+| **S**poofing | Authentication | Can someone pretend to be a user, a service or a webhook sender? | [Authentication](/docs/api-design/authentication), signed [webhooks](/docs/api-design/webhooks) |
 | **T**ampering | Integrity | Can data be changed in transit or at rest? | TLS, signatures, append-only records |
 | **R**epudiation | Non-repudiation | Can someone deny an action we can't prove they took? | Audit logs with [request IDs](/docs/operations/observability) |
 | **I**nformation disclosure | Confidentiality | Can data reach someone who shouldn't see it? | Authorization, [redaction](/docs/payments/sensitive-data), encryption |

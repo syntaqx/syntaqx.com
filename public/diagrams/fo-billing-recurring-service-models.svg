@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 200">
+  <!-- Column heads -->
+  <text class="cap" x="40" y="34">model</text>
+  <text class="cap" x="200" y="34">invoice when</text>
+  <text class="cap hl" x="360" y="34">visit skipped</text>
+  <text class="cap" x="510" y="34">cash arrives</text>
+  <text class="cap" x="630" y="34">earned</text>
+
+  <!-- Per visit: the default -->
+  <rect class="cell hl" x="40" y="44" width="150" height="26"/>
+  <text class="t hl b" x="50" y="57" dominant-baseline="central">per visit</text>
+  <rect class="cell" x="190" y="44" width="160" height="26"/>
+  <text class="t" x="200" y="57" dominant-baseline="central">visit completed</text>
+  <rect class="cell hl" x="350" y="44" width="150" height="26"/>
+  <text class="t hl" x="360" y="57" dominant-baseline="central">nothing billed</text>
+  <rect class="cell" x="500" y="44" width="120" height="26"/>
+  <text class="t" x="510" y="57" dominant-baseline="central">after each</text>
+  <rect class="cell" x="620" y="44" width="100" height="26"/>
+  <text class="t" x="630" y="57" dominant-baseline="central">on the visit</text>
+
+  <!-- Monthly fixed -->
+  <rect class="cell" x="40" y="70" width="150" height="26"/>
+  <text class="t b" x="50" y="83" dominant-baseline="central">periodic</text>
+  <rect class="cell" x="190" y="70" width="160" height="26"/>
+  <text class="t" x="200" y="83" dominant-baseline="central">billing day</text>
+  <rect class="cell hl" x="350" y="70" width="150" height="26"/>
+  <text class="t hl" x="360" y="83" dominant-baseline="central">still billed</text>
+  <rect class="cell" x="500" y="70" width="120" height="26"/>
+  <text class="t" x="510" y="83" dominant-baseline="central">each period</text>
+  <rect class="cell" x="620" y="70" width="100" height="26"/>
+  <text class="t" x="630" y="83" dominant-baseline="central">over term</text>
+
+  <!-- Annual prepay -->
+  <rect class="cell" x="40" y="96" width="150" height="26"/>
+  <text class="t b" x="50" y="109" dominant-baseline="central">prepaid</text>
+  <rect class="cell" x="190" y="96" width="160" height="26"/>
+  <text class="t" x="200" y="109" dominant-baseline="central">on activation</text>
+  <rect class="cell hl" x="350" y="96" width="150" height="26"/>
+  <text class="t hl" x="360" y="109" dominant-baseline="central">owed a visit</text>
+  <rect class="cell" x="500" y="96" width="120" height="26"/>
+  <text class="t" x="510" y="109" dominant-baseline="central">up front</text>
+  <rect class="cell" x="620" y="96" width="100" height="26"/>
+  <text class="t" x="630" y="109" dominant-baseline="central">per visit</text>
+
+  <!-- Seasonal -->
+  <rect class="cell" x="40" y="122" width="150" height="26"/>
+  <text class="t b" x="50" y="135" dominant-baseline="central">seasonal</text>
+  <rect class="cell" x="190" y="122" width="160" height="26"/>
+  <text class="t" x="200" y="135" dominant-baseline="central">each round, in season</text>
+  <rect class="cell hl" x="350" y="122" width="150" height="26"/>
+  <text class="t hl" x="360" y="135" dominant-baseline="central">round moves</text>
+  <rect class="cell" x="500" y="122" width="120" height="26"/>
+  <text class="t" x="510" y="135" dominant-baseline="central">in season</text>
+  <rect class="cell" x="620" y="122" width="100" height="26"/>
+  <text class="t" x="630" y="135" dominant-baseline="central">per round</text>
+
+  <text class="n hl" x="500" y="176" text-anchor="middle">the visit-skipped column is where billing disputes start</text>
+</svg>

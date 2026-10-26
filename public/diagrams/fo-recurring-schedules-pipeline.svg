@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 272">
+  <defs>
+    <marker id="fo-rs-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-rs-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- What each stage is -->
+  <text class="cap" x="40" y="34">the rule</text>
+  <text class="cap" x="180" y="34">generated</text>
+  <text class="cap" x="320" y="34">the backlog</text>
+  <text class="cap" x="460" y="34">on a route</text>
+  <text class="cap" x="600" y="34">history</text>
+
+  <!-- The happy path -->
+  <rect class="cell" x="40" y="70" width="120" height="26"/>
+  <text class="t b" x="100" y="83" text-anchor="middle" dominant-baseline="central">recurrence</text>
+  <rect class="cell band" x="180" y="70" width="120" height="26"/>
+  <text class="t" x="240" y="83" text-anchor="middle" dominant-baseline="central">upcoming</text>
+  <rect class="cell band" x="320" y="70" width="120" height="26"/>
+  <text class="t" x="380" y="83" text-anchor="middle" dominant-baseline="central">open</text>
+  <rect class="cell hl" x="460" y="70" width="120" height="26"/>
+  <text class="t hl b" x="520" y="83" text-anchor="middle" dominant-baseline="central">booked</text>
+  <rect class="cell end" x="600" y="70" width="120" height="26"/>
+  <text class="t b" x="660" y="83" text-anchor="middle" dominant-baseline="central">completed</text>
+
+  <path class="ln hl" d="M160,83H178" marker-end="url(#fo-rs-ah-hl)"/>
+  <path class="ln hl" d="M300,83H318" marker-end="url(#fo-rs-ah-hl)"/>
+  <path class="ln hl" d="M440,83H458" marker-end="url(#fo-rs-ah-hl)"/>
+  <path class="ln hl" d="M580,83H598" marker-end="url(#fo-rs-ah-hl)"/>
+
+  <text class="n" x="170" y="58" text-anchor="middle">horizon</text>
+  <text class="n" x="310" y="58" text-anchor="middle">window opens</text>
+  <text class="n" x="450" y="58" text-anchor="middle">visit scheduled</text>
+  <text class="n" x="590" y="58" text-anchor="middle">visit completed</text>
+
+  <!-- Visit fails: back to the backlog -->
+  <rect class="cell ghost" x="440" y="140" width="160" height="26"/>
+  <text class="t dim" x="520" y="153" text-anchor="middle" dominant-baseline="central">not_completed, cancelled</text>
+  <path class="ln dash" d="M520,96V138" marker-end="url(#fo-rs-ah)"/>
+  <path class="ln dash" d="M440,153H380V98" marker-end="url(#fo-rs-ah)"/>
+  <text class="n" x="410" y="146" text-anchor="middle">make-up</text>
+
+  <!-- Occurrence exits -->
+  <rect class="cell ghost end" x="180" y="190" width="110" height="26"/>
+  <text class="t dim" x="235" y="203" text-anchor="middle" dominant-baseline="central">skipped</text>
+  <rect class="cell ghost end" x="300" y="190" width="110" height="26"/>
+  <text class="t dim" x="355" y="203" text-anchor="middle" dominant-baseline="central">missed</text>
+  <path class="ln dash" d="M330,96C330,150 235,150 235,188" marker-end="url(#fo-rs-ah)"/>
+  <path class="ln dash" d="M355,96V188" marker-end="url(#fo-rs-ah)"/>
+  <text class="n" x="235" y="234" text-anchor="middle">customer asked</text>
+  <text class="n" x="355" y="234" text-anchor="middle">window passed</text>
+
+  <text class="n hl" x="720" y="260" text-anchor="end">an occurrence is identified by its recurrence and original due date, never by its booked date</text>
+</svg>

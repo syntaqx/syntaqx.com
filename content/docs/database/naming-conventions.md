@@ -27,20 +27,19 @@ Tables hold many rows, so they're plural: `customers`, `payments`, `addresses`. 
 The primary key is always `id`. A foreign key is the singular of the related table plus `_id`:
 
 ```sql
-CREATE TABLE addresses (
+CREATE TABLE orders (
   id          UUID PRIMARY KEY DEFAULT uuidv7(),
   customer_id UUID NOT NULL REFERENCES customers (id),
-  street      TEXT NOT NULL,
-  city        TEXT NOT NULL,
+  placed_on   DATE NOT NULL,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX addresses_customer_id_idx ON addresses (customer_id);
+CREATE INDEX orders_customer_id_idx ON orders (customer_id);
 ```
 
 - **`id` names the role, not the type.** It works the same for integers, UUIDs or ULIDs, as long as the schema is consistent. The default is [UUID v7](/docs/fundamentals/identifier-conventions): globally unique, sortable by creation time, and kind to B-tree indexes. Postgres 18 generates them natively with `uuidv7()`; on older versions, generate them in the application.
 - **Declare foreign keys in transactional databases.** A missing constraint is how orphaned rows appear, and nobody notices until a report doesn't add up. Analytics warehouses often skip constraints for load speed and leave integrity to the pipeline; that's their call, not the application database's.
-- **Index every foreign key column.** Postgres doesn't do it for you. Without one, deleting a customer scans all of `addresses` to check for references, and joins on `customer_id` scan too.
+- **Index every foreign key column.** Postgres doesn't do it for you. Without one, deleting a customer scans all of `orders` to check for references, and joins on `customer_id` scan too.
 
 When a schema mixes integer keys and universal ones, foreign keys to the universal ones end in `_uid`, so the type is obvious from the name (`post_uid UUID` next to `author_id BIGINT`). It's `_uid` rather than `_uuid` because the value might be a ULID. When universal IDs are the only kind, plain `_id` everywhere.
 
@@ -57,6 +56,7 @@ Identifiers from another system end in `_xid`: `google_place_xid`, `stripe_charg
 | `_on` | `DATE`, no time component | `published_on` |
 | `is_`, `has_`, `can_`, `do_` | `BOOLEAN NOT NULL` with a default | `is_active`, `can_export` |
 | `amount`, `_amount` | `BIGINT` minor units, paired with a `currency` column | `fee_amount`, `fee_currency` |
+| `_during` | A range (`DATERANGE` or `TSTZRANGE`), closed-open, for effective dating; see [Effective Dating & History](/docs/database/temporal-data) | `valid_during`, `recorded_during` |
 
 The rules behind the table:
 
@@ -84,9 +84,9 @@ Name constraints and indexes explicitly, using the pattern Postgres uses when it
 | ------ | ------ | ------- |
 | Primary key | `_pkey` | `customers_pkey` |
 | Unique constraint | `_key` | `customers_email_key` |
-| Foreign key | `_fkey` | `addresses_customer_id_fkey` |
+| Foreign key | `_fkey` | `orders_customer_id_fkey` |
 | Check constraint | `_check` | `payments_status_check` |
-| Index | `_idx` | `addresses_customer_id_idx` |
+| Index | `_idx` | `orders_customer_id_idx` |
 
 Constraint names appear in error messages and migrations. `violates unique constraint "customers_email_key"` tells whoever is on call exactly what happened; `"uq_8f3a2"` sends them digging. Explicit names also let a later migration drop or replace the constraint by name on every environment, without looking up what the database happened to call it.
 

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 252">
+  <defs>
+    <marker id="fo-cp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-cp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Column heads -->
+  <text class="cap" x="40" y="18">who pays</text>
+  <text class="cap" x="290" y="18">where the work is</text>
+  <text class="cap" x="560" y="18">what is serviced</text>
+
+  <!-- Who pays -->
+  <rect class="cell ghost" x="40" y="36" width="150" height="26"/>
+  <text class="t dim" x="115" y="49" text-anchor="middle" dominant-baseline="central">parent account</text>
+  <rect class="cell" x="40" y="110" width="150" height="26"/>
+  <text class="t" x="115" y="123" text-anchor="middle" dominant-baseline="central">account (bill-to)</text>
+  <path class="ln dash" d="M115,110V64" marker-end="url(#fo-cp-ah)"/>
+  <text class="n" x="123" y="90">rolls up, optional</text>
+
+  <!-- People -->
+  <rect class="cell" x="290" y="36" width="170" height="26"/>
+  <text class="t" x="375" y="49" text-anchor="middle" dominant-baseline="central">person (contact)</text>
+  <path class="ln" d="M290,49C240,49 236,112 192,118" marker-end="url(#fo-cp-ah)"/>
+  <text class="n" x="200" y="28">billing role</text>
+  <path class="ln" d="M375,62V108" marker-end="url(#fo-cp-ah)"/>
+  <text class="n" x="383" y="88">site role</text>
+
+  <!-- Where the work is -->
+  <rect class="cell hl" x="290" y="110" width="170" height="26"/>
+  <text class="t hl b" x="375" y="123" text-anchor="middle" dominant-baseline="central">property (service site)</text>
+  <path class="ln hl" d="M290,123H192" marker-end="url(#fo-cp-ah-hl)"/>
+  <text class="n" x="241" y="152" text-anchor="middle">one payer at a time</text>
+
+  <rect class="cell" x="290" y="184" width="170" height="26"/>
+  <text class="t" x="375" y="197" text-anchor="middle" dominant-baseline="central">property key (parcel)</text>
+  <path class="ln dash" d="M375,136V182" marker-end="url(#fo-cp-ah)"/>
+  <text class="n" x="383" y="162">matched to</text>
+
+  <!-- What is serviced -->
+  <rect class="cell" x="560" y="110" width="160" height="26"/>
+  <text class="t" x="640" y="123" text-anchor="middle" dominant-baseline="central">asset (equipment)</text>
+  <path class="ln" d="M460,123H558" marker-end="url(#fo-cp-ah)"/>
+  <text class="n" x="509" y="114" text-anchor="middle">installed at</text>
+
+  <rect class="cell" x="560" y="184" width="160" height="26"/>
+  <text class="t" x="640" y="197" text-anchor="middle" dominant-baseline="central">component</text>
+  <path class="ln" d="M640,136V182" marker-end="url(#fo-cp-ah)"/>
+  <text class="n" x="648" y="162">contains</text>
+
+  <text class="n hl" x="720" y="240" text-anchor="end">the property carries the geocode, time zone, access notes and alerts</text>
+</svg>

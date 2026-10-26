@@ -71,7 +71,7 @@ Cash vouchers, covered with the US retail networks in [Cash Payments](/docs/indu
 
 The engineering follows from that table:
 
-- **The redirect isn't the result.** Most local methods send the customer to their bank or app and back. They might not come back, and coming back proves nothing. The source of truth is the provider's [webhook](/docs/payments/webhooks), or your own status query when it's late. The order is "pending" until then.
+- **The redirect isn't the result.** Most local methods send the customer to their bank or app and back. They might not come back, and coming back proves nothing. The source of truth is the provider's [webhook](/docs/api-design/webhooks), or your own status query when it's late. The order is "pending" until then.
 
 ![Async payment flow: the customer is redirected from checkout to their bank, approves the payment there, and is returned to the merchant with the order still pending; the provider's webhook, not the redirect, marks the payment received, and a status check covers a webhook that never arrives.](/diagrams/async-payment.svg "The redirect isn't the result. The customer may never come back, and coming back proves nothing; the provider's webhook or your own status check is what moves the order from pending to paid.")
 

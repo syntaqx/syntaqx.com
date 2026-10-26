@@ -46,11 +46,11 @@ Every embedded payments product is a tree. The provider at the top, then the pla
 
 ![A tree of tenants: the payment provider at the top, which underwrites, settles and holds the risk; one software platform below it; two organizations below the platform; and four merchants below the organizations. Configuration such as pricing, fees and permissions inherits down the tree, reporting rolls up it, and the provider settles net funds directly to each merchant's bank.](/diagrams/software-platforms.svg "Configuration flows down, reporting flows up, and money skips the middle. The provider settles each merchant directly, so the platform and its organizations never hold the funds.")
 
-Three things move through that tree, and each needs an explicit model:
+Configuration inherits down the tree with explicit overrides, permissions are scoped to a node and cover its subtree, and reporting rolls up from the same entries; the general model, with the query that resolves an inherited setting, is in [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies). What payments adds:
 
-- **Configuration inherits down.** Pricing, fee schedules, payout timing, allowed payment methods and risk limits are set at the platform or organization and overridden only where a merchant needs something different. Providers expose the same shape: Payabli's organizations nest sub-organizations and merchants ("paypoints") without limit, and billing, risk and funding settings cascade down unless overridden. Store overrides explicitly and resolve the effective value by walking up the tree, never by copying parent values into children. Copies drift: change the organization's pricing and half its merchants keep the old price.
-- **Permissions are scoped to a node.** A franchise owner sees all their locations; a location manager sees one; platform support sees everything, with every access logged. This is [multi-tenancy](/docs/architecture/multi-tenancy) with the tenant boundary at every level of the tree, enforced in the data layer, not the UI.
-- **Reporting rolls up.** Every report a merchant gets must sum exactly into its organization's report and the platform's. That only works if every number comes from the same ledger entries, never from a separate reporting pipeline that recomputes fees.
+- **What inherits is money.** Pricing, fee schedules, payout timing, allowed payment methods and risk limits are set at the platform or organization and overridden only where a merchant needs something different. Providers expose the same shape: Payabli's organizations nest sub-organizations and merchants ("paypoints") without limit, and billing, risk and funding settings cascade down unless overridden. A copied parent value that drifts is a merchant charged the wrong price.
+- **Reports roll up from ledger entries.** Every report a merchant gets must sum exactly into its organization's report and the platform's, which only works if every number comes from the same ledger entries, never from a separate reporting pipeline that recomputes fees.
+- **Money skips the middle.** The provider settles each merchant directly, so neither the platform nor its organizations hold the funds on the way.
 
 ## One Merchant, Several Merchant Accounts
 
@@ -105,7 +105,7 @@ So whoever settles to the merchant needs a correct legal name and taxpayer ID fo
 
 ## Events to the Platform
 
-The platform's software needs to know what happened to its merchants' money as it happens: a merchant became active, a payment succeeded, a payout landed or failed, a dispute opened with a deadline attached. That's [webhooks](/docs/payments/webhooks), with one addition. Every event carries the merchant it belongs to, and one platform endpoint receives events for thousands of merchants. Route events by merchant before any business logic runs, and make every handler idempotent, because the provider will deliver some events twice.
+The platform's software needs to know what happened to its merchants' money as it happens: a merchant became active, a payment succeeded, a payout landed or failed, a dispute opened with a deadline attached. That's [webhooks](/docs/api-design/webhooks), with one addition. Every event carries the merchant it belongs to, and one platform endpoint receives events for thousands of merchants. Route events by merchant before any business logic runs, and make every handler idempotent, because the provider will deliver some events twice.
 
 ## Support and Disputes Across Three Parties
 

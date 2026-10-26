@@ -120,12 +120,45 @@ The final failure mode is organizational: finance's revenue number doesn't match
 
 Define each important metric once, in code: a semantic or metrics layer, or at minimum one mart model per metric with its definition next to it, and every dashboard reads from that. Changing what "active user" means is then a reviewed pull request, not a silent edit to one dashboard. A short list of company metrics with owners and written definitions does more for trust in data than any tool purchase.
 
+### What a Definition Contains
+
+"Churn rate" is not a definition. Two honest teams computing it will disagree on five points, and a definition settles each one:
+
+- **The unit.** Customers, subscriptions, seats or accounts. Stripe counts "a customer with multiple active subscriptions" as "a single active subscriber" ([Stripe: Billing analytics](https://docs.stripe.com/billing/subscriptions/analytics)); a report that counts subscriptions will show a customer who cancels two plans as two churns.
+- **The numerator and the denominator.** Stripe divides churned subscribers by subscribers at the start of the period plus new subscribers in it; dividing by the starting count alone gives a higher number from the same data.
+- **Inclusion rules.** Free plans, trials, test accounts, internal users, refunds, discounts. Stripe even lets the account choose whether discounts reduce MRR and whether a subscriber is active at the start of the subscription or at the first payment, which makes those settings part of the definition.
+- **The clock.** Which timestamp places an event in a period (created, completed, paid, settled), and which duration a rate is measured over (clocked-in hours, scheduled hours, calendar days).
+- **An owner,** who approves changes and answers when the number looks wrong.
+
+### Versions, Stamps and Frozen Periods
+
+Once a metric decides money (a commission, a bonus, a royalty, a revenue share, an SLA credit), its definition is a contract, and someone will dispute it.
+
+- **Version every definition.** The SQL or YAML lives in version control with an author, a reviewer, an effective date and a reason. Settings that change a metric without touching code (a threshold, a weighting, an attribution window) are logged with who changed them, when, and the before and after values.
+- **Stamp outputs with the version.** Every row a payout, scorecard or invoice reads carries the definition version that built it, so a disputed number can be recomputed exactly as it was.
+- **Freeze what was paid.** A closed period's figures are snapshotted, not recomputed from live data on each read. A late correction (a refund after payroll, a callback linked after the commission run) posts as an adjustment to the next open period, with a reference to the record it corrects, the same way a [ledger](/docs/payments/payment-states) corrects with new entries rather than edits.
+- **Log manual overrides.** Excusing a late delivery for weather or reclassifying a cancellation reason changes someone's pay. Each override is an attributed action with a reason, reviewable by someone other than the person it benefits.
+
+### Assign the Business Date Once
+
+Every metric with a period needs a date, and the date is local to the business: a sale at 23:30 in Chicago belongs to that day's report, not tomorrow's UTC one. Assign the business date once, in the location's time zone, at the staging or mart layer ([Time & Date Formats](/docs/fundamentals/time#business-dates-business-days-and-holidays)), and have every metric group by that column. The alternative is the bug Stripe documents in its own product: prebuilt reports "use UTC" while charts use the account's time zone, "so monthly totals may not match exactly."
+
+### Reconcile to the Source
+
+A metric is only as complete as the pipeline under it. Run daily checks that the warehouse's counts (completed orders, payments, active subscriptions) match the source system's own totals for the same business date; a gap means the pipeline dropped or duplicated changes, and it surfaces before a payout uses the number.
+
+The classic hole is deletes. Log-based CDC "can capture deletes" and needs no "Last Updated" column ([Debezium: Features](https://debezium.io/documentation/reference/stable/features.html)); a polling extract or a vendor connector's incremental sync that doesn't capture deletes never learns that a row is gone. A hard-deleted cancelled order then stays in the warehouse as a live one, and the completion rate quietly rises. When you sync from a system you don't control, check per table whether deletes are captured, and for tables where they aren't, schedule periodic full re-imports to find what disappeared.
+
+For a worked set of metric definitions with formulas, see [Operating Metrics](/docs/industries/field-operations/operating-metrics).
+
 ## References
 
 **Reference**
 
 - [PostgreSQL: Logical replication](https://www.postgresql.org/docs/current/logical-replication.html), publications, subscriptions and replication slots
 - [PostgreSQL: Replication settings](https://www.postgresql.org/docs/current/runtime-config-replication.html), `max_slot_wal_keep_size` caps the WAL a slot can retain (unlimited by default)
+- [Debezium: Features](https://debezium.io/documentation/reference/stable/features.html), log-based CDC captures deletes and old record state without a "Last Updated" column
+- [Stripe: Billing analytics](https://docs.stripe.com/billing/subscriptions/analytics), published metric definitions with units, denominators, configurable inclusion rules and the UTC report caveat
 - [Debezium: PostgreSQL connector](https://debezium.io/documentation/reference/stable/connectors/postgresql.html), logical decoding, initial snapshots, and WAL retained by replication slots
 - [dbt: Data tests](https://docs.getdbt.com/docs/build/data-tests), the `unique`, `not_null`, `accepted_values` and `relationships` tests, and tests as queries for failing rows
 - [dbt: Incremental models](https://docs.getdbt.com/docs/build/incremental-models), processing only new data on each run

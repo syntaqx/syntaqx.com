@@ -40,7 +40,7 @@ Read end to end, the volume describes the components of a payment provider. Each
 | Disputes | Chargebacks, evidence, prevention | [Disputes & Chargebacks](/docs/industries/payments/disputes-and-chargebacks) |
 | Payouts | Paying merchants and their vendors | [Payouts & Settlement](/docs/industries/payments/payouts-and-settlement), [Vendor Payouts](/docs/industries/payments/vendor-payouts) |
 | Treasury and bank files | The bank accounts, files and calendar behind it | [Treasury & Bank Operations](/docs/industries/payments/treasury) |
-| Events | Telling merchants what happened | [Webhooks](/docs/payments/webhooks) |
+| Events | Telling merchants what happened | [Webhooks](/docs/api-design/webhooks) |
 | Platform features | Serving software companies and their merchants | [Payments for Software Platforms](/docs/industries/payments/software-platforms) |
 | Operations | Support console, monitoring, statements, incidents | [Operating the Platform](/docs/industries/payments/operating-the-platform) |
 | Licenses, bank and compliance | What lets you do any of it | [Becoming a Payment Provider](/docs/industries/payments/becoming-a-payment-provider), [The Payments Rulebook](/docs/industries/payments/payments-rulebook) |

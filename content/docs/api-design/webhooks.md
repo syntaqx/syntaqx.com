@@ -1,10 +1,10 @@
 +++
 title = "Webhooks"
 description = "Signed, at-least-once webhook delivery: payload shape, signature verification, retry schedule, and how consumers should dedupe and process events."
-category = "Payments"
-order = 804
+category = "API Design"
+order = 209
 tags = ["api", "webhooks", "events", "payments"]
-aliases = ["webhooks"]
+aliases = ["webhooks", "payments/webhooks"]
 +++
 
 The [state machine](/docs/payments/payment-states) changes long after the API call that started it: a bank transfer settles days later, a dispute arrives weeks later, and a customer finishes 3-D Secure in a browser tab the client never sees. Webhooks are how those transitions reach the systems that need them, without polling. They're also an API you call, into servers you don't control, over a network that fails, and every rule below follows from that.

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 232">
+  <defs>
+    <marker id="fo-omp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-omp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Row 1: out of the platform -->
+  <text class="cap" x="40" y="30">the platform</text>
+  <text class="cap" x="400" y="30">the warehouse</text>
+
+  <rect class="cell" x="40" y="40" width="140" height="28"/>
+  <text class="t" x="110" y="54" text-anchor="middle" dominant-baseline="central">platform database</text>
+  <path class="ln" d="M180,54H218" marker-end="url(#fo-omp-ah)"/>
+
+  <rect class="cell" x="220" y="40" width="140" height="28"/>
+  <text class="t" x="290" y="54" text-anchor="middle" dominant-baseline="central">CDC from the log</text>
+  <path class="ln" d="M360,54H398" marker-end="url(#fo-omp-ah)"/>
+
+  <rect class="cell" x="400" y="40" width="140" height="28"/>
+  <text class="t" x="470" y="54" text-anchor="middle" dominant-baseline="central">raw, append-only</text>
+  <path class="ln" d="M540,54H578" marker-end="url(#fo-omp-ah)"/>
+
+  <rect class="cell" x="580" y="40" width="140" height="28"/>
+  <text class="t" x="650" y="54" text-anchor="middle" dominant-baseline="central">staging</text>
+
+  <text class="n" x="110" y="86" text-anchor="middle">no reporting queries</text>
+  <text class="n" x="290" y="86" text-anchor="middle">every change, deletes too</text>
+  <text class="n" x="470" y="86" text-anchor="middle">replayable</text>
+  <text class="n" x="650" y="86" text-anchor="middle">renamed, typed, one per source</text>
+
+  <!-- Down to row 2 -->
+  <path class="ln" d="M650,68V106H110V128" marker-end="url(#fo-omp-ah)"/>
+
+  <!-- Row 2: definitions and consumers -->
+  <rect class="cell" x="40" y="130" width="140" height="28"/>
+  <text class="t" x="110" y="144" text-anchor="middle" dominant-baseline="central">marts: visits, routes</text>
+  <path class="ln hl" d="M180,144H218" marker-end="url(#fo-omp-ah-hl)"/>
+
+  <rect class="cell hl" x="220" y="130" width="140" height="28"/>
+  <text class="t hl b" x="290" y="144" text-anchor="middle" dominant-baseline="central">metric definitions</text>
+  <text class="n hl" x="290" y="176" text-anchor="middle">versioned, reviewed</text>
+
+  <path class="ln hl" d="M360,144C384,144 380,118 398,118" marker-end="url(#fo-omp-ah-hl)"/>
+  <path class="ln hl" d="M360,144H398" marker-end="url(#fo-omp-ah-hl)"/>
+  <path class="ln hl" d="M360,144C384,144 380,170 398,170" marker-end="url(#fo-omp-ah-hl)"/>
+  <path class="ln hl" d="M360,144C384,144 380,196 398,196" marker-end="url(#fo-omp-ah-hl)"/>
+
+  <rect class="cell" x="400" y="106" width="150" height="24"/>
+  <text class="t" x="410" y="118" dominant-baseline="central">dashboards</text>
+  <rect class="cell" x="400" y="132" width="150" height="24"/>
+  <text class="t" x="410" y="144" dominant-baseline="central">commission runs</text>
+  <rect class="cell" x="400" y="158" width="150" height="24"/>
+  <text class="t" x="410" y="170" dominant-baseline="central">in-app scorecards</text>
+  <rect class="cell" x="400" y="184" width="150" height="24"/>
+  <text class="t" x="410" y="196" dominant-baseline="central">customer exports</text>
+
+  <text class="n" x="570" y="150">one number, everywhere</text>
+  <text class="n" x="570" y="166">it appears</text>
+</svg>

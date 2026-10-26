@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 244">
+  <!-- Column heads -->
+  <text class="cap" x="40" y="26">level</text>
+  <text class="cap" x="420" y="26">what lives here</text>
+  <text class="cap" x="630" y="26">who works it</text>
+
+  <!-- Connectors -->
+  <path class="ln" d="M60,62V85H88"/>
+  <path class="ln" d="M110,102V125H138"/>
+  <path class="ln hl" d="M160,142V165H188"/>
+  <path class="ln" d="M210,182V205H238"/>
+
+  <!-- Levels -->
+  <rect class="cell" x="40" y="36" width="160" height="26"/>
+  <text class="t" x="52" y="49" dominant-baseline="central">company or brand</text>
+  <text class="n" x="420" y="53">brands, price lists, policy</text>
+  <text class="n" x="630" y="53">owner, finance</text>
+
+  <rect class="cell" x="90" y="76" width="160" height="26"/>
+  <text class="t" x="102" y="89" dominant-baseline="central">region</text>
+  <text class="n" x="420" y="93">P&amp;L rollup, state rules</text>
+  <text class="n" x="630" y="93">regional manager</text>
+
+  <rect class="cell hl" x="140" y="116" width="160" height="26"/>
+  <text class="t hl b" x="152" y="129" dominant-baseline="central">branch</text>
+  <text class="n hl" x="420" y="133">licenses, stock, office, P&amp;L</text>
+  <text class="n" x="630" y="133">branch manager, CSRs</text>
+
+  <rect class="cell" x="190" y="156" width="160" height="26"/>
+  <text class="t" x="202" y="169" dominant-baseline="central">territory or route</text>
+  <text class="n" x="420" y="173">zip codes, route days</text>
+  <text class="n" x="630" y="173">dispatcher</text>
+
+  <rect class="cell" x="240" y="196" width="160" height="26"/>
+  <text class="t" x="252" y="209" dominant-baseline="central">technician, van</text>
+  <text class="n" x="420" y="213">skills, license, stock</text>
+  <text class="n" x="630" y="213">technician</text>
+
+  <text class="n hl" x="720" y="240" text-anchor="end">the branch is the unit that makes or loses money</text>
+</svg>
