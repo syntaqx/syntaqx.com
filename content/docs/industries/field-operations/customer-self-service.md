@@ -2,7 +2,7 @@
 title = "Customer Self-Service"
 description = "Portals and the contact center: sign-in, households and multi-site access, online booking, payments and autopay, history, cancellation and AI voice agents."
 category = "Field Operations Industry"
-order = 1524
+order = 1525
 part = "Customers and Billing"
 tags = ["field-operations", "customer-portal", "contact-center", "authentication", "payments", "ai"]
 +++
@@ -77,7 +77,7 @@ Rules that keep this sane: only an admin grant can create grants, and never abov
 
 Online booking for new work, including each vendor's booking settings (earliest availability, buffers, drive-time limits, request fallbacks), lives in [Booking Appointments](/docs/industries/field-operations/booking-appointments); the portal's version is mostly rescheduling existing visits, and it should honor those same settings.
 
-Recurring route-based work (pest, lawn, pool) is harder to reschedule than one-off trades work, because the visit belongs to a route on a day in an area. Moving a quarterly pest visit from Tuesday to Thursday is only cheap if a technician is already in that neighborhood on Thursday.
+Recurring route-based work (pest, lawn, pool) is harder to reschedule than one-off trades work, because the visit belongs to a route on a day in an area. Moving a quarterly pest visit from Tuesday to Thursday is only cheap if a technician is already in that neighborhood on Thursday, so the portal should offer reschedule windows ranked by what they add to a route, as [Booking Appointments](/docs/industries/field-operations/booking-appointments#offer-times-where-the-routes-already-are) describes for new bookings.
 
 ![Reschedule flow from the portal: the customer asks, a policy check can send it to the office, a slot search can show the next open dates, a held slot can expire and send the customer back to search, and the commit emits an event, notifies and audits.](/diagrams/fo-customer-self-service-reschedule.svg "The portal calls the same scheduling service as the dispatcher. It never writes the visit row itself, so every rule applies to both.")
 

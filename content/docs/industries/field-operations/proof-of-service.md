@@ -2,7 +2,7 @@
 title = "Proof of Service"
 description = "Proving the visit happened: photos, signatures, scans, readings and GPS, required evidence per task, not-completed reasons, reports, disputes and amendments."
 category = "Field Operations Industry"
-order = 1513
+order = 1514
 part = "In the Field"
 tags = ["field-operations", "proof-of-service", "proof-of-delivery", "evidence", "disputes", "mobile"]
 +++
@@ -49,6 +49,8 @@ Field service suites capture the same things through forms and the visit record 
 - **Pool Brain** and **Skimmer** email a service report with labeled photos when a pool stop is completed.
 
 The convergence is clear: proof is a configurable list of evidence types, some required, attached to the task with a time and a place.
+
+When nobody is home to sign, the handoff type (safe place, neighbor, locker) and an in-app photo carry the proof, and a PIN or ID check forces someone to be there; [Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery) covers unattended drops.
 
 ## Required Evidence, Configured per Task
 

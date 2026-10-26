@@ -2,7 +2,7 @@
 title = "Licenses & Permits"
 description = "Who may do what, where: business, trade and contractor licenses, applicator and tester credentials, solicitor permits, supervision, renewals and state lookups."
 category = "Field Operations Industry"
-order = 1516
+order = 1517
 part = "The Rules"
 tags = ["field-operations", "licensing", "permits", "compliance", "jurisdictions", "scheduling"]
 +++

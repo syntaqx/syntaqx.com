@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360">
+  <defs>
+    <marker id="fo-lmd-att-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-lmd-att-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Left: attended, two-hour windows -->
+  <rect class="zone" x="40" y="44" width="320" height="226"/>
+  <text class="cap" x="50" y="60">attended: someone must be home</text>
+  <rect class="cell end" x="50" y="168" width="50" height="24"/>
+  <text class="t b" x="75" y="180" text-anchor="middle" dominant-baseline="central">depot</text>
+  <rect class="cell" x="118" y="120" width="24" height="20"/>
+  <text class="t" x="130" y="130" text-anchor="middle" dominant-baseline="central">A</text>
+  <text class="n" x="130" y="113" text-anchor="middle">8-10</text>
+  <rect class="cell" x="210" y="100" width="24" height="20"/>
+  <text class="t" x="222" y="110" text-anchor="middle" dominant-baseline="central">B</text>
+  <text class="n" x="222" y="93" text-anchor="middle">10-12</text>
+  <rect class="cell" x="300" y="120" width="24" height="20"/>
+  <text class="t" x="312" y="130" text-anchor="middle" dominant-baseline="central">C</text>
+  <text class="n" x="312" y="113" text-anchor="middle">8-10</text>
+  <rect class="cell" x="290" y="200" width="24" height="20"/>
+  <text class="t" x="302" y="210" text-anchor="middle" dominant-baseline="central">D</text>
+  <text class="n" x="302" y="234" text-anchor="middle">10-12</text>
+  <rect class="cell" x="200" y="220" width="24" height="20"/>
+  <text class="t" x="212" y="230" text-anchor="middle" dominant-baseline="central">E</text>
+  <text class="n" x="212" y="254" text-anchor="middle">8-10</text>
+  <rect class="cell" x="118" y="200" width="24" height="20"/>
+  <text class="t" x="130" y="210" text-anchor="middle" dominant-baseline="central">F</text>
+  <text class="n" x="130" y="234" text-anchor="middle">10-12</text>
+  <path class="ln ink" d="M92,168L120,142" marker-end="url(#fo-lmd-att-ah-ink)"/>
+  <path class="ln ink" d="M142,134H298" marker-end="url(#fo-lmd-att-ah-ink)"/>
+  <path class="ln ink" d="M306,140L222,218" marker-end="url(#fo-lmd-att-ah-ink)"/>
+  <path class="ln ink" d="M213,220L221,122" marker-end="url(#fo-lmd-att-ah-ink)"/>
+  <path class="ln ink" d="M232,120L294,198" marker-end="url(#fo-lmd-att-ah-ink)"/>
+  <path class="ln ink" d="M290,208L144,208" marker-end="url(#fo-lmd-att-ah-ink)"/>
+  <path class="ln ink" d="M118,212L102,190" marker-end="url(#fo-lmd-att-ah-ink)"/>
+  <text class="cap" x="50" y="292">order</text>
+  <text class="t" x="120" y="292">A C E, then B D F</text>
+  <text class="cap" x="50" y="308">shape</text>
+  <text class="t" x="120" y="308">crosses itself</text>
+  <text class="cap" x="50" y="324">risk</text>
+  <text class="t" x="120" y="324">a missed window</text>
+
+  <!-- Right: unattended, no windows -->
+  <rect class="zone" x="400" y="44" width="320" height="226"/>
+  <text class="cap hl" x="410" y="60">unattended: nobody needs to be home</text>
+  <rect class="cell end" x="410" y="168" width="50" height="24"/>
+  <text class="t b" x="435" y="180" text-anchor="middle" dominant-baseline="central">depot</text>
+  <rect class="cell" x="478" y="120" width="24" height="20"/>
+  <text class="t" x="490" y="130" text-anchor="middle" dominant-baseline="central">A</text>
+  <rect class="cell" x="570" y="100" width="24" height="20"/>
+  <text class="t" x="582" y="110" text-anchor="middle" dominant-baseline="central">B</text>
+  <rect class="cell" x="660" y="120" width="24" height="20"/>
+  <text class="t" x="672" y="130" text-anchor="middle" dominant-baseline="central">C</text>
+  <rect class="cell" x="650" y="200" width="24" height="20"/>
+  <text class="t" x="662" y="210" text-anchor="middle" dominant-baseline="central">D</text>
+  <rect class="cell" x="560" y="220" width="24" height="20"/>
+  <text class="t" x="572" y="230" text-anchor="middle" dominant-baseline="central">E</text>
+  <rect class="cell" x="478" y="200" width="24" height="20"/>
+  <text class="t" x="490" y="210" text-anchor="middle" dominant-baseline="central">F</text>
+  <path class="ln hl" d="M452,168L480,142" marker-end="url(#fo-lmd-att-ah-hl)"/>
+  <path class="ln hl" d="M502,126L568,113" marker-end="url(#fo-lmd-att-ah-hl)"/>
+  <path class="ln hl" d="M594,113L658,126" marker-end="url(#fo-lmd-att-ah-hl)"/>
+  <path class="ln hl" d="M671,140L663,198" marker-end="url(#fo-lmd-att-ah-hl)"/>
+  <path class="ln hl" d="M650,213L586,227" marker-end="url(#fo-lmd-att-ah-hl)"/>
+  <path class="ln hl" d="M560,227L504,213" marker-end="url(#fo-lmd-att-ah-hl)"/>
+  <path class="ln hl" d="M478,212L462,190" marker-end="url(#fo-lmd-att-ah-hl)"/>
+  <text class="cap" x="410" y="292">order</text>
+  <text class="t" x="480" y="292">A B C D E F</text>
+  <text class="cap" x="410" y="308">shape</text>
+  <text class="t hl b" x="480" y="308">one loop</text>
+  <text class="cap" x="410" y="324">risk</text>
+  <text class="t" x="480" y="324">access, theft, proof</text>
+
+  <text class="n" x="40" y="350">illustrative: the same six stops and depot; only the windows differ</text>
+</svg>

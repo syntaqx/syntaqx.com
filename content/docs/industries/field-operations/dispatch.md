@@ -2,7 +2,7 @@
 title = "Dispatch & the Day of Service"
 description = "Running the day: dispatch consoles, visit states, same-day exceptions, live ETA links, geofence arrivals, telematics, weather, customer updates, escalation."
 category = "Field Operations Industry"
-order = 1511
+order = 1512
 part = "Scheduling and Routing"
 tags = ["field-operations", "dispatch", "telematics", "tracking", "operations"]
 +++
@@ -86,6 +86,7 @@ Most of a dispatcher's day is a short list of exceptions, each with a known resp
 | **Part not on the truck** | If the technician diagnosed the problem, the visit ends `completed` and the work order stays open with `hold_reason = 'part_needed'`; if nothing could be done, the visit ends `not_completed` with `part_needed`. Either way, order or reserve the part ([Fleet, Inventory & Safety](/docs/industries/field-operations/fleet-and-safety)) and book the return visit on the same work order when it's due. It isn't a callback |
 | **Driver near an hours limit** | For drivers of commercial vehicles outside the short-haul exception, check remaining drive and on-duty time before inserting or redistributing work ([Fleet, Inventory & Safety](/docs/industries/field-operations/fleet-and-safety)) |
 | **Urgent or emergency job** | Find technicians who can reach it soonest without breaking pinned or in-progress work, ranked by SLA deadline where one applies; let the dispatcher choose, or auto-insert under an emergency policy |
+| **Delivery fails** | Driver picks a reason and captures proof of the attempt; the visit ends `not_completed`, and the order's undeliverable action (retry, hold at a pickup point, return) decides what follows ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery)) |
 | **Truck breakdown or crash** | End the technician's route at their current stop; redistribute the rest; open an incident |
 | **Customer reschedules by text or portal** | Release and rebook through the booking rules ([Customer Self-Service](/docs/industries/field-operations/customer-self-service)); retract queued reminders |
 

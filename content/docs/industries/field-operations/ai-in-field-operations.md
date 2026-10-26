@@ -2,7 +2,7 @@
 title = "AI in Field Operations"
 description = "AI in field service: call answering and booking against live capacity, coaching, dispatch, summaries and diagnostics, what vendors ship, law and audit."
 category = "Field Operations Industry"
-order = 1528
+order = 1529
 part = "Running the Platform"
 tags = ["field-operations", "ai", "voice", "scheduling", "compliance", "audit"]
 +++

@@ -1,8 +1,8 @@
 +++
 title = "Booking Appointments"
-description = "Promising a visit: arrival windows, slot search, online booking, holds, AI voice agents and lead sources, rescheduling, notifications, double-booking."
+description = "Promising a visit: arrival windows, route-aware slot offers, online booking, holds, AI agents and lead sources, rescheduling, notifications, double-booking."
 category = "Field Operations Industry"
-order = 1508
+order = 1509
 part = "Scheduling and Routing"
 tags = ["field-operations", "scheduling", "appointments", "booking", "concurrency"]
 +++
@@ -16,6 +16,8 @@ Field service customers are rarely given a start time. They get an **arrival win
 Salesforce separates the promise from the plan in the data model. A service appointment carries `ArrivalWindowStartTime` and `ArrivalWindowEndTime` (what the customer was told) separately from its scheduled start and end (what the optimizer planned), and its booking API takes an `exactAppointment` flag that "specifies whether the result uses exact appointments or an arrival window." That separation is the design to copy. The scheduled time moves every time the route is re-optimized; the arrival window moves only when someone tells the customer. Store the window as the customer heard it, a local date and times plus the property's time zone, and compute instants from it when you need them ([Time](/docs/fundamentals/time#future-wall-clock-times-local-time-plus-a-zone)).
 
 Window width is a business choice with a measurable cost. A narrow window pleases the customer and pins the route; a wide one absorbs a long previous job and lets the optimizer work. ServiceTitan says its route optimizer is "less effective for businesses that give smaller arrival windows (2-3 hours), or that only run 1-3 jobs per day." The trades differ: a recurring pest or pool customer often accepts "Tuesday, anytime" because nobody needs to be home; a furnace repair needs an adult at the door and a window of two to four hours; a commercial account's SLA may promise a response time instead of a window; a delivery customer expects a narrower window than any of them. My default: offer narrow windows where route density is high and wider ones in sparse territories, and track on-time arrival against the window per territory so the choice gets revisited.
+
+Not every booking needs a window at all. When nobody has to be home (a parcel left in a safe place, exterior lawn or pest service, a meter read), the promise can be a day, or no promise beyond "this week", and the optimizer gets the stop with no time constraint. That's the biggest density lever a booking flow has, so ask whether attendance is needed before showing a window picker, and record the answer on the work order ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery)).
 
 ## How Slots Are Found
 
@@ -32,9 +34,153 @@ Slot search is the [availability engine](/docs/industries/field-operations/terri
 
 Salesforce's flow is the clearest public one. `GetSlots` takes the appointment, a scheduling policy and an operating hours record that "represents various slots offered to the customer during appointment booking (for example, Mondays 9 to 11 AM, 11 AM to 1 PM...)," and returns available slots without scheduling anything. After the customer picks one, the code sets the arrival window and calls `ScheduleService`, which "performs resource locking and collision detection" and can, with sliding and reshuffling on, let "a higher-priority incoming appointment ... cause an existing appointment to be dropped." Recurring visits have their own call, `getRecurringAppointmentsSlots`, which returns up to three sets of options for a whole weekly series.
 
-Grading slots, not just listing them, is where the money is. A slot that adds four minutes of driving to a route already in the neighborhood is worth far more than one that sends a truck across town, and an operator wants the first offered first. Jobber approximates this with a drive time limit that offers slots near the day's other bookings. Timefold's recommendations return a narrow window ("a specific afternoon slot instead of 'the first week in February'") and optimize the accepted visit later, so "the customer doesn't need to stay on the phone to wait for the optimized solution."
+Listing slots answers "who could go?" It doesn't answer "which of these times should the business hope the customer picks?", and the gap between those two questions is a large share of a branch's drive time. That's the next section.
 
-The general pattern: compute candidate slots from availability and capacity, score each by the marginal cost of inserting the visit into the current plan (added travel, lost flexibility, preferred technician), offer the best few, and re-optimize after acceptance. Don't run a full [route optimization](/docs/industries/field-operations/route-optimization) inside a customer's page load.
+## Offer Times Where the Routes Already Are
+
+A customer choosing from a calendar can't see where the trucks will be, so every set of times a booking screen offers is also a routing decision, made before the [route optimizer](/docs/industries/field-operations/route-optimization) ever sees the visit. The optimizer can only arrange the promises it's given. Which promises get made is decided here.
+
+### Open Calendar Versus Route-Aware Booking
+
+**Open-calendar booking** offers every window in which some qualified technician in the territory has room, and lets the customer pick any of them. It's the natural first version: it falls straight out of availability and capacity, it's easy to explain, and it gives the most choice. It's also what a calendar-first booking form does unless something else is configured; the online booking rows for Housecall Pro and ServiceTitan Scheduling Pro in the table above decide slots from availability, capacity, zones and buffers, and Jobber's drive time limit is a setting layered on top.
+
+**Route-aware booking** starts from the same candidates and asks one more question of each: what would it cost to add this visit to the plan as it stands? It then offers the windows where a technician will already be nearby, ranked by that marginal cost, and either keeps the other windows one tap away or doesn't show them.
+
+The trouble with "any time" is that the order in which customers call, not where they live, decides which of them share a day:
+
+- **Zig-zag days.** Monday's four visits end up in four corners of the territory because those were the four customers who wanted Monday.
+- **Anchors.** One far stop with a fixed window pins a technician to the far side of town at that hour, and the rest of the day is planned around it. Jobber's drive time limit shows the mechanism from the other side: on a day with no bookings yet, a customer "will see all available time slots ... regardless of where they are," and that first booking becomes the reference point for the rest of the day's offers. A good first booking clusters the day; a bad one drags it across town.
+- **Fragmented capacity.** Ninety minutes free between two stops forty minutes apart holds no job. The capacity ledger says the day has room; the route says it doesn't.
+- **More driving per stop, fewer stops per day, more late arrivals.** Every long leg is unbilled time and another chance to miss the next window.
+- **A promise the optimizer can't undo.** Once the customer has heard the window, it's a hard constraint ([Route Optimization](/docs/industries/field-operations/route-optimization#how-to-build-it-the-problem-you-hand-the-solver) treats a promised window as hard in most businesses, and ServiceTitan's optimizer "schedules each job within the indicated arrival window"). The optimizer can reorder everything around a bad promise; it can't move the promise without a call to the customer.
+
+So the cost of a booking is mostly set when the window is offered, not when the route is optimized. Route-aware booking moves the cost model from [Weighing the Routing Objective](/docs/industries/field-operations/route-objectives) forward to the moment of the offer.
+
+![Two booking screens for the same customer and week. On the left, an open calendar: a grid of Monday to Friday by four two-hour windows, eighteen identical open windows and two marked full, then a Continue button. On the right, route-aware: three recommended times, the first highlighted with a technician nearby badge and the note on your street that morning, the second also nearby, the third a wider window with a $15 discount, then a See more times link and a Continue button.](/diagrams/fo-booking-appointments-offers.svg "An open calendar makes every window look equal. A route-aware screen shows the few windows where a technician will already be, best first, and keeps the rest behind a link.")
+
+### A Worked Example
+
+The numbers are illustrative, and the rates are the ones [Weighing the Routing Objective](/docs/industries/field-operations/route-objectives#time-is-not-distance) uses: $45 an hour of loaded labor, or $0.75 a minute, and $0.76 a vehicle mile. A new customer books an hour-long furnace tune-up.
+
+On Tuesday, Bob has a stop in the customer's neighborhood at 9:00 and another at 11:30. Today those two stops are six minutes and 2.5 miles apart. Fitting the new visit between them, in a 10-to-12 window, means driving four minutes (1.5 miles) to the new customer and five minutes (2.0 miles) on to the next stop, instead of the six-minute leg. The added drive is 4 + 5 − 6 = 3 minutes and 1.5 + 2.0 − 2.5 = 1.0 mile, which costs 3 × $0.75 + 1.0 × $0.76 = $3.01.
+
+On an open calendar, the customer picks Thursday 8 to 10, the first window of their week. On Thursday, the only technician with room is Ana, whose route is on the other side of town. Her shift starts at 7:30 from home, and her first stop is twelve minutes (7 miles) away. To keep an 8-to-10 promise, the new visit has to come first: 36 minutes (23 miles) from her home to the customer, then 36 minutes (23 miles) back to her first stop, replacing the twelve-minute leg. The added drive is 36 + 36 − 12 = 60 minutes and 23 + 23 − 7 = 39 miles, which costs 60 × $0.75 + 39 × $0.76 = $45.00 + $29.64 = $74.64.
+
+The knock-on effects are worse than the arithmetic. Ana's first existing stop moves from about 7:42 to about 9:42, and every stop after it moves too unless the plan had slack, so any of them with a narrow window is now at risk of a late arrival. If her Thursday was planned at 7.0 hours, the visit and its drive take it to 9.0, one of those hours at an overtime rate of $67.50 rather than $45, another $22.50. Or the optimizer keeps her day inside the shift by dropping her last visit to the pool, and that customer gets a rescheduling call.
+
+![Two panels. On the left, Tuesday 10 to 12: the new visit sits between Bob's previous and next stops, replacing a 6-minute, 2.5-mile leg with legs of 4 minutes and 1.5 miles and 5 minutes and 2.0 miles, adding 3 minutes and 1.0 mile for $3.01. On the right, Thursday 8 to 10: the new visit is across town from Ana's home and first stop, replacing a 12-minute, 7-mile leg with two 36-minute, 23-mile legs, adding 60 minutes and 39 miles for $74.64 and pushing her day from 7.0 to 9.0 hours.](/diagrams/fo-booking-appointments-insertion.svg "The same visit, inserted where a route already is and where it isn't (illustrative numbers). Insertion cost is the new legs minus the leg they replace.")
+
+The two windows differ by $71.63 for one booking. Ten bookings like Thursday's in a branch's week is $716.30 and ten hours of driving, more than a technician-day, every week: about $37,000 a year at these rates. The customer may well have been as happy on Tuesday; the open calendar never asked.
+
+### The Strategies
+
+Between "any time" and "the system decides" there is a spectrum, and most businesses end up mixing several points on it:
+
+| Strategy | How it works | What it gains | What it costs |
+| --- | --- | --- | --- |
+| **Open calendar** | Every window with capacity, unranked | Most choice; simplest to build and explain | Customers' calendars decide the routes; anchors and fragmented days |
+| **Hide far slots** | Show only windows whose insertion cost is under a threshold in drive minutes or money | Removes the worst bookings; the screen still looks like a calendar | Sparse areas see a near-empty week; the customer can't tell why Thursday is missing; a threshold to tune per branch |
+| **Rank and badge** | Show everything, recommended windows first, marked "technician nearby" | No choice lost; a nudge rather than a rule | Works only as far as customers follow the nudge; the badge must be true when shown |
+| **A few best offers** | Two or three windows, with "see more times" behind a link | Quick to read on a phone and to say on a call; most bookings land on cheap windows | Feels narrow; needs diversity (different days, morning and afternoon) or it offers three versions of one time |
+| **Zone days** | Each area is served on fixed days ("Westside is Tuesdays and Fridays") | Dense routes by construction; predictable for recurring route work | Longer waits for one-off repairs; demand doesn't respect the zone calendar |
+| **Incentives** | A discount or perk for a recommended window, or for accepting a wider one | The customer still chooses, with a reason to choose well | Costs margin; it's a price, so pricing and disclosure rules apply; needs measuring to know it pays |
+| **Dynamic slot pricing** | Each window has its own price or fee, from its cost or demand | Prices the route cost directly | Complex to explain; a fee by neighborhood raises fairness questions; needs volume to tune |
+| **Book now, assign later** | Promise a day and window against territory capacity; pick the technician and order at optimization time | The most flexible plan; the optimizer chooses who | The insertion estimate at booking can be wrong; the capacity guard has to be tight or days overfill; no technician's name at booking |
+
+My default for one-off work, web and phone alike: **a few best offers, ranked, with every other window behind "see more times," also ranked.** The customer who needs Thursday can still get Thursday, while most bookings land where the routes already are; call-center reps and AI voice agents read the same top two or three, because nobody listens to a calendar read aloud. Recurring route work (pest, lawn, pool) does better with zone days, which [Recurring Schedules](/docs/industries/field-operations/recurring-schedules) generates as service windows anyway, and wide windows pair naturally with book now, assign later. I'd add incentives only after ranking alone has been measured, since a discount spent on a customer who would have taken the recommended window anyway is pure margin lost. Hiding far slots is the right call where a branch genuinely can't serve them that week, not as a way to steer.
+
+Incentives and slot prices are prices. A "$15 off for a 4-hour window" is a promotion with conditions, shown before the customer chooses and recorded with the booking ([Pricing & Sales Rules](/docs/industries/field-operations/pricing-and-sales-rules#promotions)), and the invoice must honor it.
+
+### Customers, Fairness and Urgent Work
+
+**Customer experience and conversion pull both ways.** Fewer choices can make a decision faster, or lose a customer whose only free morning wasn't on the first screen. Which effect wins depends on the trade, the channel and the customer, and it's a number to measure per branch, not to assume (below).
+
+**Fairness.** Ranking by route cost favors customers who live where the business is already dense. Someone at the edge of the territory sees fewer recommended windows, later ones, or only wide ones. That can be a reasonable decision, but it is a decision: the same kind of hidden policy as a weight that quietly drops outlying customers ([Weighing the Routing Objective](/docs/industries/field-operations/route-objectives#pitfalls)). My rule: every serviceable address gets a guaranteed floor of offers, say three windows within the next seven days, whatever they cost, and the floor is configuration someone approved. A business that won't serve an area should say so in its territory, not by never offering it a time.
+
+**Urgent and emergency work skips the ranking.** No heat in January, a burst pipe or a walk-in cooler that's down wants the earliest feasible arrival, with route cost only breaking ties. Classify at intake by work type, and give emergencies their own path through the same availability engine, drawing on the room [Territories & Capacity](/docs/industries/field-operations/territories-and-capacity#reserving-room-and-forecasting) holds back for them.
+
+**Commercial SLAs replace the customer's choice with a deadline.** A contract that promises a technician within four hours leaves nothing to offer: the system picks the cheapest feasible insertion that meets the deadline, and the deadline is the hard window.
+
+**Window width and density interact.** The [Arrival Windows](#arrival-windows) default above (narrow where routes are dense, wide where they're sparse) is easier to keep with route-aware offers, because a two-hour window is cheap to promise where a route already is and expensive anywhere else. Timefold puts the trade-off from the solver's side: "as time windows get longer, you reduce the number of recommendations and the customer's options." The attended home delivery research below measured the other side, what narrow windows cost a route.
+
+### What the Platforms and the Research Show
+
+The field service suites expose the same calculation in different places:
+
+- **ServiceTitan's Schedule Assistant** is the clearest public statement of insertion cost. It suggests "a date, time, and technician for a given job that minimizes drive time," lists up to 52 technicians "sorted by most efficient drive time," and shows on each card "the extra time and distance that would be added if the new appointment is added to the technician's route," computed as the time and distance from the previous appointment to the new one, plus from the new one to the next, minus from the previous to the next. That is exactly the worked example's arithmetic, offered to dispatchers and CSRs during call booking.
+- **Salesforce Field Service** grades slots rather than filtering them. `GetSlots` can sort results by `Grade`, `SlotDateTime` or `NoSort`, each `AppointmentBookingSlot` carries a grade, and `GradeSlotsService` evaluates "all possible slots where a given service appointment can be scheduled." The grade comes from the scheduling policy: the optimizer "evaluates each available time slot and qualified candidate for the objectives" and "multiplies the grade for each objective by the relative weight of that objective," in Trailhead's example ASAP 4, Preferred Resource 4 and Minimize Travel 2. When ASAP outweighs Minimize Travel, the earliest slot outranks the cheap one, so those weights are where a business decides how much soonness to trade for route cost ([Weighing the Routing Objective](/docs/industries/field-operations/route-objectives#time-is-not-distance)).
+- **Dynamics 365's schedule assistant** "recommends resources that match criteria like availability, skills, and location" and "estimates travel time for the recommended resources," for dispatchers who want the system to "estimate travel time and rank resources." Its docs add a warning worth copying: booking outside its recommended slots means "constraints such as capacity, work hours, and time windows aren't verified or enforced."
+- **Jobber's drive time limit** is the filtering approach for online booking: it "Limits bookings to appointments that are within a set driving time of other bookings scheduled that day," with travel estimated from historical traffic, and shows every slot on a day with no bookings.
+- **Timefold's time window recommendations** fit a visit into an existing plan and return, per requested window, up to `maxNumberOfRecommendationsPerTimeWindow` technician shifts, each with a `scoreDiff` against the plan without the visit. They offer a narrow window ("a specific afternoon slot instead of 'the first week in February'"), and the accepted visit is added to the draft plan and optimized afterward, so "the customer doesn't need to stay on the phone to wait for the optimized solution." The docs are candid that the recommended times "will likely change as additional visits are added to the plan," and that "it is important to decide how to manage concurrent requests."
+
+Attended home delivery, grocery above all, studies the same problem under the name **time slot management**. Agatz, Campbell, Fleischmann and Savelsbergh worked with Albert.nl, the online channel of the Dutch grocer Albert Heijn, where customers chose a two-hour slot from a menu per ZIP code, each slot carried a delivery fee from €4.95 to €8.95 depending on day and time, and slots closed when capacity got tight. Albert.nl already differentiated by place: "a zip code with low demand potential receives only a few weekly time slots in an attempt to concentrate that demand," while keeping a balance of morning and afternoon slots as a service requirement. On Albert.nl's data, the paper found that "narrow delivery time slots are convenient for the customer, they greatly reduce routing efficiency": up to 25% higher delivery cost for two-hour slots than for slots spanning a whole morning or afternoon, and up to 10% savings from differentiating the offering by region instead of offering every slot everywhere. Its central trade-off is "between demand clustering and demand smoothing": clustering shortens the distance between stops, at the risk of leaving capacity unused. Earlier, Campbell and Savelsbergh studied "the use of incentives to influence consumer behavior to reduce delivery costs," with optimization models for two forms of incentive tested by simulation. A delivery stop takes minutes and a furnace repair takes an hour, so the numbers don't transfer, but the levers (which slots to offer where, how wide, at what price) are the same ones in the strategy table above.
+
+### How to Build It
+
+The slot search becomes a pipeline with one new step in the middle:
+
+1. **Generate candidates.** Run the shared availability engine ([Territories & Capacity](/docs/industries/field-operations/territories-and-capacity#how-to-build-it), steps 1 to 5) over the booking horizon: territory, members, calendars, eligibility and capacity give each window the technicians who could take it. Hard rules stay the same for every caller.
+2. **Score by insertion against the current plan.** For each candidate technician-day, take its current planned sequence (the last applied optimization plus bookings since) and try the new visit in each gap, including the legs from and back to the technician's home. A gap's cost is the new legs minus the leg they replace, in minutes and miles, priced with the branch's [objective profile](/docs/industries/field-operations/route-objectives) so a booking and a solve agree on what a minute is worth. A gap is feasible only if the arrival lands inside the window and the pushed-back stops still meet their promised windows and the hard shift end. Add what the legs don't capture: slack consumed (lateness risk), capacity eaten from what's reserved for emergencies, and a bonus for the customer's preferred technician. A window's score is its best feasible gap across technicians. This is a cheap insertion heuristic, linear in the stops on each day; the full re-optimization runs later, as the usual asynchronous job ([Route Optimization](/docs/industries/field-operations/route-optimization#runs-are-jobs-and-results-go-stale)). For book now, assign later, score against the territory-day instead and commit only capacity.
+3. **Choose the offers.** Take the best few by score, then apply the diversity and floor rules from configuration (at least two days, a morning and an afternoon, the guaranteed minimum for sparse addresses), and attach badges and incentives.
+4. **Hold, then commit.** When the customer picks, re-score that one window against the plan as it is now, since plans move between showing and choosing, then hold it as described under [Requests and Holds](#requests-and-holds). If two customers pick the last good gap at once, the database refuses the second ([Idempotency and Double-Booking](#idempotency-and-double-booking)) and that customer gets a fresh search, not an error.
+
+**Latency.** A customer on a web page and a caller on the phone are both waiting, and a voice agent fills the silence badly. My default budget is about a second for the whole search, with a fallback to unranked availability if scoring runs over, so a slow matrix call costs ranking, never the booking. That budget rules out a solver run per page load and shapes the caches: each technician-day's planned sequence with arrival times and slack, invalidated by events (booking, cancellation, optimization applied, technician called in sick); the per-resource open intervals the availability engine already precomputes; and travel times from the [cached matrix](/docs/industries/field-operations/route-optimization#what-exists-routing-engines-over-openstreetmap), plus one many-to-one request from the new address to the stops on the candidate days. Geocode the address when it's entered, not at search time. Drive time, not straight-line distance or a fixed radius, is the measure throughout: a river, a bridge or a highway interchange makes the two disagree exactly where it matters.
+
+**Record what was offered.** Every search writes the offers it showed and, later, which one was chosen. Without it, nobody can answer "why was I only offered Thursday?", show that a neighborhood wasn't steered, or measure anything below. A sketch beside the canonical `visits`, with windows local to the property's zone like the visit's own:
+
+```sql
+CREATE TABLE slot_offers (
+  id                        UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id                 UUID NOT NULL,
+  offer_set_id              UUID NOT NULL,            -- one search shown to one customer
+  property_id               UUID NOT NULL REFERENCES properties (id),
+  booked_via                TEXT NOT NULL,            -- the channel, as on visits
+  offer_policy_version      INTEGER NOT NULL,
+  objective_profile_version INTEGER NOT NULL,
+  offer_rank                INTEGER NOT NULL,         -- 1 = shown first
+  is_first_screen           BOOLEAN NOT NULL,         -- false: behind "see more times"
+  service_on                DATE NOT NULL,
+  window_starts_local       TIME NOT NULL,
+  window_ends_local         TIME NOT NULL,
+  resource_id               UUID REFERENCES resources (id),  -- null when assigned later
+  added_drive_seconds       INTEGER NOT NULL,
+  added_distance_meters     INTEGER NOT NULL,
+  added_cost_amount         BIGINT NOT NULL,          -- minor units
+  incentive_amount          BIGINT,                   -- minor units; null = none
+  currency                  TEXT NOT NULL,
+  badge                     TEXT,                     -- 'technician_nearby' or null
+  shown_at                  TIMESTAMPTZ NOT NULL,
+  chosen_at                 TIMESTAMPTZ,
+  visit_id                  UUID REFERENCES visits (id)  -- set on the offer that was booked
+);
+```
+
+**Configuration per branch.** How many offers, whether other windows sit behind a link or are hidden, the badge threshold, diversity and floor rules, incentives, and which work types bypass ranking all vary by branch and season, so they're a versioned policy like the objective profile ([Rules as Data](/docs/architecture/rules-as-data)):
+
+```json
+{
+  "offer_policies": [{
+    "branch": "north_metro", "version": 4, "valid_during": "[2026-11-02,)",
+    "objective_profile": "metro_dense",
+    "offers_on_first_screen": 3, "other_windows": "ranked_behind_link",
+    "nearby_badge_max_added_minutes": 10,
+    "diversity": { "min_days": 2, "morning_and_afternoon": true },
+    "floor": { "min_offers": 3, "within_days": 7 },
+    "incentives": [{ "name": "wide_window", "min_window_hours": 4,
+                     "discount_amount": 1500, "currency": "usd" }],
+    "skip_ranking_for": ["emergency", "sla_response"],
+    "approved_by": "ops_director"
+  }]
+}
+```
+
+**What to measure.** From `slot_offers` and the visits they became:
+
+- **Offer acceptance:** the share of offer sets where the customer chose a first-screen offer, and the rank chosen. A low rate means the offers are wrong for this branch's customers, or too few.
+- **Added drive per booking:** planned at booking, then after the next optimization, then actual from the technician app. The gap between the first two shows how good the insertion estimate is.
+- **Conversion:** bookings per customer who reached the time screen, compared with an open-calendar holdout of the same branch over the same weeks, bucketed by a stable key such as the property so a customer sees one experience ([Progressive Rollout](/docs/delivery/feature-flags#progressive-rollout)). This is the number that says whether steering costs customers.
+- **Route outcomes:** on-time arrival against the promised window, drive share and stops per hour ([Operating Metrics](/docs/industries/field-operations/operating-metrics#route-efficiency)), by territory.
+- **Floor and fairness:** offers per search and days to the first offer, by territory and ZIP code, so the edge of the map is watched rather than discovered.
 
 ## Online Booking
 
@@ -133,8 +279,8 @@ Bookings that can't be decided synchronously (a lead-source booking that needs o
 Bookings are the record of what the business promised, and they end up in complaints, chargebacks and lead-billing disputes. What's specific to booking:
 
 - **The promised window and every change to it,** with the actor (customer, rep, voice agent, optimizer, integration) and channel. A "you never showed up" dispute is answered by the window that was promised and the messages that announced each change.
-- **AI bookings**: the call or chat ID, transcript and recording references, the slots offered and the one chosen, and any handoff. If a caller disputes what the agent agreed to, this is the evidence.
-- **Lead source and lead ID**, for attribution and for disputing lead charges.
+- **The offers shown and the one chosen,** on every channel: each window with its rank, badge, incentive and added cost, and the offer policy and objective profile versions, from `slot_offers`. It answers "why was I only offered Thursday?", shows whether an area was steered, and backs any incentive the invoice must honor.
+- **AI and lead-source bookings**: the call or chat ID, transcript and recording references and any handoff, so a caller's dispute over what the agent agreed to has evidence; and the lead source and lead ID, for attribution and for disputing lead charges.
 - **Cancellation and reschedule reasons with the policy and any fee applied,** since fee disputes and [chargebacks](/docs/industries/payments/disputes-and-chargebacks) turn on whether the policy was disclosed and followed.
 
 Record structure, typed actors and recording automated decisions are in [Audit Trails](/docs/architecture/audit-trails); field retention periods are in [Audit Trails & Records](/docs/industries/field-operations/audit-trails-and-records).
@@ -142,7 +288,10 @@ Record structure, typed actors and recording automated decisions are in [Audit T
 ## What This Means for the System You Build
 
 - **Store the arrival window separately from the scheduled time,** as local time plus the property's zone. Optimizers move the plan; only a customer notification moves the promise.
-- **Grade slots by marginal route cost.** Offer the best few quickly and optimize after acceptance.
+- **Offer times where the routes already are.** Score each candidate window by its insertion cost against the current plan, priced with the branch's objective profile; show the best few first and the rest ranked behind a link; optimize after acceptance, never inside the page load.
+- **Keep a floor and an emergency path.** Every serviceable address gets a minimum of offers whatever they cost, and emergency and SLA work skips the ranking for the earliest feasible arrival.
+- **Make the offer policy configuration:** offers shown, badges, diversity, floor and incentives per branch, versioned and approved, with incentives treated as prices.
+- **Record every offer shown and the one chosen,** and measure acceptance, added drive per booking, on-time arrival and conversion against an open-calendar holdout.
 - **Run every channel through one booking API.** Portal, call center, rep app, lead sources and AI agents share availability, rules and permissions.
 - **Book only predictable work online;** diagnostics book as fixed-length visits, large jobs as estimate requests.
 - **Choose a hold store deliberately.** Whichever you pick, enforce expiry on read, convert atomically, and cap and rate-limit holds.
@@ -159,12 +308,18 @@ Record structure, typed actors and recording automated decisions are in [Audit T
 - [PostgreSQL: Range Types](https://www.postgresql.org/docs/current/rangetypes.html), exclusion constraints that prevent overlapping reservations, combined with equality through `btree_gist`
 - [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests), saved responses for retried keys and parameter mismatch errors
 - [CTIA: Messaging Principles and Best Practices (2023)](https://api.ctia.org/wp-content/uploads/2023/05/230523-CTIA-Messaging-Principles-and-Best-Practices-FINAL.pdf), appointment reminders as informational messages needing consent for that purpose
+- [Agatz, Campbell, Fleischmann and Savelsbergh: Time Slot Management in Attended Home Delivery (Transportation Science, 2011)](https://repub.eur.nl/pub/25987/TimeSlotManagement_2011.pdf), Albert.nl's slot menu and fees per ZIP code, few slots for low-demand ZIP codes, up to 25% higher cost for two-hour slots and up to 10% savings from regional differentiation
+- [Campbell and Savelsbergh: Incentive Schemes for Attended Home Delivery Services (Transportation Science, 2006)](https://ideas.repec.org/a/inm/ortrsc/v40y2006i3p327-341.html), incentives to steer customers toward low-cost delivery slots, modeled and simulated
 
 **In practice**
 
-- [Salesforce: Field Service Developer Guide](https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/field_service_dev.pdf), `GetSlots`, arrival window fields, `ScheduleService` resource locking and collision detection, recurring appointment slots
+- [Salesforce: Field Service Developer Guide](https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/field_service_dev.pdf), `GetSlots` and its sort by grade or date, slot grades and `GradeSlotsService`, arrival window fields, `ScheduleService` resource locking and collision detection, recurring appointment slots
+- [Salesforce Trailhead: Explore optimization](https://trailhead.salesforce.com/content/learn/modules/field-service-lightning-optimization/explore-optimization), time slots and candidates graded against weighted service objectives
+- [ServiceTitan: Use Schedule Assistant](https://help.servicetitan.com/docs/use-schedule-assistant), date, time and technician suggestions that minimize drive time, sorted by drive time, with the added time and distance of inserting a job into a route
+- [Microsoft Learn: Schedule assistant overview](https://learn.microsoft.com/en-us/dynamics365/field-service/schedule-assistant), resource recommendations with estimated travel time, and constraints not enforced outside recommended slots
 - [Oracle Field Service: Activity booking overview](https://docs.oracle.com/en/cloud/saas/field-service/faaca/c-activitybookingoverview.html), booking methods per capacity area
 - [Timefold: Time window recommendations](https://docs.timefold.ai/field-service-routing/latest/recommendations/recommendations), offering narrow windows while the customer is on the phone and optimizing afterward
+- [Timefold: Visit time window recommendations](https://docs.timefold.ai/field-service-routing/latest/recommendations/visit-time-window-recommendations), recommendations per window with a score difference, the draft plan, longer windows giving fewer options, and concurrent requests
 - [ServiceTitan: Set up arrival windows](https://help.servicetitan.com/docs/set-up-arrival-windows.md), preset windows per business unit, no spanning midnight, mandatory with capacity planning
 - [ServiceTitan: Set up Scheduling Pro](https://help.servicetitan.com/docs/set-up-your-online-scheduler-with-scheduling-pro-in-servicetitan-max.md), online and call-center booking, zones, buffers and blocked dates
 - [ServiceTitan: Configure voice agent settings](https://help.servicetitan.com/docs/configure-your-voice-agent-settings-in-servicetitan), per-action and per-job-type booking permissions, Adaptive Capacity dependency and retention offers
@@ -173,6 +328,6 @@ Record structure, typed actors and recording automated decisions are in [Audit T
 - [Housecall Pro: Setting your arrival window](https://help.housecallpro.com/en/articles/918018-setting-your-arrival-window), window options starting at the scheduled time
 - [Housecall Pro: Online booking settings](https://help.housecallpro.com/en/articles/7034474-new-online-booking-settings), booking modes, employees available for booking, "Send request" creating a lead when no slot fits, Reserve with Google
 - [Housecall Pro: Customer notifications overview](https://help.housecallpro.com/en/articles/357613-customer-notifications-overview), scheduled-job notifications resent when the time or employee changes
-- [Jobber: Online booking](https://help.getjobber.com/hc/en-us/articles/13808363916951), booking intervals, drive time limits, buffers and random assignment
+- [Jobber: Online booking](https://help.getjobber.com/hc/en-us/articles/13808363916951), booking intervals, drive time limits measured from the day's other bookings (every slot on an empty day), buffers and random assignment
 - [Jobber: Receptionist](https://help.getjobber.com/hc/en-us/articles/25315927533847), AI booking through online booking settings, approvals, summaries, recordings and transcripts
 - [Google: Local Services Ads charges](https://support.google.com/adwords/answer/7195435), booking requests charged as valid leads in the US and Canada

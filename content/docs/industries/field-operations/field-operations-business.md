@@ -15,7 +15,7 @@ The software is hard because scheduling, routing, recurring billing, offline mob
 
 The chapters follow the work, in seven parts plus a reference:
 
-- **How the Work Flows.** This chapter, then [The Software Landscape](/docs/industries/field-operations/software-landscape) (the products and what each class is built for), [Customers, Accounts & Properties](/docs/industries/field-operations/customers-and-properties), [Service Agreements & Plans](/docs/industries/field-operations/service-agreements) and [Repair, Install & Commercial Work](/docs/industries/field-operations/repair-and-installation) (flat-rate repair, diagnostics, parts, warranty claims, installs and commercial SLAs).
+- **How the Work Flows.** This chapter, then [The Software Landscape](/docs/industries/field-operations/software-landscape) (the products and what each class is built for), [Customers, Accounts & Properties](/docs/industries/field-operations/customers-and-properties), [Service Agreements & Plans](/docs/industries/field-operations/service-agreements) and [Repair, Install & Commercial Work](/docs/industries/field-operations/repair-and-installation) (flat-rate repair, diagnostics, parts, warranty claims, installs and commercial SLAs) and [Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery) (attended and unattended stops, instructions, failed attempts, loading and depots).
 - **Scheduling and Routing.** [Recurring Schedules](/docs/industries/field-operations/recurring-schedules), [Territories & Capacity](/docs/industries/field-operations/territories-and-capacity), [Booking Appointments](/docs/industries/field-operations/booking-appointments), [Route Optimization](/docs/industries/field-operations/route-optimization), [Weighing the Routing Objective](/docs/industries/field-operations/route-objectives) and [Dispatch & the Day of Service](/docs/industries/field-operations/dispatch).
 - **In the Field.** [The Technician App](/docs/industries/field-operations/technician-app), [Proof of Service](/docs/industries/field-operations/proof-of-service) and [Fleet, Inventory & Safety](/docs/industries/field-operations/fleet-and-safety).
 - **The Rules.** [Regulated Materials](/docs/industries/field-operations/regulated-materials), [Licenses & Permits](/docs/industries/field-operations/licensing-and-permits), [Consumer Protection](/docs/industries/field-operations/consumer-protection) and [Audit Trails & Records](/docs/industries/field-operations/audit-trails-and-records).
@@ -35,6 +35,7 @@ Read end to end, the volume describes the components of a field operations platf
 | Org tree and core model | Branches, accounts, properties, work orders, visits | This chapter, [Customers, Accounts & Properties](/docs/industries/field-operations/customers-and-properties) |
 | Agreements | What was sold, on which terms | [Service Agreements & Plans](/docs/industries/field-operations/service-agreements) |
 | Repair and project work | Flat-rate tickets, parts, warranty claims, installs, SLAs | [Repair, Install & Commercial Work](/docs/industries/field-operations/repair-and-installation) |
+| Delivery | Items, instructions, attempts, loads and depots | [Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery) |
 | Recurrence engine | Agreements into promised occurrences | [Recurring Schedules](/docs/industries/field-operations/recurring-schedules) |
 | Capacity and booking | Who works where, what fits, which windows to offer | [Territories & Capacity](/docs/industries/field-operations/territories-and-capacity), [Booking Appointments](/docs/industries/field-operations/booking-appointments) |
 | Optimizer and dispatch | Routes, the objective they serve, then the live day | [Route Optimization](/docs/industries/field-operations/route-optimization), [Weighing the Routing Objective](/docs/industries/field-operations/route-objectives), [Dispatch & the Day of Service](/docs/industries/field-operations/dispatch) |
@@ -67,7 +68,7 @@ Dynamics 365 Field Service names the same split (reactive, preventive, predictiv
 
 **Commercial contracts** add response times, many sites under one bill-to, and reports a customer's own auditors read. Salesforce links work orders to entitlements for SLAs; ServiceTrade's contracts carry separate recurrences for the work and the invoicing; Swept compares scheduled to actual janitorial hours to find underbid sites. [Repair, Install & Commercial Work](/docs/industries/field-operations/repair-and-installation) covers these three models.
 
-**Delivery** stops take minutes, so a route holds dozens, and the business lives on same-day re-planning, proof of delivery and live ETAs: patterns field service keeps borrowing.
+**Delivery** stops take minutes, so a route holds dozens, and the business lives on same-day re-planning, proof of delivery and live ETAs: patterns field service keeps borrowing. [Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery) covers the model.
 
 ## How Big It Is
 
@@ -291,7 +292,8 @@ CREATE TABLE visits (
   status_reason          TEXT CHECK (status_reason IN ('no_access', 'not_home',
                            'customer_declined', 'part_needed', 'weather',
                            'unsafe_condition', 'tech_out', 'customer_asked',
-                           'expired')),  -- required for not_completed and cancelled
+                           'expired', 'address_not_found', 'id_check_failed',
+                           'item_damaged')),  -- required for not_completed and cancelled
   hold_expires_at        TIMESTAMPTZ,    -- only while held
   is_locked              BOOLEAN NOT NULL DEFAULT FALSE,  -- pinned; optimizers leave it
   created_at             TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -309,7 +311,7 @@ There is no separate outcome column; later chapters use these values. A **callba
 Design decisions behind it:
 
 - **Separate the payer from the place.** ServiceTitan's customer is the bill-to and its location the service site; Jobber's clients have zero, one or many properties. Collapse them and the first landlord with twelve rentals, or the restaurant group with forty kitchens, breaks the model. Who pays for a property changes over time, so that link is an effective-dated row in [Customers, Accounts & Properties](/docs/industries/field-operations/customers-and-properties).
-- **One-off work needs no agreement.** A no-heat call, a water heater install and a furniture delivery are work orders with a null `agreement_id`. [Repair, Install & Commercial Work](/docs/industries/field-operations/repair-and-installation) adds the assets, parts and warranty claims around repair and installs; delivery needs no extra model and is covered by [Proof of Service](/docs/industries/field-operations/proof-of-service), [Route Optimization](/docs/industries/field-operations/route-optimization) and [Dispatch & the Day of Service](/docs/industries/field-operations/dispatch). The work order is the unit dispatch, proof, billing and commissions all read.
+- **One-off work needs no agreement.** A no-heat call, a water heater install and a furniture delivery are work orders with a null `agreement_id`. [Repair, Install & Commercial Work](/docs/industries/field-operations/repair-and-installation) adds the assets, parts and warranty claims around repair and installs; [Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery) adds items, delivery instructions and attempts for delivery. The work order is the unit dispatch, proof, billing and commissions all read.
 - **Visit windows are local promises.** "Tuesday 8 to noon" means 8 at the property, so the window is local time plus the property's IANA zone ([Time & Date Formats](/docs/fundamentals/time#future-wall-clock-times-local-time-plus-a-zone)), and chapters that need instants (booking's overlap check, the metrics warehouse) derive them from these columns rather than storing a second promise; things that already happened (`arrived_at`, `completed_at`) are UTC instants.
 - **Effective-date what changes and gets disputed:** territory membership, a plan's price, a property's payer, a technician's license, each with a `valid_during` range ([Effective Dating & History](/docs/database/temporal-data)).
 - **Scope every row** by `tenant_id`, and by `branch_id` wherever a rule can differ by branch, enforced in the database ([Multi-Tenancy](/docs/architecture/multi-tenancy)).

@@ -2,7 +2,7 @@
 title = "Territories & Capacity"
 description = "Where work can happen and who can do it: territory polygons, PostGIS lookups, skills and licenses, crews and shifts, capacity models, forecasting."
 category = "Field Operations Industry"
-order = 1507
+order = 1508
 part = "Scheduling and Routing"
 tags = ["field-operations", "scheduling", "territories", "capacity", "geospatial"]
 +++

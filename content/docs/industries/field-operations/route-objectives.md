@@ -3,7 +3,7 @@ title = "Weighing the Routing Objective"
 nav_title = "Weighing the Objective"
 description = "Folding drive time, miles, overtime, lateness, skipped work and fairness into one solver cost: levels, real prices, profiles, units and calibration."
 category = "Field Operations Industry"
-order = 1510
+order = 1511
 part = "Scheduling and Routing"
 tags = ["field-operations", "routing", "optimization", "objectives", "vrp"]
 +++

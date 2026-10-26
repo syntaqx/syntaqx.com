@@ -2,7 +2,7 @@
 title = "Pricing & Sales Rules"
 description = "Pricing field service: flat-rate pricebooks and markup, good-better-best proposals, recurring prices, discount bands, pricing rules, promotions and financing."
 category = "Field Operations Industry"
-order = 1520
+order = 1521
 part = "Selling"
 tags = ["field-operations", "sales", "pricing", "pricebook", "rules-engine", "financing"]
 +++

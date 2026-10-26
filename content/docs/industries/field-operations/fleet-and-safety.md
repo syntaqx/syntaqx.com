@@ -2,7 +2,7 @@
 title = "Fleet, Inventory & Safety"
 description = "Vans and box trucks as vehicles, warehouses and workplaces: CMV thresholds, DVIR and hours, telematics, safety scores, van stock, hazmat, PPE and incidents."
 category = "Field Operations Industry"
-order = 1514
+order = 1515
 part = "In the Field"
 tags = ["field-operations", "fleet", "telematics", "inventory", "dot", "osha", "safety"]
 +++
@@ -86,7 +86,7 @@ CREATE TABLE vehicle_assignments (
 );
 ```
 
-`is_cmv` is stored, not computed, because the answer depends on how the vehicle is used (towing, passengers, placarded loads), and `cmv_basis` says why. An `out_of_service` vehicle (an open DVIR defect, an expired periodic inspection) can't take a route. `capabilities` is what delivery work matches against: an appliance that needs a liftgate, a full-room furniture delivery that needs a long box, a pharmacy order that needs refrigeration are requirements on the work order, checked against the vehicle the crew will drive. A two-person delivery crew is one driver plus a helper: the assignment names the driver, because hours of service and safety events belong to whoever is at the wheel, and the helper rides on the crew resource.
+`is_cmv` is stored, not computed, because the answer depends on how the vehicle is used (towing, passengers, placarded loads), and `cmv_basis` says why. An `out_of_service` vehicle (an open DVIR defect, an expired periodic inspection) can't take a route. `capabilities` is what delivery work matches against: an appliance that needs a liftgate, a full-room furniture delivery that needs a long box, a pharmacy order that needs refrigeration are requirements on the work order, checked against the vehicle the crew will drive. A two-person delivery crew is one driver plus a helper: the assignment names the driver, because hours of service and safety events belong to whoever is at the wheel, and the helper rides on the crew resource. Delivery vehicles also need capacity in weight, volume and pallets, loaded in reverse stop order and scanned on; [Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery) adds those columns.
 
 ## Safety Scores and Dashcams
 

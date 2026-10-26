@@ -2,7 +2,7 @@
 title = "Customer Communications"
 description = "The messages around every job: confirmations, reminders, on-my-way texts, service reports, review requests, shared numbers and the inbox that answers them."
 category = "Field Operations Industry"
-order = 1523
+order = 1524
 part = "Customers and Billing"
 tags = ["field-operations", "sms", "email", "consent", "tcpa", "notifications", "reviews"]
 +++
@@ -39,7 +39,7 @@ Every suite ships the core lifecycle. They differ in how reminders are triggered
 
 Two details are worth borrowing. FieldRoutes tracks each reminder's state (sent, don't send, pending confirmation, confirmed via office), turning reminders into a confirmation workflow: the unconfirmed visits on tomorrow's routes are the ones to call. And Housecall Pro resends the scheduled notification when the time or technician changes, so the customer's copy tracks the real appointment.
 
-Delivery platforms go further on triggers, because a delivery customer waits by the door: Onfleet notifies on task started, an ETA threshold, driver arriving, completed, failed and a **delay** threshold, and Salesforce Field Service's Appointment Assistant notifies when the worker is en route and again about a mile away. The delay trigger is the one trades should copy: a message that the technician is running late beats a customer calling the office to ask.
+Delivery platforms go further on triggers, because a delivery customer waits by the door: Onfleet notifies on task started, an ETA threshold, driver arriving, completed, failed and a **delay** threshold, and Salesforce Field Service's Appointment Assistant notifies when the worker is en route and again about a mile away. The delay trigger is the one trades should copy: a message that the technician is running late beats a customer calling the office to ask. Delivery messages also collect: the tracking link is where a customer says where to leave a package or asks to hold it, and a failed-attempt message carries the next step ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery)).
 
 Beside the FSM sits a layer of communications vendors. Podium sells one inbox for calls, texts, web leads and social messages, with automatic review requests and an AI agent that books; Birdeye and Broadly sell similar reputation and messaging tools. Many businesses run one of these and an FSM together, which creates this chapter's hardest data problem: two systems texting one number, with two opt-out lists.
 

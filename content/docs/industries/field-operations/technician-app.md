@@ -2,7 +2,7 @@
 title = "The Technician App"
 description = "The field app: what vendors keep offline, field conflict rules, forms and readings, parts and equipment, flat-rate selling, payments, time and devices."
 category = "Field Operations Industry"
-order = 1512
+order = 1513
 part = "In the Field"
 tags = ["field-operations", "mobile", "offline", "forms", "pricebook", "time-tracking"]
 +++

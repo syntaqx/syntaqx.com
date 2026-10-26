@@ -2,7 +2,7 @@
 title = "Sales Teams & Commissions"
 description = "Paying the people who sell: team structures, recruiting and onboarding gates, worker classification, commission plans as data, clawbacks, payroll and disputes."
 category = "Field Operations Industry"
-order = 1522
+order = 1523
 part = "Selling"
 tags = ["field-operations", "sales", "commissions", "payroll", "compliance"]
 +++

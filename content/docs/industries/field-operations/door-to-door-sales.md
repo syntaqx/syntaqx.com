@@ -2,7 +2,7 @@
 title = "Door-to-Door Sales"
 description = "Selling at the door: canvass areas, the knock log and door statuses, property data, propensity scores, Do Not Knock lists, data licensing and rep safety."
 category = "Field Operations Industry"
-order = 1519
+order = 1520
 part = "Selling"
 tags = ["field-operations", "sales", "door-to-door", "geospatial", "lead-scoring", "compliance"]
 +++

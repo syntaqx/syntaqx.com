@@ -2,7 +2,7 @@
 title = "Recurring Schedules"
 description = "Turning a cadence into visits: RFC 5545 rules, seasonal rounds, how vendors generate recurring work, service windows, backlog, holidays and make-ups."
 category = "Field Operations Industry"
-order = 1506
+order = 1507
 part = "Scheduling and Routing"
 tags = ["field-operations", "scheduling", "recurrence", "service-windows", "backlog"]
 +++

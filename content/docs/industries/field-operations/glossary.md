@@ -3,7 +3,7 @@ title = "Field Operations Glossary"
 nav_title = "Glossary"
 description = "Every term the field operations volume uses, defined in a line and linked to its chapter: the work, scheduling, the field, the rules, selling and billing."
 category = "Field Operations Industry"
-order = 1531
+order = 1532
 part = "Reference"
 tags = ["field-operations", "glossary", "reference"]
 +++
@@ -69,6 +69,18 @@ Field operations borrows words from sales, logistics, billing, telematics and re
 - **Warranty claim:** a request to a manufacturer, distributor or claim processor to pay for a covered part or labor, tracked as a receivable with a submit-by date, evidence and states ([Repair, Install & Commercial Work](/docs/industries/field-operations/repair-and-installation#warranty-claims-getting-paid-by-someone-else)).
 - **Work order:** the work to be done (`work_orders`), from an occurrence, a request, a sale or a callback; vendors also call it a job or ticket. One work order can take several visits ([The Field Operations Business](/docs/industries/field-operations/field-operations-business#the-core-data-model)).
 
+## Last-Mile Delivery
+
+- **Attendance:** whether someone must be present for the work: `required`, `preferred` or `not_required`. Unattended work can drop its arrival window, which is the largest density lever in routing ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#attended-and-unattended-service)).
+- **Cost per stop, cost per delivery:** route cost divided by stops attempted, versus by deliveries completed; the gap is what failed attempts cost ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#why-the-last-mile-costs-the-most)).
+- **Delivery instruction:** a standing instruction on the property (safe place, gate code) or a one-off on the order, applied in a fixed precedence; access codes are secrets ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#preferences-and-instructions)).
+- **First, middle and last mile:** shipper to warehouse, warehouse to hub or depot, and depot to door ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#from-dock-to-door)).
+- **First-attempt delivery rate:** the share of deliveries completed on the first attempt ([Operating Metrics](/docs/industries/field-operations/operating-metrics)).
+- **Handoff:** how a delivery left the driver: to the recipient, to a third party, a safe place, a mailbox, a locker or a garage ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#proof-when-nobody-signs)).
+- **Pickup-and-delivery pair:** two linked stops where the delivery can't happen before its pickup ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#waves-depots-and-pickup-and-delivery-pairs)).
+- **Shipper, consignee:** who pays for the delivery, and who receives it at the site ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#who-pays-shipper-and-consignee)).
+- **Undeliverable action:** what happens after the last failed attempt (return to sender, hold at a pickup point, dispose), decided when the order is created ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery#failed-attempts-redelivery-and-returns)).
+
 ## Scheduling and Routing
 
 - **Arrival window:** the span the customer is told to expect the technician in, stored as local time plus the property's time zone ([Booking Appointments](/docs/industries/field-operations/booking-appointments#arrival-windows)).
@@ -95,7 +107,7 @@ Field operations borrows words from sales, logistics, billing, telematics and re
 - **Scheduling policy:** an ordered set of work rules and weighted objectives a scheduler applies, as Salesforce Field Service names it ([Booking Appointments](/docs/industries/field-operations/booking-appointments#how-slots-are-found)).
 - **Service territory:** the area, usually an effective-dated polygon, a branch or team covers ([Territories & Capacity](/docs/industries/field-operations/territories-and-capacity#territories)).
 - **Service window:** the span a recurring visit may happen in and still count as on time ([Recurring Schedules](/docs/industries/field-operations/recurring-schedules#service-windows-and-flexibility)).
-- **Status reason (visit):** the one catalog behind `not_completed` and `cancelled` visits: `no_access`, `not_home`, `customer_declined`, `part_needed`, `weather`, `unsafe_condition`, `tech_out`, `customer_asked`, and `expired` for a lapsed hold. Work performed on site makes a visit `completed` instead ([The Core Data Model](/docs/industries/field-operations/field-operations-business#the-core-data-model)).
+- **Status reason (visit):** the one catalog behind `not_completed` and `cancelled` visits: `no_access`, `not_home`, `customer_declined`, `part_needed`, `weather`, `unsafe_condition`, `tech_out`, `customer_asked`, `address_not_found`, `id_check_failed`, `item_damaged`, and `expired` for a lapsed hold. Work performed on site makes a visit `completed` instead ([The Core Data Model](/docs/industries/field-operations/field-operations-business#the-core-data-model)).
 - **Travel matrix:** drive times and distances between every pair of stops, from a routing engine such as OSRM, Valhalla or a hosted API ([Route Optimization](/docs/industries/field-operations/route-optimization#what-exists-routing-engines-over-openstreetmap)).
 - **Visit:** a scheduled time plus an assignment that performs a work order (`visits`): held, scheduled, dispatched, en route, on site, completed, not completed or cancelled ([The Field Operations Business](/docs/industries/field-operations/field-operations-business#the-core-data-model)).
 - **VRP, VRPTW (vehicle routing problem, with time windows):** assigning and ordering stops across vehicles, under time windows in the second form, solved by tools such as OR-Tools, VROOM or Timefold ([Route Optimization](/docs/industries/field-operations/route-optimization#the-problem-stated-precisely)).

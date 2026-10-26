@@ -2,7 +2,7 @@
 title = "Consumer Protection"
 description = "Consumer law at the customer's door: the Cooling-Off Rule and its exclusions, home solicitation, renewals and cancellation, field contact and privacy."
 category = "Field Operations Industry"
-order = 1517
+order = 1518
 part = "The Rules"
 tags = ["field-operations", "compliance", "consumer-protection", "cooling-off", "subscriptions", "privacy"]
 +++

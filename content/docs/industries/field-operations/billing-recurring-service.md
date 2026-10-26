@@ -2,7 +2,7 @@
 title = "Billing Recurring Service"
 description = "Billing recurring service: per-visit, periodic and prepaid models, the service balance, invoices, autopay, financing, tax on services and accounting sync."
 category = "Field Operations Industry"
-order = 1525
+order = 1526
 part = "Customers and Billing"
 tags = ["field-operations", "billing", "invoicing", "autopay", "sales-tax", "accounting"]
 +++

@@ -2,7 +2,7 @@
 title = "Operating Metrics"
 description = "The numbers field operations runs on: first-time fix, arrival windows, SLAs, utilization, job costing, close rate, retention, AR and safety."
 category = "Field Operations Industry"
-order = 1529
+order = 1530
 part = "Running the Platform"
 tags = ["field-operations", "metrics", "analytics", "retention", "data-pipelines", "reporting"]
 +++
@@ -94,7 +94,7 @@ Efficiency metrics share one denominator problem, drawn above. FieldRoutes' Rout
 - **Revenue per route hour** = production value of completed visits ÷ clocked-in hours. FieldRoutes reports production value per technician through its Billing by Service Type report grouped by technician; dividing by hours is what makes a dense route and a sparse one comparable.
 - **Planned vs actual** drive and duration per route, which Track-POD exposes as plan and actual fields, is how you tell a bad plan from a bad day.
 
-Exclude re-services and no-charge callbacks from production value, or a technician who causes callbacks looks more productive; FieldRoutes' Route Summary shows re-service time next to production for that reason. A delivery or cleaning route adds failed stops by reason (not home, no access, refused), which Spoke reports alongside late stops and cost per delivery; a failed stop costs the drive and earns nothing.
+Exclude re-services and no-charge callbacks from production value, or a technician who causes callbacks looks more productive; FieldRoutes' Route Summary shows re-service time next to production for that reason. A delivery or cleaning route adds failed stops by reason (not home, no access, refused), which Spoke reports alongside late stops and cost per delivery; a failed stop costs the drive and earns nothing. For delivery, **first-attempt delivery rate** is delivery work orders completed on their first visit ÷ delivery work orders closed (completed, or returned after a failed attempt), and cost per stop is reported beside cost per delivery so the gap shows what failed attempts cost ([Last-Mile Delivery & Distribution](/docs/industries/field-operations/last-mile-delivery)).
 
 ## Sales and Memberships
 

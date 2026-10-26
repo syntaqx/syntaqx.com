@@ -2,7 +2,7 @@
 title = "Audit Trails & Records"
 description = "Audit trails applied to field service: who asks for records, what vendors expose, field retention, snapshots, e-sign evidence, offline capture and production."
 category = "Field Operations Industry"
-order = 1518
+order = 1519
 part = "The Rules"
 tags = ["field-operations", "compliance", "audit", "records", "retention"]
 +++

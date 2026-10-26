@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 376">
+  <!-- a. Open calendar: every open window looks the same -->
+  <text class="cap" x="40" y="30">a. open calendar</text>
+  <rect class="frame" x="40" y="40" width="320" height="300"/>
+  <text class="t b" x="52" y="62">Pick a time</text>
+  <text class="n" x="52" y="80">any technician, any open time</text>
+
+  <text class="t" x="80" y="104" text-anchor="middle">Mon 2</text>
+  <text class="t" x="140" y="104" text-anchor="middle">Tue 3</text>
+  <text class="t" x="200" y="104" text-anchor="middle">Wed 4</text>
+  <text class="t" x="260" y="104" text-anchor="middle">Thu 5</text>
+  <text class="t" x="320" y="104" text-anchor="middle">Fri 6</text>
+
+  <rect class="cell" x="52" y="114" width="56" height="30"/>
+  <text class="t" x="80" y="129" text-anchor="middle" dominant-baseline="central">8-10</text>
+  <rect class="cell" x="112" y="114" width="56" height="30"/>
+  <text class="t" x="140" y="129" text-anchor="middle" dominant-baseline="central">8-10</text>
+  <rect class="cell" x="172" y="114" width="56" height="30"/>
+  <text class="t" x="200" y="129" text-anchor="middle" dominant-baseline="central">8-10</text>
+  <rect class="cell" x="232" y="114" width="56" height="30"/>
+  <text class="t" x="260" y="129" text-anchor="middle" dominant-baseline="central">8-10</text>
+  <rect class="cell" x="292" y="114" width="56" height="30"/>
+  <text class="t" x="320" y="129" text-anchor="middle" dominant-baseline="central">8-10</text>
+
+  <rect class="cell" x="52" y="150" width="56" height="30"/>
+  <text class="t" x="80" y="165" text-anchor="middle" dominant-baseline="central">10-12</text>
+  <rect class="cell ghost" x="112" y="150" width="56" height="30"/>
+  <text class="t dim" x="140" y="165" text-anchor="middle" dominant-baseline="central">full</text>
+  <rect class="cell" x="172" y="150" width="56" height="30"/>
+  <text class="t" x="200" y="165" text-anchor="middle" dominant-baseline="central">10-12</text>
+  <rect class="cell" x="232" y="150" width="56" height="30"/>
+  <text class="t" x="260" y="165" text-anchor="middle" dominant-baseline="central">10-12</text>
+  <rect class="cell" x="292" y="150" width="56" height="30"/>
+  <text class="t" x="320" y="165" text-anchor="middle" dominant-baseline="central">10-12</text>
+
+  <rect class="cell" x="52" y="186" width="56" height="30"/>
+  <text class="t" x="80" y="201" text-anchor="middle" dominant-baseline="central">12-2</text>
+  <rect class="cell" x="112" y="186" width="56" height="30"/>
+  <text class="t" x="140" y="201" text-anchor="middle" dominant-baseline="central">12-2</text>
+  <rect class="cell" x="172" y="186" width="56" height="30"/>
+  <text class="t" x="200" y="201" text-anchor="middle" dominant-baseline="central">12-2</text>
+  <rect class="cell" x="232" y="186" width="56" height="30"/>
+  <text class="t" x="260" y="201" text-anchor="middle" dominant-baseline="central">12-2</text>
+  <rect class="cell" x="292" y="186" width="56" height="30"/>
+  <text class="t" x="320" y="201" text-anchor="middle" dominant-baseline="central">12-2</text>
+
+  <rect class="cell" x="52" y="222" width="56" height="30"/>
+  <text class="t" x="80" y="237" text-anchor="middle" dominant-baseline="central">2-4</text>
+  <rect class="cell" x="112" y="222" width="56" height="30"/>
+  <text class="t" x="140" y="237" text-anchor="middle" dominant-baseline="central">2-4</text>
+  <rect class="cell" x="172" y="222" width="56" height="30"/>
+  <text class="t" x="200" y="237" text-anchor="middle" dominant-baseline="central">2-4</text>
+  <rect class="cell ghost" x="232" y="222" width="56" height="30"/>
+  <text class="t dim" x="260" y="237" text-anchor="middle" dominant-baseline="central">full</text>
+  <rect class="cell" x="292" y="222" width="56" height="30"/>
+  <text class="t" x="320" y="237" text-anchor="middle" dominant-baseline="central">2-4</text>
+
+  <text class="t dim" x="52" y="274">18 open windows, all equal</text>
+  <rect class="cell band" x="52" y="294" width="296" height="28"/>
+  <text class="t b" x="200" y="308" text-anchor="middle" dominant-baseline="central">Continue</text>
+
+  <!-- b. Route-aware: a few windows ranked by what they add to a route -->
+  <text class="cap hl" x="400" y="30">b. route-aware</text>
+  <rect class="frame" x="400" y="40" width="320" height="300"/>
+  <text class="t b" x="412" y="62">Recommended times</text>
+  <text class="n" x="412" y="80">where a technician is already nearby</text>
+
+  <rect class="cell hl" x="412" y="96" width="296" height="48"/>
+  <text class="t hl b" x="424" y="113" dominant-baseline="central">Tue Nov 3, 10-12</text>
+  <rect class="cell hl end" x="580" y="104" width="116" height="18"/>
+  <text class="t hl" x="638" y="113" text-anchor="middle" dominant-baseline="central">technician nearby</text>
+  <text class="n ink" x="424" y="136">on your street that morning</text>
+
+  <rect class="cell" x="412" y="152" width="296" height="48"/>
+  <text class="t b" x="424" y="169" dominant-baseline="central">Wed Nov 4, 8-10</text>
+  <rect class="cell band" x="580" y="160" width="116" height="18"/>
+  <text class="t" x="638" y="169" text-anchor="middle" dominant-baseline="central">technician nearby</text>
+  <text class="n" x="424" y="192">two streets over that morning</text>
+
+  <rect class="cell" x="412" y="208" width="296" height="48"/>
+  <text class="t b" x="424" y="225" dominant-baseline="central">Thu Nov 5, 8-12</text>
+  <rect class="cell band" x="640" y="216" width="56" height="18"/>
+  <text class="t" x="668" y="225" text-anchor="middle" dominant-baseline="central">$15 off</text>
+  <text class="n" x="424" y="248">a wider window, so the route can fit you</text>
+
+  <text class="t hl" x="412" y="276">See more times</text>
+  <rect class="cell band" x="412" y="294" width="296" height="28"/>
+  <text class="t b" x="560" y="308" text-anchor="middle" dominant-baseline="central">Continue</text>
+
+  <text class="n" x="40" y="364">illustrative screens: the same customer and the same week, offered two ways</text>
+</svg>
