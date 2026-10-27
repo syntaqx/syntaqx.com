@@ -113,11 +113,34 @@ export function rasterize(
             : 0;
     }
 
-  const fill = (pts: V3[], v: number, accent = false, alpha = 1) =>
-    scan(pts.map(P), cols, rows, (i) => {
-      lum[i] = lum[i] * (1 - alpha) + v * alpha;
-      acc[i] = accent ? 1 : 0;
+  // Coverage is sampled S×S per cell. Only cells wholly inside a face take
+  // its tone; cells an edge cuts through are cleared, so no tile crosses an
+  // outline and every line runs in a clean channel.
+  const S = 4;
+  const cover = new Uint8Array(cols * rows);
+  const touched: number[] = [];
+  const fill = (pts: V3[], v: number, accent = false, alpha = 1) => {
+    const sub = pts.map((p): V2 => {
+      const [x, y] = P(p);
+      return [x * S, y * S];
     });
+    scan(sub, cols * S, rows * S, (k) => {
+      const sx = k % (cols * S);
+      const i = Math.floor((k - sx) / (cols * S) / S) * cols + Math.floor(sx / S);
+      if (!cover[i]++) touched.push(i);
+    });
+    for (const i of touched) {
+      if (cover[i] === S * S) {
+        lum[i] = lum[i] * (1 - alpha) + v * alpha;
+        acc[i] = accent ? 1 : 0;
+      } else {
+        lum[i] = 0;
+        acc[i] = 0;
+      }
+      cover[i] = 0;
+    }
+    touched.length = 0;
+  };
 
   for (const p of scene.parts) {
     if (p.kind === "plane" && !p.dashed) fill(p.pts, p.v, false, 0.82);
