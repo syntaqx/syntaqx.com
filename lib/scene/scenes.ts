@@ -865,8 +865,9 @@ const arcade: SceneFn = (s) => {
 
 /**
  * Property Tech: a mid-rise whose floors part on hover. One unit's window
- * lights as it's leased, and the matching row lights on the rent roll
- * floating beside it, one unit at a time.
+ * lights as it's leased, the lease runs into the database beside it, and
+ * the matching row lights on the rent roll floating above, one unit at a
+ * time.
  */
 const tenancy: SceneFn = (s) => {
   const [x0, y0, a, b] = [1, 3.6, 4.4, 3.4];
@@ -881,11 +882,15 @@ const tenancy: SceneFn = (s) => {
   const ww = a / 3;
   const front = (x: number, z: number, h = 0.45): Part => ({ kind: "plane", pts: [[x, fy, z], [x + ww - 0.5, fy, z], [x + ww - 0.5, fy, z + h], [x, fy, z + h]], v: 0.03 });
   const side = (y: number, z: number): Part => ({ kind: "plane", pts: [[fx, y, z], [fx, y + 0.9, z], [fx, y + 0.9, z + 0.45], [fx, y, z + 0.45]], v: 0.03 });
-  const sheetZ = 2.4 + s.spread * 1.4 + bob(s, 0.1);
+  const sheetZ = 3.2 + s.spread * 1.4 + bob(s, 0.1);
+  // the database under the rent roll: platters that part on hover
+  const [dx, dy, dr, dh] = [8.3, 2.5, 0.95, 0.32];
+  const dgap = 0.08 + s.spread * 0.3;
+  const dbTop = 3 * dh + 2 * dgap;
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    // the walk from the door to the rent roll
-    { kind: "cable", pts: [[x0 + a / 2, fy, 0], [x0 + a / 2, 8.6, 0], [8.4, 8.6, 0], [8.4, 4.2, 0]], speed: 0.35, accent: true },
+    // the walk from the door to the database
+    { kind: "cable", pts: [[x0 + a / 2, fy, 0], [x0 + a / 2, 8.6, 0], [dx, 8.6, 0], [dx, dy + dr, 0]], speed: 0.35, accent: true },
     // lobby: a band of glass and the door
     { kind: "box", box: box(x0, y0, 0, a, b, lobbyH) },
     { kind: "plane", pts: [[x0 + 0.3, fy, 0.2], [x0 + a / 2 - 0.5, fy, 0.2], [x0 + a / 2 - 0.5, fy, 0.65], [x0 + 0.3, fy, 0.65]], v: 0.03 },
@@ -903,6 +908,8 @@ const tenancy: SceneFn = (s) => {
     }
     parts.push(side(y0 + 0.4, z + 0.3), side(y0 + 1.9, z + 0.3));
   }
+  for (let k = 0; k < 3; k++) parts.push({ kind: "cyl", cx: dx, cy: dy, z: k * (dh + dgap), r: dr, h: dh });
+  parts.push({ kind: "line", a: [dx, dy, dbTop], b: [dx, dy, sheetZ], dashed: true, alpha: 0.4 });
   // the rent roll: one row per unit on the visible floor
   parts.push({
     kind: "plane",
