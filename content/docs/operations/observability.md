@@ -39,6 +39,28 @@ A trace follows a request through every service it touches, so "the API was slow
 - Queue messages and [webhooks](/docs/api-design/webhooks) carry the trace context too, so asynchronous work links back to the request that caused it.
 - Spans record the resource IDs they touched (payment ID, account ID), so you can search by business object, not just by trace.
 
+## Sampling Traces: Head or Tail
+
+Tracing every request stops being affordable long before it stops being useful. OpenTelemetry suggests considering sampling once you generate "1000 or more traces per second," and most of those traces are healthy requests that look like each other. Logs and metrics stay complete; traces are the signal you sample. There are two places to decide:
+
+| | Head sampling | Tail sampling |
+| --- | ------------- | ------------- |
+| Decides | "As early as possible," when the trace starts | After seeing "all or most of the spans within the trace" |
+| Knows | Only what's known at the start: route, service, attributes | The outcome: errors, latency, which services were touched |
+| Costs | Nothing extra; unsampled spans are never exported | A stateful collector tier that holds every span until the decision |
+| Can't | Guarantee every error is kept | Run cheaply at very high volume without a head sample in front |
+
+**Head sampling** makes the decision from the trace ID, so every service agrees without talking to each other. The SDK's default sampler is `ParentBased` with `AlwaysOn` as its root: a service follows the decision in the incoming `traceparent`, and only the first service decides. Set the ratio at that root. Its limitation is the one that matters: "it is not possible to make a sampling decision based on data in the entire trace," so a 1% head sample keeps 1% of your errors too.
+
+**Tail sampling** decides in the OpenTelemetry Collector once a trace is complete, with policies such as always keeping traces with an error status, keeping traces over a latency threshold, keeping everything from a newly deployed version, and a probabilistic sample of the rest. The Collector's tail sampling processor waits 30 seconds by default (`decision_wait`) and holds 50,000 traces in memory (`num_traces`), and "all spans for a given trace MUST be received by the same collector instance," so scaling it means a first collector layer that routes spans by trace ID with the load-balancing exporter and a second layer that samples.
+
+My default:
+
+- **Head-sample at the edge** at a rate the pipeline can always absorb, and **tail-sample after it** to keep every error and slow trace among what survived. OpenTelemetry describes exactly this combination for high-volume systems.
+- **Keep everything for what's rare:** a canary, a new release, a pilot customer, a debug flag on a single request.
+- **Record the rate.** OpenTelemetry's probability sampler writes the sampling threshold into the `tracestate`, and any span-derived count must be weighted by it, the same rule as [sampling product events](/docs/telemetry/collection#sampling). Request rates and error rates come from metrics, never from counting sampled traces.
+- **Make the request ID independent of sampling.** Every request still gets a `Request-Id` and its log lines, so a support ticket can always be traced through logs even when its trace wasn't kept.
+
 ## Structured Logs
 
 Logs are JSON, one event per line, with a consistent set of fields:
@@ -93,10 +115,13 @@ The syntaqx API generates a UUID v7 `Request-Id` for every response, including e
 - [W3C: Trace Context](https://www.w3.org/TR/trace-context/), the `traceparent` and `tracestate` headers
 - [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/), spans and context propagation
 - [OpenTelemetry: Semantic conventions](https://opentelemetry.io/docs/specs/semconv/), standard attribute names
+- [OpenTelemetry: Trace SDK](https://opentelemetry.io/docs/specs/otel/trace/sdk/), built-in samplers, the `ParentBased` default and the probability sampler's threshold in `tracestate`
 - [RFC 6648: Deprecating the "X-" Prefix](https://datatracker.ietf.org/doc/html/rfc6648), `Request-Id` without `X-`
 
 **In practice**
 
 - [Stripe: Request IDs](https://docs.stripe.com/api/request_ids), the `Request-Id` header
+- [OpenTelemetry: Sampling](https://opentelemetry.io/docs/concepts/sampling/), when to sample, head and tail sampling and combining them
+- [OpenTelemetry Collector: Tail sampling processor](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/tailsamplingprocessor/README.md), policies, `decision_wait` and `num_traces` defaults, and routing every span of a trace to one collector
 - [Google SRE Book: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/), the four golden signals and symptom-based alerting
 - [OWASP: Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html), what not to log

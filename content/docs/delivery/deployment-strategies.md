@@ -84,6 +84,32 @@ Every strategy except recreate runs old and new code against the same database a
 
 Every strategy above assumes "the old version" still exists, exactly as it was. With [immutable artifacts](/docs/delivery/containers) it does: rolling back is pointing at the previous image, not reconstructing it. Serverless platforms take this furthest, since every deploy is a new, separately addressable build.
 
+## Versioning a Set of Services Together
+
+Everything above deploys one service at a time, and for independent services that's right. Some changes span several: a client, a server and three backend services that changed their contract on the same day. Each one rolling out on its own schedule produces combinations nobody tested. Riot's account of running its online services puts it bluntly: "Allowing unaligned streams of changes into a distributed system will eventually lead to preventable incidents," and its partner-operated shards, where operators assembled service versions themselves, had more incidents traced to microservice versions that weren't compatible with each other.
+
+The fix is to version the set. Riot calls its unit an environment, a bundle of "all the declarative metadata required to fully specify, deploy, configure, run, and operate" a product's services, versioned as a whole and never changed in place:
+
+```json
+{
+  "environment": "prod-eu",
+  "version": "2026.10.27-3",
+  "services": {
+    "accounts": { "image": "accounts@sha256:4c1d...e2", "replicas": 12 },
+    "orders":   { "image": "orders@sha256:9a07...51",   "replicas": 20 },
+    "billing":  { "image": "billing@sha256:b3f2...0c",  "replicas": 6 }
+  },
+  "config_overrides": ["base", "region/eu"]
+}
+```
+
+- **Pin by digest, not tag.** Kubernetes documents why: tags "can be moved to point to different images, but digests are fixed," so a set pinned by digest runs the same code every time it starts. A set of mutable tags is not a version.
+- **One version per environment at a time.** Rolling forward or back moves the whole set, and a hotfix to one service is a new set version, not a side-channel deploy. Two environments on the same version are known to be identical.
+- **Layered overrides for what legitimately differs** (region, credentials, scale) on top of the versioned base, so a deployment stays traceable to the set that was tested. Riot describes the same layering.
+- **The set is still rolled out with the strategies above.** A new set version can go to one region or shard first as a canary, with the previous set version kept ready to switch back to.
+
+A **release train** is the same idea on a calendar: changes that are ready by a cut-off ship together on a fixed cadence, and anything that misses waits for the next one. Chrome ships a new milestone to stable every two weeks, and features that aren't complete by branch point "should be punted to the following milestone." Trains suit products where shipping is expensive per release (store-reviewed apps, game clients, appliances, on-premises software; see [Mobile Releases](/docs/delivery/mobile-releases#release-trains)). For backend services that can each deploy many times a day, keep services independently deployable with backward-compatible contracts ([API Versioning](/docs/api-design/versioning)), and reserve set versioning for the changes that genuinely have to move together.
+
 ## This Site
 
 Every [syntaqx.com](https://github.com/syntaqx/syntaqx.com) deploy is a new immutable Vercel deployment, so the site gets blue-green behavior without running two environments: the previous production deployment still exists, and [Vercel's Instant Rollback](https://vercel.com/docs/instant-rollback) points the domains back at it without rebuilding. Two details matter in practice: a rollback keeps the *current* environment variables rather than restoring old ones, and after a rollback Vercel stops promoting new pushes automatically until the rollback is undone, so a fix doesn't silently replace the rolled-back version.
@@ -94,6 +120,8 @@ Every [syntaqx.com](https://github.com/syntaqx/syntaqx.com) deploy is a new immu
 
 - [Kubernetes: Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), Recreate and RollingUpdate, with maxUnavailable and maxSurge defaults of 25%
 - [Vercel: Instant Rollback](https://vercel.com/docs/instant-rollback), rolling back by reassigning domains to a previous deployment, and what it does and doesn't restore
+- [Kubernetes: Images](https://kubernetes.io/docs/concepts/containers/images/), mutable tags, immutable digests and pinning an image by digest
+- [Chromium: Release cycle](https://chromium.googlesource.com/chromium/src/+/master/docs/process/release_cycle.md), a stable milestone every two weeks and features punted past the branch point
 
 **In practice**
 
@@ -101,3 +129,4 @@ Every [syntaqx.com](https://github.com/syntaqx/syntaqx.com) deploy is a new immu
 - [Martin Fowler: Canary Release](https://martinfowler.com/bliki/CanaryRelease.html), exposing a release to a small subset first
 - [Martin Fowler: Dark Launching](https://martinfowler.com/bliki/DarkLaunching.html), exercising new back-end behavior with real traffic, invisibly
 - [Google SRE Workbook: Canarying Releases](https://sre.google/workbook/canarying-releases/), canary versus control, SLI-based evaluation and automated verdicts
+- [Riot Games: Running Online Services at Riot, Part VI](https://www.riotgames.com/en/news/running-online-services-riot-part-vi), deploying a product as one immutably versioned environment with layered overrides, and incidents from unaligned changes

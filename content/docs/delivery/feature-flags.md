@@ -63,6 +63,19 @@ Every risky integration has an ops flag that turns it off and falls back to some
 - Take effect in seconds, without a deploy.
 - Are tested regularly. A kill switch that's never been flipped is a hypothesis.
 
+## Remote Config
+
+Remote config is the same mechanism carrying values instead of booleans: timeouts, polling intervals, limits, prices, copy, a drop rate, the order of a menu. Unity describes its service as a way "to tune your game design without deploying new versions of your application"; Firebase Remote Config does the same for apps. It's the fastest way to change production behavior, which makes it a deploy that skips most of a deploy's safety, so it needs the discipline back:
+
+- **Typed and validated before publish.** Every key has a schema: a type, bounds and allowed values (a rate between 0 and 1, a timeout above zero, a known enum). Firebase lets you declare a parameter's type so its console validates values against it; your own service should reject a change that fails its schema in the API, not just the UI. A typo in a JSON value can take a system down as surely as a bad build.
+- **Versioned, with rollback as a new version.** Every published change is a version with an author, a timestamp and a reason. Firebase keeps up to 300 versions per template and records who published each; rolling back from version 10 to version 6 creates version 11, so history only moves forward. Services report the config version they're running in their telemetry, so "what was live at 14:02?" has an answer.
+- **Targeting with a defined precedence.** Values vary by platform, app version, region, tenant or percentage, with the same stable bucketing as a flag. When several conditions match, exactly one must win; Firebase uses the condition with the highest priority. Ambiguous precedence turns every incident into an argument about which value a client actually got.
+- **Defaults in the code, the last good value in a cache.** The client ships with built-in defaults and caches the last config it fetched and validated, so an outage of the config service degrades to yesterday's values, never to a blank screen or a blocked launch. Firebase's guidance is to "set in-app default parameter values so that your app always behaves as expected" ([Mobile Releases](/docs/delivery/mobile-releases#flags-and-remote-config-are-your-rollback)).
+- **Applied at a defined moment.** Fetch and activate are separate steps. Activate at startup or a natural boundary (the next session, the next job, the start of a match), not mid-interaction; Firebase's own loading strategies include fetching now and activating on next load for exactly that reason. A value that changes halfway through a request or a user's checkout is the half-old, half-new behavior flags avoid by evaluating once.
+- **Reviewed like code for risky keys.** Changes to anything that moves money, safety or capacity need an approver, and a staged rollout to a percentage first, watched against the same abort criteria as a feature.
+
+Remote config is not a place for legal or dated business rules with sources and effective dates; those are [rules as data](/docs/architecture/rules-as-data). And it isn't a secret store: anything a client can fetch, a user can read ([Environments & Configuration](/docs/operations/environments#configuration)).
+
 ## Cleanup
 
 Removing a flag is never urgent until the day it is, so cleanup can't rely on anyone remembering:
@@ -77,6 +90,13 @@ Removing a flag is never urgent until the day it is, so cleanup can't rely on an
 **Specifications**
 
 - [OpenFeature Specification](https://openfeature.dev/specification/), the vendor-neutral evaluation API
+
+**Reference**
+
+- [Firebase: Remote Config templates and versioning](https://firebase.google.com/docs/remote-config/templates), 300 stored versions, who published each, and rollback as a new version
+- [Firebase: Remote Config parameters and conditions](https://firebase.google.com/docs/remote-config/parameters), condition priority, in-app defaults and typed values validated in the console
+- [Firebase: Remote Config loading strategies](https://firebase.google.com/docs/remote-config/loading), in-app defaults, activating on next load and avoiding mid-session UI changes
+- [Unity: What is Remote Config](https://docs.unity.com/ugs/en-us/manual/remote-config/manual/WhatsRemoteConfig), tuning without new versions, key-value settings and overrides that target players
 
 **In practice**
 
