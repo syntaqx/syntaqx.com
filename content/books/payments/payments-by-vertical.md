@@ -3,7 +3,7 @@ title = "Payments by Vertical"
 nav_title = "Payments by Vertical"
 description = "What changes by industry: healthcare, government, schools, nonprofits, utilities, B2B, gyms and restaurants, with their codes, programs, laws and features."
 category = "Payments Industry"
-order = 1430
+order = 1432
 part = "Running a Provider"
 tags = ["payments", "verticals", "healthcare", "government", "nonprofits", "merchant-category-codes"]
 +++

@@ -3,7 +3,7 @@ title = "Payments for Software Platforms"
 nav_title = "Software Platforms"
 description = "Embedded payments for vertical software: payfac models, the tenant tree, fee overrides at scale, wrong fees and their fixes, fund splits, 1099-K and support."
 category = "Payments Industry"
-order = 1428
+order = 1430
 part = "Running a Provider"
 tags = ["payments", "platforms", "payfac", "multi-tenancy", "embedded-payments"]
 +++

@@ -2,7 +2,7 @@
 title = "HSMs & Key Management"
 description = "Payments cryptography as its own discipline: HSMs, key hierarchies, key blocks, DUKPT and PIN blocks, the move off TDES, key ceremonies and cryptoperiods."
 category = "Payments Industry"
-order = 1434
+order = 1436
 part = "Running a Provider"
 tags = ["payments", "security", "cryptography", "hsm", "pci", "keys"]
 +++

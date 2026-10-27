@@ -3,7 +3,7 @@ title = "Payments Architecture at Scale"
 nav_title = "Architecture at Scale"
 description = "Running payments at millions a day: service boundaries, idempotency end to end, outbox and sagas, hot ledger accounts, multi-region, peaks and safe change."
 category = "Payments Industry"
-order = 1437
+order = 1439
 part = "Running a Provider"
 tags = ["payments", "architecture", "scalability", "ledger", "reliability", "idempotency"]
 +++

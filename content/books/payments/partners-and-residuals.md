@@ -3,7 +3,7 @@ title = "Partners, ISOs & Residuals"
 nav_title = "Partners & Residuals"
 description = "Selling through ISOs, agents, software platforms and banks: network registration, buy rates and splits, clawbacks, and a residual engine partners can audit."
 category = "Payments Industry"
-order = 1429
+order = 1431
 part = "Running a Provider"
 tags = ["payments", "residuals", "iso", "partners", "commissions"]
 +++

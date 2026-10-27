@@ -1,9 +1,9 @@
 +++
 title = "Payments Glossary"
 nav_title = "Glossary"
-description = "Every term the payments volume uses, defined in a line and linked to its chapter: rails, rules, taking payments, paying out and running a provider."
+description = "Every term the payments volume uses, defined in a line and linked to its chapter: rails, rules, taking payments, paying out, issuing and running a provider."
 category = "Payments Industry"
-order = 1442
+order = 1444
 part = "Reference"
 tags = ["payments", "glossary", "reference"]
 +++
@@ -148,7 +148,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **3RI (3DS Requestor Initiated):** a 3-D Secure authentication the merchant starts without the customer present, to refresh or extend an earlier one ([SCA & 3-D Secure](/books/payments/strong-customer-authentication#3ri-authenticating-without-the-customer)).
 - **A2P 10DLC:** carrier registration for business texting from ordinary 10-digit numbers ([Phone Payments](/books/payments/phone-payments#the-rules-for-texting)).
 - **Account updater:** a network service that refreshes stored card numbers and expiries when cards are reissued ([Stored Cards & Recurring Billing](/books/payments/stored-credentials#keeping-the-card-alive)).
-- **ACS, Directory Server, 3DS Server:** the issuer's authentication service, the network's routing service, and the merchant side's component in 3-D Secure ([SCA & 3-D Secure](/books/payments/strong-customer-authentication#the-three-domains)).
+- **ACS, Directory Server, 3DS Server:** the issuer's authentication service, the network's routing service, and the merchant side's component in 3-D Secure ([SCA & 3-D Secure](/books/payments/strong-customer-authentication#the-three-domains); the ACS from the issuer's side in [Issuer Processing](/books/payments/issuer-processing#issuer-side-fraud)).
 - **AFA (additional factor of authentication):** India's requirement, set by the Reserve Bank of India, for a second factor on digital payments ([SCA & 3-D Secure](/books/payments/strong-customer-authentication#beyond-psd2)).
 - **APP fraud:** authorized push payment fraud, where a payer is tricked into sending money themselves ([Fraud & Risk](/books/payments/fraud-and-risk#bank-rail-fraud)).
 - **Application:** a request to become a merchant, with its own states and history, separate from the merchant account it creates ([Merchant Onboarding](/books/payments/merchant-onboarding#the-application-is-not-the-merchant)); in receivables, a record of what a payment or credit paid for, allocating it to one or more invoices, with reversals as new negative applications ([Checkout, Invoices & Payment Links](/books/payments/checkout-and-invoicing#applying-money-to-invoices)).
@@ -248,6 +248,29 @@ Payments has more acronyms than most fields, and several words mean different th
 - **T+N:** a schedule where money captured on day T is available N business days later ([Payouts & Settlement](/books/payments/payouts-and-settlement#settlement-timing)).
 - **Unapplied cash:** money received from a customer and not yet matched to a charge ([Payment States & Ledgers](/docs/payments/payment-states#payments-are-applied-not-assigned)).
 - **Virtual card:** a card number issued for one payable, with controls on amount, dates and merchant ([Vendor Payouts](/books/payments/vendor-payouts#virtual-cards-who-pays-for-the-rebate)).
+
+## Issuing Cards
+
+- **Account range:** a slice of a BIN configured as its own product, shared among programs or dedicated to one ([Card Issuing](/books/payments/card-issuing#bin-sponsorship)).
+- **Auth API, Auth Stream Access (ASA), Gateway JIT Funding:** the real-time authorization webhooks of Galileo, Lithic and Marqeta, which let a program approve or decline inside the authorization ([Issuer Processing](/books/payments/issuer-processing#real-time-decisions-webhooks-and-jit-funding)).
+- **BIN sponsor:** the network-member bank whose BIN a non-bank card program issues under, and which answers to the network and its regulators for it ([Card Issuing](/books/payments/card-issuing#the-parties-and-the-stack)).
+- **Card production (card bureau):** the manufacturer and personalizer that embosses cards, loads the chip, and mails cards and PINs under PCI's Card Production and Provisioning standards ([Card Issuing](/books/payments/card-issuing#creating-and-producing-the-card)).
+- **Commando Mode:** Marqeta's stand-in that decides by preset rules when a program's gateway times out or errors ([Issuer Processing](/books/payments/issuer-processing#real-time-decisions-webhooks-and-jit-funding)).
+- **Force post:** clearing that arrives with no authorization, or after a decline, and posts anyway ([Issuer Processing](/books/payments/issuer-processing#the-ledger-for-an-issuer)).
+- **Green, yellow and red paths:** a token request approved outright, approved after the cardholder verifies, or declined ([Card Issuing](/books/payments/card-issuing#tokenization-on-the-issuer-side)).
+- **Hybrid prepaid-credit card:** a prepaid card that can draw on a credit feature, treated as a credit card under Regulation Z, with the feature offered no sooner than 30 days after registration ([Card Issuing](/books/payments/card-issuing#prepaid)).
+- **ID&V (identification and verification):** the step-up a cardholder completes before a yellow-path token activates: a one-time code, the issuer's app or a call ([Card Issuing](/books/payments/card-issuing#tokenization-on-the-issuer-side)).
+- **Issuer processor:** the system that authorizes, posts and keeps the card ledger for an issuer, and produces its network files ([Card Issuing](/books/payments/card-issuing#the-parties-and-the-stack)).
+- **Just-in-time (JIT) funding:** funding a card account at the moment of each approval instead of holding a balance on it ([Issuer Processing](/books/payments/issuer-processing#real-time-decisions-webhooks-and-jit-funding)).
+- **Open-to-buy:** a credit card's line minus its posted balance and active holds; the amount an authorization can approve ([Issuer Processing](/books/payments/issuer-processing#the-checks-in-order)).
+- **Over-capture:** clearing for more than was authorized, as with tips, which issuers can't block ([Issuer Processing](/books/payments/issuer-processing#the-ledger-for-an-issuer)).
+- **Prepaid account:** a card account funded in advance, with Regulation E's prepaid disclosures and, once identity is verified, its protections ([Card Issuing](/books/payments/card-issuing#prepaid)).
+- **Program agreement:** the contract between a sponsor bank and a program manager: approved products, funding, delegated compliance tasks, audit and exit ([Card Issuing](/books/payments/card-issuing#the-parties-and-the-stack)).
+- **Program manager:** the company that designs and runs a card program for (or as) the brand under a sponsor bank: onboarding, support, compliance operations ([Card Issuing](/books/payments/card-issuing#the-parties-and-the-stack)).
+- **Provisional credit:** money an issuer credits a cardholder during a Regulation E investigation, reversible with notice if no error is found ([Issuer Processing](/books/payments/issuer-processing#debit-and-prepaid-regulation-e)).
+- **Push provisioning:** adding a card to a wallet from the issuer's app or site, which needs each wallet's approval ([Card Issuing](/books/payments/card-issuing#tokenization-on-the-issuer-side)).
+- **Spend controls:** per-card or per-cardholder rules on merchant category, country, channel, amount and velocity, checked at authorization ([Issuer Processing](/books/payments/issuer-processing#spend-controls)).
+- **Visa Account Screen:** the list of blocked and lost or stolen card numbers that Visa's stand-in declines, which issuers must update immediately ([Issuer Processing](/books/payments/issuer-processing#stand-in-and-offline)).
 
 ## Running a Provider
 

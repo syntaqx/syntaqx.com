@@ -2,7 +2,7 @@
 title = "Operating the Platform"
 description = "Running a payments platform day to day: the internal console, monitoring, statements, compliance, outages, card-data incidents and retention."
 category = "Payments Industry"
-order = 1438
+order = 1440
 part = "Running a Provider"
 tags = ["payments", "operations", "monitoring", "compliance", "incident-response", "retention"]
 +++

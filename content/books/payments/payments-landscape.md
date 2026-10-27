@@ -17,6 +17,7 @@ The market also moves faster than any other in this volume. Networks change owne
 | --- | --- | --- |
 | **Networks** | Write the rules, route messages between acquirers and issuers, clear and settle | American Express, Discover (Capital One), Mastercard, Visa; debit networks such as PULSE |
 | **Issuers** | Hold the cardholder's account and approve or decline | Banks and card programs, and the issuer processors behind them |
+| **Issuing platforms** | Processing, program management and sponsor-bank access for companies that issue cards ([Card Issuing](/books/payments/card-issuing#how-the-platforms-do-it)) | Adyen, Galileo (SoFi), i2c, Lithic, Marqeta, Stripe Issuing |
 | **Acquirers and processors** | Sign merchants, carry their risk, run authorization and clearing for them | Chase, Elavon, Fiserv, Global Payments (with Worldpay) |
 | **Gateways and PSPs** | One API in front of acquiring, often acquiring themselves | Adyen, Braintree (PayPal), Checkout.com, Square, Stripe |
 | **Embedded payments** | Let a software platform offer payments to its own customers | Adyen for Platforms, Finix, Global Payments for Platforms (formerly Payrix), Moov, NMI, Payabli, Rainforest, Stax Connect, Stripe Connect, Tilled |
@@ -279,3 +280,9 @@ The audit record itself is in [Audit Trails](/docs/architecture/audit-trails).
 - [Google Pay API: Request objects](https://developers.google.com/pay/api/web/reference/request-objects), `CRYPTOGRAM_3DS` for Android device tokens and `PAN_ONLY` for cards on file
 - [Adyen: Affirm](https://docs.adyen.com/payment-methods/affirm), Affirm handling the credit risk and paying the merchant upfront
 - [Stripe: Klarna](https://stripe.com/payments/klarna), Klarna paying upfront and covering fraud and credit losses
+- [Adyen: Issuing](https://docs.adyen.com/issuing), card issuing in the EEA, UK and US on Visa and Mastercard
+- [Galileo: Setting up a card program](https://docs.tech.sofi.com/pro/docs/setting-up-a-card-program), Galileo's issuer processing, part of SoFi Technology Solutions
+- [i2c: Platform](https://www.i2cinc.com/platform/), issuer processing for credit, debit and prepaid
+- [Lithic: Why businesses choose Lithic](https://www.lithic.com/comparison/unit), issuer processing with sponsor bank integrations and program management
+- [Marqeta: Annual report on Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1522540/000152254026000017/mq-20251231.htm), card issuing platform working through issuing banks as BIN sponsors
+- [Stripe: Issuing](https://stripe.com/issuing), card issuing with program management or processing only

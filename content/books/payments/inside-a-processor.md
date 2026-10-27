@@ -2,7 +2,7 @@
 title = "Inside a Processor"
 description = "What an acquiring processor runs: the authorization switch, network connections, stand-in, clearing files, settlement, exceptions, merchant setup and billing."
 category = "Payments Industry"
-order = 1435
+order = 1437
 part = "Running a Provider"
 tags = ["payments", "processing", "iso-8583", "clearing", "settlement", "networks"]
 +++
@@ -18,7 +18,7 @@ Most providers never connect to Visa or Mastercard themselves: an acquiring proc
 1. **Checkout to provider.** A JSON request with a token, an amount and an idempotency key. The provider checks risk, decides routing, and detokenizes through the vault's forwarder ([Running a Card Vault](/books/payments/card-vault#who-gets-the-number-back)).
 2. **Provider to acquiring processor.** The processor's front end maps the request onto an ISO 8583 `0100` authorization request and holds a persistent connection to each network.
 3. **Processor to network.** Over a dedicated circuit, framed with a length header, to Visa's VisaNet Integrated Payment (V.I.P.) system or Mastercard's switch.
-4. **Network to issuer.** If the request carries a network token and cryptogram, the network's token service checks the cryptogram and swaps in the real card number first. The network routes by BIN to the issuer's processor, which checks the account, its fraud models and any authentication, and answers with a `0110`.
+4. **Network to issuer.** If the request carries a network token and cryptogram, the network's token service checks the cryptogram and swaps in the real card number first. The network routes by BIN to the issuer's processor, which checks the account, its fraud models and any authentication ([the issuer's checks, in order](/books/payments/issuer-processing#the-checks-in-order)), and answers with a `0110`.
 5. **Back the same way,** with an authorization code and a response code.
 
 The clocks are set by the rules. Outside Europe, Visa gives an issuer 10 seconds to answer a point-of-sale authorization before Visa answers for it with stand-in (below), and in the US requires issuers to average no more than 5 seconds over each month. It also forbids an acquirer or merchant from timing out a point-of-sale transaction in less than 15 seconds, and an approval that arrives after a merchant timed out must be reversed. Your own timeouts sit inside those numbers, and every one of them produces the unknown outcome [Retries & Timeouts](/docs/architecture/retries-and-timeouts) warns about. Those clocks are why only the authorization path runs synchronously ([What Has to Be Synchronous](/books/payments/architecture-at-scale#what-has-to-be-synchronous)).
@@ -63,7 +63,7 @@ A processor's connection to a network is infrastructure, not an API key:
 
 ## When the Issuer Doesn't Answer
 
-**Stand-in processing** is the network answering on the issuer's behalf. Visa's Stand-In Processing (STIP) steps in when an issuer or its processor is unavailable, too slow, or has asked Visa to answer for it, using the issuer's own parameters; Mastercard's stand-in service is mandatory for every card program, with parameters at or above Mastercard's defaults. Either way the issuer is liable for what stand-in approves, and learns about it afterward. That's why you see response code `91` (issuer unavailable) less often than issuers actually go down: the network usually answers instead.
+**Stand-in processing** is the network answering on the issuer's behalf. Visa's Stand-In Processing (STIP) steps in when an issuer or its processor is unavailable, too slow, or has asked Visa to answer for it, using the issuer's own parameters; Mastercard's stand-in service is mandatory for every card program, with parameters at or above Mastercard's defaults. Either way the issuer is liable for what stand-in approves, and learns about it afterward. [Issuer Processing](/books/payments/issuer-processing#stand-in-and-offline) covers setting stand-in parameters from the issuer's side. That's why you see response code `91` (issuer unavailable) less often than issuers actually go down: the network usually answers instead.
 
 Acquirers have their own version. Mastercard recognizes approvals made at the acquirer's interface when the issuer path is down, up to limits it sets, with the issuer liable within those limits. Terminals that approve offline do something similar at the edge, and there the merchant usually carries the risk: Stripe's offline mode, for one, puts every later decline on the merchant ([Card-Present Payments](/books/payments/card-present#offline-approved-isn-t-paid)).
 

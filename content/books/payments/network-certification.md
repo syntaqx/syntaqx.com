@@ -2,7 +2,7 @@
 title = "Network Certification"
 description = "Going live and staying live on card networks: processor and host certification, EMV levels, 3DS approval, and the twice-yearly network release calendar."
 category = "Payments Industry"
-order = 1436
+order = 1438
 part = "Running a Provider"
 tags = ["payments", "certification", "emv", "iso-8583", "testing", "release-management"]
 +++

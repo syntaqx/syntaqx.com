@@ -101,7 +101,7 @@ A standing card loses the one-card-one-invoice match, so two things change. **Ev
 
 Payout methods have their own economics, and a platform that sells payables sets them per method:
 
-- **Virtual cards pay the platform.** The vendor's processor keeps a percentage of each card payment (Payabli's example: on a $100 payment at 1%, the vendor receives $99), and part of the interchange flows back through the card program. Payabli, as program manager with the issuing bank, charges the platform nothing for virtual cards and shares that revenue with it; BILL charges payers no fee for sending virtual cards.
+- **Virtual cards pay the platform.** The vendor's processor keeps a percentage of each card payment (Payabli's example: on a $100 payment at 1%, the vendor receives $99), and part of the interchange flows back through the card program. Payabli, as program manager with the issuing bank ([how card programs are set up](/books/payments/card-issuing#the-parties-and-the-stack)), charges the platform nothing for virtual cards and shares that revenue with it; BILL charges payers no fee for sending virtual cards.
 - **ACH and checks cost the platform,** which can pass the fee through at cost, mark it up, absorb it, or fold it into a subscription. Payabli's example is a check it charges the platform $2 for and the platform charges $4.
 - **Some speed is vendor-paid.** BILL's instant transfer lets a vendor accelerate a check or ACH payment and pay the fee itself.
 

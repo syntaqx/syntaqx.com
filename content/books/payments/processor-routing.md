@@ -2,7 +2,7 @@
 title = "Processor Routing"
 description = "Running payments over several processors: orchestration, routing by card and cost, US debit, safe failover, cascading within retry rules, and tokens."
 category = "Payments Industry"
-order = 1431
+order = 1433
 part = "Running a Provider"
 tags = ["payments", "routing", "processors", "debit", "architecture"]
 +++

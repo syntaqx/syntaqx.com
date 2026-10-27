@@ -42,7 +42,7 @@ The data is the lever: the more context you send, the more often the issuer deci
 
 - **The merchant and acquirer domain:** the merchant's **3DS Requestor**, the **3DS SDK** in a mobile app, and the **3DS Server** that builds the authentication messages. This is the provider's side.
 - **The interoperability domain:** each network's **Directory Server**, which routes a request to the right issuer and knows which card ranges take part.
-- **The issuer domain:** the issuer's **Access Control Server** (ACS), which decides frictionless or challenge and runs the challenge.
+- **The issuer domain:** the issuer's **Access Control Server** (ACS), which decides frictionless or challenge and runs the challenge ([what the issuer must do with it](/books/payments/issuer-processing#issuer-side-fraud)).
 
 The messages come in pairs. The 3DS Server asks the Directory Server which card ranges participate (PReq/PRes) and caches the answer; it sends the authentication request (AReq), the ACS answers (ARes) frictionlessly or with a challenge; the challenge runs in the customer's browser or app (CReq/CRes); and the ACS reports the outcome to the 3DS Server (RReq/RRes). A data-only variant shares the context with the issuer without authenticating, to improve approval rates where a challenge isn't wanted.
 

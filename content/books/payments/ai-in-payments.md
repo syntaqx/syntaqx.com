@@ -2,7 +2,7 @@
 title = "AI in Payments"
 description = "Models in payments: fraud scoring, authorization optimization, disputes, onboarding and support, agentic commerce mandates, model risk and adverse action."
 category = "Payments Industry"
-order = 1439
+order = 1441
 part = "Running a Provider"
 tags = ["payments", "ai", "fraud", "agentic-commerce", "model-risk", "compliance"]
 +++

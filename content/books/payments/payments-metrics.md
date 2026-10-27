@@ -2,7 +2,7 @@
 title = "Payments Metrics"
 description = "The numbers a payments platform runs on, one definition each: approval and success rates, declines, fraud, disputes, take rate, payouts, reconciliation, SLOs."
 category = "Payments Industry"
-order = 1440
+order = 1442
 part = "Running a Provider"
 tags = ["payments", "metrics", "analytics", "authorization", "disputes", "slos"]
 +++
