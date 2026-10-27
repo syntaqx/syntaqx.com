@@ -92,6 +92,9 @@
     },
     "eslint-plugin-react": {
       "eslint": "$eslint"
+    },
+    "@vercel/cli-config": {
+      "zod": "$zod"
     }
   },
   "allowScripts": {
