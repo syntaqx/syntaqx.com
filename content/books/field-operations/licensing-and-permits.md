@@ -312,5 +312,5 @@ The record structure and typed actors are in [Audit Trails](/docs/architecture/a
 - [PestPac: Scheduling](https://www.pestpac.com/features/pest-control-scheduling-software), automatic warnings when assigning a technician without the required license
 - [Jobber: Chemical Tracking](https://help.getjobber.com/es/articles/chemical-tracking/), company and applicator license numbers on treatment records
 - [Timefold: Skills](https://docs.timefold.ai/field-service-routing/latest/visit-service-constraints/skills), required skills, levels, time-bounded skill sets and the hard constraint
-- [Salesforce: ServiceResourceSkill](https://developer.salesforce.com/docs/atlas.en-us.field_service_dev.meta/field_service_dev/sforce_api_objects_serviceresourceskill.htm), skill levels and effective start and end dates for certifications
+- [Salesforce: ServiceResourceSkill](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_serviceresourceskill.htm), skill levels and effective start and end dates for certifications
 - [ServiceTitan: Expands into Enterprise Pest Control, Lawn Care and Pool and Spa](https://www.servicetitan.com/press/servicetitan-expands-into-enterprise-pest-control-lawn-care-and-pool-spa-markets), Certified Sentricon Specialists as a manufacturer program

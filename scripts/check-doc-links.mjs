@@ -1,5 +1,5 @@
-// Checks every external source the playbook cites (Markdown link targets in
-// content/docs and docs/adr) and prints a Markdown report grouped by status.
+// Checks every external source the playbook and books cite (Markdown link
+// targets in content/docs, content/books and docs/adr) and prints a Markdown report grouped by status.
 // Exits 1 only when a link is definitely dead (404, 410, unknown host); bot
 // walls and timeouts are reported as uncertain without failing the run.
 //
@@ -10,7 +10,7 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { classify, extractLinks, renderReport } from "../lib/doc-links.ts";
 
-const ROOTS = ["content/docs", "docs/adr"];
+const ROOTS = ["content/docs", "content/books", "docs/adr"];
 const TIMEOUT_MS = 15_000;
 const CONCURRENCY = 8;
 const USER_AGENT =

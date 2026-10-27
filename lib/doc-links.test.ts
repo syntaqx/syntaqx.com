@@ -24,6 +24,15 @@ describe("extractLinks()", () => {
     ].join("\n");
     expect(extractLinks(md)).toEqual(["https://www.rfc-editor.org/rfc/rfc8288"]);
   });
+
+  it("keeps balanced parentheses inside a URL", () => {
+    const md =
+      "[Apple](https://developer.apple.com/documentation/uikit/x/applicationdidenterbackground(_:)), then (see [this](https://example.com/a)).";
+    expect(extractLinks(md)).toEqual([
+      "https://developer.apple.com/documentation/uikit/x/applicationdidenterbackground(_:)",
+      "https://example.com/a",
+    ]);
+  });
 });
 
 describe("classify()", () => {

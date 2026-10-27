@@ -46,7 +46,7 @@ npm run typecheck
 CI runs all three in parallel on every pull request; see [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
 ```bash
-npm run links      # check every URL cited in content/docs and docs/adr
+npm run links      # check every URL cited in content/docs, content/books and docs/adr
 ```
 
 [.github/workflows/doc-links.yml](.github/workflows/doc-links.yml) runs the same check every Monday: dead links open (or update) one issue, and a clean run closes it.

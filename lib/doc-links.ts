@@ -18,7 +18,10 @@ function stripCodeFences(markdown: string): string {
  */
 export function extractLinks(markdown: string): string[] {
   const urls = new Set<string>();
-  for (const match of stripCodeFences(markdown).matchAll(/\]\((https?:\/\/[^)\s]+)\)/g)) {
+  // Allows one level of balanced parentheses, as Markdown does: Apple's docs
+  // live at URLs like .../applicationdidenterbackground(_:).
+  const link = /\]\((https?:\/\/(?:[^()\s]|\([^()\s]*\))+)\)/g;
+  for (const match of stripCodeFences(markdown).matchAll(link)) {
     urls.add(match[1].split("#")[0]);
   }
   return [...urls];

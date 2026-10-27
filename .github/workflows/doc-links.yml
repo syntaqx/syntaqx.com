@@ -1,6 +1,6 @@
 name: Doc links
 
-# Every source the playbook cites, checked weekly. Links rot quietly; a
+# Every source the playbook and books cite, checked weekly. Links rot quietly; a
 # citation that 404s undermines the doc that relies on it. Dead links open
 # (or update) one issue, and a clean run closes it. Bot walls and timeouts
 # are reported as uncertain without failing. See
