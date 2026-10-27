@@ -109,7 +109,7 @@ export async function DocArticle({
         <aside className="hidden xl:block">
           <DocsToc
             headings={toc}
-            className="rail-scroll sticky top-26 max-h-[calc(100vh-7.5rem)] overflow-y-auto"
+            className="rail-scroll sticky top-16 max-h-[calc(100vh-5rem)] overflow-y-auto"
           />
         </aside>
       )}
