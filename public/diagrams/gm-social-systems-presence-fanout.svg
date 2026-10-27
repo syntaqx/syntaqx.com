@@ -1,119 +1,128 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 724">
-  <defs>
-    <marker id="gm-sp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="gm-sp-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-SOC-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">presence fan-out</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- View A: the roster -->
-  <text class="vt" x="40" y="64">Plan view A: one player's friends list</text>
-  <text class="vs" x="40" y="80">Illustrative [1] · 1 friend = 4 px</text>
-
-  <path class="ext" d="M140,127V105M620,127V105"/>
-  <path class="dim" d="M140,110H620" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
-  <text class="dt" x="380" y="106" text-anchor="middle">F1 = R1 + V1 + O1 = 25 + 5 + 90 = 120</text>
-
-  <rect class="obj hl" x="140" y="130" width="100" height="24"/>
-  <rect class="hatch" x="240" y="130" width="20" height="24" fill="url(#gm-sp-hatch)"/>
-  <rect class="obj fill-2" x="260" y="130" width="360" height="24"/>
-  <text class="sl ink" x="190" y="142" text-anchor="middle" dominant-baseline="central">online</text>
-  <text class="sl ink" x="440" y="142" text-anchor="middle" dominant-baseline="central">offline friends</text>
-
-  <!-- Chain under the strip -->
-  <path class="ext" d="M140,157V227M240,157V185M260,157V227M620,157V185"/>
-  <path class="dim" d="M140,180H240" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
-  <text class="dt" x="190" y="176" text-anchor="middle">R1 = 25</text>
-  <path class="dim" d="M240,180H260"/>
-  <text class="dt" x="265" y="198">V1 = 5 [2]</text>
-  <path class="dim" d="M260,180H620" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
-  <text class="dt" x="440" y="176" text-anchor="middle">O1 = 90</text>
-  <path class="dim" d="M140,222H260" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
-  <text class="dt" x="200" y="218" text-anchor="middle">N2 = 30</text>
-  <text class="t" x="280" y="222" dominant-baseline="central">N2 = R1 + V1 = 25 + 5 = 30 online</text>
-
-  <!-- View B: the pipeline -->
-  <text class="vt" x="40" y="270">Plan view B: one status change, fanned out</text>
-  <text class="vs" x="40" y="286">Not to scale · per change after coalescing [3]</text>
-
-  <rect class="obj fill-2" x="40" y="310" width="150" height="40"/>
-  <rect class="obj fill-2" x="220" y="310" width="150" height="40"/>
-  <rect class="obj fill-2" x="400" y="310" width="150" height="40"/>
-  <rect class="obj fill-1" x="580" y="310" width="150" height="40"/>
-  <text class="sl ink" x="115" y="330" text-anchor="middle" dominant-baseline="central">status change</text>
-  <text class="sl ink" x="295" y="330" text-anchor="middle" dominant-baseline="central">privacy filter</text>
-  <text class="sl ink" x="475" y="330" text-anchor="middle" dominant-baseline="central">session router</text>
-  <text class="sl ink" x="655" y="330" text-anchor="middle" dominant-baseline="central">edge sockets</text>
-  <path class="ln ink" d="M190,330H219" marker-end="url(#gm-sp-ah)"/>
-  <path class="ln ink" d="M370,330H399" marker-end="url(#gm-sp-ah)"/>
-  <path class="ln ink" d="M550,330H579" marker-end="url(#gm-sp-ah)"/>
-  <text class="n" x="115" y="370" text-anchor="middle">one event from the player</text>
-  <text class="n" x="115" y="386" text-anchor="middle">U1 = 6 per hour</text>
-  <text class="n" x="295" y="370" text-anchor="middle">N2 = 30 online friends</text>
-  <text class="n" x="295" y="386" text-anchor="middle">drops V1 = 5</text>
-  <text class="n" x="475" y="370" text-anchor="middle">R1 = 25 recipients</text>
-  <text class="n" x="475" y="386" text-anchor="middle">D1 = 1.2 sessions each</text>
-  <text class="n" x="655" y="370" text-anchor="middle">M1 = R1 x D1</text>
-  <text class="n" x="655" y="386" text-anchor="middle">= 25 x 1.2 = 30 pushes</text>
-
-  <text class="t" x="380" y="424" text-anchor="middle">Q1 = C1 x U1 x M1 / 3600 = 1,000,000 x 6 x 30 / 3600 = 50,000 pushes/s [4]</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="464">Variables</text>
-  <text class="vs" x="40" y="480">Illustrative [1]</text>
-  <rect class="cell band" x="40" y="490" width="50" height="22"/>
-  <rect class="cell band" x="90" y="490" width="220" height="22"/>
-  <rect class="cell band" x="310" y="490" width="90" height="22"/>
-  <text class="cap ink" x="50" y="501" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="501" dominant-baseline="central">item</text>
-  <text class="cap ink" x="390" y="501" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,512H400V710H40Z"/>
-  <path class="ln ink" d="M90,512V710M310,512V710"/>
-  <path class="ln" d="M40,534H400M40,556H400M40,578H400M40,600H400M40,622H400M40,644H400M40,666H400M40,688H400"/>
-  <text class="t b" x="50" y="523" dominant-baseline="central">F1</text>
-  <text class="t" x="100" y="523" dominant-baseline="central">friends on the list</text>
-  <text class="t" x="390" y="523" text-anchor="end" dominant-baseline="central">120</text>
-  <text class="t b" x="50" y="545" dominant-baseline="central">N2</text>
-  <text class="t" x="100" y="545" dominant-baseline="central">friends online now</text>
-  <text class="t" x="390" y="545" text-anchor="end" dominant-baseline="central">30</text>
-  <text class="t b" x="50" y="567" dominant-baseline="central">V1</text>
-  <text class="t" x="100" y="567" dominant-baseline="central">online, filtered out</text>
-  <text class="t" x="390" y="567" text-anchor="end" dominant-baseline="central">5</text>
-  <text class="t b" x="50" y="589" dominant-baseline="central">R1</text>
-  <text class="t" x="100" y="589" dominant-baseline="central">recipients: N2 - V1</text>
-  <text class="t" x="390" y="589" text-anchor="end" dominant-baseline="central">25</text>
-  <text class="t b" x="50" y="611" dominant-baseline="central">O1</text>
-  <text class="t" x="100" y="611" dominant-baseline="central">offline: F1 - N2</text>
-  <text class="t" x="390" y="611" text-anchor="end" dominant-baseline="central">90</text>
-  <text class="t b" x="50" y="633" dominant-baseline="central">D1</text>
-  <text class="t" x="100" y="633" dominant-baseline="central">sessions per recipient</text>
-  <text class="t" x="390" y="633" text-anchor="end" dominant-baseline="central">1.2</text>
-  <text class="t b" x="50" y="655" dominant-baseline="central">M1</text>
-  <text class="t" x="100" y="655" dominant-baseline="central">pushes per change</text>
-  <text class="t" x="390" y="655" text-anchor="end" dominant-baseline="central">30</text>
-  <text class="t b" x="50" y="677" dominant-baseline="central">U1</text>
-  <text class="t" x="100" y="677" dominant-baseline="central">changes per player-hour</text>
-  <text class="t" x="390" y="677" text-anchor="end" dominant-baseline="central">6</text>
-  <text class="t b" x="50" y="699" dominant-baseline="central">C1</text>
-  <text class="t" x="100" y="699" dominant-baseline="central">concurrent players</text>
-  <text class="t" x="390" y="699" text-anchor="end" dominant-baseline="central">1,000,000</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 782">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-sp-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-sp-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-sp-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="762" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="420" y="490" width="300" height="220"/>
-  <text class="sl ink" x="432" y="508">notes</text>
-  <text class="n" x="432" y="528">[1] Every value on this sheet is illustrative;</text>
-  <text class="n" x="432" y="543">measure your own roster sizes and churn.</text>
-  <text class="n" x="432" y="563">[2] Online but not told: the player appears</text>
-  <text class="n" x="432" y="578">offline to them, they blocked each other, or</text>
-  <text class="n" x="432" y="593">a privacy setting hides presence from them.</text>
-  <text class="n" x="432" y="613">[3] Changes inside a short window merge</text>
-  <text class="n" x="432" y="628">into one push; U1 counts after the merge.</text>
-  <text class="n" x="432" y="648">[4] Q1 grows with C1 x U1 x M1, so roster</text>
-  <text class="n" x="432" y="663">size and churn matter as much as player</text>
-  <text class="n" x="432" y="678">count. Cut U1 first: it is the one you</text>
-  <text class="n" x="432" y="693">control without hurting anyone's list.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">EVERY VALUE ON THIS SHEET IS ILLUSTRATIVE; MEASURE YOUR OWN ROSTER SIZES AND CHURN.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">ONLINE BUT NOT TOLD: THE PLAYER APPEARS OFFLINE TO THEM, THEY BLOCKED EACH OTHER, OR A PRIVACY SETTING HIDES</text>
+  <text class="nt" x="50" y="92">PRESENCE FROM THEM.</text>
+  <rect class="nb" x="32" y="100.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="108.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="109">CHANGES INSIDE A SHORT WINDOW MERGE INTO ONE PUSH; U1 COUNTS AFTER THE MERGE.</text>
+  <rect class="nb" x="32" y="117.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="125.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="126">Q1 GROWS WITH C1, U1 AND M1, SO ROSTER SIZE AND CHURN MATTER AS MUCH AS PLAYER COUNT. CUT U1 FIRST: IT IS THE ONE</text>
+  <text class="nt" x="50" y="139">YOU CONTROL WITHOUT HURTING ANYONE'S LIST.</text>
+  <text class="nt" x="50" y="156">THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view A: one player's friends list -->
+  <rect class="obj hl" x="140" y="225" width="100" height="28"/>
+  <rect class="hatch" x="240" y="225" width="20" height="28" fill="url(#gm-sp-hatch)"/>
+  <rect class="obj fill-2" x="260" y="225" width="360" height="28"/>
+  <text class="sl ink" x="190" y="242" text-anchor="middle">ONLINE, TOLD</text>
+  <text class="sl ink" x="440" y="242" text-anchor="middle">OFFLINE</text>
+  <circle class="dot" cx="250" cy="231" r="1.6"/>
+  <path class="leader" d="M250,231L280,211H290"/>
+  <text class="sl ink" x="294" y="214">FILTERED</text>
+  <rect class="nb" x="342.5" y="205.5" width="11" height="11"/>
+  <text class="nbt" x="348" y="213.7" text-anchor="middle">2</text>
+  <path class="ext" d="M140,222L140,187"/>
+  <path class="ext" d="M620,222L620,187"/>
+  <path class="dim" d="M140,191L620,191" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
+  <text class="dt" x="380" y="187" text-anchor="middle">F1</text>
+  <rect class="nb" x="392.5" y="178" width="11" height="11"/>
+  <text class="nbt" x="398" y="186.2" text-anchor="middle">1</text>
+  <path class="ext" d="M140,256L140,277"/>
+  <path class="ext" d="M240,256L240,277"/>
+  <path class="dim" d="M140,273L240,273" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
+  <text class="dt" x="190" y="285" text-anchor="middle">R1</text>
+  <path class="ext" d="M260,256L260,277"/>
+  <path class="dim" d="M240,273L260,273"/><path class="dim" d="M230,273L240,273" marker-end="url(#gm-sp-ah)"/><path class="dim" d="M270,273L260,273" marker-end="url(#gm-sp-ah)"/>
+  <text class="dt" x="250" y="285" text-anchor="middle">V1</text>
+  <path class="ext" d="M620,256L620,277"/>
+  <path class="dim" d="M260,273L620,273" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
+  <text class="dt" x="440" y="285" text-anchor="middle">O1</text>
+  <path class="ext" d="M140,276L140,307"/>
+  <path class="ext" d="M260,276L260,307"/>
+  <path class="dim" d="M140,303L260,303" marker-start="url(#gm-sp-ah)" marker-end="url(#gm-sp-ah)"/>
+  <text class="dt" x="200" y="315" text-anchor="middle">N2</text>
+  <text class="vt" x="380" y="349" text-anchor="middle">PLAN VIEW A · ONE PLAYER'S FRIENDS LIST</text>
+  <text class="vs" x="380" y="362" text-anchor="middle">SCALE 1 FRIEND = 4 PX · STRIP</text>
+  <!-- Plan view B: one status change, fanned out -->
+  <rect class="obj fill-2" x="58" y="422" width="124" height="36"/>
+  <text class="sl ink" x="120" y="443" text-anchor="middle">STATUS CHANGE</text>
+  <text class="dt" x="120" y="474" text-anchor="middle">U1</text>
+  <path class="leader" d="M185,440H215" marker-end="url(#gm-sp-ah)"/>
+  <rect class="obj fill-2" x="218" y="422" width="124" height="36"/>
+  <text class="sl ink" x="280" y="443" text-anchor="middle">PRIVACY FILTER</text>
+  <text class="dt" x="280" y="474" text-anchor="middle">N2 · V1</text>
+  <path class="leader" d="M345,440H375" marker-end="url(#gm-sp-ah)"/>
+  <rect class="obj fill-2" x="378" y="422" width="124" height="36"/>
+  <text class="sl ink" x="440" y="443" text-anchor="middle">SESSION ROUTER</text>
+  <text class="dt" x="440" y="474" text-anchor="middle">R1 · D1</text>
+  <path class="leader" d="M505,440H535" marker-end="url(#gm-sp-ah)"/>
+  <rect class="obj fill-1" x="538" y="422" width="124" height="36"/>
+  <text class="sl ink" x="600" y="443" text-anchor="middle">EDGE SOCKETS</text>
+  <text class="dt" x="600" y="474" text-anchor="middle">M1</text>
+  <rect class="nb" x="138.5" y="465" width="11" height="11"/>
+  <text class="nbt" x="144" y="473.2" text-anchor="middle">3</text>
+  <path class="leader" d="M665,440H702" marker-end="url(#gm-sp-ah)"/>
+  <text class="dt" x="684" y="416" text-anchor="middle">Q1</text>
+  <rect class="nb" x="694.5" y="407" width="11" height="11"/>
+  <text class="nbt" x="700" y="415.2" text-anchor="middle">4</text>
+  <text class="vt" x="380" y="518" text-anchor="middle">PLAN VIEW B · ONE STATUS CHANGE, FANNED OUT</text>
+  <text class="vs" x="380" y="531" text-anchor="middle">NOT TO SCALE · PER CHANGE AFTER COALESCING</text>
+  <!-- Variable table -->
+  <text class="vt" x="153" y="580">VARIABLES · ILLUSTRATIVE</text>
+  <rect class="tbl" x="153" y="587" width="454" height="165"/>
+  <path class="tbl" d="M153,602L607,602"/>
+  <path class="tbl" d="M153,617L607,617"/>
+  <path class="tbl" d="M153,632L607,632"/>
+  <path class="tbl" d="M153,647L607,647"/>
+  <path class="tbl" d="M153,662L607,662"/>
+  <path class="tbl" d="M153,677L607,677"/>
+  <path class="tbl" d="M153,692L607,692"/>
+  <path class="tbl" d="M153,707L607,707"/>
+  <path class="tbl" d="M153,722L607,722"/>
+  <path class="tbl" d="M153,737L607,737"/>
+  <path class="tbl" d="M197,587L197,752"/>
+  <path class="tbl" d="M397,587L397,752"/>
+  <text class="th" x="159" y="597.2">CODE</text>
+  <text class="th" x="297" y="597.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="502" y="597.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="159" y="612.7">F1</text>
+  <text class="tc" x="297" y="612.7" text-anchor="middle">friends on the list</text>
+  <text class="tc" x="502" y="612.7" text-anchor="middle">R1+V1+O1 = 120</text>
+  <text class="tc" x="159" y="627.7">N2</text>
+  <text class="tc" x="297" y="627.7" text-anchor="middle">friends online now</text>
+  <text class="tc" x="502" y="627.7" text-anchor="middle">R1+V1 = 30</text>
+  <text class="tc" x="159" y="642.7">V1</text>
+  <text class="tc" x="297" y="642.7" text-anchor="middle">online, filtered out</text>
+  <text class="tc" x="502" y="642.7" text-anchor="middle">5</text>
+  <text class="tc" x="159" y="657.7">R1</text>
+  <text class="tc" x="297" y="657.7" text-anchor="middle">recipients</text>
+  <text class="tc" x="502" y="657.7" text-anchor="middle">N2 − V1 = 25</text>
+  <text class="tc" x="159" y="672.7">O1</text>
+  <text class="tc" x="297" y="672.7" text-anchor="middle">offline</text>
+  <text class="tc" x="502" y="672.7" text-anchor="middle">F1 − N2 = 90</text>
+  <text class="tc" x="159" y="687.7">D1</text>
+  <text class="tc" x="297" y="687.7" text-anchor="middle">sessions per recipient</text>
+  <text class="tc" x="502" y="687.7" text-anchor="middle">1.2</text>
+  <text class="tc" x="159" y="702.7">M1</text>
+  <text class="tc" x="297" y="702.7" text-anchor="middle">pushes per change</text>
+  <text class="tc" x="502" y="702.7" text-anchor="middle">R1 × D1 = 30</text>
+  <text class="tc" x="159" y="717.7">U1</text>
+  <text class="tc" x="297" y="717.7" text-anchor="middle">changes per player-hour</text>
+  <text class="tc" x="502" y="717.7" text-anchor="middle">6</text>
+  <text class="tc" x="159" y="732.7">C1</text>
+  <text class="tc" x="297" y="732.7" text-anchor="middle">concurrent players</text>
+  <text class="tc" x="502" y="732.7" text-anchor="middle">1,000,000</text>
+  <text class="tc" x="159" y="747.7">Q1</text>
+  <text class="tc" x="297" y="747.7" text-anchor="middle">pushes per second</text>
+  <text class="tc" x="502" y="747.7" text-anchor="middle">C1 × U1 × M1 ÷ 3600 = 50,000</text>
 </svg>

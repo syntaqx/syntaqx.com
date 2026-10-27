@@ -1,116 +1,100 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 846">
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-PCH-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">chunked release, exploded</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 2</text>
-
-  <text class="vt" x="40" y="64">Exploded axonometric: one release</text>
-  <text class="vs" x="40" y="80">Not to scale · League patcher per Riot, July 2019</text>
-
-  <!-- Assembly lines through the stack's outer corners, behind the plates -->
-  <path class="phantom" d="M295,244V430M645,201V387"/>
-
-  <!-- 01 install on disk -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 336)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="150" height="60"/>
-    <rect class="cell band" x="180" y="100" width="55" height="60"/>
-    <rect class="cell band" x="245" y="100" width="35" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="424.65" r="2"/>
-  <path class="leader" d="M309.5,424.65L297.5,412.65H270"/>
-  <text class="sl ink" x="264" y="412.65" text-anchor="end" dominant-baseline="central">01 install</text>
-  <text class="n" x="264" y="428.65" text-anchor="end">game files plus Game.db (SQLite)</text>
-
-  <!-- 02 chunks -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 274)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="25" height="60"/>
-    <rect class="cell band" x="50" y="100" width="40" height="60"/>
-    <rect class="cell band" x="95" y="100" width="20" height="60"/>
-    <rect class="cell band" x="120" y="100" width="35" height="60"/>
-    <rect class="cell band" x="160" y="100" width="30" height="60"/>
-    <rect class="cell band" x="195" y="100" width="45" height="60"/>
-    <rect class="cell band" x="245" y="100" width="35" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="362.65" r="2"/>
-  <path class="leader" d="M309.5,362.65L297.5,350.65H270"/>
-  <text class="sl ink" x="264" y="350.65" text-anchor="end" dominant-baseline="central">02 chunks</text>
-  <text class="n" x="264" y="366.65" text-anchor="end">content-defined, 64-bit ids, zstd 19</text>
-
-  <!-- 03 bundles -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 212)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="300.65" r="2"/>
-  <path class="leader" d="M309.5,300.65L297.5,288.65H270"/>
-  <text class="sl ink" x="264" y="288.65" text-anchor="end" dominant-baseline="central">03 bundles</text>
-  <text class="n" x="264" y="304.65" text-anchor="end">CDN objects, over 85% reused</text>
-
-  <!-- 04 release manifest -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 150)">
-    <rect class="obj hl" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="260" height="25"/>
-    <rect class="cell band" x="20" y="135" width="260" height="25"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="238.65" r="2"/>
-  <path class="leader" d="M309.5,238.65L297.5,226.65H270"/>
-  <text class="sl ink" x="264" y="226.65" text-anchor="end" dominant-baseline="central">04 release manifest</text>
-  <text class="n" x="264" y="242.65" text-anchor="end">signed FlatBuffers, about 8 MB</text>
-
-  <!-- Client steps between layers -->
-  <text class="n" x="740" y="228" text-anchor="end">verify, then</text>
-  <text class="n" x="740" y="242" text-anchor="end">diff [1]</text>
-  <text class="n" x="740" y="290" text-anchor="end">range</text>
-  <text class="n" x="740" y="304" text-anchor="end">requests [2]</text>
-  <text class="n" x="740" y="352" text-anchor="end">write in</text>
-  <text class="n" x="740" y="366" text-anchor="end">place [3]</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="520">Published figures</text>
-  <text class="vs" x="40" y="536">Riot tech blog, July 2019 · League game data</text>
-  <rect class="cell band" x="40" y="546" width="50" height="22"/>
-  <rect class="cell band" x="90" y="546" width="530" height="22"/>
-  <rect class="cell band" x="620" y="546" width="100" height="22"/>
-  <text class="cap ink" x="50" y="557" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="557" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="557" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,568H720V744H40Z"/>
-  <path class="ln ink" d="M90,568V744M620,568V744"/>
-  <path class="ln" d="M40,590H720M40,612H720M40,634H720M40,656H720M40,678H720M40,700H720M40,722H720"/>
-  <text class="t" x="50" y="579" dominant-baseline="central">C1</text>
-  <text class="t" x="100" y="579" dominant-baseline="central">chunks in a release</text>
-  <text class="t" x="710" y="579" text-anchor="end" dominant-baseline="central">&gt; 300,000</text>
-  <text class="t" x="50" y="601" dominant-baseline="central">B1</text>
-  <text class="t" x="100" y="601" dominant-baseline="central">bundles the chunks are grouped into</text>
-  <text class="t" x="710" y="601" text-anchor="end" dominant-baseline="central">&lt; 5,000</text>
-  <text class="t b" x="50" y="623" dominant-baseline="central">R1</text>
-  <text class="t" x="100" y="623" dominant-baseline="central">HTTP requests for a full download: R1 &lt;= B1</text>
-  <text class="t b" x="710" y="623" text-anchor="end" dominant-baseline="central">&lt;= 5,000</text>
-  <text class="t" x="50" y="645" dominant-baseline="central">S1</text>
-  <text class="t" x="100" y="645" dominant-baseline="central">bundles shared with the previous version</text>
-  <text class="t" x="710" y="645" text-anchor="end" dominant-baseline="central">&gt; 85%</text>
-  <text class="t" x="50" y="667" dominant-baseline="central">D1</text>
-  <text class="t" x="100" y="667" dominant-baseline="central">chunks removed by deduplication</text>
-  <text class="t" x="710" y="667" text-anchor="end" dominant-baseline="central">about 10%</text>
-  <text class="t" x="50" y="689" dominant-baseline="central">A1</text>
-  <text class="t" x="100" y="689" dominant-baseline="central">average chunk in the post's example (cut at 16 zero bits)</text>
-  <text class="t" x="710" y="689" text-anchor="end" dominant-baseline="central">64 KB</text>
-  <text class="t" x="50" y="711" dominant-baseline="central">M1</text>
-  <text class="t" x="100" y="711" dominant-baseline="central">release manifest</text>
-  <text class="t" x="710" y="711" text-anchor="end" dominant-baseline="central">about 8 MB</text>
-  <text class="t" x="50" y="733" dominant-baseline="central">W1</text>
-  <text class="t" x="100" y="733" dominant-baseline="central">largest write slice / download bytes in flight</text>
-  <text class="t" x="710" y="733" text-anchor="end" dominant-baseline="central">64 / 128 MB</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 766">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-pm-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-pm-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-pm-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="746" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="762" width="680" height="64"/>
-  <text class="sl ink" x="52" y="780">notes</text>
-  <text class="n" x="52" y="796">[1] Only a signed manifest loads; its chunk list is compared with Game.db. [2] Multipart range requests, 8 connections.</text>
-  <text class="n" x="52" y="812">[3] In place, in slices up to 64 MB on chunk boundaries, with Game.db committed after each slice.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ONLY A SIGNED MANIFEST LOADS; ITS CHUNK LIST IS COMPARED WITH GAME.DB.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">MISSING CHUNKS ARRIVE BY MULTIPART RANGE REQUESTS OVER 8 CONNECTIONS.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">WRITES GO IN PLACE, IN SLICES UP TO 64 MB ON CHUNK BOUNDARIES, WITH GAME.DB COMMITTED AFTER EACH SLICE.</text>
+  <text class="nt" x="50" y="113">PUBLISHED FIGURES, JULY 2019, FOR ONE GAME'S DATA. NOT TO SCALE; PLATE CONTENTS ARE SCHEMATIC.</text>
+  <!-- Exploded view -->
+  <path class="phantom" d="M330,360L330,162"/>
+  <path class="phantom" d="M612,411L612,213"/>
+  <path class="phantom" d="M544,505L544,307"/>
+  <path class="phantom" d="M262,454L262,256"/>
+  <!-- 01 · Install -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 330 360)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="92" width="150" height="92"/><rect class="obj fill-1" x="26" y="102" width="60" height="34"/><rect class="obj fill-1" x="92" y="102" width="64" height="20"/><rect class="obj fill-1" x="92" y="128" width="64" height="46"/><rect class="obj fill-1" x="26" y="142" width="60" height="32"/><path class="obj fill-2" d="M196,104v62a28,9 0 0 0 56,0v-62"/><path class="obj fill-1" d="M196,104a28,9 0 0 1 56,0a28,9 0 0 1 -56,0Z"/><path class="ext" d="M196,126a28,9 0 0 0 56,0M196,146a28,9 0 0 0 56,0"/></g>
+  <circle class="dot" cx="262" cy="454" r="1.6"/>
+  <path class="leader" d="M262,454H238"/>
+  <text class="lt" x="230" y="452" text-anchor="end">01 · INSTALL</text>
+  <text class="vs" x="230" y="464" text-anchor="end">GAME FILES · GAME.DB · W1 SLICES</text>
+  <!-- 02 · Chunks -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 330 294)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="98" width="14" height="20"/><rect class="obj fill-1" x="33" y="98" width="22" height="20"/><rect class="obj fill-2" x="58" y="98" width="10" height="20"/><rect class="obj fill-2" x="71" y="98" width="18" height="20"/><rect class="obj fill-2" x="92" y="98" width="26" height="20"/><rect class="obj fill-1" x="121" y="98" width="12" height="20"/><rect class="obj fill-2" x="136" y="98" width="16" height="20"/><rect class="obj fill-2" x="155" y="98" width="20" height="20"/><rect class="obj fill-2" x="178" y="98" width="11" height="20"/><rect class="obj fill-1" x="192" y="98" width="24" height="20"/><rect class="obj fill-2" x="219" y="98" width="15" height="20"/><rect class="obj fill-2" x="237" y="98" width="19" height="20"/><rect class="obj fill-2" x="259" y="98" width="13" height="20"/><rect class="obj fill-1" x="16" y="124" width="12" height="20"/><rect class="obj fill-2" x="31" y="124" width="16" height="20"/><rect class="obj fill-2" x="50" y="124" width="20" height="20"/><rect class="obj fill-2" x="73" y="124" width="11" height="20"/><rect class="obj fill-1" x="87" y="124" width="24" height="20"/><rect class="obj fill-2" x="114" y="124" width="15" height="20"/><rect class="obj fill-2" x="132" y="124" width="19" height="20"/><rect class="obj fill-2" x="154" y="124" width="13" height="20"/><rect class="obj fill-1" x="170" y="124" width="14" height="20"/><rect class="obj fill-2" x="187" y="124" width="22" height="20"/><rect class="obj fill-2" x="212" y="124" width="10" height="20"/><rect class="obj fill-2" x="225" y="124" width="18" height="20"/><rect class="obj fill-1" x="246" y="124" width="26" height="20"/><rect class="obj fill-2" x="16" y="150" width="15" height="20"/><rect class="obj fill-2" x="34" y="150" width="19" height="20"/><rect class="obj fill-2" x="56" y="150" width="13" height="20"/><rect class="obj fill-1" x="72" y="150" width="14" height="20"/><rect class="obj fill-2" x="89" y="150" width="22" height="20"/><rect class="obj fill-2" x="114" y="150" width="10" height="20"/><rect class="obj fill-2" x="127" y="150" width="18" height="20"/><rect class="obj fill-1" x="148" y="150" width="26" height="20"/><rect class="obj fill-2" x="177" y="150" width="12" height="20"/><rect class="obj fill-2" x="192" y="150" width="16" height="20"/><rect class="obj fill-2" x="211" y="150" width="20" height="20"/><rect class="obj fill-1" x="234" y="150" width="11" height="20"/><rect class="obj fill-2" x="248" y="150" width="24" height="20"/></g>
+  <circle class="dot" cx="262" cy="388" r="1.6"/>
+  <path class="leader" d="M262,388H238"/>
+  <text class="lt" x="230" y="386" text-anchor="end">02 · CHUNKS</text>
+  <text class="vs" x="230" y="398" text-anchor="end">CONTENT-DEFINED · 64-BIT IDS · ZSTD 19</text>
+  <!-- 03 · Bundles -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 330 228)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="92" width="62" height="92"/><rect class="obj fill-1" x="24" y="98" width="46" height="12"/><rect class="obj fill-1" x="24" y="118" width="34" height="12"/><rect class="obj fill-1" x="24" y="138" width="46" height="12"/><rect class="obj fill-1" x="24" y="158" width="34" height="12"/><rect class="obj fill-2" x="86" y="92" width="62" height="92"/><rect class="obj fill-1" x="94" y="98" width="46" height="12"/><rect class="obj fill-1" x="94" y="118" width="34" height="12"/><rect class="obj fill-1" x="94" y="138" width="46" height="12"/><rect class="obj fill-1" x="94" y="158" width="34" height="12"/><rect class="obj fill-2" x="156" y="92" width="62" height="92"/><rect class="obj fill-1" x="164" y="98" width="46" height="12"/><rect class="obj fill-1" x="164" y="118" width="34" height="12"/><rect class="obj fill-1" x="164" y="138" width="46" height="12"/><rect class="obj fill-1" x="164" y="158" width="34" height="12"/><rect class="slot" x="226" y="92" width="58" height="92"/><rect class="obj fill-2" x="234" y="98" width="40" height="12"/><rect class="obj fill-2" x="234" y="118" width="40" height="12"/><rect class="obj fill-2" x="234" y="138" width="40" height="12"/></g>
+  <circle class="dot" cx="262" cy="322" r="1.6"/>
+  <path class="leader" d="M262,322H238"/>
+  <text class="lt" x="230" y="320" text-anchor="end">03 · BUNDLES</text>
+  <text class="vs" x="230" y="332" text-anchor="end">CDN OBJECTS · B1 · S1 REUSED</text>
+  <!-- 04 · Release manifest -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 330 162)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj hl" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="20" y="20" width="260" height="26"/><circle class="obj" cx="262" cy="33" r="7"/><rect class="obj fill-2" x="20" y="62" width="200" height="10"/><rect class="obj fill-2" x="20" y="80" width="170" height="10"/><rect class="obj fill-2" x="20" y="98" width="140" height="10"/><rect class="obj fill-2" x="20" y="116" width="200" height="10"/><rect class="obj fill-2" x="20" y="134" width="170" height="10"/><rect class="obj fill-2" x="20" y="152" width="140" height="10"/><rect class="obj fill-2" x="20" y="170" width="200" height="10"/></g>
+  <circle class="dot" cx="262" cy="256" r="1.6"/>
+  <path class="leader" d="M262,256H238"/>
+  <text class="lt" x="230" y="254" text-anchor="end">04 · RELEASE MANIFEST</text>
+  <text class="vs" x="230" y="266" text-anchor="end">SIGNED FLATBUFFERS · M1</text>
+  <!-- Client steps -->
+  <path class="leader" d="M642,250.60000000000002V448.6" marker-end="url(#gm-pm-ah)"/>
+  <text class="sl ink" x="652" y="286.6">VERIFY, DIFF</text>
+  <rect class="nb" x="652.5" y="293.1" width="11" height="11"/>
+  <text class="nbt" x="658" y="301.3" text-anchor="middle">1</text>
+  <text class="sl ink" x="652" y="352.6">RANGE REQUESTS</text>
+  <rect class="nb" x="652.5" y="359.1" width="11" height="11"/>
+  <text class="nbt" x="658" y="367.3" text-anchor="middle">2</text>
+  <text class="sl ink" x="652" y="418.6">WRITE IN PLACE</text>
+  <rect class="nb" x="652.5" y="425.1" width="11" height="11"/>
+  <text class="nbt" x="658" y="433.3" text-anchor="middle">3</text>
+  <text class="vt" x="437" y="545" text-anchor="middle">EXPLODED VIEW · ONE RELEASE</text>
+  <text class="vs" x="437" y="558" text-anchor="middle">AXONOMETRIC · NOT TO SCALE · INSTALL AT THE BOTTOM</text>
+  <!-- Variable table -->
+  <text class="vt" x="210" y="594">PUBLISHED FIGURES</text>
+  <rect class="tbl" x="210" y="601" width="341" height="135"/>
+  <path class="tbl" d="M210,616L551,616"/>
+  <path class="tbl" d="M210,631L551,631"/>
+  <path class="tbl" d="M210,646L551,646"/>
+  <path class="tbl" d="M210,661L551,661"/>
+  <path class="tbl" d="M210,676L551,676"/>
+  <path class="tbl" d="M210,691L551,691"/>
+  <path class="tbl" d="M210,706L551,706"/>
+  <path class="tbl" d="M210,721L551,721"/>
+  <path class="tbl" d="M247,601L247,736"/>
+  <path class="tbl" d="M451,601L451,736"/>
+  <text class="th" x="216" y="611.2">CODE</text>
+  <text class="th" x="349" y="611.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="501" y="611.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="216" y="626.7">C1</text>
+  <text class="tc" x="349" y="626.7" text-anchor="middle">chunks in a release</text>
+  <text class="tc" x="501" y="626.7" text-anchor="middle">&gt; 300,000</text>
+  <text class="tc" x="216" y="641.7">B1</text>
+  <text class="tc" x="349" y="641.7" text-anchor="middle">bundles the chunks are grouped into</text>
+  <text class="tc" x="501" y="641.7" text-anchor="middle">&lt; 5,000</text>
+  <text class="tc" x="216" y="656.7">R1</text>
+  <text class="tc" x="349" y="656.7" text-anchor="middle">HTTP requests, full download</text>
+  <text class="tc" x="501" y="656.7" text-anchor="middle">R1 ≤ B1, so ≤ 5,000</text>
+  <text class="tc" x="216" y="671.7">S1</text>
+  <text class="tc" x="349" y="671.7" text-anchor="middle">bundles shared with the previous version</text>
+  <text class="tc" x="501" y="671.7" text-anchor="middle">&gt; 85%</text>
+  <text class="tc" x="216" y="686.7">D1</text>
+  <text class="tc" x="349" y="686.7" text-anchor="middle">chunks removed by deduplication</text>
+  <text class="tc" x="501" y="686.7" text-anchor="middle">about 10%</text>
+  <text class="tc" x="216" y="701.7">A1</text>
+  <text class="tc" x="349" y="701.7" text-anchor="middle">average chunk, example (16 zero bits)</text>
+  <text class="tc" x="501" y="701.7" text-anchor="middle">64 KB</text>
+  <text class="tc" x="216" y="716.7">M1</text>
+  <text class="tc" x="349" y="716.7" text-anchor="middle">release manifest</text>
+  <text class="tc" x="501" y="716.7" text-anchor="middle">about 8 MB</text>
+  <text class="tc" x="216" y="731.7">W1</text>
+  <text class="tc" x="349" y="731.7" text-anchor="middle">largest write slice / bytes in flight</text>
+  <text class="tc" x="501" y="731.7" text-anchor="middle">64 / 128 MB</text>
 </svg>

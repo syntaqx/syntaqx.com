@@ -1,149 +1,161 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 804">
-  <defs>
-    <marker id="gm-pbp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-pbp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-PBM-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">report-to-penalty volumes, 2025</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Lane 1: proactive detection -->
-  <text class="vt" x="40" y="64">Lane 1: proactive detection</text>
-  <text class="vs" x="40" y="80">Xbox 2025 [1] · split bar to scale</text>
-  <rect class="obj fill-2" x="40" y="112" width="150" height="40"/>
-  <text class="sl ink" x="115" y="125" text-anchor="middle" dominant-baseline="central">scanned</text>
-  <text class="t" x="115" y="141" text-anchor="middle" dominant-baseline="central">S1 = 14.8B</text>
-  <path class="ln ink" d="M190,132H230" marker-end="url(#gm-pbp-ah)"/>
-  <rect class="obj fill-2" x="230" y="112" width="150" height="40"/>
-  <text class="sl ink" x="305" y="125" text-anchor="middle" dominant-baseline="central">violating</text>
-  <text class="t" x="305" y="141" text-anchor="middle" dominant-baseline="central">D1 = 368M</text>
-  <path class="ln ink" d="M380,132H420" marker-end="url(#gm-pbp-ah)"/>
-  <rect class="obj fill-2" x="420" y="112" width="10.4" height="40"/>
-  <rect class="obj fill-1" x="430.4" y="112" width="289.6" height="40"/>
-  <text class="sl ink" x="575.2" y="132" text-anchor="middle" dominant-baseline="central">automated</text>
-  <path class="ext" d="M420,109V99M720,109V99"/>
-  <path class="dim" d="M420,104H720" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
-  <text class="dt" x="570" y="100" text-anchor="middle">D1 ≈ M2 + A2 = 12.8M + 355.1M = 367.9M</text>
-  <path class="ext" d="M420,155V181M430.4,155V181M720,155V181"/>
-  <path class="dim" d="M400,176H420" marker-end="url(#gm-pbp-ah)"/>
-  <path class="dim" d="M420,176H430.4"/>
-  <text class="dt" x="396" y="176" text-anchor="end" dominant-baseline="central">M2 = 12.8M</text>
-  <path class="dim" d="M430.4,176H720" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
-  <text class="dt" x="575.2" y="172" text-anchor="middle">A2 = 355.1M</text>
-
-  <!-- Lane 2: player reports -->
-  <text class="vt" x="40" y="210">Lane 2: player reports</text>
-  <text class="vs" x="40" y="226">Xbox 2025 [1] · split bar to scale</text>
-  <rect class="obj fill-2" x="40" y="258" width="150" height="40"/>
-  <text class="sl ink" x="115" y="271" text-anchor="middle" dominant-baseline="central">reports</text>
-  <text class="t" x="115" y="287" text-anchor="middle" dominant-baseline="central">R1 = 39M</text>
-  <path class="ln ink" d="M190,278H230" marker-end="url(#gm-pbp-ah)"/>
-  <rect class="obj fill-2" x="230" y="258" width="150" height="40"/>
-  <text class="sl ink" x="305" y="271" text-anchor="middle" dominant-baseline="central">actioned</text>
-  <text class="t" x="305" y="287" text-anchor="middle" dominant-baseline="central">R2 = 3.7M</text>
-  <path class="ln ink" d="M380,278H420" marker-end="url(#gm-pbp-ah)"/>
-  <rect class="obj fill-2" x="420" y="258" width="105.4" height="40"/>
-  <rect class="obj fill-1" x="525.4" y="258" width="194.6" height="40"/>
-  <text class="sl ink" x="472.7" y="278" text-anchor="middle" dominant-baseline="central">manual</text>
-  <text class="sl ink" x="622.7" y="278" text-anchor="middle" dominant-baseline="central">automated [2]</text>
-  <path class="ext" d="M420,255V245M720,255V245"/>
-  <path class="dim" d="M420,250H720" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
-  <text class="dt" x="570" y="246" text-anchor="middle">U1 = M1 + A1 = 1.3M + 2.4M = 3.7M</text>
-  <path class="ext" d="M420,301V327M525.4,301V327M720,301V327"/>
-  <path class="dim" d="M420,322H525.4" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
-  <text class="dt" x="472.7" y="318" text-anchor="middle">M1 = 1.3M</text>
-  <path class="dim hl" d="M525.4,322H720" marker-start="url(#gm-pbp-ah-hl)" marker-end="url(#gm-pbp-ah-hl)"/>
-  <text class="dt hl" x="622.7" y="318" text-anchor="middle">A1 = 2.4M (65%)</text>
-
-  <!-- Lane 3: appeals -->
-  <text class="vt" x="40" y="356">Lane 3: appeals</text>
-  <text class="vs" x="40" y="372">Xbox 2025 [1] · split bar to scale</text>
-  <rect class="obj fill-2" x="40" y="404" width="150" height="40"/>
-  <text class="sl ink" x="115" y="417" text-anchor="middle" dominant-baseline="central">appeals</text>
-  <text class="t" x="115" y="433" text-anchor="middle" dominant-baseline="central">P1 = 332K</text>
-  <path class="ln ink" d="M190,424H230" marker-end="url(#gm-pbp-ah)"/>
-  <rect class="obj fill-2" x="230" y="404" width="150" height="40"/>
-  <text class="sl ink" x="305" y="417" text-anchor="middle" dominant-baseline="central">case review</text>
-  <text class="t" x="305" y="433" text-anchor="middle" dominant-baseline="central">human agent [3]</text>
-  <path class="ln ink" d="M380,424H420" marker-end="url(#gm-pbp-ah)"/>
-  <rect class="obj fill-2" x="420" y="404" width="76.8" height="40"/>
-  <rect class="obj fill-1" x="496.8" y="404" width="223.2" height="40"/>
-  <text class="sl ink" x="608.4" y="424" text-anchor="middle" dominant-baseline="central">upheld</text>
-  <path class="ext" d="M420,401V391M720,401V391"/>
-  <path class="dim" d="M420,396H720" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
-  <text class="dt" x="570" y="392" text-anchor="middle">P1 = N1 + N2 = 85K + 247K = 332K</text>
-  <path class="ext" d="M420,447V473M496.8,447V473M720,447V473"/>
-  <path class="dim" d="M420,468H496.8" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
-  <text class="dt" x="414" y="468" text-anchor="end" dominant-baseline="central">N1 = 85K (26%)</text>
-  <path class="dim" d="M496.8,468H720" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
-  <text class="dt" x="608.4" y="464" text-anchor="middle">N2 = 247K (74%)</text>
-
-  <!-- Variables -->
-  <text class="vt" x="40" y="508">Variables</text>
-  <text class="vs" x="40" y="524">Xbox 2025 [1] · counts per year</text>
-  <rect class="cell band" x="40" y="534" width="50" height="22"/>
-  <rect class="cell band" x="90" y="534" width="190" height="22"/>
-  <rect class="cell band" x="280" y="534" width="80" height="22"/>
-  <text class="cap ink" x="50" y="545" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="545" dominant-baseline="central">item</text>
-  <text class="cap ink" x="350" y="545" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,556H360V688H40Z"/>
-  <path class="ln ink" d="M90,556V688M280,556V688"/>
-  <path class="ln" d="M40,578H360M40,600H360M40,622H360M40,644H360M40,666H360"/>
-  <text class="t b" x="50" y="567" dominant-baseline="central">S1</text>
-  <text class="t" x="100" y="567" dominant-baseline="central">content scanned</text>
-  <text class="t b" x="350" y="567" text-anchor="end" dominant-baseline="central">14.8B</text>
-  <text class="t b" x="50" y="589" dominant-baseline="central">D1</text>
-  <text class="t" x="100" y="589" dominant-baseline="central">found violating, 2.5%</text>
-  <text class="t b" x="350" y="589" text-anchor="end" dominant-baseline="central">368M</text>
-  <text class="t" x="50" y="611" dominant-baseline="central">M2</text>
-  <text class="t" x="100" y="611" dominant-baseline="central">proactive, manual</text>
-  <text class="t" x="350" y="611" text-anchor="end" dominant-baseline="central">12.8M</text>
-  <text class="t" x="50" y="633" dominant-baseline="central">A2</text>
-  <text class="t" x="100" y="633" dominant-baseline="central">proactive, automated</text>
-  <text class="t" x="350" y="633" text-anchor="end" dominant-baseline="central">355.1M</text>
-  <text class="t b" x="50" y="655" dominant-baseline="central">R1</text>
-  <text class="t" x="100" y="655" dominant-baseline="central">player reports</text>
-  <text class="t b" x="350" y="655" text-anchor="end" dominant-baseline="central">39M</text>
-  <text class="t b" x="50" y="677" dominant-baseline="central">R2</text>
-  <text class="t" x="100" y="677" dominant-baseline="central">reports actioned, 9.6%</text>
-  <text class="t b" x="350" y="677" text-anchor="end" dominant-baseline="central">3.7M</text>
-
-  <rect class="cell band" x="400" y="534" width="50" height="22"/>
-  <rect class="cell band" x="450" y="534" width="190" height="22"/>
-  <rect class="cell band" x="640" y="534" width="80" height="22"/>
-  <text class="cap ink" x="410" y="545" dominant-baseline="central">code</text>
-  <text class="cap ink" x="460" y="545" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="545" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M400,556H720V688H400Z"/>
-  <path class="ln ink" d="M450,556V688M640,556V688"/>
-  <path class="ln" d="M400,578H720M400,600H720M400,622H720M400,644H720M400,666H720"/>
-  <text class="t" x="410" y="567" dominant-baseline="central">M1</text>
-  <text class="t" x="460" y="567" dominant-baseline="central">reported, manual</text>
-  <text class="t" x="710" y="567" text-anchor="end" dominant-baseline="central">1.3M</text>
-  <text class="t" x="410" y="589" dominant-baseline="central">A1</text>
-  <text class="t" x="460" y="589" dominant-baseline="central">reported, automated</text>
-  <text class="t" x="710" y="589" text-anchor="end" dominant-baseline="central">2.4M</text>
-  <text class="t b" x="410" y="611" dominant-baseline="central">U1</text>
-  <text class="t" x="460" y="611" dominant-baseline="central">reported, processed</text>
-  <text class="t b" x="710" y="611" text-anchor="end" dominant-baseline="central">3.7M</text>
-  <text class="t b" x="410" y="633" dominant-baseline="central">P1</text>
-  <text class="t" x="460" y="633" dominant-baseline="central">appeals (case reviews)</text>
-  <text class="t b" x="710" y="633" text-anchor="end" dominant-baseline="central">332K</text>
-  <text class="t" x="410" y="655" dominant-baseline="central">N1</text>
-  <text class="t" x="460" y="655" dominant-baseline="central">reinstated, 26%</text>
-  <text class="t" x="710" y="655" text-anchor="end" dominant-baseline="central">85K</text>
-  <text class="t" x="410" y="677" dominant-baseline="central">N2</text>
-  <text class="t" x="460" y="677" dominant-baseline="central">upheld, 74%</text>
-  <text class="t" x="710" y="677" text-anchor="end" dominant-baseline="central">247K</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 796">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-pbp-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-pbp-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-pbp-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="776" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="704" width="680" height="80"/>
-  <text class="sl ink" x="52" y="722">notes</text>
-  <text class="n" x="52" y="740">[1] Xbox Transparency Report 2025, Xbox platform, Jan 1 to Dec 31, 2025. Lane boxes are not to scale.</text>
-  <text class="n" x="52" y="756">[2] Per the report, 65% of user reports and 97% of total reports were processed using automated systems.</text>
-  <text class="n" x="52" y="772">[3] A moderation agent reviews; reinstated when an error is found or reconsideration is warranted.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">A PLATFORM TRANSPARENCY REPORT, JAN 1 TO DEC 31, 2025. STAGE BOXES ARE NOT TO SCALE; SPLIT BARS ARE.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">PER THE REPORT, 65% OF USER REPORTS AND 97% OF TOTAL REPORTS WERE PROCESSED USING AUTOMATED SYSTEMS.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">A HUMAN AGENT REVIEWS EACH APPEAL; REINSTATED WHEN AN ERROR IS FOUND OR RECONSIDERATION IS WARRANTED.</text>
+  <text class="nt" x="50" y="113">COUNTS PER YEAR. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLES.</text>
+  <!-- Lane 1: proactive detection -->
+  <rect class="obj fill-2" x="70" y="176" width="120" height="40"/>
+  <text class="sl ink" x="130" y="193" text-anchor="middle">SCANNED</text>
+  <text class="dt" x="130" y="207" text-anchor="middle">S1</text>
+  <path class="leader" d="M194,196H220" marker-end="url(#gm-pbp-ah)"/>
+  <rect class="obj fill-2" x="224" y="176" width="120" height="40"/>
+  <text class="sl ink" x="284" y="193" text-anchor="middle">VIOLATING</text>
+  <text class="dt" x="284" y="207" text-anchor="middle">D1</text>
+  <path class="leader" d="M348,196H374" marker-end="url(#gm-pbp-ah)"/>
+  <rect class="obj fill-2" x="378" y="176" width="10.44" height="40"/>
+  <rect class="obj fill-1" x="388.44" y="176" width="289.56" height="40"/>
+  <text class="sl ink" x="533.22" y="199" text-anchor="middle">AUTOMATED</text>
+  <path class="ext" d="M378,173L378,158"/>
+  <path class="ext" d="M678,173L678,158"/>
+  <path class="dim" d="M378,162L678,162" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="528" y="158" text-anchor="middle">D1</text>
+  <path class="ext" d="M378,219L378,238"/>
+  <path class="ext" d="M388.44,219L388.44,238"/>
+  <path class="dim" d="M378,234L388.44,234"/><path class="dim" d="M368,234L378,234" marker-end="url(#gm-pbp-ah)"/><path class="dim" d="M398.44,234L388.44,234" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="359.22" y="246" text-anchor="middle">M2</text>
+  <path class="ext" d="M678,219L678,238"/>
+  <path class="dim" d="M388.44,234L678,234" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="533.22" y="246" text-anchor="middle">A2</text>
+  <text class="vt" x="380" y="278" text-anchor="middle">LANE 1 · PROACTIVE DETECTION</text>
+  <text class="vs" x="380" y="291" text-anchor="middle">PLAN VIEW · SPLIT BAR TO SCALE · BOXES NOT TO SCALE</text>
+  <!-- Lane 2: player reports -->
+  <rect class="obj fill-2" x="70" y="341" width="120" height="40"/>
+  <text class="sl ink" x="130" y="358" text-anchor="middle">REPORTS</text>
+  <text class="dt" x="130" y="372" text-anchor="middle">R1</text>
+  <path class="leader" d="M194,361H220" marker-end="url(#gm-pbp-ah)"/>
+  <rect class="obj fill-2" x="224" y="341" width="120" height="40"/>
+  <text class="sl ink" x="284" y="358" text-anchor="middle">ACTIONED</text>
+  <text class="dt" x="284" y="372" text-anchor="middle">R2</text>
+  <path class="leader" d="M348,361H374" marker-end="url(#gm-pbp-ah)"/>
+  <rect class="obj fill-2" x="378" y="341" width="105.41" height="40"/>
+  <rect class="obj hl" x="483.41" y="341" width="194.59" height="40"/>
+  <text class="sl ink" x="430.7" y="364" text-anchor="middle">MANUAL</text>
+  <text class="sl ink" x="580.7" y="364" text-anchor="middle">AUTOMATED</text>
+  <path class="ext" d="M378,338L378,323"/>
+  <path class="ext" d="M678,338L678,323"/>
+  <path class="dim" d="M378,327L678,327" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="528" y="323" text-anchor="middle">U1</text>
+  <path class="ext" d="M378,384L378,403"/>
+  <path class="ext" d="M483.41,384L483.41,403"/>
+  <path class="dim" d="M378,399L483.41,399" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="430.7" y="411" text-anchor="middle">M1</text>
+  <path class="ext" d="M678,384L678,403"/>
+  <path class="dim hl" d="M483.41,399L678,399" marker-start="url(#gm-pbp-ah-hl)" marker-end="url(#gm-pbp-ah-hl)"/>
+  <text class="dt hl" x="580.7" y="411" text-anchor="middle">A1</text>
+  <rect class="nb" x="642.5" y="314" width="11" height="11"/>
+  <text class="nbt" x="648" y="322.2" text-anchor="middle">2</text>
+  <text class="vt" x="380" y="443" text-anchor="middle">LANE 2 · PLAYER REPORTS</text>
+  <text class="vs" x="380" y="456" text-anchor="middle">PLAN VIEW · SPLIT BAR TO SCALE · BOXES NOT TO SCALE</text>
+  <!-- Lane 3: appeals -->
+  <rect class="obj fill-2" x="70" y="506" width="120" height="40"/>
+  <text class="sl ink" x="130" y="523" text-anchor="middle">APPEALS</text>
+  <text class="dt" x="130" y="537" text-anchor="middle">P1</text>
+  <path class="leader" d="M194,526H220" marker-end="url(#gm-pbp-ah)"/>
+  <rect class="obj fill-2" x="224" y="506" width="120" height="40"/>
+  <text class="sl ink" x="284" y="529" text-anchor="middle">CASE REVIEW</text>
+  <path class="leader" d="M348,526H374" marker-end="url(#gm-pbp-ah)"/>
+  <rect class="obj fill-2" x="378" y="506" width="76.81" height="40"/>
+  <rect class="obj fill-1" x="454.81" y="506" width="223.19" height="40"/>
+  <text class="sl ink" x="416.4" y="529" text-anchor="middle">REINSTATED</text>
+  <text class="sl ink" x="566.4" y="529" text-anchor="middle">UPHELD</text>
+  <path class="ext" d="M378,503L378,488"/>
+  <path class="ext" d="M678,503L678,488"/>
+  <path class="dim" d="M378,492L678,492" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="528" y="488" text-anchor="middle">P1</text>
+  <path class="ext" d="M378,549L378,568"/>
+  <path class="ext" d="M454.81,549L454.81,568"/>
+  <path class="dim" d="M378,564L454.81,564" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="416.4" y="576" text-anchor="middle">N1</text>
+  <path class="ext" d="M678,549L678,568"/>
+  <path class="dim" d="M454.81,564L678,564" marker-start="url(#gm-pbp-ah)" marker-end="url(#gm-pbp-ah)"/>
+  <text class="dt" x="566.4" y="576" text-anchor="middle">N2</text>
+  <rect class="nb" x="278.5" y="490.5" width="11" height="11"/>
+  <text class="nbt" x="284" y="498.7" text-anchor="middle">3</text>
+  <text class="vt" x="380" y="608" text-anchor="middle">LANE 3 · APPEALS</text>
+  <text class="vs" x="380" y="621" text-anchor="middle">PLAN VIEW · SPLIT BAR TO SCALE · BOXES NOT TO SCALE</text>
+  <!-- Variable tables -->
+  <text class="vt" x="40" y="654">DETECTION AND REPORTS</text>
+  <rect class="tbl" x="40" y="661" width="239" height="105"/>
+  <path class="tbl" d="M40,676L279,676"/>
+  <path class="tbl" d="M40,691L279,691"/>
+  <path class="tbl" d="M40,706L279,706"/>
+  <path class="tbl" d="M40,721L279,721"/>
+  <path class="tbl" d="M40,736L279,736"/>
+  <path class="tbl" d="M40,751L279,751"/>
+  <path class="tbl" d="M77,661L77,766"/>
+  <path class="tbl" d="M193,661L193,766"/>
+  <text class="th" x="46" y="671.2">CODE</text>
+  <text class="th" x="135" y="671.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="236" y="671.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="46" y="686.7">S1</text>
+  <text class="tc" x="135" y="686.7" text-anchor="middle">content scanned</text>
+  <text class="tc" x="236" y="686.7" text-anchor="middle">14.8B</text>
+  <text class="tc" x="46" y="701.7">D1</text>
+  <text class="tc" x="135" y="701.7" text-anchor="middle">found violating, 2.5%</text>
+  <text class="tc" x="236" y="701.7" text-anchor="middle">M2 + A2 ≈ 368M</text>
+  <text class="tc" x="46" y="716.7">M2</text>
+  <text class="tc" x="135" y="716.7" text-anchor="middle">proactive, manual</text>
+  <text class="tc" x="236" y="716.7" text-anchor="middle">12.8M</text>
+  <text class="tc" x="46" y="731.7">A2</text>
+  <text class="tc" x="135" y="731.7" text-anchor="middle">proactive, automated</text>
+  <text class="tc" x="236" y="731.7" text-anchor="middle">355.1M</text>
+  <text class="tc" x="46" y="746.7">R1</text>
+  <text class="tc" x="135" y="746.7" text-anchor="middle">player reports</text>
+  <text class="tc" x="236" y="746.7" text-anchor="middle">39M</text>
+  <text class="tc" x="46" y="761.7">R2</text>
+  <text class="tc" x="135" y="761.7" text-anchor="middle">reports actioned, 9.6%</text>
+  <text class="tc" x="236" y="761.7" text-anchor="middle">3.7M</text>
+  <text class="vt" x="400" y="654">PROCESSING AND APPEALS</text>
+  <rect class="tbl" x="400" y="661" width="249" height="105"/>
+  <path class="tbl" d="M400,676L649,676"/>
+  <path class="tbl" d="M400,691L649,691"/>
+  <path class="tbl" d="M400,706L649,706"/>
+  <path class="tbl" d="M400,721L649,721"/>
+  <path class="tbl" d="M400,736L649,736"/>
+  <path class="tbl" d="M400,751L649,751"/>
+  <path class="tbl" d="M437,661L437,766"/>
+  <path class="tbl" d="M566,661L566,766"/>
+  <text class="th" x="406" y="671.2">CODE</text>
+  <text class="th" x="501.5" y="671.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="607.5" y="671.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="406" y="686.7">M1</text>
+  <text class="tc" x="501.5" y="686.7" text-anchor="middle">reported, manual</text>
+  <text class="tc" x="607.5" y="686.7" text-anchor="middle">1.3M</text>
+  <text class="tc" x="406" y="701.7">A1</text>
+  <text class="tc" x="501.5" y="701.7" text-anchor="middle">reported, automated, 65%</text>
+  <text class="tc" x="607.5" y="701.7" text-anchor="middle">2.4M</text>
+  <text class="tc" x="406" y="716.7">U1</text>
+  <text class="tc" x="501.5" y="716.7" text-anchor="middle">reported, processed</text>
+  <text class="tc" x="607.5" y="716.7" text-anchor="middle">M1 + A1 = 3.7M</text>
+  <text class="tc" x="406" y="731.7">P1</text>
+  <text class="tc" x="501.5" y="731.7" text-anchor="middle">appeals (case reviews)</text>
+  <text class="tc" x="607.5" y="731.7" text-anchor="middle">N1 + N2 = 332K</text>
+  <text class="tc" x="406" y="746.7">N1</text>
+  <text class="tc" x="501.5" y="746.7" text-anchor="middle">reinstated, 26%</text>
+  <text class="tc" x="607.5" y="746.7" text-anchor="middle">85K</text>
+  <text class="tc" x="406" y="761.7">N2</text>
+  <text class="tc" x="501.5" y="761.7" text-anchor="middle">upheld, 74%</text>
+  <text class="tc" x="607.5" y="761.7" text-anchor="middle">247K</text>
 </svg>

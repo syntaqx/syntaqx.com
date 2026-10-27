@@ -1,99 +1,107 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 798">
-  <defs>
-    <marker id="gm-mf-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-mf-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-MON-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">players to revenue, one month</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: the audience -->
-  <text class="vt" x="40" y="64">Plan view: monthly active players</text>
-  <text class="vs" x="40" y="80">Scale 100,000 players = 54 px · illustrative [1]</text>
-
-  <path class="ext" d="M140,125V95M680,125V95"/>
-  <path class="dim" d="M140,100H680" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
-  <text class="dt" x="410" y="96" text-anchor="middle">M1 = 1,000,000 players</text>
-
-  <rect class="obj hl" x="140" y="128" width="16.2" height="40"/>
-  <rect class="obj fill-2" x="156.2" y="128" width="523.8" height="40"/>
-  <text class="sl ink" x="418.1" y="148" text-anchor="middle" dominant-baseline="central">non-paying players</text>
-
-  <circle class="detail" cx="148.1" cy="148" r="20"/>
-  <text class="sl ink" x="124" y="122" text-anchor="end" dominant-baseline="central">detail A</text>
-
-  <path class="ext" d="M140,171V197M156.2,171V197M680,171V197"/>
-  <path class="dim hl" d="M120,192H140" marker-end="url(#gm-mf-ah-hl)"/>
-  <path class="dim hl" d="M140,192H156.2"/>
-  <text class="dt hl" x="116" y="192" text-anchor="end" dominant-baseline="central">P1 = 30,000</text>
-  <path class="dim" d="M156.2,192H680" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
-  <text class="dt" x="418.1" y="188" text-anchor="middle">M1 - P1 = 970,000</text>
-  <text class="t" x="410" y="224" text-anchor="middle">P1 = M1 × C1 = 1,000,000 × 3.0% = 30,000</text>
-
-  <!-- Detail A: the payers' money -->
-  <text class="vt" x="40" y="262">Detail A: what the payers spend</text>
-  <text class="vs" x="40" y="278">Scale $100,000 = 100 px · USD before tax [2]</text>
-
-  <path class="ext" d="M100,325V295M700,325V295"/>
-  <path class="dim" d="M100,300H700" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
-  <text class="dt" x="400" y="296" text-anchor="middle">B1 = P1 × A1 = 30,000 × 20.00 = 600,000</text>
-
-  <rect class="obj fill-1" x="100" y="328" width="180" height="40"/>
-  <rect class="obj fill-2" x="280" y="328" width="420" height="40"/>
-  <text class="sl ink" x="190" y="348" text-anchor="middle" dominant-baseline="central">store fee [3]</text>
-  <text class="sl ink" x="490" y="348" text-anchor="middle" dominant-baseline="central">net to developer</text>
-
-  <path class="ext" d="M100,371V397M280,371V397M700,371V397"/>
-  <path class="dim" d="M100,392H280" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
-  <text class="dt" x="190" y="388" text-anchor="middle">S1 = 180,000</text>
-  <path class="dim" d="M280,392H700" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
-  <text class="dt" x="490" y="388" text-anchor="middle">N1 = B1 - S1 = 420,000</text>
-  <text class="t" x="400" y="424" text-anchor="middle">S1 = B1 × 30% = 180,000 · R1 = B1 / M1 = 600,000 / 1,000,000 = 0.60</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="462">Variables</text>
-  <text class="vs" x="40" y="478">Illustrative [1] · USD, one month</text>
-  <rect class="cell band" x="40" y="488" width="60" height="22"/>
-  <rect class="cell band" x="100" y="488" width="500" height="22"/>
-  <rect class="cell band" x="600" y="488" width="120" height="22"/>
-  <text class="cap ink" x="50" y="499" dominant-baseline="central">code</text>
-  <text class="cap ink" x="110" y="499" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="499" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,510H720V686H40Z"/>
-  <path class="ln ink" d="M100,510V686M600,510V686"/>
-  <path class="ln" d="M40,532H720M40,554H720M40,576H720M40,598H720M40,620H720M40,642H720M40,664H720"/>
-  <text class="t" x="50" y="521" dominant-baseline="central">M1</text>
-  <text class="t" x="110" y="521" dominant-baseline="central">monthly active players</text>
-  <text class="t" x="710" y="521" text-anchor="end" dominant-baseline="central">1,000,000</text>
-  <text class="t" x="50" y="543" dominant-baseline="central">C1</text>
-  <text class="t" x="110" y="543" dominant-baseline="central">monthly payer conversion: payers / M1</text>
-  <text class="t" x="710" y="543" text-anchor="end" dominant-baseline="central">3.0%</text>
-  <text class="t" x="50" y="565" dominant-baseline="central">P1</text>
-  <text class="t" x="110" y="565" dominant-baseline="central">paying players: M1 × C1</text>
-  <text class="t" x="710" y="565" text-anchor="end" dominant-baseline="central">30,000</text>
-  <text class="t" x="50" y="587" dominant-baseline="central">A1</text>
-  <text class="t" x="110" y="587" dominant-baseline="central">ARPPU on gross bookings: B1 / P1</text>
-  <text class="t" x="710" y="587" text-anchor="end" dominant-baseline="central">20.00</text>
-  <text class="t b" x="50" y="609" dominant-baseline="central">B1</text>
-  <text class="t" x="110" y="609" dominant-baseline="central">gross bookings: P1 × A1</text>
-  <text class="t b" x="710" y="609" text-anchor="end" dominant-baseline="central">600,000</text>
-  <text class="t" x="50" y="631" dominant-baseline="central">S1</text>
-  <text class="t" x="110" y="631" dominant-baseline="central">store fee: B1 × 30%</text>
-  <text class="t" x="710" y="631" text-anchor="end" dominant-baseline="central">180,000</text>
-  <text class="t" x="50" y="653" dominant-baseline="central">N1</text>
-  <text class="t" x="110" y="653" dominant-baseline="central">net to developer: B1 - S1</text>
-  <text class="t" x="710" y="653" text-anchor="end" dominant-baseline="central">420,000</text>
-  <text class="t" x="50" y="675" dominant-baseline="central">R1</text>
-  <text class="t" x="110" y="675" dominant-baseline="central">ARPU on gross bookings: B1 / M1</text>
-  <text class="t" x="710" y="675" text-anchor="end" dominant-baseline="central">0.60</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 736">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-mf-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-mf-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-mf-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="716" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="702" width="680" height="76"/>
-  <text class="sl ink" x="52" y="720">notes</text>
-  <text class="n" x="52" y="738">[1] Illustrative values, not benchmarks: conversion and spend vary widely by genre, platform and region.</text>
-  <text class="n" x="52" y="754">[2] Amounts are before sales tax and VAT, which the store or the seller collects and remits on top.</text>
-  <text class="n" x="52" y="770">[3] A 30% store fee, the top rate at several stores; each store's rate is in Stores, Fees &amp; Payments.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE VALUES, NOT BENCHMARKS: CONVERSION AND SPEND VARY WIDELY BY GENRE, PLATFORM AND REGION.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">AMOUNTS ARE BEFORE SALES TAX AND VAT, WHICH THE STORE OR THE SELLER COLLECTS AND REMITS ON TOP.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">A 30% STORE FEE, THE TOP RATE AT SEVERAL STORES; EACH STORE'S RATE IS IN STORES, FEES &amp; PAYMENTS.</text>
+  <text class="nt" x="50" y="113">PLAYERS AND USD, ONE MONTH. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: monthly active players -->
+  <rect class="obj hl" x="110" y="202" width="16.2" height="36"/>
+  <rect class="obj fill-2" x="126.2" y="202" width="523.8" height="36"/>
+  <text class="sl ink" x="388.1" y="223" text-anchor="middle">NON-PAYING PLAYERS</text>
+  <path class="ext" d="M110,199L110,154"/>
+  <path class="ext" d="M650,199L650,154"/>
+  <path class="dim" d="M110,158L650,158" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
+  <text class="dt" x="380" y="154" text-anchor="middle">M1</text>
+  <rect class="nb" x="392.5" y="145" width="11" height="11"/>
+  <text class="nbt" x="398" y="153.2" text-anchor="middle">1</text>
+  <path class="ext" d="M110,199L110,180"/>
+  <path class="ext" d="M126.2,199L126.2,180"/>
+  <path class="dim hl" d="M110,184L126.2,184"/><path class="dim hl" d="M100,184L110,184" marker-end="url(#gm-mf-ah-hl)"/><path class="dim hl" d="M136.2,184L126.2,184" marker-end="url(#gm-mf-ah-hl)"/>
+  <text class="dt hl" x="88.1" y="187.5" text-anchor="middle">P1</text>
+  <path class="ext" d="M126.2,241L126.2,262"/>
+  <path class="ext" d="M650,241L650,262"/>
+  <path class="dim" d="M126.2,258L650,258" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
+  <text class="dt" x="388.1" y="270" text-anchor="middle">M1 − P1</text>
+  <circle class="detail" cx="118.1" cy="220" r="20"/>
+  <path class="leader" d="M103.94,234.12L84,254"/>
+  <text class="sl ink" x="80" y="257" text-anchor="end">DETAIL A</text>
+  <text class="vt" x="380" y="304" text-anchor="middle">PLAN VIEW · MONTHLY ACTIVE PLAYERS</text>
+  <text class="vs" x="380" y="317" text-anchor="middle">SCALE 100,000 PLAYERS = 54 PX · ILLUSTRATIVE</text>
+  <!-- Detail A: the payers' money -->
+  <rect class="obj fill-1" x="80" y="391" width="180" height="36"/>
+  <rect class="obj fill-2" x="260" y="391" width="420" height="36"/>
+  <text class="sl ink" x="170" y="412" text-anchor="middle">STORE FEE</text>
+  <rect class="nb" x="208.5" y="403.5" width="11" height="11"/>
+  <text class="nbt" x="214" y="411.7" text-anchor="middle">3</text>
+  <text class="sl ink" x="470" y="412" text-anchor="middle">NET TO DEVELOPER</text>
+  <path class="ext" d="M80,388L80,365"/>
+  <path class="ext" d="M680,388L680,365"/>
+  <path class="dim" d="M80,369L680,369" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
+  <text class="dt" x="380" y="365" text-anchor="middle">B1</text>
+  <rect class="nb" x="392.5" y="356" width="11" height="11"/>
+  <text class="nbt" x="398" y="364.2" text-anchor="middle">2</text>
+  <path class="ext" d="M80,430L80,451"/>
+  <path class="ext" d="M260,430L260,451"/>
+  <path class="dim" d="M80,447L260,447" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
+  <text class="dt" x="170" y="459" text-anchor="middle">S1</text>
+  <path class="ext" d="M680,430L680,451"/>
+  <path class="dim" d="M260,447L680,447" marker-start="url(#gm-mf-ah)" marker-end="url(#gm-mf-ah)"/>
+  <text class="dt" x="470" y="459" text-anchor="middle">N1</text>
+  <text class="vt" x="380" y="493" text-anchor="middle">DETAIL A · WHAT THE PAYERS SPEND</text>
+  <text class="vs" x="380" y="506" text-anchor="middle">SCALE $100,000 = 100 PX · USD BEFORE TAX</text>
+  <!-- Variable table -->
+  <text class="vt" x="147" y="549">VARIABLES · USD, ONE MONTH</text>
+  <rect class="tbl" x="147" y="556" width="466" height="150"/>
+  <path class="tbl" d="M147,571L613,571"/>
+  <path class="tbl" d="M147,586L613,586"/>
+  <path class="tbl" d="M147,601L613,601"/>
+  <path class="tbl" d="M147,616L613,616"/>
+  <path class="tbl" d="M147,631L613,631"/>
+  <path class="tbl" d="M147,646L613,646"/>
+  <path class="tbl" d="M147,661L613,661"/>
+  <path class="tbl" d="M147,676L613,676"/>
+  <path class="tbl" d="M147,691L613,691"/>
+  <path class="tbl" d="M203,556L203,706"/>
+  <path class="tbl" d="M433,556L433,706"/>
+  <text class="th" x="153" y="566.2">CODE</text>
+  <text class="th" x="318" y="566.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="523" y="566.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="153" y="581.7">M1</text>
+  <text class="tc" x="318" y="581.7" text-anchor="middle">monthly active players</text>
+  <text class="tc" x="523" y="581.7" text-anchor="middle">1,000,000</text>
+  <text class="tc" x="153" y="596.7">C1</text>
+  <text class="tc" x="318" y="596.7" text-anchor="middle">monthly payer conversion</text>
+  <text class="tc" x="523" y="596.7" text-anchor="middle">payers ÷ M1 = 3.0%</text>
+  <text class="tc" x="153" y="611.7">P1</text>
+  <text class="tc" x="318" y="611.7" text-anchor="middle">paying players</text>
+  <text class="tc" x="523" y="611.7" text-anchor="middle">M1 × C1 = 30,000</text>
+  <text class="tc" x="153" y="626.7">M1 − P1</text>
+  <text class="tc" x="318" y="626.7" text-anchor="middle">non-paying players</text>
+  <text class="tc" x="523" y="626.7" text-anchor="middle">970,000</text>
+  <text class="tc" x="153" y="641.7">A1</text>
+  <text class="tc" x="318" y="641.7" text-anchor="middle">ARPPU on gross bookings</text>
+  <text class="tc" x="523" y="641.7" text-anchor="middle">B1 ÷ P1 = 20.00</text>
+  <text class="tc" x="153" y="656.7">B1</text>
+  <text class="tc" x="318" y="656.7" text-anchor="middle">gross bookings</text>
+  <text class="tc" x="523" y="656.7" text-anchor="middle">P1 × A1 = 600,000</text>
+  <text class="tc" x="153" y="671.7">S1</text>
+  <text class="tc" x="318" y="671.7" text-anchor="middle">store fee</text>
+  <text class="tc" x="523" y="671.7" text-anchor="middle">B1 × 30% = 180,000</text>
+  <text class="tc" x="153" y="686.7">N1</text>
+  <text class="tc" x="318" y="686.7" text-anchor="middle">net to developer</text>
+  <text class="tc" x="523" y="686.7" text-anchor="middle">B1 − S1 = 420,000</text>
+  <text class="tc" x="153" y="701.7">R1</text>
+  <text class="tc" x="318" y="701.7" text-anchor="middle">ARPU on gross bookings</text>
+  <text class="tc" x="523" y="701.7" text-anchor="middle">B1 ÷ M1 = 0.60</text>
 </svg>

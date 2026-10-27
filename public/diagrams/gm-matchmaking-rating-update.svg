@@ -1,142 +1,194 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 860">
-  <defs>
-    <marker id="gm-mr-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-mr-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-MMR-002</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">rating updates, worked</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- View A: Elo under FIDE rules -->
-  <text class="vt" x="40" y="64">Plan view A: one Elo game, FIDE rules</text>
-  <text class="vs" x="40" y="80">Scale 1 rating point = 2.5 px · K = 20 · lower-rated A wins</text>
-
-  <!-- D1 -->
-  <path class="ext" d="M265,113V97M515,113V97"/>
-  <path class="dim" d="M265,102H515" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
-  <text class="dt" x="390" y="98" text-anchor="middle">D1 = R2 - R1 = 100</text>
-
-  <!-- Before and after rows -->
-  <text class="sl" x="130" y="120" text-anchor="end" dominant-baseline="central">before</text>
-  <rect class="obj fill-1" x="259" y="114" width="12" height="12"/>
-  <rect class="obj fill-1" x="509" y="114" width="12" height="12"/>
-  <text class="sl ink" x="245" y="120" text-anchor="end" dominant-baseline="central">A</text>
-  <text class="sl ink" x="535" y="120" dominant-baseline="central">B</text>
-  <text class="sl" x="130" y="150" text-anchor="end" dominant-baseline="central">after</text>
-  <rect class="obj fill-2" x="291.5" y="144" width="12" height="12"/>
-  <rect class="obj fill-2" x="476.5" y="144" width="12" height="12"/>
-  <path class="phantom" d="M265,126V170M515,126V170"/>
-
-  <!-- U1, U2 -->
-  <path class="ext" d="M297.5,159V177"/>
-  <path class="dim hl" d="M265,172H297.5" marker-start="url(#gm-mr-ah-hl)" marker-end="url(#gm-mr-ah-hl)"/>
-  <text class="dt hl" x="258" y="172" text-anchor="end" dominant-baseline="central">U1 = +13</text>
-  <path class="ext" d="M482.5,159V177"/>
-  <path class="dim" d="M482.5,172H515" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
-  <text class="dt" x="522" y="172" dominant-baseline="central">U2 = -13</text>
-
-  <!-- Rating axis -->
-  <path class="ln ink" d="M140,196H640"/>
-  <path class="ln ink" d="M140,192V200M265,192V200M390,192V200M515,192V200M640,192V200"/>
-  <text class="t" x="140" y="210" text-anchor="middle" dominant-baseline="central">1850</text>
-  <text class="t" x="265" y="210" text-anchor="middle" dominant-baseline="central">1900</text>
-  <text class="t" x="390" y="210" text-anchor="middle" dominant-baseline="central">1950</text>
-  <text class="t" x="515" y="210" text-anchor="middle" dominant-baseline="central">2000</text>
-  <text class="t" x="640" y="210" text-anchor="middle" dominant-baseline="central">2050</text>
-
-  <!-- Formulas A -->
-  <text class="t" x="60" y="240">E1 = 1 / (1 + 10^(D1/400)) = 1 / (1 + 10^0.25) = 0.36    [1]</text>
-  <text class="t" x="60" y="257">E2 = 1 - E1 = 0.64</text>
-  <text class="t" x="60" y="274">U1 = K x (S1 - E1) = 20 x (1 - 0.36) = +12.8, rounded +13    [2]</text>
-  <text class="t" x="60" y="291">U2 = K x (S2 - E2) = 20 x (0 - 0.64) = -12.8, rounded -13</text>
-  <text class="t" x="60" y="308">R1' = R1 + U1 = 1900 + 13 = 1913 · R2' = R2 + U2 = 2000 - 13 = 1987</text>
-
-  <!-- View B: Glicko-2 -->
-  <text class="vt" x="40" y="342">Plan view B: Glicko-2 interval, one rating period</text>
-  <text class="vs" x="40" y="357">Scale 1 rating point = 0.5 px · Glickman's example [3]</text>
-
-  <path class="ext" d="M190,393V377M590,393V377"/>
-  <path class="dim" d="M190,382H590" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
-  <text class="dt" x="390" y="378" text-anchor="middle">W0 = 4 x RD = 4 x 200 = 800</text>
-  <text class="sl" x="130" y="402" text-anchor="end" dominant-baseline="central">before</text>
-  <rect class="obj fill-2" x="190" y="396" width="400" height="12"/>
-  <path class="ctr" d="M390,390V414"/>
-
-  <text class="sl" x="130" y="436" text-anchor="end" dominant-baseline="central">after</text>
-  <rect class="obj fill-1" x="220.5" y="430" width="303.05" height="12"/>
-  <path class="ctr" d="M372.03,424V448"/>
-  <path class="ext" d="M220.5,445V466M523.55,445V466"/>
-  <path class="dim" d="M220.5,461H523.55" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
-  <text class="dt" x="372" y="457" text-anchor="middle">W1 = 4 x RD' = 606.08</text>
-
-  <path class="ln ink" d="M140,484H640"/>
-  <path class="ln ink" d="M140,480V488M265,480V488M390,480V488M515,480V488M640,480V488"/>
-  <text class="t" x="140" y="498" text-anchor="middle" dominant-baseline="central">1000</text>
-  <text class="t" x="265" y="498" text-anchor="middle" dominant-baseline="central">1250</text>
-  <text class="t" x="390" y="498" text-anchor="middle" dominant-baseline="central">1500</text>
-  <text class="t" x="515" y="498" text-anchor="middle" dominant-baseline="central">1750</text>
-  <text class="t" x="640" y="498" text-anchor="middle" dominant-baseline="central">2000</text>
-
-  <!-- Formulas B -->
-  <text class="t" x="60" y="528">r = 1500, RD = 200, sigma = 0.06, tau = 0.5; beat 1400, lost to 1550 and 1700</text>
-  <text class="t" x="60" y="545">v = 1.7785 · Delta = -0.4834 · sigma' = 0.05999</text>
-  <text class="t" x="60" y="562">r' = 1500 + 173.7178 x (-0.2069) = 1464.06</text>
-  <text class="t" x="60" y="579">RD' = 173.7178 x 0.8722 = 151.52 · W1 = 4 x 151.52 = 606.08</text>
-
-  <!-- Variable tables -->
-  <text class="vt" x="40" y="616">Variables</text>
-  <text class="vs" x="40" y="632">Rating points</text>
-  <rect class="cell band" x="40" y="642" width="50" height="22"/>
-  <rect class="cell band" x="90" y="642" width="200" height="22"/>
-  <rect class="cell band" x="290" y="642" width="80" height="22"/>
-  <text class="cap ink" x="50" y="653" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="653" dominant-baseline="central">item</text>
-  <text class="cap ink" x="360" y="653" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,664H370V752H40Z"/>
-  <path class="ln ink" d="M90,664V752M290,664V752"/>
-  <path class="ln" d="M40,686H370M40,708H370M40,730H370"/>
-  <text class="t b" x="50" y="675" dominant-baseline="central">R1</text>
-  <text class="t" x="100" y="675" dominant-baseline="central">A's rating</text>
-  <text class="t" x="360" y="675" text-anchor="end" dominant-baseline="central">1900</text>
-  <text class="t b" x="50" y="697" dominant-baseline="central">R2</text>
-  <text class="t" x="100" y="697" dominant-baseline="central">B's rating</text>
-  <text class="t" x="360" y="697" text-anchor="end" dominant-baseline="central">2000</text>
-  <text class="t b" x="50" y="719" dominant-baseline="central">K</text>
-  <text class="t" x="100" y="719" dominant-baseline="central">FIDE, rated under 2400</text>
-  <text class="t" x="360" y="719" text-anchor="end" dominant-baseline="central">20</text>
-  <text class="t b" x="50" y="741" dominant-baseline="central">S1/S2</text>
-  <text class="t" x="100" y="741" dominant-baseline="central">score: win 1, loss 0</text>
-  <text class="t" x="360" y="741" text-anchor="end" dominant-baseline="central">1/0</text>
-
-  <rect class="cell band" x="390" y="642" width="62" height="22"/>
-  <rect class="cell band" x="452" y="642" width="188" height="22"/>
-  <rect class="cell band" x="640" y="642" width="80" height="22"/>
-  <text class="cap ink" x="400" y="653" dominant-baseline="central">code</text>
-  <text class="cap ink" x="462" y="653" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="653" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M390,664H720V752H390Z"/>
-  <path class="ln ink" d="M452,664V752M640,664V752"/>
-  <path class="ln" d="M390,686H720M390,708H720M390,730H720"/>
-  <text class="t b" x="400" y="675" dominant-baseline="central">E1</text>
-  <text class="t" x="462" y="675" dominant-baseline="central">A's expected score</text>
-  <text class="t" x="710" y="675" text-anchor="end" dominant-baseline="central">0.36</text>
-  <text class="t b" x="400" y="697" dominant-baseline="central">U1</text>
-  <text class="t" x="462" y="697" dominant-baseline="central">A's change, rounded</text>
-  <text class="t" x="710" y="697" text-anchor="end" dominant-baseline="central">+13</text>
-  <text class="t b" x="400" y="719" dominant-baseline="central">RD/RD'</text>
-  <text class="t" x="462" y="719" dominant-baseline="central">deviation before/after</text>
-  <text class="t" x="710" y="719" text-anchor="end" dominant-baseline="central">200/151.52</text>
-  <text class="t b" x="400" y="741" dominant-baseline="central">W0/W1</text>
-  <text class="t" x="462" y="741" dominant-baseline="central">95% interval width</text>
-  <text class="t" x="710" y="741" text-anchor="end" dominant-baseline="central">800/606.08</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 850">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-mr-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-mr-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-mr-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="830" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="768" width="680" height="76"/>
-  <text class="sl ink" x="52" y="786">notes</text>
-  <text class="n" x="52" y="802">[1] FIDE gives E as a table (gap 99 to 106: 0.36 lower, 0.64 higher); the logistic form gives 0.360.</text>
-  <text class="n" x="52" y="818">[2] FIDE rounds a rating period's change to a whole number, with 0.5 rounded away from zero.</text>
-  <text class="n" x="52" y="834">[3] Values from Glickman's Glicko-2 worked example (2022); the 95% interval is r plus or minus 2 RD.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">FIDE GIVES E AS A TABLE (GAP 99 TO 106: 0.36 LOWER, 0.64 HIGHER); THE LOGISTIC FORM GIVES 0.360.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">FIDE ROUNDS A RATING PERIOD'S CHANGE TO A WHOLE NUMBER, WITH 0.5 ROUNDED AWAY FROM ZERO.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">VALUES FROM GLICKMAN'S GLICKO-2 WORKED EXAMPLE (2022); THE 95% INTERVAL IS R PLUS OR MINUS 2 RD.</text>
+  <text class="nt" x="50" y="113">VALUES IN RATING POINTS. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLES.</text>
+  <!-- Plan view A: one Elo game, FIDE rules -->
+  <path class="obj" d="M96,310L346,310"/>
+  <path class="obj" d="M96,306L96,314"/>
+  <text class="vs" x="96" y="326" text-anchor="middle">1850</text>
+  <path class="obj" d="M158.5,306L158.5,314"/>
+  <text class="vs" x="158.5" y="326" text-anchor="middle">1900</text>
+  <path class="obj" d="M221,306L221,314"/>
+  <text class="vs" x="221" y="326" text-anchor="middle">1950</text>
+  <path class="obj" d="M283.5,306L283.5,314"/>
+  <text class="vs" x="283.5" y="326" text-anchor="middle">2000</text>
+  <path class="obj" d="M346,306L346,314"/>
+  <text class="vs" x="346" y="326" text-anchor="middle">2050</text>
+  <text class="sl" x="82" y="187" text-anchor="end">BEFORE</text>
+  <text class="sl" x="82" y="255" text-anchor="end">AFTER</text>
+  <rect class="obj fill-1" x="152.5" y="178" width="12" height="12"/>
+  <rect class="obj fill-1" x="277.5" y="178" width="12" height="12"/>
+  <rect class="obj fill-2" x="168.75" y="246" width="12" height="12"/>
+  <rect class="obj fill-2" x="261.25" y="246" width="12" height="12"/>
+  <text class="sl ink" x="146.5" y="187" text-anchor="end">A</text>
+  <text class="sl ink" x="295.5" y="187">B</text>
+  <path class="phantom" d="M158.5,193L158.5,304"/>
+  <path class="phantom" d="M283.5,193L283.5,304"/>
+  <path class="ext" d="M158.5,175L158.5,160"/>
+  <path class="ext" d="M283.5,175L283.5,160"/>
+  <path class="dim" d="M158.5,164L283.5,164" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="221" y="160" text-anchor="middle">D1</text>
+  <path class="ext" d="M174.75,261L174.75,280"/>
+  <path class="dim hl" d="M158.5,276L174.75,276"/><path class="dim hl" d="M148.5,276L158.5,276" marker-end="url(#gm-mr-ah-hl)"/><path class="dim hl" d="M184.75,276L174.75,276" marker-end="url(#gm-mr-ah-hl)"/>
+  <text class="dt hl" x="136.63" y="279.5" text-anchor="middle">U1</text>
+  <path class="ext" d="M267.25,261L267.25,280"/>
+  <path class="dim" d="M267.25,276L283.5,276"/><path class="dim" d="M257.25,276L267.25,276" marker-end="url(#gm-mr-ah)"/><path class="dim" d="M293.5,276L283.5,276" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="305.38" y="279.5" text-anchor="middle">U2</text>
+  <rect class="nb" x="95" y="267" width="11" height="11"/>
+  <text class="nbt" x="100.5" y="275.2" text-anchor="middle">2</text>
+  <text class="dt" x="186.75" y="255">R1'</text>
+  <text class="dt" x="255.25" y="255" text-anchor="end">R2'</text>
+  <text class="vt" x="221" y="360" text-anchor="middle">PLAN VIEW A · ONE ELO GAME</text>
+  <text class="vs" x="221" y="373" text-anchor="middle">SCALE 1 POINT = 1.25 PX · LOWER-RATED A WINS</text>
+  <!-- Plan view B: Glicko-2 interval, one rating period -->
+  <path class="obj" d="M446,310L696,310"/>
+  <path class="obj" d="M446,306L446,314"/>
+  <text class="vs" x="446" y="326" text-anchor="middle">1000</text>
+  <path class="obj" d="M508.5,306L508.5,314"/>
+  <text class="vs" x="508.5" y="326" text-anchor="middle">1250</text>
+  <path class="obj" d="M571,306L571,314"/>
+  <text class="vs" x="571" y="326" text-anchor="middle">1500</text>
+  <path class="obj" d="M633.5,306L633.5,314"/>
+  <text class="vs" x="633.5" y="326" text-anchor="middle">1750</text>
+  <path class="obj" d="M696,306L696,314"/>
+  <text class="vs" x="696" y="326" text-anchor="middle">2000</text>
+  <text class="sl" x="432" y="187" text-anchor="end">BEFORE</text>
+  <text class="sl" x="432" y="255" text-anchor="end">AFTER</text>
+  <rect class="obj fill-2" x="471" y="178" width="200" height="12"/>
+  <rect class="obj fill-1" x="486.26" y="246" width="151.52" height="12"/>
+  <path class="ctr" d="M571,172L571,196"/>
+  <path class="ctr" d="M562.02,240L562.02,264"/>
+  <text class="dt" x="571" y="208" text-anchor="middle">r</text>
+  <text class="dt" x="562.02" y="276" text-anchor="middle">r'</text>
+  <path class="ext" d="M471,175L471,160"/>
+  <path class="ext" d="M671,175L671,160"/>
+  <path class="dim" d="M471,164L671,164" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="571" y="160" text-anchor="middle">W0</text>
+  <path class="ext" d="M486.26,243L486.26,228"/>
+  <path class="ext" d="M637.78,243L637.78,228"/>
+  <path class="dim" d="M486.26,232L637.78,232" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="562.02" y="228" text-anchor="middle">W1</text>
+  <text class="vt" x="571" y="360" text-anchor="middle">PLAN VIEW B · GLICKO-2</text>
+  <text class="vs" x="571" y="373" text-anchor="middle">SCALE 1 POINT = 0.25 PX · ONE RATING PERIOD</text>
+  <rect class="nb" x="655.5" y="350.5" width="11" height="11"/>
+  <text class="nbt" x="661" y="358.7" text-anchor="middle">3</text>
+  <!-- Variables: Elo -->
+  <text class="vt" x="179" y="409">VARIABLES · ELO</text>
+  <rect class="tbl" x="179" y="416" width="402" height="180"/>
+  <path class="tbl" d="M179,431L581,431"/>
+  <path class="tbl" d="M179,446L581,446"/>
+  <path class="tbl" d="M179,461L581,461"/>
+  <path class="tbl" d="M179,476L581,476"/>
+  <path class="tbl" d="M179,491L581,491"/>
+  <path class="tbl" d="M179,506L581,506"/>
+  <path class="tbl" d="M179,521L581,521"/>
+  <path class="tbl" d="M179,536L581,536"/>
+  <path class="tbl" d="M179,551L581,551"/>
+  <path class="tbl" d="M179,566L581,566"/>
+  <path class="tbl" d="M179,581L581,581"/>
+  <path class="tbl" d="M231,416L231,596"/>
+  <path class="tbl" d="M391,416L391,596"/>
+  <text class="th" x="185" y="426.2">CODE</text>
+  <text class="th" x="311" y="426.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="486" y="426.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="185" y="441.7">R1</text>
+  <text class="tc" x="311" y="441.7" text-anchor="middle">A's rating</text>
+  <text class="tc" x="486" y="441.7" text-anchor="middle">1900</text>
+  <text class="tc" x="185" y="456.7">R2</text>
+  <text class="tc" x="311" y="456.7" text-anchor="middle">B's rating</text>
+  <text class="tc" x="486" y="456.7" text-anchor="middle">2000</text>
+  <text class="tc" x="185" y="471.7">D1</text>
+  <text class="tc" x="311" y="471.7" text-anchor="middle">rating gap</text>
+  <text class="tc" x="486" y="471.7" text-anchor="middle">R2 − R1 = 100</text>
+  <text class="tc" x="185" y="486.7">K</text>
+  <text class="tc" x="311" y="486.7" text-anchor="middle">FIDE, rated under 2400</text>
+  <text class="tc" x="486" y="486.7" text-anchor="middle">20</text>
+  <text class="tc" x="185" y="501.7">S1, S2</text>
+  <text class="tc" x="311" y="501.7" text-anchor="middle">score: win 1, loss 0</text>
+  <text class="tc" x="486" y="501.7" text-anchor="middle">1, 0</text>
+  <text class="tc" x="185" y="516.7">E1</text>
+  <text class="tc" x="311" y="516.7" text-anchor="middle">A's expected score</text>
+  <text class="tc" x="486" y="516.7" text-anchor="middle">1 ÷ (1 + 10^(D1/400)) = 0.36</text>
+  <text class="tc" x="185" y="531.7">E2</text>
+  <text class="tc" x="311" y="531.7" text-anchor="middle">B's expected score</text>
+  <text class="tc" x="486" y="531.7" text-anchor="middle">1 − E1 = 0.64</text>
+  <text class="tc" x="185" y="546.7">U1</text>
+  <text class="tc" x="311" y="546.7" text-anchor="middle">A's change, rounded</text>
+  <text class="tc" x="486" y="546.7" text-anchor="middle">K(S1 − E1) = 12.8 → +13</text>
+  <text class="tc" x="185" y="561.7">U2</text>
+  <text class="tc" x="311" y="561.7" text-anchor="middle">B's change, rounded</text>
+  <text class="tc" x="486" y="561.7" text-anchor="middle">K(S2 − E2) = −12.8 → −13</text>
+  <text class="tc" x="185" y="576.7">R1'</text>
+  <text class="tc" x="311" y="576.7" text-anchor="middle">A after</text>
+  <text class="tc" x="486" y="576.7" text-anchor="middle">R1 + U1 = 1913</text>
+  <text class="tc" x="185" y="591.7">R2'</text>
+  <text class="tc" x="311" y="591.7" text-anchor="middle">B after</text>
+  <text class="tc" x="486" y="591.7" text-anchor="middle">R2 + U2 = 1987</text>
+  <rect class="nb" x="291.5" y="399.5" width="11" height="11"/>
+  <text class="nbt" x="297" y="407.7" text-anchor="middle">1</text>
+  <!-- Variables: Glicko-2 -->
+  <text class="vt" x="179" y="633">VARIABLES · GLICKO-2</text>
+  <rect class="tbl" x="179" y="640" width="402" height="180"/>
+  <path class="tbl" d="M179,655L581,655"/>
+  <path class="tbl" d="M179,670L581,670"/>
+  <path class="tbl" d="M179,685L581,685"/>
+  <path class="tbl" d="M179,700L581,700"/>
+  <path class="tbl" d="M179,715L581,715"/>
+  <path class="tbl" d="M179,730L581,730"/>
+  <path class="tbl" d="M179,745L581,745"/>
+  <path class="tbl" d="M179,760L581,760"/>
+  <path class="tbl" d="M179,775L581,775"/>
+  <path class="tbl" d="M179,790L581,790"/>
+  <path class="tbl" d="M179,805L581,805"/>
+  <path class="tbl" d="M231,640L231,820"/>
+  <path class="tbl" d="M391,640L391,820"/>
+  <text class="th" x="185" y="650.2">CODE</text>
+  <text class="th" x="311" y="650.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="486" y="650.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="185" y="665.7">r</text>
+  <text class="tc" x="311" y="665.7" text-anchor="middle">rating before</text>
+  <text class="tc" x="486" y="665.7" text-anchor="middle">1500</text>
+  <text class="tc" x="185" y="680.7">RD</text>
+  <text class="tc" x="311" y="680.7" text-anchor="middle">deviation before</text>
+  <text class="tc" x="486" y="680.7" text-anchor="middle">200</text>
+  <text class="tc" x="185" y="695.7">σ, τ</text>
+  <text class="tc" x="311" y="695.7" text-anchor="middle">volatility, system constant</text>
+  <text class="tc" x="486" y="695.7" text-anchor="middle">0.06, 0.5</text>
+  <text class="tc" x="185" y="710.7">O1…O3</text>
+  <text class="tc" x="311" y="710.7" text-anchor="middle">opponents: beat, lost, lost</text>
+  <text class="tc" x="486" y="710.7" text-anchor="middle">1400, 1550, 1700</text>
+  <text class="tc" x="185" y="725.7">v</text>
+  <text class="tc" x="311" y="725.7" text-anchor="middle">estimated variance</text>
+  <text class="tc" x="486" y="725.7" text-anchor="middle">1.7785</text>
+  <text class="tc" x="185" y="740.7">Δ</text>
+  <text class="tc" x="311" y="740.7" text-anchor="middle">estimated improvement</text>
+  <text class="tc" x="486" y="740.7" text-anchor="middle">−0.4834</text>
+  <text class="tc" x="185" y="755.7">σ'</text>
+  <text class="tc" x="311" y="755.7" text-anchor="middle">volatility after</text>
+  <text class="tc" x="486" y="755.7" text-anchor="middle">0.05999</text>
+  <text class="tc" x="185" y="770.7">r'</text>
+  <text class="tc" x="311" y="770.7" text-anchor="middle">rating after</text>
+  <text class="tc" x="486" y="770.7" text-anchor="middle">r + 173.7178 × (−0.2069) = 1464.06</text>
+  <text class="tc" x="185" y="785.7">RD'</text>
+  <text class="tc" x="311" y="785.7" text-anchor="middle">deviation after</text>
+  <text class="tc" x="486" y="785.7" text-anchor="middle">173.7178 × 0.8722 = 151.52</text>
+  <text class="tc" x="185" y="800.7">W0</text>
+  <text class="tc" x="311" y="800.7" text-anchor="middle">95% interval before</text>
+  <text class="tc" x="486" y="800.7" text-anchor="middle">4 × RD = 800</text>
+  <text class="tc" x="185" y="815.7">W1</text>
+  <text class="tc" x="311" y="815.7" text-anchor="middle">95% interval after</text>
+  <text class="tc" x="486" y="815.7" text-anchor="middle">4 × RD' = 606.08</text>
 </svg>

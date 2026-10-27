@@ -1,122 +1,136 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 716">
-  <defs>
-    <marker id="gm-ps-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-ps-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-SUP-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">support intake, one day</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- View 1: one day of requests -->
-  <text class="vt" x="40" y="64">Plan view: one day of requests</text>
-  <text class="vs" x="40" y="80">Riot 2017 [1] · 1,000 = 25 px</text>
-  <rect class="obj fill-2" x="40" y="112" width="150" height="40"/>
-  <text class="sl ink" x="115" y="125" text-anchor="middle" dominant-baseline="central">intake</text>
-  <text class="t" x="115" y="141" text-anchor="middle" dominant-baseline="central">tickets, forms</text>
-  <path class="ln ink" d="M190,132H230" marker-end="url(#gm-ps-ah)"/>
-  <rect class="obj fill-2" x="230" y="112" width="150" height="40"/>
-  <text class="sl ink" x="305" y="125" text-anchor="middle" dominant-baseline="central">classifier</text>
-  <text class="t" x="305" y="141" text-anchor="middle" dominant-baseline="central">per language [2]</text>
-  <path class="ln ink" d="M380,132H420" marker-end="url(#gm-ps-ah)"/>
-  <rect class="obj fill-1" x="420" y="112" width="60" height="40"/>
-  <rect class="obj fill-2" x="480" y="112" width="240" height="40"/>
-  <text class="sl ink" x="450" y="132" text-anchor="middle" dominant-baseline="central">bot</text>
-  <text class="sl ink" x="600" y="132" text-anchor="middle" dominant-baseline="central">agents</text>
-  <path class="ext" d="M420,109V99M720,109V99"/>
-  <path class="dim" d="M420,104H720" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
-  <text class="dt" x="570" y="100" text-anchor="middle">Q1 = B1 + H1 = 2,400 + 9,600 = 12,000</text>
-  <path class="ext" d="M420,155V181M480,155V181M720,155V181"/>
-  <path class="dim hl" d="M420,176H480" marker-start="url(#gm-ps-ah-hl)" marker-end="url(#gm-ps-ah-hl)"/>
-  <text class="dt hl" x="414" y="176" text-anchor="end" dominant-baseline="central">B1 = 2,400 (20%)</text>
-  <path class="dim" d="M480,176H720" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
-  <text class="dt" x="600" y="172" text-anchor="middle">H1 = 9,600 (80%)</text>
-  <text class="t" x="380" y="208" text-anchor="middle">E1: the bot's share equals the daily output of about 50 agents</text>
-
-  <!-- View 2: one ticket before automation -->
-  <text class="vt" x="40" y="246">Plan view: one ticket before automation</text>
-  <text class="vs" x="40" y="262">Riot 2017 [1] · 1 h = 6 px · values in hours [3]</text>
-  <rect class="obj fill-2" x="100" y="300" width="150" height="40"/>
-  <rect class="obj fill-1" x="250" y="300" width="282" height="40"/>
-  <text class="sl ink" x="175" y="320" text-anchor="middle" dominant-baseline="central">queue</text>
-  <text class="sl ink" x="391" y="320" text-anchor="middle" dominant-baseline="central">back and forth</text>
-  <path class="ext" d="M100,297V279M532,297V279"/>
-  <path class="dim" d="M100,284H532" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
-  <text class="dt" x="316" y="280" text-anchor="middle">L2 = L1 + L3 = 25 + 47 = 72 (3 days)</text>
-  <path class="ext" d="M100,343V369M250,343V369M532,343V369"/>
-  <path class="dim" d="M100,364H250" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
-  <text class="dt" x="175" y="360" text-anchor="middle">L1 = 25</text>
-  <path class="dim" d="M250,364H532" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
-  <text class="dt" x="391" y="360" text-anchor="middle">L3 = 47</text>
-  <circle class="dot" cx="100" cy="320" r="2.5"/>
-  <circle class="dot" cx="250" cy="320" r="2.5"/>
-  <circle class="dot" cx="532" cy="320" r="2.5"/>
-  <text class="sl" x="100" y="388" text-anchor="middle">opened</text>
-  <text class="sl" x="250" y="388" text-anchor="middle">first reply</text>
-  <text class="sl" x="532" y="388" text-anchor="middle">resolved</text>
-
-  <!-- Variables -->
-  <text class="vt" x="40" y="426">Variables</text>
-  <text class="vs" x="40" y="442">Riot 2017 [1] · requests per day, hours, shares</text>
-  <rect class="cell band" x="40" y="452" width="50" height="22"/>
-  <rect class="cell band" x="90" y="452" width="190" height="22"/>
-  <rect class="cell band" x="280" y="452" width="80" height="22"/>
-  <text class="cap ink" x="50" y="463" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="463" dominant-baseline="central">item</text>
-  <text class="cap ink" x="350" y="463" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,474H360V606H40Z"/>
-  <path class="ln ink" d="M90,474V606M280,474V606"/>
-  <path class="ln" d="M40,496H360M40,518H360M40,540H360M40,562H360M40,584H360"/>
-  <text class="t b" x="50" y="485" dominant-baseline="central">Q1</text>
-  <text class="t" x="100" y="485" dominant-baseline="central">requests a day</text>
-  <text class="t b" x="350" y="485" text-anchor="end" dominant-baseline="central">12,000</text>
-  <text class="t" x="50" y="507" dominant-baseline="central">B1</text>
-  <text class="t" x="100" y="507" dominant-baseline="central">routed or answered by bot</text>
-  <text class="t" x="350" y="507" text-anchor="end" dominant-baseline="central">2,400</text>
-  <text class="t" x="50" y="529" dominant-baseline="central">H1</text>
-  <text class="t" x="100" y="529" dominant-baseline="central">left for agents</text>
-  <text class="t" x="350" y="529" text-anchor="end" dominant-baseline="central">9,600</text>
-  <text class="t" x="50" y="551" dominant-baseline="central">E1</text>
-  <text class="t" x="100" y="551" dominant-baseline="central">bot work, in agents</text>
-  <text class="t" x="350" y="551" text-anchor="end" dominant-baseline="central">~50</text>
-  <text class="t" x="50" y="573" dominant-baseline="central">F1</text>
-  <text class="t" x="100" y="573" dominant-baseline="central">solved at first touch</text>
-  <text class="t" x="350" y="573" text-anchor="end" dominant-baseline="central">70%</text>
-  <text class="t" x="50" y="595" dominant-baseline="central">K1</text>
-  <text class="t" x="100" y="595" dominant-baseline="central">category chosen right</text>
-  <text class="t" x="350" y="595" text-anchor="end" dominant-baseline="central">~80%</text>
-
-  <rect class="cell band" x="400" y="452" width="50" height="22"/>
-  <rect class="cell band" x="450" y="452" width="190" height="22"/>
-  <rect class="cell band" x="640" y="452" width="80" height="22"/>
-  <text class="cap ink" x="410" y="463" dominant-baseline="central">code</text>
-  <text class="cap ink" x="460" y="463" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="463" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M400,474H720V584H400Z"/>
-  <path class="ln ink" d="M450,474V584M640,474V584"/>
-  <path class="ln" d="M400,496H720M400,518H720M400,540H720M400,562H720"/>
-  <text class="t" x="410" y="485" dominant-baseline="central">L1</text>
-  <text class="t" x="460" y="485" dominant-baseline="central">first response, up to</text>
-  <text class="t" x="710" y="485" text-anchor="end" dominant-baseline="central">25 h</text>
-  <text class="t" x="410" y="507" dominant-baseline="central">L3</text>
-  <text class="t" x="460" y="507" dominant-baseline="central">reply to resolution</text>
-  <text class="t" x="710" y="507" text-anchor="end" dominant-baseline="central">47 h</text>
-  <text class="t b" x="410" y="529" dominant-baseline="central">L2</text>
-  <text class="t" x="460" y="529" dominant-baseline="central">resolution, up to</text>
-  <text class="t b" x="710" y="529" text-anchor="end" dominant-baseline="central">72 h</text>
-  <text class="t" x="410" y="551" dominant-baseline="central">C1</text>
-  <text class="t" x="460" y="551" dominant-baseline="central">recovery tickets caught</text>
-  <text class="t" x="710" y="551" text-anchor="end" dominant-baseline="central">52%</text>
-  <text class="t" x="410" y="573" dominant-baseline="central">C2</text>
-  <text class="t" x="460" y="573" dominant-baseline="central">accuracy on those</text>
-  <text class="t" x="710" y="573" text-anchor="end" dominant-baseline="central">~93%</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 724">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-ps-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-ps-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-ps-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="704" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="620" width="680" height="80"/>
-  <text class="sl ink" x="52" y="638">notes</text>
-  <text class="n" x="52" y="656">[1] Riot Games tech blog, "Blitzcrank Bot", June 1, 2017 (not current). B1 = 20% of Q1; H1 = Q1 minus B1.</text>
-  <text class="n" x="52" y="672">[2] Classifiers trained on about 100k completed tickets per major language; C1 and C2 are at launch.</text>
-  <text class="n" x="52" y="688">[3] Before automation, as "up to" values. L3 is derived: L2 minus L1. Denials stayed with agents.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ONE STUDIO'S PUBLISHED 2017 SUPPORT-BOT FIGURES: A DATED BASELINE, NOT CURRENT. B1 IS 20% OF Q1.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">CLASSIFIERS TRAINED ON ABOUT 100K COMPLETED TICKETS PER MAJOR LANGUAGE; C1 AND C2 ARE AT LAUNCH.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">BEFORE AUTOMATION, AS &quot;UP TO&quot; VALUES. L3 IS DERIVED FROM L2 AND L1. DENIALS STAYED WITH AGENTS.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">E1: THE BOT'S SHARE EQUALS THE DAILY OUTPUT OF ABOUT 50 AGENTS.</text>
+  <text class="nt" x="50" y="130">VALUES IN REQUESTS PER DAY AND HOURS. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLES.</text>
+  <!-- Plan view: one day of requests -->
+  <rect class="obj fill-2" x="52" y="199" width="116" height="34"/>
+  <text class="sl ink" x="110" y="219" text-anchor="middle">INTAKE</text>
+  <rect class="obj fill-2" x="200" y="199" width="116" height="34"/>
+  <text class="sl ink" x="258" y="219" text-anchor="middle">CLASSIFIER</text>
+  <rect class="nb" x="252.5" y="182.5" width="11" height="11"/>
+  <text class="nbt" x="258" y="190.7" text-anchor="middle">2</text>
+  <path class="leader" d="M171,216H197" marker-end="url(#gm-ps-ah)"/>
+  <path class="leader" d="M319,216H345" marker-end="url(#gm-ps-ah)"/>
+  <rect class="obj hl" x="348" y="199" width="72" height="34"/>
+  <rect class="obj fill-2" x="420" y="199" width="288" height="34"/>
+  <text class="sl ink" x="384" y="219" text-anchor="middle">BOT</text>
+  <text class="sl ink" x="564" y="219" text-anchor="middle">AGENTS</text>
+  <path class="ext" d="M348,196L348,173"/>
+  <path class="ext" d="M708,196L708,173"/>
+  <path class="dim" d="M348,177L708,177" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="528" y="173" text-anchor="middle">Q1</text>
+  <rect class="nb" x="542.5" y="164" width="11" height="11"/>
+  <text class="nbt" x="548" y="172.2" text-anchor="middle">1</text>
+  <path class="ext" d="M348,236L348,257"/>
+  <path class="ext" d="M420,236L420,257"/>
+  <path class="dim hl" d="M348,253L420,253" marker-start="url(#gm-ps-ah-hl)" marker-end="url(#gm-ps-ah-hl)"/>
+  <text class="dt hl" x="384" y="265" text-anchor="middle">B1</text>
+  <path class="ext" d="M708,236L708,257"/>
+  <path class="dim" d="M420,253L708,253" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="564" y="265" text-anchor="middle">H1</text>
+  <rect class="nb" x="396.5" y="256" width="11" height="11"/>
+  <text class="nbt" x="402" y="264.2" text-anchor="middle">4</text>
+  <text class="vt" x="380" y="299" text-anchor="middle">PLAN VIEW · ONE DAY OF REQUESTS</text>
+  <text class="vs" x="380" y="312" text-anchor="middle">SCALE 1,000 REQUESTS = 30 PX · FLOW</text>
+  <!-- Plan view: one ticket before automation -->
+  <rect class="obj fill-2" x="92" y="376" width="200" height="30"/>
+  <rect class="obj fill-1" x="292" y="376" width="376" height="30"/>
+  <text class="sl ink" x="192" y="394" text-anchor="middle">QUEUE</text>
+  <text class="sl ink" x="480" y="394" text-anchor="middle">BACK AND FORTH</text>
+  <path class="ext" d="M92,373L92,350"/>
+  <path class="ext" d="M668,373L668,350"/>
+  <path class="dim" d="M92,354L668,354" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="380" y="350" text-anchor="middle">L2</text>
+  <rect class="nb" x="392.5" y="341" width="11" height="11"/>
+  <text class="nbt" x="398" y="349.2" text-anchor="middle">3</text>
+  <path class="ext" d="M92,409L92,430"/>
+  <path class="ext" d="M292,409L292,430"/>
+  <path class="dim" d="M92,426L292,426" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="192" y="438" text-anchor="middle">L1</text>
+  <path class="ext" d="M668,409L668,430"/>
+  <path class="dim" d="M292,426L668,426" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="480" y="438" text-anchor="middle">L3</text>
+  <circle class="dot" cx="92" cy="391" r="2.2"/>
+  <text class="sl ink" x="92" y="456" text-anchor="middle">OPENED</text>
+  <circle class="dot" cx="292" cy="391" r="2.2"/>
+  <text class="sl ink" x="292" y="456" text-anchor="middle">FIRST REPLY</text>
+  <circle class="dot" cx="668" cy="391" r="2.2"/>
+  <text class="sl ink" x="668" y="456" text-anchor="middle">RESOLVED</text>
+  <text class="vt" x="380" y="490" text-anchor="middle">PLAN VIEW · ONE TICKET BEFORE AUTOMATION</text>
+  <text class="vs" x="380" y="503" text-anchor="middle">SCALE 1 H = 8 PX · TIMELINE</text>
+  <!-- Variable tables -->
+  <text class="vt" x="52" y="552">VARIABLES · ONE DAY</text>
+  <rect class="tbl" x="52" y="559" width="259" height="135"/>
+  <path class="tbl" d="M52,574L311,574"/>
+  <path class="tbl" d="M52,589L311,589"/>
+  <path class="tbl" d="M52,604L311,604"/>
+  <path class="tbl" d="M52,619L311,619"/>
+  <path class="tbl" d="M52,634L311,634"/>
+  <path class="tbl" d="M52,649L311,649"/>
+  <path class="tbl" d="M52,664L311,664"/>
+  <path class="tbl" d="M52,679L311,679"/>
+  <path class="tbl" d="M89,559L89,694"/>
+  <path class="tbl" d="M221,559L221,694"/>
+  <text class="th" x="58" y="569.2">CODE</text>
+  <text class="th" x="155" y="569.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="266" y="569.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="58" y="584.7">Q1</text>
+  <text class="tc" x="155" y="584.7" text-anchor="middle">requests a day</text>
+  <text class="tc" x="266" y="584.7" text-anchor="middle">B1 + H1 = 12,000</text>
+  <text class="tc" x="58" y="599.7">B1</text>
+  <text class="tc" x="155" y="599.7" text-anchor="middle">routed or answered by bot</text>
+  <text class="tc" x="266" y="599.7" text-anchor="middle">20% × Q1 = 2,400</text>
+  <text class="tc" x="58" y="614.7">H1</text>
+  <text class="tc" x="155" y="614.7" text-anchor="middle">left for agents</text>
+  <text class="tc" x="266" y="614.7" text-anchor="middle">Q1 − B1 = 9,600</text>
+  <text class="tc" x="58" y="629.7">E1</text>
+  <text class="tc" x="155" y="629.7" text-anchor="middle">bot work, in agents</text>
+  <text class="tc" x="266" y="629.7" text-anchor="middle">~50</text>
+  <text class="tc" x="58" y="644.7">F1</text>
+  <text class="tc" x="155" y="644.7" text-anchor="middle">solved at first touch</text>
+  <text class="tc" x="266" y="644.7" text-anchor="middle">70%</text>
+  <text class="tc" x="58" y="659.7">K1</text>
+  <text class="tc" x="155" y="659.7" text-anchor="middle">category chosen right</text>
+  <text class="tc" x="266" y="659.7" text-anchor="middle">~80%</text>
+  <text class="tc" x="58" y="674.7">C1</text>
+  <text class="tc" x="155" y="674.7" text-anchor="middle">recovery tickets caught</text>
+  <text class="tc" x="266" y="674.7" text-anchor="middle">52%</text>
+  <text class="tc" x="58" y="689.7">C2</text>
+  <text class="tc" x="155" y="689.7" text-anchor="middle">accuracy on those</text>
+  <text class="tc" x="266" y="689.7" text-anchor="middle">~93%</text>
+  <text class="vt" x="462" y="552">VARIABLES · HOURS</text>
+  <rect class="tbl" x="462" y="559" width="218" height="60"/>
+  <path class="tbl" d="M462,574L680,574"/>
+  <path class="tbl" d="M462,589L680,589"/>
+  <path class="tbl" d="M462,604L680,604"/>
+  <path class="tbl" d="M499,559L499,619"/>
+  <path class="tbl" d="M609,559L609,619"/>
+  <text class="th" x="468" y="569.2">CODE</text>
+  <text class="th" x="554" y="569.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="644.5" y="569.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="468" y="584.7">L1</text>
+  <text class="tc" x="554" y="584.7" text-anchor="middle">first response, up to</text>
+  <text class="tc" x="644.5" y="584.7" text-anchor="middle">25</text>
+  <text class="tc" x="468" y="599.7">L3</text>
+  <text class="tc" x="554" y="599.7" text-anchor="middle">reply to resolution</text>
+  <text class="tc" x="644.5" y="599.7" text-anchor="middle">L2 − L1 = 47</text>
+  <text class="tc" x="468" y="614.7">L2</text>
+  <text class="tc" x="554" y="614.7" text-anchor="middle">resolution, up to</text>
+  <text class="tc" x="644.5" y="614.7" text-anchor="middle">72 (3 days)</text>
 </svg>
