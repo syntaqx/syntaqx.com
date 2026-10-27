@@ -202,7 +202,7 @@ A tournament match is an ordinary `matches` row with a tournament, so recordings
 
 Competitive integrity has two halves: the game must be fair (no cheating, which [Anti-Cheat](/books/gaming/anti-cheat) covers, with tournament clients and machines under tighter control than online play), and the competitors must be trying to win.
 
-Riot's published anti-match-fixing program describes the second half. Its Esports Global Code of Conduct must be explicitly accepted by teams, referees and key operational staff, and "incidents of match-fixing, gambling, and failure to report are amongst the most serious breaches" of the code. Since 2019 Riot has worked with Sportradar on bet monitoring and investigations, and "currently, Sportradar monitors over 8,000 matches per year" across 25 leagues and international events. Investigations can take months, provisional suspensions may be imposed during them, and final rulings are typically published through Riot's esports channels.
+Riot's published anti-match-fixing program describes the second half. Its Esports Global Code of Conduct must be explicitly accepted by teams, referees and key operational staff, and "incidents of match-fixing, gambling, and failure to report are amongst the most serious breaches" of the code. Since 2019 Riot has worked with Sportradar on bet monitoring and investigations, and, as of October 2026, the page says Sportradar "monitors over 8,000 matches per year" across Riot's sanctioned competitions, 25 leagues and international competitions. Investigations can last several months, provisional suspensions may be imposed during them, and final rulings are typically published through Riot's esports channels.
 
 The parts a platform builds:
 

@@ -87,7 +87,7 @@ Hold windows depend on the brand, the channel and who started the payment: a **c
 | Mastercard | Pre-authorization | 30 days |
 | Visa | Automated fuel pump | 2 hours |
 
-The table is the networks' limits, and Mastercard's are about fees rather than expiry: its Transaction Processing Excellence program charges an integrity fee on a final authorization not cleared or fully reversed within 7 calendar days, and on a pre-authorization not cleared or reversed within 30, with no separate card-present window. A processor can enforce shorter windows of its own. Stripe, as of October 2026, holds a standard Mastercard authorization for 7 days online (customer- or merchant-initiated) and 2 days in person, and only its extended authorization feature holds longer. The window your system tracks is the shorter of the two: the network's rule, or your processor's.
+The table is the networks' limits, and Mastercard's are about fees rather than expiry: its Transaction Processing Excellence program charges an integrity fee on a final authorization not cleared or fully reversed within 7 calendar days, and on a pre-authorization not cleared or reversed within 30, with no separate card-present window. A processor can enforce shorter windows of its own. Stripe, as of October 2026, holds a standard Visa authorization for 7 days online when the customer initiated it (Visa allows 10) and 5 days in person or merchant-initiated (exactly 4 days and 18 hours, to leave time for clearing), and a standard Mastercard authorization for 7 days online (customer- or merchant-initiated) and 2 days in person; only its extended authorization feature holds longer. The window your system tracks is the shorter of the two: the network's rule, or your processor's.
 
 Not every authorization is a purchase for a final amount. A **zero-amount verification** checks a card is valid without holding money, when a card is saved; a **partial approval** approves less than requested (common on prepaid cards) and leaves the merchant to collect the rest another way; **estimated** and **incremental** authorizations hold an amount that may change ([Payment States & Ledgers](/docs/payments/payment-states#holds-that-change-size)); and a refund can itself be authorized before it's sent.
 
@@ -179,11 +179,11 @@ The card number is the **PAN**, the primary account number, and almost everythin
 
 - [Cornell LII: 15 U.S.C. § 1693o-2](https://www.law.cornell.edu/uscode/text/15/1693o-2), the Durbin Amendment behind regulated debit
 - [Federal Register: Debit Card Interchange Fees and Routing (2022)](https://www.federalregister.gov/documents/2022/10/11/2022-21838/debit-card-interchange-fees-and-routing), card-not-present debit routable over two unaffiliated networks from July 1, 2023
-- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), authorization types, approval validity windows (5.7.3.5) and the reversal requirement (5.7.3.6)
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), authorization types, approval validity windows (5.7.3.5, Table 5-12, 18 April 2026 edition) and the reversal requirement (5.7.3.6)
 - [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), merchant category codes such as 5411, 6513 and 4900
 
 **In practice**
 
-- [Stripe: Place a hold on a payment method](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method), authorization validity windows by brand and channel (Mastercard 7 days card-not-present, 2 days card-present), and capture rules
+- [Stripe: Place a hold on a payment method](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method), authorization validity windows by brand and channel (Visa 7 days card-not-present customer-initiated, 5 days merchant-initiated or card-present; Mastercard 7 days card-not-present, 2 days card-present), and capture rules
 - [Evolve: Mastercard Transaction Processing Excellence Program](https://developers.getevolved.com/enterprise/docs/mastercard-transaction-processing-excellence-program), Mastercard's integrity fee thresholds: 7 calendar days for final and undefined authorizations, 30 for pre-authorizations
 - [PayPal: Navigating Mastercard's New Mandate](https://www.paypal.com/us/brc/article/navigating-mastercards-new-mandate), final authorization captured within 7 days and the July 2025 fee on undefined authorizations (March 27, 2025)
