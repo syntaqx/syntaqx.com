@@ -292,3 +292,6 @@ diagram avoids it. Keep each to one or two lines: what went wrong, the rule.
 - 2026-10-27: Editing sources with Python on Windows rewrote the file with
   CRLF endings, and a bash heredoc mangled the middle dot; edit with the
   Edit or Write tools.
+- 2026-10-27: An actor flush to the right margin put its offset shadow 3
+  past it; give an actor at an edge 3 of slack. Edge labels are caps, so
+  cardinalities (`1..n`) need `tc ko` text placed beside the segment.

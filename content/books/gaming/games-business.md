@@ -139,7 +139,7 @@ Grants and credits are claimed against costs by project and place, so the studio
 
 ## The Life of a Game
 
-![A game's life from left to right: prototype, production, launch and live, then sunset. A loop from live back to itself is labelled patches, seasons and events. A dashed exit from prototype goes to cancelled. Above each stage is what the platform must have by the end of it: a playable build; pipelines, test automation and certification; accounts, store, servers and support at scale; live configuration, telemetry and moderation; and what happens to purchases and data at shutdown.](/diagrams/gm-games-business-lifecycle.svg "Most of a successful game's cost, and nearly all of its backend, belongs to the years after launch.")
+![A game's life from left to right: prototype, production, launch and live, then sunset. A loop from live back to itself is labelled patches, seasons and events. A dashed exit labelled not fun goes from prototype to cancelled, a terminal state. Under each stage is what the platform must have by the end of it: a playable build; pipelines, test automation and certification; accounts, store, servers and support at scale; live configuration, telemetry and moderation; and what happens to purchases and data at shutdown.](/diagrams/gm-games-business-lifecycle.svg "Most of a successful game's cost, and nearly all of its backend, belongs to the years after launch.")
 
 **Prototype.** A small team proves the game is fun. Code is thrown away, and engine choice happens here ([The Engine Landscape](/books/gaming/engine-landscape)). A prototype that isn't fun gets cancelled, which is the point of making it cheap. The platform at this stage is a build machine and a way to get builds to playtesters.
 

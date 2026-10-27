@@ -27,7 +27,7 @@ The layers mirror the parties in [How Card Payments Work](/books/payments/card-p
 
 Most platforms face only the first row, plus the last if they provision network tokens themselves ([Processor Routing](/books/payments/processor-routing#tokens-decide-how-free-you-are)): a processor certifies you, and the processor has already done the rest. The further down the stack you build, toward being the processor yourself ([Becoming a Payment Provider](/books/payments/becoming-a-payment-provider)), the more rows are yours.
 
-![Certification path: unit and contract tests feed processor certification, then network and EMV certification, then a pilot, then production; a dashed loop returns from production to certification whenever a network release, a new terminal or kernel, or a new message field arrives.](/diagrams/certification-path.svg "Certification never ends at go-live. Every network release, new terminal or new message field sends the change back through the same tests, so the cheapest certification is the one your test suite already runs.")
+![Certification path: unit and contract tests feed processor certification, then network and EMV certification (host interface and chip data tests such as Mastercard NIV; terminal Level 3 tests such as Visa ADVT and Mastercard M-TIP), then a pilot, then production; a dashed loop returns from production to certification whenever a network release, a new terminal or kernel, or a new message field arrives.](/diagrams/certification-path.svg "Certification never ends at go-live. Every network release, new terminal or new message field sends the change back through the same tests, so the cheapest certification is the one your test suite already runs.")
 
 ## Processor Certification
 
