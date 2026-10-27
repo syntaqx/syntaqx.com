@@ -296,16 +296,15 @@ body {
   color: var(--muted);
   counter-reset: section;
 }
-/* Docs and book chapters run wider than the site's 80rem container, so wide
-   content has room between the sidebar and the "On this page" rail. The text
-   keeps a 45rem measure, centred in its column (the breakout rules are after
-   the tables). */
-main:has(.doc-article),
-body:has(.doc-article) .site-bar {
+/* Docs and books run wider than the site's 80rem container, GitHub-style:
+   one column between the sidebar and the "On this page" rail, and the text,
+   tables, code and drawings all share its edges. */
+main:has(.doc-shell),
+body:has(.doc-shell) .site-bar {
   max-width: 110rem;
 }
 .prose-docs {
-  max-width: 45rem;
+  max-width: 60rem;
   margin-inline: auto;
 }
 .prose h1,
@@ -674,29 +673,14 @@ body:has(.doc-article) .site-bar {
   }
 }
 
-/* Breakout: in docs, wide content sizes to itself (a drawing to 1.25x its
-   natural width, set by rehypeDiagrams; a table or code block to its
-   content), at least the text's measure and at most the whole column
-   (100cqw: the column is the size container), centred on the text. */
+/* In docs, wide content takes the column's width, the same edges as the
+   text: drawings scale to it, tables and code scroll inside it. */
 .prose.prose-docs > :is(figure.diagram, pre, .table-scroll, p:has(> img:only-child)) {
-  width: max-content;
-  min-width: min(100cqw, 45rem);
-  max-width: 100cqw;
-  margin-left: 50%;
-  margin-right: 0;
-  translate: -50% 0;
-}
-.prose.prose-docs > p:has(> img:only-child) {
-  text-align: center;
-}
-/* A caption wraps to the drawing's width instead of widening the figure. */
-.prose.prose-docs > figure.diagram figcaption {
-  contain: inline-size;
+  width: 100%;
 }
 .prose.prose-docs > figure.diagram > svg {
-  width: auto;
+  width: 100%;
   max-width: 100%;
-  margin-inline: auto;
 }
 
 /* GFM task lists */

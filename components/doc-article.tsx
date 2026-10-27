@@ -63,7 +63,7 @@ export async function DocArticle({
         })}
       />
       <div className="@container min-w-0">
-        <div className="mx-auto max-w-180">
+        <div className="mx-auto max-w-240">
           <DocsHeader title={doc.title} eyebrow={eyebrow}>
             {doc.description && <p className="max-w-3xl text-dim">{doc.description}</p>}
             <div className="inst mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
@@ -86,7 +86,7 @@ export async function DocArticle({
         {(prev || next) && (
           <nav
             aria-label="Previous and next (or use the arrow keys)"
-            className="mx-auto mt-16 grid max-w-180 gap-4 border-t border-border pt-8 sm:grid-cols-2"
+            className="mx-auto mt-16 grid max-w-240 gap-4 border-t border-border pt-8 sm:grid-cols-2"
           >
             {prev && (
               <Link
@@ -113,7 +113,7 @@ export async function DocArticle({
         <aside className="hidden xl:block">
           <DocsToc
             headings={toc}
-            className="rail-scroll sticky top-26 max-h-[calc(100vh-7.5rem)] overflow-y-auto"
+            className="rail-scroll sticky top-16 max-h-[calc(100vh-5rem)] overflow-y-auto"
           />
         </aside>
       )}
