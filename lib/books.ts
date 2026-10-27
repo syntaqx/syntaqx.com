@@ -86,11 +86,9 @@ export const BOOKS: Book[] = [
 
 /** Books planned but not written yet, shown as "Soon". */
 export const UPCOMING_BOOKS: { name: string; type: BookType }[] = [
-  { name: "Health Tech", type: "industry" },
   { name: "Commerce", type: "industry" },
-  { name: "Banking & Lending", type: "industry" },
+  { name: "Consumer Fintech", type: "industry" },
   { name: "Hosting & Cloud", type: "industry" },
-  { name: "Workplace & Collaboration", type: "industry" },
 ];
 
 export const getBook = (slug: string) => BOOKS.find((b) => b.slug === slug);
