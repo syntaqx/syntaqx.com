@@ -1,110 +1,131 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 772">
-  <defs>
-    <marker id="pb-tmp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="pb-tmp-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-DB-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">effective-dated rows</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: one item's price in one region -->
-  <text class="vt" x="40" y="64">Plan view: item_prices, one item and region</text>
-  <text class="vs" x="40" y="80">Scale 1 day = 4 px · timeline · illustrative amounts [1]</text>
-  <text class="t" x="120" y="104" text-anchor="middle" dominant-baseline="central">2026-10-01</text>
-  <text class="t" x="244" y="104" text-anchor="middle" dominant-baseline="central">2026-11-01</text>
-  <text class="t" x="364" y="104" text-anchor="middle" dominant-baseline="central">2026-12-01</text>
-  <text class="t" x="488" y="104" text-anchor="middle" dominant-baseline="central">2027-01-01</text>
-  <text class="t" x="612" y="104" text-anchor="middle" dominant-baseline="central">2027-02-01</text>
-  <path class="ext" d="M120,112V125M244,112V125M364,112V125M488,112V125M612,112V125"/>
-  <rect class="obj fill-1" x="120" y="128" width="124" height="32"/>
-  <rect class="obj fill-2" x="244" y="128" width="120" height="32"/>
-  <rect class="obj fill-2" x="364" y="128" width="124" height="32"/>
-  <rect class="obj fill-2" x="488" y="128" width="212" height="32"/>
-  <path class="ln ink" d="M700,144H722" marker-end="url(#pb-tmp-ah)"/>
-  <text class="sl ink" x="182" y="144" text-anchor="middle" dominant-baseline="central">2400</text>
-  <text class="sl ink" x="304" y="144" text-anchor="middle" dominant-baseline="central">1499</text>
-  <text class="sl ink" x="426" y="144" text-anchor="middle" dominant-baseline="central">2400</text>
-  <text class="sl ink" x="594" y="144" text-anchor="middle" dominant-baseline="central">2600, open end</text>
-  <circle class="detail" cx="244" cy="144" r="18"/>
-  <text class="sl ink" x="266" y="120" dominant-baseline="central">detail A</text>
-
-  <!-- Chain: one row per period -->
-  <path class="ext" d="M120,163V189M244,163V189M364,163V189M488,163V189"/>
-  <path class="dim" d="M120,184H244" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
-  <text class="dt" x="182" y="180" text-anchor="middle">V1 = 31 d</text>
-  <path class="dim" d="M244,184H364" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
-  <text class="dt" x="304" y="180" text-anchor="middle">V2 = 30 d</text>
-  <path class="dim" d="M364,184H488" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
-  <text class="dt" x="426" y="180" text-anchor="middle">V3 = 31 d</text>
-  <path class="dim" d="M488,184H700" marker-start="url(#pb-tmp-ah)"/>
-  <text class="dt" x="594" y="180" text-anchor="middle">V4 = open [3]</text>
-
-  <!-- A rejected overlapping row -->
-  <rect class="hatch" x="320" y="202" width="80" height="22" fill="url(#pb-tmp-hatch)"/>
-  <text class="n" x="408" y="213" dominant-baseline="central">rejected insert: overlaps V2 and V3 [2]</text>
-
-  <!-- Today and an as-of read -->
-  <path class="ctr" d="M220,112V232"/>
-  <text class="sl" x="220" y="242" text-anchor="middle" dominant-baseline="central">today</text>
-  <path class="ln ink" d="M260,252V164" marker-end="url(#pb-tmp-ah)"/>
-  <text class="t" x="260" y="264" text-anchor="middle" dominant-baseline="central">as of 2026-11-05 [4]</text>
-
-  <!-- Detail A: the boundary -->
-  <text class="vt" x="40" y="306">Detail A: the 2026-11-01 boundary</text>
-  <text class="vs" x="40" y="322">Scale 1 day = 80 px · closed-open ranges</text>
-  <rect class="obj fill-1" x="100" y="346" width="180" height="24"/>
-  <circle class="obj" cx="280" cy="358" r="4"/>
-  <text class="t" x="296" y="358" dominant-baseline="central">V1 = [2026-10-01, 2026-11-01)</text>
-  <rect class="obj fill-2" x="280" y="380" width="180" height="24"/>
-  <circle class="dot" cx="280" cy="392" r="4"/>
-  <text class="t" x="476" y="392" dominant-baseline="central">V2 = [2026-11-01, 2026-12-01)</text>
-  <path class="ctr" d="M280,336V414"/>
-  <path class="ext" d="M200,373V433M280,417V433M360,407V433"/>
-  <path class="dim" d="M200,428H280" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
-  <text class="dt" x="240" y="446" text-anchor="middle">10-31 in V1</text>
-  <path class="dim" d="M280,428H360" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
-  <text class="dt" x="320" y="446" text-anchor="middle">11-01 in V2</text>
-  <text class="t" x="380" y="472" text-anchor="middle">upper(V1) = lower(V2) = 2026-11-01 · V1 -|- V2 · no gap, no shared day</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="510">Rows</text>
-  <text class="vs" x="40" y="526">Illustrative [1] · amount in cents, USD · today 2026-10-26</text>
-  <rect class="cell band" x="40" y="536" width="50" height="22"/>
-  <rect class="cell band" x="90" y="536" width="300" height="22"/>
-  <rect class="cell band" x="390" y="536" width="150" height="22"/>
-  <rect class="cell band" x="540" y="536" width="180" height="22"/>
-  <text class="cap ink" x="50" y="547" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="547" dominant-baseline="central">valid_during</text>
-  <text class="cap ink" x="530" y="547" text-anchor="end" dominant-baseline="central">amount</text>
-  <text class="cap ink" x="550" y="547" dominant-baseline="central">state</text>
-  <path class="cell" d="M40,558H720V646H40Z"/>
-  <path class="ln ink" d="M90,558V646M390,558V646M540,558V646"/>
-  <path class="ln" d="M40,580H720M40,602H720M40,624H720"/>
-  <text class="t b" x="50" y="569" dominant-baseline="central">V1</text>
-  <text class="t" x="100" y="569" dominant-baseline="central">[2026-10-01, 2026-11-01)</text>
-  <text class="t" x="530" y="569" text-anchor="end" dominant-baseline="central">2400</text>
-  <text class="t" x="550" y="569" dominant-baseline="central">current</text>
-  <text class="t" x="50" y="591" dominant-baseline="central">V2</text>
-  <text class="t" x="100" y="591" dominant-baseline="central">[2026-11-01, 2026-12-01)</text>
-  <text class="t" x="530" y="591" text-anchor="end" dominant-baseline="central">1499</text>
-  <text class="t" x="550" y="591" dominant-baseline="central">scheduled</text>
-  <text class="t" x="50" y="613" dominant-baseline="central">V3</text>
-  <text class="t" x="100" y="613" dominant-baseline="central">[2026-12-01, 2027-01-01)</text>
-  <text class="t" x="530" y="613" text-anchor="end" dominant-baseline="central">2400</text>
-  <text class="t" x="550" y="613" dominant-baseline="central">scheduled</text>
-  <text class="t" x="50" y="635" dominant-baseline="central">V4</text>
-  <text class="t" x="100" y="635" dominant-baseline="central">[2027-01-01,)</text>
-  <text class="t" x="530" y="635" text-anchor="end" dominant-baseline="central">2600</text>
-  <text class="t" x="550" y="635" dominant-baseline="central">scheduled, open end</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 642">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="pb-tmp-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="pb-tmp-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="pb-tmp-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="622" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="662" width="680" height="90"/>
-  <text class="sl ink" x="52" y="680">notes</text>
-  <text class="n" x="52" y="698">[1] Illustrative prices for one item in one region; ranges follow the chapter's valid_during and [) rules.</text>
-  <text class="n" x="52" y="714">[2] The exclusion constraint rejects any row whose valid_during overlaps another for the same item and region.</text>
-  <text class="n" x="52" y="730">[3] An open upper bound means until further notice: upper_inf(valid_during) is true, with no sentinel date.</text>
-  <text class="n" x="52" y="746">[4] The as-of moment is a parameter: valid_during @&gt; '2026-11-05' returns V2, 1499, whenever the query runs.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE PRICES FOR ONE ITEM IN ONE REGION; RANGES FOLLOW THE CHAPTER'S VALID_DURING AND [) RULES.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">THE EXCLUSION CONSTRAINT REJECTS ANY ROW WHOSE VALID_DURING OVERLAPS ANOTHER FOR THE SAME ITEM AND REGION.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">AN OPEN UPPER BOUND MEANS UNTIL FURTHER NOTICE: UPPER_INF(VALID_DURING) IS TRUE, WITH NO SENTINEL DATE.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">THE AS-OF MOMENT IS A PARAMETER: VALID_DURING @&gt; Q1 RETURNS V2 WHENEVER THE QUERY RUNS.</text>
+  <rect class="nb" x="32" y="121.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="129.5" text-anchor="middle">5</text>
+  <text class="nt" x="50" y="130">CLOSED-OPEN: V1'S EXCLUDED UPPER BOUND EQUALS V2'S INCLUDED LOWER BOUND, SO V1 -|- V2: NO GAP, NO SHARED DAY.</text>
+  <text class="nt" x="50" y="147">AMOUNTS IN CENTS, USD. THE DRAWING CARRIES CODES; RANGES, AMOUNTS AND DATES ARE IN THE TABLE.</text>
+  <!-- Plan view: item_prices -->
+  <rect class="obj fill-1" x="90" y="222" width="124" height="32"/>
+  <text class="sl ink" x="152" y="241" text-anchor="middle">CURRENT</text>
+  <rect class="obj fill-2" x="214" y="222" width="120" height="32"/>
+  <text class="sl ink" x="274" y="241" text-anchor="middle">SCHEDULED</text>
+  <rect class="obj fill-2" x="334" y="222" width="124" height="32"/>
+  <text class="sl ink" x="396" y="241" text-anchor="middle">SCHEDULED</text>
+  <rect class="obj fill-2" x="458" y="222" width="212" height="32"/>
+  <text class="sl ink" x="564" y="241" text-anchor="middle">SCHEDULED · OPEN END</text>
+  <path class="leader" d="M670,238H694" marker-end="url(#pb-tmp-ah)"/>
+  <path class="ctr" d="M190,186L190,262"/>
+  <text class="sl" x="185" y="192" text-anchor="end">TODAY</text>
+  <path class="dim" d="M230,186V222" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="235" y="192">Q1</text>
+  <rect class="nb" x="254.5" y="183" width="11" height="11"/>
+  <text class="nbt" x="260" y="191.2" text-anchor="middle">4</text>
+  <circle class="detail" cx="214" cy="238" r="14"/>
+  <path class="leader" d="M226.89,232.53L280,210"/>
+  <text class="sl ink" x="284" y="213">DETAIL A</text>
+  <path class="ext" d="M90,257L90,278"/>
+  <path class="ext" d="M214,257L214,278"/>
+  <path class="dim" d="M90,274L214,274" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="152" y="286" text-anchor="middle">V1</text>
+  <path class="ext" d="M334,257L334,278"/>
+  <path class="dim" d="M214,274L334,274" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="274" y="286" text-anchor="middle">V2</text>
+  <path class="ext" d="M458,257L458,278"/>
+  <path class="dim" d="M334,274L458,274" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="396" y="286" text-anchor="middle">V3</text>
+  <path class="ext" d="M458,257L458,278"/>
+  <path class="dim" d="M458,274H694" marker-start="url(#pb-tmp-ah)"/>
+  <text class="dt" x="564" y="286" text-anchor="middle">V4</text>
+  <rect class="nb" x="580.5" y="277" width="11" height="11"/>
+  <text class="nbt" x="586" y="285.2" text-anchor="middle">3</text>
+  <rect class="hatch" x="290" y="304" width="80" height="18" fill="url(#pb-tmp-hatch)"/>
+  <text class="sl ink" x="380" y="316">REJECTED INSERT</text>
+  <rect class="nb" x="478.5" y="307.5" width="11" height="11"/>
+  <text class="nbt" x="484" y="315.7" text-anchor="middle">2</text>
+  <text class="vt" x="380" y="366" text-anchor="middle">PLAN VIEW · ITEM_PRICES, ONE ITEM AND REGION</text>
+  <text class="vs" x="380" y="379" text-anchor="middle">SCALE 1 DAY = 4 PX · TIMELINE · ILLUSTRATIVE AMOUNTS</text>
+  <rect class="nb" x="557.02" y="356.5" width="11" height="11"/>
+  <text class="nbt" x="562.52" y="364.7" text-anchor="middle">1</text>
+  <!-- Detail A: closed-open boundary -->
+  <rect class="obj fill-1" x="76" y="469" width="120" height="24"/>
+  <rect class="obj fill-2" x="196" y="509" width="120" height="24"/>
+  <path class="ext" d="M136,469L136,493"/>
+  <path class="ext" d="M256,509L256,533"/>
+  <text class="sl ink" x="106" y="484" text-anchor="middle">V1</text>
+  <text class="sl ink" x="286" y="524" text-anchor="middle">V2</text>
+  <path class="ctr" d="M196,443L196,561"/>
+  <circle class="nb" cx="196" cy="481" r="3.5"/>
+  <circle class="dot" cx="196" cy="521" r="3.5"/>
+  <text class="sl ink" x="206" y="484">UPPER EXCLUDED</text>
+  <text class="sl ink" x="186" y="524" text-anchor="end">LOWER INCLUDED</text>
+  <path class="ext" d="M136,466L136,449"/>
+  <path class="ext" d="M196,466L196,449"/>
+  <path class="dim" d="M136,453L196,453" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="166" y="449" text-anchor="middle">D1</text>
+  <path class="ext" d="M196,536L196,555"/>
+  <path class="ext" d="M256,536L256,555"/>
+  <path class="dim" d="M196,551L256,551" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="226" y="563" text-anchor="middle">D2</text>
+  <text class="dt" x="201" y="447">B1</text>
+  <rect class="nb" x="216.5" y="438" width="11" height="11"/>
+  <text class="nbt" x="222" y="446.2" text-anchor="middle">5</text>
+  <text class="vt" x="196" y="599" text-anchor="middle">DETAIL A · THE V1 / V2 BOUNDARY</text>
+  <text class="vs" x="196" y="612" text-anchor="middle">SCALE 15:1 · 1 DAY = 60 PX · CLOSED-OPEN</text>
+  <!-- Row table -->
+  <text class="vt" x="404" y="438">ROWS · TODAY 2026-10-26</text>
+  <rect class="tbl" x="404" y="445" width="324" height="135"/>
+  <path class="tbl" d="M404,460L728,460"/>
+  <path class="tbl" d="M404,475L728,475"/>
+  <path class="tbl" d="M404,490L728,490"/>
+  <path class="tbl" d="M404,505L728,505"/>
+  <path class="tbl" d="M404,520L728,520"/>
+  <path class="tbl" d="M404,535L728,535"/>
+  <path class="tbl" d="M404,550L728,550"/>
+  <path class="tbl" d="M404,565L728,565"/>
+  <path class="tbl" d="M436,445L436,580"/>
+  <path class="tbl" d="M632,445L632,580"/>
+  <text class="th" x="410" y="455.2">CODE</text>
+  <text class="th" x="534" y="455.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="680" y="455.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="410" y="470.7">V1</text>
+  <text class="tc" x="534" y="470.7" text-anchor="middle">[2026-10-01, 2026-11-01) · current</text>
+  <text class="tc" x="680" y="470.7" text-anchor="middle">2400 · 31 d</text>
+  <text class="tc" x="410" y="485.7">V2</text>
+  <text class="tc" x="534" y="485.7" text-anchor="middle">[2026-11-01, 2026-12-01) · scheduled</text>
+  <text class="tc" x="680" y="485.7" text-anchor="middle">1499 · 30 d</text>
+  <text class="tc" x="410" y="500.7">V3</text>
+  <text class="tc" x="534" y="500.7" text-anchor="middle">[2026-12-01, 2027-01-01) · scheduled</text>
+  <text class="tc" x="680" y="500.7" text-anchor="middle">2400 · 31 d</text>
+  <text class="tc" x="410" y="515.7">V4</text>
+  <text class="tc" x="534" y="515.7" text-anchor="middle">[2027-01-01,) · scheduled</text>
+  <text class="tc" x="680" y="515.7" text-anchor="middle">2600 · open</text>
+  <text class="tc" x="410" y="530.7">Q1</text>
+  <text class="tc" x="534" y="530.7" text-anchor="middle">as-of moment, lands in V2</text>
+  <text class="tc" x="680" y="530.7" text-anchor="middle">2026-11-05</text>
+  <text class="tc" x="410" y="545.7">D1</text>
+  <text class="tc" x="534" y="545.7" text-anchor="middle">last day in V1</text>
+  <text class="tc" x="680" y="545.7" text-anchor="middle">2026-10-31</text>
+  <text class="tc" x="410" y="560.7">D2</text>
+  <text class="tc" x="534" y="560.7" text-anchor="middle">first day in V2</text>
+  <text class="tc" x="680" y="560.7" text-anchor="middle">2026-11-01</text>
+  <text class="tc" x="410" y="575.7">B1</text>
+  <text class="tc" x="534" y="575.7" text-anchor="middle">upper(V1) = lower(V2)</text>
+  <text class="tc" x="680" y="575.7" text-anchor="middle">2026-11-01</text>
 </svg>

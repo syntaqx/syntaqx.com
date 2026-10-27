@@ -1,163 +1,173 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 868">
-  <defs>
-    <marker id="fo-otu-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="fo-otu-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="fo-otu-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-OTU-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">one-time to plan, first term</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: one customer's first term, x = 110 + 1.6 * day -->
-  <text class="vt" x="40" y="64">Plan view: one customer's first term</text>
-  <text class="vs" x="40" y="80">Scale 1 day = 1.6 px · timeline · USD, illustrative [1]</text>
-
-  <!-- Lane labels -->
-  <text class="sl ink" x="98" y="124" text-anchor="end" dominant-baseline="central">one-time</text>
-  <text class="sl ink" x="98" y="201" text-anchor="end" dominant-baseline="central">plan</text>
-  <text class="sl ink" x="98" y="241" text-anchor="end" dominant-baseline="central">add-on</text>
-
-  <!-- One-time lane: the visit at D0 -->
-  <rect class="obj fill-1" x="110" y="112" width="8" height="24"/>
-  <text class="n" x="134" y="124" dominant-baseline="central">O1 = 189.00, one-time treatment at D0 [2]</text>
-
-  <!-- Plan lane: agreement active D10 to D375, recurring visits at D90, D180, D270, D360 -->
-  <rect class="obj fill-2" x="126" y="189" width="584" height="24"/>
-  <rect class="obj fill-1" x="250" y="189" width="8" height="24"/>
-  <rect class="obj fill-1" x="394" y="189" width="8" height="24"/>
-  <rect class="obj fill-1" x="538" y="189" width="8" height="24"/>
-  <rect class="obj fill-1" x="682" y="189" width="8" height="24"/>
-  <text class="sl ink" x="190" y="201" text-anchor="middle" dominant-baseline="central">plan v1</text>
-  <circle class="dot" cx="121.2" cy="201" r="2"/>
-
-  <!-- Detail circle on signing and activation -->
-  <circle class="detail" cx="120" cy="201" r="16"/>
-  <text class="sl ink" x="100" y="176" text-anchor="end" dominant-baseline="central">detail A</text>
-
-  <!-- Add-on lane: amendment effective D150 -->
-  <rect class="obj hl" x="350" y="229" width="360" height="24"/>
-  <text class="sl ink" x="530" y="241" text-anchor="middle" dominant-baseline="central">add-on, terms v2 [3]</text>
-
-  <!-- Chain above the plan: V1, Q1 x 3, E1 -->
-  <path class="ext" d="M126,186V159M254,186V159M398,186V159M542,186V159M686,186V159M710,186V159"/>
-  <path class="dim" d="M126,164H254" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="190" y="160" text-anchor="middle">V1 = 80</text>
-  <path class="dim" d="M254,164H398" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="326" y="160" text-anchor="middle">Q1 = 90</text>
-  <path class="dim" d="M398,164H542" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="470" y="160" text-anchor="middle">Q1 = 90</text>
-  <path class="dim" d="M542,164H686" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="614" y="160" text-anchor="middle">Q1 = 90</text>
-  <path class="dim" d="M666,164H686" marker-end="url(#fo-otu-ah)"/>
-  <path class="dim" d="M686,164H710"/>
-  <path class="dim" d="M730,164H710" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="698" y="150" text-anchor="middle">E1 = 15</text>
-
-  <!-- A1: the add-on's days left in the term -->
-  <path class="ext" d="M350,256V281M710,256V309"/>
-  <path class="dim hl" d="M350,276H710" marker-start="url(#fo-otu-ah-hl)" marker-end="url(#fo-otu-ah-hl)"/>
-  <text class="dt hl" x="530" y="272" text-anchor="middle">A1 = 375 - 150 = 225 days</text>
-
-  <!-- T1: the plan term -->
-  <path class="ext" d="M126,216V309"/>
-  <path class="dim" d="M126,304H710" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="418" y="300" text-anchor="middle">T1 = V1 + 3 × Q1 + E1 = 80 + 270 + 15 = 365 days</text>
-
-  <!-- Detail A: offer to active, x = 60 + 20 * day -->
-  <text class="vt" x="40" y="350">Detail A: offer to active</text>
-  <text class="vs" x="40" y="366">Scale 1 day = 20 px · D0 to D16</text>
-  <text class="sl ink" x="70" y="400" text-anchor="end">visit</text>
-  <text class="sl" x="135" y="400" text-anchor="middle">offer open</text>
-  <text class="sl ink" x="202" y="400">cooling-off [4]</text>
-  <rect class="obj fill-1" x="60" y="410" width="10" height="24"/>
-  <path class="phantom" d="M70,422H200"/>
-  <rect class="hatch" x="200" y="410" width="60" height="24" fill="url(#fo-otu-hatch)"/>
-  <circle class="dot" cx="200" cy="422" r="2.5"/>
-  <rect class="obj fill-2" x="260" y="410" width="120" height="24"/>
-  <text class="sl ink" x="320" y="422" text-anchor="middle" dominant-baseline="central">active</text>
-  <path class="ext" d="M60,437V463M200,437V463M260,437V463"/>
-  <path class="dim" d="M60,458H200" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="130" y="454" text-anchor="middle">E0 = 7 days</text>
-  <path class="dim" d="M200,458H260" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
-  <text class="dt" x="230" y="454" text-anchor="middle">W1 = 3</text>
-  <text class="n" x="60" y="484">I1 = 60.00 posts at D10, when the plan becomes active.</text>
-
-  <!-- Closing formula -->
-  <text class="vt" x="40" y="524">Closing formula</text>
-  <text class="vs" x="40" y="540">Illustrative [1] · USD</text>
-  <text class="t b" x="40" y="562">Y1 = O1 + I1 + 4 × S1 + A2</text>
-  <text class="t" x="64" y="580">= 189.00 + 60.00 + 516.00 + 221.92</text>
-  <text class="t b" x="64" y="598">= 986.92</text>
-  <text class="t" x="40" y="622">I1 = P0 - C1 = 249.00 - 189.00 = 60.00</text>
-  <text class="t" x="40" y="640">A2 = A0 × A1 / 365</text>
-  <text class="t" x="64" y="658">= 360.00 × 225 / 365 = 221.92</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="420" y="350">Variables</text>
-  <text class="vs" x="420" y="366">Illustrative [1] · USD, days</text>
-  <rect class="cell band" x="420" y="376" width="50" height="22"/>
-  <rect class="cell band" x="470" y="376" width="180" height="22"/>
-  <rect class="cell band" x="650" y="376" width="70" height="22"/>
-  <text class="cap ink" x="430" y="387" dominant-baseline="central">code</text>
-  <text class="cap ink" x="480" y="387" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="387" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M420,398H720V728H420Z"/>
-  <path class="ln ink" d="M470,398V728M650,398V728"/>
-  <path class="ln" d="M420,420H720M420,442H720M420,464H720M420,486H720M420,508H720M420,530H720M420,552H720M420,574H720M420,596H720M420,618H720M420,640H720M420,662H720M420,684H720M420,706H720"/>
-  <text class="t" x="430" y="409" dominant-baseline="central">T1</text>
-  <text class="t" x="480" y="409" dominant-baseline="central">plan term</text>
-  <text class="t" x="710" y="409" text-anchor="end" dominant-baseline="central">365</text>
-  <text class="t" x="430" y="431" dominant-baseline="central">V1</text>
-  <text class="t" x="480" y="431" dominant-baseline="central">active to first recurring</text>
-  <text class="t" x="710" y="431" text-anchor="end" dominant-baseline="central">80</text>
-  <text class="t" x="430" y="453" dominant-baseline="central">Q1</text>
-  <text class="t" x="480" y="453" dominant-baseline="central">recurring interval</text>
-  <text class="t" x="710" y="453" text-anchor="end" dominant-baseline="central">90</text>
-  <text class="t" x="430" y="475" dominant-baseline="central">E1</text>
-  <text class="t" x="480" y="475" dominant-baseline="central">last visit to term end</text>
-  <text class="t" x="710" y="475" text-anchor="end" dominant-baseline="central">15</text>
-  <text class="t" x="430" y="497" dominant-baseline="central">A1</text>
-  <text class="t" x="480" y="497" dominant-baseline="central">add-on days left in term</text>
-  <text class="t" x="710" y="497" text-anchor="end" dominant-baseline="central">225</text>
-  <text class="t" x="430" y="519" dominant-baseline="central">E0</text>
-  <text class="t" x="480" y="519" dominant-baseline="central">offer to signature</text>
-  <text class="t" x="710" y="519" text-anchor="end" dominant-baseline="central">7</text>
-  <text class="t" x="430" y="541" dominant-baseline="central">W1</text>
-  <text class="t" x="480" y="541" dominant-baseline="central">cooling-off window</text>
-  <text class="t" x="710" y="541" text-anchor="end" dominant-baseline="central">3</text>
-  <text class="t" x="430" y="563" dominant-baseline="central">O1</text>
-  <text class="t" x="480" y="563" dominant-baseline="central">one-time price paid</text>
-  <text class="t" x="710" y="563" text-anchor="end" dominant-baseline="central">189.00</text>
-  <text class="t" x="430" y="585" dominant-baseline="central">P0</text>
-  <text class="t" x="480" y="585" dominant-baseline="central">plan initial price</text>
-  <text class="t" x="710" y="585" text-anchor="end" dominant-baseline="central">249.00</text>
-  <text class="t" x="430" y="607" dominant-baseline="central">C1</text>
-  <text class="t" x="480" y="607" dominant-baseline="central">credit for O1</text>
-  <text class="t" x="710" y="607" text-anchor="end" dominant-baseline="central">189.00</text>
-  <text class="t" x="430" y="629" dominant-baseline="central">I1</text>
-  <text class="t" x="480" y="629" dominant-baseline="central">initial due: P0 - C1</text>
-  <text class="t" x="710" y="629" text-anchor="end" dominant-baseline="central">60.00</text>
-  <text class="t" x="430" y="651" dominant-baseline="central">S1</text>
-  <text class="t" x="480" y="651" dominant-baseline="central">price per recurring visit</text>
-  <text class="t" x="710" y="651" text-anchor="end" dominant-baseline="central">129.00</text>
-  <text class="t" x="430" y="673" dominant-baseline="central">A0</text>
-  <text class="t" x="480" y="673" dominant-baseline="central">add-on price, full term</text>
-  <text class="t" x="710" y="673" text-anchor="end" dominant-baseline="central">360.00</text>
-  <text class="t" x="430" y="695" dominant-baseline="central">A2</text>
-  <text class="t" x="480" y="695" dominant-baseline="central">prorated add-on</text>
-  <text class="t" x="710" y="695" text-anchor="end" dominant-baseline="central">221.92</text>
-  <text class="t b" x="430" y="717" dominant-baseline="central">Y1</text>
-  <text class="t" x="480" y="717" dominant-baseline="central">first-term revenue</text>
-  <text class="t b" x="710" y="717" text-anchor="end" dominant-baseline="central">986.92</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 816">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="fo-otu-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="fo-otu-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="fo-otu-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="796" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="748" width="680" height="100"/>
-  <text class="sl ink" x="52" y="766">notes</text>
-  <text class="n" x="52" y="784">[1] Illustrative values, not benchmarks or any vendor's defaults. Days count from the one-time visit, D0.</text>
-  <text class="n" x="52" y="800">[2] The one-time visit counts as the plan's initial service, so its price is credited against the initial charge.</text>
-  <text class="n" x="52" y="816">[3] An amendment: terms version 2, effective D150, prorated by day and generating its own occurrences.</text>
-  <text class="n" x="52" y="832">[4] Signed is not active: no recurring charge until the window closes; the deadline is computed at signing.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE VALUES, NOT BENCHMARKS OR ANY VENDOR'S DEFAULTS. DAYS COUNT FROM THE ONE-TIME VISIT, D0.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">THE ONE-TIME VISIT COUNTS AS THE PLAN'S INITIAL SERVICE, SO ITS PRICE IS CREDITED AGAINST THE INITIAL CHARGE.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">AN AMENDMENT: TERMS VERSION 2, EFFECTIVE D150, PRORATED BY DAY AND GENERATING ITS OWN OCCURRENCES.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">SIGNED IS NOT ACTIVE: NO RECURRING CHARGE UNTIL THE WINDOW CLOSES; THE DEADLINE IS COMPUTED AT SIGNING.</text>
+  <text class="nt" x="50" y="130">VALUES IN DAYS AND USD. CODES ON THE DRAWING, VALUES AND FORMULAS IN THE TABLES.</text>
+  <!-- Plan view: first term -->
+  <text class="sl ink" x="102.75" y="193" text-anchor="end">ONE-TIME</text>
+  <text class="sl ink" x="102.75" y="273" text-anchor="end">PLAN</text>
+  <text class="sl ink" x="102.75" y="309" text-anchor="end">ADD-ON</text>
+  <rect class="obj fill-1" x="118.75" y="179" width="6" height="22"/>
+  <circle class="dot" cx="121.75" cy="190" r="1.6"/>
+  <path class="leader" d="M121.75,190L158.75,190H168.75"/>
+  <text class="dt" x="172.75" y="193">O1</text>
+  <text class="sl ink" x="191.95" y="193">ONE-TIME VISIT</text>
+  <rect class="nb" x="277.96" y="184.5" width="11" height="11"/>
+  <text class="nbt" x="283.46" y="192.7" text-anchor="middle">2</text>
+  <rect class="obj fill-2" x="133.75" y="259" width="547.5" height="22"/>
+  <rect class="obj fill-1" x="250.75" y="259" width="6" height="22"/>
+  <rect class="obj fill-1" x="385.75" y="259" width="6" height="22"/>
+  <rect class="obj fill-1" x="520.75" y="259" width="6" height="22"/>
+  <rect class="obj fill-1" x="655.75" y="259" width="6" height="22"/>
+  <text class="sl ink" x="193.75" y="273" text-anchor="middle">PLAN V1</text>
+  <path class="ext" d="M133.75,256L133.75,233"/>
+  <path class="ext" d="M253.75,256L253.75,233"/>
+  <path class="dim" d="M133.75,237L253.75,237" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="193.75" y="233" text-anchor="middle">V1</text>
+  <path class="ext" d="M388.75,256L388.75,233"/>
+  <path class="dim" d="M253.75,237L388.75,237" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="321.25" y="233" text-anchor="middle">Q1</text>
+  <path class="ext" d="M523.75,256L523.75,233"/>
+  <path class="dim" d="M388.75,237L523.75,237" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="456.25" y="233" text-anchor="middle">Q1</text>
+  <path class="ext" d="M658.75,256L658.75,233"/>
+  <path class="dim" d="M523.75,237L658.75,237" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="591.25" y="233" text-anchor="middle">Q1</text>
+  <path class="ext" d="M681.25,256L681.25,233"/>
+  <path class="dim" d="M658.75,237L681.25,237" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="670" y="233" text-anchor="middle">E1</text>
+  <rect class="obj hl" x="343.75" y="295" width="337.5" height="22"/>
+  <text class="sl ink" x="512.5" y="309" text-anchor="middle">ADD-ON, TERMS V2</text>
+  <rect class="nb" x="564.3" y="300.5" width="11" height="11"/>
+  <text class="nbt" x="569.8" y="308.7" text-anchor="middle">3</text>
+  <path class="ext" d="M343.75,320L343.75,339"/>
+  <path class="ext" d="M681.25,320L681.25,339"/>
+  <path class="dim hl" d="M343.75,335L681.25,335" marker-start="url(#fo-otu-ah-hl)" marker-end="url(#fo-otu-ah-hl)"/>
+  <text class="dt hl" x="512.5" y="347" text-anchor="middle">A1</text>
+  <path class="ext" d="M133.75,284L133.75,371"/>
+  <path class="dim" d="M133.75,367L681.25,367" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="407.5" y="379" text-anchor="middle">T1</text>
+  <path class="ext" d="M681.25,339L681.25,371"/>
+  <circle class="detail" cx="126.25" cy="270" r="16"/>
+  <path class="leader" d="M114.24,259.43L88.75,237"/>
+  <text class="sl ink" x="84.75" y="240" text-anchor="end">DETAIL A</text>
+  <text class="vt" x="380" y="413" text-anchor="middle">PLAN VIEW · ONE CUSTOMER'S FIRST TERM</text>
+  <text class="vs" x="380" y="426" text-anchor="middle">SCALE 1 DAY = 1.5 PX · TIMELINE · DAYS FROM D0</text>
+  <rect class="nb" x="524.5" y="403.5" width="11" height="11"/>
+  <text class="nbt" x="530" y="411.7" text-anchor="middle">1</text>
+  <!-- Detail A: offer to active -->
+  <rect class="obj fill-1" x="140" y="492" width="15" height="26"/>
+  <path class="phantom" d="M155,505L350,505"/>
+  <circle class="dot" cx="350" cy="505" r="2.2"/>
+  <rect class="hatch" x="350" y="492" width="90" height="26" fill="url(#fo-otu-hatch)"/>
+  <rect class="obj fill-2" x="440" y="492" width="180" height="26"/>
+  <text class="sl ink" x="530" y="508" text-anchor="middle">ACTIVE</text>
+  <text class="sl ink" x="147.5" y="482" text-anchor="middle">VISIT</text>
+  <text class="sl" x="252.5" y="482" text-anchor="middle">OFFER OPEN</text>
+  <text class="sl ink" x="332" y="497" text-anchor="end">SIGNED</text>
+  <text class="sl ink" x="395" y="482" text-anchor="middle">COOLING-OFF</text>
+  <rect class="nb" x="435.76" y="473.5" width="11" height="11"/>
+  <text class="nbt" x="441.26" y="481.7" text-anchor="middle">4</text>
+  <path class="ext" d="M140,521L140,542"/>
+  <path class="ext" d="M350,521L350,542"/>
+  <path class="dim" d="M140,538L350,538" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="245" y="550" text-anchor="middle">E0</text>
+  <path class="ext" d="M440,521L440,542"/>
+  <path class="dim" d="M350,538L440,538" marker-start="url(#fo-otu-ah)" marker-end="url(#fo-otu-ah)"/>
+  <text class="dt" x="395" y="550" text-anchor="middle">W1</text>
+  <circle class="dot" cx="440" cy="518" r="1.6"/>
+  <path class="leader" d="M440,518L480,540H490"/>
+  <text class="sl ink" x="494" y="543">I1 POSTS</text>
+  <text class="vt" x="380" y="582" text-anchor="middle">DETAIL A · OFFER TO ACTIVE</text>
+  <text class="vs" x="380" y="595" text-anchor="middle">SCALE 1 DAY = 30 PX · D0 TO D16</text>
+  <!-- Variable tables -->
+  <text class="vt" x="81.5" y="644">VARIABLES · DAYS</text>
+  <rect class="tbl" x="81.5" y="651" width="267" height="120"/>
+  <path class="tbl" d="M81.5,666L348.5,666"/>
+  <path class="tbl" d="M81.5,681L348.5,681"/>
+  <path class="tbl" d="M81.5,696L348.5,696"/>
+  <path class="tbl" d="M81.5,711L348.5,711"/>
+  <path class="tbl" d="M81.5,726L348.5,726"/>
+  <path class="tbl" d="M81.5,741L348.5,741"/>
+  <path class="tbl" d="M81.5,756L348.5,756"/>
+  <path class="tbl" d="M118.5,651L118.5,771"/>
+  <path class="tbl" d="M249.5,651L249.5,771"/>
+  <text class="th" x="87.5" y="661.2">CODE</text>
+  <text class="th" x="184" y="661.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="299" y="661.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="87.5" y="676.7">T1</text>
+  <text class="tc" x="184" y="676.7" text-anchor="middle">plan term</text>
+  <text class="tc" x="299" y="676.7" text-anchor="middle">V1+3×Q1+E1 = 365</text>
+  <text class="tc" x="87.5" y="691.7">V1</text>
+  <text class="tc" x="184" y="691.7" text-anchor="middle">active to first recurring</text>
+  <text class="tc" x="299" y="691.7" text-anchor="middle">80</text>
+  <text class="tc" x="87.5" y="706.7">Q1</text>
+  <text class="tc" x="184" y="706.7" text-anchor="middle">recurring interval</text>
+  <text class="tc" x="299" y="706.7" text-anchor="middle">90</text>
+  <text class="tc" x="87.5" y="721.7">E1</text>
+  <text class="tc" x="184" y="721.7" text-anchor="middle">last visit to term end</text>
+  <text class="tc" x="299" y="721.7" text-anchor="middle">15</text>
+  <text class="tc" x="87.5" y="736.7">A1</text>
+  <text class="tc" x="184" y="736.7" text-anchor="middle">add-on days left in term</text>
+  <text class="tc" x="299" y="736.7" text-anchor="middle">375 − 150 = 225</text>
+  <text class="tc" x="87.5" y="751.7">E0</text>
+  <text class="tc" x="184" y="751.7" text-anchor="middle">offer to signature</text>
+  <text class="tc" x="299" y="751.7" text-anchor="middle">7</text>
+  <text class="tc" x="87.5" y="766.7">W1</text>
+  <text class="tc" x="184" y="766.7" text-anchor="middle">cooling-off window</text>
+  <text class="tc" x="299" y="766.7" text-anchor="middle">3</text>
+  <text class="vt" x="380.5" y="644">VARIABLES · USD</text>
+  <rect class="tbl" x="380.5" y="651" width="298" height="135"/>
+  <path class="tbl" d="M380.5,666L678.5,666"/>
+  <path class="tbl" d="M380.5,681L678.5,681"/>
+  <path class="tbl" d="M380.5,696L678.5,696"/>
+  <path class="tbl" d="M380.5,711L678.5,711"/>
+  <path class="tbl" d="M380.5,726L678.5,726"/>
+  <path class="tbl" d="M380.5,741L678.5,741"/>
+  <path class="tbl" d="M380.5,756L678.5,756"/>
+  <path class="tbl" d="M380.5,771L678.5,771"/>
+  <path class="tbl" d="M417.5,651L417.5,786"/>
+  <path class="tbl" d="M548.5,651L548.5,786"/>
+  <text class="th" x="386.5" y="661.2">CODE</text>
+  <text class="th" x="483" y="661.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="613.5" y="661.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="386.5" y="676.7">O1</text>
+  <text class="tc" x="483" y="676.7" text-anchor="middle">one-time price paid</text>
+  <text class="tc" x="613.5" y="676.7" text-anchor="middle">189.00</text>
+  <text class="tc" x="386.5" y="691.7">P0</text>
+  <text class="tc" x="483" y="691.7" text-anchor="middle">plan initial price</text>
+  <text class="tc" x="613.5" y="691.7" text-anchor="middle">249.00</text>
+  <text class="tc" x="386.5" y="706.7">C1</text>
+  <text class="tc" x="483" y="706.7" text-anchor="middle">credit for O1</text>
+  <text class="tc" x="613.5" y="706.7" text-anchor="middle">189.00</text>
+  <text class="tc" x="386.5" y="721.7">I1</text>
+  <text class="tc" x="483" y="721.7" text-anchor="middle">initial due, at D10</text>
+  <text class="tc" x="613.5" y="721.7" text-anchor="middle">P0 − C1 = 60.00</text>
+  <text class="tc" x="386.5" y="736.7">S1</text>
+  <text class="tc" x="483" y="736.7" text-anchor="middle">price per recurring visit</text>
+  <text class="tc" x="613.5" y="736.7" text-anchor="middle">129.00</text>
+  <text class="tc" x="386.5" y="751.7">A0</text>
+  <text class="tc" x="483" y="751.7" text-anchor="middle">add-on price, full term</text>
+  <text class="tc" x="613.5" y="751.7" text-anchor="middle">360.00</text>
+  <text class="tc" x="386.5" y="766.7">A2</text>
+  <text class="tc" x="483" y="766.7" text-anchor="middle">prorated add-on</text>
+  <text class="tc" x="613.5" y="766.7" text-anchor="middle">A0×A1÷365 = 221.92</text>
+  <text class="tc" x="386.5" y="781.7">Y1</text>
+  <text class="tc" x="483" y="781.7" text-anchor="middle">first-term revenue</text>
+  <text class="tc" x="613.5" y="781.7" text-anchor="middle">O1+I1+4×S1+A2 = 986.92</text>
 </svg>

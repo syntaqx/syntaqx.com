@@ -1,146 +1,172 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 724">
-  <defs>
-    <marker id="fo-bsb-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="fo-bsb-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-BIL-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">service balance, level billing</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: one program year -->
-  <text class="vt" x="40" y="64">Plan view: a seven-round program, one year</text>
-  <text class="vs" x="40" y="80">Scale 1 month = 50 px · 1 USD = 1 px · illustrative [2] · USD</text>
-  <path class="ext" d="M110,111V99M710,111V99"/>
-  <path class="dim" d="M110,104H710" marker-start="url(#fo-bsb-ah)" marker-end="url(#fo-bsb-ah)"/>
-  <text class="dt" x="410" y="100" text-anchor="middle">T1 = 12 months, billed on the 1st</text>
-  <text class="sl ink" x="135" y="124" text-anchor="middle" dominant-baseline="central">jan</text>
-  <text class="sl ink" x="185" y="124" text-anchor="middle" dominant-baseline="central">feb</text>
-  <text class="sl ink" x="235" y="124" text-anchor="middle" dominant-baseline="central">mar</text>
-  <text class="sl ink" x="285" y="124" text-anchor="middle" dominant-baseline="central">apr</text>
-  <text class="sl ink" x="335" y="124" text-anchor="middle" dominant-baseline="central">may</text>
-  <text class="sl ink" x="385" y="124" text-anchor="middle" dominant-baseline="central">jun</text>
-  <text class="sl ink" x="435" y="124" text-anchor="middle" dominant-baseline="central">jul</text>
-  <text class="sl ink" x="485" y="124" text-anchor="middle" dominant-baseline="central">aug</text>
-  <text class="sl ink" x="535" y="124" text-anchor="middle" dominant-baseline="central">sep</text>
-  <text class="sl ink" x="585" y="124" text-anchor="middle" dominant-baseline="central">oct</text>
-  <text class="sl ink" x="635" y="124" text-anchor="middle" dominant-baseline="central">nov</text>
-  <text class="sl ink" x="685" y="124" text-anchor="middle" dominant-baseline="central">dec</text>
-
-  <!-- Charges and rounds -->
-  <text class="sl ink" x="100" y="144" text-anchor="end" dominant-baseline="central">billed</text>
-  <text class="sl ink" x="100" y="174" text-anchor="end" dominant-baseline="central">rounds</text>
-  <rect class="obj fill-2" x="120" y="134" width="30" height="20"/>
-  <text class="t" x="135" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-2" x="170" y="134" width="30" height="20"/>
-  <text class="t" x="185" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-2" x="220" y="134" width="30" height="20"/>
-  <text class="t" x="235" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-1" x="220" y="164" width="30" height="20"/>
-  <text class="t" x="235" y="174" text-anchor="middle" dominant-baseline="central">1</text>
-  <rect class="obj fill-2" x="270" y="134" width="30" height="20"/>
-  <text class="t" x="285" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-1" x="270" y="164" width="30" height="20"/>
-  <text class="t" x="285" y="174" text-anchor="middle" dominant-baseline="central">2</text>
-  <rect class="obj fill-2" x="320" y="134" width="30" height="20"/>
-  <text class="t" x="335" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-1" x="320" y="164" width="30" height="20"/>
-  <text class="t" x="335" y="174" text-anchor="middle" dominant-baseline="central">3</text>
-  <rect class="obj fill-2" x="370" y="134" width="30" height="20"/>
-  <text class="t" x="385" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-1" x="370" y="164" width="30" height="20"/>
-  <text class="t" x="385" y="174" text-anchor="middle" dominant-baseline="central">4</text>
-  <rect class="obj fill-2" x="420" y="134" width="30" height="20"/>
-  <text class="t" x="435" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-2" x="470" y="134" width="30" height="20"/>
-  <text class="t" x="485" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-1" x="470" y="164" width="30" height="20"/>
-  <text class="t" x="485" y="174" text-anchor="middle" dominant-baseline="central">5</text>
-  <rect class="obj fill-2" x="520" y="134" width="30" height="20"/>
-  <text class="t" x="535" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-1" x="520" y="164" width="30" height="20"/>
-  <text class="t" x="535" y="174" text-anchor="middle" dominant-baseline="central">6</text>
-  <rect class="obj fill-2" x="570" y="134" width="30" height="20"/>
-  <text class="t" x="585" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-1" x="570" y="164" width="30" height="20"/>
-  <text class="t" x="585" y="174" text-anchor="middle" dominant-baseline="central">7</text>
-  <rect class="obj fill-2" x="620" y="134" width="30" height="20"/>
-  <text class="t" x="635" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-  <rect class="obj fill-2" x="670" y="134" width="30" height="20"/>
-  <text class="t" x="685" y="144" text-anchor="middle" dominant-baseline="central">35</text>
-
-  <!-- Balance at each month end -->
-  <text class="sl ink" x="100" y="278" text-anchor="end" dominant-baseline="central">balance</text>
-  <path class="ctr" d="M110,278H710"/>
-  <rect class="obj fill-2" x="120" y="243" width="30" height="35"/>
-  <text class="t" x="135" y="237" text-anchor="middle">+35</text>
-  <rect class="obj fill-2" x="170" y="208" width="30" height="70"/>
-  <text class="t" x="185" y="202" text-anchor="middle">+70</text>
-  <rect class="obj fill-2" x="220" y="233" width="30" height="45"/>
-  <text class="t" x="235" y="227" text-anchor="middle">+45</text>
-  <rect class="obj fill-2" x="270" y="258" width="30" height="20"/>
-  <text class="t" x="285" y="252" text-anchor="middle">+20</text>
-  <rect class="obj fill-2" x="320" y="278" width="30" height="5"/>
-  <text class="t" x="335" y="296" text-anchor="middle">-5</text>
-  <rect class="obj fill-2" x="370" y="278" width="30" height="30"/>
-  <text class="t" x="385" y="321" text-anchor="middle">-30</text>
-  <rect class="obj fill-2" x="420" y="273" width="30" height="5"/>
-  <text class="t" x="435" y="267" text-anchor="middle">+5</text>
-  <rect class="obj hl" x="470" y="278" width="30" height="20"/>
-  <rect class="obj fill-2" x="520" y="278" width="30" height="45"/>
-  <text class="t" x="535" y="336" text-anchor="middle">-45</text>
-  <rect class="obj fill-2" x="570" y="278" width="30" height="70"/>
-  <text class="t" x="585" y="361" text-anchor="middle">-70</text>
-  <rect class="obj fill-2" x="620" y="278" width="30" height="35"/>
-  <text class="t" x="635" y="326" text-anchor="middle">-35</text>
-  <text class="t" x="685" y="272" text-anchor="middle">0</text>
-  <text class="n" x="476" y="234">above: business owes service [1]</text>
-  <text class="n" x="120" y="330">below: customer has received more</text>
-
-  <!-- B8: the August true-up -->
-  <path class="ext" d="M467,278H457M467,298H457"/>
-  <path class="dim hl" d="M460,278V298" marker-start="url(#fo-bsb-ah-hl)" marker-end="url(#fo-bsb-ah-hl)"/>
-  <text class="dt hl" x="456" y="288" text-anchor="end" dominant-baseline="central">B8 = -20</text>
-
-  <!-- Formulas -->
-  <text class="t" x="40" y="380">B(m) = M1 × m - V1 × rounds done by month end m</text>
-  <text class="t" x="40" y="400">B8 = 35 × 8 - 60 × 5 = 280 - 300 = -20 · cancelled in august, the customer owes 20 [3]</text>
-  <text class="t" x="40" y="420">B12 = 35 × 12 - 60 × 7 = 420 - 420 = 0 · the year closes level</text>
-
-  <!-- Variables -->
-  <text class="vt" x="40" y="456">Variables</text>
-  <text class="vs" x="40" y="472">Illustrative program [2] · USD</text>
-  <rect class="cell band" x="40" y="482" width="50" height="22"/>
-  <rect class="cell band" x="90" y="482" width="520" height="22"/>
-  <rect class="cell band" x="610" y="482" width="110" height="22"/>
-  <text class="cap ink" x="50" y="493" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="493" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="493" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,504H720V614H40Z"/>
-  <path class="ln ink" d="M90,504V614M610,504V614"/>
-  <path class="ln" d="M40,526H720M40,548H720M40,570H720M40,592H720"/>
-  <text class="t" x="50" y="515" dominant-baseline="central">A1</text>
-  <text class="t" x="100" y="515" dominant-baseline="central">annual price, seven rounds</text>
-  <text class="t" x="710" y="515" text-anchor="end" dominant-baseline="central">420</text>
-  <text class="t" x="50" y="537" dominant-baseline="central">M1</text>
-  <text class="t" x="100" y="537" dominant-baseline="central">monthly charge: A1 / 12</text>
-  <text class="t" x="710" y="537" text-anchor="end" dominant-baseline="central">35</text>
-  <text class="t" x="50" y="559" dominant-baseline="central">V1</text>
-  <text class="t" x="100" y="559" dominant-baseline="central">value of one round: A1 / 7</text>
-  <text class="t" x="710" y="559" text-anchor="end" dominant-baseline="central">60</text>
-  <text class="t b" x="50" y="581" dominant-baseline="central">B8</text>
-  <text class="t" x="100" y="581" dominant-baseline="central">service balance, end of august</text>
-  <text class="t b" x="710" y="581" text-anchor="end" dominant-baseline="central">-20</text>
-  <text class="t" x="50" y="603" dominant-baseline="central">B12</text>
-  <text class="t" x="100" y="603" dominant-baseline="central">service balance, end of the year</text>
-  <text class="t" x="710" y="603" text-anchor="end" dominant-baseline="central">0</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 714">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="fo-bsb-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="fo-bsb-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="fo-bsb-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="694" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="630" width="680" height="74"/>
-  <text class="sl ink" x="52" y="648">notes</text>
-  <text class="n" x="52" y="666">[1] Paid ahead of the work: under accrual accounting, a liability until earned (deferred revenue).</text>
-  <text class="n" x="52" y="682">[2] Illustrative: the price, the seven round months and the even round value are not from a source.</text>
-  <text class="n" x="52" y="698">[3] Whether a negative balance is billed, refunded or forgiven at termination is a term the agreement states.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">PAID AHEAD OF THE WORK: UNDER ACCRUAL ACCOUNTING, A LIABILITY UNTIL EARNED (DEFERRED REVENUE).</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">ILLUSTRATIVE: THE PRICE, THE SEVEN ROUND MONTHS AND THE EVEN ROUND VALUE ARE NOT FROM A SOURCE.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">WHETHER A NEGATIVE BALANCE IS BILLED, REFUNDED OR FORGIVEN AT TERMINATION IS A TERM THE AGREEMENT STATES.</text>
+  <text class="nt" x="50" y="113">VALUES IN USD; BALANCE IS PAID MINUS DELIVERED AT MONTH END. CODES ON THE DRAWING, VALUES IN THE TABLE.</text>
+  <!-- Plan view: one program year -->
+  <path class="ext" d="M80,197L80,158"/>
+  <path class="ext" d="M680,197L680,158"/>
+  <path class="dim" d="M80,162L680,162" marker-start="url(#fo-bsb-ah)" marker-end="url(#fo-bsb-ah)"/>
+  <text class="dt" x="380" y="158" text-anchor="middle">T1</text>
+  <text class="sl ink" x="105" y="188" text-anchor="middle">JAN</text>
+  <rect class="obj fill-2" x="90" y="200" width="30" height="18"/>
+  <text class="tc" x="105" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="155" y="188" text-anchor="middle">FEB</text>
+  <rect class="obj fill-2" x="140" y="200" width="30" height="18"/>
+  <text class="tc" x="155" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="205" y="188" text-anchor="middle">MAR</text>
+  <rect class="obj fill-2" x="190" y="200" width="30" height="18"/>
+  <text class="tc" x="205" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="255" y="188" text-anchor="middle">APR</text>
+  <rect class="obj fill-2" x="240" y="200" width="30" height="18"/>
+  <text class="tc" x="255" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="305" y="188" text-anchor="middle">MAY</text>
+  <rect class="obj fill-2" x="290" y="200" width="30" height="18"/>
+  <text class="tc" x="305" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="355" y="188" text-anchor="middle">JUN</text>
+  <rect class="obj fill-2" x="340" y="200" width="30" height="18"/>
+  <text class="tc" x="355" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="405" y="188" text-anchor="middle">JUL</text>
+  <rect class="obj fill-2" x="390" y="200" width="30" height="18"/>
+  <text class="tc" x="405" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="455" y="188" text-anchor="middle">AUG</text>
+  <rect class="obj fill-2" x="440" y="200" width="30" height="18"/>
+  <text class="tc" x="455" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="505" y="188" text-anchor="middle">SEP</text>
+  <rect class="obj fill-2" x="490" y="200" width="30" height="18"/>
+  <text class="tc" x="505" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="555" y="188" text-anchor="middle">OCT</text>
+  <rect class="obj fill-2" x="540" y="200" width="30" height="18"/>
+  <text class="tc" x="555" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="605" y="188" text-anchor="middle">NOV</text>
+  <rect class="obj fill-2" x="590" y="200" width="30" height="18"/>
+  <text class="tc" x="605" y="212" text-anchor="middle">M1</text>
+  <text class="sl ink" x="655" y="188" text-anchor="middle">DEC</text>
+  <rect class="obj fill-2" x="640" y="200" width="30" height="18"/>
+  <text class="tc" x="655" y="212" text-anchor="middle">M1</text>
+  <rect class="obj fill-1" x="190" y="230" width="30" height="18"/>
+  <text class="tc" x="205" y="242" text-anchor="middle">1</text>
+  <rect class="obj fill-1" x="240" y="230" width="30" height="18"/>
+  <text class="tc" x="255" y="242" text-anchor="middle">2</text>
+  <rect class="obj fill-1" x="290" y="230" width="30" height="18"/>
+  <text class="tc" x="305" y="242" text-anchor="middle">3</text>
+  <rect class="obj fill-1" x="340" y="230" width="30" height="18"/>
+  <text class="tc" x="355" y="242" text-anchor="middle">4</text>
+  <rect class="obj fill-1" x="440" y="230" width="30" height="18"/>
+  <text class="tc" x="455" y="242" text-anchor="middle">5</text>
+  <rect class="obj fill-1" x="490" y="230" width="30" height="18"/>
+  <text class="tc" x="505" y="242" text-anchor="middle">6</text>
+  <rect class="obj fill-1" x="540" y="230" width="30" height="18"/>
+  <text class="tc" x="555" y="242" text-anchor="middle">7</text>
+  <text class="sl ink" x="68" y="212" text-anchor="end">BILLED</text>
+  <text class="sl ink" x="68" y="242" text-anchor="end">ROUNDS</text>
+  <text class="sl ink" x="68" y="351" text-anchor="end">BALANCE</text>
+  <path class="ctr" d="M80,348L680,348"/>
+  <rect class="obj fill-2" x="90" y="313" width="30" height="35"/>
+  <rect class="obj fill-2" x="140" y="278" width="30" height="70"/>
+  <text class="dt" x="155" y="272" text-anchor="middle">B2</text>
+  <rect class="obj fill-2" x="190" y="303" width="30" height="45"/>
+  <rect class="obj fill-2" x="240" y="328" width="30" height="20"/>
+  <rect class="obj fill-2" x="290" y="348" width="30" height="5"/>
+  <rect class="obj fill-2" x="340" y="348" width="30" height="30"/>
+  <rect class="obj fill-2" x="390" y="343" width="30" height="5"/>
+  <rect class="obj hl" x="440" y="348" width="30" height="20"/>
+  <rect class="obj fill-2" x="490" y="348" width="30" height="45"/>
+  <rect class="obj fill-2" x="540" y="348" width="30" height="70"/>
+  <text class="dt" x="555" y="431" text-anchor="middle">B10</text>
+  <rect class="obj fill-2" x="590" y="348" width="30" height="35"/>
+  <text class="dt" x="655" y="342" text-anchor="middle">B12</text>
+  <path class="ext" d="M437,348L426,348"/>
+  <path class="ext" d="M437,368L426,368"/>
+  <path class="dim hl" d="M430,348L430,368"/><path class="dim hl" d="M430,338L430,348" marker-end="url(#fo-bsb-ah-hl)"/><path class="dim hl" d="M430,378L430,368" marker-end="url(#fo-bsb-ah-hl)"/>
+  <text class="dt hl" x="424" y="361.5" text-anchor="end">B8</text>
+  <rect class="nb" x="392.5" y="352.5" width="11" height="11"/>
+  <text class="nbt" x="398" y="360.7" text-anchor="middle">3</text>
+  <circle class="detail" cx="455" cy="358" r="22"/>
+  <path class="leader" d="M439.58,373.7L400,414"/>
+  <text class="sl ink" x="396" y="417" text-anchor="end">DETAIL A</text>
+  <text class="sl ink" x="490" y="296">ABOVE: BUSINESS OWES SERVICE</text>
+  <rect class="nb" x="660.72" y="287.5" width="11" height="11"/>
+  <text class="nbt" x="666.22" y="295.7" text-anchor="middle">1</text>
+  <text class="sl ink" x="90" y="394">BELOW: CUSTOMER HAS RECEIVED MORE</text>
+  <text class="vt" x="380" y="458" text-anchor="middle">PLAN VIEW · A SEVEN-ROUND PROGRAM, ONE YEAR</text>
+  <text class="vs" x="380" y="471" text-anchor="middle">SCALE 1 MONTH = 50 PX · 1 USD = 1 PX · ILLUSTRATIVE</text>
+  <rect class="nb" x="546.5" y="448.5" width="11" height="11"/>
+  <text class="nbt" x="552" y="456.7" text-anchor="middle">2</text>
+  <!-- Detail A: August true-up -->
+  <rect class="obj fill-2" x="60" y="551" width="224" height="22"/>
+  <rect class="obj fill-1" x="60" y="585" width="240" height="22"/>
+  <text class="sl ink" x="172" y="565" text-anchor="middle">PAID</text>
+  <text class="sl ink" x="180" y="599" text-anchor="middle">DELIVERED</text>
+  <path class="ext" d="M60,548L60,529"/>
+  <path class="ext" d="M284,548L284,529"/>
+  <path class="dim" d="M60,533L284,533" marker-start="url(#fo-bsb-ah)" marker-end="url(#fo-bsb-ah)"/>
+  <text class="dt" x="172" y="529" text-anchor="middle">M1×8</text>
+  <path class="ext" d="M300,582L300,529"/>
+  <path class="dim hl" d="M284,533L300,533"/><path class="dim hl" d="M274,533L284,533" marker-end="url(#fo-bsb-ah-hl)"/><path class="dim hl" d="M310,533L300,533" marker-end="url(#fo-bsb-ah-hl)"/>
+  <text class="dt hl" x="292" y="529" text-anchor="middle">B8</text>
+  <rect class="nb" x="318.5" y="520" width="11" height="11"/>
+  <text class="nbt" x="324" y="528.2" text-anchor="middle">3</text>
+  <path class="ext" d="M60,610L60,631"/>
+  <path class="ext" d="M300,610L300,631"/>
+  <path class="dim" d="M60,627L300,627" marker-start="url(#fo-bsb-ah)" marker-end="url(#fo-bsb-ah)"/>
+  <text class="dt" x="180" y="639" text-anchor="middle">V1×5</text>
+  <text class="vt" x="180" y="671" text-anchor="middle">DETAIL A · AUGUST TRUE-UP</text>
+  <text class="vs" x="180" y="684" text-anchor="middle">SCALE 1 USD = 0.8 PX · PAID AGAINST DELIVERED</text>
+  <!-- Variable table -->
+  <text class="vt" x="372" y="520">VARIABLES · USD</text>
+  <rect class="tbl" x="372" y="527" width="317" height="150"/>
+  <path class="tbl" d="M372,542L689,542"/>
+  <path class="tbl" d="M372,557L689,557"/>
+  <path class="tbl" d="M372,572L689,572"/>
+  <path class="tbl" d="M372,587L689,587"/>
+  <path class="tbl" d="M372,602L689,602"/>
+  <path class="tbl" d="M372,617L689,617"/>
+  <path class="tbl" d="M372,632L689,632"/>
+  <path class="tbl" d="M372,647L689,647"/>
+  <path class="tbl" d="M372,662L689,662"/>
+  <path class="tbl" d="M409,527L409,677"/>
+  <path class="tbl" d="M568,527L568,677"/>
+  <text class="th" x="378" y="537.2">CODE</text>
+  <text class="th" x="488.5" y="537.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="628.5" y="537.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="378" y="552.7">T1</text>
+  <text class="tc" x="488.5" y="552.7" text-anchor="middle">program year, billed on the 1st</text>
+  <text class="tc" x="628.5" y="552.7" text-anchor="middle">12 months</text>
+  <text class="tc" x="378" y="567.7">A1</text>
+  <text class="tc" x="488.5" y="567.7" text-anchor="middle">annual price, seven rounds</text>
+  <text class="tc" x="628.5" y="567.7" text-anchor="middle">420</text>
+  <text class="tc" x="378" y="582.7">M1</text>
+  <text class="tc" x="488.5" y="582.7" text-anchor="middle">monthly charge</text>
+  <text class="tc" x="628.5" y="582.7" text-anchor="middle">A1 ÷ 12 = 35</text>
+  <text class="tc" x="378" y="597.7">V1</text>
+  <text class="tc" x="488.5" y="597.7" text-anchor="middle">value of one round</text>
+  <text class="tc" x="628.5" y="597.7" text-anchor="middle">A1 ÷ 7 = 60</text>
+  <text class="tc" x="378" y="612.7">Bm</text>
+  <text class="tc" x="488.5" y="612.7" text-anchor="middle">service balance, end of month m</text>
+  <text class="tc" x="628.5" y="612.7" text-anchor="middle">M1×m − V1×rounds done</text>
+  <text class="tc" x="378" y="627.7">B2</text>
+  <text class="tc" x="488.5" y="627.7" text-anchor="middle">balance, end of February</text>
+  <text class="tc" x="628.5" y="627.7" text-anchor="middle">M1×2 − V1×0 = 70</text>
+  <text class="tc" x="378" y="642.7">B8</text>
+  <text class="tc" x="488.5" y="642.7" text-anchor="middle">balance, end of August</text>
+  <text class="tc" x="628.5" y="642.7" text-anchor="middle">M1×8 − V1×5 = −20</text>
+  <text class="tc" x="378" y="657.7">B10</text>
+  <text class="tc" x="488.5" y="657.7" text-anchor="middle">balance, end of October</text>
+  <text class="tc" x="628.5" y="657.7" text-anchor="middle">M1×10 − V1×7 = −70</text>
+  <text class="tc" x="378" y="672.7">B12</text>
+  <text class="tc" x="488.5" y="672.7" text-anchor="middle">balance, end of the year</text>
+  <text class="tc" x="628.5" y="672.7" text-anchor="middle">M1×12 − V1×7 = 0</text>
 </svg>

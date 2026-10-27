@@ -1,107 +1,145 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 832">
-  <defs>
-    <marker id="pb-slo-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="pb-slo-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="pb-slo-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-OPS-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">error budget, 99.9% over 30 days</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: the window -->
-  <text class="vt" x="40" y="64">Plan view: one 30-day SLO window</text>
-  <text class="vs" x="40" y="80">Scale 1 day = 20 px · timeline · days</text>
-  <path class="ext" d="M100,125V95M700,125V95"/>
-  <path class="dim" d="M100,100H700" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
-  <text class="dt" x="400" y="96" text-anchor="middle">N1 = 30 d = 720 h = 43,200 min</text>
-  <rect class="obj fill-2" x="100" y="128" width="599.4" height="32"/>
-  <rect class="hatch" x="699.4" y="128" width="0.6" height="32" fill="url(#pb-slo-hatch)"/>
-  <text class="sl ink" x="400" y="144" text-anchor="middle" dominant-baseline="central">SLO S1 = 99.9% good [1]</text>
-  <circle class="detail" cx="700" cy="144" r="16"/>
-  <text class="sl ink" x="684" y="118" text-anchor="end" dominant-baseline="central">detail A</text>
-  <path class="ln" d="M100,160V166M200,160V166M300,160V166M400,160V166M500,160V166M600,160V166M700,160V166"/>
-  <text class="t" x="100" y="178" text-anchor="middle" dominant-baseline="central">0</text>
-  <text class="t" x="200" y="178" text-anchor="middle" dominant-baseline="central">5</text>
-  <text class="t" x="300" y="178" text-anchor="middle" dominant-baseline="central">10</text>
-  <text class="t" x="400" y="178" text-anchor="middle" dominant-baseline="central">15</text>
-  <text class="t" x="500" y="178" text-anchor="middle" dominant-baseline="central">20</text>
-  <text class="t" x="600" y="178" text-anchor="middle" dominant-baseline="central">25</text>
-  <text class="t" x="700" y="178" text-anchor="middle" dominant-baseline="central">30</text>
-
-  <!-- Detail A: the budget itself -->
-  <text class="vt" x="40" y="216">Detail A: the error budget</text>
-  <text class="vs" x="40" y="232">Scale 720:1 · 1 min = 10 px</text>
-  <path class="ext" d="M100,265V247M532,265V247"/>
-  <path class="dim hl" d="M100,252H532" marker-start="url(#pb-slo-ah-hl)" marker-end="url(#pb-slo-ah-hl)"/>
-  <text class="dt hl" x="316" y="248" text-anchor="middle">B1 = (1 - S1) × N1 = 0.001 × 43,200 = 43.2 min</text>
-  <rect class="hatch" x="100" y="268" width="432" height="32" fill="url(#pb-slo-hatch)"/>
-  <text class="sl ink" x="548" y="280" dominant-baseline="central">error budget</text>
-  <text class="n" x="548" y="296">any mix of failures [2]</text>
-
-  <!-- Plan view: burn rate to exhaustion -->
-  <text class="vt" x="40" y="340">Plan view: burn rate to exhaustion</text>
-  <text class="vs" x="40" y="356">Scale 1 day = 20 px · timeline · SRE Workbook rates [3]</text>
-  <text class="sl ink" x="100" y="378" dominant-baseline="central">1 page, fast burn</text>
-  <rect class="obj fill-1" x="100" y="386" width="41.67" height="24"/>
-  <text class="dt" x="152" y="398" dominant-baseline="central">E1 = N1 / 14.4 = 720 / 14.4 = 50 h</text>
-  <text class="sl ink" x="100" y="430" dominant-baseline="central">2 page, slow burn</text>
-  <rect class="obj fill-1" x="100" y="438" width="100" height="24"/>
-  <text class="dt" x="210" y="450" dominant-baseline="central">E2 = N1 / 6 = 720 / 6 = 120 h</text>
-  <text class="sl ink" x="100" y="482" dominant-baseline="central">3 ticket</text>
-  <rect class="obj fill-1" x="160" y="490" width="540" height="24"/>
-  <rect class="hatch" x="100" y="490" width="60" height="24" fill="url(#pb-slo-hatch)"/>
-  <circle class="dot" cx="130" cy="508" r="2"/>
-  <path class="leader" d="M130,508L142,528H160"/>
-  <text class="sl ink" x="164" y="528" dominant-baseline="central">long window L3 = 72 h [4]</text>
-  <path class="ext" d="M100,517V553M700,517V553"/>
-  <path class="dim" d="M100,548H700" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
-  <text class="dt" x="560" y="544" text-anchor="middle">E3 = N1 / 1 = 720 h</text>
-
-  <!-- Alert table -->
-  <text class="vt" x="40" y="590">Burn-rate alerts</text>
-  <text class="vs" x="40" y="606">SRE Workbook, 99.9% over 30 days [3] · C = R × L / N1</text>
-  <rect class="cell band" x="40" y="616" width="110" height="22"/>
-  <rect class="cell band" x="150" y="616" width="90" height="22"/>
-  <rect class="cell band" x="240" y="616" width="80" height="22"/>
-  <rect class="cell band" x="320" y="616" width="80" height="22"/>
-  <rect class="cell band" x="400" y="616" width="170" height="22"/>
-  <rect class="cell band" x="570" y="616" width="150" height="22"/>
-  <text class="cap ink" x="50" y="627" dominant-baseline="central">alert</text>
-  <text class="cap ink" x="160" y="627" dominant-baseline="central">long L</text>
-  <text class="cap ink" x="250" y="627" dominant-baseline="central">short</text>
-  <text class="cap ink" x="330" y="627" dominant-baseline="central">burn R</text>
-  <text class="cap ink" x="410" y="627" dominant-baseline="central">consumed C</text>
-  <text class="cap ink" x="580" y="627" dominant-baseline="central">exhausted E</text>
-  <path class="cell" d="M40,638H720V704H40Z"/>
-  <path class="ln ink" d="M150,638V704M240,638V704M320,638V704M400,638V704M570,638V704"/>
-  <path class="ln" d="M40,660H720M40,682H720"/>
-  <text class="t b" x="50" y="649" dominant-baseline="central">1 page</text>
-  <text class="t" x="160" y="649" dominant-baseline="central">1 h</text>
-  <text class="t" x="250" y="649" dominant-baseline="central">5 min</text>
-  <text class="t" x="330" y="649" dominant-baseline="central">14.4</text>
-  <text class="t" x="410" y="649" dominant-baseline="central">14.4 × 1 / 720 = 2%</text>
-  <text class="t" x="580" y="649" dominant-baseline="central">720 / 14.4 = 50 h</text>
-  <text class="t b" x="50" y="671" dominant-baseline="central">2 page</text>
-  <text class="t" x="160" y="671" dominant-baseline="central">6 h</text>
-  <text class="t" x="250" y="671" dominant-baseline="central">30 min</text>
-  <text class="t" x="330" y="671" dominant-baseline="central">6</text>
-  <text class="t" x="410" y="671" dominant-baseline="central">6 × 6 / 720 = 5%</text>
-  <text class="t" x="580" y="671" dominant-baseline="central">720 / 6 = 120 h</text>
-  <text class="t b" x="50" y="693" dominant-baseline="central">3 ticket</text>
-  <text class="t" x="160" y="693" dominant-baseline="central">3 d = 72 h</text>
-  <text class="t" x="250" y="693" dominant-baseline="central">6 h</text>
-  <text class="t" x="330" y="693" dominant-baseline="central">1</text>
-  <text class="t" x="410" y="693" dominant-baseline="central">1 × 72 / 720 = 10%</text>
-  <text class="t" x="580" y="693" dominant-baseline="central">720 / 1 = 720 h</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 959">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="pb-slo-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="pb-slo-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="pb-slo-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="939" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="720" width="680" height="92"/>
-  <text class="sl ink" x="52" y="738">notes</text>
-  <text class="n" x="52" y="756">[1] S1 is the target for the SLI, good events over valid events, across a rolling 30 days.</text>
-  <text class="n" x="52" y="772">[2] 43.2 minutes of full outage, or a partial one: 1% errors for 72 hours spends the same budget.</text>
-  <text class="n" x="52" y="788">[3] Burn rate R is the error rate over the rate the SLO allows; at R the budget is gone after E = N1 / R.</text>
-  <text class="n" x="52" y="804">[4] An alert fires when both its long window L and its short window, L / 12, burn faster than R.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">S1 IS THE TARGET FOR THE SLI, GOOD EVENTS OVER VALID EVENTS, ACROSS A ROLLING 30 DAYS.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">B1 IS 43.2 MINUTES OF FULL OUTAGE, OR A PARTIAL ONE: 1% ERRORS FOR 72 HOURS SPENDS THE SAME BUDGET.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">BURN RATE R IS THE ERROR RATE OVER THE RATE THE SLO ALLOWS; AT R THE BUDGET IS GONE AFTER E = N1 ÷ R.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">AN ALERT FIRES WHEN BOTH ITS LONG WINDOW L AND ITS SHORT WINDOW, L ÷ 12, BURN FASTER THAN R.</text>
+  <text class="nt" x="50" y="130">RATES AND WINDOWS FROM THE SRE WORKBOOK, 99.9% OVER 30 DAYS. VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: one SLO window -->
+  <rect class="obj fill-2" x="80" y="193" width="599.4" height="30"/>
+  <rect class="hatch" x="679.4" y="193" width="0.6" height="30" fill="url(#pb-slo-hatch)"/>
+  <text class="sl ink" x="380" y="211" text-anchor="middle">GOOD EVENTS · S1</text>
+  <rect class="nb" x="436.5" y="202.5" width="11" height="11"/>
+  <text class="nbt" x="442" y="210.7" text-anchor="middle">1</text>
+  <path class="ext" d="M80,190L80,167"/>
+  <path class="ext" d="M680,190L680,167"/>
+  <path class="dim" d="M80,171L680,171" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
+  <text class="dt" x="380" y="167" text-anchor="middle">N1</text>
+  <circle class="detail" cx="680" cy="208" r="16"/>
+  <path class="leader" d="M677.68,223.83L674,249"/>
+  <text class="sl ink" x="670" y="252" text-anchor="end">DETAIL A</text>
+  <text class="vt" x="380" y="281" text-anchor="middle">PLAN VIEW · ONE 30-DAY SLO WINDOW</text>
+  <text class="vs" x="380" y="294" text-anchor="middle">SCALE 1 DAY = 20 PX · TIMELINE</text>
+  <!-- Plan view: burn rate to exhaustion -->
+  <text class="sl ink" x="80" y="338">ALERT 1 · PAGE</text>
+  <rect class="obj fill-1" x="80" y="346" width="41.67" height="22"/>
+  <text class="sl ink" x="80" y="416">ALERT 2 · PAGE</text>
+  <rect class="obj fill-1" x="80" y="424" width="100" height="22"/>
+  <text class="sl ink" x="80" y="494">ALERT 3 · TICKET</text>
+  <rect class="obj fill-1" x="80" y="502" width="600" height="22"/>
+  <path class="ext" d="M80,371L80,390"/>
+  <path class="ext" d="M121.67,371L121.67,390"/>
+  <path class="dim" d="M80,386L121.67,386" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
+  <text class="dt" x="100.83" y="398" text-anchor="middle">E1</text>
+  <path class="ext" d="M80,449L80,468"/>
+  <path class="ext" d="M180,449L180,468"/>
+  <path class="dim" d="M80,464L180,464" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
+  <text class="dt" x="130" y="476" text-anchor="middle">E2</text>
+  <rect class="hatch" x="80" y="502" width="60" height="22" fill="url(#pb-slo-hatch)"/>
+  <path class="ext" d="M80,527L80,546"/>
+  <path class="ext" d="M140,527L140,546"/>
+  <path class="dim" d="M80,542L140,542" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
+  <text class="dt" x="110" y="554" text-anchor="middle">L3</text>
+  <rect class="nb" x="148.5" y="536.5" width="11" height="11"/>
+  <text class="nbt" x="154" y="544.7" text-anchor="middle">4</text>
+  <path class="ext" d="M680,527L680,574"/>
+  <path class="dim" d="M80,570L680,570" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
+  <text class="dt" x="380" y="582" text-anchor="middle">E3</text>
+  <path class="ext" d="M80,546L80,574"/>
+  <text class="vt" x="380" y="616" text-anchor="middle">PLAN VIEW · BURN RATE TO EXHAUSTION</text>
+  <text class="vs" x="380" y="629" text-anchor="middle">SCALE 1 DAY = 20 PX · TIMELINE · ONE BAR PER ALERT</text>
+  <rect class="nb" x="516.5" y="606.5" width="11" height="11"/>
+  <text class="nbt" x="522" y="614.7" text-anchor="middle">3</text>
+  <!-- Detail A: the error budget -->
+  <rect class="hatch" x="56" y="769" width="216" height="30" fill="url(#pb-slo-hatch)"/>
+  <text class="sl ink ko" x="164" y="787" text-anchor="middle">ERROR BUDGET</text>
+  <path class="ext" d="M56,766L56,745"/>
+  <path class="ext" d="M272,766L272,745"/>
+  <path class="dim hl" d="M56,749L272,749" marker-start="url(#pb-slo-ah-hl)" marker-end="url(#pb-slo-ah-hl)"/>
+  <text class="dt hl" x="164" y="745" text-anchor="middle">B1</text>
+  <rect class="nb" x="176.5" y="736" width="11" height="11"/>
+  <text class="nbt" x="182" y="744.2" text-anchor="middle">2</text>
+  <text class="vt" x="164" y="839" text-anchor="middle">DETAIL A · THE ERROR BUDGET</text>
+  <text class="vs" x="164" y="852" text-anchor="middle">SCALE 360:1 · 1 MIN = 5 PX</text>
+  <!-- Variable table -->
+  <text class="vt" x="352" y="682">VARIABLES</text>
+  <rect class="tbl" x="352" y="689" width="376" height="240"/>
+  <path class="tbl" d="M352,704L728,704"/>
+  <path class="tbl" d="M352,719L728,719"/>
+  <path class="tbl" d="M352,734L728,734"/>
+  <path class="tbl" d="M352,749L728,749"/>
+  <path class="tbl" d="M352,764L728,764"/>
+  <path class="tbl" d="M352,779L728,779"/>
+  <path class="tbl" d="M352,794L728,794"/>
+  <path class="tbl" d="M352,809L728,809"/>
+  <path class="tbl" d="M352,824L728,824"/>
+  <path class="tbl" d="M352,839L728,839"/>
+  <path class="tbl" d="M352,854L728,854"/>
+  <path class="tbl" d="M352,869L728,869"/>
+  <path class="tbl" d="M352,884L728,884"/>
+  <path class="tbl" d="M352,899L728,899"/>
+  <path class="tbl" d="M352,914L728,914"/>
+  <path class="tbl" d="M384,689L384,929"/>
+  <path class="tbl" d="M544,689L544,929"/>
+  <text class="th" x="358" y="699.2">CODE</text>
+  <text class="th" x="464" y="699.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="636" y="699.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="358" y="714.7">N1</text>
+  <text class="tc" x="464" y="714.7" text-anchor="middle">SLO window</text>
+  <text class="tc" x="636" y="714.7" text-anchor="middle">30 d = 720 h = 43,200 min</text>
+  <text class="tc" x="358" y="729.7">S1</text>
+  <text class="tc" x="464" y="729.7" text-anchor="middle">SLO target</text>
+  <text class="tc" x="636" y="729.7" text-anchor="middle">99.9%</text>
+  <text class="tc" x="358" y="744.7">B1</text>
+  <text class="tc" x="464" y="744.7" text-anchor="middle">error budget</text>
+  <text class="tc" x="636" y="744.7" text-anchor="middle">(1 − S1) × N1 = 43.2 min</text>
+  <text class="tc" x="358" y="759.7">R1</text>
+  <text class="tc" x="464" y="759.7" text-anchor="middle">burn rate, alert 1</text>
+  <text class="tc" x="636" y="759.7" text-anchor="middle">14.4</text>
+  <text class="tc" x="358" y="774.7">R2</text>
+  <text class="tc" x="464" y="774.7" text-anchor="middle">burn rate, alert 2</text>
+  <text class="tc" x="636" y="774.7" text-anchor="middle">6</text>
+  <text class="tc" x="358" y="789.7">R3</text>
+  <text class="tc" x="464" y="789.7" text-anchor="middle">burn rate, alert 3</text>
+  <text class="tc" x="636" y="789.7" text-anchor="middle">1</text>
+  <text class="tc" x="358" y="804.7">L1</text>
+  <text class="tc" x="464" y="804.7" text-anchor="middle">long window, alert 1</text>
+  <text class="tc" x="636" y="804.7" text-anchor="middle">1 h · short 5 min</text>
+  <text class="tc" x="358" y="819.7">L2</text>
+  <text class="tc" x="464" y="819.7" text-anchor="middle">long window, alert 2</text>
+  <text class="tc" x="636" y="819.7" text-anchor="middle">6 h · short 30 min</text>
+  <text class="tc" x="358" y="834.7">L3</text>
+  <text class="tc" x="464" y="834.7" text-anchor="middle">long window, alert 3</text>
+  <text class="tc" x="636" y="834.7" text-anchor="middle">72 h · short 6 h</text>
+  <text class="tc" x="358" y="849.7">C1</text>
+  <text class="tc" x="464" y="849.7" text-anchor="middle">budget spent when 1 fires</text>
+  <text class="tc" x="636" y="849.7" text-anchor="middle">R1 × L1 ÷ N1 = 2%</text>
+  <text class="tc" x="358" y="864.7">C2</text>
+  <text class="tc" x="464" y="864.7" text-anchor="middle">budget spent when 2 fires</text>
+  <text class="tc" x="636" y="864.7" text-anchor="middle">R2 × L2 ÷ N1 = 5%</text>
+  <text class="tc" x="358" y="879.7">C3</text>
+  <text class="tc" x="464" y="879.7" text-anchor="middle">budget spent when 3 fires</text>
+  <text class="tc" x="636" y="879.7" text-anchor="middle">R3 × L3 ÷ N1 = 10%</text>
+  <text class="tc" x="358" y="894.7">E1</text>
+  <text class="tc" x="464" y="894.7" text-anchor="middle">budget gone at R1</text>
+  <text class="tc" x="636" y="894.7" text-anchor="middle">N1 ÷ R1 = 50 h</text>
+  <text class="tc" x="358" y="909.7">E2</text>
+  <text class="tc" x="464" y="909.7" text-anchor="middle">budget gone at R2</text>
+  <text class="tc" x="636" y="909.7" text-anchor="middle">N1 ÷ R2 = 120 h</text>
+  <text class="tc" x="358" y="924.7">E3</text>
+  <text class="tc" x="464" y="924.7" text-anchor="middle">budget gone at R3</text>
+  <text class="tc" x="636" y="924.7" text-anchor="middle">N1 ÷ R3 = 720 h</text>
 </svg>

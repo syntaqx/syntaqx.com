@@ -1,117 +1,130 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 816">
-  <defs>
-    <marker id="pb-web-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="pb-web-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="pb-web-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-FE-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">core web vitals budget</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: the LCP budget by subpart -->
-  <text class="vt" x="40" y="64">Plan view: LCP budget by subpart</text>
-  <text class="vs" x="40" y="80">Scale 1 s = 240 px · timeline · values in s</text>
-  <path class="ext" d="M100,125V95M700,125V95"/>
-  <path class="dim hl" d="M100,100H700" marker-start="url(#pb-web-ah-hl)" marker-end="url(#pb-web-ah-hl)"/>
-  <text class="dt hl" x="400" y="96" text-anchor="middle">L1 = LCP good threshold = 2.50 [1]</text>
-  <rect class="obj fill-2" x="100" y="128" width="240" height="40"/>
-  <rect class="obj fill-1" x="340" y="128" width="60" height="40"/>
-  <rect class="obj fill-2" x="400" y="128" width="240" height="40"/>
-  <rect class="obj fill-1" x="640" y="128" width="60" height="40"/>
-  <text class="sl ink" x="220" y="148" text-anchor="middle" dominant-baseline="central">time to first byte</text>
-  <text class="sl ink" x="520" y="148" text-anchor="middle" dominant-baseline="central">load duration</text>
-  <circle class="dot" cx="370" cy="140" r="2"/>
-  <path class="leader" d="M370,140L382,116H390"/>
-  <text class="sl ink" x="394" y="116" dominant-baseline="central">load delay</text>
-  <circle class="dot" cx="670" cy="140" r="2"/>
-  <path class="leader" d="M670,140L658,116H650"/>
-  <text class="sl ink" x="646" y="116" text-anchor="end" dominant-baseline="central">render delay</text>
-
-  <!-- Chain: T1 to T4 -->
-  <path class="ext" d="M100,171V219M340,171V219M400,171V219M640,171V219M700,171V219"/>
-  <path class="dim" d="M100,192H340" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
-  <text class="dt" x="220" y="188" text-anchor="middle">T1 ≈ 0.40 × L1 = 1.00</text>
-  <path class="dim" d="M400,192H640" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
-  <text class="dt" x="520" y="188" text-anchor="middle">T3 ≈ 0.40 × L1 = 1.00</text>
-  <path class="dim" d="M340,214H400" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
-  <text class="dt" x="370" y="232" text-anchor="middle">T2 ≤ 0.25</text>
-  <path class="dim" d="M640,214H700" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
-  <text class="dt" x="670" y="232" text-anchor="middle">T4 ≤ 0.25</text>
-  <text class="t" x="400" y="258" text-anchor="middle">L1 = T1 + T2 + T3 + T4 = 1.00 + 0.25 + 1.00 + 0.25 = 2.50 [3]</text>
-
-  <!-- Plan view: thresholds -->
-  <text class="vt" x="40" y="298">Plan view: thresholds at the 75th percentile [2]</text>
-  <text class="vs" x="40" y="314">LCP 1 s = 108 px · INP 100 ms = 72 px · CLS 0.1 = 108 px</text>
-  <rect class="obj fill-2" x="160" y="330" width="14" height="10"/>
-  <text class="sl ink" x="180" y="335" dominant-baseline="central">good</text>
-  <rect class="obj fill-1" x="250" y="330" width="14" height="10"/>
-  <text class="sl ink" x="270" y="335" dominant-baseline="central">needs improvement</text>
-  <rect class="hatch" x="460" y="330" width="14" height="10" fill="url(#pb-web-hatch)"/>
-  <text class="sl ink" x="480" y="335" dominant-baseline="central">poor</text>
-
-  <text class="sl ink" x="40" y="386" dominant-baseline="central">LCP</text>
-  <text class="dt" x="430" y="368" text-anchor="middle">2.5 s</text>
-  <text class="dt" x="592" y="368" text-anchor="middle">4.0 s</text>
-  <rect class="obj fill-2" x="160" y="374" width="270" height="24"/>
-  <rect class="obj fill-1" x="430" y="374" width="162" height="24"/>
-  <rect class="hatch" x="592" y="374" width="108" height="24" fill="url(#pb-web-hatch)"/>
-
-  <text class="sl ink" x="40" y="440" dominant-baseline="central">INP</text>
-  <text class="dt" x="304" y="422" text-anchor="middle">200 ms</text>
-  <text class="dt" x="520" y="422" text-anchor="middle">500 ms</text>
-  <rect class="obj fill-2" x="160" y="428" width="144" height="24"/>
-  <rect class="obj fill-1" x="304" y="428" width="216" height="24"/>
-  <rect class="hatch" x="520" y="428" width="180" height="24" fill="url(#pb-web-hatch)"/>
-
-  <text class="sl ink" x="40" y="494" dominant-baseline="central">CLS</text>
-  <text class="dt" x="268" y="476" text-anchor="middle">0.1</text>
-  <text class="dt" x="430" y="476" text-anchor="middle">0.25</text>
-  <rect class="obj fill-2" x="160" y="482" width="108" height="24"/>
-  <rect class="obj fill-1" x="268" y="482" width="162" height="24"/>
-  <rect class="hatch" x="430" y="482" width="270" height="24" fill="url(#pb-web-hatch)"/>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="548">Variables</text>
-  <text class="vs" x="40" y="564">web.dev, Optimize LCP [3] · s</text>
-  <rect class="cell band" x="40" y="574" width="50" height="22"/>
-  <rect class="cell band" x="90" y="574" width="390" height="22"/>
-  <rect class="cell band" x="480" y="574" width="120" height="22"/>
-  <rect class="cell band" x="600" y="574" width="120" height="22"/>
-  <text class="cap ink" x="50" y="585" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="585" dominant-baseline="central">item</text>
-  <text class="cap ink" x="590" y="585" text-anchor="end" dominant-baseline="central">share</text>
-  <text class="cap ink" x="710" y="585" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,596H720V706H40Z"/>
-  <path class="ln ink" d="M90,596V706M480,596V706M600,596V706"/>
-  <path class="ln" d="M40,618H720M40,640H720M40,662H720M40,684H720"/>
-  <text class="t b" x="50" y="607" dominant-baseline="central">L1</text>
-  <text class="t" x="100" y="607" dominant-baseline="central">LCP, good at the 75th percentile</text>
-  <text class="t" x="590" y="607" text-anchor="end" dominant-baseline="central">100%</text>
-  <text class="t b" x="710" y="607" text-anchor="end" dominant-baseline="central">2.50</text>
-  <text class="t" x="50" y="629" dominant-baseline="central">T1</text>
-  <text class="t" x="100" y="629" dominant-baseline="central">time to first byte</text>
-  <text class="t" x="590" y="629" text-anchor="end" dominant-baseline="central">~40%</text>
-  <text class="t" x="710" y="629" text-anchor="end" dominant-baseline="central">1.00</text>
-  <text class="t" x="50" y="651" dominant-baseline="central">T2</text>
-  <text class="t" x="100" y="651" dominant-baseline="central">resource load delay</text>
-  <text class="t" x="590" y="651" text-anchor="end" dominant-baseline="central">&lt;10%</text>
-  <text class="t" x="710" y="651" text-anchor="end" dominant-baseline="central">0.25</text>
-  <text class="t" x="50" y="673" dominant-baseline="central">T3</text>
-  <text class="t" x="100" y="673" dominant-baseline="central">resource load duration</text>
-  <text class="t" x="590" y="673" text-anchor="end" dominant-baseline="central">~40%</text>
-  <text class="t" x="710" y="673" text-anchor="end" dominant-baseline="central">1.00</text>
-  <text class="t" x="50" y="695" dominant-baseline="central">T4</text>
-  <text class="t" x="100" y="695" dominant-baseline="central">element render delay</text>
-  <text class="t" x="590" y="695" text-anchor="end" dominant-baseline="central">&lt;10%</text>
-  <text class="t" x="710" y="695" text-anchor="end" dominant-baseline="central">0.25</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 826">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="pb-web-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="pb-web-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="pb-web-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="806" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="722" width="680" height="74"/>
-  <text class="sl ink" x="52" y="740">notes</text>
-  <text class="n" x="52" y="758">[1] Good LCP is 2.5 s or less; the split is web.dev's guideline for where the time goes, not a rule.</text>
-  <text class="n" x="52" y="774">[2] Each metric is judged at the 75th percentile of real page loads, for mobile and desktop separately.</text>
-  <text class="n" x="52" y="790">[3] About 40% each for TTFB and load duration, under 10% each for the delays, drawn at their ceiling.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">GOOD LCP IS 2.5 S OR LESS; THE SPLIT IS WEB.DEV'S GUIDELINE FOR WHERE THE TIME GOES, NOT A RULE.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">EACH METRIC IS JUDGED AT THE 75TH PERCENTILE OF REAL PAGE LOADS, FOR MOBILE AND DESKTOP SEPARATELY.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">ABOUT 40% EACH FOR TTFB AND LOAD DURATION, UNDER 10% EACH FOR THE DELAYS, DRAWN AT THEIR CEILING.</text>
+  <text class="nt" x="50" y="113">VALUES IN S UNLESS MARKED. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: LCP budget -->
+  <rect class="obj fill-2" x="80" y="182" width="240" height="36"/>
+  <rect class="obj fill-1" x="320" y="182" width="60" height="36"/>
+  <rect class="obj fill-2" x="380" y="182" width="240" height="36"/>
+  <rect class="obj fill-1" x="620" y="182" width="60" height="36"/>
+  <text class="sl ink" x="200" y="203" text-anchor="middle">TIME TO FIRST BYTE</text>
+  <text class="sl ink" x="500" y="203" text-anchor="middle">LOAD DURATION</text>
+  <circle class="dot" cx="350" cy="194" r="1.6"/>
+  <path class="leader" d="M350,194L366,164H376"/>
+  <text class="sl ink" x="380" y="167">LOAD DELAY</text>
+  <circle class="dot" cx="650" cy="194" r="1.6"/>
+  <path class="leader" d="M650,194L634,164H624"/>
+  <text class="sl ink" x="620" y="167" text-anchor="end">RENDER DELAY</text>
+  <path class="ext" d="M80,221L80,242"/>
+  <path class="ext" d="M320,221L320,242"/>
+  <path class="dim" d="M80,238L320,238" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
+  <text class="dt" x="200" y="250" text-anchor="middle">T1</text>
+  <path class="ext" d="M380,221L380,242"/>
+  <path class="dim" d="M320,238L380,238" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
+  <text class="dt" x="350" y="250" text-anchor="middle">T2</text>
+  <path class="ext" d="M620,221L620,242"/>
+  <path class="dim" d="M380,238L620,238" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
+  <text class="dt" x="500" y="250" text-anchor="middle">T3</text>
+  <path class="ext" d="M680,221L680,242"/>
+  <path class="dim" d="M620,238L680,238" marker-start="url(#pb-web-ah)" marker-end="url(#pb-web-ah)"/>
+  <text class="dt" x="650" y="250" text-anchor="middle">T4</text>
+  <rect class="nb" x="516.5" y="241" width="11" height="11"/>
+  <text class="nbt" x="522" y="249.2" text-anchor="middle">3</text>
+  <path class="ext" d="M80,245L80,274"/>
+  <path class="ext" d="M680,245L680,274"/>
+  <path class="dim hl" d="M80,270L680,270" marker-start="url(#pb-web-ah-hl)" marker-end="url(#pb-web-ah-hl)"/>
+  <text class="dt hl" x="380" y="282" text-anchor="middle">L1</text>
+  <rect class="nb" x="396.5" y="273" width="11" height="11"/>
+  <text class="nbt" x="402" y="281.2" text-anchor="middle">1</text>
+  <text class="vt" x="380" y="316" text-anchor="middle">PLAN VIEW · LCP BUDGET BY SUBPART</text>
+  <text class="vs" x="380" y="329" text-anchor="middle">SCALE 1 S = 240 PX · TIMELINE</text>
+  <!-- Plan view: thresholds -->
+  <rect class="obj fill-2" x="130" y="393" width="270" height="24"/>
+  <rect class="obj fill-1" x="400" y="393" width="162" height="24"/>
+  <rect class="hatch" x="562" y="393" width="108" height="24" fill="url(#pb-web-hatch)"/>
+  <text class="sl ink" x="114" y="408" text-anchor="end">LCP</text>
+  <path class="ext" d="M400,390L400,384"/>
+  <text class="dt" x="400" y="380" text-anchor="middle">G1</text>
+  <path class="ext" d="M562,390L562,384"/>
+  <text class="dt" x="562" y="380" text-anchor="middle">P1</text>
+  <text class="sl ink" x="265" y="408" text-anchor="middle">GOOD</text>
+  <text class="sl ink" x="481" y="408" text-anchor="middle">NEEDS IMPROVEMENT</text>
+  <text class="sl ink ko" x="616" y="408" text-anchor="middle">POOR</text>
+  <rect class="obj fill-2" x="130" y="449" width="144" height="24"/>
+  <rect class="obj fill-1" x="274" y="449" width="216" height="24"/>
+  <rect class="hatch" x="490" y="449" width="180" height="24" fill="url(#pb-web-hatch)"/>
+  <text class="sl ink" x="114" y="464" text-anchor="end">INP</text>
+  <path class="ext" d="M274,446L274,440"/>
+  <text class="dt" x="274" y="436" text-anchor="middle">G2</text>
+  <path class="ext" d="M490,446L490,440"/>
+  <text class="dt" x="490" y="436" text-anchor="middle">P2</text>
+  <rect class="obj fill-2" x="130" y="505" width="108" height="24"/>
+  <rect class="obj fill-1" x="238" y="505" width="162" height="24"/>
+  <rect class="hatch" x="400" y="505" width="270" height="24" fill="url(#pb-web-hatch)"/>
+  <text class="sl ink" x="114" y="520" text-anchor="end">CLS</text>
+  <path class="ext" d="M238,502L238,496"/>
+  <text class="dt" x="238" y="492" text-anchor="middle">G3</text>
+  <path class="ext" d="M400,502L400,496"/>
+  <text class="dt" x="400" y="492" text-anchor="middle">P3</text>
+  <text class="vt" x="380" y="573" text-anchor="middle">PLAN VIEW · THRESHOLDS AT THE 75TH PERCENTILE</text>
+  <text class="vs" x="380" y="586" text-anchor="middle">LCP 1 S = 108 PX · INP 100 MS = 72 PX · CLS 0.1 = 108 PX</text>
+  <rect class="nb" x="560.65" y="563.5" width="11" height="11"/>
+  <text class="nbt" x="566.15" y="571.7" text-anchor="middle">2</text>
+  <!-- Variable table -->
+  <text class="vt" x="145" y="639">VARIABLES · WEB.DEV, OPTIMIZE LCP AND THRESHOLDS</text>
+  <rect class="tbl" x="145" y="646" width="470" height="150"/>
+  <path class="tbl" d="M145,661L615,661"/>
+  <path class="tbl" d="M145,676L615,676"/>
+  <path class="tbl" d="M145,691L615,691"/>
+  <path class="tbl" d="M145,706L615,706"/>
+  <path class="tbl" d="M145,721L615,721"/>
+  <path class="tbl" d="M145,736L615,736"/>
+  <path class="tbl" d="M145,751L615,751"/>
+  <path class="tbl" d="M145,766L615,766"/>
+  <path class="tbl" d="M145,781L615,781"/>
+  <path class="tbl" d="M205,646L205,796"/>
+  <path class="tbl" d="M425,646L425,796"/>
+  <text class="th" x="151" y="656.2">CODE</text>
+  <text class="th" x="315" y="656.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="520" y="656.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="151" y="671.7">L1</text>
+  <text class="tc" x="315" y="671.7" text-anchor="middle">LCP, good at the 75th percentile</text>
+  <text class="tc" x="520" y="671.7" text-anchor="middle">2.50</text>
+  <text class="tc" x="151" y="686.7">T1</text>
+  <text class="tc" x="315" y="686.7" text-anchor="middle">time to first byte</text>
+  <text class="tc" x="520" y="686.7" text-anchor="middle">≈ 0.40 × L1 = 1.00</text>
+  <text class="tc" x="151" y="701.7">T2</text>
+  <text class="tc" x="315" y="701.7" text-anchor="middle">resource load delay</text>
+  <text class="tc" x="520" y="701.7" text-anchor="middle">≤ 0.10 × L1 = 0.25</text>
+  <text class="tc" x="151" y="716.7">T3</text>
+  <text class="tc" x="315" y="716.7" text-anchor="middle">resource load duration</text>
+  <text class="tc" x="520" y="716.7" text-anchor="middle">≈ 0.40 × L1 = 1.00</text>
+  <text class="tc" x="151" y="731.7">T4</text>
+  <text class="tc" x="315" y="731.7" text-anchor="middle">element render delay</text>
+  <text class="tc" x="520" y="731.7" text-anchor="middle">≤ 0.10 × L1 = 0.25</text>
+  <text class="tc" x="151" y="746.7">C1</text>
+  <text class="tc" x="315" y="746.7" text-anchor="middle">chain, closes on L1</text>
+  <text class="tc" x="520" y="746.7" text-anchor="middle">T1 + T2 + T3 + T4 = 2.50</text>
+  <text class="tc" x="151" y="761.7">G1 / P1</text>
+  <text class="tc" x="315" y="761.7" text-anchor="middle">LCP good up to / poor over</text>
+  <text class="tc" x="520" y="761.7" text-anchor="middle">2.5 s / 4.0 s</text>
+  <text class="tc" x="151" y="776.7">G2 / P2</text>
+  <text class="tc" x="315" y="776.7" text-anchor="middle">INP good up to / poor over</text>
+  <text class="tc" x="520" y="776.7" text-anchor="middle">200 ms / 500 ms</text>
+  <text class="tc" x="151" y="791.7">G3 / P3</text>
+  <text class="tc" x="315" y="791.7" text-anchor="middle">CLS good up to / poor over</text>
+  <text class="tc" x="520" y="791.7" text-anchor="middle">0.1 / 0.25</text>
 </svg>
