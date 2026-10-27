@@ -172,12 +172,15 @@ CREATE TABLE deposit_protection_events (   -- append-only: lodged, info served, 
   recorded_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Deposits nearing their protection deadline, across a tenant.
+-- Deposits nearing their protection deadline, across a tenant, each against its
+-- property's business date rather than the database session's date.
 SELECT dp.id, dp.lease_id, dp.protect_by
 FROM deposit_protections dp
+JOIN leases l     ON l.id = dp.lease_id
+JOIN properties p ON p.id = l.property_id
 WHERE dp.tenant_id = $1
   AND dp.status = 'pending'
-  AND dp.protect_by <= CURRENT_DATE + 7
+  AND dp.protect_by <= (now() AT TIME ZONE p.time_zone)::date + 7
 ORDER BY dp.protect_by;
 ```
 

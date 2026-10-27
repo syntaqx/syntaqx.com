@@ -143,7 +143,7 @@ The resident ledger is a view, not a table: every charge, reversal, payment and 
 Four rules follow:
 
 - **The sum of resident balances equals the receivable account.** Every day, per property and per owning entity. A difference is a bug, and the reconciliation that finds it is part of the month-end close ([Month-End Close](/docs/payments/accounting#month-end-close)).
-- **Aging comes from the ledger, not a column.** The aged receivables report (current, 30, 60, 90 days) is computed from open charges and their due dates, which is why application order changes aging: rent-first application leaves fees aging instead of rent. Delinquency starts there.
+- **Aging comes from the ledger, not a column.** The aged receivables report (current, 30, 60, 90 days) is computed as of the property's business date from open charges and their due dates, which is why application order changes aging: rent-first application leaves fees aging instead of rent. Delinquency starts there.
 - **The ledger is per landlord entity.** The resident owes the lease's landlord of record, and the receivable sits on that entity's books, in a property that may be owned by an LLC inside a fund. [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#the-general-ledger-by-entity) covers the entity GLs and trust accounts the cash lands in.
 - **Closed periods stay closed.** A correction to a charge from a closed month posts in the current period with a reference to the original ([Closed Periods Stay Closed](/docs/payments/accounting#closed-periods-stay-closed)); the resident ledger shows the correction on the day it happened.
 
@@ -230,13 +230,13 @@ SELECT c.tenant_id, c.lease_id, c.posted_on AS entry_date, 'charge' AS kind,
        c.amount, c.due_on
   FROM charges c JOIN charge_codes cc ON cc.id = c.charge_code_id
 UNION ALL
-SELECT p.tenant_id, p.lease_id, p.created_at::date, 'payment',
+SELECT p.tenant_id, p.lease_id, p.posted_on, 'payment',
        p.id, 'Payment', NULL, 'resident', -p.amount_captured, NULL
   FROM payments p
- WHERE p.lease_id IS NOT NULL AND p.status = 'succeeded';
+ WHERE p.lease_id IS NOT NULL AND p.posted_on IS NOT NULL;  -- includes submitted ACH debits
 ```
 
-The view is deliberately simple; the portal adds a running balance with a window function per lease and ledger party, and returned payments appear as their own reversing entries from the Payments model. Decisions behind the shape:
+The view is deliberately simple; the portal adds a running balance with a window function per lease and ledger party, ordered by `entry_date` and then `entry_id`, and returned payments appear as their own reversing entries from the Payments model. Both sides are dated by the property's business date, stored at posting (`charges.posted_on`, `payments.posted_on`), never by the UTC date of `created_at`: a payment at 11 PM local time on the 5th belongs to the 5th, because late fees, cutoffs and month-end follow the property's day ([Business Dates](/docs/fundamentals/time#business-dates-business-days-and-holidays)). A payment is on the ledger once it has a `posted_on`, which for an ACH debit is submission, not settlement; a return reverses it ([Payment Channels](/books/property-tech/collecting-rent#payment-channels)). Decisions behind the shape:
 
 - **Jurisdiction rules and operator policies share one rules catalog.** The late fee cap is a `late_fee_cap` rule and the operator's fee a `tenant_policies` row of the same type ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it)); the late fee engine evaluates both and posts the lesser, recording both in a `rule_evaluations` row, so a fee can be proven lawful on the day it posted. Application order follows the same pattern with `payment_application_order` rules over the operator's `payment_application_rules`.
 - **`counts_as_rent` is a default, not the answer.** Whether a mandatory fee is rent depends on the lease and the jurisdiction; the notice generator in [Notices](/books/property-tech/delinquency-and-eviction#notices) resolves it per lease and records the resolution.

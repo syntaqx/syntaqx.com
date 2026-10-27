@@ -82,10 +82,15 @@ Retention is law resolved per record type and property, the same way as deposit 
 | Record | Minimum | Source |
 | --- | --- | --- |
 | HUD-assisted applicant removed from the waiting list | Application, rejection notice, reply and supporting documents for three years | HUD Handbook 4350.3, 4-22 |
-| HUD-assisted tenant file | Application kept for the tenancy and three years after the tenant leaves | HUD Handbook 4350.3, 4-22 |
-| LIHTC owner records | At least six years after the tax return due date for each year; first-year records six years past the end of the compliance period | 26 CFR 1.42-5(b)(2) |
+| HUD multifamily tenant file | Application, form HUD-92006 and all verification documentation for the tenancy and at least three years after move-out | HUD Handbook 4350.3, 4-22 and 5-23 |
+| HUD multifamily EIV reports | Income, Summary and Income Discrepancy Reports and supporting documents for the tenancy plus three years, master files three years, then disposed of | HUD Handbook 4350.3, 9-14 |
+| Public housing and voucher files | The last three years of HUD-50058s and support, through each assisted lease and three years after end of participation; voucher lease, HAP contract and application for the lease term plus three years; EIV printouts no longer than three years after end of participation | 24 CFR 908.101; 24 CFR 982.158(e); Notice PIH 2018-18 |
+| LIHTC owner records | At least six years after the tax return due date for each year; first-year records six years past the return for the last year of the compliance period (a minimum of 21 years) | 26 CFR 1.42-5(b)(2); SC Housing compliance manual |
+| HOME rental records | Tenant income verifications, rents and inspections until five years after the affordability period ends | 24 CFR 92.508(c) |
 | California broker trust records | A columnar record of all trust funds received and disbursed, reconciled monthly; receipts for certain small third-party checks kept three years | 10 CCR 2831, 2831.2 |
 | Consumer reports | No federal minimum; disposal must be secure when kept no longer | 16 CFR 682 |
+
+The programs differ, so a unit in several (tax credits layered on project-based Section 8, say) keeps each record for the longest period that applies, with one exception: EIV data has a ceiling as well as a floor, and is disposed of when its period ends even if the tax credit file around it stays ([Auditing](/books/property-tech/affordable-housing#auditing)). HUD's own systems keep their copies on their own schedules (TRACS tenant archives 25 years after move-out); that's HUD's retention, not the owner's.
 
 Each is a `legal_rules` row of type `record_retention` ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix)), with `params` naming the record type, the trigger (removed from waiting list, move-out, end of compliance period) and the period. The operator's `retention_schedules` choose a period at least as long as the longest applicable rule and at most as long as privacy law and policy allow; the engine checks both bounds. Other chapters own record-specific rules that feed this one: eviction record sealing and what screening may consider ([Eviction Filings](/books/property-tech/delinquency-and-eviction#eviction-filings); [Criminal History and Fair-Chance Laws](/books/property-tech/applications-and-screening#criminal-history-and-fair-chance-laws)), unclaimed property for uncashed refunds and deposits ([Unclaimed Property](/books/property-tech/trust-accounting#unclaimed-property)), and owner record rights under management agreements ([The Management Agreement](/books/property-tech/owners-and-management-agreements#the-management-agreement)).
 
@@ -238,7 +243,7 @@ The disposal job's core is a guarded query: due records, minus everything any ac
 SELECT d.record_type, d.record_id
 FROM record_disposal_dates d
 WHERE d.tenant_id = $1
-  AND d.dispose_on <= CURRENT_DATE
+  AND d.dispose_on <= $2                  -- the run's business date, passed in, not the session's
   AND NOT EXISTS (
     SELECT 1
     FROM legal_holds h
@@ -294,9 +299,17 @@ Design decisions:
 - [10 CCR 2831.2: Trust account reconciliation](https://www.law.cornell.edu/regulations/california/10-CCR-2831.2), monthly reconciliation and its written record
 - [Ohio Revised Code 2741.02: Use of persona for commercial purposes](https://codes.ohio.gov/ohio-revised-code/section-2741.02), the consent requirement and its exceptions
 - [HUD Handbook 4350.3 REV-1, Chapter 4 (PDF)](https://www.hud.gov/sites/documents/43503c4hsgh.pdf), record-keeping for applicants and tenants (4-22), VAWA documentation in a separate secure file, affirmative marketing records for compliance reviews
+- [HUD Handbook 4350.3 REV-1, Chapter 5 (PDF)](https://www.hud.gov/sites/documents/43503c5hsgh.pdf), verification records kept for the tenancy and three years after move-out (5-23)
+- [HUD Handbook 4350.3 REV-1, Chapter 9 (PDF)](https://www.hud.gov/sites/documents/43503c9hsgh.pdf), EIV report retention and disposal (9-14)
+- [24 CFR 908.101](https://www.law.cornell.edu/cfr/text/24/908.101), HUD-50058 retention by housing authorities through the lease and three years after end of participation
+- [24 CFR 982.158](https://www.law.cornell.edu/cfr/text/24/982.158), voucher program records and their retention periods
+- [24 CFR 92.508](https://www.law.cornell.edu/cfr/text/24/92.508), HOME record retention, five years after the affordability period for rental tenant records
 
 **Agencies and guidance**
 
+- [HUD: Notice PIH 2018-18 (PDF)](https://www.hud.gov/sites/dfiles/OCHCO/documents/18-18pihn.pdf), EIV printouts kept no longer than three years after end of participation
+- [HUD: TRACS system of records notice (2026)](https://www.federalregister.gov/documents/2026/04/24/2026-07999/privacy-act-of-1974-system-of-records), HUD's own retention of TRACS tenant archives
+- [SC Housing: LIHTC Compliance Manual (PDF, revised February 12, 2026)](https://www.schousing.sc.gov/sites/schousing/files/Documents/Development/Manuals%20and%20Forms/LIHTC%20Compliance%20Manual%20-%20Revised%202.12.2026.pdf), first-year tax credit records kept a minimum of 21 years
 - [FTC: Disposing of Consumer Report Information? Rule Tells How](https://www.ftc.gov/business-guidance/resources/disposing-consumer-report-information-rule-tells-how), landlords and service providers covered, tenant history as consumer information
 - [California Privacy Protection Agency: 2025 increases for CCPA thresholds, fines and penalties](https://cppa.ca.gov/announcements/2024/20241217.html), the $26,625,000 revenue threshold effective January 1, 2025
 - [Kutak Rock: CCPA employee and B2B exemptions set to expire](https://www.kutakrock.com/newspublications/publications/2022/12/ccpa-employee-and-b2b-exemptions-set-to-expire), the January 1, 2023 expiry and the Colorado, Connecticut, Utah and Virginia employment exclusions

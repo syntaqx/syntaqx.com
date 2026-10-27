@@ -362,10 +362,14 @@ CREATE TABLE charges (                   -- posted; never edited, only reversed
 );
 
 -- Money in is a row in the Payments volume's payments table, scoped by tenant_id,
--- with the lease and payer this volume adds.
+-- with the lease, payer and business date this volume adds. posted_on is set once, when
+-- the payment starts counting on the lease's ledger (a captured card, a confirmed cash
+-- payment, a submitted ACH debit); a later return posts a reversal, never clears it.
 ALTER TABLE payments
   ADD COLUMN lease_id        UUID REFERENCES leases (id),
-  ADD COLUMN payer_person_id UUID REFERENCES people (id);
+  ADD COLUMN payer_person_id UUID REFERENCES people (id),
+  ADD COLUMN posted_on       DATE,     -- business date in the property's zone; null until posted
+  ADD CONSTRAINT payments_posted_on_lease CHECK (posted_on IS NULL OR lease_id IS NOT NULL);
 
 CREATE TABLE payment_applications (      -- what each payment paid for
   id         UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -413,7 +417,7 @@ Design decisions behind it:
 - **Leases are new rows, never rewrites.** A renewal points at the lease it renews; a transfer ends one lease and starts another for the same household. That keeps every signed price, term and landlord provable, which is what renewal caps, rent control and fee disputes ask for.
 - **People are residents; staff are users.** `people` holds applicants, leaseholders, occupants and guarantors. Staff, owner users and vendor users are accounts with grants, defined in [Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants), so a technician is never a `person_id`. Minors are occupants and never leaseholders.
 - **Money is the Payments model.** Amounts in minor units with an explicit currency; every charge and every payment application posts a balanced ledger transaction; corrections are reversals ([Append-Only Records](/docs/payments/payment-states#append-only-records), [Double-Entry Ledger](/docs/payments/payment-states#double-entry-ledger)). The resident ledger, the owner's ledger and each entity's general ledger are views over the same entries, which [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#the-general-ledger-by-entity) turns into bank accounts held in trust.
-- **Business dates are the property's.** Rent is due on the first in the property's time zone, and `posted_on` and `due_on` are dates there ([Business Dates](/docs/fundamentals/time#business-dates-business-days-and-holidays)); instants (`created_at`, `completed_at`) are UTC.
+- **Business dates are the property's.** Rent is due on the first in the property's time zone, and a charge's `posted_on` and `due_on` and a payment's `posted_on` are dates there, computed once from `properties.time_zone` when the row posts ([Business Dates](/docs/fundamentals/time#business-dates-business-days-and-holidays)); instants (`created_at`, `completed_at`) are UTC. A payment made at 11 PM in Los Angeles on the 5th is already the 6th in UTC, so a ledger dated by `created_at::date` would show it late; late fees, cutoffs, aging and month-end all follow the property's local day, and read the stored date.
 - **Resolve identities once.** Properties, parcels and owning entities arrive from deeds, lenders, other managers and data vendors under different identifiers. Keep a crosswalk of external IDs and match before creating ([Matching, Merging & Many Sources](/docs/architecture/record-linkage)); RealPage's July 2026 acquisition of Cherre, whose product "connects, resolves, and governs fragmented data," shows how central that problem has become.
 - **Emit life-cycle events.** `lease.signed`, `lease.moved_in`, `lease.notice_given`, `lease.moved_out`, `charge.posted`, `payment.applied` and `work_order.completed` are what fee runs, owner reporting, notifications and integrations subscribe to ([Events & Async Messaging](/docs/architecture/events)).
 

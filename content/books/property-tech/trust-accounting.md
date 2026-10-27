@@ -323,9 +323,11 @@ FROM (
   JOIN bank_account_properties bp
     ON bp.property_id = a.property_id AND bp.valid_during @> :as_of::date
    AND bp.bank_account_id = :bank_account_id
+  JOIN properties p           ON p.id = a.property_id
   WHERE g.trust_role IN ('owner_funds', 'security_deposits', 'deposit_interest',
                          'prepaid_rent', 'suspense', 'unclaimed', 'broker_funds')
-    AND t.effective_at < :as_of::date + 1
+    -- through the end of :as_of in the property's zone, not the session's
+    AND t.effective_at < ((:as_of::date + 1)::timestamp AT TIME ZONE p.time_zone)
   GROUP BY a.id
 ) bal;
 ```
