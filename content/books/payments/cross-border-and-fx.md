@@ -2,7 +2,7 @@
 title = "Cross-Border Payments & FX"
 description = "Presentment, settlement and funding currencies, cross-border card fees, local acquiring, DCC rules, FX quotes, wires and correspondents, and FX on refunds."
 category = "Payments Industry"
-order = 1409
+order = 1410
 part = "How Money Moves"
 tags = ["payments", "cross-border", "fx", "currency", "swift", "dcc"]
 +++
@@ -11,7 +11,7 @@ A payment crosses a border whenever two of its parties sit in different countrie
 
 ## How the Platforms Do It
 
-The large providers sell the same three things, priced differently: acceptance of foreign cards, conversion between currencies, and settlement or payout in more than one currency.
+The large providers sell the same three things, priced differently: acceptance of foreign cards, conversion between currencies, and settlement or payout in more than one currency. Some now add [stablecoin payouts](/books/payments/stablecoins#payouts-to-contractors-and-sellers-abroad) for corridors where a bank payout is slow or expensive.
 
 **Adyen** argues for **local acquiring**: using local entities or partners with domestic licenses in each market, which in its words "results in higher approval rates, fewer declines, and significantly lower interchange fees", where cross-border acquiring "frequently results in lower authorization rates". **Airwallex** sells conversion as either the market rate at the moment of conversion or "a guaranteed rate with a validity period", and lets a booked conversion be canceled before settlement. **Checkout.com** publishes plain explanations of the network fees cross-border transactions attract, Visa's ISA and IAF among them.
 

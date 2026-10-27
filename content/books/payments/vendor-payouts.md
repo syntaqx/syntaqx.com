@@ -2,7 +2,7 @@
 title = "Vendor Payouts"
 description = "Paying vendors and suppliers: ACH, virtual cards, push to card, checks and instant rails, enablement, stopping redirect fraud, funding, 1099s."
 category = "Payments Industry"
-order = 1425
+order = 1427
 part = "Paying Out"
 tags = ["payments", "payouts", "accounts-payable", "fraud", "tax"]
 +++
@@ -78,7 +78,7 @@ Providers that pay vendors on a platform's behalf cover different subsets of the
 | **Repay** | Same-day ACH | Single-use cards to suppliers | Not documented | Instant funding to debit and prepaid cards | Not documented |
 | **Stripe** | Treasury outbound payments | Issuing cards with spending controls | Not documented | Instant Payouts to debit cards | Treasury outbound wires |
 
-No row covers everything, and the gaps follow the business: the providers with accounts payable products (BILL, Payabli, Repay) issue cards to vendors, and the ones built around marketplaces and platform balances (Adyen, Moov, Nuvei, Stripe) lead with bank transfers and pushes to cards.
+No row covers everything, and the gaps follow the business: the providers with accounts payable products (BILL, Payabli, Repay) issue cards to vendors, and the ones built around marketplaces and platform balances (Adyen, Moov, Nuvei, Stripe) lead with bank transfers and pushes to cards. Paying abroad in stablecoins is a newer rail with its own controls ([Stablecoins & Crypto Rails](/books/payments/stablecoins#payouts-to-contractors-and-sellers-abroad)).
 
 ## Virtual Cards: Who Pays for the Rebate
 
@@ -186,7 +186,7 @@ A reissue doesn't erase the original: Payabli marks it reissued and links the tw
 
 ## Remittance and Reconciliation
 
-A vendor receiving $12,480 needs to know which invoices it covers, or its accounts receivable team calls yours. Send remittance data with the payment where the rail carries it: an ACH CCD entry carries one addenda record, and a CTX entry up to 9,999, enough for a full remittance document ([ACH & Bank Transfers](/books/payments/ach#files-batches-and-sec-codes)). Otherwise send a remittance advice by email or the portal, keyed to the payment's reference.
+A vendor receiving $12,480 needs to know which invoices it covers, or its accounts receivable team calls yours. Send remittance data with the payment where the rail carries it: an ACH CCD entry carries one addenda record, and a CTX entry up to 9,999, enough for a full remittance document ([ACH & Bank Transfers](/books/payments/ach#files-batches-and-sec-codes)); the receiving side is in [B2B Receivables](/books/payments/checkout-and-invoicing#b2b-receivables). Otherwise send a remittance advice by email or the portal, keyed to the payment's reference.
 
 **Descriptors** are the remittance everyone sees. A payout has two sides on two bank statements: the debit that funds it from the payer, and the credit that reaches the vendor, and each needs text its reader recognizes. Payabli builds both from templates with placeholders, by default `Debit for {{VendorName1}} for bill(s): {{BillNumberList}}` on the payer's side and `Credit from {{PaypointDbaName}} for bill(s): {{BillNumberList}}` on the vendor's, with optional separate templates for Same Day ACH. A payer who can see which vendor and bills a debit paid doesn't call support about it, and a vendor who sees invoice numbers applies the payment without asking.
 
@@ -198,7 +198,7 @@ Paying vendors in the US makes the payer an information reporter, and the paymen
 
 - **Collect a W-9 at enrollment.** It gives you the legal name and taxpayer ID, a field classified and protected like a bank account number, masked in support tools and never logged ([Sensitive Data](/docs/payments/sensitive-data#classify-every-field)). The IRS TIN Matching service lets payers check name and TIN combinations before they file, which catches the typo now instead of as an IRS notice later.
 - **Backup withholding.** If a vendor doesn't provide a correct TIN, the payer withholds 24% of payments and sends it to the IRS. The system has to support withholding as a ledger entry, not a manual adjustment.
-- **1099-NEC and 1099-MISC.** Nonemployee compensation, rents and similar payments are reported by the payer. For tax years beginning after 2025, the threshold is $2,000, up from $600, and may be adjusted for inflation from 2027. Flag which vendors are reportable when they're created, not in January.
+- **1099-NEC and 1099-MISC.** Nonemployee compensation, rents and similar payments are reported by the payer. For tax years beginning after 2025, the threshold is $2,000, up from $600, and may be adjusted for inflation from 2027. Flag which vendors are reportable when they're created, not in January. Residuals and commissions paid to sales partners follow the same rules ([Paying Partners and Reporting to the IRS](/books/payments/partners-and-residuals#paying-partners-and-reporting-to-the-irs)).
 - **1099-K, not 1099-NEC, for card payments.** Payments made by credit or payment card, and third-party network transactions, are reported on Form 1099-K by the payment settlement entity, and not by the payer on 1099-NEC or 1099-MISC.
 
 That last rule means the tax totals depend on the method, so track totals per vendor, per year, per method. A vendor paid partly by ACH and partly by virtual card gets a 1099-NEC for the ACH portion only.

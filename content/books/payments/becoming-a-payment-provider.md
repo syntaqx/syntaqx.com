@@ -2,7 +2,7 @@
 title = "Becoming a Payment Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
 category = "Payments Industry"
-order = 1436
+order = 1441
 part = "Running a Provider"
 aliases = ["payments/becoming-a-payment-provider"]
 tags = ["payments", "compliance", "pci", "licensing"]
@@ -45,7 +45,7 @@ Card networks don't contract with software companies. Visa and Mastercard are me
 
 One sponsor is enough to launch. It isn't enough to survive that sponsor changing its risk policy, so plan for a second.
 
-Being sponsored also isn't being known to the networks. Both major networks register the third parties in the chain (payfacs, ISOs, and service providers that store or process card data), usually with the acquirer submitting the registration, and Visa's Global Registry of Service Providers is where customers and acquirers check. Program names, fees and requirements differ between networks and change, so take them from your sponsor and the networks' current rules. The shape doesn't change: registration needs a sponsor, and staying registered needs annual proof that you're secure.
+Being sponsored also isn't being known to the networks. Both major networks register the third parties in the chain (payfacs, ISOs, and service providers that store or process card data), usually with the acquirer submitting the registration, and Visa's Global Registry of Service Providers is where customers and acquirers check. Program names, fees and requirements differ between networks and change, so take them from your sponsor and the networks' current rules. The shape doesn't change: registration needs a sponsor, and staying registered needs annual proof that you're secure. The rules for ISOs and agents are in [Registration and Oversight](/books/payments/partners-and-residuals#registration-and-oversight).
 
 The relationship is also public. Providers name their sponsors, usually in a site footer or a legal page, and the wording says which rung they stand on:
 
@@ -91,7 +91,7 @@ Enterprise customers and partner banks will also ask about everything PCI doesn'
 
 The moment funds pass through your control on their way from payer to merchant, you may be doing something regulated: money transmission in the US, payment services or e-money issuance in the EU and UK. This is where specifics matter most.
 
-**United States.** Money transmission is licensed state by state, each with its own application, examination and reporting. The Conference of State Bank Supervisors' Money Transmission Modernization Act sets nationwide standards for net worth, surety bonds and permissible investments; CSBS reported 31 states had enacted it in full or in part as of September 2026, which means many haven't. Whether a given payfac needs licenses at all is contested. Structures exist that may avoid it, such as funds flowing through accounts the sponsor bank controls, or acting as the merchant's agent to receive payment ([Cash Payments](/books/payments/cash-payments#who-s-a-money-transmitter) explains that exemption), but whether one applies depends on the state and the contracts. That's a question for counsel with the actual flow of funds in front of them, not something to infer from a competitor.
+**United States.** Money transmission is licensed state by state, each with its own application, examination and reporting. The Conference of State Bank Supervisors' Money Transmission Modernization Act sets nationwide standards for net worth, surety bonds and permissible investments; CSBS reported 31 states had enacted it in full or in part as of September 2026, which means many haven't. Whether a given payfac needs licenses at all is contested. Structures exist that may avoid it, such as funds flowing through accounts the sponsor bank controls, or acting as the merchant's agent to receive payment ([Cash Payments](/books/payments/cash-payments#who-s-a-money-transmitter) explains that exemption), but whether one applies depends on the state and the contracts. Holding stablecoins for customers raises the same question ([custodial stablecoin wallets](/books/payments/stablecoins#money-transmission-for-custodial-wallets)). That's a question for counsel with the actual flow of funds in front of them, not something to infer from a competitor.
 
 **UK.** The FCA authorizes payment institutions under the Payment Services Regulations 2017 and e-money institutions under the Electronic Money Regulations 2011. Above a monthly average of €3 million in payment transactions you need full authorization as a payment institution (below it you may register as a small one), and above €5 million of average outstanding e-money, full authorization as an e-money institution, with the capital, safeguarding and governance that brings. The initial capital per service, safeguarding and the end of passporting between the UK and the EU are in [Who Regulates You](/books/payments/eu-and-uk#who-regulates-you).
 

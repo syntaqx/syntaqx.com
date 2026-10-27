@@ -3,7 +3,7 @@ title = "Running a Card Vault"
 nav_title = "Card Vault"
 description = "Building the one service that holds card numbers: token design, envelope encryption, who may detokenize, capture iframes, BIN data and the CDE around it."
 category = "Payments Industry"
-order = 1429
+order = 1433
 part = "Running a Provider"
 tags = ["payments", "pci", "tokenization", "security", "cryptography", "vault"]
 +++

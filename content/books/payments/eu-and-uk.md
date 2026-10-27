@@ -3,7 +3,7 @@ title = "Payments in the EU & UK"
 nav_title = "EU & UK"
 description = "Europe for a US platform: interchange caps, SEPA and SEPA Instant, direct debits, Faster Payments, Bacs, CHAPS, payee checks, APP fraud and licensing."
 category = "Payments Industry"
-order = 1414
+order = 1415
 part = "The Rules"
 tags = ["payments", "eu", "uk", "sepa", "bacs", "faster-payments", "psd2"]
 +++

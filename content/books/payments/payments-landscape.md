@@ -125,7 +125,7 @@ Dated facts age fast; this is the market as of October 2026, from each company's
 | June 14, 2024 | Federal Reserve cease-and-desist order against Evolve Bank & Trust | Sponsor banks' fintech programs come under enforcement |
 | November 15, 2024 | Nuvei completes its going-private transaction with Advent | A public PSP returns to private ownership |
 | December 19, 2024 | Visa completes its acquisition of Featurespace | Networks buy fraud machine learning |
-| February 4, 2025 | Stripe completes its acquisition of Bridge | A PSP adds stablecoin infrastructure |
+| February 4, 2025 | Stripe completes its acquisition of Bridge | A PSP adds stablecoin infrastructure ([what providers ship with stablecoins](/books/payments/stablecoins#how-the-platforms-do-it)) |
 | May 18, 2025 | Capital One completes its acquisition of Discover | An issuer owns a network, and moves its debit cards onto it |
 | June 11, 2025 | Paynt acquires E-xact Transactions, a Canadian payment processor | A European payments company buys its way into North America |
 | September 2025 | Spreedly closes its acquisition of Dodgeball | Orchestration adds fraud orchestration |

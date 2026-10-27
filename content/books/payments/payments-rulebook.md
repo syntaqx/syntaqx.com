@@ -2,7 +2,7 @@
 title = "The Payments Rulebook"
 description = "How payments rules fit together: network contracts like PCI DSS and Nacha, the laws behind them, who enforces each, and which apply from merchant to provider."
 category = "Payments Industry"
-order = 1411
+order = 1412
 part = "The Rules"
 aliases = ["compliance/payments-rulebook"]
 tags = ["payments", "compliance", "regulation", "pci", "nacha"]
@@ -64,7 +64,7 @@ The rules fall into a few families. Each row names who sets the rule, how it rea
 | ---- | ----------- | ------------------ | ---------------------------- |
 | GLBA Safeguards Rule | FTC for non-banks | Law, non-bank financial institutions | A written security program and risk assessment, MFA, an incident response plan, and FTC notice within 30 days of a breach affecting 500 or more |
 | GDPR | EU, UK | Law, personal data | Lawful basis, rights, breach notice; [GDPR](/docs/compliance/gdpr) |
-| HIPAA | HHS | Law, health data | Only if you process health information; [HIPAA](/docs/compliance/hipaa) |
+| HIPAA | HHS | Law, health data | Only if you process health information; [HIPAA](/docs/compliance/hipaa); the payment exemption in [Payments by Vertical](/books/payments/payments-by-vertical#hipaa-when-a-payments-provider-signs-a-baa) |
 | SOC 1, SOC 2, ISO 27001 | AICPA, ISO | Customer and partner contracts | Evidence that controls operate; [SOC 2](/docs/compliance/soc-2) |
 
 ### International

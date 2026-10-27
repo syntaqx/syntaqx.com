@@ -2,7 +2,7 @@
 title = "Payouts & Settlement"
 description = "How a card payment becomes money in a merchant's bank: settlement timing, fees as ledger entries, payout schedules and reserves, failures, and reconciliation."
 category = "Payments Industry"
-order = 1422
+order = 1424
 part = "Paying Out"
 aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
@@ -94,7 +94,7 @@ A changed payout account is where takeovers cash out, so a change re-verifies th
 
 ## Idempotent Payouts
 
-A payout sent twice is money that's very hard to get back. Payouts carry an [idempotency key](/docs/payments/idempotency) derived from what they represent and the attempt (the merchant, the balance period, attempt 1), so a retry after a timeout can't create a second transfer, and a scheduled payout job uses the same deterministic key so a crash and restart can't pay twice. A payout re-sent after a return is a new attempt, with a new key, to the corrected account.
+A payout sent twice is money that's very hard to get back. Payouts carry an [idempotency key](/docs/payments/idempotency) derived from what they represent and the attempt (the merchant, the balance period, attempt 1), so a retry after a timeout can't create a second transfer, and a scheduled payout job uses the same deterministic key so a crash and restart can't pay twice. A payout re-sent after a return is a new attempt, with a new key, to the corrected account. The key chain from the API to the bank file is in [Idempotency End to End](/books/payments/architecture-at-scale#idempotency-end-to-end).
 
 ## Reconciliation
 

@@ -2,7 +2,7 @@
 title = "Switching Processors"
 description = "Moving to a new processor: contracts, card and bank mandate migration, network tokens, recurring and dunning state, cohort cutover, declines and an exit plan."
 category = "Payments Industry"
-order = 1428
+order = 1432
 part = "Running a Provider"
 tags = ["payments", "migration", "processors", "tokens", "cutover", "data-portability"]
 +++

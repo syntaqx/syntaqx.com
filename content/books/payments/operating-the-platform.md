@@ -2,7 +2,7 @@
 title = "Operating the Platform"
 description = "Running a payments platform day to day: the internal console, monitoring, statements, compliance, outages, card-data incidents and retention."
 category = "Payments Industry"
-order = 1433
+order = 1438
 part = "Running a Provider"
 tags = ["payments", "operations", "monitoring", "compliance", "incident-response", "retention"]
 +++
@@ -124,7 +124,7 @@ Most payment outages aren't yours. A processor, a card network, an issuer or a b
 
 ## When a Region Fails
 
-[Disaster Recovery](/docs/operations/disaster-recovery) covers the general practice; payments adds specifics. Authorization needs the shortest recovery time, since every minute down is sales lost; payouts and file processing can wait hours. The vault's keys and the HSMs must be recoverable in the other region without ever existing in the clear, which means key backups made under the same dual control as everything else ([HSMs & Key Management](/books/payments/key-management)). And after a failover, every bank file and every unsettled payment is checked against what the bank and processor actually received before anything is resent, because a duplicated file is a duplicated payment ([Treasury & Bank Operations](/books/payments/treasury#bank-files)).
+[Disaster Recovery](/docs/operations/disaster-recovery) covers the general practice; payments adds specifics. Authorization needs the shortest recovery time, since every minute down is sales lost; payouts and file processing can wait hours. The vault's keys and the HSMs must be recoverable in the other region without ever existing in the clear, which means key backups made under the same dual control as everything else ([HSMs & Key Management](/books/payments/key-management)). And after a failover, every bank file and every unsettled payment is checked against what the bank and processor actually received before anything is resent, because a duplicated file is a duplicated payment ([Treasury & Bank Operations](/books/payments/treasury#bank-files)). The architecture that makes this possible, active-active authorization over a single-writer ledger, is in [Multi-Region](/books/payments/architecture-at-scale#multi-region).
 
 ## Auditing
 

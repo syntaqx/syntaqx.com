@@ -33,7 +33,7 @@ Visa and Mastercard publish their US interchange tables, and Visa's latest sched
 
 - **Card type.** Regulated debit, exempt debit, prepaid, consumer credit (with higher rates for premium rewards products), and commercial cards each have their own tables.
 - **Channel.** Card-present beats card-not-present, and a key-entered card-present payment is priced closer to online. Visa's exempt debit table charges 0.80% + $0.15 for card-present retail and 1.65% + $0.15 for basic e-commerce, both qualified categories; the downgrades below are what happens when a transaction misses them.
-- **Merchant category.** Some industries get their own rates, often flat: Visa prices exempt debit for utility bill payment at $0.65, and for recurring utility payments at $0.45.
+- **Merchant category.** Some industries get their own rates, often flat ([Payments by Vertical](/books/payments/payments-by-vertical)): Visa prices exempt debit for utility bill payment at $0.65, and for recurring utility payments at $0.45.
 - **Data and timing.** Each category has qualification rules: authorization and settlement within time limits, matching amounts, address verification, and for business cards, line-item data. Miss one and the transaction falls to a costlier category.
 - **Merchant size.** Visa's credit tables have performance tiers for the largest retail and supermarket merchants, with volume and dispute-ratio thresholds updated on their own schedule (the current ones took effect April 18, 2026).
 
@@ -74,7 +74,7 @@ Visa reorganized this in 2025 as its **Commercial Enhanced Data Program**. Its c
 
 ![A dimensioned drawing of interchange on a 100 dollar card-not-present payment by card type (Visa's schedule), bars drawn to scale: 0.27 dollars on regulated debit, 1.80 on exempt e-commerce debit, 1.85 on a commercial card with Level 3 data, 2.80 on a commercial card without it, and 3.05 on a non-qualified commercial transaction. The accented dimension between the two commercial card-not-present bars, 0.95 dollars, is what complete Level 3 data saves; a table gives each rate's formula.](/diagrams/interchange-ladder.svg "The same $100 can cost $0.27 or $3.05 to accept. Card type sets the range, and on business cards, complete Level 3 data is worth about a dollar per hundred.")
 
-For a B2B platform this is real money, and almost all of it is engineering: capturing line items at invoice time, carrying them through to settlement, and validating the arithmetic before the processor does.
+For a B2B platform this is real money, and almost all of it is engineering: [capturing line items at invoice time](/books/payments/checkout-and-invoicing#b2b-receivables), carrying them through to settlement, and validating the arithmetic before the processor does.
 
 ## Pricing Models
 
@@ -105,7 +105,7 @@ Every model above is a rule over the same inputs, and a provider needs an engine
 
 ## How a Platform Earns
 
-A software company that embeds payments earns on the spread. An ISO or referral partner usually receives **residuals**: a share of the markup on its merchants' volume, paid monthly from the processor's reports. A [payment facilitator](/books/payments/becoming-a-payment-provider), which signs merchants as its own sub-merchants, sets their price itself and keeps the difference between that and its own cost. Either way, revenue is a function of interchange the platform doesn't control, so its margin per merchant swings with that merchant's card mix: a flat-rate merchant whose customers move from debit to rewards credit can go from profitable to loss-making without changing anything. [Payments for Software Platforms](/books/payments/software-platforms) covers the platform model; the point here is that the platform can't see its margin without the cost data below. How net revenue, take rate, effective rate and pass-through margin are computed from that data is in [Revenue and Cost](/books/payments/payments-metrics#revenue-and-cost).
+A software company that embeds payments earns on the spread. An ISO or referral partner usually receives [**residuals**](/books/payments/partners-and-residuals#the-economics): a share of the markup on its merchants' volume, paid monthly from the processor's reports. A [payment facilitator](/books/payments/becoming-a-payment-provider), which signs merchants as its own sub-merchants, sets their price itself and keeps the difference between that and its own cost. Either way, revenue is a function of interchange the platform doesn't control, so its margin per merchant swings with that merchant's card mix: a flat-rate merchant whose customers move from debit to rewards credit can go from profitable to loss-making without changing anything. [Payments for Software Platforms](/books/payments/software-platforms) covers the platform model; the point here is that the platform can't see its margin without the cost data below. How net revenue, take rate, effective rate and pass-through margin are computed from that data is in [Revenue and Cost](/books/payments/payments-metrics#revenue-and-cost).
 
 ## What This Means for the System You Build
 

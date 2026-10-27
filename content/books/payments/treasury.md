@@ -2,7 +2,7 @@
 title = "Treasury & Bank Operations"
 description = "The bank accounts behind a payments ledger: FBO accounts, pass-through insurance, funding, bank files, the banking calendar and reconciliation."
 category = "Payments Industry"
-order = 1423
+order = 1425
 part = "Paying Out"
 tags = ["payments", "treasury", "banking", "reconciliation", "ledger"]
 +++

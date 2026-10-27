@@ -3,7 +3,7 @@ title = "Stored Cards & Recurring Billing"
 nav_title = "Stored Cards & Recurring"
 description = "Saving a card and charging it later: the stored credential framework, network transaction IDs, network tokens, account updater, retry rules and dunning."
 category = "Payments Industry"
-order = 1418
+order = 1420
 part = "Taking Payments"
 tags = ["payments", "cards", "recurring", "subscriptions", "tokens"]
 +++
@@ -82,7 +82,7 @@ Subscriptions draw rules from both the networks and the law.
 
 ## Autopay Against a Balance
 
-A subscription charges a fixed price on a schedule. Plenty of recurring bills don't work that way: a usage-based SaaS invoice changes every month, a B2B customer's open invoices add up to whatever they add up to, a clinic's patient balance moves as insurance pays its part, and a customer might pay some of it by hand before the scheduled charge runs. So the other common recurring shape charges, on a schedule, **whatever the account owes**.
+A subscription charges a fixed price on a schedule. Plenty of recurring bills don't work that way: a usage-based SaaS invoice changes every month, a B2B customer's [open invoices](/books/payments/checkout-and-invoicing#applying-money-to-invoices) add up to whatever they add up to, a clinic's patient balance moves as insurance pays its part, and a customer might pay some of it by hand before the scheduled charge runs. So the other common recurring shape charges, on a schedule, **whatever the account owes**.
 
 Billing systems model it the same way under different names. Zuora's payment runs pick up invoices with auto-pay on and a balance above zero, charge the account's default payment method, and leave a declined balance open for the next run once the method is updated. Stripe Invoicing collects open invoices automatically, retries failed card payments on a schedule, and can mark an invoice paid when a partial payment comes within a set amount of the total. Payabli's balance-driven autopay charges the customer's open balance on the first, the fifteenth or the last day of the month, skips the cycle when the balance is zero, and allows one per customer. The balance it reads is one the platform maintains through the API; Payabli reads it at execution and doesn't change it, so a platform that forgets to lower it after a payment taken by hand charges it again. What they share is the rule that matters: the amount is decided by the ledger at run time, not by the schedule.
 

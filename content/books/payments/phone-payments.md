@@ -2,7 +2,7 @@
 title = "Phone Payments"
 description = "Taking payments by phone and by link: MOTO and TEL rules, telephony in PCI scope, DTMF masking, text-to-pay, recordings, IVR design, remote agents."
 category = "Payments Industry"
-order = 1419
+order = 1421
 part = "Taking Payments"
 tags = ["payments", "pci", "moto", "ivr", "contact-center", "ach"]
 +++
@@ -59,7 +59,7 @@ Whichever you use, what comes out of the capture should be what a web checkout p
 The simplest way to keep card data out of a call is to take the payment out of the call: the agent, or an automated message, sends the customer a link, and the customer pays on a hosted payment page on their own phone. The same link works by text or email for a patient balance after a visit, a deposit on a booking, or a B2B invoice, which is why "text to pay" is a product of its own.
 
 - **It's an online payment now, not MOTO.** The customer is entering their own card in a browser, so 3-D Secure applies and its liability shift is available: the legitimate version of what the EBA criticized above.
-- **The link is a bearer token.** Anyone holding it can pay, and some links show a name and balance, so it's single-use, bound to one amount and payee, expiring, and carries no personal data in the URL. Behind it is a payment in `pending`, created with an [idempotency key](/docs/payments/idempotency), so a customer tapping twice pays once. Providers set their own bounds: Adyen's payment links are single-use unless marked reusable and expire 24 hours after creation unless given a date up to 70 days out, Payabli's pay-by-SMS links expire after 3 days, and Stripe's checkout sessions expire between 30 minutes and 24 hours after creation.
+- **The link is a bearer token.** Anyone holding it can pay, and some links show a name and balance, so it's single-use, bound to one amount and payee, expiring, and carries no personal data in the URL. Behind it is a payment in `pending`, created with an [idempotency key](/docs/payments/idempotency), so a customer tapping twice pays once. Providers set their own bounds: Adyen's payment links are single-use unless marked reusable and expire 24 hours after creation unless given a date up to 70 days out, Payabli's pay-by-SMS links expire after 3 days, and Stripe's checkout sessions expire between 30 minutes and 24 hours after creation. Building links for a provider: [Links That Can't Be Tampered With](/books/payments/checkout-and-invoicing#links-that-can-t-be-tampered-with).
 - **The page is hosted, never the message.** PCI DSS forbids sending unprotected card numbers by end-user messaging, and PCI SSC's FAQ 1085 names email, SMS, chat and instant messaging (requirement 4.2.2). The link opens your [hosted fields](/books/payments/card-vault#getting-the-card-in); nobody ever replies with card details.
 
 ### The Rules for Texting

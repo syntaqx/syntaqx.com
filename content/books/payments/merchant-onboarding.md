@@ -2,7 +2,7 @@
 title = "Merchant Onboarding"
 description = "Knowing who processes payments on a platform: KYC and KYB, a verification state machine, progressive onboarding, underwriting, and an API that says what's due."
 category = "Payments Industry"
-order = 1415
+order = 1416
 part = "Taking Payments"
 aliases = ["payments/merchant-onboarding"]
 tags = ["payments", "onboarding", "kyc", "compliance"]
@@ -109,7 +109,7 @@ Underwriting assigns a **risk tier**, and the tier sets the controls:
 
 Some businesses aren't a matter of tier at all: card networks, acquirers and the law prohibit or restrict whole categories (illegal goods, some financial services, unlicensed gambling and others). Check **prohibited and restricted business lists** at onboarding against the description, website and category code, and treat a restricted category as a requirement for extra diligence such as licenses, not an automatic rejection.
 
-Check **terminated-merchant lists** too. Mastercard's MATCH list records merchants an acquirer terminated for cause (excessive chargebacks, fraud, laundering), and a merchant on it is one some other acquirer already learned about the hard way. The duty runs both ways: merchants you terminate for a listed reason go on the list.
+Check **terminated-merchant lists** too. Mastercard's MATCH list records merchants an acquirer terminated for cause (excessive chargebacks, fraud, laundering), and a merchant on it is one some other acquirer already learned about the hard way. The duty runs both ways: merchants you terminate for a listed reason go on the list. Partners' principals are screened the same way ([Principals, MATCH and Terminated Agents](/books/payments/partners-and-residuals#principals-match-and-terminated-agents)).
 
 ## Ongoing Monitoring
 

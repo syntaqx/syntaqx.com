@@ -3,7 +3,7 @@ title = "Designing the Payments API"
 nav_title = "The Payments API"
 description = "The surface merchants integrate with: payment objects and intents, modifications, keys and the client, test mode, versioning, errors, events and platforms."
 category = "Payments Industry"
-order = 1416
+order = 1417
 part = "Taking Payments"
 tags = ["payments", "api-design", "webhooks", "testing", "versioning", "sdk"]
 +++

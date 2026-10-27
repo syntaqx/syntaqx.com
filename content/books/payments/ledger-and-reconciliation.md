@@ -3,7 +3,7 @@ title = "Ledger & Reconciliation at Provider Scale"
 nav_title = "Ledger & Reconciliation"
 description = "A provider's chart of accounts, the three-way match of ledger, settlement files and bank statements, matching engines, breaks, suspense and the close."
 category = "Payments Industry"
-order = 1424
+order = 1426
 part = "Paying Out"
 tags = ["payments", "ledger", "reconciliation", "accounting", "treasury"]
 +++
@@ -62,7 +62,7 @@ Three rules make it work at scale.
 
 The rules don't change at scale: balanced transactions, append-only rows, idempotent postings, corrections as reversals ([Append-Only Records](/docs/payments/payment-states#append-only-records)). What changes is what breaks first.
 
-- **Hot accounts.** Every payment credits `platform_revenue` and `processing_costs`, so those two rows take a write from every transaction on the platform. A ledger that locks a cached balance row per posting serializes the whole business on them. Post entries without locking the balance, compute balances from entries plus periodic snapshots, and reserve row-level locking for accounts where an overdraft check is the point (a merchant's available balance before a payout).
+- **Hot accounts.** Every payment credits `platform_revenue` and `processing_costs`, so those two rows take a write from every transaction on the platform. A ledger that locks a cached balance row per posting serializes the whole business on them. Post entries without locking the balance, compute balances from entries plus periodic snapshots, and reserve row-level locking for accounts where an overdraft check is the point (a merchant's available balance before a payout). [Hot Accounts](/books/payments/architecture-at-scale#hot-accounts) covers sharding, batching and deferred aggregation.
 - **Pending and posted are separate balances.** A capture is pending until settlement confirms it, a payout until the bank does. Track them as separate figures on the account, the way TigerBeetle keeps `debits_pending` beside `debits_posted`, so available balance is computed from posted entries and nothing pays out against money that might not come.
 - **Three dates per entry.** When it happened at the source (`effective_at`), when you recorded it (`created_at`), and which accounting period it belongs to. Settlement files describe yesterday and arrive today; a correction found in March belongs to February's activity but is posted in March once February is closed.
 - **Estimates are entries too.** The fee at capture is an estimate until the processor's file supplies the real interchange and network fees ([Fees Are Separate Entries](/books/payments/payouts-and-settlement#fees-are-separate-entries)). Post the estimate, then post the true-up as its own transaction linked to the first. Overwriting the estimate destroys the one number that tells you whether your pricing engine is right.

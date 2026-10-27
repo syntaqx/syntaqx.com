@@ -2,12 +2,12 @@
 title = "Surcharging & Fees"
 description = "Passing card costs to the payer: surcharges, convenience and service fees, cash discounts, the network caps and state laws behind them, and safe fee math."
 category = "Payments Industry"
-order = 1412
+order = 1413
 part = "The Rules"
 tags = ["payments", "surcharging", "convenience-fees", "compliance", "pricing"]
 +++
 
-Every card payment costs the merchant something ([Interchange & Pricing](/books/payments/interchange-and-pricing)), and more merchants now pass that cost to the payer. For a B2B distributor invoicing on thin margins, a restaurant group, a dental practice or a public agency collecting a fixed statutory amount, it's often the deciding factor in whether they take cards at all: their margins can't absorb 2 or 3 percent of a large payment. So a platform serving those verticals will be asked for fees on day one, and fee handling is only a feature if it's right. The verticals differ: government and education use service fee programs because statutory amounts leave no margin, a subscription business can't put a convenience fee on its recurring charges, and a B2B seller weighs a surcharge against steering buyers to [ACH](/books/payments/ach).
+Every card payment costs the merchant something ([Interchange & Pricing](/books/payments/interchange-and-pricing)), and more merchants now pass that cost to the payer. For a B2B distributor invoicing on thin margins, a restaurant group, a dental practice or a public agency collecting a fixed statutory amount, it's often the deciding factor in whether they take cards at all: their margins can't absorb 2 or 3 percent of a large payment. So a platform serving those verticals will be asked for fees on day one, and fee handling is only a feature if it's right. The verticals differ ([Payments by Vertical](/books/payments/payments-by-vertical)): government and education use service fee programs because statutory amounts leave no margin, a subscription business can't put a convenience fee on its recurring charges, and a B2B seller weighs a surcharge against steering buyers to [ACH](/books/payments/ach).
 
 The trouble is that "a card fee" is four different things, each allowed under different conditions by different rulebooks: the card networks' rules, which bind through the merchant's contract, and state law, which binds regardless ([The Payments Rulebook](/books/payments/payments-rulebook) explains why the two differ). Get the category wrong and a merchant is charging an illegal fee on every payment your system processes. This chapter is the map, and the engineering that keeps a platform inside it. None of it is legal advice; the specifics change, and a merchant's counsel and acquirer have the last word.
 
@@ -15,11 +15,11 @@ The trouble is that "a card fee" is four different things, each allowed under di
 
 | | Surcharge | Convenience fee | Service fee | Cash discount |
 | --- | --- | --- | --- | --- |
-| **What it is** | A percentage added for paying by credit card | A flat fee for using a channel outside the merchant's usual ones | A fee for government and education payments, under a network program | A lower price for paying another way |
-| **Cards** | Credit only | Any card in that channel | Any, at the same fee for every brand | Not a card fee at all |
+| **What it is** | A percentage added for paying by credit card | A flat fee for using a channel outside the merchant's usual ones | A fee for government, education and utility payments, under a network program | A lower price for paying another way |
+| **Cards** | Credit only | Any card in that channel | Any | Not a card fee at all |
 | **Amount** | Up to the merchant's cost, capped | Flat, whatever the amount | Flat, percentage or tiered | The merchant's choice |
 | **Where** | Where state law allows | Not face-to-face, not on recurring payments | In person, online and recurring, for eligible merchants | Anywhere |
-| **Gate** | 30 days' notice; disclosure | The channel must be a real convenience | Network registration; eligible merchant categories | Clear disclosure |
+| **Gate** | 30 days' notice; disclosure | The channel must be a real convenience | Eligible merchant categories; cards accepted in every channel | Clear disclosure |
 
 The difference that trips people up: a **surcharge** is charged for the card, a **convenience fee** for the channel. A medical practice that takes payments at the front desk and by mail may add a flat fee for paying online, charged to every payment method in that channel. It may not add a percentage to card payments and call it a convenience fee.
 
@@ -53,7 +53,7 @@ These rules may loosen. On November 10, 2025, Visa and Mastercard announced a pr
 
 Visa's own rules describe a convenience fee as a flat fee, clearly disclosed, for the convenience of paying through an alternate channel. Processors summarize the conditions in more detail: never in a face-to-face environment, never on recurring or installment payments, the same fee for every payment type in that channel, charged only by the merchant that provides the goods or services, and included in the payment's total.
 
-**Service fees** are the exception for the public sector. Visa allows certain merchants, government and education among them, to assess fixed or variable service fees, under a program that requires registration and is limited to specific merchant category codes: taxes, courts and fines, government services, colleges and schools. A service fee can be a percentage, can apply in person and on recurring payments, must be the same for every card brand, and must be disclosed before the payment completes so the payer can cancel. When a third party charges it on a card-not-present payment, processors describe it going through as a separate transaction from the payment itself.
+**Service fees** are the exception for the public sector and utilities. Visa lets a US government agency, utility or education merchant, or a third party acting for one, assess a service fee in specific merchant category codes: utilities (4900), schools and colleges (8211, 8220, 8244, 8249), court costs (9211), fines (9222), tax payments (9311) and government services (9399). The amount may be "flat, fixed, banded, or ad valorem," so it can be a percentage, and it must reasonably reflect the cost of acceptance and, where possible, be capped. The merchant must accept Visa in every channel where it takes payments, disclose the fee as a service fee before the payment completes so the payer can cancel, and never charge it on top of a surcharge or convenience fee. The program changed on October 18, 2025: utilities were added, registration with Visa and the Merchant Verification Value were dropped, and a third party's fee no longer has to go through as a separate transaction from the payment. Integrations built for the old program may still run two transactions; what each vertical does with the fee is in [Payments by Vertical](/books/payments/payments-by-vertical#government).
 
 **Rent has its own program.** Visa's US Rent Payment Program is open only to merchants coded as real estate agents and managers (MCC 6513) and registered with Visa. It allows a flat fee of up to $10 on debit cards (a program fee, not a surcharge), card-not-present only, and treats a fee on credit cards as a surcharge, under the surcharge rules above. A rent platform's fee engine needs the merchant account's category code as an input, which is one reason [Software Platforms](/books/payments/software-platforms) gives each line of business its own merchant account.
 
@@ -117,7 +117,7 @@ A fee is a charge the payer didn't choose, so the record has to answer a payer's
 - [Erie County Consumer Protection: NYS General Business Law § 518 Changes](https://www3.erie.gov/consumerprotection/nys-general-business-law-ss518-changes-february-11-2024), the February 11, 2024 effective date
 - [Visa Inc. Form 8-K, November 10, 2025](https://www.sec.gov/Archives/edgar/data/1403161/000140316125000093/v-20251110.htm), the proposed injunctive relief class settlement: brand-level surcharging, acceptance by credit category, the 10 basis point reduction for five years and the 125 bps standard consumer cap, subject to court approval
 - [Capital One: Capital One Completes Acquisition of Discover](https://www.capitalone.com/about/newsroom/capital-one-completes-acquisition-of-discover/), May 18, 2025
-- [Visa Core Rules and Visa Product and Service Rules (PDF)](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the US Rent Payment Program for MCC 6513 merchants and its debit fee limit
+- [Visa Core Rules and Visa Product and Service Rules, 18 April 2026 edition (PDF)](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the US Rent Payment Program for MCC 6513 merchants and its debit fee limit, and the service fee requirements, permitted MCCs (Table 5-6) and US entities (Table 5-7) in 5.5.3.1
 - [UNC School of Government: Local Governments Now Allowed to Charge Fees for Accepting Credit and Charge Card Payments](https://canons.sog.unc.edu/blog/2013/02/08/local-governments-now-allowed-to-charge-customers-fees-for-using-credit-and-charge-cards), February 2013: the settlement's surcharge permission effective January 27, 2013
 
 **In practice**
@@ -130,4 +130,5 @@ A fee is a charge the payer didn't choose, so the record has to answer a payer's
 - [Payabli: Unified response codes](https://docs.payabli.com/guides/pay-in-unified-response-codes-reference), surcharge errors E5050 to E5056: card type, non-US card, merchant and payer state, network registration, combination with a service fee, and amount mismatch
 - [Rainforest: Surcharging with BIN lookup](https://docs.rainforestpay.com/docs/surcharging-with-bin-lookup), the 4% cap, 3% for Visa credit, credit only, and BIN lookup in the payment component
 - [Stripe: Collect surcharges](https://docs.stripe.com/payments/cards/surcharge), the public preview API version, `amount_details[surcharge]`, `maximum_amount` as a technical restriction, and full and prorated surcharge refunds
+- [TSG: Visa expands service fee eligibility and simplifies rules](https://tsgpayments.com/visa-expands-service-fee-eligibility-and-simplifies-rules/), the October 18, 2025 change: utilities added, no registration, no Merchant Verification Value, no separate transaction
 - [Fiserv: Understanding Surcharging, Convenience and Service Fees (PDF)](https://www.carat.fiserv.com/content/dam/firstdata/us/en/documents/pdf/Understanding_Surcharging_Convenience_Service_Fees_Whitepaper.pdf), a processor's summary of convenience and service fee conditions as of January 2023

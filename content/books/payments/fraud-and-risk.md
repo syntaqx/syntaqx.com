@@ -2,7 +2,7 @@
 title = "Fraud & Risk"
 description = "Deciding which payments to allow, review, challenge or block: both costs, network and consortium signals, card testing, merchant and bank-rail fraud."
 category = "Payments Industry"
-order = 1420
+order = 1422
 part = "Taking Payments"
 aliases = ["payments/fraud-and-risk"]
 tags = ["payments", "fraud", "risk", "security"]
@@ -82,7 +82,7 @@ It hurts even when no money is lost. Every attempt is an authorization that can 
 Defenses, layered because each one alone is easy to route around:
 
 - **Rate limits per card, per IP, per account and per device**, not just per IP. Attackers rotate IPs cheaply; they can't rotate the card they're testing. See [What to Key On](/docs/requests/rate-limiting#what-to-key-on). Providers ship defaults keyed this way: Payabli's, per merchant, are 3 declines per card, 3 per IP address and 3 per payer an hour, 10 declines per merchant an hour, 10 transactions per card an hour and 250 transactions per merchant in 15 minutes, each adjustable on request. A velocity alert on a payout capture returns a `202` with the capture held for review rather than refused.
-- **Limit the cheap paths.** Card-setup endpoints and guest checkout are preferred targets because a zero-amount verification doesn't show on the cardholder's statement. Require a session or an account before a card can be saved, and cap how many cards one account can add.
+- **Limit the cheap paths.** Card-setup endpoints and guest checkout are preferred targets because a zero-amount verification doesn't show on the cardholder's statement. Require a session or an account before a card can be saved, and cap how many cards one account can add. Payment links and donation pages are cheap paths too ([Card Testing on Public Pages](/books/payments/checkout-and-invoicing#card-testing-on-public-pages)).
 - **CAPTCHA, applied by risk** and enforced on the server. A visible CAPTCHA on every payment costs conversions; a risk-triggered one costs almost nothing. Checking it only in the browser is no check at all.
 - **Watch the decline rate as an attack signal.** A sudden spike in declines, especially generic ones, on small amounts is the signature. Alert on it, and switch on tighter limits automatically when it fires.
 - **Refund what got through.** Successful test charges become disputes; refunding them first is cheaper.

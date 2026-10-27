@@ -3,7 +3,7 @@ title = "Payments in Canada"
 nav_title = "Canada"
 description = "Extending a US payments platform to Canada: ACSS and Standard 005 files, pre-authorized debits under Rule H1, Interac, card rules, RPAA and FINTRAC."
 category = "Payments Industry"
-order = 1413
+order = 1414
 part = "The Rules"
 tags = ["payments", "canada", "pad", "interac", "eft", "compliance"]
 +++

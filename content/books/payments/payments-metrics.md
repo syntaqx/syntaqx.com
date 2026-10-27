@@ -2,7 +2,7 @@
 title = "Payments Metrics"
 description = "The numbers a payments platform runs on, one definition each: approval and success rates, declines, fraud, disputes, take rate, payouts, reconciliation, SLOs."
 category = "Payments Industry"
-order = 1435
+order = 1440
 part = "Running a Provider"
 tags = ["payments", "metrics", "analytics", "authorization", "disputes", "slos"]
 +++
@@ -147,7 +147,7 @@ net revenue = fees billed to merchants
 - **NMI** returns a month's commission per merchant line through a commission report API, with the resale price, the cost and the commission earned, recollected and returned.
 - **Tilled** computes commission per fee type as merchant revenue minus platform cost times the revenue share, pays it the month after the activity, and gives its monthly commission statement a transaction-level tab for auditing the calculations.
 
-Compute your own number from the ledger and reconcile it against the processor's statement every month, per merchant and fee type. A gap is either your pricing engine billing something the contract doesn't pay a share of, or an error on the statement, and the transaction-level detail is what settles which ([Payments for Software Platforms](/books/payments/software-platforms)).
+Compute your own number from the ledger and reconcile it against the processor's statement every month, per merchant and fee type. A gap is either your pricing engine billing something the contract doesn't pay a share of, or an error on the statement, and the transaction-level detail is what settles which ([Payments for Software Platforms](/books/payments/software-platforms)). How a provider computes and pays residuals is in [The Residual Engine](/books/payments/partners-and-residuals#the-residual-engine).
 
 **Effective rate**, from the merchant's side: total fees the merchant paid over its sales volume. Canada's Code of Conduct defines the effective merchant discount rate as total acquirer and processor fees and network fees paid, divided by sales volume, per card type, and requires it on statements at least monthly ([Statements and Reports](/books/payments/operating-the-platform#statements-and-reports)). Use the same definition everywhere, since a merchant comparing your statement with a competitor's quote will.
 
@@ -263,7 +263,7 @@ CREATE TABLE fct_payment_attempts (
 );
 ```
 
-From it, the success rate counts `outcome = 'approved'` over rows with `stage_reached <> 'invalid'`; the authorization rate over rows with `stage_reached = 'network'`; the deduplicated rates use only `is_final_attempt` rows. A dispute fact (one row per dispute, with raised date, payment date, network, reason, fraud flag and outcome) and a fraud report fact feed the network ratios; the ledger feeds revenue, cost, losses and reserves; payout and reconciliation facts feed the money movement metrics.
+From it, the success rate counts `outcome = 'approved'` over rows with `stage_reached <> 'invalid'`; the authorization rate over rows with `stage_reached = 'network'`; the deduplicated rates use only `is_final_attempt` rows. A dispute fact (one row per dispute, with raised date, payment date, network, reason, fraud flag and outcome) and a fraud report fact feed the network ratios; the ledger feeds revenue, cost, losses and reserves, copied as posted rather than recomputed ([Analytics Without Recomputing Money](/books/payments/architecture-at-scale#analytics-without-recomputing-money)); payout and reconciliation facts feed the money movement metrics.
 
 Three holes to close. **Network data isn't yours:** fraud reports and network program counts arrive from the processor, late, and Visa's enumeration count comes from a model you can't run, so store the network's reported figures beside your own estimate and reconcile them monthly ([Reconcile to the Source](/docs/architecture/data-pipelines#reconcile-to-the-source)). **Late labels:** a dispute can arrive months after its payment, so metrics by payment month are restated as labels arrive, and frozen periods are snapshotted rather than recomputed ([Versions, Stamps and Frozen Periods](/docs/architecture/data-pipelines#versions-stamps-and-frozen-periods)). **The business date:** a payment's day is assigned once, in a declared zone; the networks report in their own cutoffs and Stripe's analytics in UTC, so reconcile at month level, not day level ([Assign the Business Date Once](/docs/architecture/data-pipelines#assign-the-business-date-once)).
 

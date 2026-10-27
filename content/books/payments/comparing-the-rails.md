@@ -2,7 +2,7 @@
 title = "Comparing the Rails"
 description = "Every way money moves, side by side: who starts it, when you know it worked, when it settles, when it's final, how it comes back, and which accounts it crosses."
 category = "Payments Industry"
-order = 1410
+order = 1411
 part = "How Money Moves"
 tags = ["payments", "rails", "settlement", "ledger", "treasury"]
 +++
@@ -24,6 +24,7 @@ The chapters before this one take one way of paying at a time: [cards](/books/pa
 | **Canadian pre-authorized debit** ([Payments in Canada](/books/payments/canada#pre-authorized-debits-rule-h1)) | The payee, under a PAD agreement | When no dishonor arrives by the next business day | Next business day | 90 calendar days for a personal debit's claim | A dishonor or a reimbursement claim |
 | **[SEPA](/books/payments/eu-and-uk#sepa-direct-debit) or [Bacs](/books/payments/eu-and-uk#uk-faster-payments-bacs-and-chaps) Direct Debit** | The payee, under a mandate | Days later | Days | Eight weeks for SEPA's no-questions refund, 13 months if there was no valid mandate; Bacs refunds under its guarantee | A scheme refund through the payer's bank |
 | **Instant push abroad** ([SEPA Instant](/books/payments/eu-and-uk#sepa-credit-transfer-and-sepa-instant), [Faster Payments](/books/payments/eu-and-uk#uk-faster-payments-bacs-and-chaps), Pix, UPI) | The payer, from their bank | Seconds | Immediately | Immediately, except fraud reimbursement schemes like the UK's for scams and Pix's MED | A new transfer, or a fraud claim outside the payment |
+| **Stablecoin transfer** ([Stablecoins & Crypto Rails](/books/payments/stablecoins#finality-next-to-cards-and-ach)) | The payer, pushing from a wallet | Seconds, when it's in a block | On chain, at any hour, weekends included | At chain finality: seconds on some chains, 15 to 19 minutes on Ethereum | Nothing; a refund is a new transfer |
 | **Buy now, pay later** | The merchant, via the lender | When the lender approves | Paid out by the lender | The lender's terms | The lender's dispute process |
 | **Push to card** (a payout, [Vendor Payouts](/books/payments/vendor-payouts#push-to-card)) | The platform, pushing to a debit card | Seconds to 30 minutes | Immediately, if the card's issuer is in Visa's Fast Funds program | Immediately; reversible only for processing errors | Nothing, in practice |
 
