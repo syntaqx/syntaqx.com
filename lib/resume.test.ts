@@ -86,7 +86,7 @@ describe("resume", () => {
     const pdf = new Uint8Array(await (await resumePdf()).arrayBuffer());
     const { text } = await extractText(pdf, { mergePages: true });
     const flat = text.replace(/\s+/g, " ");
-    expect(flat.trimStart().startsWith(resume.name.toUpperCase())).toBe(true);
+    expect(flat.trimStart().startsWith(resume.name)).toBe(true);
     for (const heading of [
       "SUMMARY",
       "TECHNICAL SKILLS",
@@ -147,7 +147,7 @@ describe("resume", () => {
     const res = await resumeText();
     expect(res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
     const text = await res.text();
-    expect(text.startsWith(resume.name.toUpperCase())).toBe(true);
+    expect(text.startsWith(resume.name)).toBe(true);
     for (const heading of ["SUMMARY", "SKILLS", "EXPERIENCE", "EDUCATION"])
       expect(text).toContain(`
 ${heading}

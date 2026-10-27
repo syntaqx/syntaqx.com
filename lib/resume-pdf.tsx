@@ -68,7 +68,6 @@ const s = StyleSheet.create({
     lineHeight: 1,
     letterSpacing: 0.4,
     color: INK,
-    textTransform: "uppercase",
   },
   title: { fontSize: 11.5, fontWeight: 500, color: ACCENT, marginTop: 6 },
   contact: {

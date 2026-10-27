@@ -23,7 +23,7 @@ export function renderResumeText(
       .join("\n"),
   );
   return `${[
-    `${resume.name.toUpperCase()}\n${title.replace(" · ", " | ")}\n${reach}\n${resume.links.map((l) => l.href).join(" | ")}`,
+    `${resume.name}\n${title.replace(" · ", " | ")}\n${reach}\n${resume.links.map((l) => l.href).join(" | ")}`,
     `SUMMARY\n${resume.summary.join("\n\n")}`,
     `SKILLS\n${resume.skills.map((k) => `${k.label}: ${k.items}`).join("\n")}`,
     `EXPERIENCE\n${jobs.join("\n\n")}`,
