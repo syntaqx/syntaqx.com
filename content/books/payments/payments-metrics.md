@@ -168,10 +168,10 @@ The denominator is payouts that were due, including those held, delayed or faile
 
 ```text
 break rate = unmatched items / items expected to match, per source (processor file, bank statement)
-break age  = now - first_seen_at, per open break; report count and amount by age bucket
+break age  = today - opened_on, per open break; report count and amount by age bucket
 ```
 
-A break is any expected item without its counterpart: a captured payment with no settlement line, a deposit with no payout, a fee the ledger didn't expect. The rate says how good matching is; the age says how good the team is, and old breaks are where losses hide. Report the open break amount by age bucket (under a day, 1 to 3 days, 3 to 7, over 7) next to the count, and alert on age, since a break stops payouts ([Watching the Pipeline](/books/payments/operating-the-platform#watching-the-pipeline), [Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline)).
+A break is any expected item without its counterpart: a captured payment with no settlement line, a deposit with no payout, a fee the ledger didn't expect. The rate says how good matching is; the age says how good the team is, and old breaks are where losses hide. Report the open break amount by the age buckets of [Breaks](/books/payments/ledger-and-reconciliation#breaks) (today, 1 to 3 days, 4 to 7, 8 to 30, older) next to the count, and alert on age, since a cash break stops payouts ([Watching the Pipeline](/books/payments/operating-the-platform#watching-the-pipeline)).
 
 **Settlement lag** (this book's): time from capture to funds received from the processor, by processor and rail, against the expected schedule. A lag that grows is a processor holding funds before it tells you.
 

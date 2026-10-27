@@ -15,11 +15,11 @@ This chapter is the map the rest of the volume uses. The engineering of money it
 
 The chapters follow the money, in six parts:
 
-- **How Money Moves.** This chapter, then [Card-Present Payments](/books/payments/card-present), [Interchange & Pricing](/books/payments/interchange-and-pricing) (what card acceptance costs), [ACH & Bank Transfers](/books/payments/ach), [Accepting Checks](/books/payments/checks), [Cash Payments](/books/payments/cash-payments), [Wallets & Local Payment Methods](/books/payments/wallets-and-local-methods), and [Comparing the Rails](/books/payments/comparing-the-rails) to put them side by side.
-- **The Rules.** [The Payments Rulebook](/books/payments/payments-rulebook) (who sets them), [Surcharging & Fees](/books/payments/surcharging-and-fees) (what you may pass on to the payer) and [Payments in Canada](/books/payments/canada) (how they change across a border).
+- **How Money Moves.** This chapter, then [The Payments Landscape](/books/payments/payments-landscape) (who's who, and what to buy or build), [Card-Present Payments](/books/payments/card-present), [Interchange & Pricing](/books/payments/interchange-and-pricing) (what card acceptance costs), [ACH & Bank Transfers](/books/payments/ach), [Accepting Checks](/books/payments/checks), [Cash Payments](/books/payments/cash-payments), [Wallets & Local Payment Methods](/books/payments/wallets-and-local-methods), [Cross-Border Payments & FX](/books/payments/cross-border-and-fx) (what changes between countries and currencies), and [Comparing the Rails](/books/payments/comparing-the-rails) to put them side by side.
+- **The Rules.** [The Payments Rulebook](/books/payments/payments-rulebook) (who sets them), [Surcharging & Fees](/books/payments/surcharging-and-fees) (what you may pass on to the payer), and how they change across a border in [Payments in Canada](/books/payments/canada) and [Payments in the EU & UK](/books/payments/eu-and-uk).
 - **Taking Payments.** [Merchant Onboarding](/books/payments/merchant-onboarding), [Designing the Payments API](/books/payments/payments-api), [SCA & 3-D Secure](/books/payments/strong-customer-authentication), [Stored Cards & Recurring Billing](/books/payments/stored-credentials), [Phone Payments](/books/payments/phone-payments), [Fraud & Risk](/books/payments/fraud-and-risk) and [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks).
-- **Paying Out.** [Payouts & Settlement](/books/payments/payouts-and-settlement), [Treasury & Bank Operations](/books/payments/treasury) and [Vendor Payouts](/books/payments/vendor-payouts).
-- **Running a Provider.** [Payments for Software Platforms](/books/payments/software-platforms), [Processor Routing](/books/payments/processor-routing), [Running a Card Vault](/books/payments/card-vault), [HSMs & Key Management](/books/payments/key-management), [Inside a Processor](/books/payments/inside-a-processor), [Network Certification](/books/payments/network-certification), [Operating the Platform](/books/payments/operating-the-platform) and [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider).
+- **Paying Out.** [Payouts & Settlement](/books/payments/payouts-and-settlement), [Treasury & Bank Operations](/books/payments/treasury), [Ledger & Reconciliation at Provider Scale](/books/payments/ledger-and-reconciliation) (proving every balance against the processors and the banks) and [Vendor Payouts](/books/payments/vendor-payouts).
+- **Running a Provider.** [Payments for Software Platforms](/books/payments/software-platforms), [Processor Routing](/books/payments/processor-routing), [Switching Processors](/books/payments/switching-processors), [Running a Card Vault](/books/payments/card-vault), [HSMs & Key Management](/books/payments/key-management), [Inside a Processor](/books/payments/inside-a-processor), [Network Certification](/books/payments/network-certification), [Operating the Platform](/books/payments/operating-the-platform), [AI in Payments](/books/payments/ai-in-payments), [Payments Metrics](/books/payments/payments-metrics) and [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider).
 - **Reference.** The [Glossary](/books/payments/glossary).
 
 ## The System You're Building
@@ -34,8 +34,9 @@ Read end to end, the volume describes the components of a payment provider. Each
 | Card vault and keys | Holds card and bank numbers, hands out tokens | [Running a Card Vault](/books/payments/card-vault), [HSMs & Key Management](/books/payments/key-management) |
 | Authentication | 3-D Secure, and when it's required | [SCA & 3-D Secure](/books/payments/strong-customer-authentication) |
 | Risk engine | Decides which payments to allow | [Fraud & Risk](/books/payments/fraud-and-risk) |
-| Processor adapters and router | Talk to acquirers and networks, and choose between them | [Processor Routing](/books/payments/processor-routing), [Inside a Processor](/books/payments/inside-a-processor) |
-| Ledger | Every balance, explainable | [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger) |
+| Processor adapters and router | Talk to acquirers and networks, choose between them, and move between them | [Processor Routing](/books/payments/processor-routing), [Inside a Processor](/books/payments/inside-a-processor), [Switching Processors](/books/payments/switching-processors) |
+| Ledger and reconciliation | Every balance explainable, and matched daily to processor files and bank statements | [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger), [Ledger & Reconciliation](/books/payments/ledger-and-reconciliation) |
+| Currencies and borders | Where each party is, what crossing costs, conversion and multi-currency payouts | [Cross-Border Payments & FX](/books/payments/cross-border-and-fx) |
 | Pricing engine | What each payment costs and earns | [Interchange & Pricing](/books/payments/interchange-and-pricing) |
 | Disputes | Chargebacks, evidence, prevention | [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks) |
 | Payouts | Paying merchants and their vendors | [Payouts & Settlement](/books/payments/payouts-and-settlement), [Vendor Payouts](/books/payments/vendor-payouts) |
@@ -43,7 +44,10 @@ Read end to end, the volume describes the components of a payment provider. Each
 | Events | Telling merchants what happened | [Webhooks](/docs/api-design/webhooks) |
 | Platform features | Serving software companies and their merchants | [Payments for Software Platforms](/books/payments/software-platforms) |
 | Operations | Support console, monitoring, statements, incidents | [Operating the Platform](/books/payments/operating-the-platform) |
-| Licenses, bank and compliance | What lets you do any of it | [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider), [The Payments Rulebook](/books/payments/payments-rulebook) |
+| Metrics | One definition per number, and the network's where a threshold applies | [Payments Metrics](/books/payments/payments-metrics) |
+| Models and agents | Scores, drafts and agent mandates, with code deciding | [AI in Payments](/books/payments/ai-in-payments) |
+| Licenses, bank and compliance | What lets you do any of it | [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider), [The Payments Rulebook](/books/payments/payments-rulebook), [Payments in Canada](/books/payments/canada), [Payments in the EU & UK](/books/payments/eu-and-uk) |
+| Vendors | Which layers to buy, extend or build | [The Payments Landscape](/books/payments/payments-landscape#build-buy-or-extend) |
 
 ## The Parties
 
@@ -58,6 +62,8 @@ Read end to end, the volume describes the components of a payment provider. Each
 | **Gateway** | Takes the payment from a website or app and hands it to the processor; often the same company |
 | **ISO or payfac** | Sells acquiring on an acquirer's behalf. (ISO here is an independent sales organization, not the standards body behind ISO 8583.) An ISO signs merchants to the acquirer; a payment facilitator signs them as its own sub-merchants under one master account ([Becoming a Payment Provider](/books/payments/becoming-a-payment-provider)) |
 | **Payment provider** | What this volume calls any company that bundles gateway, processing and often acquiring or payfac services behind one API: Stripe, Adyen, Checkout.com, Worldpay, Fiserv's Clover, Square and many smaller ones |
+
+[The Payments Landscape](/books/payments/payments-landscape) puts company names on each of these roles, and on the layers that have grown around them (embedded payments, bank-rail APIs, orchestration, vaults, fraud vendors).
 
 Visa and Mastercard are **four-party** networks: the network sits between issuers and acquirers it doesn't own. American Express and Discover grew up as **three-party** networks that largely issue and acquire themselves, which is why their pricing and rules differ from Visa's and Mastercard's, as later chapters on pricing, surcharging and disputes show. Since May 18, 2025, Discover has belonged to Capital One, which completed its acquisition that day, so a large card issuer now also owns a network ([Interchange & Pricing](/books/payments/interchange-and-pricing#pricing-models) covers what that changes).
 
@@ -173,7 +179,7 @@ Every provider converges on the same handful of objects under different names. S
 | **refund** | `refunds` | Money going back, its own object against a payment |
 | **dispute** | `disputes` | A chargeback against a payment, with its deadlines ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)) |
 | **payout** | `payouts` | Money leaving a merchant's balance for their bank ([Payouts & Settlement](/books/payments/payouts-and-settlement)) |
-| **ledger** | `ledger_accounts`, `ledger_transactions`, `ledger_entries` | Every balance as the sum of balanced entries ([Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger)) |
+| **ledger** | `ledger_accounts`, `ledger_transactions`, `ledger_entries` | Every balance as the sum of balanced entries ([Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger), [Ledger & Reconciliation](/books/payments/ledger-and-reconciliation)) |
 
 The split that matters most is **payment versus attempt**. The payment is what the merchant asked for and what its customer sees; the attempt is one conversation with one processor. A payment declined on one card and approved on another, retried after a timeout, sent through 3-D Secure, or failed over to a second processor ([Processor Routing](/books/payments/processor-routing)) has several attempts, and each keeps its own raw response code, network transaction ID and BIN data version, because disputes, retries and pricing all look at the attempt that actually went through.
 
@@ -234,6 +240,7 @@ CREATE TABLE payments (
 CREATE TABLE payment_attempts (
   id                     UUID PRIMARY KEY DEFAULT uuidv7(),
   payment_id             UUID NOT NULL REFERENCES payments (id),
+  payment_method_id      UUID REFERENCES payment_methods (id),  -- the card this try used
   processor              TEXT NOT NULL,
   processor_reference    TEXT,
   amount                 BIGINT NOT NULL,
@@ -318,7 +325,7 @@ The accounts are the [chart of accounts](/docs/payments/payment-states#a-chart-o
 - **Treat timeouts as unknowns:** query or reverse, with the processor key derived from yours, and never re-authorize blind.
 - **Keep the raw response code** beside your soft or hard classification, so the mapping can be fixed later without losing history.
 - **Record channel, card type and BIN data version** on every payment; pricing, disputes and fraud all depend on them.
-- **Reconcile funding to captures,** since the deposit is captures minus refunds, disputes, fees and reserves, and only the ledger can explain the difference.
+- **Reconcile funding to captures,** since the deposit is captures minus refunds, disputes, fees and reserves, and only the ledger can explain the difference ([Ledger & Reconciliation](/books/payments/ledger-and-reconciliation#three-sources-of-truth)).
 
 ## References
 

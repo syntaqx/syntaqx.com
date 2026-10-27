@@ -16,7 +16,7 @@ It's also where a software company turns into a financial services company, part
 
 ## Four Ways In
 
-The question that separates the models is the same one that separates payment providers: when a merchant on your platform runs up chargebacks and disappears, who pays? The full ladder, from referral partner to acquirer, with who holds the risk at each rung, is in [Pick a Model, Pick a Risk](/books/payments/becoming-a-payment-provider#pick-a-model-pick-a-risk). Here is what the four rungs a software company usually chooses between mean for the software company itself:
+The question that separates the models is the same one that separates payment providers: when a merchant on your platform runs up chargebacks and disappears, who pays? The full ladder, from referral partner to acquirer, with who holds the risk at each rung, is in [Pick a Model, Pick a Risk](/books/payments/becoming-a-payment-provider#pick-a-model-pick-a-risk). Here is what the four rungs a software company usually chooses between mean for the software company itself; the vendors who sell the middle rungs are compared in [Embedded Payments: How the Platforms Do It](/books/payments/payments-landscape#embedded-payments-how-the-platforms-do-it):
 
 - **Referral.** A link and an integration; the processor owns the merchant, the risk and the support. The platform earns a referral fee or small share and builds almost nothing.
 - **Reseller (ISV as agent).** The platform hands onboarding off to the processor and receives residuals, so it builds the handoff and the reporting to check the residual statement. Losses stay with the processor unless the contract shifts them.
@@ -93,7 +93,7 @@ Fee schedules are versioned rules over the same inputs, and the engine that comp
 
 ## Reconciliation for Two Audiences
 
-The matching itself, ledger to processor report to bank, is in [Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline). What platforms add is a second audience reading the same numbers for a different reason: a merchant reconciles its payouts to its sales, and a platform reconciles its revenue, every residual or fee tracing to the merchants and transactions that produced it. Both views come from the same ledger and both tie to the provider's settlement reports to the cent; a residual statement the platform can't recompute from its own records is one it can only take on trust.
+A platform reads the same numbers as its merchants for a different reason: the merchant reconciles payouts to sales, the platform reconciles its revenue to the merchants and transactions that produced it, and both views are queries over one ledger, as [Two Audiences for the Same Numbers](/books/payments/ledger-and-reconciliation#two-audiences-for-the-same-numbers) describes.
 
 ## 1099-K and Taxpayer Data
 

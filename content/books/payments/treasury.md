@@ -85,33 +85,17 @@ Most bank connections are still files. ACH and wire instructions, positive pay i
 
 ## Bank Reconciliation Is Its Own Discipline
 
-[Ledger reconciliation](/docs/payments/payment-states) asks whether your books balance. Bank reconciliation asks whether the bank agrees, and they fail in different ways: a ledger can balance perfectly while a wire you think you sent never left.
-
-Banks report in two families of formats. In the US, BAI2 files are still everywhere. ISO 20022 replaces them with `camt.053`, the end-of-day statement of booked entries; `camt.052`, an intraday report of the account; and `camt.054`, notifications of individual debits and credits. Expect several versions across your banks and build a parser per bank, not one that assumes the standard means one shape.
-
-Every movement has to be explained three ways: by your ledger (which balance entries it moves), by the counterparty's report (the processor's settlement file, the ACH return and settlement files, the card issuer's settlement report, the bank's paid-check file, the wire or instant payment confirmation), and by the bank statement (what actually moved). Reconcile all three daily, each rail against its own source of truth, with the general rules from [Payment States & Ledgers](/docs/payments/payment-states#reconciliation): breaks are records with owners, fixed by correcting entries, on a data path separate from the payment flow. Each disbursement in the ledger matches exactly one external record, and a merchant's question, "which payments make up this $3,812.40 deposit?", is one query because each payout lists the ledger transactions it pays.
-
-Reconciliation is matching, and the shapes are uneven:
-
-- **One to one:** a wire matches a transfer you initiated, by your end-to-end reference.
-- **One to many:** a net settlement deposit matches the thousands of transactions, refunds and fees it settles.
-- **Many to one:** a payout batch leaves as one debit and has to match every payout in it.
-
-What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Money that arrives and can't be identified, a credit with no reference, is one of those items: it sits in a suspense account until someone claims it, and goes back to the sender if nobody does. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one.
-
-An unexplained break is a stop, not a ticket: it holds the next payout run until someone explains it. Intraday reports earn their keep here: they tell you whether today's payouts are funded before the bank's cutoff, not after. At month end the reconciled bank balances are what finance closes the books against, so a break found after the close is a correction in the next open period, never an edit to a closed one ([Accounting](/docs/payments/accounting#closed-periods-stay-closed)).
-
-Monitoring this pipeline, from a failed connection or a missing acknowledgement to a file that arrived and never reached the ledger, is in [Operating the Platform](/books/payments/operating-the-platform#watching-the-pipeline).
+Ledger reconciliation asks whether your books balance; bank reconciliation asks whether the bank agrees, and the two fail in different ways. The three-way match of ledger, processor files and bank statements, the matching engine, breaks, suspense and the daily close are in [Ledger & Reconciliation at Provider Scale](/books/payments/ledger-and-reconciliation#three-sources-of-truth) ([A Matching Engine](/books/payments/ledger-and-reconciliation#a-matching-engine), [Breaks](/books/payments/ledger-and-reconciliation#breaks), [Suspense Accounts and Who Works Breaks](/books/payments/ledger-and-reconciliation#suspense-accounts-and-who-works-breaks)). What treasury adds is timing: intraday reports (`camt.052`) tell you whether today's payouts are funded before the bank's cutoff, not after, and an unexplained cash break holds the next payout run until someone explains it. Monitoring the file pipeline, from a failed connection or a missing acknowledgement to a file that arrived and never reached the ledger, is in [Operating the Platform](/books/payments/operating-the-platform#watching-the-pipeline).
 
 ## Safeguarding Outside the US
 
 In the UK, payment and e-money institutions don't rely on deposit insurance; they safeguard customers' funds under the FCA's rules, and those rules just got stricter. The FCA published PS25/12 on 7 August 2025, and its Supplementary Regime came into force on 7 May 2026. Firms now reconcile safeguarded funds at least once every reconciliation day (weekends, bank holidays and days when the relevant foreign markets are closed excepted), keep a resolution pack describing where funds are held and how they'd be returned, file a new monthly safeguarding return, and, unless they've safeguarded no more than £100,000 over the past 53 weeks, arrange an annual safeguarding audit by a qualified auditor. An end state modeled on the FCA's client assets rules (CASS) is planned for after the underlying legislation is repealed.
 
-Read it as the US direction of travel written down: daily reconciliation, records that let someone else return the money if you can't, and an outside party checking.
+Read it as the US direction of travel written down: daily reconciliation, records that let someone else return the money if you can't, and an outside party checking. The artifacts that prove it, on either side of the Atlantic, are in [Proving It to Auditors and Sponsor Banks](/books/payments/ledger-and-reconciliation#proving-it-to-auditors-and-sponsor-banks), and the UK and EU licensing around it in [Payments in the EU & UK](/books/payments/eu-and-uk#who-regulates-you).
 
 ## How to Build It
 
-These are deltas against [the core data model](/books/payments/card-payments#the-core-data-model). Each real bank account gets a row and a `ledger_accounts` account of its own (`merchant_id` null), so the custodial equation is a sum over entries. Movements, files and statement lines are their own records, and matching links them.
+These are deltas against [the core data model](/books/payments/card-payments#the-core-data-model). Each real bank account gets a row here and a `cash` ledger account dimensioned by it (`merchant_id` null), so the custodial equation is a sum over entries ([A Provider's Chart of Accounts](/books/payments/ledger-and-reconciliation#a-provider-s-chart-of-accounts)). Treasury owns the movements it starts and the files it sends; everything that comes back (statements, returns, settlement files) is an external record in [Ledger & Reconciliation](/books/payments/ledger-and-reconciliation#how-to-build-it), matched and broken there.
 
 ```sql
 CREATE TABLE bank_accounts (
@@ -119,8 +103,7 @@ CREATE TABLE bank_accounts (
   bank              TEXT NOT NULL,
   purpose           TEXT NOT NULL CHECK (purpose IN ('fbo', 'reserve', 'operating', 'clearing', 'collateral')),
   account_token     TEXT NOT NULL,             -- vaulted; never the account number
-  currency          TEXT NOT NULL,
-  ledger_account_id UUID NOT NULL REFERENCES ledger_accounts (id)
+  currency          CHAR(3) NOT NULL
 );
 
 CREATE TABLE bank_transfers (                  -- sweeps, prefunding, wires, payout batches
@@ -129,7 +112,7 @@ CREATE TABLE bank_transfers (                  -- sweeps, prefunding, wires, pay
   to_account_id    UUID REFERENCES bank_accounts (id),  -- null when paying out of the bank
   rail             TEXT NOT NULL CHECK (rail IN ('ach', 'wire', 'rtp', 'fednow', 'book')),
   amount           BIGINT NOT NULL,
-  currency         TEXT NOT NULL,
+  currency         CHAR(3) NOT NULL,
   purpose          TEXT NOT NULL,              -- 'fee_sweep', 'prefund', 'payout_batch', ...
   idempotency_key  TEXT NOT NULL UNIQUE,       -- e.g. 'fee_sweep:2026-10-26'
   end_to_end_id    TEXT NOT NULL UNIQUE,       -- your reference on the payment message
@@ -137,48 +120,26 @@ CREATE TABLE bank_transfers (                  -- sweeps, prefunding, wires, pay
   created_by       TEXT NOT NULL,
   approved_by      TEXT,                       -- never the creator
   bank_reference   TEXT,
+  ledger_transaction_id UUID REFERENCES ledger_transactions (id),
   created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK (approved_by IS NULL OR approved_by <> created_by)
 );
 
-CREATE TABLE bank_files (
+CREATE TABLE bank_files (                      -- outbound: what you send the bank
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
   bank         TEXT NOT NULL,
-  direction    TEXT NOT NULL CHECK (direction IN ('outbound', 'inbound')),
-  kind         TEXT NOT NULL,                  -- 'nacha', 'pain.001', 'positive_pay', 'camt.053', 'bai2', ...
+  kind         TEXT NOT NULL,                  -- 'nacha', 'pain.001', 'pain.008', 'positive_pay', ...
   file_name    TEXT NOT NULL,
   content_hash TEXT NOT NULL,
-  status       TEXT NOT NULL,                  -- built, transmitted, acknowledged, rejected, processed, failed
+  entry_count  INTEGER NOT NULL,
+  control_total BIGINT NOT NULL,               -- compared with the acknowledgement's totals
+  status       TEXT NOT NULL CHECK (status IN ('built', 'transmitted', 'acknowledged', 'rejected', 'settled')),
   archive_uri  TEXT NOT NULL,                  -- the original bytes, encrypted and immutable
-  UNIQUE (bank, direction, file_name, content_hash)
-);
-
-CREATE TABLE bank_statement_lines (
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  bank_account_id  UUID NOT NULL REFERENCES bank_accounts (id),
-  bank_file_id     UUID NOT NULL REFERENCES bank_files (id),
-  booked_on        DATE NOT NULL,
-  amount           BIGINT NOT NULL,            -- signed
-  bank_reference   TEXT,
-  end_to_end_id    TEXT,
-  matched_at       TIMESTAMPTZ
-);
-
-CREATE TABLE reconciliation_breaks (
-  id                     UUID PRIMARY KEY DEFAULT uuidv7(),
-  bank_account_id        UUID NOT NULL REFERENCES bank_accounts (id),
-  statement_line_id      UUID REFERENCES bank_statement_lines (id),
-  ledger_transaction_id  UUID REFERENCES ledger_transactions (id),
-  difference             BIGINT NOT NULL,
-  owner                  TEXT NOT NULL,
-  blocks_payouts         BOOLEAN NOT NULL DEFAULT TRUE,
-  status                 TEXT NOT NULL CHECK (status IN ('open', 'explained', 'corrected')),
-  resolution_ledger_transaction_id UUID REFERENCES ledger_transactions (id),
-  opened_at              TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  UNIQUE (bank, file_name)
 );
 ```
 
-A match is a link table between statement lines and the ledger transactions or `bank_transfers` they explain, many to many, because one deposit settles thousands of payments and one batch debit pays thousands of payouts. The payout run checks for open breaks with `blocks_payouts` before it starts.
+Each `bank_transfers` row posts its ledger transaction when it's sent, and its `end_to_end_id` is the reference the matching engine finds echoed on the statement line. Inbound files land in `external_files` with the same hash and archive rules, statement lines become `external_records` with their `bank_account_id`, and an unmatched line becomes a `breaks` row; the payout run checks for open breaks with `blocks_payouts` before it starts.
 
 ## Auditing
 
@@ -192,7 +153,7 @@ Treasury records are evidence in sponsor bank reviews, examinations, a safeguard
 
 ## What This Means for the System You Build
 
-- **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)), synced to the general ledger finance keeps ([Accounting](/docs/payments/accounting#syncing-to-the-accounting-system)). The cash in custodial accounts equals what you owe merchants (pending and available balances), plus reserves you hold for them, plus fees you've earned but not yet swept, adjusted for money in transit either way (`acquirer_settlement_clearing` coming in, `payouts_in_transit` going out). That equation is checked daily and alerts when it doesn't hold.
+- **Cash accounts in the same ledger as the balances they back.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)), synced to the general ledger finance keeps ([Accounting](/docs/payments/accounting#syncing-to-the-accounting-system)). The cash in custodial accounts equals what you owe merchants (pending and available balances), plus reserves you hold for them, plus fees you've earned but not yet swept, adjusted for money in transit either way (`acquirer_settlement_clearing` coming in, `payouts_in_transit` going out). That equation is checked daily and alerts when it doesn't hold.
 - **Per-owner balances on demand.** The file your bank or a regulator would need to pay each owner directly is a scheduled job, not a project you start during a crisis.
 - **Every movement is a record before it's a transfer.** Intent stored, approvals attached, bank reference captured, bank confirmation matched. A transfer that exists at the bank and not in your records is the worst finding a reconciliation can produce.
 - **Breaks stop payouts.** A reconciliation job that only reports is a dashboard. One that holds the next payout run on an unexplained difference is a control.

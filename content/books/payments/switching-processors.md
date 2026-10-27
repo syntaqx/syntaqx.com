@@ -115,7 +115,7 @@ Each cohort follows the phases in [Replacing Systems](/docs/architecture/replaci
 
 ## Watching Declines After Cutover
 
-A new merchant ID declines more at first, and the job is to tell that expected bump from a real problem.
+A new merchant ID declines more at first, and ramping volume while issuers learn it is what the industry calls **MID warming**. The job is to tell that expected bump from a real problem.
 
 - **Expect it.** Stripe lists the codes the bump shows up as: `generic_decline`, `do_not_honor`, `transaction_not_allowed` and `try_again_later`. The Merchant Risk Council describes issuer rules disrupted when "there's no chargeback performance history," with a rise in security and do-not-honor declines "for the first 90 to 120 days," and recommends having the provider tell issuers about the new processing relationship.
 - **Baseline before you leave.** Stripe recommends keeping one to two years of authorization-rate data from the old processor. Compare each cohort with its own history on the old processor, sliced by brand, issuer or BIN range, card type, country and initiation type, since a platform-wide average hides a single issuer declining everything ([Payments Metrics](/books/payments/payments-metrics#acceptance)).
@@ -141,7 +141,7 @@ Every processor contract should come with an exit plan written at signing, becau
 - **The clauses:** export on request to a PCI-compliant recipient, network transaction IDs included, a stated timeline and price, no automatic renewal you can't escape, and the reserve release schedule.
 - **The identifiers:** your own customer and payment method IDs used as the processor's references, so a mapping file joins to your records directly.
 - **The tokens:** a vault you control or an export right for the cards, and network tokens under a requestor ID you control where you can ([Processor Routing](/books/payments/processor-routing#tokens-decide-how-free-you-are), [Running a Card Vault](/books/payments/card-vault)).
-- **The evidence:** network transaction IDs, consent records and mandate text stored on your side for every stored credential, so nothing that proves an agreement exists only at the processor.
+- **The evidence:** network transaction IDs, consent records and mandate text stored on your side for every stored credential ([The Credential Record](/books/payments/stored-credentials#the-credential-record)), so nothing that proves an agreement exists only at the processor.
 - **The schedules:** subscriptions, retry counts and dunning state in your own database, never only in the processor's billing product.
 - **A rehearsal:** an annual test export of a small sample to a staging recipient, if the processor will do it, or at least a dry run of your import and crosswalk code.
 
@@ -149,11 +149,11 @@ If you are the provider, the same plan is a product feature. A merchant that kno
 
 ## How to Build It
 
-The core data model in [How Card Payments Work](/books/payments/card-payments) has payment methods, payments and their attempts. A migration adds a crosswalk from each processor's references to yours, the batch that created each link, the processor that holds each credential, and the cohort that decides who charges it. The crosswalk follows the general shape in [Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids):
+The [core data model](/books/payments/card-payments#the-core-data-model) has payment methods, payments and their attempts, and [Stored Cards & Recurring Billing](/books/payments/stored-credentials#how-to-build-it) adds the agreement behind each stored method (with its initial network transaction ID) and the token requestor. A migration adds a crosswalk from each processor's references to yours, the batch that created each link, the processor that holds each credential, and the cohort that decides who charges it. The crosswalk follows the general shape in [Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids):
 
 ```sql
 CREATE TABLE migration_batches (
-  id              UUID PRIMARY KEY,
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
   source          TEXT NOT NULL,        -- 'old-processor'
   target          TEXT NOT NULL,        -- 'new-processor'
   kind            TEXT NOT NULL,        -- bulk | delta
@@ -176,26 +176,18 @@ CREATE TABLE payment_method_external_ids (
 
 -- Which processor charges a credential, and since when
 ALTER TABLE payment_methods
-  ADD COLUMN charging_processor         TEXT NOT NULL,
-  ADD COLUMN charging_since             TIMESTAMPTZ NOT NULL,
-  ADD COLUMN cohort                     TEXT,          -- migration cohort, null once settled
-  ADD COLUMN network_transaction_id     TEXT,          -- from the initial CIT, kept on our side
-  ADD COLUMN network_token_requestor    TEXT;          -- processor | own | vault
+  ADD COLUMN charging_processor TEXT NOT NULL,
+  ADD COLUMN charging_since     TIMESTAMPTZ NOT NULL,
+  ADD COLUMN cohort             TEXT;          -- migration cohort, null once settled
 
 -- Retry attempts belong to the card, across processors
-CREATE TABLE credential_attempts (
-  payment_method_id UUID NOT NULL REFERENCES payment_methods (id),
-  attempted_at      TIMESTAMPTZ NOT NULL,
-  processor         TEXT NOT NULL,
-  outcome           TEXT NOT NULL,      -- approved | soft_decline | hard_decline
-  raw_code          TEXT,
-  merchant_advice   TEXT                -- Mastercard MAC when present
-);
+CREATE INDEX payment_attempts_payment_method_id_requested_at_idx
+  ON payment_attempts (payment_method_id, requested_at);
 ```
 
 - **`charging_processor` is the switch.** The renewal job and checkout read it to choose a route; a cohort's cutover is one update to it, logged, with the rollback being the reverse update while the old processor still holds the card.
 - **Old references are kept, not overwritten.** A dispute on a pre-cutover payment arrives with the old processor's references; the crosswalk resolves it.
-- **Retry counters read `credential_attempts` across processors,** so a cutover never resets them below the network limits.
+- **Retry counters read `payment_attempts` by payment method across processors** (with the `merchant_advice_code` [Processor Routing](/books/payments/processor-routing#how-to-build-it) adds), so a cutover never resets them below the network limits.
 - **Payments record their processor,** as they already must for routing; captures, refunds and disputes follow it.
 
 ## Auditing

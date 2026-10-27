@@ -163,23 +163,20 @@ Cross-border payments are where sanctions screening does its real work, because 
 
 ## How to Build It
 
-The changes below extend the core `payments`, `refunds`, `payouts` and `merchants` tables from [How Card Payments Work](/books/payments/card-payments) and the amount fields of [Multi-Currency & FX](/docs/payments/multi-currency#storing-both-amounts).
+The changes below extend the core `payments`, `refunds`, `payouts` and `merchants` tables from [the core data model](/books/payments/card-payments#the-core-data-model), the `merchant_accounts` of [Payments for Software Platforms](/books/payments/software-platforms#how-to-build-it) (one per MID, with its country and processor), the payout columns of [Payouts & Settlement](/books/payments/payouts-and-settlement#how-to-build-it), and the amount fields of [Multi-Currency & FX](/docs/payments/multi-currency#storing-both-amounts).
 
 ```sql
--- A merchant has one account per entity and country it acquires in.
-CREATE TABLE merchant_accounts (
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  merchant_id      UUID NOT NULL REFERENCES merchants (id),
-  legal_entity     TEXT NOT NULL,
-  outlet_country   TEXT NOT NULL,
-  acquirer         TEXT NOT NULL,
-  settlement_currencies TEXT[] NOT NULL
-);
+-- A merchant has one account per entity and country it acquires in;
+-- the account's country is the merchant outlet location.
+ALTER TABLE merchant_accounts
+  ADD COLUMN legal_entity          TEXT NOT NULL,
+  ADD COLUMN acquirer              TEXT NOT NULL,   -- the licensed acquirer behind the processor
+  ADD COLUMN settlement_currencies TEXT[] NOT NULL;
 
 CREATE TABLE fx_quotes (
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  from_currency    TEXT NOT NULL,
-  to_currency      TEXT NOT NULL,
+  from_currency    CHAR(3) NOT NULL,
+  to_currency      CHAR(3) NOT NULL,
   rate             NUMERIC(20, 10) NOT NULL,   -- what we quoted, markup included
   mid_rate         NUMERIC(20, 10) NOT NULL,   -- the reference we marked up
   markup_bps       INTEGER NOT NULL,
@@ -194,7 +191,7 @@ CREATE TABLE fx_quotes (
 -- Where each party is, decided once and kept with the payment.
 ALTER TABLE payments
   ADD COLUMN issuer_country           TEXT,          -- from BIN data, with its version
-  ADD COLUMN merchant_outlet_country  TEXT NOT NULL, -- from the merchant account used
+  ADD COLUMN merchant_outlet_country  TEXT NOT NULL, -- merchant_accounts.country of the account used
   ADD COLUMN is_cross_border          BOOLEAN GENERATED ALWAYS AS
                                         (issuer_country IS DISTINCT FROM merchant_outlet_country) STORED,
   ADD COLUMN pricing_mode             TEXT NOT NULL DEFAULT 'domestic'
@@ -207,9 +204,9 @@ CREATE TABLE fx_conversions (
   fx_quote_id      UUID REFERENCES fx_quotes (id),
   purpose          TEXT NOT NULL CHECK (purpose IN ('settlement', 'refund', 'dispute', 'payout', 'treasury')),
   sell_amount      BIGINT NOT NULL,
-  sell_currency    TEXT NOT NULL,
+  sell_currency    CHAR(3) NOT NULL,
   buy_amount       BIGINT NOT NULL,
-  buy_currency     TEXT NOT NULL,
+  buy_currency     CHAR(3) NOT NULL,
   executed_rate    NUMERIC(20, 10) NOT NULL,
   counterparty     TEXT NOT NULL,              -- processor, bank or FX provider
   counterparty_ref TEXT,
@@ -231,9 +228,9 @@ CREATE TABLE network_fee_rates (
 CREATE TABLE dcc_offers (
   payment_id       UUID PRIMARY KEY REFERENCES payments (id),
   local_amount     BIGINT NOT NULL,
-  local_currency   TEXT NOT NULL,
+  local_currency   CHAR(3) NOT NULL,
   offered_amount   BIGINT NOT NULL,
-  offered_currency TEXT NOT NULL,            -- must be the card's billing currency
+  offered_currency CHAR(3) NOT NULL,            -- must be the card's billing currency
   rate             NUMERIC(20, 10) NOT NULL,
   markup_bps       INTEGER NOT NULL,
   cardholder_choice TEXT NOT NULL CHECK (cardholder_choice IN ('accepted', 'declined')),
@@ -241,9 +238,9 @@ CREATE TABLE dcc_offers (
 );
 
 ALTER TABLE payouts
-  ADD COLUMN funding_currency TEXT NOT NULL,
+  ADD COLUMN funding_currency CHAR(3) NOT NULL,
   ADD COLUMN fx_conversion_id UUID REFERENCES fx_conversions (id),
-  ADD COLUMN rail             TEXT NOT NULL,  -- 'sepa_ct', 'faster_payments', 'swift', ...
+  -- rail (from Payouts & Settlement) gains 'sepa_ct', 'faster_payments', 'swift'
   ADD COLUMN charge_bearer    TEXT CHECK (charge_bearer IN ('OUR', 'SHA', 'BEN')),
   ADD COLUMN screening_status TEXT NOT NULL DEFAULT 'pending'
                                 CHECK (screening_status IN ('pending', 'clear', 'review', 'blocked'));

@@ -38,7 +38,7 @@ The volumes say which rails matter. In 2025 Faster Payments processed 5.55 billi
 
 **Scheme fees are under the same regulator.** The PSR found in March 2025 that Visa and Mastercard raised core scheme and processing fees by more than 25% in real terms between 2017 and 2023, costing UK businesses at least £170 million a year. Its July 2026 decision directs both networks on pricing governance (fee decisions compliant from November 2026) and on information, transparency and complexity (from July 2027). For a provider, the practical effect is more detailed fee data from the networks to reconcile against, and more questions from merchants about the network lines on their statements.
 
-**Surcharging consumer cards is banned.** In the UK a payee must not charge any fee for paying with a consumer card covered by the interchange regulation, or for SEPA credit transfers and direct debits, a rule in force since 13 January 2018 when the UK implemented PSD2, whose surcharging ban for the EU it mirrors. Commercial cards fall outside the ban. [Surcharging & Fees](/books/payments/surcharging-and-fees) holds the rules per country; in the EU and UK the consumer answer is no.
+**Surcharging consumer cards is banned.** In the UK a payee must not charge any fee for paying with a consumer card covered by the interchange regulation, or for SEPA credit transfers and direct debits, a rule in force since 13 January 2018 when the UK implemented PSD2, whose surcharging ban for the EU it mirrors. Commercial cards fall outside the ban. [Surcharging & Fees](/books/payments/surcharging-and-fees) holds the US rules as per-jurisdiction data, and the same table carries this one: in the EU and UK the consumer answer is no.
 
 ## SEPA Credit Transfer and SEPA Instant
 

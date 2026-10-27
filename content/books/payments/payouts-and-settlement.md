@@ -88,7 +88,7 @@ A payout sent twice is money that's very hard to get back. Payouts carry an [ide
 
 ## Reconciliation
 
-The three-way match of ledger, processor report and bank is in [Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline). What payouts add is the merchant as a reconciler: a merchant matches each deposit against its own sales, so every payout lists the ledger transactions it includes (payments, refunds, fees, dispute debits, reserve holds and releases), and the payout report is the same list the platform matched against the processor. A payout whose components don't sum to the deposit is a break on both sides.
+The three-way match of ledger, processor report and bank is in [Three Sources of Truth](/books/payments/ledger-and-reconciliation#three-sources-of-truth). What payouts add is the merchant as a reconciler: a merchant matches each deposit against its own sales, so every payout lists the ledger transactions it includes (payments, refunds, fees, dispute debits, reserve holds and releases), and the payout report is the same list the platform matched against the processor. A payout whose components don't sum to the deposit is a break on both sides ([Two Audiences for the Same Numbers](/books/payments/ledger-and-reconciliation#two-audiences-for-the-same-numbers)).
 
 ## One Payment, Traced
 
@@ -137,7 +137,7 @@ CREATE TABLE balance_holds (                 -- holds and reserves, each one dat
   kind          TEXT NOT NULL CHECK (kind IN ('hold', 'rolling_reserve', 'fixed_reserve', 'first_payout_delay')),
   payment_id    UUID REFERENCES payments (id),  -- for rolling reserves, the payment it came from
   amount        BIGINT NOT NULL,
-  currency      TEXT NOT NULL,
+  currency      CHAR(3) NOT NULL,
   release_on    DATE NOT NULL,
   released_at   TIMESTAMPTZ,
   reason        TEXT NOT NULL,

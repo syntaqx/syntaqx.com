@@ -21,7 +21,7 @@ Under PSD2 (the EU's second Payment Services Directive), an electronic payment t
 | Possession | A phone that receives a one-time code, or a banking app |
 | Inherence | A fingerprint or face scan |
 
-It applies to customer-initiated online payments in the European Economic Area, and the UK kept equivalent rules (the FCA's SCA rules applied from 14 September 2019, with full compliance for online card payments expected by 14 March 2022; across the EEA, supervisors' flexibility for card e-commerce ended on 31 December 2020). If you take payments from European cards, expect issuers to ask for it, whatever your integration assumes.
+It applies to customer-initiated online payments in the European Economic Area, and the UK kept equivalent rules (the FCA's SCA rules applied from 14 September 2019, with full compliance for online card payments expected by 14 March 2022; across the EEA, supervisors' flexibility for card e-commerce ended on 31 December 2020). If you take payments from European cards, expect issuers to ask for it, whatever your integration assumes. The rest of what changes in Europe (capped interchange, the surcharge ban, instant transfers, direct debit refunds, licensing) is in [Payments in the EU & UK](/books/payments/eu-and-uk).
 
 Two factors from different categories means one stolen thing isn't enough: a phished password without the phone fails, and so does a stolen phone without the PIN. That's why SCA moves fraud economics: stolen card data alone stops being sufficient.
 

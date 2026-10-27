@@ -56,12 +56,12 @@ A dispute is its own object with its own state machine, referencing the payment 
 
 | Event | Ledger transaction |
 | ----- | ------------------ |
-| Dispute opened | Disputed amount moves from the merchant's balance to a `disputes_held` account. The fee moves to `dispute_fees`. |
+| Dispute opened | Disputed amount moves from the merchant's balance to a `disputes_held` account. The dispute fee is debited from the merchant's balance to `platform_revenue`, and the network's fee to you posts to `processing_costs` ([A Provider's Chart of Accounts](/books/payments/ledger-and-reconciliation#a-provider-s-chart-of-accounts)). |
 | Won | The held amount returns to the merchant's balance. The fee usually stays charged. |
 | Lost | The held amount leaves for good, through the acquirer's settlement (`acquirer_settlement_clearing`), because the issuer kept it. |
 | Accepted without contest | Same as lost, without the countering fee. |
 
-Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts. On a cross-currency payment, the amount debited for a dispute can differ from what the merchant received for the sale, because it's converted at a different time; post the difference as an FX gain or loss, as [Multi-Currency](/docs/payments/multi-currency#refunds-and-fx-gains-and-losses) does for refunds.
+Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts. On a cross-currency payment, the amount debited for a dispute can differ from what the merchant received for the sale, because it's converted at a different time; post the difference as an FX gain or loss, as [Multi-Currency](/docs/payments/multi-currency#refunds-and-fx-gains-and-losses) does for refunds; who carries it under the network rules is in [FX Risk on Refunds and Disputes](/books/payments/cross-border-and-fx#fx-risk-on-refunds-and-disputes).
 
 Post each fee as its own entry too. Stripe, for example, charges one fee when a dispute is received that isn't returned on a win, and a separate countering fee that is; explicit entries are what answer "why is this merchant down a fee on a dispute they won".
 
@@ -94,7 +94,7 @@ Mastercard runs its own programs by merchant, and as of October 2026 acquirers s
 
 Two details differ from Visa: Mastercard's chargeback ratio divides this month's chargebacks by the **previous** month's transactions, so a month of falling sales raises it, and assessments start in the second month and grow the longer a merchant stays in, until three consecutive months below the thresholds release it.
 
-Two details make it harder than it looks. Fraud reports (the early fraud warnings of [Fraud & Risk](/books/payments/fraud-and-risk#the-two-costs)) count even when no dispute follows, so a [card-testing attack](/books/payments/fraud-and-risk#card-testing) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
+Two details make it harder than it looks. Fraud reports (the early fraud warnings of [Fraud & Risk](/books/payments/fraud-and-risk#the-two-costs)) count even when no dispute follows, so a [card-testing attack](/books/payments/fraud-and-risk#card-testing) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month. Reproducing each network's arithmetic (its clock, its exclusions, count rather than value) is in [Payments Metrics](/books/payments/payments-metrics#fraud), with the chargeback and refund rates in [Disputes and Refunds](/books/payments/payments-metrics#disputes-and-refunds).
 
 ## Prevention Beats Winning
 

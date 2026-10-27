@@ -47,7 +47,7 @@ A merchant sees its own traffic. The networks and the large providers see everyo
 
 ## Rules, Models and Decisions
 
-A model score with explicit rules on top is the arrangement that works ([Rules and Models Together](/docs/architecture/risk-scoring#rules-and-models-together)), and commercial tools such as Stripe Radar are built that way: machine-learned scoring underneath, rules and lists on top. Keep the rules as versioned data, not code ([Rules as Data](/docs/architecture/rules-as-data)), so a rule written during an attack ships in minutes and the decision records which version decided.
+A model score with explicit rules on top is the arrangement that works ([Rules and Models Together](/docs/architecture/risk-scoring#rules-and-models-together)), and commercial tools such as Stripe Radar are built that way: machine-learned scoring underneath, rules and lists on top. Keep the rules as versioned data, not code ([Rules as Data](/docs/architecture/rules-as-data)), so a rule written during an attack ships in minutes and the decision records which version decided. Which models score a payment before you see it (the provider's, the network's for the issuer) and what a model may and may not decide are in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
 
 A risk check doesn't return yes or no ([More Outcomes Than Yes and No](/docs/architecture/risk-scoring#more-outcomes-than-yes-and-no)). In payments the outcomes have specific costs:
 
@@ -99,7 +99,7 @@ For a provider, bank-rail fraud shows up on both ends: as a payer's platform, wh
 
 ## Labels and Outages
 
-Fraud labels arrive late ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)). In payments the label sources are disputes, early fraud warnings, network fraud reports from the acquirer, and manual review outcomes, and the first three arrive weeks or months after the payment. Blocked payments never get a label at all, so hold out a small random share of borderline traffic for review instead of blocking ([Holdouts](/docs/architecture/risk-scoring#holdouts)).
+Fraud labels arrive late ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)). In payments the label sources are disputes, early fraud warnings, network fraud reports from the acquirer, and manual review outcomes, and the first three arrive weeks or months after the payment. Blocked payments never get a label at all, so hold out a small random share of borderline traffic for review instead of blocking ([Holdouts](/docs/architecture/risk-scoring#holdouts)). Retraining on those labels, and measuring a vendor model against a holdout, is in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
 
 The risk service will sometimes be slow or down, and the policy for that is decided in advance ([When the Scorer Is Down](/docs/architecture/risk-scoring#when-the-scorer-is-down)). The payments version: fail open for low-value card payments with local fallback rules (velocity limits, blocklists, CVC must match), because a card payment can still be refunded or disputed; fail closed or queue for review on payouts and instant bank transfers, because those can't be pulled back.
 

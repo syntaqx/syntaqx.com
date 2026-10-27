@@ -76,7 +76,7 @@ Every movement of money is described three times, by three systems that never co
 2. **The processor's and network's files,** which say what they did: settlement and fee files per processor, network settlement reports for a provider that clears directly ([Inside a Processor](/books/payments/inside-a-processor#settlement)), ACH return and NOC files, card payout confirmations.
 3. **The bank's statements,** which say what money actually moved: in the US mostly BAI2, elsewhere MT940, and increasingly ISO 20022's `camt.053` (the prior day's booked entries), `camt.052` (intraday) and `camt.054` (individual debit and credit notifications). Each bank populates them in "their own flavour", in the words of one practitioner guide: the detail record (BAI2 record 16, MT940 tag 61) carries references however the bank chose to.
 
-A **three-way match** is two joins, at different grains:
+The ledger can balance perfectly while a wire you think you sent never left, which is why the ledger's own checks are not reconciliation. The general rules (breaks are records with owners, fixed by correcting entries, on a data path separate from the payment flow) are in [Reconciliation](/docs/payments/payment-states#reconciliation). A **three-way match** is two joins, at different grains, and a daily check of balances:
 
 - **Ledger to processor, per transaction.** Every capture, refund, dispute and fee in the ledger matches a row in the processor's file, and every row in the file matches the ledger. This is where fee true-ups happen and where a transaction the processor dropped, or one you never recorded, shows up.
 - **Processor to bank, per batch.** Each settlement batch's net amount matches one deposit on the bank statement. Adyen's rule (net credits minus net debits equals the payout) and Stripe's itemized payout are the processor side of this join.
@@ -109,7 +109,7 @@ The cheapest reconciliation improvement is putting your own ID into every outbou
 
 **Cardinality.** One to one is a wire matched to the transfer you sent. One to many is a net settlement deposit matched to thousands of transactions and fees. Many to one is a payout batch that left as one debit. Many to many happens when a processor nets several days into one deposit after a holiday. The engine matches groups by summing one side and comparing to the other, and stores the group as the match, so the explanation of a $3,812.40 deposit is a list, not a calculation someone repeats.
 
-**Tolerances.** A tolerance is a documented reason a difference is expected: a bank's per-wire fee, a correspondent's deduction on an incoming international wire, an FX rounding remainder. Each tolerance names the account the difference posts to. "Within five dollars" with no reason is how a slow leak becomes a large one ([Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline)).
+**Tolerances.** A tolerance is a documented reason a difference is expected: a bank's per-wire fee, a correspondent's deduction on an incoming international wire, an FX rounding remainder. Each tolerance names the account the difference posts to. "Within five dollars" with no reason is how a slow leak becomes a large one.
 
 **Date windows.** A card capture on Friday settles on Monday, an ACH debit on its settlement date, a wire the same day. Each match rule carries a window per rail, measured in banking days from the [banking calendar](/books/payments/treasury#the-banking-calendar), not calendar days.
 
@@ -157,7 +157,7 @@ Write-offs and manual adjustments need two people: one to propose with evidence,
 
 ## Two Audiences for the Same Numbers
 
-A provider serving software platforms reconciles for two readers at once. A **merchant** reconciles payouts to sales: every payout traces to the payments, refunds, fees and disputes it nets, which is what Stripe's itemized payout and Adyen's settlement details deliver. A **platform** reconciles its revenue: every residual or fee traces to the merchants and transactions that produced it ([Payments for Software Platforms](/books/payments/software-platforms#reconciliation-for-two-audiences)). Both views are queries over the same entries, and both tie to the same settlement files. Build the payout-to-transactions link and the fee-to-transaction link into the ledger itself; a report that reconstructs them later will one day reconstruct them differently.
+A provider serving software platforms reconciles for two readers at once. A **merchant** reconciles payouts to sales: every payout traces to the payments, refunds, fees and disputes it nets, which is what Stripe's itemized payout and Adyen's settlement details deliver. A **platform** reconciles its revenue: every residual or fee traces to the merchants and transactions that produced it ([Pricing Per Merchant](/books/payments/software-platforms#pricing-per-merchant) has the two fee layers). A residual statement the platform can't recompute from its own records is one it can only take on trust. Both views are queries over the same entries, and both tie to the same settlement files. Build the payout-to-transactions link and the fee-to-transaction link into the ledger itself; a report that reconstructs them later will one day reconstruct them differently.
 
 ## Multi-Currency Ledgers
 
@@ -180,7 +180,7 @@ Everything above runs per currency. A transaction balances in each currency it t
 
 **The month-end close** adds the accounting layer, and the general mechanics (period locks, accruals, journals to the general ledger) are in [Accounting](/docs/payments/accounting). For a provider, the payments-specific steps are:
 
-- **Lock the period** so nothing posts into it, and post late-arriving corrections into the open period with the original effective date.
+- **Lock the period** so nothing posts into it, and post late-arriving corrections into the open period with the original effective date; a break found after the close is a correction in the next open period, never an edit to a closed one ([Closed Periods Stay Closed](/docs/payments/accounting#closed-periods-stay-closed)).
 - **Reconcile the processor's and network's invoices** against the per-transaction costs you recorded. When they differ, the difference is either a fee you didn't know about or a transaction you didn't record ([Interchange & Pricing](/books/payments/interchange-and-pricing#a-pricing-engine) prices them; this is where you find out whether the prices were right).
 - **Accrue what's owed but not billed,** like a monthly sponsor-bank fee, and reverse estimates that the files have since replaced.
 - **Produce the merchant statements** from the closed ledger, so every number a merchant sees ties to a locked period ([Operating the Platform](/books/payments/operating-the-platform#statements-and-reports)).
@@ -197,28 +197,25 @@ Reconciliation is also evidence, and the people who ask for it want specific art
 
 ## How to Build It
 
-The tables below extend the core `ledger_accounts`, `ledger_transactions`, `ledger_entries`, `payments` and `payouts` from [How Card Payments Work](/books/payments/card-payments), with the double-entry rules of [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger) enforced on them. `bank_accounts` is one row per real account [Treasury](/books/payments/treasury#the-accounts-you-run) runs, and `bank_statement_balances` holds each statement's opening and closing balance per account, currency and business date, parsed from the same files as the external records.
+The tables below extend the core `ledger_accounts`, `ledger_transactions`, `ledger_entries`, `payments` and `payouts` from [the core data model](/books/payments/card-payments#the-core-data-model), with the double-entry rules of [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger) enforced on them. The core already gives every account a `merchant_id`, a `name` and a `currency`, and every transaction a `status`, an `effective_at` and the event that caused it (`source_type`, `source_id`, unique together). `bank_accounts` is one row per real account [Treasury](/books/payments/treasury#how-to-build-it) runs, and this chapter owns every inbound file, statement line and break: Treasury's outbound files and transfers are matched through the tables here.
 
 ```sql
--- Dimensions on accounts, so one type covers every merchant and currency.
+-- Dimensions on accounts, so one type covers every merchant, bank account and currency.
+-- The core `name` holds the account type: 'merchant_balance', 'cash', 'suspense', ...
 ALTER TABLE ledger_accounts
-  ADD COLUMN account_type    TEXT NOT NULL,          -- 'merchant_balance', 'cash', 'suspense', ...
   ADD COLUMN side            TEXT NOT NULL CHECK (side IN ('asset', 'liability', 'income', 'expense')),
-  ADD COLUMN merchant_id     UUID REFERENCES merchants (id),
   ADD COLUMN bank_account_id UUID REFERENCES bank_accounts (id),
   ADD COLUMN processor       TEXT,
-  ADD COLUMN currency        TEXT NOT NULL,
+  DROP CONSTRAINT ledger_accounts_merchant_id_name_currency_key,
   ADD CONSTRAINT ledger_accounts_dims_key
-    UNIQUE NULLS NOT DISTINCT (account_type, merchant_id, bank_account_id, processor, currency);
+    UNIQUE NULLS NOT DISTINCT (name, merchant_id, bank_account_id, processor, currency);
 
--- Three dates and a status on every transaction.
+-- The third date, and corrections linked to what they correct.
+-- source_type gains 'file_row' and 'adjustment' alongside the payment events.
 ALTER TABLE ledger_transactions
-  ADD COLUMN status        TEXT NOT NULL CHECK (status IN ('pending', 'posted', 'archived')),
-  ADD COLUMN effective_at  TIMESTAMPTZ NOT NULL,      -- when it happened at the source
-  ADD COLUMN period        DATE NOT NULL,             -- accounting period it posts into
-  ADD COLUMN source_event  TEXT NOT NULL,             -- capture, file row, approved adjustment
-  ADD COLUMN corrects_id   UUID REFERENCES ledger_transactions (id),
-  ADD CONSTRAINT ledger_transactions_source_key UNIQUE (source_event);
+  ADD COLUMN created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),  -- when we recorded it
+  ADD COLUMN period       DATE NOT NULL,                       -- accounting period it posts into
+  ADD COLUMN corrects_id  UUID REFERENCES ledger_transactions (id);
 
 CREATE TABLE external_files (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -238,14 +235,26 @@ CREATE TABLE external_records (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
   file_id       UUID NOT NULL REFERENCES external_files (id),
   source        TEXT NOT NULL,
+  bank_account_id UUID REFERENCES bank_accounts (id),  -- set for statement lines
   source_ref    TEXT,                       -- PSP reference, trace ID, end-to-end ID
   our_ref       TEXT,                       -- our ID, when the source echoed it
   kind          TEXT NOT NULL,              -- 'capture', 'refund', 'fee', 'deposit', 'payout', ...
   amount        BIGINT NOT NULL,            -- signed, minor units
-  currency      TEXT NOT NULL,
+  currency      CHAR(3) NOT NULL,
   value_date    DATE NOT NULL,
   counterparty  TEXT,
   raw           JSONB NOT NULL              -- the row as received
+);
+
+-- Each statement's opening and closing balance, parsed from the same files.
+CREATE TABLE bank_statement_balances (
+  bank_account_id UUID NOT NULL REFERENCES bank_accounts (id),
+  currency        CHAR(3) NOT NULL,
+  business_date   DATE NOT NULL,
+  opening_balance BIGINT NOT NULL,
+  closing_balance BIGINT NOT NULL,
+  file_id         UUID NOT NULL REFERENCES external_files (id),
+  PRIMARY KEY (bank_account_id, currency, business_date)
 );
 
 CREATE TABLE expected_records (
@@ -253,7 +262,7 @@ CREATE TABLE expected_records (
   source        TEXT NOT NULL,
   our_ref       TEXT NOT NULL,
   amount        BIGINT NOT NULL,
-  currency      TEXT NOT NULL,
+  currency      CHAR(3) NOT NULL,
   expected_during DATERANGE NOT NULL,       -- window in banking days, resolved to dates
   ledger_transaction_id UUID REFERENCES ledger_transactions (id),
   status        TEXT NOT NULL CHECK (status IN ('open', 'partially_matched', 'matched', 'expired'))
@@ -284,7 +293,7 @@ CREATE TABLE breaks (
   kind          TEXT NOT NULL CHECK (kind IN ('timing', 'missing_external', 'missing_internal',
                   'amount', 'duplicate', 'fx', 'unidentified', 'misapplied')),
   amount        BIGINT NOT NULL,
-  currency      TEXT NOT NULL,
+  currency      CHAR(3) NOT NULL,
   ledger_account_id UUID REFERENCES ledger_accounts (id),
   owner_team    TEXT NOT NULL,
   opened_on     DATE NOT NULL,
@@ -314,11 +323,11 @@ SELECT a.id,
        SUM(e.amount) FILTER (WHERE t.effective_at < :day + 1)              AS closing,
        s.closing_balance                                                   AS bank_closing
 FROM ledger_accounts a
-JOIN ledger_entries e      ON e.account_id = a.id
-JOIN ledger_transactions t ON t.id = e.transaction_id AND t.status = 'posted'
+JOIN ledger_entries e      ON e.ledger_account_id = a.id
+JOIN ledger_transactions t ON t.id = e.ledger_transaction_id AND t.status = 'posted'
 JOIN bank_statement_balances s ON s.bank_account_id = a.bank_account_id
                               AND s.currency = a.currency AND s.business_date = :day
-WHERE a.account_type = 'cash'
+WHERE a.name = 'cash'
 GROUP BY a.id, s.closing_balance;
 ```
 

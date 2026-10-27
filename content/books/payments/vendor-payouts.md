@@ -111,7 +111,7 @@ The rule that matters most is that **a payable is paid once**. Every disbursemen
 
 A vendor receiving $12,480 needs to know which invoices it covers, or its accounts receivable team calls yours. Send remittance data with the payment where the rail carries it: an ACH CCD entry carries one addenda record, and a CTX entry up to 9,999, enough for a full remittance document ([ACH & Bank Transfers](/books/payments/ach#files-batches-and-sec-codes)). Otherwise send a remittance advice by email or the portal, keyed to the payment's reference.
 
-Reconciliation runs per rail against each rail's own source of truth, as [Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline) describes. What payables add is two more matches: each disbursement back through its payable to the approved bill, and the vendor's side, where an unapplied payment on the vendor's books usually means the remittance didn't arrive, not the money.
+Reconciliation runs per rail against each rail's own source of truth, as [Three Sources of Truth](/books/payments/ledger-and-reconciliation#three-sources-of-truth) describes. What payables add is two more matches: each disbursement back through its payable to the approved bill, and the vendor's side, where an unapplied payment on the vendor's books usually means the remittance didn't arrive, not the money.
 
 ## Tax: W-9s, TIN Matching and 1099s
 
@@ -157,7 +157,7 @@ CREATE TABLE bills (
   vendor_id    UUID NOT NULL REFERENCES vendors (id),
   invoice_number TEXT NOT NULL,
   amount       BIGINT NOT NULL,
-  currency     TEXT NOT NULL,
+  currency     CHAR(3) NOT NULL,
   due_on       DATE,
   status       TEXT NOT NULL CHECK (status IN ('entered', 'pending_approval', 'approved', 'rejected', 'funded', 'in_transit', 'partially_paid', 'paid')),
   entered_by   TEXT NOT NULL,

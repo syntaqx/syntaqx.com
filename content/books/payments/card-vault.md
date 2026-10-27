@@ -84,7 +84,7 @@ Detokenization is the whole risk of a vault, so it gets the narrowest interface 
 - **A named role,** not "anyone who can log in", granted by approval and reviewed every six months (7.2.4).
 - **A reason and a ticket on every reveal,** MFA at the moment of the reveal, and a per-person daily cap that alerts when hit.
 - **No copying out.** Over remote access, controls must stop a number being copied or moved without explicit authorization (3.4.2); a reveal shows the number, it doesn't export it.
-- **Two people for anything in bulk,** like an export to another processor when a merchant leaves, encrypted to the recipient's published key. [Payment Credentials](/docs/architecture/replacing-systems#payment-credentials) describes how those migrations run, and [Processor Routing](/books/payments/processor-routing#tokens-decide-how-free-you-are) why holding the cards yourself makes them rare.
+- **Two people for anything in bulk,** like an export to another processor when a merchant leaves, encrypted to the recipient's published key. [Moving Card Numbers](/books/payments/switching-processors#moving-card-numbers) describes how those migrations run, and [Processor Routing](/books/payments/processor-routing#tokens-decide-how-free-you-are) why holding the cards yourself makes them rare.
 
 **No back doors.** No magic token that returns a test card in production, no unauthenticated maintenance or deploy endpoint, no shared admin login. Each is convenient once and in scope forever.
 

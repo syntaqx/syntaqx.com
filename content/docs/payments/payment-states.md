@@ -161,7 +161,7 @@ A payment records money that moved; an **application** records what that money p
 
 ## Reconciliation
 
-Every external system is wrong sometimes, including yours: processors drop transactions from settlement files, banks post late, and your own code has bugs. Reconciliation is how you find out before a merchant does. The settlement side of this, matching processor files and bank deposits to payouts, is in [Payouts & Settlement](/books/payments/payouts-and-settlement), and the bank side in [Treasury & Bank Operations](/books/payments/treasury#bank-reconciliation-is-its-own-discipline).
+Every external system is wrong sometimes, including yours: processors drop transactions from settlement files, banks post late, and your own code has bugs. Reconciliation is how you find out before a merchant does. How a payment provider runs it at scale, matching its ledger to processor files and bank statements every day, is in [Ledger & Reconciliation at Provider Scale](/books/payments/ledger-and-reconciliation).
 
 - **Reconcile daily,** matching ledger entries against processor settlement files and bank statements. A break found the next day has one day of context. One found at month end has thirty.
 - **Breaks are tracked, not patched.** A mismatch becomes a record with an owner, and it's resolved with a correcting entry, so the fix is as auditable as the mistake.

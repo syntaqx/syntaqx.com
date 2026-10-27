@@ -7,7 +7,7 @@ part = "How Money Moves"
 tags = ["payments", "rails", "settlement", "ledger", "treasury"]
 +++
 
-The chapters before this one take one way of paying at a time: [cards](/books/payments/card-payments) online and [in person](/books/payments/card-present), [ACH](/books/payments/ach), [checks](/books/payments/checks), [cash](/books/payments/cash-payments), and the [wallets and local methods](/books/payments/wallets-and-local-methods) the rest of the world uses. A provider runs all of them through one platform, and the platform's job is to treat each honestly: not as a card that happens to be slower, but as a rail with its own answers to the same few questions. This chapter puts those answers side by side. It also includes two rails that come later, Canadian pre-authorized debits and pushes to a debit card, so the comparison is complete.
+The chapters before this one take one way of paying at a time: [cards](/books/payments/card-payments) online and [in person](/books/payments/card-present), [ACH](/books/payments/ach), [checks](/books/payments/checks), [cash](/books/payments/cash-payments), and the [wallets and local methods](/books/payments/wallets-and-local-methods) the rest of the world uses, with [Cross-Border Payments & FX](/books/payments/cross-border-and-fx) for what changes when payer and merchant are in different countries. A provider runs all of them through one platform, and the platform's job is to treat each honestly: not as a card that happens to be slower, but as a rail with its own answers to the same few questions. This chapter puts those answers side by side. It also includes two rails that come later, Canadian pre-authorized debits and pushes to a debit card, so the comparison is complete.
 
 ## The Questions Every Rail Answers
 
@@ -22,8 +22,8 @@ The chapters before this one take one way of paying at a time: [cards](/books/pa
 | **Check** | The payer writes it; the payee deposits it | Only when the paying bank's return window passes, about two business days after presentment | Through image clearing, days | Ordinary returns within days, warranty and forgery claims long after | A return, then possibly a claim |
 | **Retail cash** | The payer, at a store counter | Seconds, at the network's confirmation | Days later, net of fees | At confirmation | Nothing; refunds go by another rail |
 | **Canadian pre-authorized debit** ([Payments in Canada](/books/payments/canada#pre-authorized-debits-rule-h1)) | The payee, under a PAD agreement | When no dishonour arrives by the next business day | Next business day | 90 calendar days for a personal debit's claim | A dishonour or a reimbursement claim |
-| **SEPA or Bacs Direct Debit** | The payee, under a mandate | Days later | Days | Eight weeks for SEPA's no-questions refund, 13 months if there was no valid mandate; Bacs refunds under its guarantee | A scheme refund through the payer's bank |
-| **Instant push abroad** (SEPA Instant, Faster Payments, Pix, UPI) | The payer, from their bank | Seconds | Immediately | Immediately, except fraud reimbursement schemes like the UK's for scams and Pix's MED | A new transfer, or a fraud claim outside the payment |
+| **[SEPA](/books/payments/eu-and-uk#sepa-direct-debit) or [Bacs](/books/payments/eu-and-uk#uk-faster-payments-bacs-and-chaps) Direct Debit** | The payee, under a mandate | Days later | Days | Eight weeks for SEPA's no-questions refund, 13 months if there was no valid mandate; Bacs refunds under its guarantee | A scheme refund through the payer's bank |
+| **Instant push abroad** ([SEPA Instant](/books/payments/eu-and-uk#sepa-credit-transfer-and-sepa-instant), [Faster Payments](/books/payments/eu-and-uk#uk-faster-payments-bacs-and-chaps), Pix, UPI) | The payer, from their bank | Seconds | Immediately | Immediately, except fraud reimbursement schemes like the UK's for scams and Pix's MED | A new transfer, or a fraud claim outside the payment |
 | **Buy now, pay later** | The merchant, via the lender | When the lender approves | Paid out by the lender | The lender's terms | The lender's dispute process |
 | **Push to card** (a payout, [Vendor Payouts](/books/payments/vendor-payouts#push-to-card)) | The platform, pushing to a debit card | Seconds to 30 minutes | Immediately, if the card's issuer is in Visa's Fast Funds program | Immediately; reversible only for processing errors | Nothing, in practice |
 
@@ -52,7 +52,7 @@ The tables describe timing. The money also physically crosses bank accounts, and
 - **That account is held for the merchants,** a for-benefit-of (FBO) account whose owners only the provider's ledger can name, with the commingling rule and pass-through insurance in [FBO Accounts and Pass-Through Insurance](/books/payments/treasury#fbo-accounts-and-pass-through-insurance).
 - **Payouts leave it** by ACH, instant rails or push to card, to each merchant's bank ([Payouts & Settlement](/books/payments/payouts-and-settlement)).
 
-Whether the provider ever holds that money in its own name is the question [money transmission](/books/payments/becoming-a-payment-provider#holding-other-people-s-money) law turns on, which is why this picture is drawn with counsel before the ledger is designed.
+Proving every day that the account holds exactly what the ledger says it owes is [Ledger & Reconciliation at Provider Scale](/books/payments/ledger-and-reconciliation#three-sources-of-truth). Whether the provider ever holds that money in its own name is the question [money transmission](/books/payments/becoming-a-payment-provider#holding-other-people-s-money) law turns on, which is why this picture is drawn with counsel before the ledger is designed.
 
 ## What This Means for the System You Build
 

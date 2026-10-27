@@ -139,15 +139,16 @@ Payments providers often sit inside a bank's oversight through their sponsor ban
 
 ## How to Build It
 
-The core data model in [How Card Payments Work](/books/payments/card-payments) holds merchants, payments and their attempts. AI adds two records: every model decision that touched money, and every mandate an agent pays under.
+The [core data model](/books/payments/card-payments#the-core-data-model) holds merchants, customers, payments and their attempts, and [Fraud & Risk](/books/payments/fraud-and-risk#how-to-build-it) already records every fraud decision in `risk_decisions`, with score, model version and rule set. AI adds two records: every other model decision that touched money (and a link from a fraud decision to the model output behind it), and every mandate an agent pays under.
 
 ```sql
 -- One row per model decision that affected a payment, merchant or dispute
 CREATE TABLE model_decisions (
-  id              UUID PRIMARY KEY,
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
   subject_type    TEXT NOT NULL,        -- payment_attempt | merchant_application | dispute | support_case
   subject_id      UUID NOT NULL,
   use             TEXT NOT NULL,        -- fraud_score | auth_optimization | dispute_evidence | kyb_review | credit
+  risk_decision_id UUID REFERENCES risk_decisions (id),  -- for fraud_score: the decision it fed
   provider        TEXT NOT NULL,        -- own | vendor name
   model_version   TEXT NOT NULL,        -- as the provider reports it, or our registry version
   score           NUMERIC,
@@ -160,8 +161,8 @@ CREATE TABLE model_decisions (
 
 -- What a user authorized an agent to pay for
 CREATE TABLE agent_mandates (
-  id                  UUID PRIMARY KEY,
-  customer_id         UUID NOT NULL,
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  customer_id         UUID NOT NULL REFERENCES customers (id),
   agent_id            TEXT NOT NULL,     -- the agent's verified identity
   protocol            TEXT NOT NULL,     -- acp | ap2 | network program
   merchant_scope      TEXT[] NOT NULL,   -- seller IDs or categories
@@ -180,6 +181,7 @@ ALTER TABLE payment_attempts
   ADD COLUMN agent_mandate_id UUID REFERENCES agent_mandates (id);
 ```
 
+- **A fraud score keeps one decision record.** The action lives in `risk_decisions` as it always has; the `model_decisions` row holds what the model itself returned, so the two can be compared when either changes.
 - **The model's output and the code's action are separate columns.** A review asks both "what did the model propose" and "what did the policy do with it", and they change on different schedules.
 - **`reason_codes` come from a fixed list,** so a credit notice or a support answer can be generated from them without asking a model to explain itself after the fact.
 - **A payment under a mandate references it,** and the check (merchant in scope, amount under both limits, not expired, not revoked) runs in the payment path, in code, before the authorization is sent.

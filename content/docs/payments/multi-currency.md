@@ -6,7 +6,7 @@ order = 805
 tags = ["payments", "currency", "fx", "money"]
 +++
 
-The chapters before this one hold for a single currency. Selling in the customer's own currency raises conversion and approval rates, and it's what customers expect, but it means a payment now has two amounts, a rate between them, and a question single-currency systems never face: when the rate moves between the charge and the refund, whose money is that? Every rule here builds on [Money & Amounts](/docs/payments/money).
+The chapters before this one hold for a single currency. Selling in the customer's own currency raises conversion and approval rates, and it's what customers expect, but it means a payment now has two amounts, a rate between them, and a question single-currency systems never face: when the rate moves between the charge and the refund, whose money is that? Every rule here builds on [Money & Amounts](/docs/payments/money), and what the card networks, banks and FX providers charge and require around these mechanics is in [Cross-Border Payments & FX](/books/payments/cross-border-and-fx).
 
 ## Two Currencies, Two Names
 
