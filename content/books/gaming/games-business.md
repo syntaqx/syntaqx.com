@@ -91,7 +91,7 @@ Forecasts get revised in both directions, so I date every market figure and cite
 A game reaches players through a platform, and each platform brings four things the backend has to integrate with: an identity (a Steam ID, a PlayStation Network account, an Xbox gamertag), a store that sells and refunds, a certification process the build must pass, and rules about what the game may sell and how.
 
 - **PC.** Storefronts include Steam, the Epic Games Store, the Microsoft Store and publishers' own launchers. PC is the most open platform: a studio can sell directly from its own site and patch on its own schedule. Its costs are the hardware range (every GPU and driver) and cheating, because the player controls the machine ([Anti-Cheat](/books/gaming/anti-cheat)).
-- **Console.** PlayStation, Xbox and Nintendo Switch. The platform holder approves the developer, certifies each build against its requirements and owns the store, the identity and the party and voice systems. Microsoft publishes the Xbox Requirements; Sony's and Nintendo's checklists are under NDA ([Production Pipelines & Builds](/books/gaming/production-pipelines)).
+- **Console.** PlayStation, Xbox and Nintendo Switch, now two generations of it: Nintendo Switch 2 launched on June 5, 2025, and Nintendo's results put it at 23.68 million units sold through June 30, 2026, against 156.59 million for the original Switch, which is still the larger installed base a game ships to. The platform holder approves the developer, certifies each build against its requirements and owns the store, the identity and the party and voice systems. Microsoft publishes the Xbox Requirements; Sony's and Nintendo's checklists are under NDA ([Production Pipelines & Builds](/books/gaming/production-pipelines)).
 - **Mobile.** Apple's App Store and Google Play. The store's billing and review rules shape the product: currencies and items sold inside the game generally go through the store's in-app purchase system, and both stores require the odds of randomized items to be disclosed before purchase. Court orders and the EU's Digital Markets Act have changed what developers may link to outside the app, region by region, in 2025 and 2026 ([Stores, Fees & Payments](/books/gaming/stores-and-payments)).
 - **Web, cloud and subscription.** Browser games, mini-game platforms inside apps like WeChat, cloud streaming and subscription libraries. Each adds another store and another identity.
 
@@ -168,7 +168,7 @@ Every game backend converges on the same handful of concepts under different nam
 
 Three distinctions recur in every chapter.
 
-**The account is not the profile.** The account is the publisher's identity for a person, the thing a login, a linked platform, a wallet or a ban attaches to. The profile is that person inside one game: a name, a rank, progression, settings. A publisher with several games wants one account and many profiles, so a player who buys currency once can spend it in more than one title. Riot's TFT migration FAQ (June 19, 2026) is a public example: moving TFT to a new engine left purchases untouched, and on PC, RP "continues to be shared across League of Legends and Teamfight Tactics." That only works because ownership and currency live in backend services above any one game's client.
+**The account is not the profile.** The account is the publisher's identity for a person, the thing a login, a linked platform, a wallet or a ban attaches to. The profile is that person inside one game: a name, a rank, progression, settings. A publisher with several games wants one account and many profiles, so a player who buys currency once can spend it in more than one title. Riot's 2026 move of Teamfight Tactics to a new engine is a public example: purchases and the currency shared with League of Legends came through untouched ([Studios Changing Engines](/books/gaming/engine-landscape#studios-changing-engines)). That only works because ownership and currency live in backend services above any one game's client.
 
 **Entitlements are not item instances.** An entitlement is a right: this account owns this skin, this DLC, this season pass, from this purchase, until revoked. An item instance is the copy inside one game, and it carries whatever differs between copies (a weapon's rolled stats, a card's level, a tradeable item's history), so it belongs to a profile. Keeping them apart makes refunds tractable: the store refund revokes the entitlement, and the instance created from it goes with it, while a traded item needs the instance's whole chain ([Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements)).
 
@@ -320,20 +320,26 @@ CREATE TABLE reports (
   CHECK (reporter_profile_id <> reported_profile_id)
 );
 
-CREATE TABLE penalties (
-  id           UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id    UUID NOT NULL,
-  account_id   UUID NOT NULL REFERENCES accounts (id),
-  game_id      UUID REFERENCES games (id),  -- null: every game on the account
-  kind         TEXT NOT NULL CHECK (kind IN ('warning', 'chat_restriction',
-                 'queue_restriction', 'ranked_restriction', 'suspension', 'ban')),
-  reason       TEXT NOT NULL,
-  issued_by    TEXT NOT NULL CHECK (issued_by IN ('system', 'staff')),
-  valid_during TSTZRANGE NOT NULL,          -- unbounded upper end for a permanent ban
-  revoked_at   TIMESTAMPTZ,                 -- overturned on appeal
-  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+CREATE TABLE penalties (                   -- the playbook's table, scoped to a game
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id          UUID NOT NULL,
+  account_id         UUID NOT NULL REFERENCES accounts (id),
+  game_id            UUID REFERENCES games (id),  -- null: every game on the account
+  decision_id        UUID NOT NULL REFERENCES moderation_decisions (id),  -- who decided, why
+  kind               TEXT NOT NULL CHECK (kind IN
+                       ('warning', 'feature_restriction', 'suspension', 'permanent_ban')),
+  restricted_feature TEXT CHECK (restricted_feature IN ('text_chat', 'voice_chat',
+                       'queue', 'ranked', 'trading', 'ugc_publishing')),
+  ladder_step        SMALLINT NOT NULL,
+  valid_during       TSTZRANGE NOT NULL,    -- unbounded upper end for a permanent ban
+  revoked_at         TIMESTAMPTZ,           -- overturned on appeal
+  revoked_reason     TEXT,
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK ((kind = 'feature_restriction') = (restricted_feature IS NOT NULL))
 );
 ```
+
+`penalties` is the playbook's [penalties table](/docs/security/trust-and-safety#penalties-and-escalation-ladders) with two game-specific changes: `game_id` scopes a penalty to one title, and `restricted_feature` names the game features a ladder restricts (chat, a queue, ranked play, trading). Who issued it, under which policy version and on what evidence lives on the playbook's `moderation_decisions` row that `decision_id` points to, so cheating and conduct penalties share one decision record and one appeal path.
 
 Design decisions behind it:
 
@@ -379,6 +385,8 @@ The mechanics (typed actors, append-only history, snapshots) are in [Audit Trail
 - [Google AdMob: Rewarded ads](https://developers.google.com/admob/android/rewarded), rewarding players for watching ads
 - [Xbox Game Pass](https://www.xbox.com/en-US/xbox-game-pass), the four tiers and their library sizes
 - [Xbox Requirements](https://devdocs.xbox.com/publishing/certification/xbox-requirements), the published console certification requirements
+- [Nintendo: Nintendo Switch 2 launches June 5](https://www.nintendo.co.jp/corporate/release/en/2025/250402.html), the launch date, announced April 2, 2025
+- [Nintendo IR: Hardware and software sales units](https://www.nintendo.co.jp/ir/en/finance/hard_soft/index.html), Switch 2 and Switch hardware units through June 30, 2026
 - [Apple: App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/), in-app purchase for currencies and items, loot box odds disclosed before purchase
 - [Google Play: Payments policy](https://support.google.com/googleplay/android-developer/answer/9858738), odds of randomized items disclosed close to the purchase
 - [Apple: Alternative terms for apps in the EU](https://developer.apple.com/support/dma-and-apps-in-the-eu/), the EU terms under the Digital Markets Act
@@ -386,5 +394,4 @@ The mechanics (typed actors, append-only history, snapshots) are in [Audit Trail
 **In practice**
 
 - [Riot Games: Automated Testing for League of Legends](https://www.riotgames.com/en/news/automated-testing-league-legends), a new patch every two weeks
-- [Riot Games: TFT Unreal Engine Migration FAQ](https://support.riotgames.com/tft/client/tft-unreal-engine-migration-faq), purchases kept through an engine migration, RP shared across League and TFT
 - [Riot Games: Scalability and Load Testing for VALORANT](https://www.riotgames.com/en/news/scalability-and-load-testing-valorant), one game server executable per running match beside a platform of backend services

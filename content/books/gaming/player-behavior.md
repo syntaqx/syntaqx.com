@@ -2,7 +2,7 @@
 title = "Player Behavior & Moderation"
 description = "How games answer disruptive play: in-match reports, text and voice moderation, gameplay detection, penalty ladders, reform, UGC safety and the pipeline."
 category = "Gaming Industry"
-order = 1618
+order = 1620
 part = "Fair Play and Safety"
 tags = ["gaming", "moderation", "player-behavior", "trust-and-safety", "voice", "chat"]
 +++
@@ -110,7 +110,7 @@ The playbook's [penalty ladder](/docs/security/trust-and-safety#penalties-and-es
 | Offensive name | Forced rename | Rename and restriction | Suspension |
 | Zero tolerance (threats, sexual content involving minors, extremism) | Skip the ladder | | Permanent ban, reports to authorities where required |
 
-Xbox's published ladder works this way across a platform: repeated violations lead to longer suspensions and "can culminate in a 12-month suspension of social features", egregious violations can result in permanent account suspensions or device bans, and an enforcement strike system introduced in 2023 shows players the cumulative effect of their enforcements. Its 2025 report adds that at Xbox Game Studios, child sexual exploitation, grooming and violent extremism violations bring a permanent suspension "even if it is a first offense".
+Xbox's published ladder, quoted in the playbook, works this way across a platform, ending in a suspension of social features before the account; the game-specific addition is its enforcement strike system (introduced in 2023), which shows players the cumulative effect of their enforcements, the visible standing the reform rules below depend on.
 
 **Reform is the point.** The fewer-than-10% repeat rate Riot reported for 2021 and the 80% non-reoffense rate Activision reported for voice enforcement both say the same thing: for most players, a clear, specific, prompt consequence works. Three properties make it work:
 
@@ -148,7 +148,7 @@ Studios that don't build detection in-house buy it. As their own pages describe 
 | GGWP | Chat, voice, usernames, images, player reports, Discord | Modules for scanning content on arrival, behavior over time, automated decisions and escalation of serious risks |
 | Hive | Images, video, text, audio | Classification across categories including NSFW, hate, violence and CSAM |
 
-Vendor claims about accuracy and automation rates are marketing until you measure them on your own traffic. My default: run a vendor in shadow mode against a labeled sample of your own reports for a few weeks before it's allowed to act, and keep the decision thresholds and the penalty ladder in your own system, so changing vendors changes a signal, not your policy.
+Vendor claims about accuracy and automation rates are marketing until you measure them on your own traffic. My default: run a vendor in shadow mode against a labeled sample of your own reports for a few weeks before it's allowed to act ([Changing Rules and Models Safely](/docs/architecture/risk-scoring#changing-rules-and-models-safely)), and keep the decision thresholds and the penalty ladder in your own system, so changing vendors changes a signal, not your policy.
 
 ## User-Generated Content and Young Players
 
@@ -174,23 +174,18 @@ The pieces, in the order a message travels:
 - **Chat and voice services** emit every message and voice-session event as an [event](/docs/architecture/events), with match ID and offset, to a moderation stream. Text is kept per your retention policy; audio only within the recording windows.
 - **The detection service** consumes the stream, calls filters, models and vendors, and writes scores, not penalties.
 - **The case service** groups reports and scores into the playbook's `moderation_cases`, one per account and policy category while open, sets priority and routes to automation or a human queue. Cheating reports never land here; they become signals on an anti-cheat case.
-- **The penalty service** applies the ladder, writes to the core model's `penalties` table (whose `kind` already covers warnings, chat, queue and ranked restrictions, suspensions and bans), and publishes `penalty.issued` and `penalty.ended` events.
+- **The penalty service** applies the ladder, writes to the core model's `penalties` table (a `feature_restriction` with `restricted_feature` set to `text_chat`, `voice_chat`, `queue` or `ranked` covers the game's restrictions, and `ladder_step` the ladder position), and publishes `penalty.issued` and `penalty.ended` events.
 - **Enforcement points** (chat, voice, matchmaking, ranked queue, login) check active penalties. Matchmaking checks at queue time, chat at send time, and both cache with invalidation on penalty events, so a penalty takes effect in the next match, not the next day.
 - **The player-facing surface**: an in-client notice with the evidence and the rule, a standing page, the appeal path, and "your report led to action" messages to reporters.
 
 ```sql
 ALTER TABLE penalties
-  ADD COLUMN chat_channel        TEXT CHECK (chat_channel IN ('text', 'voice', 'all')),
-  ADD COLUMN ladder_step         SMALLINT,
-  ADD COLUMN policy_version      TEXT,
   ADD COLUMN source_match_id     UUID REFERENCES matches (id),
   ADD COLUMN evidence_excerpt    TEXT,
-  ADD COLUMN is_shown_to_player  BOOLEAN NOT NULL DEFAULT TRUE,
-  ADD CONSTRAINT penalties_chat_channel_check
-    CHECK ((kind = 'chat_restriction') = (chat_channel IS NOT NULL));
+  ADD COLUMN is_shown_to_player  BOOLEAN NOT NULL DEFAULT TRUE;
 ```
 
-`chat_channel` lets a chat restriction take voice and leave text, or the reverse. The penalty's `evidence_excerpt` is what the in-client notice shows (the chat lines, the rule), copied at decision time so a later retention deletion of the chat log doesn't empty the notice the player is reading. Every decision, automated or human, is recorded as the playbook's [moderation decision](/docs/security/trust-and-safety#auditing-moderation-decisions) with the model version, threshold and policy version. Behavior appeals and ban questions arrive through [Player Support](/books/gaming/player-support); route them to the moderation appeal flow rather than letting general support agents reverse penalties.
+The core table already carries the ladder step, and the policy version sits on the decision, so moderation adds only the match and what the player is shown. Separate `text_chat` and `voice_chat` values for `restricted_feature` let a chat restriction take voice and leave text, or the reverse. The penalty's `evidence_excerpt` is what the in-client notice shows (the chat lines, the rule), copied at decision time so a later retention deletion of the chat log doesn't empty the notice the player is reading. Every decision, automated or human, is recorded as the playbook's [moderation decision](/docs/security/trust-and-safety#auditing-moderation-decisions) with the model version, threshold and policy version. Behavior appeals and ban questions arrive through [Player Support](/books/gaming/player-support); route them to the moderation appeal flow rather than letting general support agents reverse penalties.
 
 ## What This Means for the System You Build
 

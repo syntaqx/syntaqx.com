@@ -157,22 +157,12 @@ Game patches are a CDN's ideal workload: large, static, identical for everyone a
 
 ## Integrity and Signing
 
-A patcher writes executables to millions of machines, which makes it one of the most valuable targets a studio runs. The Update Framework (TUF), a specification for securing software updaters, lists the attacks a patcher has to withstand. Among them:
+A patcher writes executables to millions of machines, which makes it one of the most valuable targets a studio runs. The attacks an updater has to resist (arbitrary installation, rollback, freeze, mix-and-match, endless data, malicious mirrors, key compromise) and the defenses against them are in [Software Updates](/docs/security/software-updates#what-an-updater-must-resist). A chunked game patcher maps onto them directly:
 
-- **Arbitrary installation:** an attacker serves any file in response to download requests.
-- **Rollback:** serving files older than what the client has already seen, to reinstall a vulnerable version.
-- **Indefinite freeze:** serving the same old metadata forever, so the client never learns an update exists.
-- **Mix-and-match:** combining files that never existed together in one release.
-- **Endless data:** an endless stream that exhausts disk or memory.
-- **Malicious mirrors:** one compromised mirror blocking updates from the good ones.
-- **Key compromise:** a stolen signing key that makes malicious content verify.
-
-The defenses map onto a chunked design directly:
-
-- **Sign the manifest** with a key the CDN never holds, and load nothing unsigned, as League's patcher does. Chunks named by their hashes and listed in a signed manifest are then verified by content, whoever served them.
-- **Monotonic release numbers and expiry.** Refuse a manifest older than the last one accepted, and give the pointer to the current release a short expiry, so a frozen mirror is detected.
-- **Expected sizes** for every object, so a download stops at the size the manifest promised.
-- **Separate keys by role** (the root of trust, release signing, and the short-lived "current version" pointer), keep the root offline, require more than one signature for the most powerful key, and rehearse rotating each ([Threat Modeling](/docs/security/threat-modeling)).
+- **The release manifest is the signed metadata.** Sign it with a key the CDN never holds and load nothing unsigned, as League's patcher does; chunks named by their hashes and listed in it are then verified by content, whoever served them ([Content-Addressed Chunks](/docs/security/software-updates#content-addressed-chunks)).
+- **The "current release" pointer per platform and channel** is the short-lived, forward-only part: monotonic release numbers and a short expiry catch a frozen or rolled-back mirror ([Manifests That Only Move Forward](/docs/security/software-updates#manifests-that-only-move-forward)).
+- **Chunk and bundle sizes come from the manifest,** so a download stops at the size it promised, which matters more for a 100 GB game than for most software.
+- **Keys are separated by role** with the root offline, as [Separate Keys by Role](/docs/security/software-updates#separate-keys-by-role) describes; for a game, the platform holders' own signing on console and mobile sits outside yours, and your keys cover the PC launcher and the content you deliver yourself.
 
 ## Rollouts, Rollbacks and Hotfixes
 
@@ -201,7 +191,7 @@ The best update is one the player never waits for. Platforms now support it dire
 
 Designing for it means ordering content by when it's needed (the menus and first map before the rest), making missing content a state the game handles (a placeholder, a progress bar, a mode that isn't available yet), and having the client report what's installed so matchmaking doesn't offer a mode whose map isn't on disk.
 
-## The Data Model
+## How to Build It
 
 A sketch of the release side, extending the core model's `builds` table (its `promotion` path from candidate to released is in [Production Pipelines & Builds](/books/gaming/production-pipelines#recording-builds)):
 
@@ -265,12 +255,21 @@ How the rows are used:
 
 Ranges keep history: the release a channel served at any moment, and the policy in force when a player was blocked, are both queries ([Temporal Data](/docs/database/temporal-data)). Every change to a channel or policy is an audited decision with an approver ([Audit Trails](/docs/architecture/audit-trails)).
 
+## Auditing
+
+A patcher is a privileged path onto millions of machines, and its records answer what each player was offered and who decided:
+
+- **What was live, where, when?** `channel_releases` ranges give the manifest each channel served at any instant, with exposure and approver; rollbacks are rows with a reason, so the history of an incident reads in order.
+- **Was it signed?** No `release_manifests` row exists for an unsigned manifest; signing keys and their use are logged by the signing service, and a key rotation or revocation is a recorded event ([Key Rotation and Compromise Recovery](/docs/security/software-updates#key-rotation-and-compromise-recovery)).
+- **Who was blocked, and by which policy?** A player refused at sign-in for an old build is answered by the `client_version_policies` row in force at that time.
+- **Which build crashed?** Crash reports and support tickets name the build and manifest, so a regression is a join, not an investigation ([Production Pipelines & Builds](/books/gaming/production-pipelines)).
+
 ## What This Means for the System You Build
 
 - **Content-defined chunks and a signed manifest** as the default for your own launcher: any version to latest in one step, repair with the same mechanism, publishing in minutes. Choose deltas only where download size dominates and the version spread is tiny.
 - **Patch-friendly content from the first build:** deterministic cooking, stable order, alignment to the store's block size, per-asset compression, append-only packs, and a patch-size budget checked in CI.
 - **A download client that survives the internet:** a few parallel connections, range requests, a cap on bytes in flight, retries with backoff, progress-based cancellation, more than one CDN, and in-place writes with an atomic local state database.
-- **Integrity against TUF's attack list:** offline root keys, signed manifests with increasing sequence numbers and short expiry, content-addressed objects with expected sizes.
+- **Integrity against the updater attack list:** offline root keys, signed manifests with increasing sequence numbers and short expiry, content-addressed objects with expected sizes.
 - **Channels with staged exposure,** rollbacks as new releases, and a server-data path for fixes that don't need a client patch.
 - **Explicit compatibility:** a deliberate network protocol version on every connection, a minimum supported version per platform enforced before queueing, and one go-live switch for manifest, minimum version and server builds.
 - **Play while downloading** wherever the platform allows it, with missing content as a state the game handles.
@@ -279,7 +278,6 @@ Ranges keep history: the release a channel served at any moment, and the policy 
 
 **Specifications**
 
-- [The Update Framework: Security](https://theupdateframework.io/docs/security/), the attacks a software updater must resist and TUF's design principles
 - [FastCDC (USENIX ATC 2016)](https://www.usenix.org/conference/atc16/technical-sessions/presentation/xia), the chunking algorithm, its speed relative to Rabin and Gear-based CDC, and its three techniques
 
 **Reference**

@@ -2,7 +2,7 @@
 title = "Telemetry & Analytics"
 description = "What a game measures and how: match and gameplay events, heatmaps, server tick and crash data, replays, economy events, vendors, sampling and the bill."
 category = "Gaming Industry"
-order = 1616
+order = 1618
 part = "Backend and Live Services"
 tags = ["gaming", "telemetry", "analytics", "events", "heatmaps", "performance"]
 +++
@@ -81,7 +81,7 @@ Crash reporting itself (symbol servers, minidumps, grouping by stack and build) 
 
 - **Hardware and driver on every session,** bucketed: GPU model, driver version, CPU, memory, operating system, and on mobile the device model. Crashes and stutter cluster by hardware, and a regression that hits one driver is invisible in the average.
 - **Histograms, not frames.** A client at 144 frames a second produces half a million frame times an hour. Bucket them on the client and upload the histogram with the session summary. Load times, hitch counts and memory peaks go the same way.
-- **Server frame time per match,** keyed by server build, map and player count. Riot's account of VALORANT's server performance work shows why the split matters: a degradation first noticed in a 22-client playtest was confirmed by "processing telemetry from our live environment" and separating games by client count from 10 to 22, which showed that server performance had a non-linear relationship with the number of players; the cause was a single line from an Unreal Engine upgrade that made replication run much more often (Riot, March 2023). Averaged over all matches, the regression was small; at full lobbies, it was the whole problem.
+- **Server frame time per match,** keyed by server build, map and player count, because a regression can live only at full lobbies: Riot found VALORANT's worst server slowdown by splitting live telemetry by client count ([The Frame Budget at 128 Ticks](/books/gaming/game-servers#the-frame-budget-at-128-ticks) tells it). Averaged over all matches, such a regression is small; at full lobbies, it's the whole problem.
 - **Network quality per match and region:** round trip, loss and jitter, measured by both client and server. Riot's network team named those three as "more impactful values" than router-centric counters, and streamed router telemetry every millisecond instead of polling it (Riot Direct, July 2016). For a game backend the actionable unit is coarser: per match, per region and per ISP, so a routing problem shows up as one ISP's players losing packets in one city ([Netcode Fundamentals](/books/gaming/netcode#bandwidth-loss-and-jitter)).
 
 Server processes also emit the ordinary service telemetry (logs, metrics, traces) that every backend has; that is [Observability](/docs/operations/observability), on its own pipeline. The game-specific part is the match-level record above, joinable to players and builds.
@@ -90,7 +90,7 @@ Server processes also emit the ordinary service telemetry (logs, metrics, traces
 
 Sampling rules are general ([Sampling](/docs/telemetry/collection#sampling)): sample by unit, deterministically, record the rate on every sampled event, and serve rates as remote configuration. Games make some of them sharper.
 
-**Never sample:** match results, purchases and currency movements, penalties and the evidence behind them, crash first occurrences per build, and anything a player can dispute. **Sample freely:** position streams, per-frame and per-tick performance data, verbose client debug events, and server traces for healthy matches. OpenTelemetry's sampling guide gives the general rule for traces (sample when you generate "1000 or more traces per second" and most of them are healthy traffic) and the two strategies: head sampling decides "as early as possible," and tail sampling decides by "considering all or most of the spans," at the price of being harder to run.
+**Never sample:** match results, purchases and currency movements, penalties and the evidence behind them, crash first occurrences per build, and anything a player can dispute. **Sample freely:** position streams, per-frame and per-tick performance data, verbose client debug events, and server traces for healthy matches, with head or tail sampling chosen as in [Sampling Traces: Head or Tail](/docs/operations/observability#sampling-traces-head-or-tail).
 
 The game-specific rules:
 
@@ -102,7 +102,7 @@ The game-specific rules:
 
 Consent flows, lawful bases, pseudonymous IDs and erasure are general ([Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy); [GDPR & Privacy Law](/docs/compliance/gdpr)). Three points are particular to games.
 
-**Telemetry IDs are personal information for children.** The COPPA rule's definition of personal information includes "a persistent identifier that can be used to recognize a user over time and across different websites or online services," such as a device identifier or an IP address. It also defines "support for the internal operations" of a service (keeping it working, measuring performance, security and integrity, among others) where such identifiers can be used without parental consent, as long as the data isn't used "to contact a specific individual, including through behavioral advertising" or "to amass a profile on a specific individual." For a game with child players, that is the line between crash and performance telemetry and behavioral profiling ([Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy#coppa); [Ratings, Age & Children](/books/gaming/ratings-and-age)).
+**Telemetry IDs are personal information for children.** Under COPPA, the device and account identifiers every telemetry SDK collects are personal information, usable without parental consent only for "support for the internal operations" of the game and never to profile a child ([COPPA in Games](/books/gaming/ratings-and-age#coppa-in-games); [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy#coppa)). For a game with child players, that is the line between crash and performance telemetry and behavioral profiling, and the pipeline enforces it by age band.
 
 **SDKs don't decide for you.** Unity's documentation says plainly that "the Analytics SDK does not manage data privacy compliance in any way"; since version 5.0.0 it starts "in a dormant state, in which it ignores all events" until the game grants consent (through `StartDataCollection()` in older versions, the `EndUserConsent` API from Unity 6.2), and its `RequestDataDeletion()` covers Analytics and Push Notifications only, not the game's other services. Every vendor SDK in the game needs the same review: what it collects before consent, how it is stopped, and what deletion reaches.
 
@@ -134,7 +134,7 @@ The vendor facts are as their documentation stated them in October 2026. The buy
 
 ## Cost Control
 
-Telemetry cost grows with players, events per player and bytes per event, and the second factor is the one teams lose control of. The levers, in the order I'd pull them:
+Telemetry cost grows with players, events per player and bytes per event, and the second factor is the one teams lose control of. The general levers are in [Cost Control](/docs/telemetry/collection#cost-control); in a game, in the order I'd pull them:
 
 - **A budget per event family,** in events per player per hour, set at design review and checked in a test: a client build that emits more than its budget in an automated play session fails, the same way a build that blows its frame budget does.
 - **Aggregate on the device or server.** Histograms for frame time, counters per minute for repeated actions, one resource event per level. GameAnalytics' resource guidance is the same idea.
@@ -188,7 +188,7 @@ My default for which path an event takes: it goes to the hot path only if someon
 
 ### The Data Model
 
-The warehouse tables follow the general layering ([Data Pipelines & Analytics](/docs/architecture/data-pipelines)). The operational side needs two things the [core data model](/books/gaming/games-business) doesn't have: sampling and budget rules as data, and per-match health written by the server.:
+The warehouse tables follow the general layering ([Data Pipelines & Analytics](/docs/architecture/data-pipelines)). The operational side needs two things the [core data model](/books/gaming/games-business) doesn't have: sampling and budget rules as data, and per-match health written by the server:
 
 ```sql
 CREATE TABLE telemetry_sampling_rules (     -- served to clients and servers as remote config
@@ -220,7 +220,7 @@ ALTER TABLE match_participants
   ADD COLUMN client_build_id       UUID REFERENCES builds (id);
 ```
 
-The server frame counts per match are already on `matches` from [Game Metrics](/books/gaming/game-metrics#building-the-pipeline), and recordings are rows in `match_recordings`, with their build, hash and expiry, from [Esports & Spectating](/books/gaming/esports-and-spectating#replays-rewinds-and-recovery). Kill, position and ability events don't belong in these tables at all: they land as files in the raw store, partitioned by game, day and map version, and only aggregates come back. What the events become (funnels, cohorts, retention, experiment readouts) is [Game Metrics](/books/gaming/game-metrics).
+The server frame counts per match are already on `matches` from [Game Metrics](/books/gaming/game-metrics#how-to-build-it), and recordings are rows in `match_recordings`, with their build, hash and expiry, from [Esports & Spectating](/books/gaming/esports-and-spectating#replays-rewinds-and-recovery). Kill, position and ability events don't belong in these tables at all: they land as files in the raw store, partitioned by game, day and map version, and only aggregates come back. What the events become (funnels, cohorts, retention, experiment readouts) is [Game Metrics](/books/gaming/game-metrics).
 
 ## What This Means for the System You Build
 
@@ -240,7 +240,6 @@ The server frame counts per match are already on `matches` from [Game Metrics](/
 **Specifications**
 
 - [eCFR via Cornell LII: 16 CFR 312.2, COPPA definitions](https://www.law.cornell.edu/cfr/text/16/312.2), persistent identifiers as personal information and "support for the internal operations"
-- [OpenTelemetry: Sampling](https://opentelemetry.io/docs/concepts/sampling/), head and tail sampling and when to sample
 
 **Reference**
 
@@ -256,7 +255,7 @@ The server frame counts per match are already on `matches` from [Game Metrics](/
 
 **In practice**
 
-- [Riot Games: How We Got to the Best-Performing VALORANT Servers Since Launch](https://playvalorant.com/en-us/news/dev/how-we-got-to-the-best-performing-valorant-servers-since-launch/), live telemetry split by client count to find a non-linear server regression (March 2023)
+- [Riot Games: How We Got to the Best-Performing VALORANT Servers Since Launch](https://playvalorant.com/en-us/news/dev/how-we-got-to-the-best-performing-valorant-servers-since-launch/), the server regression found by splitting live telemetry by client count (March 2023)
 - [Riot Games: Determinism in League of Legends: Introduction](https://www.riotgames.com/en/news/determinism-league-legends-introduction), Server Network Recordings as a complete record of a match (June 2017)
 - [Riot Games: Fixing the Internet for Real-Time Applications: Part III](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-iii), latency, loss and jitter as the metrics that matter, streamed every millisecond (July 2016)
 - [Riot Games: re:presenting at AWS re:Invent](https://www.riotgames.com/en/news/re-presenting-at-aws-re-invent), the session title on 20 TB of analytics data a day (December 2022)

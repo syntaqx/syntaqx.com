@@ -3,7 +3,7 @@ title = "Lockstep, Rollback & Determinism"
 nav_title = "Lockstep & Rollback"
 description = "Deterministic lockstep for RTS, rollback for fighting games, what determinism really requires, finding desyncs, and replays and rewinds from recorded inputs."
 category = "Gaming Industry"
-order = 1609
+order = 1610
 part = "Multiplayer"
 tags = ["gaming", "determinism", "rollback", "lockstep", "ggpo", "replays"]
 +++

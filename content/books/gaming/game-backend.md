@@ -2,7 +2,7 @@
 title = "Game Backend Architecture"
 description = "What a live game's backend runs, how Riot and others have built and deployed it, the platforms you can buy, and why launches break and how to load test them."
 category = "Gaming Industry"
-order = 1612
+order = 1613
 part = "Backend and Live Services"
 tags = ["gaming", "backend", "microservices", "scalability", "load-testing"]
 +++
@@ -47,7 +47,7 @@ Riot has written about its languages more than most studios, and the posts are p
 - **Java and Go across Riot.** In "Leveraging Golang for Game Development and Operations" (November 6, 2020), Aaron Torres, engineering manager of the Riot Developer Experience team, writes: "At Riot, our two primary languages for services are Java and Go." The same post says most of the services his team supports are written in Go, and that Riot's deployment tool (backed by MySQL, able to target several datacenter locations) and its operability forwarder (which pushes logs and metrics to observability platforms) are Go.
 - **Go for VALORANT's backend.** In the same post, Justin O'Brien of VALORANT's competitive team says his team, and every VALORANT feature team, uses Go for all backend services, and that the whole backend microservice architecture is Go. Gunning's load-testing post a month later says almost all of the services making up the VALORANT platform are written in Go, and that the load-test harness was written in Go too, for its concurrency model and network I/O.
 - **Java with a Go sidecar.** "Running Online Services at Riot: Part I" (September 23, 2016, Jonathan McCaffrey) uses the Loot service (Hextech Crafting in League) as its example: a Java REST service with a small Go sidecar beside its Memcached cache. [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#inventories) walks through its read and write path.
-- **Erlang for chat and push.** Riot's 2015 chat servers are mostly Erlang with some C, and the Riot Messaging Service (Michal Ptaszek, February 28, 2017), which lets backend services push events to clients over persistent connections, was implemented entirely in Erlang; the RMS post describes Riot's teams as split between Java, Go and Erlang by preference. Both designs are in [Parties, Presence, Chat & Voice](/books/gaming/social-systems#protocol-xmpp-or-your-own).
+- **Erlang for chat and push.** Riot's chat servers and its messaging service are Erlang; both designs, and the RMS post's note that Riot's teams split between Java, Go and Erlang by preference, are in [Parties, Presence, Chat & Voice](/books/gaming/social-systems#protocol-xmpp-or-your-own).
 
 Read together, the posts describe a company where the language follows the team and the problem: Erlang where a service holds millions of long-lived connections, Java for long-standing League services, and Go for a newer game built from scratch. They're dated statements about specific services, not a description of everything Riot runs today.
 
@@ -63,25 +63,7 @@ Riot's "Running Online Services" series is the most detailed public account of a
 
 The container counts aren't one series: Part VI counts Riot-operated regions only, and the posts don't reconcile their scopes, so I quote each with its date and don't compute a growth rate from them.
 
-Part VI's idea is the one I'd copy first. A game patch changes the client, the game server and several services at the same minute, and the combinations that were tested are the only ones that are safe. Version the set, not the pieces:
-
-```json
-{
-  "environment": "game-prod-eu",
-  "version": "2026.10.27-3",
-  "game_build": { "client": "11.08.0.4412", "server": "11.08.0.4412" },
-  "services": {
-    "parties":     { "image": "parties:5.14.2",     "replicas": 40 },
-    "matchmaking": { "image": "matchmaking:7.2.0",  "replicas": 12 },
-    "results":     { "image": "results:3.9.1",      "replicas": 8 },
-    "store":       { "image": "store:4.1.7",        "replicas": 6 }
-  },
-  "config_overrides": ["base", "region/eu", "event/season-start"],
-  "approved_by": "release_manager"
-}
-```
-
-The names and numbers are illustrative. What matters is that a shard runs exactly one environment version at a time, that rolling forward or back moves the whole set, and that a hotfix to one service is a new environment version, not a side-channel deploy. The mechanics of rollouts are in [Deployment Strategies](/docs/delivery/deployment-strategies) and [Containers](/docs/delivery/containers).
+Part VI's idea is the one I'd copy first: a game patch changes the client, the game server and several services at the same minute, and the combinations that were tested are the only ones that are safe, so version the set, not the pieces ([Versioning a Set of Services Together](/docs/delivery/deployment-strategies#versioning-a-set-of-services-together)). In a game the set also pins the client and server build, so a shard runs exactly one environment version, a hotfix to one service is a new environment version, and the client a player can connect with is part of what rolls back.
 
 ## The Stack
 
@@ -157,14 +139,12 @@ Launches fail in the same few ways, and the public record is unusually good:
 
 ### Login Queues
 
-A login queue is admission control with a user interface, and it belongs at the edge of the account service, in front of everything that holds state. The pieces:
+A login queue is admission control with a user interface, at the edge of the account service in front of everything that holds state; the general design (capacity per scope, a ceiling on the queue, honest position, priority classes, reclaiming idle sessions, ramping after an outage) is in [Waiting Rooms & Admission Control](/docs/architecture/admission-control). What games add, from FFXIV's Endwalker launch:
 
-- **A capacity number per scope.** A logical data center, a World or a shard has a maximum of concurrent sessions and a maximum login rate, both set from load tests and enforced by the login service, not discovered by the database falling over.
-- **A queue with a ceiling.** Players beyond capacity get a position, and the queue itself has a limit. FFXIV's Error 2002 is exactly that ceiling: past 17,000 queued, new players were refused. A queue that grows without bound fills memory and promises waits nobody will sit through.
-- **Honest position and estimate.** Show the position and an estimate computed from the recent admission rate. Players tolerate a long queue far better than an unknown one.
-- **Priority classes.** FFXIV gave paying subscribers priority over Free Trial players. Priority is a business rule, so it lives in configuration with an effective date ([Rules as Data](/docs/architecture/rules-as-data)).
-- **Reclaim idle slots.** FFXIV logs out inactive players after 30 minutes and says emote loops and training-dummy attacks don't prevent it. Every idle session held during a launch is a queued player not playing.
-- **Ramp, don't flip.** After an outage, admit players in steps (Roblox used about 10%) and watch databases and caches at each step. Reconnect storms with every client retrying at once are the second outage; clients back off with jitter ([Retries & Timeouts](/docs/architecture/retries-and-timeouts#exponential-backoff-with-jitter)).
+- **The scope is a World or a logical data center,** each with its own concurrent-session and login-rate caps, so one popular World queues while its neighbors are empty, and moving players between Worlds is a lever the queue itself can't pull.
+- **The ceiling shows up as an error code.** FFXIV's Error 2002 was the queue's ceiling: past 17,000 queued for a logical data center, new players were refused ([The Queue Has a Ceiling](/docs/architecture/admission-control#the-queue-has-a-ceiling)).
+- **Priority follows the business model.** FFXIV gave paying subscribers priority over Free Trial players, and suspended Free Trial registration outright ([Priority Classes](/docs/architecture/admission-control#priority-classes)).
+- **Idle in a game looks busy.** FFXIV logs out inactive players after 30 minutes and says emote loops and training-dummy attacks don't prevent it, so "idle" has to be defined by meaningful input, not by packets ([Reclaiming Idle Sessions](/docs/architecture/admission-control#reclaiming-idle-sessions)).
 
 ## Load Testing
 

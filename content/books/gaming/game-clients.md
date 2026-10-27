@@ -1,6 +1,6 @@
 +++
 title = "Game Clients & Launchers"
-description = "What a game's front-end client and launcher do, how League's client moved from Adobe AIR to web tech and plugins, what that cost, and how to build one."
+description = "What a game's front end and launcher do on PC and console, how League's client moved to web tech and plugins, what that cost, and how to build one."
 category = "Gaming Industry"
 order = 1605
 part = "Clients and Delivery"
@@ -9,7 +9,7 @@ tags = ["gaming", "game-clients", "launchers", "cef", "desktop", "game-ui", "per
 
 A player who opens a PC game rarely starts with the game. They start with a client: a desktop program that signs them in, shows the store, the friends list and their collection, patches the game, and finally starts the game executable and steps aside. That program runs for hours, often longer than any match, and it's where most of a live game's features show up first. It's also software that many teams change at once, on a release cadence set by the game, and that players judge by how long it takes to open.
 
-This chapter covers that front end: what clients and launchers do, the best-documented public example of building one (the League of Legends client update, which Riot described in engineering posts in 2016 and 2017 and measured in public from 2020 to 2021), the other launchers players use, the UI technology inside games, and how to build a client of your own. The engine itself, its frame loop and in-game rendering belong to [Building Your Own Engine](/books/gaming/building-an-engine); moving bytes to players belongs to [Patching & Content Delivery](/books/gaming/patching); sign-in and platform accounts belong to [Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity).
+This chapter covers that front end: what clients and launchers do, the best-documented public example of building one (the League of Legends client update, which Riot described in engineering posts in 2016 and 2017 and measured in public from 2020 to 2021), the other launchers players use, front ends on consoles and inside the engine, the UI technology inside games, and how to build a client of your own. The engine itself, its frame loop and in-game rendering belong to [Building Your Own Engine](/books/gaming/building-an-engine); moving bytes to players belongs to [Patching & Content Delivery](/books/gaming/patching); sign-in and platform accounts belong to [Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity).
 
 ## What a Client Does
 
@@ -27,78 +27,40 @@ A **launcher** is the narrower version: install, patch and launch, plus news and
 
 ## The League Client Update
 
-Riot's 2016 post "The Architecture of the League Client Update", by software architect Andrew McVeigh, is the most detailed public account of building a game client on web technology, and it's worth reading in full. The facts below are Riot's, from that post.
-
-The original League client was built in 2008 on Adobe AIR and used an RTMP session-based protocol to talk to Riot's servers. AIR gave a small team rich multimedia, animation and cross-platform support. By 2015, Riot named three problems:
-
-1. **HTML5 had become a standardized, widely adopted platform,** with standard tooling and a large pool of developers who knew it.
-2. **Players wanted to stay connected in and out of game,** and the AIR client used too many resources to keep running in the background.
-3. **Teams kept colliding.** The codebase suited a small team, not many teams adding features at once.
-
-Riot considered reorganizing the AIR code and chose a platform change instead, with the Chromium Embedded Framework (CEF) as the front end. CEF is a BSD-licensed project, founded by Marshall Greenblatt in 2008, for embedding Chromium-based browsers in other applications; its own description lists "a light-weight native 'shell' application that hosts a user interface developed primarily using Web technologies" as a use case, which is exactly this one.
+Riot's 2016 post "The Architecture of the League Client Update", by software architect Andrew McVeigh, is the most detailed public account of building a game client on web technology. The original client was built in 2008 on Adobe AIR. By 2015 Riot named three problems: HTML5 had become the standard platform with the larger talent pool, players wanted to stay connected in and out of game and the AIR client was too heavy to keep running in the background, and many teams were colliding in a codebase built for one. Riot chose a platform change, with the Chromium Embedded Framework (CEF), a BSD-licensed project whose own description lists "a light-weight native 'shell' application that hosts a user interface developed primarily using Web technologies" as a use case.
 
 The architecture took four steps to settle, and the steps are the useful part:
 
-- **All JavaScript, rejected.** The first version had a small C++ library that let JavaScript make RTMP calls, with ember.js for the UI and ember-orbit as the data layer. Asynchronous handling and player state in JavaScript made the code complex and memory-heavy, and an internal survey found developers less productive than on the AIR client.
-- **C++ services on the desktop.** Riot moved communication into a C++ "foundation": microservices running on the player's machine that presented the server protocol as REST resources and pushed events to the UI over WebSockets. The foundation held the canonical state, so the UI could rebuild itself with GET requests. When the client was minimized, the UI and its JavaScript VMs could shut down while the foundation, at about 20 MB, kept running and could still show invite notifications. That answered the second problem directly.
-- **Plugins.** Each feature became a plugin: an independent unit of ownership, development, testing and deployment, versioned with semver and declaring the plugins and versions it depends on. Front-end plugins hold UI; back-end plugins hold C++ communication logic. Which plugins load depends on the player's entitlements, such as regional features or game access. Each front-end plugin got its own resource cache, and ember-orbit was retired. That answered the third problem.
-- **Framework per plugin.** The JavaScript framework became each front-end plugin's own choice, though most features stayed on Ember.
-
-One developer called the result a "datacenter in a desktop," and the post compares it with GitHub's Atom editor, also built on Chromium. After the plugin architecture landed, Riot's developer survey had "improved by around 15%" and was rising.
+- **All JavaScript, rejected.** Asynchronous handling and player state in JavaScript made the code complex and memory-heavy, and an internal survey found developers less productive than on the AIR client.
+- **C++ services on the desktop.** Communication moved into a C++ "foundation": microservices on the player's machine that presented the server protocol as REST resources and pushed events to the UI over WebSockets. The foundation held the canonical state, so the UI could be shut down when the client was minimized while the foundation, at about 20 MB, kept showing invite notifications.
+- **Plugins.** Each feature became an independently owned, tested and versioned plugin (semver, declared dependencies), front end for UI and back end for C++ logic, loaded according to the player's entitlements.
+- **Framework per plugin,** though most features stayed on Ember. After the plugin architecture landed, Riot's developer survey had "improved by around 15%."
 
 ### A Build Is a List of Plugins
 
-Riot's 2017 follow-up, "Under the Hood of the League Client's Hextech UI" by Jules Glegg, describes how the plugin model works day to day. A build of the client "is expressed as a list of units called plugins": a JSON file of plugin names and versions, such as `rcp-be-login`, `rcp-be-lol-patcher`, `rcp-fe-audio` and `rcp-fe-lol-navigation`. "Back-end plugins that deal purely with data are written as C++ REST microservices"; front-end plugins are JavaScript apps that run in CEF, which ships with the client. The build system assembles a client only "as long as the list of plugins satisfies each plugin's dependencies and doesn't contradict itself," and each plugin "uses Semver to communicate changes in its API."
-
-At runtime a front-end plugin waits for an init event, registers its public API and asks for its dependencies by name. Dependencies "flow upwards": a feature registers itself with shared systems such as navigation, rather than navigation knowing every feature. The post covers several problems any multi-team web client meets:
-
-- **Framework versions.** Riot supports "a small list of Ember versions," retiring an old one before adding a new one, and loads them side by side with a custom Webpack loader that captures each library's globals so versions don't collide.
-- **Shared code and memory.** Shared NPM libraries are compiled into a shared plugin so they're loaded once, and shared UI components are "native Custom Elements with heavy usage of Shadow DOM."
-- **Data.** REST handles one-shot calls, and "a WebSocket that allows the front-end plugins to observe back-end plugins for changes" handles live state, wrapped in a small data-binding library with `get` and `observe`.
-- **Media.** Audio runs on Web Audio channels with ducking; video is affordable because assets are patched to local disk.
-
-The goal is stated plainly: League "puts new things in the hands of players every 2 weeks," and the build system is meant to let the client scale "to many dozens of teams all working on the same client at once."
+Riot's 2017 follow-up by Jules Glegg describes the model day to day. A build "is expressed as a list of units called plugins," a JSON file of names and versions, assembled only "as long as the list of plugins satisfies each plugin's dependencies and doesn't contradict itself." Dependencies "flow upwards" (a feature registers itself with navigation rather than navigation knowing every feature); Riot supports "a small list of Ember versions," loaded side by side, retiring one before adding another; shared libraries compile into one shared plugin; and live state reaches the UI through "a WebSocket that allows the front-end plugins to observe back-end plugins for changes." The goal was a client that scales "to many dozens of teams all working on the same client at once," shipping every two weeks.
 
 ![Exploded axonometric of a desktop game client in four plates. At the bottom, separated by a gap, the game process: a separate executable with its own loopback API. Above it the plugin host, which loads plugins from a build manifest by semver and entitlements; then local services, the back-end plugins holding canonical state; then the web UI, a CEF renderer running front-end plugins. Side notes mark REST and WebSocket between UI and services and a token handed to the game at launch. A table lists Riot's published memory figures: about 20 MB for the 2016 desktop services, and front-end memory per session at the median falling from 597 MB on CEF 74 to 275 MB on CEF 91, a 322 MB saving.](/diagrams/gm-client-architecture.svg "The client as a small datacenter: a host process, local services that own state, a disposable web UI on top, and the game as a separate process. Memory figures are Riot's.")
 
 ## What the Architecture Cost, and the Cleanup
 
-An architecture like this moves costs around rather than removing them. Every plugin and framework instance a client loads at startup costs time and memory on the player's machine, and an embedded browser is a large dependency that has to be kept current. Riot's League team measured those costs in public in a series of "Client Cleanup" dev posts from 2020 to 2021, which make an unusually concrete record of what a web-tech game client has to manage at scale.
+An architecture like this moves costs around rather than removing them: every plugin loaded at startup costs time and memory, and an embedded browser is a large dependency that has to be kept current. Riot measured those costs in public in a series of "Client Cleanup" posts from 2020 to 2021. The campaign opened in March 2020 with targets of bootstrap under about 15 seconds at the 90th percentile (against up to 40 seconds for many players) and champion-select lock-in at about 100 ms at the 90th percentile; bootstrap was loading "41 separate plugins and 16 apps." In May 2020 Riot found that Affinity, the mechanism deciding which plugins loaded at boot, had been "inadvertently broken" in 2018, so "the client is defaulting to loading every single plugin during bootstrap." A boot set that nobody tests drifts until it's everything.
 
-The campaign opened on March 2, 2020, with Riot acknowledging too many bugs, too much lag (especially in champion select), memory leaks, crashes and freezes. It set targets: bootstrap (startup to a usable client) under 15 seconds even on relatively slow machines, about 15 seconds at the 90th percentile, against times of up to 40 seconds for many players; and champion-select lock-in at about 100 ms for the 90th percentile, against about 300 ms at the median, 450 ms at the 70th percentile and 800 ms at the 90th. Riot named the causes as it saw them: bootstrap loaded "41 separate plugins and 16 apps," each taking "anywhere from 100ms to 800ms" to start, and champion-select actions spawned apps that piled up over a session. It also said where the deepest problem was: "The real, root problem in champ select is the way that our backend systems manage data."
-
-The May 2020 update found something worth remembering for any plugin system. A mechanism called Affinity decided which plugins had to load before bootstrap completed, and "at some point during 2018" it had been "inadvertently broken," so "the client is defaulting to loading every single plugin during bootstrap" (and after games). Riot added that even when Affinity worked, it hadn't prioritized plugin loading efficiently, and planned to replace it. The lesson isn't specific to League: a boot set that nobody tests will drift until it's everything.
-
-The 2020 recap, published February 5, 2021, reported the results:
+The cleanup's published results, before and after:
 
 | Measure (Riot, League client) | Before | After |
 | --- | --- | --- |
-| Bootstrap | 29.5 s at the start of 2020 | 16 s for 90% of players |
-| Ember apps loaded at bootstrap | Baseline | 63% fewer |
+| Bootstrap | 29.5 s at the start of 2020 | 16 s for 90% of players (February 2021) |
 | Plugins in the client | Baseline | 57% fewer |
-| Out-of-memory crashes | 193,000 per patch before the fixes in 10.23 | 55% fewer by patch 10.25 |
+| Out-of-memory crashes | 193,000 per patch (10.23) | 55% fewer by patch 10.25 |
+| Client crashes per patch, CEF 74 to CEF 91 | 3,161,145 (11.16) | 1,214,155 (11.17), 61% fewer |
+| Front-end memory per session, p50 | 597 MB on CEF 74 | 275 MB on CEF 91 |
 
-Riot also reported 175 bugs fixed and 30 memory leaks addressed in 2020. Patch 10.25 still saw 2.2 million client crashes across 16 regions, and Riot concluded that "the best option for us to address the majority of crashes is to upgrade our version of Chromium."
+The CEF upgrade was the biggest single lever: in April 2021 the client was on CEF 74, last updated in November 2019, and Riot called updating it "the single most impactful individual change we can make to improve the client." It needed preparation (web components updated so they wouldn't break on the newer engine) and shipped in patch 11.17. The top remaining crash cause was running out of memory, almost half on Windows 7 machines, and Riot also corrected its own earlier figure for JavaScript errors per patch as a measurement mistake.
 
 ![Two timeline plan views. The first, at 1 second to 20 pixels, shows Riot's published League client bootstrap times: B0 of 29.5 seconds at the start of 2020 and B1 of 16.0 seconds for 90 percent of players as reported in February 2021, with a goal line G1 at 15 seconds, 1.0 second short of B1. The second, at 1 second to 40 pixels, splits an illustrative 15-second budget into seven parts: process start and self-update check 1.00, session restore 2.00, local services ready 1.50, boot-set plugins 4.50, first data 3.00, home screen 1.50 and headroom 1.50, summing to 15.00. A variable table defines each code.](/diagrams/gm-client-startup.svg "Startup as a budget. The published numbers are Riot's; the split of the 15-second goal is illustrative, and it only holds if everything outside the boot set waits until the home screen is usable.")
 
-### Keeping the Embedded Browser Current
-
-In April 2021 the client was on CEF 74, last updated in November 2019, and Riot called updating CEF "the single most impactful individual change we can make to improve the client." The update needed preparation: the team first had to update its web components so they wouldn't break on the newer engine, and the target moved from CEF 90 to CEF 91 along the way. The April post also expected WebSocket transfers up to 4.1 times faster on Windows and 7.8 times faster on Mac, and corrected an earlier figure: JavaScript errors stood at 140 million per patch, and the 265 million reported for 10.25 had been a measurement mistake, not a change in what players saw.
-
-CEF 91 shipped in patch 11.17. Riot's September 20, 2021 post published the effect:
-
-| Measure (Riot, League client) | CEF 74 | CEF 91 |
-| --- | --- | --- |
-| Client crashes per patch | 3,161,145 (11.16) | 1,214,155 (11.17), 61% fewer |
-| Front-end memory per session, p20 | 359 MB | 74 MB |
-| Front-end memory per session, p50 | 597 MB | 275 MB |
-| Front-end memory per session, p90 | 1,016 MB | 598 MB |
-| CPU, p20 / p50 / p90 | 13% / 34% / 83% | 10% / 22% / 72% |
-
-The 11.17 crash count was also 38% below the 2021 average to that point. The top remaining crash cause was machines running out of memory, and almost half of those were old PCs on Windows 7. Riot's stated next step was "a more frequent update schedule" for CEF, plus WebAssembly and Web Workers.
-
-Read together, the posts are a practical checklist. Startup cost grows with the number of things loaded at boot, so the boot set needs an owner and a test. An embedded browser is a dependency like any other, and an old one costs crashes and memory, so schedule its upgrades instead of waiting for them to become a project ([Dependencies](/docs/engineering/dependencies)). Count crashes and errors per release, check the counting, and publish targets in percentiles, because the slowest tenth of machines is where a client's reputation is made.
+Read together, the posts are a checklist. Startup cost grows with what loads at boot, so the boot set needs an owner and a test. An embedded browser is a dependency like any other, so schedule its upgrades instead of waiting for them to become a project ([Dependencies](/docs/engineering/dependencies)). Count crashes and errors per release, check the counting, and publish targets in percentiles, because the slowest tenth of machines is where a client's reputation is made.
 
 ## One Client for Every Game: The Riot Client
 
@@ -126,6 +88,15 @@ Public engineering detail on other launchers is thin. What the companies themsel
 
 The pattern across these is the one Riot documented: launchers compete on cold start, memory while a game runs, and keeping games patched without the player waiting.
 
+## Console and In-Engine Front Ends
+
+On a console, and on PC games that skip a separate client, the platform's shell is the launcher and the front end is drawn by the engine. The store, the library, installs and patches belong to the platform ([How Platforms Deliver Updates](/books/gaming/patching#how-platforms-deliver-updates)); sign-in is the platform account, linked to yours behind the scenes ([Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity)). What's left for the game's own front end is the same list as a desktop client's, minus patching, plus rules the platform sets:
+
+- **The platform certifies it.** Microsoft publishes the Xbox Requirements (XRs), "the policies, technical requirements, and product component-related requirements" every Xbox title must meet; Sony's and Nintendo's equivalents are under NDA. Menus, sign-in flows, error messages and suspend and resume are where front ends most often meet those requirements ([Platform Certification](/books/gaming/production-pipelines#platform-certification)).
+- **The shell reaches into the game.** PlayStation 5's Control Center shows Activities, cards that let a player "jump directly into levels or challenges," some in picture-in-picture "without having to leave the game." A front end that can only be entered from its title screen can't honor a card that points at a mode, a level or a challenge, so design every screen and mode to be reachable by a deep link with the session already restored.
+- **Controller first, at a distance.** Valve's Steam Deck review is a public statement of what a controller-first front end needs: full navigation with the physical controls in the default configuration, no mouse-and-keyboard glyphs when they aren't the active input, text entry through the platform's on-screen keyboard API, and interface text readable at 30 cm, with 9 pixels at 1280x800 as "the absolute minimum" and 12 pixels recommended. Launchers are held to the same standard, and Valve recommends "strongly against requiring the user to navigate a launcher to play your game."
+- **No second front end to maintain.** A game that ships on console and PC usually draws its front end in the engine everywhere and keeps a desktop client, if it has one, for the things only a PC needs (multiple games, background patching, a social presence outside the game). The engine's UI technology is the next section's subject, and its frame cost is the reason its choice matters.
+
 ## UI Technology Inside the Game
 
 In-game UI (menus, HUDs, the store inside the game) has its own lineage, and a game that renders its front end in the engine picks from these:
@@ -141,7 +112,7 @@ In-game UI (menus, HUDs, the store inside the game) has its own lineage, and a g
 
 The tradeoff is the one the League team weighed at desktop scale. Web-style authoring gets a large talent pool and fast iteration; a purpose-built engine (Gameface's custom subset, Ultralight's stripped WebKit, or the engine's own UI) gets predictable memory and frame cost, which matters more inside a game than in a launcher, because UI time comes out of the frame budget ([Building Your Own Engine](/books/gaming/building-an-engine)).
 
-## How to Build One
+## How to Build It
 
 ### Process Model
 
@@ -253,11 +224,11 @@ A client crashes in three places, and each needs its own capture: native crashes
 **In practice**
 
 - [Riot Games: The Architecture of the League Client Update](https://www.riotgames.com/en/news/architecture-league-client-update), the move from Adobe AIR to CEF, the desktop C++ services, plugins and the survey result (May 2016)
-- [Riot Games: Under the Hood of the League Client's Hextech UI](https://www.riotgames.com/en/news/under-hood-league-client%E2%80%99s-hextech-ui), builds as plugin lists, semver resolution, Ember versions, Custom Elements and WebSocket data binding (February 2017)
+- [Riot Games: Under the Hood of the League Client's Hextech UI](https://www.riotgames.com/en/news/under-hood-league-client%E2%80%99s-hextech-ui), builds as plugin lists, semver resolution, Ember versions, shared plugins and WebSocket data binding (February 2017)
 - [League of Legends: Introducing the Client Cleanup Campaign](https://www.leagueoflegends.com/en-us/news/dev/introducing-the-client-cleanup-campaign/), bootstrap and champion-select targets, 41 plugins and 16 apps at boot (March 2020)
 - [League of Legends: Client Cleanup: Progress, Setbacks & Discoveries](https://www.leagueoflegends.com/en-gb/news/dev/client-cleanup-progress-setbacks-discoveries/), the Affinity discovery (May 2020)
 - [League of Legends: Client Cleanup: 2020 Recap & What's Ahead](https://www.leagueoflegends.com/en-us/news/dev/client-cleanup-2020-recap-what-s-ahead), bootstrap from 29.5 s to 16 s, fewer apps and plugins, crash and memory figures (February 2021)
-- [League of Legends: Client Cleanup: 2021 So Far & What's On Deck](https://leagueoflegends.com/en-pl/news/dev/client-cleanup-2021-so-far-what-s-on-deck), CEF 74 and the upgrade plan, WebSocket speedups and the JavaScript error correction (April 2021)
+- [League of Legends: Client Cleanup: 2021 So Far & What's On Deck](https://leagueoflegends.com/en-pl/news/dev/client-cleanup-2021-so-far-what-s-on-deck), CEF 74, the upgrade plan and the JavaScript error correction (April 2021)
 - [League of Legends: We launched the updated CEF](https://www.leagueoflegends.com/en-us/news/dev/client-cleanup-we-launched-the-updated-chromium-embedded-framework-cef/), CEF 91 in patch 11.17 and its crash, memory and CPU results (September 2021)
 - [Riot Games: New Riot Client Coming Soon](https://www.riotgames.com/en/news/new-riot-client-coming-soon), one client for all desktop Riot games and its rollout dates (September 2021)
 - [Riot Games: Riot Client background patching](https://www.riotgames.com/en/news/riot-client-background-patching-valorant), opt-in background patching, full for VALORANT and partial for other games (May 2023)
@@ -266,4 +237,7 @@ A client crashes in three places, and each needs its own capture: native crashes
 - [EA: The EA app](https://www.ea.com/en-gb/inside-ea/news/ea-app), EA's description of its client and background updates
 - [Gaming.net: Epic says it vibe coded its rebuilt launcher](https://www.gaming.net/epic-games-says-it-vibe-coded-its-rebuilt-launcher-now-in-preview/), secondary report of the October 2026 launcher preview and Epic's cold-start claim
 - [Thurrott: Xbox app rebuilt in React Native](https://www.thurrott.com/?p=236311), secondary report quoting Microsoft on the move from Electron (June 2020)
+- [Xbox Requirements](https://devdocs.xbox.com/publishing/certification/xbox-requirements), the published policies and technical requirements every Xbox title must meet
+- [Steamworks: Steam Deck compatibility review](https://partner.steamgames.com/doc/steamdeck/compat), controller navigation, glyphs, on-screen keyboard, text size and launchers
+- [PlayStation Blog: First look at PlayStation 5's user experience](https://blog.playstation.com/2020/10/15/first-look-playstation-5s-next-generation-user-experience/), the Control Center and Activities cards (October 2020)
 - [PocketGamer.biz: Autodesk kills off game middleware products](https://www.pocketgamer.biz/news/66202/autodesk-kills-off-game-middleware-products/), secondary report of Scaleform's end of sale (July 2017)

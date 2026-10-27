@@ -2,7 +2,7 @@
 title = "Monetization Models"
 description = "Premium, DLC, free-to-play, battle passes, subscriptions, ads and personalized shops: what each model sells, what it obliges you to keep, and what it builds."
 category = "Gaming Industry"
-order = 1620
+order = 1622
 part = "Money"
 tags = ["gaming", "monetization", "free-to-play", "subscriptions", "virtual-currency", "personalization"]
 +++
@@ -33,11 +33,11 @@ A premium game is the simplest model to build and the hardest to get exactly rig
 
 Editions are bundles of entitlements, not separate games. A deluxe edition is the base license plus a cosmetic pack plus early access, so model it as a product that grants three entitlements, each of which can also be sold on its own. If you model "deluxe" as a flag on the account, the first time you sell the cosmetic pack separately you'll have two ways to own the same thing and two ways to refund it.
 
-Refund windows shape the premium launch. Steam and PlayStation both give buyers 14 days, limited by playtime on Steam and by starting the download on PlayStation ([Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks) has each store's rules and how you learn of a refund). A short game, or one whose value is front-loaded, meets those windows head-on, and the refund arrives as a revocation your backend has to process.
+Refund windows shape the premium launch. Most PC and console stores refund a game within a window limited by playtime or by starting the download ([Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks) has each store's rules and how you learn of a refund). A short game, or one whose value is front-loaded, meets those windows head-on, and the refund arrives as a revocation your backend has to process.
 
 ## DLC, Expansions and Season Passes
 
-Downloadable content is a second purchase that depends on the first. An expansion is useless without the base game, so the entitlement check is a conjunction: the account owns both, on this platform, now. Steam's refund rule shows the dependency from the store's side: DLC is refundable within 14 days of purchase if the base game has been played for less than two hours since the DLC was bought and the DLC hasn't been consumed, modified or transferred, and some third-party DLC is non-refundable, which Steam marks on the store page before purchase.
+Downloadable content is a second purchase that depends on the first. An expansion is useless without the base game, so the entitlement check is a conjunction: the account owns both, on this platform, now. Store refund rules show the dependency from the other side: Steam measures a DLC refund by playtime in the base game since the DLC was bought ([Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks)).
 
 A season pass, in the original sense, is a pre-purchase of DLC that doesn't exist yet. It's a promise, and the system has to keep it: when each piece of content ships, every pass holder needs the matching entitlement, including players who bought the pass two years earlier on a platform you've since stopped patching. Model the pass as an entitlement to a list of future products, and grant each product by a job that walks pass holders when the content releases ([Background Jobs](/docs/architecture/background-jobs)), not by checking "has pass" at every content gate. A content check that consults the pass directly works until the day you sell the same expansion on its own, and then two code paths decide ownership.
 
@@ -55,7 +55,7 @@ Apple's App Review Guideline 3.1.1 requires in-app purchase for in-game currenci
 
 Those rules shape the data. Every item price in currency needs a money equivalent you can show, every pack needs a published rate, and pack sizes that always leave an unspendable remainder become a pattern a regulator can point at. My rule: a player should be able to see what an item costs in their own money before they confirm, and buy exactly what they need without stranding a balance.
 
-Currency is also a liability on the books. A player who buys coins has paid for something they haven't received yet. Roblox's FY2025 10-K shows how one large platform accounts for it: bookings are "initially recorded in deferred revenue" and recognized over the period the items are available, and for durable items that period is the "estimated average lifetime of a paying user, which was 27 months as of December 31, 2025". Your finance team will ask the backend for exactly the data that estimate needs: what was bought, when, whether it was durable or consumable, and when it was used. The double-entry ledger that records it is in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements); amounts follow [Money](/docs/payments/money).
+Currency is also a liability on the books: a player who buys coins has paid for something they haven't received yet, so the sale is deferred revenue, not revenue. How one large platform recognizes it, and the facts the ledger keeps so finance can, are in [Accounting for Virtual Currency](/books/gaming/economies-and-entitlements#accounting-for-virtual-currency); amounts follow [Money](/docs/payments/money).
 
 ## Battle Passes
 
@@ -170,7 +170,7 @@ The same codes, as definitions you can compute. The definitions of active player
 | N1 | Net to developer | B1 - S1 | $420,000 |
 | R1 | ARPU on gross bookings | B1 / M1 | $0.60 |
 
-ARPU on net revenue for the same month would divide the net measure its definition names (N1 less refunds and chargebacks, say) by M1, and the two are never charted under one name. GameAnalytics computes metrics "within UTC dates/hours" and defines conversion as the "Percentage of daily active users who made a purchase reported per day"; C1 is monthly conversion, a different number from the average of daily ones, so name the window in every metric. Bookings are not revenue: the Roblox filing above is the example of bookings deferred and recognized over months. And the store's share varies by store and program, from 12% to 30% on the stores in [Stores, Fees & Payments](/books/gaming/stores-and-payments), so S1 is a weighted sum across stores, not one rate.
+ARPU on net revenue for the same month would divide the net measure its definition names (N1 less refunds and chargebacks, say) by M1, and the two are never charted under one name. GameAnalytics computes metrics "within UTC dates/hours" and defines conversion as the "Percentage of daily active users who made a purchase reported per day"; C1 is monthly conversion, a different number from the average of daily ones, so name the window in every metric. Bookings are not revenue: Roblox defers bookings and recognizes them over months ([Accounting for Virtual Currency](/books/gaming/economies-and-entitlements#accounting-for-virtual-currency)). And the store's share varies by store and program, from 12% to 30% on the stores in [Stores, Fees & Payments](/books/gaming/stores-and-payments), so S1 is a weighted sum across stores, not one rate.
 
 ## Personalized Shops
 
@@ -243,34 +243,24 @@ CREATE TABLE player_offers (
 
 The discount levels in the check constraint are illustrative; the point is a small, fixed set shared by everyone. Prices live in `offer_prices`, not on the offer, because one offer has a price per store and market, each with its own history ([Regional Pricing](/books/gaming/stores-and-payments#regional-pricing) has the rules those rows follow); the price in the game's currency is the `in_game` row, the same everywhere.
 
-## How Monetization Shapes the System
+## Auditing
 
-Whatever the mix, every model above ends in the same few places, and they're the parts of the backend that can't be wrong:
+The questions a monetization system gets asked are about what a player was shown and what they agreed to, and the tables above answer them if nothing is overwritten:
 
-- **Entitlements are the source of truth for ownership.** A store purchase, a battle-pass tier, a subscription period, an ad reward and a support make-good all end as an entitlement or an inventory grant with a source. The store receipt is evidence; the entitlement is the fact the game reads. The core `entitlements` table is defined in [The Games Business](/books/gaming/games-business), and grants, revocations and their audit belong to [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements); its `source`, `source_ref` and `valid_during` columns already carry what every model needs, so each model writes into it with its own source rather than getting a table of its own.
-- **Every grant is idempotent and every grant is reversible.** Grants are keyed by what caused them (a store transaction, a season tier, an ad callback), so retries can't double-grant; and each grant can be revoked with a reason when its cause is refunded or charged back. What revocation does to items already used, or to a balance already spent, is a policy you decide before launch: revoke what it bought, let the balance go negative, or write it off ([Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks)).
-- **Prices are data with dates.** Offers, currency-pack rates, regional prices and discount levels are versioned rows with validity ranges, so you can answer what a player saw and paid on a given day ([Effective Dating & History](/docs/database/temporal-data)).
-- **Every money movement reaches finance.** Bookings, deferrals, refunds, chargebacks and store fees go to a pipeline finance can reconcile against each store's reports ([Data Pipelines](/docs/architecture/data-pipelines)).
-
-## Ethics and Regulation
-
-Monetization is where a game meets consumer law most directly, and the rules have moved quickly since 2025. The detail lives in [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes) and [Ratings, Age & Children](/books/gaming/ratings-and-age); the pointers that change what you build:
-
-- **Random paid items** need odds disclosed before purchase on the App Store and Google Play, raise the PEGI rating, and are off entirely in some countries; drop tables, disclosures and gates are built in [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes#building-drop-tables-that-can-be-audited).
-- **Purchase flows** are a regulatory subject. The FTC's 2023 final order against Epic Games bars charging through dark patterns or without express consent ([The FTC's Orders](/books/gaming/consumer-law-and-loot-boxes#the-ftc-s-orders)). Confirmation steps, button placement and one-tap purchases are design decisions that a regulator can review.
-- **Children** change everything: parental consent, spending limits, ad targeting, and what offers may say. A monetization design that hasn't been checked against the youngest player who can install the game isn't finished.
-
-My rule: the systems that make spending easy (saved payment methods, one-tap buys, currency balances) need matching systems that make spending visible and controllable: purchase history in the client, spending limits a parent can set, and refunds that don't punish the account.
+- **What did this player see, at what price?** `player_offers` (with the model version that chose the offer, and `shown_at`) joined to the `offer_prices` row in force at that instant. Prices are never updated in place; a new price is a new row with a new validity range ([Effective Dating & History](/docs/database/temporal-data)).
+- **Was the season's promise kept?** For each pass holder, the tiers reached against the reward entitlements granted with `pass:<season>:<tier>:<lane>` keys; the difference should be empty, and a job that checks it after each season's end is cheap.
+- **What did the confirmation say?** Purchase flows are a regulatory subject: the FTC's Epic order bars charging through dark patterns or without express consent ([The FTC's Orders](/books/gaming/consumer-law-and-loot-boxes#the-ftc-s-orders)), so keep the version of the purchase screen and its copy with each purchase, the same way a terms version is kept with a consent.
+- **Personalization decisions** carry the model version that made them, so a complaint that a player was shown a higher price, or a regulator asking whether minors were profiled, is a query rather than an investigation.
 
 ## What This Means for the System You Build
 
-- **One ownership record across models:** entitlements and inventory grants with a source, a validity range and a revocation path, whatever sold them.
+- **One ownership record across models:** a store purchase, a pass tier, a subscription period, an ad reward and a support make-good all end as an entitlement or inventory grant with a source, a validity range and a revocation path, in the tables of [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements).
 - **A catalog and offer system:** items, bundles, currency packs, passes and subscriptions as offers with dated prices, and per-player offer rows when the shop is personalized.
-- **Idempotent grants keyed by cause,** so store retries, ad callbacks and season grants can't double-grant, and a defined policy for revoking what's already been used.
-- **Currency that shows its price:** money equivalents for every item, published pack rates, and a ledger that finance can defer and recognize.
+- **Idempotent grants keyed by cause,** so store retries, ad callbacks and season grants can't double-grant, and one published policy for revoking what's already been used ([Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks)).
+- **Currency that shows its price:** money equivalents for every item, published pack rates, and a ledger that finance can defer and recognize ([Accounting for Virtual Currency](/books/gaming/economies-and-entitlements#accounting-for-virtual-currency)).
 - **Season machinery for passes:** tiers and thresholds as versioned data, server-side progress from events, and retroactive grants on upgrade.
 - **Metrics with named windows:** active players, conversion, ARPPU, bookings and store fees per store, defined once and reconciled against store reports.
-- **Guardrails built in:** odds disclosure, age gates, spending controls and honest confirmation steps, designed with the monetization, not after it.
+- **Guardrails built in, not added:** odds disclosure and drop tables that can be audited ([Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes#how-to-build-it)), ratings that follow the features ([Ratings, Age & Children](/books/gaming/ratings-and-age)), and for every system that makes spending easy a matching one that makes it visible: purchase history in the client, spending limits a parent can set, and refunds that don't punish the account.
 
 ## References
 
@@ -283,18 +273,16 @@ My rule: the systems that make spending easy (saved payment methods, one-tap buy
 - [PEGI: Expanded age rating criteria](https://pegi.info/news/pegi-expands-age-rating-criteria-interactive-risk-categories), 12 March 2026, new criteria for paid random items, time-limited offers and play-by-appointment from June 2026
 - [Google Play: Payments policy](https://support.google.com/googleplay/android-developer/answer/9858738), odds disclosure for randomized virtual items close to the purchase
 - [FTC: Changes to the children's privacy rule](https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-finalizes-changes-childrens-privacy-rule-limiting-companies-ability-monetize-kids-data), 16 January 2025, opt-in consent for targeted advertising and third-party disclosures
-- [Springlex: DSA Article 28](https://www.springlex.eu/en/packages/dsa/dsa-regulation/article-28/), the text of the minors-protection article, including the bar on profiling-based ads to known minors (secondary reproduction)
+- [EUR-Lex: Regulation (EU) 2022/2065, the Digital Services Act](https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng), Article 28 on the online protection of minors, including the bar on profiling-based ads to known minors
 
 **Reference**
 
 - [Google AdMob: Rewarded ads](https://developers.google.com/admob/android/rewarded), the rewarded-ad definition and custom data in server-side verification callbacks
 - [GameAnalytics: Metrics](https://docs.gameanalytics.com/events-metrics-and-filtering/metrics), definitions of DAU, conversion, ARPDAU and ARPPU computed in UTC
 - [Unity: Analytics terminology (2022.1)](https://docs.unity3d.com/2022.1/Documentation/Manual/UnityAnalyticsTerminology.html), ARPDAU including ad revenue and verified purchases
-- [Roblox: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1315098/000131509826000024/rblx-20251231.htm), bookings recorded in deferred revenue and the 27-month paying-user lifetime
 - [FTC: Final order requiring Epic Games to pay $245 million](https://www.ftc.gov/news-events/news/press-releases/2023/03/ftc-finalizes-order-requiring-fortnite-maker-epic-games-pay-245-million-tricking-users-making), 14 March 2023, the bar on dark patterns and billing without express consent
 
 **In practice**
 
-- [Steam: Refunds](https://store.steampowered.com/steam_refunds/), the 14-day and two-hour rule, DLC and early access playtime
-- [PlayStation: Store cancellation policy (US)](https://www.playstation.com/en-us/legal/playstation-store-cancellation-policy/), the 14-day window for games that haven't started downloading or streaming
+- [Steam: Refunds](https://store.steampowered.com/steam_refunds/), DLC refunds measured by base-game playtime
 - [Riot Games: Stocking Your Shop With Data Science](https://www.riotgames.com/en/news/stocking-your-shop-data-science), 30 April 2019, Your Shop's collaborative filtering, data problems, compute and offline evaluation

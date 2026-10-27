@@ -2,7 +2,7 @@
 title = "Live Operations"
 description = "Running a game that changes every week: patches, hotfixes and server-side overrides, seasons as dated content, flags, experiments, version skew and incidents."
 category = "Gaming Industry"
-order = 1615
+order = 1617
 part = "Backend and Live Services"
 tags = ["gaming", "live-ops", "patching", "feature-flags", "remote-config", "incidents"]
 +++
@@ -92,12 +92,10 @@ The general practice of feature flags (types, lifetimes, progressive rollout, cl
 
 **Kill switches** in a game disable a piece of content or a system without a build: a character pulled from the pick screen because of a game-breaking bug, a game mode taken out of the queue list, a store item hidden, a crafting recipe disabled because it's being exploited, a trade feature shut off during a duplication incident. Each one has to fail safe for players already using it (a disabled character in a match in progress plays out the match; a disabled store item already owned stays owned) and has to be listed in the runbook with exactly what flipping it does ([Kill Switches](/docs/delivery/feature-flags#kill-switches)).
 
-**Remote config** is tuning without a deploy. Unity describes Remote Config as a service "to tune your game design without deploying new versions," built from namespaced key-value parameters with overrides that "control which players receive what settings updates, and when"; PlayFab's title data does the same for "game configuration remotely." Riot's own configuration service, above, does it for services and game servers. Whatever the product, remote config is a deploy wearing different clothes, so it needs the same discipline:
+**Remote config** is tuning without a deploy. Unity describes Remote Config as a service "to tune your game design without deploying new versions," built from namespaced key-value parameters with overrides that "control which players receive what settings updates, and when"; PlayFab's title data does the same for "game configuration remotely." Riot's own configuration service, above, does it for services and game servers. Whatever the product, remote config is a deploy wearing different clothes, and the discipline (schema and bounds checks, versions and audit, shipped defaults with a cached last good value) is in [Remote Config](/docs/delivery/feature-flags#remote-config). Two parts are particular to games:
 
-- **Schema-validated.** A config change is checked against a schema and against bounds (a drop rate between 0 and 1, a price above zero) before it can publish. A typo in a JSON value can take a game down as surely as a bad build.
-- **Versioned and audited.** Every change has an author, a reason, an approver for risky keys, and a version that services report in their telemetry, so "what was live at 14:02" has an answer.
-- **Defaulted in the client.** The client ships with built-in defaults and caches the last good config it fetched, so a config service outage at login degrades to yesterday's values instead of a black screen.
-- **Applied at a defined moment.** Game servers read gameplay config at match start, not mid-match, so both teams play by one set of rules; Riot's post describes exactly that.
+- **Bounds are game rules.** A drop rate between 0 and 1, a price above zero, a cooldown no shorter than the animation: the schema for gameplay keys is written by designers and checked like code, because a typo in a tuning value can take a game down as surely as a bad build.
+- **Applied at a defined moment.** Game servers read gameplay config at match start, not mid-match, so both teams play by one set of rules; Riot's post describes exactly that. A config version that services and game servers report in their telemetry makes "what was live in this match" a join.
 
 ## Experiments
 

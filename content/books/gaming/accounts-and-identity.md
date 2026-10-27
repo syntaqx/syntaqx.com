@@ -3,7 +3,7 @@ title = "Accounts, Identity & Cross-Platform"
 nav_title = "Accounts & Identity"
 description = "Publisher accounts versus platform identities, linking and merging, cross-play rules, tokens, account security, regions, age controls and bans."
 category = "Gaming Industry"
-order = 1613
+order = 1614
 part = "Backend and Live Services"
 tags = ["gaming", "identity", "accounts", "cross-platform", "cross-play"]
 +++

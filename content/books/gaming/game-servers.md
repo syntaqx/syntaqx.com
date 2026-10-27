@@ -2,7 +2,7 @@
 title = "Game Servers & Hosting"
 description = "Dedicated server processes, VALORANT's 128-tick frame budget, fleets and allocation, Agones and GameLift, placement, the network path, DDoS and load tests."
 category = "Gaming Industry"
-order = 1608
+order = 1609
 part = "Multiplayer"
 tags = ["gaming", "game-servers", "hosting", "agones", "gamelift", "multiplayer"]
 +++
@@ -133,7 +133,7 @@ The target is a product decision. Riot's stated VALORANT goal was "35ms ping to 
 
 ## The Network Between Player and Server
 
-Servers near players are half the problem; the path to them is the other half. Riot's three-part series "Fixing the Internet for Real Time Applications" (2015-2016) explains why. "Backbone providers and ISPs route traffic to the lowest cost path, not the lowest latency path": Riot's example is San Francisco to Portland, 14 ms direct and 70 ms when routed through Los Angeles, Denver and Seattle. Video can buffer about five seconds; games can't buffer actions that haven't happened yet. And game packets are small, so routers that count packets rather than bytes treat game traffic as many times more expensive.
+Servers near players are half the problem; the path to them is the other half. Riot's three-part series "Fixing the Internet for Real Time Applications" (2015-2016) explains why. "Backbone providers and ISPs route traffic to the lowest cost path, not the lowest latency path": Riot's example is San Francisco to Portland, 14 ms direct and 70 ms when routed through Los Angeles, Denver and Seattle. Video can buffer about five seconds; games can't buffer actions that haven't happened yet. Game packets are also small, which costs more than it looks on routers that count packets ([Reliability Over UDP](/books/gaming/netcode#reliability-over-udp)).
 
 **Riot Direct** is Riot's answer: its own routers in ten of the largest internet hubs in the US, connected by leased dark fiber or optical waves, peering directly with as many ISPs as possible so player traffic enters Riot's network early. BGP's defaults kept sending return traffic the slow way, which Riot fixed with ISPs using BGP communities and MED preferences. Riot's published results: the share of players under 80 ms rose from 31% to 50% between November 2014 and August 2015, and moving servers to Chicago took it "from 50% to 80% overnight." The third post adds that Riot tracks "latency, packet loss, and jitter," streams device telemetry with "updates every millisecond," built a DPDK-based router that "can process 400M packets per second," and that "Riot now spends less on internet access and internet facing networking than ever before." Riot's closing argument: "We believe that games deserve their own network."
 
@@ -147,7 +147,8 @@ Game servers are exposed by design (players connect straight to an IP and port),
 - **Absorb and scrub upstream.** Volumetric attacks are handled by the network provider or a scrubbing service before they reach the host. Edgegap documents detection of "TCP SYN floods, UDP floods, and HTTP floods" by port, source and connection rate, upstream scrubbing, null-routing suspicious traffic at the edge, and steering new deployments away from a machine under attack.
 - **Rotate.** Short-lived servers help: Edgegap retires an attacked site's IP after the match so "subsequent matches will not be targeted by the same attacker." Fresh addresses and ports per match make a leaked address worth one match.
 - **Drop the unauthenticated cheaply.** The server should reject packets that don't carry a valid connection token before doing any work; a match ticket signed by the backend and checked on connect is the usual design ([API Security](/docs/security/api-security) covers token handling).
-- **Protect the platform too.** Login, matchmaking and the store are HTTP services; they get the ordinary edge protection and rate limiting of any web service.
+- **Protect the platform too.** Login, matchmaking and the store are HTTP services; they get the ordinary edge protection and [rate limiting](/docs/requests/rate-limiting) of any web service.
+- **Treat attacks on opponents as cheating.** A player who knocks an opponent offline mid-match wins by disconnect, so hidden addresses and relays are also a fair-play measure, and a pattern of opponents dropping from one player's matches is a signal for [Anti-Cheat](/books/gaming/anti-cheat#signals).
 
 ## Load Testing Servers and Fleets
 
@@ -206,7 +207,7 @@ The trade has four parts:
 - **Cost.** A managed service charges for the convenience on top of the compute. Self-hosting on cloud VMs or Kubernetes pays only for compute, and owned or leased bare metal is cheaper again at steady load, which is the load a game has every evening. Riot's tuning list (power states, hyperthreading, NUMA pinning, clocksource) is the other half of the cost case: each item is a few percent of capacity, and only someone who controls the host can take them. The economics are in [Cost & FinOps](/docs/operations/cost-and-finops).
 - **Operations burden.** Agones means running Kubernetes clusters in every region, upgrading them and Agones together, and being on call for them ([Kubernetes](/docs/operations/kubernetes)). A managed service runs the control plane; you still own the game server, its builds, and the fleet configuration.
 - **Regions.** You can only place matches where your hosting is. A single cloud covers its own regions (and edge locations such as AWS Local Zones); multi-provider services like Edgegap, and GameLift Anywhere with your own hardware, reach places one cloud doesn't. For a game with players in regions a provider doesn't serve, this decides the question.
-- **Lock-in.** Each managed service has its own SDK and allocation API in the game server and the matchmaker, and three have gone away in recent years. Agones is portable across any Kubernetes; the thin adapter limits the damage either way.
+- **Lock-in.** Each managed service has its own SDK and allocation API in the game server and the matchmaker, and three of them (Google Cloud Game Servers, Unity Multiplay, Hathora) have shut down, been deprecated or are winding down; with the archived Thundernetes, that's the four of ten in the table above. Agones is portable across any Kubernetes; the thin adapter limits the damage either way.
 
 A common shape at scale is hybrid: a base load on hardware you own or lease, with cloud capacity for launches and peaks. GameLift's hybrid hosting describes exactly that ("burst" capacity beside your existing hosting).
 
@@ -262,7 +263,7 @@ By game and team:
 - [Riot Games: Scalability and Load Testing for VALORANT](https://www.riotgames.com/en/news/scalability-and-load-testing-valorant), one server executable per match, over three 128-tick games per core, mock game servers in Go and Riot Container Engine on Mesos (December 15, 2020)
 - [Riot Games: Leveraging Golang for Game Development and Operations](https://www.riotgames.com/en/news/leveraging-golang-game-development-and-operations), VALORANT's backend microservices in Go, including the ones that manage game server processes (November 6, 2020)
 - [Riot Games: Peeking into VALORANT's Netcode](https://www.riotgames.com/en/news/peeking-valorants-netcode), the 35 ms ping target for 70% of players (July 28, 2020)
-- [Riot Games: Fixing the Internet for Real Time Applications, Part I](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-i), lowest-cost routing, the San Francisco to Portland example and small game packets (November 6, 2015)
+- [Riot Games: Fixing the Internet for Real Time Applications, Part I](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-i), lowest-cost routing and the San Francisco to Portland example (November 6, 2015)
 - [Riot Games: Fixing the Internet for Real Time Applications, Part II](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-ii), Riot Direct's hubs, fiber and peering, and players under 80 ms from 31% to 50% to 80% (February 12, 2016)
 - [Riot Games: Fixing the Internet for Real Time Applications, Part III](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-iii), latency, loss and jitter telemetry, the 400M packets per second router and lower networking spend (July 25, 2016)
 - [AWS News Blog: AWS Local Zones expansion](https://aws.amazon.com/blogs/aws/aws-local-zones-expansion-taipei-and-delhi/), Riot serving League of Legends and VALORANT players from Local Zones (October 5, 2022)

@@ -2,7 +2,7 @@
 title = "Netcode Fundamentals"
 description = "Authority, what crosses the wire, prediction, reconciliation, interpolation, lag compensation, peeker's advantage, tick rate and relevancy, mechanism first."
 category = "Gaming Industry"
-order = 1607
+order = 1608
 part = "Multiplayer"
 tags = ["gaming", "netcode", "multiplayer", "latency", "lag-compensation", "udp"]
 +++
@@ -204,8 +204,7 @@ Everything above can be written from scratch, and the transport libraries in [Wh
 | Godot MultiplayerAPI | Client-server over ENet, WebRTC or WebSocket peers | Server is peer 1 and the default authority, changeable per node | RPCs and synchronizers with a replication interval and per-peer visibility; prediction is yours to write | MIT, like the engine | Self-host (headless Godot) |
 | Mirror (Unity) | Client-server, server and client in one project | Server | Lag compensation in beta and prediction "researching," per its README; KCP transport by default | MIT; active (last push October 19, 2026) | Self-host |
 | FishNet (Unity) | Client-server, dedicated or a player acting as server and client | Server, "by design" | Prediction documented; "no CCU caps" | FirstGearGames' own license: royalty-free use in games, with restrictions on competing networking products; paid Pro tier; active (October 18, 2026) | Self-host |
-| Colyseus (Node.js) | Client-server rooms, one Room class, many instances | Server ("authoritative game servers") | Schema state with automatic binary delta patches; no prediction framework; WebSocket by default, WebTransport listed | Open source; see [Game Backend Architecture](/books/gaming/game-backend#what-you-can-adopt) | Self-host or managed |
-| Nakama match handler (Heroic Labs) | Client-server matches inside the backend; also relayed matches | Authoritative: server validates and broadcasts; relayed: none, one client hosts | Match loop at a tick rate you set (about 1 a second for turn-based up to dozens); Go, TypeScript or Lua | Open source; see [Game Backend Architecture](/books/gaming/game-backend#what-you-can-adopt) | Self-host |
+| Colyseus rooms, Nakama matches (backend frameworks) | Client-server rooms or matches outside an engine; Nakama also relays | Server; none when relayed | Colyseus: schema state with binary delta patches, no prediction; Nakama: a match loop at a tick rate you set, in Go, TypeScript or Lua | Open source; licensing, hosting and the rest are in [Game Backend Architecture](/books/gaming/game-backend#what-you-can-adopt) | Self-host or managed |
 | Photon Fusion 2 (commercial) | Dedicated server, client host or shared authority, one API | Server, host or shared | Tick-based, with client-side prediction and lag compensation "out of the box" | Proprietary; free for development, paid past the free tier | Photon's cloud; Dedicated Server mode runs your server build |
 | Photon Quantum 3 (commercial) | Deterministic predict/rollback, up to 128 players | Every client simulates; a "game-agnostic authoritative server" syncs clocks and input latency | Fixed-point ECS, rollback | Proprietary; free for development, paid past the free tier | Photon Cloud |
 
@@ -268,7 +267,7 @@ struct Connection {
 };
 ```
 
-The snapshot history is what makes delta compression safe: the server deltas against the newest snapshot the client has acknowledged, never the newest it sent, and falls back to a full snapshot when the baseline has aged out of the history. Nothing here is durable. What outlives the match is a per-player summary of round trip, loss and client build on `match_participants` ([Telemetry & Analytics](/books/gaming/telemetry#the-data-model)), and the server's frame counts on `matches` ([Game Metrics](/books/gaming/game-metrics#building-the-pipeline)).
+The snapshot history is what makes delta compression safe: the server deltas against the newest snapshot the client has acknowledged, never the newest it sent, and falls back to a full snapshot when the baseline has aged out of the history. Nothing here is durable. What outlives the match is a per-player summary of round trip, loss and client build on `match_participants` ([Telemetry & Analytics](/books/gaming/telemetry#the-data-model)), and the server's frame counts on `matches` ([Game Metrics](/books/gaming/game-metrics#how-to-build-it)).
 
 ## What This Means for the System You Build
 

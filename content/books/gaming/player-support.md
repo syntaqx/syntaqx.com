@@ -2,7 +2,7 @@
 title = "Player Support"
 description = "Support for games: channels and in-game SDKs, context-rich tickets, bots that know when to hand off, refunds, account recovery and staff access to player data."
 category = "Gaming Industry"
-order = 1619
+order = 1621
 part = "Fair Play and Safety"
 tags = ["gaming", "support", "customer-service", "automation", "refunds", "account-recovery"]
 +++
@@ -99,13 +99,11 @@ Language-model agents make the conversational part easier and the risks larger: 
 
 **Who refunds depends on who sold it.** A purchase on a console store, Steam or a mobile app store is the platform's transaction, under the platform's refund policy; the game finds out through the platform's notifications and has to revoke what it granted. A purchase in the game's own web store is yours. [Stores, Fees & Payments](/books/gaming/stores-and-payments) covers the stores and their notifications; support needs a view that shows, for any purchase, which store sold it, its state there and what was granted.
 
-**Platform policies set expectations.** Steam's refund policy is the one players quote: refunds on request "within two weeks of purchase and with less than two hours of playtime," with separate rules for in-game purchases, DLC and pre-purchases. Each store's rules are in [Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks); what support needs is those rules in the help center, in the agent's macros, and in the purchase view, so an agent can say which store decides before the player asks the wrong one.
+**Platform policies set expectations.** Each store's refund rules are in [Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks); what support needs is those rules in the help center, in the agent's macros, and in the purchase view, so an agent can say which store decides before the player asks the wrong one.
 
-**Support applies the clawback rule; it doesn't invent one.** Refunding a currency pack after the currency was spent leaves a negative balance or a free item, and the policy for that is decided per item type before launch and applied by one algorithm ([Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks)). On your own store, refunding only the unspent part avoids the question ([Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes#refund-rights)). An agent's refund button calls that algorithm; every grant, revocation and goodwill credit is an entitlement or [ledger](/books/gaming/economies-and-entitlements#wallets-are-ledgers) entry with a reason, never a balance edit.
+**Support applies the clawback rule; it doesn't invent one.** An agent's refund button calls the one algorithm in [Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks), with the policy for spent currency decided before launch; every grant, revocation and goodwill credit is an entitlement or [ledger](/books/gaming/economies-and-entitlements#wallets-are-ledgers) entry with a reason, never a balance edit. A chargeback is never by itself a reason to lock the account ([The FTC's Orders](/books/gaming/consumer-law-and-loot-boxes#the-ftc-s-orders)).
 
 **Missing grants are a reconciliation problem.** Most "paid but didn't get it" tickets are a grant that failed after a successful charge. A job that reconciles store transactions against grants and fixes the gaps (idempotently, keyed by the store's transaction ID, as [Idempotency](/docs/payments/idempotency) describes) prevents the ticket instead of answering it.
-
-**Chargebacks are not a ban reason by themselves.** The FTC's 2023 final order against Epic Games bars it from locking the accounts of customers who dispute charges. Revoke what the chargeback took back; don't lock the account for disputing, and send suspected abuse to the penalty system like any other violation.
 
 ## Account Recovery
 
@@ -141,11 +139,9 @@ Support agents in a game can see private messages, purchase histories and linked
 
 ## How to Build It
 
-The helpdesk holds the conversation; the game's backend holds what support is allowed to do. Two pieces carry the design: a ticket that moves through known states, and a catalog of named operations that every resolver (agent, bot, runbook) calls the same way.
+The helpdesk holds the conversation; the game's backend holds what support is allowed to do. The ticket itself moves through the playbook's [ticket states](/docs/operations/customer-support#ticket-states); the game twist is that tickets which become moderation reports or appeals stay linked but leave that machine, because their outcome is a moderation decision, not a support resolution.
 
-**Ticket states.** `new` moves to `waiting_on_agent` once it is classified and routed; an agent's reply moves it to `waiting_on_player`, and the player's reply moves it back; `solved` is set by the resolver, and becomes `closed` after a quiet period without a reply, while a reply inside that period reopens it to `waiting_on_agent` and counts as a reopen. Tickets that become moderation reports or appeals stay linked but leave this machine: their outcome is a moderation decision, not a support resolution.
-
-**Operations, not buttons.** Each thing support can change is an operation with a kind, a cap and an approval rule:
+**Operations, not buttons.** As in [Actions Are Operations](/docs/operations/customer-support#actions-are-operations), each thing support can change is an operation with a kind, a cap and an approval rule; a game's kinds are these:
 
 ```sql
 CREATE TABLE support_operations (           -- every action support takes on a player's behalf
@@ -178,17 +174,21 @@ The decisions behind it:
 
 My default for a new game: ship the operation catalog and the ticket context before launch with a small set of kinds, and add a kind only when a ticket category has shown up often enough to write its runbook. An agent with a general-purpose "edit account" screen is a support team waiting for its first insider incident.
 
+## Auditing
+
+Support is a privileged path to other people's accounts, and its record has to answer three questions afterward:
+
+- **Who changed what on this account, and why?** Every `support_operations` row names the ticket, the requester, the approver above the threshold and the entitlement or ledger transaction it produced, so a player's "my items vanished" and an investigator's "who granted these" read the same rows.
+- **Who looked?** Opening a player's purchases, chat or recovery history is logged per agent and per field, as [Logging Support Access](/docs/security/support-access#logging-support-access) describes; flagged high-profile accounts (streamers, pros, staff) alert on any access.
+- **Did support reverse a penalty?** It can't: `route_to_moderation` is the only behavior operation, and any penalty change appears as a moderation decision by an appeal reviewer, never as a support operation.
+
+A weekly review of operations per agent against peers (grant value, grants to the same accounts, approvals by the same pair) finds the insider case before a player does.
+
 ## Measuring Support
 
-The useful numbers are few, and they all come from timestamps and states already in the ticket record:
+The general set (response and resolution time as distributions, first-contact resolution, satisfaction, reopen rate) is in [Metrics](/docs/operations/customer-support#metrics). Riot's numbers give a game's baseline: "up to 25 hours" is the response tail players remember, first-contact resolution was about 70% for agents, and satisfaction per resolver is how Riot found that denials should stay human. The game-specific number is **contact rate per active player** around launches, patches and outages, joined to [telemetry](/books/gaming/telemetry), so a spike in "lost items" tickets after a patch reads as a bug report, not a staffing problem.
 
-- **First response time and resolution time,** as distributions per category and channel, not averages; Riot's "up to 25 hours" is the tail players remember.
-- **First-contact resolution,** which Riot reported at about 70% for agents.
-- **Satisfaction per category and per resolver** (bot or agent), which is how Riot found that denials should stay human.
-- **Reopen rate** per category and resolver, the check on automation that closes without resolving.
-- **Contact rate per active player** around launches, patches and outages, joined to [telemetry](/books/gaming/telemetry), so a spike in "lost items" tickets after a patch reads as a bug report, not a staffing problem.
-
-The last one is the most valuable. Support tickets are the best bug tracker a live game has, and the [live operations](/books/gaming/live-operations) team should see ticket volume by category on the same dashboard as crash rates.
+That one is the most valuable. Support tickets are the best bug tracker a live game has, and the [live operations](/books/gaming/live-operations) team should see ticket volume by category on the same dashboard as crash rates.
 
 ## What This Means for the System You Build
 
@@ -205,9 +205,7 @@ The last one is the most valuable. Support tickets are the best bug tracker a li
 
 **Reference**
 
-- [Steam: Refunds](https://store.steampowered.com/steam_refunds/), the two-week and two-hour rule and the separate rules for in-game purchases, DLC and pre-purchases
 - [Fair Play Alliance and ADL: Planning a Penalty and Reporting System](https://thrivingingames.org/wp-content/uploads/2020/12/FPA-Framework-Planning-Penalty-Reporting-System.pdf), behavior tickets in player support and their toll on staff
-- [FTC: Final order in the Epic Games billing case](https://www.ftc.gov/news-events/news/press-releases/2023/03/ftc-finalizes-order-requiring-fortnite-maker-epic-games-pay-245-million-tricking-users-making), the bar on locking accounts over disputed charges
 
 **In practice**
 

@@ -2,7 +2,7 @@
 title = "AI in Games"
 description = "Classic game AI (behavior trees, utility, navigation) and generative AI: LLM NPCs, content tools, Steam disclosure, performer consent, testing and safety."
 category = "Gaming Industry"
-order = 1626
+order = 1629
 part = "Running the Platform"
 tags = ["gaming", "ai", "llm", "behavior-trees", "navigation", "safety"]
 +++
@@ -68,7 +68,7 @@ In a server-authoritative game the AI runs on the server, inside the same tick b
 
 - **AI cost is server cost.** Behavior tree evaluation, EQS queries and pathfinding are measured per frame on the server, and the share of server frames within budget ([Game Metrics](/books/gaming/game-metrics)) includes them. Stagger expensive queries across ticks.
 - **Determinism matters for replays.** A game that replays recorded inputs ([Lockstep, Rollback & Determinism](/books/gaming/determinism-and-rollback)) needs AI that uses the simulation's seeded random number generator and clock, never wall time or an unseeded RNG.
-- **Bots that stand in for players are a product decision.** A bot filling an empty slot changes match fairness and the meaning of a win; record the bot as a participant with no profile ([The Records](/books/gaming/ai-in-games#the-records)), and exclude it from ratings and metrics by rule.
+- **Bots that stand in for players are a product decision.** A bot filling an empty slot changes match fairness and the meaning of a win; record the bot as a participant with no profile ([How to Build It](#how-to-build-it)), and exclude it from ratings and metrics by rule.
 
 ## Generative AI for Players: Talking to Characters
 
@@ -122,6 +122,7 @@ Player-facing generation joins the trust and safety system the game already runs
 - **Age-aware by default.** A conversational character is a communication feature, and the protections for younger players apply ([Ratings, Age & Children](/books/gaming/ratings-and-age)): off by default or behind a parental control for children's accounts, as Fortnite gates it.
 - **A report button on the character,** sending the transcript of the reported exchange to review, with a reason code, into the same queue as player reports.
 - **Retain little.** Epic keeps no transcript unless a player reports one. Transcripts and voice are personal data with retention limits ([Recordings and Transcripts Are Personal Data](/docs/architecture/ai-agents#recordings-and-transcripts-are-personal-data)); keep what a report or an audit needs, for as long as it needs.
+- **Say it's AI.** The EU AI Act's Article 50 transparency obligations apply from August 2, 2026: a system that interacts with people must tell them they're dealing with an AI unless that's obvious from the context, and generative systems must mark their output as machine-generated, with generative systems already on the market given until December 2, 2026 for the marking by the Digital Omnibus amendments ([The Law, at a Pointer Level](/docs/architecture/ai-agents#the-law-at-a-pointer-level)). In a game, "obvious from the context" is a fictional character in a fictional world for some players and not for others; my default is a visible label on generated characters and a line in the store disclosure, which also answers Steam's survey (below).
 - **Bounded cost.** Per-player and per-server rate limits and token budgets, so a player looping a conversation, or a script farming it, costs a known amount.
 - **Evals before every model or prompt change,** with a test set of known jailbreaks, slurs, self-harm statements and lore questions, run on the exact model version you will ship ([Evals](/docs/architecture/ai-agents#evals)). Model upgrades from the vendor are releases you test, not updates that happen to you.
 
@@ -185,11 +186,11 @@ My default: start with scripted bots that reproduce known paths (they are cheap 
 
 ## AI in Moderation and Anti-Cheat
 
-Machine learning is already central to trust and safety and fair play, and those chapters own it: classifiers on text and voice, report triage and the human review behind them are in [Player Behavior & Moderation](/books/gaming/player-behavior); behavior-based cheat detection and its appeal path are in [Anti-Cheat](/books/gaming/anti-cheat); support bots in [Player Support](/books/gaming/player-support). The rule they share with this chapter: a model can flag, hide temporarily and prioritize, while penalties that are hard to undo go through a person ([Decide in Code](/docs/architecture/ai-agents#decide-in-code)).
+Machine learning is already central to trust and safety and fair play ([Trust & Safety](/docs/security/trust-and-safety#automated-detection-human-review)), and the game chapters own it: classifiers on text and voice, report triage and the human review behind them are in [Player Behavior & Moderation](/books/gaming/player-behavior); behavior-based cheat detection and its appeal path are in [Anti-Cheat](/books/gaming/anti-cheat); support bots in [Player Support](/books/gaming/player-support). The rule they share with this chapter: a model can flag, hide temporarily and prioritize, while penalties that are hard to undo go through a person ([Decide in Code](/docs/architecture/ai-agents#decide-in-code)).
 
-## The Records
+## How to Build It
 
-Beyond `asset_provenance`, a game with conversational characters needs the consent and the per-turn facts, without keeping conversations by default, and a game with bots needs participants that aren't players:
+Beyond `asset_provenance`, and following the playbook's rule that every automated decision records its model, inputs and outcome ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)), a game with conversational characters needs the consent and the per-turn facts, without keeping conversations by default, and a game with bots needs participants that aren't players:
 
 ```sql
 CREATE TABLE replica_consents (
@@ -261,6 +262,8 @@ Ratings, reports and metrics join on `player_profile_id`, so a bot drops out of 
 - [Unity: AI Navigation package manual](https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html), navigation meshes from scene geometry, dynamic obstacles, NavMesh links
 - [Epic Games: LLM Conversations in UEFN](https://dev.epicgames.com/documentation/fortnite/llm-conversations-in-unreal-editor-for-fortnite), Gemini 3.1 Flash-Lite and Eleven v3, safety layers, reporting, storage and training, English only, parental controls and cabined accounts
 - [Steamworks: Content Survey](https://partner.steamgames.com/doc/gettingstarted/contentsurvey), AI disclosure for pre-generated and live-generated content, guardrails, live-generated adult sexual content, efficiency tools out of scope
+- [EU AI Act: Article 50](https://artificialintelligenceact.eu/article/50/), disclosure to people interacting with an AI system, marking of synthetic output, and the context exception
+- [EU AI Act: Digital Omnibus on AI](https://artificialintelligenceact.eu/ai-act-explorer/digital-omnibus/), Regulation (EU) 2026/1744; Article 50 kept at August 2, 2026, with a transition to December 2, 2026 for marking by systems already on the market
 - [Unity: AI](https://unity.com/products/ai), brand retirement, Muse deprecation, Sentis, third-party models, AI-generated asset metadata, data use, developer responsibility for store declarations
 
 **In practice**

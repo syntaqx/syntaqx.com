@@ -3,7 +3,7 @@ title = "Parties, Presence, Chat & Voice"
 nav_title = "Parties, Presence & Chat"
 description = "The social layer of an online game: friends and blocks, presence and its fan-out, parties and invites, chat, server push, voice, platform rules and privacy."
 category = "Gaming Industry"
-order = 1611
+order = 1612
 part = "Multiplayer"
 tags = ["gaming", "social", "presence", "chat", "voice", "parties", "xmpp"]
 +++
@@ -72,7 +72,7 @@ The party's life cycle:
 Rules that keep it consistent:
 
 - **One party per player per game,** enforced by the party service; joining a new party leaves the old one.
-- **The leader starts the queue,** and the party service checks every member before creating the ticket: online, on the current build, owns the mode, no queue or ranked restriction, within the mode's rank spread. VALORANT's published flow is this pattern: "the parties service will ask the skill ratings service to verify" the members' ranks before asking matchmaking to queue the party ([Matchmaking & Ranked](/books/gaming/matchmaking#parties)).
+- **The leader starts the queue,** and the party service checks every member before creating the ticket: online, on the current build, owns the mode, no queue or ranked restriction, within the mode's rank spread. VALORANT's published flow is this pattern, with the rank check delegated to the ratings service ([Parties](/books/gaming/matchmaking#parties)).
 - **Any change while queued cancels the ticket.** A member who leaves or joins changes the ticket's ratings and size; cancel and let the leader requeue rather than mutate a ticket the matchmaker is considering.
 - **Leadership passes on leave,** by join order, so a party never has no leader.
 - **Disconnects are not leaves.** A member whose session drops gets a grace period before removal, so a client crash doesn't dissolve the party.
@@ -126,14 +126,14 @@ Presence and chat need a connection from the client to the social tier, and so d
 
 RMS is written entirely in Erlang, packaged in Docker and deployed to AWS with Terraform. In load tests a single r3.8xlarge edge machine handled "at least 10M concurrent connections," with about 15 ms end to end from publish to receive; on a dropped connection, messages for the affected players are cached in memory and delivered on reconnect. The motivating example was League's Clubs: instead of every client polling the Clubs service every few seconds, the service publishes a change and members' clients refresh.
 
-That split (independent edges holding sockets, a routing layer that knows where each session is, any backend service able to publish) is the shape I'd build the whole social tier's connection layer on. Presence fan-out, chat delivery, invites and notifications all become publishes to a set of players; the routing layer turns them into deliveries. Messages that must survive a player being offline (a friend request, a gift) belong in a durable store with the push as a hint to refresh, and anything that must reach a player who isn't connected at all goes through [Notifications](/docs/architecture/notifications#push-notifications) instead.
+That split (independent edges holding sockets, a routing layer that knows where each session is, any backend service able to publish) is the general shape in [Realtime Connections](/docs/architecture/realtime-connections#edge-and-routing), which also covers authenticating on connect, heartbeats, catch-up and reconnect storms; the game twist is that one connection carries the whole social tier for the length of a session, so it's the shape I'd build that tier's connection layer on. Presence fan-out, chat delivery, invites and notifications all become publishes to a set of players; the routing layer turns them into deliveries. Messages that must survive a player being offline (a friend request, a gift) belong in a durable store with the push as a hint to refresh, and anything that must reach a player who isn't connected at all goes through [Notifications](/docs/architecture/notifications#push-notifications) instead.
 
 ## Voice
 
 Voice is the hardest social feature to build and the easiest to buy, so most games buy it. The vendors, as documented:
 
 - **Vivox,** acquired by Unity in January 2019 when, per TechCrunch, it powered chat "from Fortnite to PUBG to League of Legends," is now part of Unity Gaming Services as "Vivox Voice & Text Chat." Its channel model is a useful vocabulary: **echo** channels for microphone and connectivity tests, **non-positional** (2D) channels "for level-wide audio and text," used for teams, squads and party chat, and **positional** (3D) channels where voices attenuate and pan with distance and direction. A client can join only one positional channel at a time, and should join it before any non-positional ones; large 3D channels support up to 2,000 participants.
-- **Discord Social SDK,** announced March 17, 2025, at no cost and usable "with or without a Discord account": a unified friends list, deep-link invites and rich presence at launch, with cross-platform messaging, linked channels and voice chat in closed beta. It supported C++, Unreal and Unity on Windows 11 and macOS, with console and mobile "coming soon" at announcement.
+- **Discord Social SDK,** announced March 17, 2025, at no cost and usable "with or without a Discord account": a unified friends list, deep-link invites and rich presence at launch, with cross-platform messaging, linked channels and voice chat in closed beta. On August 13, 2025 the communication features (voice, lobbies and direct messages, linked channels) left closed beta and became available to all developers. As of October 2026 its compatibility page lists Windows, macOS, Android, iOS, Xbox Series X|S and PlayStation 5 as generally available, Linux, Xbox One and PS4 as experimental, and no Nintendo platform; console use needs the platform holder's approval, and on PlayStation account linking and linked channels aren't allowed.
 - **Epic Online Services** Voice, with text chat, used through EOS Lobbies or your own trusted server.
 - **PlayFab Party,** peer-to-peer voice and chat with transcription and translation across "more than 30 different languages."
 
@@ -333,6 +333,8 @@ The design rules that hold it together:
 - [League of Legends: /dev: Behavioral Systems Update](https://www.leagueoflegends.com/en-gb/news/dev/dev-behavioral-systems-update-may-2023/), party-only chat, self-mute and deafen commands and in-game reporting (May 24, 2023)
 - [VALORANT: Voice Evaluation Update](https://playvalorant.com/en-us/news/announcements/valorant-voice-evaluation-update/), the recording notice and opt-out, and retention of 24 hours, 7 days and up to 2 years (June 24, 2022)
 - [Discord: Announcing Discord's Social SDK](https://discord.com/press-releases/announcing-discords-social-sdk-helping-power-your-games-social-experiences), free, with or without a Discord account, unified friends, deep-link invites, rich presence and the closed beta for messaging and voice (March 17, 2025)
+- [Discord: Social SDK in-game communications](https://discord.com/press-releases/social-sdk-ingame-communications), voice, lobbies, DMs and linked channels available to all developers (August 13, 2025)
+- [Discord Developer Docs: Social SDK platform compatibility](https://docs.discord.com/developers/discord-social-sdk/core-concepts/platform-compatibility), supported and experimental platforms, console approval and PlayStation restrictions
 - [TechCrunch: Unity acquires Vivox](https://techcrunch.com/2019/01/29/unity-acquires-vivox-which-powers-voice-chat-in-fortnite-and-league-of-legends), the acquisition and the games Vivox powered (January 29, 2019)
 - [FTC: Epic Games to pay more than half a billion dollars](https://www.ftc.gov/news-events/news/press-releases/2022/12/fortnite-video-game-maker-epic-games-pay-more-half-billion-dollars-over-ftc-allegations), voice and text chat on by default for children and teens, and the order to turn them off by default (December 19, 2022)
 - [Roblox: Age checks required to chat](https://about.roblox.com/newsroom/2026/01/roblox-age-checks-required-to-chat), age checks for chat and default chat within one's own and adjacent age groups (January 7, 2026)

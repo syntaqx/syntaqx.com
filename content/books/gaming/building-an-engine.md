@@ -146,18 +146,7 @@ What the engine owes the rest of the game is three seams, designed in from the f
 - **A state hash** the engine can compute at any step over everything the simulation owns, in a fixed order.
 - **An input recorder and player** at the boundary where commands enter the simulation.
 
-With those, the test is short:
-
-```text
-record = play(seed, scripted_inputs)          # keeps inputs and the hash at every step
-state = initial_state(seed)
-for step in 0..record.length:
-    state = simulate(state, record.inputs[step], dt)
-    if hash(state) != record.hashes[step]:
-        fail("diverged at step", step)          # only the first divergence matters
-```
-
-My rule: run it on every build and every platform you ship, and fail the build on the first divergent step. Retrofitting determinism into a shipped engine is a long project; checking it continuously is cheap.
+With those, the record, replay and compare test in [Finding Desyncs](/books/gaming/determinism-and-rollback#finding-desyncs) is short to write and cheap to run on every build. Retrofitting the seams into a shipped engine is a long project; designing them in is not.
 
 ## Tools and the Editor
 

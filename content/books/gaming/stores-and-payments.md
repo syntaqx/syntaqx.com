@@ -2,7 +2,7 @@
 title = "Stores, Fees & Payments"
 description = "Store fees and billing rules for Steam, Epic, Microsoft, Apple and Google as of October 2026, web stores, regional prices, refunds, taxes and receipt checks."
 category = "Gaming Industry"
-order = 1621
+order = 1623
 part = "Money"
 tags = ["gaming", "app-stores", "store-fees", "payments", "refunds", "receipt-validation"]
 +++
@@ -32,7 +32,7 @@ The sections that follow give each row its sources and caveats.
 
 ## Steam
 
-Valve's Steamworks documentation states the costs of getting onto Steam plainly. Steam Direct charges "$100 USD (or equivalent)" for each new app, non-refundable, and "recoupable in the payment made after your product has at least $1,000.00 Adjusted Gross Revenue." The revenue share isn't stated on those pages; Valve's announcement of "New Revenue Share Tiers" (late 2018) renders without its text, and TechCrunch's report of it (3 December 2018) gives the tiers: "30 percent cut on sales under $10 million, then a 25 percent cut on sales between $10 million and $50 million, then a 20 percent cut on sales above $50 million." Contemporary reports disagreed on whether the lower rates apply to all sales once a threshold is crossed or only to sales above it, so confirm with your distribution agreement before modeling revenue above $10 million.
+Valve's Steamworks documentation states the costs of getting onto Steam plainly. Steam Direct charges "$100 USD (or equivalent)" for each new app, non-refundable, and "recoupable in the payment made after your product has at least $1,000.00 Adjusted Gross Revenue." The revenue share isn't stated on those pages; TechCrunch's report of Valve's "New Revenue Share Tiers" announcement (3 December 2018) gives the tiers: "30 percent cut on sales under $10 million, then a 25 percent cut on sales between $10 million and $50 million, then a 20 percent cut on sales above $50 million." Contemporary reports disagreed on whether the lower rates apply to all sales once a threshold is crossed or only to sales above it, so confirm with your distribution agreement before modeling revenue above $10 million.
 
 Steam's microtransaction model is the clearest example of a store that is the seller. Its documentation says "Steam is providing services as a payment processor" and "Steam customers can only make purchases from the Steam Wallet", through the microtransaction API. The flow, from the implementation guide:
 
@@ -47,7 +47,7 @@ Two fraud rules from the same page are worth copying on any store: Steam catches
 
 ## Epic Games Store
 
-Epic's own store pages refused automated access during research, so the terms here come from Epic's announcement as quoted by GameFromScratch (1 May 2025): "developers will pay a 0% revenue share on their first $1,000,000 in revenue per app per year", then "our regular 88%/12% revenue share", starting in June 2025. The same announcement launched webshops "hosted by the Epic Games Store", which let developers send players from a game to buy digital items on any platform that allows it, and said players "will also accrue 5% Epic Rewards on all their purchases". Read Epic's current distribution terms for the exact threshold wording (per app or per product, gross or net) before you rely on it.
+Epic's announcement of 1 May 2025, as quoted by GameFromScratch, set the terms: "developers will pay a 0% revenue share on their first $1,000,000 in revenue per app per year", then "our regular 88%/12% revenue share", starting in June 2025. The same announcement launched webshops "hosted by the Epic Games Store", which let developers send players from a game to buy digital items on any platform that allows it, and said players "will also accrue 5% Epic Rewards on all their purchases". Read Epic's current distribution terms for the exact threshold wording (per app or per product, gross or net) before you rely on it.
 
 ## Microsoft Store and Xbox
 
@@ -179,14 +179,13 @@ Every store has a refund policy, and most of them put the decision with the stor
 | PlayStation Store (US) | Games and add-ons within 14 days unless downloading or streaming has started; currency bought outside gameplay within 14 days if the game hasn't been launched; currency bought in gameplay not cancellable unless faulty; wallet funds non-refundable | Platform-specific; not public |
 | Apple | Apple decides refunds | App Store Server Notifications report refunds; you can send consumption information when Apple asks |
 | Google Play | Varies by product, payment method and location; "The developer can help with purchase issues and can process refunds" | The Voided Purchases API lists purchases "canceled, revoked, or charged back" |
+| Microsoft Store (Xbox games) | Eligible games under two hours of total play, released more than 24 hours ago, not part of a bundle; other digital goods "aren't refundable unless the offer or applicable law states" otherwise | Not public |
+| Epic Games Store | Products marked self-refundable within 14 days of purchase with under two hours of runtime; unreleased pre-orders; separate rules for mobile | Not public |
+| Nintendo eShop (Australia) | Generally no refunds for change of mind or accidental purchase; consumer-law remedies for faults | Not public |
 
-Steam's policy also shows a rule worth knowing: "If you have been banned by VAC (the Valve Anti-Cheat system) on a game, you lose the right to refund that game."
+Steam's policy also shows a rule worth knowing: "If you have been banned by VAC (the Valve Anti-Cheat system) on a game, you lose the right to refund that game." Store terms sit under consumer law, not over it: in Germany the Higher Regional Court of Frankfurt confirmed in January 2022 that the 14-day right of withdrawal applied to digital pre-orders that couldn't yet be played, and Nintendo changed its eShop order form in Germany and Norway.
 
-On your own web store, refunds are your policy within consumer law (the EU right of withdrawal for digital content is part of the CPC principles in [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes)), and chargebacks are the card network's. Stripe's documentation summarizes the card timeline: cardholders can typically dispute "within 120 days of the original payment", you usually have 7 to 21 days to respond, the issuer usually decides within 60 to 75 days, and the full cycle takes two to three months. Stripe also reports that "about 40% of Visa and Mastercard EFWs" (early fraud warnings) become fraud disputes if the charge isn't refunded. Virtual goods invite friendly fraud because the item was delivered and used before the dispute arrives, so keep the evidence: the account, the device, the session, the grant and the play time after it ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks#reason-codes-decide-the-evidence)).
-
-What a reversal does to the account is a policy with legal edges. The FTC's 2023 final order against Epic Games bars it from locking accounts of customers who dispute charges, so "ban the account on chargeback" is not a safe default. Revoke what the payment bought, record the reversal, and handle abuse through the same penalty system as any other policy violation ([Player Behavior & Moderation](/books/gaming/player-behavior)).
-
-When an item was already used, the revocation needs a rule: Steam's guidance and Google's Voided Purchases API both describe clawing back unused items "as if they were never purchased". For spent currency, the choices are revoking what it bought, a negative balance that future purchases repay, or writing it off. Pick one per game, publish it, and implement it in the ledger rather than by hand ([Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks) has the algorithm). On your own store you can also refund only the unspent part in the first place, which avoids the question.
+On your own web store, refunds are your policy within consumer law ([Refund Rights](/books/gaming/consumer-law-and-loot-boxes#refund-rights)), and chargebacks follow the card networks' timelines ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)). The gaming twist is friendly fraud: a virtual item was delivered and used before the dispute arrives, so keep the evidence (the account, the device, the session, the grant and the play time after it) for the dispute ([Reason Codes Decide the Evidence](/books/payments/disputes-and-chargebacks#reason-codes-decide-the-evidence)). Revoke what the payment bought, never lock the account for disputing ([The FTC's Orders](/books/gaming/consumer-law-and-loot-boxes#the-ftc-s-orders)), and handle abuse through the penalty system. The clawback for items and currency already used is one algorithm for every store, in [Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks); on your own store you can also refund only the unspent part in the first place, which avoids the question.
 
 ## Taxes
 
@@ -196,7 +195,7 @@ Games are digital services for VAT. In the EU and UK, consumer sales are taxed w
 
 ## Receipt Validation and Entitlement Grants
 
-The client's word that a purchase succeeded is not proof. Every store gives your server a way to verify a purchase directly, and the grant should happen only after that check, on the server, exactly once.
+The client's word that a purchase succeeded is not proof. Every store gives your server a way to verify a purchase directly, and the grant should happen only after that check, on the server, exactly once, keyed by the store's transaction ID ([Idempotency](/docs/payments/idempotency)).
 
 - **Apple.** The App Store Server API is "a REST API that you call from your server to request and provide information about your customers' In-App Purchases", and the App Store signs the transaction information it returns. Get Transaction Info works for any transaction ID; Get Transaction History returns the whole history; App Store Server Notifications push refunds and subscription changes, and you can request notifications missed in the past 180 days. Set an `appAccountToken` (a UUID) at purchase time and "the App Store returns the same app account token value in the resulting transaction", which ties the purchase to your account.
 - **Google.** "Your app should always verify the legitimacy of purchases before granting benefits to a user", using `Purchases.products:get` or `Purchases.subscriptionsv2:get`. Grant only when the state is `PURCHASED`, never while `PENDING`. Acknowledge (or consume) "within three days so that the purchase isn't automatically refunded and entitlement revoked." Use the purchase token as the key: it "is globally unique, so you can safely use this value as a primary key", while `orderId` isn't, because "not all purchases generate an orderId". Pass `obfuscatedAccountId` at purchase to tie the purchase to your account.
@@ -265,6 +264,15 @@ The fee on a transaction is an estimate until the store pays. Some rates depend 
 
 The grants themselves go into the core `entitlements` and inventory tables with the store transaction ID as their `source_ref`, and a reversal writes the revocation there ([Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements) owns grants, revocations and clawbacks). Every state change is an event that finance, support and anti-fraud consume ([Events](/docs/architecture/events)), and the store's notifications are only one input: a daily reconciliation against each store's report (Steam's `GetReport`, Apple's transaction history, Google's voided purchases) catches whatever the push missed. Support needs to see the whole row, from verification to reversal, when a player says they paid and got nothing ([Player Support](/books/gaming/player-support)).
 
+## Auditing
+
+A store transaction is money, and the questions about it come from finance, the stores, card networks and players:
+
+- **Did this purchase grant exactly once, and was it taken back when reversed?** One `store_transactions` row per store transaction ID, its state history from events, and the entitlement or ledger rows whose `source_ref` names it. A transaction that is `reversed` with live grants, or `acknowledged` with none, is a reconciliation break with an owner ([Reconciliation](/docs/payments/payment-states#reconciliation)).
+- **What fee was expected, and what did the store take?** `store_fee_rate_id` names the published rate the estimate used; the store's report is the truth, and the difference is posted, not overwritten.
+- **Why was this purchase rejected?** Verification and fraud failures keep the store's response and the check that failed, so a player's "it charged me and gave me nothing" can be answered, and a store auto-refund can be told apart from an explicit revoke.
+- **What price and terms did the player see?** The offer and its price row in force at purchase time, and for EU link-outs the `link_token` that ties a purchase to the link that started it.
+
 ## What This Means for the System You Build
 
 - **A fee schedule as data:** rates per store, program, region and transaction kind, with validity ranges and sources, so the next court order or program change is a new row.
@@ -300,7 +308,6 @@ The grants themselves go into the core `entitlements` and inventory tables with 
 - [Apple: In-App Purchase](https://developer.apple.com/in-app-purchase/), App Store Server Notifications for refunds and the consumption information endpoint
 - [Android Developers: Integrate the Google Play Billing Library](https://developer.android.com/google/play/billing/integrate), verification before granting, pending purchases and the three-day acknowledgment window
 - [Android Developers: Fight fraud and abuse](https://developer.android.com/google/play/billing/security), backend verification, purchase tokens as keys, explicit revoke and refund, and the Voided Purchases API
-- [Stripe: How disputes work](https://docs.stripe.com/disputes/how-disputes-work), dispute windows, response and decision times, and early fraud warnings
 - [Stripe: Pricing](https://stripe.com/pricing), the standard US card rate, international and conversion surcharges and the dispute fee
 
 **In practice**
@@ -313,4 +320,8 @@ The grants themselves go into the core `entitlements` and inventory tables with 
 - [Steam: Refunds](https://store.steampowered.com/steam_refunds/), refund windows by product type, VAC bans and abuse
 - [PlayStation: Store cancellation policy (US)](https://www.playstation.com/en-us/legal/playstation-store-cancellation-policy/), cancellation windows for games, currency, subscriptions and wallet funds
 - [Google Play Help: Refunds](https://support.google.com/googleplay/answer/2479637), policy varying by product, payment method and location, with developers able to refund
-- [FTC: Final order requiring Epic Games to pay $245 million](https://www.ftc.gov/news-events/news/press-releases/2023/03/ftc-finalizes-order-requiring-fortnite-maker-epic-games-pay-245-million-tricking-users-making), 14 March 2023, including the bar on locking accounts over disputed charges
+- [Microsoft Support: Can't get a refund on apps and games](https://support.microsoft.com/en-US/accounts-billing/can-t-get-a-refund-on-apps-and-games-from-microsoft-store), Xbox game refund conditions: under two hours played, released over 24 hours ago, not in a bundle
+- [Microsoft Support: Get a refund for apps and games](https://support.microsoft.com/en-us/accounts-billing/subscriptions/get-a-refund-for-apps-and-games-purchased-from-microsoft-store), digital goods not refundable unless the offer or law says so
+- [Epic Games: How to refund an Epic Games Store purchase](https://www.epicgames.com/help/c-202300000001639/a202300000013832), self-refundable products within 14 days and under two hours, and pre-orders
+- [Nintendo Australia: Refund for a downloaded game or DLC](https://nintendo.com/au/support/articles/refund-for-downloaded-game-or-dlc), no change-of-mind refunds and consumer guarantees for faults
+- [vzbv: Court confirms right of withdrawal for video game pre-order](https://www.vzbv.de/en/court-confirms-right-withdrawal-video-game-pre-order), the Frankfurt ruling and Nintendo's changed eShop order form (January 2022)

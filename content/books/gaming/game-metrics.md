@@ -2,7 +2,7 @@
 title = "Game Metrics"
 description = "The numbers a live game runs on: DAU, retention cohorts, ARPDAU, LTV, concurrency, queue time, match fairness, crash rate, frame time, tick health, experiments."
 category = "Gaming Industry"
-order = 1625
+order = 1628
 part = "Running the Platform"
 tags = ["gaming", "metrics", "analytics", "retention", "experiments", "data-pipelines"]
 +++
@@ -161,9 +161,9 @@ slow_frame_share(session) = frames over the target frame time / total frames
 slow_session_rate         = sessions with slow_frame_share above a threshold / sessions
 ```
 
-Collect a histogram per session on the client (bucket counts, not every frame) and upload it with the session summary; the budget a frame must meet is in [Building Your Own Engine](/books/gaming/building-an-engine).
+The histogram is collected on the client ([Crash, Performance and Network Telemetry](/books/gaming/telemetry#crash-performance-and-network-telemetry)); the budget a frame must meet is in [Building Your Own Engine](/books/gaming/building-an-engine).
 
-**Server tick health.** A server that can't finish its frame within the tick interval falls behind, and every player in the match feels it. Riot's public account of VALORANT's servers gives the shape of the metric: "each server frame needs to be shorter than 7.8125 milliseconds" at 128 ticks per second, the performance target for server frame time is 2.34 ms (so that three games fit on a core), and "since patch 5.07, 99.3+% of server frames have met our strict 128-tick requirements" (Riot, March 2023). That is the metric to copy: **the share of server frames within the tick budget**, per build and per player count, with the frame-time distribution behind it. GameLift's server telemetry exposes the same family (server tick rate, tick time, world tick time). Network health (round-trip time, packet loss, jitter) per match and region sits next to it ([Netcode Fundamentals](/books/gaming/netcode)).
+**Server tick health.** A server that can't finish its frame within the tick interval falls behind, and every player in the match feels it. Riot reports VALORANT's servers this way, as the share of server frames inside the 128-tick budget ([The Frame Budget at 128 Ticks](/books/gaming/game-servers#the-frame-budget-at-128-ticks)), and that is the metric to copy: **the share of server frames within the tick budget**, per build and per player count, with the frame-time distribution behind it. GameLift's server telemetry exposes the same family (server tick rate, tick time, world tick time). Network health (round-trip time, packet loss, jitter) per match and region sits next to it ([Netcode Fundamentals](/books/gaming/netcode)).
 
 ## Experiments
 
@@ -175,7 +175,7 @@ Running an experiment on a live game (variants delivered through remote config, 
 - **Retention tests wait.** A D7 test counts only players who entered at least seven days ago, so it can't be read on day 3.
 - **Shared assignment changes the arithmetic.** When a change is assigned by party, region or server because players in one match share it ([Interference and Network Effects](/docs/telemetry/experimentation#interference-and-network-effects)), the cluster is the unit of analysis: compute variance over clusters, not players, or the readout claims significance it doesn't have.
 
-## Building the Pipeline
+## How to Build It
 
 The events arrive through the [telemetry](/books/gaming/telemetry) pipeline and the backend's own tables; the steps (raw, staging, marts, one definition per metric) are in [Data Pipelines & Analytics](/docs/architecture/data-pipelines). Grain, fact types and dimensions are in [Modeling Analytical Data](/docs/data/data-modeling#facts-and-dimensions). The game-specific part is the facts to model. A player-day fact (a periodic snapshot) is the base for engagement, retention and revenue:
 
@@ -237,6 +237,15 @@ Two holes to close.
 
 Metrics that feed money outside the company (a revenue share with a partner, a creator payout, a publisher royalty) get frozen periods and stamped versions ([Versions, Stamps and Frozen Periods](/docs/architecture/data-pipelines#versions-stamps-and-frozen-periods)).
 
+## Auditing
+
+A metric is a claim the studio makes to itself, to investors and sometimes to the public, so the pipeline has to answer how a number was produced:
+
+- **Which definition, which version?** Every metric is defined once in code, versioned, and the dashboard and the published figure name the version; a changed day boundary or exclusion rule is a new version, not a silent edit ([Why the Same Metric Disagrees](#why-the-same-metric-disagrees)).
+- **What was excluded?** `is_excluded` on `fct_player_days` marks bots, testers and merged-away accounts, and the exclusion rules are versioned with the definitions, so "DAU fell 3%" can be checked against a change in which bots were excluded.
+- **Who was in the experiment?** `experiment_assignments` keeps assignment and first exposure per player, so a result can be recomputed after the fact and a complaint that a player was treated differently can be answered from the record ([Experiments](#experiments)).
+- **Revenue ties to the ledger.** Bookings and net revenue in the warehouse reconcile to store transactions and the currency ledger every day; a gap is a pipeline bug until proven otherwise ([Accounting for Virtual Currency](/books/gaming/economies-and-entitlements#accounting-for-virtual-currency)).
+
 ## What This Means for the System You Build
 
 - **Name the unit.** Account, device or profile per metric, never mixed in one ratio; device counts kept for store reconciliation.
@@ -268,4 +277,4 @@ Metrics that feed money outside the company (a revenue share with a partner, a c
 
 **In practice**
 
-- [VALORANT: How We Got to the Best-Performing VALORANT Servers Since Launch](https://playvalorant.com/en-us/news/dev/how-we-got-to-the-best-performing-valorant-servers-since-launch/), Riot's public account of the 7.8125 ms frame limit, the 2.34 ms target and the share of server frames meeting 128-tick since patch 5.07 (March 2023)
+- [VALORANT: How We Got to the Best-Performing VALORANT Servers Since Launch](https://playvalorant.com/en-us/news/dev/how-we-got-to-the-best-performing-valorant-servers-since-launch/), server frames reported as the share inside the 128-tick budget (March 2023)

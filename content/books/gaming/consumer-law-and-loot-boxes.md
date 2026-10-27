@@ -2,7 +2,7 @@
 title = "Loot Boxes & Consumer Law"
 description = "Loot box rules by country, store odds disclosure, the EU's virtual currency principles, FTC orders on dark patterns, refunds, and auditable drop tables."
 category = "Gaming Industry"
-order = 1623
+order = 1626
 part = "The Rules"
 tags = ["gaming", "loot-boxes", "consumer-law", "virtual-currency", "odds", "refunds"]
 +++
@@ -17,9 +17,12 @@ This chapter covers the rules (country by country, store by store, and the EU co
 | --- | --- | --- |
 | Belgium | The Gaming Commission's 2018 report found the paid loot boxes it examined to be illegal games of chance | Paid random items off for Belgian players |
 | Netherlands | The highest administrative court overturned the gambling regulator's penalty against EA's FIFA packs in 2022 | Not treated as gambling on those facts; consumer law still applies |
-| United Kingdom | No change to gambling law (2022); industry-led protections expected from 2023 | Under-18 purchases need parental consent; probability disclosure; spending controls |
+| United Kingdom | No change to gambling law (2022); industry principles (2023), implementation period ended July 2024 | Under-18 purchases need parental consent; probability disclosure; spending controls |
 | China | Draw probabilities must be published (2016 notice, effective May 1, 2017) | Names, contents and probabilities of every item, on the site or draw page |
-| Brazil | On the App Store, declaring loot boxes makes the app 18+ (from February 24, 2026) | Store reach changes with the checkbox |
+| Brazil | Loot boxes banned in games aimed at or likely accessed by minors (Lei 15.211/2025, in force March 17, 2026); Apple rates declared loot boxes 18+ | Paid random items off unless the game's rating keeps minors out |
+| Australia | Paid random items carry a minimum M classification, simulated gambling R 18+ (from September 2024) | The feature sets the floor of the rating |
+| South Korea | Probability disclosure for paid random items mandatory (from March 22, 2024) | Odds for every paid random item, published |
+| Japan | Kompu gacha (complete gacha) unlawful under the Premiums and Representations Act (2012) | No prize for completing a set of paid random items |
 | EU (all) | Consumer protection principles on virtual currencies (March 2025); PEGI 16 for paid random items from June 2026 | Real-money prices, no forced currency purchases, withdrawal rights, children protected |
 | United States | No loot box statute; FTC orders under consumer protection and COPPA | Odds and exchange rates disclosed, under-16 consent in one order, no dark patterns |
 
@@ -40,7 +43,7 @@ In July 2022 the government decided against changing the Gambling Act 2005 "at t
 - "clear probability disclosures", and
 - "fair and lenient refund policies".
 
-The government said it would report after the implementation period and independent scrutiny; legislation stays an option.
+The government said it would report after the implementation period and independent scrutiny; legislation stays an option. The period ended in July 2024, and as of October 2026 no government evaluation has been published. Independent research has: Leon Y. Xiao and Mie Lange Lund checked the UK's 100 highest-grossing iPhone games before and after the principles took effect in 2024 and, as the 5Rights Foundation summarized it in May 2025, found that none of the 81 games with loot boxes used effective age verification and only 7 consistently disclosed probabilities. A principle the industry wrote and nobody enforces is a weak defense; build to the commitments as if they were law.
 
 ### China
 
@@ -48,11 +51,21 @@ The Ministry of Culture's notice on online game operations, issued on December 1
 
 ### Brazil, and the Stores as Regulators
 
-Apple announced on February 24, 2026 that on the Brazil storefront, an app that declares loot boxes in its age rating questionnaire "will be updated to 18+," and that 18+ downloads in Brazil, Australia and Singapore require the store to confirm the user is an adult. A rule like that reaches a game through its store listing before any regulator does.
+Brazil is the first large market to ban loot boxes for minors by statute. Article 20 of Lei 15.211/2025, the Digital Statute of Children and Adolescents (ECA Digital), says loot boxes "são vedadas" (are prohibited) in electronic games aimed at children and adolescents or likely to be accessed by them, under the game's indicative rating. The law was signed on September 17, 2025 and, after an amendment fixed the date, entered into force on March 17, 2026. "Likely to be accessed" is the operative phrase: a game doesn't escape by saying it's for adults if its rating, marketing and audience say otherwise.
+
+The stores moved too. Apple announced on February 24, 2026 that on the Brazil storefront, an app that declares loot boxes in its age rating questionnaire "will be updated to 18+," and that 18+ downloads in Brazil, Australia and Singapore require the store to confirm the user is an adult. A rule like that reaches a game through its store listing before any regulator does.
+
+### Australia
+
+Australia regulates through classification rather than gambling law. From September 2024, games with in-game purchases linked to elements of chance, including paid loot boxes, receive a minimum classification of M, and games with simulated gambling (social casino games) a mandatory R 18+, which makes them legally restricted to adults. The change applies to games classified from that date, on every device type, so a live game that adds paid random items later has to be classified again.
+
+### South Korea and Japan
+
+South Korea made probability disclosure law: under an amended enforcement decree of the Game Industry Promotion Act, operators must disclose the type of each paid probability-based item and its probability from March 22, 2024, as the Ministry of Culture, Sports and Tourism announced in January 2024. Japan acted earlier and more narrowly. In May 2012 the Consumer Affairs Agency stated that **kompu gacha** ("complete gacha", a prize for collecting a full set of items from paid draws) is the "card matching" method banned outright under the Act against Unjustifiable Premiums and Misleading Representations, with the revised standards applied from July 1, 2012. Ordinary gacha stayed legal; the prize for completing a set did not.
 
 ### The European Union
 
-There's no EU loot box law. What there is: PEGI's rating change (paid random items rated PEGI 16 by default from June 2026, and existing PEGI 3, 7 and 12 digital games re-rated from October 2026), and consumer law applied to virtual currencies, below. Belgium shows that national gambling law can still apply on top.
+There's no EU loot box law. What there is: PEGI's 2026 rating criteria, which raise the age rating for paid random items ([Ratings, Age & Children](/books/gaming/ratings-and-age#pegi)), and consumer law applied to virtual currencies, below. Belgium shows that national gambling law can still apply on top.
 
 ## Store Odds Rules
 
@@ -97,7 +110,7 @@ Refunds for digital purchases come from three layers, and the strictest applies:
 - **Store policy.** Each store sets its own windows and conditions, and on a closed store the store decides; Steam, for example, refunds third-party in-game purchases only if the developer opts in. The per-store table and how each store tells you is in [Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks).
 - **Your own commitments,** like the UK industry's "fair and lenient refund policies."
 
-The engineering consequences are the same in every case. A refund needs to know what was bought, whether it was consumed, and what was received for it; a refund of currency you issue can cover only what's left unspent, and one already issued by a store or bank reverses the unspent part and applies the published policy to the rest (revoke what it bought, a negative balance or a write-off, as in [Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks)); and a refunded or charged-back purchase must never lock the account for having asked ([Stores, Fees & Payments](/books/gaming/stores-and-payments) owns the receipt and refund flows; [Player Support](/books/gaming/player-support) owns the queue).
+The engineering consequences are the same in every case: a refund you issue can cover only what's left unspent, one already issued by a store or bank runs the clawback in [Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks), and neither may lock the account for having asked (the Epic order, above).
 
 "How much of this purchase is unspent" has a definite answer only if the ledger decides which purchase each paid spend came from. My default is first in, first out: every spend of paid currency is attributed to the oldest purchase with units left, under the versioned spend-order rule in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#spend-order), so a purchase's unspent balance is what it issued minus what has been attributed to it. A 14-day withdrawal request then reverses exactly that remainder, and the answer is the same whether support, the store or a regulator asks.
 
@@ -111,7 +124,7 @@ The CPC principles and the HoYoverse order turn currency design into something a
 - **Direct purchase of random items with money.** The HoYoverse order requires it for that company; it's also the simplest way to make the price of a draw unambiguous everywhere.
 - **No expiry on purchased currency.** Apple's Guideline 3.1.1 already says purchased credits and currencies "may not expire," and principle 6 warns against unilaterally changing their value.
 
-## Building Drop Tables That Can Be Audited
+## How to Build It
 
 A drop table is the list of possible outcomes of a draw with their probabilities. Everything in this section follows from one rule: **the disclosure and the roll read the same rows.** Odds published from a spreadsheet and a roll coded in the game server will drift apart, and the first person to notice will be a player with a spreadsheet of their own.
 
@@ -187,7 +200,7 @@ Keep the audit's inputs: the version, the counts, the test and the result, per d
 
 ### Gates Around the Draw
 
-- **Region:** paid tables off where paid random items are off (Belgium), with the geofence keyed to the account's billing country and the store region, not the IP address alone.
+- **Region:** paid tables off where paid random items are off (Belgium, and Brazil for games minors are likely to play), with the geofence keyed to the account's billing country and the store region, not the IP address alone.
 - **Age and consent:** paid draws behind parental consent for under-18 accounts in the UK under the industry commitments, and under-16 in the HoYoverse order's terms; the age band and consent model are in [Ratings, Age & Children](/books/gaming/ratings-and-age#age-and-features).
 - **Spending limits:** a per-account limit, default zero on child accounts, enforced on the server before the payment, and visible to the player and parent (below).
 - **Confirmation:** a deliberate confirmation step showing the item or draw, the real-money price, and a link to the odds, placed where it can't be hit by the button that dismissed the last dialog.
@@ -238,6 +251,9 @@ What gets asked for, and by whom:
 - [Apple: App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/), Guideline 3.1.1 on odds disclosure before purchase and non-expiring purchased currency
 - [Google Play: Payments policy](https://support.google.com/googleplay/android-developer/answer/9858738), odds disclosure in advance of and in close proximity to the purchase
 - [Elawcn: Ministry of Culture notice on online game operations (2016)](https://www.elawcn.com/rule/2020/0301/617.html), a reproduction of the notice; Article 6's publication of item names, contents and draw probabilities
+- [Planalto: Lei nº 15.211, de 17 de setembro de 2025](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15211.htm), the ECA Digital; Article 20's loot box prohibition and Article 41-A's entry into force on March 17, 2026
+- [Australian Classification: New classifications for gambling content in video games](https://www.classification.gov.au/about-us/media-and-news/news/new-classifications-for-gambling-content-video-games), the M minimum for in-game purchases linked to chance and R 18+ for simulated gambling from September 2024
+- [Japanese Law Translation: Act against Unjustifiable Premiums and Misleading Representations](https://www.japaneselawtranslation.go.jp/en/laws/view/2888/en), the act under which kompu gacha was held unlawful
 
 **Reference**
 
@@ -245,6 +261,9 @@ What gets asked for, and by whom:
 - [Dirkzwager: Loot boxes in FIFA not a prohibited game of chance after all](https://www.dirkzwager.nl/kennis/artikelen/loot-boxes-in-fifa-toch-geen-verboden-kansspel-dwangsom-onterecht-opgelegd), April 1, 2022; the Council of State ruling on EA's FIFA packs, in Dutch
 - [GOV.UK: Government response to the call for evidence on loot boxes](https://www.gov.uk/government/consultations/loot-boxes-in-video-games-call-for-evidence/outcome/government-response-to-the-call-for-evidence-on-loot-boxes-in-video-games), July 18, 2022; no change to gambling law and the expectation of industry-led measures
 - [GOV.UK: Update on improvements to industry-led protections](https://www.gov.uk/guidance/loot-boxes-in-video-games-update-on-improvements-to-industry-led-protections), July 18, 2023; parental consent for under-18s, £0 default limits, probability disclosure, refunds and the 12-month implementation period
+- [5Rights Foundation: Research reveals "non-existent" enforcement of industry-led standards on loot boxes](https://5rightsfoundation.com/research-reveals-non-existent-enforcement-of-industry-led-standards-on-loot-boxes), May 29, 2025; Xiao and Lund's before-and-after study of the UK's top-grossing iPhone games
+- [Aju News: Probability disclosure for paid random items mandatory from March 22](https://www.ajunews.com/view/20240102104711033), January 2, 2024; the Ministry of Culture, Sports and Tourism's announcement of the amended enforcement decree, in Korean
+- [4Gamer: Consumer Affairs Agency publishes its view on kompu gacha](https://www.4gamer.net/games/000/G000000/20120518018/), May 18, 2012; kompu gacha as banned card matching and the July 1, 2012 start, in Japanese
 - [Forbrukertilsynet: Consumer authorities take action on harmful practices in the gaming industry](https://www.forbrukertilsynet.no/eng-articles/national-consumer-authorities-and-commission-take-action-on-harmful-practices-in-the-gaming-industry), March 21, 2025; the principles' announcement and the Star Stable action
 - [European Commission: Stakeholder talks on the CPC Network's key principles](https://commission.europa.eu/news-and-media/news/european-commission-hosts-stakeholders-talks-application-cpc-networks-key-principles-games-virtual-2025-06-03_en), June 3, 2025; the principles' status and follow-up
 - [FTC: Epic Games to pay more than half a billion dollars](https://www.ftc.gov/news-events/news/press-releases/2022/12/fortnite-video-game-maker-epic-games-pay-more-half-billion-dollars-over-ftc-allegations), December 19, 2022; button configurations, unwanted charges and account locks

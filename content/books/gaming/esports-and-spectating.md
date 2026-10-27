@@ -2,7 +2,7 @@
 title = "Esports & Spectating"
 description = "Spectator and observer modes, delayed feeds and fog of war, replays and rewinds, remote production, official data feeds, tournament rules and integrity."
 category = "Gaming Industry"
-order = 1627
+order = 1630
 part = "Running the Platform"
 tags = ["gaming", "esports", "spectating", "replays", "broadcast", "integrity"]
 +++
@@ -231,6 +231,16 @@ CREATE TABLE competitive_rulings (
 ```
 
 A provisional suspension is a row with an open-ended range; the final ruling closes the range or marks the row overturned, and the history stays ([Audit Trails](/docs/architecture/audit-trails)).
+
+## Auditing
+
+Competitive integrity is decided on records, and the records are asked for by officials, teams, publishers, betting integrity units and sometimes courts:
+
+- **Every intervention** (pause, restore, remake) is a `match_interventions` row with the official, the reason and the restore point, so a disputed restore can be replayed against the recording.
+- **Every ruling** is a `competitive_rulings` row with the rule and ruleset version, the evidence references and the status history; a provisional ruling is closed or overturned, never edited ([Audit Trails](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Recordings that support a ruling** are flagged `is_retained_for_ruling`, hashed at capture (`content_sha256`), and exempt from expiry until the ruling is final, with the build kept runnable or the match converted to video.
+- **Who saw what, when.** `spectator_grants` and the `delay_seconds` and fog setting of the stream each grant was for show whether an observer or a broadcast feed could have seen information a team couldn't, which is the first question in a ghosting dispute.
+- **Data feeds** carry the match, server frame and sequence number of each event, with corrections as new events, so a betting partner's dispute about a result is answered from the same record the officials used ([Official Data Feeds](#official-data-feeds)).
 
 ## What This Means for the System You Build
 

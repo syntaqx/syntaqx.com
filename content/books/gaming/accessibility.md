@@ -2,7 +2,7 @@
 title = "Accessibility"
 description = "Game accessibility with the Xbox and Game Accessibility Guidelines: text, contrast, subtitles, color, remapping, assists, narration, the CVAA and testing it."
 category = "Gaming Industry"
-order = 1624
+order = 1627
 part = "The Rules"
 tags = ["gaming", "accessibility", "xag", "subtitles", "remapping", "cvaa"]
 +++
@@ -21,7 +21,7 @@ The two agree on almost everything. Where the XAGs give a number, this chapter u
 
 ## The Law
 
-Most game accessibility is driven by players, platforms and studios rather than law, with one exception in the US. The **Twenty-First Century Communications and Video Accessibility Act** (CVAA) added 47 U.S.C. 617, which requires manufacturers of equipment and software used for **advanced communications services**, and the providers of those services, a category in-game text and voice chat can fall into, to make them "accessible to and usable by individuals with disabilities," unless that "is not achievable," meaning not possible "with reasonable effort or expense, as determined by the Commission." Where accessibility isn't achievable, the product must be compatible with the peripheral devices and specialized equipment people with disabilities commonly use. The statute lets the FCC waive the requirements for equipment and services "designed primarily for purposes other than using advanced communications services." Whether the FCC's rules apply to a given game's chat, whether any waiver covers it, and what records the FCC expects a publisher to keep are questions for counsel.
+Most game accessibility is driven by players, platforms and studios rather than law, with one exception in the US. The **Twenty-First Century Communications and Video Accessibility Act** (CVAA) added 47 U.S.C. 617, which requires manufacturers of equipment and software used for **advanced communications services**, and the providers of those services, a category in-game text and voice chat can fall into, to make them "accessible to and usable by individuals with disabilities," unless that "is not achievable," meaning not possible "with reasonable effort or expense, as determined by the Commission." Where accessibility isn't achievable, the product must be compatible with the peripheral devices and specialized equipment people with disabilities commonly use. The statute lets the FCC waive the requirements for equipment and services "designed primarily for purposes other than using advanced communications services," and the FCC did that for video game software, in a class waiver requested by the Entertainment Software Association and extended several times. The last extension (DA 17-1243, December 2017) ran "through December 31, 2018," and the FCC granted it based in part on the ESA's assertion "that this will be its final request." Since January 1, 2019, game chat has had no class waiver: text and voice chat in a game are advanced communications services the accessibility rules can reach. How the rules apply to a given game's chat, and what records the FCC expects a publisher to keep, are questions for counsel.
 
 In the EU, the European Accessibility Act has applied since June 28, 2025 to e-commerce and other consumer services ([Accessibility](/docs/frontend/accessibility#it-s-the-law-too)); a game's web store and account pages are the clearest fit. Whether and how it reaches anything inside a game is also a question for counsel.
 
@@ -60,7 +60,7 @@ XAG 102 gives contrast ratios in the same terms as web standards, with "large te
 | Placeholder or input text | 4.5:1, or 3:1 if large |
 | Everything, in a high contrast mode | 7:1 |
 
-Games add a problem web pages rarely have: the background moves. XAG 102 says that over a non-solid background, contrast is measured "between the text and the lowest contrasting area of the background," which over a 3D scene means the worst frame. The practical answers are the ones the XAG lists: an optional solid background behind text with adjustable opacity, outlines around text and symbols, player-chosen colors for HUD elements, and a high contrast mode. Read the platform's high contrast setting at launch and start the game in its high contrast mode if the platform has it on.
+Games add a problem web pages rarely have: the background moves. XAG 102 says that over a non-solid background, contrast is measured "between the text and the lowest contrasting area of the background," which over a 3D scene means the worst frame. The practical answers are the ones the XAG lists: an optional solid background behind text with adjustable opacity, outlines around text and symbols, player-chosen colors for HUD elements, and a high contrast mode. Read the platform's high contrast setting at launch and start the game in its high contrast mode if the platform has it on. A high contrast mode is a theme, so build it the way UI themes are built, as redefined color tokens with contrast checked in every theme ([Design Tokens](/docs/frontend/design-tokens#check-contrast-in-every-theme)).
 
 ## Subtitles and Captions
 
@@ -77,7 +77,7 @@ XAG 104 distinguishes **subtitles** ("text equivalents for the speech or dialogu
 
 ![Subtitle legibility sheet for a console game at 1080p. A plan view of a 1920 by 1080 frame at 1:4 shows a two-line subtitle block near the bottom on a solid background, with the line dimensioned at no more than 40 characters and leaders for the second line and the background. Detail A, at 10:1, compares the default body height S1 = 26 px with the height at 200% scaling, S5 = S1 x K1 = 26 x 2.00 = 52 px, highlighted, which equals T1, the console threshold for large text. A variable table lists the XAG sizes for console and PC at 1080p and 4K, the 4.5:1 and 3:1 contrast ratios, and the 40-character and two-line limits.](/diagrams/gm-accessibility-subtitles.svg "Subtitle limits come in numbers you can test: 26 px default on console, scalable to 52 px, at most 40 characters and two lines. At full scale, console text crosses the large-text line and its contrast floor drops from 4.5:1 to 3:1.")
 
-Subtitles are also a data problem. The 40-character limit and hand-placed line breaks mean subtitle text is authored per language with its own breaks and timing, not generated from the dialogue script by wrapping. A localization pipeline that stores dialogue lines should store subtitle segmentations next to them, with the speaker, and lint every language for line length and line count at build time, since a German line that fits in English rarely fits in German.
+Subtitles are also a data problem. The 40-character limit and hand-placed line breaks mean subtitle text is authored per language with its own breaks and timing, not generated from the dialogue script by wrapping. A localization pipeline that stores dialogue lines should store subtitle segmentations next to them, with the speaker, and lint every language for line length and line count at build time, since a line that fits in English often won't fit once translated ([Text Expansion](/docs/frontend/internationalization#text-expansion)); externalized strings and pseudo-localization in CI catch the rest ([Internationalization](/docs/frontend/internationalization)).
 
 ## Color and Multiple Channels
 
@@ -172,7 +172,7 @@ CREATE TABLE accessibility_settings (       -- one row per account, plus device 
 );
 ```
 
-The table extends the volume's core model ([The Games Business](/books/gaming/games-business#the-core-data-model)). Resolution runs from the most specific row to the least (this game on this device class, this game, all games on this device class, all games), and the client caches the result so the game starts correctly offline. Two cautions: a settings row is personal data about a person's disability in some readings, so keep it out of analytics that aren't about accessibility, and summarize usage in aggregate ([Telemetry & Analytics](/books/gaming/telemetry)); and a remote config or live-ops change must never reset accessibility settings to defaults, which is a bug that only the players who need them notice.
+The table extends the volume's core model ([The Games Business](/books/gaming/games-business#the-core-data-model)). Resolution runs from the most specific row to the least (this game on this device class, this game, all games on this device class, all games), and the client caches the result so the game starts correctly offline, queuing changes made offline and syncing them when it reconnects, with the newest change per setting winning ([Offline-First Sync](/docs/architecture/offline-sync#conflicts-choosing-who-wins)). Two cautions: a settings row is personal data about a person's disability in some readings, so keep it out of analytics that aren't about accessibility, and summarize usage in aggregate ([Telemetry & Analytics](/books/gaming/telemetry)); and a remote config or live-ops change must never reset accessibility settings to defaults, which is a bug that only the players who need them notice.
 
 ## Testing
 
@@ -209,6 +209,7 @@ The XAGs are written to be tested, and most of their numbers can be checked by m
 - [XAG 106: Screen narration](https://learn.microsoft.com/en-us/gaming/accessibility/xbox-accessibility-guidelines/106), what to narrate, name-role-value-position order, interruption, rate and pitch
 - [XAG 107: Input](https://learn.microsoft.com/en-us/gaming/accessibility/xbox-accessibility-guidelines/107), full remapping, action remapping, holds and taps, sensitivity, game speed and touch target sizes
 - [47 U.S.C. 617](https://www.law.cornell.edu/uscode/text/47/617), the CVAA's accessibility requirement for advanced communications services, achievability, compatibility and waivers
+- [FCC: Order DA 17-1243 (PDF)](https://docs.fcc.gov/public/attachments/DA-17-1243A1.pdf), December 2017; the final extension of the video game software class waiver through December 31, 2018
 
 **Reference**
 

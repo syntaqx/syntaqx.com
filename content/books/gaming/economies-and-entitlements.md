@@ -3,7 +3,7 @@ title = "Inventories, Entitlements & Economies"
 nav_title = "Entitlements & Economies"
 description = "What an account owns and how it got it: entitlements, item definitions and instances, currency wallets as ledgers, sinks, crafting, trading and clawbacks."
 category = "Gaming Industry"
-order = 1614
+order = 1616
 part = "Backend and Live Services"
 tags = ["gaming", "entitlements", "inventory", "virtual-currency", "ledgers", "economy"]
 +++
@@ -166,7 +166,7 @@ So the ledger keeps them in separate accounts even when the client shows one num
 
 ## Accounting for Virtual Currency
 
-Selling virtual currency doesn't produce revenue on the day of the sale; the player has paid for something not yet delivered. [Monetization Models](/books/gaming/monetization#virtual-currency) walks through Roblox's public treatment: bookings recorded in deferred revenue and recognized over the period items are available, which for durable items is the estimated lifetime of a paying user, 27 months as of December 31, 2025. One more detail from the same filing matters to the system: Roblox reassesses that estimate every quarter, and the filing records a change from 28 months to 27. The estimate moves; the facts underneath it must not.
+Selling virtual currency doesn't produce revenue on the day of the sale; the player has paid for something not yet delivered. The general rule (cash is not revenue, performance obligations, breakage, recognition schedules) is in [Accounting & Revenue Recognition](/docs/payments/accounting#cash-is-not-revenue). Roblox's FY2025 10-K is the clearest public example for a game: bookings are "initially recorded in deferred revenue" and recognized over the period the items are available, and for durable items that period is the "estimated average lifetime of a paying user, which was 27 months as of December 31, 2025". One more detail from the same filing matters to the system: Roblox reassesses that estimate every quarter, and the filing records a change from 28 months to 27. The estimate moves; the facts underneath it must not.
 
 I'm not your accountant, and the right treatment for your game is your finance team's and auditor's call. The engineering consequence holds regardless: the ledger keeps the facts any such policy needs, so finance can recompute under this quarter's estimate. For every spend that means the paid and earned split (the `funding` on its `consumed` entries), whether the item bought is durable or used up (`is_durable` on the item), the time, and the purchase each paid unit traces back to. For every purchase it means the amount, currency, store and the store's fee, which [Stores, Fees & Payments](/books/gaming/stores-and-payments) records. With those, any deferral schedule can be rebuilt for any past quarter; without them, none can.
 
@@ -186,7 +186,7 @@ Random outputs (a chest, a pack, a crafted item with rolled stats) add three req
 
 - **The server rolls.** The client asks; the server draws from the drop table and records the result. A client-side roll is a client-side grant.
 - **The table is versioned data.** A drop table is a definition with weights, guarantees ("pity" counters that force a rare drop after N misses) and a validity range, and a published version never changes. The tables themselves (`drop_tables`, `drop_table_versions` with integer weights in `drop_table_entries`) are defined in [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes#odds-as-data), because published odds have to be versioned. Every roll records the table version, the draw and the outcome.
-- **The odds you disclose are the odds you run.** Apple's guidelines require apps that sell randomized virtual items to "disclose the odds of receiving each type of item to customers prior to purchase," and Google Play has an equivalent rule; China's 2016 Ministry of Culture notice required operators to publish draw probabilities and said the published information must be true. Recording the table version on every roll is how you show that what you published is what ran, and comparing observed rates to configured weights is a test you run continuously. The law itself is in [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes).
+- **The odds you disclose are the odds you run.** Both mobile stores and several countries require odds disclosed before purchase, and China requires them to be true ([Store Odds Rules](/books/gaming/consumer-law-and-loot-boxes#store-odds-rules), [The Rules by Jurisdiction](/books/gaming/consumer-law-and-loot-boxes#the-rules-by-jurisdiction)). Recording the table version on every roll is how you show that what you published is what ran, and comparing observed rates to configured weights is a test you run continuously.
 
 One table records every roll, whether a paid loot box, an earned chest or a craft with rolled stats, and links it to the table version it drew from and to what it granted:
 
@@ -218,9 +218,11 @@ Trading moves instances between accounts, and every trade is a chance to move va
 The risks come from outside the game:
 
 - **Stolen payment methods.** A fraudster buys items with a stolen card, trades them to a clean account and sells them; the chargeback arrives weeks later against an account that no longer holds anything. Valve's guidance is a hold of at least 72 hours before newly purchased items can be traded or gifted ([Stores, Fees & Payments](/books/gaming/stores-and-payments#steam)), which `trade_hold` on the item and `tradable_after` on the copy enforce, and Steam reserves Trusted account status for accounts with a transaction more than 90 days old and no chargebacks.
-- **Account theft.** Stolen accounts are emptied through trades. Holds after a password or email change, new-device trade delays and velocity limits all buy time for the owner to notice ([Authentication](/docs/security/authentication)).
+- **Account theft.** Stolen accounts are emptied through trades. Holds after a password or email change, new-device trade delays and velocity limits all buy time for the owner to notice ([Authentication](/docs/security/authentication)). Valve added a second mechanism for Counter-Strike 2 in July 2025: items received in a trade are "Trade Protected" for a period, and a player "may reverse all Counter-Strike item trades from the last 7 days" from their trade history. A reversible trade needs the instance's chain of owners and an escrow-like state on the received copy (usable, but not tradable, sellable or consumable until protection ends), so the reversal can return exactly what moved.
 - **Real-money trading.** Once items can be traded, third-party markets will price them in real money, whatever your terms say. Roblox's filing states that Robux have no authorized market outside its platform; a terms line like that is a legal position, not a control. Gold farming, bots and laundering follow the money ([Anti-Cheat](/books/gaming/anti-cheat)).
 - **Gambling law.** Tradable items with real-money value change how regulators look at random rewards. Belgium's Gaming Commission examined CS:GO among the games in its 2018 loot box report and concluded that the paid loot boxes it examined were illegal. Whether items can leave an account is a legal question as much as a design one.
+- **Skin gambling.** Tradable cosmetics become stakes on third-party sites. In July 2016 Valve said gambling sites were "using the OpenID API as a way for users to prove ownership of their Steam accounts and items," in breach of its API and user agreements, and that it would send notices "requesting they cease operations through Steam." In February 2017 the UK Gambling Commission secured convictions against the operators of FUTGalaxy, a site that let players gamble FIFA Ultimate Team coins, for providing unlicensed gambling facilities, with £265,000 in fines and costs between the two directors. If your items have a price, someone will run a casino on them, and your sign-in and trading APIs are its plumbing: watch for accounts that receive and send items at volumes no player does.
+- **Blockchain items.** Selling items as tokens on a public chain puts them on an external market by design. Steam's onboarding rules list "applications built on blockchain technology that issue or allow exchange of cryptocurrencies or NFTs" among what can't be published on Steam (added in October 2021). Ubisoft's Quartz launched NFT "Digits" for Ghost Recon Breakpoint in December 2021; the last Breakpoint Digit came in March 2022 and no further Digits were released. A store ban plus a market that didn't come is a reason to keep ownership in your own ledger.
 
 Every trade writes provenance: each instance carries its chain of owners, so when a fraudulent purchase is found, you can follow where its items went and decide how far to unwind. Treat trades as payments-grade events, with the scoring and review that [Fraud & Risk](/books/payments/fraud-and-risk) describes.
 
@@ -235,7 +237,7 @@ The clawback is an algorithm, and it has to be the same whatever the trigger:
 3. **Handle what's already gone.** If the currency was spent, apply the game's published policy: revoke what it bought (the drawing's choice), let the paid balance go negative so the next purchase repays it, or absorb the loss and record a write-off. If items were traded away, follow provenance and decide whether to unwind the trade or write off the loss. My default order is: revoke what the refunded currency bought, starting with the most recent spends; let the paid balance go negative only for the remainder that can't be revoked (an item already consumed); and never unwind a trade from an innocent counterparty, writing that loss off instead.
 4. **Record the decision** with the refund, the policy version and the actor, in the same database transaction as the reversal.
 
-What a clawback must never do is lock the account. The FTC's 2023 final order bars Epic from locking the accounts of customers who dispute charges, and [Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks) draws the general rule from it: a clawback takes back what the disputed money paid for, and abuse goes through the penalty system like any other violation, never as a side effect of a refund.
+What a clawback must never do is lock the account for having disputed ([The FTC's Orders](/books/gaming/consumer-law-and-loot-boxes#the-ftc-s-orders)): it takes back what the disputed money paid for, and abuse goes through the penalty system like any other violation, never as a side effect of a refund. The finance side, deferred revenue reversed and the write-off booked, is in [Accounting for Virtual Currency](#accounting-for-virtual-currency).
 
 ## Auditing
 
@@ -264,23 +266,24 @@ Every grant, revocation, spend, craft and trade is already a ledger or entitleme
 **Specifications**
 
 - [Android Developers: Real-time developer notifications reference](https://developer.android.com/google/play/billing/rtdn-reference), full and quantity-based partial voids, and calling the Developer API after each notification
-- [Apple: App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/), Guideline 3.1.1 on in-app currencies and disclosing loot box odds before purchase
-- [Google Play Console Help: Payments policy](https://support.google.com/googleplay/android-developer/answer/9858738), disclosing the odds of randomized virtual items close to the purchase
 
 **Reference**
 
 - [Steamworks: Steam Inventory Service](https://partner.steamgames.com/doc/features/inventory), item definitions, playtime drops, untrusted clients and server-only explicit grants
 - [Steamworks: Microtransactions](https://partner.steamgames.com/doc/features/microtransactions), daily `GetReport()` reconciliation, the 72-hour trade hold and Trusted status
 - [Microsoft Learn: What is PlayFab](https://learn.microsoft.com/en-us/gaming/playfab/what-is-playfab), catalog, virtual currencies, drop tables and server-side receipt validation as backend features
-- [Roblox: Annual report on Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1315098/000131509826000024/rblx-20251231.htm), the quarterly reassessment of the paying-user life (28 to 27 months) and Robux having no authorized outside market
+- [Roblox: Annual report on Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1315098/000131509826000024/rblx-20251231.htm), bookings in deferred revenue, the 27-month paying-user life and its quarterly reassessment (28 to 27 months), and Robux having no authorized outside market
 
 **In practice**
 
 - [Riot Games: Running Online Services at Riot, Part I](https://www.riotgames.com/en/news/running-online-services-riot-part-i), the Loot service behind Hextech Crafting: Java REST service, Memcached with a Go sidecar, MySQL with replicas
 - [Riot Games: The Architecture of the League Client Update](https://www.riotgames.com/en/news/architecture-league-client-update), client plugins loaded according to the player's entitlements
 - [FTC: Genshin Impact game developer will be banned from selling lootboxes to teens under 16 without parental consent](https://www.ftc.gov/news-events/news/press-releases/2025/01/genshin-impact-game-developer-will-be-banned-selling-lootboxes-teens-under-16-without-parental), the order's disclosure of odds and multi-tiered currency exchange rates and a direct real-money option
-- [FTC: Final order in the Epic Games billing case](https://www.ftc.gov/news-events/news/press-releases/2023/03/ftc-finalizes-order-requiring-fortnite-maker-epic-games-pay-245-million-tricking-users-making), the bar on locking accounts over disputed charges
 - [Norwegian Consumer Authority: Action on harmful practices in the gaming industry](https://www.forbrukertilsynet.no/eng-articles/national-consumer-authorities-and-commission-take-action-on-harmful-practices-in-the-gaming-industry), the 2025 consumer principles on in-game virtual currencies
 - [Belgian Gaming Commission: Research Report on Loot Boxes (English translation)](https://www.skadden.com/-/media/files/publications/2019/08/video-gaming-egaming-law-update/fn12_onderzoeksrapportlootboxenengelspublicatie.pdf), the 2018 report that examined four games and found their paid loot boxes illegal
-- [eLawCN: Ministry of Culture notice on online game operations (2016)](https://www.elawcn.com/rule/2020/0301/617.html), the requirement to publish true draw probabilities
+- [Counter-Strike 2: Season Two, Episode One](https://steamcommunity.com/ogg/730/announcements/detail/529852487375519752), Trade Protected items and reversing trades from the last 7 days (July 2025)
+- [Steam: In-Game Item Trading Update](https://store.steampowered.com/news/22883/), Valve's notices to gambling sites using Steam OpenID (July 2016)
+- [UK Gambling Commission: Two men convicted after offering illegal gambling](https://www.gamblingcommission.gov.uk/news/article/two-men-convicted-after-offering-illegal-gambling-parasitic-upon-popular), the FUTGalaxy prosecution and fines (February 2017)
+- [Steamworks: Onboarding](https://partner.steamgames.com/doc/gettingstarted/onboarding), what can't be published on Steam, including blockchain applications that issue or exchange cryptocurrencies or NFTs
+- [Decrypt: Ubisoft ends Ghost Recon NFT support](https://decrypt.co/97090/ubisoft-tezos-nfts-other-games-ghost-recon-support-ends), the last Breakpoint Digit in March 2022 and no further drops
 - [Square Enix: Ongoing congestion situation and compensation](https://na.finalfantasyxiv.com/lodestone/news/detail/1c59de837cc84285ad1cdb4c9a9cad782363f25b), seven days of compensation after login congestion

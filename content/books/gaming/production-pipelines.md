@@ -107,7 +107,7 @@ The test layers in a game pipeline, using Runeterra's published stages as the ex
 Games add test types web services rarely need:
 
 - **Headless clients and bots** that play scripted matches against a real server.
-- **Replay tests** that feed a recorded game's inputs into a new build and compare the outcome, which needs a deterministic simulation ([Building Your Own Engine](/books/gaming/building-an-engine#determinism)); Riot's Delta Checker began as exactly this.
+- **Replay tests** that feed a recorded game's inputs into a new build and compare the outcome, which needs a deterministic simulation; the loop and its tooling are in [Finding Desyncs](/books/gaming/determinism-and-rollback#finding-desyncs), and Riot's Delta Checker began as exactly this.
 - **Soak tests** that run a client or server for hours to find leaks and fragmentation.
 - **Device farms** for the spread of phones and PC hardware nobody can cover by hand.
 
@@ -122,7 +122,7 @@ A game crashes on hardware you don't own, with drivers you didn't test, and the 
 3. **Symbolicate.** A minidump holds addresses. Turning them into functions, files and line numbers needs the debug information files from the exact build: PDBs on Windows, dSYMs on Apple platforms, ELF symbols on Linux and Android, or Breakpad symbols anywhere. Sentry matches them by debug identifiers that "uniquely identify debug information files across builds," from uploads or from a symbol server it downloads from on demand. This is why symbol upload is a pipeline step on every build that might reach a player.
 4. **Group.** Reports with the same faulting stack (after stripping addresses and normalizing inlined frames) become one issue, counted by build, platform, GPU and driver, so the team sees "this crash, 4,000 times, only on one driver version" instead of 4,000 reports.
 
-Minidumps contain memory, and memory can contain chat text, names or tokens. Treat them as personal data: collect only what you need, scrub, restrict access and expire them ([GDPR & Privacy](/docs/compliance/gdpr), [Data Retention & Deletion](/docs/architecture/data-retention)). Crash rate per build is defined in [Game Metrics](/books/gaming/game-metrics#technical-health), and it's one of the signals that decides whether a staged rollout widens ([Patching & Content Delivery](/books/gaming/patching#rollouts-rollbacks-and-hotfixes)).
+The crash pipeline sits beside the backend's ordinary error and trace pipeline, and joins it by build and session ID so a client crash can be read next to the server errors in the same match ([Observability](/docs/operations/observability)). Minidumps contain memory, and memory can contain chat text, names or tokens. Treat them as personal data: collect only what you need, scrub, restrict access and expire them ([GDPR & Privacy](/docs/compliance/gdpr), [Data Retention & Deletion](/docs/architecture/data-retention)). Crash rate per build is defined in [Game Metrics](/books/gaming/game-metrics#technical-health), and it's one of the signals that decides whether a staged rollout widens ([Patching & Content Delivery](/books/gaming/patching#rollouts-rollbacks-and-hotfixes)).
 
 ## Profiling
 
@@ -155,7 +155,7 @@ Before a game or patch ships on a console, the platform holder tests it against 
 
 Microsoft publishes the most. The Xbox Requirements (XRs) "consist of the policies, technical requirements, and product component-related requirements" every Xbox title must meet; "XRs that are tested in Certification are identified with an asterisk"; unless noted they apply to games on "XBOX One, XBOX Series X|S console generations, xCloud, and PC"; and "inaccurate and incomplete submissions will be rejected from Certification." Retired XRs are removed, so the numbering has gaps.
 
-Sony's and Nintendo's requirements and submission processes are available only to licensed developers under NDA, through their developer portals. That's all that can be said about them publicly, and it's all this book says.
+Sony's and Nintendo's requirements and submission processes are available only to licensed developers under NDA, through their developer portals. Their names are public even though their contents aren't: porting studios call Nintendo's submission procedure Lotcheck, and QA vendors refer to Sony's requirement list as the TRC. Vendors use the labels loosely, so take each platform holder's term from its own portal. Beyond the names, this book says nothing about them.
 
 PC stores have lighter gates. Steam reviews the store page and the build separately, each "typically 3-5 business days," and asks you to plan for at least 7 business days; the build must start up properly, implement every feature the store page lists, and use Steam Wallet for in-game transactions.
 
@@ -249,7 +249,7 @@ CREATE TABLE certification_submissions (
 );
 ```
 
-Two state machines run over these rows. `pipeline_state` moves from `queued` through `syncing`, `compiling`, `cooking`, `packaging` and `testing` to `passed` or `failed`, written by the farm. `promotion` is a separate, human-approved path: a passed build becomes a `candidate`, is `submitted` and `certified` per platform, and is `released` or `withdrawn`. Keep them apart: a build that passed every test is not a release until someone promotes it, and every promotion is recorded with who did it ([Audit Trails](/docs/architecture/audit-trails)). Only a `passed` build can become a `candidate`, and the release a channel serves points at a promoted build ([Patching & Content Delivery](/books/gaming/patching#the-data-model)), so nothing reaches players that the farm didn't build and test.
+Two state machines run over these rows. `pipeline_state` moves from `queued` through `syncing`, `compiling`, `cooking`, `packaging` and `testing` to `passed` or `failed`, written by the farm. `promotion` is a separate, human-approved path: a passed build becomes a `candidate`, is `submitted` and `certified` per platform, and is `released` or `withdrawn`. Keep them apart: a build that passed every test is not a release until someone promotes it, and every promotion is recorded with who did it ([Audit Trails](/docs/architecture/audit-trails)). Only a `passed` build can become a `candidate`, and the release a channel serves points at a promoted build ([Patching & Content Delivery](/books/gaming/patching#how-to-build-it)), so nothing reaches players that the farm didn't build and test.
 
 Three smaller decisions make the tables useful later:
 
@@ -302,3 +302,5 @@ Three smaller decisions make the tables useful later:
 - [Riot Games: Legends of Runeterra CI/CD pipeline](https://www.riotgames.com/en/news/legends-runeterra-cicd-pipeline), the move from Perforce to Git LFS, repository size, Jenkins, run counts, build nodes and test stages
 - [Riot Games: Random Acts of Optimization](https://www.riotgames.com/en/news/random-acts-optimization), the Waffles tool, compiled-out instrumentation, Chrome tracing and VTune
 - [Riot Games: VALORANT's 128-Tick Servers](https://www.riotgames.com/en/news/valorants-128-tick-servers), per-subsystem server telemetry
+- [Room 8 Studio: How to submit a game to the store from the first attempt](https://room8studio.com/news/how-to-submit-game-to-store-from-the-first-attempt-game-porting-tips), the Nintendo Switch submission procedure called Lotcheck (secondary)
+- [iXie Gaming: Console compliance testing](https://www.ixiegaming.com/console-compliance-testing/), a QA vendor naming Sony's TRC (secondary)
