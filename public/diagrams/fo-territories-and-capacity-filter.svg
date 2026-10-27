@@ -24,8 +24,8 @@
   <path class="flow hl" d="M321,244L321,260" marker-end="url(#fo-tcf-ah-hl)"/>
   <!-- Hard and soft -->
   <path class="flow" d="M611,60H617V244H611"/>
-  <text class="sl" x="629" y="150">HARD RULES:</text>
-  <text class="sl" x="629" y="162">PASS OR FAIL</text>
+  <text class="sl" x="629" y="149.5">HARD RULES:</text>
+  <text class="sl" x="629" y="160.5">PASS OR FAIL</text>
   <path class="flow hl" d="M611,260H617V284H611"/>
   <text class="sl hl" x="629" y="275">SOFT: SCORED</text>
   <!-- Footer -->

@@ -20,8 +20,8 @@
   <rect class="obj plate" x="20" y="128" width="140" height="28"/>
   <text class="sl ink" x="90" y="145" text-anchor="middle">BROWSER</text>
   <text class="tc" x="90" y="174" text-anchor="middle">opaque HttpOnly cookie</text>
-  <path class="flow" d="M160,142L248,142" marker-end="url(#sh-ah)"/>
-  <text class="sl ko" x="204" y="137" text-anchor="middle">COOKIE</text>
+  <path class="flow" d="M163,142L248,142" marker-end="url(#sh-ah)"/>
+  <text class="sl ko" x="205.5" y="137" text-anchor="middle">COOKIE</text>
   <rect class="slot" x="20" y="52" width="140" height="28"/>
   <text class="sl" x="90" y="69" text-anchor="middle">LOGOUT OR REVOKE</text>
   <path class="flow alt" d="M160,66L380,66L380,122" marker-end="url(#sh-ah)"/>

@@ -32,13 +32,8 @@ export default function draw() {
 
   s.comment("Hard and soft");
   const bx = cx + wMax / 2 + 16;
-  const bracket = (y1, y2, cls) => s.path(`M${bx - 6},${y1}H${bx}V${y2}H${bx - 6}`, cls);
-  const r0 = rules[0], r4 = rules.at(-1);
-  bracket(r0.y, r4.y + h, "flow");
-  s.text(bx + 12, (r0.y + r4.y + h) / 2 - 2, "hard rules:", "sl");
-  s.text(bx + 12, (r0.y + r4.y + h) / 2 + 10, "pass or fail", "sl");
-  bracket(cand.y, cand.y + h, "flow hl");
-  s.text(bx + 12, cand.cy + 3, "soft: scored", "sl hl");
+  s.bracket(rules[0].y, rules.at(-1).y + h, bx, "hard rules:\npass or fail");
+  s.bracket(cand.y, cand.y + h, bx, "soft: scored", { hl: true });
 
   s.comment("Footer");
   const fy = cand.y + h + 30;

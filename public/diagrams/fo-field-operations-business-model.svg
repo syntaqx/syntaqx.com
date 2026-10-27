@@ -14,9 +14,9 @@
   <path class="flow" d="M234,38L272,38" marker-end="url(#fo-fobm-ah)"/>
   <text class="sl ko" x="253" y="33" text-anchor="middle">ROLE</text>
   <path class="flow" d="M366,38L404,38" marker-end="url(#fo-fobm-ah)"/>
-  <text class="sl ko" x="385" y="33" text-anchor="middle">1..N</text>
+  <text class="tc ko" x="385" y="33" text-anchor="middle">1..n</text>
   <path class="flow" d="M498,38L536,38" marker-end="url(#fo-fobm-ah)"/>
-  <text class="sl ko" x="517" y="33" text-anchor="middle">1..N</text>
+  <text class="tc ko" x="517" y="33" text-anchor="middle">1..n</text>
   <!-- What was sold -->
   <text class="lt" x="20" y="113.5">WHAT WAS SOLD</text>
   <rect class="obj fill-2" x="140" y="96" width="94" height="28"/>
@@ -46,7 +46,7 @@
   <text class="sl ko" x="385" y="145" text-anchor="middle">GENERATES</text>
   <path class="flow" d="M234,194L272,194" marker-end="url(#fo-fobm-ah)"/>
   <path class="flow hl" d="M366,194L404,194" marker-end="url(#fo-fobm-ah-hl)"/>
-  <text class="sl hl ko" x="385" y="189" text-anchor="middle">1..N</text>
+  <text class="tc hl ko" x="385" y="189" text-anchor="middle">1..n</text>
   <path class="flow" d="M498,194L536,194" marker-end="url(#fo-fobm-ah)"/>
   <rect class="slot" x="536" y="244" width="94" height="28"/>
   <text class="tc" x="583" y="261" text-anchor="middle">resource</text>

@@ -24,17 +24,17 @@ export default function draw() {
   const offer = s.node(20, midY - h / 2, ew, h, "offer accepted", { fill: 1 });
   const gate = s.node(cx0, midY - h / 2, cw, h, "cleared to knock", { hl: true });
 
-  TRACKS.forEach((t, i) => {
+  const tracks = TRACKS.map((t, i) => {
     s.comment(t.label);
     s.text(x0, ys[i] - 8, t.label, "sl");
     const nodes = t.steps.map((l, j) => s.node(x0 + j * (w + gap), ys[i], w, h, l, { code: true }));
-    s.wire([offer.port("r"), [forkX, midY], [forkX, nodes[0].cy], nodes[0].port("l")]);
     nodes.slice(1).forEach((nd, j) => s.connect(nodes[j], nd));
-    const last = nodes.at(-1);
-    // Into the gate: the outer tracks meet the middle one at the join.
-    if (i === 1) s.wire([last.port("r"), gate.port("l")], { hl: true });
-    else s.wire([last.port("r"), [joinX, last.cy], [joinX, midY]], { hl: true, arrow: "none" });
+    return nodes;
   });
+
+  s.comment("The offer forks into the tracks; they join at the gate");
+  s.fanOut(offer, tracks.map((n) => n[0]), { via: forkX });
+  s.fanIn(tracks.map((n) => n.at(-1)), gate, { via: joinX, hl: true });
 
   s.comment("Footer");
   const fy = ys[2] + h + 30;

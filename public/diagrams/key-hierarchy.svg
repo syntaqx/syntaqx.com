@@ -19,32 +19,32 @@
   <text class="vs" x="460" y="64.5" text-anchor="middle">NEVER LEAVES; EVERY KEY BELOW IS STORED ENCRYPTED UNDER IT</text>
   <!-- zone master key (ZMK) -->
   <rect class="obj fill-2" x="180" y="108" width="170.67" height="50"/>
-  <text class="sl ink" x="265.33" y="124" text-anchor="middle">ZONE MASTER KEY (ZMK)</text>
+  <text class="sl ink" x="265.33" y="125" text-anchor="middle">ZONE MASTER KEY (ZMK)</text>
   <text class="vs" x="265.33" y="137" text-anchor="middle">SHARED WITH A PARTNER,</text>
   <text class="vs" x="265.33" y="148" text-anchor="middle">IN PARTS</text>
   <rect class="obj fill-2" x="180" y="194" width="170.67" height="50"/>
-  <text class="sl ink" x="265.33" y="210" text-anchor="middle">ZONE PIN KEY (ZPK)</text>
+  <text class="sl ink" x="265.33" y="211" text-anchor="middle">ZONE PIN KEY (ZPK)</text>
   <text class="vs" x="265.33" y="223" text-anchor="middle">PINS ON ONE LINK,</text>
   <text class="vs" x="265.33" y="234" text-anchor="middle">CHANGED OFTEN</text>
   <path class="flow" d="M265.33,73L265.33,108" marker-end="url(#kh-ah)"/>
   <path class="flow" d="M265.33,158L265.33,194" marker-end="url(#kh-ah)"/>
   <!-- terminal KEK -->
   <rect class="obj fill-2" x="374.67" y="108" width="170.67" height="50"/>
-  <text class="sl ink" x="460" y="124" text-anchor="middle">TERMINAL KEK</text>
+  <text class="sl ink" x="460" y="125" text-anchor="middle">TERMINAL KEK</text>
   <text class="vs" x="460" y="137" text-anchor="middle">LOADS TERMINALS</text>
   <text class="vs" x="460" y="148" text-anchor="middle">REMOTELY (TR-34)</text>
   <rect class="obj hl" x="374.67" y="194" width="170.67" height="50"/>
-  <text class="sl ink hl" x="460" y="210" text-anchor="middle">DUKPT KEYS</text>
+  <text class="sl ink hl" x="460" y="211" text-anchor="middle">DUKPT KEYS</text>
   <text class="vs" x="460" y="223" text-anchor="middle">BDK TO DEVICE KEYS,</text>
   <text class="vs" x="460" y="234" text-anchor="middle">NEW KEY PER TRANSACTION</text>
   <path class="flow hl" d="M460,73L460,108" marker-end="url(#kh-ah-hl)"/>
   <path class="flow hl" d="M460,158L460,194" marker-end="url(#kh-ah-hl)"/>
   <!-- vault KEK -->
   <rect class="obj fill-2" x="569.33" y="108" width="170.67" height="50"/>
-  <text class="sl ink" x="654.67" y="129.5" text-anchor="middle">VAULT KEK</text>
+  <text class="sl ink" x="654.67" y="130.5" text-anchor="middle">VAULT KEK</text>
   <text class="vs" x="654.67" y="142.5" text-anchor="middle">WRAPS THE DATA KEYS</text>
   <rect class="obj fill-2" x="569.33" y="194" width="170.67" height="50"/>
-  <text class="sl ink" x="654.67" y="210" text-anchor="middle">DATA KEYS</text>
+  <text class="sl ink" x="654.67" y="211" text-anchor="middle">DATA KEYS</text>
   <text class="vs" x="654.67" y="223" text-anchor="middle">CARD NUMBERS AT REST,</text>
   <text class="vs" x="654.67" y="234" text-anchor="middle">ENVELOPE-STYLE</text>
   <path class="flow" d="M654.67,73L654.67,108" marker-end="url(#kh-ah)"/>

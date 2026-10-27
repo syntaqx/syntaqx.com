@@ -34,54 +34,35 @@ export default function draw() {
   const laneX = x0 - 14;
 
   // Axis: banking days to the break, then S+60.
-  s.line(X(0), axY, brk0, axY, "leader");
-  s.line(brk1, axY, xEnd, axY, "leader");
-  s.path(`M${brk0 - 3},${axY + 5}L${brk0 + 3},${axY - 5}M${brk1 - 3},${axY + 5}L${brk1 + 3},${axY - 5}`, "leader");
   const ticks = [...Array(DAYS + 1).keys()].map((d) => [X(d), d ? `S+${d}` : "S"]).concat([[xEnd, `S+${U1}`]]);
-  for (const [x, t] of ticks) {
-    s.line(x, axY - 4, x, axY + 4, "leader");
-    s.text(x, axY - 10, t, "tc", "middle");
-  }
+  const tl = s.timeline({ x1: X(0), x2: xEnd, y: axY, breaks: [[brk0, brk1]], ticks, laneX, h });
   s.nb(X(0) + 14, axY - 13.5, 1);
-
-  const lane = (y, label) => s.text(laneX, y + h / 2 + 3, label, "sl ink", "end");
-  // Boxes split by the break: [x1, x2] spans, with x2 past brk0 split in two.
-  const span = (y, x1, x2, cls) => {
-    if (x2 <= brk0) return s.rect(x1, y, x2 - x1, h, cls);
-    s.rect(x1, y, brk0 - x1, h, cls);
-    return s.rect(brk1, y, x2 - brk1, h, cls);
-  };
 
   // State.
   const y1 = axY + 26;
-  lane(y1, "state");
-  span(y1, X(0), X(R1), "obj fill-2");
-  span(y1, X(R1), xEnd, "obj fill-2");
-  s.rect(xEnd, y1, xFinal - xEnd, h, "obj fill-1");
-  s.label(X(0), y1, X(R1) - X(0), h, "settled");
-  s.label(X(R1), y1, brk0 - X(R1), h, "available");
-  s.label(xEnd, y1, xFinal - xEnd, h, "final");
+  tl.lane(y1, "state");
+  tl.bar(y1, X(0), X(R1), "obj fill-2", "settled");
+  tl.bar(y1, X(R1), xEnd, "obj fill-2", "available");
+  tl.bar(y1, xEnd, xFinal, "obj fill-1", "final");
 
   // Administrative returns.
   const y2 = y1 + h + 30;
-  lane(y2, "returns");
-  span(y2, X(0), X(R1), "obj fill-2");
-  s.label(X(0), y2, X(R1) - X(0), h, "admin returns");
+  tl.lane(y2, "returns");
+  tl.bar(y2, X(0), X(R1), "obj fill-2", "admin returns");
   s.dimH(X(0), X(R1), y2 + h + 18, "R1", { from: [y2 + h, y2 + h], below: true });
 
   // Unauthorized returns: the subject.
   const y3 = y2 + h + 48;
-  lane(y3, "unauthorized");
-  span(y3, X(0), xEnd, "obj fill-1");
+  tl.lane(y3, "unauthorized");
   const ul = "unauthorized returns";
-  s.label(X(0), y3, brk0 - X(0), h, ul);
+  tl.bar(y3, X(0), xEnd, "obj fill-1", ul);
   s.nb(X(0) + (brk0 - X(0)) / 2 + widthOf(ul, "sl") / 2 + 10, y3 + h / 2, 2);
   s.dimH(X(0), xEnd, y3 + h + 18, "U1", { from: [y3 + h, y3 + h], below: true, hl: true });
 
   // Originator reversal.
   const y4 = y3 + h + 48;
-  lane(y4, "reversal");
-  span(y4, X(0), X(V1), "obj fill-2");
+  tl.lane(y4, "reversal");
+  tl.bar(y4, X(0), X(V1), "obj fill-2");
   s.label(X(R1), y4, X(V1) - X(R1), h, "originator reversal");
   s.dimH(X(0), X(V1), y4 + h + 18, "V1", { from: [y4 + h, y4 + h], below: true });
   s.nb(X(V1 / 2) + 22, y4 + h + 26.5, 3);

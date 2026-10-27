@@ -16,8 +16,8 @@ export default function draw() {
   row(r1, "who and where");
   const [person, account, property, asset] = ["person", "account", "property", "asset"].map((l, i) => t(i, r1, l));
   s.connect(person, account, { label: "role" });
-  s.connect(account, property, { label: "1..n" });
-  s.connect(property, asset, { label: "1..n" });
+  s.connect(account, property, { label: "1..n", labelCls: "tc" });
+  s.connect(property, asset, { label: "1..n", labelCls: "tc" });
 
   s.comment("What was sold");
   row(r2, "what was sold");
@@ -36,7 +36,7 @@ export default function draw() {
   const route = t(3, r3, "route");
   s.connect(recurrence, occurrence, { from: "b", to: "t", alt: true, via: r2 + h + 26, label: "generates", side: "above" });
   s.connect(occurrence, wo);
-  s.connect(wo, visit, { hl: true, label: "1..n" });
+  s.connect(wo, visit, { hl: true, label: "1..n", labelCls: "tc" });
   s.connect(visit, route);
   const resource = t(3, r3 + h + 36, "resource", { kind: "ghost" });
   s.connect(route, resource, { from: "b", to: "t", alt: true, label: "one day", side: "right" });

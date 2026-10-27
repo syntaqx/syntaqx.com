@@ -597,6 +597,7 @@ body {
 .diagram .dwg .flow.hl { stroke: var(--fig-accent); stroke-width: 1.2; }
 .diagram .dwg .sl.hl,
 .diagram .dwg .lt.hl,
+.diagram .dwg .th.hl,
 .diagram .dwg .tc.hl { fill: var(--fig-accent); }
 
 /* GFM tables */

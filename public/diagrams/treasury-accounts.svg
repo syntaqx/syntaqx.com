@@ -6,25 +6,25 @@
   <text class="lt" x="23" y="105">SPONSOR BANK: ONE BANK, SEPARATE ACCOUNTS</text>
   <rect class="obj fill-2" x="35" y="124" width="170" height="64"/>
   <path class="obj" d="M44,124L44,188"/>
-  <text class="sl ink" x="124.5" y="146" text-anchor="middle">RESERVE</text>
-  <text class="vs" x="124.5" y="164" text-anchor="middle">HELD AGAINST DISPUTES,</text>
-  <text class="vs" x="124.5" y="175" text-anchor="middle">REFUNDS AND LOSSES</text>
+  <text class="sl ink" x="124.5" y="148" text-anchor="middle">RESERVE</text>
+  <text class="vs" x="124.5" y="160" text-anchor="middle">HELD AGAINST DISPUTES,</text>
+  <text class="vs" x="124.5" y="171" text-anchor="middle">REFUNDS AND LOSSES</text>
   <rect class="obj hl" x="295" y="124" width="170" height="64"/>
   <path class="obj hl" d="M304,124L304,188"/>
-  <text class="sl hl" x="384.5" y="146" text-anchor="middle">FBO / CUSTODIAL</text>
-  <text class="vs" x="384.5" y="164" text-anchor="middle">MERCHANTS' MONEY, TITLED</text>
-  <text class="vs" x="384.5" y="175" text-anchor="middle">FOR THEIR BENEFIT</text>
+  <text class="sl ink hl" x="384.5" y="148" text-anchor="middle">FBO / CUSTODIAL</text>
+  <text class="vs" x="384.5" y="160" text-anchor="middle">MERCHANTS' MONEY, TITLED</text>
+  <text class="vs" x="384.5" y="171" text-anchor="middle">FOR THEIR BENEFIT</text>
   <rect class="obj fill-2" x="555" y="124" width="170" height="64"/>
   <path class="obj" d="M564,124L564,188"/>
-  <text class="sl ink" x="644.5" y="146" text-anchor="middle">OPERATING</text>
-  <text class="vs" x="644.5" y="164" text-anchor="middle">YOUR MONEY: FEES EARNED,</text>
-  <text class="vs" x="644.5" y="175" text-anchor="middle">PAYROLL, EVERY EXPENSE</text>
+  <text class="sl ink" x="644.5" y="148" text-anchor="middle">OPERATING</text>
+  <text class="vs" x="644.5" y="160" text-anchor="middle">YOUR MONEY: FEES EARNED,</text>
+  <text class="vs" x="644.5" y="171" text-anchor="middle">PAYROLL, EVERY EXPENSE</text>
   <!-- Settlement in -->
   <rect class="obj fill-1" x="323" y="23" width="120" height="28"/>
   <rect class="obj plate" x="320" y="20" width="120" height="28"/>
   <text class="sl ink" x="380" y="37" text-anchor="middle">ACQUIRERS</text>
-  <path class="flow hl" d="M380,48L380,124" marker-end="url(#tr-ah-hl)"/>
-  <text class="sl hl ko" x="374" y="70.2" text-anchor="end">SETTLES DAILY,</text><text class="sl hl ko" x="374" y="81.2" text-anchor="end">NET OR GROSS OF FEES</text>
+  <path class="flow hl" d="M380,51L380,124" marker-end="url(#tr-ah-hl)"/>
+  <text class="sl hl ko" x="374" y="72.22" text-anchor="end">SETTLES DAILY,</text><text class="sl hl ko" x="374" y="83.23" text-anchor="end">NET OR GROSS OF FEES</text>
   <!-- Moves out of the custodial account -->
   <path class="flow" d="M295,156L205,156" marker-end="url(#tr-ah)"/>
   <text class="sl ko" x="250" y="151" text-anchor="middle">HELD BACK</text>

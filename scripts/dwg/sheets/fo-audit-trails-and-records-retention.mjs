@@ -24,31 +24,12 @@ const RECORDS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, rowH = 22, barH = 10;
+  const W = 760, x = 20;
   const s = sheet({ prefix: "fo-atr", width: W });
-  const ax = 220, k = 84; // axis origin and sheet units per year
-  const top = 40, bottom = top + RECORDS.length * rowH + 4;
 
-  s.comment("Axis: years");
-  s.text(x, 26, "record", "th");
-  for (let yr = 0; yr <= 5; yr++) {
-    const gx = ax + yr * k;
-    s.text(gx, 26, yr ? `${yr} yr` : "0", "th", "middle");
-    // Ticks only: gridlines would run through the value labels.
-    s.line(gx, top - 10, gx, top - 4, "obj");
-    s.line(gx, bottom, gx, bottom + 6, "obj");
-  }
-
-  s.line(ax, top - 4, ax + 5 * k, top - 4, "obj");
-  s.line(ax, bottom, ax + 5 * k, bottom, "obj");
-  s.line(ax, top - 4, ax, bottom, "obj");
-
-  s.comment("Bars");
-  RECORDS.forEach(([name, years, value, dashed], i) => {
-    const cy = top + i * rowH + rowH / 2;
-    s.text(x, cy + 3.2, name, "tc");
-    s.rect(ax, cy - barH / 2, years * k, barH, dashed ? "slot" : "obj fill-2");
-    s.text(ax + years * k + 8, cy + 3.2, value, "tc");
+  s.comment("Bars on a years axis, ticks only");
+  const { bottom } = s.bars(x, 40, RECORDS.map(([label, value, text, alt]) => ({ label, value, text, alt })), {
+    ax: 220, k: 84, ticks: [0, 1, 2, 3, 4, 5], tick: (yr) => (yr ? `${yr} yr` : "0"), head: "record",
   });
 
   s.comment("Footnotes");

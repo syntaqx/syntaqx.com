@@ -22,7 +22,7 @@
   <rect class="obj fill-2" x="620" y="196" width="120" height="40"/>
   <text class="sl ink" x="680" y="219" text-anchor="middle">PLATFORM</text>
   <!-- Real digits -->
-  <path class="flow hl" d="M130,130L196.67,130" marker-end="url(#ph-ah-hl)"/>
+  <path class="flow hl" d="M133,130L196.67,130" marker-end="url(#ph-ah-hl)"/>
   <path class="flow hl" d="M336.67,130L620,130" marker-end="url(#ph-ah-hl)"/>
   <text class="sl hl ko" x="520.83" y="142" text-anchor="middle">OUT OF BAND</text>
   <!-- Flat tones -->

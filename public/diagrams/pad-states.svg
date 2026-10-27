@@ -38,18 +38,18 @@
   <text class="nbt" x="170" y="161.2" text-anchor="middle">1</text>
   <text class="sl ink" x="140" y="213" text-anchor="end">STATE</text>
   <rect class="obj fill-2" x="154" y="198" width="90" height="24"/>
+  <text class="sl ink" x="199" y="213" text-anchor="middle">CONFIRMED</text>
   <rect class="obj fill-2" x="268" y="198" width="76" height="24"/>
+  <text class="sl ink" x="306" y="213" text-anchor="middle">EXCHANGED</text>
   <rect class="obj fill-2" x="344" y="198" width="76" height="24"/>
+  <text class="sl ink" x="382" y="213" text-anchor="middle">SETTLED</text>
   <rect class="obj fill-2" x="420" y="198" width="98.8" height="24"/>
   <rect class="obj fill-2" x="532.8" y="198" width="66" height="24"/>
   <rect class="obj fill-2" x="612.8" y="198" width="40" height="24"/>
-  <rect class="obj fill-1" x="652.8" y="198" width="83.2" height="24"/>
-  <rect class="obj" x="655.8" y="201" width="77.2" height="18"/>
-  <text class="sl ink" x="199" y="213" text-anchor="middle">CONFIRMED</text>
-  <text class="sl ink" x="306" y="213" text-anchor="middle">EXCHANGED</text>
-  <text class="sl ink" x="382" y="213" text-anchor="middle">SETTLED</text>
   <text class="sl ink" x="469.4" y="213" text-anchor="middle">AVAILABLE</text>
+  <rect class="obj fill-1" x="652.8" y="198" width="83.2" height="24"/>
   <text class="sl ink" x="694.4" y="213" text-anchor="middle">FINAL</text>
+  <rect class="obj" x="655.8" y="201" width="77.2" height="18"/>
   <path class="ext" d="M154,225L154,244"/>
   <path class="ext" d="M344,225L344,244"/>
   <path class="dim" d="M154,240L344,240" marker-start="url(#pad-ah)" marker-end="url(#pad-ah)"/>

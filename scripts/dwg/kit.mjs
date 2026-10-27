@@ -253,40 +253,47 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * Column widths fit the content unless `widths` is given. Returns
      * { y: bottom, width }.
      */
-    table(x, y, title, rows, { widths, rowH = 15, minWidths = [30, 80, 60] } = {}) {
-      return s.grid(x, y, title, ["CODE", "VARIABLE", "VALUE"], rows, { widths, rowH, minWidths });
+    table(x, y, title, rows, { widths, rowH = 15, minWidths = [30, 80, 60], ...o } = {}) {
+      return s.grid(x, y, title, ["CODE", "VARIABLE", "VALUE"], rows, { widths, rowH, minWidths, ...o });
     },
 
     /**
      * Any ruled table: optional title (vt) above, a header row (th), then
      * rows (tc). First column left-aligned, the rest centered unless `align`
-     * ('start' | 'middle' | 'end' per column) says otherwise. Returns
-     * { y: bottom, width, widths }.
+     * ('start' | 'middle' | 'end' per column) says otherwise. `hl` lists
+     * body rows (0-based) to accent: an accent box behind the row, its text
+     * in `tc hl`. `hlHead` lists columns whose head takes `th hl`. `headH`
+     * sets the header row's height (default rowH): the row offset that
+     * lines the body rows up with a column of nodes beside the table.
+     * Returns { y: bottom, width, widths, rows } where rows[i] is body row
+     * i's { y, cy } (top and center), for placing nodes level with it.
      */
-    grid(x, y, title, head, rows, { widths, rowH = 15, minWidths = [], align = [] } = {}) {
+    grid(x, y, title, head, rows, { widths, rowH = 15, headH = rowH, minWidths = [], align = [], hl = [], hlHead = [] } = {}) {
       const all = [head, ...rows];
       const ws =
         widths ??
         head.map((_, j) => Math.max(minWidths[j] ?? 30, Math.ceil(Math.max(...rows.map((r) => widthOf(r[j] ?? "", "tc")), widthOf(head[j], "th")) + 14)));
       const w = ws.reduce((a, b) => a + b, 0);
-      const h = all.length * rowH;
+      const h = headH + rows.length * rowH;
+      const top = (i) => (i ? y + headH + (i - 1) * rowH : y); // i over all rows, head first
       if (title) s.add(text(x, y - 7, title, "vt"));
       s.rect(x, y, w, h, "tbl");
-      for (let i = 1; i < all.length; i++) s.line(x, y + i * rowH, x + w, y + i * rowH, "tbl");
+      for (let i = 1; i < all.length; i++) s.line(x, top(i), x + w, top(i), "tbl");
       let cx = x;
       for (const wj of ws.slice(0, -1)) s.line((cx += wj), y, cx, y + h, "tbl");
+      for (const i of hl) s.rect(x, top(i + 1), w, rowH, "obj hl");
       all.forEach((r, i) => {
         let c = x;
         r.forEach((v, j) => {
-          const cls = i ? "tc" : "th";
-          const yy = y + i * rowH + rowH / 2 + (i ? 3.2 : 2.7);
+          const cls = i ? (hl.includes(i - 1) ? "tc hl" : "tc") : hlHead.includes(j) ? "th hl" : "th";
+          const yy = top(i) + (i ? rowH : headH) / 2 + (i ? 3.2 : 2.7);
           const a = align[j] ?? (j === 0 ? "start" : "middle");
           const tx = a === "start" ? c + 6 : a === "end" ? c + ws[j] - 6 : c + ws[j] / 2;
           s.add(text(tx, yy, v, cls, a));
           c += ws[j];
         });
       });
-      return { y: y + h, width: w, widths: ws };
+      return { y: y + h, width: w, widths: ws, rows: rows.map((_, i) => ({ y: top(i + 1), cy: top(i + 1) + rowH / 2 })) };
     },
 
     // ---- Standard diagrams: nodes, connectors, lanes, trees, pipelines,
@@ -301,16 +308,32 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * system) | decision (diamond) | ghost (dashed: optional or external).
      * `end` doubles the outline (terminal state); `hl` takes the accent;
      * `fill` 1 or 2 picks the shade (default 2, actor 1); `code` sets the
-     * label as an identifier (sans, case kept) instead of caps; `sub` is a
-     * second, gray line inside the box. A label may contain "\n". `w` null
-     * sizes the box to the label. Returns the node: { x, y, w, h, cx, cy,
-     * port(side, t) } with side 'l' | 'r' | 't' | 'b' and t the fraction
-     * along that side (0.5 = middle).
+     * label as an identifier (sans, case kept) instead of caps; `sub` is
+     * gray text under the label inside the box: a string with "\n" breaks
+     * or an array of lines. A label may contain "\n". `w` null sizes the
+     * box to the label and sub lines, `h` null to the stacked lines. Size
+     * goes in the positional `w` / `h`; a `w` or `h` (or any unknown key) in
+     * the options throws rather than being ignored. An actor's shadow sits
+     * 3 right of and below the box: its `r` and `b` ports land on the
+     * shadow's edge, and the 20 margin counts the shadow. Returns the node:
+     * { x, y, w, h, cx, cy, x2, y2, port(side, t) } with x2 / y2 the outer
+     * right and bottom edges (shadow included), side 'l' | 'r' | 't' | 'b'
+     * and t the fraction along that side (0.5 = middle).
      */
-    node(x, y, w, h, label, { kind = "process", end = false, hl = false, fill, code = false, sub, cls } = {}) {
+    node(x, y, w, h, label, opts = {}) {
+      const bad = Object.keys(opts).filter((k) => !NODE_OPTS.has(k));
+      if (bad.length) throw new Error(`node "${label}": unknown option ${bad.map((k) => `"${k}"`).join(", ")}; size goes in the positional w and h`);
+      const { kind = "process", end = false, hl = false, fill, code = false, sub, cls } = opts;
       const lines = label == null ? [] : String(label).split("\n");
+      const subs = sub == null ? [] : Array.isArray(sub) ? sub : String(sub).split("\n");
       const lcls = cls ?? (code ? "tc" : "sl ink") + (hl ? " hl" : "");
-      if (w == null) w = Math.ceil(Math.max(...lines.map((l) => widthOf(l, lcls)), sub ? widthOf(sub, "vs") : 0) + 28);
+      if (w == null) w = Math.ceil(Math.max(...lines.map((l) => widthOf(l, lcls)), ...subs.map((l) => widthOf(l, "vs")), 0) + 28);
+      const lh = 11.5;
+      const block = lines.length * lh + subs.length * 11;
+      if (h == null) h = Math.max(28, Math.ceil(block + 16));
+      const sh = kind === "actor" ? 3 : 0; // the actor's offset shadow
+      if (x < 20 - 0.01 || x + w + sh > s.width - 20 + 0.01)
+        throw new Error(`node "${label}" (x ${f(x)} to ${f(x + w + sh)}${sh ? ", shadow included" : ""}) crosses the 20 margin of a ${s.width} sheet`);
       const fc = `fill-${fill ?? (kind === "actor" ? 1 : 2)}`;
       const box = hl ? "obj hl" : kind === "ghost" ? "slot" : `obj ${fc}`;
       if (kind === "decision") {
@@ -318,29 +341,33 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       } else {
         if (kind === "actor") s.rect(x + 3, y + 3, w, h, hl ? "obj hl" : "obj fill-1");
         s.rect(x, y, w, h, kind === "actor" && !hl ? "obj plate" : box, { rx: kind === "state" ? 6 : null });
-        if (end) s.rect(x + 3, y + 3, w - 6, h - 6, hl ? "obj hl" : "obj", { rx: kind === "state" ? 4 : null });
+        // A ghost's inner outline is dashed too: a solid one inside a dashed box reads as broken.
+        if (end) s.rect(x + 3, y + 3, w - 6, h - 6, hl ? "obj hl" : kind === "ghost" ? "slot" : "obj", { rx: kind === "state" ? 4 : null });
         if (kind === "store") s.line(x + 9, y, x + 9, y + h, hl ? "obj hl" : "obj");
       }
       const dx = kind === "store" ? 4.5 : 0;
-      const lh = 11.5;
-      const block = lines.length * lh + (sub ? 11 : 0);
       const ty = y + h / 2 - block / 2 + lh / 2 + 3;
       lines.forEach((l, i) => s.add(text(x + w / 2 + dx, ty + i * lh, l, kind === "ghost" && !hl && !cls ? lcls.replace(" ink", "") : lcls, "middle")));
-      if (sub) s.add(text(x + w / 2 + dx, ty + lines.length * lh + 0.5, sub, "vs", "middle"));
-      return nodeOf(x, y, w, h);
+      subs.forEach((l, j) => s.add(text(x + w / 2 + dx, ty + lines.length * lh + 0.5 + j * 11, l, "vs", "middle")));
+      return nodeOf(x, y, w, h, sh);
     },
 
     /**
      * A row of equal nodes spread across `w` from x, `gap` apart. Items are
-     * labels or { label, ...node options }; `o` applies to all. Returns the
-     * nodes.
+     * labels or { label, h, ...node options }; `o` applies to all, and an
+     * item's own `h` overrides the row's. `arrows: true` connects
+     * neighbors left to right (accented where both ends are), and throws
+     * when `gap` is under 16, too short for a readable arrowhead. Returns
+     * the nodes, with `bottom` (the lowest node's bottom edge) on the array.
      */
-    row(x, y, w, items, { h = 26, gap = 12, ...o } = {}) {
+    row(x, y, w, items, { h = 26, gap = 12, arrows = false, ...o } = {}) {
+      if (arrows && gap < 16) throw new Error(`row: gap ${gap} is too short for an arrow; use 16 or more`);
       const nw = (w - gap * (items.length - 1)) / items.length;
-      return items.map((it, i) => {
-        const { label, ...io } = typeof it === "string" ? { label: it } : it;
-        return s.node(x + i * (nw + gap), y, nw, h, label, { ...o, ...io });
-      });
+      const its = items.map((it) => (typeof it === "string" ? { label: it } : it));
+      const nodes = its.map(({ label, h: ih, ...io }, i) => s.node(x + i * (nw + gap), y, nw, ih ?? h, label, { ...o, ...io }));
+      if (arrows) nodes.slice(1).forEach((n, i) => s.connect(nodes[i], n, { hl: !!((its[i].hl ?? o.hl) && (its[i + 1].hl ?? o.hl)) }));
+      nodes.bottom = Math.max(...nodes.map((n) => n.y2));
+      return nodes;
     },
 
     /**
@@ -351,9 +378,14 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * `seg` (default the longest) on `side` ('above' | 'below' for a
      * horizontal segment, 'right' | 'left' for a vertical one), shifted
      * along the segment by `shift` (0 = middle, -1 / 1 = the ends) and off
-     * it by `off`. Labels carry a paper knockout. Returns the points.
+     * it by `off`. Labels carry a paper knockout and are gray caps (`sl`)
+     * unless `labelCls` names another text class (`'tc'` keeps the case of
+     * identifiers and cardinalities: `code_verifier`, `1..n`). `rotate`
+     * turns a vertical segment's label to run along it (read bottom to top)
+     * on its `side`, for a tall drop with no room beside it. Returns the
+     * points.
      */
-    wire(points, { hl = false, alt = false, arrow = "end", start, label, seg, side, shift = 0, off = 0, cls } = {}) {
+    wire(points, { hl = false, alt = false, arrow = "end", start, label, seg, side, shift = 0, off = 0, cls, labelCls, rotate = false } = {}) {
       const d = points.map(([x, y], i) => `${i ? "L" : "M"}${f(x)},${f(y)}`).join("");
       const m = hl ? ahHl : ah;
       s.path(d, cls ?? `flow${hl ? " hl" : ""}${alt ? " alt" : ""}`, {
@@ -364,7 +396,7 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       if (label != null) {
         const segs = points.slice(1).map((p, i) => [points[i], p]);
         const k = seg ?? segs.reduce((best, sg, i) => (len(sg) > len(segs[best]) ? i : best), 0);
-        s.add(edgeLabel(segs[k < 0 ? segs.length + k : k], label, { side, shift, off, hl }));
+        s.add(edgeLabel(segs[k < 0 ? segs.length + k : k], label, { side, shift, off, hl, labelCls, rotate }));
       }
       return points;
     },
@@ -514,25 +546,32 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * A pipeline: stages left to right, `w` x `h`, `gap` apart, arrows
      * between. Each stage { label, head, sub, kind, hl, code }: `head` is a
      * gray caps word above the box (the step's role), `sub` a string or
-     * lines of gray text under it (wrapped to the box width). An arrow is
-     * accented when both its ends are. Returns { nodes, bottom } where
-     * bottom is the y under the lowest sub text (start downstream wires
-     * there, not at the box).
+     * lines of gray text under it (wrapped to the box width); a line may be
+     * { text, hl } to accent just that line. `headHl` accents the head. An
+     * arrow is accented when both its ends are, or when `hlArrows` (true
+     * for all, or the indices of arrows, arrow i leaving stage i) names it:
+     * the path can take the accent while the boxes stay ink. Returns
+     * { nodes, bottom, bottoms }: bottom is the y under the lowest sub text,
+     * bottoms[i] the y under stage i's own (its box when it has none).
+     * Start a downstream wire at its stage's bottoms[i], not at the box.
      */
-    pipeline(x, y, stages, { w = 100, h = 28, gap = 16, headGap = 12, subGap = 16 } = {}) {
+    pipeline(x, y, stages, { w = 100, h = 28, gap = 16, headGap = 12, subGap = 16, hlArrows = [] } = {}) {
       const nodes = stages.map((st, i) => {
         const nx = x + i * (w + gap);
-        if (st.head) s.add(text(nx + w / 2, y - headGap, st.head, "sl", "middle"));
+        if (st.head) s.add(text(nx + w / 2, y - headGap, st.head, st.headHl ? "sl hl" : "sl", "middle"));
         return s.node(nx, y, w, h, st.label, { kind: st.kind, hl: st.hl, code: st.code, end: st.end });
       });
-      nodes.slice(1).forEach((n, i) => s.wire([nodes[i].port("r"), n.port("l")], { hl: stages[i].hl && stages[i + 1].hl }));
-      let bottom = y + h;
-      stages.forEach((st, i) => {
+      const hlA = (i) => hlArrows === true || (Array.isArray(hlArrows) && hlArrows.includes(i));
+      nodes.slice(1).forEach((n, i) => s.wire([nodes[i].port("r"), n.port("l")], { hl: (stages[i].hl && stages[i + 1].hl) || hlA(i) }));
+      const bottoms = stages.map((st, i) => {
         const lines = st.sub == null ? [] : Array.isArray(st.sub) ? st.sub : wrap(st.sub, w + gap - 6, "sl");
-        lines.forEach((l, j) => s.add(text(nodes[i].cx, y + h + subGap + j * 11.5, l, st.hl ? "sl hl" : "sl", "middle")));
-        if (lines.length) bottom = Math.max(bottom, y + h + subGap + (lines.length - 1) * 11.5 + 4);
+        lines.forEach((l, j) => {
+          const [t, lhl] = typeof l === "object" ? [l.text, l.hl] : [l, false];
+          s.add(text(nodes[i].cx, y + h + subGap + j * 11.5, t, st.hl || lhl ? "sl hl" : "sl", "middle"));
+        });
+        return lines.length ? y + h + subGap + (lines.length - 1) * 11.5 + 4 : y + h;
       });
-      return { nodes, bottom };
+      return { nodes, bottom: Math.max(y + h, ...bottoms), bottoms };
     },
 
     /**
@@ -589,6 +628,192 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       // estimate, and the gap would vary with the real font.
       if (sub) s.add(text(x + w, y - 7, sub, "vs", "end"));
       return s;
+    },
+
+    /**
+     * Fan-out: one source to several targets through a shared trunk. A stub
+     * leaves `src` on side `from` (default 'r') to the trunk at `via` (an x
+     * for left/right, a y for top/bottom; default halfway to the nearest
+     * target), the trunk spans the branches, and each branch ends in an
+     * arrow on its target's side `to` (default 'l'). `hl`: true accents
+     * all of it; an index or an array of indices accents only those
+     * branches, and the shared stub and trunk stay ink. `label` and the
+     * other wire() options go on the stub. Returns { via }.
+     */
+    fanOut(src, targets, { from = "r", to = "l", via, hl = false, at = 0.5, alt = false, ...o } = {}) {
+      const g = fanGeom(src.port(from, at), targets.map((t) => t.port(to)), from, via);
+      const all = hl === true;
+      s.wire([g.p, g.T(g.c(g.p))], { hl: all, alt, arrow: "none", ...o });
+      if (g.hi - g.lo > 0.5) s.wire([g.T(g.lo), g.T(g.hi)], { hl: all, alt, arrow: "none" });
+      g.ends.forEach((e, i) => s.wire([g.T(g.c(e)), e], { hl: all || hl === i || (Array.isArray(hl) && hl.includes(i)), alt }));
+      return { via: g.m };
+    },
+
+    /**
+     * Fan-in (a join, a bus): several sources into one arrowhead. Each
+     * source leaves on side `from` (default 'r') to the trunk at `via`, and
+     * one arrow runs from the trunk to `dst` on side `to` (default 'l').
+     * `hl`: true accents all of it; an index or array accents those
+     * branches only. `label` and the other wire() options go on the last
+     * run into `dst`. Returns { via }.
+     */
+    fanIn(sources, dst, { from = "r", to = "l", via, hl = false, at = 0.5, alt = false, ...o } = {}) {
+      const g = fanGeom(dst.port(to, at), sources.map((n) => n.port(from)), to, via);
+      const all = hl === true;
+      g.ends.forEach((e, i) => s.wire([e, g.T(g.c(e))], { hl: all || hl === i || (Array.isArray(hl) && hl.includes(i)), alt, arrow: "none" }));
+      if (g.hi - g.lo > 0.5) s.wire([g.T(g.lo), g.T(g.hi)], { hl: all, alt, arrow: "none" });
+      s.wire([g.T(g.c(g.p)), g.p], { hl: all, alt, ...o });
+      return { via: g.m };
+    },
+
+    /**
+     * Span: a zone along a flow marked under (or over) it instead of a
+     * boxed group, so connectors crossing from one zone to the next keep
+     * their labels: a line from x1 to x2 with end ticks, its title (lt)
+     * centered 18 below (`above: true` puts it 10 above). Returns the y
+     * of the title's baseline.
+     */
+    span(x1, x2, y, label, { hl = false, above = false } = {}) {
+      s.line(x1, y, x2, y, hl ? "flow hl" : "flow");
+      s.line(x1, y - 5, x1, y + 5, "flow");
+      s.line(x2, y - 5, x2, y + 5, "flow");
+      const ly = above ? y - 10 : y + 18;
+      if (label) s.text((x1 + x2) / 2, ly, label, hl ? "lt hl" : "lt", "middle");
+      return ly;
+    },
+
+    /**
+     * Bracket: a vertical bracket at x from y1 to y2, its arms reaching
+     * `depth` back toward the content, and its label (sl, "\n" for lines)
+     * beside it, 12 out. `side` 'r' (default: content on the left) or 'l'.
+     * `hl` accents bracket and label: e.g. hard rules in ink, the soft one
+     * in the accent. Returns the x where the label starts (or ends).
+     */
+    bracket(y1, y2, x, label, { hl = false, side = "r", depth = 6 } = {}) {
+      const d = side === "l" ? depth : -depth;
+      s.path(`M${f(x + d)},${f(y1)}H${f(x)}V${f(y2)}H${f(x + d)}`, hl ? "flow hl" : "flow");
+      const lines = subLines(label);
+      const lx = side === "l" ? x - 12 : x + 12;
+      const y0 = (y1 + y2) / 2 + 3 - ((lines.length - 1) * 11) / 2;
+      lines.forEach((l, i) => s.text(lx, y0 + i * 11, l, hl ? "sl hl" : "sl", side === "l" ? "end" : "start"));
+      return lx;
+    },
+
+    /**
+     * Note under a node: gray text (`cls`, default sl; "\n" for lines) `dy`
+     * below the box, anchored to its left edge, center or right edge
+     * (`anchor` 'left' | 'center' | 'right'). Use left or right for a box at
+     * the margin, where a centered note would run past it; a note that
+     * would cross the 20 margin throws. Returns the last line's baseline.
+     */
+    note(n, label, { anchor = "center", dy = 18, cls = "sl" } = {}) {
+      const lines = subLines(label);
+      const [x, a] = anchor === "left" ? [n.x, "start"] : anchor === "right" ? [n.x + n.w, "end"] : [n.cx, "middle"];
+      for (const l of lines) {
+        const tw = widthOf(l, cls);
+        const [l0, l1] = a === "start" ? [x, x + tw] : a === "end" ? [x - tw, x] : [x - tw / 2, x + tw / 2];
+        if (l0 < 20 - 0.01 || l1 > s.width - 20 + 0.01) throw new Error(`note "${l}" crosses the 20 margin; anchor it to the box's ${l0 < 20 ? "left" : "right"} edge`);
+      }
+      const y = n.y + n.h + dy;
+      lines.forEach((l, i) => s.text(x, y + i * 11, l, cls, a));
+      return y + (lines.length - 1) * 11;
+    },
+
+    /**
+     * Sequence message: an arrow from lifeline x1 to lifeline x2 at y with
+     * a dot at its start, and its label above. When the arrow crosses
+     * other `lifelines` (their xs), the label sits centered in the gap next
+     * to the sender (`near: 'end'` for the receiver's), never on a crossed
+     * lifeline; it throws when the label is wider than that gap.
+     * `labelCls` 'tc' keeps identifiers' case. Other options are wire()'s.
+     * Returns the points.
+     */
+    message(x1, x2, y, label, { lifelines = [], near = "start", hl = false, labelCls = "sl", ...o } = {}) {
+      const pts = s.wire([[x1, y], [x2, y]], { hl, start: "dot", ...o });
+      if (label == null) return pts;
+      const dir = Math.sign(x2 - x1);
+      const inner = lifelines.filter((lx) => (lx - x1) * dir > 0.5 && (x2 - lx) * dir > 0.5).sort((a, b) => (a - b) * dir);
+      const [a, b] = !inner.length ? [x1, x2] : near === "end" ? [inner.at(-1), x2] : [x1, inner[0]];
+      const tw = widthOf(label, labelCls);
+      if (tw > Math.abs(b - a)) throw new Error(`message "${label}" (about ${Math.round(tw)} wide) does not fit its ${Math.round(Math.abs(b - a))} gap between lifelines`);
+      s.text((a + b) / 2, y - 6, label, `${labelCls}${hl ? " hl" : ""} ko`, "middle");
+      return pts;
+    },
+
+    /**
+     * Bars on a value axis (durations, periods): one row per item with its
+     * name at x (tc), a bar from the axis origin `ax` at `k` units per
+     * value, and its value text beside the bar end. The axis is ruled at
+     * top and bottom with ticks at `ticks` (labels from `tick(v)` in th
+     * over the top), and no gridlines, which would run through the value
+     * labels. `head` labels the name column. Rows are { label, value, text,
+     * alt, hl }: `alt` dashes the bar (a different kind of period), `hl`
+     * accents it. Returns { bottom } (the lower axis rule).
+     */
+    bars(x, y, rows, { ax, k, ticks, tick = String, head, rowH = 22, barH = 10 }) {
+      const bottom = y + rows.length * rowH + 4;
+      const end = ax + ticks.at(-1) * k;
+      if (head) s.text(x, y - 14, head, "th");
+      for (const v of ticks) {
+        const gx = ax + v * k;
+        s.text(gx, y - 14, tick(v), "th", "middle");
+        s.line(gx, y - 10, gx, y - 4, "obj");
+        s.line(gx, bottom, gx, bottom + 6, "obj");
+      }
+      s.line(ax, y - 4, end, y - 4, "obj");
+      s.line(ax, bottom, end, bottom, "obj");
+      s.line(ax, y - 4, ax, bottom, "obj");
+      rows.forEach((r, i) => {
+        const cy = y + i * rowH + rowH / 2;
+        s.text(x, cy + 3.2, r.label, "tc");
+        s.rect(ax, cy - barH / 2, r.value * k, barH, r.hl ? "obj hl" : r.alt ? "slot" : "obj fill-2");
+        if (r.text != null) s.text(ax + r.value * k + 8, cy + 3.2, r.text, r.hl ? "tc hl" : "tc");
+      });
+      return { bottom };
+    },
+
+    /**
+     * Timeline with breaks: an axis at y from x1 to x2 (leader weight)
+     * interrupted at `breaks` ([[b0, b1], ...] in x, each drawn as a pair
+     * of zigzags), with `ticks` ([[x, label], ...]) labeled above in tc.
+     * Positions are the caller's (a scale to the break, another after).
+     * Returns { bar(y, xa, xb, cls, label), lane(y, label) }: bar draws a
+     * box `h` tall from xa to xb, split wherever it crosses a break, with
+     * the label centered in its first piece, and returns the pieces as
+     * [[x1, x2], ...]; lane writes a lane title right-aligned at `laneX`.
+     */
+    timeline({ x1, x2, y, breaks = [], ticks = [], laneX, h = 24 }) {
+      const bs = [...breaks].sort((p, q) => p[0] - q[0]);
+      let a = x1;
+      for (const [b0, b1] of bs) {
+        s.line(a, y, b0, y, "leader");
+        a = b1;
+      }
+      s.line(a, y, x2, y, "leader");
+      if (bs.length) s.path(bs.flat().map((b) => `M${f(b - 3)},${f(y + 5)}L${f(b + 3)},${f(y - 5)}`).join(""), "leader");
+      for (const [tx, t] of ticks) {
+        s.line(tx, y - 4, tx, y + 4, "leader");
+        s.text(tx, y - 10, t, "tc", "middle");
+      }
+      return {
+        bar(by, xa, xb, cls = "obj fill-2", label) {
+          const pieces = [];
+          let p = xa;
+          for (const [b0, b1] of bs) {
+            if (p < b0 && xb > b1) {
+              pieces.push([p, b0]);
+              p = b1;
+            }
+          }
+          pieces.push([p, xb]);
+          for (const [p0, p1] of pieces) s.rect(p0, by, p1 - p0, h, cls);
+          if (label) s.label(pieces[0][0], by, pieces[0][1] - pieces[0][0], h, label);
+          return pieces;
+        },
+        lane(ly, label) {
+          s.text(laneX, ly + h / 2 + 3, label, "sl ink", "end");
+        },
+      };
     },
 
     /**
@@ -671,21 +896,57 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
 const len = ([[x1, y1], [x2, y2]]) => Math.hypot(x2 - x1, y2 - y1);
 const subLines = (sub) => (sub == null ? [] : String(sub).split("\n"));
 
-/** A node's geometry and its ports. */
-function nodeOf(x, y, w, h) {
+const NODE_OPTS = new Set(["label", "kind", "end", "hl", "fill", "code", "sub", "cls"]);
+
+/**
+ * A node's geometry and its ports. `sh` is an actor's shadow offset: the
+ * right and bottom ports land on the shadow's edge (where it covers that
+ * point of the side), so arrows stop at the silhouette, not inside it.
+ */
+function nodeOf(x, y, w, h, sh = 0) {
   const port = (side, t = 0.5) =>
-    ({ l: [x, y + h * t], r: [x + w, y + h * t], t: [x + w * t, y], b: [x + w * t, y + h] })[side];
-  return { x, y, w, h, cx: x + w / 2, cy: y + h / 2, port };
+    ({
+      l: [x, y + h * t],
+      r: [x + w + (h * t >= sh ? sh : 0), y + h * t],
+      t: [x + w * t, y],
+      b: [x + w * t, y + h + (w * t >= sh ? sh : 0)],
+    })[side];
+  return { x, y, w, h, cx: x + w / 2, cy: y + h / 2, x2: x + w + sh, y2: y + h + sh, port };
+}
+
+/**
+ * Shared geometry of fanOut / fanIn: `p` the single end (port), `ends` the
+ * many, the trunk at `via` across the axis that `side` (p's side) faces.
+ * T(c) is the trunk point at cross coordinate c; c(pt) a point's cross
+ * coordinate; lo / hi the trunk's extent.
+ */
+function fanGeom(p, ends, side, via) {
+  const H = side === "l" || side === "r";
+  const ax = (pt) => (H ? pt[0] : pt[1]);
+  const c = (pt) => (H ? pt[1] : pt[0]);
+  const near = ends.reduce((b, e) => (Math.abs(ax(e) - ax(p)) < Math.abs(ax(b) - ax(p)) ? e : b), ends[0]);
+  const m = via ?? (ax(p) + ax(near)) / 2;
+  const T = (cc) => (H ? [m, cc] : [cc, m]);
+  const cs = [c(p), ...ends.map(c)];
+  return { p, ends, m, T, c, lo: Math.min(...cs), hi: Math.max(...cs) };
 }
 
 /**
  * Connector label on one segment: above / below a horizontal one, right /
- * left of a vertical one, gray caps with a paper knockout (accent with hl).
+ * left of a vertical one (or along it with `rotate`), gray caps with a
+ * paper knockout (accent with hl), or `labelCls` text.
  */
-function edgeLabel([[x1, y1], [x2, y2]], label, { side, shift = 0, off = 0, hl }) {
+function edgeLabel([[x1, y1], [x2, y2]], label, { side, shift = 0, off = 0, hl, labelCls, rotate }) {
   const lines = String(label).split("\n");
-  const cls = hl ? "sl hl ko" : "sl ko";
+  const cls = labelCls ? `${labelCls}${hl ? " hl" : ""} ko` : hl ? "sl hl ko" : "sl ko";
   const LH = 11;
+  if (rotate && Math.abs(x1 - x2) < 0.5) {
+    const my = (y1 + y2) / 2 + (shift * Math.abs(y2 - y1)) / 2;
+    const n = lines.length;
+    // Rotated -90: the text reads bottom to top and its glyphs rise to the left of the baseline.
+    const bx = (i) => (side === "right" ? x1 + 5 + off + 6.5 + i * LH : x1 - 5 - off - (n - 1 - i) * LH);
+    return lines.map((l, i) => text(bx(i), my, l, cls, "middle", { transform: `rotate(-90 ${f(bx(i))} ${f(my)})` })).join("");
+  }
   if (Math.abs(y1 - y2) < 0.5) {
     const mx = (x1 + x2) / 2 + (shift * Math.abs(x2 - x1)) / 2;
     const below = side === "below";

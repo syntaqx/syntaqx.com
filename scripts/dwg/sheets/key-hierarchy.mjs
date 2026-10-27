@@ -36,13 +36,7 @@ export default function draw() {
   });
 
   // A key box: name on top, what it does in gray under it.
-  const key = (bx, by, [name, ...sub], hl) => {
-    const n = s.node(bx, by, cw, bh, null, { hl });
-    const top = by + bh / 2 - (sub.length * 11) / 2 + 2;
-    s.text(n.cx, top, name, hl ? "sl ink hl" : "sl ink", "middle");
-    sub.forEach((l, j) => s.text(n.cx, top + 13 + j * 11, l, "vs", "middle"));
-    return n;
-  };
+  const key = (bx, by, [name, ...sub], hl) => s.node(bx, by, cw, bh, name, { hl, sub });
 
   s.comment("Master key");
   const master = s.node(X(0), L0.y + pad + 3, W - x - X(0), 36, "master key", { fill: 1, sub: "never leaves; every key below is stored encrypted under it" });

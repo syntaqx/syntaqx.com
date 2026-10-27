@@ -14,16 +14,12 @@
   <text class="tc" x="375" y="57" text-anchor="middle">I-9 sec 2: +3 bd</text>
   <rect class="obj fill-2" x="454" y="40" width="118" height="28"/>
   <text class="tc" x="513" y="57" text-anchor="middle">E-Verify: +3 bd</text>
-  <path class="flow" d="M138,118L158,118L158,54L178,54" marker-end="url(#fo-sto-ah)"/>
   <path class="flow" d="M296,54L316,54" marker-end="url(#fo-sto-ah)"/>
   <path class="flow" d="M434,54L454,54" marker-end="url(#fo-sto-ah)"/>
-  <path class="flow hl" d="M572,54L592,54L592,118"/>
   <!-- tax form -->
   <text class="sl" x="178" y="96">TAX FORM</text>
   <rect class="obj fill-2" x="178" y="104" width="118" height="28"/>
   <text class="tc" x="237" y="121" text-anchor="middle">W-4 or W-9</text>
-  <path class="flow" d="M138,118L158,118L158,118L178,118" marker-end="url(#fo-sto-ah)"/>
-  <path class="flow hl" d="M296,118L612,118" marker-end="url(#fo-sto-ah-hl)"/>
   <!-- screening -->
   <text class="sl" x="178" y="160">SCREENING</text>
   <rect class="obj fill-2" x="178" y="168" width="118" height="28"/>
@@ -32,10 +28,19 @@
   <text class="tc" x="375" y="185" text-anchor="middle">report, MVR</text>
   <rect class="obj fill-2" x="454" y="168" width="118" height="28"/>
   <text class="tc" x="513" y="185" text-anchor="middle">permit, badge</text>
-  <path class="flow" d="M138,118L158,118L158,182L178,182" marker-end="url(#fo-sto-ah)"/>
   <path class="flow" d="M296,182L316,182" marker-end="url(#fo-sto-ah)"/>
   <path class="flow" d="M434,182L454,182" marker-end="url(#fo-sto-ah)"/>
-  <path class="flow hl" d="M572,182L592,182L592,118"/>
+  <!-- The offer forks into the tracks; they join at the gate -->
+  <path class="flow" d="M138,118L158,118"/>
+  <path class="flow" d="M158,54L158,182"/>
+  <path class="flow" d="M158,54L178,54" marker-end="url(#fo-sto-ah)"/>
+  <path class="flow" d="M158,118L178,118" marker-end="url(#fo-sto-ah)"/>
+  <path class="flow" d="M158,182L178,182" marker-end="url(#fo-sto-ah)"/>
+  <path class="flow hl" d="M572,54L592,54"/>
+  <path class="flow hl" d="M296,118L592,118"/>
+  <path class="flow hl" d="M572,182L592,182"/>
+  <path class="flow hl" d="M592,54L592,182"/>
+  <path class="flow hl" d="M592,118L612,118" marker-end="url(#fo-sto-ah-hl)"/>
   <!-- Footer -->
   <text class="tc" x="20" y="226">bd: business days after work for pay begins; screening rules vary by state and city</text>
 </svg>

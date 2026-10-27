@@ -18,14 +18,9 @@ export default function draw() {
 
   s.comment("Sponsor bank");
   s.group(x0 - pad, gTop, 3 * bw + 2 * gap + 2 * pad, bh + 2 * pad, "sponsor bank: one bank, separate accounts");
-  const [reserve, fbo, operating] = ACCOUNTS.map(([label, a, b], i) => {
-    const hl = i === 1;
-    const n = s.node(x0 + i * (bw + gap), boxY, bw, bh, null, { kind: "store", hl });
-    s.text(n.cx + 4.5, n.y + 22, label, hl ? "sl hl" : "sl ink", "middle");
-    s.text(n.cx + 4.5, n.y + 40, a, "vs", "middle");
-    s.text(n.cx + 4.5, n.y + 51, b, "vs", "middle");
-    return n;
-  });
+  const [reserve, fbo, operating] = ACCOUNTS.map(([label, ...sub], i) =>
+    s.node(x0 + i * (bw + gap), boxY, bw, bh, label, { kind: "store", hl: i === 1, sub }),
+  );
 
   s.comment("Settlement in");
   const acq = s.node(fbo.cx - 60, 20, 120, nh, "acquirers", { kind: "actor" });

@@ -110,10 +110,22 @@ noted).
 | `s.rad(cornerX, cornerY, r, 'tl' \| 'tr' \| 'bl' \| 'br', label)` | radius callout from the arc's midpoint |
 | `s.detailRef(cx, cy, r, label, lx, ly)` | dashed detail circle, leader, `DETAIL A`; draw the matching view titled `Detail A · …` at a larger scale |
 | `s.table(x, y, title, [[code, variable, value]…])` | CODE / VARIABLE / VALUE with light rules; returns `{ y, width }` |
-| `s.grid(x, y, title, head, rows, { widths, align })` | any ruled table (more or other columns, ledger rows); `align` per column; returns `{ y, width, widths }` |
-| `s.node`, `s.row`, `s.connect`, `s.wire`, `s.loop`, `s.lanes`, `s.tree`, `s.pipeline`, `s.tAccount`, `s.group`, `s.legend` | boxes, orthogonal connectors, lanes, trees, pipelines, T-accounts, boundaries and legends; documented with examples in the `diagram` skill, and usable on a sheet too (a flow inside a plan view, a legend under it) |
+| `s.grid(x, y, title, head, rows, { widths, align, hl, hlHead, headH })` | any ruled table (more or other columns, ledger rows); `align` per column; `hl` accents body rows, `hlHead` column heads (`th hl`), `headH` sets the header height; returns `{ y, width, widths, rows }` with each body row's `{ y, cy }`. `s.table` takes the same options |
+| `s.timeline({ x1, x2, y, breaks, ticks, laneX, h })` | an axis with breaks (zigzag pairs at each `[b0, b1]`) and labeled ticks `[[x, label], ...]`; returns `bar(y, xa, xb, cls, label)`, which splits a box at every break it crosses and labels its first piece, and `lane(y, label)` for lane titles. Positions are yours (one scale to a break, another after) |
+| `s.bars(x, y, rows, { ax, k, ticks, tick, head })` | durations as bars with value text beside them, ticks on the top and bottom rules only (no gridlines through the labels) |
+| `s.node`, `s.row`, `s.connect`, `s.wire`, `s.loop`, `s.fanOut`, `s.fanIn`, `s.span`, `s.bracket`, `s.note`, `s.message`, `s.lanes`, `s.tree`, `s.pipeline`, `s.tAccount`, `s.group`, `s.legend` | boxes, orthogonal connectors, lanes, trees, pipelines, T-accounts, boundaries and legends; documented with examples in the `diagram` skill, and usable on a sheet too (a flow inside a plan view, a legend under it) |
 | `s.exploded({ tx, ty, w, d, gap, labelX, layers })` | axonometric stack, bottom layer first; each layer `{ label, sub, draw(p) }` where `draw` returns content in plate coordinates via `p.rect / p.line / p.circle / p.path` (no text, it would shear); projection lines through the corners; returns `P(x, y, z)` |
 | `textWidth`, `widthOf(str, cls)`, `wrap` | width estimates for layout |
+
+Timeline with breaks (`pm-ach-return-windows`, `pad-states`):
+
+```js
+const tl = s.timeline({ x1: X(0), x2: xEnd, y: axY, breaks: [[brk0, brk1]], ticks, laneX, h: 24 });
+tl.lane(y1, "state");
+tl.bar(y1, X(0), X(R1), "obj fill-2", "settled");
+tl.bar(y3, X(0), xEnd, "obj fill-1", "unauthorized returns"); // split at the break
+s.dimH(X(0), xEnd, y3 + 24 + 18, "U1", { from: [y3 + 24, y3 + 24], below: true, hl: true });
+```
 
 Exploded views: with plate depth `d` and step `gap`, a lower plate shows only
 local y > d − 1.88·gap, so put each lower layer's modules in that front band.
@@ -136,8 +148,8 @@ table cells are sans with tabular figures, `dt` with a paper knockout (`ko`
 adds it to any text). Mono stays for the shared `.t` cells only.
 
 Standard-diagram classes: `flow` 0.9 (connectors), `flow alt` dashed (exit
-or exception), `flow hl` 1.2 accent; `sl hl`, `lt hl` and `tc hl` accent
-text.
+or exception), `flow hl` 1.2 accent; `sl hl`, `lt hl`, `th hl` and `tc hl`
+accent text.
 
 ## Don't
 
@@ -179,3 +191,6 @@ Keep each to one or two lines: what went wrong, the rule.
   dropped it. No border; `frame` stays off.
 - 2026-10-27: Flow diagrams forced into sheets (notes, codes, tables with
   nothing measured) read as noise; they are standard diagrams now.
+- 2026-10-27: The ACH return windows and Canadian debit sheets each
+  hand-rolled the broken axis and the box split at a break. Resolved
+  2026-10-27: `s.timeline`.

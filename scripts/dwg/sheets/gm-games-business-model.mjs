@@ -19,12 +19,7 @@ export default function draw() {
   const sub = (n, t) => s.text(n.cx, n.y + h + 14, t, "sl", "middle");
 
   // Cardinality keeps its case (tc), beside the segment with a knockout.
-  const card = (pts, t, side = "above") => {
-    s.wire(pts);
-    const [[x1, y1], [x2, y2]] = pts.slice(-2);
-    if (Math.abs(y1 - y2) < 0.5) s.text((x1 + x2) / 2, y1 - 5, t, "tc ko", "middle");
-    else s.text(side === "left" ? x1 - 6 : x1 + 6, (y1 + y2) / 2 + 3, t, "tc ko", side === "left" ? "end" : "start");
-  };
+  const card = (pts, t, side = "above") => s.wire(pts, { label: t, labelCls: "tc", side, seg: -1 });
 
   s.comment("Who plays");
   title(0, "who plays");

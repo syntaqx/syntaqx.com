@@ -18,23 +18,20 @@ export default function draw() {
   const widths = [118, 112, 150];
   const gx = W - x - widths.reduce((a, b) => a + b, 0);
   const mw = 130, mx = gx - 16 - mw, bus = mx - 22;
-  const RY = (i) => top + rowH * (i + 1) + rowH / 2;
 
   s.comment("Rails");
-  s.grid(gx, top, null, ["arrives", "final", "how it fails"], METHODS.map((m) => m.slice(1)), { widths, rowH, align: ["start", "start", "start"] });
+  const g = s.grid(gx, top, null, ["arrives", "final", "how it fails"], METHODS.map((m) => m.slice(1)), { widths, rowH, align: ["start", "start", "start"] });
   s.text(mx, top + rowH / 2 + 2.7, "method", "th");
-  const methods = METHODS.map(([label], i) => s.node(mx, RY(i) - nh / 2, mw, nh, label, { hl: i === 0 }));
+  // Each method sits level with its row of the table.
+  const methods = METHODS.map(([label], i) => s.node(mx, g.rows[i].cy - nh / 2, mw, nh, label, { hl: i === 0 }));
 
   s.comment("One payable");
-  const midY = RY(2);
-  const payable = s.node(x, midY - 15, 110, 30, "payable");
-  s.text(payable.cx, payable.y + 30 + 16, "approved, funded", "sl", "middle");
+  const payable = s.node(x, g.rows[2].cy - 15, 110, 30, "payable");
+  s.note(payable, "approved, funded", { dy: 16 });
   s.text(x, payable.y - 12, "one payable", "lt");
 
   s.comment("Fan out; the trunk stays ink, the default's branch takes the accent");
-  s.line(payable.x + payable.w, midY, bus, midY, "flow");
-  s.line(bus, RY(0), bus, RY(4), "flow");
-  methods.forEach((n, i) => s.wire([[bus, n.cy], n.port("l")], { hl: i === 0 }));
+  s.fanOut(payable, methods, { via: bus, hl: 0 });
 
   const fy = top + rowH * 6 + 22;
   s.text(W - x, fy, "ACH credit is the default: cheap, universal, carries remittance data", "sl hl", "end");

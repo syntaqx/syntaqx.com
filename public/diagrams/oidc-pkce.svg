@@ -37,10 +37,10 @@
   <!-- 5. The back channel: the only place tokens travel -->
   <path class="flow hl" d="M380,284L620,284" marker-end="url(#oi-ah-hl)"/>
   <circle class="dot" cx="380" cy="284" r="1.8"/>
-  <text class="tc ko hl" x="500" y="278" text-anchor="middle">code + code_verifier, server to server</text>
+  <text class="tc hl ko" x="500" y="278" text-anchor="middle">code + code_verifier, server to server</text>
   <path class="flow hl" d="M620,318L380,318" marker-end="url(#oi-ah-hl)"/>
   <circle class="dot" cx="620" cy="318" r="1.8"/>
-  <text class="sl ko hl" x="500" y="312" text-anchor="middle">ID TOKEN, ACCESS TOKEN</text>
+  <text class="sl hl ko" x="500" y="312" text-anchor="middle">ID TOKEN, ACCESS TOKEN</text>
   <!-- 6. Validate, then start a session -->
   <rect class="obj hl" x="260" y="352" width="240" height="28"/>
   <rect class="obj hl" x="263" y="355" width="234" height="22"/>

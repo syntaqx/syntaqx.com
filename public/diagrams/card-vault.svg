@@ -24,7 +24,7 @@
   <rect class="obj plate" x="617" y="230" width="120" height="28"/>
   <text class="sl ink" x="677" y="247" text-anchor="middle">PROCESSORS</text>
   <!-- Card number in, and out to processors only -->
-  <path class="flow hl" d="M140,70L240,70" marker-end="url(#cv-ah-hl)"/>
+  <path class="flow hl" d="M143,70L240,70" marker-end="url(#cv-ah-hl)"/>
   <path class="flow hl" d="M315,84L315,136" marker-end="url(#cv-ah-hl)"/>
   <path class="flow hl" d="M315,164L315,230" marker-end="url(#cv-ah-hl)"/>
   <path class="flow hl" d="M390,244L617,244" marker-end="url(#cv-ah-hl)"/>

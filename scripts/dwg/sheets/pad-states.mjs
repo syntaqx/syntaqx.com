@@ -35,69 +35,39 @@ export default function draw() {
   const xFinal = W - 24;
   const axY = ny + 46;
 
-  const zig = (x) => `M${x - 3},${axY + 5}L${x + 3},${axY - 5}`;
-  s.line(xC, axY, bL[0], axY, "leader");
-  s.line(bL[1], axY, bA[0], axY, "leader");
-  s.line(bA[1], axY, bB[0], axY, "leader");
-  s.line(bB[1], axY, xEnd, axY, "leader");
-  s.path([bL, bA, bB].flat().map(zig).join(""), "leader");
   const ticks = [[xC, "C"], [X(-1), "E"], [X(0), "S"], [X(1), "S+1"], [X(2), "S+2"], [x10, `S+${B1}`], [xEnd, `S+${P1}`]];
-  for (const [x, t] of ticks) {
-    s.line(x, axY - 4, x, axY + 4, "leader");
-    s.text(x, axY - 10, t, "tc", "middle");
-  }
+  const tl = s.timeline({ x1: xC, x2: xEnd, y: axY, breaks: [bL, bA, bB], ticks, laneX, h });
   s.nb(xC + 16, axY - 13.5, 1);
-
-  const lane = (y, label) => s.text(laneX, y + h / 2 + 3, label, "sl ink", "end");
-  // A box from x1 to x2, split wherever it crosses a break.
-  const span = (y, x1, x2, cls) => {
-    let a = x1;
-    for (const [b0, b1] of [bL, bA, bB]) {
-      if (a < b0 && x2 > b1) {
-        s.rect(a, y, b0 - a, h, cls);
-        a = b1;
-      }
-    }
-    s.rect(a, y, x2 - a, h, cls);
-  };
 
   // State.
   const y1 = axY + 26;
-  lane(y1, "state");
-  s.rect(xC, y1, bL[0] - xC, h, "obj fill-2");
-  s.rect(X(-1), y1, k, h, "obj fill-2");
-  s.rect(X(0), y1, k, h, "obj fill-2");
-  span(y1, X(1), xEnd, "obj fill-2");
-  s.rect(xEnd, y1, xFinal - xEnd, h, "obj fill-1");
-  s.rect(xEnd + 3, y1 + 3, xFinal - xEnd - 6, h - 6, "obj");
-  s.label(xC, y1, bL[0] - xC, h, "confirmed");
-  s.label(X(-1), y1, k, h, "exchanged");
-  s.label(X(0), y1, k, h, "settled");
-  s.label(X(1), y1, bA[0] - X(1), h, "available");
-  s.label(xEnd, y1, xFinal - xEnd, h, "final");
+  tl.lane(y1, "state");
+  tl.bar(y1, xC, bL[0], "obj fill-2", "confirmed");
+  tl.bar(y1, X(-1), X(0), "obj fill-2", "exchanged");
+  tl.bar(y1, X(0), X(1), "obj fill-2", "settled");
+  tl.bar(y1, X(1), xEnd, "obj fill-2", "available");
+  tl.bar(y1, xEnd, xFinal, "obj fill-1", "final");
+  s.rect(xEnd + 3, y1 + 3, xFinal - xEnd - 6, h - 6, "obj"); // final: a terminal state's double outline
   s.dimH(xC, X(0), y1 + h + 18, "N1", { from: [y1 + h, y1 + h], below: true });
 
   // Dishonour.
   const y2 = y1 + h + 48;
-  lane(y2, "dishonour");
-  s.rect(X(0), y2, k * D1, h, "obj fill-2");
-  s.label(X(0), y2, k * D1, h, "returned");
+  tl.lane(y2, "dishonour");
+  tl.bar(y2, X(0), X(D1), "obj fill-2", "returned");
   s.nb(X(D1) + 14, y2 + h / 2, 2);
   s.dimH(X(0), X(D1), y2 + h + 18, "D1", { from: [y2 + h, y2 + h], below: true });
 
   // Business PAD claims.
   const y3 = y2 + h + 48;
-  lane(y3, "business claims");
-  span(y3, X(0), x10, "obj fill-2");
-  s.label(X(0), y3, bA[0] - X(0), h, "business PAD claims");
+  tl.lane(y3, "business claims");
+  tl.bar(y3, X(0), x10, "obj fill-2", "business PAD claims");
   s.dimH(X(0), x10, y3 + h + 18, "B1", { from: [y3 + h, y3 + h], below: true });
 
   // Personal PAD claims: the subject.
   const y4 = y3 + h + 48;
-  lane(y4, "personal claims");
-  span(y4, X(0), xEnd, "obj fill-1");
+  tl.lane(y4, "personal claims");
   const pl = "personal PAD claims";
-  s.label(X(0), y4, bA[0] - X(0), h, pl);
+  tl.bar(y4, X(0), xEnd, "obj fill-1", pl);
   s.nb(X(0) + (bA[0] - X(0)) / 2 + widthOf(pl, "sl") / 2 + 12, y4 + h / 2, 3);
   s.dimH(X(0), xEnd, y4 + h + 18, "P1", { from: [y4 + h, y4 + h], below: true, hl: true });
 

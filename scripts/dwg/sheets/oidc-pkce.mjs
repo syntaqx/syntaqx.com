@@ -21,14 +21,11 @@ export default function draw() {
   s.comment("Parties");
   ["browser", "your app", "identity provider"].forEach((l, i) => s.node(CX(i) - aw / 2, top, aw, ah, l, { kind: i === 1 ? "process" : "actor" }));
 
-  // A message: arrow between lifelines, label above, centered between the
-  // two nearest lifelines so it never sits on the one in the middle. Labels
-  // with identifiers set in tc so code_challenge keeps its case.
-  const msg = (a, b, y, label, { hl = false, code = false, mid } = {}) => {
-    s.wire([[a, y], [b, y]], { hl, start: "dot" });
-    const cx = mid ?? (a + b) / 2;
-    s.text(cx, y - 6, label, `${code ? "tc" : "sl"} ko${hl ? " hl" : ""}`, "middle");
-  };
+  // A message between lifelines; one that crosses the app's lifeline puts
+  // its label in the gap next to the sender. Labels with identifiers set
+  // in tc so code_challenge keeps its case.
+  const msg = (a, b, y, label, { hl = false, code = false } = {}) =>
+    s.message(a, b, y, label, { hl, labelCls: code ? "tc" : "sl", lifelines: [BR, APP, IDP] });
   const step1 = (cx, y, label, o = {}) => s.node(cx - 85, y - 13, 170, 26, label, o);
 
   s.comment("1. The app makes secrets the browser never learns");
@@ -36,13 +33,13 @@ export default function draw() {
 
   s.comment("2. Redirect to the provider");
   msg(APP, BR, Y(1), "redirect");
-  msg(BR, IDP, Y(2), "authorize: code_challenge, state, nonce", { code: true, mid: (BR + APP) / 2 });
+  msg(BR, IDP, Y(2), "authorize: code_challenge, state, nonce", { code: true });
 
   s.comment("3. The user signs in at the provider");
   step1(IDP, Y(3), "sign in, MFA");
 
   s.comment("4. Back with a one-time code");
-  msg(IDP, BR, Y(4), "redirect back: code, state", { mid: (APP + IDP) / 2 });
+  msg(IDP, BR, Y(4), "redirect back: code, state");
   msg(BR, APP, Y(5), "code, state: check state");
 
   s.comment("5. The back channel: the only place tokens travel");

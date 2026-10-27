@@ -26,7 +26,7 @@ export default function draw() {
 
   s.comment("Browser and revocation");
   const browser = s.node(x, store.cy - sh / 2, bw, sh, "browser", { kind: "actor" });
-  s.text(browser.cx, browser.y + sh + 18, "opaque HttpOnly cookie", "tc", "middle");
+  s.note(browser, "opaque HttpOnly cookie", { cls: "tc" });
   s.connect(browser, store, { label: "cookie" });
   const revoke = s.node(x, revY, bw, sh, "logout or revoke", { kind: "ghost" });
   s.connect(revoke, store, { from: "r", to: "t", at: [0.5, 0.75], alt: true, label: "deletes the session", side: "above" });
@@ -34,9 +34,7 @@ export default function draw() {
   s.comment("Services verify locally");
   const step = sh + svcGap;
   const svcs = SERVICES.map((n, i) => s.node(svcX, mint.cy + (i - 1) * step - sh / 2, svcW, sh, n));
-  s.wire([mint.port("r"), [bus, mint.cy]], { hl: true, arrow: "none", label: "signed JWT,\nminutes long", side: "above", shift: 0.12 });
-  s.line(bus, svcs[0].cy, bus, svcs[2].cy, "flow hl");
-  svcs.forEach((n) => s.wire([[bus, n.cy], n.port("l")], { hl: true }));
+  s.fanOut(mint, svcs, { via: bus, hl: true, label: "signed JWT,\nminutes long", side: "above", shift: 0.12 });
   s.text(W - x, svcs[0].y - 12, "each checks the signature, no lookup", "sl", "end");
 
   const fy = Math.max(svcs[2].y + sh, mintY + nh + pad) + 26;
