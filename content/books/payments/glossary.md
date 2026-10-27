@@ -256,6 +256,8 @@ Payments has more acronyms than most fields, and several words mean different th
 - **BIN sponsor:** the network-member bank whose BIN a non-bank card program issues under, and which answers to the network and its regulators for it ([Card Issuing](/books/payments/card-issuing#the-parties-and-the-stack)).
 - **Card production (card bureau):** the manufacturer and personalizer that embosses cards, loads the chip, and mails cards and PINs under PCI's Card Production and Provisioning standards ([Card Issuing](/books/payments/card-issuing#creating-and-producing-the-card)).
 - **Commando Mode:** Marqeta's stand-in that decides by preset rules when a program's gateway times out or errors ([Issuer Processing](/books/payments/issuer-processing#real-time-decisions-webhooks-and-jit-funding)).
+- **Earned wage access (EWA):** advancing a worker's already-earned pay before payday, often onto a prepaid or payroll card; not credit under Regulation Z when it meets the CFPB's conditions ([Card Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)).
+- **Embedded issuing:** a software platform issuing cards to its own business customers inside its product, usually carrying their verification and losses ([Card Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)).
 - **Force post:** clearing that arrives with no authorization, or after a decline, and posts anyway ([Issuer Processing](/books/payments/issuer-processing#the-ledger-for-an-issuer)).
 - **Green, yellow and red paths:** a token request approved outright, approved after the cardholder verifies, or declined ([Card Issuing](/books/payments/card-issuing#tokenization-on-the-issuer-side)).
 - **Hybrid prepaid-credit card:** a prepaid card that can draw on a credit feature, treated as a credit card under Regulation Z, with the feature offered no sooner than 30 days after registration ([Card Issuing](/books/payments/card-issuing#prepaid)).
@@ -270,6 +272,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **Provisional credit:** money an issuer credits a cardholder during a Regulation E investigation, reversible with notice if no error is found ([Issuer Processing](/books/payments/issuer-processing#debit-and-prepaid-regulation-e)).
 - **Push provisioning:** adding a card to a wallet from the issuer's app or site, which needs each wallet's approval ([Card Issuing](/books/payments/card-issuing#tokenization-on-the-issuer-side)).
 - **Spend controls:** per-card or per-cardholder rules on merchant category, country, channel, amount and velocity, checked at authorization ([Issuer Processing](/books/payments/issuer-processing#spend-controls)).
+- **Spend management:** a commercial charge card bundled with expense software (limits, approvals, receipts, accounting sync), paid for mostly by commercial interchange ([Card Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)).
 - **Visa Account Screen:** the list of blocked and lost or stolen card numbers that Visa's stand-in declines, which issuers must update immediately ([Issuer Processing](/books/payments/issuer-processing#stand-in-and-offline)).
 
 ## Running a Provider

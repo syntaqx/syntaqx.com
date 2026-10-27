@@ -134,7 +134,7 @@ Dated facts age fast; this is the market as of October 2026, from each company's
 | November 10, 2025 | Visa and Mastercard sign an amended merchant class settlement; preliminary approval June 9, 2026 | Interchange caps, category-level acceptance and surcharging rules, pending final approval |
 | December 18, 2025 | Visa reports hundreds of live agent-initiated transactions on Intelligent Commerce | Agentic commerce moves from announcement to production pilots ([AI in Payments](/books/payments/ai-in-payments)) |
 | January 12, 2026 | Global Payments completes its acquisition of Worldpay; FIS acquires Global Payments' Issuer Solutions | The largest acquirer consolidation in years, and TSYS splits by side |
-| April 7, 2026 | Capital One completes its acquisition of Brex | An issuer-network buys a corporate card and spend platform |
+| April 7, 2026 | Capital One completes its acquisition of Brex | An issuer-network buys a corporate card and spend platform ([What Gets Built on Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)) |
 | May 19, 2026 | NMI announces its acquisition of Dwolla | An embedded payments provider adds bank-rail payouts: ACH, RTP and FedNow |
 | October 19, 2026 | Tilled announces more than $10 million in new funding | A payfac-as-a-service provider keeps raising as an independent |
 

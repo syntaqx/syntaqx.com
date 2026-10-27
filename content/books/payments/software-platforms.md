@@ -27,6 +27,8 @@ Managed payfac, sometimes called payfac-as-a-service, is where most vertical pla
 
 My rule: go as far down as your risk team and balance sheet can actually support, not as far as the margin is tempting. The margin on a registered payfac only exists after underwriting, monitoring, chargeback losses and compliance are paid for, and a platform that's good at gym software isn't automatically good at any of those.
 
+Acceptance isn't the only embedded product. A platform can also issue cards to the businesses it serves, and the same question decides it: issuing on connected accounts usually puts the platform on the hook for their verification and their losses ([What Gets Built on Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)).
+
 ## Where the Money Goes
 
 The platform earns from payments in one of two ways, and they have different engineering shapes:
