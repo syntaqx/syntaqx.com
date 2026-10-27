@@ -4,11 +4,13 @@ Personal site for [Chase Pierce](https://www.syntaqx.com), built with [Next.js](
 
 ## Stack
 
-- **Framework**: Next.js 16 (App Router, static export)
+- **Framework**: Next.js 16 (App Router)
 - **Styling**: Tailwind CSS v4, `@tailwindcss/typography`
 - **Search**: [Pagefind](https://pagefind.app) (built at build time, client-side)
 - **Syntax Highlighting**: [Shiki](https://shiki.style) via `@shikijs/rehype`
-- **Analytics**: Vercel Analytics
+- **Analytics**: Vercel Analytics, Speed Insights
+- **Errors**: [Sentry](https://sentry.io)
+- **Rate limiting**: [Upstash Redis](https://upstash.com)
 - **Icons**: [Lucide](https://lucide.dev), [Simple Icons](https://simpleicons.org)
 
 ## Development
@@ -43,13 +45,19 @@ npm run typecheck
 
 CI runs all three in parallel on every pull request; see [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
+```bash
+npm run links      # check every URL cited in content/docs and docs/adr
+```
+
+[.github/workflows/doc-links.yml](.github/workflows/doc-links.yml) runs the same check every Monday: dead links open (or update) one issue, and a clean run closes it.
+
 ## Build
 
 ```bash
 npm run build
 ```
 
-This runs the Next.js build and then generates the Pagefind search index from the static output.
+This fetches full git history when the checkout is shallow (so each doc's "last updated" date is real), runs the Next.js build, and then generates the Pagefind search index from the output.
 
 ## Deploy
 
@@ -68,10 +76,12 @@ app/            → Pages, layouts and the API (App Router)
 components/     → React components
 content/posts/  → Blog posts (Markdown with TOML frontmatter)
 content/docs/   → The playbook, one folder per section (/docs/<section>/<slug>)
+content/books/  → Industry books, one folder per book (/books/<book>/<chapter>)
 docs/adr/       → Architecture Decision Records
 lib/            → Utilities: docs and posts, API helpers, rate limiting, QUERY
 proxy.ts        → API headers, rate limiting, HTTP QUERY routing
 public/         → Static assets
+scripts/        → Build steps and the link checker
 compose.yml     → Optional local Redis for the rate limiter
 ```
 
