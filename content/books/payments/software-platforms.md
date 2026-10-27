@@ -1,7 +1,7 @@
 +++
 title = "Payments for Software Platforms"
 nav_title = "Software Platforms"
-description = "Embedded payments for vertical software: referral, reseller, managed and registered payfac models, the tenant hierarchy, fund splits, 1099-K and support."
+description = "Embedded payments for vertical software: payfac models, the tenant tree, fee overrides at scale, wrong fees and their fixes, fund splits, 1099-K and support."
 category = "Payments Industry"
 order = 1426
 part = "Running a Provider"
@@ -49,6 +49,7 @@ Providers draw the tree with different nouns and the same shape:
 - **Stripe Connect** is flat at the account level: a platform and its connected accounts. Below an account, Terminal **locations** group card readers by physical site, and zones group locations into regions or sub-brands.
 - **Adyen for Platforms** separates who a user is from where its money sits: a **legal entity** per country for KYC, an **account holder** per country for capabilities, one or more **balance accounts** that hold funds and pay out, and a **store** per physical location under the merchant account for that country.
 - **Finix** puts the platform's **Application** at the root, an **Identity** for each business (where KYC happens), and **Merchants** under the Identity for each payment capability it enables, online and in person for example.
+- **Payabli** nests **sub-organizations** under an **organization** to any depth, with a **paypoint** for each merchant account, created through boarding once underwriting approves it.
 
 Whatever the vendor calls them, the platform's own model needs the same levels: platform, organization, merchant (the legal entity that's underwritten and paid), merchant account (below), and location. Configuration inherits down the tree with explicit overrides, permissions are scoped to a node and cover its subtree, and reporting rolls up from the same entries; the general model, with the query that resolves an inherited setting, is in [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies). What payments adds:
 
@@ -85,11 +86,71 @@ Ask before you sign who owns the stored cards if you leave. A provider's tokens 
 
 ## Pricing Per Merchant
 
-Fee schedules are versioned rules over the same inputs, and the engine that computes them, with effective dates and every fee's inputs stored, is in [A Pricing Engine](/books/payments/interchange-and-pricing#a-pricing-engine). What a platform adds is two layers on top of it:
+Fee schedules are versioned rules over the same inputs, and the engine that computes them, with effective dates and every fee's inputs stored, is in [A Pricing Engine](/books/payments/interchange-and-pricing#a-pricing-engine). What a platform adds is the tree on top of it: prices set at one level, overridden at another, and charged at the bottom, on every payment every merchant account takes.
 
-- **Schedules inherit down the tree.** A platform sets a default schedule, an organization negotiates its own for all its merchants, and a merchant overrides it only by contract. The fee on a payment is computed from the schedule resolved for that merchant on that date, and the merchant's statement says where the schedule came from.
+![An indented tree of five levels with three fee columns: card discount, ACH fee and chargeback fee, with illustrative values. The platform sets all three: 2.90%, $0.50 and $25.00. The organization overrides only the card discount, at 2.60%; the sub-organization only the ACH fee, at $0.30; and paypoint A, the accented one, only the chargeback fee, at $15.00. Paypoint B inherits all three. Below the table, paypoint A's resolved schedule is 2.60% from the organization, $0.30 from the sub-organization and $15.00 from paypoint A, frozen as one version and stamped on every payment it prices.](/diagrams/pm-fee-overrides.svg "Each level overrides single lines, and a merchant account's schedule resolves line by line from the nearest level that sets each. A sibling with no overrides of its own inherits everything.")
+
+### Overrides Down the Tree
+
+- **Schedules inherit down the tree.** A platform sets a default schedule, an organization negotiates its own for all its merchants, a sub-organization (a region, a franchise group, a product line) adjusts it again, and a merchant account overrides it only by contract. Payabli's hierarchy is this shape: organizations nest sub-organizations without a fixed depth, each paypoint (its merchant account) belongs to exactly one organization, and billing, risk and funding settings cascade down, each level inheriting from the one above unless an override is in place. The fee on a payment is computed from the schedule resolved for that merchant account on that date, and the merchant's statement says where each line came from.
+- **Override a line, not the schedule.** A negotiated price is almost never a new schedule; it's one rate. An organization that negotiated its card discount should still pick up the platform's next change to the ACH fee. So an override is a single fee line at a node (the card discount, the ACH fee, the chargeback fee, a monthly minimum), and the schedule resolves line by line, each line from the nearest level that sets it. Copying a whole schedule to change one number is how a merchant ends up on last year's ACH price without anyone having decided that.
+- **Every level has a cost and a price.** In a tree deeper than platform and merchant, each level's price to the levels below is the next level's cost: a reseller organization buys at the platform's rate and sells to its merchants at its own. The margin at every level is a subtraction, and only if the resolved schedule keeps every level's price for each line, not just the bottom one. The guardrail follows: a level can't price a line below its own cost without an approved exception, because a price under cost is a loss on every payment, and someone in the tree pays it.
+- **Moving a node is a pricing event.** A merchant moved to another organization, or a sub-organization moved under another parent, changes every line it inherits. Payabli doesn't make either move self-service, and a moved paypoint may get a new configuration profile to preserve its effective settings when the new parent's differ. Whatever the mechanism, the decision is explicit: pin the moved node's effective lines as its own overrides, recorded as a change with a reason, or adopt the new parent's prices, which for an increase is a new version that respects the notice period. A move must never reprice silently.
 - **Two prices per payment.** In a managed model the provider charges the platform its price, and the platform charges the merchant its own. The platform's markup is the difference, and it's only visible if both are stored per payment: the merchant's fee as the merchant was charged, and the provider's cost as the provider's statement shows it.
 - **Notice before increases.** Notice periods for price increases come from the merchant agreement, and the system enforces them by refusing a new version that takes effect sooner.
+
+### Who Pays the Fee
+
+The schedule decides how much. Who pays, and when, is a separate setting that inherits down the same tree:
+
+- **The merchant absorbs it,** netted from each day's funding or billed in bulk at month end ([Collecting Your Own Fees](/books/payments/payouts-and-settlement#collecting-your-own-fees)). Payabli offers both.
+- **The payer pays it,** as a service fee, convenience fee or surcharge on top of the amount, within the limits in [Surcharging & Fees](/books/payments/surcharging-and-fees). Payabli carries every payer fee type in one `serviceFee` field and checks it against the configured amount to two decimals, accepting a difference of one cent either way. Two settings decide what happens beyond that: absorb a lower fee, with the merchant covering the difference (otherwise the payment is rejected with return code 5005), and accept a higher one (otherwise 5006). Overriding the configured fee on individual transactions is a further setting it enables case by case.
+- **A parent pays it.** Payabli calls this bill to parent: the merchant and its customers pay no fees, and the partner above them does, usually to make signing up easier. In the ledger the fee still belongs to the merchant's payment; it posts to the parent's receivable instead of netting from the merchant's funding, so the merchant's statement and the parent's invoice trace to the same entries.
+
+My default: who pays, the payer fee tolerance and the per-transaction override are permissions as much as configuration. An API key that can override the fee on a payment can charge a payer anything up to the legal cap, so the override is granted per merchant, and every overridden payment stores the configured fee beside the one charged.
+
+### Resolving at Scale
+
+Walking up the tree with a recursive query, as [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies) shows, is right for an admin screen and wrong for pricing millions of payments a day. It repeats the same walk for every payment, its cost grows with a depth the provider may not cap, and two payments a second apart can resolve differently if a change commits between their reads.
+
+- **Resolve when prices change, not when payments happen.** When an override is written, recompute the resolved schedule for every merchant account under that node, and store each as an immutable version: every line with its value, the node it came from, and every level's price for it. Pricing a payment is one indexed lookup (the account's version in force at the payment's timestamp), and since versions never change, they cache by id indefinitely.
+- **Fan-out is a job with a deadline.** A platform-level change touches every account in the tree. Changes are effective-dated, so the job runs ahead of the effective time and writes versions whose `valid_during` starts then; at the effective instant nothing recomputes, and lookups simply land in the new rows ([Scheduling Future Changes](/docs/database/temporal-data#scheduling-future-changes)). A change effective immediately is the dangerous one: hold it until the fan-out completes, or let pricing resolve live for any account whose version isn't written yet, and alert on how many did.
+- **Stamp the version on the payment.** Each payment records the resolved schedule that priced it, and each fee entry its line and inputs ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). "Where did this price come from" on a statement is then a join, never a recomputation.
+- **Reprice a sample every night.** Recompute a sample of the day's payments, and every payment for an account whose prices changed that day, from the stamped version and stored inputs, and compare with the posted fees. Any difference is a defect in the engine, found the next morning instead of at month end.
+
+### Changing Prices Without Losing the Record
+
+A price change is money, so it's handled like money: attributed, approved, and never rewritten.
+
+- **Change sets, not edits.** Every change, one line for one merchant or a new ACH price for ten thousand, is a change set: who made it, why, the contract or ticket it implements, who approved it, and the override rows it writes. A bulk repricing is one change set with one approval, previewed before approval as a diff of every affected account's effective lines and the revenue effect at last month's volume.
+- **Approval scaled to risk.** A change inside a merchant's contract can go straight through. A price below cost, a retroactive change, or an increase inside the notice period needs a second person, and never the person who benefits from it ([Auditing Metric Definitions](/books/payments/payments-metrics#auditing-metric-definitions) applies the same rule to overrides of metrics).
+- **Two kinds of time.** Each override keeps when it takes effect (`valid_during`) and when the system recorded it (`recorded_during`), as [Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections) describes. "What was this paypoint's ACH fee on March 3" and "what did we believe it was on March 3" are different questions, and a disputed fee needs both answers.
+- **Rollback is another change set.** Undoing a change writes the old values as new overrides with their own record. Nothing deletes the mistaken one; it's the evidence of what was charged in between. The change record itself belongs in the [audit trail](/docs/architecture/audit-trails), with the before and after effective lines.
+
+### Where It Breaks
+
+The fee arithmetic is rarely what fails. The failures sit where configuration, time and the tree meet, and each one needs a check that runs without anyone remembering to:
+
+- **Copies drift.** A schedule copied to a child at creation, or lines pinned during a move, stop receiving the parent's changes. That can be correct, but it must be visible: report every pinned line with its age and whether it differs from what it would inherit, and have someone review the list.
+- **The payment doesn't carry what the line keys on.** A line priced by card type when the BIN table is stale, by channel when an integration misreports it, or by category on a payment routed to the wrong merchant account. The schedule is right and the fee is wrong. Track fees by input, and let the processor's files true up the estimate ([A Pricing Engine](/books/payments/interchange-and-pricing#a-pricing-engine)).
+- **Effective dates in the wrong zone.** A price effective November 1 applied at midnight UTC reprices the evening of October 31 across the US. Resolve business dates in the merchant's zone and test the boundary ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
+- **A fan-out that didn't finish.** A job that failed halfway leaves part of a subtree on the old version. After every change set, count the accounts under its node whose version at the effective time doesn't include it; anything above zero pages someone.
+- **Rounding in two places.** A percentage fee rounded per payment and the same fee rounded on the monthly total differ by cents per merchant per month. Write the rule down once and use it in the engine, the statement and the reconciliation ([Rounding](/docs/payments/money#rounding)).
+- **The same fee computed twice.** Billing computes from the schedule, a dashboard recomputes for display, a residual statement computes again, and they disagree. Every fee shown anywhere is read from posted entries.
+- **A checkout that computes its own payer fee.** A client that calculates the service fee with its own rounding or a stale rate gets rejected, or, with absorb turned on, quietly costs the merchant the difference on every payment. Have the checkout ask the pricing engine for the fee, and alert on absorbed differences.
+- **Overrides nobody owns.** An exception granted for one quarter that's still in force three years later. Give exceptions an end date or a review date, and list the ones past it.
+
+### When a Fee Is Wrong
+
+A wrong fee is found by the merchant, by the nightly repricing, or by reconciliation against the processor's statement. However it's found, fixing it takes the same steps:
+
+1. **Stop it.** Write the corrected line as a change set effective now, so new payments price correctly while the rest is worked out.
+2. **Scope it.** Because every payment stamps the version that priced it, the affected payments are a query: every payment priced by a version containing the bad line, per merchant account, with the fee charged and the fee the corrected schedule gives. That list is the remediation, and its total is the number finance books.
+3. **Correct in the ledger, never in place.** Post an adjustment per merchant account, usually per period with the payment list attached, referencing the original fee entries. The originals stay, because the merchant was funded net of them and their bank statement shows it ([Append-Only Records](/docs/payments/payment-states#append-only-records)). An overcharge comes back as a credit on the next funding or a payout of its own. An undercharge is a decision: the contract may allow collecting it, but collecting a fee the platform got wrong can cost more in trust than it recovers, so set the threshold in advance rather than per incident.
+4. **Tell the merchant.** The statement shows the adjustment as its own line, with the period and the reason, never folded into the month's fees.
+5. **Fix the cause, and add the check.** A wrong fee from any of the failures above gets the check that would have caught it.
+
+Two variations. An overcharged **payer** fee is refunded to the payer, not credited to the merchant, and an excessive surcharge can break network rules or state law, not just the merchant agreement ([Surcharging & Fees](/books/payments/surcharging-and-fees#what-state-law-allows)). A wrong **cost**, a processor fee you didn't contract, runs the same scope query in the other direction, and its output is the claim you send the processor.
 
 ## Reconciliation for Two Audiences
 
@@ -156,19 +217,51 @@ CREATE TABLE locations (
 
 CREATE TABLE merchant_settings (               -- overrides only; resolve by walking up parent_id
   merchant_id    UUID NOT NULL REFERENCES merchants (id),
-  key            TEXT NOT NULL,                -- 'fee_schedule_id', 'payout_delay_days', ...
+  key            TEXT NOT NULL,                -- 'fee_payer', 'payout_delay_days', ...
   value          JSONB NOT NULL,
   effective_from TIMESTAMPTZ NOT NULL,
   set_by         TEXT NOT NULL,
   PRIMARY KEY (merchant_id, key, effective_from)
 );
 
+CREATE TABLE fee_change_sets (
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  reason      TEXT NOT NULL,
+  reference   TEXT,                            -- contract, ticket
+  created_by  TEXT NOT NULL,
+  approved_by TEXT,                            -- required by policy for below cost, retroactive, inside notice
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (approved_by IS NULL OR approved_by <> created_by)
+);
+
+CREATE TABLE fee_overrides (                   -- one line at one node; append-only
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id         UUID REFERENCES merchants (id),          -- any level of the tree
+  merchant_account_id UUID REFERENCES merchant_accounts (id),  -- or one merchant account
+  fee_line            TEXT NOT NULL,           -- 'card.discount', 'ach.fixed', 'chargeback.fixed', ...
+  value               JSONB NOT NULL,          -- {"bps": 260} or {"fixed": 30}, never floats
+  valid_during        TSTZRANGE NOT NULL,
+  recorded_during     TSTZRANGE NOT NULL DEFAULT tstzrange(NOW(), NULL),
+  change_set_id       UUID NOT NULL REFERENCES fee_change_sets (id),
+  CHECK (num_nonnulls(merchant_id, merchant_account_id) = 1)
+);
+
+CREATE TABLE resolved_fee_schedules (          -- immutable; written ahead of valid_during
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_account_id UUID NOT NULL REFERENCES merchant_accounts (id),
+  valid_during        TSTZRANGE NOT NULL,
+  lines               JSONB NOT NULL,          -- per line: value, source node, each level's price
+  change_set_id       UUID NOT NULL REFERENCES fee_change_sets (id),
+  EXCLUDE USING GIST (merchant_account_id WITH =, valid_during WITH &&)
+);
+
 ALTER TABLE payments ADD COLUMN merchant_account_id UUID REFERENCES merchant_accounts (id);
 ALTER TABLE payments ADD COLUMN location_id UUID REFERENCES locations (id);
 ALTER TABLE payments ADD COLUMN charge_type TEXT;  -- what it pays for; picks the account
+ALTER TABLE payments ADD COLUMN resolved_fee_schedule_id UUID REFERENCES resolved_fee_schedules (id);
 ```
 
-The platform's fee and the provider's cost are ledger entries on the payment's ledger transaction, to `platform_revenue` and `processing_costs`, so the markup per merchant is a query over entries rather than a column anyone maintains.
+The platform's fee and the provider's cost are ledger entries on the payment's ledger transaction, to `platform_revenue` and `processing_costs`, so the markup per merchant is a query over entries rather than a column anyone maintains. A corrected fee is another entry referencing the original, and a level's margin on any payment is its own price minus its parent's, both read from the stamped schedule.
 
 ## What This Means for the System You Build
 
@@ -177,7 +270,9 @@ The platform's fee and the provider's cost are ledger entries on the payment's l
 - **One merchant account per line of business,** each with its own category code, credentials, descriptor, pricing and settlement account, with payments routed by charge type.
 - **Treat the provider's merchant status as authoritative,** and show what's due inside your product.
 - **Keep card numbers out with the provider's components,** and know who owns the stored cards if you leave.
-- **Fee schedules that inherit down the tree,** with the provider's cost and the merchant's price both stored per payment.
+- **Fee schedules that inherit down the tree line by line,** with every level's price, the provider's cost and the merchant's price stored per payment.
+- **Resolve schedules when prices change,** stamp the version on each payment, and reprice a sample nightly against posted fees.
+- **Price changes as approved change sets** with both kinds of time; moves and exceptions are explicit, and wrong fees are corrected by adjusting entries scoped from the stamped versions.
 - **Route events by merchant before any logic runs,** and handle each one idempotently.
 - **Give support the provider's view:** ledger states, payout dates, return codes and dispute deadlines.
 
@@ -205,3 +300,7 @@ The platform's fee and the provider's cost are ledger entries on the payment's l
 - [Adyen: Platform account structure](https://docs.adyen.com/platforms/account-structure-resources/platform-structure), legal entities and account holders per country, balance accounts, and a store per physical location
 - [Adyen: Account structure for platforms](https://docs.adyen.com/platforms/account-structure-resources/), merchant accounts, balance accounts for funds, and stores for routing and reconciliation
 - [Finix: Key resources](https://docs.finix.com/additional-resources/developers/resources-and-payment-flows/key-resources), Application, Identity and Merchant, and fee and risk profiles copied from the Application at creation
+- [Payabli: Organizations overview](https://docs.payabli.com/guides/pay-ops-organizations-overview), sub-organizations, one organization per paypoint, settings cascading with overrides, and moving a paypoint
+- [Payabli: Entities overview](https://docs.payabli.com/guides/platform-entities-overview), unlimited nesting of sub-organizations and paypoints, and paypoints created through boarding
+- [Payabli: Billing and fees](https://docs.payabli.com/guides/pay-ops-billing-and-fees-overview), fee structures, who pays (absorb, service fee, bill to parent), and daily or monthly collection
+- [Payabli: Payor fees](https://docs.payabli.com/guides/pay-in-payor-fees-overview), the `serviceFee` field, the one-cent tolerance, absorb and accept-greater settings, return codes 5005 and 5006, and per-transaction overrides

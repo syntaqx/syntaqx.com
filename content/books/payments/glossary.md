@@ -237,6 +237,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **AP2 (Agent Payments Protocol):** Google's protocol, donated to the FIDO Alliance, that records what a user authorized as signed mandates ([AI in Payments](/books/payments/ai-in-payments#agentic-commerce)).
 - **ASV, QSA:** an approved scanning vendor and a qualified security assessor.
 - **Authorization rate, payment success rate:** issuer approvals over attempts sent to the network, and authorized attempts over all valid attempts, including authentication failures and risk blocks ([Payments Metrics](/books/payments/payments-metrics#acceptance)).
+- **Bill to parent:** a parent in the platform's tree paying its merchants' processing fees, so neither the merchant nor its customers do ([Payments for Software Platforms](/books/payments/software-platforms#who-pays-the-fee)).
 - **Capture token, stored token:** the short-lived token a browser gets, and the long-lived one the platform saves in exchange ([Running a Card Vault](/books/payments/card-vault#designing-the-token)).
 - **Card fingerprint:** a keyed hash of a card number that recognizes the same card behind different tokens.
 - **Cascading:** sending a declined or failed payment to another processor, within the networks' retry rules ([Processor Routing](/books/payments/processor-routing#cascading-and-smart-retries)).
@@ -247,6 +248,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **DUKPT, BDK:** the scheme that gives every terminal transaction its own key, and the root key it derives them from ([HSMs & Key Management](/books/payments/key-management#dukpt-and-pin-blocks)).
 - **EMV Levels 1, 2 and 3:** terminal certification of the hardware, the kernel, and the integration end to end; unrelated to Level 2 and Level 3 data ([Network Certification](/books/payments/network-certification#card-present-emv-levels-1-2-and-3)).
 - **Envelope encryption:** data encrypted under a data key, which is itself encrypted under a key-encrypting key in a KMS or HSM ([Encryption at Rest](/docs/security/encryption-at-rest#envelope-encryption)).
+- **Fee override:** one fee line set at one level of a platform's tree, replacing what that level and everything below it would inherit ([Payments for Software Platforms](/books/payments/software-platforms#overrides-down-the-tree)).
 - **Forwarder:** the vault component that swaps a token for the card number on the way to a processor, the only path a number takes out.
 - **HSM, KMS:** a hardware security module, and a key management service, often built on HSMs.
 - **ISV (independent software vendor):** a software company, often vertical, that embeds payments in its product ([Payments for Software Platforms](/books/payments/software-platforms)).
