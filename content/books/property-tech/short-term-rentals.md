@@ -119,7 +119,7 @@ For damage, operators choose among three instruments:
 - **A damage waiver:** a non-refundable fee per stay in exchange for the operator agreeing to absorb accidental damage up to a limit, often backed by insurance. It's revenue (and possibly taxable, depending on the jurisdiction), not a deposit, and should be a different charge code.
 - **The channel's host protection program.** Airbnb's AirCover for Hosts includes host damage protection "up to $3M USD" for damage guests don't pay for, and "$1M liability insurance," on Airbnb bookings only. Guesty also lists damage protection coverage. Claims run on the channel's evidence rules and deadlines, which is why turnover evidence is captured at the door.
 
-The system should record which instrument applies to each stay, set from the channel and the rate plan, so that a damage finding at the turnover routes to the right path: deduct from the deposit, absorb under the waiver, or file with the channel.
+The system should record which instrument applies to each stay, set from the channel and the rate plan, so that a damage finding at the turnover routes to the right path: deduct from the deposit, absorb under the waiver, or file with the channel. How the channels run the other side, from [deposit holds and protection plans](/books/user-generated-platforms/deposits-and-protection#the-protection-stack) to [claims windows and evidence](/books/user-generated-platforms/damage-and-claims#windows-and-requirements), is in the User-Generated Platforms book.
 
 ## Owners, Owner Nights and Statements
 

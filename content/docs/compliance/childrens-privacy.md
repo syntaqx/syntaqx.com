@@ -146,7 +146,7 @@ Age assurance is the umbrella for every way of establishing age, with different 
 
 Vendors publish error figures for estimation, and they're worth reading closely. Roblox, which requires a facial age check before chat, reported in January 2026 that its vendor's models reached a "Mean Absolute Error of 1.4 years for users younger than 18" in testing under the UK's Age Check Certification Scheme, that images and video are deleted immediately after processing, and that users who dispute the result can verify by ID or have a parent set their age. An average error of 1.4 years means a check at 13 or 16 can't rely on estimation alone close to the line: build a buffer, or a fallback to a stronger method for anyone estimated near the threshold.
 
-My rule: **pick the method per feature, not per product.** A neutral age screen is enough to route a new user to the right consent flow. Open chat with strangers, purchases, or adult content need a stronger signal. Nothing at all is needed for features you've made safe for everyone.
+My rule: **pick the method per feature, not per product.** A neutral age screen is enough to route a new user to the right consent flow. Open chat with strangers, purchases, or adult content need a stronger signal. Nothing at all is needed for features you've made safe for everyone. How general-audience platforms apply that rule (to unblurring adult content, age-restricted communities, messages from strangers and broadcasting), and where US state age-verification laws stand in court, is in [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#age-assurance-on-a-general-audience-platform).
 
 ### The Age Screen
 

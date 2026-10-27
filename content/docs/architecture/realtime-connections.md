@@ -67,6 +67,8 @@ One change, many recipients: a message to a 10,000-member channel, a status chan
 - **Send only what's shown.** A client with the member list closed needs availability changes, not every detail. Let clients subscribe to what's on screen.
 - **Shard by the thing that fans out.** Slack assigns channels to channel servers by consistent hashing; Discord shards bot connections by guild. Keeping one hot channel's state on one owner makes its ordering simple and its fan-out local.
 
+How chat platforms handle fan-out at its hardest, in communities with hundreds of thousands of connected sessions and in a popular live stream's chat, is in [Real-Time Chat](/books/user-generated-platforms/real-time-chat#large-communities) and [Live Chat & the Interactive Layer](/books/user-generated-platforms/live-chat-and-interactivity#chat-fanout).
+
 ## Ordering and Catch-Up
 
 Connections drop, and a client that reconnects needs to know what it missed. Decide this up front, because it can't be bolted on.

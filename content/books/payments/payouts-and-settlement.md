@@ -61,6 +61,8 @@ How soon a merchant can be paid is a risk decision, not a convenience setting: o
 - **Instant payouts are a different product.** A payout to a debit card or over RTP or FedNow is final on arrival ([Vendor Payouts](/books/payments/vendor-payouts#push-to-card)), so it's priced and limited like credit, and paying before settlement lands is a [treasury decision](/books/payments/treasury#funding-the-day).
 - **Holds are explicit and explained.** Every held amount is a ledger entry into the `reserves` account with a release date, never just a smaller "available" number. A merchant who can see "$1,200 held until March 12, rolling 10% reserve" is a merchant who doesn't open a support ticket.
 
+Creator and seller platforms apply the same holds to payees who never sold anything themselves, paying out of subscriptions, tips and ad shares, and pair them with eligibility gates ([Risk Holds, Negative Balances and Clawbacks](/books/user-generated-platforms/paying-creators-and-sellers#risk-holds-negative-balances-and-clawbacks)).
+
 ### Negative Balances
 
 Refunds and lost disputes can take a merchant's balance below zero, and on a platform someone has to cover it. Options, in order: offset against the merchant's future payments, debit their bank account (which requires authorization to debit, collected during [onboarding](/books/payments/merchant-onboarding)), and finally, absorb it from the platform's own funds. Decide the order up front and tell merchants, because the alternative is discovering the policy in the middle of a loss. While a balance is negative, payouts stop.

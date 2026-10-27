@@ -28,7 +28,7 @@ The split is between **platforms where the game is the creators' work** (Roblox,
 
 ## How Creators Get Paid
 
-There are three ways a platform pays creators, and the big platforms combine them.
+There are three ways a game platform pays creators, and the big platforms combine them. Video, streaming and membership platforms add subscriptions, tips and ad revenue shares, compared in the User-Generated Platforms book's [Creator Monetization](/books/user-generated-platforms/creator-monetization#revenue-splits-compared).
 
 **A share of sales.** The creator sells something (a pass, an item, a mod) and gets a percentage. Roblox says creators "generally earn 70%" of what they sell in Robux in their own experience and "30% of anything they sell in the Marketplace." Its marketplace terms show how detailed a split gets: on an in-experience purchase of an avatar item, the item's creator receives 30% and the experience owner 40%, the creator's share rises to 70% when the item is priced at six times the floor, uploads cost 80 Robux, and proceeds sit in escrow for 30 days. Fortnite's in-island transactions pay developers "ordinarily" 50% of the V-Bucks value, raised to 100% from 9 January 2026 through 31 January 2027. Steam's Workshop leaves the percentage to the game: contributors' share is a portion of Adjusted Gross Revenue "determined by the developer/publisher," and contributors on a shared item "specify revenue split percentages" among themselves. mod.io's marketplace is the same: "Studios define how revenue is split with their content creators."
 
@@ -95,6 +95,8 @@ The platforms' public processes follow that shape:
 - **Steam** takes claims through a web form that warns that knowingly misrepresenting infringement creates liability.
 - **mod.io** says its team "will action valid DMCA's, unless your team actions them sooner."
 
+The same process at video-platform scale, with fingerprinting systems such as Content ID and the EU's Article 17, is in [Copyright at Scale](/books/user-generated-platforms/copyright#fingerprinting-and-content-id).
+
 What that means for the system:
 
 - **A claim is a case with a state machine:** received, validated, content disabled, creator notified, counter-notice received, restore scheduled, restored or kept down because the claimant sued. Each transition has a deadline the law sets, so the deadlines are data.
@@ -104,7 +106,7 @@ What that means for the system:
 
 ## Creator Identity, KYC and Tax
 
-A creator who earns money is a payee, and paying them brings identity checks and tax reporting the player-facing game never needed. The payout mechanics (enrollment, methods, a payout as a state machine, W-9s and TIN matching, 1099s) are in [Vendor Payouts](/books/payments/vendor-payouts#tax-w-9s-tin-matching-and-1099s); the creator-platform specifics:
+A creator who earns money is a payee, and paying them brings identity checks and tax reporting the player-facing game never needed. The payout mechanics (enrollment, methods, a payout as a state machine, W-9s and TIN matching, 1099s) are in [Vendor Payouts](/books/payments/vendor-payouts#tax-w-9s-tin-matching-and-1099s), and the eligibility gates, risk holds, 1042-S and DAC7 reporting every creator and seller platform shares are in [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers); the game-platform specifics:
 
 - **Verification happens at cash-out, not at upload.** mod.io: "By default, KYC verification is only required for cash-out." Roblox's DevEx requires a verified email, a DevEx portal account and a W-9 or W-8 on file, and pays through Tipalti; its higher DevEx rate and Audience Expansion require ID verification. Epic's Fortnite Developer Program runs a tax interview through a provider that produces a W-9 or W-8 ("Verification can take up to five business days") and pays through Hyperwallet. Most platforms outsource the payee onboarding to a payouts provider, which also collects the tax forms.
 - **Which tax form depends on how the money moves.** For payments to US creators, nonemployee compensation of $2,000 or more is reported on Form 1099-NEC for tax years after 2025 (Epic's FAQ still cited $600 as of October 2026, a reminder to read thresholds from the IRS, not a vendor page). Payment settlement entities report on Form 1099-K when payments to a payee exceed $20,000 across more than 200 transactions, the threshold the One Big Beautiful Bill reinstated retroactively. The [Vendor Payouts](/books/payments/vendor-payouts#tax-w-9s-tin-matching-and-1099s) chapter covers why a payment through a card or payment network goes on a 1099-K rather than a 1099-NEC.
