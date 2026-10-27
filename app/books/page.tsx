@@ -54,7 +54,7 @@ export default function BooksPage() {
                 summary: book.summary,
               };
             }),
-            ...UPCOMING_BOOKS.filter((b) => b.type === type).map((b) => ({ eyebrow: "Soon", name: b.name, summary: b.summary })),
+            ...UPCOMING_BOOKS.filter((b) => b.type === type).map((b) => ({ cover: b.cover, eyebrow: "Soon", name: b.name, summary: b.summary })),
           ];
           return (
             <section key={type} id={type} className="scroll-mt-24">

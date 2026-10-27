@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { project, type SceneState, type V2 } from "@/lib/scene/iso";
-import { HOT, LEVELS, levels, rasterize } from "@/lib/scene/raster";
+import { HOT, LEVELS, WARN, levels, rasterize } from "@/lib/scene/raster";
 import { sceneAt, type SceneName } from "@/lib/scene/scenes";
 import { walk, type Ink, type Pen } from "@/lib/scene/walk";
 
@@ -25,6 +25,8 @@ interface Props {
   grain?: number;
   className?: string;
   label: string;
+  /** One resting frame: no ticker, no hover. For covers of books not written yet. */
+  still?: boolean;
 }
 
 type RGB = [number, number, number];
@@ -50,6 +52,7 @@ function palette() {
     dim: parse(cs.getPropertyValue("--dim")),
     ramp: [0.14, 0.3, 0.55, 0.85].map((t) => mix(bg, acc, light ? t * 0.8 : t)),
     hot: mix(acc, light ? bg : [255, 255, 255], 0.35),
+    warn: (light ? [196, 55, 47] : [255, 93, 82]) as RGB,
     inst: cs.getPropertyValue("--font-michroma").trim() || "sans-serif",
   };
 }
@@ -63,7 +66,7 @@ function canvasPen(
 ): Pen {
   const lw = Math.max(1, dpr * 0.9);
   const ink = (k: Ink) =>
-    k === "acc" ? pal.acc : k === "dim" ? pal.dim : pal.fg;
+    k === "acc" ? pal.acc : k === "warn" ? pal.warn : k === "dim" ? pal.dim : pal.fg;
   const trace = (pts: V2[], close: boolean) => {
     ctx.beginPath();
     pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
@@ -185,6 +188,7 @@ export function SceneArt({
   grain = 5,
   className = "",
   label,
+  still = false,
 }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -196,7 +200,7 @@ export function SceneArt({
     if (!ctx) return;
     reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     // Touch screens can't hover to pull the layers apart, so rest part-open.
-    const rest = matchMedia("(hover: none)").matches ? 0.6 : 0;
+    const rest = !still && matchMedia("(hover: none)").matches ? 0.6 : 0;
     const layer = document.createElement("canvas");
     const lctx = layer.getContext("2d")!;
 
@@ -228,7 +232,7 @@ export function SceneArt({
       ctx.fillStyle = css(pal.bg);
       ctx.fillRect(0, 0, W, H);
       const size = (grain - (grain >= 5 ? 1 : 0.6)) * dpr;
-      const paths = Array.from({ length: HOT + 1 }, () => new Path2D());
+      const paths = Array.from({ length: WARN + 1 }, () => new Path2D());
       for (let y = 0; y < rows; y++)
         for (let x = 0; x < cols; x++) {
           const v = lv[y * cols + x];
@@ -240,6 +244,8 @@ export function SceneArt({
       }
       ctx.fillStyle = css(pal.hot);
       ctx.fill(paths[HOT]);
+      ctx.fillStyle = css(pal.warn, 0.85);
+      ctx.fill(paths[WARN]);
 
       // Lines on their own layer, so occlusion only erases line work.
       if (layer.width !== W || layer.height !== H) {
@@ -287,9 +293,11 @@ export function SceneArt({
         draw();
       }
     };
-    host.addEventListener("pointerenter", enter);
-    host.addEventListener("pointerleave", leave);
-    host.addEventListener("pointermove", move);
+    if (!still) {
+      host.addEventListener("pointerenter", enter);
+      host.addEventListener("pointerleave", leave);
+      host.addEventListener("pointermove", move);
+    }
 
     // Redraw when the theme flips (class on <html>) or fonts finish loading.
     const mo = new MutationObserver(draw);
@@ -300,7 +308,7 @@ export function SceneArt({
     document.fonts?.ready.then(draw);
 
     const actor: Actor = { draw, st };
-    if (!reduce) {
+    if (!reduce && !still) {
       actors.add(actor);
       if (!running) {
         running = true;
@@ -318,7 +326,7 @@ export function SceneArt({
       host.removeEventListener("pointerleave", leave);
       host.removeEventListener("pointermove", move);
     };
-  }, [scene, wide, grain]);
+  }, [scene, wide, grain, still]);
 
   return (
     <canvas
