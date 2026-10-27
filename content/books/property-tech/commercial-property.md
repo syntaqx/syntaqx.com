@@ -17,7 +17,7 @@ Commercial is an edition of most multifamily suites and the core business of a f
 
 | Vendor | Commercial capabilities on its own pages |
 | --- | --- |
-| **Entrata** (Commercial) | CAM, insurance and tax expense pools allocated by square feet with each tenant's share calculated monthly and annually; automated triple net reconciliations; lease abstracts; clause and exclusion tracking; tenant insurance compliance; commercial rent roll; tenant portal with permissions |
+| **Entrata** (Commercial) | CAM, insurance and tax expenses pooled by square feet, with each tenant's share and monthly and annual charges; automated triple net reconciliations; lease abstracts; clause and exclusion tracking; tenant insurance compliance; commercial rent roll; tenant portal with permissions |
 | **RealPage** (Commercial) | CAM calculation, billing and reconciliation; percentage rent calculated from tenant sales reported through the tenant portal; CPI escalations; scheduled rent postings; late fee and vacancy loss calculations; tenant portal where tenants pay invoices and upload insurance certificates |
 | **Yardi Breeze** (Commercial) | Triple net, gross or combined leases; custom expense pools with caps; estimates posted monthly, quarterly or annually for later reconciliation; percentage rent and retail sales tracking; escalations; lease expiration tracking; a tenant portal and app as a Premier add-on; $2 per unit per month with a $200 monthly minimum on an annual agreement |
 | **MRI Software** | Recoveries for office, industrial and retail; a retail product that automates "recoveries, percentage rent, and breakpoints"; lease abstraction; tenant portal; for occupiers, lease management with critical dates and lease accounting |

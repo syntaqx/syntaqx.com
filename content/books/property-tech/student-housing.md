@@ -117,7 +117,7 @@ A term is a property-level product row: its name ("2027-28 academic year," "Spri
 
 - **Installment schedules.** Academic-year rent is often stated as a total contract amount and billed in installments; the charge schedules are generated from the term, with proration rules for partial first and last months stated in the lease rather than computed differently per resident.
 - **Summer and short terms.** Summer residents (interns, summer session students, residents staying between years) occupy beds that the academic-year leases have released, with their own pricing.
-- **Renewal timing.** Renewing residents are offered next year's term before the bed goes to new pre-leasing, often in bulk; Entrata's student page describes generating renewal offers automatically and sending them to all residents at once.
+- **Renewal timing.** Renewing residents are offered next year's term before the bed goes to new pre-leasing, often in bulk; Entrata's student page describes generating renewal offers automatically and bulk-sending them to residents.
 
 ## Per-Bed Pricing and the Pre-Leasing Curve
 
@@ -152,7 +152,7 @@ When nearly every lease ends at the end of one academic year and the next year's
 - **Inspect each bedroom and the common areas separately.** Damage in a bedroom is that resident's; damage in the kitchen is the unit's, allocated across its leases by the rule the leases state. Move-out inspections record which space each finding is in, so Move-In & Move-Out can itemize deposits per lease within each state's deadline.
 - **Stagger arrivals.** Move-in day for several hundred residents is a capacity problem: elevator, loading dock and parking capacity by hour. Arrival time slots are pooled inventory with a cap per slot ([Counters for Pooled Inventory](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory)), booked by the resident or parent from the pre-arrival checklist.
 - **Clear residents before they arrive.** Entrata describes gathering students' information before arrival and showing outstanding items in one place. A resident who arrives with an unsigned guaranty, an unpaid first installment or missing insurance holds up the line; the checklist (lease signed, guaranty signed, payment made, insurance verified, slot booked) is computed per resident and per bed, and keys or credentials are issued only when it's complete.
-- **Run the day live.** Check-in staff see who has arrived, who is late and which beds are still turning, and route early arrivals to beds that are ready ("real-time" move-in day management, in Entrata's words).
+- **Run the day live.** Check-in staff see who has arrived, who is late and which beds are still turning, and route early arrivals to beds that are ready (managing move-in days "in real time," in Entrata's words).
 
 ## How to Build It
 

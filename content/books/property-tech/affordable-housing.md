@@ -38,7 +38,7 @@ For the platform, three ideas carry across all of them.
 
 **The ledger has two payers.** In assisted units, rent is split: the tenant rent the household owes, and the assistance payment the agency owes. They post as separate charges, the household's with `ledger_party = 'resident'` and the agency's with `ledger_party = 'subsidy'` ([The Charge Catalog](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog)). Late fees, aging, notices and evictions run only on the resident's portion; Colorado, for one, forbids late fees on any portion of rent a subsidy provider is responsible for, and Minnesota limits them to the tenant's portion under HAP contracts ([Late Fees](/books/property-tech/charges-and-resident-ledgers#late-fees)). The subsidy portion is reconciled against what the agency actually paid.
 
-**Retroactive changes are normal.** An interim certification for a job lost in March, processed in May, changes tenant rent and assistance from April. The ledger reverses and re-posts both portions for the affected months, and the next voucher to HUD carries the adjustment. Entrata advertises ledgers that "self-correct" when income is backdated; the mechanism underneath is reversal and re-posting, never edits ([Recurring Charges and the Posting Run](/books/property-tech/charges-and-resident-ledgers#recurring-charges-and-the-posting-run)). When the household owes money because it under-reported income, the owner signs a **repayment agreement**, an installment plan against a separate receivable that isn't rent.
+**Retroactive changes are normal.** An interim certification for a job lost in March, processed in May, changes tenant rent and assistance from April. The ledger reverses and re-posts both portions for the affected months, and the next voucher to HUD carries the adjustment. Entrata advertises certifications and ledgers that "correct automatically" when income is backdated; the mechanism underneath is reversal and re-posting, never edits ([Recurring Charges and the Posting Run](/books/property-tech/charges-and-resident-ledgers#recurring-charges-and-the-posting-run)). When the household owes money because it under-reported income, the owner signs a **repayment agreement**, an installment plan against a separate receivable that isn't rent.
 
 ### Vouchers and TRACS
 
@@ -324,7 +324,7 @@ Subsidized housing has the most demanding audit trail in the book:
 
 **In practice**
 
-- [Entrata: Affordable](https://www.entrata.com/solutions/affordable), TRACS, HAP requests, special claims, repayment agreements, self-correcting ledgers, multi-program certification, tax credit set-asides
+- [Entrata: Affordable](https://www.entrata.com/solutions/affordable), TRACS, HAP requests, special claims, repayment agreements, ledgers that correct automatically, multi-program certification, tax credit set-asides
 - [Yardi Breeze: Affordable housing features](https://www.yardibreeze.com/affordable-housing-features/), programs supported, TRACS and MINC files, mass recertifications, subsidy payments, pricing
 - [RealPage: Affordable](https://www.realpage.com/affordable/), HUD, tax credit, rural housing and 50058 compliance, compliance services, reporting by subjournal
 - [RealPage: Maintenance management](https://www.realpage.com/property-management-software/maintenance-management/), NSPIRE inspection scheduling and audit-ready reports

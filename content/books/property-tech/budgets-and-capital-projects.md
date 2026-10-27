@@ -105,7 +105,7 @@ A **value-add renovation** program upgrades units as they turn over (kitchens, f
 
 ## Draw Requests and Lien Waivers
 
-Renovations and new construction are often financed by a lender that funds the work in **draws**: periodic advances against a construction or renovation loan, each supported by a package the lender's inspector and servicer review. Both Entrata and RealPage name draw requests and draw packages as job costing features. A draw package typically holds:
+Renovations and new construction are often financed by a lender that funds the work in **draws**: periodic advances against a construction or renovation loan, each supported by a package the lender's inspector and servicer review. Entrata names draw requests and RealPage names draw packages as job costing features. A draw package typically holds:
 
 - **A schedule of values:** each cost code's budget, work completed in prior draws, work completed this period, materials stored, retainage, and balance to finish.
 - **Invoices and contracts** supporting this period's amounts.

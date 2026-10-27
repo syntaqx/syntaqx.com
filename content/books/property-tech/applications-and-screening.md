@@ -477,6 +477,10 @@ The mechanics are in [Audit Trails](/docs/architecture/audit-trails); retention 
 - [Poverty & Race Research Action Council: State, Local, and Federal Laws Barring Source of Income Discrimination (PDF)](https://www.prrac.org/pdf/AppendixB.pdf), the state list and weakened laws, updated March 2026
 - [Wikipedia: Biometric Information Privacy Act](https://en.wikipedia.org/wiki/Biometric_Information_Privacy_Act), BIPA's 2008 enactment, consent and destruction duties, private right of action and damages, and the Texas and Washington analogues
 
+**Filings**
+
+- [Entrata: Form S-1/A, Amendment No. 2](https://www.sec.gov/Archives/edgar/data/0002028464/000162828026059692/entrata-sx1a2.htm), resident screening among Embedded Technology Solutions revenue
+
 **In practice**
 
 - [Entrata: ResidentVerify](https://www.entrata.com/products/residentverify), screening in the application, configurable criteria, document fraud, synthetic identity, ID scan and liveness, bank and payroll income, international credit, centralized disputes

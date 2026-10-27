@@ -14,7 +14,7 @@ Utilities are the largest operating expense a property can recover from resident
 Utility management is a service business wrapped in software, and the large suites sell both halves:
 
 - **RealPage** lists resident billing aimed at cost recovery, submetering from installation to maintenance with meter data linked to billing, utility expense management that automates invoice processing and aims to reduce late fees and disconnects, energy management, sustainability services (benchmarking, procurement, conservation and ESG reporting), and smart waste management that tracks volumes and overflows. It claims "the industry's largest utility expense database".
-- **Entrata** bills utilities on one monthly bill with rent, parking and fees, with experts who "configure utility charges" for regulatory compliance; processes property utility bills into accounts payable with bills routed to it and audited (its page says "up to 25% of utility bills contain an error"); automates ENERGY STAR Portfolio Manager data entry for benchmarking; and, through a partner (AUTA), recovers overpaid sales tax on utility bills on a contingency basis, with refunds in some states going back up to ten years.
+- **Entrata** bills utilities on one monthly bill with rent, parking and fees, with experts who "configure utility charges" for regulatory compliance; processes property utility bills into accounts payable with bills routed to it and audited (its page says "up to 25% of utility bills contain an error"); automates ENERGY STAR Portfolio Manager data entry for benchmarking; and, through a specialized firm (its page names AUTA), recovers overpaid sales tax on utility bills on a contingency basis, with refunds in some states going back up to ten years.
 - **Yardi Breeze** sells a utility billing add-on that monitors consumption, flags issues, detects invoice errors and recovers overages.
 - **Specialist billing companies** run resident utility billing for properties on every platform, and their output arrives in the property's ledger as charges.
 
@@ -62,7 +62,7 @@ States regulate resident utility billing in landlord-tenant statutes, in utility
 
 The common threads are what the data model needs: the method must be in the written lease; charges are capped at the provider's cost plus enumerated fees; allocation and the provider's bill must be explainable to the resident; fees have their own caps and exemptions for subsidized residents; equipment has standards; and utility charges often aren't rent. Other states and cities add rules on which utilities may be allocated at all, on billing companies' registration, and on when, if ever, a landlord may interrupt service, which Landlord-Tenant Law as Data covers. These belong in jurisdiction rules, effective-dated and cited ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), checked when the allocation method is configured and on every billing run.
 
-**Who's billing matters too.** Many properties hire a third party to bill and collect utilities. That company is collecting money owed to the landlord from consumers, which brings the question of whether it needs a collection agency license in states that license collectors broadly; Entrata's S-1 discloses a putative class action in Maryland alleging it lacked a license under the Maryland Collection Agency Licensing Act. As of October 2026, that question is being litigated rather than settled, so the platform keeps billing companies, their licenses by state, and the agreement that names them as the landlord's agent as data, and lets compliance decide which flows need what ([Collections After Move-Out](/books/property-tech/delinquency-and-eviction#collections-after-move-out) covers the same issue for rent).
+**Who's billing matters too.** Many properties hire a third party to bill and collect utilities. That company is collecting money owed to the landlord from consumers, which brings the question of whether it needs a collection agency license in states that license collectors broadly. That question is unsettled, so the platform keeps billing companies, their licenses by state, and the agreement that names them as the landlord's agent as data, and lets compliance decide which flows need what ([Collections After Move-Out](/books/property-tech/delinquency-and-eviction#collections-after-move-out) covers the same issue for rent).
 
 ## Utility Invoice Processing and Audit
 
@@ -76,7 +76,7 @@ The expense side starts with a property's utility accounts: electric for common 
 
 The flagship number this produces is **utility recovery**: the share of recoverable utility expense billed back to residents, by property and service, which Operating Metrics defines. A falling recovery rate is how missed move-ins, wrong allocation settings and vacant units billed to occupied ones show up.
 
-**Sales tax** on utilities is its own audit. Where a state taxes residential and commercial utility use differently, a property billed at the wrong rate overpays, so specialist firms recover overpayments on contingency and fix the rate going forward; Entrata's partner offering says some states allow refunds up to ten years back. The platform's job is to keep the tax lines from every bill, by account and service period, so a claim can be filed from data ([Sales Tax](/docs/payments/sales-tax#exemptions-are-documents) covers exemption documents).
+**Sales tax** on utilities is its own audit. Where a state taxes residential and commercial utility use differently, a property billed at the wrong rate overpays, so specialist firms recover overpayments on contingency and fix the rate going forward; Entrata's sales tax audit page says some states allow refunds up to ten years back. The platform's job is to keep the tax lines from every bill, by account and service period, so a claim can be filed from data ([Sales Tax](/docs/payments/sales-tax#exemptions-are-documents) covers exemption documents).
 
 ## Procurement
 
@@ -245,10 +245,6 @@ Decisions behind it:
 - [NYC Department of Buildings: Local Law 97](https://www.nyc.gov/site/buildings/codes/ll97-greenhouse-gas-emissions-reductions.page), covered buildings, compliance periods, annual reports due May 1
 - [Washington Department of Commerce: Clean Buildings](https://www.commerce.wa.gov/growing-the-economy/energy/buildings/), Tier 1 compliance dates, Tier 2 reporting, penalties
 - [ENERGY STAR: Benchmark your building](https://www.energystar.gov/buildings/benchmark), Portfolio Manager, the 1 to 100 score, nearly 25% of commercial space benchmarked
-
-**Filings**
-
-- [Entrata: Form S-1/A, Amendment No. 2](https://www.sec.gov/Archives/edgar/data/0002028464/000162828026059692/entrata-sx1a2.htm), the Maryland Collection Agency Licensing Act class action
 
 **In practice**
 

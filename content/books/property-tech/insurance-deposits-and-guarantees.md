@@ -36,13 +36,13 @@ The resident's choice matters for a second reason. A property that requires insu
 
 ## Verification and Lapse
 
-Verification is a queue fed by three sources: policies bought through the property's program (verified automatically), proofs residents upload (read, checked against the requirement, approved or rejected), and notices from carriers (cancellation, nonrenewal, non-payment, renewal). Entrata's and RealPage's verification products both describe the same work: review third-party policies, process notices, and automate messages to residents who fall out of compliance.
+Verification is a queue fed by three sources: policies bought through the property's program (verified automatically), proofs residents upload (read, checked against the requirement, approved or rejected), and notices from carriers (cancellation, nonrenewal, non-payment, renewal). Entrata's and RealPage's verification products both describe the same core work: review third-party policies and process carrier notices.
 
 The policy is a record, not a PDF: carrier, policy number, named insureds, liability limit, effective dates, interested party listed or not, the document, and the verification decision with who made it. Every lease member who must be covered is either on a policy or isn't. Then:
 
 - **Compliance is computed daily** per lease from requirements and policies, not stored as a flag.
 - **A carrier notice changes a policy's status** (pending cancellation with a date), and the resident is told before the gap opens.
-- **A lapse starts a clock.** The lease and the jurisdiction say what happens: a cure period, then landlord-placed coverage with its charge, or a violation notice. Both RealPage and Entrata sell gap coverage that switches on automatically.
+- **A lapse starts a clock.** The lease and the jurisdiction say what happens: a cure period, then landlord-placed coverage with its charge, or a violation notice. Both RealPage and Entrata sell gap coverage for the lapse.
 - **Move-out ends the requirement,** and any landlord-placed charge stops with it.
 
 Document reading is a good use of extraction models, with a person approving anything below a confidence threshold ([Scores, Bands and the Human Middle](/docs/architecture/risk-scoring#scores-bands-and-the-human-middle)), because a wrongly approved policy is discovered only when there's a claim.
@@ -268,6 +268,7 @@ Decisions behind it:
 
 - [RealPage: Insurance](https://www.realpage.com/insurance/), renters insurance, gap coverage, master policy, ledger-billed liability coverage, policy validation, agency subsidiaries, 4 million units, the 2013 NMHC requirement figure
 - [RealPage: Security deposit alternatives](https://www.realpage.com/resident-services/security-deposit-alternatives/), a one-time non-refundable surety bond and a non-insurance alternative
+- [Entrata: Renters Insurance](https://www.entrata.com/products/renters-insurance), renters insurance through a full-service agency
 - [Entrata: Master Policy](https://www.entrata.com/products/master-policy), standard and blanket strategies, force-placement, cost recovery where law allows
 - [Entrata: Insurance Verification](https://www.entrata.com/products/insurance-verification), third-party policy review, notice handling, gap coverage on lapse
 - [Entrata: Deposit Alternative](https://www.entrata.com/products/deposit-alternative), a monthly premium insurance policy in place of a deposit

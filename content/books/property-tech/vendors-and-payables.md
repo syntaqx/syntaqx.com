@@ -68,7 +68,7 @@ Whatever the capture method, the invoice becomes a **bill** and goes through the
 
 ## Paying Vendors
 
-Paying the approved bill is a payout, and the Payments volume covers the rails: [enrollment and method choice](/books/payments/vendor-payouts#enrollment-and-method-choice), [virtual cards and who pays for the rebate](/books/payments/vendor-payouts#virtual-cards-who-pays-for-the-rebate), [checks](/books/payments/vendor-payouts#checks-are-still-here) (including uncashed checks that become unclaimed property), [funding](/books/payments/vendor-payouts#funding-whose-money-and-when), and [the payout state machine](/books/payments/vendor-payouts#a-payout-is-a-state-machine). The platforms offer the same three methods: Entrata's Bill Pay and AvidXchange both pay by virtual card, ACH or check, and both describe rebates on electronic payments as a feature.
+Paying the approved bill is a payout, and the Payments volume covers the rails: [enrollment and method choice](/books/payments/vendor-payouts#enrollment-and-method-choice), [virtual cards and who pays for the rebate](/books/payments/vendor-payouts#virtual-cards-who-pays-for-the-rebate), [checks](/books/payments/vendor-payouts#checks-are-still-here) (including uncashed checks that become unclaimed property), [funding](/books/payments/vendor-payouts#funding-whose-money-and-when), and [the payout state machine](/books/payments/vendor-payouts#a-payout-is-a-state-machine). The platforms offer the same three methods: Entrata's Bill Pay and AvidXchange both pay by virtual card, ACH or check, and AvidXchange describes rebates on electronic payments as a feature.
 
 What property adds:
 
