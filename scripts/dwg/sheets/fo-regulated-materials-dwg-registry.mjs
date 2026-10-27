@@ -12,7 +12,7 @@ const D1 = 500; // ft
 
 export default function draw() {
   const W = 760;
-  const s = sheet({ prefix: "fo-rmr", width: W });
+  const s = sheet({ prefix: "fo-rmn", width: W });
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
