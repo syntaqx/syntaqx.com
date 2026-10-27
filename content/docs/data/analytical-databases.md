@@ -94,7 +94,7 @@ DuckDB is the analytical counterpart of SQLite: "there is no DBMS server softwar
 Where I use it:
 
 - **Analysts' laptops and notebooks,** querying an export or a slice of the lake without touching shared compute.
-- **Tests for data models,** running transformations against fixtures in CI in seconds ([Testing](/docs/engineering/testing)).
+- **Tests for data models,** running transformations against fixtures in CI in seconds ([Testing](/docs/quality/testing)).
 - **Small embedded analytics,** a per-tenant report computed inside a service from a Parquet file, or a SaaS product's in-app charts for customers whose data fits on one machine.
 - **Pipelines' glue,** converting, sampling and validating files between stages.
 

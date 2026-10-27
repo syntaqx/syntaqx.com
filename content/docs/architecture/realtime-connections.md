@@ -93,7 +93,7 @@ Connections are mostly idle, so the first limit is usually memory per connection
 - **Measure memory per idle session** and size nodes from it. Discord reported each VM handling up to 500,000 live sessions; Riot's load tests had a single edge machine handling "at least 10M concurrent connections." Figures like these depend heavily on the runtime (Discord's is Elixir, built for huge numbers of lightweight processes) and on what each session holds, so measure your own.
 - **Raise the operating system's limits** (file descriptors, ephemeral ports at the load balancer, kernel socket buffers) before the first load test, not during the launch.
 - **Account for the connect rate as well as the count.** Managed gateways often quota new connections per second: Amazon API Gateway's default is 500 new WebSocket connections per second per account per Region, which with its 2-hour connection cap is what bounds concurrent connections there.
-- **Load test the reconnect storm,** not only steady state: drop every connection on one node and watch what the rest of the tier, the routing layer and the services behind it do when they all come back ([Load Testing](/docs/operations/load-testing)).
+- **Load test the reconnect storm,** not only steady state: drop every connection on one node and watch what the rest of the tier, the routing layer and the services behind it do when they all come back ([Load Testing](/docs/quality/load-testing)).
 
 ## Load Shedding
 

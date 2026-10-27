@@ -29,7 +29,7 @@ The cost of an upgrade grows much faster than the distance you're behind. One ma
 
 - **Automate it.** [Renovate](https://docs.renovatebot.com/) or [Dependabot](https://docs.github.com/en/code-security/dependabot) opens upgrade PRs weekly, merged the same week.
 - **Group what moves together** (a framework and its plugins, React and its types), so each PR is one coherent change.
-- **Auto-merge green patch and minor updates.** A human skimming a lockfile diff catches almost nothing the [test suite](/docs/engineering/testing) doesn't, and if the tests can't catch a bad patch release, that's a test gap to fix. Save reviewer attention for majors.
+- **Auto-merge green patch and minor updates.** A human skimming a lockfile diff catches almost nothing the [test suite](/docs/quality/testing) doesn't, and if the tests can't catch a bad patch release, that's a test gap to fix. Save reviewer attention for majors.
 - **Majors one at a time,** with the changelog read, published codemods run, and the upgrade in its own PR.
 - **Security updates immediately,** outside the schedule. See [Vulnerability Management](/docs/security/vulnerability-management).
 - **A minimum release age** of a few days before adopting a new version. Compromised releases are usually caught and pulled within days, so letting one sit means someone else finds the malware first.

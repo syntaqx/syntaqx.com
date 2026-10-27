@@ -161,7 +161,7 @@ For the fleet specifically, a load test should cover:
 - **Placement edge cases:** one location out of capacity or down, so fallback to the next location is exercised before players need it.
 - **Long runs.** Some failures (connection pools, queue backlogs, log volume) appear only after hours.
 
-General load-testing practice is in [Load Testing](/docs/operations/load-testing); capacity targets and alerts are in [SLOs](/docs/operations/slos).
+General load-testing practice is in [Load Testing](/docs/quality/load-testing); capacity targets and alerts are in [SLOs](/docs/operations/slos).
 
 ## Operating the Fleet
 

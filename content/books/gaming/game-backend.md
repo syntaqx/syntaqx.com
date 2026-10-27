@@ -159,7 +159,7 @@ What I take from both:
 - **Mock the game server, not the platform.** The game server's cost is measured separately in games per core; the platform test needs fake servers that start, run for a match length and report results.
 - **Grow the target in steps, and finish with margin.** Doubling, as VALORANT did, finds the next bottleneck at each step; the test is done when it reaches the target before launch, not after.
 
-The general method is in [Load Testing](/docs/operations/load-testing).
+The general method is in [Load Testing](/docs/quality/load-testing).
 
 ## How to Build It
 

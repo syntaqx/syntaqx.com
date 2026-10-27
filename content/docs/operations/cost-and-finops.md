@@ -32,7 +32,7 @@ A handful of levers account for most savings. Work on them in order of size, not
 
 | Lever | Why it's big | Watch out for |
 | ----- | ------------ | ------------- |
-| **Rightsizing** | Most resources are provisioned for a peak that never comes | Do it from measured utilization, and keep headroom per [Load & Performance Testing](/docs/operations/load-testing) |
+| **Rightsizing** | Most resources are provisioned for a peak that never comes | Do it from measured utilization, and keep headroom per [Load & Performance Testing](/docs/quality/load-testing) |
 | **Commitments vs on-demand** | Committed-use discounts are large; AWS advertises [Savings Plans](https://aws.amazon.com/savingsplans/) at up to 72% below on-demand | Commit only to the steady baseline you're confident in; commitments are the hardest decision to undo |
 | **Data transfer and egress** | Often invisible in design: cross-region or cross-zone chatter and internet egress are billed per GB | Draw where data flows in the design doc, not after the bill |
 | **Storage lifecycle** | Data accumulates forever by default: logs, backups, old artifacts | Retention rules per [Data Retention & Deletion](/docs/architecture/data-retention); move cold data to cheaper tiers |

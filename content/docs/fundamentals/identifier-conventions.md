@@ -64,7 +64,7 @@ uuid.uuid5(uuid.NAMESPACE_URL, "https://example.com/users/42")
 
 - **Idempotent imports.** Derive each record's ID from the source system's key, and re-running an import updates rows instead of duplicating them.
 - **Shared identity without a mapping table.** Two systems that agree on a namespace compute the same ID for the same entity independently.
-- **Stable test fixtures.** `uuid5(ns, "user-admin")` is the same on every run, so fixtures don't hard-code UUIDs ([Testing Strategy](/docs/engineering/testing)).
+- **Stable test fixtures.** `uuid5(ns, "user-admin")` is the same on every run, so fixtures don't hard-code UUIDs ([Testing Strategy](/docs/quality/testing)).
 
 Don't use v5 where a user can guess the input. Anyone who knows the namespace and the name can compute the ID, so it's no access control, and it can leak the input it was derived from.
 

@@ -64,7 +64,7 @@ The transformations between raw and marts are the business logic of analytics: w
 - **Models are `SELECT` statements** that build on other models, so the dependency graph is explicit and the tool can build them in order.
 - **Every model is tested.** At minimum, primary keys are `unique` and `not_null`, foreign keys satisfy `relationships`, and status columns hold `accepted_values`. A test is a query that returns failing rows; zero rows passes.
 - **Business rules get their own tests.** Revenue is never negative; every order in the mart has a customer; daily totals reconcile with the payments ledger within a tolerance. These catch what schema tests can't.
-- **CI builds changed models against a sample** and runs their tests before merge, the same [testing](/docs/engineering/testing) discipline as application code.
+- **CI builds changed models against a sample** and runs their tests before merge, the same [testing](/docs/quality/testing) discipline as application code.
 - **Incremental models for large tables,** processing only new data on each run, with a full rebuild available and exercised regularly so it still works when you need it.
 
 A dashboard querying a raw table with its own joins and filters will drift from every other definition of the same thing.

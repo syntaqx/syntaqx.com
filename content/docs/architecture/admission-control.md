@@ -26,7 +26,7 @@ A rate limit is per client and fair to well-behaved ones; it does nothing when a
 
 ## Capacity per Scope
 
-Admission needs a number to admit against, set from load tests rather than discovered by a database falling over ([Load Testing](/docs/operations/load-testing#capacity-planning)).
+Admission needs a number to admit against, set from load tests rather than discovered by a database falling over ([Load Testing](/docs/quality/load-testing#capacity-planning)).
 
 - **Two limits, not one.** A maximum of concurrent active sessions and a maximum rate of new admissions. Cloudflare's Waiting Room is configured with exactly these two: total active users ("how many simultaneous users you want to allow") and new users per minute, and "a sharp spike in either of these values might result in queuing." The rate matters as much as the total, because new sessions are expensive (login, loading state, warming caches) and a burst of them hurts more than the same number of settled users.
 - **Per scope.** A game has a capacity per shard or data center, a ticketing site per event, a store per drop. A global number lets one hot scope starve the rest.

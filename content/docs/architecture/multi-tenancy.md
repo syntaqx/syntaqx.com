@@ -102,7 +102,7 @@ Shared infrastructure means one tenant's traffic spike can become everyone's out
 
 ## Testing Isolation
 
-Isolation is a feature, so it has [tests](/docs/engineering/testing). Every integration test runs with at least two tenants and asserts that tenant A can't read, list, update or delete tenant B's data, and a test fails if any tenant-owned table is missing an RLS policy, so a new table can't ship unprotected.
+Isolation is a feature, so it has [tests](/docs/quality/testing). Every integration test runs with at least two tenants and asserts that tenant A can't read, list, update or delete tenant B's data, and a test fails if any tenant-owned table is missing an RLS policy, so a new table can't ship unprotected.
 
 ## References
 

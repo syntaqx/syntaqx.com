@@ -67,7 +67,7 @@ Forms are where most accessibility failures cost someone a task: unlabeled input
 
 Automated tools are necessary and nowhere near sufficient. They can tell that an image has `alt` text, not whether it describes the image; that a button has a name, not whether the name makes sense. [axe-core](https://github.com/dequelabs/axe-core), the engine behind most of them, reports finding about 57% of WCAG issues on average, so a clean report means the easy half is done. The rest takes a person:
 
-1. **Automated checks in CI** with axe on key pages, failing the build on new violations.
+1. **Automated checks in CI** with axe on key pages, failing the build on new violations ([wiring it into the suite](/docs/quality/cross-platform-testing#automated-accessibility-checks)).
 2. **A keyboard pass** on every new flow: unplug the mouse and finish the task.
 3. **A screen reader pass** on new components: VoiceOver on macOS and iOS, NVDA on Windows.
 4. **Zoom to 200%** and check at 320px width: content reflows, nothing overlaps or gets cut off.

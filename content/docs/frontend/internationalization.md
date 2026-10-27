@@ -74,7 +74,7 @@ Design for it: let containers grow, avoid fixed widths on anything holding text,
 
 ## Pseudo-Localization in CI
 
-Most i18n bugs can be found before anyone translates anything. [Pseudo-localization](https://learn.microsoft.com/en-us/globalization/methodology/pseudolocalization) generates a fake locale from English: accented characters ("Ŝåṽé"), about 40% padding to simulate expansion, and brackets around each string. Unaccented text was never externalized; a missing closing bracket means truncation; a bracket pair mid-sentence reveals concatenation. The `en-XA` (accents) and `en-XB` (bidirectional) pseudo-locales exist for exactly this. Run the UI in one in CI with screenshot or end-to-end tests, and these bugs fail the build instead of a release.
+Most i18n bugs can be found before anyone translates anything. [Pseudo-localization](https://learn.microsoft.com/en-us/globalization/methodology/pseudolocalization) generates a fake locale from English: accented characters ("Ŝåṽé"), about 40% padding to simulate expansion, and brackets around each string. Unaccented text was never externalized; a missing closing bracket means truncation; a bracket pair mid-sentence reveals concatenation. The `en-XA` (accents) and `en-XB` (bidirectional) pseudo-locales exist for exactly this. Run the UI in one in CI with screenshot or end-to-end tests, and these bugs fail the build instead of a release ([Localization Checks](/docs/quality/cross-platform-testing#localization-checks)).
 
 ## What Not to Translate
 

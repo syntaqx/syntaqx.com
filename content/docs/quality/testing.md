@@ -1,10 +1,10 @@
 +++
 title = "Testing Strategy"
 description = "The test pyramid and why it has that shape, what each test type covers, real databases over mocks, deterministic fixtures, and zero tolerance for flaky tests."
-category = "Engineering Practice"
-order = 1004
+category = "Quality"
+order = 1052
 tags = ["testing", "quality", "process", "ci"]
-aliases = ["testing"]
+aliases = ["testing", "engineering/testing"]
 +++
 
 Tests exist so you can change code with confidence, and everything downstream, from [code review](/docs/engineering/commits-and-reviews) to deploying every merge, leans on them. A suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
@@ -34,7 +34,7 @@ The rule that falls out: **test each behavior at the lowest level that can catch
 | Contract | The agreement between a service and its consumers | Milliseconds | Every boundary |
 | End to end | Critical journeys across the deployed system, through the UI or public API | Seconds to minutes | A handful |
 
-The names vary by team. *Functional*, *acceptance* and *behavior* tests usually mean the top of the pyramid: a feature checked from the user's side, as a black box. Behavior-driven development (given, when, then) is a way of writing tests, not a layer; it works at any level. Load and security testing sit outside the pyramid altogether, because they answer different questions: see [Load Testing](/docs/operations/load-testing) and [Vulnerability Management](/docs/security/vulnerability-management).
+The names vary by team. *Functional*, *acceptance* and *behavior* tests usually mean the top of the pyramid: a feature checked from the user's side, as a black box. Behavior-driven development (given, when, then) is a way of writing tests, not a layer; it works at any level. Load and security testing sit outside the pyramid altogether, because they answer different questions: see [Load Testing](/docs/quality/load-testing) and [Vulnerability Management](/docs/security/vulnerability-management).
 
 ## Where the Pyramid Goes Wrong
 
@@ -87,7 +87,7 @@ A flaky test is a failing test. The damage isn't the one false alarm; it's what 
 
 ## In CI
 
-- The full suite runs on every pull request and blocks the merge, in under about 10 minutes. Parallelize before you start skipping. See [CI & Continuous Deployment](/docs/delivery/ci-pipelines).
+- The full suite runs on every pull request and blocks the merge, in under about 10 minutes. Parallelize before you start skipping. See [CI & Continuous Deployment](/docs/delivery/ci-pipelines) and [Keeping It Fast](/docs/quality/automated-testing#keeping-it-fast).
 - Coverage is a signal for finding untested code, not a target to hit. Make it a target and people write tests that execute lines without asserting anything; 100% coverage of the wrong assertions proves nothing.
 
 ## References

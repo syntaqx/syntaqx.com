@@ -154,7 +154,7 @@ These are append-only records, and they're often [events](/docs/architecture/eve
 
 Rules in data are still logic, and they break like logic. Test at three levels:
 
-- **The mechanism,** with ordinary unit tests in code: strictest-wins really intersects windows, stages really can't read their own writes, final checks really block ([Testing](/docs/engineering/testing)).
+- **The mechanism,** with ordinary unit tests in code: strictest-wins really intersects windows, stages really can't read their own writes, final checks really block ([Testing](/docs/quality/testing)).
 - **The rule set,** with table-driven cases owned by the policy owner: "a marketing text to a Florida number at 8:15 p.m. is deferred", "a member in Brazil sees the promotion price on November 1 and not October 31". Run them in CI against the rule rows themselves, and require new cases with every rule change. Boundaries are where rules fail: the day before and after each end of `valid_during`, the minute before and after a window, the 3rd and 4th attempt.
 - **The change,** by evaluating a proposed rule version against recent real decisions before it takes effect and reviewing the diff: how many prices move, how many messages that would have sent now defer. A rule change that unexpectedly affects every customer should be visible in review, not in support tickets.
 

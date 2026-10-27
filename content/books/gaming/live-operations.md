@@ -144,7 +144,7 @@ Riot's 2020 postmortem of the Clash tournament launch is the public example, and
 
 My rule: every dated thing live ops publishes (an event start, a season reset, a tournament round, a store rotation) has a declared expected peak, reviewed against measured capacity before approval, and a stagger by region or tier when the peak doesn't fit. The other public outages in Launch Day (Roblox's shared Consul dependency, Final Fantasy XIV's login cap, Pokémon GO's traffic at 50 times the target) point to the same rules for running a live game:
 
-- **Plan for the synchronized peak,** not the average: event starts, patch days and tournament starts are scheduled, so their load is predictable ([Load & Performance Testing](/docs/operations/load-testing#capacity-planning)).
+- **Plan for the synchronized peak,** not the average: event starts, patch days and tournament starts are scheduled, so their load is predictable ([Load & Performance Testing](/docs/quality/load-testing#capacity-planning)).
 - **Admit players at a controlled rate.** A login queue with an honest position and estimate is a feature; a stampede that knocks over authentication is an outage ([Login Queues](/books/gaming/game-backend#login-queues)).
 - **Keep monitoring off the critical path** of what it monitors.
 - **Mitigate with the fast paths first.** The kill switch, the config change and the queue limit exist so the first response to an incident takes seconds ([Mitigate First, Diagnose Later](/docs/operations/incident-response#mitigate-first-diagnose-later)).

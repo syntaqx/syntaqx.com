@@ -1,16 +1,17 @@
 +++
 title = "Load & Performance Testing"
 description = "Performance budgets tied to SLOs, the test types and when to run each, realistic traffic, capacity headroom, and the measurement trap that hides slow responses."
-category = "Operations"
-order = 1207
+category = "Quality"
+order = 1057
 tags = ["operations", "performance", "load-testing", "reliability"]
+aliases = ["operations/load-testing"]
 +++
 
 "It's fast on my machine" is a measurement of one user. Load testing is how you learn what happens with ten thousand, before they arrive on launch day and teach you in production.
 
 ## Start From a Budget
 
-A load test without a target just produces graphs. Set the target first, from the [SLOs](/docs/operations/slos): latency at percentiles ("p95 under 300ms and p99 under 1s at 500 requests per second"), an error rate under load ("fewer than 0.1% at peak"), and a throughput target with headroom, expected peak times a safety factor (2x is a reasonable default), because launches and incidents both arrive as spikes. The test passes or fails against those numbers, in CI where possible. It sits outside the [test pyramid](/docs/engineering/testing): it answers a different question.
+A load test without a target just produces graphs. Set the target first, from the [SLOs](/docs/operations/slos): latency at percentiles ("p95 under 300ms and p99 under 1s at 500 requests per second"), an error rate under load ("fewer than 0.1% at peak"), and a throughput target with headroom, expected peak times a safety factor (2x is a reasonable default), because launches and incidents both arrive as spikes. The test passes or fails against those numbers, in CI where possible. It sits outside the [test pyramid](/docs/quality/testing): it answers a different question.
 
 ## Test Types
 
@@ -32,7 +33,7 @@ Run smoke tests on every change. Run average-load before every launch and after 
 A test that hammers one endpoint with one payload measures your cache.
 
 - **Model real traffic:** the mix of endpoints, read/write ratio and payload sizes from production [metrics](/docs/operations/observability).
-- **Realistic data volumes.** Queries instant on 1,000 rows fall over on 100 million. Seed synthetic data at production scale, never a copy ([Environments & Configuration](/docs/operations/environments)).
+- **Realistic data volumes.** Queries instant on 1,000 rows fall over on 100 million. Seed synthetic data at production scale, never a copy ([Test Data & Environments](/docs/quality/test-data#synthetic-data-not-production-copies)).
 - **Open load models.** Real users don't wait for your slow response before the next arrives. Generate load at an arrival rate, not a fixed number of looping users, or you undercount exactly the slow periods you're looking for.
 - **Somewhere production-like:** same instance sizes, database tier and limits. Results from a smaller environment don't scale linearly.
 

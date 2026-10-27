@@ -158,7 +158,7 @@ An agent with a general-purpose "edit account" screen is a support team waiting 
 
 Some tickets are bugs, and the path from support to engineering decides how fast they're fixed and whether the customer hears back.
 
-- **Tiers with criteria.** Frontline support answers and acts; a specialist tier handles hard cases and reproduces bugs; engineering gets a ticket only with a reproduction or a clear trail (account, time, request ID, steps, expected and actual). Written criteria for each hop, so escalation isn't a judgment call made under pressure.
+- **Tiers with criteria.** Frontline support answers and acts; a specialist tier handles hard cases and reproduces bugs; engineering gets a ticket only with a reproduction or a clear trail ([what a good bug report contains](/docs/quality/defects#the-bug-report)) (account, time, request ID, steps, expected and actual). Written criteria for each hop, so escalation isn't a judgment call made under pressure.
 - **One engineering ticket, many customer tickets.** The bug lives in the engineering tracker; every customer ticket it affects links to it and moves to `waiting_on_third_party`. When the fix ships, every linked customer gets an update, from a macro, the same day.
 - **A severity path to incidents.** When tickets reveal something widespread (many customers, money moving wrongly, data exposed), support declares or joins an incident instead of filing a ticket ([Declare Early](/docs/operations/incident-response#declare-early)), and the incident's communications lead owns customer updates.
 - **An agreed response clock.** Engineering commits to triage escalations within a stated time per priority, and support reports on it. Escalations that wait a week teach support to stop escalating.

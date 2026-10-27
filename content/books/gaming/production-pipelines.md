@@ -111,7 +111,7 @@ Games add test types web services rarely need:
 - **Soak tests** that run a client or server for hours to find leaks and fragmentation.
 - **Device farms** for the spread of phones and PC hardware nobody can cover by hand.
 
-Flaky tests are worse in games than elsewhere, because timing, frame rate and GPU drivers vary. Quarantine a flaky test immediately and fix it, or the farm teaches everyone to ignore red ([Testing Strategy](/docs/engineering/testing)).
+Flaky tests are worse in games than elsewhere, because timing, frame rate and GPU drivers vary. Quarantine a flaky test immediately and fix it, or the farm teaches everyone to ignore red ([Testing Strategy](/docs/quality/testing)).
 
 ## Crash Reporting and Symbolication
 

@@ -20,7 +20,7 @@ Parallelism costs setup: every job installs dependencies on its own, so splittin
 
 ## Trustworthy
 
-- **Deterministic.** Same commit, same result: no calls to services you don't control, no clock or ordering dependencies. [Flaky tests are bugs](/docs/engineering/testing#flaky-tests), quarantined and fixed, never retried to hide them.
+- **Deterministic.** Same commit, same result: no calls to services you don't control, no clock or ordering dependencies. [Flaky tests are bugs](/docs/quality/testing#flaky-tests), quarantined and fixed, never retried to hide them.
 - **Real services, not mocks.** If production talks to Postgres or Redis, CI runs them as service containers, the same images developers run from `compose.yml`.
 - **Required checks.** Branch protection lists the checks that must pass. A check that isn't required eventually gets ignored.
 
@@ -48,7 +48,7 @@ Deploying puts code in production; releasing puts a feature in front of users. "
 
 Continuous deployment is the result of good practice, not a substitute for it. Before turning it on you need: CI you trust; small pull requests on short-lived branches ([Commits, PRs & Code Review](/docs/engineering/commits-and-reviews)); a preview deployment of every change; [observability](/docs/operations/observability) that alerts on its own; and a one-step rollback that's been practiced.
 
-Some releases genuinely need a human gate: app store submissions ([Mobile Releases](/docs/delivery/mobile-releases)), software on customers' machines, regulated changes needing a recorded sign-off. You can't take those back quickly, or someone outside the team must approve. Use continuous delivery there, with the gate as thin as the rules allow. For a web service you run yourself, a manual gate mostly adds a person who can't tell a safe change from an unsafe one any better than the tests can.
+Some releases genuinely need a human gate: app store submissions ([Mobile Releases](/docs/delivery/mobile-releases)), software on customers' machines, regulated changes needing a recorded sign-off. You can't take those back quickly, or someone outside the team must approve. Use continuous delivery there, with the gate as thin as the rules allow. For a web service you run yourself, a manual gate mostly adds a person who can't tell a safe change from an unsafe one any better than the tests can. [Release Readiness](/docs/quality/release-readiness) covers what those gates check.
 
 ## References
 

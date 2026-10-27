@@ -45,7 +45,7 @@ A popular key expires, and a thousand requests miss at once and hit the source t
 
 The worse version is the whole cache being empty: a new cluster, a flush, a failover. A system that has quietly come to depend on a 95% hit rate can't serve normal traffic from the source alone, and falls over exactly when it's recovering. Amazon's Builders' Library calls this a cache becoming a critical dependency, and recommends treating it as one ([Caching challenges and strategies](https://builder.aws.com/content/3K9TeXp6strMiJ4vhakpRD7BQWO/caching-challenges-and-strategies)):
 
-- **Load test with the cache empty,** not just warm ([Load & Performance Testing](/docs/operations/load-testing)).
+- **Load test with the cache empty,** not just warm ([Load & Performance Testing](/docs/quality/load-testing)).
 - **Keep serving stale data when the source is down** (a soft TTL that triggers a refresh, and a hard TTL after which the entry is finally dropped).
 - **Warm caches gradually** after a deploy, or roll out new instances slowly.
 

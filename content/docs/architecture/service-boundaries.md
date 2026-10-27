@@ -63,7 +63,7 @@ Systems end up mirroring the communication structure of the organization that bu
 
 ## Contracts
 
-Every boundary has an explicit contract, versioned like a public API whether it's internal or not; internal consumers break just as hard and are usually less able to pin an old version. HTTP APIs follow [Versioning & Deprecation](/docs/api-design/versioning), events get schemas with the same compatibility rules ([Events & Async Messaging](/docs/architecture/events)), and contract tests run in CI on both sides ([Testing Strategy](/docs/engineering/testing)).
+Every boundary has an explicit contract, versioned like a public API whether it's internal or not; internal consumers break just as hard and are usually less able to pin an old version. HTTP APIs follow [Versioning & Deprecation](/docs/api-design/versioning), events get schemas with the same compatibility rules ([Events & Async Messaging](/docs/architecture/events)), and contract tests run in CI on both sides ([Testing Strategy](/docs/quality/testing)).
 
 Splitting or merging a service is a decision you'll live with for years, so it starts with a [design doc](/docs/engineering/design-docs).
 

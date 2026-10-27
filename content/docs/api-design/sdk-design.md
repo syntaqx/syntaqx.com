@@ -46,7 +46,7 @@ An SDK has two versions: its own and the API's. It follows [SemVer](https://semv
 
 ## Testing
 
-Test the hand-written layer against behavior, not mocks of your own code: a real test environment or recorded responses (vcrpy records real HTTP interactions once and replays them) for each scenario that matters. A retry after a timeout reuses the key, a `429` honors `Retry-After`, pagination reaches the end, every error type maps. Contract tests from the OpenAPI document run in CI, so a spec change that breaks generation fails before release ([Testing Strategy](/docs/engineering/testing)).
+Test the hand-written layer against behavior, not mocks of your own code: a real test environment or recorded responses (vcrpy records real HTTP interactions once and replays them) for each scenario that matters. A retry after a timeout reuses the key, a `429` honors `Retry-After`, pagination reaches the end, every error type maps. Contract tests from the OpenAPI document run in CI, so a spec change that breaks generation fails before release ([Testing Strategy](/docs/quality/testing)).
 
 ## Deprecation
 
