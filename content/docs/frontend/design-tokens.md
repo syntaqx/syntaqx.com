@@ -67,12 +67,6 @@ Contrast is a property of a pair of tokens in a theme, not of a component. Check
 
 Once tokens exist in a design tool and in code, they drift unless one is generated from the other, so shared tokens live in one source and are generated into each platform. The W3C Design Tokens Community Group's [Design Tokens Format Module](https://www.designtokens.org/TR/2025.10/format/) is the common JSON format for that, stable as of its 2025.10 version, and supported by tools like Style Dictionary.
 
-## This Site
-
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) defines its tokens in `app/globals.css`: dark values on `:root`, light values under `prefers-color-scheme: light`, and `.dark` and `.light` classes from the theme toggle that override the OS preference. Tailwind's theme maps its color utilities to the same variables, so `border-border` and `var(--border)` are one decision.
-
-It also shows why the semantic layer matters. Table header rules used `--foreground`, the text color, so they rendered far heavier than the row rules in both themes. The fix was one line: `--border-hover`, the token for a border one step stronger than `--border`, which is right in both themes without any theme-specific code.
-
 ## References
 
 **Specifications**

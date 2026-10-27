@@ -79,10 +79,6 @@ Staleness is a product decision. A minute-old product description is invisible; 
 
 Use the outermost layer that fits. A response a CDN can cache never reaches your application at all.
 
-## This Site
-
-syntaqx.com doesn't cache application data, because nothing it computes is expensive enough to need it. It runs Upstash Redis for shared state instead: [rate-limit counters](/docs/requests/rate-limiting) and [idempotency keys](/docs/payments/idempotency), both of which must be correct rather than merely fast. Its caching happens at the HTTP layer, with ETags and Cache-Control on API responses.
-
 ## References
 
 **Reference**

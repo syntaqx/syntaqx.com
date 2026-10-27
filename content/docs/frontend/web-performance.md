@@ -72,10 +72,6 @@ Static assets get content-hashed filenames and `Cache-Control: public, max-age=3
 
 Every tag, widget and pixel runs on your users' devices and counts against your Core Web Vitals. Each needs an owner and a reason, loads after the content, and goes when nobody can say what it's for.
 
-## This Site
-
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) is a Next.js site on Vercel, with pages rendered on the server or at build time. Fonts are self-hosted through `next/font`, images go through `next/image`, and [Vercel Speed Insights](https://vercel.com/docs/speed-insights) collects field data from real visitors at the 75th percentile (on the free plan, a Real Experience Score plus FCP and LCP; per-metric INP and CLS need the paid tier), alongside [Vercel Web Analytics](https://vercel.com/docs/analytics) for traffic.
-
 ## References
 
 **Reference**

@@ -55,10 +55,6 @@ Know your dependencies' DR too. Your RTO can't beat your payment processor's, id
 
 Each scenario (region loss, database corruption, compromised credentials, a dependency outage) gets a [runbook](/docs/operations/on-call) saying who decides, the exact steps, and how to verify recovery. Game days rehearse them for real: fail over a region, restore the database, rotate every secret, on a scheduled day with everyone watching. The gaps you find on a game day are gaps you didn't find in an incident, and every real incident's [postmortem](/docs/operations/incident-response) updates the plan.
 
-## This Site
-
-This site holds no user data, and everything it serves is rebuilt from the repository on every deploy, so its recovery plan is redeploying from Git. The only datastore, Upstash Redis, holds rate-limit counters that expire within an hour; losing it costs nothing, and the API falls back to in-memory limits while it's gone. That's the cheapest DR there is: make most of the system disposable.
-
 ## References
 
 **Reference**

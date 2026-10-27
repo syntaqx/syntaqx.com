@@ -52,10 +52,6 @@ Every [design doc](/docs/engineering/design-docs) that adds infrastructure estim
 
 The [FinOps Foundation framework](https://www.finops.org/framework/phases/) describes the practice as three phases that repeat: **Inform** (make spend visible and attributable), **Optimize** (find where it can be more efficient) and **Operate** (make the changes and the habits stick). It's a useful check: dashboards nobody acts on are Inform without Operate, and one-off cleanups are Optimize without the habits that stop the waste coming back.
 
-## This Site
-
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) is deliberately built to run on free tiers, and treats that as a design constraint. It allows a datastore only if it's managed, on a free tier and never on the critical path. The rate limiter's Upstash Redis free tier includes 500K commands a month (per [Upstash's pricing](https://upstash.com/pricing/redis)), so the limiter uses one script per request and caches blocked clients in memory to stay well inside it, and it falls back to in-memory counting if Redis stops answering. The cliff is designed in: crossing it makes rate limits per-instance for a while, not an outage.
-
 ## References
 
 **Reference**
@@ -64,7 +60,6 @@ The [FinOps Foundation framework](https://www.finops.org/framework/phases/) desc
 - [AWS Cost Anomaly Detection](https://aws.amazon.com/aws-cost-management/aws-cost-anomaly-detection/), alerting on unusual spend
 - [AWS Savings Plans](https://aws.amazon.com/savingsplans/), committed-use discounts of up to 72% against on-demand
 - [Vercel: Hobby plan](https://vercel.com/docs/plans/hobby), included usage, what happens when it's exceeded, and the non-commercial restriction
-- [Upstash: Redis pricing](https://upstash.com/pricing/redis), the free tier's monthly command allowance
 
 **In practice**
 

@@ -81,10 +81,6 @@ Ownership changes are explicit handoffs, never drift:
 
 Code no team will accept is a candidate for deletion, not for a "shared" label. See [Tech Debt](/docs/engineering/tech-debt).
 
-## This Site
-
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) has one owner, so a `CODEOWNERS` file would list one name; required CI checks enforce review instead. Its README covers what the site is and who owns it, `npm run dev` with nothing else required, `docker compose up -d` for the optional local Redis, the test commands, the ADR index, and that every merge to `main` deploys and how to roll back.
-
 ## References
 
 **Reference**

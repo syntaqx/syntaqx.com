@@ -104,10 +104,6 @@ Keep label cardinality bounded: route templates (`/payments/{id}`), never raw pa
 
 Alert on symptoms, not causes: customers seeing errors or slow responses, measured against an [SLO](/docs/operations/slos) burn rate. A CPU spike nobody notices isn't a page. Every alert has an owner and a [runbook](/docs/operations/on-call), and every page is actionable; paging people for things they can't fix trains them to ignore the one page that matters.
 
-## This API
-
-The syntaqx API generates a UUID v7 `Request-Id` for every response, including errors and rate-limited requests, and sends the same value as `X-Request-ID` for clients that already read the older name. Errors are reported to Sentry. It's a single service, so there's no trace propagation to do yet.
-
 ## References
 
 **Specifications**

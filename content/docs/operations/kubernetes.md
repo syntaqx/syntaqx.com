@@ -121,10 +121,6 @@ Beyond your application's own [telemetry](/docs/operations/observability), dashb
 
 The [cost](/docs/operations/cost-and-finops) waste is almost always the gap between requests and usage: pods reserving twice what they use means half your nodes are paid for and idle. Compare requests to usage regularly, right-size, let the cluster autoscaler remove the freed nodes, and label every workload with its owning team.
 
-## This Site
-
-This site doesn't run on Kubernetes. It's a handful of stateless functions and static pages on Vercel, which is exactly the case where a cluster costs more than it returns. The practices that carry over are the platform-independent ones: immutable deploys, health that reflects real readiness, and configuration outside the code.
-
 ## References
 
 **Reference**

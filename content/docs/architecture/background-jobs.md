@@ -80,10 +80,6 @@ Recurring jobs ("every night at 02:00") have their own failure modes:
 
 Workers restart on every deploy. Asked to stop, a worker stops claiming new jobs, lets the current one finish within a deadline, and exits. Platforms enforce that deadline: Kubernetes sends `SIGTERM`, waits a grace period (30 seconds by default), then sends `SIGKILL` ([Pod lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)). Keep jobs shorter than it or make them resumable from checkpoints. Because jobs are idempotent and stuck jobs are reclaimed, a kill is a delay, not data loss.
 
-## This Site
-
-syntaqx.com has no job queue, because nothing it does needs to happen after a request. Its one scheduled job runs in CI: a weekly GitHub Actions workflow checks every link the playbook cites, with a concurrency group so two runs never overlap, and one issue it updates or closes rather than opening a new one each week, so running it twice is harmless.
-
 ## References
 
 **Reference**

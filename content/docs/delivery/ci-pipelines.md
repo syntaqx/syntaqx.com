@@ -50,12 +50,6 @@ Continuous deployment is the result of good practice, not a substitute for it. B
 
 Some releases genuinely need a human gate: app store submissions ([Mobile Releases](/docs/delivery/mobile-releases)), software on customers' machines, regulated changes needing a recorded sign-off. You can't take those back quickly, or someone outside the team must approve. Use continuous delivery there, with the gate as thin as the rules allow. For a web service you run yourself, a manual gate mostly adds a person who can't tell a safe change from an unsafe one any better than the tests can.
 
-## This Site
-
-[syntaqx.com's pipeline](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/ci.yml) runs lint, typecheck and test as parallel jobs. A composite setup action restores `node_modules` from a cache keyed on `.nvmrc` and the lockfile; the test job starts the same Redis containers as `compose.yml`; every action is pinned to a SHA. The numbers make the setup-cost point: the old serial job took about 57 seconds, 27 of them installing dependencies and 2 running tests. Parallel jobs alone would have paid that install three times; with the cache warm, the pipeline finishes in about 36. A [weekly job](https://github.com/syntaqx/syntaqx.com/blob/main/.github/workflows/doc-links.yml) checks every source the playbook cites and opens an issue for any that died.
-
-Every pull request gets a Vercel preview deployment. When CI is green it merges, and `main` deploys to production in about a minute, with no release step. Rollback is Vercel's instant rollback, or reverting the commit.
-
 ## References
 
 **Reference**

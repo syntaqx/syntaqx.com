@@ -63,13 +63,6 @@ Some rules shouldn't depend on a reviewer noticing: storage buckets aren't publi
 
 Data isn't infrastructure. The state backend and the CI identity that runs everything have to exist first, so they're bootstrapped once, carefully, and documented. Secrets' values stay out, and third-party settings without a provider stay manual. The honest goal isn't "everything in code"; it's that everything is either in code or explicitly listed as not, so nobody discovers a hand-made dependency during an outage.
 
-## This Site
-
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) is small enough that it doesn't need Terraform, and is honest about which parts are code and which aren't:
-
-- **In code:** the build and headers (`next.config.ts`, including the [Content-Security-Policy](/docs/security/security-headers) and redirects), CI (`.github/workflows`), dependency automation (`.github/dependabot.yml`) and local services (`compose.yml`).
-- **Not in code:** the Vercel project's environment variables (the Upstash credentials arrive through the Vercel Marketplace integration), domains, and the GitHub branch protection rules, all set in dashboards. The environment variables are at least documented, in the README and `.env.example`; the domains and branch protection live only in their dashboards, which is the gap a larger system would close with code.
-
 ## References
 
 **Reference**

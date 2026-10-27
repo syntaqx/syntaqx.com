@@ -90,10 +90,6 @@ Don't use v5 where a user can guess the input. Anyone who knows the namespace an
 - **Public IDs never change.** If an internal key has to change, the public one doesn't.
 - **Column names describe roles, not types:** `id`, `user_id`, `stripe_charge_xid` for external IDs. See [Database Naming Conventions](/docs/database/naming-conventions).
 
-## This Site
-
-The [UUID/ULID Generator](/tools/uuid) generates and inspects v7, v4, v1 and ULIDs. The API's [`/uuid`](/docs/api) endpoint returns v7 by default and v4 with `?version=4`, and the API's `Request-Id` header is a v7. Its generator is the simple kind: IDs created in the same millisecond, like a batch from `?count=100`, aren't guaranteed to be in order.
-
 ## References
 
 **Specifications**

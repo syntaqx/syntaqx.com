@@ -103,14 +103,6 @@ The rate limiter must never be the reason the API is down. If Redis errors or do
 
 Remember clients already over the limit in memory too. A blocked client keeps sending requests, and checking Redis for each one spends the store's capacity, and on a metered plan money, on traffic you've already refused.
 
-## This Site
-
-The syntaqx API runs this script on [Upstash Redis](https://upstash.com/docs/redis/sdks/ts/developing), keyed on the client IP, with the in-memory fallback after a one-second timeout. Locally, `compose.yml` runs Redis behind the same REST API Upstash serves, and with no Redis configured at all the limiter uses a no-op store that sends the headers but never blocks, so `npm run dev` needs nothing else running.
-
-It deliberately doesn't use Upstash's own rate-limit library: its scripts carry an Upstash-only Lua flag that stock Redis rejects, so local and CI runs against plain Redis would quietly fall back to memory and test nothing. Five lines of portable Lua are a better trade than a dependency that only works in production.
-
-Revalidations are free: a `304` refunds the request, so a client polling politely never runs out of quota ([Caching & Conditional Requests](/docs/requests/caching)).
-
 ## References
 
 **Specifications**

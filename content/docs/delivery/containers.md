@@ -72,10 +72,6 @@ Each cost pushes you toward a practice you want anyway, which is the strongest a
 
 Serverless platforms take immutability to its conclusion: there's no server for you to patch at all. Every deploy is a fresh build that the platform runs, scales to zero and patches underneath. Containers are the right tool when you need control over the runtime, long-running processes or portability between providers; serverless when you don't.
 
-## This Site
-
-This site runs on Vercel: every push builds a new immutable deployment, previews and production run the same build, and rolling back is pointing production at the previous deployment. There are no servers here to patch. Locally, `compose.yml` runs Redis 8 and its REST proxy from images, the same ones CI starts as service containers.
-
 ## References
 
 **Specifications**

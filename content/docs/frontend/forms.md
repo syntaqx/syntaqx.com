@@ -76,10 +76,6 @@ Blocking paste on password fields, or breaking autofill with unusual markup, pus
 
 Use `autocomplete="current-password"` on sign-in and `new-password` on sign-up and password changes, so managers know whether to fill or generate; `one-time-code` lets the platform offer the code from an SMS without switching apps.
 
-## This Site
-
-The site has no account forms, but the API reference's "Try it" console follows the same rules for its request form: every parameter has a visible label, the request body is checked as JSON before sending with a message that says what's wrong ("Body isn't valid JSON: …"), and a failed request leaves everything the user entered in place so they can fix it and send again.
-
 ## References
 
 **Specifications**

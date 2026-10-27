@@ -67,13 +67,6 @@ Place them around each independent widget, so one failing chart doesn't blank th
 
 Announce dynamic changes for screen reader users too. A status message that appears without moving focus, like "Saved" or "3 results", needs a live region ([WCAG 4.1.3, Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)).
 
-## This Site
-
-- **Empty search:** the docs index search shows "Nothing matches" with the query and a "Show everything" button, rather than an empty list with no explanation.
-- **API console errors:** the reference console's "Try it" shows a request that never got a response as a network error with its timing, keeps the request as entered, and for any response that does arrive, error or not, lists its `request-id` among the headers, so a failure has something to search for.
-- **Loading:** route changes show a thin progress bar at the top of the viewport instead of blanking the page.
-- **Last resort:** a `global-error` page with a "Try again" button catches errors in the root layout, so even a crash there isn't a blank screen.
-
 ## References
 
 **Specifications**

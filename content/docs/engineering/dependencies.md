@@ -64,10 +64,6 @@ Prefer boring technology. Every new tool carries costs its demo doesn't show: un
 - **Provenance for what you publish.** Build on hosted CI and attach signed provenance ([`npm publish --provenance`](https://docs.npmjs.com/generating-provenance-statements), [artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations)), aiming for [SLSA](https://slsa.dev/spec/v1.0/levels) Build L2 or higher, so consumers can verify a package came from your workflow and not a stolen laptop token.
 - **Scan continuously,** with alerts triaged like any other bug.
 
-## This Site
-
-`.nvmrc` pins Node.js 24, an LTS line, for local development, CI and Vercel. Dependabot opens grouped PRs weekly (Next.js with its config, React with its types, GitHub Actions together), and Actions are pinned to commit SHAs that Dependabot bumps with their version comment. Every update runs full CI and gets a preview deployment. Updates are still merged by hand; auto-merging green patch and minor updates is the next step.
-
 ## References
 
 **Specifications**

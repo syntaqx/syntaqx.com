@@ -110,10 +110,6 @@ The fix is to version the set. Riot calls its unit an environment, a bundle of "
 
 A **release train** is the same idea on a calendar: changes that are ready by a cut-off ship together on a fixed cadence, and anything that misses waits for the next one. Chrome ships a new milestone to stable every two weeks, and features that aren't complete by branch point "should be punted to the following milestone." Trains suit products where shipping is expensive per release (store-reviewed apps, game clients, appliances, on-premises software; see [Mobile Releases](/docs/delivery/mobile-releases#release-trains)). For backend services that can each deploy many times a day, keep services independently deployable with backward-compatible contracts ([API Versioning](/docs/api-design/versioning)), and reserve set versioning for the changes that genuinely have to move together.
 
-## This Site
-
-Every [syntaqx.com](https://github.com/syntaqx/syntaqx.com) deploy is a new immutable Vercel deployment, so the site gets blue-green behavior without running two environments: the previous production deployment still exists, and [Vercel's Instant Rollback](https://vercel.com/docs/instant-rollback) points the domains back at it without rebuilding. Two details matter in practice: a rollback keeps the *current* environment variables rather than restoring old ones, and after a rollback Vercel stops promoting new pushes automatically until the rollback is undone, so a fix doesn't silently replace the rolled-back version.
-
 ## References
 
 **Reference**

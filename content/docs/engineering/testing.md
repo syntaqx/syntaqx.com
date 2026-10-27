@@ -90,10 +90,6 @@ A flaky test is a failing test. The damage isn't the one false alarm; it's what 
 - The full suite runs on every pull request and blocks the merge, in under about 10 minutes. Parallelize before you start skipping. See [CI & Continuous Deployment](/docs/delivery/ci-pipelines).
 - Coverage is a signal for finding untested code, not a target to hit. Make it a target and people write tests that execute lines without asserting anything; 100% coverage of the wrong assertions proves nothing.
 
-## This Site
-
-[syntaqx.com](https://github.com/syntaqx/syntaqx.com) runs its suite with Vitest on every pull request. The API's proxy tests go through the real request handling (headers, rate limits, `QUERY` routing) rather than calling functions in isolation, and the rate limiter's integration tests run against a real Redis: `compose.yml` locally, CI service containers in the pipeline. One of those tests checks the key inside Redis itself, because an earlier version passed while silently falling back to the in-memory store. The docs have tests too: `lib/docs.test.ts` fails the build on a broken link or a missing References section.
-
 ## References
 
 **Specifications**

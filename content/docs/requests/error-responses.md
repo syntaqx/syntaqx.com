@@ -77,10 +77,6 @@ The split is worth keeping because the fixes differ. A `400` is usually a bug in
 
 A `5xx` means the outcome is unknown or the server is struggling, and the right response differs: `503` with `Retry-After` is an invitation to come back, while a `500` on a request with side effects may have half happened. [Retries & Timeouts](/docs/architecture/retries-and-timeouts) covers which are safe to retry and how.
 
-## This Site
-
-The syntaqx API returns this shape from every endpoint, with `400` for malformed requests (invalid JSON, a missing `User-Agent`, an unknown `Api-Version`) and `422` with field-level `errors` for invalid values. Unknown paths return `404` with `"The requested endpoint could not be found."`.
-
 ## References
 
 **Specifications**

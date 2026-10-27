@@ -63,10 +63,6 @@ Independent work parallelizes well: several agents writing separate docs or modu
 
 The same tools that speed up development speed up vulnerability discovery. Assume known vulnerabilities in your dependencies get exploited faster than they used to, and patch accordingly. See [Vulnerability Management](/docs/security/vulnerability-management).
 
-## This Site
-
-Much of [syntaqx.com](https://github.com/syntaqx/syntaqx.com) was built with an AI coding agent under exactly these rules, including this playbook, the ADRs and the CI docs checks. The repository's [`AGENTS.md`](https://github.com/syntaqx/syntaqx.com/blob/main/AGENTS.md) holds its standing instructions, every change went through a pull request with required checks, and `lib/docs.test.ts` fails the build when a doc drops its references, links to a page that doesn't exist, or uses an em-dash.
-
 ## References
 
 **Specifications**

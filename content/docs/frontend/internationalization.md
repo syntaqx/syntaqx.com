@@ -80,10 +80,6 @@ Most i18n bugs can be found before anyone translates anything. [Pseudo-localizat
 
 Translate what people read. Identifiers stay stable: API field names, enum values, log messages, error codes and URLs, so code, support and search keep working across languages. An [error response](/docs/requests/error-responses) has a stable shape and a human message; the message is localizable, the shape isn't. Brand and product names usually stay as they are, by a decision written down.
 
-## This Site
-
-The site is English-only and sets `lang="en"` on the document, which tells screen readers and translation tools what they're reading. Its converter tools show the length trap in miniature: their character counts use `string.length`, so an emoji counts as two. That's right for a byte-oriented encoder, where code units matter, and would be a bug behind a "maximum 280 characters" limit shown to users.
-
 ## References
 
 **Specifications**

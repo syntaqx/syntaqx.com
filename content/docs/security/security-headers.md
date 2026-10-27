@@ -80,10 +80,6 @@ CORS relaxes the browser's same-origin policy; it doesn't protect your server. `
 
 Keep `Access-Control-Allow-Origin` to the origins that need it, and never reflect the request's origin together with `Access-Control-Allow-Credentials: true`: that lets any website make authenticated requests as your logged-in users and read the answers.
 
-## This Site
-
-syntaqx.com sends the baseline above, with `Cross-Origin-Resource-Policy: same-site` so `www` and the `api` subdomain can share resources. Its Content Security Policy ran Report-Only first, and before enforcing, every page type was loaded and every interactive tool exercised against it. That found what page loads alone wouldn't: the IP lookup and hover-card demo call third-party APIs only when used, and the favicon tool reads uploads back from `data:` URLs. Those are listed explicitly, and the policy is enforced, still reporting to Sentry. Its `script-src` allows inline scripts, because nonces would mean rendering every page per request; that departure is recorded in [ADR 0003](https://github.com/syntaqx/syntaqx.com/blob/main/docs/adr/0003-csp-allows-inline-scripts.md).
-
 ## References
 
 **Specifications**

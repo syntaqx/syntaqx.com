@@ -75,10 +75,6 @@ A leaked secret is an incident even if nothing has happened yet, because you hav
 
 Anyone with a pull request gets a preview, automatically. Production deploys come from the pipeline, on merge to `main` after CI is green, and from nowhere else. Production credentials live in the platform's secret store, scoped to production, and the pipeline is the only thing that uses them. Break-glass access exists, is logged, and is reviewed afterward.
 
-## This Site
-
-`npm run dev` needs nothing else: every variable is optional and documented in `.env.example`, and without Redis the API's rate limiter uses a no-op store that sends its headers but never blocks. `docker compose up -d` runs the real Redis behind the same REST API Upstash serves in production, and CI runs those same containers. Every pull request gets a Vercel preview, `main` deploys to production, production values live in Vercel's encrypted environment variables, and there's no staging, because nothing here needs one.
-
 ## References
 
 **Reference**
