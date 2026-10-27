@@ -19,6 +19,12 @@ Reference sheets: `scripts/dwg/sheets/gm-frame-budget.mjs` (timeline plan
 view with a code chain, a detail view, a pipelined view and a variable table)
 and `scripts/dwg/sheets/gm-client-exploded.mjs` (exploded layer stack).
 
+Not everything should be a sheet. Flowcharts, state machines, sequences,
+hierarchies, pipelines, money flows and maps are standard diagrams: same
+kit, same line weights and lettering, no notes, codes or tables. Use the
+`diagram` skill for those. A sheet earns its place only where something is
+measured: a budget, a timeline with durations, a stack, a layout.
+
 ## Workflow
 
 1. **Decide the one idea** the sheet makes (a budget, a stack, a timeline, a
@@ -32,11 +38,10 @@ and `scripts/dwg/sheets/gm-client-exploded.mjs` (exploded layer stack).
    Lay views out from computed positions (a scale `k`, an origin, sums of
    parts), not hand-typed coordinates, so spacing stays even and the parts sum.
 4. **Build:** `npm run dwg` (or `npm run dwg -- <name>` for one sheet).
-5. **Render and look.** Rasterize the SVG with the site CSS inlined (sharp is
-   already a dependency; a throwaway script in your scratchpad is enough:
-   slice the `.diagram` rules out of `app/globals.css`, map the `--fig-*`
-   variables to light colors, inject them as a `<style>`, render at density
-   200). Check: no label crosses a line, box or another label; nothing crosses
+5. **Render and look.** `npm run dwg:render -- public/diagrams/<name>.svg
+   <scratchpad>/<name>.png` rasterizes the SVG with the site's diagram CSS
+   inlined (add `--dark` for the dark palette; fonts fall back to Arial, so
+   leave a little slack). Check: no label crosses a line, box or another label; nothing crosses
    the sheet edge; gaps between views are even. Fix in the source, rebuild,
    look again.
 6. **Embed** as its own paragraph:
@@ -61,11 +66,14 @@ and `scripts/dwg/sheets/gm-client-exploded.mjs` (exploded layer stack).
 5. **Architecture, not content, for UI.** Draw slots and regions (`TITLE SLOT ·
    FLEX`, `CONTENT SLOT · FILL`, `ACTION · HUG`), never real copy. Size words:
    HUG (sized by content), FLEX (takes remaining space), FILL (parent width).
-6. **Unbranded.** No logos, wordmarks, product names or trade dress in the
-   drawing; neutral names only.
+6. **Unbranded.** No logos, wordmarks, trade dress, or brand, company,
+   product or studio names anywhere in the drawing; neutral terms only. The
+   caption, alt text and References may name sources.
 7. **No screenshots.** When a chapter wants to show a product's UI, draw the
    component's architecture instead: its slots, layers and spacing codes.
 8. **No em-dashes** in labels or notes.
+9. **No border.** Drawings are unframed; the page frames the figure. The
+   sheet's `frame` option exists but is not used.
 
 ## Sheet layout
 
@@ -102,6 +110,8 @@ noted).
 | `s.rad(cornerX, cornerY, r, 'tl' \| 'tr' \| 'bl' \| 'br', label)` | radius callout from the arc's midpoint |
 | `s.detailRef(cx, cy, r, label, lx, ly)` | dashed detail circle, leader, `DETAIL A`; draw the matching view titled `Detail A · …` at a larger scale |
 | `s.table(x, y, title, [[code, variable, value]…])` | CODE / VARIABLE / VALUE with light rules; returns `{ y, width }` |
+| `s.grid(x, y, title, head, rows, { widths, align })` | any ruled table (more or other columns, ledger rows); `align` per column; returns `{ y, width, widths }` |
+| `s.node`, `s.row`, `s.connect`, `s.wire`, `s.loop`, `s.lanes`, `s.tree`, `s.pipeline`, `s.tAccount`, `s.group`, `s.legend` | boxes, orthogonal connectors, lanes, trees, pipelines, T-accounts, boundaries and legends; documented with examples in the `diagram` skill, and usable on a sheet too (a flow inside a plan view, a legend under it) |
 | `s.exploded({ tx, ty, w, d, gap, labelX, layers })` | axonometric stack, bottom layer first; each layer `{ label, sub, draw(p) }` where `draw` returns content in plate coordinates via `p.rect / p.line / p.circle / p.path` (no text, it would shear); projection lines through the corners; returns `P(x, y, z)` |
 | `textWidth`, `widthOf(str, cls)`, `wrap` | width estimates for layout |
 
@@ -125,6 +135,10 @@ title, `nt` / `nth` notes, `th` table header; `dt` dimension codes and `tc`
 table cells are sans with tabular figures, `dt` with a paper knockout (`ko`
 adds it to any text). Mono stays for the shared `.t` cells only.
 
+Standard-diagram classes: `flow` 0.9 (connectors), `flow alt` dashed (exit
+or exception), `flow hl` 1.2 accent; `sl hl`, `lt hl` and `tc hl` accent
+text.
+
 ## Don't
 
 - Don't hard-code colors, fonts or `<style>` in a sheet; classes only, every id
@@ -132,3 +146,36 @@ adds it to any text). Mono stays for the shared `.t` cells only.
 - Don't write full equations on the drawing; codes there, formulas in the table.
 - Don't run a dimension line through spaced text and count on the knockout.
 - Don't place coordinates by hand when they derive from values: compute them.
+- Don't draw a border, and don't put a brand, company, product or studio
+  name on a sheet.
+
+## Converting an old diagram
+
+The older hand-written diagrams in `public/diagrams/` (no `class="dwg"`,
+classes `cell`, `ln`, `ah`, `t`, `cap`, `n`, `zone`) move to the kit one at
+a time. Decide per diagram:
+
+- **Dimensional sheet** (this skill) only when the diagram is about a
+  measured quantity (durations, a budget, sizes, a layer stack, a layout)
+  and codes plus a variable table would tell the reader something the old
+  picture did not.
+- **Standard kit diagram** (`diagram` skill) for flowcharts, state
+  machines, sequences, hierarchies, pipelines, money flows and maps. Most
+  old diagrams are this.
+- **Leave it alone** when it already renders cleanly at the column width,
+  has no brand names, and a rewrite would change nothing a reader sees.
+
+Then follow the `diagram` skill's "Converting an old diagram" steps: list
+every label as the facts to keep, map old classes to kit helpers, move brand
+names to the caption, write the source under the same file name, render and
+check until clean, and update the alt text only where labels changed.
+
+## Lessons learned
+
+Append a dated entry whenever a review finds a new problem with a sheet.
+Keep each to one or two lines: what went wrong, the rule.
+
+- 2026-10-27: Sheets were first drawn with a rounded border; the owner
+  dropped it. No border; `frame` stays off.
+- 2026-10-27: Flow diagrams forced into sheets (notes, codes, tables with
+  nothing measured) read as noise; they are standard diagrams now.

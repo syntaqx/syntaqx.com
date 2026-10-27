@@ -254,13 +254,23 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * { y: bottom, width }.
      */
     table(x, y, title, rows, { widths, rowH = 15, minWidths = [30, 80, 60] } = {}) {
-      const all = [["CODE", "VARIABLE", "VALUE"], ...rows];
+      return s.grid(x, y, title, ["CODE", "VARIABLE", "VALUE"], rows, { widths, rowH, minWidths });
+    },
+
+    /**
+     * Any ruled table: optional title (vt) above, a header row (th), then
+     * rows (tc). First column left-aligned, the rest centered unless `align`
+     * ('start' | 'middle' | 'end' per column) says otherwise. Returns
+     * { y: bottom, width, widths }.
+     */
+    grid(x, y, title, head, rows, { widths, rowH = 15, minWidths = [], align = [] } = {}) {
+      const all = [head, ...rows];
       const ws =
         widths ??
-        [0, 1, 2].map((j) => Math.max(minWidths[j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc")), widthOf(all[0][j], "th")) + 14)));
+        head.map((_, j) => Math.max(minWidths[j] ?? 30, Math.ceil(Math.max(...rows.map((r) => widthOf(r[j] ?? "", "tc")), widthOf(head[j], "th")) + 14)));
       const w = ws.reduce((a, b) => a + b, 0);
       const h = all.length * rowH;
-      s.add(text(x, y - 7, title, "vt"));
+      if (title) s.add(text(x, y - 7, title, "vt"));
       s.rect(x, y, w, h, "tbl");
       for (let i = 1; i < all.length; i++) s.line(x, y + i * rowH, x + w, y + i * rowH, "tbl");
       let cx = x;
@@ -270,11 +280,315 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         r.forEach((v, j) => {
           const cls = i ? "tc" : "th";
           const yy = y + i * rowH + rowH / 2 + (i ? 3.2 : 2.7);
-          s.add(j === 0 ? text(c + 6, yy, v, cls) : text(c + ws[j] / 2, yy, v, cls, "middle"));
+          const a = align[j] ?? (j === 0 ? "start" : "middle");
+          const tx = a === "start" ? c + 6 : a === "end" ? c + ws[j] - 6 : c + ws[j] / 2;
+          s.add(text(tx, yy, v, cls, a));
           c += ws[j];
         });
       });
-      return { y: y + h, width: w };
+      return { y: y + h, width: w, widths: ws };
+    },
+
+    // ---- Standard diagrams: nodes, connectors, lanes, trees, pipelines,
+    // ledgers and legends. They share the sheet's line weights and
+    // lettering; use them with or without the sheet trappings (notes, view
+    // titles, codes, tables). ----
+
+    /**
+     * A node box. `kind`: process (default, square box) | state (rounded) |
+     * store (box with an index line at the left: an account, a table, a
+     * queue) | actor (box with an offset shadow: a party outside the
+     * system) | decision (diamond) | ghost (dashed: optional or external).
+     * `end` doubles the outline (terminal state); `hl` takes the accent;
+     * `fill` 1 or 2 picks the shade (default 2, actor 1); `code` sets the
+     * label as an identifier (sans, case kept) instead of caps; `sub` is a
+     * second, gray line inside the box. A label may contain "\n". `w` null
+     * sizes the box to the label. Returns the node: { x, y, w, h, cx, cy,
+     * port(side, t) } with side 'l' | 'r' | 't' | 'b' and t the fraction
+     * along that side (0.5 = middle).
+     */
+    node(x, y, w, h, label, { kind = "process", end = false, hl = false, fill, code = false, sub, cls } = {}) {
+      const lines = label == null ? [] : String(label).split("\n");
+      const lcls = cls ?? (code ? "tc" : "sl ink") + (hl ? " hl" : "");
+      if (w == null) w = Math.ceil(Math.max(...lines.map((l) => widthOf(l, lcls)), sub ? widthOf(sub, "vs") : 0) + 28);
+      const fc = `fill-${fill ?? (kind === "actor" ? 1 : 2)}`;
+      const box = hl ? "obj hl" : kind === "ghost" ? "slot" : `obj ${fc}`;
+      if (kind === "decision") {
+        s.path(`M${f(x + w / 2)},${f(y)}L${f(x + w)},${f(y + h / 2)}L${f(x + w / 2)},${f(y + h)}L${f(x)},${f(y + h / 2)}Z`, box);
+      } else {
+        if (kind === "actor") s.rect(x + 3, y + 3, w, h, hl ? "obj hl" : "obj fill-1");
+        s.rect(x, y, w, h, kind === "actor" && !hl ? "obj plate" : box, { rx: kind === "state" ? 6 : null });
+        if (end) s.rect(x + 3, y + 3, w - 6, h - 6, hl ? "obj hl" : "obj", { rx: kind === "state" ? 4 : null });
+        if (kind === "store") s.line(x + 9, y, x + 9, y + h, hl ? "obj hl" : "obj");
+      }
+      const dx = kind === "store" ? 4.5 : 0;
+      const lh = 11.5;
+      const block = lines.length * lh + (sub ? 11 : 0);
+      const ty = y + h / 2 - block / 2 + lh / 2 + 3;
+      lines.forEach((l, i) => s.add(text(x + w / 2 + dx, ty + i * lh, l, kind === "ghost" && !hl && !cls ? lcls.replace(" ink", "") : lcls, "middle")));
+      if (sub) s.add(text(x + w / 2 + dx, ty + lines.length * lh + 0.5, sub, "vs", "middle"));
+      return nodeOf(x, y, w, h);
+    },
+
+    /**
+     * A row of equal nodes spread across `w` from x, `gap` apart. Items are
+     * labels or { label, ...node options }; `o` applies to all. Returns the
+     * nodes.
+     */
+    row(x, y, w, items, { h = 26, gap = 12, ...o } = {}) {
+      const nw = (w - gap * (items.length - 1)) / items.length;
+      return items.map((it, i) => {
+        const { label, ...io } = typeof it === "string" ? { label: it } : it;
+        return s.node(x + i * (nw + gap), y, nw, h, label, { ...o, ...io });
+      });
+    },
+
+    /**
+     * Orthogonal connector through `points` ([[x, y], ...]), arrow at the
+     * end. Options: `hl` accent, `alt` dashed (an exception or exit path),
+     * `arrow` 'end' (default) | 'both' | 'none', `start` 'dot' for a dot on
+     * the first point, `label` (string, "\n" for lines) placed on segment
+     * `seg` (default the longest) on `side` ('above' | 'below' for a
+     * horizontal segment, 'right' | 'left' for a vertical one), shifted
+     * along the segment by `shift` (0 = middle, -1 / 1 = the ends) and off
+     * it by `off`. Labels carry a paper knockout. Returns the points.
+     */
+    wire(points, { hl = false, alt = false, arrow = "end", start, label, seg, side, shift = 0, off = 0, cls } = {}) {
+      const d = points.map(([x, y], i) => `${i ? "L" : "M"}${f(x)},${f(y)}`).join("");
+      const m = hl ? ahHl : ah;
+      s.path(d, cls ?? `flow${hl ? " hl" : ""}${alt ? " alt" : ""}`, {
+        "marker-end": arrow === "none" ? null : m,
+        "marker-start": arrow === "both" ? m : null,
+      });
+      if (start === "dot") s.add(el("circle", { class: "dot", cx: points[0][0], cy: points[0][1], r: 1.8 }));
+      if (label != null) {
+        const segs = points.slice(1).map((p, i) => [points[i], p]);
+        const k = seg ?? segs.reduce((best, sg, i) => (len(sg) > len(segs[best]) ? i : best), 0);
+        s.add(edgeLabel(segs[k < 0 ? segs.length + k : k], label, { side, shift, off, hl }));
+      }
+      return points;
+    },
+
+    /**
+     * Connect two nodes with an orthogonal route. `from` / `to` are sides
+     * ('r', 'l', 't', 'b'; default r to l), `at` the fractions along them
+     * ([0.5, 0.5]). Opposite sides route with one jog at the midline (or at
+     * `via`, an x for left/right or a y for top/bottom); the same side on
+     * both (a back edge) runs out to the channel `via` (default 20 past the
+     * outer node) and back; a horizontal side to a vertical one turns once.
+     * Other options are wire()'s. Returns the points.
+     */
+    connect(a, b, { from = "r", to = "l", at = [0.5, 0.5], via, ...o } = {}) {
+      const p0 = a.port(from, at[0]);
+      const p1 = b.port(to, at[1]);
+      const H = (sd) => sd === "l" || sd === "r";
+      let pts;
+      if (H(from) && H(to)) {
+        if (from === to) {
+          const mx = via ?? (from === "r" ? Math.max(p0[0], p1[0]) + 20 : Math.min(p0[0], p1[0]) - 20);
+          pts = [p0, [mx, p0[1]], [mx, p1[1]], p1];
+        } else if (Math.abs(p0[1] - p1[1]) < 0.5 && via == null) pts = [p0, p1];
+        else {
+          const mx = via ?? (p0[0] + p1[0]) / 2;
+          pts = [p0, [mx, p0[1]], [mx, p1[1]], p1];
+        }
+      } else if (!H(from) && !H(to)) {
+        if (from === to) {
+          const my = via ?? (from === "b" ? Math.max(p0[1], p1[1]) + 20 : Math.min(p0[1], p1[1]) - 20);
+          pts = [p0, [p0[0], my], [p1[0], my], p1];
+        } else if (Math.abs(p0[0] - p1[0]) < 0.5 && via == null) pts = [p0, p1];
+        else {
+          const my = via ?? (p0[1] + p1[1]) / 2;
+          pts = [p0, [p0[0], my], [p1[0], my], p1];
+        }
+      } else if (H(from)) pts = [p0, [p1[0], p0[1]], p1];
+      else pts = [p0, [p0[0], p1[1]], p1];
+      return s.wire(pts, o);
+    },
+
+    /**
+     * Self-loop on a node side (a state that stays in itself): out of the
+     * side at fractions `at` [t0, t1], `reach` away, and back with the arrow.
+     * Label beyond the loop. Other options are wire()'s.
+     */
+    loop(n, side = "t", { at = [0.35, 0.65], reach = 18, ...o } = {}) {
+      const [p0, p1] = [n.port(side, at[0]), n.port(side, at[1])];
+      const v = { t: [0, -1], b: [0, 1], l: [-1, 0], r: [1, 0] }[side];
+      const pts = [p0, [p0[0] + v[0] * reach, p0[1] + v[1] * reach], [p1[0] + v[0] * reach, p1[1] + v[1] * reach], p1];
+      return s.wire(pts, { seg: 1, side: { t: "above", b: "below", l: "left", r: "right" }[side], ...o });
+    },
+
+    /**
+     * Lanes (swimlanes). dir 'h': rows stacked from y, each `{ label, sub,
+     * h, hl }`, the lane title in a left column `titleW` wide, light rules
+     * between lanes. dir 'v': columns side by side from x, each `{ label,
+     * sub, w }` (default w = width / count); titles centered at the top in a
+     * head `headH` tall, light rules between columns. Returns the lanes
+     * with { x, y, w, h, cx, cy, x0, y0 } (x0 / y0: where content starts).
+     */
+    lanes({ x, y, w, h, lanes: L, dir = "h", titleW = 120, headH = 34 }) {
+      const out = [];
+      if (dir === "h") {
+        let yy = y;
+        s.line(x, yy, x + w, yy, "tbl");
+        for (const ln of L) {
+          s.add(text(x, yy + 17, ln.label, ln.hl ? "lt hl" : "lt"));
+          subLines(ln.sub).forEach((t, i) => s.add(text(x, yy + 30 + i * 11, t, "vs")));
+          out.push({ ...ln, x, y: yy, w, h: ln.h, cx: x + w / 2, cy: yy + ln.h / 2, x0: x + titleW, y0: yy });
+          yy += ln.h;
+          s.line(x, yy, x + w, yy, "tbl");
+        }
+      } else {
+        const cw = w / L.length;
+        let xx = x;
+        s.line(x, y + headH, x + w, y + headH, "tbl");
+        L.forEach((ln, i) => {
+          const lw = ln.w ?? cw;
+          s.add(text(xx + lw / 2, y + 15, ln.label, ln.hl ? "lt hl" : "lt", "middle"));
+          subLines(ln.sub).forEach((t, i) => s.add(text(xx + lw / 2, y + 27 + i * 11, t, "vs", "middle")));
+          if (i) s.line(xx, y, xx, y + h, "tbl");
+          out.push({ ...ln, x: xx, y, w: lw, h, cx: xx + lw / 2, cy: y + h / 2, x0: xx, y0: y + headH });
+          xx += lw;
+        });
+      }
+      return out;
+    },
+
+    /**
+     * A tree. `root` is { label, sub, kind, hl, code, children: [...] }.
+     * layout 'indent': one node per row, each child `indent` right of its
+     * parent, rows `rowH` apart, elbow connectors from a stub under the
+     * parent. layout 'down': a top-down tree, leaves `gapX` apart, parents
+     * centered over their children, levels `levelH` apart, bus connectors.
+     * Nodes are `w` x `h`. Returns the placed nodes in row order, each
+     * { ...node, data, depth, row }.
+     */
+    tree(root, { x, y, w = 150, h = 26, layout = "indent", indent = 50, rowH = 40, gapX = 16, levelH = 60, stub = 0.4, hl } = {}) {
+      const placed = [];
+      if (layout === "indent") {
+        let row = 0;
+        const walk = (d, depth, parent) => {
+          const nx = x + depth * indent, ny = y + row * rowH;
+          const n = s.node(nx, ny, w, h, d.label, { kind: d.kind, hl: d.hl, code: d.code, sub: d.sub, end: d.end });
+          if (parent) {
+            const sx = parent.x + indent * stub;
+            s.path(`M${f(sx)},${f(parent.y + parent.h)}V${f(n.cy)}H${f(n.x)}`, d.hl || hl ? "flow hl" : "flow");
+          }
+          const p = { ...n, data: d, depth, row: row++ };
+          placed.push(p);
+          for (const c of d.children ?? []) walk(c, depth + 1, p);
+        };
+        walk(root, 0, null);
+        return placed;
+      }
+      // 'down': assign leaf slots, center parents.
+      let slot = 0;
+      const pos = new Map();
+      const measure = (d, depth) => {
+        const kids = d.children ?? [];
+        if (!kids.length) pos.set(d, { cx: x + w / 2 + slot++ * (w + gapX), depth });
+        else {
+          kids.forEach((c) => measure(c, depth + 1));
+          pos.set(d, { cx: (pos.get(kids[0]).cx + pos.get(kids.at(-1)).cx) / 2, depth });
+        }
+      };
+      measure(root, 0);
+      const draw = (d, parent) => {
+        const { cx, depth } = pos.get(d);
+        const n = s.node(cx - w / 2, y + depth * levelH, w, h, d.label, { kind: d.kind, hl: d.hl, code: d.code, sub: d.sub, end: d.end });
+        if (parent) {
+          // The trunk is shared, so only the branch to an accented child is accented.
+          const by = parent.y + parent.h + (levelH - h) / 2;
+          if (d === parent.data.children[0]) s.path(`M${f(parent.cx)},${f(parent.y + parent.h)}V${f(by)}`, "flow");
+          s.path(`M${f(parent.cx)},${f(by)}H${f(n.cx)}V${f(n.y)}`, d.hl ? "flow hl" : "flow");
+        }
+        const p = { ...n, data: d, depth, row: depth };
+        placed.push(p);
+        for (const c of d.children ?? []) draw(c, p);
+      };
+      draw(root, null);
+      return placed;
+    },
+
+    /**
+     * A pipeline: stages left to right, `w` x `h`, `gap` apart, arrows
+     * between. Each stage { label, head, sub, kind, hl, code }: `head` is a
+     * gray caps word above the box (the step's role), `sub` a string or
+     * lines of gray text under it (wrapped to the box width). An arrow is
+     * accented when both its ends are. Returns { nodes, bottom } where
+     * bottom is the y under the lowest sub text (start downstream wires
+     * there, not at the box).
+     */
+    pipeline(x, y, stages, { w = 100, h = 28, gap = 16, headGap = 12, subGap = 16 } = {}) {
+      const nodes = stages.map((st, i) => {
+        const nx = x + i * (w + gap);
+        if (st.head) s.add(text(nx + w / 2, y - headGap, st.head, "sl", "middle"));
+        return s.node(nx, y, w, h, st.label, { kind: st.kind, hl: st.hl, code: st.code, end: st.end });
+      });
+      nodes.slice(1).forEach((n, i) => s.wire([nodes[i].port("r"), n.port("l")], { hl: stages[i].hl && stages[i + 1].hl }));
+      let bottom = y + h;
+      stages.forEach((st, i) => {
+        const lines = st.sub == null ? [] : Array.isArray(st.sub) ? st.sub : wrap(st.sub, w + gap - 6, "sl");
+        lines.forEach((l, j) => s.add(text(nodes[i].cx, y + h + subGap + j * 11.5, l, st.hl ? "sl hl" : "sl", "middle")));
+        if (lines.length) bottom = Math.max(bottom, y + h + subGap + (lines.length - 1) * 11.5 + 4);
+      });
+      return { nodes, bottom };
+    },
+
+    /**
+     * T-account: a title (vt) centered over a heavy T, `heads` over the two
+     * sides (default IN / OUT; DEBIT / CREDIT where the account's side is
+     * known), entries as rows of tc text, each side left-aligned. `hl`
+     * accents the T. Returns { y: bottom, width }.
+     */
+    tAccount(x, y, w, title, left, right, { heads = ["IN", "OUT"], rowH = 15, hl = false } = {}) {
+      const n = Math.max(left.length, right.length, 1);
+      const cx = x + w / 2, top = y + 16, bot = top + 4 + n * rowH;
+      if (title) s.add(text(cx, y - 2, title, "vt", "middle"));
+      s.add(text(x + w / 4, top - 4, heads[0], "th", "middle"), text(x + (3 * w) / 4, top - 4, heads[1], "th", "middle"));
+      s.line(x, top, x + w, top, hl ? "obj hl" : "obj");
+      s.line(cx, top, cx, bot, hl ? "obj hl" : "obj");
+      left.forEach((t, i) => s.add(text(x + 6, top + 4 + (i + 0.5) * rowH + 3.2, t, "tc")));
+      right.forEach((t, i) => s.add(text(cx + 6, top + 4 + (i + 0.5) * rowH + 3.2, t, "tc")));
+      return { y: bot, width: w };
+    },
+
+    /**
+     * Legend: a row of samples with labels, wrapping at `width`. Item kinds:
+     * flow | hl | alt (connector samples), node | state | store | actor |
+     * ghost | end (box samples), group (boundary). `width` defaults to the
+     * room left before the 20 margin. Returns { y: bottom }.
+     */
+    legend(x, y, items, { width = s.width - 20 - x, gap = 22 } = {}) {
+      let xx = x, yy = y;
+      for (const it of items) {
+        const iw = 30 + widthOf(it.label, "sl");
+        if (xx > x && xx + iw > x + width) {
+          xx = x;
+          yy += 18;
+        }
+        const k = it.kind;
+        if (k === "flow" || k === "hl" || k === "alt")
+          s.wire([[xx, yy], [xx + 22, yy]], { hl: k === "hl", alt: k === "alt" });
+        else if (k === "group") s.line(xx, yy, xx + 22, yy, "phantom"); // a box would show only its corners at this size
+        else s.node(xx, yy - 5, 22, 10, null, { kind: k === "end" || k === "node" ? "process" : k, end: k === "end", hl: it.hl });
+        s.add(text(xx + 30, yy + 3, it.label, "sl"));
+        xx += iw + gap;
+      }
+      return { y: yy + 8 };
+    },
+
+    /**
+     * Group boundary (a zone, a band, a trust boundary): a light long-dash
+     * box with its title above the top-left corner, sub above the top-right.
+     */
+    group(x, y, w, h, label, { sub, hl = false } = {}) {
+      s.rect(x, y, w, h, "phantom");
+      if (label) s.add(text(x, y - 7, label, hl ? "lt hl" : "lt"));
+      // Sub flush right: placing it after the title would lean on a width
+      // estimate, and the gap would vary with the real font.
+      if (sub) s.add(text(x + w, y - 7, sub, "vs", "end"));
+      return s;
     },
 
     /**
@@ -352,6 +666,36 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
   }
 
   return s;
+}
+
+const len = ([[x1, y1], [x2, y2]]) => Math.hypot(x2 - x1, y2 - y1);
+const subLines = (sub) => (sub == null ? [] : String(sub).split("\n"));
+
+/** A node's geometry and its ports. */
+function nodeOf(x, y, w, h) {
+  const port = (side, t = 0.5) =>
+    ({ l: [x, y + h * t], r: [x + w, y + h * t], t: [x + w * t, y], b: [x + w * t, y + h] })[side];
+  return { x, y, w, h, cx: x + w / 2, cy: y + h / 2, port };
+}
+
+/**
+ * Connector label on one segment: above / below a horizontal one, right /
+ * left of a vertical one, gray caps with a paper knockout (accent with hl).
+ */
+function edgeLabel([[x1, y1], [x2, y2]], label, { side, shift = 0, off = 0, hl }) {
+  const lines = String(label).split("\n");
+  const cls = hl ? "sl hl ko" : "sl ko";
+  const LH = 11;
+  if (Math.abs(y1 - y2) < 0.5) {
+    const mx = (x1 + x2) / 2 + (shift * Math.abs(x2 - x1)) / 2;
+    const below = side === "below";
+    const y0 = below ? y1 + 12 + off : y1 - 5 - off - (lines.length - 1) * LH;
+    return lines.map((l, i) => text(mx, y0 + i * LH, l, cls, "middle")).join("");
+  }
+  const my = (y1 + y2) / 2 + (shift * Math.abs(y2 - y1)) / 2;
+  const left = side === "left";
+  const y0 = my + 3 - ((lines.length - 1) * LH) / 2;
+  return lines.map((l, i) => text(left ? x1 - 6 - off : x1 + 6 + off, y0 + i * LH, l, cls, left ? "end" : "start")).join("");
 }
 
 /** Greedy word wrap by estimated width for a kit text class. */

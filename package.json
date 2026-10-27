@@ -12,6 +12,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "dwg": "node scripts/dwg/build.mjs",
+    "dwg:render": "node scripts/dwg/render.mjs",
     "links": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-doc-links.mjs",
     "test": "vitest run",
     "test:watch": "vitest",

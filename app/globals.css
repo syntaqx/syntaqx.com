@@ -589,6 +589,15 @@ body {
 .diagram .dwg .nbt { font-size: 7.5px; }
 .diagram .dwg .dt,
 .diagram .dwg .ko { paint-order: stroke; stroke: var(--fig-paper); stroke-width: 4px; stroke-linejoin: round; }
+/* Standard diagrams (flows, states, trees) drawn with the same kit:
+   connectors sit between the object outline and the leaders; dashed for an
+   exit or exception path; the accent for the one path that matters. */
+.diagram .dwg .flow { fill: none; stroke: var(--fig-ink); stroke-width: 0.9; stroke-linejoin: round; }
+.diagram .dwg .flow.alt { stroke-dasharray: 4 3; }
+.diagram .dwg .flow.hl { stroke: var(--fig-accent); stroke-width: 1.2; }
+.diagram .dwg .sl.hl,
+.diagram .dwg .lt.hl,
+.diagram .dwg .tc.hl { fill: var(--fig-accent); }
 
 /* GFM tables */
 .prose table {
