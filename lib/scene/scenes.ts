@@ -792,28 +792,31 @@ const route: SceneFn = (s) => {
 
 /**
  * Gaming: two soldiers trade fire across a low wall among trees, rocks and
- * crates while a pixel invader hovers over the field, stepping its legs; on
- * hover it lifts higher.
+ * crates, watched by a pixel drone, on a battlefield lifted off the game
+ * servers that run it. On hover the field rises off the racks.
  */
-const INVADER = [
-  ["..X.....X..", "...X...X...", "..XXXXXXX..", ".XX.XXX.XX.", "XXXXXXXXXXX", "X.XXXXXXX.X", "X.X.....X.X", "...XX.XX..."],
-  ["..X.....X..", "X..X...X..X", "X.XXXXXXX.X", "XXX.XXX.XXX", "XXXXXXXXXXX", ".XXXXXXXXX.", "..X.....X..", ".X.......X."],
+// an original sprite: a round drone with an antenna, its eye glancing side to
+// side and its thrusters flickering
+const DRONE = [
+  [".....X.....", "....XXX....", "..XXXXXXX..", ".XX.....XX.", ".X..XXX..X.", ".XX.....XX.", "..XXXXXXX..", "...X...X..."],
+  [".....X.....", "....XXX....", "..XXXXXXX..", ".XX.....XX.", ".X...XXX.X.", ".XX.....XX.", "..XXXXXXX..", "..X.....X.."],
 ];
 const arcade: SceneFn = (s) => {
   const T = 1.2;
   const n = Math.floor(s.t / T);
   const p = (s.t - n * T) / T;
   // a soldier at x facing dir (+1 or -1): legs, torso, head and a rifle at the shoulder
-  const gz = 1.05;
+  const Z0 = 2.9 + s.spread * 1.8;
+  const gz = Z0 + 1.05;
   const soldier = (x: number, y: number, dir: number, firing: boolean, opts: { accent?: boolean } = {}): Part[] => {
     const kick = firing && p < 0.15 ? -0.08 * dir : 0;
     const rifle: Part = { kind: "box", box: box(dir > 0 ? x + 0.1 + kick : x - 1.3 + kick, y + 0.2, gz, 1.2, 0.14, 0.14), small: true };
     return [
       ...(dir < 0 ? [rifle] : []),
-      { kind: "box", box: box(x - 0.25, y + 0.05, 0, 0.2, 0.2, 0.6), small: true },
-      { kind: "box", box: box(x - 0.25, y + 0.35, 0, 0.2, 0.2, 0.6), small: true },
-      { kind: "box", box: box(x - 0.3, y, 0.6, 0.6, 0.6, 0.7), ...opts },
-      { kind: "box", box: box(x - 0.18, y + 0.12, 1.3, 0.36, 0.36, 0.36), ...opts },
+      { kind: "box", box: box(x - 0.25, y + 0.05, Z0, 0.2, 0.2, 0.6), small: true },
+      { kind: "box", box: box(x - 0.25, y + 0.35, Z0, 0.2, 0.2, 0.6), small: true },
+      { kind: "box", box: box(x - 0.3, y, Z0 + 0.6, 0.6, 0.6, 0.7), ...opts },
+      { kind: "box", box: box(x - 0.18, y + 0.12, Z0 + 1.3, 0.36, 0.36, 0.36), ...opts },
       ...(dir > 0 ? [rifle] : []),
     ];
   };
@@ -824,32 +827,35 @@ const arcade: SceneFn = (s) => {
   // the tracer: from the shooter's muzzle to the other's chest
   const [m, t] = aFires ? [[ax + 1.3, ay + 0.27], [bx - 0.3, by + 0.3]] : [[bx - 1.3, by + 0.27], [ax + 0.3, ay + 0.3]];
   const at = (k: number): V3 => [m[0] + (t[0] - m[0]) * k, m[1] + (t[1] - m[1]) * k, gz + 0.07];
-  // the invader: one bar per run of pixels in a row, bottom row first
+  // the drone: one bar per run of pixels in a row, bottom row first
   const [px, ix, iy] = [0.36, 2.4, 3.4];
-  const iz = 2.6 + s.spread * 1.4 + bob(s, 0.2);
-  const pixels = INVADER[Math.floor(s.t / 0.6) % 2].toReversed().flatMap((row, r) =>
+  const iz = Z0 + 2.4 + s.spread * 0.6 + bob(s, 0.2);
+  const pixels = DRONE[Math.floor(s.t / 0.6) % 2].toReversed().flatMap((row, r) =>
     [...row.matchAll(/X+/g)].map((run): Part => ({ kind: "box", box: box(ix + run.index * px, iy, iz + r * px, run[0].length * px, 0.08, px), accent: true })),
   );
   // scenery: a trunk under two stacked cones, low rocks, crates and a barrel
   const tree = (x: number, y: number, h: number): [number, Part[]] => [x + y, [
-    { kind: "cyl", cx: x, cy: y, z: 0, r: 0.12, h: 0.5 },
-    { kind: "cyl", cx: x, cy: y, z: 0.5, r: 0.6, h: h * 0.6, rt: 0.15 },
-    { kind: "cyl", cx: x, cy: y, z: 0.5 + h * 0.45, r: 0.45, h: h * 0.55, rt: 0.02 },
+    { kind: "cyl", cx: x, cy: y, z: Z0, r: 0.12, h: 0.5 },
+    { kind: "cyl", cx: x, cy: y, z: Z0 + 0.5, r: 0.6, h: h * 0.6, rt: 0.15 },
+    { kind: "cyl", cx: x, cy: y, z: Z0 + 0.5 + h * 0.45, r: 0.45, h: h * 0.55, rt: 0.02 },
   ]];
-  const rock = (x: number, y: number, a: number, b: number, h: number): [number, Part[]] => [x + y + (a + b) / 2, [{ kind: "box", box: box(x, y, 0, a, b, h), small: true }]];
+  const rock = (x: number, y: number, a: number, b: number, h: number): [number, Part[]] => [x + y + (a + b) / 2, [{ kind: "box", box: box(x, y, Z0, a, b, h), small: true }]];
   const things: [number, Part[]][] = [
     tree(1.5, 5.2, 2), tree(8.4, 2.2, 2.1), tree(8.7, 5.5, 1.5), tree(8.4, 7.9, 1.8), tree(1.6, 8.3, 1.5),
     rock(5.6, 1.6, 0.8, 0.6, 0.3), rock(1.3, 3, 0.6, 0.9, 0.35), rock(6.2, 8.2, 0.9, 0.5, 0.25),
-    [8.9, [{ kind: "box", box: box(5.8, 2.5, 0, 0.6, 0.6, 0.6) }, { kind: "box", box: box(6.4, 2.6, 0, 0.55, 0.55, 0.55) }, { kind: "box", box: box(5.95, 2.6, 0.6, 0.5, 0.5, 0.5) }]],
-    [11.6, [{ kind: "cyl", cx: 3.7, cy: 7.9, z: 0, r: 0.3, h: 0.7 }]],
-    [ix + iy + 2, [{ kind: "line", a: [ix + 2, iy, 0], b: [ix + 2, iy, iz], dashed: true, alpha: 0.35 }, ...pixels]],
+    [8.9, [{ kind: "box", box: box(5.8, 2.5, Z0, 0.6, 0.6, 0.6) }, { kind: "box", box: box(6.4, 2.6, Z0, 0.55, 0.55, 0.55) }, { kind: "box", box: box(5.95, 2.6, Z0 + 0.6, 0.5, 0.5, 0.5) }]],
+    [11.6, [{ kind: "cyl", cx: 3.7, cy: 7.9, z: Z0, r: 0.3, h: 0.7 }]],
+    [ix + iy + 2, [{ kind: "line", a: [ix + 2, iy, Z0], b: [ix + 2, iy, iz], dashed: true, alpha: 0.35 }, ...pixels]],
     [bx + by, soldier(bx, by, -1, !aFires)],
-    [4.65 + 5.9, [{ kind: "box", box: box(4.4, 4.6, 0, 0.5, 2.6, 0.55), small: true }]],
+    [4.65 + 5.9, [{ kind: "box", box: box(4.4, 4.6, Z0, 0.5, 2.6, 0.55), small: true }]],
     [ax + ay + 0.3, soldier(ax, ay, 1, aFires, { accent: true })],
   ];
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    { kind: "plane", pts: quad(1, 1, 0, 8, 8), v: 0.12 },
+    // the game servers under the field, and the link up to it
+    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(3.1 + i * 1.4, 4.2, 0, 1, 1.8, 0.9), slots: true })),
+    { kind: "cable", pts: [[5, 5.1, 0.9], [5, 5.1, Z0]], speed: 0.5, accent: true },
+    { kind: "plane", pts: quad(1, 1, Z0, 8, 8), v: 0.12, drops: { at: [[1, 9], [9, 9], [9, 1]], from: 0 } },
     ...things.sort((a, b) => a[0] - b[0]).flatMap(([, ps]) => ps),
     ...(p < 0.15 ? [{ kind: "box", box: box(m[0] - 0.12, m[1] - 0.12, gz - 0.05, 0.24, 0.24, 0.24), accent: true } as Part] : []),
     { kind: "line", a: at(Math.max(0, p * 1.4 - 0.3)), b: at(Math.min(1, p * 1.4)), accent: true },
