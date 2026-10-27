@@ -4,6 +4,7 @@ import { SimpleIcon } from "@/components/simple-icon";
 import { Button } from "@/components/button";
 import { socials } from "@/lib/constants";
 import { pageMetadata } from "@/lib/metadata";
+import { SceneArt } from "@/components/scene-art";
 
 export const metadata = pageMetadata(
   "/about",
@@ -98,6 +99,11 @@ export default function AboutPage() {
 
           {/* Right: details sidebar */}
           <aside className="lg:sticky lg:top-24">
+            <SceneArt
+              scene="desk"
+              className="mb-8 aspect-square max-lg:hidden"
+              label="A desk with code typing itself out on the monitor, a keyboard, a controller and a steaming mug"
+            />
             <dl className="border-t border-border">
               {[
                 { label: "location", value: "Remote" },

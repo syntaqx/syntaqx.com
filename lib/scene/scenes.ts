@@ -14,6 +14,18 @@ const ground = (n = 12): [V3, V3][] => [
   [[-14, n, 0], [n + 16, n, 0]],
 ];
 
+const ease = (k: number) => k * k * (3 - 2 * k);
+
+/** An open-topped box on the ground: far walls, then what's inside, then near walls. */
+const tray = (x: number, y: number, a: number, b: number, h: number, inside: Part[], t = 0.15): Part[] => [
+  { kind: "plane", pts: quad(x, y, 0, a, b), v: 0.12 },
+  { kind: "box", box: box(x, y, 0, a, t, h) },
+  { kind: "box", box: box(x, y, 0, t, b, h) },
+  ...inside,
+  { kind: "box", box: box(x, y + b - t, 0, a - t, t, h) },
+  { kind: "box", box: box(x + a - t, y, 0, t, b, h) },
+];
+
 /**
  * Home: a production system exploded into four tiers: product, the edge
  * (dns, cdn, s3) outside the network, then the app and data subnets. The
@@ -392,7 +404,6 @@ const toolbox: SceneFn = (s) => {
   const now = s.t + T * 0.5;
   const up = Math.floor(now / T) % tools.length;
   const ph = (now % T) / T;
-  const ease = (k: number) => k * k * (3 - 2 * k);
   const lift = (ph < 0.25 ? ease(ph / 0.25) : ph > 0.8 ? ease((1 - ph) / 0.2) : 1) * (2.2 + s.spread * 1.2);
   const tool = (i: number, z: number): Part => {
     const { at: [x, y], size: [a, b, h], round } = tools[i];
@@ -416,12 +427,7 @@ const toolbox: SceneFn = (s) => {
     { kind: "plane", pts: [hinge(0, 0), hinge(A, 0), hinge(A, B), hinge(0, B)], v: 0.3, handles: true },
     { kind: "plane", pts: [hinge(0.35, 0.35), hinge(A - 0.35, 0.35), hinge(A - 0.35, B - 0.35), hinge(0.35, B - 0.35)], v: 0.22 },
     { kind: "line", a: hinge(A / 2 - 0.8, B - 0.18), b: hinge(A / 2 + 0.8, B - 0.18), alpha: 0.9 },
-    { kind: "plane", pts: quad(x0, y0, 0, A, B), v: 0.12 },
-    { kind: "box", box: box(x0, y0, 0, A, 0.15, H) },
-    { kind: "box", box: box(x0, y0, 0, 0.15, B, H) },
-    ...tools.flatMap((_, i) => (out && i === up ? [] : [tool(i, i === up ? lift : 0)])),
-    { kind: "box", box: box(x0, y0 + B - 0.15, 0, A - 0.15, 0.15, H) },
-    { kind: "box", box: box(x0 + A - 0.15, y0, 0, 0.15, B, H) },
+    ...tray(x0, y0, A, B, H, tools.flatMap((_, i) => (out && i === up ? [] : [tool(i, i === up ? lift : 0)]))),
     { kind: "box", box: box(x0 + A / 2 - 0.4, y0 + B, H - 0.5, 0.8, 0.12, 0.35), small: true },
     { kind: "line", a: [mx, my, H], b: [mx, my, Math.max(H, lift)], dashed: true, alpha: 0.4 },
     ...(out ? [tool(up, lift)] : []),
@@ -436,6 +442,162 @@ const toolbox: SceneFn = (s) => {
     ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], hinge(0, B + 0.4), hinge(A, B + 0.4), [4, 4, H + 5.4]],
     axes: ground(10),
   };
+};
+
+/**
+ * About: the desk. Code types itself out on the screen, a key lighting
+ * with each keystroke, next to a controller and a mug.
+ */
+const desk: SceneFn = (s) => {
+  const [sx, sy, sw, sh] = [1.4, 3.2, 5.6, 3.4];
+  const sz = 1.2 + s.spread * 1.2;
+  const face = sy + 0.35;
+  const indent = [0, 0.4, 0.8, 0.8, 0.4, 0.4, 0];
+  const lines = [2.4, 2.8, 2.2, 3.2, 1.4, 2.6, 0.8];
+  // a line a beat, then a pause before the screen clears
+  const at = (s.t * 0.7) % (lines.length + 2);
+  const done = Math.min(lines.length, Math.floor(at));
+  const typing = done < lines.length;
+  const row = (i: number) => sz + sh - 0.55 - i * 0.36;
+  const x0 = sx + 0.5;
+  const cur: V3 = typing
+    ? [x0 + indent[done] + lines[done] * (at - done), face + 0.01, row(done) - 0.08]
+    : [x0, face + 0.01, row(done) - 0.08];
+  const capZ = 0.2 + s.spread * 0.6;
+  const key = Math.floor(s.t * 9) % 40;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "box", box: box(3.3, 2.4, 0, 1.8, 1.3, 0.12) },
+    { kind: "box", box: box(4, 2.85, 0.12, 0.4, 0.35, 1.08) },
+    { kind: "line", a: [4.2, 3.03, 1.2], b: [4.2, 3.03, sz], dashed: true, alpha: 0.4 },
+    { kind: "box", box: box(sx, sy, sz, sw, 0.35, sh) },
+    { kind: "plane", pts: [[sx + 0.2, face, sz + 0.2], [sx + sw - 0.2, face, sz + 0.2], [sx + sw - 0.2, face, sz + sh - 0.2], [sx + 0.2, face, sz + sh - 0.2]], v: 0.03 },
+    ...lines.slice(0, done).map((len, i): Part => ({ kind: "line", a: [x0 + indent[i], face, row(i)], b: [x0 + indent[i] + len, face, row(i)], alpha: 0.7 })),
+    ...(typing ? [{ kind: "line", a: [x0 + indent[done], face, row(done)], b: [cur[0], face, row(done)], alpha: 1, accent: true } as Part] : []),
+    ...(typing || Math.floor(s.t * 2.5) % 2 ? [{ kind: "line", a: cur, b: [cur[0] + 0.25, cur[1], cur[2]], alpha: 1, accent: true } as Part] : []),
+    // keyboard, its keycaps lifting off on hover
+    { kind: "box", box: box(1.8, 4.6, 0, 4.4, 1.5, 0.15) },
+    { kind: "plane", pts: quad(1.95, 4.75, capZ, 4.1, 1.2), v: 0.2, drops: { at: [[1.95, 4.75], [6.05, 5.95]], from: 0.15 } },
+    ...[1, 2, 3].map((k): Part => ({ kind: "line", a: [1.95, 4.75 + k * 0.3, capZ], b: [6.05, 4.75 + k * 0.3, capZ], alpha: 0.35 })),
+    ...[1, 2, 3, 4, 5, 6, 7, 8, 9].map((j): Part => ({ kind: "line", a: [1.95 + j * 0.41, 4.75, capZ], b: [1.95 + j * 0.41, 5.95, capZ], alpha: 0.35 })),
+    ...(typing ? [{ kind: "box", box: box(1.95 + (key % 10) * 0.41, 4.75 + Math.floor(key / 10) * 0.3, capZ, 0.41, 0.3, 0.06), accent: true } as Part] : []),
+    // controller
+    { kind: "box", box: box(6.9, 6.9, 0, 1.7, 1, 0.25), small: true },
+    { kind: "cyl", cx: 7.3, cy: 7.4, z: 0.25, r: 0.17, h: 0.12 },
+    { kind: "cyl", cx: 8.2, cy: 7.4, z: 0.25, r: 0.17, h: 0.12 },
+    // mug, steaming
+    ...[0, 1].map((k): Part => ({ kind: "line", a: [7.7 + k * 0.25, 5.2, 1.1], b: [7.7 + k * 0.25 + Math.sin(s.t * 1.6 + k * 2) * 0.2, 5.2, 1.9 + k * 0.2], dashed: true, alpha: 0.4 })),
+    { kind: "cyl", cx: 7.8, cy: 5.3, z: 0, r: 0.45, h: 0.95 },
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [sx, sy, sz + sh + 0.4], [sx + sw, sy, sz + sh + 0.4]], axes: ground(10) };
+};
+
+/**
+ * Contact: a plug (you) seats itself in a socket (me), with messages
+ * flowing down its cable; the socket's light is on while they're connected.
+ */
+const plug: SceneFn = (s) => {
+  const ph = (s.t % 4.2) / 4.2;
+  const down = ph < 0.3 ? ease(ph / 0.3) : ph < 0.7 ? 1 : 1 - ease((ph - 0.7) / 0.3);
+  const on = down > 0.98;
+  const plate = 0.5;
+  const up = 2.4 + s.spread * 1.6 + bob(s);
+  const tip = plate - 0.55 + (up - plate + 0.55) * (1 - down);
+  const body = tip + 1.1;
+  const prongs = [4.4, 5.4];
+  const top = body + 1.7;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "box", box: box(2.6, 2.6, 0, 4.8, 4.8, plate) },
+    { kind: "plane", pts: quad(3.1, 3.1, plate, 3.8, 3.8), v: 0.2 },
+    ...prongs.map((x): Part => ({ kind: "plane", pts: quad(x - 0.05, 4.3, plate, 0.4, 1), v: 0 })),
+    { kind: "box", box: box(6.3, 3.3, plate, 0.4, 0.4, 0.12), accent: on, small: !on },
+    ...(on ? [] : prongs.map((x): Part => ({ kind: "line", a: [x + 0.15, 4.8, plate], b: [x + 0.15, 4.8, tip], dashed: true, alpha: 0.4 }))),
+    ...prongs.map((x): Part => ({ kind: "box", box: box(x, 4.35, Math.max(tip, plate), 0.3, 0.9, body - Math.max(tip, plate)) })),
+    { kind: "box", box: box(4, 4, body, 2.1, 1.6, 1), accent: true, handles: true },
+    { kind: "cyl", cx: 5.05, cy: 4.8, z: body + 1, r: 0.6, h: 0.7, rt: 0.22, accent: true },
+    { kind: "cable", pts: [[5.05, -1.5, top + 1], [5.05, 4.8, top + 1], [5.05, 4.8, top]], speed: 0.45, accent: true },
+    { kind: "label", at: [6.1, 4, body + 1], text: "you", dx: 1.4, dy: -1, accent: true },
+    { kind: "label", at: [7.4, 7.4, plate], text: on ? "me · connected" : "me", dx: 1, dy: 1, accent: on },
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [5.05, 2, up + 3.8], [4, 4, up + 2.2]], axes: ground(10) };
+};
+
+/**
+ * Resume: the career as a skyline along a timeline, a block per role,
+ * rising with scope. A playhead walks it, lighting each role in turn, and
+ * ends on the open slot for what's next.
+ */
+const career: SceneFn = (s) => {
+  const yr = (y: number) => (y - 2011) * 0.75;
+  const roles: [string, number, number, number][] = [
+    ["softwaremedia", 2011.25, 2012.8, 0.7],
+    ["betterservers", 2012.85, 2013.45, 0.6],
+    ["bluehost", 2013.85, 2014.35, 0.8],
+    ["riot games", 2014.35, 2016.5, 1.4],
+    ["imgur", 2016.8, 2018.35, 1.7],
+    ["even", 2018.5, 2018.95, 1.4],
+    ["outdoorsy", 2019.1, 2019.8, 1.6],
+    ["trugolf", 2020, 2021.25, 1.9],
+    ["entrata", 2021.35, 2023.7, 2.4],
+    ["aptive", 2023.7, 2026.7, 3.1],
+  ];
+  const next = [2026.9, 2027.7, 3.4];
+  const [y0, depth] = [3, 2];
+  const end = yr(next[1]) + 0.6;
+  // starts mid-career, so the resting frame (and the OG image) has a role lit
+  const px = ((s.t * 0.08 + 0.55) % 1) * end;
+  const lit = roles.findIndex(([, a, b]) => px >= yr(a) && px <= yr(b));
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(-0.4, 1.8, 0, end + 0.8, 4.4), v: 0.09 },
+    ...Array.from({ length: 17 }, (_, k): Part => ({ kind: "line", a: [yr(2011 + k), 6, 0], b: [yr(2011 + k), 6.2, 0], alpha: k % 5 === 4 ? 0.8 : 0.35 })),
+    { kind: "line", a: [px, 1.8, 0], b: [px, 6.2, 0], alpha: 1, accent: true },
+  ];
+  roles.forEach(([name, a, b, h], i) => {
+    const z = i === lit ? s.spread * 1 : 0;
+    if (z) parts.push({ kind: "line", a: [yr(a), y0 + depth, 0], b: [yr(a), y0 + depth, z], dashed: true, alpha: 0.4 });
+    parts.push({ kind: "box", box: box(yr(a), y0, z, Math.max(0.2, yr(b) - yr(a) - 0.06), depth, h), accent: i === lit, vents: h > 2 && i !== lit });
+    if (i === lit) parts.push({ kind: "label", at: [yr(b), y0, z + h], text: name, dx: 1.2, dy: -1.2, accent: true });
+  });
+  parts.push({ kind: "box", box: box(yr(next[0]), y0, 0, yr(next[1]) - yr(next[0]), depth, next[2]), ghost: true });
+  if (px > yr(next[0])) parts.push({ kind: "label", at: [yr(next[1]), y0, next[2]], text: "next · ?", dx: 1.2, dy: -1.2, accent: true });
+  return { parts, ext: [[-0.4, 1.8, 0], [end + 0.4, 1.8, 0], [-0.4, 6.2, 0], [end + 0.4, 6.2, 0], [yr(next[0]), y0, next[2] + 2.4], [0, y0, 2.4]], axes: [] };
+};
+
+/**
+ * Topics: posts ride a belt and drop into the bin for their topic, the
+ * belt's slats sliding underneath.
+ */
+const sorter: SceneFn = (s) => {
+  const bins: [string, number, number][] = [["llms", 1.2, 3], ["ai in dev", 4.2, 2], ["engineering", 7.2, 2]];
+  const belt = 2;
+  const deck = belt + 0.25;
+  const T = 3.4;
+  const n = Math.floor(s.t / T) % bins.length;
+  const ph = (s.t % T) / T;
+  const [, bx, held] = bins[n];
+  const tx = bx + 0.75;
+  const rest = 0.04 + held * 0.08;
+  const x = ph < 0.55 ? 0.5 + (tx - 0.5) * (ph / 0.55) : tx;
+  const y = ph < 0.55 ? 4.1 : 4.1 + 2.75 * ease(Math.min(1, (ph - 0.55) / 0.15));
+  const z = ph < 0.7 ? deck : deck + (rest - deck) * ease(Math.min(1, (ph - 0.7) / 0.15));
+  const sheet: Part = { kind: "box", box: box(x, y, z, 0.9, 0.7, 0.06), accent: true };
+  const inBin = ph >= 0.7;
+  const slide = (s.t * 0.9) % 0.6;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    ...[0.8, 5, 9.2].map((lx): Part => ({ kind: "box", box: box(lx, 4.2, 0, 0.3, 0.3, belt) })),
+    { kind: "box", box: box(0.3, 3.9, belt, 9.6, 1.1, 0.25) },
+    ...Array.from({ length: 16 }, (_, k): Part => ({ kind: "line", a: [0.3 + slide + k * 0.6, 3.9, deck], b: [0.3 + slide + k * 0.6, 5, deck], alpha: 0.3 })),
+    ...(ph < 0.55 ? [sheet] : []),
+  ];
+  bins.forEach(([name, b, count], i) => {
+    const stack = Array.from({ length: count }, (_, k): Part => ({ kind: "box", box: box(b + 0.7 + (k % 2) * 0.1, 6.8 - (k % 2) * 0.08, 0.04 + k * 0.08, 0.9, 0.7, 0.06), small: true }));
+    parts.push(...tray(b, 6.2, 2.4, 2, 1.1, i === n && inBin ? [...stack, sheet] : stack));
+    parts.push({ kind: "label", at: [b + 1.2, 8.2, 0.55], text: name, dx: -0.9, dy: 1.2, accent: i === n });
+  });
+  if (ph >= 0.55 && !inBin) parts.push(sheet);
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [0.3, 3.9, deck + 1], [9.9, 3.9, deck + 1]], axes: ground(10) };
 };
 
 /**
@@ -530,7 +692,7 @@ const missing: SceneFn = (s) => {
   return { parts, ext: [[0, 9, 0], [9, 0, 0], [9, 9, 0], [0, 0, 0], [3, 3, z + 1.5], [8.6, 4.3, 3]], axes: ground(9) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, missing } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */

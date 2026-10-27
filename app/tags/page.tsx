@@ -23,7 +23,13 @@ export default function TagsPage() {
           tags.map((tag) => ({ name: tag.label, path: `/tags/${tag.slug}` })),
         )}
       />
-      <PageHeader label="tags" title="Topics">
+      <PageHeader
+        label="tags"
+        title="Topics"
+        scene="sorter"
+        sceneLabel="Posts riding a conveyor belt and dropping into bins labeled by topic"
+        hideSceneOnMobile
+      >
         <p>
           Browse posts by topic. {tags.length} tag
           {tags.length === 1 ? "" : "s"} in total.
