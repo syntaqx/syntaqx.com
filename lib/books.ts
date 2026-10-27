@@ -60,11 +60,21 @@ export const BOOKS: Book[] = [
       "It reads in eight parts, plus a reference. How Games Get Made: the business and its data model, the engine landscape, building your own engine, and production pipelines. Clients and Delivery: game clients and launchers, and patching. Multiplayer: netcode, game servers, lockstep and rollback, matchmaking, and social systems. Backend and Live Services: backend architecture, accounts, economies, live operations and telemetry. Fair Play and Safety: anti-cheat, player behavior and player support. Money: monetization, and stores and payments. The Rules: ratings and children, loot boxes and consumer law, and accessibility. Running the Platform: metrics, AI and esports. Reference: a glossary of every term.",
     ],
   },
+  {
+    slug: "property-tech",
+    type: "industry",
+    name: "Property Tech",
+    summary:
+      "How the software that runs rental housing, associations, commercial space, storage and short-term rentals works, from the lease and the ledger to the law.",
+    intro: [
+      "A rental property looks simple from outside: a unit, a lease, rent on the first. Underneath it run three ledgers that must never mix (the owner's, the manager's and the resident's), money held in trust under each state's rules, prices that antitrust enforcers now read line by line, screening governed by credit reporting and fair housing law, and a different body of landlord-tenant law at every state and city line. This book surveys how the industry's platforms handle each piece, benchmarked across Entrata, Yardi, RealPage, AppFolio, MRI, ResMan, Rent Manager, Buildium and the specialists around them, with no single vendor as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in eight parts, plus a reference. The Business: how property earns money, who the parties are, the core data model, and the software landscape. Properties, Owners and Investors: the property hierarchy, management agreements and owner accounting, funds and asset management, trust accounting, and budgets and capital projects. Leasing: listings and marketing, leads and tours, revenue management and its antitrust record, screening, the lease, and move-in and move-out. Rent and Resident Money: charges and ledgers, collecting rent, resident financial products, insurance and deposits, utilities, affordable housing, and delinquency and eviction. Operations: maintenance, vendors and payables, access and smart buildings, and resident experience. Other Property Types: student, military and specialty, senior living, associations, commercial, self storage and short-term rentals. The Rules: fair housing, landlord-tenant law as data, records and privacy, and what changes outside the US. Running the Platform: architecture and integrations, AI, operating metrics, and switching platforms. Reference: a glossary of every term.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
 export const UPCOMING_BOOKS: { name: string; type: BookType }[] = [
-  { name: "Property Tech", type: "industry" },
   { name: "Commerce & Marketplaces", type: "industry" },
   { name: "Consumer Fintech", type: "industry" },
   { name: "Social & UGC", type: "industry" },
