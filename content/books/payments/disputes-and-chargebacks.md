@@ -191,16 +191,14 @@ Dispute records are evidence in the dispute itself, in pre-arbitration and arbit
 
 **Specifications**
 
-- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the dispute time limits including the 120-day window, Compelling Evidence 3.0 conditions (11.7.5.6), Rapid Dispute Resolution, and dispute response and pre-arbitration time limits (Tables 11-1 and 11-2)
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the dispute time limits including the 120-day window, Compelling Evidence 3.0 conditions (11.7.5.6), including prior transactions "at one or more Merchants" for disputes processed on or after 24 October 2026 (11.7.5.3, 11.7.5.6), Rapid Dispute Resolution, and dispute response and pre-arbitration time limits (Tables 11-1 and 11-2); 18 April 2026 edition
 
 **Reference**
 
 - [Visa: Visa Acquirer Monitoring Program fact sheet](https://corporate.visa.com/content/dam/VCOM/corporate/visa-perspectives/security-and-trust/documents/visa-acquirer-monitoring-program-fact-sheet-2025.pdf), the VAMP ratio, regional thresholds and the April 2026 reduction
 - [Mastercard Developers: Dispute resolution cycle](https://developer.mastercard.com/mastercom/documentation/dispute-resolution-cycle/), collaboration, chargeback, second presentment and case filing
 - [Visa: Evolution of Compelling Evidence FAQ](https://usa.visa.com/content/dam/VCOM/regional/na/us/support-legal/documents/evolution-of-compelling-evidence-external-faqs.pdf), Compelling Evidence 3.0 qualification and Order Insight
-- [Visa: Sunset of retrieval requests](https://usa.visa.com/content/dam/VCOM/regional/na/us/support-legal/documents/sunset-of-retrieval-requests-and-impact-on-healthcare-auto-substantiation-transaction-receipt-requests.pdf), the end of US retrieval requests in October 2020
-- [Chargeflow: Visa CE3.0 vs Mastercard First-Party Trust](https://www.chargeflow.io/blog/visa-ce3-vs-mastercard-first-party-trust), the expansion in rules 11.7.5.3 and 11.7.5.6 for disputes processed on or after October 24, 2026, with earlier sales from one or more merchants
-- [TabaPay: The next phase of Visa's VAMP initiative](https://developers.tabapay.com/docs/the-next-phase-of-visas-vamp-initiative), the October 2025 start of enforcement and the April 1, 2026 drop to 150 basis points
+- [Visa: Sunset of retrieval requests](https://usa.visa.com/content/dam/VCOM/regional/na/us/support-legal/documents/sunset-of-retrieval-requests-and-impact-on-healthcare-auto-substantiation-transaction-receipt-requests.pdf), the end of US retrieval requests in October 2020- [TabaPay: The next phase of Visa's VAMP initiative](https://developers.tabapay.com/docs/the-next-phase-of-visas-vamp-initiative), the October 2025 start of enforcement and the April 1, 2026 drop to 150 basis points
 
 **In practice**
 
