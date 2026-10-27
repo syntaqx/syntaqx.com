@@ -128,7 +128,7 @@ The same rules apply in reverse for a manager: a manager whose packages fail val
 
 ## Asset Management
 
-The asset manager works for the owner and judges the property against its plan: budget versus actual, the reforecast, leasing and pricing against the market, capital projects against their returns, and the decision to hold, refinance or sell. The tools are reporting and modeling over the data above, plus the budgets and pro formas in [Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects), and the useful platform features are mostly about trust in the numbers: the same definitions as the operator's reports (Operating Metrics), drill-down from a portfolio figure to the ledger lines and leases behind it, and dated versions of every plan so that "versus budget" means the approved budget, not the latest draft.
+The asset manager works for the owner and judges the property against its plan: budget versus actual, the reforecast, leasing and pricing against the market, capital projects against their returns, and the decision to hold, refinance or sell. The tools are reporting and modeling over the data above, plus the budgets and pro formas in [Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects), and the useful platform features are mostly about trust in the numbers: the same definitions as the operator's reports ([Owner-Reporting Metrics](/books/property-tech/operating-metrics#owner-reporting-metrics)), drill-down from a portfolio figure to the ledger lines and leases behind it, and dated versions of every plan so that "versus budget" means the approved budget, not the latest draft.
 
 ## Valuations
 
@@ -149,7 +149,7 @@ Asset managers want to know how their properties compare: rents, occupancy and e
 - **Licensed survey and transaction data** from market data businesses, under license terms that limit use and redistribution ([Licensed Data](/docs/architecture/record-linkage#licensed-data)).
 - **Contributed nonpublic data:** competitors' actual rents, occupancy and lease terms pooled by a vendor and returned as benchmarks.
 
-The third is where antitrust law lives. The pricing software cases turned on competitors' nonpublic data being pooled and used to set rents ([Capital and Consolidation, as of October 2026](/books/property-tech/software-landscape#capital-and-consolidation-as-of-october-2026) notes why vendors that own data businesses sit on both sides), and benchmarking products that compare a property's performance with named or identifiable competitors from pooled nonpublic data raise the same question. Revenue Management & Pricing sets out the legal record and the design constraints; Operating Metrics covers benchmarking. For the asset management layer, my rule is provenance on every external dataset: who supplied it, whether it contains competitors' nonpublic data, how old it is, how aggregated, and what the license allows, so the question "did this number come from a competitor's private data" has an answer before a regulator asks it.
+The third is where antitrust law lives. The pricing software cases turned on competitors' nonpublic data being pooled and used to set rents ([Capital and Consolidation, as of October 2026](/books/property-tech/software-landscape#capital-and-consolidation-as-of-october-2026) notes why vendors that own data businesses sit on both sides), and benchmarking products that compare a property's performance with named or identifiable competitors from pooled nonpublic data raise the same question. [Revenue Management & Pricing](/books/property-tech/revenue-management#the-antitrust-record-as-of-october-2026) sets out the legal record and the design constraints; [Operating Metrics](/books/property-tech/operating-metrics#benchmarking-as-an-information-exchange-risk) covers benchmarking. For the asset management layer, my rule is provenance on every external dataset: who supplied it, whether it contains competitors' nonpublic data, how old it is, how aggregated, and what the license allows, so the question "did this number come from a competitor's private data" has an answer before a regulator asks it.
 
 ## How to Build It
 
@@ -159,7 +159,7 @@ Deltas against [The Core Data Model](/books/property-tech/property-business#the-
 ALTER TABLE legal_entities
   DROP CONSTRAINT legal_entities_role_check,
   ADD CONSTRAINT legal_entities_role_check CHECK (role IN ('manager', 'owner', 'fund',
-    'association', 'investor', 'sponsor', 'venture'));
+    'association', 'investor', 'sponsor', 'venture', 'lender'));  -- lenders: Budgets' draws
 
 CREATE TABLE offerings (
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -178,7 +178,8 @@ CREATE TABLE investor_verifications (               -- accreditation evidence, p
   investor_entity_id  UUID NOT NULL REFERENCES legal_entities (id),
   basis               TEXT NOT NULL,                -- 'income', 'net_worth', 'professional', 'entity'
   method              TEXT NOT NULL,                -- 'tax_forms', 'third_party_letter', ...
-  verified_by         TEXT NOT NULL,                -- staff user or the confirming professional
+  verified_by         UUID NOT NULL REFERENCES users (id),  -- the staff user who accepted it
+  confirming_professional TEXT,                     -- the CPA, attorney or adviser, for a letter
   verified_on         DATE NOT NULL,
   evidence_uri        TEXT NOT NULL,                -- retained per the offering's schedule
   UNIQUE (offering_id, investor_entity_id)
@@ -312,8 +313,8 @@ CREATE TABLE valuations (
   cap_rate_bps    INT,
   discount_rate_bps INT,
   inputs          JSONB NOT NULL,
-  prepared_by     TEXT NOT NULL,                     -- appraiser or staff
-  approved_by     UUID,
+  prepared_by     TEXT NOT NULL,                     -- the appraiser or preparer, by name
+  approved_by     UUID REFERENCES users (id),
   supersedes_id   UUID REFERENCES valuations (id),
   report_uri      TEXT,
   CHECK (num_nonnulls(property_id, entity_id) = 1)

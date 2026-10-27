@@ -8,7 +8,7 @@ part = "Rent and Resident Money"
 tags = ["property-tech", "affordable-housing", "hud", "lihtc", "tracs", "public-housing"]
 +++
 
-In subsidized housing, the rent is computed, not set. A household's income, members, assets and expenses go in; a program's rules produce what the household pays and, often, what a government agency pays on its behalf. The owner must recertify the household every year and whenever its circumstances change, transmit the result to the agency in a prescribed format, bill the agency monthly for its share, keep the unit inside the program's rent limits, pass physical inspections, and keep every document for audits that can claw back years of subsidy. Many properties sit in more than one program at once (a tax credit property that also has project-based Section 8 units and a state loan), each with its own income limits and its own definition of income. On the other side of a voucher, a public housing authority runs its own system: waitlists, eligibility, landlords and their contracts, inspections and payments. This chapter covers both: the owner side (project-based assistance, tax credits and rural housing), certifications and income, the 2016 income and asset reforms known as HOTMA, inspections, and the housing authority side. Program rules move often, so dates here are as of October 2026.
+In subsidized housing, the rent is computed, not set. A household's income, members, assets and expenses go in; a program's rules produce what the household pays and, often, what a government agency pays on its behalf. The owner must recertify the household every year and whenever its circumstances change, transmit the result to the agency in a prescribed format, bill the agency monthly for its share, keep the unit inside the program's rent limits, pass physical inspections, and keep every document for audits that can claw back years of subsidy. Many properties sit in more than one program at once (a tax credit property that also has project-based Section 8 units and a state loan), each with its own income limits and its own definition of income. On the other side of a voucher, a public housing authority runs its own system: waitlists, eligibility, landlords and their contracts, inspections and payments. This chapter covers both: the owner side (project-based assistance, tax credits and rural housing), certifications and income, the 2016 income and asset reforms known as HOTMA, inspections, and the housing authority side. Program rules move often, so dates here are as of October 2026. Social housing outside the US is a different regulated market ([Outside the US](/books/property-tech/outside-the-us#the-united-kingdom)).
 
 ## How the Platforms Do It
 
@@ -48,11 +48,11 @@ The software contract is the file format. TRACS defines record layouts and valid
 
 ### Rents, limits and allowances
 
-Programs constrain rents from both sides. Assisted contract rents change by HUD-approved adjustments (gross rent changes), which reprice the whole property at once and flow into every household's certification. Tax credit rents are capped by limits derived from area income. **Income limits** and the tax credit's multifamily tax subsidy project limits are published annually by HUD by area and household size; Entrata's import of "data sets released every April" is the annual load, and it has to keep every prior year, because a household certified last year was tested against last year's limits. **Utility allowances** reduce what the household pays when it pays utilities directly, and they're part of gross rent under the tax credit rules, so changing an allowance changes the maximum rent ([Resident Utility Billing](/books/property-tech/utilities-and-energy#resident-utility-billing) covers the billing side).
+Programs constrain rents from both sides. Assisted contract rents change by HUD-approved adjustments (gross rent changes), which reprice the whole property at once and flow into every household's certification. Tax credit rents are capped by limits derived from area income, a ceiling the pricing engine must respect ([Rent Limits in the Engine](/books/property-tech/revenue-management#rent-limits-in-the-engine)). **Income limits** and the tax credit's multifamily tax subsidy project limits are published annually by HUD by area and household size; Entrata's import of "data sets released every April" is the annual load, and it has to keep every prior year, because a household certified last year was tested against last year's limits. **Utility allowances** reduce what the household pays when it pays utilities directly, and they're part of gross rent under the tax credit rules, so changing an allowance changes the maximum rent ([Resident Utility Billing](/books/property-tech/utilities-and-energy#resident-utility-billing) covers the billing side).
 
 ### Inspections
 
-Assisted and public housing is inspected under HUD's National Standards for the Physical Inspection of Real Estate (NSPIRE). Compliance dates have moved program by program: in September 2025 HUD extended the NSPIRE compliance date for the voucher, project-based voucher and moderate rehabilitation programs to January 31, 2027 (the third extension), and for CPD programs to October 1, 2026; in September 2026 it sought comment on revised NSPIRE scoring procedures. RealPage markets NSPIRE tools (inspection scheduling and audit-ready reports) in its maintenance product. For the platform, an inspection is a dated record with findings by unit and area, each finding with a severity and a deadline, each deficiency a work order with proof of repair (Maintenance & Work Orders owns the repair; [Proof of Service](/books/field-operations/proof-of-service) the evidence).
+Assisted and public housing is inspected under HUD's National Standards for the Physical Inspection of Real Estate (NSPIRE). Compliance dates have moved program by program: in September 2025 HUD extended the NSPIRE compliance date for the voucher, project-based voucher and moderate rehabilitation programs to January 31, 2027 (the third extension), and for CPD programs to October 1, 2026; in September 2026 it sought comment on revised NSPIRE scoring procedures. RealPage markets NSPIRE tools (inspection scheduling and audit-ready reports) in its maintenance product. For the platform, an inspection is a dated record with findings by unit and area, each finding with a severity and a deadline, each deficiency a work order with proof of repair ([Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#inspections) owns the repair; [Proof of Service](/books/field-operations/proof-of-service) the evidence).
 
 ## Certifications and Income
 
@@ -67,7 +67,7 @@ Each certification captures the household's members (head, spouse, co-head, depe
 
 - **The certification is immutable.** A correction is a new certification, often with an earlier effective date; the old one stays, because HUD, the state and the auditor all ask "what did you know and when?" ([Effective Dating & History](/docs/database/temporal-data#recorded-time-and-corrections)).
 - **The computation is reproducible.** Store the inputs, the rule version and the outputs, not just the outputs, because program rules change and a 2023 certification must still compute under 2023 rules ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
-- **Verification is evidence.** Third-party verification of income and assets, and HUD's own **Enterprise Income Verification** system, which checks reported income for tenants in HUD rental assistance programs; HUD's June 2026 system of records notice replaces EIV's Income Discrepancy Report with an Income Validation Tool. Each source document is attached to the member and the income it verifies. Applications & Screening covers verification vendors; this chapter only needs the result and its evidence.
+- **Verification is evidence.** Third-party verification of income and assets, and HUD's own **Enterprise Income Verification** system, which checks reported income for tenants in HUD rental assistance programs; HUD's June 2026 system of records notice replaces EIV's Income Discrepancy Report with an Income Validation Tool. Each source document is attached to the member and the income it verifies. [Applications & Screening](/books/property-tech/applications-and-screening#income-and-identity-verification) covers verification vendors; this chapter only needs the result and its evidence.
 - **Multi-program certifications run every test at once.** A household in a tax credit unit with project-based assistance is tested against both limits, with both programs' definitions of income where they differ.
 - **Deadlines are computed and tracked.** Recertification notices go out on the program's schedule, and a missed annual changes rent (often to market) on a date the rules set; the platform computes and stores those dates when the cycle opens ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
 
@@ -97,7 +97,7 @@ A public housing authority runs a different system with overlapping data. It adm
 - **Inspections** of voucher units under NSPIRE (compliance date for voucher programs January 31, 2027, as of October 2026), scheduled, conducted on mobile devices, and tied to abatement.
 - **Case management** for family self-sufficiency and other programs, with escrow accounts that grow as earned income rises.
 
-For a platform that serves both sides, the boundary is where the owner's system meets the authority's: a landlord renting to a voucher holder receives the authority's HAP payment as a `ledger_party = 'subsidy'` payment and the family's share as a resident payment, and the authority's portal and the owner's ledger have to agree on both. Source-of-income laws that bar refusing voucher holders are Applications & Screening's and Fair Housing's.
+For a platform that serves both sides, the boundary is where the owner's system meets the authority's: a landlord renting to a voucher holder receives the authority's HAP payment as a `ledger_party = 'subsidy'` payment and the family's share as a resident payment, and the authority's portal and the owner's ledger have to agree on both. Source-of-income laws that bar refusing voucher holders are [Applications & Screening](/books/property-tech/applications-and-screening#source-of-income)'s and [Fair Housing](/books/property-tech/fair-housing#protected-classes)'s.
 
 ## How to Build It
 
@@ -259,17 +259,11 @@ CREATE TABLE hap_contracts (             -- the authority's contract with a land
   abated_from         DATE                -- set when a failed inspection stops payments
 );
 
-CREATE TABLE unit_inspections (
-  id             UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id      UUID NOT NULL,
-  unit_id        UUID REFERENCES units (id),
-  hap_contract_id UUID REFERENCES hap_contracts (id),
-  standard       TEXT NOT NULL,           -- 'NSPIRE', 'NSPIRE-V', a state standard
-  inspected_on   DATE NOT NULL,
-  result         TEXT NOT NULL CHECK (result IN ('pass', 'fail', 'inconclusive')),
-  findings       JSONB NOT NULL,          -- deficiency, severity, location, cure deadline
-  CHECK (unit_id IS NOT NULL OR hap_contract_id IS NOT NULL)
-);
+-- Inspections are the inspections table from Maintenance & Work Orders: kinds
+-- 'nspire_self', 'nspire_hud' and 'hcv', standard 'NSPIRE' or 'NSPIRE-V', a pass/fail
+-- result, and deficiencies as inspection_findings with severity, area and cure_by.
+ALTER TABLE inspections
+  ADD COLUMN hap_contract_id UUID REFERENCES hap_contracts (id);  -- authority side: abatement
 ```
 
 Decisions behind it:
@@ -288,7 +282,7 @@ Subsidized housing has the most demanding audit trail in the book:
 - **Every transmission and response.** TRACS and MINC files as sent, error reports and resubmissions, and every voucher's payment.
 - **Rent compliance by unit and month.** For tax credit units, the gross rent including utility allowance against the limit in force, because one overcharged month is a finding.
 - **Program reporting** to state agencies and HUD on their schedules, and management reviews.
-- **Waitlist history** at an authority: every application, preference, selection and removal, which is what a fair housing complaint asks for (Fair Housing; Records, Privacy & Audits).
+- **Waitlist history** at an authority: every application, preference, selection and removal, which is what a fair housing complaint asks for ([Fair Housing](/books/property-tech/fair-housing#enforcement); [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds)).
 
 ## What This Means for the System You Build
 

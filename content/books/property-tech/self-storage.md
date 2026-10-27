@@ -13,7 +13,7 @@ In return for giving up landlord-tenant protections, the occupant gets a differe
 
 ## How It Differs From the Multifamily Core
 
-The core model already makes room for storage: a self-storage facility is a `properties` row of type `self_storage`, each unit is a `units` row of kind `storage_unit`, and the rental agreement is a `leases` row with `ends_on` null, because it is periodic. What changes is everything hanging off those rows:
+The core model already makes room for storage: a self-storage facility is a `properties` row of type `self_storage`, each unit is a `units` row of kind `storage_unit`, and the rental agreement is a `leases` row with `ends_on` null, because it is periodic ([Holdover and Month-to-Month](/books/property-tech/the-lease#holdover-and-month-to-month)). What changes is everything hanging off those rows:
 
 | | Multifamily core | Self storage |
 | --- | --- | --- |
@@ -26,7 +26,7 @@ The core model already makes room for storage: a self-storage facility is a `pro
 | **Possession** | The resident lives there | The occupant visits; the gate decides who gets in |
 | **Ancillary revenue** | Fees, parking, renters insurance | Protection plans or tenant insurance, locks, boxes |
 
-So the storage edition of a property platform is mostly new tables around an unchanged spine: unit types and street rates instead of floor plans and lease-term pricing, access state instead of keys, and lien cases instead of evictions. The pieces that stay the same matter as much: charges are still schedules and posted facts, payments are still applied to charges, and the owner of record still gets an owner statement (Owners & Management Agreements).
+So the storage edition of a property platform is mostly new tables around an unchanged spine: unit types and street rates instead of floor plans and lease-term pricing, access state instead of keys, and lien cases instead of evictions ([Delinquency, Collections & Eviction](/books/property-tech/delinquency-and-eviction)). The pieces that stay the same matter as much: charges are still schedules and posted facts, payments are still applied to charges, and the owner of record still gets an owner statement ([Owners & Management Agreements](/books/property-tech/owners-and-management-agreements#owner-reporting)).
 
 ## How the Platforms Do It
 
@@ -49,7 +49,7 @@ Three things stand out. First, the specialists bundle the revenue lines: one ven
 
 A storage unit is a box with a door, but the attributes that price it are many:
 
-- **Size.** Width by depth (a 5x10, a 10x10, a 10x30), sometimes height, and the derived square footage that every revenue and occupancy figure in the industry is expressed in. Public Storage reports realized rent "per occupied square foot," not per unit.
+- **Size.** Width by depth (a 5x10, a 10x10, a 10x30), sometimes height, and the derived square footage that every revenue and occupancy figure in the industry is expressed in (occupancy by square foot is defined in [Operating Metrics](/books/property-tech/operating-metrics#occupancy-leased-and-exposure)). Public Storage reports realized rent "per occupied square foot," not per unit.
 - **Climate control.** Heated and cooled, sometimes humidity controlled. A different product at a different price, and a different risk when the HVAC fails.
 - **Access.** Interior (reached through a building, hallway and maybe an elevator), drive-up (a roll-up door you can back a truck to), or a locker. Floor level is a pricing attribute for interior units, since carrying things up stairs or an elevator is work.
 - **Vehicle, RV and boat parking.** Outdoor, covered or enclosed spaces, priced by length. These units hold titled property, which changes the lien process (below).
@@ -68,7 +68,7 @@ Storage pricing has two prices for the same unit type at the same moment:
 
 The gap between them is the business model. Public Storage's 2025 10-K reports that it "lowered move-in rental rates to stimulate move-in activity" in 2025, and that the average annual contract rent per square foot was $12.80 for tenants moving in and $20.30 for tenants moving out. It also says it "typically increase[s] rental rates to our long-term tenants," and that cumulative increases to existing long-term tenants drove revenue growth that was partly offset by lower rates for new ones. Promotions sit on top: the same filing reports promotional discounts of about $56.9 million in 2025, "generally, '$1.00 rent for the first month.'" Low entry prices and first-month promotions win the move-in; **existing customer rate increases** (ECRIs, in the industry's shorthand) recover the margin from occupants who rarely move their belongings to save a few dollars.
 
-Both prices are set by revenue management. Public Storage describes being able to "quickly change each of our individual property's pricing and promotions" and lists revenue management among its centralized functions; Extra Space describes "real-time, interactive pricing and discount tools." The inputs (occupancy by unit type, move-in and move-out velocity, competitor street rates, seasonality) and the antitrust record of pricing software that pools competitors' data are the subject of Revenue Management & Pricing; this chapter covers what storage adds.
+Both prices are set by revenue management. Public Storage describes being able to "quickly change each of our individual property's pricing and promotions" and lists revenue management among its centralized functions; Extra Space describes "real-time, interactive pricing and discount tools." The inputs (occupancy by unit type, move-in and move-out velocity, competitor street rates, seasonality) and the antitrust record of pricing software that pools competitors' data are the subject of [Revenue Management & Pricing](/books/property-tech/revenue-management#inputs-own-public-and-pooled-data); this chapter covers what storage adds.
 
 What storage adds is regulation of the increase itself, which is newer than most pricing engines:
 
@@ -107,7 +107,7 @@ Two remedies sit on that boundary:
 - **Denial of access** is a statutory step with its own clock. Florida lets the owner deny access without notice once 5 days have passed from the date rent was due (83.8055). Washington allows it after rent is unpaid for six consecutive days, if the rental agreement provides for it (RCW 19.150.030). California ties the right to deny access to the lien attaching on the termination date in the preliminary lien notice (BPC 21705(a)), which comes much later. A platform that suspends gate codes on day 1 everywhere is breaking some states' rules.
 - **The overlock** is a second lock the operator puts on the unit door so the occupant's own key no longer opens it. It's the physical form of denying access, and it's done by a person walking the facility with a list, or by a smart lock switching state. Janus says Nokē automates "overlocking and release," and Tenant Inc.'s Mobile Manager handles overlock tasks and photos. The record that matters is when the overlock went on and came off, by whom, and with what photo, because a removed overlock is what an occupant who paid at 11pm expects to find in the morning.
 
-Gate codes are credentials, so they get the treatment of credentials: never stored or shown in plain text where they don't need to be, rotated at move-out, and pushed to the access system idempotently, since a gate controller that missed a "suspend" message leaves a delinquent occupant with access, and one that missed a "restore" message locks out someone who paid. My default: the management system holds the desired access state per agreement, the integration reconciles the gate's actual state against it on a schedule, and every disagreement is an alert.
+Gate codes are credentials ([Smart Locks and Access Control](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control)), so they get the treatment of credentials: never stored or shown in plain text where they don't need to be, rotated at move-out, and pushed to the access system idempotently, since a gate controller that missed a "suspend" message leaves a delinquent occupant with access, and one that missed a "restore" message locks out someone who paid. My default: the management system holds the desired access state per agreement, the integration reconciles the gate's actual state against it on a schedule, and every disagreement is an alert.
 
 ## Lien Sales and State Lien Law
 
@@ -129,13 +129,13 @@ Texas adds its own clock: after delivering notice of the claim, the owner may se
 
 What the table means for the system:
 
-- **Timelines are computed, per agreement, from the rules in force.** "Day 14" in California counts from when rent went unpaid; Florida's 14 days run from delivery of the notice; Washington's sale date is the later of two dates. Each case stores the rule version it ran under and every deadline it computed, so that a sale in March can be checked against the law that applied when the notice went out ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). Statutes change often here: California's chapter carries amendments effective in 2023, 2025 and 2026.
+- **Timelines are computed, per agreement, from the rules in force** ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) keeps them as effective-dated rows). "Day 14" in California counts from when rent went unpaid; Florida's 14 days run from delivery of the notice; Washington's sale date is the later of two dates. Each case stores the rule version it ran under and every deadline it computed, so that a sale in March can be checked against the law that applied when the notice went out ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). Statutes change often here: California's chapter carries amendments effective in 2023, 2025 and 2026.
 - **Delivery methods are not interchangeable.** Certified mail (a USPS service with a signature), first-class mail with a certificate of mailing (proof of mailing, not of receipt), "verified mail" (Washington's term for any USPS method "that provides evidence of mailing"), email with signed consent, and personal delivery are distinct channels with distinct evidence, and the rule says which are allowed for which notice. Email is allowed only under conditions (consent in the agreement, a designated sender, proof of receipt, a fallback by mail), so the notice record holds the delivery evidence and the fallback it triggered. Notices go through the [one outbound gate](/docs/architecture/notifications#one-outbound-gate) with the consent ledger behind it, and mailed notices are usually printed and mailed by a vendor whose tracking number comes back into the record.
 - **The alternate contact is load-bearing.** In California and Washington, an agreement that didn't request an alternate address means the lien doesn't attach at all, and notices must go to both addresses. That is a required field in the move-in flow, not an optional profile field.
 - **Advertisement is a vendor step with proof.** A newspaper's affidavit of publication or the online listing's dates are the evidence that the sale was advertised as required.
 - **The sale is usually online now.** California and Florida expressly allow online sales, and auction sites (StorageTreasures, Lockerfox, the vendors' own) carry the listing, photos, bidding and buyer payment. Storable says its winning bidder "cleans out the unit within 72 hours"; Lockerfox charges buyers a 15% premium. The platform records the sale, the winning bid, the costs and what was applied to the lien.
 - **Redemption stops everything.** Florida lets the tenant pay the lien and reasonable expenses at any time before the sale and recover the property (83.806(6)); California lets the occupant regain the space by paying the full lien amount before the sale date, and lets a secured creditor or claimant pay to stop the sale (21705, 21708, 21709). A payment that arrives after the listing goes live has to cancel the auction, restore access and remove the overlock, and the system must make that one atomic outcome, not three tasks.
-- **Surplus is someone else's money.** The excess of the sale over the lien and costs belongs to the occupant (or a senior lienholder), is held for a statutory period, and then goes to a county, the state's unclaimed property program, or is deemed abandoned, depending on the state. It's a liability in the trust ledger from the day of the sale (Trust Accounting & the General Ledger).
+- **Surplus is someone else's money.** The excess of the sale over the lien and costs belongs to the occupant (or a senior lienholder), is held for a statutory period, and then goes to a county, the state's unclaimed property program, or is deemed abandoned, depending on the state. It's a liability in the trust ledger from the day of the sale ([Unclaimed Property](/books/property-tech/trust-accounting#unclaimed-property)).
 - **Small-value and abandoned property have their own paths.** Washington and California allow disposal instead of sale when the contents are worth under $300 (RCW 19.150.080; BPC 21712.8 for property left after an agreement ends), and Washington lets the occupant reclaim personal papers and photographs for six months after a sale before they may be disposed of.
 
 ### Military Occupants
@@ -155,7 +155,7 @@ Storage operators sell coverage for the stored goods in two legally different fo
 
 Two related contract terms appear in nearly every agreement. **The occupant insures.** Washington's act says the occupant is responsible for insuring stored property against fire, theft or damage, and the owner has no obligation to provide insurance (RCW 19.150.130). **The value limit.** Agreements commonly cap the value of property that may be stored; California preserves "the right to limit the value of the property the occupant may store" (BPC 21713), Florida makes the agreement's limit the maximum value of the property in the space (83.806(9)), and Washington says the limit caps only the owner's liability (RCW 19.150.170).
 
-Most operators require one of the three at move-in (their plan, their insurance, or proof of the occupant's own policy), and Storable reports that operators using its default enrollment options see a 65% enrollment rate. The platform therefore needs a coverage catalog where each product carries its legal form, the states it may be sold in, its limit and price; an enrollment per agreement over time; the evidence for an occupant's own policy; and a rule that a product whose form is insurance in a state is offered there only through a licensed insurer and licensed sellers. Claims for protection plans are paid by the operator and need their own record; insurance claims go to the insurer. Insurance, Deposits & Guarantees covers the general insurance-verification and master-policy model for housing; storage is the segment where the operator most often is, through reinsurance or a plan, the risk carrier.
+Most operators require one of the three at move-in (their plan, their insurance, or proof of the occupant's own policy), and Storable reports that operators using its default enrollment options see a 65% enrollment rate. The platform therefore needs a coverage catalog where each product carries its legal form, the states it may be sold in, its limit and price; an enrollment per agreement over time; the evidence for an occupant's own policy; and a rule that a product whose form is insurance in a state is offered there only through a licensed insurer and licensed sellers. Claims for protection plans are paid by the operator and need their own record; insurance claims go to the insurer. [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#verification-and-lapse) covers the general insurance-verification and master-policy model for housing; storage is the segment where the operator most often is, through reinsurance or a plan, the risk carrier.
 
 ## Fees, Late Charges and Ancillary Retail
 
@@ -200,9 +200,8 @@ CREATE TABLE street_rates (              -- the move-in price of a unit type, ov
   EXCLUDE USING GIST (storage_unit_type_id WITH =, valid_during WITH &&)
 );
 
-ALTER TABLE leases                       -- which body of law governs the agreement
-  ADD COLUMN agreement_kind TEXT NOT NULL DEFAULT 'residential_lease'
-    CHECK (agreement_kind IN ('residential_lease', 'commercial_lease', 'storage_rental'));
+-- leases.agreement_kind (added in Commercial Property) says which body of law governs the
+-- agreement; a storage agreement is 'storage_rental'.
 
 CREATE UNIQUE INDEX leases_one_open_storage_rental  -- no pre-leasing: one open agreement per unit
   ON leases (unit_id)
@@ -249,7 +248,7 @@ CREATE TABLE rate_change_notices (       -- an existing-customer rate increase, 
   current_amount      BIGINT NOT NULL,
   new_amount          BIGINT NOT NULL,
   currency            CHAR(3) NOT NULL,
-  rule_version_id     UUID NOT NULL,     -- notice period, caps and emergency orders applied
+  rule_evaluation_id  UUID NOT NULL REFERENCES rule_evaluations (id),     -- notice period, caps and emergency orders applied
   notice_delivered_on DATE,
   effective_on        DATE,              -- computed from delivery and the rule
   status              TEXT NOT NULL CHECK (status IN ('proposed', 'blocked', 'sent', 'applied',
@@ -259,15 +258,9 @@ CREATE TABLE rate_change_notices (       -- an existing-customer rate increase, 
   CHECK (status <> 'blocked' OR blocked_reason IS NOT NULL)
 );
 
-CREATE TABLE access_credentials (        -- gate codes and mobile keys
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
-  lease_id        UUID NOT NULL REFERENCES leases (id),
-  person_id       UUID REFERENCES people (id),   -- an occupant's authorized user, too
-  kind            TEXT NOT NULL CHECK (kind IN ('gate_code', 'mobile_key', 'fob')),
-  credential_ref  TEXT NOT NULL,         -- the access system's ID, never the code itself
-  valid_during    TSTZRANGE NOT NULL     -- open-ended until revoked
-);
+-- Gate codes and mobile keys are rows in access_credentials (Access & Smart Buildings):
+-- purpose 'lease', kind 'pin', 'mobile' or 'fob', the occupant or an authorized user as
+-- holder_person_id, and the access system's ID in external_id, never the code itself.
 
 CREATE TABLE access_states (             -- what the gate should do for this agreement, over time
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -277,7 +270,7 @@ CREATE TABLE access_states (             -- what the gate should do for this agr
                  'ended')),
   valid_during TSTZRANGE NOT NULL,
   reason       TEXT NOT NULL,
-  rule_version_id UUID,                  -- the rule that allowed a suspension, if any
+  rule_evaluation_id UUID REFERENCES rule_evaluations (id),                  -- the rule that allowed a suspension, if any
   synced_at    TIMESTAMPTZ,              -- when the access system confirmed it
   EXCLUDE USING GIST (lease_id WITH =, valid_during WITH &&)
 );
@@ -312,7 +305,7 @@ CREATE TABLE lien_cases (                -- one delinquency taken through the st
   tenant_id          UUID NOT NULL,
   property_id        UUID NOT NULL REFERENCES properties (id),
   lease_id           UUID NOT NULL REFERENCES leases (id),
-  rule_version_id    UUID NOT NULL,      -- the jurisdiction's lien rules as of the case's start
+  rule_evaluation_id UUID NOT NULL REFERENCES rule_evaluations (id),      -- the jurisdiction's lien rules as of the case's start
   path               TEXT NOT NULL CHECK (path IN ('contents_sale', 'vehicle_lien_sale',
                        'tow', 'small_value_disposal')),
   status             TEXT NOT NULL CHECK (status IN ('open', 'notice_period', 'lien_attached',
@@ -445,7 +438,7 @@ CREATE TABLE retail_sale_lines (
 );
 ```
 
-The lien rules themselves are rule rows per jurisdiction, effective-dated as [Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions) describes: days to deny access, days to the first notice, the cure period and what it counts from, allowed channels per notice type and their conditions, advertisement modes and lead times, the earliest-sale formula, surplus hold period and destination, the vehicle threshold, the small-value threshold, late fee formulas and the rate-change notice period. `rule_version_id` on cases, notices, rate changes and access suspensions points at the version that decided.
+The lien rules themselves are `legal_rules` rows of type `storage_lien` per jurisdiction ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix)), effective-dated as [Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions) describes: days to deny access, days to the first notice, the cure period and what it counts from, allowed channels per notice type and their conditions, advertisement modes and lead times, the earliest-sale formula, surplus hold period and destination, the vehicle threshold, the small-value threshold and the rate-change notice period (late fee caps are `late_fee_cap` rules, resolved for `agreement_kind = 'storage_rental'`). `rule_evaluation_id` on cases, notices, rate changes and access suspensions points at the evaluation, and through it the rule version, that decided.
 
 Design decisions:
 

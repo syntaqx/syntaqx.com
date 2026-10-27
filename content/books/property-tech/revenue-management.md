@@ -24,7 +24,7 @@ The large suites and a few specialists sell pricing, and their public pages now 
 
 Two things stand out. First, every vendor now describes its inputs as **own data plus public data**, which is the line the Final Judgment and several statutes draw; the 2026 marketing is the antitrust record restated as features. Second, AppFolio's note that public-data features aren't available everywhere shows the next line: some jurisdictions restrict algorithms that use competitor data whether or not it's public, so the inputs a property may use depend on where it sits. A platform that treats "which data may price this unit" as configuration per jurisdiction can follow both.
 
-Around the pricing engines sit the **market data businesses**: Yardi Matrix, which builds property-level data from "original field research" plus "aggregated & anonymized operating data from the Yardi property management platform," and RealPage Market Analytics, which describes "30+ year historical data" updated daily and "publicly available property data" (asking rents, concessions) gathered daily, with five-year forecasts. Market data is a legitimate input and a normal product; whether a particular feed is public, licensed or pooled from competitors' operations is the question the rest of this chapter keeps asking. Student housing prices by the bed against an academic-year pre-leasing curve, which the Student Housing chapter covers.
+Around the pricing engines sit the **market data businesses**: Yardi Matrix, which builds property-level data from "original field research" plus "aggregated & anonymized operating data from the Yardi property management platform," and RealPage Market Analytics, which describes "30+ year historical data" updated daily and "publicly available property data" (asking rents, concessions) gathered daily, with five-year forecasts. Market data is a legitimate input and a normal product, and asset managers buy it too ([Market Data and Benchmarks](/books/property-tech/investors-and-asset-management#market-data-and-benchmarks)); whether a particular feed is public, licensed or pooled from competitors' operations is the question the rest of this chapter keeps asking. Student housing prices by the bed against an academic-year pre-leasing curve, which [Student Housing](/books/property-tech/student-housing#per-bed-pricing-and-the-pre-leasing-curve) covers.
 
 ## What Gets Priced
 
@@ -33,23 +33,23 @@ The unit of pricing is a **quote**: one unit, one lease term, one move-in date, 
 - **Base rent by unit.** A floor plan's base price adjusted by unit amenities (view, floor, renovation level, end unit) as premiums. Amenity premiums are data on the unit, so a renovated unit's price change is explainable as "the premium changed," not "the model moved."
 - **Lease-term pricing.** A 12-month lease is the reference; shorter and longer terms carry premiums or discounts. The purpose is less the term itself than the **expiration month** it produces: a lease that would expire in December, when few people move, is priced up so the household picks a term that ends in a busier month.
 - **Move-in date.** A unit available today and one available in six weeks have different prices because the vacancy days differ. The quote fixes the date it was priced for.
-- **Concessions.** A free month or a discount to sign. The industry compares rents on a **net effective** basis (the concession spread over the term), and the listing, the lease and the ledger all have to agree on whether a number is gross or net. Fee-transparency rules on advertising concessions are in [Listings, Websites & Marketing](/books/property-tech/listings-and-marketing); the postings are in Charges & Resident Ledgers.
+- **Concessions.** A free month or a discount to sign. The industry compares rents on a **net effective** basis (the concession spread over the term; [Rent: GPR, Loss to Lease and Effective Rent](/books/property-tech/operating-metrics#rent-gpr-loss-to-lease-and-effective-rent)), and the listing, the lease and the ledger all have to agree on whether a number is gross or net. Fee-transparency rules on advertising concessions are in [Listings, Websites & Marketing](/books/property-tech/listings-and-marketing#fee-transparency-and-all-in-pricing); the concession terms are in [The Lease](/books/property-tech/the-lease#concessions) and the postings in [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#concessions).
 - **Renewals.** A per-household offer, priced separately (below).
 
-**Exposure** drives most of it: units vacant and unleased plus units on notice without a pre-lease, over a horizon of weeks. When exposure rises, recommended prices fall; when a floor plan is nearly full, they rise. That forecast is also what marketing uses to decide where to spend ([Listings, Websites & Marketing](/books/property-tech/listings-and-marketing)), and it is the same model, under the same data rules, whichever team reads it.
+**Exposure** drives most of it: the units vacant or on notice and not yet leased over a horizon of weeks, as [Occupancy, Leased and Exposure](/books/property-tech/operating-metrics#occupancy-leased-and-exposure) defines it. When exposure rises, recommended prices fall; when a floor plan is nearly full, they rise. That forecast is also what marketing uses to decide where to spend ([Exposure-Driven Spend](/books/property-tech/listings-and-marketing#exposure-driven-spend)), and it is the same model, under the same data rules, whichever team reads it.
 
 A quote is a hold-like promise: an agent quotes a price, the prospect applies two days later, and the application's income test is a ratio to that rent. My rule: the quote is a row with an expiry, and the application and the lease carry its id, so "what were they quoted, and was it still valid" is a join, not a recollection ([Reservations & Holds](/docs/architecture/reservations-and-holds#hold-lifetimes-are-policy)).
 
 ## Renewal Pricing
 
-A renewal offer prices the household that already lives there. The models estimate how likely the household is to renew at a given increase, and the offer weighs the increase against the cost of a turn (vacancy days, make-ready, leasing cost). The constraints are mostly legal and procedural:
+A renewal offer prices the household that already lives there. The models estimate how likely the household is to renew at a given increase, and the offer weighs the increase against the cost of a turn (vacancy days, make-ready, leasing cost; [Renewals and Turnover](/books/property-tech/operating-metrics#renewals-and-turnover)). The constraints are mostly legal and procedural:
 
 - **The cap comes first.** Where a rent cap or rent stabilization applies, the offer is clamped to the legal maximum before the household sees it (below).
-- **The notice period sets the deadline.** Offers have to reach the household before the notice period for an increase begins, and several states key that period to the size of the increase or the length of the tenancy; [The Lease](/books/property-tech/the-lease) has the table. The pricing run therefore works backwards from each expiration: compute the notice deadline, price before it, send before it.
-- **Good cause laws make the offer evidence.** Where a landlord needs cause not to renew, a reasonable offer the household refused can itself be the cause, so the offer, its amount and its delivery are records ([The Lease](/books/property-tech/the-lease)).
+- **The notice period sets the deadline.** Offers have to reach the household before the notice period for an increase begins, and several states key that period to the size of the increase or the length of the tenancy; [The Lease](/books/property-tech/the-lease#renewals) has the table. The pricing run therefore works backwards from each expiration: compute the notice deadline, price before it, send before it.
+- **Good cause laws make the offer evidence.** Where a landlord needs cause not to renew, a reasonable offer the household refused can itself be the cause, so the offer, its amount and its delivery are records ([Good Cause Laws](/books/property-tech/the-lease#good-cause-laws)).
 - **Several terms, one decision.** Operators commonly offer a menu (say 6, 12 and 15 months) with different increases. Each is an offer row; the household's acceptance points at one.
 
-The operating measure is **trade-out**: the new rent against the rent it replaces, for new leases and renewals separately. Operating Metrics defines it; this chapter's job is to store the inputs so trade-out can be computed from records rather than spreadsheets.
+The operating measure is **trade-out**: the new rent against the rent it replaces, for new leases and renewals separately. [Trade-Out](/books/property-tech/operating-metrics#trade-out) defines it; this chapter's job is to store the inputs so trade-out can be computed from records rather than spreadsheets.
 
 ## Inputs: Own, Public and Pooled Data
 
@@ -62,7 +62,7 @@ A pricing engine's data falls into four kinds, and the law treats them different
 | **Licensed market data** | Surveys, field research, aggregated datasets from a data vendor | Depends on how it was built: field research of public facts differs from aggregated operating data contributed by competitors |
 | **Pooled nonpublic data** | Competitors' executed rents, lease terms, occupancy, traffic | The core of every case below; barred at runtime by the Final Judgment and by most of the laws |
 
-The difference between asking and executed rent matters most. An asking rent on a website is what a competitor is willing to publish; an executed rent, with its concession and term, is what it actually agreed, and that is the data the M.D.N.C. complaint describes landlords contributing "effective rents net of discounts, lease terms, lease status, occupancy, unit characteristics, and information on prospective renters," with the pool alleged to reach over 16 million units, including many that do not use the pricing product (allegations, not findings). Benchmarking dashboards that compare a property with its competitors run on the same kind of data, which is why the court treated the property management system and the benchmarking products as part of the alleged exchange; Operating Metrics covers benchmarking as an information-exchange risk.
+The difference between asking and executed rent matters most. An asking rent on a website is what a competitor is willing to publish; an executed rent, with its concession and term, is what it actually agreed, and that is the data the M.D.N.C. complaint describes landlords contributing "effective rents net of discounts, lease terms, lease status, occupancy, unit characteristics, and information on prospective renters," with the pool alleged to reach over 16 million units, including many that do not use the pricing product (allegations, not findings). Benchmarking dashboards that compare a property with its competitors run on the same kind of data, which is why the court treated the property management system and the benchmarking products as part of the alleged exchange; [Operating Metrics](/books/property-tech/operating-metrics#benchmarking-as-an-information-exchange-risk) covers benchmarking as an information-exchange risk.
 
 **Market surveys** deserve their own line. A survey (a "call-around") is staff phoning or emailing competing properties for their current rents and concessions. The Final Judgment bars the vendor from conducting new ones for use in its pricing products. An operator's own leasing staff checking competitors' public websites is a different act from collecting their nonpublic numbers by phone, and my rule is to record which one each survey row was.
 
@@ -70,7 +70,7 @@ The difference between asking and executed rent matters most. An asking rent on 
 
 ### United States v. RealPage
 
-The Department of Justice and eight states sued RealPage on August 23, 2024 in the Middle District of North Carolina (No. 1:24-cv-00710), under Sections 1 and 2 of the Sherman Act, and later added landlords as defendants. Washington withdrew on February 25, 2025 to file its own case. On November 24, 2025 the Antitrust Division filed a proposed settlement with RealPage, with no fine and no admission; RealPage said it "codifies product modifications" it had begun implementing more than a year earlier. The court entered the **Final Judgment on May 19, 2026** (Doc. 194). It expires seven years after entry, and the United States may move to terminate it after four.
+The Department of Justice and eight states sued RealPage on August 23, 2024 in the Middle District of North Carolina (No. 1:24-cv-00710), under Sections 1 and 2 of the Sherman Act, and later added landlords as defendants. Washington withdrew on February 25, 2025 to file its own case. On November 24, 2025 the Antitrust Division filed a proposed settlement with RealPage, with no fine and no admission; RealPage said it "codifies product modifications" it had begun implementing more than a year earlier. Under the Tunney Act, the proposed Final Judgment (Doc. 159-1) was published in the Federal Register on December 5, 2025 for public comment, and the United States filed its response to eight comments on April 30, 2026, saying it would then move for entry. The court's September 30, 2026 opinion records that it entered the **Final Judgment on May 19, 2026** (Doc. 194); as of October 2026 the Antitrust Division's case page posts only the proposed version, so the terms below are quoted from the proposed judgment and its Competitive Impact Statement. The judgment expires seven years after entry, and after four the United States may end it by notice to the court.
 
 The Final Judgment resolves only the United States' claims against RealPage. In an opinion of September 30, 2026 (Doc. 223), the court denied RealPage's motion to dismiss and the remaining landlords' motions, holding that the complaint states claims under Sections 1 and 2 and the related state laws, and that the Final Judgment does not moot the states' claims: it lapses on a fixed date, it reaches only products that generate prices (not the property management system or benchmarking products alleged to carry the exchange), and it gives the states no relief. The United States and the states had entered final judgments with Cortland, Greystar and LivCor; the United States had entered consent decrees with Pinnacle and Willow Bridge that the court had not yet adopted. What remains is the states' case against RealPage and Pinnacle and all plaintiffs' claims against Camden and Willow Bridge.
 
@@ -159,16 +159,16 @@ Some prices are capped by law, and the cap belongs inside the pricing engine, no
 - **California's Tenant Protection Act** (Civil Code 1947.12) limits increases over any 12 months to the lower of 5% plus the change in the cost of living or 10% total, with exemptions that include single-family homes not owned by a corporation or REIT, units under a stricter local rent control law, units with a certificate of occupancy issued within the last 15 years, deed-restricted affordable housing and dormitories. The landlord sets the initial rent when a unit turns over. Local rent control ordinances can be stricter.
 - **Washington** (RCW 59.18.700, enacted 2025 and effective May 7, 2025) limits increases in any 12-month period to the lower of 7% plus CPI (the June change in the Seattle-area index) or 10%, bars increases in the first 12 months of a tenancy, and has the Department of Commerce publish the annual maximum; the section expires July 1, 2040. Exemptions are in RCW 59.18.710.
 
-Oregon has its own statewide cap and notice rules, and New York's Good Cause law makes increases above the local rent standard presumptively unreasonable; [The Lease](/books/property-tech/the-lease) carries both because they shape renewal notices. Affordable programs cap rent by program limits instead, which Subsidized & Affordable Housing owns. The pattern for all of them is the same:
+Oregon has its own statewide cap and notice rules, and New York's Good Cause law makes increases above the local rent standard presumptively unreasonable; [The Lease](/books/property-tech/the-lease#good-cause-laws) carries both because they shape renewal notices. Affordable programs cap rent by program limits instead, which [Subsidized & Affordable Housing](/books/property-tech/affordable-housing#rents-limits-and-allowances) owns. The pattern for all of them is the same:
 
-- **Coverage is per unit and per date.** Whether a cap applies depends on the unit's certificate of occupancy date, the owner's entity type, the program restrictions and the local ordinance, all inputs recorded with the determination. Landlord-Tenant Law as Data owns the determination.
+- **Coverage is per unit and per date.** Whether a cap applies depends on the unit's certificate of occupancy date, the owner's entity type, the program restrictions and the local ordinance, all inputs recorded with the determination. [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#a-worked-example-an-oregon-rent-increase) owns the determination.
 - **The limit is a computed number.** For each lease, the maximum rent for the next increase given the rent history in the lookback window, the published index value and the rule version.
 - **The engine clamps, then explains.** A recommendation above the legal maximum is reduced to it, and the record says so; a manual override above it is blocked, not warned.
 - **Turnover resets where the law says so.** California lets the landlord set the initial rent on turnover; local vacancy-control rules may not. The rule, not the engine, decides.
 
 ## How to Build It
 
-This chapter extends the [core data model](/books/property-tech/property-business#the-core-data-model) with the pricing pipeline: data sources, models, landlord settings, recommendations, decisions, quotes, renewal offers, rent limits and jurisdictional restrictions on pricing tools. Other chapters reference two of these: applications and leases carry `rent_quote_id`, and renewal leases and notices carry `renewal_offer_id` ([Applications & Screening](/books/property-tech/applications-and-screening), [The Lease](/books/property-tech/the-lease)). Staff are users from Platform Architecture, referenced as `user_id`. Rules are effective-dated rows ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
+This chapter extends the [core data model](/books/property-tech/property-business#the-core-data-model) with the pricing pipeline: data sources, models, landlord settings, recommendations, decisions, quotes, renewal offers, rent limits and jurisdictional restrictions on pricing tools. Other chapters reference two of these: applications and leases carry `rent_quote_id`, and renewal leases and notices carry `renewal_offer_id` ([Applications & Screening](/books/property-tech/applications-and-screening#how-to-build-it), [The Lease](/books/property-tech/the-lease#how-to-build-it)). Staff are users from [Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants), referenced as `user_id`. Rules are effective-dated rows ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
 
 ```sql
 CREATE TABLE pricing_data_sources (      -- every feed a model or recommendation may read
@@ -203,7 +203,7 @@ CREATE TABLE pricing_models (            -- one row per trained version
                           'cbsa', 'property')),
   training_source_ids   UUID[] NOT NULL, -- pricing_data_sources
   feature_list_ref      TEXT NOT NULL,   -- reviewed list; no competitor rent features
-  approved_by_user_id   UUID,
+  approved_by           UUID REFERENCES users (id),
   approved_at           TIMESTAMPTZ,
   retired_at            TIMESTAMPTZ,
   UNIQUE (tenant_id, name, version)
@@ -218,7 +218,8 @@ CREATE TABLE pricing_settings (          -- the landlord's own choices, per prop
   auto_accept             BOOLEAN NOT NULL DEFAULT FALSE,
   auto_accept_max_change_pct NUMERIC(5, 2),  -- per day, per unit
   allowed_source_ids      UUID[] NOT NULL,   -- what this property may read at runtime
-  set_by_user_id          UUID NOT NULL,     -- a named person at the operator, never the vendor
+  set_by                  UUID NOT NULL REFERENCES users (id),  -- a named person at the operator,
+                                             -- never the vendor
   valid_during            TSTZRANGE NOT NULL,
   CHECK (NOT auto_accept OR auto_accept_max_change_pct IS NOT NULL),
   EXCLUDE USING GIST (property_id WITH =, valid_during WITH &&)
@@ -229,7 +230,7 @@ CREATE TABLE price_recommendations (     -- what the engine suggested, and from 
   tenant_id           UUID NOT NULL,
   property_id         UUID NOT NULL REFERENCES properties (id),
   unit_id             UUID REFERENCES units (id),        -- null for a floor-plan price
-  floor_plan_code     TEXT,
+  floor_plan_id       UUID REFERENCES floor_plans (id),
   lease_term_months   INT NOT NULL CHECK (lease_term_months > 0),
   move_in_on          DATE NOT NULL,
   amount              BIGINT NOT NULL,   -- minor units
@@ -239,7 +240,7 @@ CREATE TABLE price_recommendations (     -- what the engine suggested, and from 
   model_ids           UUID[] NOT NULL,   -- pricing_models used
   source_ids          UUID[] NOT NULL,   -- pricing_data_sources read at runtime
   settings_id         UUID NOT NULL REFERENCES pricing_settings (id),
-  rent_limit_id       UUID,              -- rent_limits (below): the cap applied, if any
+  rent_limit_id       UUID REFERENCES rent_limits (id),  -- (below): the cap applied, if any
   clamped_by_limit    BOOLEAN NOT NULL DEFAULT FALSE,
   explanation         JSONB NOT NULL,    -- drivers: exposure, amenity premiums, term premium
   business_date       DATE NOT NULL,     -- the property's date
@@ -253,12 +254,12 @@ CREATE TABLE price_decisions (           -- what a person (or their auto-accept 
   outcome             TEXT NOT NULL CHECK (outcome IN ('accepted', 'auto_accepted',
                         'overridden', 'rejected')),
   amount              BIGINT,            -- the price put in effect
-  decided_by_user_id  UUID,              -- null only for auto_accepted
+  decided_by          UUID REFERENCES users (id),  -- null only for auto_accepted
   settings_id         UUID REFERENCES pricing_settings (id),  -- the rule that auto-accepted
   reason              TEXT,
   decided_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK (outcome <> 'auto_accepted' OR settings_id IS NOT NULL),
-  CHECK (outcome = 'auto_accepted' OR decided_by_user_id IS NOT NULL),
+  CHECK (outcome = 'auto_accepted' OR decided_by IS NOT NULL),
   CHECK (outcome <> 'overridden' OR reason IS NOT NULL)
 );
 
@@ -274,15 +275,17 @@ CREATE TABLE rent_quotes (               -- the price a prospect was given
   concession         JSONB,              -- terms of any concession offered with it
   price_decision_id  UUID REFERENCES price_decisions (id),  -- null for a manual price
   guest_card_id      UUID REFERENCES guest_cards (id),      -- who it was quoted to, if known
-  quoted_by_user_id  UUID,               -- null when a website or agent quoted it
+  quoted_by          UUID REFERENCES users (id),  -- staff, or the AI agent's user; null
+                                         -- when the website quoted it
   valid_until        TIMESTAMPTZ NOT NULL,
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE rent_limits (               -- caps by jurisdiction and period; shared reference
-                                         -- data, so no tenant_id
+CREATE TABLE rent_limits (               -- each period's computed cap: a typed slice of a
+                                         -- 'rent_cap' legal rule; shared, so no tenant_id
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  jurisdiction       TEXT NOT NULL,      -- 'US-CA', 'US-WA', a city or county code
+  legal_rule_id      UUID NOT NULL REFERENCES legal_rules (id),  -- source, review, versions
+  jurisdiction_id    UUID NOT NULL REFERENCES jurisdictions (id),  -- 'US-CA', 'US-WA', a city
   name               TEXT NOT NULL,      -- 'Tenant Protection Act'
   formula            TEXT NOT NULL,      -- 'min(5% + CPI, 10%)'
   max_increase_pct   NUMERIC(5, 2) NOT NULL,  -- the computed maximum for this period
@@ -290,9 +293,8 @@ CREATE TABLE rent_limits (               -- caps by jurisdiction and period; sha
   index_series       TEXT,               -- the CPI series the formula names
   index_value        NUMERIC(6, 3),
   coverage_rule_ref  TEXT NOT NULL,      -- exemptions, resolved per unit elsewhere
-  source_url         TEXT NOT NULL,
   valid_during       DATERANGE NOT NULL,
-  EXCLUDE USING GIST (jurisdiction WITH =, name WITH =, valid_during WITH &&)
+  EXCLUDE USING GIST (jurisdiction_id WITH =, name WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE renewal_offers (            -- one row per term offered to a household
@@ -306,6 +308,7 @@ CREATE TABLE renewal_offers (            -- one row per term offered to a househ
   renewal_likelihood NUMERIC(4, 3),      -- the model's estimate at the offered rent
   price_decision_id  UUID REFERENCES price_decisions (id),
   rent_limit_id      UUID REFERENCES rent_limits (id),
+  rule_evaluation_id UUID REFERENCES rule_evaluations (id),  -- the rent_cap and notice evaluation
   limit_amount       BIGINT,             -- the legal maximum, computed when offered
   notice_due_by      DATE NOT NULL,      -- from the notice rule for this increase
   sent_at            TIMESTAMPTZ,
@@ -315,19 +318,19 @@ CREATE TABLE renewal_offers (            -- one row per term offered to a househ
   CHECK (limit_amount IS NULL OR offered_rent <= limit_amount)
 );
 
-CREATE TABLE pricing_restrictions (      -- which tools and data a jurisdiction allows;
-                                         -- shared reference data, so no tenant_id
+CREATE TABLE pricing_restrictions (      -- which tools and data a jurisdiction allows: a typed
+                                         -- slice of 'pricing_tool_restriction' legal rules
   id                         UUID PRIMARY KEY DEFAULT uuidv7(),
-  jurisdiction               TEXT NOT NULL,
+  legal_rule_id              UUID NOT NULL REFERENCES legal_rules (id),
+  jurisdiction_id            UUID NOT NULL REFERENCES jurisdictions (id),
   instrument                 TEXT NOT NULL,   -- 'S.F. Admin. Code 37.10C'
   public_competitor_data     BOOLEAN NOT NULL,  -- may a pricing tool use it
   nonpublic_competitor_data  BOOLEAN NOT NULL,
   covers                     TEXT[] NOT NULL,  -- 'rent', 'fees', 'lease_terms', 'occupancy'
   enforcement_status         TEXT NOT NULL CHECK (enforcement_status IN ('in_force',
                                'enjoined', 'pending', 'repealed')),
-  source_url                 TEXT NOT NULL,
   valid_during               DATERANGE NOT NULL,
-  EXCLUDE USING GIST (jurisdiction WITH =, instrument WITH =, valid_during WITH &&)
+  EXCLUDE USING GIST (jurisdiction_id WITH =, instrument WITH =, valid_during WITH &&)
 );
 ```
 
@@ -345,8 +348,11 @@ WHERE NOT s.allowed_runtime
    OR NOT (s.id = ANY (ps.allowed_source_ids))
    OR (s.is_competitor_data AND EXISTS (
          SELECT 1 FROM pricing_restrictions pr
-         WHERE p.subdivision = pr.jurisdiction          -- refined to city in practice
-           AND pr.enforcement_status = 'in_force'
+         JOIN property_jurisdictions pj               -- Landlord-Tenant Law as Data
+           ON pj.jurisdiction_id = pr.jurisdiction_id
+          AND pj.property_id = p.id
+          AND pj.valid_during @> r.business_date
+         WHERE pr.enforcement_status = 'in_force'
            AND pr.valid_during @> r.business_date
            AND (NOT pr.public_competitor_data AND s.is_public
                 OR NOT pr.nonpublic_competitor_data AND NOT s.is_public)));
@@ -365,11 +371,12 @@ WHERE EXISTS (
 Design decisions behind it:
 
 - **Sources are first-class.** Every input is a row with its publicness, provenance and allowed uses, and a recommendation stores the ids it read. That turns "did a competitor's nonpublic data price this unit" from a forensic exercise into a query, which is the evidence that won *Mach*.
-- **One band, owned by the landlord.** `band_pct` is a single number applied both ways, so asymmetric bounds can't be configured, and `set_by_user_id` records who chose it.
+- **One band, owned by the landlord.** `band_pct` is a single number applied both ways, so asymmetric bounds can't be configured, and `set_by` records who chose it.
 - **Auto-accept is a setting with an owner.** An auto-accepted decision points at the settings row that allowed it; changing auto-accept is a new effective-dated row, so the history of who turned it on, where and when is intact.
 - **Recommendations and decisions are separate rows.** The recommendation is the engine's; the decision is a person's. Override rates per property and per user come from `price_decisions`, and nothing downstream reads them as a performance measure for staff.
 - **The cap is enforced in the schema.** `renewal_offers.offered_rent <= limit_amount` is a constraint, and the recommendation records that it was clamped, so the engine can't silently produce an unlawful offer.
 - **Restrictions are dated data.** An injunction, a new ordinance or a repeal is a row with a `valid_during`, resolved from the property's jurisdiction; the code never names a city ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Limits and restrictions are slices of the shared rules catalog.** Each `rent_limits` and `pricing_restrictions` row belongs to an approved `legal_rules` row ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it)), which carries the source, the two-person review and the version history; the slice adds the typed columns the pricing engine and its constraints read.
 - **Events.** `price.recommended`, `price.decided`, `quote.issued`, `renewal_offer.sent` and `renewal_offer.accepted` feed listings, the leasing screen, notices and metrics ([Events & Async Messaging](/docs/architecture/events)).
 
 ## Auditing
@@ -383,7 +390,7 @@ Pricing records get read by monitors, attorneys general, class counsel and city 
 - **Caps applied.** For each capped offer: the rule version, index value, lookback rent history and the computed maximum.
 - **Conduct outside the software.** Survey rows with their collection method, advisory call notes, user-group materials and the product inventory per property.
 
-Retention follows the longest of the decree terms, the settlement terms and the statute of limitations, which Records, Privacy & Audits schedules.
+Retention follows the longest of the decree terms, the settlement terms and the statute of limitations, which [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds) schedules.
 
 ## What This Means for the System You Build
 
@@ -403,7 +410,10 @@ Retention follows the longest of the decree terms, the settlement terms and the 
 
 - [DOJ: Justice Department requires RealPage to end the sharing of competitively sensitive information](https://www.justice.gov/opa/pr/justice-department-requires-realpage-end-sharing-competitively-sensitive-information-and), the November 24, 2025 proposed settlement, runtime and training data limits, state-level geography, the monitor, cooperation
 - [DOJ: Competitive Impact Statement, United States v. RealPage, No. 1:24-cv-00710 (M.D.N.C.), Doc. 160 (PDF)](https://www.justice.gov/atr/media/1419471/dl), the Final Judgment's terms by paragraph: runtime and training rules, 12- and 16-month aging, geography, surrogate data and CBSAs, surveys, auto-accept, target leases, sold-out guardrail, symmetric bounds, advisors and meetings, the monitor and compliance terms
-- [United States v. RealPage, Memorandum Opinion and Order, Doc. 223 (September 30, 2026) (PDF)](https://www.courthousenews.com/wp-content/uploads/2026/10/usdc-north-carolina-rent-software-antitrust-opinion.pdf), entry of the Final Judgment on May 19, 2026, its seven-year term, mootness, landlord resolutions, the alleged data pool, motions denied, *Gibson v. Cendyn* citation history
+- [DOJ: Proposed Final Judgment as to RealPage, Inc., Doc. 159-1 (November 24, 2025) (PDF)](https://www.justice.gov/atr/media/1419451/dl), the definition of revenue management products (II.EE) and the seven-year term with termination by notice after four (XIV)
+- [DOJ Antitrust Division: U.S. and Plaintiff States v. RealPage, Inc. case page](https://www.justice.gov/atr/case/us-and-plaintiff-states-v-realpage-inc), the filings posted as of October 2026, which list the RealPage judgment only as proposed
+- [Federal Register: United States et al. v. RealPage, Inc. et al.; Response to Public Comments, 91 FR 25373 (May 8, 2026)](https://www.govinfo.gov/content/pkg/FR-2026-05-08/html/2026-09147.htm), the December 5, 2025 publication at 90 FR 56286, eight comments, the April 30, 2026 response and the intent to move for entry
+- [United States v. RealPage, Memorandum Opinion and Order, Doc. 223 (September 30, 2026) (PDF)](https://www.courthousenews.com/wp-content/uploads/2026/10/usdc-north-carolina-rent-software-antitrust-opinion.pdf), entry of the Final Judgment on May 19, 2026 (Doc. 194), its seven-year term, mootness, landlord resolutions, the alleged data pool, motions denied, *Gibson v. Cendyn* citation history
 - [DOJ and FTC: Statement of Interest in Duffy v. Yardi Systems, No. 2:23-cv-01391-RSL (March 1, 2024) (PDF)](https://www.ftc.gov/system/files/ftc_gov/pdf/YardiSOI-filed%28withattachments%29_0.pdf), joint delegation of pricing to a common algorithm as per se illegal even with discretion to deviate
 - [FTC: FTC and DOJ file statement of interest in hotel room algorithmic price-fixing case](https://www.ftc.gov/news-events/news/press-releases/2024/03/ftc-doj-file-statement-interest-hotel-room-algorithmic-price-fixing-case), the agencies' positions on starting prices and algorithms (March 28, 2024)
 - [Washington Attorney General: RealPage rental housing litigation](https://www.atg.wa.gov/realpage-rental-housing-litigation), Washington's April 3, 2025 King County suit and its withdrawal from the federal case

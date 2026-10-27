@@ -30,7 +30,7 @@ Association management is sold three ways: by association specialists, by multi-
 What the pages leave out is as telling. Yardi Breeze's associations page lists no architectural requests, voting, board portal, reserves or resale certificates; Vantaca's pages name neither violations nor resale; MRI's page names no violations, architectural review or reserves. Absence from a marketing page isn't absence from the product, but it marks which workflows each vendor leads with. Three patterns run across all of them:
 
 - **Payments, resale documents and insurance are their own businesses.** RealPage sells all three as separate products and owns Buildium, which sells association accounting ([the landscape chapter](/books/property-tech/software-landscape#the-major-platforms) covers the ownership), and Buildium's own resale documents come from HomeWiseDocs. An association platform integrates with these as often as it builds them.
-- **The board is a user, not just a report recipient.** Every vendor that describes a board experience gives board members approvals (invoices, architectural requests) and financial visibility, so board members need scoped grants like owner users in [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies), and their approvals become records.
+- **The board is a user, not just a report recipient.** Every vendor that describes a board experience gives board members approvals (invoices, architectural requests) and financial visibility, so board members are users with scoped grants ([Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants)) like owner users in [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies), and their approvals become records.
 - **The manager bills the association per action.** Vantaca's "fee and admin billing attached to every action" names what association management contracts do: a fee for a violation letter, a resale package, a collection step. Those fees are revenue for the management company and charges to either the association or the owner, and the system has to know which. The segment's specialists sit in [Specialists by Segment](/books/property-tech/software-landscape#specialists-by-segment).
 
 ## HOA, Condominium and Co-op
@@ -65,7 +65,7 @@ In the core data model that maps cleanly:
 - The **lot, home or condo unit** is a `units` row (`kind = 'dwelling'` or `'lot'`), and occupancy stays a query, but over title rather than leases.
 - The **owner** is a person or a legal entity (an LLC that owns a rental condo, a trust, an investor holding hundreds of homes), and their relationship to the unit is an **ownership account**: the ledger and membership for one owner, or set of co-owners, of one unit for as long as they hold title. When the unit sells, that account closes and a new one opens for the buyer, the way a renewal is a new lease. An owner who rents their unit out has a tenant the association doesn't contract with, but the association still needs to know who lives there, because rules bind occupants and fines for a tenant's violation land on the owner's account.
 
-Association money is held in trust for the association, never commingled with the manager's money or other associations' money, and most associations keep at least an operating account and a reserve account. Trust Accounting & the General Ledger owns the bank-account model; what's particular here is that the reserve account is restricted by statute and by the board's funding plan, and transfers out of it are governance events.
+Association money is held in trust for the association, never commingled with the manager's money or other associations' money, and most associations keep at least an operating account and a reserve account. [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#bank-accounts) owns the bank-account model; what's particular here is that the reserve account is restricted by statute and by the board's funding plan, and transfers out of it are governance events.
 
 ## Assessments
 
@@ -80,20 +80,20 @@ A **special assessment** is a one-time levy outside the regular budget: a roof r
 
 Allocation is where rounding bites. A $412,000 budget across 137 units at unequal percentages produces fractions of a cent per unit per month; the allocation run must round each unit's share and then push the remainder to defined units so the sum equals the budget exactly, the same largest-remainder discipline as splitting any amount in [Money & Amounts](/docs/payments/money). The result is stored per unit and per period, so an owner's statement, an estoppel and a lender's questionnaire all show the same number.
 
-Beyond assessments, the owner's ledger carries the same kinds of entries a resident's does, with different rules about each: late charges and interest, collection costs, fines, chargebacks for damage or for work done in the unit (Yardi Breeze lists owner maintenance requests "with automatic resident charges for work performed"), amenity and key fees, transfer and capital contribution fees at sale, and utility submetering in condos. Which of these become part of the lien, and which can support a foreclosure, varies by state, so every charge code carries a lien class.
+Beyond assessments, the owner's ledger carries the same kinds of entries a resident's does, with different rules about each: late charges and interest, collection costs, fines, chargebacks for damage or for work done in the unit (Yardi Breeze lists owner maintenance requests "with automatic resident charges for work performed"), amenity and key fees, transfer and capital contribution fees at sale, and utility submetering in condos. Which of these become part of the lien, and which can support a foreclosure, varies by state, so every charge code ([The Charge Catalog](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog)) carries a lien class.
 
 ## Delinquency, Liens and Foreclosure
 
 An owner who stops paying can't be evicted from property they own. The association's remedy is the lien that the statute or declaration gives it on the unit, enforced by foreclosure or, increasingly, by collecting through a payment plan before it gets there. State law shapes every step:
 
 - **When it's late, and what it costs.** California treats assessments as delinquent 15 days after they're due, caps the late charge at the greater of 10 percent of the delinquent assessment or $10, and allows interest of up to 12 percent a year starting 30 days after the due date. Florida's condominium statute defaults interest to 18 percent a year when the declaration sets no rate and allows an administrative late fee of up to the greater of $25 or 5 percent of each delinquent installment. UCIOA as enacted in West Virginia caps interest at 18 percent.
-- **Where a payment goes.** Florida's condominium statute fixes the order: accrued interest, then administrative late fees, then collection costs and attorney fees, then the delinquent assessment. That's the opposite of the oldest-charge-first rule most resident ledgers use, so payment application order is a jurisdiction rule, not a tenant setting.
+- **Where a payment goes.** Florida's condominium statute fixes the order: accrued interest, then administrative late fees, then collection costs and attorney fees, then the delinquent assessment. That's the opposite of the oldest-charge-first rule most resident ledgers use, so [payment application order](/books/property-tech/charges-and-resident-ledgers#payment-application-order) is a jurisdiction rule, not a tenant setting.
 - **What the lien covers.** UCIOA makes "fees, charges, late charges, fines and interest" enforceable as assessments unless the declaration says otherwise; California says a disciplinary fine "may not be characterized nor treated" as an assessment that becomes a lien; Florida's HOA statute says a fine under $1,000 may not become a lien.
 - **When foreclosure is allowed.** California bars foreclosure for delinquent assessments under $1,800 (excluding late charges, fees, collection costs, attorney fees and interest) unless they are more than 12 months delinquent, and requires the association to offer dispute resolution before recording a lien. Nevada bars foreclosing a lien based on a fine unless the violation threatens health, safety or welfare or the fine is for missing a required schedule. Florida requires written notice of intent to foreclose at least 45 days before judgment, and a recorded claim of lien expires after a year unless the association sues to enforce it.
 - **Priority against the mortgage.** Normally a first mortgage recorded before the delinquency outranks the association's lien. UCIOA carves out a limited **super-priority**: the lien is "also prior" to that mortgage to the extent of budget-based assessments that would have come due in the six months before the association sued to enforce it. Nevada extends this to nine months of assessments plus capped enforcement costs (from $90 for an intent-to-record letter to $400 for a notice of default), but never less than six months if Fannie Mae or Freddie Mac rules require a shorter period. Florida takes the safe-harbor approach instead: a first mortgagee that takes title by foreclosure owes the lesser of the 12 months of assessments before it took title or 1 percent of the original mortgage debt.
 - **Payment plans.** California lets an owner request a meeting with the board about a payment plan, which the board must hold in executive session within 45 days; while the owner complies, "additional late fees shall not accrue," a plan doesn't stop the association recording a lien, and on default collection resumes where it left off.
 
-Each of these is a rule with a jurisdiction and an effective date, stored as data as [Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule) describes, and the collection workflow computes its deadlines from them and stores them ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). The super-priority amount is a calculation over charge history (which assessments, from the budget, in which window), so it's only possible if charges keep their assessment schedule, service period and lien class. Collection agencies and attorneys work association accounts the way they work resident ones; the case model, notices and handoff belong to Delinquency, Collections & Eviction, with the ownership account in place of the lease.
+Each of these is a rule with a jurisdiction and an effective date, stored as data as [Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule) describes, and the collection workflow computes its deadlines from them and stores them ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). The super-priority amount is a calculation over charge history (which assessments, from the budget, in which window), so it's only possible if charges keep their assessment schedule, service period and lien class. Collection agencies and attorneys work association accounts the way they work resident ones; the case model, notices and handoff belong to [Delinquency, Collections & Eviction](/books/property-tech/delinquency-and-eviction#collections-after-move-out), with the ownership account in place of the lease.
 
 ## Reserves and Reserve Studies
 
@@ -107,7 +107,7 @@ The rules got sharper after Champlain Towers South, a 12-story condominium in Su
 
 California's Davis-Stirling Act runs on disclosure rather than mandated funding. The board must have a visual inspection of the major components done "at least once every three years," when their replacement value is at least half the gross budget excluding reserves, and review the study every year. The study lists components with a remaining useful life under 30 years, their remaining life and cost, the annual contribution needed, and a funding plan. The annual budget report, distributed 30 to 90 days before the fiscal year ends, summarizes the reserves and the funding plan, states any deferred repairs with a justification, states anticipated special assessments, and may not assume a return on reserve cash more than 2 percent above the Federal Reserve Bank of San Francisco discount rate. The Assessment and Reserve Funding Disclosure Summary (Civil Code section 5570) goes with it.
 
-For the software, a reserve study is a dated document with a component inventory, and each component row needs its category (so Florida's SIRS components can be flagged), useful and remaining life, replacement cost, and the study it came from. The next study produces new rows; comparing them is how a board sees that the roof's cost doubled. The budget's reserve contribution, the restricted reserve bank account, and the component inventory have to agree, and the gap between the funding plan and actual contributions is a number boards, buyers and lenders all ask for. Capital projects that spend reserves are the Budgets, Forecasts & Capital Projects chapter's job, with the reserve component as the link.
+For the software, a reserve study is a dated document with a component inventory, and each component row needs its category (so Florida's SIRS components can be flagged), useful and remaining life, replacement cost, and the study it came from. The next study produces new rows; comparing them is how a board sees that the roof's cost doubled. The budget's reserve contribution, the restricted reserve bank account, and the component inventory have to agree, and the gap between the funding plan and actual contributions is a number boards, buyers and lenders all ask for. Capital projects that spend reserves are the [Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects#replacement-reserves) chapter's job, with the reserve component as the link.
 
 ## Violations and Fines
 
@@ -170,7 +170,7 @@ The reliance rules make the certificate a binding snapshot. Once issued, the ass
 
 The association's **master policy** insures what the association must insure, and the declaration and statute decide what that is. UCIOA (as enacted in West Virginia) requires property insurance on the common elements against all risks of direct physical loss commonly insured, for at least 80 percent of actual cash value after deductibles, and, in a cooperative or in a building whose units have horizontal boundaries, on the units themselves, though not the improvements owners install. It also requires liability insurance in an amount the board sets, makes every owner an insured, has the insurer waive subrogation against owners, and requires notice to all owners if the coverage isn't reasonably available. Florida requires condominium associations to carry "adequate property insurance" based on replacement cost re-determined at least every 3 years, covering the property as originally installed but excluding owners' personal property, floor, wall and ceiling coverings, fixtures, appliances, water heaters, cabinets, countertops and window treatments, which the owner's own policy must cover. The board sets deductibles consistent with industry practice; deductibles and uninsured losses are common expenses, except damage an owner or their occupants or guests cause, which can be charged to that owner.
 
-Associations also carry directors and officers liability, fidelity or crime coverage for anyone who handles association money (including the manager), flood where required, and umbrella policies. The system tracks each policy, its limits, deductible, term and certificate, renews it on time (CommunityCoverage sells "automated policy tracking and renewal reminders"), answers lenders' and buyers' questions from it, and sends the certificate of insurance with resale packages. When a loss hits, the deductible and any shortfall become a special assessment or a chargeback, which is where insurance meets the ledger. The resident-side insurance products are Insurance, Deposits & Guarantees.
+Associations also carry directors and officers liability, fidelity or crime coverage for anyone who handles association money (including the manager), flood where required, and umbrella policies. The system tracks each policy, its limits, deductible, term and certificate, renews it on time (CommunityCoverage sells "automated policy tracking and renewal reminders"), answers lenders' and buyers' questions from it, and sends the certificate of insurance with resale packages. When a loss hits, the deductible and any shortfall become a special assessment or a chargeback, which is where insurance meets the ledger. The resident-side insurance products are in [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#master-and-force-placed-policies).
 
 ## State Acts as Data
 
@@ -186,7 +186,7 @@ No two states agree, and most have more than one act. As this chapter has shown,
 | Resale deadline | 10 days | 10 days | 10 business days | Not covered here |
 | Electronic voting | Not covered here | Electronic secret ballot by rule, not for assessments | Condo: owner consent and board resolution | Not covered here |
 
-Each cell is a rule row with a jurisdiction, an association form, an effective date range and a citation, per [Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions), and Landlord-Tenant Law as Data is where they are sourced and reviewed. The declaration's own terms (its interest rate, its late fee, its fine schedule) are association-level overrides inside the statutory bounds.
+Each cell is a rule row with a jurisdiction, an association form, an effective date range and a citation, per [Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions), and [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#sourcing-and-keeping-rules-current) is where they are sourced and reviewed. The declaration's own terms (its interest rate, its late fee, its fine schedule) are association-level overrides inside the statutory bounds.
 
 ## How to Build It
 
@@ -250,7 +250,7 @@ ALTER TABLE charges ALTER COLUMN lease_id DROP NOT NULL,
 ALTER TABLE payments
   ADD COLUMN ownership_account_id UUID REFERENCES ownership_accounts (id),
   ADD COLUMN payer_entity_id      UUID REFERENCES legal_entities (id),  -- an owning LLC pays
-  ADD CONSTRAINT payments_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) = 1);
+  ADD CONSTRAINT payments_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) <= 1);  -- none: an application fee or a walk-in sale
 
 ALTER TABLE charge_codes
   ADD COLUMN lien_class TEXT CHECK (lien_class IN ('assessment', 'collection_cost', 'interest',
@@ -348,7 +348,7 @@ CREATE TABLE violation_steps (            -- notices, hearings and decisions, ap
                   'posted')),
   outcome       TEXT,
   charge_id     UUID REFERENCES charges (id),  -- the fine, when one is posted
-  rule_id       UUID,                        -- the jurisdiction rule that set its deadline
+  rule_evaluation_id UUID REFERENCES rule_evaluations (id),                        -- the jurisdiction rule that set its deadline
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -392,7 +392,7 @@ CREATE TABLE votes (                      -- a question put to a body
   tenant_id      UUID NOT NULL,
   property_id    UUID NOT NULL REFERENCES properties (id),
   body           TEXT NOT NULL CHECK (body IN ('board', 'architectural_committee',
-                   'fining_committee', 'members')),
+                   'covenants_committee', 'fining_committee', 'other_committee', 'members')),
   subject        TEXT NOT NULL CHECK (subject IN ('election', 'budget', 'special_assessment',
                    'amendment', 'architectural_request', 'invoice_approval', 'other')),
   method         TEXT NOT NULL CHECK (method IN ('meeting', 'written_ballot',
@@ -402,7 +402,7 @@ CREATE TABLE votes (                      -- a question put to a body
   quorum         NUMERIC(6, 5),           -- fraction of eligible votes
   threshold      NUMERIC(6, 5) NOT NULL,  -- fraction needed to carry
   voting_during  TSTZRANGE NOT NULL,
-  rule_id        UUID,                    -- the election rule or statute applied
+  rule_evaluation_id UUID REFERENCES rule_evaluations (id),                    -- the election rule or statute applied
   result         TEXT CHECK (result IN ('carried', 'failed', 'no_quorum')),
   certified_at   TIMESTAMPTZ,
   certified_by   TEXT                     -- the inspector of elections, where one is required
@@ -450,7 +450,7 @@ CREATE TABLE resale_requests (            -- resale certificates, estoppels, que
   is_expedited         BOOLEAN NOT NULL DEFAULT FALSE,
   received_at          TIMESTAMPTZ NOT NULL,
   due_by               DATE NOT NULL,      -- from the jurisdiction rule, stored
-  rule_id              UUID,
+  rule_evaluation_id   UUID REFERENCES rule_evaluations (id),
   fee_amount           BIGINT NOT NULL,
   currency             CHAR(3) NOT NULL,
   status               TEXT NOT NULL CHECK (status IN ('received', 'in_progress', 'issued',
@@ -502,7 +502,7 @@ Association records are read by owners exercising inspection rights, buyers, len
 - **Reserves.** Each reserve study and SIRS, each milestone inspection report and its delivery to owners, and every transfer into or out of the reserve account with the authorizing vote.
 - **Access to records.** Each inspection request, what was produced, what was withheld and why, and when.
 
-The mechanics (typed actors including the board member who approved and the inspector who certified, append-only history, snapshots) are in [Audit Trails](/docs/architecture/audit-trails#typed-actors), and the [snapshot](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you) pattern is what an issued certificate is. Retention follows the statutes (California keeps minutes open permanently; Florida keeps records checklists seven years) through [Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type).
+The mechanics (typed actors including the board member who approved and the inspector who certified, append-only history, snapshots) are in [Audit Trails](/docs/architecture/audit-trails#typed-actors), and the [snapshot](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you) pattern is what an issued certificate is. Retention follows the statutes (California keeps minutes open permanently; Florida keeps records checklists seven years) through [Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type), with the volume's retention and legal holds in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

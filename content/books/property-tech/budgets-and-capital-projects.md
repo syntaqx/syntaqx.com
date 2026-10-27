@@ -32,7 +32,7 @@ The management agreement sets the calendar. In the 2010 Bell Partners agreement 
 3. **Submit** to the owner by the agreement's deadline, with a narrative.
 4. **Revise** in rounds of comments, each round a version.
 5. **Approve.** The approved version is frozen: it's the authority for spending and the baseline for variance for the whole year.
-6. **Operate** against it: purchase orders and invoices check the remaining budget by account, and spending outside it needs the approval the agreement requires (Vendors, Procurement & Payables).
+6. **Operate** against it: purchase orders and invoices check the remaining budget by account, and spending outside it needs the approval the agreement requires ([Vendors, Procurement & Payables](/books/property-tech/vendors-and-payables#purchase-orders)).
 
 My rule: an approved budget never changes. A mid-year change is a reforecast or an approved amendment, both new versions, so that "versus budget" in any report means one thing.
 
@@ -40,9 +40,9 @@ My rule: an approved budget never changes. A mid-year change is a reforecast or 
 
 A useful budget is computed from the property's own records rather than last year's actuals plus 3%:
 
-- **Rental income** starts from the rent roll: every unit's current lease, its expiration month, an assumed renewal rate and renewal increase (inside any legal cap; Revenue Management & Pricing), market rents for units turning over, and the vacancy days between. Gross potential rent then falls out of units and rents rather than being typed, and changes when rents change.
+- **Rental income** starts from the rent roll: every unit's current lease, its expiration month, an assumed renewal rate (defined as in [Renewals and Turnover](/books/property-tech/operating-metrics#renewals-and-turnover)) and renewal increase (inside any legal cap; [Rent Limits in the Engine](/books/property-tech/revenue-management#rent-limits-in-the-engine)), market rents for units turning over, and the vacancy days between. Gross potential rent then falls out of units and rents rather than being typed, and changes when rents change.
 - **Vacancy, concessions and bad debt** come from the leasing plan and history, and are budgeted as their own lines, in the same order as the operating statement in [The Property's Money](/books/property-tech/property-business#the-property-s-money).
-- **Other income** comes from the charge catalog: parking spaces times rents and take-up, pet fees by pet count, utility reimbursements from the billing method (Utilities & Energy).
+- **Other income** comes from the charge catalog: parking spaces times rents and take-up, pet fees by pet count, utility reimbursements from the billing method ([Utilities & Energy](/books/property-tech/utilities-and-energy#resident-utility-billing)).
 - **Payroll** comes from a staffing plan (positions, rates, benefits, raises by month), allocated to the property.
 - **Contracts** come from the service contracts in force (landscaping, pest, elevators), with escalations and expirations.
 - **Utilities** from usage history and rates; **property taxes** from the parcels' assessments and tax rates ([Addresses, Parcels and Jurisdictions](/books/property-tech/portfolios-properties-and-units#addresses-parcels-and-jurisdictions)); **insurance** from the renewal quote.
@@ -78,7 +78,7 @@ Whether a cost is an operating expense (deducted this year, in the operating sta
 - **Improvements are capitalized** if they're a betterment (fixing a pre-existing defect, a material addition or increase in capacity, or a material increase in productivity, efficiency, strength, quality or output), a restoration (replacing a major component or substantial structural part, returning property from disrepair, rebuilding to like-new), or an adaptation to a new use.
 - **Small taxpayer safe harbor** for buildings: taxpayers with average annual gross receipts of $10 million or less, for a building with an unadjusted basis under $1 million, can expense repairs, maintenance and improvements on it if the year's total doesn't exceed the lesser of 2% of the basis or $10,000.
 
-The platform doesn't decide tax treatment, but it has to capture the facts that decide it, at the invoice line: the amount, the property and building, the component (roof, HVAC unit, flooring in unit 214), whether it's a replacement, the project it belongs to, and the owner's book capitalization threshold. Classification is then a rule over those facts with a recorded reason, reviewable by the owner's accountant, instead of a GL account picked by whoever keyed the invoice ([The Product Keeps Facts, Finance Picks Policy](/docs/payments/accounting#the-product-keeps-facts-finance-picks-policy)).
+The platform doesn't decide tax treatment, but it has to capture the facts that decide it, at the invoice line ([Invoice Capture and Approval](/books/property-tech/vendors-and-payables#invoice-capture-and-approval)): the amount, the property and building, the component (roof, HVAC unit, flooring in unit 214), whether it's a replacement, the project it belongs to, and the owner's book capitalization threshold. Classification is then a rule over those facts with a recorded reason, reviewable by the owner's accountant, instead of a GL account picked by whoever keyed the invoice ([The Product Keeps Facts, Finance Picks Policy](/docs/payments/accounting#the-product-keeps-facts-finance-picks-policy)).
 
 ## Capital Projects and Job Costing
 
@@ -124,7 +124,7 @@ For the platform, the reserve is:
 - **A requirement with terms:** the monthly deposit, any required balance, eligible items, and the release process, as data per loan.
 - **A source of funds for projects:** a capital project can be funded partly from the reserve, which needs a release request with invoices and, often, lender inspection; the project tracks which costs were reimbursed from the reserve so they aren't claimed twice.
 
-An owner's own operating reserve under the management agreement is a different thing ([Reserves](/books/property-tech/owners-and-management-agreements#reserves)), and so is an association's reserve fund (Community Associations).
+An owner's own operating reserve under the management agreement is a different thing ([Reserves](/books/property-tech/owners-and-management-agreements#reserves)), and so is an association's reserve fund ([Community Associations](/books/property-tech/community-associations#reserves-and-reserve-studies)).
 
 ## Fixed Assets
 
@@ -132,7 +132,7 @@ Capitalized costs become **fixed assets**, each with a cost, a placed-in-service
 
 The register matters operationally as well as for tax:
 
-- **Component-level assets** (each HVAC unit, each roof section, each appliance) carry warranties, expected lives and replacement dates, which feed the capital plan and the replacement reserve budget. Maintenance & Work Orders keeps the equipment and warranty side of the same records, and the two should be one register, not two.
+- **Component-level assets** (each HVAC unit, each roof section, each appliance) carry warranties, expected lives and replacement dates, which feed the capital plan and the replacement reserve budget. [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#assets-and-warranties) keeps the equipment and warranty side of the same records in `property_assets`, and the two should be one register, not two: a component's `fixed_assets` row points at its `property_assets` row, and the warranty date lives only there.
 - **Disposals:** a replaced component is retired from the register when its replacement is placed in service, so the books don't depreciate two roofs.
 - **Acquisitions:** a purchased property arrives with an allocation of price between land, building and components, which sets depreciation for years; it's recorded with its source (an appraisal or a cost segregation study) and never re-derived.
 
@@ -153,7 +153,7 @@ CREATE TABLE budgets (
                     'superseded', 'rejected')),
   due_on          DATE,                               -- from the agreement's budget lead time
   submitted_at    TIMESTAMPTZ,
-  approved_by     UUID,                               -- the owner's approver
+  approved_by     UUID REFERENCES users (id),         -- the owner's approver
   approved_at     TIMESTAMPTZ,
   based_on_id     UUID REFERENCES budgets (id),        -- the prior version or the budget reforecast
   UNIQUE (tenant_id, property_id, fiscal_year, kind, version)
@@ -182,7 +182,7 @@ CREATE TABLE variance_explanations (
   kind           TEXT NOT NULL CHECK (kind IN ('timing', 'permanent')),
   explanation    TEXT NOT NULL,
   due_on         DATE NOT NULL,                       -- from the agreement
-  written_by     UUID NOT NULL,
+  written_by     UUID NOT NULL REFERENCES users (id),
   written_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY (budget_id, gl_account_id, month)
 );
@@ -207,7 +207,7 @@ CREATE TABLE capital_projects (
   approved_budget BIGINT NOT NULL,
   status          TEXT NOT NULL CHECK (status IN ('proposed', 'approved', 'in_progress',
                     'substantially_complete', 'closed', 'cancelled')),
-  approved_by     UUID,
+  approved_by     UUID REFERENCES users (id),
   funding         TEXT[] NOT NULL DEFAULT '{}',        -- 'owner', 'reserve', 'construction_loan'
   completed_on    DATE
 );
@@ -226,11 +226,12 @@ CREATE TABLE project_budget_lines (
   UNIQUE NULLS NOT DISTINCT (project_id, cost_code, phase, unit_id)
 );
 
-CREATE TABLE project_commitments (                     -- contracts and purchase orders
+CREATE TABLE project_commitments (                     -- a contract, or a purchase order
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id       UUID NOT NULL,
   project_id      UUID NOT NULL REFERENCES capital_projects (id),
   vendor_id       UUID NOT NULL REFERENCES vendors (id),
+  purchase_order_id UUID REFERENCES purchase_orders (id),  -- null for a contract
   budget_line_id  UUID NOT NULL REFERENCES project_budget_lines (id),
   original_amount BIGINT NOT NULL,
   retainage_bps   INT NOT NULL DEFAULT 0,              -- 1000 = 10% held back
@@ -244,7 +245,7 @@ CREATE TABLE change_orders (
   number         INT NOT NULL,
   amount         BIGINT NOT NULL,                      -- signed: up or down
   reason         TEXT NOT NULL,
-  approved_by    UUID NOT NULL,
+  approved_by    UUID NOT NULL REFERENCES users (id),
   approved_on    DATE NOT NULL,
   UNIQUE (commitment_id, number)
 );
@@ -255,7 +256,7 @@ CREATE TABLE project_costs (                            -- actuals: approved inv
   project_id         UUID NOT NULL REFERENCES capital_projects (id),
   commitment_id      UUID REFERENCES project_commitments (id),
   budget_line_id     UUID NOT NULL REFERENCES project_budget_lines (id),
-  invoice_line_id    UUID NOT NULL,                     -- in Vendors, Procurement & Payables
+  bill_line_id       UUID NOT NULL REFERENCES bill_lines (id),
   amount             BIGINT NOT NULL,
   retainage_held     BIGINT NOT NULL DEFAULT 0,
   component          TEXT,                              -- 'roof', 'hvac', 'flooring'
@@ -270,7 +271,7 @@ CREATE TABLE cost_to_complete (                         -- dated estimates, neve
   budget_line_id UUID NOT NULL REFERENCES project_budget_lines (id),
   as_of          DATE NOT NULL,
   amount         BIGINT NOT NULL,
-  estimated_by   UUID NOT NULL,
+  estimated_by   UUID NOT NULL REFERENCES users (id),
   PRIMARY KEY (budget_line_id, as_of)
 );
 
@@ -352,7 +353,7 @@ CREATE TABLE fixed_assets (
   book_life_months     INT,                              -- null for land
   tax_recovery_years   NUMERIC(4, 1),                    -- 27.5 for residential rental buildings
   tax_method           TEXT,
-  warranty_until       DATE,
+  property_asset_id    UUID REFERENCES property_assets (id),  -- equipment and warranty side
   replaces_asset_id    UUID REFERENCES fixed_assets (id),
   disposed_on          DATE,
   CHECK (component <> 'land' OR (book_life_months IS NULL AND tax_recovery_years IS NULL))

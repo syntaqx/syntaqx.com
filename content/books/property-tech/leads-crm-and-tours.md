@@ -48,7 +48,7 @@ The same household arrives through an ILS form, a call to a tracking number, a w
 
 ### One Household, Several Properties
 
-A household shopping an operator's portfolio is common: a central team sends it to a sister property when the first is full, or the household finds two of the operator's listings itself. My default is one household, one guest card per property of interest, and every touch recorded once on the household with the property it concerned. That keeps per-property metrics (leads, tours, leases per property, which owners pay for) honest while letting any agent see the whole journey. It also answers a third-party manager's owner question: when a lead that came in for Owner A's property leases at Owner B's, which owner's marketing paid for it, and which property's leasing fee is earned? The answer belongs in the management agreement, not in an agent's judgment (Owners & Management Agreements); the data has to make it visible, so a cross-property referral is a recorded event, not a new lead.
+A household shopping an operator's portfolio is common: a central team sends it to a sister property when the first is full, or the household finds two of the operator's listings itself. My default is one household, one guest card per property of interest, and every touch recorded once on the household with the property it concerned. That keeps per-property metrics (leads, tours, leases per property, which owners pay for) honest while letting any agent see the whole journey. It also answers a third-party manager's owner question: when a lead that came in for Owner A's property leases at Owner B's, which owner's marketing paid for it, and which property's leasing fee is earned? The answer belongs in the management agreement, not in an agent's judgment ([Management Fees](/books/property-tech/owners-and-management-agreements#management-fees)); the data has to make it visible, so a cross-property referral is a recorded event, not a new lead.
 
 ## Lead Sources and Attribution
 
@@ -58,7 +58,7 @@ The sources are the industry's own: **ILSs** (internet listing services, the apa
 
 **First touch and lease-attributed source are two answers.** A household that found the property on an ILS, came back through a search ad, and called the number on the website has a first-touch source (the ILS), a last-touch source (the website number), and possibly a self-reported one ("a friend lives here"). Marketing budgets ask which source started the journeys that ended in leases; per-lease ILS invoices ask whether that site's lead is the one that leased. My rule: store every touch, compute the **first-touch source** on the guest card when it's created and never change it, compute the **lease-attributed source** when the lease is signed under a named, versioned model, and record the self-reported source as a separate field. Report all three; pay vendors under whatever their contract defines, and keep the contract's definition with the claim.
 
-**Leases, not leads, are the unit of value.** Lead counts reward the sources that send the most inquiries; operators judge sources by cost per lease, and a lease's value by its rent and term. RealPage's Performance Reporting connects "sources, activities, and spend" to the campaigns "driving signed leases"; Entrata's LeadManager reports which sources bring the most leads and which bring the best. Lead-to-lease conversion and cost per lease are defined once in Operating Metrics; this chapter's records are their inputs.
+**Leases, not leads, are the unit of value.** Lead counts reward the sources that send the most inquiries; operators judge sources by cost per lease, and a lease's value by its rent and term. RealPage's Performance Reporting connects "sources, activities, and spend" to the campaigns "driving signed leases"; Entrata's LeadManager reports which sources bring the most leads and which bring the best. Lead-to-lease conversion and cost per lease are defined once in [The Leasing Funnel](/books/property-tech/operating-metrics#the-leasing-funnel); this chapter's records are their inputs.
 
 ## Tours
 
@@ -77,13 +77,13 @@ A **self-guided tour** lets a prospect enter a vacant unit or a model without st
 3. **Grant access for the window only.** A smart-lock code or mobile credential is issued for the booked window and the unit's lock (or the building's entry and the unit's), and it expires at the window's end or when the tour is marked complete. SmartRent invalidates the PIN automatically after the tour.
 4. **Record what happened:** check-in, the lock's entry events, check-out, and a follow-up message.
 
-The lock, its provider and credential mechanics belong to Access, Smart Buildings & Parking; what this chapter owns is the **tour access grant**: which tour, which person, which lock, which window, issued after which verification, and when it was used and revoked. My rules: never issue a code before the verification passes; never reuse a code across tours; scope it to the unit and the common doors on the route, not the building; and never self-tour an occupied unit, because entering a resident's home is governed by entry-notice law and the lease, not by a prospect's convenience.
+The lock, its provider and credential mechanics belong to [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control); what this chapter owns is the **tour access grant**: which tour, which person, which lock, which window, issued after which verification, and when it was used and revoked. My rules: never issue a code before the verification passes; never reuse a code across tours; scope it to the unit and the common doors on the route, not the building; and never self-tour an occupied unit, because entering a resident's home is governed by entry-notice law and the lease, not by a prospect's convenience.
 
 ### Identity Checks and Biometric Privacy
 
-A selfie compared with an ID photo is a face-geometry comparison, and in Illinois the Biometric Information Privacy Act requires a written release before a private entity collects a biometric identifier, with disclosure of "the purpose and length of term of collection, storage, or use of the data," and liquidated damages of $1,000 per negligent and $5,000 per intentional or reckless violation. An August 2024 amendment made repeated collection from the same person by the same method a single violation and confirmed that an electronic signature satisfies the release. Other states have their own biometric laws, and Records, Privacy & Audits owns that matrix. For the tour flow that means: the consent screen is the verification provider's and the operator's, versioned and logged per tour; the platform stores the provider's verification result and reference, never the face template; and retention of the result follows a schedule ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+A selfie compared with an ID photo is a face-geometry comparison, and in Illinois the Biometric Information Privacy Act requires a written release before a private entity collects a biometric identifier, with disclosure of "the purpose and length of term of collection, storage, or use of the data," and liquidated damages of $1,000 per negligent and $5,000 per intentional or reckless violation. An August 2024 amendment made repeated collection from the same person by the same method a single violation and confirmed that an electronic signature satisfies the release. Other states have their own biometric laws, and [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#state-privacy-laws) owns that matrix. For the tour flow that means: the consent screen is the verification provider's and the operator's, versioned and logged per tour; the platform stores the provider's verification result and reference, never the face template; and retention of the result follows a schedule ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
 
-Identity checks are also a fair housing and accessibility question. A smartphone-and-selfie gate excludes prospects without a smartphone or with some disabilities, so an agent-led alternative must exist on the same terms, and the check must apply to every self-guided tour, not to prospects an agent finds suspicious. The identity result can be reused when the household applies, which is how vendors pitch it, but an application's identity verification has its own rules and records in Applications & Screening, which the tour's check feeds rather than replaces.
+Identity checks are also a fair housing and accessibility question. A smartphone-and-selfie gate excludes prospects without a smartphone or with some disabilities, so an agent-led alternative must exist on the same terms, and the check must apply to every self-guided tour, not to prospects an agent finds suspicious. The identity result can be reused when the household applies, which is how vendors pitch it, but an application's identity verification has its own rules and records in [Applications & Screening](/books/property-tech/applications-and-screening#income-and-identity-verification), which the tour's check feeds rather than replaces.
 
 ## Call Tracking
 
@@ -95,21 +95,21 @@ Centralized leasing moves leasing work from each property's office to a team tha
 
 - **Every queue item carries its property and the property's business date and zone.** A follow-up "due today" is due in the property's zone; a tour at 10:00 is 10:00 there; the agent's own zone is irrelevant ([Business Dates](/docs/fundamentals/time#business-dates-business-days-and-holidays)).
 - **The agent's screen shows the property's rules, not the agent's habits.** Screening criteria, source-of-income protection, application fee caps, pet policies and fee disclosures differ by jurisdiction, so the answer to "do you take vouchers?" or "what does it cost to apply?" comes from the property's current rules as data, never from memory ([Rules as Data](/docs/architecture/rules-as-data)).
-- **Prices come from the property's current quote,** which Revenue Management & Pricing produces; an agent quoting a stale price to one caller and the current one to another is both a sales problem and a fair housing exposure.
+- **Prices come from the property's current quote,** which [Revenue Management & Pricing](/books/property-tech/revenue-management#what-gets-priced) produces; an agent quoting a stale price to one caller and the current one to another is both a sales problem and a fair housing exposure.
 - **Record who did each piece of work for which property:** owner billing, agent productivity and fair housing reviews all ask.
 
 ## Leasing Contact Centers and AI Leasing Agents
 
 Outsourcing the phones is common in this industry, and vendors sell it as a service: Entrata's Leasing Center, RealPage's Contact Center ("88% of our calls are answered in 25 seconds or less," by its own measure), ResMan's Contact Center and Rent Manager's Call Center. ResMan's case is the industry's usual one: "More than 70% of leasing calls go unanswered" at an average property, by its own figure. An outsourced agent needs exactly what a central agent needs (the property's availability, prices, rules and calendar) and must write to the same guest card, so the integration is a client of the platform's leasing API, not an email summary. Routing, overflow and after-hours design, and how a contact center measures itself, are in [Routing, Overflow and After Hours](/books/field-operations/contact-center#routing-overflow-and-after-hours).
 
-**AI leasing agents** now answer the same channels. Entrata's Leasing AI responds on the channel where the lead started, schedules tours from the property calendar and works in 30+ languages; RealPage says its AI Leasing Agent works "across more than 175 management companies" and that some customers resolve "roughly nine in ten routine prospect inquiries" (August 2026); AppFolio's and MRI's agents do the same. The engineering (tools rather than database access, decisions in code, handoff, evals, audit) is in [AI Agents in the Product](/docs/architecture/ai-agents); governance, cost allocation and fair housing risk across all of a property platform's agents are in AI in Property Management. Two leasing-specific points:
+**AI leasing agents** now answer the same channels. Entrata's Leasing AI responds on the channel where the lead started, schedules tours from the property calendar and works in 30+ languages; RealPage says its AI Leasing Agent works "across more than 175 management companies" and that some customers resolve "roughly nine in ten routine prospect inquiries" (August 2026); AppFolio's and MRI's agents do the same. The engineering (tools rather than database access, decisions in code, handoff, evals, audit) is in [AI Agents in the Product](/docs/architecture/ai-agents); governance, cost allocation and fair housing risk across all of a property platform's agents are in AI in Property Management ([Governance and the AI Audit Trail](/books/property-tech/ai-in-property-management#governance-and-the-ai-audit-trail), [AI Cost Allocation to Owners](/books/property-tech/ai-in-property-management#ai-cost-allocation-to-owners)). Two leasing-specific points:
 
 - **Say it's an AI.** Entrata's page says "Renters often mistake ELI for a real person," presented as a strength. State bot laws point the other way, and the design that satisfies them is an agent that says it's an AI at the start, answers honestly when asked, and logs the greeting version ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)). An AI placing outbound calls is making artificial-voice calls under the TCPA ([Artificial and AI Voices](/docs/compliance/consumer-contact#artificial-and-ai-voices)).
 - **The agent's answers are the operator's answers.** An AI that tells one prospect a unit is available and another that it isn't, or that offers a concession to some callers, creates the same fair housing record a person would. Availability, price, fees and policies come from tools that read the property's data, and the agent never improvises them ([The AI's Promises Are the Business's Promises](/docs/architecture/ai-agents#the-ai-s-promises-are-the-business-s-promises)).
 
 ### After-Hours Maintenance Calls
 
-The leasing number is the number residents know, so maintenance emergencies land in the leasing center after hours. RealPage's center acts as residents' "first responders for handling and dispatching service requests 24/7"; ResMan's associates "troubleshoot issues, triage severity, and only dispatch technicians after hours for true emergencies"; Rent Manager's agents create service tickets and follow the emergency and dispatch protocols the operator defines. For the leasing system the rules are short: recognize a resident (the caller's number matches a current lease) and route to maintenance intake rather than a guest card; never create a lead from a resident's repair call; and let the emergency triggers and on-call schedule be the maintenance system's, shared with the IVR and any AI agent ([Emergencies Skip the Model](/docs/architecture/ai-agents#emergencies-skip-the-model)). Intake, triage and dispatch are Maintenance & Work Orders.
+The leasing number is the number residents know, so maintenance emergencies land in the leasing center after hours. RealPage's center acts as residents' "first responders for handling and dispatching service requests 24/7"; ResMan's associates "troubleshoot issues, triage severity, and only dispatch technicians after hours for true emergencies"; Rent Manager's agents create service tickets and follow the emergency and dispatch protocols the operator defines. For the leasing system the rules are short: recognize a resident (the caller's number matches a current lease) and route to maintenance intake rather than a guest card; never create a lead from a resident's repair call; and let the emergency triggers and on-call schedule be the maintenance system's, shared with the IVR and any AI agent ([Emergencies Skip the Model](/docs/architecture/ai-agents#emergencies-skip-the-model)). Intake, triage and dispatch are [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#requests-and-after-hours-intake).
 
 ## Recording, QA and Call Scoring
 
@@ -133,10 +133,10 @@ The Fair Housing Act makes it unlawful to discriminate "in the terms, conditions
 What that means for the system:
 
 - **Every answer about availability, price, fees, specials and criteria comes from data,** the same for every channel and agent, so two testers asking the same question on the same day get the same answer. Templates for responses are versioned, and the version used is recorded on each message.
-- **Response time and follow-up are measured for parity** by property, agent, channel and language. The platform doesn't record protected traits of prospects and shouldn't; it can show that every inquiry got a response within the same window and the same number of follow-ups.
+- **Response time and follow-up are measured for parity** by property, agent, channel and language, from the same funnel events as [The Leasing Funnel](/books/property-tech/operating-metrics#the-leasing-funnel). The platform doesn't record protected traits of prospects and shouldn't; it can show that every inquiry got a response within the same window and the same number of follow-ups.
 - **Steering is a scripting problem.** Agents and AI agents describe units and amenities, never neighborhoods' demographics, schools as a proxy, or which building "families prefer."
 
-The rules, testing and the platform's broader obligations are in Fair Housing.
+The rules, testing and the platform's broader obligations are in [Fair Housing](/books/property-tech/fair-housing#enforcement).
 
 ## Reviews and Reputation
 
@@ -157,11 +157,11 @@ Review gating (asking for a rating first and sending only happy residents to a p
 
 ### The Lease and the Consumer Review Fairness Act
 
-The Consumer Review Fairness Act of 2016 (15 U.S.C. 45b) makes void any provision of a form contract that restricts a party's ability to review the business, imposes a penalty or fee for a review, or requires transferring intellectual property rights in review content (a non-exclusive license is allowed), and makes it unlawful to offer a form contract containing one. A residential lease offered on standard terms is a form contract. So a "no negative reviews" clause, a fee for disparaging the property, or a clause claiming the copyright in residents' reviews is void and offering it is a violation; the FTC and state attorneys general enforce it. The Act preserves a business's right to remove content from its own site that is confidential, defamatory, harassing, unrelated or clearly false, which matches the rule's withholding criteria above. Lease templates are The Lease's; the check that no template carries such a clause belongs in its template review.
+The Consumer Review Fairness Act of 2016 (15 U.S.C. 45b) makes void any provision of a form contract that restricts a party's ability to review the business, imposes a penalty or fee for a review, or requires transferring intellectual property rights in review content (a non-exclusive license is allowed), and makes it unlawful to offer a form contract containing one. A residential lease offered on standard terms is a form contract. So a "no negative reviews" clause, a fee for disparaging the property, or a clause claiming the copyright in residents' reviews is void and offering it is a violation; the FTC and state attorneys general enforce it. The Act preserves a business's right to remove content from its own site that is confidential, defamatory, harassing, unrelated or clearly false, which matches the rule's withholding criteria above. Lease templates belong to [The Lease](/books/property-tech/the-lease#templates-and-clause-libraries); the check that no template carries such a clause belongs in its template review.
 
 ## How to Build It
 
-This chapter extends `people` and `households` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model) with contact points and household membership, and adds sources, guest cards, touches, tours, access grants, call scores and reviews. Consent is not a table here: it lives in the platform's consent ledger keyed by contact point and purpose ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)). Staff are users added in Platform Architecture, referenced here as `user_id`.
+This chapter extends `people` and `households` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model) with contact points and household membership, and adds sources, guest cards, touches, tours, access grants, call scores and reviews. Consent is not a table here: it lives in the platform's consent ledger keyed by contact point and purpose ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)). Staff are users defined in [Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants), referenced here as `user_id`.
 
 ```sql
 CREATE TABLE contact_points (            -- how to reach a person; consent is keyed by value
@@ -176,6 +176,8 @@ CREATE TABLE contact_points (            -- how to reach a person; consent is ke
 );
 CREATE INDEX contact_points_match_idx ON contact_points (tenant_id, value);  -- dedupe lookups
 
+-- Prospects' households before a lease; once one is signed, lease_members
+-- (The Lease) is the source of truth for who lives there.
 CREATE TABLE household_members (         -- who shops and lives together, over time
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id    UUID NOT NULL,
@@ -224,7 +226,7 @@ CREATE TABLE guest_cards (               -- a household's interest in one proper
   desired_bedrooms           INT,
   max_rent                   BIGINT,     -- minor units, as the prospect stated it
   currency                   CHAR(3),
-  assigned_user_id           UUID,       -- site or central agent
+  assigned_user_id           UUID REFERENCES users (id), -- site or central agent
   leased_lease_id            UUID REFERENCES leases (id),
   lease_attributed_source_id UUID REFERENCES lead_sources (id),
   attribution_model          TEXT,       -- 'last_non_direct_touch@v3'
@@ -252,7 +254,8 @@ CREATE TABLE lead_events (               -- every touch, inbound or outbound, ap
   direction              TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
   actor_type             TEXT NOT NULL CHECK (actor_type IN ('prospect', 'site_staff',
                            'central_staff', 'contact_center', 'ai_agent', 'system')),
-  actor_ref              TEXT,           -- user ID, outsourcer agent ID, or AI agent and version
+  actor_user_id          UUID REFERENCES users (id),  -- staff, a contact-center vendor user,
+                                         -- an AI agent or a service; null for the prospect
   external_ref           TEXT,           -- ILS lead ID, provider call ID, message ID
   dialed_number          TEXT,           -- for calls: resolves tracking_numbers
   click_id               TEXT,
@@ -291,7 +294,7 @@ CREATE TABLE tours (
   unit_id          UUID REFERENCES units (id),        -- null for a property tour
   kind             TEXT NOT NULL CHECK (kind IN ('agent_led', 'self_guided', 'virtual_live')),
   scheduled_during TSTZRANGE NOT NULL,
-  agent_user_id    UUID,                              -- null for self-guided
+  agent_user_id    UUID REFERENCES users (id),        -- null for self-guided
   verification_id  UUID REFERENCES verifications (id),  -- identity check, from Applications & Screening
   status           TEXT NOT NULL CHECK (status IN ('scheduled', 'checked_in', 'completed',
                      'no_show', 'cancelled')),
@@ -310,8 +313,7 @@ CREATE TABLE tour_access_grants (        -- a code or credential for one tour's 
   tenant_id       UUID NOT NULL,
   tour_id         UUID NOT NULL REFERENCES tours (id),
   person_id       UUID NOT NULL REFERENCES people (id),  -- who was verified
-  lock_ref        TEXT NOT NULL,         -- the access provider's device or door ID
-  credential_ref  TEXT NOT NULL,         -- provider's reference; never the code in clear
+  credential_id   UUID NOT NULL REFERENCES access_credentials (id),  -- purpose 'tour'
   valid_during    TSTZRANGE NOT NULL,
   issued_at       TIMESTAMPTZ NOT NULL,
   first_used_at   TIMESTAMPTZ,
@@ -326,12 +328,11 @@ CREATE TABLE call_scores (               -- QA on a recorded call, by a person o
   tenant_id            UUID NOT NULL,
   lead_event_id        UUID NOT NULL REFERENCES lead_events (id),
   scorecard_version_id UUID NOT NULL,
-  scored_by_user_id    UUID,
-  scored_by_model      TEXT,             -- model and prompt version
+  scored_by            UUID NOT NULL REFERENCES users (id),  -- a reviewer, or an AI agent's user
+  model_version        TEXT,             -- model and prompt version, when an AI agent scored
   section_scores       JSONB NOT NULL,   -- includes the fair housing consistency section
   total                NUMERIC(5, 2) NOT NULL,
-  created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CHECK (num_nonnulls(scored_by_user_id, scored_by_model) = 1)
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE review_requests (           -- every ask, so solicitation can be shown to be uniform
@@ -364,7 +365,7 @@ CREATE TABLE reviews (                   -- reviews of a property, on any platfo
                          'suspected_fake', 'unrelated')),  -- 16 CFR 465.7(b) criteria only
   response_body        TEXT,
   response_drafted_by  TEXT CHECK (response_drafted_by IN ('staff', 'ai')),
-  response_approved_by UUID,             -- a person, always
+  response_approved_by UUID REFERENCES users (id), -- a person, always
   responded_at         TIMESTAMPTZ,
   UNIQUE (tenant_id, platform, external_review_id),
   CHECK ((own_site_display = 'withheld') = (withheld_reason IS NOT NULL)),
@@ -381,7 +382,7 @@ Decisions in the shape:
 - **Access grants never hold the code** and always point at a verified person and one tour; the exclusion constraint on `tours` stops two self-guided tours of one unit overlapping.
 - **Withholding a review on the property's own site takes one of the rule's reasons,** and a response can't be published without a person's approval.
 
-Events: `guest_card.created`, `guest_card.merged`, `guest_card.referred`, `tour.scheduled`, `tour.completed`, `tour_access.issued`, `tour_access.revoked`, `guest_card.leased` (with the attributed source), `review.received`. Applications & Screening listens for `tour.completed` to invite an application; Operating Metrics builds lead-to-lease conversion from `guest_card.created` and `guest_card.leased`.
+Events: `guest_card.created`, `guest_card.merged`, `guest_card.referred`, `tour.scheduled`, `tour.completed`, `tour_access.issued`, `tour_access.revoked`, `guest_card.leased` (with the attributed source), `review.received`. [Applications & Screening](/books/property-tech/applications-and-screening#the-application) listens for `tour.completed` to invite an application; [Operating Metrics](/books/property-tech/operating-metrics#the-leasing-funnel) builds lead-to-lease conversion from `guest_card.created` and `guest_card.leased`.
 
 ## Auditing
 
@@ -394,7 +395,7 @@ Leasing records answer an ILS invoice dispute, a fair housing complaint or test,
 - **Recording announcement and AI disclosure versions per call and conversation,** with recordings kept and deleted on the tenant's schedule ([Recordings and Transcripts Are Personal Data](/docs/architecture/ai-agents#recordings-and-transcripts-are-personal-data)).
 - **Review requests, withholding decisions and responses,** with the approver, so solicitation can be shown to be uniform and suppression to follow the rule's criteria.
 
-Record mechanics, including AI decisions, are in [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions); which records regulators ask for, and for how long, is in Records, Privacy & Audits.
+Record mechanics, including AI decisions, are in [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions); which records regulators ask for, and for how long, is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

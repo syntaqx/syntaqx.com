@@ -25,10 +25,10 @@ The rest of the chapter is what those settings have to encode.
 
 The charge code is where a fee becomes a fact the platform can reason about. The core model's `charge_codes` has a code, a name and a category; a working catalog needs more, because each code answers questions regulators and owners ask:
 
-- **Is it mandatory?** A charge every resident must pay (pest control, valet trash, a "technology package", utility administration) is part of the price. The FTC's December 2025 order against Greystar requires a "Total Monthly Leasing Price" that includes such fees ([The Property Business](/books/property-tech/property-business#the-property-s-money)), and Colorado's HB25-1090, effective January 1, 2026, requires anyone advertising a price to disclose the maximum total price clearly and conspicuously and bars landlords from requiring certain fees at all, with tenants entitled to demand reimbursement of unlawfully imposed charges plus damages. Listings, Websites & Marketing owns the display; the catalog has to be able to answer "what does this unit really cost per month," which means each code knows whether it's mandatory, recurring, and included in the advertised price.
+- **Is it mandatory?** A charge every resident must pay (pest control, valet trash, a "technology package", utility administration) is part of the price. The FTC's December 2025 order against Greystar requires a "Total Monthly Leasing Price" that includes such fees ([The Property Business](/books/property-tech/property-business#the-property-s-money)), and Colorado's HB25-1090, effective January 1, 2026, requires anyone advertising a price to disclose the maximum total price clearly and conspicuously and bars landlords from requiring certain fees at all, with tenants entitled to demand reimbursement of unlawfully imposed charges plus damages. [Listings, Websites & Marketing](/books/property-tech/listings-and-marketing#fee-transparency-and-all-in-pricing) owns the display; the catalog has to be able to answer "what does this unit really cost per month," which means each code carries a default for whether it's mandatory, recurring, and included in the advertised price. The default isn't the answer: the same code can be mandatory at one community and optional at another, so the property's effective-dated fee terms in [Listings](/books/property-tech/listings-and-marketing#how-to-build-it) decide per property and date.
 - **Is it rent?** In many states, only rent supports a nonpayment eviction. Washington says a tenant's right to possession "may not be conditioned on a tenant's payment or satisfaction of any monetary amount other than rent." Colorado and Oregon bar terminating for unpaid late fees. So each code needs to say whether it's rent for legal purposes, which is not the same as its accounting category: a mandatory monthly fee may be "rent" under one lease and state and not under another.
 - **Is it subsidized?** Under a housing assistance contract, part of the rent is owed by the agency, not the resident. Minnesota and Colorado both say late fees apply only to the tenant's portion. That's a ledger party, not a charge code, and it's why the schema below adds `ledger_party` to charges ([Subsidized & Affordable Housing](/books/property-tech/affordable-housing#the-owner-side)).
-- **Where does it post?** Every code maps to a GL account (rent income, other income, a liability for deposits or prepaid rent), which is how the resident ledger becomes the owner's income statement. The mapping is per chart of accounts, so it lives in Trust Accounting & the General Ledger, keyed by the code.
+- **Where does it post?** Every code maps to a GL account (rent income, other income, a liability for deposits or prepaid rent), which is how the resident ledger becomes the owner's income statement. The mapping is per chart of accounts, so it lives in [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#the-chart-of-accounts), keyed by the code.
 - **Is it taxable?** A few charges (some short-term or commercial rents, some resold utilities or services) carry sales or lodging tax in some places. Tax is a code per item, as [Sales Tax](/docs/payments/sales-tax#a-tax-code-per-item) describes.
 
 My rule: a fee nobody can classify on these axes doesn't get a code. Charge codes are created by a small group, with the classification reviewed when they're created, because a code added by a site manager at 5 p.m. is exactly the fee a regulator finds.
@@ -62,7 +62,7 @@ The method is a contract term: the lease or the property's policy says which one
 - **First month or second.** Some operators collect a full first month at move-in and prorate the second, so the move-in payment is round and the remainder rides on the next bill.
 - **Rounding.** Compute in integer minor units, round once per charge, and record the rule ([Rounding](/docs/payments/money#rounding)); a resident comparing a portal number with a hand calculation will find a one-cent disagreement and assume the rest is wrong too.
 
-Move-out proration is the mirror image, and in some states it's also a legal question (whether rent stops on the day the resident returns keys or at the end of the notice period). That's The Lease and Move-In & Move-Out; the ledger's job is to post what those rules decide.
+Move-out proration is the mirror image, and in some states it's also a legal question (whether rent stops on the day the resident returns keys or at the end of the notice period). That's [The Lease](/books/property-tech/the-lease#notices) and [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#move-out); the ledger's job is to post what those rules decide.
 
 ## Late Fees
 
@@ -77,7 +77,7 @@ A late fee is a charge posted by a rule: if a lease's rent is still unpaid on a 
 | **Washington** (RCW 59.18.170) | Not for rent paid within 5 days of the due date | Not capped in that section | A tenant whose primary income is monthly government assistance may propose a due date up to 5 days later |
 | **Minnesota** (504B.177) | When the written or oral agreement says | 8% of the overdue rent payment | An early-payment "discount" date isn't the due date; under a HAP contract, only the tenant's portion |
 
-That's six states of fifty, as of October 2026, plus cities that add their own rules and federal programs that override state caps for subsidized tenancies (Minnesota's statute lets a landlord follow a federal late fee schedule where it conflicts). No platform should ship this table in code. Late fee rules are effective-dated data per jurisdiction ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), maintained by someone accountable for them, and Landlord-Tenant Law as Data covers sourcing and keeping them current. The property's own policy sits inside the legal envelope: the lease sets the operator's fee, and the engine posts the lesser of the policy and the cap.
+That's six states of fifty, as of October 2026, plus cities that add their own rules and federal programs that override state caps for subsidized tenancies (Minnesota's statute lets a landlord follow a federal late fee schedule where it conflicts). No platform should ship this table in code. Late fee rules are effective-dated data per jurisdiction ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), maintained by someone accountable for them, and [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#sourcing-and-keeping-rules-current) covers sourcing and keeping them current. The property's own policy sits inside the legal envelope: the lease sets the operator's fee, and the engine posts the lesser of the policy and the cap.
 
 The design points the table forces:
 
@@ -108,15 +108,15 @@ As data, an application rule is an ordered list of steps, each matching charges 
 - **Re-apply by reversal.** When a payment is returned, its applications are reversed (negative rows), and the charges they paid are open again. When a charge is reversed, the payment applied to it becomes unapplied credit and runs through the rule again. Nothing is edited ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)).
 - **Prepayments wait.** Money beyond what's due is unapplied credit on the lease, applied by the rule when the next charges post. It's a liability in the GL until then.
 
-A per-member twist: roommates who each pay their share want to see that their share is paid. Most platforms keep one ledger per lease (the lease is jointly owed), and some, mostly in student housing, bill individually by bed. The schema allows a charge to name a `responsible_person_id`, so individually billed leases can apply each person's payment to their own charges first. Student Housing covers the by-the-bed model.
+A per-member twist: roommates who each pay their share want to see that their share is paid. Most platforms keep one ledger per lease (the lease is jointly owed), and some, mostly in student housing, bill individually by bed. The schema allows a charge to name a `responsible_person_id`, so individually billed leases can apply each person's payment to their own charges first. [Student Housing](/books/property-tech/student-housing#by-the-bed-leasing-and-liability) covers the by-the-bed model.
 
 ## Concessions
 
-A concession is a price reduction given to sign or renew: a month free, $500 off move-in, a reduced rate for the first six months. How it's booked decides what the rent roll says, what the resident sees, and what the owner's income statement shows.
+A concession is a price reduction given to sign or renew: a month free, $500 off move-in, a reduced rate for the first six months. [The Lease](/books/property-tech/the-lease#concessions) owns the concession's terms; this chapter posts against them. How it's booked decides what the rent roll says, what the resident sees, and what the owner's income statement shows.
 
 - **Upfront.** A one-time credit posted as a negative charge (a concession code) at move-in or in a named month. Simple, and the face rent stays at the full amount, which is often the point: the next lease and the renewal are priced off face rent.
 - **Recurring.** A negative recurring schedule for some or all of the term, so every month shows rent and a credit.
-- **Effective rent.** Face rent minus concessions spread over the term: $1,800 face with one month free on a 12-month lease is $1,650 effective. Revenue Management & Pricing prices in effective terms, and renewal offers compare against it.
+- **Effective rent.** Face rent minus concessions spread over the term: $1,800 face with one month free on a 12-month lease is $1,650 effective. [Revenue Management & Pricing](/books/property-tech/revenue-management#renewal-pricing) prices in effective terms, and renewal offers compare against it.
 
 The ledger and the books diverge here. A lessor with an operating lease recognizes rental income on a straight-line basis, so a free month is spread across the term in the GL even when the resident's ledger shows a zero-dollar month ([Grant Thornton's lessor discussion](https://www.grantthornton.com/insights/articles/audit/2020/snapshot/april/accounting-for-rent-concessions) describes the "normal straight-line rental income" that continues through rent relief). Many apartment operators book concessions as a contra-revenue line in the month given instead and report the difference; that's a policy finance chooses, not a fact the product decides ([The Product Keeps Facts, Finance Picks Policy](/docs/payments/accounting#the-product-keeps-facts-finance-picks-policy)). The product's job is to keep enough to support either: each concession as its own record with its total, its schedule and the lease it belongs to.
 
@@ -124,7 +124,7 @@ Concessions come back when leases end early. A lease that granted a free month f
 
 ## Chargebacks From Operations
 
-Damage repaired by maintenance, a lockout fee, a replaced key fob, a towing reimbursement: operations generate one-off charges. The work order in the core model has `is_resident_chargeable`; when it closes, the platform proposes a charge from its time and materials, a manager approves it, and it posts with a link to the work order and its photos ([Proof of Service](/books/field-operations/proof-of-service) has the evidence model). During a tenancy these are ordinary charges; at move-out they're deposit deductions, governed by itemization deadlines in Move-In & Move-Out. Either way, the charge without the evidence is the one that gets refunded.
+Damage repaired by maintenance, a lockout fee, a replaced key fob, a towing reimbursement: operations generate one-off charges. The work order in the core model has `is_resident_chargeable`; when it closes, the platform proposes a charge from its time and materials, a manager approves it, and it posts with a link to the work order and its photos ([Proof of Service](/books/field-operations/proof-of-service) has the evidence model). During a tenancy these are ordinary charges; at move-out they're deposit deductions, governed by itemization deadlines in [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#damage-charges). Either way, the charge without the evidence is the one that gets refunded.
 
 ## The Resident Ledger and the General Ledger
 
@@ -144,7 +144,7 @@ Four rules follow:
 
 - **The sum of resident balances equals the receivable account.** Every day, per property and per owning entity. A difference is a bug, and the reconciliation that finds it is part of the month-end close ([Month-End Close](/docs/payments/accounting#month-end-close)).
 - **Aging comes from the ledger, not a column.** The aged receivables report (current, 30, 60, 90 days) is computed from open charges and their due dates, which is why application order changes aging: rent-first application leaves fees aging instead of rent. Delinquency starts there.
-- **The ledger is per landlord entity.** The resident owes the lease's landlord of record, and the receivable sits on that entity's books, in a property that may be owned by an LLC inside a fund. Trust Accounting & the General Ledger covers the entity GLs and trust accounts the cash lands in.
+- **The ledger is per landlord entity.** The resident owes the lease's landlord of record, and the receivable sits on that entity's books, in a property that may be owned by an LLC inside a fund. [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#the-general-ledger-by-entity) covers the entity GLs and trust accounts the cash lands in.
 - **Closed periods stay closed.** A correction to a charge from a closed month posts in the current period with a reference to the original ([Closed Periods Stay Closed](/docs/payments/accounting#closed-periods-stay-closed)); the resident ledger shows the correction on the day it happened.
 
 The resident sees the ledger in the portal, and residents read it closely. Show every charge with its code's plain-language name, its service period, what was applied to it and what's open, and never show a balance that a reader can't reconcile from the lines above it.
@@ -155,9 +155,10 @@ The core model's `charge_codes`, `lease_charge_schedules`, `charges` and `paymen
 
 ```sql
 ALTER TABLE charge_codes
-  ADD COLUMN is_mandatory         BOOLEAN NOT NULL DEFAULT FALSE,  -- required of every resident who has it
+  ADD COLUMN is_mandatory         BOOLEAN NOT NULL DEFAULT FALSE,  -- default; listings' fee_terms decide
+                                                                   -- per property and date
   ADD COLUMN is_recurring         BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN in_advertised_price  BOOLEAN NOT NULL DEFAULT FALSE,  -- must appear in the total price
+  ADD COLUMN in_advertised_price  BOOLEAN NOT NULL DEFAULT FALSE,  -- default, as above
   ADD COLUMN counts_as_rent       BOOLEAN NOT NULL DEFAULT FALSE,  -- for notices and application order;
                                                                    -- jurisdiction rules can override
   ADD COLUMN prorates             BOOLEAN NOT NULL DEFAULT TRUE,
@@ -172,11 +173,13 @@ ALTER TABLE charges
   ADD COLUMN work_order_id         UUID REFERENCES work_orders (id),
   ADD COLUMN proration_method      TEXT CHECK (proration_method IN ('actual_days_month',
                                      'thirty_day_month', 'actual_days_year')),
+  ADD COLUMN lease_concession_id   UUID REFERENCES lease_concessions (id),  -- concession credits
   ADD COLUMN reason                TEXT,                           -- required for one-offs and reversals
-  ADD COLUMN posted_by             TEXT NOT NULL DEFAULT 'system'; -- typed actor reference
+  ADD COLUMN posted_by             UUID NOT NULL REFERENCES users (id);  -- staff, or the run's
+                                                                   -- service user
 
 ALTER TABLE payment_applications
-  ADD COLUMN application_rule_id UUID;   -- the rule version that produced it
+  ADD COLUMN application_rule_id UUID REFERENCES payment_application_rules (id);  -- the order used
 
 CREATE TABLE charge_posting_runs (       -- one row per property per run
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -192,52 +195,34 @@ CREATE TABLE charge_posting_runs (       -- one row per property per run
   UNIQUE (tenant_id, property_id, kind, business_date)
 );
 
-CREATE TABLE late_fee_policies (         -- the law's cap and the operator's policy, both as data
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id        UUID,                 -- null: a jurisdiction rule maintained centrally
-  jurisdiction     TEXT,                 -- 'US-CO', 'US-NY', a city code; null for a policy
-  property_id      UUID REFERENCES properties (id),  -- an operator policy for one property
-  source           TEXT NOT NULL CHECK (source IN ('law', 'policy')),
-  starts_after     INTERVAL NOT NULL,    -- '5 days', '7 days'
-  day_basis        TEXT NOT NULL CHECK (day_basis IN ('calendar', 'full_days_after', 'day_of_period')),
-  base             TEXT NOT NULL CHECK (base IN ('monthly_rent', 'past_due_rent', 'period_rent')),
-  flat_amount      BIGINT,               -- minor units
-  percent          NUMERIC(6, 4),        -- 0.0500 for 5%
-  cap_rule         TEXT CHECK (cap_rule IN ('lesser', 'greater')),  -- of flat and percent
-  daily_amount     BIGINT,
-  daily_cap_percent_of_flat NUMERIC(6, 4),
-  max_fees_per_period INT,
-  tenant_portion_only BOOLEAN NOT NULL DEFAULT TRUE,
-  citation         TEXT,                 -- 'Colo. SB21-173', for the audit trail
-  valid_during     DATERANGE NOT NULL,
-  CHECK ((jurisdiction IS NULL) <> (source = 'law'))
-);
+-- Late fees use the rules catalog in Landlord-Tenant Law as Data, not a table of their
+-- own: the law's cap is a legal_rules row of rule type 'late_fee_cap' (citation via its
+-- legal_sources row), and the operator's policy is a tenant_policies row of the same type,
+-- never looser than the law. Both share one params_schema:
+--   {"starts_after": "5 days", "day_basis": "calendar" | "full_days_after" | "day_of_period",
+--    "base": "monthly_rent" | "past_due_rent" | "period_rent",
+--    "flat_amount": 5000, "percent": 0.05, "cap_rule": "lesser" | "greater",
+--    "daily_amount": null, "daily_cap_percent_of_flat": null,
+--    "max_fees_per_period": 1, "tenant_portion_only": true}
+-- The late fee run records a rule_evaluations row per fee it posts.
 
-CREATE TABLE payment_application_rules ( -- ordered steps; the law's mandatory order wins
+CREATE TABLE payment_application_rules ( -- the operator's order; ordered steps
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id     UUID,                    -- null: a jurisdiction rule
-  jurisdiction  TEXT,
+  tenant_id     UUID NOT NULL,
   property_id   UUID REFERENCES properties (id),
   lease_id      UUID REFERENCES leases (id),
   steps         JSONB NOT NULL,          -- [{"match": {"counts_as_rent": true}, "order": "oldest_due"},
                                          --  {"match": "any", "order": "oldest_due"}]
-  citation      TEXT,
   valid_during  DATERANGE NOT NULL
 );
+-- A jurisdiction's mandatory order is a legal_rules row of type 'payment_application_order'
+-- with the same steps; where one applies it wins, and the evaluation is recorded.
 
-CREATE TABLE lease_concessions (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
-  lease_id        UUID NOT NULL REFERENCES leases (id),
-  kind            TEXT NOT NULL CHECK (kind IN ('upfront', 'recurring', 'renewal')),
-  total_amount    BIGINT NOT NULL CHECK (total_amount > 0),
-  currency        CHAR(3) NOT NULL,
-  schedule_id     UUID REFERENCES lease_charge_schedules (id),  -- the negative schedule, if recurring
-  repayable_on_early_termination BOOLEAN NOT NULL DEFAULT FALSE,
-  lease_clause    TEXT,                  -- where the lease authorizes repayment
-  approved_by     TEXT NOT NULL,
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+-- lease_concessions is defined in The Lease: kind (upfront, recurring, digital), the
+-- signed document that authorizes it, the negative schedule for recurring ones, the
+-- clawback method and its status. This chapter posts against it: an upfront concession
+-- is a negative charge carrying lease_concession_id, a recurring one is its schedule's
+-- postings, and a clawback is a charge computed from clawback_method.
 
 CREATE VIEW resident_ledger AS           -- what the resident and the court see
 SELECT c.tenant_id, c.lease_id, c.posted_on AS entry_date, 'charge' AS kind,
@@ -253,7 +238,7 @@ SELECT p.tenant_id, p.lease_id, p.created_at::date, 'payment',
 
 The view is deliberately simple; the portal adds a running balance with a window function per lease and ledger party, and returned payments appear as their own reversing entries from the Payments model. Decisions behind the shape:
 
-- **Jurisdiction rules and operator policies share a table.** The late fee engine evaluates both and posts the lesser, recording the IDs of both, so a fee can be proven lawful on the day it posted. The same pattern holds application order.
+- **Jurisdiction rules and operator policies share one rules catalog.** The late fee cap is a `late_fee_cap` rule and the operator's fee a `tenant_policies` row of the same type ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it)); the late fee engine evaluates both and posts the lesser, recording both in a `rule_evaluations` row, so a fee can be proven lawful on the day it posted. Application order follows the same pattern with `payment_application_order` rules over the operator's `payment_application_rules`.
 - **`counts_as_rent` is a default, not the answer.** Whether a mandatory fee is rent depends on the lease and the jurisdiction; the notice generator in [Notices](/books/property-tech/delinquency-and-eviction#notices) resolves it per lease and records the resolution.
 - **`ledger_party` splits one lease's receivable** into the resident's share and a subsidy agency's share (or another third party's), with late fees, aging and notices running only on the resident's.
 - **Late fee runs share the posting run table,** so the same idempotency key and the same "what ran on the 6th" answer cover both.

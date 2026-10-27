@@ -23,7 +23,7 @@ The vendors describe migration as a service they run:
 - **Buildium** asks a new customer for "balances for your accounts, your rental owners, your residents and your association owners" before choosing an accounting start date, which "separates your Buildium accounting information from your previous accounting and reporting methods."
 - **Rentec Direct's** import "Includes tenant current balance," with property balances entered manually, and "does not include past transaction history."
 
-The pattern: **balances move, history mostly doesn't.** The new platform starts from an accounting start date with opening balances, and the old system becomes the record for everything before it. Entrata's "eight systems" figure is the other half of the story: a migration is usually a consolidation, with the old PMS, a CRM, a payments provider, a screening vendor and spreadsheets all ending on the same date.
+The pattern: **balances move, history mostly doesn't.** The new platform starts from an accounting start date with opening balances, and the old system becomes the record for everything before it. Entrata's "eight systems" figure is the other half of the story: at the large end a migration is often a consolidation, with the old PMS, a CRM, a payments provider, a screening vendor and spreadsheets all ending on the same date.
 
 ## Kinds of Move
 
@@ -279,7 +279,7 @@ CREATE TABLE lease_audit_findings (      -- diligence and onboarding, with evide
   field            TEXT NOT NULL,        -- 'rent', 'deposit', 'concession', 'fee', 'term_end'
   document_value   TEXT,
   system_value     TEXT,
-  found_by         TEXT NOT NULL,        -- a user, or a model and version
+  found_by         UUID NOT NULL REFERENCES users (id),  -- staff, or an AI agent's user
   resolution       TEXT CHECK (resolution IN ('system_corrected', 'document_controls',
                      'seller_credit', 'accepted', 'open')),
   resolved_by      UUID REFERENCES users (id)

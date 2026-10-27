@@ -14,7 +14,7 @@ Delinquency is where every other chapter in this part is tested. A balance that 
 
 Delinquency features cluster in three places: automated outreach, notice and filing workflows, and handoff to collections.
 
-- **AI outreach is the newest layer.** Entrata's Payments AI handles balance inquiries, late notices and payment plans over email and SMS, with communication logs and reporting, and its page says residents "often believe they're chatting with a real person". Whether an agent discloses that it's an AI is a legal question in a growing number of places ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)), and collection messages are among the most regulated a platform sends.
+- **AI outreach is the newest layer.** Entrata's Payments AI handles balance inquiries, late notices and payment plans over email and SMS, with communication logs and reporting, and its page says residents "often believe they're chatting with a real person". Whether an agent discloses that it's an AI is a legal question in a growing number of places ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)), and collection messages are among the most regulated a platform sends ([AI in Property Management](/books/property-tech/ai-in-property-management#agents-by-function) covers collections agents).
 - **Delinquency and collections management is core.** Yardi Breeze lists managing delinquencies and collections; every suite produces aged receivables, delinquency lists and notice batches from the [resident ledger](/books/property-tech/charges-and-resident-ledgers#the-resident-ledger-and-the-general-ledger).
 - **Collections are a partner category.** RealPage's integration marketplace has a "Collections" category, and Hunter Warfield, a collection agency, appears among its partners, describing a relationship that "began over a decade ago". Placement files and payment feedback run over those integrations.
 - **Eviction filing is mostly outside the suites.** Operators use local counsel and filing services; the platform's job is to produce the ledger, the notices and proof of service they need, and to receive status back.
@@ -42,7 +42,7 @@ Notices are generated, not typed:
 - **Service is evidence.** Who served it, how (personal delivery, posting and mailing, electronic where allowed), when, and the proof (a signed declaration, photos, tracking). Without it, the notice didn't happen.
 - **Every notice goes to every adult the lease names,** in the language the jurisdiction requires.
 
-Landlord-Tenant Law as Data covers maintaining these rules across jurisdictions; this chapter's tables store which rule version produced each notice.
+[Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#rules-as-effective-dated-data) covers maintaining these rules across jurisdictions; this chapter's tables store which rule version produced each notice.
 
 ## Payment Plans
 
@@ -50,7 +50,7 @@ Most delinquencies end in payment, often in installments. A payment plan is an a
 
 For the platform:
 
-- **The plan is its own record** with installments, each matched to payments as they arrive, and a status (current, missed, completed, broken).
+- **The plan is its own record** with installments, each matched to payments as they arrive, and a status (offered, active, completed, broken, cancelled), with each installment paid or missed.
 - **It changes payment acceptance.** A lease under a plan accepts partial payments again; a broken plan returns to the state the case was in ([Payment Blocking](/books/property-tech/collecting-rent#payment-blocking)).
 - **It pauses the clock it should pause,** and only that: late fees on the planned balance per the agreement and law, notices and filing if the agreement says so.
 - **AI agents can offer plans only inside policy.** An agent that offers a payment plan is making the business's promise ([The AI's Promises Are the Business's Promises](/docs/architecture/ai-agents#the-ai-s-promises-are-the-business-s-promises)): the terms it may offer are data the operator sets, and anything outside them goes to a person.
@@ -63,28 +63,28 @@ When the notice period ends without payment, the landlord may file. The filing i
 - **Who files.** Whether an entity landlord must appear through an attorney is a court rule that varies by jurisdiction; either way, the owner of record (the lease's landlord entity) is the plaintiff, not the manager ([The Core Data Model](/books/property-tech/property-business#the-core-data-model)). The case record names both.
 - **Status back.** Filed, served, hearing set, settled, dismissed, judgment (for possession, for money, or both), writ issued, writ executed, appeal; with dates and the court's case number.
 - **Payment acceptance follows the case.** On filing, the delinquency workflow writes a `lease_payment_acceptance` row (typically `full_balance_only` or `none` with reason `eviction_filed`) so self-service channels stop taking partial payments that could waive the case, while payments the law requires accepting still get through: Washington lets a tenant reinstate by paying rent, costs, limited late fees and awarded fees before or shortly after judgment, and requires accepting a pledge of emergency rental assistance covering the full rent before the pay-or-vacate notice expires (RCW 59.18.410). Every refused payment is logged with its reason.
-- **No self-help.** Possession comes from a writ executed by an officer, never from changing locks, removing doors, or shutting off utilities. Access, Smart Buildings & Parking covers why a smart lock must not be usable to lock out a resident.
+- **No self-help.** Possession comes from a writ executed by an officer, never from changing locks, removing doors, or shutting off utilities. [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control) covers why a smart lock must not be usable to lock out a resident.
 
 **Holds stop everything at once.** Several events must pause the case and every collection path in parallel:
 
 - **Bankruptcy.** A petition operates as an automatic stay from the moment it's filed ([Collection Agencies and the Law](/books/field-operations/collections-and-retention#collection-agencies-and-the-law)); the eviction, late fees, autopay retries and placements stop until counsel decides.
-- **Military service.** Under the Servicemembers Civil Relief Act, a landlord may not evict a servicemember or dependents from a residence with rent under a threshold (a base of $2,400 a month, adjusted annually and published by the Secretary of Defense) except by court order; the court must stay proceedings for 90 days on request when service materially affects the ability to pay, and knowingly evicting outside a court order is a crime (50 U.S.C. 3951). Military & Specialty Housing covers verification of status.
+- **Military service.** Under the Servicemembers Civil Relief Act, a landlord may not evict a servicemember or dependents from a residence with rent under a threshold (a base of $2,400 a month, adjusted annually and published by the Secretary of Defense) except by court order; the court must stay proceedings for 90 days on request when service materially affects the ability to pay, and knowingly evicting outside a court order is a crime (50 U.S.C. 3951). [Military & Specialty Housing](/books/property-tech/military-and-specialty-housing#deployment-pcs-orders-and-the-scra) covers verification of status.
 - **Pending rental assistance,** where the law or the program requires a pause (Washington requires suspending court action for 14 court days after the landlord provides payment information for a pledge).
 - **A dispute or a court order.**
 
 One `hold` concept on the case, checked by every path (notices, filings, late fees, autopay, outreach, placements), is the only reliable way to stop all of them; a hold that reaches four of five paths still violates the stay.
 
-**Right to counsel and sealing** change what happens after filing. New York City provides free lawyers to tenants facing eviction in Housing Court and NYCHA proceedings, in every ZIP code and regardless of immigration status, and other cities and states have adopted their own right-to-counsel programs, so cases take longer and settle more often, and settlements (stipulations) need tracking as payment plans with court consequences. Courts increasingly limit public access to eviction records: California restricts access to limited civil eviction records to parties, people who can name a party and the address, residents, and court order, opening them to the public only after a judgment for the landlord on statutory timelines, and never for nonpayment cases filed between March 4, 2020 and September 30, 2021 (CCP 1161.2). Sealing matters to the platform twice: the case record should carry a `sealed` flag that limits who in the operator's organization can see it, and screening must not use records the law has masked (Applications & Screening; Records, Privacy & Audits).
+**Right to counsel and sealing** change what happens after filing. New York City provides free lawyers to tenants facing eviction in Housing Court and NYCHA proceedings, in every ZIP code and regardless of immigration status, and other cities and states have adopted their own right-to-counsel programs, so cases take longer and settle more often, and settlements (stipulations) need tracking as payment plans with court consequences. Courts increasingly limit public access to eviction records: California restricts access to limited civil eviction records to parties, people who can name a party and the address, residents, and court order, opening them to the public only after a judgment for the landlord on statutory timelines, and never for nonpayment cases filed between March 4, 2020 and September 30, 2021 (CCP 1161.2). Sealing matters to the platform twice: the case record should carry a `sealed` flag that limits who in the operator's organization can see it, and screening must not use records the law has masked ([Applications & Screening](/books/property-tech/applications-and-screening#accuracy-and-the-matching-problem); [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#tenant-data)).
 
 ## Collections After Move-Out
 
-When a household leaves owing money (after an eviction, a skip, or a move-out with damage beyond the deposit), the balance becomes a final account: the deposit or its alternative is applied and itemized within the state's deadline (Move-In & Move-Out), claims are filed against any deposit alternative or guarantee ([Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#deposit-alternatives)), and what remains is a debt. Then:
+When a household leaves owing money (after an eviction, a skip, or a move-out with damage beyond the deposit), the balance becomes a final account: the deposit or its alternative is applied and itemized within the state's deadline ([Move-In & Move-Out](/books/property-tech/move-in-and-move-out#deposit-deadlines-as-rules-data)), claims are filed against any deposit alternative or guarantee ([Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#deposit-alternatives)), and what remains is a debt. Then:
 
 - **In-house collection** by the landlord or manager in its own name is creditor collection. Using a different name that suggests a third party is collecting makes the creditor a debt collector under the FDCPA.
 - **Placement with an agency** sends a file (debtor identity, last address, itemized balance by itemization date, the lease, the final account statement, any disputes), and the agency, a debt collector, owes the validation notice, contact limits and the rest of Regulation F. The integration needs a return path for agency payments, disputes, recalls and closures, so the ledger and the agency's balance agree ([Collection Agencies and the Law](/books/field-operations/collections-and-retention#collection-agencies-and-the-law) has the rules).
 - **Licensing reaches the vendor.** States license collection agencies, and some define collection broadly enough to reach software companies that send collection messages or collect payments on a landlord's behalf. Entrata's S-1 discloses a putative class action in Prince George's County, Maryland alleging it isn't properly licensed under the Maryland Collection Agency Licensing Act. As of October 2026, the theory is being litigated, not settled. A platform whose agents send collection messages for operators should keep, per state, whether that activity needs a license and who holds it, and route accordingly ([Submetering Law and Licensing](/books/property-tech/utilities-and-energy#submetering-law-and-licensing) has the same question for utility billers).
 - **Credit reporting.** Whoever reports the debt to a bureau is a furnisher with accuracy and dispute duties, and for accounts in collection must report the date of first delinquency ([Rent Reporting](/books/property-tech/resident-financial-products#rent-reporting) covers furnishing). A collector may not report before communicating with the consumer.
-- **Write-off** moves the balance to bad debt in the GL while keeping it collectible; recoveries post as payments against the written-off charges ([Write-Offs](/docs/payments/accounting#write-offs)). Bad debt is a line on the owner's statement and a metric Operating Metrics defines.
+- **Write-off** moves the balance to bad debt in the GL while keeping it collectible; recoveries post as payments against the written-off charges ([Write-Offs](/docs/payments/accounting#write-offs)). Bad debt is a line on the owner's statement and a metric [Operating Metrics](/books/property-tech/operating-metrics#delinquency-and-bad-debt) defines, which depends on the write-off policy in force, so record the policy version with each write-off.
 - **Disputes and stops are global.** A dispute, a bankruptcy, a death or an identity theft claim stops every collection path and every furnishing at once, through the same hold as the case.
 
 ## Rental Assistance
@@ -125,7 +125,7 @@ CREATE TABLE legal_notices (
   case_id           UUID NOT NULL REFERENCES delinquency_cases (id),
   kind              TEXT NOT NULL CHECK (kind IN ('pay_or_quit', 'cure_or_quit',
                       'federal_30_day', 'cares_act_vacate', 'rent_demand', 'other')),
-  rule_id           UUID NOT NULL,         -- the jurisdiction rule version used
+  rule_evaluation_id UUID NOT NULL REFERENCES rule_evaluations (id),         -- the jurisdiction rule version used
   template_version  TEXT NOT NULL,
   amount_demanded   BIGINT,
   ledger_snapshot   JSONB NOT NULL,        -- the charges the amount came from
@@ -143,8 +143,8 @@ CREATE TABLE payment_plans (
   covered_balance  BIGINT NOT NULL,
   requires_current_rent BOOLEAN NOT NULL DEFAULT TRUE,
   non_waiver_clause BOOLEAN NOT NULL,      -- where a written non-waiver agreement matters
-  offered_by       TEXT NOT NULL,          -- a user or an agent, as a typed actor
-  policy_id        UUID,                   -- the terms the offer had to fall inside
+  offered_by       UUID NOT NULL REFERENCES users (id),  -- staff, or an AI agent's user
+  policy_id        UUID REFERENCES tenant_policies (id),  -- the terms the offer had to fall inside
   signed_at        TIMESTAMPTZ,
   status           TEXT NOT NULL CHECK (status IN ('offered', 'active', 'completed',
                      'broken', 'cancelled'))
@@ -211,7 +211,7 @@ Decisions behind it:
 - **Notices store their rule, template, amount source and proof,** so a court challenge is answered from data.
 - **The plaintiff is the landlord entity,** from the lease, never the manager by default.
 - **Plans, filings, placements and awards point at the case,** so a dispute or a bankruptcy can find and stop all of them.
-- **Payment acceptance is written by this workflow but owned by Collecting Rent,** so every channel enforces one state.
+- **Payment acceptance is written by this workflow but owned by [Collecting Rent](/books/property-tech/collecting-rent#payment-blocking),** so every channel enforces one state.
 
 ## Auditing
 

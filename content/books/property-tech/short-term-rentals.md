@@ -32,7 +32,7 @@ Four patterns recur, and they shape the rest of this chapter:
 
 - **The property management system owns the calendar; channels are distribution.** Every vendor above positions its channel manager as the place availability and price are set, pushed out to the channels, with reservations flowing back.
 - **API connections replace iCal where they can.** Vendors lead with direct API connections; iCal is the fallback for channels or accounts without one.
-- **Trust accounting is the enterprise dividing line.** The products built for managers with owners (Track, Streamline, Escapia, Guesty's higher tiers) lead with trust accounting and owner statements, because the manager holds guests' money for owners, exactly as Trust Accounting & the General Ledger describes for long-term rentals.
+- **Trust accounting is the enterprise dividing line.** The products built for managers with owners (Track, Streamline, Escapia, Guesty's higher tiers) lead with trust accounting and owner statements, because the manager holds guests' money for owners, exactly as [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#whose-money-it-is) describes for long-term rentals.
 - **Pricing is a separate market.** Dedicated pricing tools write prices and minimum stays into the property management system or the channel daily; the system of record stores what was set and by whom.
 
 ## Stays Are Not Leases
@@ -44,7 +44,7 @@ California's Civil Code excludes from its hiring-of-real-property chapter "trans
 Thirty days is a common line but not a universal one, and the tax threshold and the tenancy threshold in a given place can differ. The system consequences:
 
 - **The threshold is a rule per jurisdiction,** stored with an effective date like any other ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), not a constant in code. A stay is checked against it when it's booked and every time it's extended.
-- **A long stay is a different product.** Operators offering monthly or "mid-term" stays cross into tenancy and need a lease, with the deposit, notice and eviction rules that come with it. My rule: a stay that reaches the tenancy threshold for its jurisdiction stops being editable as a stay; the system flags it, and continuing means a lease (The Lease; Landlord-Tenant Law as Data).
+- **A long stay is a different product.** Operators offering monthly or "mid-term" stays cross into tenancy and need a lease, with the deposit, notice and eviction rules that come with it. My rule: a stay that reaches the tenancy threshold for its jurisdiction stops being editable as a stay; the system flags it, and continuing means a lease ([The Lease](/books/property-tech/the-lease); [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix)).
 - **Extensions aren't free edits.** Two back-to-back stays for the same guest can add up to a tenancy, which is exactly what California's re-registration rule targets. Measure continuous occupancy by guest and unit, not by reservation.
 
 Because a stay is short, everything about it is compressed. The money is collected before arrival (by the channel or the operator), the guest's identity and party size are set at booking, and the deposit, if any, is returned within days. The household concept from the core model doesn't apply: a stay has a booker and guests, and the same person booking twice is a repeat guest, matched across stays by [record linkage](/docs/architecture/record-linkage), not a household with a history.
@@ -91,11 +91,11 @@ Around the nightly price sit the restrictions and adjustments that decide what a
 - **Closed to arrival and closed to departure:** arrivals only on Saturdays in a market that turns over weekly, for example.
 - **Gap or orphan nights:** a one-night hole between two stays that the minimum stay would otherwise make unsellable.
 - **Length-of-stay discounts:** a percentage off for weekly or monthly stays, and last-minute or early-booking adjustments.
-- **Fees:** cleaning fees per stay, pet fees, extra-guest fees per night above a base occupancy. All-in price display rules (Listings, Websites & Marketing) apply to how they're shown.
+- **Fees:** cleaning fees per stay, pet fees, extra-guest fees per night above a base occupancy. All-in price display rules ([Fee Transparency and All-In Pricing](/books/property-tech/listings-and-marketing#fee-transparency-and-all-in-pricing)) apply to how they're shown.
 
 The price a guest pays is computed once, at booking, from the nightly rates, restrictions and adjustments in force at that moment, and then frozen. My rule: store the quote night by night with the stay (`stay_nights` below), never recompute it from the rate table later. Rates change daily, and the owner's statement, a cancellation refund and the tax return all depend on what this guest was charged for each night.
 
-The antitrust questions around pooled market data that Revenue Management & Pricing covers for apartments apply to nightly pricing tools too, since they price from market data; the design guidance there carries over.
+The antitrust questions around pooled market data that [Revenue Management & Pricing](/books/property-tech/revenue-management#the-antitrust-record-as-of-october-2026) covers for apartments apply to nightly pricing tools too, since they price from market data; the design guidance there carries over.
 
 ## Turnovers
 
@@ -111,7 +111,7 @@ The vendors all carry this: Guesty's task management for cleaners, Track's house
 
 ## Guests, Screening and Damage
 
-Guest screening is lighter than tenant screening and mostly done by the channels. Airbnb describes guest identity verification against name, address and government ID, and reservation screening that "analyzes hundreds of factors" and blocks some bookings flagged as high risk for parties and property damage. Direct bookings get whatever the operator adds: identity verification, a rental agreement signed at booking ([Electronic Signatures & Records](/docs/compliance/electronic-signatures)), age minimums, and party and occupancy limits that local ordinances may also set. A guest screening decision that refuses a booking is still a decision about a person; keep the reason and the inputs ([Automated Risk Decisions](/docs/architecture/risk-scoring)), and note that fair housing and public accommodation questions don't disappear because the stay is short (Fair Housing).
+Guest screening is lighter than tenant screening and mostly done by the channels. Airbnb describes guest identity verification against name, address and government ID, and reservation screening that "analyzes hundreds of factors" and blocks some bookings flagged as high risk for parties and property damage. Direct bookings get whatever the operator adds: identity verification, a rental agreement signed at booking ([Electronic Signatures & Records](/docs/compliance/electronic-signatures)), age minimums, and party and occupancy limits that local ordinances may also set. A guest screening decision that refuses a booking is still a decision about a person; keep the reason and the inputs ([Automated Risk Decisions](/docs/architecture/risk-scoring)), and note that fair housing and public accommodation questions don't disappear because the stay is short ([Fair Housing](/books/property-tech/fair-housing#protected-classes)).
 
 For damage, operators choose among three instruments:
 
@@ -123,7 +123,7 @@ The system should record which instrument applies to each stay, set from the cha
 
 ## Owners, Owner Nights and Statements
 
-Most professionally managed vacation rentals belong to individual owners who hand the home to a manager under a management agreement (Owners & Management Agreements). The economics are a revenue split rather than a percentage of rent:
+Most professionally managed vacation rentals belong to individual owners who hand the home to a manager under a management agreement ([Owners & Management Agreements](/books/property-tech/owners-and-management-agreements#the-management-agreement)). The economics are a revenue split rather than a percentage of rent:
 
 - **Gross booking revenue** is the accommodation charge for the stay, net of discounts.
 - **Channel fees** come off first: a channel deducts its host service fee from its payout.
@@ -165,7 +165,7 @@ Cities regulate short-term rentals as a land use, and over the last decade the d
 - **San Francisco.** A host must be a permanent resident who lives in the unit at least 275 nights a calendar year, may register only the unit they live in, needs a business registration first, and holds a certificate valid for two years; unhosted stays are capped at 90 nights a year, hosted stays aren't capped, hosts report their stays quarterly, and they need $500,000 of liability insurance unless their platforms provide equivalent coverage. Every listing shows the registration number. Platforms must verify that a home is lawfully registered before providing booking services, submit a monthly affidavit that they did, and keep records for at least three years.
 - **New Orleans.** A short-term rental is "not legal without a permit"; in a single-family home "one bedroom must be reserved for the owner's full time occupancy," the current structure dates from December 1, 2019, and ordinances in force from July 1, 2023 revised it. The city advises hosts to state their permit number and term-of-stay limits prominently in advertising, and notes that platforms "do not issue permits or enforce regulations."
 
-The European Union moved the same machinery to the regional level. Regulation (EU) 2024/1028, adopted April 11, 2024 and applying from May 20, 2026, makes a registration number the unique identifier of a rented unit where a member state runs a registration procedure, has hosts declare the unit's address, type, whether it's a primary or secondary residence and its capacity, and has platforms provide rental activity data regularly through a single digital entry point in each member state. Outside the US says what else changes there.
+The European Union moved the same machinery to the regional level. Regulation (EU) 2024/1028, adopted April 11, 2024 and applying from May 20, 2026, makes a registration number the unique identifier of a rented unit where a member state runs a registration procedure, has hosts declare the unit's address, type, whether it's a primary or secondary residence and its capacity, and has platforms provide rental activity data regularly through a single digital entry point in each member state. [Outside the US](/books/property-tech/outside-the-us#the-european-union) says what else changes there.
 
 What the system has to carry:
 
@@ -176,13 +176,14 @@ What the system has to carry:
 
 ## How to Build It
 
-The short-term model is a set of new tables beside the lease spine, sharing units, people, charges, payments and work orders. Units are `units` of kind `dwelling` on a property whose `property_type` is `short_term` (already in the core CHECK); a home a manager rents both ways is one unit that carries either leases or stays on non-overlapping dates, and a nightly RV site in a manufactured housing community is a `lot` unit that carries stays the same way ([Military & Specialty Housing](/books/property-tech/military-and-specialty-housing#manufactured-housing)). Non-lease ledgers follow the pattern Community Associations introduces for `ownership_accounts`: a charge belongs to exactly one account, and a stay becomes the third kind.
+The short-term model is a set of new tables beside the lease spine, sharing units, people, charges, payments and work orders. Units are `units` of kind `dwelling` on a property whose `property_type` is `short_term` (already in the core CHECK); a home a manager rents both ways is one unit that carries either leases or stays on non-overlapping dates, and a nightly RV site in a manufactured housing community is a `lot` unit that carries stays the same way ([Military & Specialty Housing](/books/property-tech/military-and-specialty-housing#manufactured-housing)). Non-lease ledgers follow the pattern [Community Associations](/books/property-tech/community-associations#how-to-build-it) introduces for `ownership_accounts`: a charge belongs to exactly one account, and a stay becomes the third kind.
 
 ```sql
-CREATE TABLE short_term_rules (          -- a jurisdiction's STR rules, effective-dated
+CREATE TABLE short_term_rules (          -- typed slice of 'short_term_rental' legal_rules;
+                                         -- platform-wide, so no tenant_id
   id                     UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id              UUID NOT NULL,  -- the platform's rule tenant, or an operator override
-  jurisdiction_code      TEXT NOT NULL,  -- 'US-CA-SAN-FRANCISCO', resolved from the address
+  legal_rule_id          UUID NOT NULL UNIQUE REFERENCES legal_rules (id),  -- review, source, versions
+  jurisdiction_id        UUID NOT NULL REFERENCES jurisdictions (id),       -- e.g. 'US-CA-SAN_FRANCISCO_CITY'
   tenancy_threshold_nights INT,          -- a stay this long becomes a tenancy question
   requires_registration  BOOLEAN NOT NULL,
   primary_residence_only BOOLEAN NOT NULL,
@@ -191,16 +192,14 @@ CREATE TABLE short_term_rules (          -- a jurisdiction's STR rules, effectiv
   unhosted_night_cap     INT,            -- per calendar year; null: none
   max_guests             INT,
   platform_must_verify   BOOLEAN NOT NULL,
-  source_url             TEXT NOT NULL,
-  valid_during           DATERANGE NOT NULL,
-  EXCLUDE USING GIST (tenant_id WITH =, jurisdiction_code WITH =, valid_during WITH &&)
+  valid_during           DATERANGE NOT NULL     -- copied from the legal rule
 );
 
 CREATE TABLE short_term_registrations (  -- a unit's registration, permit or license
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id         UUID NOT NULL,
   unit_id           UUID NOT NULL REFERENCES units (id),
-  jurisdiction_code TEXT NOT NULL,
+  jurisdiction_id   UUID NOT NULL REFERENCES jurisdictions (id),
   kind              TEXT NOT NULL CHECK (kind IN ('registration', 'permit', 'license',
                       'certificate', 'business_registration', 'tax_account')),
   number            TEXT,                -- null while pending without a record number
@@ -211,7 +210,7 @@ CREATE TABLE short_term_registrations (  -- a unit's registration, permit or lic
                       'revoked', 'expired')),
   valid_during      DATERANGE NOT NULL,
   CHECK (num_nonnulls(holder_person_id, holder_entity_id) = 1),
-  EXCLUDE USING GIST (unit_id WITH =, jurisdiction_code WITH =, kind WITH =,
+  EXCLUDE USING GIST (unit_id WITH =, jurisdiction_id WITH =, kind WITH =,
     valid_during WITH &&) WHERE (status IN ('pending', 'active'))
 );
 
@@ -349,7 +348,7 @@ ALTER TABLE payments
   ADD COLUMN channel_connection_id UUID REFERENCES channel_connections (id),
   DROP CONSTRAINT payments_one_account,
   ADD CONSTRAINT payments_one_account
-    CHECK (num_nonnulls(lease_id, ownership_account_id, stay_id, channel_connection_id) = 1);
+    CHECK (num_nonnulls(lease_id, ownership_account_id, stay_id, channel_connection_id) <= 1);
 
 CREATE TABLE channel_payout_lines (      -- ties a channel payout back to stays
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -364,10 +363,11 @@ CREATE TABLE channel_payout_lines (      -- ties a channel payout back to stays
   CHECK (net_amount = gross_amount - channel_fee)  -- tax_withheld never reaches the operator
 );
 
-CREATE TABLE lodging_tax_rules (         -- one tax in one jurisdiction, effective-dated
+CREATE TABLE lodging_tax_rules (         -- one tax in one jurisdiction: a typed slice of the
+                                         -- jurisdiction's 'lodging_tax' legal rule; no tenant_id
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
-  jurisdiction_code  TEXT NOT NULL,      -- state, county, city or special district
+  legal_rule_id      UUID NOT NULL REFERENCES legal_rules (id),  -- one rule may list several taxes
+  jurisdiction_id    UUID NOT NULL REFERENCES jurisdictions (id),  -- state, county, city or district
   tax_code           TEXT NOT NULL,      -- 'state_hotel_occupancy'
   authority          TEXT NOT NULL,      -- who it's filed with
   basis              TEXT NOT NULL CHECK (basis IN ('percent', 'per_night', 'per_stay')),
@@ -377,11 +377,9 @@ CREATE TABLE lodging_tax_rules (         -- one tax in one jurisdiction, effecti
   min_taxable_nightly BIGINT,            -- Texas: rooms of $15 a day or more
   exempt_from_nights INT,                -- stays this long are exempt (30 in Texas)
   taxable_categories TEXT[] NOT NULL,    -- charge code categories in the base
-  source_url         TEXT NOT NULL,
   valid_during       DATERANGE NOT NULL,
   CHECK ((basis = 'percent') = (rate_bp IS NOT NULL)),
-  EXCLUDE USING GIST (tenant_id WITH =, jurisdiction_code WITH =, tax_code WITH =,
-    valid_during WITH &&)
+  EXCLUDE USING GIST (jurisdiction_id WITH =, tax_code WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE lodging_tax_remitters (     -- who collects each tax on each channel, over time
@@ -448,7 +446,7 @@ Design decisions behind it:
 - **Channel payouts are payments with lines.** One payout is one `payments` row from a channel connection, applied to many stays' charges, with `channel_payout_lines` explaining the fee and the tax the channel kept. The `payments_one_account` constraint name follows Community Associations' pattern; whichever name that chapter uses, the rule is one source per payment.
 - **Taxes are two rules and a line.** `lodging_tax_rules` says what the tax is, `lodging_tax_remitters` who collects it on each channel on each date, and `stay_tax_lines` what was computed for each stay. Only operator-remitted lines become charges, so a channel-collected tax can never be billed to the guest twice.
 - **Registrations gate listings.** A listing references the registration it shows, and publishing checks the jurisdiction's `short_term_rules` and the registration's status and dates. Night caps are computed from stays with `is_hosted` and never stored as a counter that could drift.
-- **Rules are platform content with overrides.** Tax and STR rules carry `tenant_id` like every table; the platform maintains them in its own rule tenant, and an operator can add an override with a source, per [Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided).
+- **Rules are platform content with operator policies on top.** `short_term_rules` and `lodging_tax_rules` are typed slices of the shared rules catalog in [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it): each row belongs to one approved `legal_rules` row (rule types `short_term_rental` and `lodging_tax`), which carries the source, the review and the version history, and the slice adds typed columns the booking and tax code read. An operator's stricter choice (a lower guest cap, a longer minimum stay) is a `tenant_policies` row, per [Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided).
 - **Emit stay events.** `stay.held`, `stay.confirmed`, `stay.modified`, `stay.cancelled`, `stay.checked_in`, `stay.checked_out` and `stay.overbooked` drive channel pushes, turnover scheduling, guest messages and owner reporting through the outbox ([Events & Async Messaging](/docs/architecture/events)).
 
 ## Auditing

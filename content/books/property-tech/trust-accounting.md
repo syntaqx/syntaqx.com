@@ -60,7 +60,7 @@ Some details matter enough to model directly:
 - **Nevada** requires a reconciliation of the trust account when a designated property manager leaves, covering the preceding 30 days and submitted within 15 days, and an annual trust account reconciliation report (its Form 546) filed by the broker's license anniversary, signed by the broker if an employee prepared it.
 - **Delegation doesn't move liability.** Nevada's manual is explicit: the broker "is personally responsible for the supervision and maintenance of the trust fund accounts and records," and neither delegation nor ignorance relieves that. Outsourced or AI-assisted accounting changes who does the work, not who answers for it.
 
-These are rules as data, attached to the property's state and the account's purpose ([Rules as Data](/docs/architecture/rules-as-data)): which accounts must exist, how they must be titled, deposit deadlines in banking days, reconciliation frequency and filing deadlines, outstanding-item age limits, and whether broker funds are permitted. Landlord-Tenant Law as Data owns the rules catalog; this chapter's tables consume it.
+These are rules as data, attached to the property's state and the account's purpose ([Rules as Data](/docs/architecture/rules-as-data)): which accounts must exist, how they must be titled, deposit deadlines in banking days, reconciliation frequency and filing deadlines, outstanding-item age limits, and whether broker funds are permitted. [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) owns the rules catalog; this chapter's tables consume it.
 
 ## Security Deposit Accounts
 
@@ -70,7 +70,7 @@ Landlord-tenant statutes add rules for deposits that apply to every landlord, li
 - **New Jersey.** Deposits go into an interest-bearing account at an insured New Jersey institution or an eligible money market fund (the money market option and variable-rate rules apply to landlords with 10 or more units). The tenant is told in writing the institution's name and address, the type of account, the current rate and the amount within 30 days of receipt, within 30 days of moving the deposit, within 30 days of a transfer of ownership, and with each annual interest payment. A landlord who fails to notify or pay interest can be told to apply the deposit plus 7% annual interest to rent.
 - **Florida.** The landlord chooses one of three methods: a separate non-interest-bearing account in a Florida institution, a separate interest-bearing account paying the tenant at least 75% of the annualized average rate or 5% simple interest, or a surety bond with 5% interest to the tenant; deposits may not be commingled, and the tenant is told which method within 30 days.
 
-So a deposit is a liability to a specific resident, in a specific account whose location, interest and notices are governed by the property's state, and sometimes by its unit count. Interest accrues per deposit and is paid or credited on the statute's schedule; changing banks triggers notices. The deposit's life at move-in and move-out (collection, itemized deductions and the return deadline) is in Move-In & Move-Out; deposit alternatives that replace the cash are in Insurance, Deposits & Guarantees.
+So a deposit is a liability to a specific resident, in a specific account whose location, interest and notices are governed by the property's state, and sometimes by its unit count. Interest accrues per deposit and is paid or credited on the statute's schedule; changing banks triggers notices. The deposit's life at move-in and move-out (collection, itemized deductions and the return deadline) is in [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#deposit-deadlines-as-rules-data); deposit alternatives that replace the cash are in [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#deposit-alternatives).
 
 ## Three-Way Reconciliation
 
@@ -132,7 +132,7 @@ What a platform needs to hand an auditor without a scramble:
 - **Agreements and consents:** management agreements, written consents for any disbursement below liability, and authorizations for broker funds in the account.
 - **The account inventory:** every trust account, its title as shown by the bank, its purpose, its signatories and their bonding.
 
-Owners' auditors ask for the same records from the other side ([Auditing](/books/property-tech/owners-and-management-agreements#auditing)); which records each regulator wants and how long they're kept is in Records, Privacy & Audits.
+Owners' auditors ask for the same records from the other side ([Auditing](/books/property-tech/owners-and-management-agreements#auditing)); which records each regulator wants and how long they're kept is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#regulatory-and-commission-audits).
 
 ## The General Ledger by Entity
 
@@ -141,7 +141,7 @@ A trust account proves cash; a general ledger keeps the books of each legal enti
 - **Each owning entity's books,** by property, usually on the owner's chosen basis (cash for small owners, accrual for institutional ones), with statements produced from them ([Owner Reporting](/books/property-tech/owners-and-management-agreements#owner-reporting)).
 - **The manager's corporate books,** where fee income, payroll and overhead live. Fees are an entry in both: an expense in the owner's books, income in the manager's.
 - **Funds and investment entities,** whose books hold their investment in property-owning entities ([Investors, Funds & Asset Management](/books/property-tech/investors-and-asset-management#fund-and-investor-accounting)).
-- **Associations,** whose books are their own and whose funds the manager holds in trust (Community Associations).
+- **Associations,** whose books are their own and whose funds the manager holds in trust ([Community Associations](/books/property-tech/community-associations#the-association-the-manager-and-the-owner)).
 
 The design that works is **one ledger, many entities**: every ledger account is dimensioned by the legal entity whose books it belongs to and the property it relates to, and each entity's trial balance is a filter, not a separate database. A transaction that crosses entities (the manager pays a vendor for two owners' properties with one check from an operating account, then is reimbursed) posts **due to / due from** entries in each entity's books that must net to zero across them, and a nightly check proves they do. Consolidation for an owner with several entities is then a sum with eliminations, not an export.
 
@@ -149,7 +149,7 @@ Period close is per entity: each entity's books close on its own schedule, and o
 
 ### The Chart of Accounts
 
-The tenant keeps a **master chart of accounts** that every property's books use, so a portfolio's income statement adds up without mapping. Owners with their own charts (institutional owners, funds, lenders) get a mapping from the master chart to theirs, kept as data and versioned, and the owner's reporting package is rendered in their chart ([Data from Third-Party Managers](/books/property-tech/investors-and-asset-management#data-from-third-party-managers)). Charge codes map to income accounts, so the resident ledger, the owner's books and the fee basis agree by construction (Charges & Resident Ledgers).
+The tenant keeps a **master chart of accounts** that every property's books use, so a portfolio's income statement adds up without mapping. Owners with their own charts (institutional owners, funds, lenders) get a mapping from the master chart to theirs, kept as data and versioned, and the owner's reporting package is rendered in their chart ([Data from Third-Party Managers](/books/property-tech/investors-and-asset-management#data-from-third-party-managers)). Charge codes map to income accounts, so the resident ledger, the owner's books and the fee basis agree by construction ([Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#the-resident-ledger-and-the-general-ledger)).
 
 Accounts that matter for trust:
 
@@ -167,7 +167,7 @@ Two structures coexist, and the platform has to support both:
 - **Pooled trust accounts.** One trust account (or one per state, or one per purpose) holds money for many owners, with beneficiaries separated only in the ledger. This is common for single-family and small-portfolio managers and is where three-way reconciliation is essential.
 - **Accounts per property or per owner.** Institutional owners often require an operating account and a deposit account per property, in the owner's name with the owner as signatory, as the 2020 agreement in [The Management Agreement](/books/property-tech/owners-and-management-agreements#the-management-agreement) does. Reconciliation is simpler per account, and there are hundreds of them.
 
-Each account records its holder, the title as the bank shows it (trust designation is often a titling requirement), the state and location of the depository (several statutes require an in-state institution), interest terms, signatories and the properties whose money it holds over time. Payments collected through a processor land first in the processor's or the platform's FBO account and are paid out to these accounts; the trust obligation starts when the manager receives the money, which is a reason the Collecting Rent chapter cares who holds money in transit.
+Each account records its holder, the title as the bank shows it (trust designation is often a titling requirement), the state and location of the depository (several statutes require an in-state institution), interest terms, signatories and the properties whose money it holds over time. Payments collected through a processor land first in the processor's or the platform's FBO account and are paid out to these accounts; the trust obligation starts when the manager receives the money, which is a reason [Collecting Rent](/books/property-tech/collecting-rent#who-holds-the-money) cares who holds money in transit.
 
 ## Unclaimed Property
 
@@ -236,7 +236,7 @@ CREATE TABLE bank_account_properties (               -- whose money is in which 
 CREATE TABLE bank_account_signatories (
   tenant_id       UUID NOT NULL,
   bank_account_id UUID NOT NULL REFERENCES bank_accounts (id),
-  user_id         UUID NOT NULL,
+  user_id         UUID NOT NULL REFERENCES users (id),
   bonded_amount   BIGINT,                              -- where the agreement or state requires it
   valid_during    DATERANGE NOT NULL
 );
@@ -247,7 +247,7 @@ CREATE TABLE entity_periods (                          -- close per entity
   period           DATE NOT NULL,                      -- first day of the month
   status           TEXT NOT NULL CHECK (status IN ('open', 'closing', 'closed')),
   closed_at        TIMESTAMPTZ,
-  closed_by        UUID,
+  closed_by        UUID REFERENCES users (id),
   PRIMARY KEY (legal_entity_id, period)
 );
 
@@ -266,8 +266,8 @@ CREATE TABLE trust_reconciliations (
   stale_items            INT NOT NULL,                 -- past the state's age limits
   status                 TEXT NOT NULL CHECK (status IN ('draft', 'prepared', 'reviewed',
                            'filed')),                  -- filed: submitted where a state requires it
-  prepared_by            UUID,
-  reviewed_by            UUID,                         -- the broker, where required
+  prepared_by            UUID REFERENCES users (id),
+  reviewed_by            UUID REFERENCES users (id),   -- the broker, where required
   evidence_uri           TEXT,                         -- the frozen package
   created_at             TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK (adjusted_bank_balance = statement_balance + deposits_in_transit - outstanding_payments),
@@ -348,7 +348,7 @@ How it runs:
 - **Closed periods per entity,** with corrections posted forward and linked.
 - **Unclaimed property items through their whole life,** with due diligence evidence and the report and remittance each went into.
 
-The mechanics of append-only history and evidence are in [Audit Trails](/docs/architecture/audit-trails) and the Payments volume's [Proving It to Auditors and Sponsor Banks](/books/payments/ledger-and-reconciliation#proving-it-to-auditors-and-sponsor-banks); retention by record type is in Records, Privacy & Audits.
+The mechanics of append-only history and evidence are in [Audit Trails](/docs/architecture/audit-trails) and the Payments volume's [Proving It to Auditors and Sponsor Banks](/books/payments/ledger-and-reconciliation#proving-it-to-auditors-and-sponsor-banks); retention by record type is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

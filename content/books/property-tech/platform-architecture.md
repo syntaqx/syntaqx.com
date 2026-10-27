@@ -36,7 +36,7 @@ The tenant is the operator, not the owner ([The Core Data Model](/books/property
 **The boundary bends in four places:**
 
 - **An owner with two managers** is a legal entity in two tenants, each with its own records. Combining them is the asset manager's work in [Data from Third-Party Managers](/books/property-tech/investors-and-asset-management#data-from-third-party-managers): submissions from each manager, mapped and checked, never a cross-tenant join.
-- **A property that changes managers** leaves one tenant and arrives in another as new records. The old tenant keeps its history read-only, because it stays answerable for the period it managed ([Onboarding and Offboarding an Owner](/books/property-tech/owners-and-management-agreements#onboarding-and-offboarding-an-owner)); Switching Platforms & Acquisitions covers the move.
+- **A property that changes managers** leaves one tenant and arrives in another as new records. The old tenant keeps its history read-only, because it stays answerable for the period it managed ([Onboarding and Offboarding an Owner](/books/property-tech/owners-and-management-agreements#onboarding-and-offboarding-an-owner)); [Switching Platforms & Acquisitions](/books/property-tech/switching-platforms#kinds-of-move) covers the move.
 - **One person, several tenants.** A resident who rents from two managers, a vendor who serves ten, an investor in funds run by two sponsors: one login identity, a separate user in each tenant, and a tenant picker at sign-in. Nothing a person does in one tenant is visible in another.
 - **Shared reference data has no tenant.** Jurisdictions, legal rules, HUD income limits, allowance rates and rule test cases are platform-wide rows that every tenant reads and none owns ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law)); a tenant's own policies sit on top of them.
 
@@ -44,7 +44,7 @@ The tenant is the operator, not the owner ([The Core Data Model](/books/property
 
 ## Users, Roles and Grants
 
-The core model keeps residents as `people` and says staff, owners and vendors are users with grants, defined here; every earlier chapter's `user_id`, `approved_by`, `decided_by` and `verified_by` column points at this table. The authorization model is the playbook's mix: roles for what kind of thing a user may do, and relationships for which records ([Choosing a Model](/docs/security/authorization#choosing-a-model)). Property management is the clearest case for that mix in the playbook, because most access in it comes from a relationship the domain already records.
+The core model keeps residents as `people` and says staff, owners and vendors are users with grants, defined here; every actor column in the book (`approved_by`, `decided_by`, `assigned_user_id` and the rest) points at this table, under the naming convention in [How to Build It](#how-to-build-it). The authorization model is the playbook's mix: roles for what kind of thing a user may do, and relationships for which records ([Choosing a Model](/docs/security/authorization#choosing-a-model)). Property management is the clearest case for that mix in the playbook, because most access in it comes from a relationship the domain already records.
 
 | User | How they get access | Scope | What they typically see and do |
 | --- | --- | --- | --- |
@@ -57,7 +57,7 @@ The core model keeps residents as `people` and says staff, owners and vendors ar
 | **Representative** | Derived from a verified authority record | One resident, by authority type | Billing for financial authority, care updates for health authority ([Families, Representatives and the Portal](/books/property-tech/senior-living#families-representatives-and-the-portal)) |
 | **Vendor user** | Derived from assignment to a work order, purchase order or bid | Those records only | The job, the unit's access instructions for the work window, invoices and compliance documents |
 | **Service account** | An explicit grant to an integration's identity | The properties the operator consented to | The scopes in the integration's agreement ([Service Accounts Are Users](/docs/security/support-access#service-accounts-are-users)) |
-| **AI agent** | Its own identity, acting for a user or for the operator | The intersection of the agent's scopes and the user it acts for | Tools, never tables (AI in Property Management) |
+| **AI agent** | Its own identity, acting for a user or for the operator | The intersection of the agent's scopes and the user it acts for | Tools, never tables ([AI in Property Management](/books/property-tech/ai-in-property-management#governance-and-the-ai-audit-trail)) |
 
 Five rules make this work:
 
@@ -79,7 +79,7 @@ A manager keeps many sets of books in one ledger: each owning entity's, its own 
 
 Deposit limits, late fee caps, notice periods, rent caps, fee disclosures, repair deadlines, entry notice and screening limits are effective-dated rules attached to jurisdictions, resolved from the property, and evaluated by one service that records each evaluation ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law)). The platform's job is to make every module ask it:
 
-- **Modules call; they don't embed.** The late fee run, the renewal pricer, the deposit return, the work order deadline and the listing's fee display each call the rules service with the property, the rule type and the as-of facts, and store the evaluation id on the record the rule shaped (as `work_orders.deadline_evaluation_id` and `renewal_offers.rent_limit_id` already do).
+- **Modules call; they don't embed.** The late fee run, the renewal pricer, the deposit return, the work order deadline and the listing's fee display each call the rules service with the property, the rule type and the as-of facts, and store the evaluation id on the record the rule shaped (as `work_orders.deadline_evaluation_id` and `renewal_offers.rule_evaluation_id` do).
 - **Fail closed.** When no rule resolves for a property and a rule type that matters, the action stops for review rather than defaulting to the most permissive value ([Rules as Effective-Dated Data](/books/property-tech/landlord-tenant-law#rules-as-effective-dated-data)).
 - **Tenant policy is a layer.** An operator's stricter policy (a lower late fee, a longer notice) sits on top of the law and is evaluated in the same call, so the record shows both.
 
@@ -105,7 +105,7 @@ The history is part of the model. The interface programs have been litigated: Ya
 
 ### Partner programs and the client sponsor
 
-Entrata's program has API, strategic (reselling, referral, affiliate) and consulting tracks, with "sandbox environments and API documentation" and "webhooks" among API partner benefits, and access tiers that aren't published. Third-party connector documentation shows the request shape: "All requests are `POST` requests," authenticated with the Entrata account's credentials, with a body naming the method; a newer gateway at `apis.entrata.com` uses API keys, and its limits "are calculated using the leaky bucket algorithm," answered with HTTP 429.
+Entrata's program has API, strategic (reselling, referral, affiliate) and consulting tracks, with "sandbox environments and API documentation" and "webhooks" among API partner benefits, and access tiers that aren't published. Third-party connector documentation shows the request shape: "All requests are `POST` requests," authenticated with the Entrata account's credentials, with a body naming the method; another integrator's documentation shows a base URL at `apis.entrata.com` with API key authentication, and says Entrata's limits "are calculated using the leaky bucket algorithm," answered with HTTP 429.
 
 The **client sponsor** is the distinctive step. A partner gets access because an operator vouches for it, which ties the platform's ecosystem to its customers' demand and gives the operator a voice in which vendors reach its data. My rule for a platform that runs a sponsor model: record the sponsor, the agreement and the scope per partner, and treat every additional operator that turns the partner on as its own consent, not an extension of the sponsor's.
 
@@ -167,7 +167,7 @@ Every operator tracks something the core doesn't. Custom fields land mostly on p
 - **A custom field can become a protected-class field.** A free-text "notes about household" field or a "preferred language" field used in screening or pricing is a fair housing record. Field definitions carry a purpose, and fields that may hold protected or sensitive data are excluded from screening, pricing and targeting features by the same allowlist [Fair Housing](/books/property-tech/fair-housing#how-to-build-it) describes.
 - **A custom field can become a charge.** A field like "pet weight" that drives a fee belongs in the charge catalog, where it's disclosed and capped ([The Charge Catalog](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog)); fields don't post money.
 
-Workflows and agents built by operators (rules that run on events, no-code agents from SOPs) are configuration with versions and owners, covered in AI in Property Management.
+Workflows and agents built by operators (rules that run on events, no-code agents from SOPs) are configuration with versions and owners, covered in [Marketplaces and Builders](/books/property-tech/ai-in-property-management#marketplaces-and-builders).
 
 ## Data Out
 
@@ -177,12 +177,21 @@ The pipeline engineering (analytics off production, change data capture, transfo
 
 - **Shares are scoped like users.** A share for an institutional owner contains that owner's properties and entities only, resolved by date exactly as the owner's portal is; a share for the manager's corporate BI contains its tenant. A share is an integration with a consent record, not a database export.
 - **Restricted data stays out of shares by default.** Screening reports, VAWA files, accommodation records, demographic data, bank account numbers and investor tax ids are excluded or tokenized unless a share's purpose requires them and its agreement says so ([Privacy and Retention](/docs/architecture/data-pipelines#privacy-and-retention)).
-- **Ship definitions with the data.** Occupancy, trade-out and delinquency computed differently in the customer's warehouse and the platform's reports is the most common complaint about data shares. Publish the governed metric definitions and their versions with the share (Operating Metrics).
+- **Ship definitions with the data.** Occupancy, trade-out and delinquency computed differently in the customer's warehouse and the platform's reports is the most common complaint about data shares. Publish the governed metric definitions and their versions with the share ([Operating Metrics](/books/property-tech/operating-metrics#why-the-same-metric-disagrees)).
 - **Shares carry the platform's legal constraints.** A share that combines several operators' nonpublic data, or that feeds a pricing tool, is an information exchange question, not a BI question ([Inputs: Own, Public and Pooled Data](/books/property-tech/revenue-management#inputs-own-public-and-pooled-data)).
 
 ## How to Build It
 
-This chapter extends `tenants` and `portfolios` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model) with identities, users, roles and grants, the property access every row-level policy checks, configuration, integrations and their consents, credentials, event subscriptions and data shares. Every `user_id`, `approved_by`, `decided_by`, `verified_by` and similar column in earlier chapters references `users (id)`.
+This chapter extends `tenants` and `portfolios` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model) with identities, users, roles and grants, the property access every row-level policy checks, configuration, integrations and their consents, credentials, event subscriptions and data shares.
+
+One naming convention for actors holds across the book, and every such column references `users (id)`:
+
+- **`<verb>_by`** records who did something: `approved_by`, `decided_by`, `verified_by`, `posted_by`, `set_by`, `inspected_by`. Jobs, integrations and AI agents act as `service` and `ai_agent` users, so a scheduled run or a model is a user here too, never a text label like `'system'`; the model's version goes in its own column or in the AI audit trail ([Governance and the AI Audit Trail](/books/property-tech/ai-in-property-management#governance-and-the-ai-audit-trail)).
+- **`<role>_user_id`** names the user who holds a role on a record rather than performing one act: `assigned_user_id`, `agent_user_id`, `holder_user_id`, `signer_user_id`, and `actor_user_id` on history tables.
+- **`<verb>_by_person_id`** references `people (id)` where the actor can be a resident or household member with no login, such as `requested_by_person_id` on an accommodation request.
+- **A `_by` column typed `TEXT`** names an outside party who is not a user (the surveyor in `measured_by`, the reserve study preparer, the inspector of elections), or a method chosen from a `CHECK` list (`charged_by`, `remitted_by`); neither is an actor reference.
+
+Likewise, every jurisdiction rule a record depends on is referenced through `rule_evaluation_id REFERENCES rule_evaluations (id)` ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it)).
 
 ```sql
 CREATE TABLE identities (                -- a login; platform-wide, no tenant
@@ -437,7 +446,7 @@ The platform-level records owners, residents, partners, auditors and regulators 
 
 **Filings**
 
-- [Entrata: Form S-1/A, Amendment No. 2](https://www.sec.gov/Archives/edgar/data/0002028464/000162828026059692/entrata-sx1a2.htm), one operating system for operators
+- [Entrata: Form S-1/A, Amendment No. 2](https://www.sec.gov/Archives/edgar/data/0002028464/000162828026059692/entrata-sx1a2.htm), one operating system with "one login, one database"
 
 **Platforms and programs**
 

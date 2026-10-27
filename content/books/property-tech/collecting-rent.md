@@ -103,10 +103,10 @@ Between the resident's bank and the owner's operating or trust account, rent sit
 
 The licensing analysis is the Payments volume's ([Holding Other People's Money](/books/payments/becoming-a-payment-provider#holding-other-people-s-money), [Who's a Money Transmitter](/books/payments/cash-payments#who-s-a-money-transmitter)). What rent adds:
 
-- **The payee is the landlord of record, not the manager.** A collection-agent arrangement only works if the agent is the landlord's agent under a written agreement, the landlord holds the agent out as accepting rent, and the resident's obligation ends when the agent receives the money. The management agreement and the platform agreement both have to say so, per owning entity.
-- **Rent may be trust money.** In many states a manager's collections for owners must sit in trust accounts, and security deposits in separate accounts. The settlement destination for each property is therefore an account belonging to (or held in trust for) a specific owner, which Trust Accounting & the General Ledger owns. A platform that pools settlements across owners has to be able to say, for every dollar in transit, which owner it belongs to.
+- **The payee is the landlord of record, not the manager.** A collection-agent arrangement only works if the agent is the landlord's agent under a written agreement, the landlord holds the agent out as accepting rent, and the resident's obligation ends when the agent receives the money. The [management agreement](/books/property-tech/owners-and-management-agreements#the-management-agreement) and the platform agreement both have to say so, per owning entity.
+- **Rent may be trust money.** In many states a manager's collections for owners must sit in trust accounts, and security deposits in separate accounts. The settlement destination for each property is therefore an account belonging to (or held in trust for) a specific owner, which [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#bank-accounts) owns. A platform that pools settlements across owners has to be able to say, for every dollar in transit, which owner it belongs to.
 - **Returns come back to someone.** An ACH return weeks after settlement is either debited from the owner's account, netted from the next settlement, or absorbed by the platform, which RealPage's 10-K describes as bearing losses it can't recover from clients. The agreement says which, and the ledger reverses the payment on the resident's account either way.
-- **Licenses travel with the company.** Change-of-control consents from money transmitter regulators were a closing condition of RealPage's acquisition, and Switching Platforms & Acquisitions covers what changing payments providers means for stored payment methods and autopay ([Switching Processors](/books/payments/switching-processors)).
+- **Licenses travel with the company.** Change-of-control consents from money transmitter regulators were a closing condition of RealPage's acquisition ([Money Transmitter Change of Control](/books/property-tech/switching-platforms#money-transmitter-change-of-control)), and [Switching Platforms & Acquisitions](/books/property-tech/switching-platforms#residents-payment-methods-and-autopay) covers what changing payments providers means for stored payment methods and autopay ([Switching Processors](/books/payments/switching-processors)).
 - **Processor concentration is a property risk.** A platform with a single card processor (Entrata's S-1 names one) puts every property's card rent behind one agreement. That's a vendor risk the operator should know about, not one it can fix.
 
 My rule for a platform: decide the model per flow with counsel, write it into the contracts, and record it as data per property (`collection_arrangements`), so that every payment can answer "whose money was this, where was it, and who was allowed to hold it" on any day.
@@ -134,7 +134,7 @@ CREATE TABLE lease_payment_acceptance (  -- what a lease may pay with, and why
   reason       TEXT NOT NULL CHECK (reason IN ('normal', 'nsf_history', 'notice_served',
                  'eviction_filed', 'judgment', 'court_order', 'legal_hold')),
   required_amount BIGINT,                -- the reinstatement or full balance, when set
-  set_by       TEXT NOT NULL,            -- user or workflow, as a typed actor
+  set_by       UUID NOT NULL REFERENCES users (id),  -- staff, or the workflow's service user
   valid_during TSTZRANGE NOT NULL,
   EXCLUDE USING GIST (lease_id WITH =, valid_during WITH &&)
 );
@@ -175,7 +175,7 @@ CREATE TABLE flexible_rent_arrangements (
   lease_id       UUID NOT NULL REFERENCES leases (id),
   person_id      UUID NOT NULL REFERENCES people (id),
   provider       TEXT NOT NULL,          -- the lender or servicer, from ancillary_agreements
-  agreement_id   UUID,                   -- ancillary_agreements, in Resident Financial Products
+  agreement_id   UUID REFERENCES ancillary_agreements (id),  -- Resident Financial Products
   status         TEXT NOT NULL CHECK (status IN ('active', 'cancelled', 'provider_terminated')),
   valid_during   DATERANGE NOT NULL
 );
@@ -187,7 +187,7 @@ CREATE TABLE collection_arrangements (   -- where rent sits in transit, and on w
   payee_entity_id      UUID NOT NULL REFERENCES legal_entities (id),  -- landlord of record
   model                TEXT NOT NULL CHECK (model IN ('direct_settlement', 'licensed_transmitter',
                          'agent_of_payee', 'sponsor_bank_fbo')),
-  settlement_account   TEXT NOT NULL,     -- the bank account reference; Trust Accounting owns it
+  settlement_bank_account_id UUID NOT NULL REFERENCES bank_accounts (id),  -- see Trust Accounting
   is_trust_account     BOOLEAN NOT NULL,
   returns_borne_by     TEXT NOT NULL CHECK (returns_borne_by IN ('owner', 'manager', 'platform')),
   agreement_reference  TEXT NOT NULL,     -- the contract that grants the authority

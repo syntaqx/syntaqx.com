@@ -48,7 +48,7 @@ The property website is the one channel the operator fully controls: its own dom
 
 **Structured data and machine-readable pages.** AI assistants and answer engines quote what they can parse. Schema.org has types for the domain: `ApartmentComplex` (a `Residence`) carries `numberOfAccommodationUnits`, `numberOfAvailableAccommodationUnits`, `numberOfBedrooms`, `petsAllowed` and `tourBookingPage`, and `FloorPlan` holds per-plan counts. RealPage markets sites "machine-readable and citable from the ground up" under an "Agentic Search Optimization" practice combining "SEO, GEO, and AEO" (search, generative and answer engine optimization); Entrata announced "GPT-optimized" site indexing and Vacancy.com, a listing service "built for AI-powered search." Whatever the acronym, the engineering is the same: publish accurate, structured, current facts at stable URLs. My rule: generate the structured data and the visible page from the same price computation, and include the total monthly price wherever a price appears, because an assistant that reads only a base rent from your markup will repeat it to a renter as your advertised price.
 
-**AI agents as a channel.** When a renter's assistant reads your site or a listing service's data and answers on your behalf, you don't control the sentence it writes, but you do control the data it read. Treat AI-oriented surfaces (structured data, any feed you publish for AI search, a listing service built for assistants) as channels in the publication model, with snapshots like any other. The leasing agent that answers on the operator's own behalf is a different system, covered in Leads, CRM, Tours & the Leasing Center and AI in Property Management.
+**AI agents as a channel.** When a renter's assistant reads your site or a listing service's data and answers on your behalf, you don't control the sentence it writes, but you do control the data it read. Treat AI-oriented surfaces (structured data, any feed you publish for AI search, a listing service built for assistants) as channels in the publication model, with snapshots like any other. The leasing agent that answers on the operator's own behalf is a different system, covered in [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#leasing-contact-centers-and-ai-leasing-agents) and [AI in Property Management](/books/property-tech/ai-in-property-management#agents-by-function).
 
 ## Paid Media and the Ad Platforms
 
@@ -64,7 +64,7 @@ Ad platforms bid toward whatever conversions they are told about. A lease is sig
 
 ### Exposure-driven spend
 
-**Exposure** is the count of units that are, or will be, vacant and not yet leased over a horizon: vacant unleased units plus units on notice without a pre-lease. Revenue management forecasts it, because exposure drives price. Marketing can use the same forecast to set spend: RealPage's DemandX Advertising claims to "align advertising spend with future exposure," "solving for vacancy before it even happens," and Entrata estimates "how much revenue your properties can make from each lead source" to guide where spend goes. The design point is a single forecast: if pricing and marketing each forecast demand separately, one cuts rent while the other cuts ads for the same week. My default is to read the exposure forecast from [Revenue Management & Pricing](/books/property-tech/revenue-management) and record which forecast each budget was set from, so a weekly budget change can be explained. The antitrust constraints on what data that forecast may use apply to marketing too, since it is the same model.
+**Exposure** is the units vacant or on notice and not yet leased over a horizon, as defined in [Occupancy, Leased and Exposure](/books/property-tech/operating-metrics#occupancy-leased-and-exposure). Revenue management forecasts it, because exposure drives price. Marketing can use the same forecast to set spend: RealPage's DemandX Advertising claims to "align advertising spend with future exposure," "solving for vacancy before it even happens," and Entrata estimates "how much revenue your properties can make from each lead source" to guide where spend goes. The design point is a single forecast: if pricing and marketing each forecast demand separately, one cuts rent while the other cuts ads for the same week. My default is to read the exposure forecast from [Revenue Management & Pricing](/books/property-tech/revenue-management#inputs-own-public-and-pooled-data) and record which forecast each budget was set from, so a weekly budget change can be explained. The antitrust constraints on what data that forecast may use apply to marketing too, since it is the same model.
 
 ### Housing ad targeting
 
@@ -72,7 +72,7 @@ Housing is a special ad category on the major platforms. Google's personalized a
 
 ## Virtual Tours and Media
 
-Photos, floor plan drawings, video, 3D tours and interactive maps are now expected on every listing. AppFolio offers 3D virtual tours on its sites, virtual showings and interactive property maps; RealPage's Creative Studio builds interactive 3D property maps; Zillow's feed carries virtual tours alongside photos. Self-guided and live virtual tours, which put a prospect in a building, are in Leads, CRM, Tours & the Leasing Center.
+Photos, floor plan drawings, video, 3D tours and interactive maps are now expected on every listing. AppFolio offers 3D virtual tours on its sites, virtual showings and interactive property maps; RealPage's Creative Studio builds interactive 3D property maps; Zillow's feed carries virtual tours alongside photos. Self-guided and live virtual tours, which put a prospect in a building, are in [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#tours).
 
 Media is data like any other listing attribute. Each item belongs to a unit, a floor plan or the property, has a capture date, and stays accurate only while the unit does: a renovated kitchen makes old photos misleading. My rules: tag media as representative (a model or a sister unit) or actual, never show a representative photo as the specific unit, give every image a text alternative and every video captions, and keep the floor plan's dimensions and features as text, not only in a drawing or a 3D tour, so the facts reach screen readers and the structured data.
 
@@ -87,11 +87,11 @@ The engineering standard is [WCAG 2.2 AA](/docs/frontend/accessibility#the-basel
 - **The application flow.** Online applications are forms with timeouts, identity checks and document upload, which run straight into WCAG 2.2's new criteria (Redundant Entry, Accessible Authentication, Target Size).
 - **Overlays don't fix it.** A script that claims to make a site accessible on load doesn't change the underlying markup that a screen reader reads; build the templates right instead.
 
-Accessibility of the website is one thing; accessible units are another. A listing that advertises accessible features must describe them accurately, and the Fair Housing chapter covers the design and accommodation rules for the units themselves.
+Accessibility of the website is one thing; accessible units are another. A listing that advertises accessible features must describe them accurately, and [Fair Housing](/books/property-tech/fair-housing#reasonable-accommodations-and-modifications) covers the design and accommodation rules for the units themselves.
 
 ## Fair Housing in Advertising
 
-Every listing, ad, website page and social post is an advertisement under the Fair Housing Act, and the rules apply to the platform that generates them. At a pointer level (the full treatment is in Fair Housing):
+Every listing, ad, website page and social post is an advertisement under the Fair Housing Act, and the rules apply to the platform that generates them. At a pointer level (the full treatment is in [Fair Housing](/books/property-tech/fair-housing#advertising)):
 
 - **The statute.** 42 U.S.C. 3604(c) makes it unlawful "to make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement" with respect to the sale or rental of a dwelling that indicates a preference, limitation or discrimination based on a protected characteristic. State and local laws add characteristics, source of income among the most common.
 - **HUD's regulation.** 24 CFR 100.75 extends the rule to oral and written statements, and its examples include using "photographs, illustrations, symbols or forms" that convey a preference and "selecting media or locations for advertising" that deny particular segments of the market information about available housing.
@@ -107,7 +107,7 @@ This is the legal core of the chapter, because it decides the number. The rule a
 - **Invitation Homes (2024).** The FTC alleged the largest single-family rental owner misrepresented the total cost of renting by excluding mandatory monthly fees from the advertised price and failing to disclose them, among other claims; it was ordered to pay $48 million for consumer redress.
 - **Greystar (December 2025).** On December 2, 2025, the FTC and Colorado announced a $24 million settlement ($23 million to the FTC for refunds, $1 million to Colorado) with Greystar over a "deceptively low rental price" that left out "several fixed, mandatory monthly fees." The stipulated order requires Greystar, when it advertises base rent or other partial pricing, to disclose the total monthly leasing price more prominently, and, before collecting any payment such as a nonrefundable application fee, to disclose clearly and conspicuously each fee's amount, its purpose, whether it is mandatory, and the total monthly leasing price. Both cases also pleaded the Gramm-Leach-Bliley Act's ban on false statements used to obtain customer financial information, on the theory that a false price induced applicants to hand over card or bank details for application fees. [How the Money Is Made](/books/property-tech/property-business#how-the-money-is-made) lists the fees involved.
 - **The software letters (December 2025).** On December 9, 2025 the FTC announced warning letters to 13 property management software providers. The letter, dated December 8, says "available information suggests that property management software providers are limiting the ability of rental property managers and owners to accurately advertise the total monthly rental price, inclusive of all mandatory fees," names two failure modes (not accurately displaying complete pricing "across websites hosted on their platforms," and restricting owners' and managers' "ability to aggregate or convey accurate cost information" on third-party listing sites), and asks each recipient to review its "website hosting platforms and any software or coding controlling the flow of information from your software to internet listing sites." It cites civil penalties of up to $53,088 per violation of the Gramm-Leach-Bliley Act and states that receipt does not suggest illegal conduct. For a platform builder this is the most direct statement in the record: the fee model, the website and the feed are the regulator's concern, not only the operator's ad copy.
-- **Rulemaking.** The FTC sent a draft advance notice of proposed rulemaking on rental housing fees to OMB on January 30, 2026, issued it on March 12, and published it in the Federal Register on March 13, 2026 (RIN 3084-AB88, docket FTC-2026-0266), with comments due April 13, 2026. It asks about fees across the lease from application to move-out, including whether total rent with mandatory fees is disclosed and whether each fee's "nature, purpose, amount, refundability, optionality, and recurrence" are accurate. As of October 2026 the Federal Register shows no proposed rule following the advance notice. Separately, the FTC's general Rule on Unfair or Deceptive Fees, effective May 12, 2025, requires total-price disclosure for short-term lodging and live-event tickets, which reaches the Short-Term Rentals chapter but not long-term rental housing.
+- **Rulemaking.** The FTC sent a draft advance notice of proposed rulemaking on rental housing fees to OMB on January 30, 2026, issued it on March 12, and published it in the Federal Register on March 13, 2026 (RIN 3084-AB88, docket FTC-2026-0266), with comments due April 13, 2026. It asks about fees across the lease from application to move-out, including whether total rent with mandatory fees is disclosed and whether each fee's "nature, purpose, amount, refundability, optionality, and recurrence" are accurate. As of October 2026 the Federal Register shows no proposed rule following the advance notice. Separately, the FTC's general Rule on Unfair or Deceptive Fees, effective May 12, 2025, requires total-price disclosure for short-term lodging and live-event tickets, which reaches [Short-Term Rentals](/books/property-tech/short-term-rentals#nightly-pricing) but not long-term rental housing.
 
 ### State and city laws
 
@@ -135,9 +135,9 @@ The legal question for each charge a prospect could face is the same three facts
 | Mandatory | Monthly, variable | Submetered or allocated water, sewer, trash billed by usage | Excluded from the number in Colorado and Connecticut; Minnesota requires saying whether utilities are included | Disclosed with how it's calculated and a typical range |
 | Mandatory | One-time | Application fee, administrative fee, move-in fee | Not part of a monthly number | Amount and purpose before any payment is collected (the Greystar order); some are banned outright in some places (Connecticut's move-in fee ban, Seattle's administrative charges) |
 | Optional | Monthly | Parking, storage, pet rent where pets are optional | Excluded | Amount, purpose and how to decline (Massachusetts) |
-| Conditional | Per event | Late fee, lockout, damage, returned payment | Excluded | In the lease; amount caps are in Charges & Resident Ledgers |
+| Conditional | Per event | Late fee, lockout, damage, returned payment | Excluded | In the lease; amount caps are in [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#late-fees) |
 
-The hard cases are the ones operators get wrong: a fee that is "optional" only in name (renters insurance required unless the household proves its own policy is still a requirement; a technology package nobody can decline is mandatory), a fee bundled into a "package" that varies by unit, and a concession that makes the advertised net price lower than the first bill. My rules: **mandatory means the household can't sign without paying it,** whatever its name; **compute the total from the same fee terms that the lease will schedule,** so the advertised price and the first month's mandatory charges can be reconciled mechanically; and **advertise gross price with the concession stated separately,** with its amount and duration, never a net effective rent alone. The charge catalog itself, proration and fee caps belong to Charges & Resident Ledgers; this chapter decides which charges are in the advertised price.
+The hard cases are the ones operators get wrong: a fee that is "optional" only in name (renters insurance required unless the household proves its own policy is still a requirement; a technology package nobody can decline is mandatory), a fee bundled into a "package" that varies by unit, and a concession that makes the advertised net price lower than the first bill. My rules: **mandatory means the household can't sign without paying it,** whatever its name; **compute the total from the same fee terms that the lease will schedule,** so the advertised price and the first month's mandatory charges can be reconciled mechanically; and **advertise gross price with the concession stated separately,** with its amount and duration, never a net effective rent alone. The charge catalog itself, proration and fee caps belong to [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog); this chapter decides which charges are in the advertised price.
 
 ### The snapshot
 
@@ -145,7 +145,7 @@ When a prospect, a regulator or a class action asks what price was shown, the an
 
 ## How to Build It
 
-The listing model extends the core with a property's fee terms, listings, channels, publications and price snapshots. It references `units`, `properties` and `charge_codes` from the [core data model](/books/property-tech/property-business#the-core-data-model), `rent_quotes` and `pricing_models` from Revenue Management & Pricing, and `guest_cards` from Leads, CRM, Tours & the Leasing Center. Floor plans are a unit attribute owned by Portfolios, Properties & Units; until that chapter defines them, a listing carries a floor plan code.
+The listing model extends the core with a property's fee terms, listings, channels, publications and price snapshots. It references `units`, `properties` and `charge_codes` from the [core data model](/books/property-tech/property-business#the-core-data-model), `rent_quotes` and `pricing_models` from [Revenue Management & Pricing](/books/property-tech/revenue-management#how-to-build-it), and `guest_cards` from [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#how-to-build-it). Floor plans are owned by [Portfolios, Properties & Units](/books/property-tech/portfolios-properties-and-units#buildings-floor-plans-and-units); this sketch carries a `floor_plan_id` where a listing is scoped to a plan.
 
 ```sql
 CREATE TABLE fee_terms (                 -- what a prospect at this property will be charged
@@ -172,7 +172,7 @@ CREATE TABLE listings (                  -- what is marketed: a unit, a floor pl
   property_id            UUID NOT NULL REFERENCES properties (id),
   scope                  TEXT NOT NULL CHECK (scope IN ('unit', 'floor_plan', 'property')),
   unit_id                UUID REFERENCES units (id),
-  floor_plan_code        TEXT,           -- until floor plans are their own table
+  floor_plan_id          UUID REFERENCES floor_plans (id),  -- Portfolios, Properties & Units
   status                 TEXT NOT NULL CHECK (status IN ('draft', 'active', 'paused',
                            'withdrawn')),
   available_on           DATE,
@@ -180,10 +180,10 @@ CREATE TABLE listings (                  -- what is marketed: a unit, a floor pl
   description            TEXT NOT NULL,
   description_version    INT NOT NULL DEFAULT 1,  -- bumped on every edit; reviewed per version
   description_reviewed_at TIMESTAMPTZ,   -- the fair housing phrase check passed
-  accessibility_features TEXT[] NOT NULL DEFAULT '{}',  -- 'step_free_entry', 'roll_in_shower'
+  accessibility_features TEXT[] NOT NULL DEFAULT '{}',  -- from units.accessibility: 'mobility', ...
   created_at             TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK ((scope = 'unit') = (unit_id IS NOT NULL)),
-  CHECK (scope <> 'floor_plan' OR floor_plan_code IS NOT NULL),
+  CHECK (scope <> 'floor_plan' OR floor_plan_id IS NOT NULL),
   CHECK (status <> 'active' OR description_reviewed_at IS NOT NULL)
 );
 
@@ -234,7 +234,7 @@ CREATE TABLE advertised_prices (         -- the price as shown on one publicatio
   currency            CHAR(3) NOT NULL,
   concession          JSONB,             -- {amount, duration_months, terms}; never netted in
   components          JSONB NOT NULL,    -- [{charge_code, amount, amount_max, treatment, reason}]
-  rule_version        TEXT NOT NULL,     -- the jurisdiction rule set that classified the fees
+  rule_evaluation_id  UUID NOT NULL REFERENCES rule_evaluations (id),  -- fee_disclosure rules applied
   payload_sha256      BYTEA NOT NULL,    -- hash of exactly what the channel received
   CHECK (total_monthly_price >= base_rent),
   EXCLUDE USING GIST (publication_id WITH =, shown_during WITH &&)
@@ -272,12 +272,12 @@ CREATE TABLE marketing_budgets (         -- spend set from the exposure forecast
   pricing_model_id       UUID REFERENCES pricing_models (id),  -- the forecast it was set from
   forecast_as_of         TIMESTAMPTZ,
   forecast_exposed_units INT,
-  set_by                 TEXT NOT NULL,  -- user or job, per the audit trail's typed actors
+  set_by                 UUID NOT NULL REFERENCES users (id),  -- staff, or the job's service user
   EXCLUDE USING GIST (property_id WITH =, channel_id WITH =, period WITH &&)
 );
 ```
 
-The check that matters most compares what was advertised with what the lease charges. A lease carries the `rent_quote_id` it was priced from (The Lease adds the column), so every signed lease can be reconciled against the snapshots built from the same quote:
+The check that matters most compares what was advertised with what the lease charges. A lease carries the `rent_quote_id` it was priced from ([The Lease](/books/property-tech/the-lease#how-to-build-it) adds the column), so every signed lease can be reconciled against the snapshots built from the same quote:
 
 ```sql
 -- Leases whose first-month mandatory monthly charges exceed the total that was advertised
@@ -318,7 +318,7 @@ WHERE ap.tenant_id = $1
 Design decisions behind it:
 
 - **Fee terms are per property and effective-dated.** The same charge code is mandatory at one community and optional at another, and changes over time; the advertised total for any past date is computable from the terms in force ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
-- **Jurisdiction rules classify, data doesn't hard-code.** Which components are included, disclosed or excluded, and which fees are banned outright, comes from rules resolved from the property's jurisdiction, versioned, with the version stored on every snapshot ([Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided)). Landlord-Tenant Law as Data holds the rules; this chapter applies them.
+- **Jurisdiction rules classify, data doesn't hard-code.** Which components are included, disclosed or excluded, and which fees are banned outright, comes from rules resolved from the property's jurisdiction, versioned, with the version stored on every snapshot ([Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided)). [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) holds the rules; this chapter applies them.
 - **A channel that can't carry fee lines still gets the total.** `carries_fee_lines` records the channel's limit; when it's false, the adapter sends the total monthly price as the price and links to the itemization, and the snapshot records that. Sending base rent because the channel has no fee field is exactly what the FTC letters warn about.
 - **One price computation.** The website page, its structured data, every feed and the leasing agent's answer all call the same function over `rent_quotes` and `fee_terms`; no channel adapter computes its own price.
 - **Snapshots are append-only ranges.** A change closes the open snapshot and opens a new one; nothing is updated in place ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
@@ -337,7 +337,7 @@ Listings produce the records that fee-transparency enforcement, fair housing com
 - **Ad campaigns and conversion uploads.** Housing category flags and targeting settings per campaign, and every conversion sent to an ad platform with its event type and consent basis.
 - **Accessibility.** Test results for templates and embeds by release, and the accessibility statement in force on each date.
 
-The mechanics (typed actors, append-only history, retention) are in [Audit Trails](/docs/architecture/audit-trails); retention periods and records requests are in Records, Privacy & Audits.
+The mechanics (typed actors, append-only history, retention) are in [Audit Trails](/docs/architecture/audit-trails); retention periods and records requests are in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

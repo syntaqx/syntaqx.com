@@ -9,7 +9,7 @@ tags = ["property-tech", "landlord-tenant-law", "rules-as-data", "compliance", "
 
 Landlord-tenant law in the United States is fifty state codes, the District of Columbia, and a growing layer of county and city ordinances, each amended on its own calendar and some of them suspended by courts. A deposit cap changes in one state on July 1, a rent cap is recalculated every September in another, a city adds a notice requirement on top of its state's, and a state legislature then forbids its cities from doing so. A platform that runs properties in more than one place can't keep that in templates and staff memory. It has to know, for a given property on a given date, which rules apply, what they say, where they came from, and who checked them, and it has to record which rule decided every deadline, cap and notice it computed.
 
-This chapter is the modelling chapter for the volume's legal rules. Topic chapters own what each rule means for their workflow: the deposit rule belongs to the deposit chapter, the entry rule to [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice), the towing rule to [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#parking-and-towing). This chapter owns how all of them are stored, resolved, sourced, reviewed and reconciled when they conflict, and [The Rules Matrix](#the-rules-matrix) maps every rule type to the chapter that owns it. The general engineering is in [Rules as Data](/docs/architecture/rules-as-data) and [Effective Dating & History](/docs/database/temporal-data); this chapter covers what landlord-tenant law adds. None of it is legal advice: the point is a system in which counsel's conclusions are recorded, applied consistently, and provable later.
+This chapter is the modelling chapter for the volume's legal rules. Topic chapters own what each rule means for their workflow: the deposit rule belongs to the deposit chapter ([Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#security-deposits)), the entry rule to [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice), the towing rule to [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#parking-and-towing). This chapter owns how all of them are stored, resolved, sourced, reviewed and reconciled when they conflict, and [The Rules Matrix](#the-rules-matrix) maps every rule type to the chapter that owns it. The general engineering is in [Rules as Data](/docs/architecture/rules-as-data) and [Effective Dating & History](/docs/database/temporal-data); this chapter covers what landlord-tenant law adds. None of it is legal advice: the point is a system in which counsel's conclusions are recorded, applied consistently, and provable later.
 
 ## How the Platforms Do It
 
@@ -37,12 +37,12 @@ Parameters are typed per rule type with a schema checked on write. A rent cap ne
 
 A property's `subdivision` in [the core model](/books/property-tech/property-business#the-core-data-model) says which state it's in. Most rules need more: the county, the city if it's incorporated, and sometimes a district that matches neither, such as a rent stabilization area, a mobile home park ordinance's coverage, or a housing code enforcement zone. `property_jurisdictions` holds that resolved set, effective-dated, one row per jurisdiction the property sits in.
 
-Resolution starts from the property's location, never its mailing address. A postal city is a delivery route, and a property with a city's name in its address can sit in unincorporated county land where the city's ordinance doesn't reach; the playbook's [Postal City, Service Point, Jurisdiction](/docs/fundamentals/addresses#postal-city-service-point-jurisdiction) explains why legal boundaries come from point-in-polygon on a parcel or rooftop coordinate. For property, the parcel is the best key: a parcel number ties the property to the county's records and to the boundaries the county and city publish, and Portfolios, Properties & Units owns the parcel crosswalk.
+Resolution starts from the property's location, never its mailing address. A postal city is a delivery route, and a property with a city's name in its address can sit in unincorporated county land where the city's ordinance doesn't reach; the playbook's [Postal City, Service Point, Jurisdiction](/docs/fundamentals/addresses#postal-city-service-point-jurisdiction) explains why legal boundaries come from point-in-polygon on a parcel or rooftop coordinate. For property, the parcel is the best key: a parcel number ties the property to the county's records and to the boundaries the county and city publish, and [Portfolios, Properties & Units](/books/property-tech/portfolios-properties-and-units#addresses-parcels-and-jurisdictions) owns the parcel crosswalk.
 
 Three things make resolution a process rather than a lookup:
 
 - **Boundaries change.** Annexations move land into cities, and new rent control ordinances create districts. A change closes one `property_jurisdictions` row and opens another on the effective date, so evaluations of past dates still find the old set.
-- **Scattered sites span lines.** A scattered-site property of houses can cross city and county boundaries, so jurisdiction resolution happens per building where buildings differ, and rules that depend on location read the building's set.
+- **Scattered sites span lines.** A scattered-site portfolio of houses can cross city and county boundaries. A property has one jurisdiction set, so houses on different sides of a line are separate properties ([Properties](/books/property-tech/portfolios-properties-and-units#properties)), and resolution flags a property whose buildings resolve differently instead of storing a set per building.
 - **Someone confirms it.** Automated resolution proposes; a user confirms on onboarding and on every change, with the evidence (the parcel record, the boundary file and its date). A property with an unconfirmed jurisdiction set is a property whose computed deadlines are unverified, and the platform says so on the screens that use them.
 
 ## Sourcing and Keeping Rules Current
@@ -104,40 +104,47 @@ For a renewal offer generated in October 2026 for a lease ending January 31, 202
 2. **Select rule versions** by the rule type's as-of date. The cap is selected by the increase's effective date (February 1, 2027), which picks the 2027 figure of 10%, not 2026's 9.5%; the notice rule is selected by the date the notice is served.
 3. **Check applicability.** Is the tenancy past its first year? When was the last increase? When was the building's certificate of occupancy issued, and is it within 15 years of the notice date? Is the unit regulated affordable housing? Missing facts block the offer.
 4. **Compute the limits.** Maximum new rent from the current rent and the cap; latest notice date, 90 days before February 1, 2027; required notice contents.
-5. **Constrain the pricing engine's output** to the maximum, and schedule the notice so it's served in time. Revenue Management & Pricing owns the offer; The Lease owns the notice document.
+5. **Constrain the pricing engine's output** to the maximum, and schedule the notice so it's served in time. [Revenue Management & Pricing](/books/property-tech/revenue-management#rent-limits-in-the-engine) owns the offer; [The Lease](/books/property-tech/the-lease#notices) owns the notice document.
 6. **Store the evaluation** with the rule versions, inputs and results ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)), linked from the offer and the notice.
 
 If the 2027 figure had not yet been published when the offer was generated, the evaluation would have used the latest approved figure and flagged itself for re-evaluation when the new row arrived; offers generated in advance of a known publication date are provisional until then.
 
 ## The Rules Matrix
 
-Each rule type, how it combines across jurisdictions, which event's date selects the version, and the chapter that owns what it means. Chapters not yet published are listed by title.
+Each rule type, how it combines across jurisdictions, which event's date selects the version, and the chapter that owns what it means.
 
 | Rule type | Rule | Combines as | As of | Owning chapter |
 | --- | --- | --- | --- | --- |
-| `security_deposit_limit` | Maximum deposit, exceptions, what counts as a deposit | Strictest wins | Date collected | Insurance, Deposits & Guarantees; The Lease |
-| `deposit_return_deadline` | Days to return the deposit and itemize deductions; evidence required | Strictest wins | Date vacated | Move-In & Move-Out; [Resident Chargebacks](/books/property-tech/maintenance-and-work-orders#resident-chargebacks) |
-| `late_fee_cap` | Maximum late fee, its base, grace period | Strictest wins | Date charged | Charges & Resident Ledgers |
-| `rent_increase_notice` | Notice period, form and contents for an increase | Longest wins | Date served | The Lease; [Renewals and Retention](/books/property-tech/resident-experience#renewals-and-retention) |
-| `rent_cap` | Maximum increase, base, frequency, exemptions | Strictest wins, after preemption | Effective date of the increase | Revenue Management & Pricing |
+| `security_deposit_limit` | Maximum deposit, exceptions, what counts as a deposit | Strictest wins | Date collected | [Security Deposits](/books/property-tech/insurance-deposits-and-guarantees#security-deposits); [The Lease](/books/property-tech/the-lease#addenda-and-required-disclosures) |
+| `deposit_return_deadline` | Days to return the deposit and itemize deductions; evidence required | Strictest wins | Date vacated | [Deposit Deadlines as Rules Data](/books/property-tech/move-in-and-move-out#deposit-deadlines-as-rules-data); [Resident Chargebacks](/books/property-tech/maintenance-and-work-orders#resident-chargebacks) |
+| `late_fee_cap` | Maximum late fee, its base, grace period | Strictest wins | Date charged | [Late Fees](/books/property-tech/charges-and-resident-ledgers#late-fees) |
+| `payment_application_order` | The order a payment must be applied in (rent before fees) | Most specific wins | Date received | [Payment Application Order](/books/property-tech/charges-and-resident-ledgers#payment-application-order) |
+| `rent_increase_notice` | Notice period, form and contents for an increase | Longest wins | Date served | [Renewals](/books/property-tech/the-lease#renewals); [Renewals and Retention](/books/property-tech/resident-experience#renewals-and-retention) |
+| `rent_cap` | Maximum increase, base, frequency, exemptions | Strictest wins, after preemption | Effective date of the increase | [Rent Limits in the Engine](/books/property-tech/revenue-management#rent-limits-in-the-engine) |
+| `pricing_tool_restriction` | Which pricing tools and competitor data a landlord may use, and their status (in force, enjoined) | All apply | Date of the recommendation | [State and City Laws](/books/property-tech/revenue-management#state-and-city-laws) |
 | `entry_notice` | Notice before entry, hours, form, consent | Longest notice wins | Date served | [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice) |
 | `repair_deadline` | Time to begin or complete repairs by condition | Shortest wins | Trigger (notice, violation, inspection) | [Habitability and Repair Deadlines](/books/property-tech/maintenance-and-work-orders#habitability-and-repair-deadlines) |
 | `rekey_deadline` | Rekeying or credential change after turnover | Shortest wins | Turnover date | [Smart Locks and Access Control](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control) |
 | `lock_change_request` | Lock change on a protected tenant's request | Shortest wins | Date of request | [Smart Locks and Access Control](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control) |
 | `towing_notice` | Signage, notice periods, authorization, police notice | All apply | Date first observed | [Parking and Towing](/books/property-tech/access-and-smart-buildings#parking-and-towing) |
-| `fee_disclosure` | Which fees must be in advertised prices and leases | All apply | Date advertised or signed | Listings, Websites & Marketing; Charges & Resident Ledgers |
-| `application_fee_cap` | Maximum application or screening fee, refund duties | Strictest wins | Date of application | Applications & Screening |
-| `screening_restriction` | Fair chance and look-back limits, criteria and notice duties | All apply | Date of decision | Applications & Screening |
-| `source_of_income` | Income as protected; what the income test may require | All apply | Date of decision | [Fair Housing](/books/property-tech/fair-housing#protected-classes); Applications & Screening |
+| `fee_disclosure` | Which fees must be in advertised prices and leases | All apply | Date advertised or signed | [Fee Transparency and All-In Pricing](/books/property-tech/listings-and-marketing#fee-transparency-and-all-in-pricing); [The Charge Catalog](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog) |
+| `application_fee_cap` | Maximum application or screening fee, refund duties | Strictest wins | Date of application | [Application Fees and Portable Reports](/books/property-tech/applications-and-screening#application-fees-and-portable-reports) |
+| `screening_restriction` | Fair chance and look-back limits, criteria and notice duties | All apply | Date of decision | [Criminal History and Fair-Chance Laws](/books/property-tech/applications-and-screening#criminal-history-and-fair-chance-laws) |
+| `source_of_income` | Income as protected; what the income test may require | All apply | Date of decision | [Fair Housing](/books/property-tech/fair-housing#protected-classes); [Source of Income](/books/property-tech/applications-and-screening#source-of-income) |
 | `protected_classes` | Classes protected from discrimination | All apply (union) | Date of the act | [Fair Housing](/books/property-tech/fair-housing#protected-classes) |
-| `eviction_notice` | Notices to pay or quit, cure or vacate, and their periods | Longest wins; all content applies | Date served | Delinquency, Collections & Eviction |
+| `eviction_notice` | Notices to pay or quit, cure or vacate, and their periods | Longest wins; all content applies | Date served | [Notices](/books/property-tech/delinquency-and-eviction#notices) |
+| `storage_lien` | Self-storage lien steps: denial of access, notices and channels, advertisement, earliest sale, surplus | Most specific wins | Date the lien case opens | [Lien Sales and State Lien Law](/books/property-tech/self-storage#lien-sales-and-state-lien-law) |
+| `short_term_rental` | Registration, primary-residence and hosted-only rules, night caps, the stay length that becomes a tenancy | All apply | Night of the stay | [Registration, Permits and Caps](/books/property-tech/short-term-rentals#registration-permits-and-caps); [Stays Are Not Leases](/books/property-tech/short-term-rentals#stays-are-not-leases) |
+| `lodging_tax` | Lodging taxes: rate or flat amount, base, exemptions, who files | All apply | Night of the stay | [Lodging Taxes](/books/property-tech/short-term-rentals#lodging-taxes) |
 | `record_retention` | Minimum periods to keep records | Longest wins | Trigger event | [Retention and Legal Holds](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds) |
 | `deposit_protection` | Third-party protection of deposits (outside the US) | All apply | Date received | [The United Kingdom](/books/property-tech/outside-the-us#the-united-kingdom) |
-| `mandatory_lease_form` | A government-prescribed lease or notice form (outside the US) | Most specific wins | Date signed or served | [Outside the US](/books/property-tech/outside-the-us#canada); The Lease |
+| `mandatory_lease_form` | A government-prescribed lease or notice form (outside the US) | Most specific wins | Date signed or served | [Outside the US](/books/property-tech/outside-the-us#canada); [Templates and Clause Libraries](/books/property-tech/the-lease#templates-and-clause-libraries) |
 | `landlord_registration` | Landlord or property registration duties | All apply | Date let or advertised | [The United Kingdom](/books/property-tech/outside-the-us#the-united-kingdom) |
 | `indirect_tax` | VAT or GST on rent and charges, by charge code | Most specific wins | Date charged | [What a US Platform Must Re-Plan](/books/property-tech/outside-the-us#what-a-us-platform-must-re-plan) |
 
 The registry behind the matrix is data too: a new rule type is a code change (the engine needs to know its parameter schema, combination and as-of event), and a new jurisdiction's version of an existing type is a row.
+
+Every jurisdiction rule in the book lives in this one catalog. The matrix lists the types that cross chapters; an owning chapter registers its narrower types in the same `rule_types` registry, with itself as `owner_chapter`, and resolves them the same way: SCRA terminations and waitlist waterfalls in [Military & Specialty Housing](/books/property-tech/military-and-specialty-housing#deployment-pcs-orders-and-the-scra), election, violation hearing and resale certificate deadlines in [Community Associations](/books/property-tech/community-associations#state-acts-as-data), reassessment intervals and entrance-fee refunds in [Senior Living](/books/property-tech/senior-living#state-licensing), trust account and deposit-interest rules in [Trust Accounting](/books/property-tech/trust-accounting#state-trust-account-rules), unclaimed property dormancy in [Unclaimed Property](/books/property-tech/trust-accounting#unclaimed-property), resident utility billing in [Submetering Law and Licensing](/books/property-tech/utilities-and-energy#submetering-law-and-licensing), Good Cause coverage and nonrenewal notices in [Good Cause Laws](/books/property-tech/the-lease#good-cause-laws), and privacy request deadlines in [State Privacy Laws](/books/property-tech/records-privacy-and-audits#state-privacy-laws). Deposit deadlines and late fee caps are `legal_rules` rows with no table of their own; where a chapter needs typed columns its engine and constraints read (`rent_limits` and `pricing_restrictions` in Revenue Management, `short_term_rules` and `lodging_tax_rules` in Short-Term Rentals), that table is a slice: each row references the approved `legal_rules` row it was derived from, and the source, review and versions stay here. Every computed deadline, cap and notice elsewhere records the `rule_evaluations` row that produced it.
 
 ## How to Build It
 
@@ -154,19 +161,19 @@ CREATE TABLE jurisdictions (               -- platform-wide
   time_zone TEXT                           -- IANA; laws take effect on this zone's calendar
 );
 
-CREATE TABLE property_jurisdictions (      -- the resolved set, per property or building
+-- One set per property: buildings in different jurisdictions are split into
+-- separate properties, as Portfolios, Properties & Units defines a property.
+CREATE TABLE property_jurisdictions (      -- the resolved set
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id     UUID NOT NULL,
   property_id   UUID NOT NULL REFERENCES properties (id),
-  building_id   UUID REFERENCES buildings (id),  -- when buildings of one property differ
   jurisdiction_id UUID NOT NULL REFERENCES jurisdictions (id),
   valid_during  DATERANGE NOT NULL,
   resolved_by   TEXT NOT NULL CHECK (resolved_by IN ('parcel', 'geocode', 'manual')),
   evidence      TEXT,                      -- boundary file and date, parcel record
-  confirmed_by  UUID,                      -- a user; null until confirmed
+  confirmed_by  UUID REFERENCES users (id), -- a user; null until confirmed
   confirmed_at  TIMESTAMPTZ,
-  EXCLUDE USING GIST (property_id WITH =, (COALESCE(building_id, property_id)) WITH =,
-    jurisdiction_id WITH =, valid_during WITH &&)
+  EXCLUDE USING GIST (property_id WITH =, jurisdiction_id WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE legal_sources (               -- platform-wide
@@ -204,8 +211,8 @@ CREATE TABLE legal_rules (                 -- platform-wide; never edited once a
   status             TEXT NOT NULL CHECK (status IN ('draft', 'in_review', 'approved',
                        'retired')),
   maintained_by      TEXT NOT NULL,        -- 'platform', a content provider, or a tenant's counsel
-  drafted_by         UUID NOT NULL,
-  approved_by        UUID,
+  drafted_by         UUID NOT NULL REFERENCES users (id),
+  approved_by        UUID REFERENCES users (id),
   approved_at        TIMESTAMPTZ,
   interpretation     TEXT,                 -- the reading relied on, and open questions
   review_by          DATE NOT NULL,        -- stale after this; still applies, with a warning
@@ -228,7 +235,7 @@ CREATE TABLE rule_preemptions (            -- a higher law displacing lower ones
   source_id             UUID NOT NULL REFERENCES legal_sources (id),
   status                TEXT NOT NULL CHECK (status IN ('draft', 'in_review', 'approved',
                           'retired')),
-  approved_by           UUID
+  approved_by           UUID REFERENCES users (id)
 );
 
 CREATE TABLE rule_test_cases (             -- fixtures counsel signed off, run in CI
@@ -247,7 +254,7 @@ CREATE TABLE tenant_policies (             -- the operator's own choices, never 
   rule_type     TEXT NOT NULL REFERENCES rule_types (rule_type),
   params        JSONB NOT NULL,
   valid_during  DATERANGE NOT NULL,
-  set_by        UUID NOT NULL,
+  set_by        UUID NOT NULL REFERENCES users (id),
   reason        TEXT,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK (portfolio_id IS NULL OR property_id IS NULL)

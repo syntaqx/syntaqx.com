@@ -44,18 +44,18 @@ Triage sets three things: the category (plumbing, HVAC, appliance, electrical, p
 
 **Deadlines** are computed and stored, not recalculated on every read: `respond_by` (someone acknowledges and acts) and `complete_by` (the condition is fixed), each derived from the stricter of the operator's service level and any `repair_deadline` rule for the property's jurisdiction, with the rule that decided recorded ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored); the rules model is in [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law)).
 
-**Who does it** is a choice between site staff and an outside vendor, and on third-party managed properties often a question of money: a management agreement can cap what the manager may spend on a repair without the owner's approval, often with an exception for emergencies, so a work order over the cap waits for the owner. That cap is data on the agreement (Owners & Management Agreements owns it), and the approval is a step on the work order with its own timestamp. Matching a staff technician by skill, location and availability is [dispatch](/books/field-operations/dispatch); sending it to a vendor is a purchase order ([Purchase Orders](/books/property-tech/vendors-and-payables#purchase-orders)).
+**Who does it** is a choice between site staff and an outside vendor, and on third-party managed properties often a question of money: a management agreement can cap what the manager may spend on a repair without the owner's approval, often with an exception for emergencies, so a work order over the cap waits for the owner. That cap is data on the agreement ([Owners & Management Agreements](/books/property-tech/owners-and-management-agreements#the-management-agreement) owns it), and the approval is a step on the work order with its own timestamp. Matching a staff technician by skill, location and availability is [dispatch](/books/field-operations/dispatch); sending it to a vendor is a purchase order ([Purchase Orders](/books/property-tech/vendors-and-payables#purchase-orders)).
 
 ## Make-Ready Turns
 
-A **make-ready** (or **turn**) is the work that takes a unit from the day the last household leaves to the day it's ready for the next: move-out inspection, trash-out, repairs, paint, flooring, appliance checks, cleaning, a final quality inspection, and then the unit is ready. Every vacant day is vacancy loss, which is why turn time is one of the operating metrics owners watch most closely (Operating Metrics defines it).
+A **make-ready** (or **turn**) is the work that takes a unit from the day the last household leaves to the day it's ready for the next: move-out inspection, trash-out, repairs, paint, flooring, appliance checks, cleaning, a final quality inspection, and then the unit is ready. Every vacant day is vacancy loss, which is why turn time is one of the operating metrics owners watch most closely ([Turns and Maintenance](/books/property-tech/operating-metrics#turns-and-maintenance) defines it, with days vacant and cost per turn).
 
 What makes turns a planning problem, not a list of work orders:
 
 - **The deadline is the next lease.** A pre-leased unit has a move-in date, so the turn is scheduled backward from it; an unleased unit is scheduled by how fast it can be rented, which is why RealPage's agent prioritizes "using move-ins and floor plan demand." The turn record carries both the vacate date and the target ready date.
 - **Tasks have an order.** Paint before carpet cleaning, repairs before paint, cleaning last, and the final inspection after cleaning. Vendors (painters, carpet cleaners, cleaners) are booked into slots that depend on each other, so a late painter pushes every later task. A board that shows each unit's stage and the next blocker is the standard view, which is what the suites' make-ready boards and HappyCo's turn timelines provide.
-- **Scope comes from the move-out inspection.** The inspection's findings become the turn's tasks, and the same findings decide what is damage the departing household may be charged for and what is normal wear the owner absorbs ([Resident Chargebacks](#resident-chargebacks)). Move-In & Move-Out owns that inspection and the deposit itemization deadline (California's is 21 days from move-out), which runs in parallel with the turn and often needs the turn's invoices.
-- **Renovation turns are capital.** A turn that replaces cabinets and counters as part of a value-add program is a capital project with a budget, not an operating repair, and its costs go to a different place on the owner's books (Budgets, Forecasts & Capital Projects).
+- **Scope comes from the move-out inspection.** The inspection's findings become the turn's tasks, and the same findings decide what is damage the departing household may be charged for and what is normal wear the owner absorbs ([Resident Chargebacks](#resident-chargebacks)). [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#inspections) owns that inspection and the deposit itemization deadline (California's is 21 days from move-out), which runs in parallel with the turn and often needs the turn's invoices.
+- **Renovation turns are capital.** A turn that replaces cabinets and counters as part of a value-add program is a capital project with a budget, not an operating repair, and its costs go to a different place on the owner's books ([Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects#renovations-and-units-offline)).
 
 The unit's own status stays `rentable` during an ordinary turn, since occupancy is derived from leases; a turn that will take months (fire damage, a full renovation) takes the unit `down` with a reason, as the core model requires.
 
@@ -69,13 +69,13 @@ Generating recurring work from a rule is a solved problem in field service ([RFC
 
 An **asset register** lists the equipment the owner is responsible for: appliances, water heaters, HVAC units, boilers, roofs, elevators, each with its location (unit, building or common area), make, model, serial number, install date, warranty end, and expected useful life. RealPage tracks unit-level assets with "warranty information, and lifecycle data," and ResMan pairs inventory with asset tracking.
 
-The register pays for itself three ways. **Warranty first:** before a repair is sent to a vendor, check whether the part is under warranty, because a manufacturer or installer may owe the repair ([Warranty Claims](/books/field-operations/repair-and-installation#warranty-claims-getting-paid-by-someone-else)). **Repair or replace:** a fourth compressor repair on a fourteen-year-old unit is a replacement decision, and the work order history by asset is what supports it. **Reserves and budgets:** expected remaining life by asset is the input to replacement reserve schedules and capital budgets, which Budgets, Forecasts & Capital Projects owns. Capture the data plate when a technician first touches the equipment, the way the Field Operations app does ([Parts, Equipment and Warranty](/books/field-operations/technician-app#parts-equipment-and-warranty)), so the register fills itself through ordinary work.
+The register pays for itself three ways. **Warranty first:** before a repair is sent to a vendor, check whether the part is under warranty, because a manufacturer or installer may owe the repair ([Warranty Claims](/books/field-operations/repair-and-installation#warranty-claims-getting-paid-by-someone-else)). **Repair or replace:** a fourth compressor repair on a fourteen-year-old unit is a replacement decision, and the work order history by asset is what supports it. **Reserves and budgets:** expected remaining life by asset is the input to replacement reserve schedules and capital budgets, which [Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects#replacement-reserves) owns. Capture the data plate when a technician first touches the equipment, the way the Field Operations app does ([Parts, Equipment and Warranty](/books/field-operations/technician-app#parts-equipment-and-warranty)), so the register fills itself through ordinary work.
 
 ## Inspections
 
-Properties are inspected constantly, by different parties for different reasons: move-in and move-out (owned by Move-In & Move-Out), annual unit inspections, preventive walks, lender and insurer inspections, municipal code inspections, due diligence before an acquisition (Switching Platforms & Acquisitions), and, for HUD-assisted housing, federal physical inspections.
+Properties are inspected constantly, by different parties for different reasons: move-in and move-out (owned by [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#inspections)), annual unit inspections, preventive walks, lender and insurer inspections, municipal code inspections, due diligence before an acquisition ([Switching Platforms & Acquisitions](/books/property-tech/switching-platforms#onboarding-acquired-properties)), and, for HUD-assisted housing, federal physical inspections.
 
-The federal standard is **NSPIRE** (National Standards for the Physical Inspection of Real Estate). HUD's final rule was published May 11, 2023, applying to public housing from July 1, 2023 and to multifamily housing programs from October 1, 2023. Under it, owners and housing authorities self-inspect, keeping self-inspection records for three years rather than submitting them electronically, and correct deficiencies on a clock: life-threatening and severe deficiencies within 24 hours of the inspection, moderate ones within 30 days, and low ones within 60 days. That is why RealPage sells NSPIRE scheduling and audit-ready reports, and why Subsidized & Affordable Housing treats inspection results as compliance records.
+The federal standard is **NSPIRE** (National Standards for the Physical Inspection of Real Estate). HUD's final rule was published May 11, 2023, applying to public housing from July 1, 2023 and to multifamily housing programs from October 1, 2023. Under it, owners and housing authorities self-inspect, keeping self-inspection records for three years rather than submitting them electronically, and correct deficiencies on a clock: life-threatening and severe deficiencies within 24 hours of the inspection, moderate ones within 30 days, and low ones within 60 days. That is why RealPage sells NSPIRE scheduling and audit-ready reports, and why [Subsidized & Affordable Housing](/books/property-tech/affordable-housing#inspections) treats inspection results as compliance records.
 
 For the platform, inspections share one shape:
 
@@ -114,19 +114,19 @@ Statutes make the standard concrete, and some put clocks on it:
 - **How fast, by city.** New York City's Department of Housing Preservation and Development classifies violations it issues: Class A (non-hazardous) must be corrected within 90 days, Class B (hazardous) within 30, and most Class C (immediately hazardous) within 24 hours, with 21 days for lead-based paint, window guards, mold and pests and 14 for self-closing doors. Owners certify corrections, and certifications may be audited.
 - **Federal programs.** HUD-assisted properties add NSPIRE's 24-hour, 30-day and 60-day correction periods, described under [Inspections](#inspections).
 
-Each of these is a `repair_deadline` rule keyed by condition (category and severity) and by trigger: Washington's clock starts at the tenant's written notice, New York's at service of the violation, NSPIRE's at the inspection. That makes two design choices load-bearing. **Record the trigger precisely:** `reported_at` and `request_channel` on the work order, and for code violations the violation number and service date, because a deadline computed from the wrong start is wrong. **Treat a portal or app request as written notice,** which is my rule: it's in writing, it's timestamped, and arguing otherwise in court is a poor position. Where a deadline is missed because the cause was outside the landlord's control (Washington's statute excuses that but still requires action "as soon as possible"), the work order records the reason, the parts on order, and each attempt.
+Each of these is a `repair_deadline` rule keyed by condition (category and severity) and by trigger: Washington's clock starts at the tenant's written notice, New York's at service of the violation, NSPIRE's at the inspection. That makes two design choices load-bearing. **Record the trigger precisely:** `reported_at` and `request_channel` on the work order, and for code violations the violation number and service date, because a deadline computed from the wrong start is wrong. **Treat a portal or app request as written notice,** which is my rule: it's in writing, it's timestamped, and arguing otherwise in court is a poor position. Where a deadline is missed because the cause was outside the landlord's control (Washington's statute excuses that but still requires action "as soon as possible"), the work order records the reason, the parts on order, and each attempt. Response and completion against these stored deadlines is the work order SLA metric, defined in [Turns and Maintenance](/books/property-tech/operating-metrics#turns-and-maintenance).
 
 ## Resident Chargebacks
 
 Some repairs are the household's cost: a window broken by a guest, a disposal jammed with a fork, holes in walls beyond picture hangers, pet damage. The platforms all support charging residents from a work order: Entrata tracks time and materials for "billing residents," Rent Manager charges back "to tenants or owners in the form of invoices" with an optional markup, and ResMan posts charges to the resident ledger from maintenance.
 
-The law draws the line at **normal wear and tear**, and it demands evidence. California's deposit statute (Civil Code § 1950.5) lets a landlord deduct for damage beyond ordinary wear and tear and for cleaning back to move-in condition, and requires the itemized statement to show its work: for the landlord's own labor, a description with the time spent and hourly rate; for a contractor, the bill, invoice or receipt; for materials, a receipt or invoice. Photos are required after move-out before repairs, and again after, starting April 1, 2025, and at the start of tenancies beginning on or after July 1, 2025. Below $125 of combined repair and cleaning deductions the documentation can be skipped unless the tenant asks within 14 days. Move-In & Move-Out owns the deposit accounting; the work order is where its evidence comes from.
+The law draws the line at **normal wear and tear**, and it demands evidence. California's deposit statute (Civil Code § 1950.5) lets a landlord deduct for damage beyond ordinary wear and tear and for cleaning back to move-in condition, and requires the itemized statement to show its work: for the landlord's own labor, a description with the time spent and hourly rate; for a contractor, the bill, invoice or receipt; for materials, a receipt or invoice. Photos are required after move-out before repairs, and again after, starting April 1, 2025, and at the start of tenancies beginning on or after July 1, 2025. Below $125 of combined repair and cleaning deductions the documentation can be skipped unless the tenant asks within 14 days. [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#damage-charges) owns the deposit accounting; the work order is where its evidence comes from.
 
 So a chargeback is a link between a work order and a posted charge, with its basis and evidence:
 
 - **Decide chargeability at triage, confirm at completion.** The core `is_resident_chargeable` flag is set when the cause is known, and the technician's notes and photos at completion either support it or clear it.
 - **Price it from the work, not a guess.** Labor at the recorded time and a published rate, parts at cost from the invoice or price list, and any markup only where the lease and law allow it. A flat-rate damage schedule in the lease is common, and its amounts are lease terms, not maintenance settings.
-- **Post it through the ledger.** The charge posts to the lease with a charge code like any other (Charges & Resident Ledgers owns the catalog), and a reversal undoes it, never an edit. A chargeback disputed by a resident is answered with the same evidence bundle Field Operations builds for card disputes ([Evidence for Disputes and Chargebacks](/books/field-operations/proof-of-service#evidence-for-disputes-and-chargebacks)).
+- **Post it through the ledger.** The charge posts to the lease with a charge code like any other ([Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#chargebacks-from-operations) owns the catalog), and a reversal undoes it, never an edit. A chargeback disputed by a resident is answered with the same evidence bundle Field Operations builds for card disputes ([Evidence for Disputes and Chargebacks](/books/field-operations/proof-of-service#evidence-for-disputes-and-chargebacks)).
 - **Owners get chargebacks too.** On third-party managed properties, work the manager's staff performs is billed to the owner, sometimes with a markup set in the management agreement, and that bill follows the agreement's terms rather than the resident's lease.
 
 ## How to Build It
@@ -192,32 +192,44 @@ CREATE TABLE pm_schedules (              -- preventive maintenance rules
   valid_during DATERANGE NOT NULL
 );
 
-CREATE TABLE inspections (
+CREATE TABLE inspections (               -- every kind; move-in/out and subsidy chapters extend it
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id        UUID NOT NULL,
   property_id      UUID NOT NULL REFERENCES properties (id),
   unit_id          UUID REFERENCES units (id),       -- null for common areas or a whole site
   lease_id         UUID REFERENCES leases (id),      -- move-in and move-out
   turn_id          UUID REFERENCES unit_turns (id),
-  kind             TEXT NOT NULL CHECK (kind IN ('move_in', 'move_out', 'annual', 'preventive',
-                     'quality', 'nspire_self', 'nspire_hud', 'lender', 'municipal',
-                     'due_diligence')),
+  kind             TEXT NOT NULL CHECK (kind IN ('move_in', 'pre_move_out', 'move_out',
+                     'make_ready', 'annual', 'preventive', 'quality', 'nspire_self',
+                     'nspire_hud', 'hcv', 'lender', 'municipal', 'due_diligence')),
   template_version_id UUID NOT NULL,                 -- the template as it was when run
-  inspected_by     UUID NOT NULL,                    -- a user; staff are not people
-  inspected_at     TIMESTAMPTZ NOT NULL,
-  external_reference TEXT                            -- HUD inspection or code violation number
+  standard         TEXT,                             -- 'NSPIRE', 'NSPIRE-V', a state or lender standard
+  status           TEXT NOT NULL CHECK (status IN ('offered', 'scheduled', 'in_progress',
+                     'completed', 'signed', 'disputed', 'cancelled')),  -- signed, disputed: move-in/out
+  scheduled_for    TIMESTAMPTZ,
+  inspected_by     UUID REFERENCES users (id),       -- staff, vendor, or the resident's own user
+  inspected_at     TIMESTAMPTZ,                      -- when completed
+  result           TEXT CHECK (result IN ('pass', 'fail', 'inconclusive')),  -- scored standards
+  external_reference TEXT,                           -- HUD inspection or code violation number
+  supersedes_id    UUID REFERENCES inspections (id), -- re-inspections and amendments are new rows
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (status NOT IN ('completed', 'signed', 'disputed')
+         OR (inspected_by IS NOT NULL AND inspected_at IS NOT NULL))
 );
 
 CREATE TABLE inspection_findings (
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id       UUID NOT NULL,
   inspection_id   UUID NOT NULL REFERENCES inspections (id),
+  area            TEXT,                              -- 'kitchen', 'bedroom_2', 'roof'
   item            TEXT NOT NULL,                     -- template item key
-  rating          TEXT NOT NULL,                     -- template scale: 'ok', 'damaged', 'missing'
+  rating          TEXT NOT NULL,                     -- template scale: 'good', 'damaged', 'missing'
   severity        TEXT CHECK (severity IN ('life_threatening', 'severe', 'moderate', 'low')),
-  is_beyond_wear  BOOLEAN,                           -- move-out: damage vs normal wear
-  photo_ids       UUID[] NOT NULL DEFAULT '{}',
-  note            TEXT
+  cure_by         DATE,                              -- NSPIRE or code correction deadline
+  asset_id        UUID REFERENCES property_assets (id),  -- the register entry, for useful life
+  media           JSONB NOT NULL DEFAULT '[]',       -- [{sha256, captured_at, received_at, source}]
+  note            TEXT,
+  UNIQUE (inspection_id, area, item)
 );
 
 ALTER TABLE work_orders
@@ -246,8 +258,8 @@ CREATE TABLE entry_notices (             -- one per planned entry into an occupi
   basis              TEXT NOT NULL CHECK (basis IN ('notice', 'resident_permission',
                        'request_as_consent', 'emergency', 'abandonment', 'court_order')),
   served_at          TIMESTAMPTZ,                     -- null for emergency entries until after
-  method             TEXT CHECK (method IN ('email', 'sms', 'portal', 'posted', 'mailed',
-                       'hand_delivered')),
+  method             TEXT CHECK (method IN ('personal', 'posted', 'first_class_mail',
+                       'email', 'sms', 'portal')),  -- The Lease's delivery vocabulary
   entry_window       TSTZRANGE NOT NULL,
   purpose            TEXT NOT NULL,
   message_id         UUID,                            -- the notification log row
@@ -260,15 +272,19 @@ CREATE TABLE work_order_chargebacks (    -- a work order's cost posted to a ledg
   id             UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id      UUID NOT NULL,
   work_order_id  UUID NOT NULL REFERENCES work_orders (id),
-  charge_id      UUID NOT NULL REFERENCES charges (id),  -- the posted resident charge
+  charge_id      UUID REFERENCES charges (id),          -- the posted resident charge
+  ledger_transaction_id UUID REFERENCES ledger_transactions (id),  -- owner_billable: the
+                                                      -- owner ledger entry (Payments)
   basis          TEXT NOT NULL CHECK (basis IN ('damage_beyond_wear', 'cleaning',
                    'lease_damage_schedule', 'resident_caused', 'owner_billable')),
   labor_minutes  INT,
   labor_rate     BIGINT,                              -- minor units per hour
   evidence_ids   UUID[] NOT NULL,                     -- photos, invoices, finding ids
-  created_by     UUID NOT NULL,
+  created_by     UUID NOT NULL REFERENCES users (id),
   created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE (charge_id)
+  UNIQUE (charge_id),
+  CHECK ((basis = 'owner_billable') = (ledger_transaction_id IS NOT NULL)),
+  CHECK (num_nonnulls(charge_id, ledger_transaction_id) = 1)
 );
 ```
 
@@ -278,7 +294,8 @@ Design notes:
 - **Duplicates merge, they don't delete.** `merged_into_id` keeps each reporter's request and its timestamp, because the earliest report starts the statutory clock and every reporter is owed updates.
 - **One entry, one notice row.** The entry check runs at scheduling and again at check-in, and `entered_at` comes from the visit record or the smart lock's access event, so an entry outside the window shows up in a query.
 - **Owner chargebacks are not resident chargebacks.** `owner_billable` work posts to the owner's ledger under the management agreement, not to a lease; the same table records both so a work order's whole cost is traceable.
-- **Inspections never update in place.** A re-inspection is a new row; findings link to the work orders they created through `work_orders.inspection_finding_id`.
+- **One inspections table for every kind.** This chapter owns `inspections` and `inspection_findings`; [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#how-to-build-it) adds the baseline comparison, notice and sealing columns, and [Affordable Housing](/books/property-tech/affordable-housing#how-to-build-it) ties subsidy inspections to HAP contracts.
+- **Inspections never update in place.** A re-inspection is a new row (`supersedes_id`); findings link to the work orders they created through `work_orders.inspection_finding_id`.
 - **Emit events.** `work_order.reported`, `work_order.deadline_set`, `work_order.completed`, `turn.ready`, `inspection.completed` and `entry_notice.served` feed notifications, owner reporting and the turn board.
 
 ## Auditing
@@ -290,7 +307,7 @@ Maintenance records are evidence in habitability defenses, deposit disputes, ent
 - **What was done, and when.** Visits, notes, photos and completion from the Field Operations records, with the reasons for any delay (parts on order, no access, a condition outside the operator's control).
 - **Every entry.** The notice served, its method and window, the basis for any entry without notice, and the actual entry time from the visit or lock log.
 - **Every chargeback.** The finding, the evidence and the pricing behind each charge, linked to the posted charge and any reversal.
-- **Inspections as run.** The template version, the inspector, the findings with photos, and the work orders they created, kept as long as NSPIRE (three years for self-inspections) and the operator's retention schedule require (Records, Privacy & Audits).
+- **Inspections as run.** The template version, the inspector, the findings with photos, and the work orders they created, kept as long as NSPIRE (three years for self-inspections) and the operator's retention schedule require ([Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds)).
 
 ## What This Means for the System You Build
 

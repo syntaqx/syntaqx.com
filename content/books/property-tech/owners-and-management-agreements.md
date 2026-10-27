@@ -51,7 +51,7 @@ Management agreements filed with the SEC show what the contract governs. Two of 
 Each of those is a check the platform can run or a deadline it can compute. My rule: store the agreement's operational terms as versioned data attached to the agreement, not as a PDF and a memory ([Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule)):
 
 - **Dates and deadlines.** Report due days, budget submission lead time, termination notice. The platform computes and stores the due dates and shows what's late ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
-- **Spending authority.** The budget tolerance, the approval threshold for unbudgeted items and contracts, the emergency rule. Purchase orders and invoices check against them (Vendors, Procurement & Payables).
+- **Spending authority.** The budget tolerance, the approval threshold for unbudgeted items and contracts, the emergency rule. Purchase orders and invoices check against them ([Vendors, Procurement & Payables](/books/property-tech/vendors-and-payables#purchase-orders)).
 - **Fee rules.** Below, with their own versions.
 - **Reserve and distribution terms.** Minimum reserve, distribution timing and method.
 - **Reimbursable costs.** Which payroll, which central services, at what rates.
@@ -90,7 +90,7 @@ A **fee run** computes every fee for a period across the portfolio, posts each a
 
 ## Reimbursements and Allocated Costs
 
-The owner pays the property's costs, and some of those costs are the manager's own: the 2010 agreement makes on-site payroll reimbursable because the property's employees are the manager's employees, and the 2020 agreement does the same for on-site personnel. Centralization stretches this: a central leasing team, a shared maintenance crew, an outsourced invoice-processing service or an AI tier serve many properties, and whether each owner reimburses a share depends on wording that may only mention on-site staff ([Centralization and the Outsourced Back Office](/books/property-tech/software-landscape#centralization-and-the-outsourced-back-office)).
+The owner pays the property's costs, and some of those costs are the manager's own: the 2010 agreement makes on-site payroll reimbursable because the property's employees are the manager's employees, and the 2020 agreement does the same for on-site personnel. Centralization stretches this: a central leasing team, a shared maintenance crew, an outsourced invoice-processing service or an AI tier ([AI Cost Allocation to Owners](/books/property-tech/ai-in-property-management#ai-cost-allocation-to-owners)) serve many properties, and whether each owner reimburses a share depends on wording that may only mention on-site staff ([Centralization and the Outsourced Back Office](/books/property-tech/software-landscape#centralization-and-the-outsourced-back-office)).
 
 The platform's job is to make the allocation a rule with a citation: which cost pool, which allocation base (units, hours logged per property, work orders, AI interactions per property), which agreements allow it, and the allocation's output per property per period as ledger entries. A cost the agreement doesn't allow is the manager's expense, and the system should refuse to charge it to the owner rather than leave it to a reviewer to catch. Allocation mechanics are shared with budgets ([Allocations and Shared Costs](/books/property-tech/budgets-and-capital-projects#allocations-and-shared-costs)).
 
@@ -120,7 +120,7 @@ Each line is a ledger balance, so the distribution is explained by the same entr
 
 A **reserve** is the owner's money that the manager keeps in trust instead of distributing, so that bills can be paid without a negative balance: a fixed amount ("$500 per property"), an amount per unit, or a share of monthly income until a target is reached. Reserves are set in the management agreement, shown on every statement, and are a balance, not an expense: moving money into a reserve doesn't reduce the owner's income, it reduces what's distributed, and a statement export that books it as an expense misstates the owner's income.
 
-Lender-required replacement reserves are different: they're held by the lender or its servicer under the loan documents, funded by monthly deposits, and released for approved capital work. They belong to the capital side ([Replacement Reserves](/books/property-tech/budgets-and-capital-projects#replacement-reserves)). Association reserves for common-element replacement are a third kind, governed by state association law (Community Associations).
+Lender-required replacement reserves are different: they're held by the lender or its servicer under the loan documents, funded by monthly deposits, and released for approved capital work. They belong to the capital side ([Replacement Reserves](/books/property-tech/budgets-and-capital-projects#replacement-reserves)). Association reserves for common-element replacement are a third kind, governed by state association law ([Community Associations](/books/property-tech/community-associations#reserves-and-reserve-studies)).
 
 ## Owner Reporting
 
@@ -147,9 +147,9 @@ Year-end is a batch with exceptions: missing TINs, owners whose share changed mi
 
 ## Onboarding and Offboarding an Owner
 
-**Onboarding** an owner is opening an account at a bank, in effect: verify the entity (and who controls it), collect tax forms and bank details, sign the agreement, map the property's opening balances (deposits held, prepaid rent, payables, reserves), and receive the starting reserve as a contribution. For a property arriving from another manager, the security deposits and their interest are transferred with a schedule per resident; a deposit missing from the transfer is still owed to the resident at move-out (Switching Platforms & Acquisitions).
+**Onboarding** an owner is opening an account at a bank, in effect: verify the entity (and who controls it), collect tax forms and bank details, sign the agreement, map the property's opening balances (deposits held, prepaid rent, payables, reserves), and receive the starting reserve as a contribution. For a property arriving from another manager, the security deposits and their interest are transferred with a schedule per resident; a deposit missing from the transfer is still owed to the resident at move-out ([Trust Cutover and Deposit Transfer](/books/property-tech/switching-platforms#trust-cutover-and-deposit-transfer)).
 
-**Offboarding** reverses it: a final statement, a final fee run under the agreement's termination terms, transfer of deposits and remaining balances to the owner or the next manager, delivery of records, and a final 1099 for the partial year. The property stays in the system, read-only, because the manager remains answerable for the period it managed.
+**Offboarding** reverses it: a final statement, a final fee run under the agreement's termination terms, transfer of deposits and remaining balances to the owner or the next manager, delivery of records, and a final 1099 for the partial year ([Owners, Statements and 1099s in a Split Year](/books/property-tech/switching-platforms#owners-statements-and-1099s-in-a-split-year)). The property stays in the system, read-only, because the manager remains answerable for the period it managed.
 
 ## How to Build It
 
@@ -214,7 +214,7 @@ CREATE TABLE fee_runs (
   tenant_id   UUID NOT NULL,
   period      DATERANGE NOT NULL,                  -- the month, or a day for per-event fees
   kind        TEXT NOT NULL CHECK (kind IN ('scheduled', 'adjustment')),
-  started_by  UUID NOT NULL,
+  started_by  UUID NOT NULL REFERENCES users (id),
   started_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   status      TEXT NOT NULL CHECK (status IN ('draft', 'reviewed', 'posted', 'void'))
 );
@@ -239,7 +239,9 @@ CREATE TABLE cost_allocations (                     -- central staff, shared ser
   tenant_id         UUID NOT NULL,
   cost_pool         TEXT NOT NULL,                  -- 'central_leasing', 'ai_tier', 'invoice_processing'
   period            DATERANGE NOT NULL,
-  allocation_base   TEXT NOT NULL,                  -- 'units', 'hours', 'work_orders', 'ai_interactions'
+  allocation_rule_id UUID NOT NULL REFERENCES allocation_rules (id),  -- Budgets owns the rules
+  allocation_base   TEXT NOT NULL CHECK (allocation_base IN ('units', 'square_feet', 'hours',
+                      'work_orders', 'interactions', 'fixed_share')),  -- the rule's base, as run
   property_id       UUID NOT NULL REFERENCES properties (id),
   base_quantity     NUMERIC NOT NULL,
   amount            BIGINT NOT NULL,
@@ -293,7 +295,7 @@ CREATE TABLE owner_statements (                      -- what was sent, as sent
   UNIQUE (tenant_id, owner_entity_id, period, version)
 );
 
-CREATE TABLE tax_profiles (                           -- owners here; vendors use the same table
+CREATE TABLE tax_profiles (                           -- owners; vendors keep TIN columns on vendors
   legal_entity_id    UUID PRIMARY KEY REFERENCES legal_entities (id),
   tenant_id          UUID NOT NULL,
   us_person          BOOLEAN NOT NULL,

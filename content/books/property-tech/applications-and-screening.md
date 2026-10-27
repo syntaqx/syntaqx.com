@@ -9,7 +9,7 @@ tags = ["property-tech", "tenant-screening", "fcra", "fair-housing", "identity-v
 
 An application is the moment a prospect becomes someone the operator can say no to. Every adult in the household submits personal data, consents to a background check and usually pays a fee; a consumer reporting agency returns credit, eviction and criminal records and often a score; income and identity are verified; and the operator approves, approves with conditions, or denies against written criteria. Few steps in property management carry as much legal weight. The screening report is a consumer report under the Fair Credit Reporting Act, so accuracy, notices and disputes are federal duties. Every criterion is a fair housing question, and cities and states add their own rules on criminal history, sources of income, application fees and portable reports. The fraud the application has to catch (doctored pay stubs, synthetic identities, borrowed IDs) pulls in document forensics and biometrics, which bring their own privacy statutes.
 
-This chapter covers the flow from submitted application to decision: how the platforms do it, the application itself, the FCRA, fair housing and disparate impact, criminal history and fair-chance laws, source of income, income and identity verification, document fraud, biometric privacy, AI scores, fees and portable reports, applicants without a US credit file, pets and assistance animals, and the decision record that ties it all together. Pricing the unit the application is for is [Revenue Management & Pricing](/books/property-tech/revenue-management); the guest card it starts from is [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours); the lease it ends in is [The Lease](/books/property-tech/the-lease). The Fair Housing chapter owns protected classes, reasonable accommodations and advertising as a whole. Legal status here is as of October 2026, and the rules are US law unless stated.
+This chapter covers the flow from submitted application to decision: how the platforms do it, the application itself, the FCRA, fair housing and disparate impact, criminal history and fair-chance laws, source of income, income and identity verification, document fraud, biometric privacy, AI scores, fees and portable reports, applicants without a US credit file, pets and assistance animals, and the decision record that ties it all together. Pricing the unit the application is for is [Revenue Management & Pricing](/books/property-tech/revenue-management); the guest card it starts from is [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours); the lease it ends in is [The Lease](/books/property-tech/the-lease). [Fair Housing](/books/property-tech/fair-housing) owns protected classes, reasonable accommodations and advertising as a whole. Legal status here is as of October 2026, and the rules are US law unless stated.
 
 ## How the Platforms Do It
 
@@ -29,11 +29,11 @@ The design lesson is in what stays with the operator. Every vendor returns data 
 
 ## The Application
 
-**Each adult applies.** An application is a household's request to lease a specific unit on specific terms, and every adult who will live there (and every guarantor) is a member with their own consent, their own reports and their own result. Minors are listed as occupants and never screened. A household's result is computed from its members' results by the criteria: combined income against the rent, the worst criminal or eviction finding, or each leaseholder separately, and the criteria say which. Roommates who don't know each other apply as one household for one unit; student housing's by-the-bed leasing changes that and is Student Housing's subject.
+**Each adult applies.** An application is a household's request to lease a specific unit on specific terms, and every adult who will live there (and every guarantor) is a member with their own consent, their own reports and their own result. Minors are listed as occupants and never screened. A household's result is computed from its members' results by the criteria: combined income against the rent, the worst criminal or eviction finding, or each leaseholder separately, and the criteria say which. Roommates who don't know each other apply as one household for one unit; student housing's by-the-bed leasing changes that ([Student Housing](/books/property-tech/student-housing#by-the-bed-leasing-and-liability)).
 
 **It applies to a price.** An application is for a unit at a quoted rent, lease term and move-in date: a row in `rent_quotes` from [Revenue Management & Pricing](/books/property-tech/revenue-management). The quote's validity window matters because an income test is a ratio to rent, and approval at one price isn't approval at another. If the quote expires before the decision, the operator either honors it or re-quotes and re-runs the income test, and the record says which.
 
-**The fee comes before the check.** Screening costs money per report, so the application fee is collected before any report is ordered, per member, under the fee caps and refund rules of the property's jurisdiction ([Application Fees and Portable Reports](#application-fees-and-portable-reports)). Mandatory recurring fees should be disclosed before the applicant pays; the Greystar settlement turned on fees disclosed "often after a nonrefundable application fee" ([The Property's Money](/books/property-tech/property-business#the-property-s-money)), and Listings, Websites & Marketing owns the price display.
+**The fee comes before the check.** Screening costs money per report, so the application fee is collected before any report is ordered, per member, under the fee caps and refund rules of the property's jurisdiction ([Application Fees and Portable Reports](#application-fees-and-portable-reports)). Mandatory recurring fees should be disclosed before the applicant pays; the Greystar settlement turned on fees disclosed "often after a nonrefundable application fee" ([The Property's Money](/books/property-tech/property-business#the-property-s-money)), and [Listings, Websites & Marketing](/books/property-tech/listings-and-marketing#fee-transparency-and-all-in-pricing) owns the price display.
 
 **Staged where the law requires it.** Fair-chance laws in New York City and Cook County, and California's regulations, require financial and other qualifications to be decided before criminal history is looked at ([Criminal History and Fair-Chance Laws](#criminal-history-and-fair-chance-laws)). So the application has stages, and the reports ordered in each stage are recorded against it: pre-qualification (identity, income, credit, rental history), then, where allowed and only after a conditional offer, criminal history.
 
@@ -89,7 +89,7 @@ A rental history database built from landlords' own ledgers turns every contribu
 - **Flag disputes:** information the consumer has disputed with the furnisher can't be reported without noting the dispute.
 - **Investigate disputes forwarded by the agency** within the agency's 30-day window, and modify, delete or block what's inaccurate, incomplete or unverifiable.
 
-So the export to a rental history pool reads from the ledger as it stands, not a snapshot: a reversed late fee or a vacated eviction judgment has to reach the pool as a correction, and a dispute received through the resident portal has to flag the record before the next export. Rent reporting to credit bureaus as a resident product is Resident Financial Products & Ancillary Revenue's subject; the furnisher mechanics are the same.
+So the export to a rental history pool reads from the ledger as it stands, not a snapshot: a reversed late fee or a vacated eviction judgment has to reach the pool as a correction, and a dispute received through the resident portal has to flag the record before the next export. Rent reporting to credit bureaus as a resident product is covered in [Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#rent-reporting); the furnisher mechanics are the same.
 
 ## Fair Housing and Disparate Impact
 
@@ -110,7 +110,7 @@ For the platform, that means:
 - **Outcomes are measured by group where lawful,** so a criterion with a disparate effect is found by the operator before it's found by a plaintiff. Demographic data collected for that monitoring stays separate from the decision path.
 - **The vendor's score is the operator's practice.** Using a third party's model doesn't move the liability; the operator chose to use it.
 
-The Fair Housing chapter covers protected classes, reasonable accommodations, advertising and HUD's complaint process in full.
+[Fair Housing](/books/property-tech/fair-housing#disparate-impact-and-algorithms) covers protected classes, reasonable accommodations, advertising and HUD's complaint process in full.
 
 ## Criminal History and Fair-Chance Laws
 
@@ -127,7 +127,7 @@ The Fair Housing chapter covers protected classes, reasonable accommodations, ad
 
 New York City's never-considered list is worth copying as a data structure: arrests without further action, pending cases, adjournments in contemplation of dismissal, youthful offender and juvenile adjudications, sealed or expunged convictions, favorable terminations, and non-criminal violations. Its exemptions are narrow (owner-occupied buildings with two or fewer units; government-funded housing required or authorized to act on criminal history, which still follows the rest of the law).
 
-My rule: criminal screening is a **stage with a gate**, not a column in the report. The criteria for each jurisdiction say whether criminal history may be considered at all, after which step, with which lookback per offense class, and which record types are always excluded; the agency is asked only for what the stage allows; and an adverse criminal decision can't be recorded without the assessment and the applicant's response window. The jurisdiction rules are effective-dated data ([Rules as Data](/docs/architecture/rules-as-data)), resolved from the property's location, and Landlord-Tenant Law as Data holds the matrix.
+My rule: criminal screening is a **stage with a gate**, not a column in the report. The criteria for each jurisdiction say whether criminal history may be considered at all, after which step, with which lookback per offense class, and which record types are always excluded; the agency is asked only for what the stage allows; and an adverse criminal decision can't be recorded without the assessment and the applicant's response window. The jurisdiction rules are effective-dated data ([Rules as Data](/docs/architecture/rules-as-data)), resolved from the property's location, and [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) holds the matrix.
 
 ## Source of Income
 
@@ -139,7 +139,7 @@ The screening consequences:
 - **Every lawful income source counts.** Benefits, child support, pensions, gig income and assets are income; a criterion that accepts only pay stubs excludes them by design.
 - **The application records the source,** so the income test and its basis can be audited, and the jurisdiction's protection is resolved from the property.
 
-Subsidized & Affordable Housing covers program rules (income limits, certification, the voucher's own inspection and contract) from both sides.
+[Subsidized & Affordable Housing](/books/property-tech/affordable-housing#vouchers-and-tracs) covers program rules (income limits, certification, the voucher's own inspection and contract) from both sides.
 
 ## Income and Identity Verification
 
@@ -151,7 +151,7 @@ Subsidized & Affordable Housing covers program rules (income limits, certificati
 - **Step up when they don't:** a photographed government ID, checked for tampering and read for its data, and a selfie matched to the ID's photo with a **liveness** check that the selfie is a live person rather than a photo or replay.
 - **A person when the machine is unsure,** with the evidence in front of them ([Scores, Bands and the Human Middle](/docs/architecture/risk-scoring#scores-bands-and-the-human-middle)).
 
-The same identity check can run at the self-guided tour, so the person who toured is the person who applied; that tour flow is [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours)'s. Verification failure is not a denial reason by itself: an unverified identity is a step-up or a review, and a denial on it is a decision like any other with a recorded reason.
+The same identity check can run at the self-guided tour, so the person who toured is the person who applied; that tour flow is in [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#identity-checks-and-biometric-privacy). Verification failure is not a denial reason by itself: an unverified identity is a step-up or a review, and a denial on it is a decision like any other with a recorded reason.
 
 ## Synthetic Identity and Document Fraud
 
@@ -171,17 +171,17 @@ A selfie match and a liveness check create biometric data, and three states regu
 - **Washington.** RCW 19.375 requires notice and consent, or a mechanism to prevent later commercial use, before enrolling a biometric identifier in a database for a commercial purpose; bars selling or disclosing it without consent outside narrow exceptions; and allows retention "no longer than is reasonably necessary."
 - **Texas** has its own biometric identifier statute.
 
-The design that works everywhere is the strictest one: a separate biometric consent, in plain words, before the camera opens, naming who processes the image and how long it's kept; the vendor holds the template, not the operator; the platform stores the outcome (match, no match, liveness passed) and a reference, never the image or template; and a destroy-by date is set at capture and enforced ([Data Retention & Deletion](/docs/architecture/data-retention)). Applicants who decline biometrics get another route (an in-person ID check at the leasing office), because a biometric gate with no alternative is also an accessibility and fair housing problem. Records, Privacy & Audits covers state privacy laws as a whole.
+The design that works everywhere is the strictest one: a separate biometric consent, in plain words, before the camera opens, naming who processes the image and how long it's kept; the vendor holds the template, not the operator; the platform stores the outcome (match, no match, liveness passed) and a reference, never the image or template; and a destroy-by date is set at capture and enforced ([Data Retention & Deletion](/docs/architecture/data-retention)). Applicants who decline biometrics get another route (an in-person ID check at the leasing office), because a biometric gate with no alternative is also an accessibility and fair housing problem. [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#state-privacy-laws) covers state privacy laws as a whole.
 
 ## AI Scores: Decision Support, Not Decision-Maker
 
-A screening score that predicts lease performance is a model, and RealPage's choice of words for its AI screening is the right posture for any of them: "a decision-support tool rather than an automated decision-maker." The general machine is in [Automated Risk Decisions](/docs/architecture/risk-scoring); what housing adds:
+A screening score that predicts lease performance is a model, and RealPage's choice of words for its AI screening is the right posture for any of them: "a decision-support tool rather than an automated decision-maker." The general machine is in [Automated Risk Decisions](/docs/architecture/risk-scoring), and the fair housing exposure of AI across screening and pricing is in [Fair Housing, Screening and Pricing Risk](/books/property-tech/ai-in-property-management#fair-housing-screening-and-pricing-risk); what housing adds:
 
 - **The score is part of the consumer report.** The FTC counts a screening company's "risk score or recommendation" as a consumer report, so a score-driven denial carries an adverse action notice, and a credit score used must be disclosed with its key factors.
 - **The score is a fair housing practice.** SafeRent is the example: the operator's use of a third-party score with an effect on voucher holders was the claim. A score's inputs, its version, and its effect by group are the operator's evidence.
 - **Rules and people decide.** The score is one input to criteria that live in data; a band between automatic approval and automatic denial goes to a person, with the report and the applicant's own information ([Scores, Bands and the Human Middle](/docs/architecture/risk-scoring#scores-bands-and-the-human-middle)). Where a jurisdiction requires an individualized assessment, nothing automatic may deny.
 - **Explain and appeal.** The applicant gets the reasons in terms they can act on and a way to contest them, reviewed by someone who didn't make the first decision ([Explanations and Appeals](/docs/architecture/risk-scoring#explanations-and-appeals)).
-- **Language models don't decide.** An AI leasing agent may collect an application, answer questions about criteria and chase missing documents; the decision is made in code against the criteria version ([Decide in Code](/docs/architecture/ai-agents#decide-in-code)). AI in Property Management covers agent governance across the platform.
+- **Language models don't decide.** An AI leasing agent may collect an application, answer questions about criteria and chase missing documents; the decision is made in code against the criteria version ([Decide in Code](/docs/architecture/ai-agents#decide-in-code)). [AI in Property Management](/books/property-tech/ai-in-property-management#governance-and-the-ai-audit-trail) covers agent governance across the platform.
 
 ## Application Fees and Portable Reports
 
@@ -193,14 +193,14 @@ Application fees are capped, refundable or waivable in a growing list of places,
 | **New York** (Real Property Law 238-a) | No fees except for background and credit checks, at actual cost or $20, whichever is less; waived if the applicant provides a background or credit check from the past 30 days; not collectible without giving the applicant a copy of the check and the screening company's receipt or invoice; waivers void |
 | **Colorado** (HB23-1099, effective August 7, 2023) | Landlords must accept a portable tenant screening report prepared by an agency within the previous 30 days, covering employment and income verification, rental and credit history and criminal history; a landlord who accepts one may charge no application fee or fee to access it; landlords that take only one application fee at a time and refund it within 20 calendar days are exempt; the landlord must disclose this before collecting information that would generate a fee |
 
-So a fee is never a constant on the property. It's computed per member from the jurisdiction's rule version, with the cap, the waiver conditions, the receipt contents and the refund deadline, and the refund deadline is a stored date that a job enforces ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). A **portable report** is a screening report the applicant already paid for: the platform has to accept it as a report source, check its age against the rule, record that it waived the fee, and run the same criteria over it. The money itself (a card or ACH payment, its refund) moves through [Payment States & Ledgers](/docs/payments/payment-states); application fees are usually income to the owner or the screening vendor, never trust money, and Charges & Resident Ledgers covers where they post.
+So a fee is never a constant on the property. It's computed per member from the jurisdiction's rule version, with the cap, the waiver conditions, the receipt contents and the refund deadline, and the refund deadline is a stored date that a job enforces ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). A **portable report** is a screening report the applicant already paid for: the platform has to accept it as a report source, check its age against the rule, record that it waived the fee, and run the same criteria over it. The money itself (a card or ACH payment, its refund) moves through [Payment States & Ledgers](/docs/payments/payment-states); application fees are usually income to the owner or the screening vendor, never trust money, and [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog) covers where they post.
 
 ## International Applicants and No SSN
 
 Applicants new to the US (students, transferred employees, immigrants) often have no SSN and no US credit file, and a criteria set that requires a credit score denies all of them on a missing field. The platforms' answers:
 
 - **Foreign credit files.** Nova Credit, which describes itself as operating "as a consumer reporting agency under the Fair Credit Reporting Act," translates credit history from abroad; Entrata's integration covers 16 countries. The report is a consumer report like any other, with the same notices.
-- **Alternative evidence:** an ITIN, a passport and visa as identity documents, an offer letter or university enrollment, bank-verified income or assets, or a guarantor (including an institutional one, Insurance, Deposits & Guarantees' subject).
+- **Alternative evidence:** an ITIN, a passport and visa as identity documents, an offer letter or university enrollment, bank-verified income or assets, or a guarantor (including an institutional one; [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#guarantors-and-institutional-guarantees)).
 - **Criteria that say what substitutes.** "No credit history" is an outcome distinct from "poor credit history," and the criteria state what replaces the score: a larger deposit within legal limits, a guarantor, or prepaid rent where the jurisdiction allows it.
 
 National origin is a protected class, and California's Civil Rights Department publishes a fact sheet on immigration rights in housing. My rule: ask for identity documents the criteria accept, never for citizenship.
@@ -209,7 +209,7 @@ National origin is a protected class, and California's Civil Rights Department p
 
 Pets are a lease term with money attached (deposit, fee, monthly pet rent, breed and weight limits), screened by collecting a profile per animal: species, breed, weight, vaccination and license records, and the owner's history. Specialists run this as a service: PetScreening lists "3.5M+ Generated Profiles," and both it and OurPetPolicy verify assistance animal requests.
 
-**Assistance animals are not pets.** A request to keep an animal for a disability is a reasonable accommodation request under the Fair Housing Act, and pet rules, fees and breed limits don't apply to it. HUD's FHEO-2020-01 notice (January 28, 2020) gave providers step-by-step best practices: providers may ask for supporting information when the disability or need isn't apparent, including from a health care professional; documentation sold online as animal "certifications or registrations" is not by itself reliable; and animals not traditionally kept in homes need more analysis. HUD withdrew FHEO-2020-01 effective September 17, 2025 (91 FR 17291), along with the 2013 notice on service and assistance animals. The statutory duty to accommodate didn't change; the practical framework is now a matter for the operator's counsel and state law, and the Fair Housing chapter owns it.
+**Assistance animals are not pets.** A request to keep an animal for a disability is a reasonable accommodation request under the Fair Housing Act, and pet rules, fees and breed limits don't apply to it. HUD's FHEO-2020-01 notice (January 28, 2020) gave providers step-by-step best practices: providers may ask for supporting information when the disability or need isn't apparent, including from a health care professional; documentation sold online as animal "certifications or registrations" is not by itself reliable; and animals not traditionally kept in homes need more analysis. HUD withdrew FHEO-2020-01 effective September 17, 2025 (91 FR 17291), along with the 2013 notice on service and assistance animals. The statutory duty to accommodate didn't change; the practical framework is now a matter for the operator's counsel and state law, and [Fair Housing](/books/property-tech/fair-housing#reasonable-accommodations-and-modifications) owns it.
 
 For the platform: the assistance animal path is separate from pet screening from the first screen, never charges a pet fee or deposit, never gates the housing decision on the animal's paperwork, and keeps disability-related information in an access-restricted record apart from the application file the leasing team sees. A third-party verifier's outcome is an input; the accommodation decision is the operator's.
 
@@ -225,7 +225,7 @@ Everything above ends in one record: what the household applied for, which crite
 
 ## How to Build It
 
-Screening extends `people` and `households` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model), references `guest_cards` from Leads, CRM, Tours & the Leasing Center and `rent_quotes` from Revenue Management & Pricing, and points forward to the `leases` row The Lease creates. Report contents and SSNs are encrypted at the field level ([Envelope Encryption](/docs/security/encryption-at-rest#envelope-encryption)); what follows stores results, references and decisions.
+Screening extends `people` and `households` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model), references `guest_cards` from [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#how-to-build-it) and `rent_quotes` from [Revenue Management & Pricing](/books/property-tech/revenue-management#how-to-build-it), and points forward to the `leases` row [The Lease](/books/property-tech/the-lease#how-to-build-it) creates. Report contents and SSNs are encrypted at the field level ([Envelope Encryption](/docs/security/encryption-at-rest#envelope-encryption)); what follows stores results, references and decisions.
 
 ```sql
 CREATE TABLE screening_criteria (        -- a published, versioned screening policy
@@ -240,7 +240,7 @@ CREATE TABLE screening_criteria (        -- a published, versioned screening pol
   reason_codes      JSONB NOT NULL,      -- code -> applicant-facing text
   justification     TEXT NOT NULL,       -- why each criterion; the disparate impact defense
   document_ref      TEXT NOT NULL,       -- the published text applicants read
-  approved_by       UUID NOT NULL,       -- staff user
+  approved_by       UUID NOT NULL REFERENCES users (id), -- staff user
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK (num_nonnulls(property_id, portfolio_id) = 1),
   UNIQUE (tenant_id, property_id, portfolio_id, version),
@@ -288,7 +288,7 @@ CREATE TABLE application_fees (          -- per member, under the jurisdiction's
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id         UUID NOT NULL,
   member_id         UUID NOT NULL REFERENCES application_members (id),
-  fee_rule_version  TEXT NOT NULL,       -- e.g. 'US-NY:RPL-238-a@v3'
+  fee_rule_evaluation_id UUID NOT NULL REFERENCES rule_evaluations (id),  -- application_fee_cap
   amount            BIGINT NOT NULL CHECK (amount >= 0),  -- minor units
   currency          CHAR(3) NOT NULL,
   status            TEXT NOT NULL CHECK (status IN ('due', 'paid', 'waived', 'refunded')),
@@ -327,7 +327,8 @@ CREATE TABLE screening_reports (         -- a consumer report, or a portable one
 CREATE TABLE verifications (             -- income, identity, document and animal checks
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id         UUID NOT NULL,
-  member_id         UUID NOT NULL REFERENCES application_members (id),
+  member_id         UUID REFERENCES application_members (id),
+  person_id         UUID REFERENCES people (id),   -- a prospect's check before applying (tours)
   kind              TEXT NOT NULL CHECK (kind IN ('identity_data', 'identity_document',
                       'liveness', 'income_bank', 'income_payroll', 'income_document',
                       'document_authenticity', 'employment', 'rental_history',
@@ -344,7 +345,8 @@ CREATE TABLE verifications (             -- income, identity, document and anima
   biometric_destroy_by DATE,             -- set at capture, confirmed with the vendor
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK (NOT biometric OR (biometric_consent_version IS NOT NULL
-                           AND biometric_destroy_by IS NOT NULL))
+                           AND biometric_destroy_by IS NOT NULL)),
+  CHECK (num_nonnulls(member_id, person_id) = 1)
 );
 
 CREATE TABLE screening_decisions (       -- append-only; appeals supersede
@@ -363,13 +365,14 @@ CREATE TABLE screening_decisions (       -- append-only; appeals supersede
   model_version     TEXT,                -- any score used
   is_adverse        BOOLEAN NOT NULL,    -- deny, or conditions, based on a report
   assessment        JSONB,               -- individualized assessment where law requires
-  decided_by        TEXT NOT NULL,       -- 'system:screening@<version>' or 'user:<id>'
+  decided_by        UUID NOT NULL REFERENCES users (id),  -- staff, or the screening service user
   override_reason   TEXT,
   supersedes_id     UUID REFERENCES screening_decisions (id),
   decided_at        TIMESTAMPTZ NOT NULL,
   CHECK (outcome <> 'deny' OR cardinality(reason_codes) > 0),
   CHECK (outcome <> 'conditional' OR jsonb_array_length(conditions) > 0),
-  CHECK (decided_by LIKE 'user:%' OR override_reason IS NULL)
+  -- an override_reason is required when a human user changed the system's outcome;
+  -- enforced in the decision service, which can see users.actor_type
 );
 
 CREATE TABLE adverse_action_notices (    -- one per member whose report contributed
@@ -399,7 +402,7 @@ Decisions in the shape:
 - **Biometrics are outcomes and a destroy-by date,** never images or templates.
 - **Disposal is scheduled.** Each report has `dispose_after` from the retention schedule ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)); the decision keeps the summaries it used after the report itself is gone.
 
-Events: `application.submitted`, `application.fee_paid`, `screening.report_received`, `screening.decided` (with outcome and whether adverse), `screening.notice_sent`, `screening.dispute_opened`, `application.approved`, which The Lease subscribes to when it generates the packet.
+Events: `application.submitted`, `application.fee_paid`, `screening.report_received`, `screening.decided` (with outcome and whether adverse), `screening.notice_sent`, `screening.dispute_opened`, `application.approved`, which [The Lease](/books/property-tech/the-lease#the-lease-packet) subscribes to when it generates the packet.
 
 A household's history comes back: the people who left owing money may apply again years later. Matching a new application to an old resident is [Matching, Merging & Many Sources](/docs/architecture/record-linkage), and whether the old ledger may be used is the criteria's call, within the FCRA's seven-year limit when it arrives through a report.
 
@@ -414,7 +417,7 @@ Screening records are asked for by applicants, regulators, fair housing testers 
 - **What effect do the criteria have?** Approval, conditional and denial rates by criterion and, where lawful, by group, across criteria versions: the evidence the operator needs to justify a criterion or change it.
 - **Who saw what.** Access to screening reports and disability-related records is logged ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)), because both are among the most sensitive data the platform holds.
 
-The mechanics are in [Audit Trails](/docs/architecture/audit-trails); retention periods per record type and the privacy laws around them are Records, Privacy & Audits.
+The mechanics are in [Audit Trails](/docs/architecture/audit-trails); retention periods per record type and the privacy laws around them are in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

@@ -41,7 +41,7 @@ A property in this volume is **a managed asset with one owner of record and one 
 - **A community with two phases** owned by two LLCs is two properties, even if residents see one name and one leasing office, because rent goes to two owners and two sets of books. A shared leasing office is a cost allocated between them ([Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects#allocations-and-shared-costs)).
 - **A scattered-site portfolio** of forty houses owned by one LLC in one county can be one property with forty buildings, or forty properties, depending on whether the owner wants one set of statements or forty. Houses in two states are always two properties at least, because the rules differ.
 - **A mixed-use building** with apartments over retail is one property with units of two kinds, unless the commercial condominium is owned separately, in which case it's two properties sharing a building.
-- **An association** is a property whose units are owned by their occupants, and whose ledger charges assessments rather than rent (Community Associations).
+- **An association** is a property whose units are owned by their occupants, and whose ledger charges assessments rather than rent ([Community Associations](/books/property-tech/community-associations#the-association-the-manager-and-the-owner)).
 
 The attributes worth modeling as columns (and not as [custom fields](/docs/architecture/custom-fields)) are the ones rules, reports and integrations read: property type and subtype (garden, mid-rise, high-rise; conventional, affordable, student, senior), year built and renovated, the program the property participates in (tax credit, project-based subsidy), the jurisdiction, the time zone, the business date, and the external identifiers it carries elsewhere. Everything else (pool hours, pet policy prose, the leasing office's phone tree) is configuration or content.
 
@@ -64,17 +64,17 @@ A **unit** is what is leased and counted. Its attributes:
 | Kind | Dwelling, commercial suite, storage unit, lot |
 | Rentable status and reason | Inventory counts and occupancy denominators |
 
-**Area is never a bare number.** "850 square feet" means different things measured to the inside of walls, to their centerlines, or including a share of common space. BOMA publishes measurement standards per property type (office, industrial, retail, multifamily and hospitality, mixed-use); its multifamily standard offers a gross and a net method, and its office standard exists mainly to calculate rentable area for leasing. Commercial rent and expense recovery depend on which method a lease uses (Commercial Property); residential platforms mostly use the marketing number. My rule: store the area with its method and source, and never mix methods in one ratio.
+**Area is never a bare number.** "850 square feet" means different things measured to the inside of walls, to their centerlines, or including a share of common space. BOMA publishes measurement standards per property type (office, industrial, retail, multifamily and hospitality, mixed-use); its multifamily standard offers a gross and a net method, and its office standard exists mainly to calculate rentable area for leasing. Commercial rent and expense recovery depend on which method a lease uses ([Commercial Property](/books/property-tech/commercial-property#measuring-space)); residential platforms mostly use the marketing number. My rule: store the area with its method and source, and never mix methods in one ratio.
 
-**Accessible units** are tracked per unit with the feature set, not as a yes/no. HUD's Section 504 rules for federally assisted new construction require at least 5% of units (or one unit) accessible for people with mobility impairments and another 2% (or one unit) for people with hearing or vision impairments, and those units have to be offered first to households that need the features. A platform that can't list which units have which features can't show it did that (Fair Housing; Subsidized & Affordable Housing).
+**Accessible units** are tracked per unit with the feature set, not as a yes/no. HUD's Section 504 rules for federally assisted new construction require at least 5% of units (or one unit) accessible for people with mobility impairments and another 2% (or one unit) for people with hearing or vision impairments, and those units have to be offered first to households that need the features. A platform that can't list which units have which features can't show it did that ([Fair Housing](/books/property-tech/fair-housing#reasonable-accommodations-and-modifications); [Subsidized & Affordable Housing](/books/property-tech/affordable-housing#the-owner-side)).
 
 ## Rentable Spaces, Lots and Beds
 
 Non-dwelling inventory falls into three shapes, and the core model already separates them:
 
-- **Spaces rented with a unit.** Parking spaces, garages, storage lockers, bike storage, a boat slip. Each is a `rentable_spaces` row with a label and kind, rented by putting it on a lease's charge schedule, and the core model's exclusion constraint stops two households renting it at once. Some spaces come with the unit (an assigned spot included in rent) and some are sold separately; the difference is whether a charge exists, not a different table. Parking permits, towing and gate access are in Access, Smart Buildings & Parking.
-- **Spaces rented alone.** A self-storage unit, a manufactured-home lot, an RV site, a boat slip at a marina, a commercial suite. Each is leased by itself and counted for occupancy, so it's a `unit` with its own `kind`. A manufactured housing community has a second layer: the lot is the community's, and the home on it may be the community's (rented with the lot) or the resident's (with its own title, sold between residents while the lot lease continues). The home is an asset record with its title, attached to the lot over time, not an attribute of the lot (Military & Specialty Housing; Self Storage).
-- **Spaces rented inside a unit.** A bed or a bedroom in a student or co-living unit, leased individually. Beds sit under units, and occupancy is counted by bed for those properties (Student Housing).
+- **Spaces rented with a unit.** Parking spaces, garages, storage lockers, bike storage, a boat slip. Each is a `rentable_spaces` row with a label and kind, rented by putting it on a lease's charge schedule, and the core model's exclusion constraint stops two households renting it at once. Some spaces come with the unit (an assigned spot included in rent) and some are sold separately; the difference is whether a charge exists, not a different table. Parking permits, towing and gate access are in [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#parking-and-towing).
+- **Spaces rented alone.** A self-storage unit, a manufactured-home lot, an RV site, a boat slip at a marina, a commercial suite. Each is leased by itself and counted for occupancy, so it's a `unit` with its own `kind` (an RV site is a `lot` whose use is RVs). A manufactured housing community has a second layer: the lot is the community's, and the home on it may be the community's (rented with the lot) or the resident's (with its own title, sold between residents while the lot lease continues). The home is an asset record with its title, attached to the lot over time, not an attribute of the lot ([Military & Specialty Housing](/books/property-tech/military-and-specialty-housing#manufactured-housing); [Self Storage](/books/property-tech/self-storage#unit-inventory)).
+- **Spaces rented inside a unit.** A bed or a bedroom in a student or co-living unit, leased individually. Beds sit under units, and occupancy is counted by bed for those properties ([Student Housing](/books/property-tech/student-housing#occupancy-counted-by-bed)).
 
 USPS address standards reflect the same variety: its secondary unit designators include APT, STE, UNIT, LOT, SPC, SLIP, TRLR and RM, all of which require a number after them. A lot or a slip gets an address like any apartment, which is one more reason the address lives on the unit.
 
@@ -89,7 +89,7 @@ So status is a set of effective-dated periods ([Effective-Dated Rows](/docs/data
 - **A down unit can't have a current lease starting in its down period.** The check runs when a lease is signed and when a down period is created, and the second case is a warning with the conflicting lease named, because damage doesn't wait for leases to end.
 - **Corrections are recorded, not overwritten.** Backdating a down period changes past occupancy; record when the correction was made and by whom ([Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections)), because a report sent to a lender in April must be reproducible as sent.
 
-Unit counts follow from this. **Total units** is every unit the property has; **rentable units** on a date excludes those in a non-rentable period; occupancy and leased percentage divide by rentable units (Operating Metrics defines them). Write down which denominator each report uses, because the industry doesn't agree, and the difference between the two on a property with a model and an office is two percentage points of occupancy on a hundred units.
+Unit counts follow from this. **Total units** is every unit the property has; **rentable units** on a date excludes those in a non-rentable period; occupancy and leased percentage divide by rentable units ([Operating Metrics](/books/property-tech/operating-metrics#occupancy-leased-and-exposure) defines them). Write down which denominator each report uses, because [the industry doesn't agree](/books/property-tech/operating-metrics#why-the-same-metric-disagrees), and the difference between the two on a property with a model and an office is two percentage points of occupancy on a hundred units.
 
 ## Addresses, Parcels and Jurisdictions
 
@@ -99,7 +99,7 @@ Three different things are often called "the property's location," and each answ
 - **The parcel** answers who holds title and what the tax bill is. A parcel is the county assessor's unit of land, identified by an assessor's parcel number (the format differs by county) and keyed in practice by county plus that number. A property can span several parcels, a parcel can hold several buildings, and parcels split and merge when land is replatted, so the link from property to parcel is many-to-many and effective-dated. Property tax, assessment appeals, deeds and title all key on the parcel.
 - **The jurisdictions** answer which rules apply: state, county, city, and sometimes a special district or an unincorporated area governed by the county. The postal city is not the jurisdiction; an address with a city's name can sit outside its limits, which is exactly the case a rent control or rental registration ordinance turns on ([Postal City, Service Point, Jurisdiction](/docs/fundamentals/addresses#postal-city-service-point-jurisdiction)).
 
-The core model's `properties.subdivision` is the state; this chapter adds the full set of jurisdictions per property, resolved from the geocoded location against boundaries, reviewed by a person when the point is near a boundary, and effective-dated because cities annex land. Landlord-Tenant Law as Data starts its rule resolution from this set, never from the mailing city.
+The core model's `properties.subdivision` is the state; this chapter adds the full set of jurisdictions per property, resolved from the geocoded location against boundaries, reviewed by a person when the point is near a boundary, and effective-dated because cities annex land. [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#resolving-a-property-s-jurisdictions) starts its rule resolution from this set, never from the mailing city.
 
 ## Identity Across Sources
 
@@ -131,7 +131,9 @@ CREATE TABLE property_group_members (
 );
 
 ALTER TABLE properties
-  ADD COLUMN property_subtype TEXT,                 -- 'garden', 'mid_rise', 'high_rise', 'scattered_site'
+  ADD COLUMN property_subtype TEXT,                 -- the building form: 'garden', 'mid_rise',
+                                                    -- 'high_rise', 'scattered_site'; the market
+                                                    -- segment is properties.segment (Student Housing)
   ADD COLUMN year_renovated   INT,
   ADD COLUMN status           TEXT NOT NULL DEFAULT 'active'
                                 CHECK (status IN ('onboarding', 'active', 'offboarded'));
@@ -167,7 +169,10 @@ ALTER TABLE units
   ADD COLUMN retired_on     DATE,                                 -- merged, split or demolished
   DROP CONSTRAINT units_kind_check,
   ADD CONSTRAINT units_kind_check CHECK (kind IN ('dwelling', 'commercial_suite', 'storage_unit',
-                                         'lot', 'rv_site', 'slip'));
+                                         'lot', 'slip'));
+  -- kind says what is rented; each segment's use column refines it: units.site_use on lots
+  -- (home, monthly or nightly RV: Military & Specialty Housing), units.space_use on
+  -- commercial suites (Commercial Property), units.storage_unit_type_id (Self Storage)
 
 CREATE TABLE unit_status_periods (                   -- units.status is the current one, cached
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -179,12 +184,13 @@ CREATE TABLE unit_status_periods (                   -- units.status is the curr
   capital_project_id UUID,                           -- set by Budgets, Forecasts & Capital Projects
   valid_during      DATERANGE NOT NULL,
   recorded_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  recorded_by       UUID NOT NULL,
+  recorded_by       UUID NOT NULL REFERENCES users (id),
   superseded_at     TIMESTAMPTZ,                     -- corrections supersede, never delete
   EXCLUDE USING GIST (unit_id WITH =, valid_during WITH &&) WHERE (superseded_at IS NULL)
 );
 
-CREATE TABLE amenities (                             -- per-tenant catalog
+CREATE TABLE amenities (                             -- per-tenant feature catalog; bookable
+                                                     -- spaces are amenity_spaces (Resident Experience)
   id        UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id UUID NOT NULL,
   scope     TEXT NOT NULL CHECK (scope IN ('unit', 'property')),
@@ -225,16 +231,10 @@ CREATE TABLE property_parcels (
   EXCLUDE USING GIST (property_id WITH =, parcel_id WITH =, valid_during WITH &&)
 );
 
-CREATE TABLE property_jurisdictions (                 -- where rule resolution starts
-  tenant_id     UUID NOT NULL,
-  property_id   UUID NOT NULL REFERENCES properties (id),
-  level         TEXT NOT NULL CHECK (level IN ('state', 'county', 'city', 'special_district')),
-  code          TEXT NOT NULL,                        -- FIPS place or county code, or a district ID
-  name          TEXT NOT NULL,
-  valid_during  DATERANGE NOT NULL,                   -- annexations move properties
-  resolved_by   TEXT NOT NULL CHECK (resolved_by IN ('boundary_match', 'manual_review')),
-  EXCLUDE USING GIST (property_id WITH =, level WITH =, valid_during WITH &&)
-);
+-- property_jurisdictions, where rule resolution starts, is defined in Landlord-Tenant Law
+-- as Data: one row per jurisdiction (state, county, city, district) a property or building
+-- sits in, effective-dated because annexations move properties, resolved from the parcel
+-- or a geocode, with the evidence and the user who confirmed it.
 
 CREATE TABLE external_ids (                           -- the crosswalk, for any physical record
   tenant_id    UUID NOT NULL,
@@ -271,8 +271,8 @@ GROUP BY u.property_id;
 Design notes:
 
 - **The operating tree stays single-parent;** every other grouping is a `property_groups` set with dates, so "same store 2026" and "Fund II" are queries, not reorganizations.
-- **The manufactured home is not in these tables.** A home on a lot is an asset with a title and an owner, attached to a lot over time, and Military & Specialty Housing adds it; the lot is the unit.
-- **Jurisdiction is resolved once and stored,** with how it was resolved. A property near a boundary goes to a person; the answer is effective-dated, and a change emits an event that Landlord-Tenant Law as Data uses to re-evaluate open renewals and notices.
+- **The manufactured home is not in these tables.** A home on a lot is an asset with a title and an owner, attached to a lot over time, and [Military & Specialty Housing](/books/property-tech/military-and-specialty-housing#how-to-build-it) adds it; the lot is the unit.
+- **Jurisdiction is resolved once and stored** in [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it)'s `property_jurisdictions`, with how it was resolved. A property near a boundary goes to a person; the answer is effective-dated, and a change emits an event that [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#rules-as-effective-dated-data) uses to re-evaluate open renewals and notices.
 - **Status periods never overlap** for live rows; a correction supersedes the old row, so the history shows both what was believed and what was true.
 - **Emit `unit.status_changed`, `unit.retired` and `property.jurisdiction_changed`** for pricing, listings, metrics and rules to consume ([Events & Async Messaging](/docs/architecture/events)).
 

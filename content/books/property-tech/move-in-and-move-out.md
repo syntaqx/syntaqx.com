@@ -9,7 +9,7 @@ tags = ["property-tech", "move-in", "move-out", "inspections", "security-deposit
 
 A lease is a promise about the future; move-in and move-out are the two days the promise touches a real unit. At move-in, a household that was a signed lease becomes a resident: the unit has to be ready, the money due before keys has to be paid, insurance and utilities have to be in place, the unit's condition has to be recorded, and keys or credentials have to change hands. At move-out the same steps run in reverse, against a clock. Keys come back, the unit is inspected, damage is separated from wear, and within a deadline set by the state the operator has to account in writing for every dollar of the deposit it keeps. Miss the deadline or the paperwork and, in several states, the operator loses the right to keep any of it and can owe a multiple of it.
 
-This chapter covers the ready-to-move-in gate, condition inspections and the state laws that require them, keys and access credentials, utility transfer, transfers between units, the move-out sequence, deposit itemization deadlines as effective-dated rules, damage charges, the final account statement, unclaimed refunds and deposit alternatives at move-out. The make-ready work itself belongs to Maintenance & Work Orders; proration math to Charges & Resident Ledgers; smart locks to Access, Smart Buildings & Parking; the deposit's custody and interest to Insurance, Deposits & Guarantees and Trust Accounting & the General Ledger. The lease and its notices are [The Lease](/books/property-tech/the-lease).
+This chapter covers the ready-to-move-in gate, condition inspections and the state laws that require them, keys and access credentials, utility transfer, transfers between units, the move-out sequence, deposit itemization deadlines as effective-dated rules, damage charges, the final account statement, unclaimed refunds and deposit alternatives at move-out. The make-ready work itself belongs to [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#make-ready-turns); proration math to [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#proration); smart locks to [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control); the deposit's custody and interest to [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#security-deposits) and [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#security-deposit-accounts). The lease and its notices are [The Lease](/books/property-tech/the-lease).
 
 ## How the Platforms Do It
 
@@ -29,17 +29,17 @@ Move-in is a gate with several independent conditions, each owned by a different
 | Condition | What "done" means | Owner |
 | --- | --- | --- |
 | Lease executed | Every leaseholder and guarantor signed; the lease is `signed` | [The Lease](/books/property-tech/the-lease) |
-| Unit ready | The make-ready work orders for this unit are completed and the unit passed its make-ready inspection; where required, locks rekeyed since the last resident | Maintenance & Work Orders |
-| Move-in funds paid | Deposit (or a deposit alternative bound), first month's prorated rent, and any other charges due before possession, paid in good funds | Charges & Resident Ledgers; Collecting Rent |
-| Renters insurance verified | Proof of a policy meeting the lease's requirement, or enrollment in the property's program | Insurance, Deposits & Guarantees |
-| Utilities in the resident's name | For each utility the resident pays directly, an active account starting on or before the move-in date | Utilities & Energy, and [Utility Transfer](#utility-transfer) below |
+| Unit ready | No make-ready turn for this unit is still open: its work orders are completed and it passed its make-ready inspection; where required, locks rekeyed since the last resident | [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#make-ready-turns) |
+| Move-in funds paid | Deposit (or a deposit alternative bound), first month's prorated rent, and any other charges due before possession, paid in good funds | [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#recurring-charges-and-the-posting-run); [Collecting Rent](/books/property-tech/collecting-rent#payment-channels) |
+| Renters insurance verified | Proof of a policy meeting the lease's requirement, or enrollment in the property's program | [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#verification-and-lapse) |
+| Utilities in the resident's name | For each utility the resident pays directly, an active account starting on or before the move-in date | [Utilities & Energy](/books/property-tech/utilities-and-energy#resident-utility-billing), and [Utility Transfer](#utility-transfer) below |
 | Move-in inspection scheduled | Offered or scheduled as the property's state requires | [Inspections](#inspections) below |
 
 Model each condition as a check with a status, an evidence reference and who cleared it, computed from the records that prove it rather than ticked by hand. A staff override is allowed, with a reason, because a move-in does sometimes proceed with insurance outstanding; the override is the audit record. The resident sees the same list as a checklist in the portal, which is what the vendors' move-in checklists are: the readiness gate turned outward.
 
-"Good funds" deserves a sentence. A move-in paid by ACH can be returned days after the keys were handed over ([ACH & Bank Transfers](/books/payments/ach#returns-when-money-is-really-yours)), so many operators require certified funds or a card for move-in money, or wait for settlement. That's a policy per property, stored as data, and it has fair housing and payment-method implications that Collecting Rent covers.
+"Good funds" deserves a sentence. A move-in paid by ACH can be returned days after the keys were handed over ([ACH & Bank Transfers](/books/payments/ach#returns-when-money-is-really-yours)), so many operators require certified funds or a card for move-in money, or wait for settlement. That's a policy per property, stored as data, and it has fair housing and payment-method implications that [Collecting Rent](/books/property-tech/collecting-rent#payment-blocking) covers.
 
-The first month's rent is usually prorated from the move-in date. The math (daily rate from a 30-day month, the actual month or a 365-day year, and which charges prorate) belongs to Charges & Resident Ledgers; this chapter only fixes the date it starts from, which is `leases.moved_in_on`, the day possession actually changed hands, not the lease start date if the two differ.
+The first month's rent is usually prorated. The math (daily rate from a 30-day month, the actual month or a 365-day year, and which charges prorate) belongs to [Proration](/books/property-tech/charges-and-resident-ledgers#proration), and it follows the charge schedule, which starts on the lease start date. Move-in changes that only when the lease ties rent commencement to possession: then the schedule starts on `leases.moved_in_on`, the day possession actually changed hands, and a late move-in moves the proration with it.
 
 ## Inspections
 
@@ -48,7 +48,7 @@ A condition inspection is a dated, itemized record of every area and item in the
 - **Move-in.** The baseline: the unit's condition and cleanliness when the household takes possession. Every later deduction is measured against it.
 - **Pre-move-out.** An inspection before the household leaves, so they can fix what would otherwise be deducted. Some states give tenants a right to one.
 - **Move-out.** After possession is returned: the record that supports deductions.
-- **Make-ready and periodic.** Quality checks on turns and annual or program inspections, owned by Maintenance & Work Orders and Subsidized & Affordable Housing, using the same tables.
+- **Make-ready and periodic.** Quality checks on turns and annual or program inspections, owned by [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#inspections) and [Subsidized & Affordable Housing](/books/property-tech/affordable-housing#inspections). Maintenance & Work Orders owns the `inspections` table for every kind; this chapter extends it for move-in and move-out.
 
 ### What the law requires, as of October 2026
 
@@ -63,7 +63,7 @@ States differ on whether an inspection is required, who must ask for it, what mu
 | **Michigan** | Two blank commencement inventory checklists; the tenant returns one within 7 days of possession (unless a shorter period is agreed), with a required boldface notice on the form | A termination inventory checklist listing all damage claimed | MCL 554.608 |
 | **Massachusetts** | A signed statement of the unit's condition when the deposit is taken or within ten days after the tenancy begins; the tenant may return it with additions within fifteen days | | G.L. c. 186, 15B(2)(c) |
 
-Two design consequences. First, **the inspection is the deposit's precondition in some states,** not a nice-to-have: in Washington the checklist decides whether a deposit may be held at all, so the readiness gate has to block collecting it, not just warn. Second, **the inspection carries notices with deadlines:** New York and California require the landlord to tell the tenant about the pre-move-out inspection right when notice is given, which makes it a step triggered by the notice record in The Lease, scheduled inside a window computed from the tenancy's end date ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). Every requirement in the table is a row of effective-dated rules data, resolved from the property's jurisdiction, so California's 2025 photo dates apply by tenancy start date and move-out date without a code change.
+Two design consequences. First, **the inspection is the deposit's precondition in some states,** not a nice-to-have: in Washington the checklist decides whether a deposit may be held at all, so the readiness gate has to block collecting it, not just warn. Second, **the inspection carries notices with deadlines:** New York and California require the landlord to tell the tenant about the pre-move-out inspection right when notice is given, which makes it a step triggered by the notice record in [The Lease](/books/property-tech/the-lease#notices), scheduled inside a window computed from the tenancy's end date ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). Every requirement in the table is a row of effective-dated rules data, resolved from the property's jurisdiction, so California's 2025 photo dates apply by tenancy start date and move-out date without a code change.
 
 ### Capturing the record
 
@@ -78,7 +78,7 @@ The mechanics of trustworthy photos (captured in the app, hashed on the device, 
 
 ## Keys & Access
 
-Every way into the unit is a credential with a holder, an issue date and a return or revocation date: physical keys (unit, mailbox, storage, amenity), fobs and cards, garage remotes, keypad codes and mobile credentials for smart locks. The chapter's record is the handover: what was issued to whom at move-in, and what came back or was revoked at move-out. Credential provisioning, lock integrations and the privacy of access logs are Access, Smart Buildings & Parking.
+Every way into the unit is a credential with a holder, an issue date and a return or revocation date: physical keys (unit, mailbox, storage, amenity), fobs and cards, garage remotes, keypad codes and mobile credentials for smart locks. The chapter's record is the handover: what was issued to whom at move-in, and what came back or was revoked at move-out. Credential provisioning, lock integrations and the privacy of access logs are in [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control).
 
 - **Issue per person, not per unit.** A roommate who leaves mid-lease returns their fob while the others keep theirs; credentials hang off `lease_members` dates, and a smart credential's validity ends no later than the member's.
 - **Revoke at move-out, always.** A physical key that wasn't returned is a security problem for the next household, and a smart credential that wasn't revoked is a worse one. The move-out isn't complete until every credential is returned or revoked, and an unreturned key becomes a lock change.
@@ -89,7 +89,7 @@ Every way into the unit is a credential with a holder, an issue date and a retur
 
 For utilities the resident pays directly, the operator needs the resident's account to start on the move-in date and the owner's vacant-unit account to stop the same day; at move-out the reverse, so the unit never goes dark and the owner never pays a resident's usage.
 
-- **Responsibility per utility, per lease.** Electric might be the resident's account with the utility, water billed back by the operator, trash in the rent. The lease records which, and only resident-direct utilities need a transfer; billed-back ones start a billing schedule instead (Utilities & Energy).
+- **Responsibility per utility, per lease.** Electric might be the resident's account with the utility, water billed back by the operator, trash in the rent. The lease records which, and only resident-direct utilities need a transfer; billed-back ones start a billing schedule instead ([Utilities & Energy](/books/property-tech/utilities-and-energy#resident-utility-billing)).
 - **Verify the start, don't trust it.** The readiness check needs evidence that an account exists in the resident's name from the move-in date: a confirmation number the resident enters, a document, or a utility or connection-service feed. Record the method and who verified it.
 - **Vacant-unit accounts.** Between residents the owner keeps service on for the make-ready. Where the utility offers a landlord revert agreement, service reverts to the owner's account when a resident closes theirs; the platform records the expected revert date at move-out and flags units where the resident's account stayed open or the revert didn't happen, because the next utility invoice lands on the owner.
 - **Final readings and unpaid utilities.** At move-out, the meter reading date and any operator-billed utility balance flow into the final statement; New York, for example, allows deductions for unpaid utility charges payable directly to the landlord under the lease (GOL 7-108(1-a)(b)).
@@ -103,20 +103,20 @@ What makes a transfer different from two unrelated moves:
 - **The deposit can carry over.** Rather than refund and re-collect, the operator transfers the held deposit to the new lease's ledger. Do it as a pair of balanced entries between the two leases' deposit liabilities, with the old lease's deductions settled first, so each lease's ledger stays complete.
 - **The old unit still gets a move-out inspection and a statement.** Damage in the old unit is charged on the old lease's statement; the deadline rules apply to the old tenancy's end even though the household didn't leave, and whether a deposit carried forward counts as "returned" is a question for the jurisdiction's rules and counsel, so record what the household agreed to in writing.
 - **Two units on one day.** The household may hold keys to both for a day or two; the credential records and the occupancy query both need overlapping dates to be legal for one household and nobody else.
-- **Different landlord of record.** A transfer to a property owned by a different entity means the deposit moves between trust accounts, not just between ledgers (Trust Accounting & the General Ledger).
+- **Different landlord of record.** A transfer to a property owned by a different entity means the deposit moves between trust accounts, not just between ledgers ([Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#security-deposit-accounts)).
 
 ## Move-Out
 
 Move-out starts with notice and ends with a statement. In order:
 
-1. **Notice.** The household gives notice or the lease isn't renewed; The Lease records it, with the notice date and the intended move-out date. That record triggers the pre-move-out inspection notice where a state requires one, a reminder of the forwarding address request, and the unit's return to market for pre-leasing.
+1. **Notice.** The household gives notice or the lease isn't renewed; [The Lease](/books/property-tech/the-lease#notices) records it, with the notice date and the intended move-out date. That record triggers the pre-move-out inspection notice where a state requires one, a reminder of the forwarding address request, and the unit's return to market for pre-leasing.
 2. **Forwarding address.** Ask for it in writing and store it with its date. In Texas the landlord isn't obligated to refund or itemize until the tenant gives a written forwarding address, though the tenant doesn't forfeit the deposit merely by not giving one (Prop. Code 92.107); everywhere, it's where the statement is mailed. Standardize and validate it like any address ([Capture](/docs/fundamentals/addresses#capture)).
 3. **Pre-move-out inspection,** on request or by policy, with its itemized statement of proposed deductions.
 4. **Possession returned.** Keys and credentials back, the date recorded as `leases.moved_out_on`. This date, not the lease end date, usually starts the deposit clock: "after the tenant has vacated the premises" in California, "after the date the tenant surrenders the premises" in Texas, after the tenant vacates in New York, and after "termination of the rental agreement and vacation of the premises" in Washington.
 5. **Move-out inspection** promptly (Georgia: within three business days), with photos before any cleaning or repair where California requires them.
 6. **Deductions and statement,** before the deadline, then the refund or the balance due.
 
-**Abandonment** changes the start of the clock and adds a property problem. Washington starts its 30 days from when the landlord learns of the abandonment; Georgia lets the landlord inspect within a reasonable time after discovering the vacancy. What the operator may do with belongings left behind (notice, storage, sale or disposal) is state law covered in Landlord-Tenant Law as Data; this chapter records when abandonment was determined and on what evidence, because that timestamp sets the deadline.
+**Abandonment** changes the start of the clock and adds a property problem. Washington starts its 30 days from when the landlord learns of the abandonment; Georgia lets the landlord inspect within a reasonable time after discovering the vacancy. What the operator may do with belongings left behind (notice, storage, sale or disposal) is state law covered in [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix); this chapter records when abandonment was determined and on what evidence, because that timestamp sets the deadline.
 
 ## Deposit Deadlines as Rules Data
 
@@ -131,19 +131,19 @@ The deposit itemization rule is the clearest case in this chapter for [Rules as 
 | **Washington** | 30 days | Termination and vacation, or the landlord learning of abandonment | Full and specific statement; copies of estimates received or invoices paid; for staff repairs, time and hourly rate | Liable for the full deposit if late; up to two times the deposit at the court's discretion for intentional refusal (RCW 59.18.280) |
 | **New Jersey** | 30 days | Termination of the lease | Itemized list by personal delivery or registered or certified mail, with interest | Double the amount owed, plus court costs (N.J.S.A. 46:8-21.1) |
 
-Each row's parameters are what the platform stores: deadline length and unit (calendar days, business days), the event that starts the clock, required delivery methods, the itemization threshold, the evidence required per deduction, whether a forwarding address gates the obligation, and the penalty for the record. Store the computed due date on the statement when the clock starts, with the rule version that produced it, so a later statute change doesn't move a deadline that was already running ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). Cities add their own layers (deposit caps, interest, extra notices), and the rule resolver has to walk from the property's address to every jurisdiction that applies; Landlord-Tenant Law as Data owns that resolution and the full matrix.
+Each row's parameters are what the platform stores: deadline length and unit (calendar days, business days), the event that starts the clock, required delivery methods, the itemization threshold, the evidence required per deduction, whether a forwarding address gates the obligation, and the penalty for the record. Store the computed due date on the statement when the clock starts, with the rule version that produced it, so a later statute change doesn't move a deadline that was already running ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). Cities add their own layers (deposit caps, interest, extra notices), and the rule resolver has to walk from the property's address to every jurisdiction that applies; [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#resolving-a-property-s-jurisdictions) owns that resolution and the full matrix.
 
 **Normal wear and tear is not deductible,** everywhere in the table. California limits deductions to unpaid rent, damage beyond ordinary wear and tear, cleaning to return the unit to its move-in level of cleanliness, and, if the lease allows, restoring personal property, and bars charging for preexisting conditions (Civ. Code 1950.5(b), (e)); New York and Washington state the same exclusion. The statutes don't define the line item by item, so the platform's job is to make the call reviewable: each deduction says what was damaged, how it compares with the move-in record, and why it isn't wear.
 
-**Interest-bearing deposits** are a pointer here. Massachusetts requires a separate interest-bearing account in a Massachusetts bank and annual interest; New Jersey's refund includes the tenant's share of interest; Florida sets interest options when a deposit is held in an interest-bearing account or under a surety bond (Stat. 83.49(1)). Insurance, Deposits & Guarantees and Trust Accounting & the General Ledger own the custody and the accrual; the final statement only adds the interest owed as a credit line.
+**Interest-bearing deposits** are a pointer here. Massachusetts requires a separate interest-bearing account in a Massachusetts bank and annual interest; New Jersey's refund includes the tenant's share of interest; Florida sets interest options when a deposit is held in an interest-bearing account or under a surety bond (Stat. 83.49(1)). [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#security-deposits) and [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#security-deposit-accounts) own the custody and the accrual; the final statement only adds the interest owed as a credit line.
 
 ## Damage Charges
 
 A deduction is a charge on the resident's ledger like any other, posted from the charge catalog, and then settled by applying the deposit. That keeps the deposit statement, the resident ledger and the owner's ledger the same entries ([The Core Data Model](/books/property-tech/property-business#the-core-data-model)).
 
-- **Charge codes, not free text.** Cleaning, carpet replacement, paint, blinds, lost keys, trash removal, rekey where lawful, unpaid utilities: each a code with a default price or a cost-based method. A price list per property makes charges consistent across residents, which is also the fair housing answer to "why did they pay more than me" (Fair Housing).
-- **Cost evidence by state.** California and Washington want invoices or estimates for third-party work and time-and-rate for the landlord's own staff. The resident-billable work order from the make-ready carries both: the vendor invoice, or the technician's time and the hourly rate in force, so the deduction cites the work order rather than re-keying a number.
-- **Depreciation and useful life.** Replacing a carpet that was already near the end of its life at the household's expense charges them for wear. The common practice is to prorate replacement cost by remaining useful life: store each depreciable item's install date and useful life in the asset register (Maintenance & Work Orders), and compute the chargeable share as replacement cost times remaining life over total life. The useful-life table is policy data per tenant, versioned, and the deduction records the inputs it used.
+- **Charge codes, not free text.** Cleaning, carpet replacement, paint, blinds, lost keys, trash removal, rekey where lawful, unpaid utilities: each a code with a default price or a cost-based method. A price list per property makes charges consistent across residents, which is also the fair housing answer to "why did they pay more than me" ([Fair Housing](/books/property-tech/fair-housing#protected-classes)).
+- **Cost evidence by state.** California and Washington want invoices or estimates for third-party work and time-and-rate for the landlord's own staff. The resident-billable work order from the make-ready carries both: the vendor invoice, or the technician's time and the hourly rate in force on its chargeback (`work_order_chargebacks.labor_minutes` and `labor_rate`), so the deduction cites the work order rather than re-keying a number.
+- **Depreciation and useful life.** Replacing a carpet that was already near the end of its life at the household's expense charges them for wear. The common practice is to prorate replacement cost by remaining useful life: store each depreciable item's install date and useful life in the asset register ([Assets and Warranties](/books/property-tech/maintenance-and-work-orders#assets-and-warranties)), and compute the chargeable share as replacement cost times remaining life over total life. The useful-life table is policy data per tenant, versioned, and the deduction records the inputs it used.
 - **Photo evidence per deduction.** Each deduction links to the move-out inspection item and its move-in counterpart, with photos. California requires the landlord to provide the photographs taken under its 2025 rules with deductions for repairs or cleaning, by mail, e-mail, flash drive or an online link (Civ. Code 1950.5(h)(2)(D)); elsewhere they're simply what wins disputes.
 - **Charges after the statement.** A repair whose invoice arrives after the deadline is the classic trap. California allows a good-faith estimate when repairs can't reasonably be completed within 21 days, with the documentation due within 14 days after the work is finished or the invoice received (Civ. Code 1950.5(h)(3)); Washington accepts copies of estimates received. Encode it per rule: whether estimates are allowed and the follow-up obligation they create.
 
@@ -159,82 +159,58 @@ deposit held                          1,500.00
 = refund due to the household           846.25   or a balance due if negative
 ```
 
-- **Apply the deposit, then settle the difference.** The deposit is a liability to the household; at move-out it's applied to open charges like a payment, in the application order the state and lease allow (Charges & Resident Ledgers), and any remainder is a refund payable.
+- **Apply the deposit, then settle the difference.** The deposit is a liability to the household; at move-out it's applied to open charges like a payment, in the application order the state and lease allow ([Payment Application Order](/books/property-tech/charges-and-resident-ledgers#payment-application-order)), and any remainder is a refund payable.
 - **Refund to whom.** Joint leaseholders share one deposit. Some operators split the refund by leaseholder, others issue one check payable to all; the choice is lease terms and state law, and it's recorded per statement. A guarantor isn't owed the refund unless the lease says so.
 - **Refund how.** ACH to an account on file is faster than a check and has a clean trail ([ACH & Bank Transfers](/books/payments/ach)); a check to the forwarding address satisfies the mailing rules. Record the method, the date sent and proof of delivery where a statute names the method (Florida's certified mail or e-mail, New Jersey's registered or certified mail).
-- **Balance due.** A negative result is a receivable from a former resident. It gets a demand, a payment window, and then the path in Delinquency, Collections & Eviction (collection agencies, reporting, and the debt collection rules that start applying). The statement and its evidence are what the collector inherits, so they must be complete.
-- **Unclaimed refunds.** A refund check that's never cashed is still the household's money. After the state's dormancy period it's reported and remitted as unclaimed property; Trust Accounting & the General Ledger owns escheat. This chapter's job is to flag refunds outstanding and keep the household's last known address.
+- **Balance due.** A negative result is a receivable from a former resident. It gets a demand, a payment window, and then the path in [Delinquency, Collections & Eviction](/books/property-tech/delinquency-and-eviction#collections-after-move-out) (collection agencies, reporting, and the debt collection rules that start applying). The statement and its evidence are what the collector inherits, so they must be complete.
+- **Unclaimed refunds.** A refund check that's never cashed is still the household's money. After the state's dormancy period it's reported and remitted as unclaimed property; [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#unclaimed-property) owns escheat. This chapter's job is to flag refunds outstanding and keep the household's last known address.
 
-**Deposit alternatives change the end.** When the household bought a surety bond or a deposit waiver instead of paying a deposit, there is no deposit to apply; the operator itemizes the same way and files a claim with the provider for the covered amount, and the provider may then pursue the household. Whether the household understood that, how claims are documented, and how the state's deposit rules treat the alternative belong to Insurance, Deposits & Guarantees. RealPage pitches its deposit alternatives as a way to "tackle bad debt," which is exactly why claim evidence has to meet the same standard as a deduction.
+**Deposit alternatives change the end.** When the household bought a surety bond or a deposit waiver instead of paying a deposit, there is no deposit to apply; the operator itemizes the same way and files a claim with the provider for the covered amount, and the provider may then pursue the household. Whether the household understood that, how claims are documented, and how the state's deposit rules treat the alternative belong to [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#deposit-alternatives). RealPage pitches its deposit alternatives as a way to "tackle bad debt," which is exactly why claim evidence has to meet the same standard as a deduction.
 
 ## How to Build It
 
-The chapter extends `leases` and `work_orders` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model), posts damage through `charges`, and adds inspection, credential, utility and statement tables. Amounts in minor units ([Money & Amounts](/docs/payments/money)); every table carries `tenant_id` under row-level security.
+The chapter extends `leases` and `work_orders` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model), posts damage through `charges`, extends the `inspections` table that [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#how-to-build-it) owns, stores deposit deadlines as `deposit_return_deadline` rules in the [Landlord-Tenant Law](/books/property-tech/landlord-tenant-law#how-to-build-it) catalog, and adds key, utility and statement tables. Amounts in minor units ([Money & Amounts](/docs/payments/money)); every table carries `tenant_id` under row-level security.
 
 ```sql
 ALTER TABLE leases
   ADD COLUMN transferred_from_lease_id UUID REFERENCES leases (id),  -- a transfer, not a renewal
   ADD COLUMN abandonment_found_at      TIMESTAMPTZ;   -- sets the deposit clock where the rule says so
 
-ALTER TABLE work_orders
-  ADD COLUMN inspection_item_id UUID,                -- the finding this work came from
-  ADD COLUMN labor_minutes      INT,                 -- staff labor, for time-and-rate itemization
-  ADD COLUMN hourly_rate        BIGINT;              -- minor units, the rate in force
+-- Staff time for time-and-rate itemization is work_order_chargebacks.labor_minutes
+-- and labor_rate (Maintenance & Work Orders); this chapter adds no labor columns.
 
-CREATE TABLE inspections (
-  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id           UUID NOT NULL,
-  property_id         UUID NOT NULL REFERENCES properties (id),
-  unit_id             UUID NOT NULL REFERENCES units (id),
-  lease_id            UUID REFERENCES leases (id),   -- null for make-ready and vacant checks
-  kind                TEXT NOT NULL CHECK (kind IN ('move_in', 'pre_move_out', 'move_out',
-                        'make_ready', 'periodic')),
-  baseline_id         UUID REFERENCES inspections (id),  -- the move-in this move-out compares to
-  template_code       TEXT NOT NULL,
-  template_version    INT NOT NULL,
-  status              TEXT NOT NULL CHECK (status IN ('offered', 'scheduled', 'in_progress',
-                        'completed', 'signed', 'disputed', 'cancelled')),
-  requested_by_tenant BOOLEAN NOT NULL DEFAULT FALSE,    -- CA and NY pre-move-out are on request
-  notice_sent_at      TIMESTAMPTZ,                   -- the 48-hour notice, where required
-  scheduled_for       TIMESTAMPTZ,
-  rule_version_id     UUID,                          -- the rule that required or shaped it
-  performed_by_kind   TEXT NOT NULL CHECK (performed_by_kind IN ('staff', 'vendor', 'resident')),
-  performed_by_id     UUID NOT NULL,                 -- a user or a person, per kind
-  resident_present    BOOLEAN,
-  completed_at        TIMESTAMPTZ,
-  sealed_hash         TEXT,                          -- of the completed record and its media hashes
-  supersedes_id       UUID REFERENCES inspections (id),  -- amendments are new versions
-  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+-- inspections and inspection_findings are defined in Maintenance & Work Orders, with
+-- kinds 'move_in', 'pre_move_out', 'move_out' and 'make_ready', the status lifecycle
+-- (offered, scheduled, in_progress, completed, signed, disputed, cancelled), inspected_by, media
+-- hashes and supersedes_id. Move-in and move-out add the comparison and the evidence:
+ALTER TABLE inspections
+  ADD COLUMN baseline_id         UUID REFERENCES inspections (id),  -- the move-in this move-out compares to
+  ADD COLUMN requested_by_tenant BOOLEAN NOT NULL DEFAULT FALSE,    -- CA and NY pre-move-out are on request
+  ADD COLUMN notice_sent_at      TIMESTAMPTZ,       -- the 48-hour notice, where required
+  ADD COLUMN rule_evaluation_id  UUID REFERENCES rule_evaluations (id),  -- the rule that required or shaped it
+  ADD COLUMN resident_present    BOOLEAN,
+  ADD COLUMN sealed_hash         TEXT;              -- of the completed record and its media hashes
 
-CREATE TABLE inspection_items (
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
-  inspection_id      UUID NOT NULL REFERENCES inspections (id),
-  area               TEXT NOT NULL,                  -- 'kitchen', 'bedroom_2'
-  item               TEXT NOT NULL,                  -- 'carpet', 'blinds', 'range'
-  condition          TEXT NOT NULL CHECK (condition IN ('new', 'good', 'fair', 'poor',
-                       'damaged', 'missing', 'dirty', 'not_present')),
-  notes              TEXT,
-  baseline_item_id   UUID REFERENCES inspection_items (id),
-  attribution        TEXT CHECK (attribution IN ('wear', 'preexisting', 'resident', 'unknown')),
-  resident_comment   TEXT,                           -- disputes are item by item
-  media              JSONB NOT NULL DEFAULT '[]',    -- [{sha256, captured_at, received_at, source}]
-  asset_id           UUID,                           -- the register entry, for useful life
-  UNIQUE (inspection_id, area, item)
-);
+ALTER TABLE inspection_findings                     -- rating uses the template's scale:
+                                                    -- 'new', 'good', 'fair', 'poor', 'damaged', 'missing', ...
+  ADD COLUMN baseline_finding_id UUID REFERENCES inspection_findings (id),
+  ADD COLUMN attribution         TEXT CHECK (attribution IN ('wear', 'preexisting', 'resident',
+                                   'unknown')),
+  ADD COLUMN resident_comment    TEXT;              -- disputes are item by item
 
 CREATE TABLE key_issuances (                         -- every way in, per person
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id          UUID NOT NULL,
   lease_id           UUID NOT NULL REFERENCES leases (id),
   person_id          UUID NOT NULL REFERENCES people (id),
-  credential_kind    TEXT NOT NULL CHECK (credential_kind IN ('physical_key', 'mailbox_key',
-                       'fob', 'card', 'garage_remote', 'keypad_code', 'mobile_credential')),
+  credential_kind    TEXT NOT NULL CHECK (credential_kind IN ('physical_key', 'fob', 'card',
+                       'pin', 'mobile', 'mailbox_key', 'garage_remote')),  -- access_credentials.kind,
+                                                     -- plus items the access system may not track
   label              TEXT NOT NULL,                  -- key tag, fob serial; never a code itself
-  external_ref       TEXT,                           -- the access system's credential id
+  credential_id      UUID REFERENCES access_credentials (id),  -- Access & Smart Buildings;
+                                                     -- null for items the access system doesn't track
   issued_at          TIMESTAMPTZ NOT NULL,
-  issued_by          UUID NOT NULL,
+  issued_by          UUID NOT NULL REFERENCES users (id),
   returned_at        TIMESTAMPTZ,
   revoked_at         TIMESTAMPTZ,
   charge_id          UUID REFERENCES charges (id),   -- lost-key charge, if any
@@ -256,35 +232,26 @@ CREATE TABLE utility_transfers (
   verified_at        TIMESTAMPTZ,
   verified_method    TEXT CHECK (verified_method IN ('resident_entered', 'document',
                        'provider_feed', 'staff_call')),
-  verified_by        UUID,
+  verified_by        UUID REFERENCES users (id),
   UNIQUE (lease_id, utility, direction)
 );
 
-CREATE TABLE deposit_return_rules (                  -- effective-dated, per jurisdiction
-  id                    UUID PRIMARY KEY DEFAULT uuidv7(),
-  jurisdiction          TEXT NOT NULL,               -- 'US-CA', or a city code
-  deadline_days         INT NOT NULL,
-  deadline_unit         TEXT NOT NULL CHECK (deadline_unit IN ('calendar', 'business')),
-  clock_starts          TEXT NOT NULL CHECK (clock_starts IN ('vacated', 'surrendered',
-                          'termination', 'termination_and_vacated')),
-  claim_notice_days     INT,                         -- FL: notice of claim within 30
-  forwarding_address_gates BOOLEAN NOT NULL,         -- TX 92.107
-  itemize_threshold     BIGINT,                      -- CA: receipts not required at or under $125
-  receipts_required     BOOLEAN NOT NULL,
-  photos_required       BOOLEAN NOT NULL,
-  estimates_allowed     BOOLEAN NOT NULL,
-  delivery_methods      TEXT[] NOT NULL,             -- {'first_class_mail', 'certified_mail', 'email'}
-  penalty_note          TEXT NOT NULL,               -- for staff, with the citation
-  citation              TEXT NOT NULL,
-  valid_during          DATERANGE NOT NULL,
-  EXCLUDE USING GIST (jurisdiction WITH =, valid_during WITH &&)
-);
+-- Deposit return rules are legal_rules rows of rule type 'deposit_return_deadline'
+-- (Landlord-Tenant Law as Data). Its params_schema carries what this chapter needs:
+--   {"deadline_days": 21, "deadline_unit": "calendar" | "business",
+--    "clock_starts": "vacated" | "surrendered" | "termination" | "termination_and_vacated",
+--    "claim_notice_days": 30,             -- FL: notice of claim within 30
+--    "forwarding_address_gates": true,    -- TX 92.107
+--    "itemize_threshold": 12500,          -- CA: receipts not required at or under $125
+--    "receipts_required": true, "photos_required": true, "estimates_allowed": true,
+--    "delivery_methods": ["first_class_mail", "certified_mail", "email"]}
+-- The penalty note is the rule's summary; the citation is its legal_sources row.
 
 CREATE TABLE move_out_statements (                   -- the deposit itemization and final account
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id             UUID NOT NULL,
   lease_id              UUID NOT NULL REFERENCES leases (id),
-  rule_id               UUID NOT NULL REFERENCES deposit_return_rules (id),
+  rule_evaluation_id    UUID NOT NULL REFERENCES rule_evaluations (id),  -- the deadline's rule
   clock_started_on      DATE NOT NULL,
   due_on                DATE NOT NULL,               -- computed once, stored
   forwarding_address    JSONB,                       -- standardized; with the date received
@@ -313,7 +280,7 @@ CREATE TABLE move_out_deductions (
   charge_id          UUID NOT NULL REFERENCES charges (id),   -- posted with a charge code
   category           TEXT NOT NULL CHECK (category IN ('damage', 'cleaning', 'keys',
                        'utilities', 'other')),
-  inspection_item_id UUID REFERENCES inspection_items (id),
+  inspection_finding_id UUID REFERENCES inspection_findings (id),
   work_order_id      UUID REFERENCES work_orders (id),        -- the invoice or the labor
   is_estimate        BOOLEAN NOT NULL DEFAULT FALSE,
   replacement_cost   BIGINT,                                  -- before depreciation
@@ -329,9 +296,9 @@ The readiness gate is a query, not a column, so it can't drift from the records 
 ```sql
 SELECT l.id,
        l.status = 'signed'                                         AS lease_signed,
-       NOT EXISTS (SELECT 1 FROM work_orders w
-                   WHERE w.unit_id = l.unit_id AND w.source = 'make_ready'
-                     AND w.status NOT IN ('completed', 'cancelled'))   AS unit_ready,
+       NOT EXISTS (SELECT 1 FROM unit_turns t                     -- Maintenance's turns
+                   WHERE t.unit_id = l.unit_id
+                     AND t.status IN ('planned', 'in_progress'))       AS unit_ready,
        NOT EXISTS (SELECT 1 FROM charges c
                    WHERE c.lease_id = l.id AND c.due_on <= l.starts_on
                      AND c.amount > COALESCE((SELECT SUM(pa.amount)
@@ -349,11 +316,11 @@ WHERE l.tenant_id = $1 AND l.starts_on = $2;
 Design decisions behind it:
 
 - **Deductions are charges.** Each `move_out_deductions` row points at a posted `charges` row, so the statement, the resident ledger and the owner's ledger reconcile by construction, and a corrected statement reverses charges rather than editing them ([Append-Only Records](/docs/payments/payment-states#append-only-records)).
-- **The deadline is stored, with its rule.** `due_on` and `rule_id` are written when the clock starts. A nightly job lists statements due within a few days, and a statement past `due_on` without `issued_at` is an incident, not a report line.
+- **The deadline is stored, with its rule.** `due_on` and `rule_evaluation_id` are written when the clock starts. A nightly job lists statements due within a few days, and a statement past `due_on` without `issued_at` is an incident, not a report line.
 - **Statements are versioned documents.** The rendered statement's hash is stored; a correction is a new statement that supersedes the old, and both stay retrievable, as Proof of Service does for service reports.
 - **Inspections are sealed.** Once completed and signed, an inspection is amended only by a superseding version, because the move-in record is evidence a year later.
-- **Credentials store labels, never secrets.** A keypad code or mobile credential lives in the access system; this table records that it was issued and revoked.
-- **Rules carry citations.** `deposit_return_rules.citation` and `penalty_note` exist so staff can see why the deadline is what it is, and so Landlord-Tenant Law as Data can audit coverage.
+- **Credentials store labels, never secrets.** A keypad code or mobile credential lives in the access system and its `access_credentials` row ([Access & Smart Buildings](/books/property-tech/access-and-smart-buildings#how-to-build-it)); `key_issuances` records the handover of every way in, physical keys included, and its return.
+- **Rules carry citations.** The deadline comes from a `deposit_return_deadline` rule whose source and plain-language summary show staff why the deadline is what it is, and let [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#auditing) audit coverage.
 
 Events: `lease.moved_in`, `inspection.completed`, `key.issued`, `key.revoked`, `lease.moved_out`, `move_out_statement.issued`, `move_out_statement.overdue` and `deposit_refund.uncashed` feed notifications, owner reporting and the trust ledger ([Events & Async Messaging](/docs/architecture/events)).
 
@@ -363,12 +330,12 @@ Deposit disputes, small claims cases and attorney general complaints turn on a f
 
 - **The move-in baseline.** The inspection as completed and signed, its photos with hashes and both clocks, and who captured them. Without it, every move-out deduction is the operator's word against the household's.
 - **The clock.** When possession was returned or abandonment determined, the forwarding address and when it arrived, the rule version that set the deadline, and when and how the statement was delivered, with proof.
-- **Each deduction's chain.** Inspection item, move-in counterpart, work order, invoice or labor record, depreciation inputs and the explanation, linked rather than retyped.
+- **Each deduction's chain.** Inspection finding, move-in counterpart, work order, invoice or labor record, depreciation inputs and the explanation, linked rather than retyped.
 - **Credential custody.** What was issued to whom, what came back, what was revoked and when, and the rekey between households where the law requires one.
 - **Overrides of the readiness gate,** with the user, the reason and the condition that was outstanding.
 - **Refund disposition.** Sent, cashed, returned, reissued, or reported as unclaimed.
 
-The general mechanics are in [Audit Trails](/docs/architecture/audit-trails); how long each record is kept, and the statute of limitations it's measured against, is in Records, Privacy & Audits.
+The general mechanics are in [Audit Trails](/docs/architecture/audit-trails); how long each record is kept, and the statute of limitations it's measured against, is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

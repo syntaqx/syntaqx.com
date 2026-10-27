@@ -58,13 +58,13 @@ The life of a care fee:
 4. **Reassessment.** States set a floor and change of condition sets the rest. Washington requires a full assessment at least annually, at least semi-annually for residents with dementia in a certified memory care setting, and a focused assessment on a change of condition, when the service agreement no longer meets the resident's needs, or after an injury requiring a practitioner's intervention (WAC 388-78A-2100). Florida's resident contract must say residents are assessed on admission and every 3 years thereafter, or after a significant change (Florida Administrative Code 59A-36.018(k)). Two states, two intervals, two triggers: a reassessment due date is a computed deadline from a rule row, stored with the rule that set it ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
 5. **Fee change notice.** A higher level is a price increase, and contracts and states regulate notice. Florida requires the contract to provide at least 30 days' written notice of a rate increase, but says a new service or accommodation the resident wasn't previously charged for does not require the 30-day notice, and any extra charge must be itemized in writing in advance with a dated, signed addendum (section 429.24(2); rule 59A-36.018). Whether a level change is a "rate increase" or a "new service" under a given state's rule is a legal question, and the system has to record which treatment was applied, by whom, and the notice sent.
 
-Two design consequences follow. The level is **effective-dated per resident**, never a column on the lease: a resident who moves up a level on the 17th is billed for the old level through the 16th, and the proration is the core charge engine's job (Charges & Resident Ledgers). And the **assessment and the price are separate records**: the assessment is clinical, the accepted level is commercial. RealPage's "accept" step is the seam, and it is where an operator's people decide whether the computed level is the one they will bill (communities may hold a level for a family conversation, or decline to raise a fee for a short illness). RealPage even markets performing assessments "only as needed" to avoid cost creep, which is a reminder that the assessment schedule is also a cost and a revenue lever, and an auditor will ask whether fees moved only when the record supports it.
+Two design consequences follow. The level is **effective-dated per resident**, never a column on the lease: a resident who moves up a level on the 17th is billed for the old level through the 16th, and the proration is the core charge engine's job ([Proration](/books/property-tech/charges-and-resident-ledgers#proration)). And the **assessment and the price are separate records**: the assessment is clinical, the accepted level is commercial. RealPage's "accept" step is the seam, and it is where an operator's people decide whether the computed level is the one they will bill (communities may hold a level for a family conversation, or decline to raise a fee for a short illness). RealPage even markets performing assessments "only as needed" to avoid cost creep, which is a reminder that the assessment schedule is also a cost and a revenue lever, and an auditor will ask whether fees moved only when the record supports it.
 
 ## Census
 
-Census is senior living's word for occupancy, and it counts people, not units. For example, a 100-apartment community with 92 apartments occupied, ten of them companion suites shared by two unrelated residents and a dozen by couples, has 114 residents in house. The counts operators and owners ask for:
+Census is senior living's word for occupancy, and it counts people, not units; the general occupancy measures are defined in [Operating Metrics](/books/property-tech/operating-metrics#occupancy-leased-and-exposure), and what follows is what senior living adds. For example, a 100-apartment community with 92 apartments occupied, ten of them companion suites shared by two unrelated residents and a dozen by couples, has 114 residents in house. The counts operators and owners ask for:
 
-- **Occupancy by care setting:** units occupied over units available, for independent, assisted and memory care separately, because each has its own price, staffing and demand.
+- **Occupancy by care setting:** physical occupancy by unit, computed for independent, assisted and memory care separately, because each has its own price, staffing and demand.
 - **Resident census:** residents in house, by care level and by payer, against the license's capacity. A state license caps residents, not apartments, so a second person can be a licensing question as well as a pricing one.
 - **Second persons.** A spouse or companion in the same apartment pays a second-person fee for meals and services and has their own care level if they need care. In the core model they are both `lease_members`; the difference is that each is a resident with their own care record, so the lease member row isn't enough on its own (see How to Build It).
 - **Respite stays.** A short stay, often while a family caregiver travels or after a hospital discharge, under its own agreement and usually a daily rate. Washington requires a negotiated service agreement for respite residents too, developed with the individual "to maintain or improve the individual's health and functional status during their stay" (WAC 388-78A-2208). A respite stay is a lease with an end date, counted in census while it lasts.
@@ -82,7 +82,7 @@ One resident's month can involve four payers, each with different rules about wh
 - **Long-term care insurance.** The federal LongTermCare.gov guide describes policies that "reimburse policyholders a daily amount (up to a pre-selected limit)" for help with activities of daily living, though benefits can be paid to a recipient or to a care provider. A reimbursement policy is not a payer the community bills: the resident pays, and the community produces itemized statements and care documentation for the claim. An assigned-benefit policy is a payer the community bills directly.
 - **VA Aid and Attendance.** VA describes Aid and Attendance as "monthly payments added to the amount of a monthly VA pension" for qualified veterans and survivors who need help with daily activities, among other criteria. It's paid to the veteran, so it's the resident's income, not a receivable; the community records it as a payer source because families and sales teams plan around it, and because a resident whose application is pending is a collections risk.
 
-The HCBS rule reaches into the residency agreement itself. In a provider-owned or controlled residential setting, the person must have a specific place "owned, rented, or occupied under a legally enforceable agreement" with at least the protections tenants have under landlord-tenant law, or a written residency agreement with comparable eviction protections where that law doesn't apply; and privacy in their unit, lockable doors, and a choice of roommates (42 CFR 441.301(c)(4)(vi)). States implement it in their own licensing: Washington requires a written residency agreement for residents with Medicaid as a payer, signed on admission, committing the facility to the state's transfer and discharge requirements and telling residents of their right to legal counsel (WAC 388-78A-2651). The data-model consequence: a Medicaid resident's agreement is a lease in the full sense, with the notice and eviction machinery of The Lease and Delinquency, Collections & Eviction, not a care contract outside it.
+The HCBS rule reaches into the residency agreement itself. In a provider-owned or controlled residential setting, the person must have a specific place "owned, rented, or occupied under a legally enforceable agreement" with at least the protections tenants have under landlord-tenant law, or a written residency agreement with comparable eviction protections where that law doesn't apply; and privacy in their unit, lockable doors, and a choice of roommates (42 CFR 441.301(c)(4)(vi)). States implement it in their own licensing: Washington requires a written residency agreement for residents with Medicaid as a payer, signed on admission, committing the facility to the state's transfer and discharge requirements and telling residents of their right to legal counsel (WAC 388-78A-2651). The data-model consequence: a Medicaid resident's agreement is a lease in the full sense, with the notice and eviction machinery of [The Lease](/books/property-tech/the-lease#notices) and [Delinquency, Collections & Eviction](/books/property-tech/delinquency-and-eviction#eviction-filings), not a care contract outside it.
 
 Private pay versus subsidized also changes the sales funnel. A community that accepts Medicaid may limit how many Medicaid residents it takes, and needs to know, before move-in, whether a private-pay resident is likely to spend down to Medicaid eligibility; that conversion is a payer change on an existing agreement, effective on the date eligibility begins, and it often arrives retroactively, which the ledger handles with reversing charges rather than edits ([Append-Only Records](/docs/payments/payment-states#append-only-records)).
 
@@ -111,12 +111,12 @@ The boundary that design produces:
 Assisted living is licensed by each state under its own definition, and the license shapes the software in five places:
 
 - **What the community may do and for whom.** Washington's rules have a section on the resident characteristics a facility may serve (WAC 388-78A-2050); Florida's contract must say that a resident who needs services beyond what the facility is licensed to provide will be told in writing and must arrange a transfer (59A-36.018). The license type and its endorsements (Florida's limited nursing and extended congregate care, for example) belong on the property, effective-dated, with a licensed capacity.
-- **The resident agreement.** Florida requires a contract executed at or before admission, listing services, accommodations and rates, 30 days' notice of rate increases, a refund policy, any religious affiliation, and kept on file for at least 5 years after it expires; advance deposits must be held in a separate in-state account and the resident notified in writing within 30 days of receiving one (section 429.24). The contract's required clauses are template data per state, and the deposit account is a trust account question for Trust Accounting & the General Ledger.
+- **The resident agreement.** Florida requires a contract executed at or before admission, listing services, accommodations and rates, 30 days' notice of rate increases, a refund policy, any religious affiliation, and kept on file for at least 5 years after it expires; advance deposits must be held in a separate in-state account and the resident notified in writing within 30 days of receiving one (section 429.24). The contract's required clauses are template data per state, and the deposit account is a trust account question for [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#security-deposit-accounts).
 - **Disclosure.** Washington requires facilities to disclose the scope of care and services on the department's approved disclosure forms, and requires at least 30 days' written notice of a decrease in services, or 90 days if the decrease will discharge residents (WAC 388-78A-2710). A disclosure is a versioned document attached to the property, with a record of who received which version.
 - **Assessments and service plans,** with the timing above (WAC 388-78A-2100, 2140; 59A-36.018(k)).
 - **Records, staffing and training.** Washington's chapter alone has sections on resident records and their retention, residents' review of records, the resident register, staff, background checks, training and administrator qualifications (chapter 388-78A WAC). Staff credentials and background checks are workforce data that HR or scheduling systems own; the property platform needs the resident register and roster those rules require, and a retention schedule per record type ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
 
-My default: a state is a rule set, not a code branch. Reassessment intervals, rate-increase notice periods, service-decrease notice periods, bed hold terms, refund deadlines, required contract clauses and record retention are rows keyed by the property's licensing state and license type, effective-dated, each with its citation, as Landlord-Tenant Law as Data describes for the volume as a whole.
+My default: a state is a rule set, not a code branch. Reassessment intervals, rate-increase notice periods, service-decrease notice periods, bed hold terms, refund deadlines, required contract clauses and record retention are rows keyed by the property's licensing state and license type, effective-dated, each with its citation, as [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#rules-as-effective-dated-data) describes for the volume as a whole.
 
 ## Families, Representatives and the Portal
 
@@ -132,11 +132,11 @@ A representative is not a guarantor. A person who signs as the resident's agent 
 
 A senior living sale is a family decision made under stress, often after a fall or a hospital stay, and it runs through more people than an apartment lease: the prospect, one or more adult children, and referral sources (hospital discharge planners, placement agencies, physicians). Senior CRMs model that: Aline describes qualifying families "at the moment of interest" and connecting every step "from first inquiry to scheduled tour," with move-in triggering billing; ALIS lists CRM, prospecting, move-in packets and occupancy monitoring; MatrixCare lists a senior living CRM; RealPage pairs lead tracking with a dedicated senior living contact center.
 
-The funnel's stages: inquiry, discovery call, tour, assessment, deposit (to hold an apartment), move-in date, paperwork (agreement, disclosure, physician statement, medication list), move-in. Its differences from multifamily leasing: the decision-maker and the resident are different people, so a prospect record holds several contacts with roles; the **assessment is a gate** in the funnel, because the price and the admission decision depend on it; referral source attribution matters more than listing sources, and where an agency is paid a placement fee on move-in, that fee is a vendor payable; and the timeline is set by health, so "lost" prospects return months later after another event. Leads, CRM, Tours & the Leasing Center owns the prospect model; senior living adds contact roles, referral organizations, assessment scheduling, and the hold deposit.
+The funnel's stages: inquiry, discovery call, tour, assessment, deposit (to hold an apartment), move-in date, paperwork (agreement, disclosure, physician statement, medication list), move-in. Its differences from multifamily leasing: the decision-maker and the resident are different people, so a prospect record holds several contacts with roles; the **assessment is a gate** in the funnel, because the price and the admission decision depend on it; referral source attribution matters more than listing sources, and where an agency is paid a placement fee on move-in, that fee is a vendor payable; and the timeline is set by health, so "lost" prospects return months later after another event. [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#the-guest-card) owns the prospect model; senior living adds contact roles, referral organizations, assessment scheduling, and the hold deposit.
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/property-tech/property-business#the-core-data-model). A senior property is `property_type = 'multifamily'` with `properties.segment = 'senior'` (the column Student Housing adds). Nothing clinical appears here: the clinical record lives in an EHR or a segregated store, and this schema holds identifiers, accepted outcomes and money.
+The deltas against [The Core Data Model](/books/property-tech/property-business#the-core-data-model). A senior property is `property_type = 'multifamily'` with `properties.segment = 'senior'` (the column [Student Housing](/books/property-tech/student-housing#how-to-build-it) adds). Nothing clinical appears here: the clinical record lives in an EHR or a segregated store, and this schema holds identifiers, accepted outcomes and money.
 
 ```sql
 CREATE TABLE care_licenses (             -- a state license the property operates under
@@ -202,7 +202,7 @@ CREATE TABLE care_assessments (          -- the business side of an assessment; 
   total_points INT,                    -- only what pricing needs
   completed_at TIMESTAMPTZ NOT NULL,
   next_due_on  DATE,                   -- computed from the licensing state's rule
-  due_rule_id  UUID                    -- the rule row that set next_due_on
+  due_rule_evaluation_id UUID REFERENCES rule_evaluations (id)  -- what set next_due_on
 );
 
 CREATE TABLE care_level_determinations ( -- the care a resident is billed for, over time
@@ -218,7 +218,7 @@ CREATE TABLE care_level_determinations ( -- the care a resident is billed for, o
   notice_treatment TEXT CHECK (notice_treatment IN ('rate_increase', 'new_service',
                      'decrease', 'none')),
   notice_sent_on   DATE,
-  decided_by       UUID,                 -- the staff user who accepted or declined
+  decided_by       UUID REFERENCES users (id), -- the staff user who accepted or declined
   valid_during     DATERANGE NOT NULL,
   EXCLUDE USING GIST (lease_id WITH =, person_id WITH =, valid_during WITH &&)
     WHERE (is_level AND status = 'accepted'),          -- one level per resident at a time
@@ -256,15 +256,15 @@ CREATE TABLE payer_coverages (           -- who pays which part of a resident's 
 );
 
 ALTER TABLE lease_charge_schedules
-  ADD COLUMN person_id                   UUID REFERENCES people (id),  -- per-resident fees
+  ADD COLUMN responsible_person_id       UUID REFERENCES people (id),  -- per-resident fees
   ADD COLUMN care_level_determination_id UUID REFERENCES care_level_determinations (id),
   ADD COLUMN payer_coverage_id           UUID REFERENCES payer_coverages (id),  -- null: household
   DROP CONSTRAINT lease_charge_schedules_frequency_check,
   ADD CONSTRAINT lease_charge_schedules_frequency_check
     CHECK (frequency IN ('monthly', 'weekly', 'annual', 'daily'));
 
+-- charges.responsible_person_id (Charges & Resident Ledgers) names the resident.
 ALTER TABLE charges
-  ADD COLUMN person_id         UUID REFERENCES people (id),
   ADD COLUMN payer_coverage_id UUID REFERENCES payer_coverages (id);  -- whose receivable
 
 CREATE TABLE resident_absences (         -- hospital, rehab and other leaves; still a resident
@@ -306,7 +306,7 @@ CREATE TABLE resident_representatives (  -- who may act for a resident, in what 
                       'family_contact')),
   scopes            TEXT[] NOT NULL,     -- 'billing', 'sign', 'care_updates', 'emergency'
   document_ref      TEXT,                -- the instrument or court order on file
-  verified_by       UUID,
+  verified_by       UUID REFERENCES users (id),
   verified_at       TIMESTAMPTZ,
   valid_during      DATERANGE NOT NULL,
   CHECK (resident_id <> representative_id),
@@ -327,7 +327,7 @@ CREATE TABLE entrance_fee_contracts (    -- a life plan community's entrance fee
   processing_fee_bps       INT NOT NULL,
   covered_care_days        INT,           -- type B: nursing days before per diem rates
   rescission_ends_on       DATE NOT NULL,
-  refund_rule_id           UUID NOT NULL, -- the jurisdiction's refund rule version at signing
+  refund_rule_evaluation_id UUID NOT NULL REFERENCES rule_evaluations (id),  -- refund rule at signing
   signed_on                DATE NOT NULL
 );
 
@@ -359,7 +359,7 @@ CREATE TABLE clinical_system_links (     -- the only bridge to clinical systems:
 Design decisions:
 
 - **Senior living is a segment, not a property type.** Independent, assisted and memory care buildings are apartment communities with services; `care_setting` on the unit and the license on the property carry the difference. Skilled nursing appears only as a unit setting in a life plan community, with its clinical and billing systems outside.
-- **Money resolves to a person.** Per-resident schedules and charges carry `person_id`, so a couple sharing an apartment has one residency agreement and one household, two care levels and possibly two payers. Base rent and the second-person fee stay at the lease level.
+- **Money resolves to a person.** Per-resident schedules and charges carry `responsible_person_id`, so a couple sharing an apartment has one residency agreement and one household, two care levels and possibly two payers. Base rent and the second-person fee stay at the lease level.
 - **The care level is a determination, separate from the assessment.** `care_assessments` holds only what pricing and scheduling need (reason, instrument, points, due date) and an opaque pointer to the clinical record; `care_level_determinations` holds what the operator accepted, when, with which notice treatment. One accepted level per resident at a time is a constraint, and the care fee schedule points at the determination that created it.
 - **Payers are coverages on a resident, effective-dated.** A charge carries the coverage whose receivable it is, so the resident ledger, a Medicaid receivable and an insurer's statement are views over the same entries ([Double-Entry Ledger](/docs/payments/payment-states#double-entry-ledger)). Validation refuses a Medicaid waiver or state plan coverage that `covers` room and board unless the residency is a respite stay in a qualifying facility (42 CFR 441.310(a)(2)); that check lives in the rule layer because its exceptions are the regulation's, not the schema's.
 - **Reimbursed versus billed.** `bill_to = 'resident'` covers reimbursement policies and VA pension income: the coverage is tracked for planning and statements, but the resident's receivable is the one charged. Converting private pay to Medicaid is ending one coverage and starting another on the eligibility date, with reversing charges for the retroactive months.

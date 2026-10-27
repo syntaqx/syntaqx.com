@@ -17,7 +17,7 @@ Records features sit in three places in the suites, and a fourth line of busines
 
 - **Document management.** RealPage lists Document Management as a property management product for "consistent workflows, standardized forms and corporate-approved documents" across a portfolio; every suite stores leases, applications, notices and inspection photos against the resident and unit. Retention controls are not described on the public pages, which is typical: the market sells storage and templates, and leaves the schedule to the operator.
 - **Audit trails on automated work.** Entrata's AI Admin, announced in September 2026, "maintains an audit trail of AI interactions" (the model, the answer, the sources and the reasoning), exportable for audit, and breaks down AI costs by property and owner for third-party managers. As agents take actions on leases and ledgers, that trail becomes part of the operator's record ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
-- **Program and audit readiness.** Vendors pitch audit readiness for the regulated parts: RealPage describes an AI finance agent that "supports audit readiness" and OneSite support for housing compliance; affordable housing editions across vendors produce the files HUD and state housing agencies review (Subsidized & Affordable Housing).
+- **Program and audit readiness.** Vendors pitch audit readiness for the regulated parts: RealPage describes an AI finance agent that "supports audit readiness" and OneSite support for housing compliance; affordable housing editions across vendors produce the files HUD and state housing agencies review ([Subsidized & Affordable Housing](/books/property-tech/affordable-housing#auditing)).
 - **Property-records data products.** Some vendors also sell data about properties and their owners. Yardi owns PropertyShark, a property-records database, and in July 2024 two Ohio residents filed a proposed class action, LaFleur v. Yardi Systems (No. 1:24-cv-01262), alleging that PropertyShark used Ohio residents' identities in its property reports and owner search results to advertise paid subscriptions without consent, under Ohio's right-of-publicity statute. No outcome had been reported in the sources I opened as of October 2026.
 
 What the market leaves to the operator, and this chapter builds, is the policy layer: what each record is, how long the law says to keep it, what holds it, who asked for it, and when and how it was destroyed.
@@ -28,10 +28,10 @@ Classify by what the law attaches to the data, not by the table it sits in. The 
 
 | Category | Examples | What attaches |
 | --- | --- | --- |
-| **Identity** | Name, date of birth, SSN or ITIN, ID document images, selfies and liveness checks | Breach notification laws; state biometric laws for face geometry (Applications & Screening) |
+| **Identity** | Name, date of birth, SSN or ITIN, ID document images, selfies and liveness checks | Breach notification laws; state biometric laws for face geometry ([Biometric Privacy](/books/property-tech/applications-and-screening#biometric-privacy)) |
 | **Consumer reports** | Credit, criminal, eviction and rental-history reports, scores, and anything derived from them | FCRA permissible purpose and the [disposal rule](#fcra-disposal) |
 | **Financial** | Bank statements, pay stubs, account and routing numbers, card data | Breach laws; [PCI DSS](/docs/compliance/pci-dss) for card data; Payments volume for tokens |
-| **Program data** | Household income and assets, family composition, race and ethnicity collected for HUD programs | Program confidentiality and retention (Subsidized & Affordable Housing); kept out of decisions ([Fair Housing](/books/property-tech/fair-housing#protected-classes)) |
+| **Program data** | Household income and assets, family composition, race and ethnicity collected for HUD programs | Program confidentiality and retention ([Certifications and Income](/books/property-tech/affordable-housing#certifications-and-income)); kept out of decisions ([Fair Housing](/books/property-tech/fair-housing#protected-classes)) |
 | **Disability and accommodation** | Verification letters, the accommodation case | Confidentiality under the HUD and DOJ joint statement; restricted access ([Fair Housing](/books/property-tech/fair-housing#reasonable-accommodations-and-modifications)) |
 | **Domestic violence** | VAWA certifications and supporting documents | On HUD properties, a separate file in a separate secure location, never in a shared database |
 | **Home and movement** | Access events, camera footage, smart-device data, unit photos from work orders | Resident expectations of privacy in the home ([Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#resident-privacy)) |
@@ -87,7 +87,7 @@ Retention is law resolved per record type and property, the same way as deposit 
 | California broker trust records | A columnar record of all trust funds received and disbursed, reconciled monthly; receipts for certain small third-party checks kept three years | 10 CCR 2831, 2831.2 |
 | Consumer reports | No federal minimum; disposal must be secure when kept no longer | 16 CFR 682 |
 
-Each is a `legal_rules` row of type `record_retention` ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix)), with `params` naming the record type, the trigger (removed from waiting list, move-out, end of compliance period) and the period. The operator's `retention_schedules` choose a period at least as long as the longest applicable rule and at most as long as privacy law and policy allow; the engine checks both bounds. Other chapters own record-specific rules that feed this one: eviction record sealing and what screening may consider (Delinquency, Collections & Eviction; Applications & Screening), unclaimed property for uncashed refunds and deposits (Trust Accounting & the General Ledger), and owner record rights under management agreements (Owners & Management Agreements).
+Each is a `legal_rules` row of type `record_retention` ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix)), with `params` naming the record type, the trigger (removed from waiting list, move-out, end of compliance period) and the period. The operator's `retention_schedules` choose a period at least as long as the longest applicable rule and at most as long as privacy law and policy allow; the engine checks both bounds. Other chapters own record-specific rules that feed this one: eviction record sealing and what screening may consider ([Eviction Filings](/books/property-tech/delinquency-and-eviction#eviction-filings); [Criminal History and Fair-Chance Laws](/books/property-tech/applications-and-screening#criminal-history-and-fair-chance-laws)), unclaimed property for uncashed refunds and deposits ([Unclaimed Property](/books/property-tech/trust-accounting#unclaimed-property)), and owner record rights under management agreements ([The Management Agreement](/books/property-tech/owners-and-management-agreements#the-management-agreement)).
 
 Retention runs from an event, so the schedule stores a trigger and the job computes each record's disposal date when the trigger fires, the way [Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored) describes. A lease file's clock starts at move-out, not at signing; a rejected applicant's starts when they leave the waiting list.
 
@@ -97,9 +97,9 @@ A **legal hold** suspends disposal for records in scope until it's released. Hol
 
 An operator is audited by people who each want a different cut of the same records. The platform's job is to produce them consistently, as of a date, with proof they weren't altered:
 
-- **Real estate commissions.** State licensing rules set the trust records a broker who manages property must keep, and those records are what an examiner asks for. California's regulations require a chronological, columnar record of every trust fund received and disbursed with a daily balance, a separate record per beneficiary or transaction, and a written monthly reconciliation of the two identifying the account, the date and the broker's liability to each principal. That is three-way reconciliation, which Trust Accounting & the General Ledger builds; this chapter's job is to produce it for any month on request.
-- **Housing programs.** HUD or its contract administrator reviews HUD-assisted properties in on-site monitoring reviews, and the handbook requires owners to show documentation of affirmative fair housing marketing during compliance reviews. Tax credit properties face state housing agency inspections at least once every three years, with units and files for review selected at random from a minimum sample set by a table in 26 CFR 1.42-5 (for example 21 units for an 82-to-101-unit project), on reasonable notice that is generally no more than 15 days. Fifteen days is the time the platform has to assemble tenant files, certifications and income documentation. Subsidized & Affordable Housing owns the program rules.
-- **Owners and investors.** Owners audit the manager's books for their properties under the terms of their management agreements, typically management fee calculations, reimbursed payroll, vendor invoices and trust balances (Owners & Management Agreements).
+- **Real estate commissions.** State licensing rules set the trust records a broker who manages property must keep, and those records are what an examiner asks for. California's regulations require a chronological, columnar record of every trust fund received and disbursed with a daily balance, a separate record per beneficiary or transaction, and a written monthly reconciliation of the two identifying the account, the date and the broker's liability to each principal. That is three-way reconciliation, which [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#three-way-reconciliation) builds; this chapter's job is to produce it for any month on request.
+- **Housing programs.** HUD or its contract administrator reviews HUD-assisted properties in on-site monitoring reviews, and the handbook requires owners to show documentation of affirmative fair housing marketing during compliance reviews. Tax credit properties face state housing agency inspections at least once every three years, with units and files for review selected at random from a minimum sample set by a table in 26 CFR 1.42-5 (for example 21 units for an 82-to-101-unit project), on reasonable notice that is generally no more than 15 days. Fifteen days is the time the platform has to assemble tenant files, certifications and income documentation. [Subsidized & Affordable Housing](/books/property-tech/affordable-housing#auditing) owns the program rules.
+- **Owners and investors.** Owners audit the manager's books for their properties under the terms of their management agreements, typically management fee calculations, reimbursed payroll, vendor invoices and trust balances ([Owners & Management Agreements](/books/property-tech/owners-and-management-agreements#auditing)).
 - **Lenders and agencies.** Rent rolls, operating statements and reserve records in the lender's format.
 - **The vendor itself.** Operators ask their software vendor for a SOC 2 report and evidence of controls over their data ([SOC 2](/docs/compliance/soc-2)).
 
@@ -162,9 +162,9 @@ CREATE TABLE legal_holds (
   lease_ids        UUID[],
   record_types     TEXT[],                 -- null: all types
   covers_period    DATERANGE NOT NULL,
-  placed_by        UUID NOT NULL,
+  placed_by        UUID NOT NULL REFERENCES users (id),
   placed_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  released_by      UUID,
+  released_by      UUID REFERENCES users (id),
   released_at      TIMESTAMPTZ
 );
 
@@ -199,7 +199,7 @@ CREATE TABLE disposal_events (            -- append-only proof of destruction
   method           TEXT NOT NULL,
   stores           TEXT[] NOT NULL,        -- 'primary', 'search', 'warehouse', 'object_store',
                                            -- 'subprocessor:<name>'
-  run_by           TEXT NOT NULL,          -- job or user
+  run_by           UUID NOT NULL REFERENCES users (id),  -- staff, or the job's service user
   completed_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -226,7 +226,7 @@ CREATE TABLE audit_productions (          -- what left the building, and its fin
   audit_request_id UUID NOT NULL REFERENCES audit_requests (id),
   as_of            TIMESTAMPTZ NOT NULL,
   manifest         JSONB NOT NULL,         -- each file: record type, ids, sha256
-  reviewed_by      UUID NOT NULL,
+  reviewed_by      UUID NOT NULL REFERENCES users (id),
   delivered_at     TIMESTAMPTZ NOT NULL,
   delivered_via    TEXT NOT NULL
 );

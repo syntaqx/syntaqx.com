@@ -8,7 +8,7 @@ part = "Rent and Resident Money"
 tags = ["property-tech", "renters-insurance", "security-deposits", "deposit-alternatives", "guarantors", "insurance"]
 +++
 
-A lease is a bet that the resident will pay and leave the unit as they found it. Owners hedge the bet three ways: a security deposit held against damage and unpaid rent, insurance (the resident's liability coverage, so a kitchen fire doesn't land on the owner's policy), and a guarantee from someone with more money than the resident. Each has been turned into a product. Renters insurance is sold through agencies inside the portal, master policies cover units whose residents didn't buy their own, surety bonds and monthly premiums replace cash deposits, and insurance-backed guarantors stand in for a parent with good credit. These are among the most profitable things the platforms sell (they're "risk mitigation" and "Embedded Technology Solutions" in the filings), and they sit at the intersection of insurance regulation, landlord-tenant law and fee transparency. This chapter covers the requirements a property sets, verifying that residents meet them, landlord-placed coverage, security deposits and their limits, the alternatives that replace them, and guarantees. Itemizing deductions after move-out belongs to Move-In & Move-Out; holding deposits in trust accounts to Trust Accounting & the General Ledger.
+A lease is a bet that the resident will pay and leave the unit as they found it. Owners hedge the bet three ways: a security deposit held against damage and unpaid rent, insurance (the resident's liability coverage, so a kitchen fire doesn't land on the owner's policy), and a guarantee from someone with more money than the resident. Each has been turned into a product. Renters insurance is sold through agencies inside the portal, master policies cover units whose residents didn't buy their own, surety bonds and monthly premiums replace cash deposits, and insurance-backed guarantors stand in for a parent with good credit. These are among the most profitable things the platforms sell (they're "risk mitigation" and "Embedded Technology Solutions" in the filings), and they sit at the intersection of insurance regulation, landlord-tenant law and fee transparency. This chapter covers the requirements a property sets, verifying that residents meet them, landlord-placed coverage, security deposits and their limits, the alternatives that replace them, and guarantees. Itemizing deductions after move-out belongs to [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#the-final-account-statement); holding deposits in trust accounts to [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#security-deposit-accounts).
 
 ## How the Platforms Do It
 
@@ -38,7 +38,7 @@ The resident's choice matters for a second reason. A property that requires insu
 
 Verification is a queue fed by three sources: policies bought through the property's program (verified automatically), proofs residents upload (read, checked against the requirement, approved or rejected), and notices from carriers (cancellation, nonrenewal, non-payment, renewal). Entrata's and RealPage's verification products both describe the same core work: review third-party policies and process carrier notices.
 
-The policy is a record, not a PDF: carrier, policy number, named insureds, liability limit, effective dates, interested party listed or not, the document, and the verification decision with who made it. Every lease member who must be covered is either on a policy or isn't. Then:
+The policy is a record, not a PDF: carrier, policy number, named insureds, liability limit, effective dates, interested party listed or not, the document, and the verification decision with who made it. Every lease member who must be covered is either on a policy or isn't (commercial tenants are tracked the same way, through certificates of insurance: [Tenant Insurance Compliance](/books/property-tech/commercial-property#tenant-insurance-compliance)). Then:
 
 - **Compliance is computed daily** per lease from requirements and policies, not stored as a flag.
 - **A carrier notice changes a policy's status** (pending cancellation with a date), and the resident is told before the gap opens.
@@ -81,9 +81,9 @@ California's definition of security is the one to read twice: a charge "imposed 
 Deposits drive several platform behaviors:
 
 - **The cap is checked at lease generation,** summing every charge code that counts as security in that jurisdiction, so a deposit, a pet deposit and a "move-in fee" can't exceed it together.
-- **The deposit is a liability, not income,** posted to a deposits-held account on the landlord entity's books and often into a separate bank account; Trust Accounting & the General Ledger owns those accounts, and the [ledger](/books/property-tech/charges-and-resident-ledgers#the-resident-ledger-and-the-general-ledger) keeps deposit charges on a deposit category that never counts as rent.
+- **The deposit is a liability, not income,** posted to a deposits-held account on the landlord entity's books and often into a separate bank account; [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#security-deposit-accounts) owns those accounts, and the [ledger](/books/property-tech/charges-and-resident-ledgers#the-resident-ledger-and-the-general-ledger) keeps deposit charges on a deposit category that never counts as rent.
 - **Interest accrues** where the law requires it, per deposit, at the account's rate less any allowed administrative fee, and is paid annually, credited to rent or returned at move-out, as the jurisdiction and the resident's choice dictate.
-- **Unreturned deposits become unclaimed property** when the resident can't be found, which Trust Accounting & the General Ledger covers.
+- **Unreturned deposits become unclaimed property** when the resident can't be found, which [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#unclaimed-property) covers.
 
 ## Deposit Alternatives
 
@@ -104,7 +104,7 @@ At move-out, a deposit alternative turns deposit accounting into a **claim**: th
 
 ## Guarantors and Institutional Guarantees
 
-A **personal guarantor** is a person (often a parent) who promises to pay if the resident doesn't. The core model already holds one: a `lease_members` row with role `guarantor`, financially responsible but not an occupant. Guarantors are screened like applicants (Applications & Screening), sign the lease or a separate guaranty (The Lease), and need their own portal access to see the ledger they're liable for, without seeing the household's maintenance requests or messages. Student Housing covers parental guarantors at scale.
+A **personal guarantor** is a person (often a parent) who promises to pay if the resident doesn't. The core model already holds one: a `lease_members` row with role `guarantor`, financially responsible but not an occupant. Guarantors are screened like applicants ([Applications & Screening](/books/property-tech/applications-and-screening#the-application)), sign the lease or a separate guaranty ([The Lease](/books/property-tech/the-lease#guarantors)), and need their own portal access to see the ledger they're liable for, without seeing the household's maintenance requests or messages ([Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants)). [Student Housing](/books/property-tech/student-housing#guarantors-parents-international-families-and-substitutes) covers parental guarantors at scale.
 
 An **institutional guarantee** replaces the person with a company. TheGuarantors describes its lease guarantee as an insurance product sold through its licensed agency; Entrata's guarantor waiver is insurance-backed, covers default and eviction, and is approved in about 30 minutes. The applicant pays (usually), the owner gets coverage of some multiple of monthly rent or months of the lease, and when the resident defaults the owner files a claim.
 
@@ -139,7 +139,7 @@ CREATE TABLE resident_insurance_policies (
   lease_id        UUID NOT NULL REFERENCES leases (id),
   source          TEXT NOT NULL CHECK (source IN ('resident_purchased', 'property_program',
                     'landlord_placed', 'blanket')),
-  agreement_id    UUID,                   -- ancillary_agreements, for program policies
+  agreement_id    UUID REFERENCES ancillary_agreements (id),  -- program policies
   carrier         TEXT NOT NULL,
   policy_number   TEXT NOT NULL,
   liability_limit BIGINT NOT NULL,
@@ -148,7 +148,8 @@ CREATE TABLE resident_insurance_policies (
   coverage_period DATERANGE NOT NULL,
   status          TEXT NOT NULL CHECK (status IN ('pending_review', 'verified', 'rejected',
                     'pending_cancellation', 'cancelled', 'expired')),
-  verified_by     TEXT,                   -- typed actor: a user, the carrier feed, a model plus reviewer
+  verified_by     UUID REFERENCES users (id),  -- staff, the carrier feed's service user,
+                                          -- or an AI agent's user (a person reviews)
   document_id     UUID,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -173,10 +174,11 @@ CREATE TABLE security_deposits (         -- what secures a lease, in whatever fo
   amount            BIGINT NOT NULL,      -- cash held, or the coverage the product provides
   currency          CHAR(3) NOT NULL,
   charge_id         UUID REFERENCES charges (id),       -- the deposit charge, for cash
-  agreement_id      UUID,                 -- the provider's ancillary agreement, for products
+  agreement_id      UUID REFERENCES ancillary_agreements (id),  -- the provider's, for products
   certificate_number TEXT,
-  bank_account_ref  TEXT,                 -- where cash is held; Trust Accounting owns the accounts
-  interest_rule     TEXT,                 -- jurisdiction rule reference, null if none
+  bank_account_id   UUID REFERENCES bank_accounts (id),  -- where cash is held (Trust Accounting)
+  interest_rule_evaluation_id UUID REFERENCES rule_evaluations (id),  -- null if no interest rule
+  cap_rule_evaluation_id UUID REFERENCES rule_evaluations (id),  -- security_deposit_limit check
   counts_toward_cap BIGINT NOT NULL,      -- the amount the jurisdiction counts as security
   status            TEXT NOT NULL CHECK (status IN ('held', 'claim_pending', 'settled',
                       'refunded', 'escheated')),
@@ -198,7 +200,8 @@ CREATE TABLE lease_guarantees (          -- an institutional guarantee; persons 
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id       UUID NOT NULL,
   lease_id        UUID NOT NULL REFERENCES leases (id),
-  agreement_id    UUID NOT NULL,          -- the provider's ancillary agreement
+  agreement_id    UUID NOT NULL REFERENCES ancillary_agreements (id),  -- the provider's
+  guarantor_entity_id UUID NOT NULL REFERENCES legal_entities (id),  -- the institutional guarantor
   certificate_number TEXT NOT NULL,
   coverage_amount BIGINT,
   coverage_months NUMERIC(4, 1),

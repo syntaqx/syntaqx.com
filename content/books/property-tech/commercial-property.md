@@ -59,7 +59,7 @@ Every one of these becomes a **critical date** with a window, an owner and a sta
 
 A **lease abstract** is the structured summary of a long document: parties, premises, dates, rent schedule, recovery terms, options and the clauses above, each pointing back to the section it came from. Entrata advertises "succinct and customized lease abstracts" with clause and exclusion tracking; MRI and Visual Lease sell machine abstraction (Visual Lease's runs on "CoStar's Lease LLM"), and an analyst profile lists lease abstraction among VTS's AI capabilities. My rule for machine abstraction: the model proposes, a person verifies, and every abstracted field keeps its source section, the verifier and the time, because the abstract drives billing and the document still wins any dispute ([AI Agents in the Product](/docs/architecture/ai-agents#decide-in-code)).
 
-Amendments are the commercial lease's normal life. A ten-year lease picks up an expansion, an extension, a rent reset and a relocation, each a signed amendment. Unlike the multifamily core, where a renewal is a new lease, a commercial extension usually amends the same lease, and keeping one lease row matters: base years, cumulative caps, straight-line schedules and the tenant's audit history all run across amendments. Each amendment is a record, and every term it changes is a new effective-dated row pointing at it.
+Amendments are the commercial lease's normal life. A ten-year lease picks up an expansion, an extension, a rent reset and a relocation, each a signed amendment. Unlike the multifamily core, where a renewal is a new lease ([Renewals](/books/property-tech/the-lease#renewals)), a commercial extension usually amends the same lease, and keeping one lease row matters: base years, cumulative caps, straight-line schedules and the tenant's audit history all run across amendments. Each amendment is a record, and every term it changes is a new effective-dated row pointing at it.
 
 ## Measuring Space
 
@@ -124,7 +124,7 @@ The year runs in two halves:
 1. **Budget and estimates.** Before the year starts, the landlord budgets each pool, applies each lease's terms, and sets monthly estimate charges. The restaurant lease has the tenant pay its share "on the first day of each calendar month" based on the landlord's estimate. Yardi Breeze lets estimates post monthly, quarterly or annually.
 2. **Reconciliation.** After year-end close, actual pool costs are computed, adjusted per lease, and compared with estimates billed. The restaurant lease gives the landlord 90 days to "endeavor to make available" a statement and 120 days to rebate any overpayment; MRI describes reconciling "a few months after year-end close" and posting the result as a one-time charge or credit. The next year's estimates usually reset at the same time.
 
-A reconciliation is a document the tenant will check, so the system keeps it as an immutable, versioned statement: pool totals, occupancy, gross-up, the tenant's share, base, cap, exclusions, fee, estimates billed, and the balance, each line traceable to general ledger entries. The true-up posts as an ordinary charge or credit on the lease ledger, the same machinery Charges & Resident Ledgers describes for any one-off charge. A corrected reconciliation is a new version that supersedes the old one and posts the difference; it never edits the charge already billed.
+A reconciliation is a document the tenant will check, so the system keeps it as an immutable, versioned statement: pool totals, occupancy, gross-up, the tenant's share, base, cap, exclusions, fee, estimates billed, and the balance, each line traceable to general ledger entries. The true-up posts as an ordinary charge or credit on the lease ledger, the same machinery [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog) describes for any one-off charge. A corrected reconciliation is a new version that supersedes the old one and posts the difference; it never edits the charge already billed.
 
 Mid-year events complicate it: a tenant moving in or out mid-year pays for its days; a suite expansion changes the share from the amendment's effective date; a sale of the property splits the year between two owners' books. Each is a proration over effective-dated rows, which is why shares and memberships carry date ranges.
 
@@ -149,7 +149,7 @@ What the software must handle:
 - **Offsets**: some leases credit recoveries or other charges against percentage rent.
 - **Tiers**: different rates above successive breakpoints.
 
-Sales data is also an operating metric: occupancy cost as a share of sales tells a retail landlord which tenants are at risk. Keeping sales reports as first-class rows lets Operating Metrics use them without parsing charges.
+Sales data is also an operating metric: occupancy cost as a share of sales tells a retail landlord which tenants are at risk. Keeping sales reports as first-class rows lets [Operating Metrics](/books/property-tech/operating-metrics#owner-reporting-metrics), which defines the occupancy cost ratio, use them without parsing charges.
 
 ## Escalations and Straight-Line Rent
 
@@ -178,7 +178,7 @@ The product keeps the facts and finance picks the policy, exactly as [Accounting
 
 Landlords pay tenants to sign. The two big incentives:
 
-- **Tenant improvement (TI) allowance:** money the landlord contributes to build out the space, quoted per rentable square foot. The 2022 office lease grants $2,295,480, which on 38,258 rentable square feet is $60 per square foot. Allowances come with rules: what they may be spent on, a deadline to use them, disbursement against invoices and lien waivers, and sometimes conversion of unused allowance into rent credit. The construction itself is a capital project (Budgets, Forecasts & Capital Projects); the lease side tracks the allowance, draws and remaining balance.
+- **Tenant improvement (TI) allowance:** money the landlord contributes to build out the space, quoted per rentable square foot. The 2022 office lease grants $2,295,480, which on 38,258 rentable square feet is $60 per square foot. Allowances come with rules: what they may be spent on, a deadline to use them, disbursement against invoices and lien waivers, and sometimes conversion of unused allowance into rent credit. The construction itself is a capital project ([Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects#capital-projects-and-job-costing)); the lease side tracks the allowance, draws and remaining balance.
 - **Free rent (abatement):** months with base rent waived. The same lease abates base rent for months 1 to 12, $1,415,546 in total at $30,504 a month in the first year, "provided Tenant is not then in default," while additional rent (recoveries) stays payable. In the core model an abatement is a negative recurring charge schedule with a date range; the default condition belongs on it, because an abatement that a default can forfeit is a contingent credit, not a fixed one.
 
 Together with term and rent, these produce the number brokers compare deals on, **net effective rent**: total rent over the term less the landlord's concessions and costs, spread per square foot per year. It is a deal-pipeline metric, computed from the proposal's economics, not stored as a lease term.
@@ -189,7 +189,7 @@ Commercial deals usually involve a landlord's agent and often a tenant's broker,
 
 What the system records per lease:
 
-- **Who is owed:** each broker firm (a vendor, paid through payables), its side, and the agreement that sets its fee.
+- **Who is owed:** each broker firm (a vendor, paid through [payables](/books/property-tech/vendors-and-payables#paying-vendors)), its side, and the agreement that sets its fee.
 - **How it's computed:** commonly a percentage of aggregate base rent over the term, sometimes a rate per square foot or a flat amount, with different rates for new leases, renewals and expansions.
 - **When it's paid:** commissions are often split into installments triggered by events such as execution, occupancy or rent commencement, and a commission on a future renewal or expansion is a contingent obligation tied to that event.
 
@@ -199,7 +199,7 @@ For the lessor's books, broker commissions are the textbook initial direct cost.
 
 Commercial leases require the tenant to carry specific insurance (general liability, property on its improvements and contents, umbrella, workers' compensation, liquor liability for restaurants) at stated limits, with the landlord and its lender named as additional insureds. The restaurant lease requires policies or certificates by the commencement date and "at least thirty (30) days" before each policy expires, caps deductibles at $10,000, requires an insurer licensed in California, and lets the landlord buy the coverage and bill it as additional rent if the tenant doesn't comply. The office lease requires certificates before the commencement date.
 
-Entrata advertises "complete visibility and control over tenant insurance compliance," and RealPage's tenant portal takes insurance certificate uploads. The model is requirements versus evidence: each lease has insurance requirements (coverage type, per-occurrence and aggregate limits, additional insured, maximum deductible) and each certificate received is a document with insurer, policy number, coverages, limits, effective dates and named additional insureds. A compliance check compares the two and produces findings (missing, deficient limit, missing additional insured, expiring). My rule: a certificate summarizes coverage but isn't the policy, so the record keeps which endorsement evidences each requirement, and expiry dates become critical dates. Vendor insurance on the landlord's own contractors uses the same shape and belongs to Vendors, Procurement & Payables; residential renters insurance is in Insurance, Deposits & Guarantees.
+Entrata advertises "complete visibility and control over tenant insurance compliance," and RealPage's tenant portal takes insurance certificate uploads. The model is requirements versus evidence: each lease has insurance requirements (coverage type, per-occurrence and aggregate limits, additional insured, maximum deductible) and each certificate received is a document with insurer, policy number, coverages, limits, effective dates and named additional insureds. A compliance check compares the two and produces findings (missing, deficient limit, missing additional insured, expiring). My rule: a certificate summarizes coverage but isn't the policy, so the record keeps which endorsement evidences each requirement, and expiry dates become critical dates. Vendor insurance on the landlord's own contractors uses the same shape and belongs to [Vendors, Procurement & Payables](/books/property-tech/vendors-and-payables#vendor-compliance); residential renters insurance is in [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees#renters-insurance-requirements).
 
 ## Deal Pipeline and Listings
 
@@ -209,13 +209,13 @@ The design consequences:
 
 - **A deal is not a lease.** The deal holds the prospect (a company, often represented by a tenant broker), the space under discussion (which may be several suites or a not-yet-demised portion of a floor), the stage, and a versioned list of proposals. Executing it creates the lease, its premises, schedules, recovery terms and commission records, and the deal keeps a link to what it produced.
 - **Stacking plans** (floors with suites, tenants and expirations drawn as a stack) are a view over units, premises and leases, not a separate store.
-- **Listings** feed demand from marketplaces. CommercialCafe lists office, industrial, retail and coworking space and lets brokers and landlords list for free; listing syndication mechanics belong to Listings, Websites & Marketing, and the guest-card model for prospects to Leads, CRM, Tours & the Leasing Center.
+- **Listings** feed demand from marketplaces. CommercialCafe lists office, industrial, retail and coworking space and lets brokers and landlords list for free; listing syndication mechanics belong to [Listings, Websites & Marketing](/books/property-tech/listings-and-marketing#listings-and-syndication), and the guest-card model for prospects to [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#the-guest-card).
 
 ## Data Standards: OSCRE
 
 Commercial data moves between landlords, asset managers, lenders, appraisers and occupiers far more than residential data does, and a standard exists for it. OSCRE is a nonprofit membership organization "focused on the development and implementation of real estate data standards"; its Industry Data Model is free to use, covers the "entire asset lifecycle," and defines data for more than 150 use cases. At least one major suite exports on it: a third-party API directory describes Yardi's Commercial Data Interface as exporting "property, unit, lease and rent roll information" from Voyager and built on the OSCRE standard.
 
-My default: use the standard's entity definitions as the export and import contract (properties, spaces, leases, rent roll, recoveries), keep my own table names internal, and maintain a crosswalk of identifiers for every outside party, because asset managers receiving rent rolls from several managers have to resolve the same property and tenant across sources ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)). Investors, Funds & Asset Management covers the receiving side.
+My default: use the standard's entity definitions as the export and import contract (properties, spaces, leases, rent roll, recoveries), keep my own table names internal, and maintain a crosswalk of identifiers for every outside party, because asset managers receiving rent rolls from several managers have to resolve the same property and tenant across sources ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)). [Investors, Funds & Asset Management](/books/property-tech/investors-and-asset-management#data-from-third-party-managers) covers the receiving side.
 
 ## Flex Space and Coworking
 
@@ -229,7 +229,7 @@ How flex maps to the model:
 - **Desks and rooms are bookable resources,** not units: a meeting room, a hot-desk pool with a capacity, a phone booth. Bookings are reservations against them with the exclusion constraint from [Exclusion Constraints for Time](/docs/architecture/reservations-and-holds#exclusion-constraints-for-time), and pooled seats use the counter pattern from [Reservations & Holds](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory).
 - **Memberships are subscriptions.** A membership is a recurring plan with included credits (meeting-room hours, day passes), overage charges and a notice period, billed in periods as [Subscriptions & Billing](/docs/payments/subscriptions#periods-and-anchors) describes, rather than a lease ledger. The member company is a legal entity; its seated members are people with access grants.
 - **Is it a lease?** ASC 842 defines a lease as a contract conveying "the right to control the use of identified property, plant, or equipment," so a hot-desk membership with no identified desk generally is not one, while a private office for a term may be. That classification is the operator's accountants' call per contract type; the system records which plan types are accounted as leases.
-- **Access and IT are part of the product.** Door access follows active memberships and bookings (Access, Smart Buildings & Parking), and managed Wi-Fi and per-member network access are a service line (Resident Financial Products & Ancillary Revenue covers managed internet as ancillary revenue).
+- **Access and IT are part of the product.** Door access follows active memberships and bookings ([Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control)), and managed Wi-Fi and per-member network access are a service line ([Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#bulk-internet-and-managed-wi-fi) covers managed internet as ancillary revenue).
 
 The operator's own head lease or management agreement with the building's landlord is an ordinary commercial lease from the other side: the operator is the lessee, which is the occupier posture below.
 
@@ -283,7 +283,8 @@ The changes against [the core data model](/books/property-tech/property-business
 ALTER TABLE legal_entities
   DROP CONSTRAINT legal_entities_role_check,
   ADD CONSTRAINT legal_entities_role_check CHECK (role IN ('manager', 'owner', 'fund',
-    'association', 'commercial_tenant', 'occupier', 'counterparty'));
+    'association', 'investor', 'sponsor', 'venture', 'lender',  -- kept from Investors
+    'commercial_tenant', 'occupier', 'counterparty'));
 
 ALTER TABLE units
   ADD COLUMN space_use TEXT CHECK (space_use IN ('office', 'retail', 'industrial', 'flex',
@@ -292,11 +293,15 @@ ALTER TABLE units
 
 ALTER TABLE leases
   ALTER COLUMN household_id DROP NOT NULL,
+  ADD COLUMN agreement_kind TEXT NOT NULL DEFAULT 'residential_lease'   -- which body of law governs
+    CHECK (agreement_kind IN ('residential_lease', 'commercial_lease', 'storage_rental')),
   ADD COLUMN lessee_entity_id     UUID REFERENCES legal_entities (id),
   ADD COLUMN expense_structure    TEXT CHECK (expense_structure IN ('full_service_gross',
                                     'modified_gross', 'net', 'triple_net', 'absolute_net')),
   ADD COLUMN rent_commencement_on DATE,   -- can differ from starts_on
-  ADD CONSTRAINT leases_one_lessee CHECK (num_nonnulls(household_id, lessee_entity_id) = 1);
+  ADD CONSTRAINT leases_one_lessee CHECK (num_nonnulls(household_id, lessee_entity_id) = 1),
+  ADD CONSTRAINT leases_commercial_terms
+    CHECK (agreement_kind <> 'commercial_lease' OR expense_structure IS NOT NULL);
 
 ALTER TABLE charge_codes
   DROP CONSTRAINT charge_codes_category_check,
@@ -314,7 +319,7 @@ CREATE TABLE lease_amendments (          -- every change to a commercial lease i
   effective_on   DATE NOT NULL,
   prior_ends_on  DATE,                   -- the expiration this amendment replaced
   new_ends_on    DATE,
-  document_id    UUID NOT NULL,          -- the signed document (The Lease)
+  document_id    UUID NOT NULL REFERENCES lease_documents (id),  -- the signed amendment (The Lease)
   UNIQUE (tenant_id, lease_id, amendment_no)
 );
 
@@ -367,11 +372,11 @@ CREATE TABLE recovery_pool_accounts (    -- which GL accounts feed a pool
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id            UUID NOT NULL,
   pool_id              UUID NOT NULL REFERENCES recovery_pools (id),
-  gl_account_code      TEXT NOT NULL,     -- the entity's chart of accounts
+  gl_account_id        UUID NOT NULL REFERENCES gl_accounts (id),  -- Trust Accounting's chart
   expense_category     TEXT NOT NULL,     -- 'janitorial', 'security', 'capital_repair'
   varies_with_occupancy BOOLEAN NOT NULL, -- grossed up when true
   valid_during         DATERANGE NOT NULL,
-  EXCLUDE USING GIST (pool_id WITH =, gl_account_code WITH =, valid_during WITH &&)
+  EXCLUDE USING GIST (pool_id WITH =, gl_account_id WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE recovery_pool_members (     -- which suites share a pool, over time
@@ -610,7 +615,7 @@ CREATE TABLE leasing_commission_installments (
                   'rent_commencement', 'option_exercise', 'date')),
   amount        BIGINT NOT NULL,
   due_on        DATE,                     -- set when the trigger happens
-  payable_invoice_id UUID                 -- Vendors, Procurement & Payables
+  bill_id       UUID REFERENCES bills (id)  -- the broker's bill (Vendors, Procurement & Payables)
 );
 
 CREATE TABLE lease_insurance_requirements (
@@ -644,7 +649,7 @@ CREATE TABLE certificates_of_insurance (
                        'expired')),
   findings           TEXT[],              -- 'limit_below_requirement', ...
   received_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  reviewed_by        UUID                 -- user
+  reviewed_by        UUID REFERENCES users (id) -- user
 );
 
 CREATE TABLE lease_clauses (             -- the abstract, clause by clause
@@ -657,8 +662,8 @@ CREATE TABLE lease_clauses (             -- the abstract, clause by clause
                                           -- 'co_tenancy', 'termination_option', ...
   terms         JSONB NOT NULL,           -- typed per clause_type, validated in code
   source_section TEXT NOT NULL,           -- 'Section 30.2'
-  abstracted_by TEXT NOT NULL,            -- user or model and version
-  verified_by   UUID,                     -- the person who checked it
+  abstracted_by UUID NOT NULL REFERENCES users (id),  -- staff, or an AI agent's user
+  verified_by   UUID REFERENCES users (id), -- the person who checked it
   verified_at   TIMESTAMPTZ,
   CHECK (num_nonnulls(lease_id, occupier_lease_id) = 1)
 );
@@ -674,8 +679,8 @@ CREATE TABLE critical_dates (
                    'reconciliation_due', 'audit_window', 'sales_report_due', 'ti_use_by',
                    'other')),
   action_window  DATERANGE NOT NULL,      -- [opens, deadline]; one day for a single date
-  computed_by    TEXT NOT NULL,           -- the rule and version that set it
-  owner_user_id  UUID,
+  computed_from  TEXT NOT NULL,           -- the clause logic and version that set it
+  owner_user_id  UUID REFERENCES users (id),
   status         TEXT NOT NULL CHECK (status IN ('upcoming', 'actioned', 'waived',
                    'missed')),
   decision_note  TEXT,
@@ -822,7 +827,7 @@ CREATE TABLE lease_accounting_measurements ( -- one row per recognition or remea
   currency           CHAR(3) NOT NULL,
   policy_version     TEXT NOT NULL,
   supersedes_id      UUID REFERENCES lease_accounting_measurements (id),
-  approved_by        UUID,
+  approved_by        UUID REFERENCES users (id),
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -845,7 +850,7 @@ CREATE TABLE lease_accounting_schedule_lines ( -- regenerated per measurement, n
 Design decisions behind it:
 
 - **Amend the lease, don't replace it.** Multifamily renewals are new leases; commercial extensions and expansions amend one. Every term-bearing row (premises, recovery terms, escalations, percentage rent, commissions) carries the `amendment_id` that created it and an effective range, so the lease as of any date is a query, and base years, cumulative caps and straight-line schedules run unbroken across amendments.
-- **The lessee is an entity.** `leases.lessee_entity_id` replaces the household for business tenants, with a check that exactly one is set. Personal guarantors of a commercial lease stay `lease_members` with role `guarantor`; a corporate guarantor is a legal entity linked the same way in The Lease.
+- **The lessee is an entity.** `leases.lessee_entity_id` replaces the household for business tenants, with a check that exactly one is set. Personal guarantors of a commercial lease stay `lease_members` with role `guarantor`; a corporate guarantor is a legal entity linked the same way in [The Lease](/books/property-tech/the-lease#guarantors).
 - **Premises are a table.** `leases.unit_id` stays as the principal suite for the core's queries, and `lease_premises` holds every suite the lease covers over time with the exclusion constraint that keeps two lessees off one suite.
 - **Area is measured, agreed and pooled separately.** `area_measurements` holds the surveyor's numbers by standard and edition; `lease_premises.agreed_area` and `lease_recovery_terms.stipulated_share` hold what the lease says; pool denominators come from pool membership. A re-measurement never changes a stipulated share.
 - **Recovery terms are data per lease and pool, and the calculation order is versioned.** Every reconciliation records the ledger snapshot and policy version it used, so the same statement can be reproduced for a tenant's auditor years later.
@@ -868,7 +873,7 @@ Commercial records are audited by tenants, auditors, lenders and courts, often y
 - **Lease accounting.** Every measurement and remeasurement with its trigger, discount rate and the evidence for it, classification tests, approvals, and the journal batches that posted each schedule line. The FASB's review names the discount rate and modifications as the judgment-heavy areas, so those inputs need their reasoning stored, not just their values.
 - **Measurements.** Each area measurement with standard, edition, surveyor and date, and every share change it caused.
 
-The mechanics (typed actors, append-only history, snapshots of what changes underneath) are in [Audit Trails](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you); retention periods are in Records, Privacy & Audits.
+The mechanics (typed actors, append-only history, snapshots of what changes underneath) are in [Audit Trails](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you); retention periods are in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

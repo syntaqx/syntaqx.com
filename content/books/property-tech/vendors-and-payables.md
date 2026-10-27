@@ -41,7 +41,7 @@ How the operator chooses what to buy and from whom depends on what it is:
 - **Bids for projects and contracts.** A roof, a parking lot reseal or an annual landscaping contract goes out for bids: a scope, a list of invited (or public) vendors, a due date, responses, a comparison and an award. RealPage's marketplace does this end to end; an owner or lender may require a minimum number of bids above a dollar threshold, which is policy data on the owner or agreement.
 - **Group purchasing.** A **group purchasing organization** (GPO) aggregates many buyers' volume to negotiate prices from national suppliers, as RealPage's eSupply does. A GPO may be funded by supplier fees or by rebates on members' purchases, which raises the same question as card rebates below: whose money earned it.
 
-The control that ties these together is the budget. Every purchase is coded to a property and a general ledger account, and the procurement system shows spend against the property's budget before approval; Budgets, Forecasts & Capital Projects owns the budget itself. RealPage's AI Spend Agent is the newest form of an old control: comparing each purchase with policy, approved vendors and contract prices, and flagging the exceptions for a human.
+The control that ties these together is the budget. Every purchase is coded to a property and a general ledger account, and the procurement system shows spend against the property's budget before approval; [Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects#reforecasts-and-variance) owns the budget itself. RealPage's AI Spend Agent is the newest form of an old control: comparing each purchase with policy, approved vendors and contract prices, and flagging the exceptions for a human.
 
 ## Purchase Orders
 
@@ -64,7 +64,7 @@ Whatever the capture method, the invoice becomes a **bill** and goes through the
 - **Duplicate detection.** The same invoice arrives by email and by portal, or is resubmitted with a new number. The Payments model's unique (vendor, invoice number) catches the first case; the second needs fuzzy matching on amount, date and property.
 - **Coding and allocation.** Each line is coded to a property and GL account, and an invoice that covers several properties is split by allocation into one bill per paying entity, for the reason above.
 - **Approval routing.** Approvals follow the authority matrix and the owner's limits for that property, with approvals set "by property or unit" in AvidXchange's phrase. The person who entered the bill or changed the vendor's details can't approve it ([Vendor Payouts](/books/payments/vendor-payouts#how-to-build-it) enforces this in the approval transaction).
-- **Owner chargebacks and markups.** On third-party managed properties, some vendor costs are rebilled to the owner with a markup set in the management agreement, and maintenance staff time is billed to the owner ([Resident Chargebacks](/books/property-tech/maintenance-and-work-orders#resident-chargebacks) covers what goes to residents). Owners & Management Agreements owns the fee terms; payables applies them.
+- **Owner chargebacks and markups.** On third-party managed properties, some vendor costs are rebilled to the owner with a markup set in the management agreement, and maintenance staff time is billed to the owner ([Resident Chargebacks](/books/property-tech/maintenance-and-work-orders#resident-chargebacks) covers what goes to residents). [Owners & Management Agreements](/books/property-tech/owners-and-management-agreements#reimbursements-and-allocated-costs) owns the fee terms; payables applies them.
 
 ## Paying Vendors
 
@@ -72,9 +72,9 @@ Paying the approved bill is a payout, and the Payments volume covers the rails: 
 
 What property adds:
 
-- **The money is the owner's.** A vendor bill is paid from the owning entity's operating account, usually a trust account the manager controls (Trust Accounting & the General Ledger owns those accounts and their reconciliation). A payment run is therefore grouped by paying entity and bank account, and a bill can only be paid if that account holds enough of that owner's money. A manager who pays one owner's bills with another owner's cash has commingled trust funds, which is the classic trust accounting violation.
+- **The money is the owner's.** A vendor bill is paid from the owning entity's operating account, usually a trust account the manager controls ([Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#three-way-reconciliation) owns those accounts and their reconciliation). A payment run is therefore grouped by paying entity and bank account, and a bill can only be paid if that account holds enough of that owner's money. A manager who pays one owner's bills with another owner's cash has commingled trust funds, which is the classic trust accounting violation.
 - **Rebates follow the money.** A virtual card rebate or a GPO rebate is earned on spending the owner funded. Whether the manager may keep it, must credit it to the owner, or shares it is a term of the management agreement that should be explicit and disclosed. My rule: record every rebate by the property and bill that generated it, so it can be credited or disclosed either way.
-- **Who processes the payment matters.** When the software vendor or a subsidiary moves the money (Entrata's Bill Pay names "Entrata, Inc. or EntrataPay, LLC"), the owner's funds pass through a third party, which raises the [money transmission](/books/payments/becoming-a-payment-provider#holding-other-people-s-money) and trust account questions Collecting Rent and Trust Accounting & the General Ledger take up.
+- **Who processes the payment matters.** When the software vendor or a subsidiary moves the money (Entrata's Bill Pay names "Entrata, Inc. or EntrataPay, LLC"), the owner's funds pass through a third party, which raises the [money transmission](/books/payments/becoming-a-payment-provider#holding-other-people-s-money) and trust account questions [Collecting Rent](/books/property-tech/collecting-rent#who-holds-the-money) and [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#whose-money-it-is) take up.
 - **Tax reporting has two sides.** Vendors paid for services get Form 1099-NEC, now for payments of $2,000 or more for tax years beginning after 2025 (adjusted for inflation from 2027); payments to corporations are generally exempt except for legal services; and card payments are reported on Form 1099-K by the payment settlement entity, not by the payer. Separately, a property manager that collects rent for an owner must report the rent paid over to the owner on Form 1099-MISC, which Buildium's 1099 e-filing covers for "both property owners and vendors." The W-9, TIN matching and backup withholding mechanics are in [Tax: W-9s, TIN Matching and 1099s](/books/payments/vendor-payouts#tax-w-9s-tin-matching-and-1099s). The platform has to record which legal entity is the payer of record for each payment, because that's the entity whose name and TIN go on the form.
 
 ## Payment-Instruction Fraud
@@ -87,7 +87,7 @@ The controls, with the property-specific ones in bold:
 
 - **Change of bank details is a workflow,** not a field edit: a request with its channel, an out-of-band callback to a contact already on file (never one supplied in the request), account validation, and a hold on the first payment to the new account, as [Vendor Payouts](/books/payments/vendor-payouts#stopping-the-changed-bank-account) describes. Vendor self-service in a portal (Entrata's Bill Pay pulls bank details from its vendor portal) moves the change to an authenticated channel, but the portal login then becomes the target, so the hold and notification to the prior contact still apply.
 - **Separate duties** between the people who onboard vendors, change their details, approve bills and release payment runs.
-- **Owners' instructions get the same treatment.** An owner's distribution account change (Owners & Management Agreements owns distributions) is the same attack aimed at the other side of the ledger, and needs the same callback and hold.
+- **Owners' instructions get the same treatment.** An owner's distribution account change ([Owners & Management Agreements](/books/property-tech/owners-and-management-agreements#owner-distributions) owns distributions) is the same attack aimed at the other side of the ledger, and needs the same callback and hold.
 - **Watch for new-vendor patterns:** a new vendor whose bank account matches an employee's or another vendor's, invoices just under an approval limit, or a first invoice paid by rush ACH. These are rules over the payables data, with flags for a human.
 - **Plan the recovery.** When a diversion is found, the IC3 advice is to contact the financial institution immediately to request a recall and file a complaint. The runbook names who calls the bank, who notifies the owner, and how the owner is made whole while recovery runs.
 
@@ -130,7 +130,7 @@ CREATE TABLE vendor_documents (          -- evidence that a requirement is met
   jurisdiction TEXT,                                     -- ISO 3166-2 for a state license
   valid_during DATERANGE NOT NULL,
   file_id      UUID NOT NULL,
-  verified_by  UUID,                                     -- user or credentialing service
+  verified_by  UUID REFERENCES users (id),               -- user or credentialing service
   verified_at  TIMESTAMPTZ
 );
 
@@ -217,7 +217,7 @@ CREATE TABLE vendor_bank_change_requests (  -- the workflow that may add payment
                         'mail', 'staff')),
   requested_by        TEXT NOT NULL,                  -- as stated in the request
   callback_contact    TEXT,                           -- the contact on file that was called
-  verified_by         UUID,                           -- the user who made the call
+  verified_by         UUID REFERENCES users (id),     -- the user who made the call
   verified_at         TIMESTAMPTZ,
   outcome             TEXT NOT NULL CHECK (outcome IN ('pending', 'verified', 'rejected',
                         'fraud_suspected')),

@@ -9,7 +9,7 @@ tags = ["property-tech", "resident-portal", "communications", "amenities", "surv
 
 Most of a resident's relationship with a property happens between move-in and notice, and most of it now happens in an app. A household pays rent there, asks for a repair, books the clubhouse for a birthday, finds out the water will be off on Tuesday, picks up a package, answers a survey about the repair, and eventually gets a renewal offer or gives notice. To the operator, each of those is a different system with a different owner; to the resident, it's one login, and the experience is judged by the worst of them. The renewal decision at the end is made from the sum: a household that waited two weeks for a dishwasher and heard about the water shutoff from a neighbor is pricing its move.
 
-This chapter covers the resident-facing layer: portals and apps, the communications that run through them and the consent rules that govern those, amenity reservations, bookable resident services, surveys and sentiment, AI agents that answer residents, and the renewal and retention loop the rest feeds. It is mostly a front end over records other chapters own (the ledger, work orders, the lease, access credentials), so its hardest problems are identity, consent and accountability rather than data. Paying rent is Collecting Rent; the lease, its documents and renewal terms are The Lease; renewal pricing is Revenue Management & Pricing; rewards, marketplaces and bulk internet are Resident Financial Products & Ancillary Revenue; online reviews and the rules on them are Leads, CRM, Tours & the Leasing Center.
+This chapter covers the resident-facing layer: portals and apps, the communications that run through them and the consent rules that govern those, amenity reservations, bookable resident services, surveys and sentiment, AI agents that answer residents, and the renewal and retention loop the rest feeds. It is mostly a front end over records other chapters own (the ledger, work orders, the lease, access credentials), so its hardest problems are identity, consent and accountability rather than data. Paying rent is [Collecting Rent](/books/property-tech/collecting-rent); the lease, its documents and renewal terms are [The Lease](/books/property-tech/the-lease); renewal pricing is [Revenue Management & Pricing](/books/property-tech/revenue-management#renewal-pricing); rewards, marketplaces and bulk internet are [Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products); online reviews and the rules on them are [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#reviews-and-reputation).
 
 ## How the Platforms Do It
 
@@ -34,15 +34,15 @@ A resident app is a client for records the platform already has. What it shows, 
 
 | Area | What the resident does | Owned by |
 | --- | --- | --- |
-| Account | Balance, charges, payments, autopay, receipts | Charges & Resident Ledgers; Collecting Rent |
+| Account | Balance, charges, payments, autopay, receipts | [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers); [Collecting Rent](/books/property-tech/collecting-rent) |
 | Requests | Submit with photos, permission to enter, track, rate | [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders) |
-| Lease | Documents, addenda, renewal offers, notice to vacate | The Lease |
-| Household | Occupants, roommates, pets, vehicles, emergency contacts | The Lease; [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#parking-and-towing) |
+| Lease | Documents, addenda, renewal offers, notice to vacate | [The Lease](/books/property-tech/the-lease) |
+| Household | Occupants, roommates, pets, vehicles, emergency contacts | [The Lease](/books/property-tech/the-lease#roommate-changes); [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#parking-and-towing) |
 | Access | Mobile key, guest passes, packages | [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings) |
-| Coverage | Renters insurance proof, deposit alternative status | Insurance, Deposits & Guarantees |
+| Coverage | Renters insurance proof, deposit alternative status | [Insurance, Deposits & Guarantees](/books/property-tech/insurance-deposits-and-guarantees) |
 | Community | Announcements, events, community wall, classifieds | This chapter |
 | Amenities and services | Book spaces, order services | This chapter |
-| Moving | Move-in checklist, utility and internet setup, move-out checklist | Move-In & Move-Out; Utilities & Energy |
+| Moving | Move-in checklist, utility and internet setup, move-out checklist | [Move-In & Move-Out](/books/property-tech/move-in-and-move-out); [Utilities & Energy](/books/property-tech/utilities-and-energy) |
 
 Four things decide whether it works:
 
@@ -50,11 +50,11 @@ Four things decide whether it works:
 
 **Multiple households, multiple properties.** A person can be a leaseholder at one property, a guarantor at another and a former resident at a third, sometimes under different operators that happen to use the same suite. Inside one operator, the app switches between leases; across operators, they're separate tenants and separate accounts, because the data belongs to each operator ([Multi-Tenancy](/docs/architecture/multi-tenancy)).
 
-**Documents are records, not attachments.** The lease, addenda, notices and move-in inspection are shown from the signed record with its retrieval guarantees ([Storage and Retrieval](/docs/compliance/electronic-signatures#storage-and-retrieval)); a legal notice delivered through the portal counts as delivered only where the law and the resident's electronic consent allow it ([Consumer Consent Comes First](/docs/compliance/electronic-signatures#consumer-consent-comes-first)), which The Lease owns.
+**Documents are records, not attachments.** The lease, addenda, notices and move-in inspection are shown from the signed record with its retrieval guarantees ([Storage and Retrieval](/docs/compliance/electronic-signatures#storage-and-retrieval)); a legal notice delivered through the portal counts as delivered only where the law and the resident's electronic consent allow it ([Consumer Consent Comes First](/docs/compliance/electronic-signatures#consumer-consent-comes-first)), which [The Lease](/books/property-tech/the-lease#delivery-methods-are-law) owns.
 
-**Accessibility and language.** The app is a public accommodation for some residents and the only way to reach the office for others: it meets WCAG 2.2 AA ([Accessibility](/docs/frontend/accessibility)), works on low-end phones, and supports the languages the property's residents use ([Internationalization](/docs/frontend/internationalization)). Federal language-access guidance for federally assisted housing was issued under Executive Order 13166, which Executive Order 14224 revoked on March 1, 2025, directing the Attorney General to rescind guidance issued under it while stating that agencies aren't required to stop producing materials in other languages; what that means for assisted owners as of October 2026 is in Fair Housing. My default is to translate the transactional and legal messages residents rely on regardless, and to tell residents how to get help in their language.
+**Accessibility and language.** The app is a public accommodation for some residents and the only way to reach the office for others: it meets WCAG 2.2 AA ([Accessibility](/docs/frontend/accessibility)), works on low-end phones, and supports the languages the property's residents use ([Internationalization](/docs/frontend/internationalization)). Federal language-access guidance for federally assisted housing was issued under Executive Order 13166, which Executive Order 14224 revoked on March 1, 2025, directing the Attorney General to rescind guidance issued under it while stating that agencies aren't required to stop producing materials in other languages; what that means for assisted owners as of October 2026 is in [Language Access](/books/property-tech/ai-in-property-management#language-access). My default is to translate the transactional and legal messages residents rely on regardless, and to tell residents how to get help in their language.
 
-Segment editions extend the same portal: a housing authority's landlord and participant portals (Subsidized & Affordable Housing), family portals in senior living (Senior Living), sales reporting and certificates of insurance for commercial tenants (Commercial Property), and owner portals for association members (Community Associations).
+Segment editions extend the same portal: a housing authority's landlord and participant portals ([Subsidized & Affordable Housing](/books/property-tech/affordable-housing#the-housing-authority-side)), family portals in senior living ([Senior Living](/books/property-tech/senior-living#families-representatives-and-the-portal)), sales reporting and certificates of insurance for commercial tenants ([Commercial Property](/books/property-tech/commercial-property#tenant-insurance-compliance)), and owner portals for association members ([Community Associations](/books/property-tech/community-associations#the-association-the-manager-and-the-owner)).
 
 ## Communications and Consent
 
@@ -73,13 +73,13 @@ The general machinery is in [Notifications & Consent](/docs/architecture/notific
 
 The property twists:
 
-- **Legal notices are not notifications.** A rent increase or an entry notice sent by app push is a message about a notice; the notice itself is a document served by a method the law accepts, with its own record of service, which The Lease and [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice) own. The communications layer links to the served notice; it never substitutes for it.
+- **Legal notices are not notifications.** A rent increase or an entry notice sent by app push is a message about a notice; the notice itself is a document served by a method the law accepts, with its own record of service, which [The Lease](/books/property-tech/the-lease#notices) and [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice) own. The communications layer links to the served notice; it never substitutes for it.
 - **Opting out of marketing never silences the tenancy.** A resident who texts STOP to a renewal promotion still needs to hear about the water shutoff and the fire alarm test. That's why the purpose has to be right on every template, and why consent is per purpose, not per phone number ([Revoking Consent](/docs/compliance/consumer-contact#revoking-consent)).
 - **Audience comes from leases and units.** "Building C, floors 3 to 5" or "units on the east riser" resolves through units and current leases at send time, including occupants who opted in, not from a mailing list that went stale at the last move-out.
 - **The operator is the sender, per property.** Messages go out under the property's name and number, from a sender registered for that tenant ([Multi-Tenant Senders](/docs/architecture/notifications#multi-tenant-senders)); replies land in a shared inbox where site and central staff see one thread per household. Entrata's OXP Communications describes a shared inbox with SMS and email together.
-- **Partner messages are the operator's messages.** An internet or moving offer sent through the app is marketing by the operator, whatever revenue share sits behind it; the disclosure and consent obligations are Resident Financial Products & Ancillary Revenue's.
+- **Partner messages are the operator's messages.** An internet or moving offer sent through the app is marketing by the operator, whatever revenue share sits behind it; the disclosure and consent obligations are [Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#disclosure-and-revenue-share)'s.
 
-**Community walls and classifieds** are user-generated content inside the operator's product. My default is posting rules residents accept, reporting and moderation by staff, and a review queue for posts that look like housing ads (a sublet or roommate post), because a discriminatory preference in a housing notice is a fair housing problem wherever it's published (Fair Housing).
+**Community walls and classifieds** are user-generated content inside the operator's product. My default is posting rules residents accept, reporting and moderation by staff, and a review queue for posts that look like housing ads (a sublet or roommate post), because a discriminatory preference in a housing notice is a fair housing problem wherever it's published ([Fair Housing](/books/property-tech/fair-housing#advertising)).
 
 ## Amenity Reservations
 
@@ -94,7 +94,7 @@ The mechanics are a reservation system ([Reservations & Holds](/docs/architectur
 - **Fees are charges.** A party room fee posts to the lease ledger with its charge code; a damage deposit is a held amount released after inspection; damage beyond it becomes a chargeback with evidence, the same way work orders do ([Resident Chargebacks](/books/property-tech/maintenance-and-work-orders#resident-chargebacks)).
 - **Bookings may open doors.** A confirmed booking can grant an access credential to the amenity for the slot ([Smart Locks and Access Control](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control)).
 
-Amenity rules are a fair housing surface. California's civil rights department settled a familial status case in April 2018 for $25,000 where house rules barred children from the pool after 6 p.m. while adults could swim until 9 p.m. My rule: amenity rules are written about conduct and safety that apply to everyone, never about who the user is, and they're reviewed as policy text, not typed into a booking form by whoever set it up (Fair Housing).
+Amenity rules are a fair housing surface. California's civil rights department settled a familial status case in April 2018 for $25,000 where house rules barred children from the pool after 6 p.m. while adults could swim until 9 p.m. My rule: amenity rules are written about conduct and safety that apply to everyone, never about who the user is, and they're reviewed as policy text, not typed into a booking form by whoever set it up ([Fair Housing](/books/property-tech/fair-housing#protected-classes)).
 
 ## Resident Services
 
@@ -104,7 +104,7 @@ The platform's part is narrow and contractual:
 
 - **Who is the merchant.** The provider performs and usually charges the resident directly; if the operator collects, the charge is on the ledger and the operator is responsible for it. Either way the order, the price and the provider are recorded.
 - **Who pays for credits.** A service credit is a concession, a marketing expense or a vendor-funded promotion, and the owner's statement has to say which.
-- **What the operator earns.** Referral and revenue-share income from services belongs to someone under the management agreement; Resident Financial Products & Ancillary Revenue owns the money and the disclosure.
+- **What the operator earns.** Referral and revenue-share income from services belongs to someone under the [management agreement](/books/property-tech/owners-and-management-agreements#the-management-agreement); [Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#resident-marketplaces-and-referral-revenue) owns the money and the disclosure.
 - **What the provider may do.** A dog walker or cleaner entering a unit needs the resident's own access grant (a guest credential the resident issues), never a staff credential, and the operator's entry-notice rules don't apply because the operator isn't entering ([Smart Locks and Access Control](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control)).
 
 ## Surveys and Sentiment
@@ -117,7 +117,7 @@ How to make that a system rather than a dashboard:
 - **Tie the answer to its subject.** A one-star response points at the work order and the technician or vendor that did it, so it feeds vendor scorecards ([Vendors, Procurement & Payables](/books/property-tech/vendors-and-payables)) and reopens the request if the resident says it isn't fixed.
 - **Separate what residents said from what a model inferred.** A survey score is the resident's statement; a sentiment label on a text thread is a model's guess with a version. Store both, never overwrite one with the other, and keep the model output out of decisions the resident can't see or contest ([Automated Risk Decisions](/docs/architecture/risk-scoring)).
 - **Escalate, don't just score.** A response that says "still leaking" or "I feel unsafe" opens a work order or a manager task with an owner; an emergency in free text skips the queue ([Emergencies Skip the Model](/docs/architecture/ai-agents#emergencies-skip-the-model)).
-- **Don't gate reviews.** Asking only happy residents to post public reviews, or paying for positive ones, runs into the FTC's rules on consumer reviews, which Leads, CRM, Tours & the Leasing Center owns along with reputation management.
+- **Don't gate reviews.** Asking only happy residents to post public reviews, or paying for positive ones, runs into the FTC's rules on consumer reviews, which [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#the-ftc-rule-on-consumer-reviews) owns along with reputation management.
 
 ## AI Resident Agents
 
@@ -131,7 +131,7 @@ The general rules are in [AI Agents in the Product](/docs/architecture/ai-agents
 - **Accommodation requests go to people.** A resident who mentions a disability, an assistance animal or a need for a change is making a request the operator must handle through its process, and the agent's job is to recognize it and hand it off ([Reasonable Accommodations and Modifications](/books/property-tech/fair-housing#reasonable-accommodations-and-modifications)).
 - **Disclose and hand off.** Residents know they're talking to an AI where the law requires it and as my default everywhere ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)), and can reach a person ([Human Handoff Is a Product Feature](/docs/architecture/ai-agents#human-handoff-is-a-product-feature)).
 
-AI in Property Management covers governance, automation levels and cost allocation to owners across all agents.
+[AI in Property Management](/books/property-tech/ai-in-property-management#automation-levels) covers governance, automation levels and cost allocation to owners across all agents.
 
 ## Renewals and Retention
 
@@ -139,24 +139,24 @@ Renewal is where the resident experience turns into revenue. Each household that
 
 The renewal flow in the app:
 
-1. **The offer arrives on time.** The renewal window and its offers come from Revenue Management & Pricing, capped where a rent cap applies, and the notice of any increase is served under the property's `rent_increase_notice` rule ([The Rules Matrix](/books/property-tech/landlord-tenant-law#the-rules-matrix)). The app shows the offer; The Lease owns the document.
+1. **The offer arrives on time.** The renewal window and its offers come from [Revenue Management & Pricing](/books/property-tech/revenue-management#renewal-pricing), capped where a rent cap applies, and the notice of any increase is served under the property's `rent_increase_notice` rule ([The Rules Matrix](/books/property-tech/landlord-tenant-law#the-rules-matrix)). The app shows the offer; [The Lease](/books/property-tech/the-lease#renewals) owns the document.
 2. **Options are clear.** Terms and prices side by side, including month-to-month if offered and any fees, signed electronically by every leaseholder and guarantor.
-3. **Notice to vacate is just as easy.** A resident who isn't renewing gives notice in the app, with the date and time recorded as received, the notice period the lease and law require, and a forwarding address for the deposit accounting (Move-In & Move-Out). Making notice hard to give doesn't retain anyone; it produces disputes.
-4. **Roommate changes route correctly.** One leaseholder renewing and another leaving is a new lease with a different household membership, not an edit (The Lease).
+3. **Notice to vacate is just as easy.** A resident who isn't renewing gives notice in the app, with the date and time recorded as received, the notice period the lease and law require, and a forwarding address for the deposit accounting ([Move-In & Move-Out](/books/property-tech/move-in-and-move-out#move-out)). Making notice hard to give doesn't retain anyone; it produces disputes.
+4. **Roommate changes route correctly.** One leaseholder renewing and another leaving is a new lease with a different household membership, not an edit ([Roommate Changes](/books/property-tech/the-lease#roommate-changes)).
 
-**Retention signals** are what tell a manager whom to call before the window opens: repeated or reopened work orders, slow responses, negative survey answers, unanswered messages, a recent transfer request, a noise complaint thread. My rule: signals are drawn from the household's service history and stated feedback, and never from protected characteristics or their proxies (Fair Housing). Two further limits:
+**Retention signals** are what tell a manager whom to call before the window opens: repeated or reopened work orders, slow responses, negative survey answers, unanswered messages, a recent transfer request, a noise complaint thread. My rule: signals are drawn from the household's service history and stated feedback, and never from protected characteristics or their proxies ([Disparate Impact and Algorithms](/books/property-tech/fair-housing#disparate-impact-and-algorithms)). Two further limits:
 
 - **Complaints are protected.** Many states prohibit retaliating against a tenant for complaining about habitability. California, for one, bars a landlord from recovering possession within 180 days of a protected act such as a good-faith repair notice, a habitability complaint to the landlord or an agency, or an inspection that results, and separately prohibits retaliation for organizing a tenants' association. A model that ranks "likely to complain" households lower for renewal offers is building a retaliation exhibit. Retention signals may prioritize outreach and service, never a worse offer or a non-renewal.
 - **Signals are explainable.** A manager sees why a household is flagged (three reopened work orders, a detractor survey), not a score.
 
-Renewal rate, notice reasons and the trade-out between renewal and new-lease rents are defined in Operating Metrics.
+Renewal rate, notice reasons and the trade-out between renewal and new-lease rents are defined in Operating Metrics ([Renewals and Turnover](/books/property-tech/operating-metrics#renewals-and-turnover), [Trade-Out](/books/property-tech/operating-metrics#trade-out)).
 
 ## How to Build It
 
-The schema extends [the core model](/books/property-tech/property-business#the-core-data-model): amenities are property inventory; reservations, service orders and surveys hang off leases and people; fees post as `charges`. Consent and message history use the playbook's consent ledger and message log ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger), [The Message Log](/docs/architecture/notifications#the-message-log)) with `people` as the subject, so there's no consent table here.
+The schema extends [the core model](/books/property-tech/property-business#the-core-data-model): reservable amenities are property inventory (`amenity_spaces`, distinct from the unit and property feature catalog `amenities` in [Portfolios, Properties & Units](/books/property-tech/portfolios-properties-and-units#how-to-build-it)); reservations, service orders and surveys hang off leases and people; fees post as `charges`. Consent and message history use the playbook's consent ledger and message log ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger), [The Message Log](/docs/architecture/notifications#the-message-log)) with `people` as the subject, so there's no consent table here.
 
 ```sql
-CREATE TABLE amenities (
+CREATE TABLE amenity_spaces (          -- what residents can book
   id                     UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id              UUID NOT NULL,
   property_id            UUID NOT NULL REFERENCES properties (id),
@@ -178,10 +178,9 @@ CREATE TABLE amenities (
 CREATE TABLE amenity_reservations (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id          UUID NOT NULL,
-  amenity_id         UUID NOT NULL REFERENCES amenities (id),
+  amenity_space_id   UUID NOT NULL REFERENCES amenity_spaces (id),
   lease_id           UUID NOT NULL REFERENCES leases (id),
-  booked_by_person_id UUID REFERENCES people (id),          -- null when staff or an agent booked
-  booked_by_actor    TEXT NOT NULL,                          -- typed actor: person, user, agent
+  booked_by          UUID NOT NULL REFERENCES users (id),    -- the resident's user, staff or an AI agent
   during             TSTZRANGE NOT NULL,
   exclusive_slot     BOOLEAN NOT NULL,                       -- copied from the amenity at insert
   party_size         INT NOT NULL DEFAULT 1 CHECK (party_size > 0),
@@ -191,7 +190,7 @@ CREATE TABLE amenity_reservations (
   fee_charge_id      UUID REFERENCES charges (id),
   credential_id      UUID REFERENCES access_credentials (id),
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  EXCLUDE USING GIST (amenity_id WITH =, during WITH &&)
+  EXCLUDE USING GIST (amenity_space_id WITH =, during WITH &&)
     WHERE (status IN ('held', 'pending_approval', 'confirmed') AND exclusive_slot)
 );
 ```
@@ -261,7 +260,7 @@ CREATE TABLE resident_feedback (           -- what a model or a person inferred,
   source_ref      UUID,                    -- the response, message or call it was read from
   sentiment       TEXT CHECK (sentiment IN ('positive', 'neutral', 'negative')),
   topics          TEXT[] NOT NULL DEFAULT '{}',   -- 'maintenance', 'noise', 'amenities'
-  classified_by   TEXT NOT NULL,           -- 'model:<name>@<version>' or a user id
+  classified_by   UUID NOT NULL REFERENCES users (id),  -- staff, or the model's AI agent user
   escalated_work_order_id UUID REFERENCES work_orders (id),
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -273,7 +272,7 @@ Design decisions behind it:
 - **Reservations post charges, not balances.** A fee is a `charges` row with the amenity's charge code, reversed on a cancellation the rules refund; a deposit is a charge with its release recorded.
 - **Holds expire on read.** A household that starts a booking and abandons it doesn't block the slot past `held_until` ([Expiry Is Enforced on Read](/docs/architecture/reservations-and-holds#expiry-is-enforced-on-read)).
 - **The merchant of record is explicit** on every service offering, so the ledger, the owner statement and the disclosure all say the same thing about who sold what.
-- **Stated and inferred feedback are separate tables,** and inferred rows name the model and version that produced them, so a disputed label can be traced and a model change can be re-run.
+- **Stated and inferred feedback are separate tables,** and inferred rows name who classified them (`classified_by`, the model's AI agent user, whose version is in the AI audit trail), so a disputed label can be traced and a model change can be re-run.
 - **Events in, events out.** Surveys and retention flags subscribe to `lease.moved_in`, `work_order.completed` and the renewal window; bookings and orders emit their own events for owner reporting and integrations ([Events & Async Messaging](/docs/architecture/events)).
 
 ## Auditing

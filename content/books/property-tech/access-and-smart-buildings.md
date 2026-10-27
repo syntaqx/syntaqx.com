@@ -10,7 +10,7 @@ tags = ["property-tech", "access-control", "smart-home", "iot", "parking", "priv
 
 A key used to be a piece of brass the leasing office cut, handed over at move-in and asked for back at move-out. In a building with smart locks, cloud access control, a video intercom, package lockers and a gated garage, the key is a row in someone's database: a credential that opens a set of doors for a period, issued because a lease, a work order or a tour justified it, and logged every time it's used. That makes access a property-management record like any other. It has to start the day the lease says the household moves in, stop the day it says they leave, cover the maintenance technician only for the window the entry notice gave, and produce a log that's evidence in a lockout, a burglary or an eviction. It also makes it personal data: when a resident comes home, which door they used and whose face the intercom saw are exactly the facts a growing set of laws restricts.
 
-This chapter covers the operations layer between the resident and the building: smart locks and access control, sensors and smart devices, packages, parking and towing, and the privacy rules that apply to all of it. The hardware is bought, not built; what the platform owns is the link between the lease and the device, and the records that prove who could open what, when. Self-guided tour codes belong to Leads, CRM, Tours & the Leasing Center; the entry rules a technician follows are in [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice); managed Wi-Fi as a revenue line belongs to Resident Financial Products & Ancillary Revenue.
+This chapter covers the operations layer between the resident and the building: smart locks and access control, sensors and smart devices, packages, parking and towing, and the privacy rules that apply to all of it. The hardware is bought, not built; what the platform owns is the link between the lease and the device, and the records that prove who could open what, when. Self-guided tour codes belong to [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#self-guided-tours); the entry rules a technician follows are in [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice); managed Wi-Fi as a revenue line belongs to [Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#bulk-internet-and-managed-wi-fi).
 
 ## How the Platforms Do It
 
@@ -44,15 +44,15 @@ An access system answers one question at the door: does this credential open thi
 | Vendor | An approved vendor on a job | The job's dates | Job closed or vendor suspended |
 | Staff | An employee's role at the property | Employment at that property | Transfer or termination |
 | Guest or delivery | A resident's or staff member's invitation | Hours or days | Expiry |
-| Tour | A verified prospect's booking | The tour slot | Expiry (owned by the tours chapter) |
+| Tour | A verified prospect's booking | The tour slot | Expiry; the tour's `tour_access_grants` row points at the credential |
 
-The life-cycle events from [the core model](/books/property-tech/property-business#the-core-data-model) drive it: `lease.moved_in` issues credentials for every leaseholder and occupant old enough to hold one, a change in `lease_members` adds or removes a person mid-lease, and `lease.moved_out` revokes everything tied to the lease. My rule: **no credential without a purpose record, and no purpose record that outlives its credential.** A fob issued at the desk with no lease behind it is how former residents, ex-partners and fired employees keep getting in.
+The life-cycle events from [the core model](/books/property-tech/property-business#the-core-data-model) drive it: `lease.moved_in` issues credentials for every leaseholder and occupant old enough to hold one, a change in `lease_members` adds or removes a person mid-lease, and `lease.moved_out` revokes everything tied to the lease ([Keys & Access](/books/property-tech/move-in-and-move-out#keys-access) covers the handover). My rule: **no credential without a purpose record, and no purpose record that outlives its credential.** A fob issued at the desk with no lease behind it is how former residents, ex-partners and fired employees keep getting in.
 
 **Revocation is the hard direction.** Issuing a credential that doesn't sync is a support call; a revocation that doesn't sync is a security incident. Vendor clouds accept a revoke and propagate it to locks on their own schedule, and offline and data-on-card locks only learn about it when a credential with fresh data touches a reader. The platform keeps each credential's sync state (pending, active, revoke pending, revoked, failed), retries failed revocations with backoff, and raises an alert when a revocation hasn't confirmed by the time the next household's move-in is scheduled. The turn checklist in [Make-Ready Turns](/books/property-tech/maintenance-and-work-orders#make-ready-turns) includes "all credentials for the prior lease confirmed revoked," the electronic version of rekeying.
 
 Rekeying is also law. Texas requires a landlord to rekey security devices "not later than the seventh day after each tenant turnover date," at the landlord's expense, and to rekey again at the tenant's expense on request; the same subchapter lists the devices every dwelling needs (a keyed dead bolt or doorknob lock and a keyless bolting device and door viewer on each exterior door, latches on exterior windows, pin locks on sliding doors). California requires a landlord to change locks within 24 hours of a written request from a tenant protected by a qualifying order or report against someone who isn't a tenant of the unit, and lets the tenant change them and be reimbursed within 21 days if the landlord doesn't. Both are deadlines with a start event, so the platform computes and stores them ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)) and resolves which applies from the property's jurisdiction ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law)). Whether revoking and reissuing an electronic credential satisfies a statute written for keyed locks is a question for legal review in each state, not an assumption to bake into code.
 
-**Staff and vendor entry is still entry.** A smart lock makes it trivial to open a unit remotely, which is exactly why the entry-notice rules matter more, not less. A work-order credential is valid only inside the entry window recorded on the work order's notice, and its use is logged against that work order ([Entry Notice](/books/property-tech/maintenance-and-work-orders#entry-notice)). New York City's Tenant Data Privacy Act goes further: an owner can't require a tenant to use the smart access system to enter their own unit. The technician's side of the visit (arrival, proof, photos) is [Proof of Service](/books/field-operations/proof-of-service).
+**Staff and vendor entry is still entry.** Staff and vendor holders are platform users, scoped to properties by their grants ([Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants)). A smart lock makes it trivial to open a unit remotely, which is exactly why the entry-notice rules matter more, not less. A work-order credential is valid only inside the entry window recorded on the work order's notice, and its use is logged against that work order ([Entry Notice](/books/property-tech/maintenance-and-work-orders#entry-notice)). New York City's Tenant Data Privacy Act goes further: an owner can't require a tenant to use the smart access system to enter their own unit. The technician's side of the visit (arrival, proof, photos) is [Proof of Service](/books/field-operations/proof-of-service).
 
 **Access logs are evidence.** Entries, denials, forced doors and doors held open are append-only events with the credential, the access point and the time the lock or reader reported them (which may be hours after the fact for an offline lock). They answer the questions that come later: did the former roommate get in after the lockout, did the technician enter outside the notice window, was the package room opened at 2 a.m. They're also the most sensitive data in this chapter, which [Resident Privacy](#resident-privacy) covers.
 
@@ -65,11 +65,11 @@ What the property platform does with them:
 - **Leak and temperature alerts become work orders.** A leak sensor's alert is triaged like any emergency request ([Triage and Priority](/books/property-tech/maintenance-and-work-orders#triage-and-priority)), with the device, the unit and the alert time attached. Alerts that fire in vacant units are often the only way anyone finds out.
 - **Vacant units are managed remotely.** Thermostat setpoints and lights in vacant and model units are set by the platform from unit status, and reverted at move-in so the household isn't billed for the operator's settings.
 - **Device health is maintenance.** Offline hubs, low batteries and tampered sensors are alerts with an owner and an SLA, not dashboard noise; a leak sensor with a dead battery is a liability the operator believes it doesn't have.
-- **Meter data feeds billing.** Submeter reads go to resident utility billing, which Utilities & Energy owns along with the law on submetering and billing.
+- **Meter data feeds billing.** Submeter reads go to resident utility billing, which [Utilities & Energy](/books/property-tech/utilities-and-energy#resident-utility-billing) owns along with the law on submetering and billing.
 
 The integration shape is the same as access: devices live in vendor clouds with their own identifiers, the platform keeps a crosswalk ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)), and alerts arrive by webhook or polling ([Webhooks](/docs/api-design/webhooks)). Device control (unlock, setpoint) is a command with an actor and a reason, recorded in the [audit trail](/docs/architecture/audit-trails#typed-actors) like any other change.
 
-**Managed Wi-Fi** is the common-area network many smart buildings run on, and it's also a revenue line. RealPage's page says operators can "earn $50 to 70 per unit per month" from it while its FAQ gives "$50 to $79," which is a reminder that vendor revenue claims aren't data. The rules, briefly and as of October 2026: the FCC's February 2022 order bars providers from exclusive and graduated revenue-sharing agreements with owners of multiple tenant environments and requires providers to disclose exclusive marketing arrangements, while leaving ordinary bulk billing in place; a 2024 proposal to let tenants opt out of bulk billing was withdrawn in January 2025. The agreements, the revenue share and how the charge appears on the lease are Resident Financial Products & Ancillary Revenue.
+**Managed Wi-Fi** is the common-area network many smart buildings run on, and it's also a revenue line. RealPage's page says operators can "earn $50 to 70 per unit per month" from it while its FAQ gives "$50 to $79," which is a reminder that vendor revenue claims aren't data. The rules, briefly and as of October 2026: the FCC's February 2022 order bars providers from exclusive and graduated revenue-sharing agreements with owners of multiple tenant environments and requires providers to disclose exclusive marketing arrangements, while leaving ordinary bulk billing in place; a 2024 proposal to let tenants opt out of bulk billing was withdrawn in January 2025. The agreements, the revenue share and how the charge appears on the lease are [Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#bulk-internet-and-managed-wi-fi).
 
 ## Packages
 
@@ -81,7 +81,7 @@ The platform's part:
 - **Notify through the consent ledger.** A package notice is a transactional message, sent on the channel the resident chose ([Communications and Consent](/books/property-tech/resident-experience#communications-and-consent)).
 - **Enforce hold periods** as policy: a package not picked up within the property's window is returned or moved, and the resident is told before, not after.
 - **Handle former residents.** Packages keep arriving after move-out; the move-out flow tells the household and the package system stops matching them after a grace period.
-- **Charge only what was disclosed.** A locker fee is a mandatory or optional fee like any other; if it's mandatory it belongs in the advertised price, which Listings, Websites & Marketing and Charges & Resident Ledgers own.
+- **Charge only what was disclosed.** A locker fee is a mandatory or optional fee like any other; if it's mandatory it belongs in the advertised price, which [Listings, Websites & Marketing](/books/property-tech/listings-and-marketing#fee-transparency-and-all-in-pricing) and [Charges & Resident Ledgers](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog) own.
 
 Pickup records (who opened which locker, when) are access events and follow the same retention and privacy rules as door logs.
 
@@ -111,7 +111,7 @@ Access and device data says when people come and go, who visits them, and when t
 
 **Biometric laws.** Face-matching readers, fingerprint locks and intercoms that recognize faces collect biometric identifiers. Illinois' Biometric Information Privacy Act requires notice of the purpose and term, a written release before collection, and a public written policy with a retention schedule and destruction guidelines, with liquidated damages of up to $1,000 per violation or $5,000 per intentional or reckless one. An August 2, 2024 amendment made repeated collection of the same identifier from the same person by the same method a single violation and confirmed that an electronic signature can be the written release; as of October 2026, the Seventh Circuit has held the amendment applies to cases pending when it was enacted. Brivo's "opt-in face-matching" is the design these laws push toward: biometrics as an alternative the resident chooses, never the only way in.
 
-**General privacy laws.** State consumer privacy laws reach resident data generally; Records, Privacy & Audits owns them, along with retention schedules and requests to delete.
+**General privacy laws.** State consumer privacy laws reach resident data generally; [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#state-privacy-laws) owns them, along with retention schedules and requests to delete.
 
 What that means in the product:
 
@@ -148,7 +148,7 @@ CREATE TABLE access_credentials (        -- issued for a purpose; dies with it
   tenant_id       UUID NOT NULL,
   property_id     UUID NOT NULL REFERENCES properties (id),
   holder_person_id UUID REFERENCES people (id),  -- residents, guests
-  holder_user_id  UUID,                          -- staff and vendor accounts (Platform Architecture)
+  holder_user_id  UUID REFERENCES users (id),    -- staff and vendor accounts (Platform Architecture)
   purpose         TEXT NOT NULL CHECK (purpose IN ('lease', 'work_order', 'vendor', 'staff',
                     'guest', 'delivery', 'tour')),
   lease_id        UUID REFERENCES leases (id),
@@ -213,7 +213,7 @@ CREATE TABLE device_alerts (             -- leaks and dead batteries both need a
                     'tamper', 'door_held_open')),
   raised_at       TIMESTAMPTZ NOT NULL,
   acknowledged_at TIMESTAMPTZ,
-  acknowledged_by UUID,
+  acknowledged_by UUID REFERENCES users (id),
   work_order_id   UUID REFERENCES work_orders (id),  -- set when it became work
   resolved_at     TIMESTAMPTZ
 );
@@ -278,7 +278,7 @@ CREATE TABLE tow_actions (               -- every tow justified by a stored rule
                           'inoperable', 'other')),
   first_observed_at     TIMESTAMPTZ NOT NULL,
   notice_served_at      TIMESTAMPTZ,                     -- when a waiting period applies
-  authorized_by_user_id UUID NOT NULL,
+  authorized_by         UUID NOT NULL REFERENCES users (id),
   authorized_at         TIMESTAMPTZ NOT NULL,
   police_notified_at    TIMESTAMPTZ,
   towing_company        TEXT NOT NULL,

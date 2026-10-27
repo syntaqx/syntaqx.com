@@ -25,7 +25,7 @@ The enterprise suites sell military housing as an edition of their multifamily p
 
 Three patterns are worth taking whichever product you start from:
 
-- **The allowance table is the price list.** Both military editions lead with the same claim: they load the new BAH rates every year and recompute what each household owes. Neither describes a pricing engine, because in privatized housing the operator doesn't set the rent; the Department of Defense does, through the allowance.
+- **The allowance table is the price list.** Both military editions lead with the same claim: they load the new BAH rates every year and recompute what each household owes. Neither describes a pricing engine ([Revenue Management & Pricing](/books/property-tech/revenue-management#what-gets-priced)), because in privatized housing the operator doesn't set the rent; the Department of Defense does, through the allowance.
 - **The payment arrives as a file, not a resident action.** "Posts payment files to the resident ledger" (RealPage) and "MAC payment processes" with reconciliation (Entrata) describe the same job: import a periodic file of allotments, match each line to a lease, and work the exceptions.
 - **The home is an asset next to the unit.** Yardi Breeze and Rent Manager both keep the home as its own record with an owner, a title and a make and model, linked to the lot. A design that makes the home a unit attribute can't record a sale between residents, a home moved off a lot, or a community-owned home rented on a resident-owned lot's neighbor.
 
@@ -39,7 +39,7 @@ In 1996 Congress gave the Department of Defense authorities to obtain private-se
 
 **Who gets a home, and in what order.** Installations keep waitlists, and the order isn't first-come first-served. Members assigned to the installation come first; within that, priority depends on the service's rules and the project's agreement. When occupancy falls, a project's agreement can open homes to other groups in a fixed order that the industry calls the tenant **waterfall**. A 2015 Fort Campbell account describes retirees and DoD civilians being allowed to rent homes there, with active-duty families first, families already on a move list ranked above civilians, and a family waitlist that had fallen from "well over 1,000" to about 100. Entrata's edition sets "custom priorities" based on each installation's "waterfall needs." The waterfall is per installation and per project, and it changes when occupancy changes, so it's rules as data: an ordered list of eligibility tiers, each with its own conditions, effective-dated ([Rules as Data](/docs/architecture/rules-as-data#stages-and-ordered-rules)). A waitlist entry carries the household's tier, the date that orders their place (often the date of the orders or of arrival, per local policy), and the home size they're eligible for, and every offer, refusal and skip is recorded, because a family passed over will ask why.
 
-**Unaccompanied housing.** Junior unaccompanied members usually live in barracks rather than family housing. GAO reported in 2023 that "hundreds of thousands of service members live in military barracks," that some barracks it observed were in poor condition, and that DoD "doesn't have reliable information about barracks conditions." The same report notes privatized as well as government-owned barracks. Government barracks are assigned, not leased, and charge no rent, so they belong in a housing assignment system rather than a resident ledger; privatized unaccompanied housing, where it exists, is leased like family housing, often by the bed or room. The modeling is the bed model from Student Housing: a bed under a unit, an assignment over a date range, and a lease where rent is charged. I haven't found a public source describing how any vendor handles barracks, so this chapter goes no further than the shape.
+**Unaccompanied housing.** Junior unaccompanied members usually live in barracks rather than family housing. GAO reported in 2023 that "hundreds of thousands of service members live in military barracks," that some barracks it observed were in poor condition, and that DoD "doesn't have reliable information about barracks conditions." The same report notes privatized as well as government-owned barracks. Government barracks are assigned, not leased, and charge no rent, so they belong in a housing assignment system rather than a resident ledger; privatized unaccompanied housing, where it exists, is leased like family housing, often by the bed or room. The modeling is the bed model from [Student Housing](/books/property-tech/student-housing#beds-rooms-and-bed-types): a bed under a unit, an assignment over a date range, and a lease where rent is charged. I haven't found a public source describing how any vendor handles barracks, so this chapter goes no further than the shape.
 
 ## Rent Is the Allowance
 
@@ -91,15 +91,15 @@ The rules tightened after reports of poor conditions in privatized homes. The Na
 | A written lease with clearly defined terms, and a plain-language briefing before signing and 30 days after move-in | 2890(b)(4), (b)(5) | Briefing dates as lease milestones with completion recorded |
 | A common lease, and common documents and processes across installations | 2891a(d)(13)(A), 2890(b)(18) | Lease templates approved at the department level, versioned, with installation and state addenda |
 | No non-refundable fees; rent credits not "arbitrarily held" | 2890(b)(17), 2891a(f) | Fee catalog flagged optional or prohibited; credits applied, not parked |
-| Reasonable advance notice before entry, except emergencies | 2890(b)(16) | Entry notice records on work orders, as in Maintenance & Work Orders |
+| Reasonable advance notice before entry, except emergencies | 2890(b)(16) | Entry notice records on work orders, as in [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice) |
 | Disclosure of bonus structures for community managers and of bonuses tied to maintenance | 2891a(d)(1) | Not a resident feature; owner and oversight reporting |
 | A walkthrough inspection before a prospective tenant signs | 2891a(d)(3) | An inspection record linked to the lease before signature |
 
-The tenant responsibilities in 2890(c) (report hazards in a timely manner, standard upkeep, allow reasonable access, read the lease materials) are attached to the lease like any rules addendum. The section also requires that the rights and responsibilities documents be attached to each lease, and the FY2020 Act directed DoD guidance on a universal lease that includes them plus any state-required addendum. Two practical consequences: the lease template is not the operator's to write alone, and every lease must carry the document versions in force when it was signed.
+The tenant responsibilities in 2890(c) (report hazards in a timely manner, standard upkeep, allow reasonable access, read the lease materials) are attached to the lease like any rules addendum. The section also requires that the rights and responsibilities documents be attached to each lease, and the FY2020 Act directed DoD guidance on a universal lease that includes them plus any state-required addendum. Two practical consequences: the lease template ([Templates and Clause Libraries](/books/property-tech/the-lease#templates-and-clause-libraries)) is not the operator's to write alone, and every lease must carry the document versions in force when it was signed.
 
 **Dispute resolution and segregated rent.** When other routes are exhausted, a tenant may enter a formal dispute process ([10 U.S.C. 2894](https://www.law.cornell.edu/uscode/text/10/2894)). Its clock is in the statute: the request is forwarded to the commander, housing office and landlord within 2 business days; the housing office investigates, including a physical inspection, within 7 business days; and the installation or regional commander decides within 30 calendar days of submission, never later than 60. The decision is final, may order remediation in no less than 10 business days, and if the landlord misses that deadline, amounts payable to it are reduced by 10 percent for each five-calendar-day period the problem remains. During a maintenance or habitability dispute the tenant may ask that all or part of their BAH and allotted pay be **segregated**, held so the landlord can't use it while the process is pending, with a commander's approval (2890(b)(15)), and the decision says how the held money is distributed.
 
-Segregation is the requirement that breaks an apartment ledger. The rent is still charged and still paid, so the resident isn't delinquent and no late fee or collection step may fire; but the money isn't the landlord's yet. Model it as a case on the lease with its statutory dates, and route the period's payments to a held liability rather than applying them to rent; the decision then releases them to rent, returns them to the tenant as a credit or refund, or splits them, each as ledger entries that point at the decision. Every deadline is computed and stored when the case opens ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)), the 10 percent reductions are adjustments against the landlord's receipts with the decision as their reason, and delinquency rules check for an open segregation before they act.
+Segregation is the requirement that breaks an apartment ledger. The rent is still charged and still paid, so the resident isn't delinquent and no late fee or collection step may fire; but the money isn't the landlord's yet. Model it as a case on the lease with its statutory dates, and route the period's payments to a held liability rather than applying them to rent ([Payment Application Order](/books/property-tech/charges-and-resident-ledgers#payment-application-order)); the decision then releases them to rent, returns them to the tenant as a credit or refund, or splits them, each as ledger entries that point at the decision. Every deadline is computed and stored when the case opens ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)), the 10 percent reductions are adjustments against the landlord's receipts with the decision as their reason, and delinquency rules ([Delinquency, Collections & Eviction](/books/property-tech/delinquency-and-eviction#notices)) check for an open segregation before they act.
 
 ## Deployment, PCS Orders and the SCRA
 
@@ -110,7 +110,7 @@ Service members move on orders, and federal law lets them leave a lease when the
 - **Money.** Rent through the effective date is prorated; "The lessor may not impose an early termination charge"; rent paid in advance for periods after termination is refunded within 30 days. Knowingly holding a member's property or deposit to collect rent accruing after termination is a misdemeanor. So the termination workflow suppresses lease-break fees and concession clawbacks for this reason code, and the refund deadline is a tracked task.
 - **Dependents and survivors.** Termination ends a dependent's obligation under the lease too. Since 2018 a spouse or dependent may terminate within one year of the member's death in service, and since 2019 a member with a catastrophic injury or illness (or a spouse or dependent, if the member lacks capacity) may terminate within one year.
 
-The SCRA applies to any landlord renting to a service member, not only privatized housing, so this is a reason code in The Lease and Move-In & Move-Out for every property type; it's here because military housing sees it on every move-out. In privatized housing a PCS is the normal end of a lease, and the allotment stop and the termination date have to agree.
+The SCRA applies to any landlord renting to a service member, not only privatized housing, so this is a reason code in [The Lease](/books/property-tech/the-lease#early-termination) and [Move-In & Move-Out](/books/property-tech/move-in-and-move-out#the-final-account-statement) for every property type; it's here because military housing sees it on every move-out. In privatized housing a PCS is the normal end of a lease, and the allotment stop and the termination date have to agree.
 
 **Deployment.** A deployed member stays a resident, and the household may stay too. Entrata's edition helps "quickly identify deployed service members." The platform records deployments as date ranges on the service member, because they change who is reachable (the spouse, through a power of attorney), what notices are delivered how, and how delinquency and entry are handled. A home left empty during a deployment is still occupied for occupancy reporting.
 
@@ -128,7 +128,7 @@ A manufactured housing community leases lots. The resident usually owns the home
 
 **RV sites.** Many communities rent RV sites next to home lots, some by the month and some by the night. Yardi Breeze tracks RVs' make, model and title alongside homes, and Rent Manager sells a separate RV park edition with nightly reservations, online booking, seasonal, weekend and holiday rates, and tax calculations. A long-term RV site is a lot with a monthly lease; a nightly site is a stay, which is the Short-Term Rentals model of reservations and lodging taxes ([Short-Term Rentals](/books/property-tech/short-term-rentals)). Don't force one into the other: a site can be monthly one season and nightly the next, which is a change of use on the unit over time.
 
-**Utilities.** Communities often own the water and sewer system, or sit behind one master meter, and bill residents for usage. Yardi Breeze sells a utility billing add-on for this edition, and Rent Manager's metered utilities module "calculates rates and charges for residents." Utility billing, submetering law and invoice processing are in Utilities & Energy; what manufactured housing adds is that the community may be the utility, so meter reads per lot and rate rules may come from a state utility regulator rather than a lease addendum.
+**Utilities.** Communities often own the water and sewer system, or sit behind one master meter, and bill residents for usage. Yardi Breeze sells a utility billing add-on for this edition, and Rent Manager's metered utilities module "calculates rates and charges for residents." Utility billing, submetering law and invoice processing are in [Utilities & Energy](/books/property-tech/utilities-and-energy#submetering-law-and-licensing); what manufactured housing adds is that the community may be the utility, so meter reads per lot and rate rules may come from a state utility regulator rather than a lease addendum.
 
 ## Single-Family Rental and Build-to-Rent
 
@@ -136,7 +136,7 @@ A single-family rental (SFR) portfolio is houses. In the core model, a scattered
 
 **Scattered-site maintenance.** Every house is its own trip. A work order in an apartment community is a walk across the property; in a scattered portfolio it's a drive, often to a vendor rather than staff, with a lockbox code or a resident appointment, and the yard, roof, HVAC and water heater are the operator's, not shared. That is field service: routing, appointments and proof of work, covered in [Dispatch & the Day of Service](/books/field-operations/dispatch) and [Proof of Service](/books/field-operations/proof-of-service). Make-ready turns include exterior work and utilities that must be transferred into the owner's name between residents, since each house has its own meters.
 
-**Self-showing and lockboxes.** With no leasing office near the house, scattered-site operators tour by letting the prospect in. Rently describes its version: "ID verification and renter screening before every tour," a lockbox opened by "a time-sensitive code to open the box, retrieve the key," or "time-restricted, one-time codes delivered per showing" on a smart lock, and a log of every entry. The pattern (verify, issue a short-lived single-use credential, log the entry, revoke) belongs with access control and touring in Access, Smart Buildings & Parking and Leads, CRM, Tours & the Leasing Center. What SFR adds is that the vacant house is the most exposed asset in the portfolio: a self-tour credential is the key to an empty home, and the identity check before issuing it is the control against rental scams and squatting.
+**Self-showing and lockboxes.** With no leasing office near the house, scattered-site operators tour by letting the prospect in. Rently describes its version: "ID verification and renter screening before every tour," a lockbox opened by "a time-sensitive code to open the box, retrieve the key," or "time-restricted, one-time codes delivered per showing" on a smart lock, and a log of every entry. The pattern (verify, issue a short-lived single-use credential, log the entry, revoke) belongs with access control and touring in [Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control) and [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#self-guided-tours). What SFR adds is that the vacant house is the most exposed asset in the portfolio: a self-tour credential is the key to an empty home, and the identity check before issuing it is the control against rental scams and squatting.
 
 **Associations around rented homes.** Many single-family homes and most BTR townhomes sit inside a homeowners association, and the owner, not the resident, is the member. Three things follow:
 
@@ -146,11 +146,11 @@ A single-family rental (SFR) portfolio is houses. In the core model, a scattered
 
 How associations bill and govern their owners is in [Community Associations](/books/property-tech/community-associations); this chapter covers the rented house's side of it.
 
-**Owners with one house.** Many SFR owners own one or a few houses and use a third-party manager. That raises the owner-reporting load per unit: every house gets an owner statement, a distribution and a 1099, and owner-paid expenses (association dues, property tax, insurance) flow through the manager's books or around them. Those mechanics are in Owners & Management Agreements and Trust Accounting & the General Ledger. Institutional SFR and BTR owners are the opposite: thousands of houses under a few entities, managed like a multifamily portfolio with a field operations problem.
+**Owners with one house.** Many SFR owners own one or a few houses and use a third-party manager. That raises the owner-reporting load per unit: every house gets an owner statement, a distribution and a 1099, and owner-paid expenses (association dues, property tax, insurance) flow through the manager's books or around them. Those mechanics are in [Owners & Management Agreements](/books/property-tech/owners-and-management-agreements#owner-distributions) and [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#whose-money-it-is). Institutional SFR and BTR owners are the opposite: thousands of houses under a few entities, managed like a multifamily portfolio with a field operations problem.
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/property-tech/property-business#the-core-data-model). `properties.segment` (with `'military'` and `'build_to_rent'`) and `beds` come from Student Housing; `units.kind = 'lot'` and `properties.property_type` values `'single_family'` and `'manufactured_housing'` are already in the core.
+The deltas against [The Core Data Model](/books/property-tech/property-business#the-core-data-model). `properties.segment` (with `'military'` and `'build_to_rent'`) and `beds` come from [Student Housing](/books/property-tech/student-housing#how-to-build-it); `units.kind = 'lot'` and `properties.property_type` values `'single_family'` and `'manufactured_housing'` are already in the core.
 
 ```sql
 -- Military housing --------------------------------------------------------
@@ -270,7 +270,7 @@ CREATE TABLE allotment_file_lines (
   allotment_id     UUID REFERENCES allotments (id),   -- null until matched
   payment_id       UUID REFERENCES payments (id),     -- the payment it became
   exception        TEXT,                  -- 'no_match', 'amount_mismatch', 'moved_out', ...
-  resolved_by      UUID,                  -- staff user
+  resolved_by      UUID REFERENCES users (id), -- staff user
   UNIQUE (file_id, line_number)
 );
 
@@ -280,7 +280,7 @@ CREATE TABLE housing_waitlist_entries (   -- installation waitlists with tiers
   installation_id UUID NOT NULL REFERENCES military_installations (id),
   household_id    UUID NOT NULL REFERENCES households (id),
   priority_tier   INT NOT NULL,           -- from the installation's waterfall rule in force
-  rule_version_id UUID NOT NULL,          -- which waterfall placed them
+  rule_evaluation_id UUID NOT NULL REFERENCES rule_evaluations (id),          -- which waterfall placed them
   eligible_on     DATE NOT NULL,          -- the date that orders the list, per local policy
   bedrooms        INT NOT NULL,
   status          TEXT NOT NULL CHECK (status IN ('waiting', 'offered', 'accepted', 'declined',
@@ -296,7 +296,7 @@ CREATE TABLE housing_disputes (           -- the 10 U.S.C. 2894 process
   forward_due_on        DATE NOT NULL,    -- computed from the rule version at submission
   investigation_due_on  DATE NOT NULL,
   decision_due_on       DATE NOT NULL,
-  rule_version_id       UUID NOT NULL,
+  rule_evaluation_id    UUID NOT NULL REFERENCES rule_evaluations (id),
   segregation_approved  BOOLEAN NOT NULL DEFAULT FALSE,
   segregation_during    DATERANGE,        -- periods whose payments are held
   decided_on            DATE,
@@ -311,13 +311,10 @@ CREATE TABLE military_lease_terminations (  -- SCRA terminations, any property t
   lease_id           UUID NOT NULL UNIQUE REFERENCES leases (id),
   ground             TEXT NOT NULL CHECK (ground IN ('entry_to_service', 'pcs', 'deployment',
                        'stop_movement', 'death', 'catastrophic_injury')),
-  notice_received_on DATE NOT NULL,
-  delivery_method    TEXT NOT NULL CHECK (delivery_method IN ('hand', 'carrier',
-                       'certified_mail', 'electronic')),
+  lease_notice_id    UUID NOT NULL REFERENCES lease_notices (id),  -- the notice as served: receipt,
+                                          -- delivery, effective date and its rule evaluation
   orders_document_id UUID NOT NULL,
-  effective_on       DATE NOT NULL,       -- computed and stored
-  prepaid_refund_due_on DATE NOT NULL,
-  rule_version_id    UUID NOT NULL
+  prepaid_refund_due_on DATE NOT NULL     -- 30 days after the effective date
 );
 
 -- Manufactured housing and RV sites ---------------------------------------
@@ -427,8 +424,8 @@ Design decisions:
 - **Military documents live in a restricted store.** Orders, powers of attorney and leave and earnings statements are referenced by ID, never inlined, with access logged and a retention schedule of their own. File member identifiers are masked or tokenized at rest.
 - **The lot is the unit; the home is an asset.** `home_placements` makes "one home per lot, one lot per home, at a time" a constraint, and `home_ownerships` keeps the title chain independent of any lease. A community-owned home rented to a resident is `leases.home_id`; a resident-owned home has no lease of its own, only an owner.
 - **Lot rent and home rent are separate charge codes.** Increase-notice rules (rows per jurisdiction: lead days, required content, committee meeting deadline, purchase-right triggers) attach to lot rent, and a lot-rent increase can't post unless a compliant notice exists for it.
-- **Nightly RV sites are stays.** A `site_use = 'rv_nightly'` lot is booked through Short-Term Rentals' `stays`, not a lease; changing a site's use is a dated change on the unit.
-- **A scattered-site house is a building with one unit.** No new tables for SFR's shape; the new tables are for what surrounds the house: its association account and the notices that arrive about it. The association is a `legal_entities` row with role `'association'`, the same one Community Associations uses when the manager also runs that association.
+- **Nightly RV sites are stays.** A `site_use = 'rv_nightly'` lot is booked through [Short-Term Rentals](/books/property-tech/short-term-rentals#how-to-build-it)' `stays`, not a lease; changing a site's use is a dated change on the unit.
+- **A scattered-site house is a building with one unit.** No new tables for SFR's shape; the new tables are for what surrounds the house: its association account and the notices that arrive about it. The association is a `legal_entities` row with role `'association'`, the same one [Community Associations](/books/property-tech/community-associations#how-to-build-it) uses when the manager also runs that association.
 
 ## Auditing
 
@@ -444,7 +441,7 @@ What owners, services, courts and residents ask about later:
 - **Manufactured home title chains.** Each home's owners over time, title transfer steps, placements on lots, and the lot leases that started and ended around each sale. Rent-increase notices with their delivery and the rule version that set the lead time.
 - **Association money on rented houses.** Dues paid or passed through, notices received and forwarded with timestamps, rebilled fines, and any rent redirected under an association's demand.
 
-The mechanics (typed actors, snapshots, access logs for the restricted documents) are in [Audit Trails](/docs/architecture/audit-trails); retention by record type is in Records, Privacy & Audits.
+The mechanics (typed actors, snapshots, access logs for the restricted documents) are in [Audit Trails](/docs/architecture/audit-trails); retention by record type is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 
