@@ -16,10 +16,10 @@
   <text class="sl ink" x="175" y="140" text-anchor="middle">SUB-ORGANIZATION</text>
   <path class="flow" d="M76,110V137H100"/>
   <rect class="obj hl" x="140" y="164" width="150" height="26"/>
-  <text class="sl ink hl" x="215" y="180" text-anchor="middle">PAYPOINT A</text>
+  <text class="sl ink hl" x="215" y="180" text-anchor="middle">MERCHANT A</text>
   <path class="flow hl" d="M116,150V177H140"/>
   <rect class="obj fill-2" x="140" y="204" width="150" height="26"/>
-  <text class="sl ink" x="215" y="220" text-anchor="middle">PAYPOINT B</text>
+  <text class="sl ink" x="215" y="220" text-anchor="middle">MERCHANT B</text>
   <path class="flow" d="M116,150V217H140"/>
   <!-- What each level sets; blank lines inherit -->
   <text class="tc" x="340" y="60">2.90%</text>
@@ -42,13 +42,13 @@
   <text class="sl" x="480" y="220">INHERITS</text>
   <text class="sl" x="620" y="220">INHERITS</text>
   <path class="tbl" d="M340,237L740,237"/>
-  <!-- The schedule paypoint A resolves to -->
-  <text class="sl hl" x="20" y="263">RESOLVED FOR PAYPOINT A</text>
+  <!-- The schedule merchant A resolves to -->
+  <text class="sl hl" x="20" y="263">RESOLVED FOR MERCHANT A</text>
   <text class="tc hl" x="340" y="263">2.60%</text>
   <text class="sl" x="340" y="277">FROM ORGANIZATION</text>
   <text class="tc hl" x="480" y="263">$0.30</text>
   <text class="sl" x="480" y="277">FROM SUB-ORGANIZATION</text>
   <text class="tc hl" x="620" y="263">$15.00</text>
-  <text class="sl" x="620" y="277">FROM PAYPOINT A</text>
+  <text class="sl" x="620" y="277">FROM MERCHANT A</text>
   <text class="sl hl" x="740" y="303" text-anchor="end">FROZEN AS ONE VERSION AND STAMPED ON EVERY PAYMENT IT PRICES</text>
 </svg>
