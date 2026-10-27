@@ -22,7 +22,7 @@ export function Button({
     "inst group relative isolate inline-flex items-center gap-2.5 px-[1.15rem] py-2.5 transition-colors before:absolute before:inset-0 before:-z-10 before:slant before:border before:transition-colors [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:ease-[steps(3)] hover:[&_svg]:translate-x-1";
   const variants = {
     primary:
-      "text-[#041312] before:border-accent before:bg-accent hover:text-background hover:before:border-foreground hover:before:bg-foreground",
+      "text-on-accent before:border-accent before:bg-accent hover:text-background hover:before:border-foreground hover:before:bg-foreground",
     secondary:
       "text-foreground before:border-border before:bg-surface hover:before:border-foreground",
   };
