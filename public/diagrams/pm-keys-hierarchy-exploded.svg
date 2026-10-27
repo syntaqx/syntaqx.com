@@ -1,94 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 672">
-  <defs>
-    <marker id="pm-ks-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">PM-KEY-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">payment key hierarchy</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-  <text class="vt" x="40" y="64">Exploded axonometric: payment key hierarchy</text>
-  <text class="vs" x="40" y="80">Not to scale · each layer encrypted under the one above</text>
-
-  <!-- Assembly lines through the stack's outer corners, behind the plates -->
-  <path class="phantom" d="M295,190V376M645,147V333"/>
-
-  <!-- 04 protected data -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 282)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="370.65" r="2"/>
-  <path class="leader" d="M309.5,370.65L297.5,358.65H270"/>
-  <text class="sl ink" x="264" y="358.65" text-anchor="end" dominant-baseline="central">04 protected data</text>
-  <text class="n" x="264" y="374.65" text-anchor="end">PIN blocks, device keys, card numbers</text>
-
-  <!-- 03 working keys -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 220)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="308.65" r="2"/>
-  <path class="leader" d="M309.5,308.65L297.5,296.65H270"/>
-  <text class="sl ink" x="264" y="296.65" text-anchor="end" dominant-baseline="central">03 working keys</text>
-  <text class="n" x="264" y="312.65" text-anchor="end">ZPK, BDK, data keys (C3, C4)</text>
-
-  <!-- 02 key-encrypting keys -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 158)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="246.65" r="2"/>
-  <path class="leader" d="M309.5,246.65L297.5,234.65H270"/>
-  <text class="sl ink" x="264" y="234.65" text-anchor="end" dominant-baseline="central">02 key-encrypting keys</text>
-  <text class="n" x="264" y="250.65" text-anchor="end">ZMK, terminal KEK, vault KEK (C2)</text>
-
-  <!-- 01 master key -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 96)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="184.65" r="2"/>
-  <path class="leader" d="M309.5,184.65L297.5,172.65H270"/>
-  <text class="sl ink" x="264" y="172.65" text-anchor="end" dominant-baseline="central">01 master key</text>
-  <text class="n" x="264" y="188.65" text-anchor="end">LMK or MFK; clear only in the HSM</text>
-
-  <!-- Wrapping direction -->
-  <text class="sl ink" x="700" y="140" text-anchor="middle">wraps</text>
-  <text class="sl ink" x="700" y="153" text-anchor="middle">down [1]</text>
-  <path class="ln ink" d="M700,162V420" marker-end="url(#pm-ks-ah)"/>
-
-  <!-- Cryptoperiods -->
-  <text class="vt" x="40" y="462">Cryptoperiods [2]</text>
-  <text class="vs" x="40" y="478">NIST SP 800-57 Part 1 Rev. 5, Table 1 · suggested maxima</text>
-  <rect class="cell band" x="40" y="488" width="60" height="22"/>
-  <rect class="cell band" x="100" y="488" width="520" height="22"/>
-  <rect class="cell band" x="620" y="488" width="100" height="22"/>
-  <text class="cap ink" x="50" y="499" dominant-baseline="central">code</text>
-  <text class="cap ink" x="110" y="499" dominant-baseline="central">key and use</text>
-  <text class="cap ink" x="710" y="499" text-anchor="end" dominant-baseline="central">period</text>
-  <path class="cell" d="M40,510H720V576H40Z"/>
-  <path class="ln ink" d="M100,510V576M620,510V576"/>
-  <path class="ln" d="M40,532H720M40,554H720"/>
-  <text class="t" x="50" y="521" dominant-baseline="central">C2</text>
-  <text class="t" x="110" y="521" dominant-baseline="central">key-encrypting (key-wrapping) key, wrapping use</text>
-  <text class="t" x="710" y="521" text-anchor="end" dominant-baseline="central">&lt; 2 years</text>
-  <text class="t" x="50" y="543" dominant-baseline="central">C3</text>
-  <text class="t" x="110" y="543" dominant-baseline="central">data key, encrypting use (originator-usage period)</text>
-  <text class="t" x="710" y="543" text-anchor="end" dominant-baseline="central">&lt; 2 years</text>
-  <text class="t" x="50" y="565" dominant-baseline="central">C4</text>
-  <text class="t" x="110" y="565" dominant-baseline="central">data key, decrypting use (recipient-usage period)</text>
-  <text class="t" x="710" y="565" text-anchor="end" dominant-baseline="central">&lt; C3 + 3 yrs</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 701">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="pm-ks-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="pm-ks-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="pm-ks-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="681" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="592" width="680" height="60"/>
-  <text class="sl ink" x="52" y="610">notes</text>
-  <text class="n" x="52" y="628">[1] Each rotation touches only the layer below: a new KEK re-wraps data keys, a new data key re-encrypts data.</text>
-  <text class="n" x="52" y="644">[2] NIST's general suggestions; PCI DSS 3.7.4 asks for a defined cryptoperiod per key type, and it may be shorter.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">EACH LAYER IS ENCRYPTED UNDER THE ONE ABOVE. A ROTATION TOUCHES ONLY THE LAYER BELOW: A NEW KEK RE-WRAPS DATA</text>
+  <text class="nt" x="50" y="75">KEYS, A NEW DATA KEY RE-ENCRYPTS DATA.</text>
+  <rect class="nb" x="32" y="83.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="91.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="92">NIST SP 800-57 PART 1 REV. 5, TABLE 1: GENERAL SUGGESTIONS. PCI DSS 3.7.4 ASKS FOR A DEFINED CRYPTOPERIOD PER KEY</text>
+  <text class="nt" x="50" y="105">TYPE, AND IT MAY BE SHORTER.</text>
+  <text class="nt" x="50" y="122">NOT TO SCALE. LAYERS SEPARATED ALONG THE STACK AXIS; PLATE CONTENTS ARE SCHEMATIC.</text>
+  <!-- Exploded view -->
+  <path class="phantom" d="M380,363L380,165"/>
+  <path class="phantom" d="M662,414L662,216"/>
+  <path class="phantom" d="M594,508L594,310"/>
+  <path class="phantom" d="M312,457L312,259"/>
+  <!-- 04 · Protected data -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 380 363)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="92" width="80" height="92"/><rect class="obj fill-1" x="24" y="104" width="13" height="12"/><rect class="obj fill-1" x="41" y="104" width="13" height="12"/><rect class="obj fill-1" x="58" y="104" width="13" height="12"/><rect class="obj fill-1" x="75" y="104" width="13" height="12"/><rect class="obj fill-1" x="24" y="124" width="13" height="12"/><rect class="obj fill-1" x="41" y="124" width="13" height="12"/><rect class="obj fill-1" x="58" y="124" width="13" height="12"/><rect class="obj fill-1" x="75" y="124" width="13" height="12"/><rect class="obj fill-1" x="24" y="144" width="13" height="12"/><rect class="obj fill-1" x="41" y="144" width="13" height="12"/><rect class="obj fill-1" x="58" y="144" width="13" height="12"/><rect class="obj fill-1" x="75" y="144" width="13" height="12"/><rect class="obj fill-1" x="24" y="164" width="13" height="12"/><rect class="obj fill-1" x="41" y="164" width="13" height="12"/><rect class="obj fill-1" x="58" y="164" width="13" height="12"/><rect class="obj fill-1" x="75" y="164" width="13" height="12"/><rect class="obj fill-2" x="110" y="92" width="80" height="92"/><circle class="slot" cx="126" cy="110" r="8"/><path class="obj" d="M134,110L166,110"/><path class="obj" d="M156,110L156,118"/><path class="obj" d="M164,110L164,116"/><circle class="slot" cx="126" cy="138" r="8"/><path class="obj" d="M134,138L166,138"/><path class="obj" d="M156,138L156,146"/><path class="obj" d="M164,138L164,144"/><circle class="slot" cx="126" cy="166" r="8"/><path class="obj" d="M134,166L166,166"/><path class="obj" d="M156,166L156,174"/><path class="obj" d="M164,166L164,172"/><rect class="obj fill-2" x="204" y="92" width="80" height="92"/><rect class="obj fill-1" x="212" y="106" width="12" height="10"/><rect class="obj fill-1" x="228" y="106" width="12" height="10"/><rect class="obj fill-1" x="244" y="106" width="12" height="10"/><rect class="obj fill-1" x="260" y="106" width="12" height="10"/><rect class="obj fill-1" x="212" y="124" width="12" height="10"/><rect class="obj fill-1" x="228" y="124" width="12" height="10"/><rect class="obj fill-1" x="244" y="124" width="12" height="10"/><rect class="obj fill-1" x="260" y="124" width="12" height="10"/><rect class="obj fill-1" x="212" y="142" width="12" height="10"/><rect class="obj fill-1" x="228" y="142" width="12" height="10"/><rect class="obj fill-1" x="244" y="142" width="12" height="10"/><rect class="obj fill-1" x="260" y="142" width="12" height="10"/><rect class="obj fill-1" x="212" y="160" width="12" height="10"/><rect class="obj fill-1" x="228" y="160" width="12" height="10"/><rect class="obj fill-1" x="244" y="160" width="12" height="10"/><rect class="obj fill-1" x="260" y="160" width="12" height="10"/></g>
+  <circle class="dot" cx="312" cy="457" r="1.6"/>
+  <path class="leader" d="M312,457H278"/>
+  <text class="lt" x="270" y="455" text-anchor="end">04 · PROTECTED DATA</text>
+  <text class="vs" x="270" y="467" text-anchor="end">PIN BLOCKS · DEVICE KEYS · CARD NUMBERS</text>
+  <!-- 03 · Working keys -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 380 297)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="92" width="80" height="92"/><circle class="obj fill-1" cx="34" cy="138" r="8"/><path class="obj" d="M42,138L74,138"/><path class="obj" d="M64,138L64,146"/><path class="obj" d="M72,138L72,144"/><rect class="obj fill-2" x="110" y="92" width="80" height="92"/><path class="ext" d="M150,116L126,160"/><path class="ext" d="M150,116L150,160"/><path class="ext" d="M150,116L174,160"/><circle class="obj fill-1" cx="150" cy="112" r="8"/><circle class="slot" cx="126" cy="164" r="5"/><circle class="slot" cx="150" cy="164" r="5"/><circle class="slot" cx="174" cy="164" r="5"/><rect class="obj fill-2" x="204" y="92" width="80" height="92"/><rect class="slot" x="218" y="104" width="50" height="36"/><rect class="slot" x="224" y="118" width="50" height="36"/><rect class="obj fill-1" x="230" y="132" width="50" height="36"/></g>
+  <circle class="dot" cx="312" cy="391" r="1.6"/>
+  <path class="leader" d="M312,391H278"/>
+  <text class="lt" x="270" y="389" text-anchor="end">03 · WORKING KEYS</text>
+  <text class="vs" x="270" y="401" text-anchor="end">ZPK · BDK · DATA KEYS (C3, C4)</text>
+  <!-- 02 · Key-encrypting keys -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 380 231)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="92" width="80" height="92"/><rect class="slot" x="26" y="112" width="60" height="52"/><circle class="obj fill-1" cx="38" cy="138" r="8"/><path class="obj" d="M46,138L78,138"/><path class="obj" d="M68,138L68,146"/><path class="obj" d="M76,138L76,144"/><rect class="obj fill-2" x="110" y="92" width="80" height="92"/><rect class="slot" x="120" y="112" width="60" height="52"/><circle class="obj fill-1" cx="132" cy="138" r="8"/><path class="obj" d="M140,138L172,138"/><path class="obj" d="M162,138L162,146"/><path class="obj" d="M170,138L170,144"/><rect class="obj fill-2" x="204" y="92" width="80" height="92"/><rect class="slot" x="214" y="112" width="60" height="52"/><circle class="obj fill-1" cx="226" cy="138" r="8"/><path class="obj" d="M234,138L266,138"/><path class="obj" d="M256,138L256,146"/><path class="obj" d="M264,138L264,144"/></g>
+  <circle class="dot" cx="312" cy="325" r="1.6"/>
+  <path class="leader" d="M312,325H278"/>
+  <text class="lt" x="270" y="323" text-anchor="end">02 · KEY-ENCRYPTING KEYS</text>
+  <text class="vs" x="270" y="335" text-anchor="end">ZMK · TERMINAL KEK · VAULT KEK (C2)</text>
+  <!-- 01 · Master key -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 380 165)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="70" y="40" width="160" height="120"/><rect class="slot" x="84" y="54" width="132" height="92"/><circle class="obj hl" cx="124" cy="100" r="13"/><path class="obj hl" d="M137,100L186,100"/><path class="obj hl" d="M170,100L170,112"/><path class="obj hl" d="M182,100L182,109"/></g>
+  <circle class="dot" cx="312" cy="259" r="1.6"/>
+  <path class="leader" d="M312,259H278"/>
+  <text class="lt" x="270" y="257" text-anchor="end">01 · MASTER KEY</text>
+  <text class="vs" x="270" y="269" text-anchor="end">LMK OR MFK · CLEAR ONLY IN THE HSM</text>
+  <!-- Wrapping direction -->
+  <path class="leader" d="M702,216V508" marker-end="url(#pm-ks-ah)"/>
+  <text class="sl ink" x="702" y="198" text-anchor="middle">WRAPS</text>
+  <text class="sl ink" x="702" y="209" text-anchor="middle">DOWN</text>
+  <rect class="nb" x="726.5" y="200" width="11" height="11"/>
+  <text class="nbt" x="732" y="208.2" text-anchor="middle">1</text>
+  <text class="vt" x="487" y="542" text-anchor="middle">EXPLODED VIEW · PAYMENT KEY HIERARCHY</text>
+  <text class="vs" x="487" y="555" text-anchor="middle">AXONOMETRIC · NOT TO SCALE · MASTER KEY AT THE TOP</text>
+  <!-- Cryptoperiods -->
+  <text class="vt" x="150" y="604">CRYPTOPERIODS · SUGGESTED MAXIMA</text>
+  <rect class="tbl" x="150" y="611" width="460" height="60"/>
+  <path class="tbl" d="M150,626L610,626"/>
+  <path class="tbl" d="M150,641L610,641"/>
+  <path class="tbl" d="M150,656L610,656"/>
+  <path class="tbl" d="M200,611L200,671"/>
+  <path class="tbl" d="M480,611L480,671"/>
+  <text class="th" x="156" y="621.2">CODE</text>
+  <text class="th" x="340" y="621.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="545" y="621.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="156" y="636.7">C2</text>
+  <text class="tc" x="340" y="636.7" text-anchor="middle">key-encrypting key, wrapping use</text>
+  <text class="tc" x="545" y="636.7" text-anchor="middle">&lt; 2 years</text>
+  <text class="tc" x="156" y="651.7">C3</text>
+  <text class="tc" x="340" y="651.7" text-anchor="middle">data key, encrypting use (originator-usage)</text>
+  <text class="tc" x="545" y="651.7" text-anchor="middle">&lt; 2 years</text>
+  <text class="tc" x="156" y="666.7">C4</text>
+  <text class="tc" x="340" y="666.7" text-anchor="middle">data key, decrypting use (recipient-usage)</text>
+  <text class="tc" x="545" y="666.7" text-anchor="middle">&lt; C3 + 3 years</text>
+  <rect class="nb" x="405.9" y="594.5" width="11" height="11"/>
+  <text class="nbt" x="411.4" y="602.7" text-anchor="middle">2</text>
 </svg>

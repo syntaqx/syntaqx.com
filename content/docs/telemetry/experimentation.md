@@ -42,7 +42,7 @@ export function variant(experimentSeed: string, unitId: string): "control" | "tr
 }
 ```
 
-![A dimensional sheet of experiment assignment: a bar of 10,000 hash buckets split into a hatched 200-bucket holdout, 4,900 control and 4,900 highlighted treatment buckets, and a second view comparing 821,588 control with 815,482 treatment users, a gap of 6,106, with a variable table computing the chi-square test.](/diagrams/tm-experimentation-assignment.svg "Assignment is a fixed split of a hash space; a sample ratio of 50.2/49.8 looks balanced to the eye and is still a bug (bucket sizes illustrative, counts from Fabijan et al.).")
+![A dimensional sheet of experiment assignment: a bar of 10,000 hash buckets split into a hatched 200-bucket holdout, 4,900 control and 4,900 highlighted treatment buckets, and a second view comparing 821,588 control with 815,482 treatment users, a gap of 6,106, with Detail A enlarging the holdout and Detail B enlarging the gap between the two bars, and a variable table computing the chi-square test.](/diagrams/tm-experimentation-assignment.svg "Assignment is a fixed split of a hash space; a sample ratio of 50.2/49.8 looks balanced to the eye and is still a bug (bucket sizes illustrative, counts from Fabijan et al.).")
 
 Three rules keep assignment trustworthy:
 

@@ -1,93 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 762">
-  <defs>
-    <marker id="pm-fs-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="pm-fs-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">PM-FEE-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">where a $100 card payment goes</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: the whole payment -->
-  <text class="vt" x="40" y="64">Plan view: one $100.00 card-not-present payment</text>
-  <text class="vs" x="40" y="80">Scale 1 USD = 6 px · values in USD · blended pricing</text>
-  <path class="ext" d="M100,125V95M700,125V95"/>
-  <path class="dim" d="M100,100H700" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
-  <text class="dt" x="400" y="96" text-anchor="middle">W1 = 100.00</text>
-  <rect class="obj fill-2" x="100" y="128" width="580.8" height="40"/>
-  <rect class="obj fill-1" x="680.8" y="128" width="19.2" height="40"/>
-  <text class="sl ink" x="390" y="148" text-anchor="middle" dominant-baseline="central">merchant funding</text>
-  <circle class="detail" cx="690.4" cy="148" r="20"/>
-  <text class="sl ink" x="664" y="118" text-anchor="end" dominant-baseline="central">detail A</text>
-  <path class="ext" d="M100,171V197M680.8,171V197M700,171V197"/>
-  <path class="dim" d="M100,192H680.8" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
-  <text class="dt" x="390.4" y="188" text-anchor="middle">M1 = W1 - F1 = 96.80</text>
-  <path class="dim" d="M720,192H700" marker-end="url(#pm-fs-ah)"/>
-  <path class="dim" d="M680.8,192H700"/>
-  <text class="dt" x="724" y="192" dominant-baseline="central">F1</text>
-
-  <!-- Detail A: the merchant discount -->
-  <text class="vt" x="40" y="250">Detail A: the merchant discount, F1</text>
-  <text class="vs" x="40" y="266">Scale 30:1 · 1 USD = 180 px</text>
-  <path class="ext" d="M100,315V285M676,315V285"/>
-  <path class="dim hl" d="M100,290H676" marker-start="url(#pm-fs-ah-hl)" marker-end="url(#pm-fs-ah-hl)"/>
-  <text class="dt hl" x="388" y="286" text-anchor="middle">F1 = 2.9% × W1 + 0.30 = 3.20 [3]</text>
-  <rect class="obj fill-1" x="100" y="318" width="324" height="40"/>
-  <rect class="obj fill-2" x="424" y="318" width="25.2" height="40"/>
-  <rect class="obj fill-2" x="449.2" y="318" width="226.8" height="40"/>
-  <text class="sl ink" x="262" y="338" text-anchor="middle" dominant-baseline="central">interchange [1]</text>
-  <text class="sl ink" x="562.6" y="338" text-anchor="middle" dominant-baseline="central">markup</text>
-  <circle class="dot" cx="436.6" cy="338" r="2"/>
-  <path class="leader" d="M436.6,338L448.6,306H470.6"/>
-  <text class="sl ink" x="474.6" y="306" dominant-baseline="central">network fees [2]</text>
-  <path class="ext" d="M100,361V387M424,361V387M449.2,361V387M676,361V387"/>
-  <path class="dim" d="M100,382H424" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
-  <text class="dt" x="262" y="378" text-anchor="middle">I1 = 1.65% × W1 + 0.15 = 1.80</text>
-  <path class="dim" d="M449.2,382H676" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
-  <text class="dt" x="562.6" y="378" text-anchor="middle">K1 = F1 - I1 - N1 = 1.26</text>
-  <path class="ext" d="M424,387V409M449.2,387V409"/>
-  <path class="dim" d="M404,404H424" marker-end="url(#pm-fs-ah)"/>
-  <path class="dim" d="M424,404H449.2"/>
-  <path class="dim" d="M469.2,404H449.2" marker-end="url(#pm-fs-ah)"/>
-  <text class="dt" x="473.2" y="404" dominant-baseline="central">N1 = 0.14</text>
-  <text class="t" x="380" y="440" text-anchor="middle">W1 = M1 + I1 + N1 + K1 = 96.80 + 1.80 + 0.14 + 1.26 = 100.00</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="470">Variables</text>
-  <text class="vs" x="40" y="486">USD · sources in the notes</text>
-  <rect class="cell band" x="40" y="496" width="60" height="22"/>
-  <rect class="cell band" x="100" y="496" width="520" height="22"/>
-  <rect class="cell band" x="620" y="496" width="100" height="22"/>
-  <text class="cap ink" x="50" y="507" dominant-baseline="central">code</text>
-  <text class="cap ink" x="110" y="507" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="507" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,518H720V650H40Z"/>
-  <path class="ln ink" d="M100,518V650M620,518V650"/>
-  <path class="ln" d="M40,540H720M40,562H720M40,584H720M40,606H720M40,628H720"/>
-  <text class="t b" x="50" y="529" dominant-baseline="central">W1</text>
-  <text class="t b" x="110" y="529" dominant-baseline="central">payment, card-not-present, exempt debit card</text>
-  <text class="t b" x="710" y="529" text-anchor="end" dominant-baseline="central">100.00</text>
-  <text class="t" x="50" y="551" dominant-baseline="central">F1</text>
-  <text class="t" x="110" y="551" dominant-baseline="central">merchant discount, blended: 2.9% + 0.30 [3]</text>
-  <text class="t" x="710" y="551" text-anchor="end" dominant-baseline="central">3.20</text>
-  <text class="t" x="50" y="573" dominant-baseline="central">I1</text>
-  <text class="t" x="110" y="573" dominant-baseline="central">interchange: 1.65% + 0.15 [1]</text>
-  <text class="t" x="710" y="573" text-anchor="end" dominant-baseline="central">1.80</text>
-  <text class="t" x="50" y="595" dominant-baseline="central">N1</text>
-  <text class="t" x="110" y="595" dominant-baseline="central">network fees, illustrative [2]</text>
-  <text class="t" x="710" y="595" text-anchor="end" dominant-baseline="central">0.14</text>
-  <text class="t" x="50" y="617" dominant-baseline="central">K1</text>
-  <text class="t" x="110" y="617" dominant-baseline="central">markup: F1 - I1 - N1</text>
-  <text class="t" x="710" y="617" text-anchor="end" dominant-baseline="central">1.26</text>
-  <text class="t" x="50" y="639" dominant-baseline="central">M1</text>
-  <text class="t" x="110" y="639" dominant-baseline="central">merchant funding: W1 - F1</text>
-  <text class="t" x="710" y="639" text-anchor="end" dominant-baseline="central">96.80</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 673">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="pm-fs-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="pm-fs-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="pm-fs-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="653" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="666" width="680" height="76"/>
-  <text class="sl ink" x="52" y="684">notes</text>
-  <text class="n" x="52" y="702">[1] Visa exempt debit, CPS/e-Commerce Basic, from October 24, 2026. Regulation II debit would be 0.27.</text>
-  <text class="n" x="52" y="718">[2] Illustrative: real network fees are many lines on the acquirer's bill, some billed up to two months later.</text>
-  <text class="n" x="52" y="734">[3] A published blended rate: the merchant pays F1 whatever the card, so K1 shrinks as I1 grows.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">VISA EXEMPT DEBIT, CPS/E-COMMERCE BASIC, FROM OCTOBER 24, 2026. REGULATION II DEBIT WOULD BE 0.27.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">ILLUSTRATIVE: REAL NETWORK FEES ARE MANY LINES ON THE ACQUIRER'S BILL, SOME BILLED UP TO TWO MONTHS LATER.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">A PUBLISHED BLENDED RATE: THE MERCHANT PAYS F1 WHATEVER THE CARD, SO K1 SHRINKS AS I1 GROWS.</text>
+  <text class="nt" x="50" y="113">VALUES IN USD. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: one payment -->
+  <rect class="obj fill-2" x="80" y="182" width="580.8" height="34"/>
+  <rect class="obj fill-1" x="660.8" y="182" width="19.2" height="34"/>
+  <text class="sl ink" x="370.4" y="202" text-anchor="middle">MERCHANT FUNDING</text>
+  <path class="ext" d="M80,179L80,154"/>
+  <path class="ext" d="M680,179L680,154"/>
+  <path class="dim" d="M80,158L680,158" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
+  <text class="dt" x="380" y="154" text-anchor="middle">W1</text>
+  <path class="ext" d="M80,219L80,240"/>
+  <path class="ext" d="M660.8,219L660.8,240"/>
+  <path class="dim" d="M80,236L660.8,236" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
+  <text class="dt" x="370.4" y="248" text-anchor="middle">M1</text>
+  <path class="ext" d="M680,219L680,240"/>
+  <path class="dim" d="M660.8,236L680,236"/><path class="dim" d="M650.8,236L660.8,236" marker-end="url(#pm-fs-ah)"/><path class="dim" d="M690,236L680,236" marker-end="url(#pm-fs-ah)"/>
+  <text class="dt" x="670.4" y="248" text-anchor="middle">F1</text>
+  <circle class="detail" cx="670.4" cy="199" r="18"/>
+  <path class="leader" d="M654.33,190.9L620.8,174"/>
+  <text class="sl ink" x="616.8" y="177" text-anchor="end">DETAIL A</text>
+  <text class="vt" x="380" y="282" text-anchor="middle">PLAN VIEW · ONE CARD-NOT-PRESENT PAYMENT</text>
+  <text class="vs" x="380" y="295" text-anchor="middle">SCALE 1 USD = 6 PX · BLENDED PRICING</text>
+  <!-- Detail A: the merchant discount -->
+  <rect class="obj fill-1" x="92" y="375" width="324" height="34"/>
+  <rect class="obj fill-2" x="416" y="375" width="25.2" height="34"/>
+  <rect class="obj fill-2" x="441.2" y="375" width="226.8" height="34"/>
+  <text class="sl ink" x="254" y="395" text-anchor="middle">INTERCHANGE</text>
+  <rect class="nb" x="295.09" y="386" width="11" height="11"/>
+  <text class="nbt" x="300.59" y="394.2" text-anchor="middle">1</text>
+  <text class="sl ink" x="554.6" y="395" text-anchor="middle">MARKUP</text>
+  <path class="ext" d="M92,372L92,337"/>
+  <path class="ext" d="M668,372L668,337"/>
+  <path class="dim hl" d="M92,341L668,341" marker-start="url(#pm-fs-ah-hl)" marker-end="url(#pm-fs-ah-hl)"/>
+  <text class="dt hl" x="380" y="337" text-anchor="middle">F1</text>
+  <rect class="nb" x="390.5" y="328" width="11" height="11"/>
+  <text class="nbt" x="396" y="336.2" text-anchor="middle">3</text>
+  <circle class="dot" cx="428.6" cy="392" r="1.6"/>
+  <path class="leader" d="M428.6,392L446.6,361H456.6"/>
+  <text class="sl ink" x="460.6" y="364">NETWORK FEES</text>
+  <rect class="nb" x="538.71" y="356" width="11" height="11"/>
+  <text class="nbt" x="544.21" y="364.2" text-anchor="middle">2</text>
+  <path class="ext" d="M92,412L92,433"/>
+  <path class="ext" d="M416,412L416,433"/>
+  <path class="dim" d="M92,429L416,429" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
+  <text class="dt" x="254" y="441" text-anchor="middle">I1</text>
+  <path class="ext" d="M441.2,412L441.2,433"/>
+  <path class="dim" d="M416,429L441.2,429" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
+  <text class="dt" x="428.6" y="441" text-anchor="middle">N1</text>
+  <path class="ext" d="M668,412L668,433"/>
+  <path class="dim" d="M441.2,429L668,429" marker-start="url(#pm-fs-ah)" marker-end="url(#pm-fs-ah)"/>
+  <text class="dt" x="554.6" y="441" text-anchor="middle">K1</text>
+  <text class="vt" x="380" y="475" text-anchor="middle">DETAIL A · THE MERCHANT DISCOUNT, F1</text>
+  <text class="vs" x="380" y="488" text-anchor="middle">SCALE 30:1 · 1 USD = 180 PX</text>
+  <!-- Variable table -->
+  <text class="vt" x="145" y="531">VARIABLES · USD</text>
+  <rect class="tbl" x="145" y="538" width="470" height="105"/>
+  <path class="tbl" d="M145,553L615,553"/>
+  <path class="tbl" d="M145,568L615,568"/>
+  <path class="tbl" d="M145,583L615,583"/>
+  <path class="tbl" d="M145,598L615,598"/>
+  <path class="tbl" d="M145,613L615,613"/>
+  <path class="tbl" d="M145,628L615,628"/>
+  <path class="tbl" d="M195,538L195,643"/>
+  <path class="tbl" d="M425,538L425,643"/>
+  <text class="th" x="151" y="548.2">CODE</text>
+  <text class="th" x="310" y="548.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="520" y="548.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="151" y="563.7">W1</text>
+  <text class="tc" x="310" y="563.7" text-anchor="middle">payment, card-not-present, exempt debit</text>
+  <text class="tc" x="520" y="563.7" text-anchor="middle">M1+I1+N1+K1 = 100.00</text>
+  <text class="tc" x="151" y="578.7">F1</text>
+  <text class="tc" x="310" y="578.7" text-anchor="middle">merchant discount, blended</text>
+  <text class="tc" x="520" y="578.7" text-anchor="middle">2.9% × W1 + 0.30 = 3.20</text>
+  <text class="tc" x="151" y="593.7">I1</text>
+  <text class="tc" x="310" y="593.7" text-anchor="middle">interchange</text>
+  <text class="tc" x="520" y="593.7" text-anchor="middle">1.65% × W1 + 0.15 = 1.80</text>
+  <text class="tc" x="151" y="608.7">N1</text>
+  <text class="tc" x="310" y="608.7" text-anchor="middle">network fees, illustrative</text>
+  <text class="tc" x="520" y="608.7" text-anchor="middle">0.14</text>
+  <text class="tc" x="151" y="623.7">K1</text>
+  <text class="tc" x="310" y="623.7" text-anchor="middle">markup</text>
+  <text class="tc" x="520" y="623.7" text-anchor="middle">F1 − I1 − N1 = 1.26</text>
+  <text class="tc" x="151" y="638.7">M1</text>
+  <text class="tc" x="310" y="638.7" text-anchor="middle">merchant funding</text>
+  <text class="tc" x="520" y="638.7" text-anchor="middle">W1 − F1 = 96.80</text>
 </svg>

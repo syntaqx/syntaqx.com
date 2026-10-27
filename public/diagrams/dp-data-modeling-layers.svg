@@ -1,126 +1,96 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 790">
-  <defs>
-    <marker id="dp-dm-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-MOD-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">analytics model layers</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <text class="vt" x="40" y="64">Exploded axonometric: model layers</text>
-  <text class="vs" x="40" y="80">Not to scale · layers separated along the build axis</text>
-
-  <!-- Assembly lines through the stack's outer corners, behind the plates -->
-  <path class="phantom" d="M295,190V438M645,147V395"/>
-
-  <!-- 01 raw -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 344)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="432.65" r="2"/>
-  <path class="leader" d="M309.5,432.65L297.5,420.65H270"/>
-  <text class="sl ink" x="264" y="420.65" text-anchor="end" dominant-baseline="central">01 raw</text>
-  <text class="n" x="264" y="436.65" text-anchor="end">as loaded, append-only, per source</text>
-
-  <!-- 02 staging -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 282)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="370.65" r="2"/>
-  <path class="leader" d="M309.5,370.65L297.5,358.65H270"/>
-  <text class="sl ink" x="264" y="358.65" text-anchor="end" dominant-baseline="central">02 staging</text>
-  <text class="n" x="264" y="374.65" text-anchor="end">one per source table, renamed, typed</text>
-
-  <!-- 03 intermediate -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 220)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="308.65" r="2"/>
-  <path class="leader" d="M309.5,308.65L297.5,296.65H270"/>
-  <text class="sl ink" x="264" y="296.65" text-anchor="end" dominant-baseline="central">03 intermediate</text>
-  <text class="n" x="264" y="312.65" text-anchor="end">joins and reshaping, verb names</text>
-
-  <!-- 04 marts -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 158)">
-    <rect class="obj fill-1" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="246.65" r="2"/>
-  <path class="leader" d="M309.5,246.65L297.5,234.65H270"/>
-  <text class="sl ink" x="264" y="234.65" text-anchor="end" dominant-baseline="central">04 marts</text>
-  <text class="n" x="264" y="250.65" text-anchor="end">facts, conformed dimensions, wide tables</text>
-
-  <!-- 05 semantic layer -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 96)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="184.65" r="2"/>
-  <path class="leader" d="M309.5,184.65L297.5,172.65H270"/>
-  <text class="sl ink" x="264" y="172.65" text-anchor="end" dominant-baseline="central">05 semantic layer</text>
-  <text class="n" x="264" y="188.65" text-anchor="end">metrics, entities, dimensions</text>
-
-  <!-- Build direction -->
-  <text class="sl ink" x="700" y="456" text-anchor="middle">builds</text>
-  <text class="sl ink" x="700" y="469" text-anchor="middle">up [1]</text>
-  <path class="ln ink" d="M700,442V140" marker-end="url(#dp-dm-ah)"/>
-
-  <!-- Layer table -->
-  <text class="vt" x="40" y="520">Layers</text>
-  <text class="vs" x="40" y="536">Materialization per the dbt structure guide [2]</text>
-  <rect class="cell band" x="40" y="546" width="40" height="22"/>
-  <rect class="cell band" x="80" y="546" width="150" height="22"/>
-  <rect class="cell band" x="230" y="546" width="220" height="22"/>
-  <rect class="cell band" x="450" y="546" width="270" height="22"/>
-  <text class="cap ink" x="48" y="557" dominant-baseline="central">no</text>
-  <text class="cap ink" x="90" y="557" dominant-baseline="central">layer</text>
-  <text class="cap ink" x="240" y="557" dominant-baseline="central">materialized as</text>
-  <text class="cap ink" x="460" y="557" dominant-baseline="central">read by</text>
-  <path class="cell" d="M40,568H720V678H40Z"/>
-  <path class="ln ink" d="M80,568V678M230,568V678M450,568V678"/>
-  <path class="ln" d="M40,590H720M40,612H720M40,634H720M40,656H720"/>
-  <text class="t" x="50" y="579" dominant-baseline="central">01</text>
-  <text class="t" x="90" y="579" dominant-baseline="central">raw</text>
-  <text class="t" x="240" y="579" dominant-baseline="central">tables, as loaded</text>
-  <text class="t" x="460" y="579" dominant-baseline="central">staging models only</text>
-  <text class="t" x="50" y="601" dominant-baseline="central">02</text>
-  <text class="t" x="90" y="601" dominant-baseline="central">staging</text>
-  <text class="t" x="240" y="601" dominant-baseline="central">views</text>
-  <text class="t" x="460" y="601" dominant-baseline="central">intermediate, marts</text>
-  <text class="t" x="50" y="623" dominant-baseline="central">03</text>
-  <text class="t" x="90" y="623" dominant-baseline="central">intermediate</text>
-  <text class="t" x="240" y="623" dominant-baseline="central">ephemeral, or views</text>
-  <text class="t" x="460" y="623" dominant-baseline="central">marts</text>
-  <text class="t b" x="50" y="645" dominant-baseline="central">04</text>
-  <text class="t b" x="90" y="645" dominant-baseline="central">marts</text>
-  <text class="t" x="240" y="645" dominant-baseline="central">view, table, incremental</text>
-  <text class="t" x="460" y="645" dominant-baseline="central">people, BI, semantic layer</text>
-  <text class="t" x="50" y="667" dominant-baseline="central">05</text>
-  <text class="t" x="90" y="667" dominant-baseline="central">semantic</text>
-  <text class="t" x="240" y="667" dominant-baseline="central">metric definitions</text>
-  <text class="t" x="460" y="667" dominant-baseline="central">dashboards, notebooks, apps</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 779">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="dp-dm-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="dp-dm-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="dp-dm-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="759" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="696" width="680" height="76"/>
-  <text class="sl ink" x="52" y="716">notes</text>
-  <text class="n" x="110" y="716">[1] Each layer reads only the layer beneath it. Dashboards never read raw or staging.</text>
-  <text class="n" x="110" y="734">[2] Staging as views; intermediate ephemeral or views in a restricted schema; marts start</text>
-  <text class="n" x="110" y="752">as views, become tables when slow to query, incremental when slow to build.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">EACH LAYER READS ONLY THE LAYER BENEATH IT. DASHBOARDS NEVER READ RAW OR STAGING.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">STAGING AS VIEWS; INTERMEDIATE EPHEMERAL OR VIEWS IN A RESTRICTED SCHEMA; MARTS START AS VIEWS, BECOME TABLES</text>
+  <text class="nt" x="50" y="92">WHEN SLOW TO QUERY, INCREMENTAL WHEN SLOW TO BUILD.</text>
+  <text class="nt" x="50" y="109">NOT TO SCALE. LAYERS SEPARATED ALONG THE BUILD AXIS; PLATE CONTENTS ARE SCHEMATIC.</text>
+  <!-- Exploded view -->
+  <path class="phantom" d="M392,416L392,152"/>
+  <path class="phantom" d="M664.6,465.3L664.6,201.3"/>
+  <path class="phantom" d="M596.6,559.3L596.6,295.3"/>
+  <path class="phantom" d="M324,510L324,246"/>
+  <!-- 01 · Raw -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 392 416)"><rect class="obj plate" x="0" y="0" width="290" height="200"/><rect class="obj fill-2" x="16" y="92" width="74" height="92"/><rect class="obj fill-1" x="24" y="104" width="58" height="10"/><rect class="obj fill-1" x="24" y="118" width="58" height="10"/><rect class="obj fill-1" x="24" y="132" width="58" height="10"/><rect class="obj fill-1" x="24" y="146" width="58" height="10"/><rect class="slot" x="24" y="160" width="58" height="10"/><rect class="obj fill-2" x="108" y="92" width="74" height="92"/><rect class="obj fill-1" x="116" y="104" width="58" height="10"/><rect class="obj fill-1" x="116" y="118" width="58" height="10"/><rect class="obj fill-1" x="116" y="132" width="58" height="10"/><rect class="obj fill-1" x="116" y="146" width="58" height="10"/><rect class="slot" x="116" y="160" width="58" height="10"/><rect class="obj fill-2" x="200" y="92" width="74" height="92"/><rect class="obj fill-1" x="208" y="104" width="58" height="10"/><rect class="obj fill-1" x="208" y="118" width="58" height="10"/><rect class="obj fill-1" x="208" y="132" width="58" height="10"/><rect class="obj fill-1" x="208" y="146" width="58" height="10"/><rect class="slot" x="208" y="160" width="58" height="10"/></g>
+  <circle class="dot" cx="324" cy="510" r="1.6"/>
+  <path class="leader" d="M324,510H292"/>
+  <text class="lt" x="284" y="508" text-anchor="end">01 · RAW</text>
+  <text class="vs" x="284" y="520" text-anchor="end">AS LOADED · APPEND-ONLY · PER SOURCE</text>
+  <!-- 02 · Staging -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 392 350)"><rect class="obj plate" x="0" y="0" width="290" height="200"/><rect class="obj fill-2" x="16" y="92" width="74" height="40"/><rect class="obj fill-1" x="16" y="92" width="74" height="10"/><path class="ext" d="M34.5,102L34.5,132"/><path class="ext" d="M53,102L53,132"/><path class="ext" d="M71.5,102L71.5,132"/><rect class="obj fill-2" x="16" y="140" width="74" height="40"/><rect class="obj fill-1" x="16" y="140" width="74" height="10"/><path class="ext" d="M34.5,150L34.5,180"/><path class="ext" d="M53,150L53,180"/><path class="ext" d="M71.5,150L71.5,180"/><rect class="obj fill-2" x="108" y="92" width="74" height="40"/><rect class="obj fill-1" x="108" y="92" width="74" height="10"/><path class="ext" d="M126.5,102L126.5,132"/><path class="ext" d="M145,102L145,132"/><path class="ext" d="M163.5,102L163.5,132"/><rect class="obj fill-2" x="108" y="140" width="74" height="40"/><rect class="obj fill-1" x="108" y="140" width="74" height="10"/><path class="ext" d="M126.5,150L126.5,180"/><path class="ext" d="M145,150L145,180"/><path class="ext" d="M163.5,150L163.5,180"/><rect class="obj fill-2" x="200" y="92" width="74" height="40"/><rect class="obj fill-1" x="200" y="92" width="74" height="10"/><path class="ext" d="M218.5,102L218.5,132"/><path class="ext" d="M237,102L237,132"/><path class="ext" d="M255.5,102L255.5,132"/><rect class="obj fill-2" x="200" y="140" width="74" height="40"/><rect class="obj fill-1" x="200" y="140" width="74" height="10"/><path class="ext" d="M218.5,150L218.5,180"/><path class="ext" d="M237,150L237,180"/><path class="ext" d="M255.5,150L255.5,180"/></g>
+  <circle class="dot" cx="324" cy="444" r="1.6"/>
+  <path class="leader" d="M324,444H292"/>
+  <text class="lt" x="284" y="442" text-anchor="end">02 · STAGING</text>
+  <text class="vs" x="284" y="454" text-anchor="end">ONE PER SOURCE TABLE · RENAMED · TYPED</text>
+  <!-- 03 · Intermediate -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 392 284)"><rect class="obj plate" x="0" y="0" width="290" height="200"/><rect class="obj fill-2" x="16" y="94" width="50" height="30"/><rect class="obj fill-2" x="16" y="150" width="50" height="30"/><path class="obj" d="M66,109L92,137"/><path class="obj" d="M66,165L92,137"/><rect class="obj fill-1" x="92" y="117" width="46" height="40"/><rect class="obj fill-2" x="152" y="94" width="50" height="30"/><rect class="obj fill-2" x="152" y="150" width="50" height="30"/><path class="obj" d="M202,109L228,137"/><path class="obj" d="M202,165L228,137"/><rect class="obj fill-1" x="228" y="117" width="46" height="40"/></g>
+  <circle class="dot" cx="324" cy="378" r="1.6"/>
+  <path class="leader" d="M324,378H292"/>
+  <text class="lt" x="284" y="376" text-anchor="end">03 · INTERMEDIATE</text>
+  <text class="vs" x="284" y="388" text-anchor="end">JOINS AND RESHAPING · VERB NAMES</text>
+  <!-- 04 · Marts -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 392 218)"><rect class="obj plate" x="0" y="0" width="290" height="200"/><path class="ext" d="M31,106L81,137"/><rect class="obj fill-2" x="16" y="94" width="30" height="24"/><path class="ext" d="M131,106L81,137"/><rect class="obj fill-2" x="116" y="94" width="30" height="24"/><path class="ext" d="M31,172L81,137"/><rect class="obj fill-2" x="16" y="160" width="30" height="24"/><path class="ext" d="M131,172L81,137"/><rect class="obj fill-2" x="116" y="160" width="30" height="24"/><rect class="obj fill-1" x="56" y="118" width="50" height="38"/><rect class="obj fill-2" x="170" y="100" width="104" height="76"/><rect class="obj fill-1" x="170" y="100" width="104" height="12"/><path class="ext" d="M183,112L183,176"/><path class="ext" d="M196,112L196,176"/><path class="ext" d="M209,112L209,176"/><path class="ext" d="M222,112L222,176"/><path class="ext" d="M235,112L235,176"/><path class="ext" d="M248,112L248,176"/><path class="ext" d="M261,112L261,176"/></g>
+  <circle class="dot" cx="324" cy="312" r="1.6"/>
+  <path class="leader" d="M324,312H292"/>
+  <text class="lt" x="284" y="310" text-anchor="end">04 · MARTS</text>
+  <text class="vs" x="284" y="322" text-anchor="end">FACTS · CONFORMED DIMENSIONS · WIDE TABLES</text>
+  <!-- 05 · Semantic layer -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 392 152)"><rect class="obj plate" x="0" y="0" width="290" height="200"/><circle class="obj fill-1" cx="46" cy="46" r="16"/><circle class="obj fill-1" cx="94" cy="46" r="16"/><circle class="obj fill-1" cx="46" cy="94" r="16"/><circle class="obj fill-1" cx="94" cy="94" r="16"/><rect class="obj fill-2" x="140" y="30" width="56" height="34"/><rect class="obj fill-2" x="214" y="30" width="56" height="34"/><path class="obj" d="M196,47L214,47"/><rect class="obj fill-2" x="177" y="92" width="56" height="34"/><path class="obj" d="M168,64L196,92"/><path class="obj" d="M242,64L214,92"/><rect class="obj fill-2" x="24" y="152" width="52" height="16" rx="8"/><rect class="obj fill-2" x="88" y="152" width="52" height="16" rx="8"/><rect class="obj fill-2" x="152" y="152" width="52" height="16" rx="8"/><rect class="obj fill-2" x="216" y="152" width="52" height="16" rx="8"/></g>
+  <circle class="dot" cx="324" cy="246" r="1.6"/>
+  <path class="leader" d="M324,246H292"/>
+  <text class="lt" x="284" y="244" text-anchor="end">05 · SEMANTIC LAYER</text>
+  <text class="vs" x="284" y="256" text-anchor="end">METRICS · ENTITIES · DIMENSIONS</text>
+  <!-- Build direction -->
+  <path class="leader" d="M698.5999999999999,559.3V201.3" marker-end="url(#dp-dm-ah)"/>
+  <text class="sl ink" x="698.6" y="183.3" text-anchor="middle">BUILDS</text>
+  <text class="sl ink" x="698.6" y="194.3" text-anchor="middle">UP</text>
+  <rect class="nb" x="719.1" y="185.3" width="11" height="11"/>
+  <text class="nbt" x="724.6" y="193.5" text-anchor="middle">1</text>
+  <text class="vt" x="494.3" y="593.3" text-anchor="middle">EXPLODED VIEW · MODEL LAYERS</text>
+  <text class="vs" x="494.3" y="606.3" text-anchor="middle">AXONOMETRIC · NOT TO SCALE · 01 AT THE BOTTOM</text>
+  <!-- Layer table -->
+  <text class="vt" x="150" y="651.3">LAYERS · MATERIALIZATION</text>
+  <rect class="nb" x="324.29" y="642.3" width="11" height="11"/>
+  <text class="nbt" x="329.79" y="650.5" text-anchor="middle">2</text>
+  <rect class="tbl" x="150" y="658.3" width="460" height="90"/>
+  <path class="tbl" d="M150,673.3L610,673.3"/>
+  <path class="tbl" d="M150,688.3L610,688.3"/>
+  <path class="tbl" d="M150,703.3L610,703.3"/>
+  <path class="tbl" d="M150,718.3L610,718.3"/>
+  <path class="tbl" d="M150,733.3L610,733.3"/>
+  <path class="tbl" d="M190,658.3L190,748.3"/>
+  <path class="tbl" d="M290,658.3L290,748.3"/>
+  <path class="tbl" d="M440,658.3L440,748.3"/>
+  <text class="th" x="156" y="668.5">NO</text>
+  <text class="th" x="240" y="668.5" text-anchor="middle">LAYER</text>
+  <text class="th" x="365" y="668.5" text-anchor="middle">MATERIALIZED AS</text>
+  <text class="th" x="525" y="668.5" text-anchor="middle">READ BY</text>
+  <text class="tc" x="156" y="684">01</text>
+  <text class="tc" x="240" y="684" text-anchor="middle">raw</text>
+  <text class="tc" x="365" y="684" text-anchor="middle">tables, as loaded</text>
+  <text class="tc" x="525" y="684" text-anchor="middle">staging models only</text>
+  <text class="tc" x="156" y="699">02</text>
+  <text class="tc" x="240" y="699" text-anchor="middle">staging</text>
+  <text class="tc" x="365" y="699" text-anchor="middle">views</text>
+  <text class="tc" x="525" y="699" text-anchor="middle">intermediate, marts</text>
+  <text class="tc" x="156" y="714">03</text>
+  <text class="tc" x="240" y="714" text-anchor="middle">intermediate</text>
+  <text class="tc" x="365" y="714" text-anchor="middle">ephemeral, or views</text>
+  <text class="tc" x="525" y="714" text-anchor="middle">marts</text>
+  <text class="tc" x="156" y="729">04</text>
+  <text class="tc" x="240" y="729" text-anchor="middle">marts</text>
+  <text class="tc" x="365" y="729" text-anchor="middle">view, table, incremental</text>
+  <text class="tc" x="525" y="729" text-anchor="middle">people, BI, semantic layer</text>
+  <text class="tc" x="156" y="744">05</text>
+  <text class="tc" x="240" y="744" text-anchor="middle">semantic</text>
+  <text class="tc" x="365" y="744" text-anchor="middle">metric definitions</text>
+  <text class="tc" x="525" y="744" text-anchor="middle">dashboards, notebooks, apps</text>
 </svg>

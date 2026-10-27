@@ -1,91 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 600">
-  <defs>
-    <marker id="dp-ds-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="dp-ds-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="dp-ds-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-DSP-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">point-in-time feature join</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <text class="vt" x="40" y="64">Plan view: one training row</text>
-  <text class="vs" x="40" y="80">Scale 1 h = 40 px · event time · illustrative [1]</text>
-
-  <!-- t0: the label event; the centerline is the extension line for K1 and G1 -->
-  <path class="ctr" d="M500,100V262"/>
-
-  <!-- K1: TTL window -->
-  <path class="ext" d="M180,147V105"/>
-  <path class="dim" d="M180,110H500" marker-start="url(#dp-ds-ah)" marker-end="url(#dp-ds-ah)"/>
-  <text class="dt" x="340" y="106" text-anchor="middle">K1 = TTL = 8 h</text>
-
-  <!-- G1: feature age (the subject) -->
-  <path class="ext" d="M380,147V129"/>
-  <path class="dim hl" d="M380,134H500" marker-start="url(#dp-ds-ah-hl)" marker-end="url(#dp-ds-ah-hl)"/>
-  <text class="dt hl" x="440" y="130" text-anchor="middle">G1 = 3 h</text>
-
-  <!-- Feature values over time -->
-  <text class="sl ink" x="130" y="170" text-anchor="end" dominant-baseline="central">feature</text>
-  <rect class="obj fill-2" x="140" y="150" width="240" height="40"/>
-  <rect class="obj hl" x="380" y="150" width="200" height="40"/>
-  <rect class="hatch" x="580" y="150" width="80" height="40" fill="url(#dp-ds-hatch)"/>
-  <text class="sl ink" x="260" y="170" text-anchor="middle" dominant-baseline="central">v1</text>
-  <text class="sl ink" x="440" y="170" text-anchor="middle" dominant-baseline="central">v2 used</text>
-  <text class="sl ink ko" x="620" y="170" text-anchor="middle" dominant-baseline="central">v3 [3]</text>
-
-  <!-- Label event -->
-  <text class="sl ink" x="130" y="232" text-anchor="end" dominant-baseline="central">label</text>
-  <circle class="dot" cx="500" cy="232" r="3"/>
-  <path class="leader" d="M500,232L512,244H530"/>
-  <text class="sl ink" x="534" y="244" dominant-baseline="central">label event t0 [2]</text>
-
-  <!-- Axis -->
-  <path class="ln ink" d="M100,280H660M100,276V284M180,276V284M260,276V284M340,276V284M420,276V284M500,276V284M580,276V284M660,276V284"/>
-  <text class="t" x="100" y="296" text-anchor="middle" dominant-baseline="central">04:00</text>
-  <text class="t" x="180" y="296" text-anchor="middle" dominant-baseline="central">06:00</text>
-  <text class="t" x="260" y="296" text-anchor="middle" dominant-baseline="central">08:00</text>
-  <text class="t" x="340" y="296" text-anchor="middle" dominant-baseline="central">10:00</text>
-  <text class="t" x="420" y="296" text-anchor="middle" dominant-baseline="central">12:00</text>
-  <text class="t" x="500" y="296" text-anchor="middle" dominant-baseline="central">14:00</text>
-  <text class="t" x="580" y="296" text-anchor="middle" dominant-baseline="central">16:00</text>
-  <text class="t" x="660" y="296" text-anchor="middle" dominant-baseline="central">18:00</text>
-  <text class="t" x="660" y="318" text-anchor="end" dominant-baseline="central">event time</text>
-
-  <!-- Variables -->
-  <text class="vt" x="40" y="352">Variables</text>
-  <text class="vs" x="40" y="368">Illustrative [1] · hours</text>
-  <rect class="cell band" x="40" y="378" width="50" height="22"/>
-  <rect class="cell band" x="90" y="378" width="300" height="22"/>
-  <rect class="cell band" x="390" y="378" width="80" height="22"/>
-  <text class="cap ink" x="50" y="389" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="389" dominant-baseline="central">item</text>
-  <text class="cap ink" x="460" y="389" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,400H470V510H40Z"/>
-  <path class="ln ink" d="M90,400V510M390,400V510"/>
-  <path class="ln" d="M40,422H470M40,444H470M40,466H470M40,488H470"/>
-  <text class="t" x="50" y="411" dominant-baseline="central">T0</text>
-  <text class="t" x="100" y="411" dominant-baseline="central">label event time</text>
-  <text class="t" x="460" y="411" text-anchor="end" dominant-baseline="central">14:00</text>
-  <text class="t" x="50" y="433" dominant-baseline="central">K1</text>
-  <text class="t" x="100" y="433" dominant-baseline="central">feature TTL, chosen</text>
-  <text class="t" x="460" y="433" text-anchor="end" dominant-baseline="central">8 h</text>
-  <text class="t" x="50" y="455" dominant-baseline="central">U2</text>
-  <text class="t" x="100" y="455" dominant-baseline="central">v2 written</text>
-  <text class="t" x="460" y="455" text-anchor="end" dominant-baseline="central">11:00</text>
-  <text class="t b" x="50" y="477" dominant-baseline="central">G1</text>
-  <text class="t" x="100" y="477" dominant-baseline="central">feature age: T0 - U2, within K1</text>
-  <text class="t b" x="460" y="477" text-anchor="end" dominant-baseline="central">3 h</text>
-  <text class="t" x="50" y="499" dominant-baseline="central">U3</text>
-  <text class="t" x="100" y="499" dominant-baseline="central">v3 written, after T0</text>
-  <text class="t" x="460" y="499" text-anchor="end" dominant-baseline="central">16:00</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 561">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="dp-ds-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="dp-ds-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="dp-ds-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="541" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="526" width="680" height="62"/>
-  <text class="sl ink" x="52" y="546">notes</text>
-  <text class="n" x="110" y="546">[1] Illustrative times. Feast scans back from each row's timestamp up to the TTL, never forward.</text>
-  <text class="n" x="110" y="562">[2] What happened at t0: a chargeback, a cancellation, a no-show. Features are as served then.</text>
-  <text class="n" x="110" y="578">[3] Written after t0: joining it leaks the future into training. Online, the model never sees it.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE TIMES. FEAST SCANS BACK FROM EACH ROW'S TIMESTAMP UP TO THE TTL, NEVER FORWARD.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">WHAT HAPPENED AT T0: A CHARGEBACK, A CANCELLATION, A NO-SHOW. FEATURES ARE AS SERVED THEN.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">WRITTEN AFTER T0: JOINING IT LEAKS THE FUTURE INTO TRAINING. ONLINE, THE MODEL NEVER SEES IT.</text>
+  <text class="nt" x="50" y="113">EVENT TIME IN HOURS. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: one training row -->
+  <path class="ctr" d="M520,150L520,310"/>
+  <path class="ext" d="M200,203L200,156"/>
+  <path class="dim" d="M200,160L520,160" marker-start="url(#dp-ds-ah)" marker-end="url(#dp-ds-ah)"/>
+  <text class="dt" x="360" y="156" text-anchor="middle">K1</text>
+  <path class="ext" d="M400,203L400,180"/>
+  <path class="dim hl" d="M400,184L520,184" marker-start="url(#dp-ds-ah-hl)" marker-end="url(#dp-ds-ah-hl)"/>
+  <text class="dt hl" x="460" y="180" text-anchor="middle">G1</text>
+  <text class="sl ink" x="150" y="227" text-anchor="end">FEATURE</text>
+  <rect class="obj fill-2" x="160" y="206" width="240" height="36"/>
+  <rect class="obj hl" x="400" y="206" width="200" height="36"/>
+  <rect class="hatch" x="600" y="206" width="80" height="36" fill="url(#dp-ds-hatch)"/>
+  <text class="sl ink" x="280" y="227" text-anchor="middle">V1</text>
+  <text class="sl ink" x="460" y="227" text-anchor="middle">V2 USED</text>
+  <text class="sl ink ko" x="632" y="227" text-anchor="middle">V3</text>
+  <rect class="nb" x="646.5" y="218.5" width="11" height="11"/>
+  <text class="nbt" x="652" y="226.7" text-anchor="middle">3</text>
+  <text class="dt" x="400" y="256" text-anchor="middle">U2</text>
+  <text class="dt" x="600" y="256" text-anchor="middle">U3</text>
+  <text class="sl ink" x="150" y="285" text-anchor="end">LABEL</text>
+  <circle class="dot" cx="520" cy="282" r="2.6"/>
+  <circle class="dot" cx="520" cy="282" r="1.6"/>
+  <path class="leader" d="M520,282L534,294H544"/>
+  <text class="sl ink" x="548" y="297">LABEL EVENT T0</text>
+  <rect class="nb" x="632.91" y="288.5" width="11" height="11"/>
+  <text class="nbt" x="638.41" y="296.7" text-anchor="middle">2</text>
+  <path class="obj" d="M120,318L680,318"/>
+  <path class="obj" d="M120,314L120,322"/>
+  <text class="tc" x="120" y="334" text-anchor="middle">04:00</text>
+  <path class="obj" d="M200,314L200,322"/>
+  <text class="tc" x="200" y="334" text-anchor="middle">06:00</text>
+  <path class="obj" d="M280,314L280,322"/>
+  <text class="tc" x="280" y="334" text-anchor="middle">08:00</text>
+  <path class="obj" d="M360,314L360,322"/>
+  <text class="tc" x="360" y="334" text-anchor="middle">10:00</text>
+  <path class="obj" d="M440,314L440,322"/>
+  <text class="tc" x="440" y="334" text-anchor="middle">12:00</text>
+  <path class="obj" d="M520,314L520,322"/>
+  <text class="tc" x="520" y="334" text-anchor="middle">14:00</text>
+  <path class="obj" d="M600,314L600,322"/>
+  <text class="tc" x="600" y="334" text-anchor="middle">16:00</text>
+  <path class="obj" d="M680,314L680,322"/>
+  <text class="tc" x="680" y="334" text-anchor="middle">18:00</text>
+  <text class="vt" x="380" y="376" text-anchor="middle">PLAN VIEW · ONE TRAINING ROW</text>
+  <text class="vs" x="380" y="389" text-anchor="middle">SCALE 1 H = 40 PX · EVENT TIME · ILLUSTRATIVE</text>
+  <!-- Variable table -->
+  <text class="vt" x="200" y="434">VARIABLES · HOURS</text>
+  <rect class="tbl" x="200" y="441" width="360" height="90"/>
+  <path class="tbl" d="M200,456L560,456"/>
+  <path class="tbl" d="M200,471L560,471"/>
+  <path class="tbl" d="M200,486L560,486"/>
+  <path class="tbl" d="M200,501L560,501"/>
+  <path class="tbl" d="M200,516L560,516"/>
+  <path class="tbl" d="M240,441L240,531"/>
+  <path class="tbl" d="M440,441L440,531"/>
+  <text class="th" x="206" y="451.2">CODE</text>
+  <text class="th" x="340" y="451.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="500" y="451.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="206" y="466.7">T0</text>
+  <text class="tc" x="340" y="466.7" text-anchor="middle">label event time</text>
+  <text class="tc" x="500" y="466.7" text-anchor="middle">14:00</text>
+  <text class="tc" x="206" y="481.7">K1</text>
+  <text class="tc" x="340" y="481.7" text-anchor="middle">feature TTL, chosen</text>
+  <text class="tc" x="500" y="481.7" text-anchor="middle">8 h</text>
+  <text class="tc" x="206" y="496.7">U2</text>
+  <text class="tc" x="340" y="496.7" text-anchor="middle">v2 written</text>
+  <text class="tc" x="500" y="496.7" text-anchor="middle">11:00</text>
+  <text class="tc" x="206" y="511.7">G1</text>
+  <text class="tc" x="340" y="511.7" text-anchor="middle">feature age, within K1</text>
+  <text class="tc" x="500" y="511.7" text-anchor="middle">T0 − U2 = 3 h</text>
+  <text class="tc" x="206" y="526.7">U3</text>
+  <text class="tc" x="340" y="526.7" text-anchor="middle">v3 written, after T0</text>
+  <text class="tc" x="500" y="526.7" text-anchor="middle">16:00</text>
 </svg>

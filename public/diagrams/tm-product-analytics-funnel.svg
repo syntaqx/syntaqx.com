@@ -1,83 +1,100 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 700">
-  <defs>
-    <marker id="tm-pf-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="tm-pf-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">TM-PA-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">funnel, one weekly cohort</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view -->
-  <text class="vt" x="40" y="64">Plan view: four-step funnel, cohort W0</text>
-  <text class="vs" x="40" y="80">Scale 1,000 users = 50 px · uniques · illustrative [1]</text>
-  <rect class="obj fill-1" x="140" y="130" width="500" height="28"/>
-  <rect class="obj fill-2" x="140" y="180" width="200" height="28"/>
-  <rect class="obj fill-2" x="140" y="230" width="80" height="28"/>
-  <rect class="obj hl" x="140" y="280" width="20" height="28"/>
-  <text class="dt" x="140" y="125">S0 entered = 10,000</text>
-  <text class="dt" x="140" y="175">S1 started = 4,000</text>
-  <text class="dt" x="140" y="225">S2 core action = 1,600</text>
-  <text class="dt" x="140" y="275">S3 paid = 400 [2]</text>
-
-  <!-- Step conversion chain -->
-  <path class="ext" d="M643,144H695M343,194H695M223,244H695M163,294H695"/>
-  <path class="dim" d="M690,144V194" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
-  <text class="dt" x="684" y="169" text-anchor="end" dominant-baseline="central">C1 = 40.0%</text>
-  <path class="dim" d="M690,194V244" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
-  <text class="dt" x="684" y="219" text-anchor="end" dominant-baseline="central">C2 = 40.0%</text>
-  <path class="dim" d="M690,244V294" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
-  <text class="dt" x="684" y="269" text-anchor="end" dominant-baseline="central">C3 = 25.0% [3]</text>
-
-  <!-- Overall conversion -->
-  <path class="ext" d="M137,144H95M137,294H95"/>
-  <path class="dim hl" d="M100,144V294" marker-start="url(#tm-pf-ah-hl)" marker-end="url(#tm-pf-ah-hl)"/>
-  <text class="dt hl" x="94" y="219" text-anchor="end" dominant-baseline="central">C = 4.0%</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="344">Variables</text>
-  <text class="vs" x="40" y="360">Illustrative [1] · users, %</text>
-  <rect class="cell band" x="40" y="370" width="60" height="22"/>
-  <rect class="cell band" x="100" y="370" width="500" height="22"/>
-  <rect class="cell band" x="600" y="370" width="120" height="22"/>
-  <text class="cap ink" x="50" y="381" dominant-baseline="central">code</text>
-  <text class="cap ink" x="110" y="381" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="381" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,392H720V568H40Z"/>
-  <path class="ln ink" d="M100,392V568M600,392V568"/>
-  <path class="ln" d="M40,414H720M40,436H720M40,458H720M40,480H720M40,502H720M40,524H720M40,546H720"/>
-  <text class="t" x="50" y="403" dominant-baseline="central">S0</text>
-  <text class="t" x="110" y="403" dominant-baseline="central">entered the flow (step 1)</text>
-  <text class="t" x="710" y="403" text-anchor="end" dominant-baseline="central">10,000</text>
-  <text class="t" x="50" y="425" dominant-baseline="central">S1</text>
-  <text class="t" x="110" y="425" dominant-baseline="central">started (step 2)</text>
-  <text class="t" x="710" y="425" text-anchor="end" dominant-baseline="central">4,000</text>
-  <text class="t" x="50" y="447" dominant-baseline="central">S2</text>
-  <text class="t" x="110" y="447" dominant-baseline="central">completed the core action (step 3)</text>
-  <text class="t" x="710" y="447" text-anchor="end" dominant-baseline="central">1,600</text>
-  <text class="t" x="50" y="469" dominant-baseline="central">S3</text>
-  <text class="t" x="110" y="469" dominant-baseline="central">paid (step 4)</text>
-  <text class="t" x="710" y="469" text-anchor="end" dominant-baseline="central">400</text>
-  <text class="t" x="50" y="491" dominant-baseline="central">C1</text>
-  <text class="t" x="110" y="491" dominant-baseline="central">S1 / S0</text>
-  <text class="t" x="710" y="491" text-anchor="end" dominant-baseline="central">40.0%</text>
-  <text class="t" x="50" y="513" dominant-baseline="central">C2</text>
-  <text class="t" x="110" y="513" dominant-baseline="central">S2 / S1</text>
-  <text class="t" x="710" y="513" text-anchor="end" dominant-baseline="central">40.0%</text>
-  <text class="t" x="50" y="535" dominant-baseline="central">C3</text>
-  <text class="t" x="110" y="535" dominant-baseline="central">S3 / S2</text>
-  <text class="t" x="710" y="535" text-anchor="end" dominant-baseline="central">25.0%</text>
-  <text class="t b" x="50" y="557" dominant-baseline="central">C</text>
-  <text class="t" x="110" y="557" dominant-baseline="central">S3 / S0 = C1 x C2 x C3 [4]</text>
-  <text class="t b" x="710" y="557" text-anchor="end" dominant-baseline="central">4.0%</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 643">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="tm-pf-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="tm-pf-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="tm-pf-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="623" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="588" width="680" height="92"/>
-  <text class="sl ink" x="52" y="606">notes</text>
-  <text class="n" x="52" y="624">[1] Illustrative counts for one weekly cohort, not data from any product.</text>
-  <text class="n" x="52" y="640">[2] Each user counts once, entering at their first step-1 event, with a 7-day window from it.</text>
-  <text class="n" x="52" y="656">[3] The lowest step rate; the largest loss in users is S0 to S1 (6,000). Read both.</text>
-  <text class="n" x="52" y="672">[4] C is the product of the step rates, so a gain at any step lifts it by the same factor.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE COUNTS FOR ONE WEEKLY COHORT, NOT DATA FROM ANY PRODUCT.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">EACH USER COUNTS ONCE, ENTERING AT THEIR FIRST STEP-1 EVENT, WITH A 7-DAY WINDOW FROM IT.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">THE LOWEST STEP RATE; THE LARGEST LOSS IN USERS IS S0 TO S1 (6,000). READ BOTH.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">C IS THE PRODUCT OF THE STEP RATES, SO A GAIN AT ANY STEP LIFTS IT BY THE SAME FACTOR.</text>
+  <text class="nt" x="50" y="130">USERS ARE UNIQUES. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: four-step funnel -->
+  <rect class="obj fill-1" x="130" y="189" width="500" height="28"/>
+  <text class="dt" x="130" y="183">S0</text>
+  <text class="sl ink" x="149.2" y="183">ENTERED</text>
+  <rect class="obj fill-2" x="130" y="241" width="200" height="28"/>
+  <text class="dt" x="130" y="235">S1</text>
+  <text class="sl ink" x="149.2" y="235">STARTED</text>
+  <rect class="obj fill-2" x="130" y="293" width="80" height="28"/>
+  <text class="dt" x="130" y="287">S2</text>
+  <text class="sl ink" x="149.2" y="287">CORE ACTION</text>
+  <rect class="obj fill-2" x="130" y="345" width="20" height="28"/>
+  <text class="dt" x="130" y="339">S3</text>
+  <text class="sl ink" x="149.2" y="339">PAID</text>
+  <rect class="nb" x="182.86" y="330" width="11" height="11"/>
+  <text class="nbt" x="188.36" y="338.2" text-anchor="middle">2</text>
+  <path class="ext" d="M633,203L684,203"/>
+  <path class="ext" d="M333,255L684,255"/>
+  <path class="dim" d="M680,203L680,255" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
+  <text class="dt" x="686" y="232.5">C1</text>
+  <path class="ext" d="M333,255L684,255"/>
+  <path class="ext" d="M213,307L684,307"/>
+  <path class="dim" d="M680,255L680,307" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
+  <text class="dt" x="686" y="284.5">C2</text>
+  <path class="ext" d="M213,307L684,307"/>
+  <path class="ext" d="M153,359L684,359"/>
+  <path class="dim" d="M680,307L680,359" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
+  <text class="dt" x="686" y="336.5">C3</text>
+  <rect class="nb" x="714.5" y="327.5" width="11" height="11"/>
+  <text class="nbt" x="720" y="335.7" text-anchor="middle">3</text>
+  <path class="ext" d="M127,203L92,203"/>
+  <path class="ext" d="M127,359L92,359"/>
+  <path class="dim hl" d="M96,203L96,359" marker-start="url(#tm-pf-ah-hl)" marker-end="url(#tm-pf-ah-hl)"/>
+  <text class="dt hl" x="90" y="284.5" text-anchor="end">C</text>
+  <rect class="nb" x="60.5" y="275.5" width="11" height="11"/>
+  <text class="nbt" x="66" y="283.7" text-anchor="middle">4</text>
+  <text class="vt" x="380" y="415" text-anchor="middle">PLAN VIEW · FOUR-STEP FUNNEL, COHORT W0</text>
+  <text class="vs" x="380" y="428" text-anchor="middle">SCALE 1,000 USERS = 50 PX · UNIQUES · ILLUSTRATIVE</text>
+  <rect class="nb" x="534.5" y="405.5" width="11" height="11"/>
+  <text class="nbt" x="540" y="413.7" text-anchor="middle">1</text>
+  <!-- Variable table -->
+  <text class="vt" x="206.5" y="471">VARIABLES · USERS</text>
+  <rect class="tbl" x="206.5" y="478" width="354" height="135"/>
+  <path class="tbl" d="M206.5,493L560.5,493"/>
+  <path class="tbl" d="M206.5,508L560.5,508"/>
+  <path class="tbl" d="M206.5,523L560.5,523"/>
+  <path class="tbl" d="M206.5,538L560.5,538"/>
+  <path class="tbl" d="M206.5,553L560.5,553"/>
+  <path class="tbl" d="M206.5,568L560.5,568"/>
+  <path class="tbl" d="M206.5,583L560.5,583"/>
+  <path class="tbl" d="M206.5,598L560.5,598"/>
+  <path class="tbl" d="M243.5,478L243.5,613"/>
+  <path class="tbl" d="M413.5,478L413.5,613"/>
+  <text class="th" x="212.5" y="488.2">CODE</text>
+  <text class="th" x="328.5" y="488.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="487" y="488.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="212.5" y="503.7">S0</text>
+  <text class="tc" x="328.5" y="503.7" text-anchor="middle">entered the flow (step 1)</text>
+  <text class="tc" x="487" y="503.7" text-anchor="middle">10,000</text>
+  <text class="tc" x="212.5" y="518.7">S1</text>
+  <text class="tc" x="328.5" y="518.7" text-anchor="middle">started (step 2)</text>
+  <text class="tc" x="487" y="518.7" text-anchor="middle">4,000</text>
+  <text class="tc" x="212.5" y="533.7">S2</text>
+  <text class="tc" x="328.5" y="533.7" text-anchor="middle">completed the core action (step 3)</text>
+  <text class="tc" x="487" y="533.7" text-anchor="middle">1,600</text>
+  <text class="tc" x="212.5" y="548.7">S3</text>
+  <text class="tc" x="328.5" y="548.7" text-anchor="middle">paid (step 4)</text>
+  <text class="tc" x="487" y="548.7" text-anchor="middle">400</text>
+  <text class="tc" x="212.5" y="563.7">C1</text>
+  <text class="tc" x="328.5" y="563.7" text-anchor="middle">step rate, step 1 to 2</text>
+  <text class="tc" x="487" y="563.7" text-anchor="middle">S1 ÷ S0 = 40.0%</text>
+  <text class="tc" x="212.5" y="578.7">C2</text>
+  <text class="tc" x="328.5" y="578.7" text-anchor="middle">step rate, step 2 to 3</text>
+  <text class="tc" x="487" y="578.7" text-anchor="middle">S2 ÷ S1 = 40.0%</text>
+  <text class="tc" x="212.5" y="593.7">C3</text>
+  <text class="tc" x="328.5" y="593.7" text-anchor="middle">step rate, step 3 to 4</text>
+  <text class="tc" x="487" y="593.7" text-anchor="middle">S3 ÷ S2 = 25.0%</text>
+  <text class="tc" x="212.5" y="608.7">C</text>
+  <text class="tc" x="328.5" y="608.7" text-anchor="middle">overall conversion</text>
+  <text class="tc" x="487" y="608.7" text-anchor="middle">S3 ÷ S0 = C1 × C2 × C3 = 4.0%</text>
 </svg>

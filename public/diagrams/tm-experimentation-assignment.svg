@@ -1,100 +1,133 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 818">
-  <defs>
-    <marker id="tm-ex-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="tm-ex-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="tm-ex-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">TM-EX-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">assignment and sample ratio</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: the bucket space -->
-  <text class="vt" x="40" y="64">Plan view: hash buckets of one experiment</text>
-  <text class="vs" x="40" y="80">Scale 1,000 buckets = 64 px · illustrative [4]</text>
-  <rect class="hatch" x="60" y="140" width="12.8" height="40" fill="url(#tm-ex-hatch)"/>
-  <rect class="obj fill-2" x="72.8" y="140" width="313.6" height="40"/>
-  <rect class="obj hl" x="386.4" y="140" width="313.6" height="40"/>
-  <text class="sl ink" x="229.6" y="160" text-anchor="middle" dominant-baseline="central">control</text>
-  <text class="sl ink" x="543.2" y="160" text-anchor="middle" dominant-baseline="central">treatment</text>
-  <circle class="dot" cx="66.4" cy="160" r="2"/>
-  <path class="leader" d="M66.4,160L84,128H112"/>
-  <text class="sl ink" x="116" y="128" dominant-baseline="central">holdout [2]</text>
-  <path class="ext" d="M60,137V105M700,137V105"/>
-  <path class="dim" d="M60,110H700" marker-start="url(#tm-ex-ah)" marker-end="url(#tm-ex-ah)"/>
-  <text class="dt" x="380" y="106" text-anchor="middle">N = H + C + T = 10,000 buckets [1]</text>
-  <path class="ext" d="M60,183V245M72.8,183V245M386.4,183V215M700,183V215"/>
-  <path class="dim" d="M72.8,210H386.4" marker-start="url(#tm-ex-ah)" marker-end="url(#tm-ex-ah)"/>
-  <text class="dt" x="229.6" y="206" text-anchor="middle">C = 4,900</text>
-  <path class="dim hl" d="M386.4,210H700" marker-start="url(#tm-ex-ah-hl)" marker-end="url(#tm-ex-ah-hl)"/>
-  <text class="dt hl" x="543.2" y="206" text-anchor="middle">T = 4,900</text>
-  <path class="dim" d="M40,240H60" marker-end="url(#tm-ex-ah)"/>
-  <path class="dim" d="M60,240H72.8"/>
-  <path class="dim" d="M92.8,240H72.8" marker-end="url(#tm-ex-ah)"/>
-  <text class="dt" x="98" y="240" dominant-baseline="central">H = 200</text>
-
-  <!-- View B: observed exposures -->
-  <text class="vt" x="40" y="284">View B: users observed, 50/50 configured</text>
-  <text class="vs" x="40" y="300">Scale 1 px = 2,000 users · counts from [3]</text>
-  <rect class="obj fill-2" x="140" y="320" width="410.8" height="24"/>
-  <rect class="obj fill-1" x="140" y="352" width="407.7" height="24"/>
-  <text class="sl ink" x="150" y="332" dominant-baseline="central">NC</text>
-  <text class="sl ink" x="150" y="364" dominant-baseline="central">NT</text>
-  <text class="sl" x="130" y="332" text-anchor="end" dominant-baseline="central">control</text>
-  <text class="sl" x="130" y="364" text-anchor="end" dominant-baseline="central">treatment</text>
-  <path class="ext" d="M550.8,347V405M547.7,379V405"/>
-  <path class="dim" d="M527.7,400H547.7" marker-end="url(#tm-ex-ah)"/>
-  <path class="dim" d="M547.7,400H550.8"/>
-  <path class="dim" d="M570.8,400H550.8" marker-end="url(#tm-ex-ah)"/>
-  <text class="dt" x="576" y="400" dominant-baseline="central">ΔN = 6,106</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="440">Variables</text>
-  <text class="vs" x="40" y="456">Buckets illustrative [4] · users from [3]</text>
-  <rect class="cell band" x="40" y="466" width="60" height="22"/>
-  <rect class="cell band" x="100" y="466" width="480" height="22"/>
-  <rect class="cell band" x="580" y="466" width="140" height="22"/>
-  <text class="cap ink" x="50" y="477" dominant-baseline="central">code</text>
-  <text class="cap ink" x="110" y="477" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="477" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,488H720V686H40Z"/>
-  <path class="ln ink" d="M100,488V686M580,488V686"/>
-  <path class="ln" d="M40,510H720M40,532H720M40,554H720M40,576H720M40,598H720M40,620H720M40,642H720M40,664H720"/>
-  <text class="t" x="50" y="499" dominant-baseline="central">N</text>
-  <text class="t" x="110" y="499" dominant-baseline="central">buckets in the hash space</text>
-  <text class="t" x="710" y="499" text-anchor="end" dominant-baseline="central">10,000</text>
-  <text class="t" x="50" y="521" dominant-baseline="central">H</text>
-  <text class="t" x="110" y="521" dominant-baseline="central">holdout buckets, 2%</text>
-  <text class="t" x="710" y="521" text-anchor="end" dominant-baseline="central">200</text>
-  <text class="t" x="50" y="543" dominant-baseline="central">C</text>
-  <text class="t" x="110" y="543" dominant-baseline="central">control buckets</text>
-  <text class="t" x="710" y="543" text-anchor="end" dominant-baseline="central">4,900</text>
-  <text class="t" x="50" y="565" dominant-baseline="central">T</text>
-  <text class="t" x="110" y="565" dominant-baseline="central">treatment buckets</text>
-  <text class="t" x="710" y="565" text-anchor="end" dominant-baseline="central">4,900</text>
-  <text class="t" x="50" y="587" dominant-baseline="central">NC</text>
-  <text class="t" x="110" y="587" dominant-baseline="central">control users observed</text>
-  <text class="t" x="710" y="587" text-anchor="end" dominant-baseline="central">821,588</text>
-  <text class="t" x="50" y="609" dominant-baseline="central">NT</text>
-  <text class="t" x="110" y="609" dominant-baseline="central">treatment users observed</text>
-  <text class="t" x="710" y="609" text-anchor="end" dominant-baseline="central">815,482</text>
-  <text class="t" x="50" y="631" dominant-baseline="central">ΔN</text>
-  <text class="t" x="110" y="631" dominant-baseline="central">NC - NT (50.19% / 49.81%)</text>
-  <text class="t" x="710" y="631" text-anchor="end" dominant-baseline="central">6,106</text>
-  <text class="t" x="50" y="653" dominant-baseline="central">X2</text>
-  <text class="t" x="110" y="653" dominant-baseline="central">chi-square vs 50/50, 1 df</text>
-  <text class="t" x="710" y="653" text-anchor="end" dominant-baseline="central">22.77</text>
-  <text class="t b" x="50" y="675" dominant-baseline="central">p</text>
-  <text class="t" x="110" y="675" dominant-baseline="central">chance of a split this uneven</text>
-  <text class="t b" x="710" y="675" text-anchor="end" dominant-baseline="central">0.0000018</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 884">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="tm-ex-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="tm-ex-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="tm-ex-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="864" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="706" width="680" height="92"/>
-  <text class="sl ink" x="52" y="724">notes</text>
-  <text class="n" x="52" y="742">[1] bucket = hash(seed + unit id) mod 10,000: the same id always lands in the same bucket.</text>
-  <text class="n" x="52" y="758">[2] Holdout buckets see no launched features; 1% to 2% is the size Statsig recommends.</text>
-  <text class="n" x="52" y="774">[3] Fabijan et al., KDD 2019: a 50.2/49.8 split that chance explains less than 1 in 500,000.</text>
-  <text class="n" x="52" y="790">[4] Bucket counts are illustrative. A gap of 0.37 points is invisible in View B and decisive.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">BUCKET = HASH(SEED + UNIT ID) MOD 10,000: THE SAME ID ALWAYS LANDS IN THE SAME BUCKET.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">HOLDOUT BUCKETS SEE NO LAUNCHED FEATURES; 1% TO 2% IS THE SIZE STATSIG RECOMMENDS.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">FABIJAN ET AL., KDD 2019: A 50.2/49.8 SPLIT THAT CHANCE EXPLAINS LESS THAN 1 IN 500,000.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">BUCKET COUNTS ARE ILLUSTRATIVE. A GAP OF 0.37 POINTS IS INVISIBLE IN VIEW B AND DECISIVE.</text>
+  <text class="nt" x="50" y="130">THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- View A: hash buckets -->
+  <rect class="hatch" x="60" y="205" width="12.8" height="36" fill="url(#tm-ex-hatch)"/>
+  <rect class="slot" x="60" y="205" width="12.8" height="36"/>
+  <rect class="obj fill-2" x="72.8" y="205" width="313.6" height="36"/>
+  <rect class="obj hl" x="386.4" y="205" width="313.6" height="36"/>
+  <text class="sl ink" x="229.6" y="226" text-anchor="middle">CONTROL</text>
+  <text class="sl ink" x="543.2" y="226" text-anchor="middle">TREATMENT</text>
+  <path class="ext" d="M60,202L60,179"/>
+  <path class="ext" d="M700,202L700,179"/>
+  <path class="dim" d="M60,183L700,183" marker-start="url(#tm-ex-ah)" marker-end="url(#tm-ex-ah)"/>
+  <text class="dt" x="380" y="179" text-anchor="middle">N</text>
+  <rect class="nb" x="390.5" y="170" width="11" height="11"/>
+  <text class="nbt" x="396" y="178.2" text-anchor="middle">1</text>
+  <path class="ext" d="M60,244L60,265"/>
+  <path class="ext" d="M72.8,244L72.8,265"/>
+  <path class="dim" d="M60,261L72.8,261"/><path class="dim" d="M50,261L60,261" marker-end="url(#tm-ex-ah)"/><path class="dim" d="M82.8,261L72.8,261" marker-end="url(#tm-ex-ah)"/>
+  <text class="dt" x="66.4" y="273" text-anchor="middle"></text>
+  <path class="ext" d="M386.4,244L386.4,265"/>
+  <path class="dim" d="M72.8,261L386.4,261" marker-start="url(#tm-ex-ah)" marker-end="url(#tm-ex-ah)"/>
+  <text class="dt" x="229.6" y="273" text-anchor="middle">C</text>
+  <path class="ext" d="M700,244L700,265"/>
+  <path class="dim hl" d="M386.4,261L700,261" marker-start="url(#tm-ex-ah-hl)" marker-end="url(#tm-ex-ah-hl)"/>
+  <text class="dt hl" x="543.2" y="273" text-anchor="middle">T</text>
+  <text class="dt" x="46" y="273" text-anchor="end">H</text>
+  <circle class="detail" cx="66.4" cy="223" r="16"/>
+  <path class="leader" d="M79.25,213.47L150,161"/>
+  <text class="sl ink" x="154" y="164">DETAIL A</text>
+  <text class="vt" x="380" y="309" text-anchor="middle">VIEW A · HASH BUCKETS OF ONE EXPERIMENT</text>
+  <text class="vs" x="380" y="322" text-anchor="middle">SCALE 1,000 BUCKETS = 64 PX · ILLUSTRATIVE</text>
+  <!-- View B: users observed -->
+  <text class="sl ink" x="192.6" y="383" text-anchor="end">CONTROL</text>
+  <text class="sl ink" x="192.6" y="415" text-anchor="end">TREATMENT</text>
+  <rect class="obj fill-2" x="204.6" y="368" width="410.79" height="24"/>
+  <rect class="obj fill-1" x="204.6" y="400" width="407.74" height="24"/>
+  <text class="dt" x="214.6" y="383.5">NC</text>
+  <text class="dt" x="214.6" y="415.5">NT</text>
+  <circle class="detail" cx="614.4" cy="396" r="18"/>
+  <path class="leader" d="M628.56,384.89L665.4,356"/>
+  <text class="sl ink" x="669.4" y="359">DETAIL B</text>
+  <text class="vt" x="380" y="464" text-anchor="middle">VIEW B · USERS OBSERVED, 50/50 CONFIGURED</text>
+  <text class="vs" x="380" y="477" text-anchor="middle">SCALE 1 PX = 2,000 USERS · COUNTS FROM FABIJAN ET AL.</text>
+  <!-- Detail A: holdout -->
+  <rect class="hatch" x="60" y="523" width="128" height="36" fill="url(#tm-ex-hatch)"/>
+  <rect class="slot" x="60" y="523" width="128" height="36"/>
+  <path class="obj fill-2" d="M188,523H316L313,532L319,541L313,550L316,559H188Z"/>
+  <text class="sl ink" x="252" y="544" text-anchor="middle">CONTROL</text>
+  <text class="sl ink ko" x="124" y="544" text-anchor="middle">HOLDOUT</text>
+  <path class="ext" d="M60,562L60,583"/>
+  <path class="ext" d="M188,562L188,583"/>
+  <path class="dim" d="M60,579L188,579" marker-start="url(#tm-ex-ah)" marker-end="url(#tm-ex-ah)"/>
+  <text class="dt" x="124" y="591" text-anchor="middle">H</text>
+  <rect class="nb" x="134.5" y="582" width="11" height="11"/>
+  <text class="nbt" x="140" y="590.2" text-anchor="middle">2</text>
+  <text class="vt" x="188" y="641" text-anchor="middle">DETAIL A · HOLDOUT</text>
+  <text class="vs" x="188" y="654" text-anchor="middle">SCALE 10:1 · 1,000 BUCKETS = 640 PX</text>
+  <!-- Detail B: sample ratio gap -->
+  <path class="obj fill-2" d="M430,523H645.88V545H430L427,539.5L433,534L427,528.5L430,523Z"/>
+  <path class="obj fill-1" d="M430,553H584.8199999999999V575H430L427,569.5L433,564L427,558.5L430,553Z"/>
+  <text class="dt" x="442" y="537.5">NC</text>
+  <text class="dt" x="442" y="567.5">NT</text>
+  <path class="ext" d="M584.82,578L584.82,599"/>
+  <path class="ext" d="M645.88,548L645.88,599"/>
+  <path class="dim" d="M584.82,595L645.88,595" marker-start="url(#tm-ex-ah)" marker-end="url(#tm-ex-ah)"/>
+  <text class="dt" x="615.35" y="607" text-anchor="middle">ΔN</text>
+  <rect class="nb" x="629.85" y="598" width="11" height="11"/>
+  <text class="nbt" x="635.35" y="606.2" text-anchor="middle">4</text>
+  <text class="vt" x="560" y="641" text-anchor="middle">DETAIL B · SAMPLE RATIO GAP</text>
+  <text class="vs" x="560" y="654" text-anchor="middle">SCALE 20:1 · 1 PX = 100 USERS</text>
+  <!-- Variable table -->
+  <text class="vt" x="231.5" y="697">VARIABLES</text>
+  <rect class="tbl" x="231.5" y="704" width="304" height="150"/>
+  <path class="tbl" d="M231.5,719L535.5,719"/>
+  <path class="tbl" d="M231.5,734L535.5,734"/>
+  <path class="tbl" d="M231.5,749L535.5,749"/>
+  <path class="tbl" d="M231.5,764L535.5,764"/>
+  <path class="tbl" d="M231.5,779L535.5,779"/>
+  <path class="tbl" d="M231.5,794L535.5,794"/>
+  <path class="tbl" d="M231.5,809L535.5,809"/>
+  <path class="tbl" d="M231.5,824L535.5,824"/>
+  <path class="tbl" d="M231.5,839L535.5,839"/>
+  <path class="tbl" d="M268.5,704L268.5,854"/>
+  <path class="tbl" d="M415.5,704L415.5,854"/>
+  <text class="th" x="237.5" y="714.2">CODE</text>
+  <text class="th" x="342" y="714.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="475.5" y="714.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="237.5" y="729.7">N</text>
+  <text class="tc" x="342" y="729.7" text-anchor="middle">buckets in the hash space</text>
+  <text class="tc" x="475.5" y="729.7" text-anchor="middle">H + C + T = 10,000</text>
+  <text class="tc" x="237.5" y="744.7">H</text>
+  <text class="tc" x="342" y="744.7" text-anchor="middle">holdout buckets, 2%</text>
+  <text class="tc" x="475.5" y="744.7" text-anchor="middle">200</text>
+  <text class="tc" x="237.5" y="759.7">C</text>
+  <text class="tc" x="342" y="759.7" text-anchor="middle">control buckets</text>
+  <text class="tc" x="475.5" y="759.7" text-anchor="middle">4,900</text>
+  <text class="tc" x="237.5" y="774.7">T</text>
+  <text class="tc" x="342" y="774.7" text-anchor="middle">treatment buckets</text>
+  <text class="tc" x="475.5" y="774.7" text-anchor="middle">4,900</text>
+  <text class="tc" x="237.5" y="789.7">NC</text>
+  <text class="tc" x="342" y="789.7" text-anchor="middle">control users observed</text>
+  <text class="tc" x="475.5" y="789.7" text-anchor="middle">821,588</text>
+  <text class="tc" x="237.5" y="804.7">NT</text>
+  <text class="tc" x="342" y="804.7" text-anchor="middle">treatment users observed</text>
+  <text class="tc" x="475.5" y="804.7" text-anchor="middle">815,482</text>
+  <text class="tc" x="237.5" y="819.7">ΔN</text>
+  <text class="tc" x="342" y="819.7" text-anchor="middle">gap, 50.19% / 49.81%</text>
+  <text class="tc" x="475.5" y="819.7" text-anchor="middle">NC − NT = 6,106</text>
+  <text class="tc" x="237.5" y="834.7">X2</text>
+  <text class="tc" x="342" y="834.7" text-anchor="middle">chi-square vs 50/50, 1 df</text>
+  <text class="tc" x="475.5" y="834.7" text-anchor="middle">ΔN² ÷ (NC + NT) = 22.77</text>
+  <text class="tc" x="237.5" y="849.7">p</text>
+  <text class="tc" x="342" y="849.7" text-anchor="middle">chance of a split this uneven</text>
+  <text class="tc" x="475.5" y="849.7" text-anchor="middle">0.0000018</text>
 </svg>

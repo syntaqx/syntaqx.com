@@ -1,110 +1,137 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 712">
-  <defs>
-    <marker id="tm-cc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">TM-COL-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">two clocks, one event</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view -->
-  <text class="vt" x="40" y="64">Plan view: device and server clocks</text>
-  <text class="vs" x="40" y="80">Scale 1 s = 4 px · one true-time axis · values in s</text>
-
-  <!-- Q1 on the device clock -->
-  <path class="ext" d="M140,125V99M460,125V99"/>
-  <path class="dim" d="M140,104H460" marker-start="url(#tm-cc-ah)" marker-end="url(#tm-cc-ah)"/>
-  <text class="dt" x="300" y="100" text-anchor="middle">Q1 = S1 - O1 = 120.00 - 40.00 = 80.00</text>
-
-  <!-- Device lane -->
-  <text class="sl ink" x="88" y="148" text-anchor="end" dominant-baseline="central">device</text>
-  <rect class="obj fill-2" x="140" y="128" width="320" height="40"/>
-  <text class="sl ink" x="300" y="148" text-anchor="middle" dominant-baseline="central">queued offline</text>
-  <circle class="dot" cx="140" cy="148" r="3"/>
-  <circle class="dot" cx="460" cy="148" r="3"/>
-  <text class="t" x="146" y="160" dominant-baseline="central">O1</text>
-  <text class="t" x="454" y="160" text-anchor="end" dominant-baseline="central">S1</text>
-
-  <!-- Device clock axis: reads true time + 30 -->
-  <path class="ln ink" d="M100,182H620M100,178V186M180,178V186M260,178V186M340,178V186M420,178V186M500,178V186M580,178V186"/>
-  <text class="t" x="100" y="196" text-anchor="middle" dominant-baseline="central">30</text>
-  <text class="t" x="180" y="196" text-anchor="middle" dominant-baseline="central">50</text>
-  <text class="t" x="260" y="196" text-anchor="middle" dominant-baseline="central">70</text>
-  <text class="t" x="340" y="196" text-anchor="middle" dominant-baseline="central">90</text>
-  <text class="t" x="420" y="196" text-anchor="middle" dominant-baseline="central">110</text>
-  <text class="t" x="500" y="196" text-anchor="middle" dominant-baseline="central">130</text>
-  <text class="t" x="580" y="196" text-anchor="middle" dominant-baseline="central">150</text>
-  <text class="sl" x="88" y="196" text-anchor="end" dominant-baseline="central">clock</text>
-
-  <!-- Transit -->
-  <path class="ln ink" d="M460,206L464,236" marker-end="url(#tm-cc-ah)"/>
-  <text class="t" x="474" y="220" dominant-baseline="central">[2] transit</text>
-
-  <!-- Server lane -->
-  <text class="sl ink" x="88" y="258" text-anchor="end" dominant-baseline="central">server</text>
-  <rect class="obj fill-2" x="100" y="238" width="520" height="40"/>
-  <circle class="obj hl" cx="144" cy="258" r="4"/>
-  <circle class="dot" cx="464" cy="258" r="3"/>
-  <text class="t" x="154" y="258" dominant-baseline="central">T1</text>
-  <text class="t" x="454" y="258" text-anchor="end" dominant-baseline="central">R1</text>
-
-  <!-- Server clock axis: reads true time -->
-  <path class="ln ink" d="M100,292H620M100,288V296M180,288V296M260,288V296M340,288V296M420,288V296M500,288V296M580,288V296"/>
-  <text class="t" x="100" y="306" text-anchor="middle" dominant-baseline="central">0</text>
-  <text class="t" x="180" y="306" text-anchor="middle" dominant-baseline="central">20</text>
-  <text class="t" x="260" y="306" text-anchor="middle" dominant-baseline="central">40</text>
-  <text class="t" x="340" y="306" text-anchor="middle" dominant-baseline="central">60</text>
-  <text class="t" x="420" y="306" text-anchor="middle" dominant-baseline="central">80</text>
-  <text class="t" x="500" y="306" text-anchor="middle" dominant-baseline="central">100</text>
-  <text class="t" x="580" y="306" text-anchor="middle" dominant-baseline="central">120</text>
-  <text class="sl" x="88" y="306" text-anchor="end" dominant-baseline="central">clock</text>
-
-  <!-- Q1 subtracted from R1 -->
-  <path class="ext" d="M144,316V341M464,316V341"/>
-  <path class="dim" d="M144,336H464" marker-start="url(#tm-cc-ah)" marker-end="url(#tm-cc-ah)"/>
-  <text class="dt" x="304" y="332" text-anchor="middle">Q1 = 80.00 [1]</text>
-  <text class="t" x="380" y="362" text-anchor="middle" dominant-baseline="central">T1 = R1 - Q1 = 91.00 - 80.00 = 11.00 · E1 = T1 - 10.00 = 1.00</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="400">Variables</text>
-  <text class="vs" x="40" y="416">Illustrative [3] · seconds</text>
-  <rect class="cell band" x="40" y="426" width="50" height="22"/>
-  <rect class="cell band" x="90" y="426" width="530" height="22"/>
-  <rect class="cell band" x="620" y="426" width="100" height="22"/>
-  <text class="cap ink" x="50" y="437" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="437" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="437" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,448H720V602H40Z"/>
-  <path class="ln ink" d="M90,448V602M620,448V602"/>
-  <path class="ln" d="M40,470H720M40,492H720M40,514H720M40,536H720M40,558H720M40,580H720"/>
-  <text class="t" x="50" y="459" dominant-baseline="central">K1</text>
-  <text class="t" x="100" y="459" dominant-baseline="central">device clock ahead of server clock</text>
-  <text class="t" x="710" y="459" text-anchor="end" dominant-baseline="central">30.00</text>
-  <text class="t" x="50" y="481" dominant-baseline="central">O1</text>
-  <text class="t" x="100" y="481" dominant-baseline="central">created, by device clock (originalTimestamp)</text>
-  <text class="t" x="710" y="481" text-anchor="end" dominant-baseline="central">40.00</text>
-  <text class="t" x="50" y="503" dominant-baseline="central">S1</text>
-  <text class="t" x="100" y="503" dominant-baseline="central">sent, by device clock (sentAt)</text>
-  <text class="t" x="710" y="503" text-anchor="end" dominant-baseline="central">120.00</text>
-  <text class="t" x="50" y="525" dominant-baseline="central">Q1</text>
-  <text class="t" x="100" y="525" dominant-baseline="central">time in queue: S1 - O1</text>
-  <text class="t" x="710" y="525" text-anchor="end" dominant-baseline="central">80.00</text>
-  <text class="t" x="50" y="547" dominant-baseline="central">R1</text>
-  <text class="t" x="100" y="547" dominant-baseline="central">received, by server clock (receivedAt)</text>
-  <text class="t" x="710" y="547" text-anchor="end" dominant-baseline="central">91.00</text>
-  <text class="t b" x="50" y="569" dominant-baseline="central">T1</text>
-  <text class="t" x="100" y="569" dominant-baseline="central">derived event time on the server clock: R1 - Q1</text>
-  <text class="t b" x="710" y="569" text-anchor="end" dominant-baseline="central">11.00</text>
-  <text class="t" x="50" y="591" dominant-baseline="central">E1</text>
-  <text class="t" x="100" y="591" dominant-baseline="central">remaining error against the true time of 10.00</text>
-  <text class="t" x="710" y="591" text-anchor="end" dominant-baseline="central">1.00</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 698">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="tm-cc-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="tm-cc-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="tm-cc-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="678" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="620" width="680" height="72"/>
-  <text class="sl ink" x="52" y="638">notes</text>
-  <text class="n" x="52" y="656">[1] Segment: timestamp = receivedAt - (sentAt - originalTimestamp); Snowplow derived_tstamp matches.</text>
-  <text class="n" x="52" y="672">[2] Q1 is read on one clock, so the skew K1 cancels; what remains, E1, is the transit time.</text>
-  <text class="n" x="52" y="688">[3] Illustrative values in seconds from an arbitrary zero on the true clock.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">SEGMENT: TIMESTAMP = RECEIVEDAT - (SENTAT - ORIGINALTIMESTAMP); SNOWPLOW DERIVED_TSTAMP MATCHES.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">Q1 IS READ ON ONE CLOCK, SO THE SKEW K1 CANCELS; WHAT REMAINS, E1, IS THE TRANSIT TIME.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">ILLUSTRATIVE VALUES IN SECONDS FROM AN ARBITRARY ZERO ON THE TRUE CLOCK.</text>
+  <text class="nt" x="50" y="113">THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: device and server clocks -->
+  <text class="sl ink" x="126" y="202" text-anchor="end">DEVICE</text>
+  <rect class="obj fill-2" x="180" y="184" width="320" height="30"/>
+  <text class="sl ink" x="340" y="202" text-anchor="middle">QUEUED OFFLINE</text>
+  <path class="ext" d="M180,181L180,158"/>
+  <path class="ext" d="M500,181L500,158"/>
+  <path class="dim" d="M180,162L500,162" marker-start="url(#tm-cc-ah)" marker-end="url(#tm-cc-ah)"/>
+  <text class="dt" x="340" y="158" text-anchor="middle">Q1</text>
+  <rect class="nb" x="354.5" y="149" width="11" height="11"/>
+  <text class="nbt" x="360" y="157.2" text-anchor="middle">2</text>
+  <path class="obj" d="M140,228L660,228"/>
+  <path class="obj" d="M140,224L140,232"/>
+  <text class="vs" x="140" y="243" text-anchor="middle">30</text>
+  <path class="obj" d="M220,224L220,232"/>
+  <text class="vs" x="220" y="243" text-anchor="middle">50</text>
+  <path class="obj" d="M300,224L300,232"/>
+  <text class="vs" x="300" y="243" text-anchor="middle">70</text>
+  <path class="obj" d="M380,224L380,232"/>
+  <text class="vs" x="380" y="243" text-anchor="middle">90</text>
+  <path class="obj" d="M460,224L460,232"/>
+  <text class="vs" x="460" y="243" text-anchor="middle">110</text>
+  <path class="obj" d="M540,224L540,232"/>
+  <text class="vs" x="540" y="243" text-anchor="middle">130</text>
+  <path class="obj" d="M620,224L620,232"/>
+  <text class="vs" x="620" y="243" text-anchor="middle">150</text>
+  <text class="vs" x="126" y="243" text-anchor="end">DEVICE CLOCK</text>
+  <text class="sl ink" x="126" y="310" text-anchor="end">SERVER</text>
+  <rect class="slot" x="140" y="292" width="520" height="30"/>
+  <circle class="dot" cx="504" cy="307" r="2.6"/>
+  <circle class="obj hl" cx="184" cy="307" r="3.5"/>
+  <text class="dt hl" x="194" y="310.5">T1</text>
+  <text class="dt" x="514" y="310.5">R1</text>
+  <path class="obj" d="M140,336L660,336"/>
+  <path class="obj" d="M140,332L140,340"/>
+  <text class="vs" x="140" y="351" text-anchor="middle">0</text>
+  <path class="obj" d="M220,332L220,340"/>
+  <text class="vs" x="220" y="351" text-anchor="middle">20</text>
+  <path class="obj" d="M300,332L300,340"/>
+  <text class="vs" x="300" y="351" text-anchor="middle">40</text>
+  <path class="obj" d="M380,332L380,340"/>
+  <text class="vs" x="380" y="351" text-anchor="middle">60</text>
+  <path class="obj" d="M460,332L460,340"/>
+  <text class="vs" x="460" y="351" text-anchor="middle">80</text>
+  <path class="obj" d="M540,332L540,340"/>
+  <text class="vs" x="540" y="351" text-anchor="middle">100</text>
+  <path class="obj" d="M620,332L620,340"/>
+  <text class="vs" x="620" y="351" text-anchor="middle">120</text>
+  <text class="vs" x="126" y="351" text-anchor="end">SERVER CLOCK</text>
+  <text class="dt" x="186" y="202.5">O1</text>
+  <text class="dt" x="494" y="202.5" text-anchor="end">S1</text>
+  <path class="leader" d="M500,214L504,292" marker-end="url(#tm-cc-ah)"/>
+  <circle class="detail" cx="503" cy="288" r="16"/>
+  <path class="leader" d="M517.36,280.94L564,258"/>
+  <text class="sl ink" x="568" y="261">DETAIL A</text>
+  <path class="ext" d="M184,315L184,380"/>
+  <path class="ext" d="M504,314L504,380"/>
+  <path class="dim" d="M184,376L504,376" marker-start="url(#tm-cc-ah)" marker-end="url(#tm-cc-ah)"/>
+  <text class="dt" x="344" y="388" text-anchor="middle">Q1</text>
+  <rect class="nb" x="358.5" y="379" width="11" height="11"/>
+  <text class="nbt" x="364" y="387.2" text-anchor="middle">1</text>
+  <path class="ext" d="M140,357L140,380"/>
+  <path class="dim hl" d="M140,376L184,376" marker-start="url(#tm-cc-ah-hl)" marker-end="url(#tm-cc-ah-hl)"/>
+  <text class="dt hl" x="162" y="388" text-anchor="middle">T1</text>
+  <text class="vt" x="380" y="422" text-anchor="middle">PLAN VIEW · DEVICE AND SERVER CLOCKS</text>
+  <text class="vs" x="380" y="435" text-anchor="middle">SCALE 1 S = 4 PX · ONE TRUE-TIME AXIS</text>
+  <!-- Detail A: transit -->
+  <rect class="obj fill-2" x="70" y="499" width="90" height="26"/>
+  <text class="dt" x="154" y="515.5" text-anchor="end">S1</text>
+  <rect class="slot" x="70" y="561" width="240" height="26"/>
+  <circle class="dot" cx="220" cy="574" r="2.6"/>
+  <text class="dt" x="228" y="577.5">R1</text>
+  <path class="leader" d="M160,525L220,561" marker-end="url(#tm-cc-ah)"/>
+  <text class="sl ink" x="200" y="546">TRANSIT</text>
+  <text class="sl ink" x="60" y="515" text-anchor="end">DEVICE</text>
+  <text class="sl ink" x="60" y="577" text-anchor="end">SERVER</text>
+  <path class="ext" d="M160,528L160,613"/>
+  <path class="ext" d="M220,590L220,613"/>
+  <path class="dim" d="M160,609L220,609" marker-start="url(#tm-cc-ah)" marker-end="url(#tm-cc-ah)"/>
+  <text class="dt" x="190" y="621" text-anchor="middle">E1</text>
+  <rect class="nb" x="236.5" y="612" width="11" height="11"/>
+  <text class="nbt" x="242" y="620.2" text-anchor="middle">2</text>
+  <text class="vt" x="190" y="655" text-anchor="middle">DETAIL A · TRANSIT</text>
+  <text class="vs" x="190" y="668" text-anchor="middle">SCALE 15:1 · 1 S = 60 PX</text>
+  <!-- Variable table -->
+  <text class="vt" x="395" y="492">VARIABLES · S</text>
+  <rect class="tbl" x="395" y="499" width="340" height="120"/>
+  <path class="tbl" d="M395,514L735,514"/>
+  <path class="tbl" d="M395,529L735,529"/>
+  <path class="tbl" d="M395,544L735,544"/>
+  <path class="tbl" d="M395,559L735,559"/>
+  <path class="tbl" d="M395,574L735,574"/>
+  <path class="tbl" d="M395,589L735,589"/>
+  <path class="tbl" d="M395,604L735,604"/>
+  <path class="tbl" d="M432,499L432,619"/>
+  <path class="tbl" d="M643,499L643,619"/>
+  <text class="th" x="401" y="509.2">CODE</text>
+  <text class="th" x="537.5" y="509.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="689" y="509.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="401" y="524.7">K1</text>
+  <text class="tc" x="537.5" y="524.7" text-anchor="middle">device clock ahead of server clock</text>
+  <text class="tc" x="689" y="524.7" text-anchor="middle">30.00</text>
+  <text class="tc" x="401" y="539.7">O1</text>
+  <text class="tc" x="537.5" y="539.7" text-anchor="middle">created, device clock (originalTimestamp)</text>
+  <text class="tc" x="689" y="539.7" text-anchor="middle">40.00</text>
+  <text class="tc" x="401" y="554.7">S1</text>
+  <text class="tc" x="537.5" y="554.7" text-anchor="middle">sent, device clock (sentAt)</text>
+  <text class="tc" x="689" y="554.7" text-anchor="middle">120.00</text>
+  <text class="tc" x="401" y="569.7">Q1</text>
+  <text class="tc" x="537.5" y="569.7" text-anchor="middle">time in queue</text>
+  <text class="tc" x="689" y="569.7" text-anchor="middle">S1 - O1 = 80.00</text>
+  <text class="tc" x="401" y="584.7">R1</text>
+  <text class="tc" x="537.5" y="584.7" text-anchor="middle">received, server clock (receivedAt)</text>
+  <text class="tc" x="689" y="584.7" text-anchor="middle">91.00</text>
+  <text class="tc" x="401" y="599.7">T1</text>
+  <text class="tc" x="537.5" y="599.7" text-anchor="middle">event time on the server clock</text>
+  <text class="tc" x="689" y="599.7" text-anchor="middle">R1 - Q1 = 11.00</text>
+  <text class="tc" x="401" y="614.7">E1</text>
+  <text class="tc" x="537.5" y="614.7" text-anchor="middle">error against the true time of 10.00</text>
+  <text class="tc" x="689" y="614.7" text-anchor="middle">T1 - 10.00 = 1.00</text>
 </svg>
