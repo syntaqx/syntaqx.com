@@ -82,7 +82,7 @@ Crash reporting itself (symbol servers, minidumps, grouping by stack and build) 
 - **Hardware and driver on every session,** bucketed: GPU model, driver version, CPU, memory, operating system, and on mobile the device model. Crashes and stutter cluster by hardware, and a regression that hits one driver is invisible in the average.
 - **Histograms, not frames.** A client at 144 frames a second produces half a million frame times an hour. Bucket them on the client and upload the histogram with the session summary. Load times, hitch counts and memory peaks go the same way.
 - **Server frame time per match,** keyed by server build, map and player count, because a regression can live only at full lobbies: Riot found VALORANT's worst server slowdown by splitting live telemetry by client count ([The Frame Budget at 128 Ticks](/books/gaming/game-servers#the-frame-budget-at-128-ticks) tells it). Averaged over all matches, such a regression is small; at full lobbies, it's the whole problem.
-- **Network quality per match and region:** round trip, loss and jitter, measured by both client and server. Riot's network team named those three as "more impactful values" than router-centric counters, and streamed router telemetry every millisecond instead of polling it (Riot Direct, July 2016). For a game backend the actionable unit is coarser: per match, per region and per ISP, so a routing problem shows up as one ISP's players losing packets in one city ([Netcode Fundamentals](/books/gaming/netcode#bandwidth-loss-and-jitter)).
+- **Network quality per match and region:** round trip, loss and jitter, measured by both client and server. Valve's networking library reports exactly that pair of views per connection: current ping, and the fraction of packets delivered end-to-end in order, measured locally and as observed by the remote host. Riot's network team named latency, loss and jitter as "more impactful values" than router-centric counters (Riot Direct, July 2016). For a game backend the actionable unit is coarser: per match, per region and per ISP, so a routing problem shows up as one ISP's players losing packets in one city ([Netcode Fundamentals](/books/gaming/netcode#bandwidth-loss-and-jitter)).
 
 Server processes also emit the ordinary service telemetry (logs, metrics, traces) that every backend has; that is [Observability](/docs/operations/observability), on its own pipeline. The game-specific part is the match-level record above, joinable to players and builds.
 
@@ -106,7 +106,7 @@ Consent flows, lawful bases, pseudonymous IDs and erasure are general ([Consent 
 
 **SDKs don't decide for you.** Unity's documentation says plainly that "the Analytics SDK does not manage data privacy compliance in any way"; since version 5.0.0 it starts "in a dormant state, in which it ignores all events" until the game grants consent (through `StartDataCollection()` in older versions, the `EndUserConsent` API from Unity 6.2), and its `RequestDataDeletion()` covers Analytics and Push Notifications only, not the game's other services. Every vendor SDK in the game needs the same review: what it collects before consent, how it is stopped, and what deletion reaches.
 
-**Purposes stay apart.** Gameplay analytics, anti-cheat signals and voice or chat moderation data are collected for different purposes, under different retention and access rules ([Data Governance & Access](/docs/data/data-governance#access-control)). A publisher that states a purpose in public, as Riot does for Vanguard's data ([Anti-Cheat](/books/gaming/anti-cheat#privacy)), can only keep the promise if the pipelines are separate: one purpose, one pipeline, one retention rule, one set of readers.
+**Purposes stay apart.** Gameplay analytics, anti-cheat signals and voice or chat moderation data are collected for different purposes, under different retention and access rules ([Data Governance & Access](/docs/data/data-governance#access-control)). A publisher that states a purpose in public, as anti-cheat privacy statements do ([Anti-Cheat](/books/gaming/anti-cheat#privacy)), can only keep the promise if the pipelines are separate: one purpose, one pipeline, one retention rule, one set of readers.
 
 ## The Pipeline
 
@@ -118,7 +118,7 @@ The sheet's arithmetic is the sizing exercise every game should do before launch
 
 PlayFab draws the same two paths in its product. PlayStream is "a unified real-time stream (and historical archive) of every event fired by your game," with a real-time rules engine and scheduled exports to Azure Blob Storage or Amazon S3, while its Telemetry path "skips all the real-time processing, making it cost-effective," with "softer limits" on volume and "up to 10-KB payloads" (Microsoft docs, as of October 2026). Events that need a reaction go through the stream; events that only need counting go around it.
 
-Scale varies by orders of magnitude between games. The one public figure from Riot is the title of a December 2022 AWS re:Invent session: "How Riot Games processes 20 TB of analytics data daily on AWS." Design for your own number, measured from a soft launch, and plan for it to grow with every feature that adds events.
+Scale varies by orders of magnitude between games. Riot's one public figure is the title of a December 2022 AWS re:Invent session: "How Riot Games processes 20 TB of analytics data daily on AWS." MY.GAMES describes its in-house pipeline for War Robots growing from 150 to 1 billion events a day within six months, with client libraries batching events over HTTPS beside events from game servers, and about 2.5 trillion events (about 180 TB at a replication factor of 3) held in Cassandra (November 24, 2023). Design for your own number, measured from a soft launch, and plan for it to grow with every feature that adds events.
 
 ## Vendors
 
@@ -250,6 +250,7 @@ The server frame counts per match are already on `matches` from [Game Metrics](/
 - [Unity: Manage data privacy with the SDK](https://docs.unity.com/en-us/analytics/privacy-and-consent/manage-data-privacy), dormant until consent, `EndUserConsent`, `RequestDataDeletion` and its scope
 - [Microsoft: What is PlayFab?](https://learn.microsoft.com/en-us/gaming/playfab/what-is-playfab), PlayStream, the rules engine and event archiving to Blob or S3
 - [Microsoft: PlayFab Telemetry overview](https://devdocs.xbox.com/services/playfab/data-analytics/ingest-data/telemetry-overview), the cheaper telemetry path, softer limits and 10 KB payloads
+- [Valve: Steamworks steamnetworkingtypes](https://partner.steamgames.com/doc/api/steamnetworkingtypes), per-connection ping and connection quality measured locally and by the remote host
 - [Pragma](https://pragma.gg/), telemetry and analytics among its backend services (vendor page)
 - [AccelByte: Gaming Services modules](https://docs.accelbyte.io/gaming-services/modules/), game analytics in the Foundations modules
 
@@ -257,5 +258,6 @@ The server frame counts per match are already on `matches` from [Game Metrics](/
 
 - [Riot Games: How We Got to the Best-Performing VALORANT Servers Since Launch](https://playvalorant.com/en-us/news/dev/how-we-got-to-the-best-performing-valorant-servers-since-launch/), the server regression found by splitting live telemetry by client count (March 2023)
 - [Riot Games: Determinism in League of Legends: Introduction](https://www.riotgames.com/en/news/determinism-league-legends-introduction), Server Network Recordings as a complete record of a match (June 2017)
-- [Riot Games: Fixing the Internet for Real-Time Applications: Part III](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-iii), latency, loss and jitter as the metrics that matter, streamed every millisecond (July 2016)
+- [Riot Games: Fixing the Internet for Real-Time Applications: Part III](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-iii), latency, loss and jitter as the metrics that matter (July 2016)
+- [MY.GAMES: Game analytic power: how we process more than 1 billion events per day](https://dev.to/mygames/game-analytic-power-how-we-process-more-than-1-billion-events-per-day-ieo), growth from 150 to 1 billion events a day, client and server sources and 2.5 trillion events in Cassandra (November 24, 2023)
 - [Riot Games: re:presenting at AWS re:Invent](https://www.riotgames.com/en/news/re-presenting-at-aws-re-invent), the session title on 20 TB of analytics data a day (December 2022)

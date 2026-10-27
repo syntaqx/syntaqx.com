@@ -38,7 +38,7 @@ The options, as of October 2026:
 | Git with Git LFS | Distributed | Large files replaced "with text pointers inside Git," content on a separate server | Files marked `lockable` check out read-only until locked; a push isn't halted if the server can't verify locks |
 | Unity Version Control | Centralized or distributed | Locking, with "Smart Locks" that require the latest version before locking | Unity's "new brand for Plastic SCM"; "works with any engine, including Unreal"; file-based workflows for artists |
 
-Perforce's long hold on AAA is about scale and locking: one server holds the whole depot, artists see a simple checkout model, and large studios run proxies near each office. Git's appeal is the tooling programmers already use, especially CI on branches and pull requests. Riot's Legends of Runeterra team published a clean example of choosing between them: the game started on Perforce, and the team moved to Git because of "pain points with Unity's Perforce integration" and to get "better CI/CD capabilities for changes that haven't made it to the main branch yet." As of May 2021 the repository was a single Git LFS monorepo of about 100 GB and about 1,000,000 files, with Artifactory as the LFS store.
+Perforce's long hold on AAA is about scale and locking: one server holds the whole depot, artists see a simple checkout model, and large studios run proxies near each office. Git's appeal is the tooling programmers already use, especially CI on branches and pull requests, and Git LFS scales further than its reputation: Riot's Legends of Runeterra moved from Perforce to a single Git LFS monorepo of about 100 GB and 1,000,000 files (as of May 2021), for "better CI/CD capabilities for changes that haven't made it to the main branch yet."
 
 My default: Perforce (or Unity Version Control) when content dominates and artists are most of the team; Git with LFS when the team is mostly engineers and wants branch-based CI, with locking set up for the asset types that can't merge. Either way:
 
@@ -99,7 +99,7 @@ Above that sit the systems that schedule the graph and remember the results:
 
 - **Horde** is "a set of services supporting workflows Epic Games uses to develop Fortnite, Unreal Engine, and other projects": build automation "designed for teams working with large Perforce repositories," remote execution including "C++ compilation with Unreal Build Accelerator," a front end for automation test results, and analytics from editor telemetry.
 - **Incredibuild** sells compile distribution and caching: it pools "idle CPUs you already own across your network or public cloud into a high throughput cluster" and reuses a shared cache "organization-wide to eliminate redundant build tasks." Its published case figure for Bandai Namco Studios is compilation falling from 50 to 18 minutes; that's a vendor case study, not an independent benchmark.
-- **General CI systems** work too. Riot's Runeterra pipeline, as of May 2021, ran Jenkins scripted pipelines with build logic in Python, about 100 full pipeline runs a day building Windows, Android and iOS in one run, with an average pipeline of about 60 minutes on AWS build nodes (100 Windows t3.2xlarge, 5 Ubuntu m4.2xlarge and 2 mac1.metal machines).
+- **General CI systems** work too, with the graph in their own pipeline language. Riot's Runeterra pipeline (as of May 2021) ran Jenkins with build logic in Python: about 100 runs a day, each building Windows, Android and iOS in about 60 minutes on cloud build nodes.
 
 ![A dimensional timeline of one change moving through a build farm at 9 px per minute. The main lane runs seven stages from check-in to results: S1 queue and sync 3 minutes, S2 compile 14, S3 cook 12, S4 package 6, S5 deploy to test machines 4, S6 automated tests 18 (highlighted, from Riot's 2016 League figure) and S7 report 3, totaling B1 = 60 minutes. A side lane uploads symbols and the build for 5 minutes after packaging, off the critical path. A variable table marks every value illustrative except S6.](/diagrams/gm-production-pipelines-build.svg "One change, check-in to results (illustrative except the test stage). An hour is the figure both Riot posts land near; shortening it means attacking the longest stages, not the side lane.")
 
@@ -114,21 +114,16 @@ The stage split in the drawing is illustrative; the total and the test stage mat
 
 ## Automated Testing at Scale
 
-Games were long tested mostly by hand, and manual testing remains essential for whether something is fun or readable. Regressions are a different problem, and Riot's 2016 post "Automated Testing for League of Legends" shows what automating them looks like at the scale of a live game:
+Games were long tested mostly by hand, and manual testing remains essential for whether something is fun or readable. Regressions are a different problem, and the scale of the problem is the argument for automating them. EA's SEED research group cites a paper estimating that testing Battlefield V's 601 features by hand would take about 0.5 million hours, "~300 work years." Live games carry suites to match: Rare described Sea of Thieves in 2024 as having "hundreds of thousands of automated tests" guarding a game that keeps changing, and Riot's 2016 post on League of Legends reported about 5,500 test cases run in about 18 minutes on every new build, with results "within about an hour of check-in."
 
-- "Well over 100 code and content changes" checked in every day, on the two-week patch cadence above.
-- The build verification system (BVS) runs about 5,500 test cases in about 18 minutes for every new build, about 100,000 test cases a day, and "reports back within about an hour of check-in."
-- Tests and harness are written in Python.
-- "50 percent of all critical or blocker level bugs are discovered by the BVS," and "bugs discovered in automation get resolved eight times faster than the average bug."
+The same League post has the clearest public figure on why the speed matters: "bugs discovered in automation get resolved eight times faster than the average bug." A failure tied to a specific build, an hour after the change, points at a handful of check-ins; a bug found by a person a week later points at hundreds.
 
-The last figure is the argument for automation: a failure tied to a specific build, an hour after the change, points at a handful of check-ins, while a bug found by a person a week later points at hundreds.
-
-The test layers in a game pipeline, using Runeterra's published stages as the example: static analysis, asset validation, unit tests (C# xUnit there), automated performance tests against the mobile memory budget, and functional tests with pytest against game servers alone or with headless clients. Unreal's equivalents are its Automation Tool and Gauntlet, whose results Horde collects across streams and projects.
+The test layers in a game pipeline: static analysis, asset validation, unit tests, automated performance tests against the memory and frame budgets, and functional tests that launch real game processes. Riot's Runeterra pipeline published that stack (C# xUnit unit tests, pytest functional tests against game servers alone or with headless clients). In Unreal, Gauntlet is the launcher for the last layer: it runs sessions from a cooked build ("a multiplayer game may require four clients and a server"), and parses the logs and crashes they produce, with results collected by Horde across streams and projects.
 
 Games add test types web services rarely need:
 
-- **Headless clients and bots** that play scripted matches against a real server.
-- **Replay tests** that feed a recorded game's inputs into a new build and compare the outcome, which needs a deterministic simulation; the loop and its tooling are in [Finding Desyncs](/books/gaming/determinism-and-rollback#finding-desyncs), and Riot's Delta Checker began as exactly this.
+- **Headless clients and bots** that play scripted matches against a real server. Scripted bots break whenever a feature changes, which is why EA's SEED has deployed reinforcement-learning test agents in Battlefield V and Dead Space (2023) to explore what a script doesn't cover.
+- **Replay tests** that feed a recorded game's inputs into a new build and compare the outcome, which needs a deterministic simulation; the loop and its tooling are in [Finding Desyncs](/books/gaming/determinism-and-rollback#finding-desyncs).
 - **Soak tests** that run a client or server for hours to find leaks and fragmentation.
 - **Device farms** for the spread of phones and PC hardware nobody can cover by hand.
 
@@ -168,7 +163,7 @@ You can't fit a frame budget you can't see. The tools:
 - **RenderDoc,** an MIT-licensed single-frame graphics debugger for Vulkan, D3D11, D3D12 and OpenGL on Windows, Linux and Android, with a Switch build distributed through the NintendoSDK.
 - **Platform tools** from each console maker, under NDA, and general CPU profilers.
 
-Instrumentation is the other half. Riot's 2015 post "Random Acts of Optimization" describes League's approach: an in-house tool, Waffles, that connects to internal client and server builds and shows live frame-time graphs; instrumentation macros that "for public builds... compile out" but in profile builds record timed events; Chrome's tracing viewer to visualize the captured buffer; and Intel VTune for sampling to find the slowest functions. That's the general pattern: scoped timers that cost nothing in shipping builds, a capture format a standard viewer can read, and a sampling profiler for what the timers don't cover. Riot's VALORANT server post adds per-subsystem telemetry sent to Riot's analytics platform from running servers ([Game Servers & Hosting](/books/gaming/game-servers)).
+Instrumentation is the other half, and the pattern is the same everywhere: scoped timers that cost nothing in shipping builds, a capture format a standard viewer can read, and a sampling profiler for what the timers don't cover. Unreal's trace system recommends the `TRACE_CPUPROFILER_EVENT_SCOPE` macros for timing a scope; its channels are "disabled and must be explicitly opted into," and the log macros "compile to nothing when Trace is off." Tracy, a "hybrid frame and sampling profiler for games," does the same for engines without their own, across CPU, GPU, allocations and locks. Riot's 2015 post on League describes the in-house version: macros that "for public builds... compile out," captures viewed in Chrome's tracing viewer, and Intel VTune for sampling. Running servers report the same timings as telemetry ([Game Servers & Hosting](/books/gaming/game-servers)).
 
 ## Performance Budgets
 
@@ -371,16 +366,20 @@ Three smaller decisions make the tables useful later:
 - [Sentry: Unreal Engine](https://docs.sentry.io/platforms/unreal/), crash capture options, minidump defaults and supported platforms including consoles
 - [Sentry: Debug information files](https://docs.sentry.io/platforms/native/data-management/debug-files/), symbol formats, debug identifiers and symbol servers
 - [Sauce Labs: Unreal Engine error reporting setup](https://docs.saucelabs.com/error-reporting/platform-integrations/unreal/setup/), Backtrace's Unreal integration through the crash reporter
+- [Unreal Engine: Gauntlet automation framework overview](https://dev.epicgames.com/documentation/en-us/unreal-engine/gauntlet-automation-framework-overview-in-unreal-engine), sessions of several clients and a server from a cooked build, with log and crash parsing
 - [Unreal Engine: Unreal Insights](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine), the telemetry capture and analysis suite
+- [Unreal Engine: Developer guide to tracing](https://dev.epicgames.com/documentation/en-us/unreal-engine/developer-guide-to-tracing-in-unreal-engine), the `TRACE_CPUPROFILER_EVENT_SCOPE` macros, opt-in channels and macros that compile to nothing when Trace is off
+- [Tracy Profiler](https://github.com/wolfpld/tracy), a hybrid frame and sampling profiler for games covering CPU, GPU, allocations and locks
 - [Microsoft: Introduction to PIX](https://devblogs.microsoft.com/pix/introduction/), GPU and timing captures for DirectX 12 on Windows and Xbox
 - [RenderDoc](https://renderdoc.org/), the MIT-licensed frame debugger and its supported APIs and platforms
 
 **In practice**
 
-- [Riot Games: Automated Testing for League of Legends](https://www.riotgames.com/en/news/automated-testing-league-legends), test volumes, run time, time to results, patch cadence and the value of automation-found bugs
-- [Riot Games: Legends of Runeterra CI/CD pipeline](https://www.riotgames.com/en/news/legends-runeterra-cicd-pipeline), the move from Perforce to Git LFS, repository size, Jenkins, run counts, build nodes and test stages
-- [Riot Games: Random Acts of Optimization](https://www.riotgames.com/en/news/random-acts-optimization), the Waffles tool, compiled-out instrumentation, Chrome tracing and VTune
-- [Riot Games: VALORANT's 128-Tick Servers](https://www.riotgames.com/en/news/valorants-128-tick-servers), per-subsystem server telemetry
+- [EA SEED: Applying machine learning research to AAA game testing](https://www.ea.com/seed/news/seed-ml-research-aaa-game-testing), the Battlefield V manual-testing estimate, the limits of scripted bots and RL test agents in Battlefield V and Dead Space
+- [Microsoft Learn: Automated Testing of Shader Code (Pure Virtual C++ 2024)](https://learn.microsoft.com/en-us/shows/pure-virtual-cpp-2024/automated-testing-of-shader-code), Rare's hundreds of thousands of automated tests on Sea of Thieves
+- [Riot Games: Automated Testing for League of Legends](https://www.riotgames.com/en/news/automated-testing-league-legends), test volume and run time per build, time to results, patch cadence and the eight-times-faster resolution of automation-found bugs
+- [Riot Games: Legends of Runeterra CI/CD pipeline](https://www.riotgames.com/en/news/legends-runeterra-cicd-pipeline), the move from Perforce to Git LFS, repository size, Jenkins, run counts and test stages
+- [Riot Games: Random Acts of Optimization](https://www.riotgames.com/en/news/random-acts-optimization), compiled-out instrumentation, Chrome tracing and VTune
 - [Room 8 Studio: How to submit a game to the store from the first attempt](https://room8studio.com/news/how-to-submit-game-to-store-from-the-first-attempt-game-porting-tips), the Nintendo Switch submission procedure called Lotcheck (secondary)
 - [iXie Gaming: Console compliance testing](https://www.ixiegaming.com/console-compliance-testing/), a QA vendor naming Sony's TRC (secondary)
 - [New Zealand MFAT: Entering China's mobile gaming market](https://www.mfat.govt.nz/cn/trade/mfat-market-reports/entering-chinas-mobile-gaming-market-a-guide-to-licensing-and-regulatory-approval), September 2026 report: full Simplified Chinese localization as part of the ISBN application, and the publisher's license

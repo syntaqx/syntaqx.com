@@ -37,7 +37,7 @@ A ticket that says "my skin is gone" costs an agent ten minutes of questions. A 
 - **What just happened:** the last match ID, the last few purchases and grants, active penalties, and recent error codes from the client.
 - **Locale and age band,** so the ticket routes to an agent who speaks the language and to the right handling for young players.
 
-Collect it on the server where possible (the SDK passes an authenticated token; the support backend looks up the rest) rather than trusting fields the client fills in, and show agents a masked view by default, as [Support Access](/docs/security/support-access#read-only-by-default) requires. Never ask for a password, and say so in the form; "support" asking for credentials is the classic phishing script, and a player who has learned that real support never asks is harder to phish.
+Collect it on the server where possible (the SDK passes an authenticated token; the support backend looks up the rest) rather than trusting fields the client fills in, and show agents a masked view by default, as [Support Access](/docs/security/support-access#read-only-by-default) requires. Never ask for a password, and say so in the form; "support" asking for credentials is the classic phishing script, and a player who has learned that real support never asks is harder to phish. Publishers have said it in public for decades: CCP's 2005 notice says it "will never ask you for your account password" and that no staff member needs to log in to a player's account to look at a problem, and Ubisoft's account security page (2018) says its support and staff "will never request your password."
 
 ```sql
 CREATE TABLE support_tickets (
@@ -65,7 +65,7 @@ CREATE TABLE support_tickets (
 
 ## Classify, Route, Answer
 
-Riot's tech blog post on its support bot, "Blitzcrank Bot" (June 1, 2017), is still the clearest public account of automating game support, and its numbers explain why. Riot's Player Support received around 12,000 requests a day, mostly tickets. Before automation, responses took up to 25 hours and resolution up to 3 days on average; agents resolved about 70% of requests at the first touch; and players picked the right issue category about 80% of the time.
+Few studios publish support numbers. Riot's post on its support bot, "Blitzcrank Bot" (June 1, 2017), is the one with a full set: around 12,000 requests a day, responses taking up to 25 hours and resolution up to 3 days before automation, about 70% resolved at the first agent touch, and players picking the right issue category about 80% of the time. The drawing below keeps them as one dated baseline; the design rules after it rest on the helpdesk and bot platforms as well.
 
 ![A dimensional drawing of a day of support requests in 2017: 12,000 requests pass intake and a per-language classifier and split into 2,400 routed or answered by a bot and 9,600 left for agents, above a timeline of one ticket before automation with first response up to 25 hours and resolution up to 72 hours.](/diagrams/gm-player-support-intake.svg "A fifth of the intake handled by a bot was the daily work of about 50 agents, and the slow part of a ticket was the queue before anyone answered.")
 
@@ -82,12 +82,12 @@ Riot's tech blog post on its support bot, "Blitzcrank Bot" (June 1, 2017), is st
 | K1 | Players choosing the right category | about 80% |
 | C1, C2 | Account recovery tickets identified at launch, and accuracy | 52%, about 93% |
 
-The design in that post is the design to copy:
+The design rules:
 
-- **Classify first.** Riot trained classifiers on about 100,000 completed tickets per major language. One player in five picks the wrong category, so routing on the player's choice alone puts a fifth of tickets in the wrong queue. Store both the player's category and the classifier's (`category_source` above), and measure how often agents correct each.
-- **Automate runbooks, not conversations.** The post's example is a promotional skin: the bot checks regional eligibility and sends a "Not Available" response if the player isn't eligible, escalates to an agent if the player already owns the skin, and otherwise grants it and responds. Every branch is a rule over known data, and the odd case goes to a person. That's [decide in code](/docs/architecture/ai-agents#decide-in-code): the model classifies, the code acts.
-- **Keep a human one click away.** Satisfaction with bot answers dropped noticeably compared with agents at first. Riot added an opt-out checkbox to the ticket form and replaced the bot's closing line with a "Request a Human" button; most players didn't opt out, and satisfaction rose to match human agents.
-- **Leave denials to people.** Denials delivered by the bot (Riot's examples include questions about bans and requests for free Riot Points) scored about 20% lower satisfaction than when an agent delivered them, so Riot deprioritized automating them. The answer was the same; who said it changed how it landed. Automate the yeses and the routing; let a person say no.
+- **Classify first.** One player in five picked the wrong category in Riot's data, so routing on the player's choice alone puts a fifth of tickets in the wrong queue; Riot trained classifiers per major language on about 100,000 completed tickets each. Helpdesks now ship the same step: Zendesk's intelligent triage classifies each new ticket's topic, sentiment and language, attaches a confidence to each prediction, and lets agents change the values. Store both the player's category and the classifier's (`category_source` above), and measure how often agents correct each.
+- **Automate runbooks, not conversations.** Riot's example is a promotional skin: the bot checks regional eligibility and answers "Not Available" if the player isn't eligible, escalates to an agent if the player already owns the skin, and otherwise grants it. Every branch is a rule over known data, and the odd case goes to a person. That's [decide in code](/docs/architecture/ai-agents#decide-in-code): the model classifies, the code acts.
+- **Keep a human one click away, with the context.** Microsoft's Bot Framework guidance says a bot must recognize when to hand off, because it doesn't understand the player or the request needs a human action, and its handoff event carries the routing context and the transcript so the agent doesn't start over. Riot's results show why the button matters: satisfaction with bot answers dropped at first, and after it added an opt-out on the ticket form and a "Request a Human" button, most players didn't opt out and satisfaction rose to match human agents.
+- **Decide who says no.** Riot found that denials delivered by its bot (questions about bans, requests for free currency) scored about 20% lower satisfaction than the same answer from an agent, and stopped automating them. The alternative is to automate denials too, for speed and consistency, and accept the satisfaction cost on a category where the answer is fixed by policy. My default is Riot's split: automate the yeses and the routing, and let a person say no wherever the player can argue.
 
 At the time of the post the bot routed or answered 20% of all tickets, the daily output of about 50 agents. Current vendors claim far higher automation rates (Helpshift advertises "70%+" automation and an AI agent that "autonomously resolves routine issues end-to-end"); treat those as vendor marketing, and measure on your own tickets with satisfaction and reopen rates next to the automation rate. A bot that closes tickets players reopen is moving work, not removing it.
 
@@ -123,7 +123,7 @@ Players who were banned write to support, and so do players who were harassed. B
 
 Route them out of general support:
 
-- **Ban appeals go to the moderation appeal flow** in [Player Behavior & Moderation](/books/gaming/player-behavior), reviewed by someone other than the original decision-maker, recorded as a new decision. A general support agent who unbans a player because the ticket was persuasive has bypassed the whole system. Riot's privacy notice describes appeals where a player can ask an agent to make "a final manual determination"; that agent belongs to the behavior team's process, with its evidence and its records.
+- **Ban appeals go to the moderation appeal flow** in [Player Behavior & Moderation](/books/gaming/player-behavior), reviewed by someone other than the original decision-maker, recorded as a new decision. A general support agent who unbans a player because the ticket was persuasive has bypassed the whole system. Published appeal processes put the review with a dedicated team: Xbox sends eligible appeals, filed within six months, to "a trained team of human moderators" whose decisions are final, and Riot's privacy notice describes appeals where a player can ask an agent to make "a final manual determination". Either way, the reviewer belongs to the behavior team's process, with its evidence and its records.
 - **Harassment reports that arrive as tickets** become moderation reports with the ticket attached, not a reply saying "please use the in-game report button".
 - **Threats to life and child safety** follow the urgent path in [Trust & Safety](/docs/security/trust-and-safety#child-safety), with written escalation steps, from any channel, at any hour.
 - **Tell agents what they can't say.** Support explains the rule and the evidence the player was shown; it doesn't reveal reporters, detection thresholds or other players' data.
@@ -186,7 +186,7 @@ A weekly review of operations per agent against peers (grant value, grants to th
 
 ## Measuring Support
 
-The general set (response and resolution time as distributions, first-contact resolution, satisfaction, reopen rate) is in [Metrics](/docs/operations/customer-support#metrics). Riot's numbers give a game's baseline: "up to 25 hours" is the response tail players remember, first-contact resolution was about 70% for agents, and satisfaction per resolver is how Riot found that denials should stay human. The game-specific number is **contact rate per active player** around launches, patches and outages, joined to [telemetry](/books/gaming/telemetry), so a spike in "lost items" tickets after a patch reads as a bug report, not a staffing problem.
+The general set (response and resolution time as distributions, first-contact resolution, satisfaction, reopen rate) is in [Metrics](/docs/operations/customer-support#metrics). The 2017 figures above are one public baseline (a response tail of up to 25 hours, about 70% first-contact resolution for agents), and satisfaction split by resolver, bot or agent, is the measure that shows which answers to automate. The game-specific number is **contact rate per active player** around launches, patches and outages, joined to [telemetry](/books/gaming/telemetry), so a spike in "lost items" tickets after a patch reads as a bug report, not a staffing problem.
 
 That one is the most valuable. Support tickets are the best bug tracker a live game has, and the [live operations](/books/gaming/live-operations) team should see ticket volume by category on the same dashboard as crash rates.
 
@@ -206,10 +206,15 @@ That one is the most valuable. Support tickets are the best bug tracker a live g
 **Reference**
 
 - [Fair Play Alliance and ADL: Planning a Penalty and Reporting System](https://thrivingingames.org/wp-content/uploads/2020/12/FPA-Framework-Planning-Penalty-Reporting-System.pdf), behavior tickets in player support and their toll on staff
+- [Zendesk: Automatically classifying tickets with intelligent triage](https://support.zendesk.com/hc/en-us/articles/4550640560538-Automatically-classifying-tickets-with-intelligent-triage), topic, sentiment and language predictions with confidence fields that agents can change
+- [Microsoft Learn: Transition conversations from bot to human](https://learn.microsoft.com/en-us/azure/bot-service/bot-service-design-pattern-handoff-human), when a bot should hand off and a handoff event carrying routing context and the transcript
+- [Microsoft: Digital Safety at XBOX](https://www.xbox.com/en-US/legal/digital-safety-at-xbox), appeals within six months reviewed by trained human moderators, with final decisions
 
 **In practice**
 
 - [Riot Games: Blitzcrank Bot](https://www.riotgames.com/en/news/blitzcrank-bot), request volume, response and resolution times, classifiers, runbooks, Request a Human and why denials stayed with agents
 - [Riot Games: Privacy Notice](https://www.riotgames.com/en/privacy-notice), appeals with a final manual determination by an agent
+- [CCP Games: User Name and Password Scams](https://www.eveonline.com/news/view/user-name-and-password-scams), CCP never asking for a password and staff never needing to log in to a player's account (January 10, 2005)
+- [Ubisoft: Protect Your Account](https://www.ubisoft.com/en-us/game/rainbow-six/siege/news-updates/1TnAqp1P3SNDyGaVKKdq8e/protect-your-account), support and staff never requesting a password (August 22, 2018)
 - [Zendesk: Unity and Zendesk partnership](https://www.zendesk.com/company/press/unity-zendesk-partnership/), the in-game help center, messaging and game-specific fields in the Unity SDK
 - [Helpshift](https://www.helpshift.com/), in-game support SDKs, player context, console handoff by QR code and automation claims

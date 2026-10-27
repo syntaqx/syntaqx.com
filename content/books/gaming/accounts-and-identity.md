@@ -23,7 +23,7 @@ The platforms' public documentation shows how the verification works:
 - **Epic Online Services.** EOS splits authentication in two. Game Services (multiplayer, player data, trust and safety) authenticate through the Connect Interface with any supported identity provider, Steam, PlayStation, Google and others, and don't require an Epic account. Epic Account Services (friends, presence, the social overlay, crossplay with a combined friends list) authenticate through the Auth Interface and require an Epic account or a proxy account.
 - **PlayStation and Nintendo** document their identity, friends and entitlement services to licensed developers under NDA, so the specifics aren't public. Design for the same shape: a platform token, verified server to server, mapped to your account.
 
-The one rule that never changes: **key on the platform's stable ID, never on a name.** Display names change, collide and get recycled. Riot's move from League summoner names to Riot IDs (a game name plus a tag line) shows why: its developer FAQ (last updated October 30, 2023) gave the new format (game names of 3 to 16 characters, tag lines of 3 to 5 alphanumeric characters), said the old name field in match data would go stale after November 20, 2023, and recommended that developers keep their own player records keyed by the stable IDs, summonerID and PUUID. Anything keyed on the name had to be rebuilt.
+The one rule that never changes: **key on the platform's stable ID, never on a name.** Display names change, collide and get recycled. Steamworks treats the Steam ID as the globally unique identifier for an account and keeps a history of each player's persona names, current first, because names change. When Riot replaced League summoner names with Riot IDs (a game name plus a tag line), its developer FAQ (last updated October 30, 2023) said the old name field in match data would go stale after November 20, 2023, and told developers to key their own records on the stable IDs, summonerID and PUUID; anything keyed on the name had to be rebuilt.
 
 ## Three Identity Models
 
@@ -116,7 +116,7 @@ Mobile stores add their own rules. Apple's App Store Review Guideline 4.8 says a
 
 Game accounts are worth stealing: they hold purchased cosmetics, ranks that sell, and currency. They're attacked with credential stuffing, phishing and support social engineering, the same as any consumer account ([Authentication](/docs/security/authentication#credential-stuffing-and-enumeration)).
 
-Riot's public support pages describe a typical consumer setup. Multi-factor authentication sends a six-digit code by email, through the Riot Mobile app, or through an authenticator app such as Google Authenticator or Microsoft Authenticator, and the sign-in prompt offers a checkbox to ask for a code only every 30 days on a trusted device (Riot Support, page dated May 15, 2026). Riot also rewards players for turning it on: enabling MFA through Riot Mobile for the first time grants a one-time reward in each of League of Legends, Teamfight Tactics, VALORANT and Legends of Runeterra (an emote, tokens, a gun buddy and a chest; page dated November 14, 2025). Rewarding security with cosmetics is a pattern worth copying, because it costs almost nothing and changes behavior.
+The typical consumer setup offers a second factor by email code, a publisher's own mobile app or a standard authenticator app; Riot's support pages describe all three, with an option to ask for a code only every 30 days on a trusted device (page dated May 15, 2026). Publishers also pay players to turn it on. Blizzard grants four extra, account-wide bag slots in each World of Warcraft character's backpack for attaching the Battle.net Authenticator with phone notifications, plus an in-game pet; Riot grants a one-time item in each of four games for first enabling MFA through Riot Mobile (page dated November 14, 2025). Rewarding security with an in-game item is a pattern worth copying, because it costs almost nothing and changes behavior.
 
 The rest of the setup:
 
@@ -127,13 +127,13 @@ The rest of the setup:
 
 ## Regions and Data Residency
 
-Identity is global; play is regional. [Game Backend Architecture](/books/gaming/game-backend#global-and-regional-services) draws that split for every service, with Riot's public API as the example. For identity it means:
+Identity is global; play is regional. [Game Backend Architecture](/books/gaming/game-backend#global-and-regional-services) draws that split for every service, with published examples. For identity it means:
 
 - **A global account directory.** Account ID, credentials, linked identities, status and the account's home region. It's small, replicated for reads and written in one place.
 - **Personal data in the home region.** Contact details, payment profiles and support history live where the account's home region says, which is where data-residency obligations attach ([GDPR](/docs/compliance/gdpr#international-transfers)).
 - **Game data in the shard.** Profiles, match history and social data for a shard live with that shard, keyed by the global account ID.
 - **Region transfer as a recorded job.** Moving a player between shards moves their profile data, keeps their account ID and entitlements, and leaves a record. Whether a transfer is allowed, how often and at what price is a business rule ([Rules as Data](/docs/architecture/rules-as-data)).
-- **Partner regions are separate identities.** Where a partner operates the game under its own accounts (Riot's partner-run environments are the example in [Game Backend Architecture](/books/gaming/game-backend#running-it-containers-and-deployment)), treat its players as a separate identity system with its own links, not as rows in your directory.
+- **Partner regions are separate identities.** Where a partner operates the game in a region under its own accounts (the partner-run shards in [Game Backend Architecture](/books/gaming/game-backend#running-it-containers-and-deployment)), treat its players as a separate identity system with its own links, not as rows in your directory.
 
 ## Age and Parental Controls
 
@@ -149,13 +149,13 @@ How I'd carry it:
 
 ## Bans: Account, Identity, Hardware
 
-Penalties attach to the account in the core model, because a person is banned, not a device or a profile. The hard part in free-to-play games is that accounts are cheap. Riot's April 11, 2024 post on bringing Vanguard to League says repeat scripters return on fresh free accounts, which is why one ban isn't enough, and that Vanguard requires TPM 2.0 partly because it serves as a hardware identifier that's very hard to fake, so a returning cheater's machine can be recognized. The same post notes that Riot can't always tell which of its games a cheater meant to cheat in, so hardware signals cross games.
+Penalties attach to the account in the core model, because a person is banned, not a device or a profile. The hard part in free-to-play games is that accounts are cheap. Riot's April 11, 2024 post on bringing Vanguard to League says repeat scripters return on fresh free accounts, and that Vanguard requires TPM 2.0 partly because it serves as a hardware identifier that's very hard to fake, so a returning cheater's machine can be recognized. Platform holders ban devices too: Xbox enforces device bans alongside account suspensions, and its published appeal process says device bans aren't eligible for a case review, while eligible account enforcements can be appealed within six months to human moderators.
 
 How identity supports enforcement without becoming surveillance:
 
 - **The account is the subject; everything else is evidence.** Platform identities, device and hardware signals and payment fingerprints link accounts as evidence for a decision. They aren't identities and don't get their own login.
 - **Linked identities can't launder a ban.** A platform identity linked to a banned account can't link to a new account while the ban lasts, and a merge carries the penalty ([Merging](/books/gaming/accounts-and-identity#merging)).
-- **Hardware signals are hashed, scoped and time-bounded.** Store a keyed hash per tenant, not the raw identifier; give hardware-level penalties an end date and an appeal path, since machines are sold and reused. The table for them, `device_bans`, is in [Anti-Cheat](/books/gaming/anti-cheat#enforcement-bans-hardware-bans-and-appeals).
+- **Hardware signals are hashed, scoped and time-bounded.** Store a keyed hash per tenant, not the raw identifier. A device ban with no case review, as Xbox publishes it, is the simplest policy to run; my default is to give hardware-level penalties an end date and an appeal path instead, since machines are sold and reused and the next owner inherits the ban. The table for them, `device_bans`, is in [Anti-Cheat](/books/gaming/anti-cheat#enforcement-bans-hardware-bans-and-appeals).
 - **Detection lives elsewhere.** How signals are collected and judged is in [Anti-Cheat](/books/gaming/anti-cheat) and [Player Behavior & Moderation](/books/gaming/player-behavior); identity provides the links and the records.
 
 ## How to Build It
@@ -273,11 +273,15 @@ The record structure is in [Audit Trails](/docs/architecture/audit-trails).
 - [Microsoft Learn: Login basics and best practices](https://learn.microsoft.com/en-us/gaming/playfab/features/authentication/login/login-basics-best-practices), anonymous device logins, orphaned accounts, iOS reinstall behavior and adding a recoverable login
 - [Microsoft Learn: What is PlayFab?](https://learn.microsoft.com/en-us/gaming/playfab/what-is-playfab), account linking across Windows, Xbox, Steam, PlayStation, Nintendo, mobile and more
 - [Valve: Steamworks User Authentication and Ownership](https://partner.steamgames.com/doc/features/auth), session tickets, single use, Web API ticket authentication returning the Steam ID, and ownership checks
+- [Valve: Steamworks steam_api](https://partner.steamgames.com/doc/api/steam_api), the Steam ID as the globally unique identifier for Steam accounts
+- [Valve: Steamworks ISteamFriends](https://partner.steamgames.com/doc/api/ISteamFriends), persona name history from the current name back through previous ones
 
 **In practice**
 
-- [Riot Games: Summoner Name to Riot ID FAQ](https://developer.riotgames.com/docs/summoner-name-to-riot-id-faq), the Riot ID format, the November 20, 2023 transition, keeping your own records by stable IDs and regional sharding of player data (October 30, 2023)
-- [Riot Support: Multi-Factor Authentication How-to & FAQ](https://support.riotgames.com/en-us/riot/account/multi-factor-authentication-how-to-faq), email, Riot Mobile and authenticator app codes and the 30-day option to skip the code on a trusted device (page dated May 15, 2026)
+- [Riot Games: Summoner Name to Riot ID FAQ](https://developer.riotgames.com/docs/summoner-name-to-riot-id-faq), the November 20, 2023 transition from summoner names and keeping your own records by stable IDs (October 30, 2023)
+- [Riot Support: Multi-Factor Authentication How-to & FAQ](https://support.riotgames.com/en-us/riot/account/multi-factor-authentication-how-to-faq), email, mobile app and authenticator app codes and the 30-day option to skip the code on a trusted device (page dated May 15, 2026)
 - [Riot Support: Multi-Factor Authentication In-Game Rewards](https://support.riotgames.com/en-us/riot/rewards/multi-factor-authentication-in-game-rewards), one-time rewards for first enabling MFA through Riot Mobile, in four games (page dated November 14, 2025)
+- [Blizzard: Upgrade Your Account Security with the Battle.net Authenticator](https://worldofwarcraft.blizzard.com/en-us/news/23964689), four account-wide bag slots and an in-game pet for attaching the Authenticator with phone notifications
+- [Microsoft: Digital Safety at XBOX](https://www.xbox.com/en-US/legal/digital-safety-at-xbox), device bans not eligible for case review, account enforcement and appeals to human moderators within six months
 - [Riot Games: /dev: Vanguard x LoL](https://www.leagueoflegends.com/en-us/news/dev/dev-vanguard-x-lol/), repeat offenders on new free accounts and TPM 2.0 as a hard-to-fake hardware identifier (April 11, 2024)
 - [Video Games Chronicle: Sony is the only platform holder that charges for cross-play, Epic CEO claims](https://www.videogameschronicle.com/news/sony-is-the-only-platform-holder-that-charges-for-cross-play-epic-ceo-claims/), the trial document's 85% cross-party revenue share threshold and audit rights (Chris Scullion, May 4, 2021)

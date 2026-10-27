@@ -27,7 +27,7 @@ Start the way any security design starts, with what the attacker wants and what 
 | DMA and external hardware | Reads memory from a second device | A PCIe card or capture setup outside the OS | Hard; integrity checks on the system, detection |
 | Account selling and boosting | Sells leveled or ranked accounts; plays on another's account | Bots or skilled players, and a market | Detection, account security, enforcement on the account |
 
-Riot's 2018 description of League's anti-cheat defines two of these from the defender's side: scripting is third-party programs that "forcefully attach themselves to the game client" to use its memory and functions, and botting is third-party software that simulates game input, typically to level accounts for sale or farm currency. The same post sets out the three tenets that organize everything below: "prevention, detection, and deterrence," with prevention called "a more effective solution" because it "prevents cheating in the first place."
+Publishers organize the defenses in the same three parts. Riot's 2018 post on League names them "prevention, detection, and deterrence," and calls prevention "a more effective solution" because it "prevents cheating in the first place." Valve's Steamworks guidance covers the same ground from the platform side: an authoritative server to prevent, VAC to detect, and game bans that show on the player's profile to deter.
 
 The layers below map those tenets onto where code runs. Each covers what the others can't see, and each sits on hardware with a different owner:
 
@@ -35,7 +35,7 @@ The layers below map those tenets onto where code runs. Each covers what the oth
 
 ## Server Authority Is the First Defense
 
-The cheapest cheat to stop is one that has nothing to work with. In an authoritative client-server game the client sends inputs and the server decides what they do ([Netcode Fundamentals](/books/gaming/netcode#topologies-and-authority)); a client that claims full health, an extra jump or a position through a wall is simply overruled. Riot's 2018 post credits authoritative server decisions with preventing "common cheats like 'god mode' and 'disconnect hacks'"; VALORANT's netcode post says the game "uses a server-authoritative networking model to limit the types of cheats possible."
+The cheapest cheat to stop is one that has nothing to work with. In an authoritative client-server game the client sends inputs and the server decides what they do ([Netcode Fundamentals](/books/gaming/netcode#topologies-and-authority)); a client that claims full health, an extra jump or a position through a wall is simply overruled. Valve's Steamworks guidance says the server "can also be authoritative on player position and other game states to prevent speed hacking or god mode"; Riot's 2018 post credits the same design with preventing "common cheats like 'god mode' and 'disconnect hacks'"; and Unreal's networking documentation builds the engine around it, with the server holding "the one, true, authoritative game state."
 
 Authority covers more than physics:
 
@@ -46,13 +46,11 @@ Authority covers more than physics:
 
 ### Withholding Hidden State
 
-A wallhack reads enemy positions from the client. If the client never receives them, there is nothing to read. Riot's 2018 post makes the general point (not sharing other players' state unless necessary helps avoid "map hacks"), and its April 2020 post on VALORANT's Fog of War describes building it for a 128-tick shooter: "the game server withholds information about the positions of enemies until a client needs to display it."
+A wallhack reads enemy positions from the client. If the client never receives them, there is nothing to read. Engines already decide what each client receives, for bandwidth: Unreal "only replicates actors to a client if they are relevant for that client," and treats hidden actors as not relevant. Withholding hidden state turns that relevancy test into a visibility test. Riot's April 2020 post on VALORANT's Fog of War is the most detailed public account of doing it in a 128-tick shooter ("the game server withholds information about the positions of enemies until a client needs to display it"), and its lessons transfer:
 
-The engineering is in the cost and the edges:
-
-- **Cost.** The first prototype, which raycast between players every frame (more than 350 relevancy checks a frame in a 10-player game, each with ten raycasts), took about half the server's frame time; frame times doubled, dropping the server from 128 to 64 ticks. Riot replaced the raycasts with a precomputed potentially visible set: a lookup table over voxels of the map, deliberately optimistic ("as long as any part of a voxel can see any part of the other voxel, the table returns 'visible'"), which brought the cost to "less than 2% of server frame time."
-- **Latency.** Information has to arrive before the enemy appears, or players see opponents pop in late. Riot expanded each player's bounding box by velocity times a look-ahead longer than the expected ping, sending the position "just before the enemy came around the corner."
-- **Honesty about the limit.** Riot's claim is that the system "drastically reduces the time enemy positions are available to players, and therefore reduces the effectiveness of wallhacks," not that it ends them. Positions still arrive slightly early, sounds still need positions, and an aimbot still works on every enemy the player can legitimately see.
+- **Cost.** Raycasting between every pair of players every frame took about half the server's frame time. A precomputed potentially visible set (a lookup table over voxels of the map, deliberately optimistic: "as long as any part of a voxel can see any part of the other voxel, the table returns 'visible'") brought it to "less than 2% of server frame time."
+- **Latency.** A position has to arrive just before the enemy appears, or players see opponents pop in late; expand each player's bounds by velocity times a look-ahead longer than the expected ping.
+- **Honesty about the limit.** The claim is that withholding "drastically reduces the time enemy positions are available to players," not that it ends wallhacks. Positions still arrive slightly early, sounds still need positions, and an aimbot still works on every enemy the player can legitimately see.
 
 The general version is interest management for fairness: relevancy rules decide what each client receives ([Interest Management and Relevancy](/books/gaming/netcode#interest-management-and-relevancy)), and the anti-cheat question for each replicated field is "what does a cheat gain if it reads this?"
 
@@ -62,14 +60,15 @@ Authority stops cheats that lie about state. It can't stop cheats that send vali
 
 ## Client Integrity
 
-The client-side layer tries to make the client hard to read and modify, and to notice when it is being read or modified anyway. Riot's 2018 post lists the techniques League used:
+The client-side layer tries to make the client hard to read and modify, and to notice when it is being read or modified anyway. The techniques are well known (Riot's 2018 post lists them for League, and the commercial products sell them as a package):
 
-- **Encrypted code,** specifically the executable's `.text` section, with only portions decrypted at a time, and an in-house bootstrapping library that loads first and validates dependencies.
-- **Randomized anti-debugging checks** that vary between builds and don't always react immediately: a check may log a detection or make the game "crash five minutes later," so a cheat developer can't tell which action tripped it.
+- **Encrypted code,** with only portions decrypted at a time, and a bootstrapping loader that starts first and validates the game's dependencies.
+- **Anti-debugging checks** that vary between builds and don't always react immediately: a check may log a detection or make the game "crash five minutes later," in Riot's words, so a cheat developer can't tell which action tripped it.
 - **Encrypted in-memory values,** moved when they change, so a memory search can't find them.
 - **An obfuscated network protocol,** with the obfuscation changed regularly.
+- **Checks that change without a patch.** BattlEye describes its scanning as "controlled and altered by the backend," so the set of checks a client runs today isn't the set a cheat developer studied in last week's build.
 
-None of this is permanent. It raises the cost of building and maintaining a cheat, and its value decays as cheat developers adapt; the 2024 League post says plainly that Packman, League's anti-tamper system for "nearly six years," was beaten. Riot's 2018 post says it doesn't "think efficacy depends solely on secrecy," and the techniques above are public; what stays private is the specific checks in a given build.
+None of this is permanent. It raises the cost of building and maintaining a cheat, and its value decays as cheat developers adapt; the 2024 League post says plainly that Packman, League's anti-tamper system for "nearly six years," was beaten. The techniques are public; what stays private is the specific checks in a given build.
 
 The structural limit of user-mode protection is privilege. A cheat running with the same or higher privilege than the anti-cheat can hide from it, feed it false answers or switch it off.
 
@@ -87,11 +86,16 @@ None of this replaces anti-cheat, and anti-cheat must not depend on it: a cracke
 
 ## Kernel Anti-Cheat
 
-A kernel-mode driver runs with the operating system's own privilege, so a cheat can't outrank it unless it, too, runs in the kernel (or outside the machine). That is the argument for kernel anti-cheat, and the reason it is controversial.
+A kernel-mode driver runs with the operating system's own privilege, so a cheat can't outrank it unless it, too, runs in the kernel (or outside the machine). That is the argument for kernel anti-cheat, and the reason it is controversial. Publishers that ship one make it in the same terms: Riot's security team, at VALORANT's launch (April 17, 2020), said a user-mode-only design's "capabilities would be compromised by a cheat running at a higher privilege level"; EA, describing its in-house kernel-mode EA anticheat, says "PC cheat developers have increasingly moved into the kernel, so we need to have kernel-mode protections."
 
-**Riot Vanguard** is the most thoroughly documented. Riot's security and privacy teams explained it at VALORANT's launch (April 17, 2020): a user-mode-only design's "capabilities would be compromised by a cheat running at a higher privilege level," and advanced cheaters already used direct memory access (DMA) hardware to copy game memory to a second computer. The driver loads at startup "to prevent loading cheats prior to the client initialization"; it validates memory and system state, while "the client (user-mode) handles all of the anti-cheat detections while a game is running"; and "the driver does not collect or send any information about your computer back to us." The driver is signed with Riot's EV certificate and countersigned by Microsoft, was "reviewed by both internal and external security experts," and got its own scope in Riot's HackerOne program with higher bounties. Riot's support page (dated June 2026) describes the current shape: a client that runs while Riot games are active plus a kernel-mode driver, "usually an on-boot application," required "while you play most of our games."
+The designs differ most on **when the driver runs**, and that is the choice to make deliberately:
 
-Riot published results for League a few months after Vanguard arrived there. The April 2024 post adds TPM 2.0 to the design as "an extremely non-fungible form of hardware ID" and says the driver has "no network connectivity until you run one of Riot's games." The August 2024 retrospective reports:
+- **From boot.** Riot Vanguard's driver loads at startup "to prevent loading cheats prior to the client initialization," and Riot's support page (dated June 2026) calls it "usually an on-boot application." It sees cheats that load before the game, at the cost of privileged code running while the player does anything else; Riot answers that with a driver that has "no network connectivity until you run one of Riot's games."
+- **Only with the game.** EA says its anticheat "only runs when a game with EA anticheat protection included is running," and that all its processes shut down when the game does. Nothing privileged runs when the player isn't playing, at the cost of a window in which a cheat already loaded can prepare.
+
+Both split the work the same way: the driver protects and observes, and detection logic runs above it ("the client (user-mode) handles all of the anti-cheat detections while a game is running," in Riot's description). Both also invite outside scrutiny: Riot's driver is signed with its EV certificate, countersigned by Microsoft, "reviewed by both internal and external security experts" and in scope for its HackerOne program with higher bounties; EA says it worked with "independent, 3rd party security and privacy assessors" and takes vulnerability reports through coordinated disclosure.
+
+Riot is the publisher that has reported results in the most detail. When Vanguard arrived in League (April 2024) it added TPM 2.0 as "an extremely non-fungible form of hardware ID," and the August 2024 retrospective reports:
 
 | Measure (League, Riot's figures, August 2024) | Before | After |
 | --- | --- | --- |
@@ -102,7 +106,7 @@ Riot published results for League a few months after Vanguard arrived there. The
 | Bot accounts removed before sale | | 3.5 million |
 | False positives | | Under 0.01% of bans, fewer than 1 in 10,000, suspended under 72 hours on average |
 
-The retrospective is also candid about cost. Third-party overlays and tools that tried to access the game were blocked and some retried in loops, causing click lag and frame drops; blue screens hit some Intel 13th and 14th generation systems with out-of-date firmware; enabling TPM led some players to switch to UEFI, where converting an MBR disk carelessly could leave it unbootable; and Riot says it "royally biffed" session handling, so a second computer re-authenticating could disconnect a player mid-game. Kernel software touches the whole machine, and its failures are the player's whole machine.
+The retrospective is also candid about cost: blocked overlays that retried in loops and caused frame drops, blue screens on some Intel 13th and 14th generation systems with out-of-date firmware, and players who made disks unbootable converting them to UEFI to enable TPM. Kernel software touches the whole machine, and its failures are the player's whole machine.
 
 **Easy Anti-Cheat** (Epic, part of Epic Online Services) describes a "prevention-first approach," detection through "heuristics, gameplay analysis, and player report signals," a free basic tier with paid Core, Advanced and Premier tiers, and support for Windows, Mac, Linux and Steam Deck; its page doesn't say which parts run in kernel mode. **BattlEye** calls itself a "fully proactive kernel-based protection system," with scanning "controlled and altered by the backend" (so detections change without a client patch), server-side control that kicks violators, an RCon interface for server admins and a global ban system. **VAC** (Valve Anti-Cheat), per Steam Support, detects cheats "using their cheat signatures," and "users are not VAC banned based on reports alone." Vendor descriptions are as their pages stated them in October 2026.
 
@@ -110,7 +114,7 @@ The retrospective is also candid about cost. Third-party overlays and tools that
 
 ## Detection
 
-Prevention narrows what cheats can do; detection finds the players who cheat anyway. The two have different economics. Prevention acts before harm and is visible to cheat developers, who route around it. Detection acts after harm (players have already met the cheater, as Riot's 2018 post notes) and can be hidden, which is its advantage.
+Prevention narrows what cheats can do; detection finds the players who cheat anyway. The two have different economics. Prevention acts before harm and is visible to cheat developers, who route around it. Detection acts after harm (players have already met the cheater) and can be hidden, which is its advantage.
 
 ### Signals
 
@@ -139,7 +143,7 @@ Statistical detection compares a player with the population at their skill level
 
 When to act is a design decision. Banning immediately on detection protects the current match and tells the cheat developer exactly which build of the cheat was caught. Delaying (collecting detections and enforcing later, in batches) hides which check fired and catches more of a cheat's customers before it is updated, at the cost of letting known cheaters play for a while. Riot's 2018 description of anti-debug checks that respond later rather than immediately is the same idea at the level of a single check. My default: act immediately on what harms other players right now (a confirmed cheat in a ranked match: end the match or remove the player, void the result), and delay the account-level enforcement for signature detections, so the evidence of which signature fired reaches the cheat seller as late as possible.
 
-Measure the system the way Riot reported it: prevalence (the share of matches with a cheater, by mode and region), time to action (matches from first detection to enforcement), the false positive rate (bans overturned), and how long innocent players stayed suspended.
+Measure outcomes, not activity. Ban counts are what publishers report most often (Blizzard's Overwatch 2 updates report more than 100,000 accounts penalized since launch and ban waves of up to 5,000 accounts a week), but a count rises when cheating rises as much as when detection improves. The measures Riot's League retrospective reports are the ones that say whether players are better off: prevalence (the share of matches with a cheater, by mode and region), time to action (matches from first detection to enforcement), the false positive rate (bans overturned), and how long innocent players stayed suspended.
 
 ## Enforcement: Bans, Hardware Bans and Appeals
 
@@ -147,6 +151,7 @@ A detection becomes a penalty through the same ladder, notices, appeals and audi
 
 - **Severity starts high.** Confirmed cheating usually goes straight to a long suspension or a ban, because the harm is to every opponent in every match the player joins, and repeat offenders buy new accounts.
 - **Undo the damage.** Void the result of matches with a confirmed cheater and restore the rating points the opponents lost. Riot's April 2024 post described making games ruined by cheaters eventually "undone," returning LP to those affected. Mechanically, a void is a new fact on the match's result and a `match.voided` event that ranked, progression and wallets each reverse on their own ([Game Results, Exactly Once per Match](/books/gaming/game-backend#game-results-exactly-once-per-match); the `reversal` rating event is in [Updating Ratings](/books/gaming/matchmaking#updating-ratings)).
+- **The group can share the penalty.** Players who repeatedly queue with a cheater benefit from the cheat; Blizzard says it takes action against Overwatch 2 accounts that group or queue with cheaters. Judge this by pattern (the same partner across many matches), not one shared match with a stranger.
 - **Platform bans are separate from yours.** On Steam, a developer can use Valve's ban infrastructure through the `ICheatReportingService` Web API: the ban shows on the player's public profile and blocks them from secure servers for that game, "a permanent ban should only be issued for your game if the user was caught cheating in your game," and when the game was borrowed through Family Library Sharing the ban also applies to the owner. VAC bans are Valve's own: "permanent, non-negotiable, and cannot be removed by Steam Support," and removed automatically if found to have been issued incorrectly.
 - **Go after the sellers, too.** Cheats are a business, and publishers sue the businesses. Bungie's case against AimJunkies over Destiny 2 cheats produced an arbitration award of about $4.3 million and, in May 2024, a jury verdict of $63,210 for copyright infringement, which the court then upheld against a request for a new trial. Activision won a default judgment against EngineOwning in May 2024 of $14,465,600 in statutory damages ($200 for each of 72,328 cheat downloads), plus fees and an injunction. Lawsuits don't stop the next seller, but the evidence they rest on (purchases of the cheat, the detections it triggered, the accounts that used it) comes from the same case records as bans, so keep those records good enough for a court.
 - **Hardware bans** stop a banned player from simply creating a new account. They need an identifier that is hard to change: Riot uses the TPM for exactly that reason. They are also blunt. A hardware identifier follows the device, so a ban can land on the next owner of a secondhand PC or on a family that shares one, and the appeals process has to handle "this isn't my ban" as a real case, with a way to verify it. Store hardware identifiers hashed, keep them for enforcement only, and set an expiry.
@@ -226,25 +231,25 @@ A kernel driver is privileged code that a game installs on millions of machines,
 
 - **The rootkit question.** Dorner and Klausner's ARES 2024 paper, "If It Looks Like a Rootkit and Deceives Like a Rootkit," defines rootkits, separates them from ordinary kernel software, and examines four widely used kernel anti-cheat systems; it finds "two of the four anti-cheat solutions exhibiting rootkit-like behaviour," which the authors argue threatens user privacy and system integrity.
 - **Signed drivers can be abused.** Trend Micro reported in August 2022 that a ransomware actor used `mhyprot2.sys`, the anti-cheat driver for Genshin Impact, to kill antivirus processes from kernel mode before deploying ransomware; "Genshin Impact does not need to be installed on a victim's device for this to work," and "as of this writing, the code signing for mhyprot2.sys is still valid." A legitimately signed driver with a dangerous interface is a tool for anyone who can load it.
-- **Stability.** A bug in kernel code takes down the machine, not the game, and kernel software meets every combination of firmware, driver and overlay in the player base (Riot's retrospective lists several).
+- **Stability.** A bug in kernel code takes down the machine, not the game, and kernel software meets every combination of firmware, driver and overlay in the player base (the League retrospective above lists several).
 - **The platform is moving the other way.** After the July 2024 CrowdStrike outage, Microsoft's Windows Resiliency Initiative announced (November 2024) capabilities that allow "security product developers to build their products outside of kernel mode," and its June 2025 update said security products "can run in user mode just as apps do," with a private preview for antivirus vendors in the Microsoft Virus Initiative. Neither post mentions anti-cheat. As of October 2026 it's a direction, not a rule, but a design that keeps its detections in user mode and its kernel component small is the one that will move most easily if Windows narrows kernel access for third parties.
 
 If you ship one, the mitigations follow from those risks:
 
-- **Do as little as possible in the kernel.** Riot's design is the model: the driver protects and observes, and the detections run in user mode.
-- **Expose no general-purpose interface.** A driver that will terminate any process or read any memory on request is exactly what the mhyprot2 case abused. Authenticate the caller and restrict every operation to the game's own process.
+- **Do as little as possible in the kernel.** The driver protects and observes; the detections run in user mode, as both Riot and EA describe their designs.
+- **Expose no general-purpose interface.** Microsoft's driver security checklist lists as dangerous behavior any driver that can "read or write arbitrary kernel, physical, or device memory" or map it to user mode, and asks for least privilege: a strict SDDL string on the device and per-IOCTL access checks. A driver that will terminate any process or read any memory on request is exactly what the mhyprot2 case abused. Authenticate the caller and restrict every operation to the game's own process.
 - **No network from the driver,** and state it publicly, as Riot does.
-- **Sign it, have it reviewed outside the team, and pay a bounty** for vulnerabilities in it.
-- **Plan for revocation.** If a driver version is found vulnerable, you need a way to block that version from loading and to ship a fixed one; tell defenders its hashes.
-- **Test across hardware and firmware** before rollout, roll out gradually, and watch crash telemetry for the first sign of trouble.
-- **Offer a path to remove it.** Riot's driver can be uninstalled from the system at any time; the game won't run without it, but the player decides.
+- **Threat-model it, sign it, have it reviewed outside the team, and pay a bounty** for vulnerabilities in it. Microsoft's checklist asks for a driver-specific threat model before release.
+- **Plan for revocation.** If a driver version is found vulnerable, you need a way to block that version from loading and to ship a fixed one; tell defenders its hashes. Microsoft adds confirmed vulnerable drivers to its driver blocklist, applied by default on devices with hypervisor-protected code integrity, so a version you don't revoke yourself may be revoked for you.
+- **Test across hardware and firmware** before rollout, roll out gradually (Microsoft's checklist points to driver flighting and kernel-mode crash measures for this), and watch crash telemetry for the first sign of trouble.
+- **Offer a path to remove it, or don't leave it running.** Riot's driver can be uninstalled at any time (the game won't run without it, but the player decides); EA's stops when the game does.
 
 ## Privacy
 
 Anti-cheat software sees a great deal of the player's machine, and players are right to ask what it does with what it sees. The rules are the general ones ([GDPR & Privacy Law](/docs/compliance/gdpr)), applied strictly:
 
-- **Collect for one purpose,** cheat detection, and say so in public, in plain words. Riot's statements are concrete: the driver sends nothing back; League's Vanguard post says Riot "only collects what we need," keeps certain data in "warm" storage for 14 days, and will never use it for anything other than cheat detection.
-- **Minimize.** Report a signature hit, not a list of running programs; hash hardware identifiers; keep file paths and process names only as long as a case needs them. When a player asks for erasure, ban records and their evidence are kept under the rules in [Erasure Against Append-Only Records](/books/gaming/saves-and-player-data#erasure-against-append-only-records).
+- **Collect for one purpose,** cheat detection, and say so in public, in plain words. Riot's statements are concrete: the driver sends nothing back; League's Vanguard post says Riot "only collects what we need," keeps certain data in "warm" storage for 14 days, and will never use it for anything other than cheat detection. EA's are similar in kind: its anticheat "does not gather any information about your browsing history," and its use of data is bound to the published user agreement and privacy policy.
+- **Minimize.** Report a signature hit, not a list of running programs; hash hardware identifiers (EA describes hashing identifiers and discarding the originals); keep file paths and process names only as long as a case needs them. When a player asks for erasure, ban records and their evidence are kept under the rules in [Erasure Against Append-Only Records](/books/gaming/saves-and-player-data#erasure-against-append-only-records).
 - **Separate pipelines and access.** Anti-cheat data doesn't flow into product analytics or marketing ([Telemetry & Analytics](/books/gaming/telemetry)), and the people who can read it are the people who decide cases.
 - **Children.** A game rated for young players that installs a kernel driver needs a particularly clear case for it and a particularly clear notice to parents ([Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy#data-minimization-for-minors); [Ratings, Age & Children](/books/gaming/ratings-and-age)).
 - **Disclose** the anti-cheat, its components and its data use before purchase or install, and explain bans in the game. Valve's guidance to developers using its ban APIs asks for the same: tell customers an anti-cheat system exists.
@@ -265,7 +270,10 @@ Anti-cheat software sees a great deal of the player's machine, and players are r
 
 **Reference**
 
-- [Valve: Steamworks Anti-Cheat and game bans](https://partner.steamgames.com/doc/features/anticheat), developer-issued game bans, secure servers, permanence and Family Library Sharing
+- [Valve: Steamworks Anti-Cheat and game bans](https://partner.steamgames.com/doc/features/anticheat), an authoritative server against speed hacks and god mode, developer-issued game bans, secure servers, permanence and Family Library Sharing
+- [Epic Games: Networking Overview for Unreal Engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-overview-for-unreal-engine), the server holding the authoritative game state
+- [Epic Games: Actor Relevancy in Unreal Engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-relevancy-in-unreal-engine), replicating actors only to clients they are relevant to, and hidden actors as not relevant
+- [Microsoft Learn: Driver security checklist](https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/driver-security-checklist), least privilege with SDDL and IOCTL access checks, dangerous behaviors such as arbitrary memory access, driver threat models, gradual rollout and the vulnerable driver blocklist
 - [Valve: Steamworks Anti-Cheat Integration](https://partner.steamgames.com/doc/features/anticheat/vac_integration), the `ICheatReportingService` API and enforcing bans on the server
 - [Valve: Steam Hardware and Proton](https://partner.steamgames.com/doc/steamhardware/proton), Easy Anti-Cheat and BattlEye under Proton and the recommendation against kernel-space anti-cheat
 - [Steam Support: Valve Anti-Cheat (VAC) System](https://help.steampowered.com/en/faqs/view/571A-97DA-70E9-FF74), signature detection, no bans on reports alone, and permanent bans removed only if issued in error
@@ -283,12 +291,13 @@ Anti-cheat software sees a great deal of the player's machine, and players are r
 
 **In practice**
 
-- [Riot Games: Riot's Approach to Anti-Cheat](https://www.riotgames.com/en/news/riots-approach-anti-cheat), prevention, detection and deterrence, server authority, hidden state and client hardening techniques (July 2018)
+- [Riot Games: Riot's Approach to Anti-Cheat](https://www.riotgames.com/en/news/riots-approach-anti-cheat), prevention, detection and deterrence, server authority, client hardening techniques and delayed reactions (July 2018)
 - [Riot Games: Demolishing Wallhacks with VALORANT's Fog of War](https://www.riotgames.com/en/news/demolishing-wallhacks-valorants-fog-war), withholding enemy positions, the cost of raycasts, potentially visible sets and look-ahead (April 2020)
-- [Riot Games: Peeking into VALORANT's Netcode](https://www.riotgames.com/en/news/peeking-valorants-netcode), the server-authoritative model and its anti-cheat purpose (July 2020)
 - [Riot Games: A Message About Vanguard From Our Security & Privacy Teams](https://www.riotgames.com/en/news/a-message-about-vanguard-from-our-security-privacy-teams), the kernel rationale, boot loading, what the driver does and doesn't do, signing, review and bounties (April 2020)
-- [League of Legends: /dev: Vanguard x LoL](https://www.leagueoflegends.com/en-us/news/dev/dev-vanguard-x-lol/), why League's previous anti-cheat was beaten, prevalence, TPM hardware IDs and data retention (April 2024)
+- [League of Legends: /dev: Vanguard x LoL](https://www.leagueoflegends.com/en-us/news/dev/dev-vanguard-x-lol/), why League's previous anti-cheat was beaten, prevalence, TPM hardware IDs, no driver network connectivity until a game runs, and data retention (April 2024)
 - [League of Legends: /dev: Vanguard x LoL Retrospective](https://www.leagueoflegends.com/en-us/news/dev/dev-vanguard-x-lol-retrospective/), bans, prevalence, botting, time to action, false positives and the problems Riot acknowledged (August 2024)
+- [EA: EA anticheat deep dive](https://www.ea.com/security/news/eaac-deep-dive), why kernel mode, running only while a protected game runs, hashed identifiers, no browsing history, third-party assessors and coordinated disclosure
+- [Overwatch: Defense Matrix, Driving Positivity in Overwatch](https://overwatch.blizzard.com/en-us/news/23934873/), accounts penalized since launch, weekly ban waves and action against players who queue with cheaters
 - [Dorner and Klausner: If It Looks Like a Rootkit and Deceives Like a Rootkit (ARES 2024)](https://arxiv.org/abs/2408.00500), a critical examination of four kernel anti-cheat systems
 - [Trend Micro: Ransomware Actor Abuses Genshin Impact Anti-Cheat Driver to Kill Antivirus](https://www.trendmicro.com/en_us/research/22/h/ransomware-actor-abuses-genshin-impact-anti-cheat-driver-to-kill-antivirus.html), a signed anti-cheat driver used by an attacker (August 2022)
 - [EA: Battlefield 6 Secure Boot information](https://www.ea.com/games/battlefield/battlefield-6/news/secure-boot-information), Secure Boot required on PC for Javelin anti-cheat (August 2025)
