@@ -296,16 +296,10 @@ body {
   color: var(--muted);
   counter-reset: section;
 }
-/* Docs and books run wider than the site's 80rem container, GitHub-style:
-   one column between the sidebar and the "On this page" rail, and the text,
-   tables, code and drawings all share its edges. */
-main:has(.doc-shell),
-body:has(.doc-shell) .site-bar {
-  max-width: 110rem;
-}
+/* Docs fill their whole column, beside the sidebar: their tables, code and
+   diagrams need the width more than a narrow measure. */
 .prose-docs {
-  max-width: 60rem;
-  margin-inline: auto;
+  max-width: none;
 }
 .prose h1,
 .prose h2,
@@ -493,35 +487,15 @@ body:has(.doc-shell) .site-bar {
   --fig-accent: var(--accent);
   --fig-accent-fill: color-mix(in oklab, var(--accent) 14%, var(--background));
 }
-/* Diagrams fit the column at every width; the viewer (components/
-   diagram-viewer.tsx) opens one full screen to zoom and pan, from the
-   "Enlarge" button it sets in the figure's top margin or a tap on the drawing. */
 .prose figure.diagram {
-  position: relative;
   margin: 2.25em 0;
+  overflow-x: auto;
 }
 .prose figure.diagram svg {
   display: block;
   width: 100%;
+  min-width: 560px;
   height: auto;
-  cursor: zoom-in;
-}
-.diagram-enlarge {
-  position: absolute;
-  right: 0;
-  bottom: 100%;
-  margin-bottom: 0.35rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0;
-  color: var(--dim);
-  cursor: pointer;
-  transition: color 150ms;
-}
-.diagram-enlarge:hover,
-.prose figure.diagram:hover .diagram-enlarge {
-  color: var(--accent);
 }
 .prose figure.diagram figcaption {
   margin-top: 0.9rem;
@@ -642,45 +616,6 @@ body:has(.doc-shell) .site-bar {
 }
 .prose tbody tr:last-child td {
   border-bottom: none;
-}
-/* A table too wide for the screen scrolls in its own box (rehypeTables wraps
-   it), its first column pinned. components/table-scroll.tsx marks the box
-   data-overflow, data-scrolled and data-end; the faded edge says there's more. */
-.prose .table-scroll {
-  margin: 1.75em 0;
-  overflow-x: auto;
-}
-.prose .table-scroll table {
-  margin: 0;
-}
-.prose .table-scroll :is(th, td):first-child {
-  position: sticky;
-  left: 0;
-  background: var(--background);
-}
-.prose .table-scroll[data-scrolled] :is(th, td):first-child {
-  box-shadow: inset -1px 0 0 var(--border-hover);
-}
-.prose .table-scroll[data-overflow]:not([data-end]) {
-  mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
-}
-.prose .table-scroll:focus-visible {
-  mask-image: none;
-}
-@media (max-width: 40rem) {
-  .prose .table-scroll :is(th, td) {
-    min-width: 7.5rem;
-  }
-}
-
-/* In docs, wide content takes the column's width, the same edges as the
-   text: drawings scale to it, tables and code scroll inside it. */
-.prose.prose-docs > :is(figure.diagram, pre, .table-scroll, p:has(> img:only-child)) {
-  width: 100%;
-}
-.prose.prose-docs > figure.diagram > svg {
-  width: 100%;
-  max-width: 100%;
 }
 
 /* GFM task lists */

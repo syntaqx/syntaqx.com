@@ -46,8 +46,6 @@ describe("markdownToHtml diagrams", () => {
     expect(html).toMatch(/^<figure class="diagram"><svg role="img" aria-label="Payment states, from pending to settled" /);
     expect(html).toContain("<figcaption><strong>Payment states.</strong> Teal is the happy path.</figcaption>");
     expect(html).not.toContain("<img");
-    // 1.25x its viewBox width (740) caps how far a wide column scales it.
-    expect(html).toMatch(/<svg role="img" aria-label="[^"]*" width="925" /);
     // The first render loads the syntax highlighter, which can take seconds.
   }, 30_000);
 
@@ -55,11 +53,4 @@ describe("markdownToHtml diagrams", () => {
     const html = await markdownToHtml("![A photo](/images/photo.png)");
     expect(html).toContain('<img src="/images/photo.png" alt="A photo">');
   });
-});
-
-describe("markdownToHtml tables", () => {
-  it("wraps each table in its own scroll box", async () => {
-    const html = await markdownToHtml("| Rail | Settles |\n| --- | --- |\n| ACH | T+1 |");
-    expect(html).toMatch(/^<div class="table-scroll"><table>[\s\S]*<\/table><\/div>$/);
-  }, 30_000);
 });

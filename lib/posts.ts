@@ -352,29 +352,11 @@ function rehypeDiagrams() {
         // The caption's first sentence is its lead, set in bold.
         const [lead, rest] = escapeHtml(String(img.properties?.title ?? "")).split(/(?<=\.)\s+([\s\S]*)/);
         const caption = lead ? `<figcaption><strong>${lead}</strong>${rest ? ` ${rest}` : ""}</figcaption>` : "";
-        const file = fs.readFileSync(path.join(process.cwd(), "public", src), "utf8").replace(/^<\?xml[^>]*>\s*/, "");
-        // At most 1.25x its natural (viewBox) width: a wide column makes the small
-        // lettering easier to read without blowing the drawing up.
-        const natural = Number(/viewBox="[\d.-]+ [\d.-]+ ([\d.]+)/.exec(file)?.[1]);
-        const width = natural ? Math.round(natural * 1.25) : undefined;
-        const svg = file.replace("<svg ", `<svg role="img" aria-label="${alt}" ${width ? `width="${width}" ` : ""}`);
+        const svg = fs
+          .readFileSync(path.join(process.cwd(), "public", src), "utf8")
+          .replace(/^<\?xml[^>]*>\s*/, "")
+          .replace("<svg ", `<svg role="img" aria-label="${alt}" `);
         return { type: "raw", value: `<figure class="diagram">${svg}${caption}</figure>` };
-      });
-    };
-    walk(tree);
-  };
-}
-
-/** Wrap each table in a box of its own, so a wide one scrolls inside it, not the page. */
-function rehypeTables() {
-  return (tree: HastNode) => {
-    const walk = (n: HastNode) => {
-      n.children = n.children?.map((child) => {
-        if (child.tagName !== "table") {
-          walk(child);
-          return child;
-        }
-        return { type: "element", tagName: "div", properties: { className: ["table-scroll"] }, children: [child] };
       });
     };
     walk(tree);
@@ -390,7 +372,6 @@ export async function markdownToHtml(
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeSectionIds(toc))
     .use(rehypeDiagrams)
-    .use(rehypeTables)
     .use(rehypeShiki, {
       themes: {
         dark: "vitesse-dark",
