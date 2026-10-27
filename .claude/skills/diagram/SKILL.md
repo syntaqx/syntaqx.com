@@ -304,3 +304,6 @@ diagram avoids it. Keep each to one or two lines: what went wrong, the rule.
   element (group padding, bracket labels).
 - 2026-10-27: Two boxed zones side by side cut the label of the connector
   crossing between them; mark the zones as spans under the chain instead.
+- 2026-10-27: Wire labels set in caps turned `code_verifier` into
+  `CODE_VERIFIER`, and a short last run into a box had no room for its
+  label; place identifier labels by hand in `tc`, and label the longer drop.

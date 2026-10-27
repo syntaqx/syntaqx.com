@@ -40,7 +40,7 @@ COMMIT;
 
 Now the event exists if and only if the capture committed. The relay can crash after publishing and before marking the row, so an event is occasionally published twice. That's the trade: "sometimes lost" becomes "sometimes duplicated", and duplicates are a problem consumers can solve.
 
-![Transactional outbox: the service writes the payments row and the outbox_events row in one transaction and one commit. A relay, polling or using CDC, reads unpublished rows in order, publishes them to the broker, and marks them published after the broker acknowledges. The broker delivers at least once to consumers, which dedupe by event ID. A crash after publishing and before marking publishes the event twice.](/diagrams/outbox.svg "One commit for the state and the event. The event can't be lost, only duplicated, and consumers that dedupe by event ID absorb the duplicates.")
+![Transactional outbox: the service writes the payments row and the outbox_events row in one transaction and one commit. A relay, polling or using CDC, reads unpublished rows in order, publishes them to the broker, and marks them published after the broker acknowledges. The broker delivers at least once to consumers, which dedupe by event ID. A crash after publishing and before marking publishes the event twice. The event's path is accented; the mark-published step is dashed.](/diagrams/outbox.svg "One commit for the state and the event. The event can't be lost, only duplicated, and consumers that dedupe by event ID absorb the duplicates.")
 
 A change-data-capture stream (Debezium reading the write-ahead log) is an equivalent relay, with no polling, at the cost of operating the CDC pipeline; [Data Pipelines](/docs/architecture/data-pipelines) covers its risks.
 
