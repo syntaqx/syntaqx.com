@@ -36,7 +36,15 @@ The platform earns from payments in one of two ways, and they have different eng
 
 A fee the platform charges its merchants is the platform's own sale of a service, and whether it's taxable depends on where the merchant is and how the fee is described ([Sales Tax](/docs/payments/sales-tax#taxability-varies-by-place)).
 
-The question underneath both is whether the platform ever **holds** the money. If customer payments land in the platform's own bank account and the platform then pays its merchants, it's receiving and transmitting other people's money, which is [money transmission](/books/payments/becoming-a-payment-provider#holding-other-people-s-money) unless an exemption applies. The structure that avoids the question is the one in the hierarchy diagram below: the provider settles net funds directly to each merchant's bank, and the platform's cut arrives as a fee or a residual. Design the funds flow first, with counsel, and the ledger second.
+Some platforms also split the payment itself. A school's tuition payment funds the school and a partner; a homeowners association's dues fund the association and a maintenance fund. Payabli's split funding is a worked example. The transaction request carries split instructions that send shares to other paypoints or to other bank accounts of the same paypoint, and the amounts "must add up to match the transaction net total *exactly*, or the request will fail". The unwinding is defined as carefully as the split:
+
+- **A full refund** reverses the original split instructions, taking each share back from the account it went to.
+- **A partial refund** must carry its own split instructions: how much comes back from which account, only from accounts on the original payment, and never more from an account than it received.
+- **A chargeback or ACH return** comes off the originating merchant's ledger in full; Payabli then reverses the split, pulling the other accounts' shares back to the originating merchant. Fees aren't returned in either case.
+
+My rule for splits: a split is entries on one payment, never several payments, and each leg records the share it received, so a refund or dispute reverses leg by leg against the original. Decide before launch who carries the loss when a recipient's balance can't cover the reclaim. The originating merchant is the natural default, because, as in Payabli's flow, the dispute or return lands on it first, and the reclaim from the other legs is a receivable it may not collect.
+
+The question underneath all of these is whether the platform ever **holds** the money. If customer payments land in the platform's own bank account and the platform then pays its merchants, it's receiving and transmitting other people's money, which is [money transmission](/books/payments/becoming-a-payment-provider#holding-other-people-s-money) unless an exemption applies. The structure that avoids the question is the one in the hierarchy diagram below: the provider settles net funds directly to each merchant's bank, and the platform's cut arrives as a fee or a residual. Design the funds flow first, with counsel, and the ledger second.
 
 ## The Hierarchy
 
@@ -46,10 +54,15 @@ Every embedded payments product is a tree. The provider at the top, then the pla
 
 Providers draw the tree with different nouns and the same shape:
 
-- **Stripe Connect** is flat at the account level: a platform and its connected accounts. Below an account, Terminal **locations** group card readers by physical site, and zones group locations into regions or sub-brands.
 - **Adyen for Platforms** separates who a user is from where its money sits: a **legal entity** per country for KYC, an **account holder** per country for capabilities, one or more **balance accounts** that hold funds and pay out, and a **store** per physical location under the merchant account for that country.
 - **Finix** puts the platform's **Application** at the root, an **Identity** for each business (where KYC happens), and **Merchants** under the Identity for each payment capability it enables, online and in person for example.
+- **Global Payments for Platforms** (formerly Payrix) runs up to five levels, **facilitator**, **partner** (or referrer), **partition**, **division** and **merchant**, plus **groups** that share fee, billing and risk configuration across their members; a division's workflow settings override its partition's.
+- **Moov** is flat: the platform is the **partner**, with **business** and **individual accounts** linked to it through shared scopes, which Moov calls connected accounts.
+- **NMI** nests **affiliates** and **sub-affiliates** under a **partner**, with **merchants** below; asking for the list without a parent returns "the full tree".
 - **Payabli** nests **sub-organizations** under an **organization** to any depth, with a **paypoint** for each merchant account, created through boarding once underwriting approves it.
+- **Rainforest** keeps two levels: the **platform** and its **merchants**, with **users** under each.
+- **Stripe Connect** is flat at the account level: a platform and its connected accounts. Below an account, Terminal **locations** group card readers by physical site, and zones group locations into regions or sub-brands.
+- **Tilled** has three: a **reseller**, a **partner** (the software platform) and a **merchant**, each a connected account linked to its parent.
 
 Whatever the vendor calls them, the platform's own model needs the same levels: platform, organization, merchant (the legal entity that's underwritten and paid), merchant account (below), and location. Configuration inherits down the tree with explicit overrides, permissions are scoped to a node and cover its subtree, and reporting rolls up from the same entries; the general model, with the query that resolves an inherited setting, is in [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies). What payments adds:
 
@@ -99,6 +112,24 @@ Fee schedules are versioned rules over the same inputs, and the engine that comp
 - **Two prices per payment.** In a managed model the provider charges the platform its price, and the platform charges the merchant its own. The platform's markup is the difference, and it's only visible if both are stored per payment: the merchant's fee as the merchant was charged, and the provider's cost as the provider's statement shows it.
 - **Notice before increases.** Notice periods for price increases come from the merchant agreement, and the system enforces them by refusing a new version that takes effect sooner.
 
+### How the Platforms Do It
+
+Providers that sell to platforms answer the same five questions differently: where fees are set, whether a child follows its parent's later changes or keeps a copy, how one merchant gets a different price, whether one payment can, and what record of past pricing survives.
+
+| Provider | Where fees are set | Inherit live or copy | Merchant override | Per-transaction override | Pricing history |
+| --- | --- | --- | --- | --- | --- |
+| **Adyen for Platforms** | Split configuration profiles linked to a store, with `commission` and `additionalCommission` | Sharing a profile across stores not documented; an edit made after authorization applies at capture | Link the store to a different profile | `splits` on the request: "Request-level instructions override profile instructions" | Accounting, balance and statement reports, and a monthly invoice |
+| **Finix** | A fee profile on the Application's profile, with `fee_profiles` in the API | Copy on create: each merchant profile gets "a copy of the profiles in the Application Profile". A fee guide says a shared profile change affects "all merchants that profile is applied to", so the docs conflict | Change the merchant's profile | Not documented; one-off fees are separate `POST /fees` objects | A residual-by-merchant report; the merchant fee profile report shows active profiles only |
+| **Global Payments for Platforms** | Three levels: entity, group and transaction, with fee schedules, fee modifiers and fee rules | Not documented; a group configures fee settings for all its members at once | Entity-level fees | A transaction-level fee listener | Fee modifiers record the entity they came from; billing and revenue summary reports |
+| **Moov** | Fee plans "configured by Moov", assigned to one account or reused across many, accepted by the account holder | Neither: a plan is an agreement, and a change is a new agreement referencing `priorAgreementID` (in development in the v2026.10.00 changelog) | A different agreement for that account | `facilitatorFee` on the transfer | The `priorAgreementID` chain, a residuals API, partner statements and merchant statement PDFs |
+| **NMI** | Fee schedules, filterable by `parentAffiliateId`, with `isDefault` and `isCustom`, assigned to a merchant | Not documented | Not documented (`isCustom` is undefined in the reference) | Not documented | Commission reports API; residuals management with "Built-in fee verification" |
+| **Payabli** | Billing profiles per entity; billing settings at the organization | Live cascade: settings "cascade from organizations down through any sub-organizations to paypoints", each level inheriting "unless an override is in place" | Override at the paypoint | The payer's `serviceFee`, when per-transaction override is enabled | Monthly processing-fee statements; residuals in the portal |
+| **Rainforest** | A billing profile per merchant, with a default assigned automatically | Not documented; reassigning a profile "will take effect immediately" | Assign a different billing profile | Dynamic billing fees "will override the merchant's billing profile" | Residuals paid to the platform as a monthly billing deposit |
+| **Stripe Connect** | Platform pricing schemes and pricing groups | Groups follow the scheme live; overrides are copies: "any updates to your platform pricing scheme don't affect the pricing scheme of overridden connected accounts" | An override scheme per account, with "Revert to platform pricing" | An explicit application fee or `transfer_data[amount]` takes precedence over the scheme | A "historical pricing scheme" snapshot per payment, exportable as CSV, and a collected fees view |
+| **Tilled** | Pricing templates per payment method | Neither: templates are immutable, and "only the nickname of a pricing template can be edited" | Changing an existing merchant's pricing means emailing Tilled | Not documented | Monthly commission statements with transaction details "for auditing" |
+
+Read across the columns and the design space is three answers to the copy question. Payabli and Global Payments resolve through the tree, so a parent's change reaches every child that hasn't overridden it. Stripe's overrides and Finix's creation-time copies stop following the parent, which is the drift [Where It Breaks](#where-it-breaks) warns about. Moov and Tilled make a price immutable and replace it, which keeps history by construction and makes every change a migration. Only Stripe documents a pricing snapshot on each payment, the stamped version that [Resolving at Scale](#resolving-at-scale) recommends; with the others, the platform keeps that record itself.
+
 ### Who Pays the Fee
 
 The schedule decides how much. Who pays, and when, is a separate setting that inherits down the same tree:
@@ -124,7 +155,7 @@ A price change is money, so it's handled like money: attributed, approved, and n
 
 - **Change sets, not edits.** Every change, one line for one merchant or a new ACH price for ten thousand, is a change set: who made it, why, the contract or ticket it implements, who approved it, and the override rows it writes. A bulk repricing is one change set with one approval, previewed before approval as a diff of every affected account's effective lines and the revenue effect at last month's volume.
 - **Approval scaled to risk.** A change inside a merchant's contract can go straight through. A price below cost, a retroactive change, or an increase inside the notice period needs a second person, and never the person who benefits from it ([Auditing Metric Definitions](/books/payments/payments-metrics#auditing-metric-definitions) applies the same rule to overrides of metrics).
-- **Two kinds of time.** Each override keeps when it takes effect (`valid_during`) and when the system recorded it (`recorded_during`), as [Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections) describes. "What was this paypoint's ACH fee on March 3" and "what did we believe it was on March 3" are different questions, and a disputed fee needs both answers.
+- **Two kinds of time.** Each override keeps when it takes effect (`valid_during`) and when the system recorded it (`recorded_during`), as [Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections) describes. "What was this merchant account's ACH fee on March 3" and "what did the system record it as on March 3" are different questions, and a disputed fee needs both answers.
 - **Rollback is another change set.** Undoing a change writes the old values as new overrides with their own record. Nothing deletes the mistaken one; it's the evidence of what was charged in between. The change record itself belongs in the [audit trail](/docs/architecture/audit-trails), with the before and after effective lines.
 
 ### Where It Breaks
@@ -184,7 +215,7 @@ Everything above is what a platform needs. A provider that wants platforms as cu
 
 - **Connected accounts.** An API to create and manage merchants under a platform, with the platform's own key acting on behalf of any of them, and requirements, capabilities and status exposed per merchant ([Designing the Payments API](/books/payments/payments-api#acting-for-platforms)).
 - **Embedded onboarding and dashboards,** as components a platform drops into its product, authorized by short-lived sessions, so the platform never handles identity documents or long-lived merchant credentials.
-- **Liability and fee configuration per platform.** Who bears losses (provider or platform), who pays processing fees, and who collects requirements are settings on the platform's account, not separate products; Stripe's controller properties are one model of exactly this.
+- **Liability and fee configuration per platform.** Who bears losses (provider or platform), who pays processing fees, and who collects requirements are settings on the platform's account, not separate products. Stripe's controller properties are one model of exactly this; Adyen's split instructions, which deduct fees from the platform's liable account or from a chosen balance account, are another.
 - **Application fees and splits** on each payment, posted as their own ledger entries, and **residual statements** for revenue-share platforms, each tracing to the merchants and transactions behind it.
 - **Platform-scoped keys and reporting.** Keys and reports that cover a platform's whole subtree, and nothing outside it, with per-merchant reports that sum exactly into the platform's.
 - **Events for the whole tree,** delivered to one platform endpoint with the merchant attached.
@@ -263,6 +294,17 @@ ALTER TABLE payments ADD COLUMN resolved_fee_schedule_id UUID REFERENCES resolve
 
 The platform's fee and the provider's cost are ledger entries on the payment's ledger transaction, to `platform_revenue` and `processing_costs`, so the markup per merchant is a query over entries rather than a column anyone maintains. A corrected fee is another entry referencing the original, and a level's margin on any payment is its own price minus its parent's, both read from the stamped schedule.
 
+## Auditing
+
+Pricing in a tree is audited from the records the sections above require, and each check should be a query, not a project:
+
+- **Every price traces to a change set.** Sample resolved schedule versions and walk each line back to its override row, its change set, the contract or ticket it implements, and an approver other than its author wherever policy demanded one. A line that traces to nothing is a finding, however correct its value.
+- **Overrides are listed and owned.** Every override and pinned line, with its node, age, end or review date, and how it differs from what it would inherit. Exceptions past their review date are findings, and so are copies nobody can explain.
+- **Payments reprice from their stamp.** For a sample of payments, the posted fee equals the fee computed from the stamped schedule and the stored inputs. Keep the nightly repricing results as the evidence, with every difference and how it was closed.
+- **Splits sum to the payment.** Each split payment's legs add up to its net, and each refund or dispute on it reverses legs that existed, for no more than each received.
+- **Residual statements tie out.** Reconcile the provider's residual or commission statement each month against the platform's own volume and both prices per payment, and send differences to the break queue ([Breaks](/books/payments/ledger-and-reconciliation#breaks)). Providers publish the inputs differently: Finix defines "Merchant Fees - Finix Costs = Residuals" and reports residuals by merchant, NMI sells residuals management with built-in fee verification, Moov offers a residuals API and partner statements, and Stripe exports the pricing scheme in force on each payment. Whatever the provider gives, the platform's own records are what the statement is checked against.
+- **What a sponsor bank or an auditor asks.** Who can change a merchant's price, and when that access was last reviewed. Which increases went out, with the notice given and evidence the system refused anything sooner. Whether payer fees stayed within network rules and state law, with the configured fee stored beside the charged one. Whether every sub-merchant was settled directly, so the platform never held the funds. How complete the 1099-K data is, and how many merchants fail TIN matching. Each answer should come from the same ledger entries, change sets and stamped versions the platform runs on.
+
 ## What This Means for the System You Build
 
 - **Choose the model your risk team and balance sheet can carry,** and design the funds flow with counsel before the ledger, so the platform never holds merchants' money by accident.
@@ -273,6 +315,7 @@ The platform's fee and the provider's cost are ledger entries on the payment's l
 - **Fee schedules that inherit down the tree line by line,** with every level's price, the provider's cost and the merchant's price stored per payment.
 - **Resolve schedules when prices change,** stamp the version on each payment, and reprice a sample nightly against posted fees.
 - **Price changes as approved change sets** with both kinds of time; moves and exceptions are explicit, and wrong fees are corrected by adjusting entries scoped from the stamped versions.
+- **Split a payment into legs on one payment,** summing to its net, so refunds and disputes reverse leg by leg.
 - **Route events by merchant before any logic runs,** and handle each one idempotently.
 - **Give support the provider's view:** ledger states, payout dates, return codes and dispute deadlines.
 
@@ -304,3 +347,42 @@ The platform's fee and the provider's cost are ledger entries on the payment's l
 - [Payabli: Entities overview](https://docs.payabli.com/guides/platform-entities-overview), unlimited nesting of sub-organizations and paypoints, and paypoints created through boarding
 - [Payabli: Billing and fees](https://docs.payabli.com/guides/pay-ops-billing-and-fees-overview), fee structures, who pays (absorb, service fee, bill to parent), and daily or monthly collection
 - [Payabli: Payor fees](https://docs.payabli.com/guides/pay-in-payor-fees-overview), the `serviceFee` field, the one-cent tolerance, absorb and accept-greater settings, return codes 5005 and 5006, and per-transaction overrides
+- [Payabli: Split funds from a transaction](https://docs.payabli.com/guides/pay-in-developer-routing-split-funds), split instructions to other paypoints or bank accounts, which must sum exactly to the net total
+- [Payabli: Refund a split funded transaction](https://docs.payabli.com/guides/pay-in-developer-routing-refund-split), full refunds reversing the split, and the rules for partial refunds with split instructions
+- [Payabli: Split payment chargebacks and returns](https://docs.payabli.com/guides/pay-in-split-disputes-overview), the full amount debited from the originating merchant, the split reversed back to it, and fees not returned
+- [Payabli: Fees and statements](https://docs.payabli.com/guides/pay-ops-fees-statements-overview), monthly processing-fee statements
+- [Payabli: Portal overview](https://docs.payabli.com/guides/platform-portal-overview), residuals in the partner portal
+- [Payabli: Billing profiles](https://docs.payabli.com/guides/pay-ops-developer-billing-profiles-retrieve), pricing per entity
+- [Adyen: Split configuration profiles (Management API)](https://docs.adyen.com/api-explorer/Management/latest/post/merchants/(merchantId)/splitConfigurations), profiles with `commission` and `additionalCommission`, and fees deducted from the liable account or one balance account
+- [Adyen: Automatic split configuration](https://docs.adyen.com/platforms/automatic-split-configuration), profiles linked to stores, and edits after authorization applying at capture
+- [Adyen: Split transactions](https://docs.adyen.com/platforms/online-payments/split-transactions), request-level split instructions overriding the profile
+- [Adyen: Reports and fees](https://docs.adyen.com/platforms/reports-and-fees), accounting, balance and statement reports, and the monthly invoice
+- [Finix: Merchant fee profiles](https://docs.finix.com/guides/platform-payments/monetizing-payments/merchant-fee-profiles), shared fee profile changes affecting every merchant they apply to
+- [Finix: Fees API](https://docs.finix.com/api/fees), one-off fees
+- [Finix: Platform residuals](https://docs.finix.com/guides/platform-payments/monetizing-payments/platform-residuals), "Merchant Fees - Finix Costs = Residuals" and the residual-by-merchant report
+- [Finix: Reports](https://docs.finix.com/guides/managing-operations/insights-reports/reports), the merchant fee profile report showing active profiles only
+- [Global Payments for Platforms: Overview of entities](https://resource.payrix.com/docs/overview-of-entities), facilitator, partner, partition, division and merchant levels, and groups sharing fee, billing and risk configuration
+- [Global Payments for Platforms: Understanding divisions](https://resource.payrix.com/docs/understanding-divisions), division workflow settings overriding partition settings
+- [Global Payments for Platforms: Set up fees](https://resource.payrix.com/docs/set-up-fees), entity, group and transaction-level fees, and groups configuring fees for all members
+- [Global Payments for Platforms: Fees](https://resource.payrix.com/resources/fees), fee schedules and fee modifiers recording the entity they came from
+- [Global Payments for Platforms: Billing and revenue reports](https://resource.payrix.com/docs/billing-and-revenue-reports.md), billing and revenue summaries
+- [Moov: Account types](https://docs.moov.io/guides/accounts/account-types/index.md), business and individual accounts, and connected accounts through shared scopes
+- [Moov: Fee plans](https://docs.moov.io/guides/fee-plans/plan-options/), plans configured by Moov, reusable across accounts and accepted by the account holder
+- [Moov: Changelog, August 21, 2026](https://docs.moov.io/changelog/2026-08-21/), fee plan changes as new agreements with `priorAgreementID`, in development for v2026.10.00
+- [Moov: Create a transfer](https://docs.moov.io/api/money-movement/transfers/create/), `facilitatorFee` on a transfer
+- [Moov: Merchant billing](https://docs.moov.io/guides/billing/merchant-billling/), merchant statements and the residuals API
+- [Moov: Partner billing](https://docs.moov.io/guides/billing/partner/), partner statements
+- [NMI: Get sub-affiliate list](https://docs.nmi.com/reference/get-sub-affiliate-list), partner, affiliates and sub-affiliates, and the full tree
+- [NMI: Pull all fee schedules](https://docs.nmi.com/reference/pull-all-fee-schedules), fee schedules with `parentAffiliateId`, `isDefault` and `isCustom`
+- [NMI: See your commission](https://docs.nmi.com/reference/see-your-commission), the commission reports API
+- [NMI: Residuals management](https://www.nmi.com/products/merchant-central/residuals-management/), residuals with built-in fee verification
+- [Rainforest: Overview](https://docs.rainforestpay.com/docs/overview), platform, merchants and users
+- [Rainforest: Merchant billing profiles](https://docs.rainforestpay.com/docs/merchant-billing-profiles), a billing profile per merchant, reassignment taking effect immediately
+- [Rainforest: Configure a default billing profile](https://docs.rainforestpay.com/docs/configure-default-billing-profile), the default profile assigned to new merchants
+- [Rainforest: Dynamic payment billing fees](https://docs.rainforestpay.com/docs/dynamic-payment-billing-fees), per-payment fees overriding the billing profile
+- [Rainforest: Understanding deposits](https://docs.rainforestpay.com/docs/understanding-deposits), residuals deposited to the platform monthly
+- [Stripe: Pricing schemes](https://docs.stripe.com/connect/platform-pricing-tools/pricing-schemes), groups following the scheme, overrides as copies, reverting to platform pricing, explicit fees taking precedence, and the historical pricing scheme per payment
+- [Stripe: Pricing groups](https://docs.stripe.com/connect/platform-pricing-tools/pricing-groups), assigning connected accounts to groups
+- [Tilled: Glossary](https://docs.tilled.com/docs/resources/glossary), reseller, partner and merchant as connected accounts linked to a parent
+- [Tilled: Merchant pricing](https://docs.tilled.com/docs/merchants/merchant-pricing), immutable pricing templates and changing an existing merchant's pricing
+- [Tilled: Commissions](https://docs.tilled.com/docs/commissions), monthly commission statements with transaction details for auditing

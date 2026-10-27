@@ -21,7 +21,7 @@ The chapters before this one take one way of paying at a time: [cards](/books/pa
 | **RTP, FedNow, wire** | The payer, pushing | Seconds (RTP, FedNow) or hours (wire) | Immediately | Immediately | Nothing; a mistake needs a new transfer back |
 | **Check** | The payer writes it; the payee deposits it | Only when the paying bank's return window passes, about two business days after presentment | Through image clearing, days | Ordinary returns within days, warranty and forgery claims long after | A return, then possibly a claim |
 | **Retail cash** | The payer, at a store counter | Seconds, at the network's confirmation | Days later, net of fees | At confirmation | Nothing; refunds go by another rail |
-| **Canadian pre-authorized debit** ([Payments in Canada](/books/payments/canada#pre-authorized-debits-rule-h1)) | The payee, under a PAD agreement | When no dishonour arrives by the next business day | Next business day | 90 calendar days for a personal debit's claim | A dishonour or a reimbursement claim |
+| **Canadian pre-authorized debit** ([Payments in Canada](/books/payments/canada#pre-authorized-debits-rule-h1)) | The payee, under a PAD agreement | When no dishonor arrives by the next business day | Next business day | 90 calendar days for a personal debit's claim | A dishonor or a reimbursement claim |
 | **[SEPA](/books/payments/eu-and-uk#sepa-direct-debit) or [Bacs](/books/payments/eu-and-uk#uk-faster-payments-bacs-and-chaps) Direct Debit** | The payee, under a mandate | Days later | Days | Eight weeks for SEPA's no-questions refund, 13 months if there was no valid mandate; Bacs refunds under its guarantee | A scheme refund through the payer's bank |
 | **Instant push abroad** ([SEPA Instant](/books/payments/eu-and-uk#sepa-credit-transfer-and-sepa-instant), [Faster Payments](/books/payments/eu-and-uk#uk-faster-payments-bacs-and-chaps), Pix, UPI) | The payer, from their bank | Seconds | Immediately | Immediately, except fraud reimbursement schemes like the UK's for scams and Pix's MED | A new transfer, or a fraud claim outside the payment |
 | **Buy now, pay later** | The merchant, via the lender | When the lender approves | Paid out by the lender | The lender's terms | The lender's dispute process |
@@ -66,8 +66,10 @@ Proving every day that the account holds exactly what the ledger says it owes is
 **Reference**
 
 - [Nacha: ACH Network Risk and Enforcement Topics](https://www.nacha.org/rules/ach-network-risk-and-enforcement-topics), return windows that decide when an ACH debit is final
+- [Nacha: Reversals and Enforcement](https://www.nacha.org/rules/reversals-and-enforcement), the Originator's five-banking-day window to reverse an erroneous entry
 - [Payments Canada: Rule H1, Pre-Authorized Debits](https://www.payments.ca/sites/default/files/h1eng.pdf), the 90-day reimbursement window for personal debits
 - [Deutsche Bundesbank: SEPA Direct Debit](https://www.bundesbank.de/en/tasks/payment-systems/services/sepa/content/sepa-direct-debit-626654), the eight-week and 13-month refund rights
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the 120-day dispute window and Fast Funds
 - [12 CFR 229.31](https://www.law.cornell.edu/cfr/text/12/229.31), when a returned check must reach the depositary bank
-- [Lewis Silkin: PSR confirms maximum reimbursement level for APP fraud](https://www.lewissilkin.com/insights/2024/09/27/updated-psr-confirms-maximum-reimbursement-level-for-app-fraud-102jii9), the UK's mandatory reimbursement of authorised push payment scam victims, from October 7, 2024
+- [Lewis Silkin: PSR confirms maximum reimbursement level for APP fraud](https://www.lewissilkin.com/insights/2024/09/27/updated-psr-confirms-maximum-reimbursement-level-for-app-fraud-102jii9), the UK's mandatory reimbursement of authorized push payment scam victims, from October 7, 2024
+- [Banco Central do Brasil: Fórum Pix, June 2025 (PDF)](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Forum_Pix_Plenaria/20252606-Forum_Pix.pdf), Pix's special return mechanism (MED) for fraud claims

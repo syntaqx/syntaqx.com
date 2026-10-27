@@ -16,7 +16,7 @@ Five parties touch every entry:
 
 | Party | Role |
 | ----- | ---- |
-| **Originator** | The business that starts the payment and holds the customer's authorization |
+| **Originator** | The business that starts the payment and holds the payer's authorization |
 | **ODFI** | The Originator's bank, which submits entries to the network and is liable for them |
 | **ACH Operator** | The central clearing facility: the Federal Reserve (FedACH) or The Clearing House (EPN) |
 | **RDFI** | The receiving bank, which posts the entry to its customer's account |
@@ -40,7 +40,7 @@ ACH is batch and store-and-forward, and the file format shows it: fixed-width te
 | **CCD** | Business-to-business credits and debits | An agreement between the businesses, one addenda record |
 | **CTX** | Business-to-business with remittance detail | Same, with up to 9,999 addenda records |
 
-Pick the code from how the customer actually authorized you, not from what the bank accepts. A debit sent as PPD when the customer clicked a button in your app is a misrepresented entry, and the authorization you can produce on request is what decides a dispute. Nacha's guide says Originators must be able to produce proof of authorization within ten banking days of a request, and recurring consumer debits need terms that tell the customer how to revoke.
+Pick the code from how the payer actually authorized you, not from what the bank accepts. A debit sent as PPD when the payer clicked a button in your app is a misrepresented entry, and the authorization you can produce on request is what decides a dispute. Nacha's guide says Originators must be able to produce proof of authorization within ten banking days of a request, and recurring consumer debits need terms that tell the payer how to revoke.
 
 Two more families of codes live in other chapters: the check conversion codes (ARC, BOC, POP and RCK) in [Accepting Checks](/books/payments/checks), and the oral authorization rules behind TEL in [Phone Payments](/books/payments/phone-payments). Canada's equivalent of all of this, pre-authorized debits under Payments Canada's Rule H1, is in [Payments in Canada](/books/payments/canada).
 
@@ -60,10 +60,10 @@ The RDFI rejects an entry by sending a **return** with a reason code. The codes 
 | R02 | Account closed | 2 banking days |
 | R03 | No account, or can't locate it | 2 banking days |
 | R04 | Invalid account number | 2 banking days |
-| R16 | Account frozen, including by OFAC instruction (the Treasury's Office of Foreign Assets Control, which runs US sanctions) | 2 banking days |
-| R29 | Business says the debit wasn't authorized | 2 banking days |
 | R09 | Uncollected funds: the balance exists but isn't yet available | 2 banking days |
+| R16 | Account frozen, including by OFAC instruction (the Treasury's Office of Foreign Assets Control, which runs US sanctions) | 2 banking days |
 | R17 | Entry rejected, including an improper reversal to a business account | 2 banking days |
+| R29 | Business says the debit wasn't authorized | 2 banking days |
 | R05 | Consumer account debited with a business SEC code | 60 calendar days |
 | R07 | Authorization revoked | 60 calendar days |
 | R10 | Consumer says the debit wasn't authorized | 60 calendar days |
@@ -76,7 +76,7 @@ So I model an ACH debit's states through the return windows, not the submission:
 
 ![ACH debit states: pending, submitted when sent in a file, settled on the settlement date, available after 2 banking days with no return, final after 60 calendar days. An administrative return within 2 banking days moves a settled debit to returned; an unauthorized return within 60 calendar days moves an available debit to returned. Final and returned are terminal.](/diagrams/ach-states.svg "A settled debit isn't money you have yet. It's probably good once the 2-banking-day window for administrative returns closes, and final only after 60 calendar days; until then a return can take it back.")
 
-- **Never release value at submission.** A digital good, a wallet balance or a payout funded by an ACH debit waits at least for the two-day window, and for a new customer, longer.
+- **Never release value at submission.** A digital good, a wallet balance or a payout funded by an ACH debit waits at least for the two-day window, and for a new payer, longer.
 - **Size exposure to the 60-day tail.** For consumer debits the unauthorized-return risk is a credit decision: a hold period, a limit per new account, or a reserve, exactly as [Fraud & Risk](/books/payments/fraud-and-risk) and [Payouts & Settlement](/books/payments/payouts-and-settlement) treat card risk.
 - **A return is a ledger event,** reversing the original entry, never an edit to it. The returned debit's value comes back out of whatever balance it funded.
 - **Retry only what the rules allow.** A returned entry may be reinitiated at most twice, with the same company name, company ID and amount, marked `RETRY PYMT` in the Company Entry Description; that's for insufficient-funds returns, not a general retry loop. An unauthorized return (R05, R07, R10, R29) is never retried: it needs a new authorization. R11 is different: the authorization stands but the entry was wrong, so you may correct the error and send a new entry matching the authorization within 60 days.
@@ -87,10 +87,10 @@ A return is the RDFI rejecting an entry. A **reversal** is the Originator undoin
 
 - **Five banking days.** The reversing entry must reach the RDFI within five banking days of the erroneous entry's settlement date, with `REVERSAL` in the Company Entry Description and the same company ID, SEC code and amount as the original. A whole file sent in error is reversed within 24 hours of discovering it as well, and many banks apply that 24-hour clock to single entries too.
 - **Tell the Receiver** of the reversal and the reason, no later than its settlement date.
-- **It's not a collection tool.** Reversing because a customer turned out not to have paid, or because the Originator failed to fund the original credit, is an improper reversal. Since June 30, 2021 the RDFI can return one: as R11 for a consumer, within the 60-day window, or as R17 for a business account, within two banking days. Nacha can fine egregious cases.
+- **It's not a collection tool.** Reversing because a payer turned out not to have paid, or because the Originator failed to fund the original credit, is an improper reversal. Since June 30, 2021 the RDFI can return one: as R11 for a consumer, within the 60-day window, or as R17 for a business account, within two banking days. Nacha can fine egregious cases.
 - **Model it as its own entry,** linked to the one it corrects, with its own states. Banks with ACH APIs treat a reversal as a separate transfer that can itself be returned, and so should your ledger.
 
-![A business-day timeline from a consumer debit's settlement date: administrative returns close after 2 banking days, when the debit becomes available; the Originator's reversal window runs 5 banking days; unauthorized consumer returns stay open for 60 calendar days, after which the debit is final.](/diagrams/pm-ach-return-windows.svg "Three clocks start at settlement. The bank's administrative returns close in 2 banking days and my own reversals in 5, but a consumer can still return the debit as unauthorized for 60 calendar days.")
+![A business-day timeline from a consumer debit's settlement date: administrative returns close after 2 banking days, when the debit becomes available; the Originator's reversal window runs 5 banking days; unauthorized consumer returns stay open for 60 calendar days, after which the debit is final.](/diagrams/pm-ach-return-windows.svg "Three clocks start at settlement. The bank's administrative returns close in 2 banking days and the Originator's reversals in 5, but a consumer can still return the debit as unauthorized for 60 calendar days.")
 
 ## After a Return: Fees and Blocks
 
@@ -105,7 +105,7 @@ A returned debit leaves two decisions: whether to charge the payer for it, and w
 | Texas (Bus. & Com. Code 3.506) | $30 | Paper or electronic payments |
 | New York (General Obligations Law 5-328) | $20, or a landlord's actual costs if higher and the lease provides for it | Checks |
 
-Canada's Rule H1 lets a dishonoured debit be re-presented only for the same amount, with no fee added ([Payments in Canada](/books/payments/canada)). Keep return fees as data per jurisdiction with effective dates ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), the same way [Surcharging & Fees](/books/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
+Canada's Rule H1 lets a dishonored debit be re-presented only for the same amount, with no fee added ([Payments in Canada](/books/payments/canada)). Keep return fees as data per jurisdiction with effective dates ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), the same way [Surcharging & Fees](/books/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
 
 **Blocks.** The return code decides what happens to the account:
 
@@ -134,18 +134,18 @@ The Nacha Operating Rules reach you through your bank, and the ones engineering 
 Nothing in ACH tells you an account exists before you debit it, so you check first. The WEB rule above requires it on first use and whenever the account number changes; it asks only that the account is open and can take ACH entries, not who owns it, and it exempts accounts with a successful payment history and changes made because of a NOC. The methods, roughly cheapest first:
 
 - **The routing number.** Its ninth digit is a check digit (the digits weighted 3, 7, 1, repeating, must sum to a multiple of ten), which catches most typos for free. Then look it up in the Federal Reserve's **E-Payments Routing Directory**, synchronized daily with FedACH, to confirm it's ACH-eligible and current; the FedACH file names the new routing number when banks merge. Several hundred routing numbers are added or retired a year, and Nacha's December 2024 bulletin is blunt that for WEB and TEL debits "it is not commercially reasonable to do nothing." A non-bank gets the full file through its bank, under terms that forbid reselling it.
-- **Instant verification** through an open-banking aggregator confirms the account exists and belongs to the customer in seconds, and gives you a balance check at the moment of authorization that ACH itself never will. It's the better product where customers will log in to their bank.
-- **Database checks** from providers like Early Warning and GIACT report an account's status, and sometimes its owner, without the customer logging in: the fallback for people who won't link a bank.
+- **Instant verification** through an open-banking aggregator confirms the account exists and belongs to the payer in seconds, and gives you a balance check at the moment of authorization that ACH itself never will. It's the better product where payers will log in to their bank.
+- **Database checks** from providers like Early Warning and GIACT report an account's status, and sometimes its owner, without the payer logging in: the fallback for people who won't link a bank.
 - **Micro-entries** prove control of the account: credits under $1 each, optionally with an offsetting debit no larger than them, sent together, with `ACCTVERIFY` in the description and the same company name as future payments. Since March 2023, Originators must also monitor micro-entry volumes for fraud.
 - **Prenotes** are zero-dollar entries that come back as a return if the account is bad. After one, wait three banking days before sending live entries; since June 2024 you may send one at any time, for example to re-check a dormant account.
 
-All of them satisfy the WEB rule; none of them prove the customer has the money next week. Validation reduces administrative returns, not unauthorized ones.
+All of them satisfy the WEB rule; none of them prove the payer has the money next week. Validation reduces administrative returns, not unauthorized ones.
 
 ## Consumer Law: Regulation E
 
 ACH debits from consumer accounts are electronic fund transfers under the Electronic Fund Transfer Act and Regulation E, which gives consumers rights that sit above the Nacha Rules. A consumer has 60 days after the statement showing an error to report it, and the bank must investigate within 10 business days, or within 45 days if it provisionally credits the account. Liability for unauthorized transfers is capped at $50 if the consumer reports a lost credential within two business days and $500 after that, and becomes unlimited only for transfers after the 60-day statement window that a timely report would have prevented.
 
-That is a different machine from card [disputes](/books/payments/disputes-and-chargebacks). A chargeback is a network process with reason codes, evidence and a representment you can win. An unauthorized ACH return is the RDFI acting on its customer's statement; you don't get to submit evidence into the return, and your remedy, if you have a valid authorization, is to pursue the customer outside the network. That asymmetry is why authorization records and account validation are worth so much more for ACH than for cards.
+That is a different machine from card [disputes](/books/payments/disputes-and-chargebacks). A chargeback is a network process with reason codes, evidence and a representment you can win. An unauthorized ACH return is the RDFI acting on its customer's statement; you don't get to submit evidence into the return, and your remedy, if you have a valid authorization, is to pursue the payer outside the network. That asymmetry is why authorization records and account validation are worth so much more for ACH than for cards.
 
 ## The Alternatives
 
@@ -283,12 +283,23 @@ CREATE TABLE payment_method_restrictions (
 
 A return posts a `ledger_transactions` row with `source_type = 'ach_return'`, reversing whatever the entry funded, and moves the entry to `returned`; the `available` and `final` transitions are computed from `settled_on` and the banking calendar, not set by hand ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
 
+## Auditing
+
+An ACH program is audited from two sides: your ODFI's Rules compliance audit reaches down to you, and an RDFI's request for proof of authorization arrives one entry at a time. The general design is in [Audit Trails](/docs/architecture/audit-trails); for ACH, keep:
+
+- **Every authorization, for two years after it ends.** Nacha requires the Originator to keep the original or a copy for two years from its termination or revocation, so the clock starts when the payer revokes or the agreement ends, not when it was signed. Keep the accepted terms version, the evidence of acceptance, the SEC code it justifies and the revocation event, retrievable by entry: the 10-banking-day deadline for proof of authorization runs per request.
+- **Return-rate evidence you computed yourself.** Daily unauthorized, administrative and overall return rates per Originator, with the entries and return codes behind each number and the measurement window used, so a Nacha inquiry is answered from the same figures you monitored, not reconstructed after the letter arrives.
+- **Each return and NOC with what you did about it:** the code, when it arrived, the restriction it set or the correction applied, and when, which is how you show NOCs were applied within six banking days and that no unauthorized return was followed by another debit under the same authorization.
+- **Reversals and reinitiations with their reasons,** linked to the original entry, so each one can be shown to fall on Nacha's permitted list and within its window.
+- **Account validation results** for every WEB debit account on first use and after every change, with the method and provider response, since the WEB rule is satisfied only by evidence that it ran.
+- **Exposure limits and their breaches:** the limit in force per merchant on each day, every entry held or rejected for exceeding it, and who approved an override.
+
 ## What This Means for the System You Build
 
 - **Generate files idempotently.** Every entry has a stable internal ID and a trace number, and a file is built from entries not yet submitted, so rebuilding it can't double them. See [Idempotency](/docs/payments/idempotency).
-- **Never resubmit a file blindly.** If a transmission fails ambiguously, ask the bank what it received before sending again. A duplicate file debits every customer in it twice, and every one of those comes back as a return against your rates.
+- **Never resubmit a file blindly.** If a transmission fails ambiguously, ask the bank what it received before sending again. A duplicate file debits every payer in it twice, and every one of those comes back as a return against your rates.
 - **Reconcile daily against the bank's return and NOC files,** and against settlement, as [Payouts & Settlement](/books/payments/payouts-and-settlement) describes. An entry that never settled and never returned is a bug, not a delay.
-- **Store authorizations as records:** what the customer agreed to, when, how (the SEC code's justification), and the revocation terms, with the evidence an electronic acceptance needs ([What the Evidence Holds](/docs/compliance/electronic-signatures#what-the-evidence-holds)). Producing it in 10 days is the requirement; producing it in 10 seconds is the goal.
+- **Store authorizations as records:** what the payer agreed to, when, how (the SEC code's justification), and the revocation terms, with the evidence an electronic acceptance needs ([What the Evidence Holds](/docs/compliance/electronic-signatures#what-the-evidence-holds)). Producing it in 10 days is the requirement; producing it in 10 seconds is the goal.
 - **Screen before you originate.** An OFAC-blocked Receiver is your problem before it's the RDFI's R16.
 - **Treat files and dates as operations.** Transmission, acknowledgements and the banking calendar are in [Treasury & Bank Operations](/books/payments/treasury#bank-files); an effective date on a holiday settles on the next banking day, whether you planned for it or not.
 
@@ -317,7 +328,7 @@ A return posts a `ledger_transactions` row with `source_type = 'ach_return'`, re
 - [Federal Reserve Financial Services: FedNow limit to $10 million](https://www.frbservices.org/news/press-releases/090525-fednow-transaction-limit-increase), the network limit raised from $1 million, effective November 2025
 - [Nacha: Reversals and Enforcement](https://www.nacha.org/rules/reversals-and-enforcement), permissible reasons, the five-banking-day window, and improper reversals returned as R11 or R17
 - [Nacha: Micro-Entries](https://www.nacha.org/rules/micro-entries), amounts, offsetting debits, `ACCTVERIFY` and fraud monitoring
-- [Nacha: ACH Operations Bulletin #4-2024](https://www.nacha.org/news/ach-operations-bulletin-4-2024-importance-maintaining-date-routing-transit-numbers), keeping routing numbers current, and why doing nothing isn't commercially reasonable
+- [Nacha: ACH Operations Bulletin #4-2024](https://www.nacha.org/news/ach-operations-bulletin-4-2024-importance-maintaining-date-routing-transit-numbers), several hundred routing number additions and deletions a year, keeping them current, and why doing nothing isn't commercially reasonable
 - [Federal Reserve Financial Services: E-Payments Routing Directory FAQ](https://www.frbservices.org/resources/routing-number-directory/faqs.html), daily updates, download access and terms of use
 - [California Civil Code 1719](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1719), returned check service charges
 - [Florida Statutes 68.065](https://www.flsenate.gov/Laws/Statutes/2025/68.065), service charges on dishonored checks and electronic payments
@@ -334,5 +345,5 @@ A return posts a `ledger_transactions` row with `source_type = 'ach_return'`, re
 - [Increase: ACH reversals](https://increase.com/documentation/ach-reversals), a bank modeling a reversal as its own transfer
 - [Early Warning: Verify Account](https://www.earlywarning.com/sites/default/files/2024-02/Verify-account-product-brief-v3-20240202.pdf), database account status checks for the WEB rule
 - [Plaid: Auth](https://plaid.com/docs/auth/), instant account verification and its fallbacks
-- [Cape Cod 5: ACH Reference Guide (PDF)](https://www.capecodfive.com/sites/default/files/documents/2025.12.30%20CC5%20ACH%20Reference%20Guide.pdf), a bank's statement of the six-banking-day NOC rule, whichever is later
+- [Cape Cod 5: ACH Reference Guide (PDF)](https://www.capecodfive.com/sites/default/files/documents/2025.12.30%20CC5%20ACH%20Reference%20Guide.pdf), a bank's statement of the six-banking-day NOC rule (whichever is later), authorizations kept two years from termination or revocation, and prenotes at least three banking days before the first live entry
 - [The Clearing House: Higher $10 Million RTP Network Transaction Limit](https://www.theclearinghouse.org/payment-systems/Articles/2024/12/Higher_10_Million_RTP_Network_Transaction_Limit_Empowers_New_Uses_12-04-2024), the limit raised from $1 million to $10 million effective February 9, 2025

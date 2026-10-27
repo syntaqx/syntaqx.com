@@ -13,15 +13,15 @@ Checks have ACH's central problem (money available isn't money final) on an olde
 
 Four parties: the **drawer** who writes the check, the **payee** it's written to, the **depositary bank** the payee deposits it at, and the **paying bank** that holds the drawer's account. The paper itself barely travels anymore.
 
-The **Check 21 Act**, in force since October 2004, made that possible. A bank can **truncate** a check, capturing its image and data and taking the paper out of the process, and send it onward as an **electronic check** under agreements with the banks downstream. If someone downstream still needs paper, the image is printed as a **substitute check**, which the industry calls an image replacement document: a reproduction of front and back, with the MICR line and the legend "This is a legal copy of your check", and it's the legal equivalent of the original. Every bank that passes one on warrants that it's accurate and that nobody will be asked to pay the same check twice. Since 2018 Regulation CC applies the same warranties to electronic checks.
+The **Check 21 Act**, in force since October 2004, made that possible. A bank can **truncate** a check, capturing its image and data and taking the paper out of the process, and send it onward as an **electronic check** under agreements with the banks downstream. If someone downstream still needs paper, the image is printed as a **substitute check**, which the industry calls an image replacement document: a reproduction of front and back, with the MICR line and the legend "This is a legal copy of your check", and it's the legal equivalent of the original. Every bank that passes one on warrants that it's accurate and that nobody will be asked to pay the same check twice. Since July 1, 2018 Regulation CC applies the same warranties to electronic checks.
 
-Banks exchange images directly, through clearing houses, or through the Federal Reserve's FedForward and FedReturn services. The Fed's future in check is an open question: in December 2025 its Board asked for comment on whether to keep investing in check services, maintain them as they are, or significantly reduce or wind them down. Comments closed in March 2026, no strategy had been announced by October 2026, and the Board has said any proposal will go out for comment again. Its separate foreign and Canadian check service ends with 2026. Nothing about that changes your integration soon, but it's one more reason not to build a business that depends on checks growing.
+Banks exchange images directly, through clearing houses, or through the Federal Reserve's FedForward and FedReturn services. The Fed's future in check is an open question: in December 2025 its Board asked for comment on whether to keep investing in check services, maintain them as they are, or significantly reduce or wind them down. Comments closed in March 2026, no strategy had been announced by October 2026, and the Board has said any proposal will go out for comment again. Its separate Foreign and Canadian Check Service is being discontinued at the end of 2026, taking its last deposits on December 4. Nothing about that changes your integration soon, but it's one more reason not to build a business that depends on checks growing.
 
 ## The Image and the MICR Line
 
 Everything downstream reads two things: the image and the line of magnetic ink characters along the bottom.
 
-**The MICR line** carries, from right to left, an on-us field (the account number, and the serial number on personal checks), the nine-digit routing number between transit symbols, and on business checks an auxiliary on-us field holding the serial number. The amount field is blank when the check is printed; the first bank to process it encodes the amount. That auxiliary field matters later: its presence is how a system tells a business check from a consumer one.
+**The MICR line** carries, from right to left, an amount field, an on-us field (the account number, and the serial number on personal checks), the nine-digit routing number between transit symbols, and on business checks an auxiliary on-us field holding the serial number. The amount field is blank when the check is printed; the first bank to process it encodes the amount. That auxiliary field matters later: its presence is how a system tells a business check from a consumer one.
 
 **The image cash letter** is how deposits travel between banks, in the ANSI X9.100-187 format. Like a [Nacha file](/books/payments/ach#anatomy-of-a-nacha-file) it's a set of typed records: a file header (01), cash letter header (10), bundle header (20), a check detail record (25) with its addenda (26 to 28) and image view records (50, 52) for the front and back images, then bundle (70), cash letter (90) and file (99) controls. Returns use their own detail records (31 to 35). Images are typically black-and-white TIFFs. Your bank's remote deposit system usually builds the file for you; if you integrate with a bank's deposit API or run your own scanning, it's the format the bank will ask for.
 
@@ -39,6 +39,16 @@ What the capture side owes the bank, and itself:
 - **A restrictive endorsement.** "For mobile deposit only at [bank]", or whatever the bank's agreement specifies. Under Reg CC 229.34(f), a bank that takes a remote deposit and gets paid indemnifies a later bank that accepted the same paper check, unless the paper carried a restrictive endorsement inconsistent with how it was deposited. The endorsement is what puts the loss on whoever deposited it twice, not on you.
 - **Duplicate detection across every deposit you've ever taken.** The same check scanned twice, by two employees, or by one customer at two locations, is the most common RDC loss. Key on routing number, account number, serial number and amount, and keep the keys forever, not for a rolling window. Duplicates at other institutions you can't see; that's what the indemnity and return reason Y (duplicate presentment) are for.
 - **The paper has a lifecycle.** Mark it as processed when scanned so it can't be scanned again, keep it securely for the period your bank agreement requires, then destroy it. A drawer of uncashed originals in an office is a second deposit waiting to happen.
+
+### Capture That Converts
+
+Not every capture product deposits the image. A platform can also scan the check and turn it into an ACH debit, the back office conversion (BOC) [below](#turning-checks-into-ach), so the image is evidence and the payment is an ACH entry. Payabli's remote deposit capture works that way, and its documentation shows what the conversion rules do to the product:
+
+- **Eligibility narrows to the counter.** Only consumer checks received in person at a point of sale or staffed payment location qualify. Mailed checks, drop-box checks and checks from unstaffed locations are out, and so are business, cashier's, government and insurance checks, so a platform taking mailed rent or invoice checks needs image clearing or a lockbox instead.
+- **OCR, then payment, as two calls.** The front and back images go to a check processing endpoint as JPEG or PNG files under 1 MB each; it reads the MICR line, compares the courtesy and legal amounts with each other and with the amount the user entered, and fails the scan on a mismatch by default. A second call makes the payment from what it extracted.
+- **Notice is part of the flow.** A posted sign at the counter and a take-away copy tell the payer the check may be converted, give a customer service number and offer a way to opt out, and the payer going ahead after notice is the authorization. Payabli tells merchants to keep the paper for a period (typically 14 days, in its words), then destroy it, and never deposit it as well.
+- **The phone is a camera, not a deposit app.** In its virtual terminal, a desktop session shows a QR code, valid for about 10 minutes, that pairs one phone; the phone photographs both sides in its browser, the images never go to the photo library, and the desktop picks them up once they pass validation and finishes the payment.
+- **It's switched on per merchant.** The feature needs configuration by Payabli before a merchant can use it.
 
 The bank side is set out in the Federal Financial Institutions Examination Council's (FFIEC) guidance on RDC risk, issued in 2009: customer suitability reviews, deposit limits, multi-factor authentication, and monitoring for duplicates, velocity and limit breaches. Expect your bank to impose all of it on you, and build the limits and reports into the product so its review is a formality.
 
@@ -66,7 +76,7 @@ The ordinary return is fast. The paying bank must act by its **midnight deadline
 | E | Unable to locate account | Y | Duplicate presentment |
 | F | Frozen or blocked | Z | Forgery, affidavit available |
 
-The slow returns are the dangerous ones. After the ordinary window, a bank that finds a check was altered or deposited twice makes a **warranty claim**, with notice within 30 days of having reason to know (Reg CC 229.34, UCC 4-208), and the drawer has a year from their statement to tell their bank a signature was forged or the check altered (UCC 4-406). The general limitation period on these claims is three years. So a check's states don't end at "cleared": it's **probably good** once the ordinary return window passes, and **final** only as a matter of policy, chosen with that tail in mind. Each claim is a reversing [ledger entry](/docs/payments/payment-states) against whatever balance the check funded, never an edit.
+The slow returns are the dangerous ones. After the ordinary window, a bank that finds a check was altered or deposited twice makes a **warranty claim**, with notice within 30 days of having reason to know (Reg CC 229.34, UCC 4-208), and the drawer has a year from their statement to tell their bank a signature was forged or the check altered (UCC 4-406). The general limitation period on these claims is three years (UCC 4-111). So a check's states don't end at "cleared": it's **probably good** once the ordinary return window passes, and **final** only as a matter of policy, chosen with that tail in mind. Each claim is a reversing [ledger entry](/docs/payments/payment-states) against whatever balance the check funded, never an edit.
 
 **Re-depositing a returned check** is allowed for insufficient or uncollected funds, but it's a new deposit, subject to a redeposit hold, and it gets one more chance at most before you ask for another way to pay. Converting it to an ACH entry (RCK, below) is the other route.
 
@@ -81,7 +91,7 @@ Nacha's check conversion codes let you take the routing, account and serial numb
 | **POP** | At the point of purchase, converted on the spot | Notice, a copy, written authorization and the voided check back |
 | **RCK** | A check already returned for insufficient or uncollected funds, re-presented as ACH | Notice of the policy before the check was received |
 
-Eligibility is narrow. A check converted under ARC or BOC must be a completed, signed consumer check for $25,000 or less, with a pre-printed serial number and a MICR line captured by a reader. Business checks, which carry the auxiliary on-us field, are out; so are third-party checks, credit card and home equity checks, money orders, cashier's checks and Treasury checks. Nacha has floated widening conversion to business checks and larger amounts, but its stated aim is to eliminate checks, not extend them.
+Eligibility is narrow. A check converted under ARC or BOC must be a completed, signed consumer check for $25,000 or less, with a pre-printed serial number and a MICR line captured by a reader. Business checks, which carry the auxiliary on-us field, are out; so are third-party checks, credit card and home equity checks, money orders, cashier's checks and Treasury checks. Nacha's March 2026 comments on the Fed's check services argue that good alternatives to checks exist for almost every use, and suggest clearing the remaining volume over ACH by check truncation rather than growing check use.
 
 The conversion makes the payment an electronic fund transfer, which brings [Regulation E](/books/payments/ach#consumer-law-regulation-e) and its consumer rights with it, and the notice must say the check "will or may be processed as an electronic fund transfer". You keep an image of the check's front for two years and must produce it within ten banking days of a request.
 
@@ -101,7 +111,7 @@ Check fraud grew while check volume fell. FinCEN, the Treasury bureau that enfor
 - **Altered and counterfeit checks,** harder to spot from an image than from paper.
 - **Duplicate deposits** across institutions, where the indemnity above decides who pays.
 
-**Remotely created checks** deserve their own line. A remotely created check, or demand draft, is a check created by the payee from the payer's account number, with no signature. Since 2006, Reg CC makes the depositary bank warrant that the account holder authorized it, which pushes the loss onto whoever deposited it, and the FTC's Telemarketing Sales Rule has banned them in telemarketing since 2016 ([Phone Payments](/books/payments/phone-payments)). ACH debits do the same job with clearer rules; don't offer demand drafts as a product.
+**Remotely created checks** deserve their own line. A remotely created check, or demand draft, is a check created by the payee from the payer's account number, with no signature. Since 2006, Reg CC makes the depositary bank warrant that the account holder authorized it, which pushes the loss onto whoever deposited it, and the FTC's Telemarketing Sales Rule has banned them in telemarketing since June 13, 2016 ([Phone Payments](/books/payments/phone-payments)). ACH debits do the same job with clearer rules; don't offer demand drafts as a product.
 
 ## Who Still Pays by Paper
 
@@ -141,6 +151,17 @@ CREATE TABLE check_returns (
 
 Each return or claim posts a reversing `ledger_transactions` row with `source_type = 'check_return'`; there can be more than one per item, because a late warranty claim can follow an ordinary return that was redeposited.
 
+## Auditing
+
+Checks are audited by your bank against its RDC agreement and the FFIEC's expectations, by Nacha's rules for anything converted, and by the payer who says a check was cashed twice. The general design is in [Audit Trails](/docs/architecture/audit-trails); keep:
+
+- **Every capture attempt, not just the deposits:** who scanned, on which device and location, the image quality result, the amounts read and keyed, and any rejection, so velocity and limit reviews have the raw events.
+- **Duplicate detection hits and how each was resolved,** since the permanent duplicate key is a control the bank will ask you to demonstrate, and an override is the event most worth reviewing.
+- **The paper's custody:** when each item was marked processed, where it was held, and when and how it was destroyed, against the retention period your bank agreement sets.
+- **Conversion evidence for ARC, BOC and RCK:** the notice version in force at the location and date, the image of the check's front for the two years the rules require, and the eligibility checks applied (consumer check, amount, serial number).
+- **Holds, releases and limits:** each hold on a merchant's check funds with its reason and release date, the deposit limits in force, and every breach or override, so availability decisions can be explained to the merchant and the bank.
+- **Returns and late claims** with the reason code or warranty basis, the date received and the ledger reversal they posted.
+
 ## What This Means for the System You Build
 
 - **Validate at capture:** image quality, MICR, amount read back, endorsement present, before anything goes to the bank.
@@ -162,10 +183,13 @@ Each return or claim posts a reversing `ledger_transactions` row with `source_ty
 - [12 CFR 229.51: Substitute checks](https://www.law.cornell.edu/cfr/text/12/229.51), legal equivalence and the required legend
 - [UCC 4-301](https://www.law.cornell.edu/ucc/4/4-301) and [UCC 4-406](https://www.law.cornell.edu/ucc/4/4-406), the midnight deadline and the drawer's one year to report forgery or alteration
 - [12 CFR 1005.3](https://www.law.cornell.edu/cfr/text/12/1005.3), check conversion as an electronic fund transfer and the required notice
+- [UCC 4-111](https://www.law.cornell.edu/ucc/4/4-111), the three-year limitation period
 - [12 CFR 229.35: Indorsements](https://www.law.cornell.edu/cfr/text/12/229.35), bank indorsement standards for paper, substitute and electronic checks
 
 **Reference**
 
+- [Federal Register: Availability of Funds and Collection of Checks (2017 final rule)](https://www.federalregister.gov/documents/2017/06/15/2017-11379/availability-of-funds-and-collection-of-checks), warranties and indemnities for electronic checks, effective July 1, 2018
+- [Federal Register: Telemarketing Sales Rule (2015 final rule)](https://www.federalregister.gov/documents/2015/12/14/2015-30761/telemarketing-sales-rule), the ban on remotely created checks in telemarketing, effective June 13, 2016
 - [Federal Reserve: Check 21 FAQ](https://www.federalreserve.gov/paymentsystems/regcc-faq-check21.htm), truncation, substitute checks and consumer disclosures
 - [Federal Reserve: Reg CC amounts adjusted for inflation](https://www.federalreserve.gov/newsevents/pressreleases/bcreg20240513a.htm), the July 1, 2025 amounts
 - [Federal Reserve: Payments study topline, 2015 to 2024](https://www.federalreserve.gov/paymentsystems/frps_cy2015_24_topline.htm), check volume and value
@@ -176,10 +200,15 @@ Each return or claim posts a reversing `ledger_transactions` row with `source_ty
 - [FinCEN: Analysis of check fraud related to mail theft](https://www.fincen.gov/news/news-releases/fincen-issues-depth-analysis-check-fraud-related-mail-theft), $688 million in six months and how stolen checks are used
 - [Nacha: AFP survey on check fraud](https://www.nacha.org/news/afp-survey-businesses-may-be-misled-risks-check-fraud), 63% of organizations hit in 2024
 - [California Civil Code 1947.3](https://california.public.law/codes/ca_civ_code_section_1947.3), landlords must accept a non-cash, non-electronic payment
-- [Federal Reserve: Request for comment on the future of check services](https://www.federalreserve.gov/newsevents/pressreleases/other20251204b.htm), the December 2025 options, from investing to winding down
+- [Federal Reserve: Request for comment on the future of check services](https://www.federalreserve.gov/newsevents/pressreleases/other20251204b.htm), the December 2025 options, from investing to winding down, comments due 90 days after Federal Register publication on December 9, 2025, and further comment before any significant change
+- [Federal Reserve Financial Services: Discontinuation of FedGlobal ACH and the Foreign and Canadian Check Services](https://frbservices.org/news/communications/112525-ach-discontinuation-fedglobal-ach-payments-foreign-canadian-check-services), the service ending by year-end 2026, with deposits accepted until December 4, 2026
+- [Nacha: Comments on the future of Federal Reserve check services (PDF)](https://www.nacha.org/sites/default/files/2026-03/Nacha%20Comments%20to%20Federal%20Reserve%20on%20Future%20of%20Check%20Services%20RFI%20-%20FINAL%20-%20March%204%2C%202026.pdf), alternatives to checks and clearing the remaining volume over ACH by check truncation, March 4, 2026
 
 **In practice**
 
+- [Payabli: Capturing in-person checks](https://docs.payabli.com/guides/pay-in-checks-rdc-overview), remote deposit capture by back office conversion: eligible checks, image requirements, amount matching, notices and paper retention
+- [Payabli: Use Remote Deposit Capture (API)](https://docs.payabli.com/guides/pay-in-developer-checks-rdc), the image processing call followed by the payment, and configuration by Payabli
+- [Payabli: Capture a check with your phone](https://docs.payabli.com/guides/pay-in-portal-rdc-cross-device-capture), cross-device capture through a QR code valid for about 10 minutes
 - [moov-io: Image cash letter file structure](https://github.com/moov-io/imagecashletter/blob/master/docs/file-structure.md), X9.100-187 record types in an open-source implementation
 - [EPCOR: Check conversion quick reference](https://epcor.org/Portals/0/docs/Document-Resource.pdf), ARC, BOC, POP and RCK eligibility, notices and retention
 - [Q2 Helix: Check return codes](https://docs.helix.q2.com/docs/check-return-codes), the X9 return reason codes

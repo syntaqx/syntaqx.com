@@ -60,14 +60,14 @@ Read end to end, the volume describes the components of a payment provider. Each
 | **Network** | Visa, Mastercard and others. Routes messages between acquirers and issuers, clears and settles between them, and writes the rules everyone signs |
 | **Processor** | Runs the systems for an acquirer (front-end: authorizations; back-end: clearing, settlement, reporting) or for an issuer |
 | **Gateway** | Takes the payment from a website or app and hands it to the processor; often the same company |
-| **ISO or payfac** | Sells acquiring on an acquirer's behalf. (ISO here is an independent sales organization, not the standards body behind ISO 8583.) An ISO signs merchants to the acquirer; a payment facilitator signs them as its own sub-merchants under one master account ([Becoming a Payment Provider](/books/payments/becoming-a-payment-provider)) |
-| **Payment provider** | What this volume calls any company that bundles gateway, processing and often acquiring or payfac services behind one API: Stripe, Adyen, Checkout.com, Worldpay, Fiserv's Clover, Square and many smaller ones |
+| **ISO or payment facilitator (payfac)** | Sells acquiring on an acquirer's behalf. (ISO here is an independent sales organization, not the standards body behind ISO 8583.) An ISO signs merchants to the acquirer; a payfac signs them as its own sub-merchants under one master account ([Becoming a Payment Provider](/books/payments/becoming-a-payment-provider)) |
+| **Payment provider** | What this volume calls any company that bundles gateway, processing and often acquiring or payfac services behind one API: Adyen, Checkout.com, Fiserv's Clover, Square, Stripe, Worldpay and many smaller ones |
 
 [The Payments Landscape](/books/payments/payments-landscape) puts company names on each of these roles, and on the layers that have grown around them (embedded payments, bank-rail APIs, orchestration, vaults, fraud vendors).
 
 Visa and Mastercard are **four-party** networks: the network sits between issuers and acquirers it doesn't own. American Express and Discover grew up as **three-party** networks that largely issue and acquire themselves, which is why their pricing and rules differ from Visa's and Mastercard's, as later chapters on pricing, surcharging and disputes show. Since May 18, 2025, Discover has belonged to Capital One, which completed its acquisition that day, so a large card issuer now also owns a network ([Interchange & Pricing](/books/payments/interchange-and-pricing#pricing-models) covers what that changes).
 
-Where you sit among these parties is a choice with a price. A software company can refer merchants to a provider, resell one, embed one as a managed payment facilitator, become a registered payfac, or go further and become a processor or acquirer itself. Each step takes on more of the risk and more of the work; [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#pick-a-model-pick-a-risk) lays out the whole ladder, and [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in) what each rung means for a software company.
+Where you sit among these parties is a choice with a price. A software company can refer merchants to a provider, resell one, embed one through a managed payfac program, become a registered payfac, or go further and become a processor or acquirer itself. Each step takes on more of the risk and more of the work; [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#pick-a-model-pick-a-risk) lays out the whole ladder, and [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in) what each rung means for a software company.
 
 ![The four parties and the network: cardholder, merchant, acquirer, network and issuer in a row. Authorization runs from the merchant to the issuer and back in seconds; capture and clearing run toward the issuer in batches; settlement and funding run back toward the merchant later, less interchange and fees.](/diagrams/card-flow.svg "Messages go first and money goes last. Authorization asks and answers in seconds without moving anything; clearing tells the network what really happened; only settlement moves money, the other way, net of fees.")
 
@@ -85,15 +85,15 @@ Hold windows depend on the brand, the channel and who started the payment: a **c
 
 | Brand | Authorization | Must be captured within |
 | --- | --- | --- |
-| Visa | Card-absent, customer-initiated | 10 days |
-| Visa | Card-absent, customer-initiated, flagged as an extended authorization | 30 days |
-| Visa | Card-present, or merchant-initiated | 5 days |
-| Visa | Estimated, at hotels, car rentals and cruise lines | 30 days |
 | Mastercard | Final authorization | 7 days |
 | Mastercard | Pre-authorization | 30 days |
+| Visa | Card-not-present, customer-initiated | 10 days |
+| Visa | Card-not-present, customer-initiated, flagged as an extended authorization | 30 days |
+| Visa | Card-present, or merchant-initiated | 5 days |
+| Visa | Estimated, at hotels, car rentals and cruise lines | 30 days |
 | Visa | Automated fuel pump | 2 hours |
 
-The table is the networks' limits, and Mastercard's are about fees rather than expiry: its Transaction Processing Excellence program charges an integrity fee on a final authorization not cleared or fully reversed within 7 calendar days, and on a pre-authorization not cleared or reversed within 30, with no separate card-present window. A processor can enforce shorter windows of its own. Stripe, as of October 2026, holds a standard Visa authorization for 7 days online when the customer initiated it (Visa allows 10) and 5 days in person or merchant-initiated (exactly 4 days and 18 hours, to leave time for clearing), and a standard Mastercard authorization for 7 days online (customer- or merchant-initiated) and 2 days in person; only its extended authorization feature holds longer. The window your system tracks is the shorter of the two: the network's rule, or your processor's.
+The table is the networks' limits, and Mastercard's are about fees rather than expiry: its Transaction Processing Excellence program charges an integrity fee on a final authorization not cleared or fully reversed within 7 calendar days, and on a pre-authorization not cleared or reversed within 30, with no separate card-present window. A processor can enforce shorter windows of its own. Stripe, as of October 2026, holds a standard Visa authorization for 7 days online when the customer initiated it, a shorter policy of its own than the 10 days Visa allows, and 5 days in person or merchant-initiated (exactly 4 days and 18 hours, to leave time for clearing), and a standard Mastercard authorization for 7 days online (customer- or merchant-initiated) and 2 days in person; only its extended authorization feature holds longer. Payabli voids any authorization not captured within 10 days and limits partial capture too: a capture can't be for less than 85% of the authorized amount, so a smaller final total means voiding and charging again. The window your system tracks is the shorter of the two: the network's rule, or your processor's.
 
 Not every authorization is a purchase for a final amount. A **zero-amount verification** checks a card is valid without holding money, when a card is saved; a **partial approval** approves less than requested (common on prepaid cards) and leaves the merchant to collect the rest another way; **estimated** and **incremental** authorizations hold an amount that may change ([Payment States & Ledgers](/docs/payments/payment-states#holds-that-change-size)); and a refund can itself be authorized before it's sent.
 
@@ -127,7 +127,7 @@ Your system has the same problem one layer up. A timeout from your processor is 
 
 The same card behaves differently depending on whether it was physically there.
 
-- **Card-present** payments read the chip, which generates a one-time cryptogram the issuer verifies, so a copied card number alone is useless. Fraud is low and interchange is lower.
+- **Card-present** payments read the chip, which generates a one-time cryptogram the issuer verifies, so a copied card number alone is useless. Fraud and interchange are both lower.
 - **Card-not-present** payments (online, in-app, by phone) carry only what the customer typed. The issuer leans on the card verification code (CVV2 on Visa, CVC2 on Mastercard, CID on Amex), address verification (AVS, a match result returned in the authorization) and [3-D Secure](/books/payments/strong-customer-authentication) instead. Fraud is higher, interchange is higher, and the merchant carries the fraud loss unless authentication shifted it. There are two **liability shifts**, and they're different: the chip shift moves counterfeit fraud in person onto whoever didn't support chip ([Card-Present Payments](/books/payments/card-present#the-liability-shift)), and the 3-D Secure shift moves fraud online onto the issuer when the cardholder was authenticated.
 - **Key-entered** card-present payments, where the clerk types the number, get the worst of both: present in name, priced and risked like an online payment.
 
@@ -142,7 +142,7 @@ The card's type decides who funds the purchase and what it costs to accept.
 - **Prepaid** is funded in advance, and the network rules mostly treat it like debit.
 - **Commercial** cards (corporate, purchasing, fleet) carry the highest interchange, which detailed transaction data can bring down.
 
-The type also decides what you may charge on top: in the US a surcharge is allowed on credit and never on debit or prepaid, so [Surcharging & Fees](/books/payments/surcharging-and-fees) starts with knowing which one you're holding.
+The type also decides what you may charge on top: in the US the networks allow a surcharge on credit, subject to state law, and never on debit or prepaid, so [Surcharging & Fees](/books/payments/surcharging-and-fees) starts with knowing which one you're holding.
 
 ## BINs
 
@@ -195,14 +195,14 @@ CREATE TABLE merchants (
   country     CHAR(2) NOT NULL,
   mcc         CHAR(4),
   status      TEXT NOT NULL,                    -- Merchant Onboarding owns the states
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE customers (
   id          UUID PRIMARY KEY DEFAULT uuidv7(),
   merchant_id UUID NOT NULL REFERENCES merchants (id),
   email       TEXT,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE payment_methods (
@@ -215,7 +215,7 @@ CREATE TABLE payment_methods (
   last4       CHAR(4),
   exp_month   SMALLINT,
   exp_year    SMALLINT,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE payments (
@@ -233,7 +233,7 @@ CREATE TABLE payments (
   initiator         TEXT NOT NULL CHECK (initiator IN ('customer', 'merchant')),
   idempotency_key   TEXT NOT NULL,
   capture_before    TIMESTAMPTZ,                -- the shorter of the network's and the processor's window
-  created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT payments_merchant_id_idempotency_key_key UNIQUE (merchant_id, idempotency_key)
 );
 
@@ -262,7 +262,7 @@ CREATE TABLE refunds (
   status          TEXT NOT NULL,                -- 'pending', 'succeeded', 'failed'
   reason          TEXT,
   idempotency_key TEXT NOT NULL UNIQUE,
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE disputes (
@@ -274,7 +274,7 @@ CREATE TABLE disputes (
   currency        CHAR(3) NOT NULL,
   status          TEXT NOT NULL,
   evidence_due_by TIMESTAMPTZ,
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE payouts (
@@ -286,7 +286,7 @@ CREATE TABLE payouts (
   destination_token TEXT NOT NULL,              -- the vaulted bank account or card
   arrival_date      DATE,
   idempotency_key   TEXT NOT NULL UNIQUE,
-  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE ledger_accounts (
@@ -340,8 +340,7 @@ The accounts are the [chart of accounts](/docs/payments/payment-states#a-chart-o
 - [Federal Register: Debit Card Interchange Fees and Routing (2022)](https://www.federalregister.gov/documents/2022/10/11/2022-21838/debit-card-interchange-fees-and-routing), card-not-present debit routable over two unaffiliated networks from July 1, 2023
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), authorization types, approval validity windows (5.7.3.5, Table 5-12, 18 April 2026 edition) and the reversal requirement (5.7.3.6)
 - [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), merchant category codes such as 5411, 5812 and 8011
-
-- [Capital One: Capital One Completes Acquisition of Discover](https://capitalone.com/about/newsroom/capital-one-completes-acquisition-of-discover/), the acquisition completed in May 2025 (announced May 18, 2025)
+- [Capital One: Capital One Completes Acquisition of Discover](https://capitalone.com/about/newsroom/capital-one-completes-acquisition-of-discover/), the acquisition completed May 18, 2025
 - [Covington: The GENIUS Act Becomes Law](https://www.cov.com/en/news-and-insights/insights/2025/07/the-genius-act-becomes-law-key-provisions-from-the-federal-stablecoin-regulatory-framework), the federal payment stablecoin framework signed July 18, 2025
 
 **In practice**
@@ -349,5 +348,6 @@ The accounts are the [chart of accounts](/docs/payments/payment-states#a-chart-o
 - [Stripe: How Payment Intents and Setup Intents work](https://docs.stripe.com/payments/paymentintents/lifecycle), one PaymentIntent for the whole attempt to collect, creating charges as it tries, and its statuses
 - [Adyen: Capture](https://docs.adyen.com/online-payments/capture), a capture with its own PSP reference distinct from the authorization's, its result delivered by webhook
 - [Stripe: Place a hold on a payment method](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method), authorization validity windows by brand and channel (Visa 7 days card-not-present customer-initiated, 5 days merchant-initiated or card-present; Mastercard 7 days card-not-present, 2 days card-present), and capture rules
+- [Payabli: Authorize and capture transactions](https://docs.payabli.com/guides/pay-in-developer-transactions-auth-capture), captures no lower than 85% of the authorized amount, and uncaptured authorizations voided after 10 days
 - [Evolve: Mastercard Transaction Processing Excellence Program](https://developers.getevolved.com/enterprise/docs/mastercard-transaction-processing-excellence-program), Mastercard's integrity fee thresholds: 7 calendar days for final and undefined authorizations, 30 for pre-authorizations
 - [PayPal: Navigating Mastercard's New Mandate](https://www.paypal.com/us/brc/article/navigating-mastercards-new-mandate), final authorization captured within 7 days and the July 2025 fee on undefined authorizations (March 27, 2025)

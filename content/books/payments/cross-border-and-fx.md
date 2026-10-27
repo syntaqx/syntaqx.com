@@ -13,19 +13,19 @@ A payment crosses a border whenever two of its parties sit in different countrie
 
 The large providers sell the same three things, priced differently: acceptance of foreign cards, conversion between currencies, and settlement or payout in more than one currency.
 
-**Stripe** prices foreign cards and conversion as add-ons to its domestic rate: as of October 2026 its US pricing adds 1.5% for international cards and 1% more if currency conversion is required. It charges in over 135 currencies, converts incoming funds to the account's default currency unless the account settles in additional currencies, and pays out a currency only to a bank account in that currency. Two products move the conversion risk around. **Adaptive Pricing** shows customers local prices in more than 150 countries with an exchange rate guaranteed for 24 hours, the customer paying a 2 to 4% conversion fee rather than the merchant. Its **FX Quotes API** (in preview) locks a rate for five minutes, an hour or a day, for a premium that rises with the lock's length and the currency's group (0.07% to 0.20% for its first group, 0.12% to 0.30% for its second), and attaches a rate threshold to each lock.
+**Adyen** argues for **local acquiring**: using local entities or partners with domestic licenses in each market, which in its words "results in higher approval rates, fewer declines, and significantly lower interchange fees", where cross-border acquiring "frequently results in lower authorization rates". **Airwallex** sells conversion as either the market rate at the moment of conversion or "a guaranteed rate with a validity period", and lets a booked conversion be canceled before settlement. **Checkout.com** publishes plain explanations of the network fees cross-border transactions attract, Visa's ISA and IAF among them.
 
-**Adyen** argues for **local acquiring**: using local entities or partners with domestic licenses in each market, which in its words "results in higher approval rates, fewer declines, and significantly lower interchange fees", where cross-border acquiring "frequently results in lower authorization rates". **Checkout.com** publishes plain explanations of the network fees cross-border transactions attract, Visa's ISA and IAF among them. **Airwallex** sells conversion as either the market rate at the moment of conversion or "a guaranteed rate with a validity period", and lets a booked conversion be cancelled before settlement.
+**Stripe** prices foreign cards and conversion as add-ons to its domestic rate: as of October 2026 its US pricing adds 1.5% for international cards and 1% more if currency conversion is required. It charges in over 135 currencies, converts incoming funds to the account's default currency unless the account settles in additional currencies, and pays out a currency only to a bank account in that currency. Two products move the conversion risk around. **Adaptive Pricing** shows customers local prices in more than 150 countries with an exchange rate guaranteed for 24 hours, the customer paying a 2 to 4% conversion fee rather than the merchant. Its **FX Quotes API** (still in preview as of October 2026) locks a rate for five minutes, an hour or a day, for a premium that rises with the lock's length and the currency's group (0.07% to 0.20% for its first group, 0.12% to 0.30% for its second), and attaches a rate threshold to each lock.
 
 | | Foreign card surcharge | Who pays conversion | Rate held for | Settlement currencies |
 | --- | --- | --- | --- | --- |
 | Adyen | Depends on acquiring entity | Merchant | Per contract | Multiple, via local entities |
 | Airwallex | n/a | Account holder | A validity period per quote | Multi-currency wallets |
-| Stripe Adaptive Pricing | Same card fees | Customer, 2 to 4% | 24 hours | As above |
-| Stripe FX Quotes | n/a | Whoever the integrator chooses | 5 minutes, 1 hour or 1 day | As above |
+| Stripe Adaptive Pricing | Same card fees | Customer, 2 to 4% | 24 hours | Same as Stripe standard |
+| Stripe FX Quotes | n/a | Whoever the integrator chooses | 5 minutes, 1 hour or 1 day | Same as Stripe standard |
 | Stripe standard | 1.5% international, +1% conversion (US) | Merchant | Converted at processing | Default currency, more on request |
 
-## Three Currencies, Not Two
+## More Than Two Currencies
 
 [Two Currencies, Two Names](/docs/payments/multi-currency#two-currencies-two-names) separates **presentment** (what the customer sees and is charged) from **settlement** (what lands with the merchant's provider). A provider sees a third: the **funding currency**, the currency of the bank account the merchant's payout actually goes to. And the card adds a fourth outside your control: the cardholder's **billing currency**, which the issuer converts into if it differs from the presentment currency.
 
@@ -43,7 +43,7 @@ Each pair that differs is a conversion, and each conversion has a rate, a source
 To a card network, a transaction is cross-border when the merchant's country differs from the country that issued the card. The merchant's country isn't where its servers are or where its customers live; it's the **merchant outlet location** the acquirer assigns, and Visa's rules define it:
 
 - **Card-present** at a fixed place: where the transaction happens.
-- **Card-absent:** the country of the merchant's principal place of business, with narrow exceptions (an airline may use the country where the first leg of travel starts).
+- **Card-not-present:** the country of the merchant's principal place of business, with narrow exceptions (an airline may use the country where the first leg of travel starts).
 - **The acquirer must assign it correctly and must not misrepresent it,** must check before signing a merchant that it isn't misrepresenting its location, and Visa can decide the correct location itself if it disputes the acquirer's.
 
 So routing a foreign customer's payment through a local merchant account in their country only makes it domestic if the merchant really has a business there. That's the rule the next sections turn on.
@@ -52,9 +52,9 @@ So routing a foreign customer's payment through a local merchant account in thei
 
 Cross-border card payments cost more at two of the three layers of [Interchange & Pricing](/books/payments/interchange-and-pricing#three-layers-of-cost).
 
-**Interchange** runs on international and inter-regional tables, higher than domestic ones. Regulators cap some of it. Under commitments the European Commission accepted in 2019, Visa and Mastercard cap interchange on payments in the European Economic Area with cards issued outside it at 0.2% (debit) and 0.3% (credit) for card-present payments, and 1.15% and 1.50% for card-not-present ones. Brexit put UK cards on the wrong side of that line: Visa set its default fees for UK-EEA card-not-present payments at 1.15% and 1.5% in October 2021, Mastercard followed in April 2022, and the UK's regulator has spent the years since working on a cap ([Payments in the EU & UK](/books/payments/eu-and-uk) has where that stands).
+**Interchange** runs on international and inter-regional tables, higher than domestic ones. Regulators cap some of it. Under commitments the European Commission accepted in 2019, Visa and Mastercard cap interchange on payments in the European Economic Area with cards issued outside it at 0.2% (debit) and 0.3% (credit) for card-present payments, and 1.15% and 1.50% for card-not-present ones. Brexit put UK cards on the wrong side of that line: Visa set its default fees for UK-EEA card-not-present payments at 1.15% and 1.5% in October 2021, Mastercard followed in April 2022, and the UK's Payment Systems Regulator has spent the years since working on a cap; in January 2026 the High Court upheld its power to impose one ([Payments in the EU & UK](/books/payments/eu-and-uk) has where that stands).
 
-**Network assessments** are the second layer, charged by the network to the acquirer on top of interchange and passed through to the merchant. A US acquirer's pass-through schedule (Fiserv's, from 2023, published as part of a state contract) shows their shape:
+**Network assessments** are the second layer, charged by the network to the acquirer on top of interchange and passed through to the merchant. A US acquirer's pass-through schedule (Fiserv's, dated April 2023 and published in 2025 as part of a state contract) shows their shape:
 
 | Fee | Charged when | Rate |
 | --- | --- | --- |
@@ -115,14 +115,14 @@ A rate needs a source, and the sources differ in whether anyone will trade at th
 
 A provider that converts for merchants is an FX intermediary: it gets rates from one or more liquidity providers or banks, adds a markup, quotes it with an expiry, and executes and settles the conversion later. [Locking a Quoted Rate](/docs/payments/multi-currency#locking-a-quoted-rate) covers the quote object. The provider-scale additions:
 
-- **The quote's lifetime is a priced option.** Stripe charges more for a day's lock than for five minutes, and sets a rate threshold on extended locks (3.5% for payments, 1% for transfers, in its preview). Price each lock duration, cap exposure per merchant and currency pair, and expire quotes on time.
+- **The quote's lifetime is a priced option.** Stripe charges more for a day's lock than for five minutes, and sets a rate threshold on extended locks (3.5% for payments, 1% for transfers, in its preview); Airwallex's guaranteed rates carry a validity period the same way. Price each lock duration, cap exposure per merchant and currency pair, and expire quotes on time.
 - **Quotes reference the upstream quote.** When your quote is backed by a liquidity provider's, store both, so the spread you earned on each conversion is a fact rather than an estimate.
 - **Net before you trade.** Converting each payment individually pays the spread every time. Aggregate a day's flows by currency pair, offset opposite flows, and trade the net, while every merchant still gets the rate they were quoted. The difference between quoted and executed rates is your FX position, and it posts to its own account.
 - **Mark the markup on every conversion.** Regulators increasingly require it to be disclosed, and a merchant disputing a payout amount will ask.
 
 ## Settling and Paying Out in Many Currencies
 
-A merchant selling in euros, sterling and dollars can be paid three ways: converted into one home currency at settlement, held in balances per currency and paid out per currency, or a mix. Stripe converts to the default currency unless the account settles in additional ones, charges fees in the settlement currency, and pays a currency out only to a bank account in that currency.
+A merchant selling in euros, sterling and dollars can be paid three ways: converted into one home currency at settlement, held in balances per currency and paid out per currency, or a mix. Stripe converts to the default currency unless the account settles in additional ones, charges fees in the settlement currency, and pays a currency out only to a bank account in that currency. Adyen settles like for like, without conversion, where the payment method supports the currency as a settlement currency, and which currencies a merchant can be paid out in depends on the country of the acquiring connection that routed the payment.
 
 - **A balance per currency,** each with its own pending and available amounts, reserves and payout schedule. Negative-balance recovery has to say whether a negative euro balance can be offset from a positive dollar one, and at what rate.
 - **Payout rails are local where they can be.** A euro payout to an IBAN goes by SEPA Credit Transfer and a sterling one by Faster Payments ([Payments in the EU & UK](/books/payments/eu-and-uk)); both are cheap and reach the beneficiary the same or the next day. Only currencies without a local rail you can reach go by international wire, below.
@@ -147,6 +147,7 @@ A refund weeks after the sale, or a dispute months after it, converts at a diffe
 
 - **Standard conversion uses the rate at refund time.** Stripe's documented example: a 60 USD payment converted at 0.88 settles 52.80 EUR to the merchant; refunded when the rate is 0.86, Stripe deducts 51.60 EUR. The customer gets 60 USD back either way. The merchant gained 1.20 EUR here, and loses when the rate moves the other way.
 - **Some products hold the original rate.** Stripe's Adaptive Pricing refunds at the same exchange rate as the original transaction, because the customer paid for the guarantee.
+- **A platform can choose who carries it.** Adyen's currency conversion for platforms (a pilot as of October 2026) converts a refund at the prevailing rate plus its markup and calls the leftover difference the remainder; the platform books it to the user or to itself with a split item, and if the request doesn't say, it lands in the platform's liable balance account.
 - **Disputes put the gap on the loser.** Under Visa's rules, the party assigned or accepting final liability for a dispute "is responsible for the difference between the original Transaction amount and the final Dispute amount that may be caused by a change to the Currency Conversion Rate"; reversals of duplicate or erroneous transactions use the rate on the reversal's processing date.
 - **DCC refunds stay in the DCC currency,** per Mastercard's guide, so a DCC sale refunded in the merchant's currency is a rules violation as well as a reconciliation break.
 
@@ -163,7 +164,7 @@ Cross-border payments are where sanctions screening does its real work, because 
 
 ## How to Build It
 
-The changes below extend the core `payments`, `refunds`, `payouts` and `merchants` tables from [the core data model](/books/payments/card-payments#the-core-data-model), the `merchant_accounts` of [Payments for Software Platforms](/books/payments/software-platforms#how-to-build-it) (one per MID, with its country and processor), the payout columns of [Payouts & Settlement](/books/payments/payouts-and-settlement#how-to-build-it), and the amount fields of [Multi-Currency & FX](/docs/payments/multi-currency#storing-both-amounts).
+The changes below extend the core `payments`, `refunds`, `payouts` and `merchants` tables from [the core data model](/books/payments/card-payments#the-core-data-model), the `merchant_accounts` of [Payments for Software Platforms](/books/payments/software-platforms#how-to-build-it), one per merchant ID (MID) with its country and processor, the payout columns of [Payouts & Settlement](/books/payments/payouts-and-settlement#how-to-build-it), and the amount fields of [Multi-Currency & FX](/docs/payments/multi-currency#storing-both-amounts).
 
 ```sql
 -- A merchant has one account per entity and country it acquires in;
@@ -177,8 +178,8 @@ CREATE TABLE fx_quotes (
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   from_currency    CHAR(3) NOT NULL,
   to_currency      CHAR(3) NOT NULL,
-  rate             NUMERIC(20, 10) NOT NULL,   -- what we quoted, markup included
-  mid_rate         NUMERIC(20, 10) NOT NULL,   -- the reference we marked up
+  rate             NUMERIC(20, 10) NOT NULL,   -- the rate quoted, markup included
+  mid_rate         NUMERIC(20, 10) NOT NULL,   -- the reference rate before markup
   markup_bps       INTEGER NOT NULL,
   rate_source      TEXT NOT NULL,              -- liquidity provider and its quote ID
   upstream_quote   TEXT,
@@ -287,8 +288,8 @@ Cross-border payments are where examiners, network auditors and merchants with a
 **Reference**
 
 - [European Commission: Commitments by Visa and Mastercard on inter-regional interchange fees (IP/19/2311)](https://ec.europa.eu/commission/presscorner/api/documents?reference=IP/19/2311&language=en), the 0.2%, 0.3%, 1.15% and 1.50% caps on cards issued outside the EEA
-- [High Court: Mastercard Europe SA v Payment Systems Regulator [2026] EWHC 64 (Admin)](https://www.judiciary.uk/wp-content/uploads/2026/01/Mastercard-Europe-SA-v-Payment-Systems-Regulator.pdf), Visa's October 2021 and Mastercard's April 2022 UK-EEA card-not-present fees
-- [NC Office of the State Controller: Fiserv pass-through fee schedule, Appendix G (PDF)](https://www.ncosc.gov/sites/default/files/2025-04/Appendix%20G%20Pass%20Through%20Fee%20Schedule_0.pdf), Visa ISA and IAF, Mastercard cross-border and Global Acquirer Support Fee rates
+- [High Court: Mastercard Europe SA v Payment Systems Regulator [2026] EWHC 64 (Admin)](https://www.judiciary.uk/wp-content/uploads/2026/01/Mastercard-Europe-SA-v-Payment-Systems-Regulator.pdf), Visa's October 2021 and Mastercard's April 2022 UK-EEA card-not-present fees, and the PSR's power to cap them upheld in January 2026
+- [NC Office of the State Controller: Fiserv pass-through fee schedule, Appendix G (PDF)](https://www.ncosc.gov/sites/default/files/2025-04/Appendix%20G%20Pass%20Through%20Fee%20Schedule_0.pdf), Fiserv's April 2023 schedule, uploaded in 2025: Visa ISA and IAF, Mastercard cross-border and Global Acquirer Support Fee rates
 - [ECB: Euro foreign exchange reference rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html), published around 16:00 CET for information purposes only
 - [Federal Reserve: H.10 Foreign Exchange Rates](https://www.federalreserve.gov/releases/h10/), daily bilateral rates released weekly
 - [OFAC: FAQ 11, who must comply](https://ofac.treasury.gov/faqs/topic/1501), US persons wherever located and US companies' foreign branches
@@ -302,10 +303,12 @@ Cross-border payments are where examiners, network auditors and merchants with a
 
 - [Stripe: Pricing](https://stripe.com/pricing), the 1.5% international card and 1% currency conversion add-ons
 - [Stripe: Adaptive Pricing](https://docs.stripe.com/payments/currencies/localize-prices/adaptive-pricing.md?payment-ui=stripe-hosted), local prices in more than 150 countries, a 24-hour rate guarantee, the customer's 2 to 4% fee, and refunds at the original rate
-- [Stripe: FX Quotes API](https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api), lock durations, premiums by currency group and rate thresholds on extended locks
+- [Stripe: FX Quotes API](https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api), lock durations, premiums by currency group, rate thresholds on extended locks, and its preview status
 - [Stripe: Localize prices](https://docs.stripe.com/payments/currencies/localize-prices), mid-market rates and the worked refund conversion example
 - [Stripe: Settle in additional currencies](https://docs.stripe.com/payments/currencies/settlement-payouts), conversion to the default currency, fees in the settlement currency, and payout accounts per currency
 - [Stripe: Currency conversions](https://docs.stripe.com/currencies/conversions), charging in over 135 currencies
+- [Adyen: Getting paid](https://docs.adyen.com/account/getting-paid), like-for-like settlement and payout currencies set by the acquiring connection's country
+- [Adyen: Currency conversion refunds for platforms](https://docs.adyen.com/platforms/online-payments/currency-conversion/refunds), refunds at the prevailing rate plus markup, the remainder and who it's booked to, in pilot
 - [Adyen: Cross-border payments](https://www.adyen.com/knowledge-hub/cross-border-payments), local acquiring through local entities and its effect on approval rates and interchange
 - [Checkout.com: What is the Visa ISA fee?](https://www.checkout.com/blog/isa-fee), the ISA range and the International Acquirer Fee
 - [CardFellow: Mastercard cross-border fee](https://www.cardfellow.com/blog/mastercard-cross-border-fee), the 0.60% and 1.00% rates
