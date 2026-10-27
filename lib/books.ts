@@ -89,6 +89,7 @@ export const UPCOMING_BOOKS: { name: string; type: BookType }[] = [
   { name: "Commerce", type: "industry" },
   { name: "Consumer Fintech", type: "industry" },
   { name: "Hosting & Cloud", type: "industry" },
+  { name: "Workplace & Collaboration", type: "industry" },
 ];
 
 export const getBook = (slug: string) => BOOKS.find((b) => b.slug === slug);
