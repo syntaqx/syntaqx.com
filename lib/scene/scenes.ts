@@ -812,68 +812,55 @@ const arena: SceneFn = (s) => {
 };
 
 /**
- * Property Tech: a mid-rise exploded floor by floor over its lobby, with
- * balconies, a water tank and parking beside it. A unit on the top floor
- * slides out like a drawer, its lease lifting off it, one at a time.
+ * Property Tech: a mid-rise whose floors part on hover. One unit's window
+ * lights as it's leased, and the matching row lights on the rent roll
+ * floating beside it, one unit at a time.
  */
 const tenancy: SceneFn = (s) => {
-  const [x0, y0, ua, ub, n] = [1.5, 2.2, 1.6, 3, 3];
-  const face = y0 + ub;
-  const gap = 0.08 + s.spread * 0.7;
-  const [lobbyH, H] = [1, 0.9];
+  const [x0, y0, a, b] = [1, 3.6, 4.4, 3.4];
+  const [fx, fy] = [x0 + a, y0 + b];
+  const gap = 0.06 + s.spread * 0.75;
+  const [lobbyH, H, floors] = [0.9, 1, 3];
   const zAt = (f: number) => lobbyH + gap + f * (H + gap);
-  const floors = 3;
   const roof = zAt(floors - 1) + H;
-  const lit = Math.floor(s.t / 2.6) % n;
-  const out = 0.9 + s.spread * 0.5;
-  const sheetZ = roof + 0.5 + s.spread * 0.9 + bob(s, 0.1);
-  const win = (x: number, z: number, y = face): Part => ({ kind: "plane", pts: [[x + 0.35, y, z + 0.25], [x + ua - 0.35, y, z + 0.25], [x + ua - 0.35, y, z + 0.7], [x + 0.35, y, z + 0.7]], v: 0.03 });
+  const T = 2.8;
+  const lit = Math.floor(s.t / T) % (floors * 3);
+  const [litF, litU] = [Math.floor(lit / 3), lit % 3];
+  const ww = a / 3;
+  const front = (x: number, z: number, h = 0.45): Part => ({ kind: "plane", pts: [[x, fy, z], [x + ww - 0.5, fy, z], [x + ww - 0.5, fy, z + h], [x, fy, z + h]], v: 0.03 });
+  const side = (y: number, z: number): Part => ({ kind: "plane", pts: [[fx, y, z], [fx, y + 0.9, z], [fx, y + 0.9, z + 0.45], [fx, y, z + 0.45]], v: 0.03 });
+  const sheetZ = 2.4 + s.spread * 1.4 + bob(s, 0.1);
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    // parking beside the building: stalls and two cars
-    { kind: "plane", pts: quad(7, 1.4, 0, 2.4, 6.2), v: 0.12 },
-    ...[0, 1, 2, 3, 4, 5].map((k): Part => ({ kind: "line", a: [7, 1.4 + k * 1.2, 0], b: [8.3, 1.4 + k * 1.2, 0], alpha: 0.5 })),
-    { kind: "box", box: box(7.15, 1.55, 0, 1, 0.9, 0.45), small: true },
-    { kind: "box", box: box(7.15, 5.15, 0, 1, 0.9, 0.45), small: true },
-    // lobby: glass along the front, a door and its canopy
-    { kind: "box", box: box(x0, y0, 0, n * ua, ub, lobbyH) },
-    { kind: "plane", pts: [[x0 + 0.3, face, 0.15], [x0 + 2.4, face, 0.15], [x0 + 2.4, face, 0.8], [x0 + 0.3, face, 0.8]], v: 0.03 },
-    { kind: "plane", pts: [[x0 + 3.2, face, 0], [x0 + 3.9, face, 0], [x0 + 3.9, face, 0.8], [x0 + 3.2, face, 0.8]], v: 0.03 },
-    { kind: "box", box: box(x0 + 3, face, 0.85, 1.1, 0.5, 0.08), small: true },
+    // the walk from the door to the rent roll
+    { kind: "cable", pts: [[x0 + a / 2, fy, 0], [x0 + a / 2, 8.6, 0], [8.4, 8.6, 0], [8.4, 4.2, 0]], speed: 0.35, accent: true },
+    // lobby: a band of glass and the door
+    { kind: "box", box: box(x0, y0, 0, a, b, lobbyH) },
+    { kind: "plane", pts: [[x0 + 0.3, fy, 0.2], [x0 + a / 2 - 0.5, fy, 0.2], [x0 + a / 2 - 0.5, fy, 0.65], [x0 + 0.3, fy, 0.65]], v: 0.03 },
+    { kind: "plane", pts: [[x0 + a / 2 - 0.3, fy, 0], [x0 + a / 2 + 0.3, fy, 0], [x0 + a / 2 + 0.3, fy, 0.7], [x0 + a / 2 - 0.3, fy, 0.7]], v: 0.03 },
+    { kind: "plane", pts: [[x0 + a / 2 + 0.5, fy, 0.2], [fx - 0.3, fy, 0.2], [fx - 0.3, fy, 0.65], [x0 + a / 2 + 0.5, fy, 0.65]], v: 0.03 },
   ];
   for (let f = 0; f < floors; f++) {
     const z = zAt(f);
-    for (let u = 0; u < n; u++) {
-      const x = x0 + u * ua;
-      if (f === floors - 1 && u === lit) {
-        parts.push({ kind: "plane", pts: quad(x, y0, z, ua, ub), v: 0 , dashed: true });
-        continue;
-      }
-      parts.push({ kind: "box", box: box(x, y0, z, ua, ub, H), vents: u === n - 1 });
-      parts.push(win(x, z));
-      if (u === 1) {
-        parts.push({ kind: "box", box: box(x + 0.2, face, z, ua - 0.4, 0.4, 0.08), small: true });
-        parts.push({ kind: "line", a: [x + 0.2, face + 0.4, z + 0.4], b: [x + ua - 0.2, face + 0.4, z + 0.4], alpha: 0.6 });
-      }
+    if (s.spread > 0.05) parts.push({ kind: "line", a: [fx, fy, z - gap], b: [fx, fy, z], dashed: true, alpha: 0.4 });
+    parts.push({ kind: "box", box: box(x0, y0, z, a, b, H) });
+    for (let u = 0; u < 3; u++) {
+      const x = x0 + u * ww + 0.25;
+      if (f === litF && u === litU) parts.push({ kind: "box", box: box(x - 0.1, fy, z + 0.18, ww - 0.3, 0.45 + s.spread * 0.4, 0.7), accent: true, handles: true });
+      else parts.push(front(x, z + 0.3));
     }
+    parts.push(side(y0 + 0.4, z + 0.3), side(y0 + 1.9, z + 0.3));
   }
-  // the roof: a water tank on legs and an air handler
-  parts.push(
-    ...[[2.1, 2.7], [2.9, 2.7], [2.1, 3.5], [2.9, 3.5]].map(([x, y]): Part => ({ kind: "line", a: [x, y, roof], b: [x, y, roof + 0.5], alpha: 0.6 })),
-    { kind: "cyl", cx: 2.5, cy: 3.1, z: roof + 0.5, r: 0.55, h: 0.9, rt: 0.5 },
-    { kind: "box", box: box(4.6, 2.6, roof, 1.2, 1, 0.5), vents: true, small: true },
-  );
-  // the leased unit, out like a drawer, and its lease above it
-  const lx = x0 + lit * ua;
-  const lz = zAt(floors - 1);
-  parts.push(
-    { kind: "box", box: box(lx, y0 + out, lz, ua, ub, H), accent: true },
-    win(lx, lz, face + out),
-    { kind: "line", a: [lx + ua / 2, face + out - 0.6, lz + H], b: [lx + ua / 2, face + out - 0.6, sheetZ], dashed: true, alpha: 0.45 },
-    { kind: "plane", pts: quad(lx - 0.1, face + out - 1.4, sheetZ, ua + 0.2, 1.3), v: 0.2, handles: true },
-    ...[1.2, 0.8, 1.05].map((len, i): Part => ({ kind: "line", a: [lx + 0.1, face + out - 1.1 + i * 0.35, sheetZ], b: [lx + 0.1 + len, face + out - 1.1 + i * 0.35, sheetZ], alpha: i === 0 ? 1 : 0.55, accent: i === 0 })),
-  );
-  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, roof + 1.6], [x0 + n * ua, y0 + out, sheetZ + 0.4]], axes: ground(10) };
+  // the rent roll: one row per unit on the visible floor
+  parts.push({
+    kind: "plane",
+    pts: quad(6.6, 0.8, sheetZ, 3.4, 3.4),
+    v: 0.2,
+    handles: true,
+    drops: { at: [[6.6, 4.2], [10, 4.2], [10, 0.8]], from: 0 },
+    rows: { lengths: [2.8, 1.9, 2.4], accentRow: litU },
+  });
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, roof + 0.4], [10, 0.8, sheetZ + 0.4]], axes: ground(10) };
 };
 
 /**
