@@ -1,136 +1,147 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 724">
-  <defs>
-    <marker id="gm-lb-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-lb-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-LBX-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">drop table and odds sheet</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: the whole table -->
-  <text class="vt" x="40" y="64">Plan view: one drop table</text>
-  <text class="vs" x="40" y="80">Scale 1% = 5.4 px · illustrative [1] · values in %</text>
-
-  <!-- P0: the whole table -->
-  <path class="ext" d="M120,125V95M660,125V95"/>
-  <path class="dim hl" d="M120,100H660" marker-start="url(#gm-lb-ah-hl)" marker-end="url(#gm-lb-ah-hl)"/>
-  <text class="dt hl" x="390" y="96" text-anchor="middle">P0 = P1 + P2 + P3 + P4 = 100.00</text>
-
-  <!-- The table, by rarity -->
-  <rect class="obj fill-1" x="120" y="128" width="5.4" height="40"/>
-  <rect class="obj fill-2" x="125.4" y="128" width="48.6" height="40"/>
-  <rect class="obj fill-2" x="174" y="128" width="162" height="40"/>
-  <rect class="obj fill-2" x="336" y="128" width="324" height="40"/>
-  <text class="t" x="157" y="148" text-anchor="middle" dominant-baseline="central">epic</text>
-  <text class="sl ink" x="255" y="148" text-anchor="middle" dominant-baseline="central">rare</text>
-  <text class="sl ink" x="498" y="148" text-anchor="middle" dominant-baseline="central">common</text>
-
-  <!-- Detail circle on P1 -->
-  <circle class="detail" cx="122.7" cy="148" r="18"/>
-  <text class="sl ink" x="102" y="120" text-anchor="end" dominant-baseline="central">detail A</text>
-
-  <!-- Chain, tier 1: P3, P4 -->
-  <path class="ext" d="M336,171V197M660,171V197"/>
-  <path class="ext" d="M120,171V219M125.4,171V219M174,171V219"/>
-  <path class="dim" d="M174,192H336" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="255" y="188" text-anchor="middle">P3 = 30.00</text>
-  <path class="dim" d="M336,192H660" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="498" y="188" text-anchor="middle">P4 = 60.00</text>
-
-  <!-- Chain, tier 2: P1 outside left, P2 with text outside right -->
-  <path class="dim" d="M100,214H120" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="96" y="214" text-anchor="end" dominant-baseline="central">P1 = 1.00</text>
-  <path class="dim" d="M120,214H125.4"/>
-  <path class="dim" d="M125.4,214H174" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="180" y="214" dominant-baseline="central">P2 = 9.00</text>
-  <text class="t" x="390" y="246" text-anchor="middle">P0 = 1.00 + 9.00 + 30.00 + 60.00 = 100.00</text>
-
-  <!-- Detail A: the legendary band -->
-  <text class="vt" x="40" y="290">Detail A: legendary, P1</text>
-  <text class="vs" x="40" y="306">Scale 74:1 · 1% = 400 px</text>
-  <rect class="obj fill-1" x="60" y="320" width="100" height="40"/>
-  <rect class="obj fill-1" x="160" y="320" width="100" height="40"/>
-  <rect class="obj fill-1" x="260" y="320" width="100" height="40"/>
-  <rect class="obj fill-1" x="360" y="320" width="100" height="40"/>
-  <text class="sl ink" x="110" y="340" text-anchor="middle" dominant-baseline="central">item a</text>
-  <text class="sl ink" x="210" y="340" text-anchor="middle" dominant-baseline="central">item b</text>
-  <text class="sl ink" x="310" y="340" text-anchor="middle" dominant-baseline="central">item c</text>
-  <text class="sl ink" x="410" y="340" text-anchor="middle" dominant-baseline="central">item d</text>
-  <path class="ext" d="M60,363V393M160,363V393M260,363V393M360,363V393M460,363V393"/>
-  <path class="dim" d="M60,388H160" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="110" y="384" text-anchor="middle">L1 = 0.25</text>
-  <path class="dim" d="M160,388H260" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="210" y="384" text-anchor="middle">L2 = 0.25</text>
-  <path class="dim" d="M260,388H360" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="310" y="384" text-anchor="middle">L3 = 0.25</text>
-  <path class="dim" d="M360,388H460" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="410" y="384" text-anchor="middle">L4 = 0.25</text>
-  <text class="t" x="260" y="418" text-anchor="middle">P1 = L1 + L2 + L3 + L4 = 4 x 0.25 = 1.00</text>
-
-  <!-- Detail B: pity -->
-  <text class="vt" x="40" y="456">Detail B: hard pity</text>
-  <text class="vs" x="40" y="472">Scale 1 pull = 8 px · illustrative [2]</text>
-  <rect class="obj fill-2" x="60" y="486" width="400" height="20"/>
-  <path class="ctr" d="M376,480V512"/>
-  <rect class="obj fill-1" x="452" y="486" width="8" height="20"/>
-  <path class="ext" d="M60,509V561M376,515V535M460,509V561"/>
-  <path class="dim" d="M60,530H376" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="218" y="526" text-anchor="middle">E1 = 39.50</text>
-  <path class="dim" d="M60,556H460" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
-  <text class="dt" x="260" y="552" text-anchor="middle">N1 = 50</text>
-  <text class="t" x="60" y="584">E1 = (1 - (1 - B1)^N1) / B1 = (1 - 0.99^50) / 0.01 = 39.50</text>
-  <text class="t" x="60" y="602">R1 = 1 / E1 = 1 / 39.50 = 2.53%</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="490" y="290">Variables</text>
-  <text class="vs" x="490" y="306">Illustrative [1] · %</text>
-  <rect class="cell band" x="490" y="316" width="46" height="22"/>
-  <rect class="cell band" x="536" y="316" width="124" height="22"/>
-  <rect class="cell band" x="660" y="316" width="60" height="22"/>
-  <text class="cap ink" x="496" y="327" dominant-baseline="central">code</text>
-  <text class="cap ink" x="544" y="327" dominant-baseline="central">item</text>
-  <text class="cap ink" x="714" y="327" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M490,338H720V558H490Z"/>
-  <path class="ln ink" d="M536,338V558M660,338V558"/>
-  <path class="ln" d="M490,360H720M490,382H720M490,404H720M490,426H720M490,448H720M490,470H720M490,492H720M490,514H720M490,536H720"/>
-  <text class="t b" x="498" y="349" dominant-baseline="central">P0</text>
-  <text class="t" x="544" y="349" dominant-baseline="central">whole table</text>
-  <text class="t b" x="714" y="349" text-anchor="end" dominant-baseline="central">100.00</text>
-  <text class="t" x="498" y="371" dominant-baseline="central">P1</text>
-  <text class="t" x="544" y="371" dominant-baseline="central">legendary</text>
-  <text class="t" x="714" y="371" text-anchor="end" dominant-baseline="central">1.00</text>
-  <text class="t" x="498" y="393" dominant-baseline="central">P2</text>
-  <text class="t" x="544" y="393" dominant-baseline="central">epic</text>
-  <text class="t" x="714" y="393" text-anchor="end" dominant-baseline="central">9.00</text>
-  <text class="t" x="498" y="415" dominant-baseline="central">P3</text>
-  <text class="t" x="544" y="415" dominant-baseline="central">rare</text>
-  <text class="t" x="714" y="415" text-anchor="end" dominant-baseline="central">30.00</text>
-  <text class="t" x="498" y="437" dominant-baseline="central">P4</text>
-  <text class="t" x="544" y="437" dominant-baseline="central">common</text>
-  <text class="t" x="714" y="437" text-anchor="end" dominant-baseline="central">60.00</text>
-  <text class="t" x="498" y="459" dominant-baseline="central">L1</text>
-  <text class="t" x="544" y="459" dominant-baseline="central">each legendary</text>
-  <text class="t" x="714" y="459" text-anchor="end" dominant-baseline="central">0.25</text>
-  <text class="t" x="498" y="481" dominant-baseline="central">B1</text>
-  <text class="t" x="544" y="481" dominant-baseline="central">base rate, P1</text>
-  <text class="t" x="714" y="481" text-anchor="end" dominant-baseline="central">1.00</text>
-  <text class="t" x="498" y="503" dominant-baseline="central">N1</text>
-  <text class="t" x="544" y="503" dominant-baseline="central">pity, pulls</text>
-  <text class="t" x="714" y="503" text-anchor="end" dominant-baseline="central">50</text>
-  <text class="t" x="498" y="525" dominant-baseline="central">E1</text>
-  <text class="t" x="544" y="525" dominant-baseline="central">expected pulls</text>
-  <text class="t" x="714" y="525" text-anchor="end" dominant-baseline="central">39.50</text>
-  <text class="t" x="498" y="547" dominant-baseline="central">R1</text>
-  <text class="t" x="544" y="547" dominant-baseline="central">effective rate</text>
-  <text class="t" x="714" y="547" text-anchor="end" dominant-baseline="central">2.53</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 721">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-lb-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-lb-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-lb-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="701" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="626" width="680" height="76"/>
-  <text class="sl ink" x="52" y="644">notes</text>
-  <text class="n" x="52" y="662">[1] Illustrative values, not any real game's. Every level closes: rarities to P0, items to their rarity.</text>
-  <text class="n" x="52" y="678">[2] A legendary is guaranteed on pull N1 if none came sooner. Disclose B1 and N1; R1 is the consolidated rate.</text>
-  <text class="n" x="52" y="694">[3] Odds are stored as integer weights; disclosed percentages come from the same rows the server rolls.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE VALUES, NOT ANY REAL GAME'S. EVERY LEVEL CLOSES: RARITIES TO P0, ITEMS TO THEIR RARITY.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">A LEGENDARY IS GUARANTEED ON PULL N1 IF NONE CAME SOONER. DISCLOSE B1 AND N1; R1 IS THE CONSOLIDATED RATE.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">ODDS ARE STORED AS INTEGER WEIGHTS; DISCLOSED PERCENTAGES COME FROM THE SAME ROWS THE SERVER ROLLS.</text>
+  <text class="nt" x="50" y="113">RATES IN %; IN FORMULAS B1 IS A FRACTION (1% = 0.01). CODES ON THE DRAWING; VALUES AND FORMULAS IN THE TABLE.</text>
+  <!-- Plan view: one drop table -->
+  <rect class="obj fill-1" x="110" y="188" width="5.4" height="30"/>
+  <rect class="obj fill-2" x="115.4" y="188" width="48.6" height="30"/>
+  <rect class="obj fill-2" x="164" y="188" width="162" height="30"/>
+  <rect class="obj fill-2" x="326" y="188" width="324" height="30"/>
+  <text class="sl ink" x="139.7" y="206" text-anchor="middle">EPIC</text>
+  <text class="sl ink" x="245" y="206" text-anchor="middle">RARE</text>
+  <text class="sl ink" x="488" y="206" text-anchor="middle">COMMON</text>
+  <path class="ext" d="M110,185L110,162"/>
+  <path class="ext" d="M650,185L650,162"/>
+  <path class="dim hl" d="M110,166L650,166" marker-start="url(#gm-lb-ah-hl)" marker-end="url(#gm-lb-ah-hl)"/>
+  <text class="dt hl" x="380" y="162" text-anchor="middle">P0</text>
+  <path class="ext" d="M110,221L110,242"/>
+  <path class="ext" d="M115.4,221L115.4,242"/>
+  <path class="dim" d="M110,238L115.4,238"/><path class="dim" d="M100,238L110,238" marker-end="url(#gm-lb-ah)"/><path class="dim" d="M125.4,238L115.4,238" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="96.7" y="250" text-anchor="middle">P1</text>
+  <path class="ext" d="M164,221L164,242"/>
+  <path class="dim" d="M115.4,238L164,238" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="139.7" y="250" text-anchor="middle">P2</text>
+  <path class="ext" d="M326,221L326,242"/>
+  <path class="dim" d="M164,238L326,238" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="245" y="250" text-anchor="middle">P3</text>
+  <path class="ext" d="M650,221L650,242"/>
+  <path class="dim" d="M326,238L650,238" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="488" y="250" text-anchor="middle">P4</text>
+  <circle class="detail" cx="112.7" cy="203" r="10"/>
+  <path class="leader" d="M104.23,197.69L76,180"/>
+  <text class="sl ink" x="72" y="183" text-anchor="end">DETAIL A</text>
+  <text class="vt" x="380" y="282" text-anchor="middle">PLAN VIEW · ONE DROP TABLE</text>
+  <text class="vs" x="380" y="295" text-anchor="middle">SCALE 1% = 5.4 PX · BY RARITY</text>
+  <rect class="nb" x="488.73" y="272.5" width="11" height="11"/>
+  <text class="nbt" x="494.23" y="280.7" text-anchor="middle">1</text>
+  <!-- Detail A: legendary band -->
+  <rect class="obj fill-1" x="50" y="369" width="75" height="30"/>
+  <text class="sl ink" x="87.5" y="387" text-anchor="middle">ITEM A</text>
+  <rect class="obj fill-1" x="125" y="369" width="75" height="30"/>
+  <text class="sl ink" x="162.5" y="387" text-anchor="middle">ITEM B</text>
+  <rect class="obj fill-1" x="200" y="369" width="75" height="30"/>
+  <text class="sl ink" x="237.5" y="387" text-anchor="middle">ITEM C</text>
+  <rect class="obj fill-1" x="275" y="369" width="75" height="30"/>
+  <text class="sl ink" x="312.5" y="387" text-anchor="middle">ITEM D</text>
+  <path class="ext" d="M50,366L50,343"/>
+  <path class="ext" d="M350,366L350,343"/>
+  <path class="dim" d="M50,347L350,347" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="200" y="343" text-anchor="middle">P1</text>
+  <path class="ext" d="M50,402L50,423"/>
+  <path class="ext" d="M125,402L125,423"/>
+  <path class="dim" d="M50,419L125,419" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="87.5" y="431" text-anchor="middle">L1</text>
+  <path class="ext" d="M200,402L200,423"/>
+  <path class="dim" d="M125,419L200,419" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="162.5" y="431" text-anchor="middle">L2</text>
+  <path class="ext" d="M275,402L275,423"/>
+  <path class="dim" d="M200,419L275,419" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="237.5" y="431" text-anchor="middle">L3</text>
+  <path class="ext" d="M350,402L350,423"/>
+  <path class="dim" d="M275,419L350,419" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="312.5" y="431" text-anchor="middle">L4</text>
+  <text class="vt" x="200" y="463" text-anchor="middle">DETAIL A · LEGENDARY, P1</text>
+  <text class="vs" x="200" y="476" text-anchor="middle">SCALE 1% = 300 PX · 55.6:1</text>
+  <!-- Detail B: hard pity -->
+  <rect class="obj fill-2" x="410" y="369" width="294" height="30"/>
+  <rect class="obj fill-1" x="704" y="369" width="6" height="30"/>
+  <path class="ctr" d="M647,361L647,403"/>
+  <circle class="dot" cx="707" cy="384" r="1.6"/>
+  <path class="leader" d="M707,384L670,355H660"/>
+  <text class="sl ink" x="656" y="358" text-anchor="end">GUARANTEED</text>
+  <path class="ext" d="M410,402L410,423"/>
+  <path class="ext" d="M647,406L647,423"/>
+  <path class="dim" d="M410,419L647,419" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="528.5" y="415" text-anchor="middle">E1</text>
+  <path class="ext" d="M710,402L710,445"/>
+  <path class="dim" d="M410,441L710,441" marker-start="url(#gm-lb-ah)" marker-end="url(#gm-lb-ah)"/>
+  <text class="dt" x="560" y="437" text-anchor="middle">N1</text>
+  <path class="ext" d="M410,423L410,445"/>
+  <text class="vt" x="560" y="463" text-anchor="middle">DETAIL B · HARD PITY</text>
+  <text class="vs" x="560" y="476" text-anchor="middle">SCALE 1 PULL = 6 PX · PULL AXIS</text>
+  <rect class="nb" x="644.86" y="453.5" width="11" height="11"/>
+  <text class="nbt" x="650.36" y="461.7" text-anchor="middle">2</text>
+  <!-- Variable table -->
+  <text class="vt" x="206" y="519">VARIABLES · %</text>
+  <rect class="tbl" x="206" y="526" width="348" height="165"/>
+  <path class="tbl" d="M206,541L554,541"/>
+  <path class="tbl" d="M206,556L554,556"/>
+  <path class="tbl" d="M206,571L554,571"/>
+  <path class="tbl" d="M206,586L554,586"/>
+  <path class="tbl" d="M206,601L554,601"/>
+  <path class="tbl" d="M206,616L554,616"/>
+  <path class="tbl" d="M206,631L554,631"/>
+  <path class="tbl" d="M206,646L554,646"/>
+  <path class="tbl" d="M206,661L554,661"/>
+  <path class="tbl" d="M206,676L554,676"/>
+  <path class="tbl" d="M259,526L259,691"/>
+  <path class="tbl" d="M408,526L408,691"/>
+  <text class="th" x="212" y="536.2">CODE</text>
+  <text class="th" x="333.5" y="536.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="481" y="536.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="212" y="551.7">P0</text>
+  <text class="tc" x="333.5" y="551.7" text-anchor="middle">whole table</text>
+  <text class="tc" x="481" y="551.7" text-anchor="middle">P1 + P2 + P3 + P4 = 100.00</text>
+  <text class="tc" x="212" y="566.7">P1</text>
+  <text class="tc" x="333.5" y="566.7" text-anchor="middle">legendary</text>
+  <text class="tc" x="481" y="566.7" text-anchor="middle">L1 + L2 + L3 + L4 = 1.00</text>
+  <text class="tc" x="212" y="581.7">P2</text>
+  <text class="tc" x="333.5" y="581.7" text-anchor="middle">epic</text>
+  <text class="tc" x="481" y="581.7" text-anchor="middle">9.00</text>
+  <text class="tc" x="212" y="596.7">P3</text>
+  <text class="tc" x="333.5" y="596.7" text-anchor="middle">rare</text>
+  <text class="tc" x="481" y="596.7" text-anchor="middle">30.00</text>
+  <text class="tc" x="212" y="611.7">P4</text>
+  <text class="tc" x="333.5" y="611.7" text-anchor="middle">common</text>
+  <text class="tc" x="481" y="611.7" text-anchor="middle">60.00</text>
+  <text class="tc" x="212" y="626.7">L1 to L4</text>
+  <text class="tc" x="333.5" y="626.7" text-anchor="middle">each legendary item</text>
+  <text class="tc" x="481" y="626.7" text-anchor="middle">0.25</text>
+  <text class="tc" x="212" y="641.7">B1</text>
+  <text class="tc" x="333.5" y="641.7" text-anchor="middle">base rate of a legendary</text>
+  <text class="tc" x="481" y="641.7" text-anchor="middle">P1 = 1.00</text>
+  <text class="tc" x="212" y="656.7">N1</text>
+  <text class="tc" x="333.5" y="656.7" text-anchor="middle">pity, pulls</text>
+  <text class="tc" x="481" y="656.7" text-anchor="middle">50</text>
+  <text class="tc" x="212" y="671.7">E1</text>
+  <text class="tc" x="333.5" y="671.7" text-anchor="middle">expected pulls to a legendary</text>
+  <text class="tc" x="481" y="671.7" text-anchor="middle">(1 − (1 − B1)^N1) ÷ B1 = 39.50</text>
+  <text class="tc" x="212" y="686.7">R1</text>
+  <text class="tc" x="333.5" y="686.7" text-anchor="middle">effective rate</text>
+  <text class="tc" x="481" y="686.7" text-anchor="middle">1 ÷ E1 = 2.53</text>
+  <rect class="nb" x="312.62" y="509.5" width="11" height="11"/>
+  <text class="nbt" x="318.12" y="517.7" text-anchor="middle">3</text>
 </svg>

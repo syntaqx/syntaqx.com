@@ -1,111 +1,139 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 702">
-  <defs>
-    <marker id="gm-rt-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-rt-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-MET-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">cohort retention, one install day</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view -->
-  <text class="vt" x="40" y="64">Plan view: install cohort C0, 30 days</text>
-  <text class="vs" x="40" y="80">Scale 1 day = 18.67 px · 1,000 players = 12 px · illustrative [1]</text>
-
-  <!-- Axis and day ticks -->
-  <path class="ln ink" d="M140,250H700"/>
-  <path class="ext" d="M158.67,250V254M177.33,250V254M196,250V254M214.67,250V254M233.33,250V254M252,250V254M289.33,250V254M308,250V254M326.67,250V254M345.33,250V254M364,250V254M382.67,250V254M401.33,250V254M420,250V254M438.67,250V254M457.33,250V254M476,250V254M494.67,250V254M513.33,250V254M532,250V254M550.67,250V254M569.33,250V254M588,250V254M606.67,250V254M625.33,250V254M644,250V254M662.67,250V254M681.33,250V254"/>
-
-  <!-- Bars: players active on day 0, 1, 7, 30 -->
-  <rect class="obj fill-1" x="134" y="130" width="12" height="120"/>
-  <rect class="obj fill-2" x="152.67" y="202" width="12" height="48"/>
-  <rect class="obj hl" x="264.67" y="232" width="12" height="18"/>
-  <rect class="obj fill-2" x="694" y="244" width="12" height="6"/>
-  <text class="sl ink" x="140" y="120" text-anchor="middle">C0</text>
-  <text class="sl ink" x="158.67" y="192" text-anchor="middle">A1</text>
-  <text class="sl ink" x="270.67" y="222" text-anchor="middle">A7</text>
-  <text class="sl ink" x="700" y="234" text-anchor="middle">A30</text>
-
-  <!-- C0 height -->
-  <path class="ext" d="M131,130H113M131,250H113"/>
-  <path class="dim" d="M118,130V250" marker-start="url(#gm-rt-ah)" marker-end="url(#gm-rt-ah)"/>
-  <text class="dt" x="112" y="190" text-anchor="end" dominant-baseline="central">C0</text>
-
-  <!-- Detail circle -->
-  <circle class="detail" cx="270.67" cy="244" r="20"/>
-  <text class="sl ink" x="298" y="212" dominant-baseline="central">detail A</text>
-
-  <!-- Day dimensions -->
-  <path class="ext" d="M140,253V329M158.67,253V285M270.67,253V307M700,253V329"/>
-  <path class="dim" d="M120,280H140" marker-end="url(#gm-rt-ah)"/>
-  <path class="dim" d="M140,280H158.67"/>
-  <path class="dim" d="M178.67,280H158.67" marker-end="url(#gm-rt-ah)"/>
-  <text class="dt" x="183" y="280" dominant-baseline="central">N1 = 1 day</text>
-  <path class="dim hl" d="M140,302H270.67" marker-start="url(#gm-rt-ah-hl)" marker-end="url(#gm-rt-ah-hl)"/>
-  <text class="dt hl" x="205.33" y="298" text-anchor="middle">N7 = 7 days</text>
-  <path class="dim" d="M140,324H700" marker-start="url(#gm-rt-ah)" marker-end="url(#gm-rt-ah)"/>
-  <text class="dt" x="420" y="320" text-anchor="middle">N30 = 30 days</text>
-
-  <!-- Detail A: one player around day 7 -->
-  <text class="vt" x="40" y="372">Detail A: near day 7</text>
-  <text class="vs" x="40" y="388">Scale 1 day = 56 px</text>
-  <text class="n" x="60" y="404">Dots mark the days this player was active.</text>
-  <rect class="obj fill-2" x="60" y="412" width="56" height="30"/>
-  <rect class="obj fill-2" x="116" y="412" width="56" height="30"/>
-  <rect class="obj fill-1" x="172" y="412" width="56" height="30"/>
-  <rect class="obj fill-2" x="228" y="412" width="56" height="30"/>
-  <rect class="obj fill-2" x="284" y="412" width="56" height="30"/>
-  <circle class="dot" cx="144" cy="427" r="3"/>
-  <circle class="dot" cx="256" cy="427" r="3"/>
-  <text class="sl" x="88" y="456" text-anchor="middle" dominant-baseline="central">d5</text>
-  <text class="sl" x="144" y="456" text-anchor="middle" dominant-baseline="central">d6</text>
-  <text class="sl ink" x="200" y="456" text-anchor="middle" dominant-baseline="central">d7</text>
-  <text class="sl" x="256" y="456" text-anchor="middle" dominant-baseline="central">d8</text>
-  <text class="sl" x="312" y="456" text-anchor="middle" dominant-baseline="central">d9</text>
-  <text class="sl ink" x="60" y="482" dominant-baseline="central">exact d7: not retained [2]</text>
-  <text class="sl ink" x="60" y="500" dominant-baseline="central">unbounded d7: retained [3]</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="420" y="372">Variables</text>
-  <text class="vs" x="420" y="388">Illustrative [1] · players, %</text>
-  <rect class="cell band" x="420" y="398" width="50" height="22"/>
-  <rect class="cell band" x="470" y="398" width="180" height="22"/>
-  <rect class="cell band" x="650" y="398" width="70" height="22"/>
-  <text class="cap ink" x="430" y="409" dominant-baseline="central">code</text>
-  <text class="cap ink" x="480" y="409" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="409" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M420,420H720V574H420Z"/>
-  <path class="ln ink" d="M470,420V574M650,420V574"/>
-  <path class="ln" d="M420,442H720M420,464H720M420,486H720M420,508H720M420,530H720M420,552H720"/>
-  <text class="t b" x="430" y="431" dominant-baseline="central">C0</text>
-  <text class="t" x="480" y="431" dominant-baseline="central">installs on day 0</text>
-  <text class="t b" x="710" y="431" text-anchor="end" dominant-baseline="central">10,000</text>
-  <text class="t" x="430" y="453" dominant-baseline="central">A1</text>
-  <text class="t" x="480" y="453" dominant-baseline="central">active on day 1</text>
-  <text class="t" x="710" y="453" text-anchor="end" dominant-baseline="central">4,000</text>
-  <text class="t" x="430" y="475" dominant-baseline="central">A7</text>
-  <text class="t" x="480" y="475" dominant-baseline="central">active on day 7</text>
-  <text class="t" x="710" y="475" text-anchor="end" dominant-baseline="central">1,500</text>
-  <text class="t" x="430" y="497" dominant-baseline="central">A30</text>
-  <text class="t" x="480" y="497" dominant-baseline="central">active on day 30</text>
-  <text class="t" x="710" y="497" text-anchor="end" dominant-baseline="central">500</text>
-  <text class="t" x="430" y="519" dominant-baseline="central">R1</text>
-  <text class="t" x="480" y="519" dominant-baseline="central">A1 / C0</text>
-  <text class="t" x="710" y="519" text-anchor="end" dominant-baseline="central">40.0%</text>
-  <text class="t b" x="430" y="541" dominant-baseline="central">R7</text>
-  <text class="t" x="480" y="541" dominant-baseline="central">A7 / C0</text>
-  <text class="t b" x="710" y="541" text-anchor="end" dominant-baseline="central">15.0%</text>
-  <text class="t" x="430" y="563" dominant-baseline="central">R30</text>
-  <text class="t" x="480" y="563" dominant-baseline="central">A30 / C0</text>
-  <text class="t" x="710" y="563" text-anchor="end" dominant-baseline="central">5.0%</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 675">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-rt-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-rt-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-rt-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="655" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="592" width="680" height="92"/>
-  <text class="sl ink" x="52" y="610">notes</text>
-  <text class="n" x="52" y="628">[1] Illustrative counts for one install day, not data from any game.</text>
-  <text class="n" x="52" y="644">[2] Exact-day retention (GameAnalytics, Unity): retained only if active on day N itself.</text>
-  <text class="n" x="52" y="660">[3] Unbounded retention (this book's alternative): retained if active on day N or any later day.</text>
-  <text class="n" x="52" y="676">[4] Both vendors count days in UTC; whichever boundary you choose, name it in the definition.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE COUNTS FOR ONE INSTALL DAY, NOT DATA FROM ANY GAME.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">EXACT-DAY RETENTION (GAMEANALYTICS, UNITY): RETAINED ONLY IF ACTIVE ON DAY N ITSELF.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">UNBOUNDED RETENTION (THIS BOOK'S ALTERNATIVE): RETAINED IF ACTIVE ON DAY N OR ANY LATER DAY.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">BOTH VENDORS COUNT DAYS IN UTC; WHICHEVER BOUNDARY YOU CHOOSE, NAME IT IN THE DEFINITION.</text>
+  <text class="nt" x="50" y="130">COUNTS IN PLAYERS. THE DRAWING CARRIES CODES; VALUES AND RATIOS ARE IN THE TABLE.</text>
+  <!-- Plan view: install cohort C0, 30 days -->
+  <path class="obj" d="M140,307L700,307"/>
+  <path class="ext" d="M186,307L186,311"/>
+  <path class="ext" d="M204,307L204,311"/>
+  <path class="ext" d="M222,307L222,311"/>
+  <path class="ext" d="M240,307L240,311"/>
+  <path class="ext" d="M258,307L258,311"/>
+  <path class="ext" d="M294,307L294,311"/>
+  <path class="ext" d="M312,307L312,311"/>
+  <path class="ext" d="M330,307L330,311"/>
+  <path class="ext" d="M348,307L348,311"/>
+  <path class="ext" d="M366,307L366,311"/>
+  <path class="ext" d="M384,307L384,311"/>
+  <path class="ext" d="M402,307L402,311"/>
+  <path class="ext" d="M420,307L420,311"/>
+  <path class="ext" d="M438,307L438,311"/>
+  <path class="ext" d="M456,307L456,311"/>
+  <path class="ext" d="M474,307L474,311"/>
+  <path class="ext" d="M492,307L492,311"/>
+  <path class="ext" d="M510,307L510,311"/>
+  <path class="ext" d="M528,307L528,311"/>
+  <path class="ext" d="M546,307L546,311"/>
+  <path class="ext" d="M564,307L564,311"/>
+  <path class="ext" d="M582,307L582,311"/>
+  <path class="ext" d="M600,307L600,311"/>
+  <path class="ext" d="M618,307L618,311"/>
+  <path class="ext" d="M636,307L636,311"/>
+  <path class="ext" d="M654,307L654,311"/>
+  <path class="ext" d="M672,307L672,311"/>
+  <rect class="obj fill-1" x="144" y="187" width="12" height="120"/>
+  <rect class="obj fill-2" x="162" y="259" width="12" height="48"/>
+  <text class="dt" x="168" y="251" text-anchor="middle">A1</text>
+  <rect class="obj hl" x="270" y="289" width="12" height="18"/>
+  <text class="dt" x="276" y="267" text-anchor="middle">A7</text>
+  <rect class="obj fill-2" x="684" y="301" width="12" height="6"/>
+  <text class="dt" x="690" y="293" text-anchor="middle">A30</text>
+  <path class="ext" d="M141,187L120,187"/>
+  <path class="ext" d="M141,307L120,307"/>
+  <path class="dim" d="M124,187L124,307" marker-start="url(#gm-rt-ah)" marker-end="url(#gm-rt-ah)"/>
+  <text class="dt" x="118" y="250.5" text-anchor="end">C0</text>
+  <circle class="detail" cx="276" cy="298" r="16"/>
+  <path class="leader" d="M287.75,287.14L316,261"/>
+  <text class="sl ink" x="320" y="264">DETAIL A</text>
+  <path class="ext" d="M150,310L150,333"/>
+  <path class="ext" d="M168,310L168,333"/>
+  <path class="dim" d="M150,329L168,329"/><path class="dim" d="M140,329L150,329" marker-end="url(#gm-rt-ah)"/><path class="dim" d="M178,329L168,329" marker-end="url(#gm-rt-ah)"/>
+  <text class="dt" x="184" y="332.5">N1</text>
+  <path class="ext" d="M276,310L276,357"/>
+  <path class="dim hl" d="M150,353L276,353" marker-start="url(#gm-rt-ah-hl)" marker-end="url(#gm-rt-ah-hl)"/>
+  <text class="dt hl" x="213" y="365" text-anchor="middle">N7</text>
+  <path class="ext" d="M150,336L150,387"/>
+  <path class="ext" d="M690,310L690,387"/>
+  <path class="dim" d="M150,383L690,383" marker-start="url(#gm-rt-ah)" marker-end="url(#gm-rt-ah)"/>
+  <text class="dt" x="420" y="395" text-anchor="middle">N30</text>
+  <text class="vt" x="420" y="429" text-anchor="middle">PLAN VIEW · INSTALL COHORT C0, 30 DAYS</text>
+  <text class="vs" x="420" y="442" text-anchor="middle">SCALE 1 DAY = 18 PX · 1,000 PLAYERS = 12 PX</text>
+  <!-- Detail A: one player near day 7 -->
+  <rect class="obj fill-2" x="52" y="504" width="56" height="30"/>
+  <text class="sl" x="80" y="548" text-anchor="middle">D5</text>
+  <rect class="obj fill-2" x="108" y="504" width="56" height="30"/>
+  <text class="sl" x="136" y="548" text-anchor="middle">D6</text>
+  <circle class="dot" cx="136" cy="519" r="3"/>
+  <rect class="obj fill-1" x="164" y="504" width="56" height="30"/>
+  <text class="sl ink" x="192" y="548" text-anchor="middle">D7</text>
+  <rect class="obj fill-2" x="220" y="504" width="56" height="30"/>
+  <text class="sl" x="248" y="548" text-anchor="middle">D8</text>
+  <circle class="dot" cx="248" cy="519" r="3"/>
+  <rect class="obj fill-2" x="276" y="504" width="56" height="30"/>
+  <text class="sl" x="304" y="548" text-anchor="middle">D9</text>
+  <text class="sl" x="52" y="494">DOTS: DAYS THIS PLAYER WAS ACTIVE</text>
+  <text class="sl ink" x="52" y="574">EXACT D7: NOT RETAINED</text>
+  <rect class="nb" x="182.6" y="565.3" width="11" height="11"/>
+  <text class="nbt" x="188.1" y="573.5" text-anchor="middle">2</text>
+  <text class="sl ink" x="52" y="592">UNBOUNDED D7: RETAINED</text>
+  <rect class="nb" x="186" y="583.3" width="11" height="11"/>
+  <text class="nbt" x="191.5" y="591.5" text-anchor="middle">3</text>
+  <text class="vt" x="192" y="632" text-anchor="middle">DETAIL A · NEAR DAY 7</text>
+  <text class="vs" x="192" y="645" text-anchor="middle">SCALE 1 DAY = 56 PX · ONE PLAYER</text>
+  <!-- Variable table -->
+  <text class="vt" x="420" y="493">VARIABLES · PLAYERS</text>
+  <rect class="tbl" x="420" y="500" width="250" height="135"/>
+  <path class="tbl" d="M420,515L670,515"/>
+  <path class="tbl" d="M420,530L670,530"/>
+  <path class="tbl" d="M420,545L670,545"/>
+  <path class="tbl" d="M420,560L670,560"/>
+  <path class="tbl" d="M420,575L670,575"/>
+  <path class="tbl" d="M420,590L670,590"/>
+  <path class="tbl" d="M420,605L670,605"/>
+  <path class="tbl" d="M420,620L670,620"/>
+  <path class="tbl" d="M486,500L486,635"/>
+  <path class="tbl" d="M585,500L585,635"/>
+  <text class="th" x="426" y="510.2">CODE</text>
+  <text class="th" x="535.5" y="510.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="627.5" y="510.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="426" y="525.7">C0</text>
+  <text class="tc" x="535.5" y="525.7" text-anchor="middle">installs on day 0</text>
+  <text class="tc" x="627.5" y="525.7" text-anchor="middle">10,000</text>
+  <text class="tc" x="426" y="540.7">A1</text>
+  <text class="tc" x="535.5" y="540.7" text-anchor="middle">active on day 1</text>
+  <text class="tc" x="627.5" y="540.7" text-anchor="middle">4,000</text>
+  <text class="tc" x="426" y="555.7">A7</text>
+  <text class="tc" x="535.5" y="555.7" text-anchor="middle">active on day 7</text>
+  <text class="tc" x="627.5" y="555.7" text-anchor="middle">1,500</text>
+  <text class="tc" x="426" y="570.7">A30</text>
+  <text class="tc" x="535.5" y="570.7" text-anchor="middle">active on day 30</text>
+  <text class="tc" x="627.5" y="570.7" text-anchor="middle">500</text>
+  <text class="tc" x="426" y="585.7">N1, N7, N30</text>
+  <text class="tc" x="535.5" y="585.7" text-anchor="middle">days after install</text>
+  <text class="tc" x="627.5" y="585.7" text-anchor="middle">1, 7, 30</text>
+  <text class="tc" x="426" y="600.7">R1</text>
+  <text class="tc" x="535.5" y="600.7" text-anchor="middle">day-1 retention</text>
+  <text class="tc" x="627.5" y="600.7" text-anchor="middle">A1 ÷ C0 = 40.0%</text>
+  <text class="tc" x="426" y="615.7">R7</text>
+  <text class="tc" x="535.5" y="615.7" text-anchor="middle">day-7 retention</text>
+  <text class="tc" x="627.5" y="615.7" text-anchor="middle">A7 ÷ C0 = 15.0%</text>
+  <text class="tc" x="426" y="630.7">R30</text>
+  <text class="tc" x="535.5" y="630.7" text-anchor="middle">day-30 retention</text>
+  <text class="tc" x="627.5" y="630.7" text-anchor="middle">A30 ÷ C0 = 5.0%</text>
 </svg>

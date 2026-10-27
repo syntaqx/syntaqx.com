@@ -1,96 +1,73 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 671">
-  <defs>
-    <marker id="gm-bks-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-BKD-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">game backend layer stack</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <text class="vt" x="40" y="64">Exploded axonometric: game backend</text>
-  <text class="vs" x="40" y="80">Not to scale · layers separated along the stack axis</text>
-
-  <!-- Assembly lines through the stack's outer corners, behind the plates -->
-  <path class="phantom" d="M262,268V484M612,225V441"/>
-
-  <!-- 01 data -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 390)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
-  </g>
-  <circle class="dot" cx="276.5" cy="478.65" r="2"/>
-  <path class="leader" d="M276.5,478.65L264.5,466.65H237"/>
-  <text class="sl ink" x="231" y="466.65" text-anchor="end" dominant-baseline="central">01 data</text>
-  <text class="n" x="231" y="482.65" text-anchor="end">databases, caches, stream, warehouse</text>
-
-  <!-- 02 game services: the results module is the subject -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 318)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="37" height="60"/>
-    <rect class="cell band" x="64.6" y="100" width="37" height="60"/>
-    <rect class="cell band" x="109.2" y="100" width="37" height="60"/>
-    <rect class="obj hl" x="153.8" y="100" width="37" height="60"/>
-    <rect class="cell band" x="198.4" y="100" width="37" height="60"/>
-    <rect class="cell band" x="243" y="100" width="37" height="60"/>
-  </g>
-  <circle class="dot" cx="276.5" cy="406.65" r="2"/>
-  <path class="leader" d="M276.5,406.65L264.5,394.65H237"/>
-  <text class="sl ink" x="231" y="394.65" text-anchor="end" dominant-baseline="central">02 game services</text>
-  <text class="n" x="231" y="410.65" text-anchor="end">parties, queues, servers, results</text>
-
-  <!-- 03 platform services -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 246)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="46" height="60"/>
-    <rect class="cell band" x="73.5" y="100" width="46" height="60"/>
-    <rect class="cell band" x="127" y="100" width="46" height="60"/>
-    <rect class="cell band" x="180.5" y="100" width="46" height="60"/>
-    <rect class="cell band" x="234" y="100" width="46" height="60"/>
-  </g>
-  <circle class="dot" cx="276.5" cy="334.65" r="2"/>
-  <path class="leader" d="M276.5,334.65L264.5,322.65H237"/>
-  <text class="sl ink" x="231" y="322.65" text-anchor="end" dominant-baseline="central">03 platform services</text>
-  <text class="n" x="231" y="338.65" text-anchor="end">accounts, entitlements, chat, config</text>
-
-  <!-- 04 edge -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 174)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="276.5" cy="262.65" r="2"/>
-  <path class="leader" d="M276.5,262.65L264.5,250.65H237"/>
-  <text class="sl ink" x="231" y="250.65" text-anchor="end" dominant-baseline="central">04 edge</text>
-  <text class="n" x="231" y="266.65" text-anchor="end">CDN, DDoS, load balancing, gateway</text>
-
-  <!-- Request direction -->
-  <text class="sl ink" x="692" y="124" text-anchor="middle">requests</text>
-  <text class="sl ink" x="692" y="137" text-anchor="middle">enter [4]</text>
-  <path class="ln ink" d="M692,148V330" marker-end="url(#gm-bks-ah)"/>
-
-  <!-- Game server fleet, beside the stack -->
-  <text class="sl ink" x="690" y="352" text-anchor="middle">game</text>
-  <text class="sl ink" x="690" y="365" text-anchor="middle">servers</text>
-  <rect class="obj fill-1" x="645" y="380" width="90" height="24"/>
-  <rect class="obj fill-1" x="645" y="408" width="90" height="24"/>
-  <rect class="obj fill-1" x="645" y="436" width="90" height="24"/>
-  <text class="t" x="690" y="472" text-anchor="middle" dominant-baseline="central">[1]</text>
-  <path class="ln ink" d="M580.9,412H643" marker-end="url(#gm-bks-ah)"/>
-  <path class="ln ink" d="M643,430H567.9" marker-end="url(#gm-bks-ah)"/>
-  <text class="t" x="622" y="404" dominant-baseline="central">[2]</text>
-  <text class="t" x="622" y="440" dominant-baseline="central">[3]</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 575">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-bks-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-bks-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-bks-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="555" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="555" width="680" height="96"/>
-  <text class="sl ink" x="52" y="573">notes</text>
-  <text class="n" x="52" y="591">[1] Game servers run beside the stack, not in it: they meet it only at match start and at the result.</text>
-  <text class="n" x="52" y="607">[2] Match start: provisioning hands the assigned server a signed roster, map, mode and loadouts.</text>
-  <text class="n" x="52" y="623">[3] Result: the assigned server reports once per match; the highlighted results service accepts it once.</text>
-  <text class="n" x="52" y="639">[4] Riot, Dec 2020: VALORANT requests pass Cloudflare, then nginx; 30+ platform services sit below.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">GAME SERVERS RUN BESIDE THE STACK, NOT IN IT: THEY MEET IT ONLY AT MATCH START AND AT THE RESULT.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">MATCH START: PROVISIONING HANDS THE ASSIGNED SERVER A SIGNED ROSTER, MAP, MODE AND LOADOUTS.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">RESULT: THE ASSIGNED SERVER REPORTS ONCE PER MATCH; THE HIGHLIGHTED RESULTS SERVICE ACCEPTS IT ONCE.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">RIOT, DEC 2020: VALORANT REQUESTS PASS CLOUDFLARE, THEN NGINX; 30+ PLATFORM SERVICES SIT BELOW.</text>
+  <text class="nt" x="50" y="130">NOT TO SCALE. LAYERS SEPARATED ALONG THE STACK AXIS; PLATE CONTENTS ARE SCHEMATIC.</text>
+  <!-- Exploded view -->
+  <path class="phantom" d="M340,369L340,183"/>
+  <path class="phantom" d="M593.8,414.9L593.8,228.9"/>
+  <path class="phantom" d="M532.6,499.5L532.6,313.5"/>
+  <path class="phantom" d="M278.8,453.6L278.8,267.6"/>
+  <!-- 01 · data -->
+  <g class="iso" transform="matrix(0.85 0.15 -0.31 0.42 340 369)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="14" y="94" width="62" height="86"/><rect class="obj fill-1" x="24" y="108" width="42" height="16" rx="8"/><rect class="obj fill-1" x="24" y="132" width="42" height="16" rx="8"/><rect class="obj fill-1" x="24" y="156" width="42" height="16" rx="8"/><rect class="obj fill-2" x="86" y="94" width="62" height="86"/><rect class="obj fill-1" x="94" y="102" width="12" height="14"/><rect class="obj fill-1" x="110" y="102" width="12" height="14"/><rect class="obj fill-1" x="126" y="102" width="12" height="14"/><rect class="obj fill-1" x="94" y="120" width="12" height="14"/><rect class="obj fill-1" x="110" y="120" width="12" height="14"/><rect class="obj fill-1" x="126" y="120" width="12" height="14"/><rect class="obj fill-1" x="94" y="138" width="12" height="14"/><rect class="obj fill-1" x="110" y="138" width="12" height="14"/><rect class="obj fill-1" x="126" y="138" width="12" height="14"/><rect class="obj fill-1" x="94" y="156" width="12" height="14"/><rect class="obj fill-1" x="110" y="156" width="12" height="14"/><rect class="obj fill-1" x="126" y="156" width="12" height="14"/><rect class="obj fill-2" x="158" y="94" width="62" height="86"/><path class="ctr" d="M166,137L212,137"/><rect class="obj fill-1" x="166" y="129" width="9" height="16"/><rect class="obj fill-1" x="177" y="129" width="9" height="16"/><rect class="obj fill-1" x="188" y="129" width="9" height="16"/><rect class="obj fill-1" x="199" y="129" width="9" height="16"/><rect class="obj fill-2" x="230" y="94" width="58" height="86"/><rect class="obj fill-1" x="240" y="104" width="10" height="66"/><rect class="obj fill-1" x="254" y="104" width="10" height="66"/><rect class="obj fill-1" x="268" y="104" width="10" height="66"/></g>
+  <circle class="dot" cx="278.8" cy="453.6" r="1.6"/>
+  <path class="leader" d="M278.8,453.6H248"/>
+  <text class="lt" x="240" y="451.6" text-anchor="end">01 · DATA</text>
+  <text class="vs" x="240" y="463.6" text-anchor="end">DATABASES · CACHES · STREAM · WAREHOUSE</text>
+  <!-- 02 · game services -->
+  <g class="iso" transform="matrix(0.85 0.15 -0.31 0.42 340 307)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="12" y="94" width="40" height="86"/><rect class="obj fill-2" x="59.6" y="94" width="40" height="86"/><rect class="obj fill-2" x="107.2" y="94" width="40" height="86"/><rect class="obj hl" x="154.8" y="94" width="40" height="86"/><rect class="obj fill-2" x="202.4" y="94" width="40" height="86"/><rect class="obj fill-2" x="250" y="94" width="40" height="86"/><circle class="obj fill-1" cx="32" cy="112" r="6"/><circle class="obj fill-1" cx="32" cy="132" r="6"/><circle class="obj fill-1" cx="32" cy="152" r="6"/><rect class="obj fill-1" x="67.6" y="104" width="24" height="10"/><rect class="obj fill-1" x="67.6" y="120" width="24" height="10"/><rect class="obj fill-1" x="67.6" y="136" width="24" height="10"/><rect class="obj fill-1" x="67.6" y="152" width="24" height="10"/><rect class="slot" x="63.6" y="166" width="32" height="8"/><rect class="obj fill-1" x="113.2" y="104" width="28" height="12"/><rect class="obj fill-1" x="113.2" y="122" width="28" height="12"/><rect class="obj fill-1" x="113.2" y="140" width="28" height="12"/><rect class="obj fill-1" x="113.2" y="158" width="28" height="12"/><path class="obj" d="M162.8,110L186.8,110"/><path class="obj" d="M162.8,124L186.8,124"/><path class="obj" d="M162.8,138L186.8,138"/><path class="obj" d="M162.8,152L186.8,152"/><path class="obj" d="M208.4,170H218.4V146H228.4V122H236.4V100"/><rect class="obj fill-1" x="256" y="104" width="12" height="18"/><rect class="obj fill-1" x="271" y="104" width="12" height="18"/><rect class="obj fill-1" x="256" y="126" width="12" height="18"/><rect class="obj fill-1" x="271" y="126" width="12" height="18"/><rect class="obj fill-1" x="256" y="148" width="12" height="18"/><rect class="obj fill-1" x="271" y="148" width="12" height="18"/></g>
+  <circle class="dot" cx="278.8" cy="391.6" r="1.6"/>
+  <path class="leader" d="M278.8,391.6H248"/>
+  <text class="lt" x="240" y="389.6" text-anchor="end">02 · GAME SERVICES</text>
+  <text class="vs" x="240" y="401.6" text-anchor="end">PARTIES · QUEUES · SERVERS · RESULTS</text>
+  <!-- 03 · platform services -->
+  <g class="iso" transform="matrix(0.85 0.15 -0.31 0.42 340 245)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="12" y="94" width="40" height="86"/><rect class="obj fill-2" x="59.6" y="94" width="40" height="86"/><rect class="obj fill-2" x="107.2" y="94" width="40" height="86"/><rect class="obj fill-2" x="154.8" y="94" width="40" height="86"/><rect class="obj fill-2" x="202.4" y="94" width="40" height="86"/><rect class="obj fill-2" x="250" y="94" width="40" height="86"/><circle class="obj fill-1" cx="32" cy="114" r="8"/><rect class="obj fill-1" x="20" y="134" width="24" height="10"/><rect class="slot" x="20" y="150" width="24" height="10"/><path class="obj" d="M67.6,106L91.6,106"/><path class="obj" d="M67.6,122L91.6,122"/><path class="obj" d="M67.6,138L91.6,138"/><path class="obj" d="M67.6,154L91.6,154"/><rect class="obj fill-1" x="112.2" y="104" width="24" height="16"/><rect class="obj fill-1" x="118.2" y="128" width="24" height="16"/><circle class="dot" cx="127.2" cy="162" r="4"/><path class="obj" d="M162.8,130L184.8,106"/><path class="obj" d="M162.8,130L184.8,130"/><path class="obj" d="M162.8,130L184.8,154"/><rect class="obj fill-1" x="182.8" y="102" width="8" height="8"/><rect class="obj fill-1" x="182.8" y="126" width="8" height="8"/><rect class="obj fill-1" x="182.8" y="150" width="8" height="8"/><rect class="obj fill-1" x="208.4" y="106" width="10" height="10"/><path class="obj" d="M222.4,111L236.4,111"/><rect class="obj fill-1" x="208.4" y="124" width="10" height="10"/><path class="obj" d="M222.4,129L236.4,129"/><rect class="obj fill-1" x="208.4" y="142" width="10" height="10"/><path class="obj" d="M222.4,147L236.4,147"/><rect class="obj fill-1" x="208.4" y="160" width="10" height="10"/><path class="obj" d="M222.4,165L236.4,165"/><path class="obj fill-1" d="M256,104H284L274,140V170H266V140Z"/></g>
+  <circle class="dot" cx="278.8" cy="329.6" r="1.6"/>
+  <path class="leader" d="M278.8,329.6H248"/>
+  <text class="lt" x="240" y="327.6" text-anchor="end">03 · PLATFORM SERVICES</text>
+  <text class="vs" x="240" y="339.6" text-anchor="end">ACCOUNTS · ENTITLEMENTS · CHAT · CONFIG</text>
+  <!-- 04 · edge -->
+  <g class="iso" transform="matrix(0.85 0.15 -0.31 0.42 340 183)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="14" y="94" width="84" height="86"/><circle class="obj fill-1" cx="34" cy="112" r="7"/><circle class="obj fill-1" cx="78" cy="112" r="7"/><circle class="obj fill-1" cx="34" cy="162" r="7"/><circle class="obj fill-1" cx="78" cy="162" r="7"/><circle class="obj fill-1" cx="56" cy="137" r="7"/><rect class="obj fill-2" x="108" y="94" width="84" height="86"/><rect class="obj fill-1" x="118" y="131" width="14" height="12"/><path class="obj" d="M132,137L168,108"/><rect class="obj fill-1" x="168" y="102" width="14" height="12"/><path class="obj" d="M132,137L168,137"/><rect class="obj fill-1" x="168" y="131" width="14" height="12"/><path class="obj" d="M132,137L168,166"/><rect class="obj fill-1" x="168" y="160" width="14" height="12"/><rect class="obj fill-2" x="202" y="94" width="86" height="86"/><rect class="obj fill-1" x="212" y="104" width="16" height="66"/><path class="obj" d="M228,117L276,117"/><path class="obj" d="M228,137L276,137"/><path class="obj" d="M228,157L276,157"/></g>
+  <circle class="dot" cx="278.8" cy="267.6" r="1.6"/>
+  <path class="leader" d="M278.8,267.6H248"/>
+  <text class="lt" x="240" y="265.6" text-anchor="end">04 · EDGE</text>
+  <text class="vs" x="240" y="277.6" text-anchor="end">CDN · DDOS · LOAD BALANCING · GATEWAY</text>
+  <!-- Request direction -->
+  <path class="leader" d="M653.8,228.89999999999998V279.65999999999997" marker-end="url(#gm-bks-ah)"/>
+  <text class="sl ink" x="653.8" y="210.9" text-anchor="middle">REQUESTS</text>
+  <text class="sl ink" x="653.8" y="221.9" text-anchor="middle">ENTER</text>
+  <rect class="nb" x="682.3" y="212.9" width="11" height="11"/>
+  <text class="nbt" x="687.8" y="221.1" text-anchor="middle">4</text>
+  <!-- Game server fleet -->
+  <rect class="obj fill-1" x="613.8" y="381.41" width="80" height="20"/>
+  <rect class="obj fill-1" x="613.8" y="407.41" width="80" height="20"/>
+  <rect class="obj fill-1" x="613.8" y="433.41" width="80" height="20"/>
+  <text class="sl ink" x="653.8" y="359.41" text-anchor="middle">GAME</text>
+  <text class="sl ink" x="653.8" y="370.41" text-anchor="middle">SERVERS</text>
+  <rect class="nb" x="686.3" y="361.41" width="11" height="11"/>
+  <text class="nbt" x="691.8" y="369.61" text-anchor="middle">1</text>
+  <circle class="dot" cx="554.01154" cy="407.88847000000004" r="1.6"/>
+  <path class="leader" d="M554.01154,407.88847000000004H611.8" marker-end="url(#gm-bks-ah)"/>
+  <path class="leader" d="M611.8,426.92347H543.24154" marker-end="url(#gm-bks-ah)"/>
+  <rect class="nb" x="578.41" y="393.39" width="11" height="11"/>
+  <text class="nbt" x="583.91" y="401.59" text-anchor="middle">2</text>
+  <rect class="nb" x="571.52" y="431.42" width="11" height="11"/>
+  <text class="nbt" x="577.02" y="439.62" text-anchor="middle">3</text>
+  <text class="vt" x="436.3" y="533.5" text-anchor="middle">EXPLODED VIEW · GAME BACKEND</text>
+  <text class="vs" x="436.3" y="546.5" text-anchor="middle">AXONOMETRIC · NOT TO SCALE · 01 AT THE BOTTOM</text>
 </svg>

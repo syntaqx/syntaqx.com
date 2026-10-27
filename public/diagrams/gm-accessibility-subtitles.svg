@@ -1,138 +1,130 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 940">
-  <defs>
-    <marker id="gm-ax-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-ax-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-A11Y-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">subtitle legibility, 1080p</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view: the frame -->
-  <text class="vt" x="40" y="64">Plan view: one 1080p frame, console</text>
-  <text class="vs" x="40" y="80">Scale 1:4 · layout illustrative · values in px at 1080p</text>
-
-  <!-- W0 -->
-  <path class="ext" d="M60,107V95M540,107V95"/>
-  <path class="dim" d="M60,100H540" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
-  <text class="dt" x="300" y="96" text-anchor="middle">W0 = 1920</text>
-
-  <!-- Frame -->
-  <rect class="obj fill-2" x="60" y="110" width="480" height="270"/>
-  <path class="ctr" d="M300,116V290"/>
-
-  <!-- H0 -->
-  <path class="ext" d="M543,110H565M543,380H565"/>
-  <path class="dim" d="M560,110V380" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
-  <text class="dt" x="568" y="245" dominant-baseline="central">H0 = 1080</text>
-
-  <!-- Subtitle block -->
-  <rect class="obj fill-1" x="150" y="320" width="300" height="38"/>
-  <rect class="cell band" x="162" y="327" width="276" height="7"/>
-  <rect class="cell band" x="162" y="343" width="200" height="7"/>
-
-  <!-- L1 across the line -->
-  <path class="ext" d="M162,324V297M438,324V297"/>
-  <path class="dim" d="M162,302H438" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
-  <text class="dt" x="300" y="298" text-anchor="middle">L1 ≤ 40 chars [1]</text>
-
-  <!-- Detail circle on line 1 -->
-  <circle class="detail" cx="172" cy="330.5" r="14"/>
-  <text class="sl ink" x="150" y="300" text-anchor="end" dominant-baseline="central">detail A</text>
-
-  <!-- Leaders, below the frame -->
-  <circle class="dot" cx="340" cy="346.5" r="2"/>
-  <path class="leader" d="M340,346.5L328,398H290"/>
-  <text class="sl ink" x="286" y="398" text-anchor="end" dominant-baseline="central">line 2 of L2 [1]</text>
-  <circle class="dot" cx="444" cy="354" r="2"/>
-  <path class="leader" d="M444,354L456,398H500"/>
-  <text class="sl ink" x="504" y="398" dominant-baseline="central">background [2]</text>
-
-  <!-- Detail A: text body height -->
-  <text class="vt" x="40" y="470">Detail A: text body height</text>
-  <text class="vs" x="40" y="486">Scale 10:1 against the plan · 1 px = 2.5</text>
-  <path class="ln ink" d="M60,630H465"/>
-  <rect class="obj fill-2" x="80" y="565" width="120" height="65"/>
-  <rect class="obj fill-2" x="275" y="500" width="150" height="130"/>
-  <text class="sl ink" x="140" y="597.5" text-anchor="middle" dominant-baseline="central">default</text>
-  <text class="sl ink" x="350" y="565" text-anchor="middle" dominant-baseline="central">at 200%</text>
-  <text class="sl" x="60" y="646" dominant-baseline="central">body height = descender + x-height + ascender</text>
-
-  <!-- S1 -->
-  <path class="ext" d="M203,565H217M203,630H217"/>
-  <path class="dim" d="M212,565V630" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
-  <text class="dt" x="218" y="597.5" dominant-baseline="central">S1 = 26</text>
-
-  <!-- S5 -->
-  <path class="ext" d="M428,500H442M428,630H442"/>
-  <path class="dim hl" d="M437,500V630" marker-start="url(#gm-ax-ah-hl)" marker-end="url(#gm-ax-ah-hl)"/>
-  <text class="dt hl" x="443" y="550" dominant-baseline="central">S5 = S1 x K1</text>
-  <text class="dt hl" x="443" y="566" dominant-baseline="central">= 26 x 2.00</text>
-  <text class="dt hl" x="443" y="582" dominant-baseline="central">= 52 = T1 [3]</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="40" y="690">Variables</text>
-  <text class="vs" x="40" y="706">From XAG 101, 102 and 104 · px at the given resolution</text>
-  <rect class="cell band" x="40" y="716" width="50" height="22"/>
-  <rect class="cell band" x="90" y="716" width="230" height="22"/>
-  <rect class="cell band" x="320" y="716" width="60" height="22"/>
-  <rect class="cell band" x="400" y="716" width="50" height="22"/>
-  <rect class="cell band" x="450" y="716" width="210" height="22"/>
-  <rect class="cell band" x="660" y="716" width="60" height="22"/>
-  <text class="cap ink" x="48" y="727" dominant-baseline="central">code</text>
-  <text class="cap ink" x="98" y="727" dominant-baseline="central">item</text>
-  <text class="cap ink" x="374" y="727" text-anchor="end" dominant-baseline="central">value</text>
-  <text class="cap ink" x="408" y="727" dominant-baseline="central">code</text>
-  <text class="cap ink" x="458" y="727" dominant-baseline="central">item</text>
-  <text class="cap ink" x="714" y="727" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,738H380V870H40Z"/>
-  <path class="cell" d="M400,738H720V870H400Z"/>
-  <path class="ln ink" d="M90,738V870M320,738V870M450,738V870M660,738V870"/>
-  <path class="ln" d="M40,760H380M40,782H380M40,804H380M40,826H380M40,848H380M400,760H720M400,782H720M400,804H720M400,826H720M400,848H720"/>
-
-  <text class="t" x="48" y="749" dominant-baseline="central">S1</text>
-  <text class="t" x="98" y="749" dominant-baseline="central">console text, 1080p</text>
-  <text class="t" x="374" y="749" text-anchor="end" dominant-baseline="central">26</text>
-  <text class="t" x="48" y="771" dominant-baseline="central">S2</text>
-  <text class="t" x="98" y="771" dominant-baseline="central">console text, 4K</text>
-  <text class="t" x="374" y="771" text-anchor="end" dominant-baseline="central">52</text>
-  <text class="t" x="48" y="793" dominant-baseline="central">S3</text>
-  <text class="t" x="98" y="793" dominant-baseline="central">PC/VR text, 1080p</text>
-  <text class="t" x="374" y="793" text-anchor="end" dominant-baseline="central">18</text>
-  <text class="t" x="48" y="815" dominant-baseline="central">S4</text>
-  <text class="t" x="98" y="815" dominant-baseline="central">PC/VR text, 4K</text>
-  <text class="t" x="374" y="815" text-anchor="end" dominant-baseline="central">36</text>
-  <text class="t" x="48" y="837" dominant-baseline="central">K1</text>
-  <text class="t" x="98" y="837" dominant-baseline="central">text scaling, at least</text>
-  <text class="t" x="374" y="837" text-anchor="end" dominant-baseline="central">2.00</text>
-  <text class="t b" x="48" y="859" dominant-baseline="central">S5</text>
-  <text class="t" x="98" y="859" dominant-baseline="central">console 1080p at K1: S1 x K1</text>
-  <text class="t b" x="374" y="859" text-anchor="end" dominant-baseline="central">52</text>
-
-  <text class="t" x="408" y="749" dominant-baseline="central">T1</text>
-  <text class="t" x="458" y="749" dominant-baseline="central">large text, console 1080p</text>
-  <text class="t" x="714" y="749" text-anchor="end" dominant-baseline="central">52</text>
-  <text class="t" x="408" y="771" dominant-baseline="central">C1</text>
-  <text class="t" x="458" y="771" dominant-baseline="central">contrast, standard text</text>
-  <text class="t" x="714" y="771" text-anchor="end" dominant-baseline="central">4.5:1</text>
-  <text class="t" x="408" y="793" dominant-baseline="central">C2</text>
-  <text class="t" x="458" y="793" dominant-baseline="central">contrast, large text</text>
-  <text class="t" x="714" y="793" text-anchor="end" dominant-baseline="central">3:1</text>
-  <text class="t" x="408" y="815" dominant-baseline="central">L1</text>
-  <text class="t" x="458" y="815" dominant-baseline="central">characters per line, max</text>
-  <text class="t" x="714" y="815" text-anchor="end" dominant-baseline="central">40</text>
-  <text class="t" x="408" y="837" dominant-baseline="central">L2</text>
-  <text class="t" x="458" y="837" dominant-baseline="central">lines on screen, max</text>
-  <text class="t" x="714" y="837" text-anchor="end" dominant-baseline="central">2</text>
-  <text class="t" x="408" y="859" dominant-baseline="central">W0</text>
-  <text class="t" x="458" y="859" dominant-baseline="central">frame width; H0 = 1080</text>
-  <text class="t" x="714" y="859" text-anchor="end" dominant-baseline="central">1920</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 841">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-ax-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-ax-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-ax-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="821" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="878" width="680" height="56"/>
-  <text class="n" x="52" y="894">[1] XAG 104: avoid lines over 40 characters; show two lines at most (three in exceptional cases).</text>
-  <text class="n" x="52" y="910">[2] XAG 104: a solid background behind subtitles, color set by the player, opacity adjustable from 0 to 100%.</text>
-  <text class="n" x="52" y="926">[3] XAG 102: on console, 52 px at 1080p is large text, so S5 needs C2 against its background, smaller text C1.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">XAG 104: AVOID LINES OVER 40 CHARACTERS; SHOW TWO LINES AT MOST (THREE IN EXCEPTIONAL CASES).</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">XAG 104: A SOLID BACKGROUND BEHIND SUBTITLES, COLOR SET BY THE PLAYER, OPACITY ADJUSTABLE FROM 0 TO 100%.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">XAG 102: ON CONSOLE, 52 PX AT 1080P IS LARGE TEXT, SO S5 NEEDS C2 AGAINST ITS BACKGROUND; SMALLER TEXT NEEDS C1.</text>
+  <text class="nt" x="50" y="113">LAYOUT ILLUSTRATIVE. VALUES IN PX AT 1080P FROM XAG 101, 102 AND 104, LISTED IN THE TABLE.</text>
+  <!-- Plan view: one 1080p frame -->
+  <rect class="obj fill-2" x="140" y="182" width="480" height="270"/>
+  <path class="ctr" d="M380,190L380,352"/>
+  <path class="ext" d="M140,179L140,158"/>
+  <path class="ext" d="M620,179L620,158"/>
+  <path class="dim" d="M140,162L620,162" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
+  <text class="dt" x="380" y="158" text-anchor="middle">W0</text>
+  <path class="ext" d="M623,182L646,182"/>
+  <path class="ext" d="M623,452L646,452"/>
+  <path class="dim" d="M642,182L642,452" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
+  <text class="dt" x="648" y="320.5">H0</text>
+  <rect class="obj fill-1" x="230" y="392" width="300" height="38"/>
+  <rect class="obj fill-2" x="242" y="399" width="276" height="7"/>
+  <rect class="obj fill-2" x="242" y="415" width="200" height="7"/>
+  <path class="ext" d="M242,396L242,372"/>
+  <path class="ext" d="M518,396L518,372"/>
+  <path class="dim" d="M242,376L518,376" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
+  <text class="dt" x="380" y="372" text-anchor="middle">L1</text>
+  <rect class="nb" x="394.5" y="363" width="11" height="11"/>
+  <text class="nbt" x="400" y="371.2" text-anchor="middle">1</text>
+  <circle class="detail" cx="252" cy="402.5" r="14"/>
+  <path class="leader" d="M238.37,399.29L114,370"/>
+  <text class="sl ink" x="110" y="373" text-anchor="end">DETAIL A</text>
+  <circle class="dot" cx="422" cy="418.5" r="1.6"/>
+  <path class="leader" d="M422,418.5L320,478H310"/>
+  <text class="sl ink" x="306" y="481" text-anchor="end">LINE 2 OF L2</text>
+  <circle class="dot" cx="524" cy="426" r="1.6"/>
+  <path class="leader" d="M524,426L480,478H490"/>
+  <text class="sl ink" x="494" y="481">BACKGROUND</text>
+  <rect class="nb" x="563.4" y="472.5" width="11" height="11"/>
+  <text class="nbt" x="568.9" y="480.7" text-anchor="middle">2</text>
+  <text class="vt" x="380" y="522" text-anchor="middle">PLAN VIEW · ONE 1080P FRAME, CONSOLE</text>
+  <text class="vs" x="380" y="535" text-anchor="middle">SCALE 1:4 · LAYOUT ILLUSTRATIVE</text>
+  <!-- Detail A: text body height -->
+  <path class="ctr" d="M52,745L312,745"/>
+  <rect class="obj fill-2" x="64" y="680" width="80" height="65"/>
+  <rect class="obj fill-2" x="204" y="615" width="100" height="130"/>
+  <text class="sl ink" x="104" y="715.5" text-anchor="middle">DEFAULT</text>
+  <text class="sl ink" x="254" y="683" text-anchor="middle">AT 200%</text>
+  <path class="ext" d="M147,680L168,680"/>
+  <path class="ext" d="M147,745L168,745"/>
+  <path class="dim" d="M164,680L164,745" marker-start="url(#gm-ax-ah)" marker-end="url(#gm-ax-ah)"/>
+  <text class="dt" x="170" y="716">S1</text>
+  <path class="ext" d="M307,615L328,615"/>
+  <path class="ext" d="M307,745L328,745"/>
+  <path class="dim hl" d="M324,615L324,745" marker-start="url(#gm-ax-ah-hl)" marker-end="url(#gm-ax-ah-hl)"/>
+  <text class="dt hl" x="330" y="683.5">S5</text>
+  <rect class="nb" x="348.5" y="674.5" width="11" height="11"/>
+  <text class="nbt" x="354" y="682.7" text-anchor="middle">3</text>
+  <text class="vs" x="52" y="763">BODY HEIGHT = DESCENDER + X-HEIGHT + ASCENDER</text>
+  <text class="vt" x="203" y="797" text-anchor="middle">DETAIL A · TEXT BODY HEIGHT</text>
+  <text class="vs" x="203" y="810" text-anchor="middle">SCALE 10:1 AGAINST THE PLAN · 1 PX = 2.5</text>
+  <!-- Variable table -->
+  <text class="vt" x="426" y="594">VARIABLES · PX AT 1080P</text>
+  <rect class="tbl" x="426" y="601" width="239" height="210"/>
+  <path class="tbl" d="M426,616L665,616"/>
+  <path class="tbl" d="M426,631L665,631"/>
+  <path class="tbl" d="M426,646L665,646"/>
+  <path class="tbl" d="M426,661L665,661"/>
+  <path class="tbl" d="M426,676L665,676"/>
+  <path class="tbl" d="M426,691L665,691"/>
+  <path class="tbl" d="M426,706L665,706"/>
+  <path class="tbl" d="M426,721L665,721"/>
+  <path class="tbl" d="M426,736L665,736"/>
+  <path class="tbl" d="M426,751L665,751"/>
+  <path class="tbl" d="M426,766L665,766"/>
+  <path class="tbl" d="M426,781L665,781"/>
+  <path class="tbl" d="M426,796L665,796"/>
+  <path class="tbl" d="M463,601L463,811"/>
+  <path class="tbl" d="M594,601L594,811"/>
+  <text class="th" x="432" y="611.2">CODE</text>
+  <text class="th" x="528.5" y="611.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="629.5" y="611.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="432" y="626.7">W0</text>
+  <text class="tc" x="528.5" y="626.7" text-anchor="middle">frame width</text>
+  <text class="tc" x="629.5" y="626.7" text-anchor="middle">1920</text>
+  <text class="tc" x="432" y="641.7">H0</text>
+  <text class="tc" x="528.5" y="641.7" text-anchor="middle">frame height</text>
+  <text class="tc" x="629.5" y="641.7" text-anchor="middle">1080</text>
+  <text class="tc" x="432" y="656.7">S1</text>
+  <text class="tc" x="528.5" y="656.7" text-anchor="middle">console text, 1080p</text>
+  <text class="tc" x="629.5" y="656.7" text-anchor="middle">26</text>
+  <text class="tc" x="432" y="671.7">S2</text>
+  <text class="tc" x="528.5" y="671.7" text-anchor="middle">console text, 4K</text>
+  <text class="tc" x="629.5" y="671.7" text-anchor="middle">52</text>
+  <text class="tc" x="432" y="686.7">S3</text>
+  <text class="tc" x="528.5" y="686.7" text-anchor="middle">PC/VR text, 1080p</text>
+  <text class="tc" x="629.5" y="686.7" text-anchor="middle">18</text>
+  <text class="tc" x="432" y="701.7">S4</text>
+  <text class="tc" x="528.5" y="701.7" text-anchor="middle">PC/VR text, 4K</text>
+  <text class="tc" x="629.5" y="701.7" text-anchor="middle">36</text>
+  <text class="tc" x="432" y="716.7">K1</text>
+  <text class="tc" x="528.5" y="716.7" text-anchor="middle">text scaling, at least</text>
+  <text class="tc" x="629.5" y="716.7" text-anchor="middle">2.00</text>
+  <text class="tc" x="432" y="731.7">S5</text>
+  <text class="tc" x="528.5" y="731.7" text-anchor="middle">console 1080p at K1</text>
+  <text class="tc" x="629.5" y="731.7" text-anchor="middle">S1 × K1 = 52</text>
+  <text class="tc" x="432" y="746.7">T1</text>
+  <text class="tc" x="528.5" y="746.7" text-anchor="middle">large text, console 1080p</text>
+  <text class="tc" x="629.5" y="746.7" text-anchor="middle">52</text>
+  <text class="tc" x="432" y="761.7">C1</text>
+  <text class="tc" x="528.5" y="761.7" text-anchor="middle">contrast, standard text</text>
+  <text class="tc" x="629.5" y="761.7" text-anchor="middle">4.5:1</text>
+  <text class="tc" x="432" y="776.7">C2</text>
+  <text class="tc" x="528.5" y="776.7" text-anchor="middle">contrast, large text</text>
+  <text class="tc" x="629.5" y="776.7" text-anchor="middle">3:1</text>
+  <text class="tc" x="432" y="791.7">L1</text>
+  <text class="tc" x="528.5" y="791.7" text-anchor="middle">characters per line, max</text>
+  <text class="tc" x="629.5" y="791.7" text-anchor="middle">40</text>
+  <text class="tc" x="432" y="806.7">L2</text>
+  <text class="tc" x="528.5" y="806.7" text-anchor="middle">lines on screen, max</text>
+  <text class="tc" x="629.5" y="806.7" text-anchor="middle">2</text>
 </svg>

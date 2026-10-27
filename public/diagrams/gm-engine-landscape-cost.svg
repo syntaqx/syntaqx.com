@@ -1,121 +1,123 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 794">
-  <defs>
-    <marker id="gm-elc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="gm-elc-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-ELC-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">engine license cost at one revenue</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- View 1: revenue -->
-  <text class="vt" x="40" y="64">Plan view: lifetime gross revenue</text>
-  <text class="vs" x="40" y="80">Illustrative · scale $1M = 120 px · hatched: royalty-free [1]</text>
-
-  <rect class="hatch" x="80" y="150" width="120" height="36" fill="url(#gm-elc-hatch)"/>
-  <rect class="obj fill-2" x="200" y="150" width="480" height="36"/>
-  <text class="sl ink" x="520" y="168" text-anchor="middle" dominant-baseline="central">royalty base</text>
-
-  <!-- G1 -->
-  <path class="ext" d="M80,147V107M680,147V107"/>
-  <path class="dim" d="M80,112H680" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
-  <text class="dt" x="380" y="108" text-anchor="middle">G1 = E1 + B1 = 1.00 + 4.00 = 5.00</text>
-
-  <!-- Chain: E1, B1 -->
-  <path class="ext" d="M80,189V241M200,189V211M680,189V211"/>
-  <path class="dim" d="M80,206H200" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
-  <text class="dt" x="140" y="202" text-anchor="middle">E1 = 1.00</text>
-  <path class="dim" d="M200,206H680" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
-  <text class="dt" x="440" y="202" text-anchor="middle">B1 = G1 - E1 = 4.00</text>
-
-  <!-- K1: break-even between the Unreal royalty and Unity Pro seats -->
-  <path class="ctr" d="M358.4,140V244"/>
-  <path class="dim" d="M80,236H358.4" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
-  <text class="dt" x="366" y="236" dominant-baseline="central">K1 = E1 + U1 / 0.05 = 1.00 + 1.32 = 2.32 [2]</text>
-
-  <!-- View 2: license cost -->
-  <text class="vt" x="40" y="290">Plan view: license cost, 10:1</text>
-  <text class="vs" x="40" y="306">Illustrative · scale $1M = 1,200 px · values in $M</text>
-
-  <path class="ctr" d="M200,320V480"/>
-
-  <rect class="obj hl" x="200" y="330" width="240" height="22"/>
-  <text class="sl ink" x="190" y="341" text-anchor="end" dominant-baseline="central">unreal 5%</text>
-  <text class="dt hl" x="450" y="341" dominant-baseline="central">R1 = 0.05 × B1 = 0.05 × 4.00 = 0.200</text>
-
-  <rect class="obj fill-2" x="200" y="370" width="168" height="22"/>
-  <text class="sl ink" x="190" y="381" text-anchor="end" dominant-baseline="central">unreal 3.5% [3]</text>
-  <text class="dt" x="378" y="381" dominant-baseline="central">R2 = 0.035 × B1 = 0.035 × 4.00 = 0.140</text>
-
-  <rect class="obj fill-2" x="200" y="410" width="79.2" height="22"/>
-  <text class="sl ink" x="190" y="421" text-anchor="end" dominant-baseline="central">unity pro</text>
-  <text class="dt" x="289.2" y="421" dominant-baseline="central">U1 = N1 × P1 × Y1 = 10 × 2,200 × 3 = $66,000 = 0.066</text>
-
-  <circle class="dot" cx="200" cy="461" r="2"/>
-  <text class="sl ink" x="190" y="461" text-anchor="end" dominant-baseline="central">godot</text>
-  <text class="dt" x="210" y="461" dominant-baseline="central">L1 = 0.000</text>
-
-  <!-- Variables -->
-  <text class="vt" x="40" y="510">Variables</text>
-  <text class="vs" x="40" y="526">Illustrative [4] · $M unless noted</text>
-
-  <rect class="cell band" x="40" y="536" width="50" height="22"/>
-  <rect class="cell band" x="90" y="536" width="220" height="22"/>
-  <rect class="cell band" x="310" y="536" width="70" height="22"/>
-  <text class="cap ink" x="50" y="547" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="547" dominant-baseline="central">item</text>
-  <text class="cap ink" x="370" y="547" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,558H380V668H40Z"/>
-  <path class="ln ink" d="M90,558V668M310,558V668"/>
-  <path class="ln" d="M40,580H380M40,602H380M40,624H380M40,646H380"/>
-  <text class="t b" x="50" y="569" dominant-baseline="central">G1</text>
-  <text class="t" x="100" y="569" dominant-baseline="central">lifetime gross: E1 + B1</text>
-  <text class="t b" x="370" y="569" text-anchor="end" dominant-baseline="central">5.00</text>
-  <text class="t" x="50" y="591" dominant-baseline="central">E1</text>
-  <text class="t" x="100" y="591" dominant-baseline="central">royalty-free first $1M</text>
-  <text class="t" x="370" y="591" text-anchor="end" dominant-baseline="central">1.00</text>
-  <text class="t" x="50" y="613" dominant-baseline="central">B1</text>
-  <text class="t" x="100" y="613" dominant-baseline="central">royalty base: G1 - E1</text>
-  <text class="t" x="370" y="613" text-anchor="end" dominant-baseline="central">4.00</text>
-  <text class="t" x="50" y="635" dominant-baseline="central">R1</text>
-  <text class="t" x="100" y="635" dominant-baseline="central">Unreal royalty at 5%</text>
-  <text class="t" x="370" y="635" text-anchor="end" dominant-baseline="central">0.200</text>
-  <text class="t" x="50" y="657" dominant-baseline="central">R2</text>
-  <text class="t" x="100" y="657" dominant-baseline="central">at 3.5%, EGS first</text>
-  <text class="t" x="370" y="657" text-anchor="end" dominant-baseline="central">0.140</text>
-
-  <rect class="cell band" x="400" y="536" width="50" height="22"/>
-  <rect class="cell band" x="450" y="536" width="220" height="22"/>
-  <rect class="cell band" x="670" y="536" width="70" height="22"/>
-  <text class="cap ink" x="410" y="547" dominant-baseline="central">code</text>
-  <text class="cap ink" x="460" y="547" dominant-baseline="central">item</text>
-  <text class="cap ink" x="730" y="547" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M400,558H740V668H400Z"/>
-  <path class="ln ink" d="M450,558V668M670,558V668"/>
-  <path class="ln" d="M400,580H740M400,602H740M400,624H740M400,646H740"/>
-  <text class="t" x="410" y="569" dominant-baseline="central">N1</text>
-  <text class="t" x="460" y="569" dominant-baseline="central">seats</text>
-  <text class="t" x="730" y="569" text-anchor="end" dominant-baseline="central">10</text>
-  <text class="t" x="410" y="591" dominant-baseline="central">P1</text>
-  <text class="t" x="460" y="591" dominant-baseline="central">Unity Pro, $ per seat-year</text>
-  <text class="t" x="730" y="591" text-anchor="end" dominant-baseline="central">2,200</text>
-  <text class="t" x="410" y="613" dominant-baseline="central">Y1</text>
-  <text class="t" x="460" y="613" dominant-baseline="central">years on the subscription</text>
-  <text class="t" x="730" y="613" text-anchor="end" dominant-baseline="central">3</text>
-  <text class="t b" x="410" y="635" dominant-baseline="central">U1</text>
-  <text class="t" x="460" y="635" dominant-baseline="central">Unity Pro: N1 x P1 x Y1</text>
-  <text class="t b" x="730" y="635" text-anchor="end" dominant-baseline="central">0.066</text>
-  <text class="t b" x="410" y="657" dominant-baseline="central">K1</text>
-  <text class="t" x="460" y="657" dominant-baseline="central">break-even gross</text>
-  <text class="t b" x="730" y="657" text-anchor="end" dominant-baseline="central">2.32</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 657">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-elc-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-elc-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-elc-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="637" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="684" width="680" height="90"/>
-  <text class="sl ink" x="52" y="705">notes</text>
-  <text class="n" x="110" y="705">[1] Unreal (October 2026): 5% of gross above a product's first $1M; games pay royalties, not seats.</text>
-  <text class="n" x="110" y="723">[2] Below K1 the Unity Pro seats cost more than the Unreal royalty; above it, the royalty costs more.</text>
-  <text class="n" x="110" y="741">[3] Unity (Sept 12, 2024): Pro is $2,200 per seat-year from Jan 1, 2025. Unreal at 3.5%: EGS first.</text>
-  <text class="n" x="110" y="759">[4] License fees only: no store fees, engineering or support. Godot is MIT, so L1 = 0.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">UNREAL (OCTOBER 2026): 5% OF GROSS ABOVE A PRODUCT'S FIRST $1M; GAMES PAY ROYALTIES, NOT SEATS.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">BELOW K1 THE UNITY PRO SEATS COST MORE THAN THE UNREAL ROYALTY; ABOVE IT, THE ROYALTY COSTS MORE.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">UNITY (SEPT 12, 2024): PRO IS $2,200 PER SEAT-YEAR FROM JAN 1, 2025. UNREAL AT 3.5%: EGS FIRST.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">LICENSE FEES ONLY: NO STORE FEES, ENGINEERING OR SUPPORT. GODOT IS MIT, SO L1 = 0.</text>
+  <text class="nt" x="50" y="130">ILLUSTRATIVE REVENUE. VALUES IN $M UNLESS NOTED; CODES ON THE DRAWING, VALUES IN THE TABLE.</text>
+  <!-- Plan view: lifetime gross revenue -->
+  <rect class="hatch" x="80" y="199" width="120" height="36" fill="url(#gm-elc-hatch)"/>
+  <rect class="obj fill-2" x="200" y="199" width="480" height="36"/>
+  <rect class="obj" x="80" y="199" width="600" height="36"/>
+  <text class="sl ink" x="519.2" y="220" text-anchor="middle">ROYALTY BASE</text>
+  <path class="ext" d="M80,196L80,173"/>
+  <path class="ext" d="M680,196L680,173"/>
+  <path class="dim" d="M80,177L680,177" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
+  <text class="dt" x="380" y="173" text-anchor="middle">G1</text>
+  <rect class="nb" x="392.5" y="164" width="11" height="11"/>
+  <text class="nbt" x="398" y="172.2" text-anchor="middle">1</text>
+  <path class="ext" d="M80,238L80,259"/>
+  <path class="ext" d="M200,238L200,259"/>
+  <path class="dim" d="M80,255L200,255" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
+  <text class="dt" x="140" y="267" text-anchor="middle">E1</text>
+  <path class="ext" d="M680,238L680,259"/>
+  <path class="dim" d="M200,255L680,255" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
+  <text class="dt" x="440" y="267" text-anchor="middle">B1</text>
+  <path class="ctr" d="M358.4,191L358.4,299"/>
+  <path class="ext" d="M80,264L80,295"/>
+  <path class="dim" d="M80,291L358.4,291" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
+  <text class="dt" x="219.2" y="303" text-anchor="middle">K1</text>
+  <rect class="nb" x="368.9" y="294" width="11" height="11"/>
+  <text class="nbt" x="374.4" y="302.2" text-anchor="middle">2</text>
+  <text class="vt" x="380" y="337" text-anchor="middle">PLAN VIEW · LIFETIME GROSS REVENUE</text>
+  <text class="vs" x="380" y="350" text-anchor="middle">SCALE $1M = 120 PX · HATCHED: ROYALTY-FREE</text>
+  <!-- Plan view: license cost, 10:1 -->
+  <path class="ctr" d="M140,396L140,584"/>
+  <text class="sl ink" x="126" y="430" text-anchor="end">UNREAL 5%</text>
+  <rect class="obj hl" x="140" y="418" width="240" height="18"/>
+  <path class="ext" d="M380,415L380,406"/>
+  <path class="dim hl" d="M140,410L380,410" marker-start="url(#gm-elc-ah-hl)" marker-end="url(#gm-elc-ah-hl)"/>
+  <text class="dt hl" x="260" y="406" text-anchor="middle">R1</text>
+  <text class="sl ink" x="126" y="476" text-anchor="end">UNREAL 3.5%</text>
+  <rect class="nb" x="42.5" y="467.5" width="11" height="11"/>
+  <text class="nbt" x="48" y="475.7" text-anchor="middle">3</text>
+  <rect class="obj fill-2" x="140" y="464" width="168" height="18"/>
+  <path class="ext" d="M308,461L308,452"/>
+  <path class="dim" d="M140,456L308,456" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
+  <text class="dt" x="224" y="452" text-anchor="middle">R2</text>
+  <text class="sl ink" x="126" y="522" text-anchor="end">UNITY PRO</text>
+  <rect class="obj fill-2" x="140" y="510" width="79.2" height="18"/>
+  <path class="ext" d="M219.2,507L219.2,498"/>
+  <path class="dim" d="M140,502L219.2,502" marker-start="url(#gm-elc-ah)" marker-end="url(#gm-elc-ah)"/>
+  <text class="dt" x="179.6" y="498" text-anchor="middle">U1</text>
+  <text class="sl ink" x="126" y="568" text-anchor="end">GODOT</text>
+  <circle class="dot" cx="140" cy="565" r="2.2"/>
+  <text class="dt" x="152" y="568.5">L1</text>
+  <text class="vt" x="260" y="614" text-anchor="middle">PLAN VIEW · LICENSE COST, 10:1</text>
+  <text class="vs" x="260" y="627" text-anchor="middle">SCALE $1M = 1,200 PX</text>
+  <!-- Variable table -->
+  <text class="vt" x="430" y="395">VARIABLES · $M</text>
+  <rect class="tbl" x="430" y="402" width="282" height="180"/>
+  <path class="tbl" d="M430,417L712,417"/>
+  <path class="tbl" d="M430,432L712,432"/>
+  <path class="tbl" d="M430,447L712,447"/>
+  <path class="tbl" d="M430,462L712,462"/>
+  <path class="tbl" d="M430,477L712,477"/>
+  <path class="tbl" d="M430,492L712,492"/>
+  <path class="tbl" d="M430,507L712,507"/>
+  <path class="tbl" d="M430,522L712,522"/>
+  <path class="tbl" d="M430,537L712,537"/>
+  <path class="tbl" d="M430,552L712,552"/>
+  <path class="tbl" d="M430,567L712,567"/>
+  <path class="tbl" d="M467,402L467,582"/>
+  <path class="tbl" d="M603,402L603,582"/>
+  <text class="th" x="436" y="412.2">CODE</text>
+  <text class="th" x="535" y="412.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="657.5" y="412.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="436" y="427.7">G1</text>
+  <text class="tc" x="535" y="427.7" text-anchor="middle">lifetime gross</text>
+  <text class="tc" x="657.5" y="427.7" text-anchor="middle">E1+B1 = 5.00</text>
+  <text class="tc" x="436" y="442.7">E1</text>
+  <text class="tc" x="535" y="442.7" text-anchor="middle">royalty-free first $1M</text>
+  <text class="tc" x="657.5" y="442.7" text-anchor="middle">1.00</text>
+  <text class="tc" x="436" y="457.7">B1</text>
+  <text class="tc" x="535" y="457.7" text-anchor="middle">royalty base</text>
+  <text class="tc" x="657.5" y="457.7" text-anchor="middle">G1−E1 = 4.00</text>
+  <text class="tc" x="436" y="472.7">R1</text>
+  <text class="tc" x="535" y="472.7" text-anchor="middle">Unreal royalty at 5%</text>
+  <text class="tc" x="657.5" y="472.7" text-anchor="middle">0.05 × B1 = 0.200</text>
+  <text class="tc" x="436" y="487.7">R2</text>
+  <text class="tc" x="535" y="487.7" text-anchor="middle">at 3.5%, EGS first</text>
+  <text class="tc" x="657.5" y="487.7" text-anchor="middle">0.035 × B1 = 0.140</text>
+  <text class="tc" x="436" y="502.7">N1</text>
+  <text class="tc" x="535" y="502.7" text-anchor="middle">seats</text>
+  <text class="tc" x="657.5" y="502.7" text-anchor="middle">10</text>
+  <text class="tc" x="436" y="517.7">P1</text>
+  <text class="tc" x="535" y="517.7" text-anchor="middle">Unity Pro, $ per seat-year</text>
+  <text class="tc" x="657.5" y="517.7" text-anchor="middle">2,200</text>
+  <text class="tc" x="436" y="532.7">Y1</text>
+  <text class="tc" x="535" y="532.7" text-anchor="middle">years on the subscription</text>
+  <text class="tc" x="657.5" y="532.7" text-anchor="middle">3</text>
+  <text class="tc" x="436" y="547.7">U1</text>
+  <text class="tc" x="535" y="547.7" text-anchor="middle">Unity Pro seats</text>
+  <text class="tc" x="657.5" y="547.7" text-anchor="middle">N1 × P1 × Y1 = 0.066</text>
+  <text class="tc" x="436" y="562.7">L1</text>
+  <text class="tc" x="535" y="562.7" text-anchor="middle">Godot license</text>
+  <text class="tc" x="657.5" y="562.7" text-anchor="middle">0.000</text>
+  <text class="tc" x="436" y="577.7">K1</text>
+  <text class="tc" x="535" y="577.7" text-anchor="middle">break-even gross</text>
+  <text class="tc" x="657.5" y="577.7" text-anchor="middle">E1 + U1 ÷ 0.05 = 2.32</text>
 </svg>

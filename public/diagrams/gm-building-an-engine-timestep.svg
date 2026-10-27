@@ -1,156 +1,172 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 680">
-  <defs>
-    <marker id="gm-ts-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-ts-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="gm-ts-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-ENG-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">fixed timestep, accumulator</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view -->
-  <text class="vt" x="40" y="64">Plan view: four frames, fixed dt</text>
-  <text class="vs" x="40" y="80">Illustrative [1] · Scale 1 ms = 8 px · timeline · values in ms</text>
-
-  <!-- E1: elapsed time over the four frames -->
-  <path class="ext" d="M100,142V99M660,142V99"/>
-  <path class="dim" d="M100,104H660" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
-  <text class="dt" x="380" y="100" text-anchor="middle">E1 = R1 + R2 + R3 + R4 = 12 + 20 + 14 + 24 = 70</text>
-
-  <!-- Render frames: variable length -->
-  <path class="ext" d="M196,142V123M356,142V123M468,142V123"/>
-  <path class="dim" d="M100,128H196" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
-  <text class="dt" x="148" y="124" text-anchor="middle">R1 = 12</text>
-  <path class="dim" d="M196,128H356" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
-  <text class="dt" x="276" y="124" text-anchor="middle">R2 = 20</text>
-  <path class="dim" d="M356,128H468" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
-  <text class="dt" x="412" y="124" text-anchor="middle">R3 = 14</text>
-  <path class="dim" d="M468,128H660" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
-  <text class="dt" x="564" y="124" text-anchor="middle">R4 = 24</text>
-
-  <text class="sl ink" x="88" y="162.5" text-anchor="end" dominant-baseline="central">render</text>
-  <rect class="obj fill-2" x="100" y="145" width="96" height="35"/>
-  <rect class="obj fill-2" x="196" y="145" width="160" height="35"/>
-  <rect class="obj fill-2" x="356" y="145" width="112" height="35"/>
-  <rect class="obj fill-2" x="468" y="145" width="192" height="35"/>
-  <text class="sl ink" x="148" y="162.5" text-anchor="middle" dominant-baseline="central">R1</text>
-  <text class="sl ink" x="276" y="162.5" text-anchor="middle" dominant-baseline="central">R2</text>
-  <text class="sl ink" x="412" y="162.5" text-anchor="middle" dominant-baseline="central">R3</text>
-  <text class="sl ink" x="564" y="162.5" text-anchor="middle" dominant-baseline="central">R4</text>
-  <text class="t" x="668" y="162.5" dominant-baseline="central">[2]</text>
-
-  <!-- dt: one simulation step -->
-  <path class="ext" d="M100,212V194M180,212V194"/>
-  <path class="dim" d="M100,199H180" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
-  <text class="dt" x="140" y="195" text-anchor="middle">dt = 10</text>
-
-  <!-- Simulation ticks: fixed length -->
-  <text class="sl ink" x="88" y="232.5" text-anchor="end" dominant-baseline="central">sim</text>
-  <rect class="obj fill-1" x="100" y="215" width="80" height="35"/>
-  <rect class="obj fill-1" x="180" y="215" width="80" height="35"/>
-  <rect class="obj fill-1" x="260" y="215" width="80" height="35"/>
-  <rect class="obj fill-1" x="340" y="215" width="80" height="35"/>
-  <rect class="obj fill-1" x="420" y="215" width="80" height="35"/>
-  <rect class="obj fill-1" x="500" y="215" width="80" height="35"/>
-  <rect class="obj fill-1" x="580" y="215" width="80" height="35"/>
-  <text class="sl ink" x="140" y="232.5" text-anchor="middle" dominant-baseline="central">1</text>
-  <text class="sl ink" x="220" y="232.5" text-anchor="middle" dominant-baseline="central">2</text>
-  <text class="sl ink" x="300" y="232.5" text-anchor="middle" dominant-baseline="central">3</text>
-  <text class="sl ink" x="380" y="232.5" text-anchor="middle" dominant-baseline="central">4</text>
-  <text class="sl ink" x="460" y="232.5" text-anchor="middle" dominant-baseline="central">5</text>
-  <text class="sl ink" x="540" y="232.5" text-anchor="middle" dominant-baseline="central">6</text>
-  <text class="sl ink" x="620" y="232.5" text-anchor="middle" dominant-baseline="central">7</text>
-
-  <!-- Frame ends: where each frame is drawn -->
-  <path class="ctr" d="M196,183V212M356,183V212M468,183V212M660,183V212M196,253V296M356,253V296M468,253V296M660,253V296"/>
-
-  <!-- Carry: time not yet simulated at each frame end -->
-  <text class="sl ink" x="88" y="280" text-anchor="end" dominant-baseline="central">carry</text>
-  <rect class="hatch" x="180" y="270" width="16" height="20" fill="url(#gm-ts-hatch)"/>
-  <rect class="hatch" x="340" y="270" width="16" height="20" fill="url(#gm-ts-hatch)"/>
-  <rect class="hatch" x="420" y="270" width="48" height="20" fill="url(#gm-ts-hatch)"/>
-  <text class="t" x="188" y="318" text-anchor="middle" dominant-baseline="central">A1</text>
-  <text class="t" x="348" y="318" text-anchor="middle" dominant-baseline="central">A2</text>
-  <text class="t" x="444" y="318" text-anchor="middle" dominant-baseline="central">A3</text>
-  <text class="t" x="668" y="280" dominant-baseline="central">A4 = 0</text>
-  <circle class="detail" cx="444" cy="280" r="28"/>
-  <text class="sl ink" x="478" y="318" dominant-baseline="central">detail B</text>
-
-  <text class="t" x="380" y="348" text-anchor="middle">E1 = (n1 + n2 + n3 + n4) × dt + A4 = (1 + 2 + 1 + 3) × 10 + 0 = 70</text>
-  <text class="t" x="380" y="366" text-anchor="middle">ni = floor((Ai-1 + Ri) / dt) · Ai = Ai-1 + Ri - ni × dt · αi = Ai / dt</text>
-
-  <!-- Detail B: interpolation at the end of frame 3 -->
-  <text class="vt" x="40" y="406">Detail B: drawing frame 3 [3]</text>
-  <text class="vs" x="40" y="422">Scale 1 ms = 30 px · time axis</text>
-  <path class="ln ink" d="M70,474H370"/>
-  <circle class="dot" cx="70" cy="474" r="3"/>
-  <circle class="dot" cx="370" cy="474" r="3"/>
-  <circle class="obj hl" cx="250" cy="474" r="5"/>
-  <text class="sl ink" x="70" y="454" text-anchor="middle">previous</text>
-  <text class="sl ink" x="250" y="454" text-anchor="middle">drawn</text>
-  <text class="sl ink" x="370" y="454" text-anchor="middle">current</text>
-  <text class="t" x="70" y="492" text-anchor="middle" dominant-baseline="central">t = 30</text>
-  <text class="t" x="250" y="492" text-anchor="middle" dominant-baseline="central">t = 36</text>
-  <text class="t" x="370" y="492" text-anchor="middle" dominant-baseline="central">t = 40</text>
-  <path class="ext" d="M70,503V541M250,503V520M370,503V541"/>
-  <path class="dim hl" d="M70,515H250" marker-start="url(#gm-ts-ah-hl)" marker-end="url(#gm-ts-ah-hl)"/>
-  <text class="dt hl" x="160" y="511" text-anchor="middle">α3 × dt = 0.6 × 10 = 6</text>
-  <path class="dim" d="M70,536H370" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
-  <text class="dt" x="220" y="532" text-anchor="middle">dt = 10</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="440" y="406">Variables</text>
-  <text class="vs" x="440" y="422">Per frame i · ms</text>
-  <rect class="cell band" x="440" y="432" width="40" height="22"/>
-  <rect class="cell band" x="480" y="432" width="45" height="22"/>
-  <rect class="cell band" x="525" y="432" width="50" height="22"/>
-  <rect class="cell band" x="575" y="432" width="40" height="22"/>
-  <rect class="cell band" x="615" y="432" width="45" height="22"/>
-  <rect class="cell band" x="660" y="432" width="60" height="22"/>
-  <text class="cap ink" x="450" y="443" dominant-baseline="central">i</text>
-  <text class="cap ink" x="517" y="443" text-anchor="end" dominant-baseline="central">R</text>
-  <text class="cap ink" x="567" y="443" text-anchor="end" dominant-baseline="central">A+R</text>
-  <text class="cap ink" x="607" y="443" text-anchor="end" dominant-baseline="central">n</text>
-  <text class="cap ink" x="652" y="443" text-anchor="end" dominant-baseline="central">A</text>
-  <text class="cap ink" x="712" y="443" text-anchor="end" dominant-baseline="central">alpha</text>
-  <path class="cell" d="M440,454H720V564H440Z"/>
-  <path class="ln ink" d="M480,454V564M525,454V564M575,454V564M615,454V564M660,454V564"/>
-  <path class="ln" d="M440,476H720M440,498H720M440,520H720M440,542H720"/>
-  <text class="t" x="450" y="465" dominant-baseline="central">1</text>
-  <text class="t" x="517" y="465" text-anchor="end" dominant-baseline="central">12</text>
-  <text class="t" x="567" y="465" text-anchor="end" dominant-baseline="central">12</text>
-  <text class="t" x="607" y="465" text-anchor="end" dominant-baseline="central">1</text>
-  <text class="t" x="652" y="465" text-anchor="end" dominant-baseline="central">2</text>
-  <text class="t" x="712" y="465" text-anchor="end" dominant-baseline="central">0.2</text>
-  <text class="t" x="450" y="487" dominant-baseline="central">2</text>
-  <text class="t" x="517" y="487" text-anchor="end" dominant-baseline="central">20</text>
-  <text class="t" x="567" y="487" text-anchor="end" dominant-baseline="central">22</text>
-  <text class="t" x="607" y="487" text-anchor="end" dominant-baseline="central">2</text>
-  <text class="t" x="652" y="487" text-anchor="end" dominant-baseline="central">2</text>
-  <text class="t" x="712" y="487" text-anchor="end" dominant-baseline="central">0.2</text>
-  <text class="t" x="450" y="509" dominant-baseline="central">3</text>
-  <text class="t" x="517" y="509" text-anchor="end" dominant-baseline="central">14</text>
-  <text class="t" x="567" y="509" text-anchor="end" dominant-baseline="central">16</text>
-  <text class="t" x="607" y="509" text-anchor="end" dominant-baseline="central">1</text>
-  <text class="t" x="652" y="509" text-anchor="end" dominant-baseline="central">6</text>
-  <text class="t" x="712" y="509" text-anchor="end" dominant-baseline="central">0.6</text>
-  <text class="t" x="450" y="531" dominant-baseline="central">4</text>
-  <text class="t" x="517" y="531" text-anchor="end" dominant-baseline="central">24</text>
-  <text class="t" x="567" y="531" text-anchor="end" dominant-baseline="central">30</text>
-  <text class="t" x="607" y="531" text-anchor="end" dominant-baseline="central">3</text>
-  <text class="t" x="652" y="531" text-anchor="end" dominant-baseline="central">0</text>
-  <text class="t" x="712" y="531" text-anchor="end" dominant-baseline="central">0.0</text>
-  <text class="t b" x="450" y="553" dominant-baseline="central">sum</text>
-  <text class="t b" x="517" y="553" text-anchor="end" dominant-baseline="central">70</text>
-  <text class="t b" x="607" y="553" text-anchor="end" dominant-baseline="central">7</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 756">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-ts-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-ts-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-ts-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="736" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="580" width="680" height="80"/>
-  <text class="sl ink" x="52" y="598">notes</text>
-  <text class="n" x="52" y="616">[1] Illustrative: dt = 10 (100 Hz) and frame lengths chosen so the arithmetic is easy to follow.</text>
-  <text class="n" x="52" y="632">[2] Clamp the frame time before adding it (Fiedler uses 0.25 s), so one long stall can't demand endless steps.</text>
-  <text class="n" x="52" y="648">[3] The drawn state is always one dt behind real time: 46 - 36 = 10.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE: DT = 10 (100 HZ) AND FRAME LENGTHS CHOSEN SO THE ARITHMETIC IS EASY TO FOLLOW.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">CLAMP THE FRAME TIME BEFORE ADDING IT (FIEDLER USES 0.25 S), SO ONE LONG STALL CAN'T DEMAND ENDLESS STEPS.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">THE DRAWN STATE IS ALWAYS ONE DT BEHIND REAL TIME: 46 - 36 = 10.</text>
+  <text class="nt" x="50" y="113">VALUES IN MS. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: four frames, fixed dt -->
+  <text class="sl ink" x="88" y="226" text-anchor="end">RENDER</text>
+  <text class="sl ink" x="88" y="296" text-anchor="end">SIM</text>
+  <text class="sl ink" x="88" y="342" text-anchor="end">CARRY</text>
+  <rect class="obj fill-2" x="100" y="208" width="96" height="30"/>
+  <text class="sl ink" x="148" y="226" text-anchor="middle">FRAME 1</text>
+  <rect class="obj fill-2" x="196" y="208" width="160" height="30"/>
+  <text class="sl ink" x="276" y="226" text-anchor="middle">FRAME 2</text>
+  <rect class="obj fill-2" x="356" y="208" width="112" height="30"/>
+  <text class="sl ink" x="412" y="226" text-anchor="middle">FRAME 3</text>
+  <rect class="obj fill-2" x="468" y="208" width="192" height="30"/>
+  <text class="sl ink" x="564" y="226" text-anchor="middle">FRAME 4</text>
+  <path class="ext" d="M100,205L100,188"/>
+  <path class="ext" d="M196,205L196,188"/>
+  <path class="dim" d="M100,192L196,192" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
+  <text class="dt" x="148" y="188" text-anchor="middle">R1</text>
+  <path class="ext" d="M356,205L356,188"/>
+  <path class="dim" d="M196,192L356,192" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
+  <text class="dt" x="276" y="188" text-anchor="middle">R2</text>
+  <path class="ext" d="M468,205L468,188"/>
+  <path class="dim" d="M356,192L468,192" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
+  <text class="dt" x="412" y="188" text-anchor="middle">R3</text>
+  <path class="ext" d="M660,205L660,188"/>
+  <path class="dim" d="M468,192L660,192" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
+  <text class="dt" x="564" y="188" text-anchor="middle">R4</text>
+  <path class="ext" d="M100,185L100,162"/>
+  <path class="ext" d="M660,185L660,162"/>
+  <path class="dim" d="M100,166L660,166" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
+  <text class="dt" x="380" y="162" text-anchor="middle">E1</text>
+  <rect class="nb" x="392.5" y="153" width="11" height="11"/>
+  <text class="nbt" x="398" y="161.2" text-anchor="middle">1</text>
+  <rect class="nb" x="670.5" y="217.5" width="11" height="11"/>
+  <text class="nbt" x="676" y="225.7" text-anchor="middle">2</text>
+  <rect class="obj fill-1" x="100" y="278" width="80" height="30"/>
+  <text class="sl ink" x="140" y="296" text-anchor="middle">1</text>
+  <rect class="obj fill-1" x="180" y="278" width="80" height="30"/>
+  <text class="sl ink" x="220" y="296" text-anchor="middle">2</text>
+  <rect class="obj fill-1" x="260" y="278" width="80" height="30"/>
+  <text class="sl ink" x="300" y="296" text-anchor="middle">3</text>
+  <rect class="obj fill-1" x="340" y="278" width="80" height="30"/>
+  <text class="sl ink" x="380" y="296" text-anchor="middle">4</text>
+  <rect class="obj fill-1" x="420" y="278" width="80" height="30"/>
+  <text class="sl ink" x="460" y="296" text-anchor="middle">5</text>
+  <rect class="obj fill-1" x="500" y="278" width="80" height="30"/>
+  <text class="sl ink" x="540" y="296" text-anchor="middle">6</text>
+  <rect class="obj fill-1" x="580" y="278" width="80" height="30"/>
+  <text class="sl ink" x="620" y="296" text-anchor="middle">7</text>
+  <path class="ext" d="M100,275L100,260"/>
+  <path class="ext" d="M180,275L180,260"/>
+  <path class="dim" d="M100,264L180,264" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
+  <text class="dt" x="140" y="260" text-anchor="middle">dt</text>
+  <path class="ctr" d="M196,242L196,354"/>
+  <path class="ctr" d="M356,242L356,354"/>
+  <path class="ctr" d="M468,242L468,354"/>
+  <path class="ctr" d="M660,242L660,354"/>
+  <rect class="hatch" x="180" y="330" width="16" height="18" fill="url(#gm-ts-hatch)"/>
+  <text class="dt" x="188" y="364" text-anchor="middle">A1</text>
+  <rect class="hatch" x="340" y="330" width="16" height="18" fill="url(#gm-ts-hatch)"/>
+  <text class="dt" x="348" y="364" text-anchor="middle">A2</text>
+  <rect class="hatch" x="420" y="330" width="48" height="18" fill="url(#gm-ts-hatch)"/>
+  <text class="dt" x="444" y="364" text-anchor="middle">A3</text>
+  <text class="dt" x="670" y="342.5">A4</text>
+  <circle class="detail" cx="444" cy="339" r="30"/>
+  <path class="leader" d="M470.32,353.39L508,374"/>
+  <text class="sl ink" x="512" y="377">DETAIL A</text>
+  <text class="vt" x="380" y="422" text-anchor="middle">PLAN VIEW · FOUR FRAMES, FIXED DT</text>
+  <text class="vs" x="380" y="435" text-anchor="middle">SCALE 1 MS = 8 PX · TIMELINE · ILLUSTRATIVE</text>
+  <!-- Detail A: interpolation at the end of frame 3 -->
+  <path class="obj" d="M62,525L362,525"/>
+  <circle class="dot" cx="62" cy="525" r="3"/>
+  <circle class="dot" cx="362" cy="525" r="3"/>
+  <circle class="obj hl" cx="242" cy="525" r="5"/>
+  <text class="sl ink" x="62" y="511" text-anchor="middle">PREVIOUS</text>
+  <text class="sl ink" x="242" y="511" text-anchor="middle">DRAWN</text>
+  <text class="sl ink" x="362" y="511" text-anchor="middle">CURRENT</text>
+  <rect class="nb" x="266.5" y="502.5" width="11" height="11"/>
+  <text class="nbt" x="272" y="510.7" text-anchor="middle">3</text>
+  <text class="dt" x="62" y="543" text-anchor="middle">P3</text>
+  <text class="dt" x="242" y="543" text-anchor="middle">D3</text>
+  <text class="dt" x="362" y="543" text-anchor="middle">C3</text>
+  <path class="ext" d="M62,552L62,567"/>
+  <path class="ext" d="M242,552L242,567"/>
+  <path class="dim hl" d="M62,563L242,563" marker-start="url(#gm-ts-ah-hl)" marker-end="url(#gm-ts-ah-hl)"/>
+  <text class="dt hl" x="152" y="559" text-anchor="middle">α3 × dt</text>
+  <path class="ext" d="M62,570L62,593"/>
+  <path class="ext" d="M362,552L362,593"/>
+  <path class="dim" d="M62,589L362,589" marker-start="url(#gm-ts-ah)" marker-end="url(#gm-ts-ah)"/>
+  <text class="dt" x="212" y="585" text-anchor="middle">dt</text>
+  <text class="vt" x="212" y="633" text-anchor="middle">DETAIL A · DRAWING FRAME 3</text>
+  <text class="vs" x="212" y="646" text-anchor="middle">SCALE 1 MS = 30 PX · TIME AXIS</text>
+  <!-- Variable table -->
+  <text class="vt" x="400" y="494">VARIABLES · MS, ILLUSTRATIVE</text>
+  <rect class="tbl" x="400" y="501" width="276" height="225"/>
+  <path class="tbl" d="M400,516L676,516"/>
+  <path class="tbl" d="M400,531L676,531"/>
+  <path class="tbl" d="M400,546L676,546"/>
+  <path class="tbl" d="M400,561L676,561"/>
+  <path class="tbl" d="M400,576L676,576"/>
+  <path class="tbl" d="M400,591L676,591"/>
+  <path class="tbl" d="M400,606L676,606"/>
+  <path class="tbl" d="M400,621L676,621"/>
+  <path class="tbl" d="M400,636L676,636"/>
+  <path class="tbl" d="M400,651L676,651"/>
+  <path class="tbl" d="M400,666L676,666"/>
+  <path class="tbl" d="M400,681L676,681"/>
+  <path class="tbl" d="M400,696L676,696"/>
+  <path class="tbl" d="M400,711L676,711"/>
+  <path class="tbl" d="M443,501L443,726"/>
+  <path class="tbl" d="M574,501L574,726"/>
+  <text class="th" x="406" y="511.2">CODE</text>
+  <text class="th" x="508.5" y="511.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="625" y="511.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="406" y="526.7">dt</text>
+  <text class="tc" x="508.5" y="526.7" text-anchor="middle">simulation step, 100 Hz</text>
+  <text class="tc" x="625" y="526.7" text-anchor="middle">10</text>
+  <text class="tc" x="406" y="541.7">R1</text>
+  <text class="tc" x="508.5" y="541.7" text-anchor="middle">render frame 1</text>
+  <text class="tc" x="625" y="541.7" text-anchor="middle">12</text>
+  <text class="tc" x="406" y="556.7">R2</text>
+  <text class="tc" x="508.5" y="556.7" text-anchor="middle">render frame 2</text>
+  <text class="tc" x="625" y="556.7" text-anchor="middle">20</text>
+  <text class="tc" x="406" y="571.7">R3</text>
+  <text class="tc" x="508.5" y="571.7" text-anchor="middle">render frame 3</text>
+  <text class="tc" x="625" y="571.7" text-anchor="middle">14</text>
+  <text class="tc" x="406" y="586.7">R4</text>
+  <text class="tc" x="508.5" y="586.7" text-anchor="middle">render frame 4</text>
+  <text class="tc" x="625" y="586.7" text-anchor="middle">24</text>
+  <text class="tc" x="406" y="601.7">E1</text>
+  <text class="tc" x="508.5" y="601.7" text-anchor="middle">elapsed</text>
+  <text class="tc" x="625" y="601.7" text-anchor="middle">R1+…+R4 = 70</text>
+  <text class="tc" x="406" y="616.7">n1…n4</text>
+  <text class="tc" x="508.5" y="616.7" text-anchor="middle">steps, ⌊(Ai−1 + Ri) ÷ dt⌋</text>
+  <text class="tc" x="625" y="616.7" text-anchor="middle">1 · 2 · 1 · 3</text>
+  <text class="tc" x="406" y="631.7">A1…A4</text>
+  <text class="tc" x="508.5" y="631.7" text-anchor="middle">carry, Ai−1 + Ri − ni × dt</text>
+  <text class="tc" x="625" y="631.7" text-anchor="middle">2 · 2 · 6 · 0</text>
+  <text class="tc" x="406" y="646.7">α1…α4</text>
+  <text class="tc" x="508.5" y="646.7" text-anchor="middle">alpha, Ai ÷ dt</text>
+  <text class="tc" x="625" y="646.7" text-anchor="middle">0.2 · 0.2 · 0.6 · 0.0</text>
+  <text class="tc" x="406" y="661.7">N1</text>
+  <text class="tc" x="508.5" y="661.7" text-anchor="middle">steps run</text>
+  <text class="tc" x="625" y="661.7" text-anchor="middle">n1+…+n4 = 7</text>
+  <text class="tc" x="406" y="676.7">E1</text>
+  <text class="tc" x="508.5" y="676.7" text-anchor="middle">check</text>
+  <text class="tc" x="625" y="676.7" text-anchor="middle">N1 × dt + A4 = 70</text>
+  <text class="tc" x="406" y="691.7">P3</text>
+  <text class="tc" x="508.5" y="691.7" text-anchor="middle">previous state, frame 3</text>
+  <text class="tc" x="625" y="691.7" text-anchor="middle">30</text>
+  <text class="tc" x="406" y="706.7">C3</text>
+  <text class="tc" x="508.5" y="706.7" text-anchor="middle">current state, frame 3</text>
+  <text class="tc" x="625" y="706.7" text-anchor="middle">40</text>
+  <text class="tc" x="406" y="721.7">D3</text>
+  <text class="tc" x="508.5" y="721.7" text-anchor="middle">drawn</text>
+  <text class="tc" x="625" y="721.7" text-anchor="middle">P3 + α3 × dt = 36</text>
 </svg>

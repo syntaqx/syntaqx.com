@@ -1,138 +1,137 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 590">
-  <defs>
-    <marker id="gm-ai-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="gm-ai-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <pattern id="gm-ai-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
-  </defs>
-
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-AI-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">voice npc turn, latency budget</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <!-- Plan view -->
-  <text class="vt" x="40" y="64">Plan view: one conversation turn</text>
-  <text class="vs" x="40" y="80">Scale 1 ms = 0.5 px · timeline · values in ms</text>
-
-  <!-- L1 -->
-  <path class="ext" d="M100,125V95M675,125V95"/>
-  <path class="dim hl" d="M100,100H675" marker-start="url(#gm-ai-ah-hl)" marker-end="url(#gm-ai-ah-hl)"/>
-  <text class="dt hl" x="387.5" y="96" text-anchor="middle">L1 = 1,150 [1]</text>
-
-  <!-- Stages -->
-  <rect class="obj fill-2" x="100" y="128" width="150" height="40"/>
-  <rect class="obj fill-2" x="250" y="128" width="75" height="40"/>
-  <rect class="obj fill-1" x="325" y="128" width="25" height="40"/>
-  <rect class="obj fill-2" x="350" y="128" width="200" height="40"/>
-  <rect class="obj fill-1" x="550" y="128" width="25" height="40"/>
-  <rect class="obj fill-2" x="575" y="128" width="100" height="40"/>
-  <text class="sl ink" x="175" y="148" text-anchor="middle" dominant-baseline="central">end of speech</text>
-  <text class="sl ink" x="287.5" y="148" text-anchor="middle" dominant-baseline="central">ASR</text>
-  <text class="sl ink" x="450" y="148" text-anchor="middle" dominant-baseline="central">LLM</text>
-  <text class="sl ink" x="625" y="148" text-anchor="middle" dominant-baseline="central">TTS</text>
-
-  <!-- Leaders for the two filters -->
-  <circle class="dot" cx="337.5" cy="140" r="2"/>
-  <path class="leader" d="M337.5,140L326,116H300"/>
-  <text class="sl ink" x="296" y="116" text-anchor="end" dominant-baseline="central">input filter</text>
-  <circle class="dot" cx="562.5" cy="140" r="2"/>
-  <path class="leader" d="M562.5,140L551,116H530"/>
-  <text class="sl ink" x="526" y="116" text-anchor="end" dominant-baseline="central">output filter</text>
-
-  <!-- Detail circle on T5 -->
-  <circle class="detail" cx="562.5" cy="148" r="22"/>
-  <text class="sl ink" x="589" y="116" dominant-baseline="central">detail A</text>
-
-  <!-- Chain T1 to T6 -->
-  <path class="ext" d="M100,171V197M250,171V197M325,171V219M350,171V219M550,171V219M575,171V219M675,171V197"/>
-  <path class="dim" d="M100,192H250" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
-  <text class="dt" x="175" y="188" text-anchor="middle">T1 = 300</text>
-  <path class="dim" d="M250,192H325" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
-  <text class="dt" x="287.5" y="188" text-anchor="middle">T2 = 150</text>
-  <path class="dim" d="M350,192H550" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
-  <text class="dt" x="450" y="188" text-anchor="middle">T4 = 400</text>
-  <path class="dim" d="M575,192H675" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
-  <text class="dt" x="625" y="188" text-anchor="middle">T6 = 200</text>
-  <path class="dim" d="M305,214H325" marker-end="url(#gm-ai-ah)"/>
-  <path class="dim" d="M325,214H350"/>
-  <path class="dim" d="M370,214H350" marker-end="url(#gm-ai-ah)"/>
-  <text class="dt" x="301" y="214" text-anchor="end" dominant-baseline="central">T3 = 50</text>
-  <path class="dim" d="M530,214H550" marker-end="url(#gm-ai-ah)"/>
-  <path class="dim" d="M550,214H575"/>
-  <path class="dim" d="M595,214H575" marker-end="url(#gm-ai-ah)"/>
-  <text class="dt" x="599" y="214" dominant-baseline="central">T5 = 50</text>
-  <text class="t" x="387.5" y="246" text-anchor="middle">L1 = T1 + ... + T6 = 300 + 150 + 50 + 400 + 50 + 200 = 1,150</text>
-
-  <!-- Detail A: output filter, per sentence -->
-  <text class="vt" x="40" y="282">Detail A: output filter</text>
-  <text class="vs" x="40" y="298">Not to scale · gated per sentence</text>
-  <text class="sl ink" x="50" y="324" dominant-baseline="central">llm</text>
-  <text class="sl ink" x="50" y="366" dominant-baseline="central">filter</text>
-  <text class="sl ink" x="50" y="408" dominant-baseline="central">tts</text>
-  <rect class="obj fill-2" x="140" y="312" width="90" height="24"/>
-  <rect class="obj fill-2" x="230" y="312" width="90" height="24"/>
-  <rect class="hatch" x="320" y="312" width="90" height="24" fill="url(#gm-ai-hatch)"/>
-  <text class="sl ink" x="185" y="324" text-anchor="middle" dominant-baseline="central">S1</text>
-  <text class="sl ink" x="275" y="324" text-anchor="middle" dominant-baseline="central">S2</text>
-  <text class="sl ink ko" x="365" y="324" text-anchor="middle" dominant-baseline="central">S3</text>
-  <rect class="obj" x="170" y="356" width="30" height="20"/>
-  <rect class="obj" x="260" y="356" width="30" height="20"/>
-  <rect class="obj" x="350" y="356" width="30" height="20"/>
-  <text class="t" x="386" y="366" dominant-baseline="central">[3]</text>
-  <path class="ln ink" d="M185,338V354" marker-end="url(#gm-ai-ah)"/>
-  <path class="ln ink" d="M275,338V354" marker-end="url(#gm-ai-ah)"/>
-  <path class="ln ink" d="M365,338V354" marker-end="url(#gm-ai-ah)"/>
-  <path class="ln ink" d="M185,378V394" marker-end="url(#gm-ai-ah)"/>
-  <path class="ln ink" d="M275,378V394" marker-end="url(#gm-ai-ah)"/>
-  <path class="ln ink" d="M365,378V394" marker-end="url(#gm-ai-ah)"/>
-  <rect class="obj fill-2" x="140" y="396" width="90" height="24"/>
-  <rect class="obj fill-2" x="230" y="396" width="90" height="24"/>
-  <rect class="obj fill-1" x="320" y="396" width="90" height="24"/>
-  <text class="sl ink" x="185" y="408" text-anchor="middle" dominant-baseline="central">S1</text>
-  <text class="sl ink" x="275" y="408" text-anchor="middle" dominant-baseline="central">S2</text>
-  <text class="sl ink" x="365" y="408" text-anchor="middle" dominant-baseline="central">fallback</text>
-  <text class="n" x="140" y="444">Each sentence is checked before it is spoken;</text>
-  <text class="n" x="140" y="460">S1 plays while S2 is still being generated.</text>
-
-  <!-- Variable table -->
-  <text class="vt" x="440" y="282">Variables</text>
-  <text class="vs" x="440" y="298">Illustrative [1] · ms</text>
-  <rect class="cell band" x="440" y="308" width="50" height="22"/>
-  <rect class="cell band" x="490" y="308" width="180" height="22"/>
-  <rect class="cell band" x="670" y="308" width="70" height="22"/>
-  <text class="cap ink" x="450" y="319" dominant-baseline="central">code</text>
-  <text class="cap ink" x="500" y="319" dominant-baseline="central">item</text>
-  <text class="cap ink" x="730" y="319" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M440,330H740V484H440Z"/>
-  <path class="ln ink" d="M490,330V484M670,330V484"/>
-  <path class="ln" d="M440,352H740M440,374H740M440,396H740M440,418H740M440,440H740M440,462H740"/>
-  <text class="t b" x="450" y="341" dominant-baseline="central">L1</text>
-  <text class="t" x="500" y="341" dominant-baseline="central">speech end to voice</text>
-  <text class="t b" x="730" y="341" text-anchor="end" dominant-baseline="central">1,150</text>
-  <text class="t" x="450" y="363" dominant-baseline="central">T1</text>
-  <text class="t" x="500" y="363" dominant-baseline="central">end of speech [2]</text>
-  <text class="t" x="730" y="363" text-anchor="end" dominant-baseline="central">300</text>
-  <text class="t" x="450" y="385" dominant-baseline="central">T2</text>
-  <text class="t" x="500" y="385" dominant-baseline="central">ASR final text</text>
-  <text class="t" x="730" y="385" text-anchor="end" dominant-baseline="central">150</text>
-  <text class="t" x="450" y="407" dominant-baseline="central">T3</text>
-  <text class="t" x="500" y="407" dominant-baseline="central">input moderation</text>
-  <text class="t" x="730" y="407" text-anchor="end" dominant-baseline="central">50</text>
-  <text class="t" x="450" y="429" dominant-baseline="central">T4</text>
-  <text class="t" x="500" y="429" dominant-baseline="central">LLM first sentence</text>
-  <text class="t" x="730" y="429" text-anchor="end" dominant-baseline="central">400</text>
-  <text class="t" x="450" y="451" dominant-baseline="central">T5</text>
-  <text class="t" x="500" y="451" dominant-baseline="central">output moderation</text>
-  <text class="t" x="730" y="451" text-anchor="end" dominant-baseline="central">50</text>
-  <text class="t" x="450" y="473" dominant-baseline="central">T6</text>
-  <text class="t" x="500" y="473" dominant-baseline="central">TTS first audio</text>
-  <text class="t" x="730" y="473" text-anchor="end" dominant-baseline="central">200</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 595">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-ai-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-ai-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-ai-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="575" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="500" width="700" height="76"/>
-  <text class="sl ink" x="52" y="518">notes</text>
-  <text class="n" x="52" y="536">[1] Illustrative budget, not a measurement: real values come from your vendors, models and network.</text>
-  <text class="n" x="52" y="552">[2] The silence the client waits for before deciding the player has finished speaking.</text>
-  <text class="n" x="52" y="568">[3] A blocked sentence never reaches TTS: a scripted fallback line plays and the turn is logged.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">ILLUSTRATIVE BUDGET, NOT A MEASUREMENT: REAL VALUES COME FROM YOUR VENDORS, MODELS AND NETWORK.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">T1 IS THE SILENCE THE CLIENT WAITS FOR BEFORE DECIDING THE PLAYER HAS FINISHED SPEAKING.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">A BLOCKED SENTENCE NEVER REACHES TTS: A SCRIPTED FALLBACK LINE PLAYS AND THE TURN IS LOGGED.</text>
+  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <text class="nt" x="50" y="113">EACH SENTENCE IS CHECKED BEFORE IT IS SPOKEN; S1 PLAYS WHILE S2 IS STILL BEING GENERATED.</text>
+  <text class="nt" x="50" y="130">VALUES IN MS. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
+  <!-- Plan view: one conversation turn -->
+  <rect class="obj fill-2" x="92.5" y="219" width="150" height="36"/>
+  <rect class="obj fill-2" x="242.5" y="219" width="75" height="36"/>
+  <rect class="obj fill-1" x="317.5" y="219" width="25" height="36"/>
+  <rect class="obj fill-2" x="342.5" y="219" width="200" height="36"/>
+  <rect class="obj fill-1" x="542.5" y="219" width="25" height="36"/>
+  <rect class="obj fill-2" x="567.5" y="219" width="100" height="36"/>
+  <text class="sl ink" x="167.5" y="240" text-anchor="middle">END OF SPEECH</text>
+  <text class="sl ink" x="280" y="240" text-anchor="middle">ASR</text>
+  <text class="sl ink" x="442.5" y="240" text-anchor="middle">LLM</text>
+  <text class="sl ink" x="617.5" y="240" text-anchor="middle">TTS</text>
+  <path class="ext" d="M92.5,216L92.5,175"/>
+  <path class="ext" d="M667.5,216L667.5,175"/>
+  <path class="dim hl" d="M92.5,179L667.5,179" marker-start="url(#gm-ai-ah-hl)" marker-end="url(#gm-ai-ah-hl)"/>
+  <text class="dt hl" x="380" y="175" text-anchor="middle">L1</text>
+  <rect class="nb" x="392.5" y="166" width="11" height="11"/>
+  <text class="nbt" x="398" y="174.2" text-anchor="middle">1</text>
+  <circle class="dot" cx="330" cy="237" r="1.6"/>
+  <path class="leader" d="M330,237L301.5,205H291.5"/>
+  <text class="sl ink" x="287.5" y="208" text-anchor="end">INPUT FILTER</text>
+  <circle class="dot" cx="555" cy="227" r="1.6"/>
+  <path class="leader" d="M555,227L520.5,205H510.5"/>
+  <text class="sl ink" x="506.5" y="208" text-anchor="end">OUTPUT FILTER</text>
+  <circle class="detail" cx="555" cy="237" r="15"/>
+  <path class="leader" d="M561.45,223.46L575,195"/>
+  <text class="sl ink" x="579" y="198">DETAIL A</text>
+  <path class="ext" d="M92.5,258L92.5,279"/>
+  <path class="ext" d="M242.5,258L242.5,279"/>
+  <path class="dim" d="M92.5,275L242.5,275" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
+  <text class="dt" x="167.5" y="287" text-anchor="middle">T1</text>
+  <path class="ext" d="M317.5,258L317.5,279"/>
+  <path class="dim" d="M242.5,275L317.5,275" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
+  <text class="dt" x="280" y="287" text-anchor="middle">T2</text>
+  <path class="ext" d="M342.5,258L342.5,279"/>
+  <path class="dim" d="M317.5,275L342.5,275" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
+  <text class="dt" x="330" y="287" text-anchor="middle">T3</text>
+  <path class="ext" d="M542.5,258L542.5,279"/>
+  <path class="dim" d="M342.5,275L542.5,275" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
+  <text class="dt" x="442.5" y="287" text-anchor="middle">T4</text>
+  <path class="ext" d="M567.5,258L567.5,279"/>
+  <path class="dim" d="M542.5,275L567.5,275" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
+  <text class="dt" x="555" y="287" text-anchor="middle">T5</text>
+  <path class="ext" d="M667.5,258L667.5,279"/>
+  <path class="dim" d="M567.5,275L667.5,275" marker-start="url(#gm-ai-ah)" marker-end="url(#gm-ai-ah)"/>
+  <text class="dt" x="617.5" y="287" text-anchor="middle">T6</text>
+  <rect class="nb" x="182" y="278" width="11" height="11"/>
+  <text class="nbt" x="187.5" y="286.2" text-anchor="middle">2</text>
+  <text class="vt" x="380" y="325" text-anchor="middle">PLAN VIEW · ONE CONVERSATION TURN</text>
+  <text class="vs" x="380" y="338" text-anchor="middle">SCALE 1 MS = 0.5 PX · TIMELINE</text>
+  <!-- Detail A: output filter -->
+  <text class="sl ink" x="52" y="418">LLM</text>
+  <text class="sl ink" x="52" y="461">FILTER</text>
+  <text class="sl ink" x="52" y="504">TTS</text>
+  <rect class="obj fill-2" x="110" y="404" width="74" height="22"/>
+  <text class="sl ink" x="147" y="418" text-anchor="middle">S1</text>
+  <rect class="obj" x="134" y="448" width="26" height="20"/>
+  <path class="leader" d="M147,428V446" marker-end="url(#gm-ai-ah)"/>
+  <path class="leader" d="M147,470V488" marker-end="url(#gm-ai-ah)"/>
+  <rect class="obj fill-2" x="110" y="490" width="74" height="22"/>
+  <text class="sl ink" x="147" y="504" text-anchor="middle">S1</text>
+  <rect class="obj fill-2" x="184" y="404" width="74" height="22"/>
+  <text class="sl ink" x="221" y="418" text-anchor="middle">S2</text>
+  <rect class="obj" x="208" y="448" width="26" height="20"/>
+  <path class="leader" d="M221,428V446" marker-end="url(#gm-ai-ah)"/>
+  <path class="leader" d="M221,470V488" marker-end="url(#gm-ai-ah)"/>
+  <rect class="obj fill-2" x="184" y="490" width="74" height="22"/>
+  <text class="sl ink" x="221" y="504" text-anchor="middle">S2</text>
+  <rect class="hatch" x="258" y="404" width="74" height="22" fill="url(#gm-ai-hatch)"/>
+  <text class="sl ink ko" x="295" y="418" text-anchor="middle">S3</text>
+  <rect class="obj" x="282" y="448" width="26" height="20"/>
+  <path class="leader" d="M295,428V446" marker-end="url(#gm-ai-ah)"/>
+  <path class="leader" d="M295,470V488" marker-end="url(#gm-ai-ah)"/>
+  <rect class="obj fill-1" x="258" y="490" width="74" height="22"/>
+  <text class="sl ink" x="295" y="504" text-anchor="middle">FALLBACK</text>
+  <rect class="nb" x="314.5" y="452.5" width="11" height="11"/>
+  <text class="nbt" x="320" y="460.7" text-anchor="middle">3</text>
+  <rect class="nb" x="340.5" y="409.5" width="11" height="11"/>
+  <text class="nbt" x="346" y="417.7" text-anchor="middle">4</text>
+  <text class="vt" x="221" y="552" text-anchor="middle">DETAIL A · OUTPUT FILTER</text>
+  <text class="vs" x="221" y="565" text-anchor="middle">NOT TO SCALE · GATED PER SENTENCE</text>
+  <!-- Variable table -->
+  <text class="vt" x="400" y="397">VARIABLES · MS, ILLUSTRATIVE</text>
+  <rect class="tbl" x="400" y="404" width="232" height="120"/>
+  <path class="tbl" d="M400,419L632,419"/>
+  <path class="tbl" d="M400,434L632,434"/>
+  <path class="tbl" d="M400,449L632,449"/>
+  <path class="tbl" d="M400,464L632,464"/>
+  <path class="tbl" d="M400,479L632,479"/>
+  <path class="tbl" d="M400,494L632,494"/>
+  <path class="tbl" d="M400,509L632,509"/>
+  <path class="tbl" d="M437,404L437,524"/>
+  <path class="tbl" d="M542,404L542,524"/>
+  <text class="th" x="406" y="414.2">CODE</text>
+  <text class="th" x="489.5" y="414.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="587" y="414.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="406" y="429.7">T1</text>
+  <text class="tc" x="489.5" y="429.7" text-anchor="middle">end of speech</text>
+  <text class="tc" x="587" y="429.7" text-anchor="middle">300</text>
+  <text class="tc" x="406" y="444.7">T2</text>
+  <text class="tc" x="489.5" y="444.7" text-anchor="middle">ASR final text</text>
+  <text class="tc" x="587" y="444.7" text-anchor="middle">150</text>
+  <text class="tc" x="406" y="459.7">T3</text>
+  <text class="tc" x="489.5" y="459.7" text-anchor="middle">input moderation</text>
+  <text class="tc" x="587" y="459.7" text-anchor="middle">50</text>
+  <text class="tc" x="406" y="474.7">T4</text>
+  <text class="tc" x="489.5" y="474.7" text-anchor="middle">LLM first sentence</text>
+  <text class="tc" x="587" y="474.7" text-anchor="middle">400</text>
+  <text class="tc" x="406" y="489.7">T5</text>
+  <text class="tc" x="489.5" y="489.7" text-anchor="middle">output moderation</text>
+  <text class="tc" x="587" y="489.7" text-anchor="middle">50</text>
+  <text class="tc" x="406" y="504.7">T6</text>
+  <text class="tc" x="489.5" y="504.7" text-anchor="middle">TTS first audio</text>
+  <text class="tc" x="587" y="504.7" text-anchor="middle">200</text>
+  <text class="tc" x="406" y="519.7">L1</text>
+  <text class="tc" x="489.5" y="519.7" text-anchor="middle">speech end to voice</text>
+  <text class="tc" x="587" y="519.7" text-anchor="middle">T1+…+T6 = 1,150</text>
 </svg>

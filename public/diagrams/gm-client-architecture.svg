@@ -1,97 +1,90 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 804">
-  <!-- Title strip -->
-  <path class="ln" d="M20,12H740M20,36H740"/>
-  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-LCH-001</text>
-  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">desktop client process stack</text>
-  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
-
-  <text class="vt" x="40" y="64">Exploded axonometric: front-end client</text>
-  <text class="vs" x="40" y="80">Not to scale · plugin model per Riot's 2016 and 2017 posts</text>
-
-  <!-- Assembly lines through the stack's outer corners, behind the plates -->
-  <path class="phantom" d="M295,244V464M645,201V421"/>
-
-  <!-- 00 game process: its own executable, drawn with a gap below the client -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 370)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="125" height="60"/>
-    <rect class="cell band" x="155" y="100" width="125" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="458.65" r="2"/>
-  <path class="leader" d="M309.5,458.65L297.5,446.65H270"/>
-  <text class="sl ink" x="264" y="446.65" text-anchor="end" dominant-baseline="central">00 game process</text>
-  <text class="n" x="264" y="462.65" text-anchor="end">separate executable, own loopback API</text>
-
-  <!-- 01 plugin host -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 274)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="260" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="362.65" r="2"/>
-  <path class="leader" d="M309.5,362.65L297.5,350.65H270"/>
-  <text class="sl ink" x="264" y="350.65" text-anchor="end" dominant-baseline="central">01 plugin host</text>
-  <text class="n" x="264" y="366.65" text-anchor="end">manifest, semver, entitlements [1]</text>
-
-  <!-- 02 local services -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 212)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
-    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="300.65" r="2"/>
-  <path class="leader" d="M309.5,300.65L297.5,288.65H270"/>
-  <text class="sl ink" x="264" y="288.65" text-anchor="end" dominant-baseline="central">02 local services</text>
-  <text class="n" x="264" y="304.65" text-anchor="end">back-end plugins, canonical state [2]</text>
-
-  <!-- 03 web UI -->
-  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 150)">
-    <rect class="obj fill-2" width="300" height="200"/>
-    <rect class="cell band" x="20" y="100" width="80" height="60"/>
-    <rect class="cell band" x="110" y="100" width="80" height="60"/>
-    <rect class="cell band" x="200" y="100" width="80" height="60"/>
-  </g>
-  <circle class="dot" cx="309.5" cy="238.65" r="2"/>
-  <path class="leader" d="M309.5,238.65L297.5,226.65H270"/>
-  <text class="sl ink" x="264" y="226.65" text-anchor="end" dominant-baseline="central">03 web UI</text>
-  <text class="n" x="264" y="242.65" text-anchor="end">CEF renderer, front-end plugins</text>
-
-  <!-- Interfaces between layers -->
-  <text class="n" x="740" y="236" text-anchor="end">REST and</text>
-  <text class="n" x="740" y="250" text-anchor="end">WebSocket [2]</text>
-  <text class="n" x="740" y="366" text-anchor="end">launches</text>
-  <text class="n" x="740" y="380" text-anchor="end">with token [3]</text>
-
-  <!-- Published figures -->
-  <text class="vt" x="40" y="552">Published figures</text>
-  <text class="vs" x="40" y="568">Riot engineering and dev posts · MB</text>
-  <rect class="cell band" x="40" y="578" width="50" height="22"/>
-  <rect class="cell band" x="90" y="578" width="530" height="22"/>
-  <rect class="cell band" x="620" y="578" width="100" height="22"/>
-  <text class="cap ink" x="50" y="589" dominant-baseline="central">code</text>
-  <text class="cap ink" x="100" y="589" dominant-baseline="central">item</text>
-  <text class="cap ink" x="710" y="589" text-anchor="end" dominant-baseline="central">value</text>
-  <path class="cell" d="M40,600H720V688H40Z"/>
-  <path class="ln ink" d="M90,600V688M620,600V688"/>
-  <path class="ln" d="M40,622H720M40,644H720M40,666H720"/>
-  <text class="t" x="50" y="611" dominant-baseline="central">M1</text>
-  <text class="t" x="100" y="611" dominant-baseline="central">desktop services ("foundation") memory, about, 2016</text>
-  <text class="t" x="710" y="611" text-anchor="end" dominant-baseline="central">20</text>
-  <text class="t" x="50" y="633" dominant-baseline="central">M2</text>
-  <text class="t" x="100" y="633" dominant-baseline="central">front-end memory per session, p50, CEF 74</text>
-  <text class="t" x="710" y="633" text-anchor="end" dominant-baseline="central">597</text>
-  <text class="t" x="50" y="655" dominant-baseline="central">M3</text>
-  <text class="t" x="100" y="655" dominant-baseline="central">same, p50, CEF 91 (patch 11.17, September 2021)</text>
-  <text class="t" x="710" y="655" text-anchor="end" dominant-baseline="central">275</text>
-  <text class="t b" x="50" y="677" dominant-baseline="central">M4</text>
-  <text class="t" x="100" y="677" dominant-baseline="central">saved by the engine upgrade: M2 - M3 = 597 - 275</text>
-  <text class="t b" x="710" y="677" text-anchor="end" dominant-baseline="central">322</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 761">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="gm-ca-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="gm-ca-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="gm-ca-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <rect class="sheet" x="10" y="10" width="740" height="741" rx="10"/>
   <!-- Notes -->
-  <rect class="note-box" x="40" y="706" width="680" height="78"/>
-  <text class="sl ink" x="52" y="724">notes</text>
-  <text class="n" x="52" y="742">[1] The host loads the plugins a build's manifest lists, if their versions agree, chosen by the player's entitlements.</text>
-  <text class="n" x="52" y="758">[2] The UI rebuilds itself from the services with GETs and watches changes, so it can close while services keep state.</text>
-  <text class="n" x="52" y="774">[3] Hand the game a short-lived token, never the account credential; the client steps back while the match runs.</text>
+  <text class="nth" x="32" y="40">NOTES:</text>
+  <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
+  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <text class="nt" x="50" y="62">THE HOST LOADS THE PLUGINS THE MANIFEST LISTS, IF THEIR VERSIONS AGREE, AS THE PLAYER'S ENTITLEMENTS ALLOW.</text>
+  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <text class="nt" x="50" y="79">THE UI REBUILDS FROM THE SERVICES WITH GETS AND WATCHES CHANGES; IT CAN CLOSE WHILE SERVICES KEEP STATE.</text>
+  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
+  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <text class="nt" x="50" y="96">HAND THE GAME A SHORT-LIVED TOKEN, NEVER THE ACCOUNT CREDENTIAL; THE CLIENT STEPS BACK WHILE THE MATCH RUNS.</text>
+  <text class="nt" x="50" y="113">NOT TO SCALE; PLATE CONTENTS ARE SCHEMATIC. PLUGIN MODEL PER RIOT'S 2016 AND 2017 POSTS; FIGURES IN MB.</text>
+  <!-- Exploded view: game process -->
+  <path class="phantom" d="M344,408L344,408"/>
+  <path class="phantom" d="M626,459L626,459"/>
+  <path class="phantom" d="M558,553L558,553"/>
+  <path class="phantom" d="M276,502L276,502"/>
+  <!-- 00 · Game process -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 344 408)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="96" width="150" height="84"/><rect class="obj fill-1" x="26" y="106" width="130" height="50"/><path class="ctr" d="M26,168L156,168"/><rect class="obj fill-2" x="186" y="96" width="98" height="84"/><circle class="slot" cx="235" cy="118" r="7"/><circle class="slot" cx="235" cy="138" r="7"/><circle class="slot" cx="235" cy="158" r="7"/></g>
+  <circle class="dot" cx="276" cy="502" r="1.6"/>
+  <path class="leader" d="M276,502H244"/>
+  <text class="lt" x="236" y="500" text-anchor="end">00 · GAME PROCESS</text>
+  <text class="vs" x="236" y="512" text-anchor="end">SEPARATE EXECUTABLE · LOOPBACK API</text>
+  <!-- Exploded view: client -->
+  <path class="phantom" d="M344,288L344,156"/>
+  <path class="phantom" d="M626,339L626,207"/>
+  <path class="phantom" d="M558,433L558,301"/>
+  <path class="phantom" d="M276,382L276,250"/>
+  <!-- 01 · Plugin host -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 344 288)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="96" width="76" height="84"/><path class="obj" d="M26,110L82,110"/><path class="obj" d="M26,124L82,124"/><path class="obj" d="M26,138L82,138"/><path class="obj" d="M26,152L82,152"/><path class="obj" d="M26,166L82,166"/><rect class="obj fill-1" x="108" y="98" width="52" height="36"/><rect class="obj fill-1" x="168" y="98" width="52" height="36"/><rect class="slot" x="228" y="98" width="52" height="36"/><rect class="obj fill-1" x="108" y="142" width="52" height="36"/><rect class="slot" x="168" y="142" width="52" height="36"/><rect class="obj fill-1" x="228" y="142" width="52" height="36"/></g>
+  <circle class="dot" cx="276" cy="382" r="1.6"/>
+  <path class="leader" d="M276,382H244"/>
+  <text class="lt" x="236" y="380" text-anchor="end">01 · PLUGIN HOST</text>
+  <text class="vs" x="236" y="392" text-anchor="end">MANIFEST · SEMVER · ENTITLEMENTS</text>
+  <!-- 02 · Local services -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 344 222)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="96" width="58" height="84"/><rect class="obj fill-1" x="26" y="140" width="38" height="30"/><path class="obj" d="M26,150L64,150"/><path class="obj" d="M26,160L64,160"/><rect class="obj fill-2" x="84" y="96" width="58" height="84"/><rect class="obj fill-1" x="94" y="140" width="38" height="30"/><path class="obj" d="M94,150L132,150"/><path class="obj" d="M94,160L132,160"/><rect class="obj fill-2" x="152" y="96" width="58" height="84"/><rect class="obj fill-1" x="162" y="140" width="38" height="30"/><path class="obj" d="M162,150L200,150"/><path class="obj" d="M162,160L200,160"/><rect class="obj fill-2" x="220" y="96" width="58" height="84"/><rect class="obj fill-1" x="230" y="140" width="38" height="30"/><path class="obj" d="M230,150L268,150"/><path class="obj" d="M230,160L268,160"/></g>
+  <circle class="dot" cx="276" cy="316" r="1.6"/>
+  <path class="leader" d="M276,316H244"/>
+  <text class="lt" x="236" y="314" text-anchor="end">02 · LOCAL SERVICES</text>
+  <text class="vs" x="236" y="326" text-anchor="end">BACK-END PLUGINS · CANONICAL STATE</text>
+  <!-- 03 · Web UI -->
+  <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 344 156)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="20" width="268" height="166"/><path class="obj" d="M16,36L284,36"/><rect class="obj fill-1" x="28" y="48" width="70" height="126"/><rect class="obj fill-1" x="110" y="48" width="162" height="60"/><rect class="obj fill-1" x="110" y="120" width="162" height="54"/></g>
+  <circle class="dot" cx="276" cy="250" r="1.6"/>
+  <path class="leader" d="M276,250H244"/>
+  <text class="lt" x="236" y="248" text-anchor="end">03 · WEB UI</text>
+  <text class="vs" x="236" y="260" text-anchor="end">CEF RENDERER · FRONT-END PLUGINS</text>
+  <path class="leader" d="M640,213V267" marker-start="url(#gm-ca-ah)" marker-end="url(#gm-ca-ah)"/>
+  <text class="sl ink" x="648" y="238">REST AND</text>
+  <text class="sl ink" x="648" y="250">WEBSOCKET</text>
+  <rect class="nb" x="712.64" y="235" width="11" height="11"/>
+  <text class="nbt" x="718.14" y="243.2" text-anchor="middle">2</text>
+  <path class="leader" d="M640,345V453" marker-start="url(#gm-ca-ah)" marker-end="url(#gm-ca-ah)"/>
+  <text class="sl ink" x="648" y="397">LAUNCHES</text>
+  <text class="sl ink" x="648" y="409">WITH TOKEN</text>
+  <rect class="nb" x="715.53" y="394" width="11" height="11"/>
+  <text class="nbt" x="721.03" y="402.2" text-anchor="middle">3</text>
+  <rect class="nb" x="109.7" y="371" width="11" height="11"/>
+  <text class="nbt" x="115.2" y="379.2" text-anchor="middle">1</text>
+  <text class="vt" x="451" y="593" text-anchor="middle">EXPLODED VIEW · DESKTOP CLIENT</text>
+  <text class="vs" x="451" y="606" text-anchor="middle">AXONOMETRIC · NOT TO SCALE · GAME PROCESS SPLIT OFF</text>
+  <!-- Published figures -->
+  <text class="vt" x="206" y="649">PUBLISHED FIGURES · MB</text>
+  <rect class="tbl" x="206" y="656" width="348" height="75"/>
+  <path class="tbl" d="M206,671L554,671"/>
+  <path class="tbl" d="M206,686L554,686"/>
+  <path class="tbl" d="M206,701L554,701"/>
+  <path class="tbl" d="M206,716L554,716"/>
+  <path class="tbl" d="M243,656L243,731"/>
+  <path class="tbl" d="M475,656L475,731"/>
+  <text class="th" x="212" y="666.2">CODE</text>
+  <text class="th" x="359" y="666.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="514.5" y="666.2" text-anchor="middle">VALUE</text>
+  <text class="tc" x="212" y="681.7">M1</text>
+  <text class="tc" x="359" y="681.7" text-anchor="middle">desktop services memory, 2016</text>
+  <text class="tc" x="514.5" y="681.7" text-anchor="middle">about 20</text>
+  <text class="tc" x="212" y="696.7">M2</text>
+  <text class="tc" x="359" y="696.7" text-anchor="middle">front-end memory per session, p50, CEF 74</text>
+  <text class="tc" x="514.5" y="696.7" text-anchor="middle">597</text>
+  <text class="tc" x="212" y="711.7">M3</text>
+  <text class="tc" x="359" y="711.7" text-anchor="middle">same, p50, CEF 91, patch 11.17, September 2021</text>
+  <text class="tc" x="514.5" y="711.7" text-anchor="middle">275</text>
+  <text class="tc" x="212" y="726.7">M4</text>
+  <text class="tc" x="359" y="726.7" text-anchor="middle">saved by the engine upgrade</text>
+  <text class="tc" x="514.5" y="726.7" text-anchor="middle">M2 − M3 = 322</text>
 </svg>
