@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 710">
+  <defs>
+    <marker id="pm-aw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="pm-aw-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PM-ACH-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">ach debit return windows</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: banking days after settlement -->
+  <text class="vt" x="40" y="64">Plan view: one consumer debit after settlement</text>
+  <text class="vs" x="40" y="80">Scale 1 banking day = 72 px to the break · not to scale after it</text>
+
+  <!-- Ruler -->
+  <path class="ln ink" d="M140,112H590M606,112H660"/>
+  <path class="ln ink" d="M140,108V116M212,108V116M284,108V116M356,108V116M428,108V116M500,108V116M572,108V116M660,108V116"/>
+  <path class="ln ink" d="M592,117L598,107M598,117L604,107"/>
+  <text class="sl ink" x="140" y="100" text-anchor="middle">S [1]</text>
+  <text class="sl" x="212" y="100" text-anchor="middle">S+1</text>
+  <text class="sl" x="284" y="100" text-anchor="middle">S+2</text>
+  <text class="sl" x="356" y="100" text-anchor="middle">S+3</text>
+  <text class="sl" x="428" y="100" text-anchor="middle">S+4</text>
+  <text class="sl" x="500" y="100" text-anchor="middle">S+5</text>
+  <text class="sl" x="572" y="100" text-anchor="middle">S+6</text>
+  <text class="sl" x="660" y="100" text-anchor="middle">S+60</text>
+  <path class="ctr" d="M284,118V404"/>
+
+  <!-- State row -->
+  <text class="t" x="128" y="154" text-anchor="end" dominant-baseline="central">state</text>
+  <rect class="obj fill-2" x="140" y="140" width="144" height="28"/>
+  <rect class="obj fill-2" x="284" y="140" width="306" height="28"/>
+  <rect class="obj fill-2" x="606" y="140" width="54" height="28"/>
+  <rect class="obj fill-1" x="660" y="140" width="76" height="28"/>
+  <text class="sl ink" x="212" y="154" text-anchor="middle" dominant-baseline="central">settled</text>
+  <text class="sl ink" x="437" y="154" text-anchor="middle" dominant-baseline="central">available</text>
+  <text class="sl ink" x="698" y="154" text-anchor="middle" dominant-baseline="central">final</text>
+
+  <!-- Administrative returns -->
+  <text class="t" x="128" y="224" text-anchor="end" dominant-baseline="central">returns</text>
+  <rect class="obj fill-2" x="140" y="210" width="144" height="28"/>
+  <text class="sl ink" x="212" y="224" text-anchor="middle" dominant-baseline="central">admin returns</text>
+  <path class="ext" d="M140,241V267M284,241V267"/>
+  <path class="dim" d="M140,262H284" marker-start="url(#pm-aw-ah)" marker-end="url(#pm-aw-ah)"/>
+  <text class="dt" x="212" y="258" text-anchor="middle">R1 = 2</text>
+
+  <!-- Unauthorized consumer returns: the subject -->
+  <text class="t" x="128" y="304" text-anchor="end" dominant-baseline="central">unauth.</text>
+  <rect class="obj fill-1" x="140" y="290" width="450" height="28"/>
+  <rect class="obj fill-1" x="606" y="290" width="54" height="28"/>
+  <text class="sl ink" x="450" y="304" text-anchor="middle" dominant-baseline="central">unauthorized returns [2]</text>
+  <path class="ext" d="M140,321V347M660,321V347"/>
+  <path class="dim hl" d="M140,342H660" marker-start="url(#pm-aw-ah-hl)" marker-end="url(#pm-aw-ah-hl)"/>
+  <text class="dt hl" x="400" y="338" text-anchor="middle">U1 = 60 calendar days</text>
+
+  <!-- Originator reversal -->
+  <text class="t" x="128" y="384" text-anchor="end" dominant-baseline="central">reversal</text>
+  <rect class="obj fill-2" x="140" y="370" width="360" height="28"/>
+  <text class="sl ink" x="392" y="384" text-anchor="middle" dominant-baseline="central">originator reversal</text>
+  <path class="ext" d="M140,401V427M500,401V427"/>
+  <path class="dim" d="M140,422H500" marker-start="url(#pm-aw-ah)" marker-end="url(#pm-aw-ah)"/>
+  <text class="dt" x="320" y="418" text-anchor="middle">V1 = 5 [3]</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="462">Variables</text>
+  <text class="vs" x="40" y="478">Nacha Operating Rules · banking days unless noted</text>
+  <rect class="cell band" x="40" y="488" width="60" height="22"/>
+  <rect class="cell band" x="100" y="488" width="480" height="22"/>
+  <rect class="cell band" x="580" y="488" width="140" height="22"/>
+  <text class="cap ink" x="50" y="499" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="499" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="499" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,510H720V598H40Z"/>
+  <path class="ln ink" d="M100,510V598M580,510V598"/>
+  <path class="ln" d="M40,532H720M40,554H720M40,576H720"/>
+  <text class="t" x="50" y="521" dominant-baseline="central">S</text>
+  <text class="t" x="110" y="521" dominant-baseline="central">settlement date of the debit</text>
+  <text class="t" x="710" y="521" text-anchor="end" dominant-baseline="central">day 0</text>
+  <text class="t" x="50" y="543" dominant-baseline="central">R1</text>
+  <text class="t" x="110" y="543" dominant-baseline="central">administrative returns: R01-R04, R09, R16, R17, R29</text>
+  <text class="t" x="710" y="543" text-anchor="end" dominant-baseline="central">2 banking days</text>
+  <text class="t b" x="50" y="565" dominant-baseline="central">U1</text>
+  <text class="t b" x="110" y="565" dominant-baseline="central">unauthorized consumer returns: R05, R07, R10, R11, R51</text>
+  <text class="t b" x="710" y="565" text-anchor="end" dominant-baseline="central">60 calendar days</text>
+  <text class="t" x="50" y="587" dominant-baseline="central">V1</text>
+  <text class="t" x="110" y="587" dominant-baseline="central">Originator's reversal must reach the RDFI</text>
+  <text class="t" x="710" y="587" text-anchor="end" dominant-baseline="central">5 banking days</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="614" width="680" height="76"/>
+  <text class="sl ink" x="52" y="632">notes</text>
+  <text class="n" x="52" y="650">[1] Every window runs from the settlement date S; weekends and holidays aren't banking days.</text>
+  <text class="n" x="52" y="666">[2] Until U1 closes, the RDFI returns the debit on the consumer's written statement, with no evidence step.</text>
+  <text class="n" x="52" y="682">[3] Only for Nacha's listed errors, with REVERSAL in the Company Entry Description. It's not a collection tool.</text>
+</svg>

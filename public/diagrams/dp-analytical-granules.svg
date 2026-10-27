@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 650">
+  <defs>
+    <marker id="dp-gr-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="dp-gr-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-OLAP-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">what a query reads</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: one MergeTree part</text>
+  <text class="vs" x="40" y="80">Not to scale · columns as rows, granules as columns · values in rows</text>
+
+  <!-- G1 and R1 above the grid -->
+  <path class="ext" d="M160,130V105M224,130V105M288,130V105M416,130V105"/>
+  <path class="dim" d="M160,110H224" marker-start="url(#dp-gr-ah)" marker-end="url(#dp-gr-ah)"/>
+  <text class="dt" x="192" y="106" text-anchor="middle">G1 = 8192</text>
+  <path class="dim hl" d="M288,110H416" marker-start="url(#dp-gr-ah-hl)" marker-end="url(#dp-gr-ah-hl)"/>
+  <text class="dt hl" x="352" y="106" text-anchor="middle">R1 = 16,384</text>
+
+  <!-- Sparse index: one mark per granule -->
+  <text class="sl ink" x="152" y="142" text-anchor="end" dominant-baseline="central">index [1]</text>
+  <path class="ln" d="M160,142H672"/>
+  <circle class="dot" cx="192" cy="142" r="2.5"/>
+  <circle class="dot" cx="256" cy="142" r="2.5"/>
+  <circle class="dot" cx="320" cy="142" r="2.5"/>
+  <circle class="dot" cx="384" cy="142" r="2.5"/>
+  <circle class="dot" cx="448" cy="142" r="2.5"/>
+  <circle class="dot" cx="512" cy="142" r="2.5"/>
+  <circle class="dot" cx="576" cy="142" r="2.5"/>
+  <circle class="dot" cx="640" cy="142" r="2.5"/>
+
+  <!-- The part: six column files by eight granules -->
+  <text class="sl ink" x="152" y="173" text-anchor="end" dominant-baseline="central">tenant_id</text>
+  <rect class="obj fill-2" x="160" y="160" width="64" height="26"/>
+  <rect class="obj fill-2" x="224" y="160" width="64" height="26"/>
+  <rect class="obj hl" x="288" y="160" width="64" height="26"/>
+  <rect class="obj hl" x="352" y="160" width="64" height="26"/>
+  <rect class="obj fill-2" x="416" y="160" width="64" height="26"/>
+  <rect class="obj fill-2" x="480" y="160" width="64" height="26"/>
+  <rect class="obj fill-2" x="544" y="160" width="64" height="26"/>
+  <rect class="obj fill-2" x="608" y="160" width="64" height="26"/>
+  <text class="sl ink" x="152" y="199" text-anchor="end" dominant-baseline="central">occurred_at</text>
+  <rect class="obj fill-2" x="160" y="186" width="64" height="26"/>
+  <rect class="obj fill-2" x="224" y="186" width="64" height="26"/>
+  <rect class="obj hl" x="288" y="186" width="64" height="26"/>
+  <rect class="obj hl" x="352" y="186" width="64" height="26"/>
+  <rect class="obj fill-2" x="416" y="186" width="64" height="26"/>
+  <rect class="obj fill-2" x="480" y="186" width="64" height="26"/>
+  <rect class="obj fill-2" x="544" y="186" width="64" height="26"/>
+  <rect class="obj fill-2" x="608" y="186" width="64" height="26"/>
+  <text class="sl ink" x="152" y="225" text-anchor="end" dominant-baseline="central">type</text>
+  <rect class="obj fill-2" x="160" y="212" width="64" height="26"/>
+  <rect class="obj fill-2" x="224" y="212" width="64" height="26"/>
+  <rect class="obj hl" x="288" y="212" width="64" height="26"/>
+  <rect class="obj hl" x="352" y="212" width="64" height="26"/>
+  <rect class="obj fill-2" x="416" y="212" width="64" height="26"/>
+  <rect class="obj fill-2" x="480" y="212" width="64" height="26"/>
+  <rect class="obj fill-2" x="544" y="212" width="64" height="26"/>
+  <rect class="obj fill-2" x="608" y="212" width="64" height="26"/>
+  <text class="sl ink" x="152" y="251" text-anchor="end" dominant-baseline="central">match_id</text>
+  <rect class="obj fill-2" x="160" y="238" width="64" height="26"/>
+  <rect class="obj fill-2" x="224" y="238" width="64" height="26"/>
+  <rect class="obj fill-2" x="288" y="238" width="64" height="26"/>
+  <rect class="obj fill-2" x="352" y="238" width="64" height="26"/>
+  <rect class="obj fill-2" x="416" y="238" width="64" height="26"/>
+  <rect class="obj fill-2" x="480" y="238" width="64" height="26"/>
+  <rect class="obj fill-2" x="544" y="238" width="64" height="26"/>
+  <rect class="obj fill-2" x="608" y="238" width="64" height="26"/>
+  <text class="sl ink" x="152" y="277" text-anchor="end" dominant-baseline="central">region</text>
+  <rect class="obj fill-2" x="160" y="264" width="64" height="26"/>
+  <rect class="obj fill-2" x="224" y="264" width="64" height="26"/>
+  <rect class="obj fill-2" x="288" y="264" width="64" height="26"/>
+  <rect class="obj fill-2" x="352" y="264" width="64" height="26"/>
+  <rect class="obj fill-2" x="416" y="264" width="64" height="26"/>
+  <rect class="obj fill-2" x="480" y="264" width="64" height="26"/>
+  <rect class="obj fill-2" x="544" y="264" width="64" height="26"/>
+  <rect class="obj fill-2" x="608" y="264" width="64" height="26"/>
+  <text class="sl ink" x="152" y="303" text-anchor="end" dominant-baseline="central">payload</text>
+  <rect class="obj fill-2" x="160" y="290" width="64" height="26"/>
+  <rect class="obj fill-2" x="224" y="290" width="64" height="26"/>
+  <rect class="obj fill-2" x="288" y="290" width="64" height="26"/>
+  <rect class="obj fill-2" x="352" y="290" width="64" height="26"/>
+  <rect class="obj fill-2" x="416" y="290" width="64" height="26"/>
+  <rect class="obj fill-2" x="480" y="290" width="64" height="26"/>
+  <rect class="obj fill-2" x="544" y="290" width="64" height="26"/>
+  <rect class="obj fill-2" x="608" y="290" width="64" height="26"/>
+
+  <!-- P1 under the grid -->
+  <path class="ext" d="M160,319V350M672,319V350"/>
+  <path class="dim" d="M160,345H672" marker-start="url(#dp-gr-ah)" marker-end="url(#dp-gr-ah)"/>
+  <text class="dt" x="416" y="341" text-anchor="middle">P1 = 8 x G1 = 65,536</text>
+
+  <!-- Columns read -->
+  <path class="ext" d="M675,160H695M675,238H695"/>
+  <path class="dim" d="M690,160V238" marker-start="url(#dp-gr-ah)" marker-end="url(#dp-gr-ah)"/>
+  <text class="dt" x="697" y="199" dominant-baseline="central">C1 = 3</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="392">Variables</text>
+  <text class="vs" x="40" y="408">Illustrative except G1 [2] · rows</text>
+  <rect class="cell band" x="40" y="418" width="60" height="22"/>
+  <rect class="cell band" x="100" y="418" width="460" height="22"/>
+  <rect class="cell band" x="560" y="418" width="160" height="22"/>
+  <text class="cap ink" x="50" y="429" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="429" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="429" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,440H720V550H40Z"/>
+  <path class="ln ink" d="M100,440V550M560,440V550"/>
+  <path class="ln" d="M40,462H720M40,484H720M40,506H720M40,528H720"/>
+  <text class="t b" x="50" y="451" dominant-baseline="central">G1</text>
+  <text class="t" x="110" y="451" dominant-baseline="central">rows per granule, index_granularity default</text>
+  <text class="t b" x="710" y="451" text-anchor="end" dominant-baseline="central">8,192</text>
+  <text class="t" x="50" y="473" dominant-baseline="central">P1</text>
+  <text class="t" x="110" y="473" dominant-baseline="central">rows in the part: 8 x G1</text>
+  <text class="t" x="710" y="473" text-anchor="end" dominant-baseline="central">65,536</text>
+  <text class="t" x="50" y="495" dominant-baseline="central">R1</text>
+  <text class="t" x="110" y="495" dominant-baseline="central">rows read: granules 3 and 4, 2 x G1</text>
+  <text class="t" x="710" y="495" text-anchor="end" dominant-baseline="central">16,384</text>
+  <text class="t" x="50" y="517" dominant-baseline="central">C1</text>
+  <text class="t" x="110" y="517" dominant-baseline="central">column files opened, of 6</text>
+  <text class="t" x="710" y="517" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t" x="50" y="539" dominant-baseline="central">F1</text>
+  <text class="t" x="110" y="539" dominant-baseline="central">fraction read: (2 x 3) / (8 x 6)</text>
+  <text class="t" x="710" y="539" text-anchor="end" dominant-baseline="central">12.5 %</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="566" width="680" height="66"/>
+  <text class="sl ink" x="52" y="586">notes</text>
+  <text class="n" x="110" y="586">[1] One mark per granule, held in memory; the sort key (tenant_id, occurred_at) finds granules 3 and 4.</text>
+  <text class="n" x="110" y="604">[2] G1 is the ClickHouse default; the part size and the query are illustrative.</text>
+  <text class="n" x="110" y="622">[3] C1: the query filters on tenant and time and groups by type; other columns stay closed.</text>
+</svg>

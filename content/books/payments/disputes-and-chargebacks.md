@@ -25,6 +25,10 @@ Networks name the stages differently, but the shape is the same:
 
 Cardholders generally have **120 days** from the payment to file, and longer for things paid for in advance: for a ticket or a booking, the clock starts at the event, not the purchase. A dispute can therefore arrive months after the money looked settled, which is why disputes are never a state on the payment (see below).
 
+![A timeline of the longest Visa consumer dispute: a 120-day filing window from the purchase, then 30 days for the acquirer's response, 30 for the issuer's pre-arbitration attempt, 30 for the acquirer's pre-arbitration response and 10 to file for arbitration, 220 days in all; a provider's evidence deadline of 7 to 21 days sits inside the first 30.](/diagrams/pm-disputes-deadlines.svg "From purchase to the last arbitration filing can take 220 days. Each step's clock starts when the one before it is processed, and the merchant's own deadline sits well inside the acquirer's.")
+
+Each later step after the response has its own clock too. On Visa's processing-error and consumer disputes, the issuer has 30 days from the response to make a pre-arbitration attempt, the acquirer 30 days to answer it, and then there are 10 days to file for arbitration.
+
 An unanswered inquiry is the most expensive mistake in this table: it's free to resolve with evidence or a refund, and ignoring it can escalate to a chargeback the issuer treats as accepted. Route inquiries to the same queue, with the same urgency, as disputes. Arbitration is rarely worth it: the loser pays the network's fee, which runs to hundreds of dollars, so it only makes sense for large amounts with unambiguous evidence.
 
 ### The Dispute Object

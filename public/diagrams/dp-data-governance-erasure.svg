@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 640">
+  <defs>
+    <marker id="dp-dg-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="dp-dg-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="dp-dg-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-GOV-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">erasure through the warehouse</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: one erasure request</text>
+  <text class="vs" x="40" y="80">Scale 1 day = 18 px · timeline · values in days</text>
+
+  <!-- M1: response deadline -->
+  <path class="ext" d="M100,147V99M640,147V99"/>
+  <path class="dim" d="M100,104H640" marker-start="url(#dp-dg-ah)" marker-end="url(#dp-dg-ah)"/>
+  <text class="dt" x="370" y="100" text-anchor="middle">M1 = 1 month to respond [3]</text>
+
+  <!-- E1: until no copy is recoverable (the subject) -->
+  <path class="ext" d="M388,147V123"/>
+  <path class="dim hl" d="M100,128H388" marker-start="url(#dp-dg-ah-hl)" marker-end="url(#dp-dg-ah-hl)"/>
+  <text class="dt hl" x="244" y="124" text-anchor="middle">E1 = P1 + T1 + T2 = 16</text>
+
+  <!-- The bar -->
+  <rect class="obj fill-1" x="100" y="150" width="36" height="40"/>
+  <rect class="obj fill-2" x="136" y="150" width="126" height="40"/>
+  <rect class="hatch" x="262" y="150" width="126" height="40" fill="url(#dp-dg-hatch)"/>
+  <text class="sl ink" x="199" y="170" text-anchor="middle" dominant-baseline="central">time travel</text>
+  <text class="sl ink ko" x="325" y="170" text-anchor="middle" dominant-baseline="central">fail-safe</text>
+  <text class="n" x="404" y="170" dominant-baseline="central">no copy recoverable [2]</text>
+
+  <!-- Chain P1, T1, T2 -->
+  <path class="ext" d="M100,193V237M136,193V237M262,193V219M388,193V219"/>
+  <path class="dim" d="M80,232H100" marker-end="url(#dp-dg-ah)"/>
+  <path class="dim" d="M100,232H136"/>
+  <path class="dim" d="M156,232H136" marker-end="url(#dp-dg-ah)"/>
+  <text class="dt" x="76" y="232" text-anchor="end" dominant-baseline="central">P1 = 2</text>
+  <path class="dim" d="M136,214H262" marker-start="url(#dp-dg-ah)" marker-end="url(#dp-dg-ah)"/>
+  <text class="dt" x="212" y="210" text-anchor="middle">T1 = 7</text>
+  <path class="dim" d="M262,214H388" marker-start="url(#dp-dg-ah)" marker-end="url(#dp-dg-ah)"/>
+  <text class="dt" x="325" y="210" text-anchor="middle">T2 = 7</text>
+
+  <!-- Axis -->
+  <path class="ln ink" d="M100,250H640M100,246V254M190,246V254M280,246V254M370,246V254M460,246V254M550,246V254M640,246V254"/>
+  <text class="t" x="100" y="266" text-anchor="middle" dominant-baseline="central">0</text>
+  <text class="t" x="190" y="266" text-anchor="middle" dominant-baseline="central">5</text>
+  <text class="t" x="280" y="266" text-anchor="middle" dominant-baseline="central">10</text>
+  <text class="t" x="370" y="266" text-anchor="middle" dominant-baseline="central">15</text>
+  <text class="t" x="460" y="266" text-anchor="middle" dominant-baseline="central">20</text>
+  <text class="t" x="550" y="266" text-anchor="middle" dominant-baseline="central">25</text>
+  <text class="t" x="640" y="266" text-anchor="middle" dominant-baseline="central">30</text>
+  <text class="t" x="640" y="290" text-anchor="end" dominant-baseline="central">days after the request</text>
+  <circle class="dot" cx="100" cy="250" r="2.5"/>
+  <path class="leader" d="M100,252L116,282V296H124"/>
+  <text class="sl ink" x="128" y="296" dominant-baseline="central">request received</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="340">Variables</text>
+  <text class="vs" x="40" y="356">P1 illustrative, T1 and T2 BigQuery defaults [1] · days</text>
+  <rect class="cell band" x="40" y="366" width="50" height="22"/>
+  <rect class="cell band" x="90" y="366" width="470" height="22"/>
+  <rect class="cell band" x="560" y="366" width="160" height="22"/>
+  <text class="cap ink" x="50" y="377" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="377" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="377" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,388H720V498H40Z"/>
+  <path class="ln ink" d="M90,388V498M560,388V498"/>
+  <path class="ln" d="M40,410H720M40,432H720M40,454H720M40,476H720"/>
+  <text class="t" x="50" y="399" dominant-baseline="central">P1</text>
+  <text class="t" x="100" y="399" dominant-baseline="central">purge runs: source, raw, staging, marts, snapshots</text>
+  <text class="t" x="710" y="399" text-anchor="end" dominant-baseline="central">2</text>
+  <text class="t" x="50" y="421" dominant-baseline="central">T1</text>
+  <text class="t" x="100" y="421" dominant-baseline="central">time travel window, default (2 to 7)</text>
+  <text class="t" x="710" y="421" text-anchor="end" dominant-baseline="central">7</text>
+  <text class="t" x="50" y="443" dominant-baseline="central">T2</text>
+  <text class="t" x="100" y="443" dominant-baseline="central">fail-safe, not configurable</text>
+  <text class="t" x="710" y="443" text-anchor="end" dominant-baseline="central">7</text>
+  <text class="t b" x="50" y="465" dominant-baseline="central">E1</text>
+  <text class="t" x="100" y="465" dominant-baseline="central">until no warehouse copy is recoverable</text>
+  <text class="t b" x="710" y="465" text-anchor="end" dominant-baseline="central">16</text>
+  <text class="t" x="50" y="487" dominant-baseline="central">M1</text>
+  <text class="t" x="100" y="487" dominant-baseline="central">GDPR response deadline, drawn as 30 days</text>
+  <text class="t" x="710" y="487" text-anchor="end" dominant-baseline="central">1 month</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="516" width="680" height="108"/>
+  <text class="sl ink" x="52" y="536">notes</text>
+  <text class="n" x="110" y="536">[1] P1 is illustrative: a nightly purge plus a rebuild. T1 and T2 are BigQuery's documented</text>
+  <text class="n" x="110" y="552">defaults; Delta Lake keeps deleted files until VACUUM, which keeps 7 days by default.</text>
+  <text class="n" x="110" y="570">[2] Within the warehouse. Backups, exports, streams and vendors have their own clocks.</text>
+  <text class="n" x="110" y="588">[3] GDPR Article 12(3): within one month of receipt, extendable by two further months</text>
+  <text class="n" x="110" y="604">for complex or numerous requests, if the person is told why within the first month.</text>
+</svg>

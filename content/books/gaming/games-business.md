@@ -1,0 +1,390 @@
++++
+title = "The Games Business"
+description = "How games make money and get made: business models, the 2025 market, platforms, studios and publishers, the volume map and the core data model."
+category = "Gaming Industry"
+order = 1601
+part = "How Games Get Made"
+tags = ["gaming", "business-models", "live-service", "data-model", "platforms"]
++++
+
+A game company sells time spent in a simulation. Sometimes the player pays once at the door, sometimes nothing at the door and a little at a time for years, sometimes a monthly fee for a library, and sometimes an advertiser pays for thirty seconds of the player's attention. Behind every one of those deals is the same machinery: a program that has to produce a frame every 16.67 milliseconds (at 60 frames per second) on hardware the studio doesn't control, a fleet of servers that keeps thousands of matches fair at once, a store and an inventory that must never lose a purchase, and a community that has to be kept safe while it plays. A single-player game on a cartridge needs only the first piece. A competitive online game needs all of them, and needs them for as long as anyone still plays.
+
+The software is hard because those pieces interact under real-time pressure: a patch changes the client, the server and the store at the same minute; a ban touches the account, the match history and the purchases a player might want refunded; an engine migration has to leave every skin a player bought exactly where it was. This chapter is the map the rest of the volume uses: how games make money, how big the market is, the platforms, who builds and publishes games, a game's life from prototype to sunset, and the data model every later chapter extends. Terms are collected in the [Gaming Glossary](/books/gaming/glossary).
+
+## How to Read This Volume
+
+The chapters follow a game from its first build to its years of live operation, in eight parts plus a reference:
+
+- **How Games Get Made.** This chapter, then [The Engine Landscape](/books/gaming/engine-landscape) (Unreal, Unity, Godot, the rest, and how studios choose), [Building Your Own Engine](/books/gaming/building-an-engine) (the core loop, the frame budget, timesteps, entities, determinism) and [Production Pipelines & Builds](/books/gaming/production-pipelines) (source control for binaries, cooking, build farms, crash reporting, certification).
+- **Clients and Delivery.** [Game Clients & Launchers](/books/gaming/game-clients) and [Patching & Content Delivery](/books/gaming/patching).
+- **Multiplayer.** [Netcode Fundamentals](/books/gaming/netcode), [Game Servers & Hosting](/books/gaming/game-servers), [Lockstep, Rollback & Determinism](/books/gaming/determinism-and-rollback), [Matchmaking & Ranked](/books/gaming/matchmaking) and [Parties, Presence, Chat & Voice](/books/gaming/social-systems).
+- **Backend and Live Services.** [Game Backend Architecture](/books/gaming/game-backend), [Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity), [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements), [Live Operations](/books/gaming/live-operations) and [Telemetry & Analytics](/books/gaming/telemetry).
+- **Fair Play and Safety.** [Anti-Cheat](/books/gaming/anti-cheat), [Player Behavior & Moderation](/books/gaming/player-behavior) and [Player Support](/books/gaming/player-support).
+- **Money.** [Monetization Models](/books/gaming/monetization) and [Stores, Fees & Payments](/books/gaming/stores-and-payments).
+- **The Rules.** [Ratings, Age & Children](/books/gaming/ratings-and-age), [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes) and [Accessibility](/books/gaming/accessibility).
+- **Running the Platform.** [Game Metrics](/books/gaming/game-metrics), [AI in Games](/books/gaming/ai-in-games) and [Esports & Spectating](/books/gaming/esports-and-spectating).
+- **Reference.** The [Gaming Glossary](/books/gaming/glossary).
+
+The volume covers what games add. The general engineering lives in the playbook, and chapters here link to it rather than repeat it: [Multi-Tenancy](/docs/architecture/multi-tenancy), [Service Boundaries](/docs/architecture/service-boundaries), [Events & Async Messaging](/docs/architecture/events), [Background Jobs](/docs/architecture/background-jobs), [Data Pipelines & Analytics](/docs/architecture/data-pipelines), [Rules as Data](/docs/architecture/rules-as-data), [Audit Trails](/docs/architecture/audit-trails), [Notifications & Consent](/docs/architecture/notifications), [Matching, Merging & Many Sources](/docs/architecture/record-linkage), [AI Agents in the Product](/docs/architecture/ai-agents), [Time & Date Formats](/docs/fundamentals/time), [Effective Dating & History](/docs/database/temporal-data), [Money](/docs/payments/money), [Idempotency](/docs/payments/idempotency), [Subscriptions & Recurring Billing](/docs/payments/subscriptions), [Sales Tax & VAT](/docs/payments/sales-tax), [GDPR](/docs/compliance/gdpr), [Authentication](/docs/security/authentication), [Identity Providers](/docs/security/identity-providers), [Support Access & Internal Tools](/docs/security/support-access), [AI Security](/docs/security/ai-security) and [Webhooks](/docs/api-design/webhooks). Taking card payments directly, for a web store, is its own volume, [Payments](/books/payments/card-payments).
+
+## The System You're Building
+
+Read end to end, the volume describes the components of a game and the platform that runs it. Each has a chapter:
+
+| Component | What it does | Where |
+| --- | --- | --- |
+| Core model | Accounts, profiles, games, builds, ownership, matches, conduct | This chapter |
+| Engine and runtime | The loop, rendering, simulation, the editor | [The Engine Landscape](/books/gaming/engine-landscape), [Building Your Own Engine](/books/gaming/building-an-engine) |
+| Production | Source control, cooking, build farms, tests, crashes, certification | [Production Pipelines & Builds](/books/gaming/production-pipelines) |
+| Client and delivery | Launcher, front-end client, patcher, CDN | [Game Clients & Launchers](/books/gaming/game-clients), [Patching & Content Delivery](/books/gaming/patching) |
+| Netcode | Prediction, reconciliation, lag compensation, tick rate | [Netcode Fundamentals](/books/gaming/netcode), [Lockstep, Rollback & Determinism](/books/gaming/determinism-and-rollback) |
+| Server fleet | Allocating, hosting and draining game servers | [Game Servers & Hosting](/books/gaming/game-servers) |
+| Matchmaking and social | Queues, ratings, parties, presence, chat, voice | [Matchmaking & Ranked](/books/gaming/matchmaking), [Parties, Presence, Chat & Voice](/books/gaming/social-systems) |
+| Platform services | Backend architecture, accounts, linked platforms | [Game Backend Architecture](/books/gaming/game-backend), [Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity) |
+| Ownership and economy | Entitlements, inventories, wallets, ledgers | [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements) |
+| Live operations | Patches, events, configuration, experiments | [Live Operations](/books/gaming/live-operations), [Telemetry & Analytics](/books/gaming/telemetry) |
+| Fair play | Cheat detection, reports, penalties, appeals, support | [Anti-Cheat](/books/gaming/anti-cheat), [Player Behavior & Moderation](/books/gaming/player-behavior), [Player Support](/books/gaming/player-support) |
+| Money | What is sold, through which store, at what fee | [Monetization Models](/books/gaming/monetization), [Stores, Fees & Payments](/books/gaming/stores-and-payments) |
+| The rules | Age ratings, children, randomized purchases, accessibility | [Ratings, Age & Children](/books/gaming/ratings-and-age), [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes), [Accessibility](/books/gaming/accessibility) |
+| Running it | The numbers, AI, competitive play and broadcast | [Game Metrics](/books/gaming/game-metrics), [AI in Games](/books/gaming/ai-in-games), [Esports & Spectating](/books/gaming/esports-and-spectating) |
+
+## Five Ways Games Make Money
+
+Most games run one dominant model and borrow from a second. The model decides which systems a game needs on day one, and which it can ignore.
+
+| Model | The player pays | What the platform must hold | Typical games |
+| --- | --- | --- | --- |
+| **Premium** | Once, up front, plus optional DLC and expansions | Ownership of the game and each add-on | Story games, most console and PC releases |
+| **Free-to-play** | Nothing to start; buys items, currency and passes | Entitlements, wallets, a catalog, offers, receipts | Competitive online games, most mobile games |
+| **Live service** | Either of the above, for years | Everything above, plus seasons, events and configuration that change without a client patch | Shooters, MOBAs, MMOs, sports titles |
+| **Subscription** | Monthly, for one game or a library | Entitlements bounded in time, renewal and lapse | MMOs, Game Pass, PlayStation Plus |
+| **Advertising** | With attention; the advertiser pays | Ad placements, consent, rewards granted per view | Casual and hyper-casual mobile games |
+
+**Premium** is the oldest model and still the default for story-driven console and PC releases: the player buys a copy, and later buys downloadable content. The ESRB's In-Game Purchases notice lists what can follow the box price: bonus levels, skins, subscriptions, season passes and upgrades such as removing ads. In Newzoo's estimate for 2025 (reported by GameDev Reports), game sales grew 25% on PC and 8.1% on consoles. For the platform, premium is the easy case: one durable entitlement per product, granted by a store, and a save file.
+
+**Free-to-play** removes the price of entry and earns from a minority of players who spend. Apple's in-app purchase types are a good vocabulary for what gets sold: consumable, non-consumable, auto-renewable subscription and non-renewing subscription. A skin is non-consumable; a pack of currency is consumable. Everything sold this way is a record the studio must keep forever, so free-to-play is where the ownership and economy systems in this volume become mandatory, and where randomized purchases bring regulators in ([Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes)).
+
+**Live service** is an operating model rather than a price: the game is a service that keeps changing after launch. Riot described League of Legends as shipping "a new patch every two weeks" in 2016. The model works because players stay a long time: according to Newzoo (via GameDev Reports), 64% of all PC gaming time in 2025 was spent in games released before 2019. A live game needs the whole backend in this volume, because content, prices, events and balance all change on a schedule ([Live Operations](/books/gaming/live-operations)).
+
+**Subscription** comes in two forms. A single game can charge a monthly fee, as MMOs traditionally do; or a platform sells a library. Xbox Game Pass lists four tiers as of October 2026: Essential (50+ games), Premium (200+), Ultimate (500+) and PC Game Pass (300+ on PC). Newzoo reports that subscription revenue (PlayStation Plus, Xbox Game Pass) grew 10.2% in 2025. For the platform, a subscription is an entitlement with an end date that renews or lapses ([Subscriptions & Recurring Billing](/docs/payments/subscriptions)).
+
+**Advertising** pays for most casual mobile games. Rewarded ads trade play for attention: Google's AdMob describes them as letting you "reward users with in-app items for interacting with video ads, playable ads, and surveys." The grant is a ledger entry like any other, with the ad view as its source, and the consent and children's rules that govern ad targeting apply in full ([Ratings, Age & Children](/books/gaming/ratings-and-age)).
+
+[Monetization Models](/books/gaming/monetization) covers the design of each (battle passes, offers, pricing), and [Stores, Fees & Payments](/books/gaming/stores-and-payments) covers what each store takes.
+
+## How Big It Is
+
+Two public sources set the scale. Newzoo's market model is the most cited global estimate; its own site is gated, so the figures below come from GameDev Reports' summary of Newzoo's 2026 update, published June 26, 2026. The Entertainment Software Association's 2026 Essential Facts covers the United States.
+
+![A dimensioned plan view of two horizontal bars at one scale, 2.8 pixels per billion dollars. The upper bar is the 2025 global games market split into mobile 113.3, console 44.7 and PC 43.6, chained to a highlighted overall dimension G1 of 201.6, with a dashed envelope for Newzoo's 2028 forecast of 234.4. The lower bar is 2025 United States consumer spending: content 52.3, hardware 5.4 and accessories 2.95, summing to 60.65. A variable table defines every code and notes cite the sources.](/diagrams/gm-games-business-market.svg "Mobile is more than half of the global market, and in the United States almost all spending is on content rather than hardware: the platform that sells and tracks that content is most of the business.")
+
+What the numbers say for the systems in this volume:
+
+- **The global market was $201.6 billion in 2025,** up 9.1%, the first time Newzoo's estimate passed $200 billion. Mobile was $113.3 billion (+10.7%), console $44.7 billion (+2.8%) and PC $43.6 billion (+12%, which Newzoo calls the highest PC growth rate in its records). Newzoo forecasts a 5.1% compound annual growth rate to $234.4 billion in 2028.
+- **Microtransactions are concentrated.** PC microtransaction revenue grew 9.1% while console microtransaction revenue fell 4.6%, which Newzoo attributes to a few large titles underperforming: when a handful of games carry a segment's spending, their economies are that segment's economy.
+- **In the United States, 212.3 million people play every week,** and consumers spent $60.7 billion on games in 2025: $52.3 billion on content, $5.4 billion on hardware and $2.95 billion on accessories (ESA). The ESA's separate economic impact report counts more than 250,000 jobs and $95.8 billion in total economic impact.
+
+Forecasts get revised in both directions, so I date every market figure and cite the edition. These numbers are as of October 2026.
+
+## Platforms
+
+A game reaches players through a platform, and each platform brings four things the backend has to integrate with: an identity (a Steam ID, a PlayStation Network account, an Xbox gamertag), a store that sells and refunds, a certification process the build must pass, and rules about what the game may sell and how.
+
+- **PC.** Storefronts include Steam, the Epic Games Store, the Microsoft Store and publishers' own launchers. PC is the most open platform: a studio can sell directly from its own site and patch on its own schedule. Its costs are the hardware range (every GPU and driver) and cheating, because the player controls the machine ([Anti-Cheat](/books/gaming/anti-cheat)).
+- **Console.** PlayStation, Xbox and Nintendo Switch. The platform holder approves the developer, certifies each build against its requirements and owns the store, the identity and the party and voice systems. Microsoft publishes the Xbox Requirements; Sony's and Nintendo's checklists are under NDA ([Production Pipelines & Builds](/books/gaming/production-pipelines)).
+- **Mobile.** Apple's App Store and Google Play. The store's billing and review rules shape the product: currencies and items sold inside the game generally go through the store's in-app purchase system, and both stores require the odds of randomized items to be disclosed before purchase. Court orders and the EU's Digital Markets Act have changed what developers may link to outside the app, region by region, in 2025 and 2026 ([Stores, Fees & Payments](/books/gaming/stores-and-payments)).
+- **Web, cloud and subscription.** Browser games, mini-game platforms inside apps like WeChat, cloud streaming and subscription libraries. Each adds another store and another identity.
+
+The consequence for the data model: one player can arrive from several platforms, and a cross-platform game has to link those identities to one account without letting a link become a takeover ([Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity)). Purchases made on one platform may or may not be usable on another, and that is a platform rule, not a technical one.
+
+## Who Makes a Game
+
+The industry runs on a handful of roles that one company may combine or several companies may split:
+
+- **The developer** (the studio) builds the game. A studio may own its games, or build them under contract.
+- **The publisher** funds, markets and distributes. Publishing deals typically trade funding for a share of revenue; a self-publishing studio does both jobs. Large publishers own many studios and run shared services (accounts, stores, anti-cheat, player support) that all their games use, which is why the model below puts accounts above games.
+- **The platform holder** runs the hardware or store: Sony, Microsoft, Nintendo, Valve, Epic, Apple, Google. It sets certification, fees and identity.
+- **Middleware and engine vendors** sell the parts: Epic and Unity license engines; others sell physics, audio, voice, anti-cheat, crash reporting and server hosting ([The Engine Landscape](/books/gaming/engine-landscape)).
+- **Service partners** do work on contract: external art, porting, localization, quality assurance, co-development and player support.
+
+These relationships decide where data lives. A publisher with ten games wants one account per player across all of them; a studio publishing on four platforms needs four sets of store receipts reconciled into one view of what a player owns; a work-for-hire studio must hand the publisher its data and keep none.
+
+## The Life of a Game
+
+![A game's life from left to right: prototype, production, launch and live, then sunset. A loop from live back to itself is labelled patches, seasons and events. A dashed exit from prototype goes to cancelled. Above each stage is what the platform must have by the end of it: a playable build; pipelines, test automation and certification; accounts, store, servers and support at scale; live configuration, telemetry and moderation; and what happens to purchases and data at shutdown.](/diagrams/gm-games-business-lifecycle.svg "Most of a successful game's cost, and nearly all of its backend, belongs to the years after launch.")
+
+**Prototype.** A small team proves the game is fun. Code is thrown away, and engine choice happens here ([The Engine Landscape](/books/gaming/engine-landscape)). A prototype that isn't fun gets cancelled, which is the point of making it cheap. The platform at this stage is a build machine and a way to get builds to playtesters.
+
+**Production.** The team grows to its largest, content is built at scale, and the pipeline becomes the product: source control that handles binary assets, build farms, automated tests and crash reporting ([Production Pipelines & Builds](/books/gaming/production-pipelines)). For an online game, the backend is built in parallel: accounts, matchmaking, servers, the store. Closed tests and betas exercise them with real players.
+
+**Launch.** The game passes certification on each platform and goes live. Launch is a load event: the concurrency peak arrives in the first hours, from every region at once, and the backend, the server fleet, the patcher and player support all see their worst day. A launch that fails here is hard to recover from, which is why the load testing in [Game Servers & Hosting](/books/gaming/game-servers) happens months earlier.
+
+**Live.** A live game patches, runs seasons and events, sells new content, balances, bans cheaters and answers tickets, for years. This is where most of the backend in this volume does its work. The numbers that run it (concurrent players, retention, conversion, revenue per player) are defined in [Game Metrics](/books/gaming/game-metrics).
+
+**Sunset.** Every online game eventually shuts down its servers or moves to a reduced mode. What happens to the things players bought is a consumer-law question as much as a technical one ([Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes)). The technical decisions are made years earlier: whether the game can run without the backend at all, whether purchased content is recorded in a way that can be honored or refunded, and whether account data can be exported or deleted on schedule ([GDPR](/docs/compliance/gdpr)). My rule: write the sunset plan before launch, because the architecture decides which options exist.
+
+## Who Uses Which Tool
+
+| Role | What they do | What they need from the platform |
+| --- | --- | --- |
+| **Game designer** | Designs systems, levels, balance and progression | Data-driven tuning without a rebuild, telemetry on what players actually do |
+| **Gameplay and engine engineer** | Builds the simulation, rendering, tools and netcode | Fast builds, profiling, crash reports with symbols, deterministic repro |
+| **Artist and technical artist** | Builds and integrates content within budgets | Asset pipelines, locking for unmergeable files, per-platform budgets |
+| **QA** | Tests builds, files and verifies bugs | Build history, automated test results, replays, test accounts |
+| **Producer** | Plans scope, schedule and releases | Build and release status, certification state, risk |
+| **Backend and platform engineer** | Runs accounts, matchmaking, servers, store and services | Observability, fleet capacity, feature flags, safe rollouts |
+| **Live operations** | Ships patches, events, offers and configuration | Scheduling, targeting, experiments, instant rollback |
+| **Data analyst** | Measures retention, economy and balance | A clean event stream and a warehouse with stable definitions |
+| **Player support** | Answers tickets: purchases, bans, lost items | Account, purchase and penalty history on one screen, audited grant and restore tools |
+| **Trust and safety** | Reviews reports, issues and reviews penalties | Evidence (chat, voice, replays), a policy, an appeals queue |
+| **Community and esports** | Talks to players, runs competitions | Announcements, tournament tooling, spectator feeds |
+
+Every role reads the same account, profile and match records, cut for its job. Support and moderation tools also write to them, so they follow the rules in [Support Access & Internal Tools](/docs/security/support-access).
+
+## The Core Data Model
+
+Every game backend converges on the same handful of concepts under different names. This volume uses one set, and every later chapter extends it rather than redefining it:
+
+| Entity | Table | What it is |
+| --- | --- | --- |
+| **game** | `games` | One title the tenant operates |
+| **account** | `accounts` | A player's identity with the publisher, across all of its games |
+| **platform identity** | `platform_identities` | A linked Steam, PlayStation, Xbox, Epic, Nintendo, Apple or Google identity |
+| **player profile** | `player_profiles` | An account's presence in one game: name, progression, settings |
+| **build** | `builds` | A versioned client or server build for one platform |
+| **item** | `items` | The catalog entry for anything ownable: a game, DLC, a skin, a pass, gear |
+| **entitlement** | `entitlements` | An account's right to an item, with where it came from and when it ends |
+| **item instance** | `item_instances` | One copy of an item with its own state: rolled stats, wear, level |
+| **wallet** | `wallets` | An account's balance of one virtual currency |
+| **ledger entry** | `currency_ledger_entries` | One append-only change to a wallet; the balance is their sum |
+| **match** | `matches` | One played session of a mode, on one server |
+| **participant** | `match_participants` | A profile's place in a match: team, party, result |
+| **game server** | `game_servers` | One allocated server process, running a server build |
+| **party** | `parties` | Players who queue and play together |
+| **report** | `reports` | One player reporting another |
+| **penalty** | `penalties` | A sanction on an account, for one game or all |
+
+![Data model in four rows. Who plays: an account has platform identities and player profiles, and a game has player profiles and builds. What they own: an account has wallets, a wallet has ledger entries, and an item, which belongs to a game or to the whole tenant, has entitlements held by accounts and instances held by profiles. Play: a game server hosts a match, a match has participants, and a party groups participants. Conduct: a report is filed by one profile about another, and can lead to a penalty on an account.](/diagrams/gm-games-business-model.svg "The canonical model used across this volume. The account is the publisher's view of a person; ownership and money hang off it, play and conduct hang off the per-game profile.")
+
+Three distinctions recur in every chapter.
+
+**The account is not the profile.** The account is the publisher's identity for a person, the thing a login, a linked platform, a wallet or a ban attaches to. The profile is that person inside one game: a name, a rank, progression, settings. A publisher with several games wants one account and many profiles, so a player who buys currency once can spend it in more than one title. Riot's TFT migration FAQ (June 19, 2026) is a public example: moving TFT to a new engine left purchases untouched, and on PC, RP "continues to be shared across League of Legends and Teamfight Tactics." That only works because ownership and currency live in backend services above any one game's client.
+
+**Entitlements are not item instances.** An entitlement is a right: this account owns this skin, this DLC, this season pass, from this purchase, until revoked. An item instance is the copy inside one game, and it carries whatever differs between copies (a weapon's rolled stats, a card's level, a tradeable item's history), so it belongs to a profile. Keeping them apart makes refunds tractable: the store refund revokes the entitlement, and the instance created from it goes with it, while a traded item needs the instance's whole chain ([Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements)).
+
+**Balances are sums, never fields.** A wallet holds no balance column. Every grant, purchase, spend, refund and expiry is an append-only ledger transaction, keyed by its source so a retry posts once, and the balance is the sum of the entries (cached if needed, never authoritative). It's the same rule as any money ledger ([Money](/docs/payments/money), [Idempotency](/docs/payments/idempotency)), and it matters more here because currency is granted by game servers, stores, support agents and campaigns, often for the same event more than once.
+
+The spine, in the playbook's [naming conventions](/docs/database/naming-conventions). Every table carries `tenant_id`, the studio or publisher, because this model is written as a platform that serves many games from many studios; a single studio's own backend has one tenant and can drop the column. It holds keys, relations and the states every chapter reads; the columns a chapter owns (an entitlement's source and validity, ledger amounts and transactions, a build's platform and promotion, a report's match and channel, ratings) are added in that chapter:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS btree_gist;  -- for the exclusion constraint below
+
+CREATE TABLE games (
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,                 -- the studio or publisher
+  slug       TEXT NOT NULL,
+  name       TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (tenant_id, slug)
+);
+
+CREATE TABLE accounts (                     -- one per player, across the tenant's games
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  status     TEXT NOT NULL CHECK (status IN ('active', 'locked', 'closed')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE platform_identities (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  account_id   UUID NOT NULL REFERENCES accounts (id),
+  platform     TEXT NOT NULL CHECK (platform IN ('steam', 'psn', 'xbox', 'epic',
+                 'nintendo', 'apple', 'google')),
+  external_id  TEXT NOT NULL,               -- the platform's stable user id, never a name
+  valid_during TSTZRANGE NOT NULL,          -- linked until unlinked
+  EXCLUDE USING gist (tenant_id WITH =, platform WITH =, external_id WITH =,
+    valid_during WITH &&)                   -- one account per platform identity at a time
+);
+
+CREATE TABLE player_profiles (              -- an account inside one game
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  account_id   UUID NOT NULL REFERENCES accounts (id),
+  game_id      UUID NOT NULL REFERENCES games (id),
+  display_name TEXT NOT NULL,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (account_id, game_id)
+);
+
+CREATE TABLE builds (                       -- platform, branch, promotion: Production Pipelines
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  game_id    UUID NOT NULL REFERENCES games (id),
+  kind       TEXT NOT NULL CHECK (kind IN ('client', 'server')),
+  version    TEXT NOT NULL,                 -- what players and crash reports see
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE items (                        -- the catalog; trading and stacking: Economies
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  game_id    UUID REFERENCES games (id),    -- null: shared across the tenant's games
+  kind       TEXT NOT NULL CHECK (kind IN ('game', 'dlc', 'cosmetic', 'pass',
+               'consumable', 'gear')),
+  name       TEXT NOT NULL
+);
+
+CREATE TABLE entitlements (                 -- source, validity, revocation: Economies
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  account_id UUID NOT NULL REFERENCES accounts (id),
+  item_id    UUID NOT NULL REFERENCES items (id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE item_instances (               -- one copy; its state and source: Economies
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id        UUID NOT NULL,
+  item_id          UUID NOT NULL REFERENCES items (id),
+  owner_profile_id UUID NOT NULL REFERENCES player_profiles (id),
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE wallets (
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  account_id UUID NOT NULL REFERENCES accounts (id),
+  currency   TEXT NOT NULL,                 -- a virtual currency code, e.g. 'GEM'
+  UNIQUE (account_id, currency)
+);
+
+CREATE TABLE currency_ledger_entries (      -- append-only; amounts, transactions: Economies
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE game_servers (                 -- one allocated server process
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  build_id     UUID NOT NULL REFERENCES builds (id),  -- a server build
+  region       TEXT NOT NULL,
+  status       TEXT NOT NULL CHECK (status IN ('ready', 'allocated', 'draining',
+                 'shut_down')),
+  allocated_at TIMESTAMPTZ,
+  shut_down_at TIMESTAMPTZ
+);
+
+CREATE TABLE parties (                      -- members: Parties, Presence, Chat & Voice
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id         UUID NOT NULL,
+  game_id           UUID NOT NULL REFERENCES games (id),
+  leader_profile_id UUID NOT NULL REFERENCES player_profiles (id),
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  disbanded_at      TIMESTAMPTZ
+);
+
+CREATE TABLE matches (
+  id             UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id      UUID NOT NULL,
+  game_id        UUID NOT NULL REFERENCES games (id),
+  mode           TEXT NOT NULL,             -- ranked, casual, custom, ...
+  game_server_id UUID REFERENCES game_servers (id),  -- null for peer-hosted play
+  status         TEXT NOT NULL CHECK (status IN ('forming', 'in_progress',
+                   'completed', 'abandoned')),
+  started_at     TIMESTAMPTZ,
+  ended_at       TIMESTAMPTZ
+);
+
+CREATE TABLE match_participants (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id         UUID NOT NULL,
+  match_id          UUID NOT NULL REFERENCES matches (id),
+  player_profile_id UUID NOT NULL REFERENCES player_profiles (id),
+  party_id          UUID REFERENCES parties (id),  -- queued together
+  team              SMALLINT,
+  result            TEXT CHECK (result IN ('win', 'loss', 'draw', 'left')),  -- set at the end
+  UNIQUE (match_id, player_profile_id)
+);
+
+CREATE TABLE reports (
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id           UUID NOT NULL,
+  reporter_profile_id UUID NOT NULL REFERENCES player_profiles (id),
+  reported_profile_id UUID NOT NULL REFERENCES player_profiles (id),
+  category            TEXT NOT NULL CHECK (category IN ('cheating', 'harassment',
+                        'hate_speech', 'griefing', 'inappropriate_name', 'other')),
+  comment             TEXT,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (reporter_profile_id <> reported_profile_id)
+);
+
+CREATE TABLE penalties (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  account_id   UUID NOT NULL REFERENCES accounts (id),
+  game_id      UUID REFERENCES games (id),  -- null: every game on the account
+  kind         TEXT NOT NULL CHECK (kind IN ('warning', 'chat_restriction',
+                 'queue_restriction', 'ranked_restriction', 'suspension', 'ban')),
+  reason       TEXT NOT NULL,
+  issued_by    TEXT NOT NULL CHECK (issued_by IN ('system', 'staff')),
+  valid_during TSTZRANGE NOT NULL,          -- unbounded upper end for a permanent ban
+  revoked_at   TIMESTAMPTZ,                 -- overturned on appeal
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+Design decisions behind it:
+
+- **Ownership hangs off the account; play hangs off the profile.** Entitlements, wallets and penalties reference `account_id`, because a player owns things and gets banned as a person. Matches, reports and item instances reference `player_profile_id`, because they happen inside one game. Where a penalty applies to one game only, `game_id` says so.
+- **Platform links are effective-dated.** A Steam or PlayStation identity can be unlinked and relinked, sometimes to a different account after a recovery. The exclusion constraint allows one live link per platform identity, and the history of links survives for support and fraud review ([Effective Dating & History](/docs/database/temporal-data)).
+- **Every build is a row,** client and server, per platform. Crash reports, matches (through the server), telemetry and support tickets all name the build they happened on, and a patch that breaks something is found by joining on it ([Patching & Content Delivery](/books/gaming/patching)).
+- **A match names its server, and the server names its build.** That chain answers the questions that matter after an incident: which build was running, in which region, for which players. Allocation and draining are in [Game Servers & Hosting](/books/gaming/game-servers).
+- **Instants are UTC.** Everything in this model is something that already happened or a range of instants. Local-time promises (an event that starts at 6 PM in each region) are the live-ops calendar's concern ([Time & Date Formats](/docs/fundamentals/time)).
+- **Emit life-cycle events.** `entitlement.granted`, `entitlement.revoked`, `match.completed`, `report.filed` and `penalty.issued` are what the store, telemetry, ranked, moderation and support consume ([Events & Async Messaging](/docs/architecture/events)). A ranked service that polls the match table will, sooner or later, count an abandoned match.
+
+What goes wrong most often is building for one game and then becoming a publisher: profiles get merged into accounts, currency gets stored per game, and the second title needs a migration of every player's purchases. My rule: model the account above the game from the first title, even if only one game will ever exist.
+
+## Auditing
+
+The decisions in this chapter are the ones disputed later:
+
+- **Ownership.** Every entitlement and every ledger entry records its source and reference: the store receipt, the support agent and ticket, the campaign, the match that granted a reward. A chargeback, a refund request and a "my skin disappeared" ticket all start from this record.
+- **Identity links.** Who linked or unlinked a platform identity, from where, and after which verification step. Account takeover usually shows up here first.
+- **Penalties.** The evidence, the policy version, the decision (system or staff, and which staff member), the appeal and its outcome. Regulators and players both ask for the reason ([Player Behavior & Moderation](/books/gaming/player-behavior)).
+
+The mechanics (typed actors, append-only history, snapshots) are in [Audit Trails](/docs/architecture/audit-trails).
+
+## What This Means for the System You Build
+
+- **Decide the business model early,** and design the core for the next one too: a premium game that adds a store later needs the entitlement and ledger model it skipped.
+- **Model the account above the game** and the profile per game, with ownership and money on the account.
+- **Link platform identities to accounts with history,** never by display name, and never more than one live link per platform identity.
+- **Keep entitlements and item instances separate,** with the source of every grant recorded.
+- **Make every balance a sum of an append-only, idempotent ledger.**
+- **Record every client and server build,** and name the build on every match, crash and ticket.
+- **Plan for the whole life of the game,** from the prototype's throwaway builds to a sunset plan written before launch.
+- **Emit life-cycle events** and let ranked, telemetry, support and moderation consume them.
+
+## References
+
+**Reference**
+
+- [Newzoo via GameDev Reports: Gaming market surpassed $200B](https://gamedevreports.substack.com/p/newzoo-gaming-market-surpassed-200), June 26, 2026 summary of Newzoo's 2025 market estimate, segments and 2028 forecast
+- [ESA: Essential Facts About the U.S. Video Game Industry](https://www.theesa.com/resources/essential-facts-about-the-us-video-game-industry/), 212.3 million weekly players, 250,000 jobs and $95.8 billion economic impact
+- [ESA: Essential Facts 2026 data](https://www.theesa.com/resources/essential-facts-about-the-us-video-game-industry/2026-data/), 2025 U.S. consumer spending by content, hardware and accessories
+- [ESRB: Ratings guide](https://www.esrb.org/ratings-guide/), the In-Game Purchases notice and its examples
+- [Apple: In-App Purchase](https://developer.apple.com/in-app-purchase/), the four in-app purchase types
+- [Google AdMob: Rewarded ads](https://developers.google.com/admob/android/rewarded), rewarding players for watching ads
+- [Xbox Game Pass](https://www.xbox.com/en-US/xbox-game-pass), the four tiers and their library sizes
+- [Xbox Requirements](https://devdocs.xbox.com/publishing/certification/xbox-requirements), the published console certification requirements
+- [Apple: App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/), in-app purchase for currencies and items, loot box odds disclosed before purchase
+- [Google Play: Payments policy](https://support.google.com/googleplay/android-developer/answer/9858738), odds of randomized items disclosed close to the purchase
+- [Apple: Alternative terms for apps in the EU](https://developer.apple.com/support/dma-and-apps-in-the-eu/), the EU terms under the Digital Markets Act
+
+**In practice**
+
+- [Riot Games: Automated Testing for League of Legends](https://www.riotgames.com/en/news/automated-testing-league-legends), a new patch every two weeks
+- [Riot Games: TFT Unreal Engine Migration FAQ](https://support.riotgames.com/tft/client/tft-unreal-engine-migration-faq), purchases kept through an engine migration, RP shared across League and TFT
+- [Riot Games: Scalability and Load Testing for VALORANT](https://www.riotgames.com/en/news/scalability-and-load-testing-valorant), one game server executable per running match beside a platform of backend services

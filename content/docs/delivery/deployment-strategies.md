@@ -40,6 +40,8 @@ Run two full environments. Blue serves production; deploy the new version to gre
 
 Send a small slice of traffic to the new version, compare it to the old, and expand only if it behaves: 1%, then 10%, then 50%, then everyone. [Fowler's canary release](https://martinfowler.com/bliki/CanaryRelease.html) is named for the bird that warned miners before the gas reached them.
 
+![Dimensional drawing of a canary release. Traffic to the new version steps from 1 to 10 to 50 percent, with an automated verdict gate after each stage and an illustrative 30-minute bake per stage, reaching everyone 90 minutes after the first canary. A second view shows a release judged bad at the second gate: it served 1 and then 10 percent of traffic before being routed back, an exposure of 3.3 minutes of full traffic, while the planned later stages never run.](/diagrams/pb-delivery-canary.svg "Each stage has to earn the next; a release that fails a gate has only ever reached the canary's share.")
+
 - **Rollback:** route the slice back to the old version. A bad release only ever hurt the canary's share of traffic.
 - **Costs:** routing that can split traffic by percentage, monitoring that can tell the two populations apart, and time: a careful canary takes longer than a rollout.
 - **Why it's the default for high-stakes services:** it's the only strategy that limits blast radius *and* gives you a comparison. Not "are errors up?" but "are errors higher on the new version than the old one right now?", which cancels out everything else that changed at the same time.

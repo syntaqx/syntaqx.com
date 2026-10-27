@@ -104,6 +104,8 @@ Each chapter of this volume describes one layer, several of them still ahead in 
 | Month end | The statement shows the payment, its fees and its payout | [Operating the Platform](/books/payments/operating-the-platform#statements-and-reports) |
 | Next January | The merchant's 1099-K includes the full $100, gross | [Payments for Software Platforms](/books/payments/software-platforms#1099-k-and-taxpayer-data) |
 
+![A business-day timeline of one US card payment: captured on day T, settled with the network on T+1 (illustrative), available in the merchant's balance on T+2, paid out by an ACH credit that settles on T+3 (illustrative) and can still be returned for 2 banking days, while the payment itself can be disputed for 120 calendar days.](/diagrams/pm-payouts-timeline.svg "The money is available on T+2 and in the bank a day later, but it isn't settled for good: the payout can come back for 2 more banking days, and the payment can be disputed for 120.")
+
 Every row is a record somebody can find later, and the ledger ties them together: the $100 in, the $3.20 of fees split between costs and revenue, the $96.80 out, and the bank deposit that proves it.
 
 ## What This Means for the System You Build

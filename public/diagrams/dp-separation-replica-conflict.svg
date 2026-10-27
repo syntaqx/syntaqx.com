@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 696">
+  <defs>
+    <marker id="dp-rc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="dp-rc-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="dp-rc-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-SEP-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">replica query conflict</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: hot standby during a long query</text>
+  <text class="vs" x="40" y="80">Scale 1 s = 2 px · timeline · values in seconds</text>
+
+  <!-- Q1: what the query needs -->
+  <path class="ext" d="M100,125V95M700,125V95"/>
+  <path class="dim" d="M100,100H700" marker-start="url(#dp-rc-ah)" marker-end="url(#dp-rc-ah)"/>
+  <text class="dt" x="400" y="96" text-anchor="middle">Q1 = 300</text>
+
+  <!-- Lane: the analytical query -->
+  <text class="sl ink" x="92" y="146" text-anchor="end" dominant-baseline="central">query</text>
+  <rect class="obj fill-1" x="100" y="128" width="180" height="36"/>
+  <rect class="slot" x="280" y="128" width="420" height="36" fill="none"/>
+  <text class="sl ink" x="190" y="146" text-anchor="middle" dominant-baseline="central">runs</text>
+  <text class="sl" x="490" y="146" text-anchor="middle" dominant-baseline="central">cancelled at X1 [2]</text>
+
+  <!-- Lane: WAL replay on the standby -->
+  <text class="sl ink" x="92" y="218" text-anchor="end" dominant-baseline="central">replay</text>
+  <rect class="obj fill-2" x="100" y="200" width="120" height="36"/>
+  <rect class="hatch" x="220" y="200" width="60" height="36" fill="url(#dp-rc-hatch)"/>
+  <rect class="obj fill-2" x="280" y="200" width="420" height="36"/>
+  <text class="sl ink" x="160" y="218" text-anchor="middle" dominant-baseline="central">applying</text>
+  <text class="sl ink" x="490" y="218" text-anchor="middle" dominant-baseline="central">catches up</text>
+
+  <!-- Conflict arrives -->
+  <circle class="dot" cx="220" cy="200" r="2"/>
+  <path class="leader" d="M220,200L232,182H262"/>
+  <text class="sl ink" x="266" y="182" dominant-baseline="central">conflict arrives [1]</text>
+
+  <!-- Chain: C1, D1 -->
+  <path class="ext" d="M100,239V267M220,239V267M280,239V297M700,239V297"/>
+  <path class="ext" d="M100,267V297"/>
+  <path class="dim" d="M100,262H220" marker-start="url(#dp-rc-ah)" marker-end="url(#dp-rc-ah)"/>
+  <text class="dt" x="160" y="258" text-anchor="middle">C1 = 60</text>
+  <path class="dim hl" d="M220,262H280" marker-start="url(#dp-rc-ah-hl)" marker-end="url(#dp-rc-ah-hl)"/>
+  <text class="dt hl" x="250" y="258" text-anchor="middle">D1 = 30</text>
+
+  <!-- X1 and R1 -->
+  <path class="dim" d="M100,292H280" marker-start="url(#dp-rc-ah)" marker-end="url(#dp-rc-ah)"/>
+  <text class="dt" x="190" y="288" text-anchor="middle">X1 = C1 + D1 = 90</text>
+  <path class="dim" d="M280,292H700" marker-start="url(#dp-rc-ah)" marker-end="url(#dp-rc-ah)"/>
+  <text class="dt" x="490" y="288" text-anchor="middle">R1 = Q1 - X1 = 300 - 90 = 210</text>
+
+  <!-- Lane: replica lag -->
+  <text class="sl ink" x="92" y="345" text-anchor="end" dominant-baseline="central">lag</text>
+  <path class="ln" d="M100,370H700"/>
+  <path class="obj fill-2" d="M220,370L280,320L300,370Z"/>
+  <path class="ext" d="M283,320H330"/>
+  <path class="dim" d="M325,320V370" marker-start="url(#dp-rc-ah)" marker-end="url(#dp-rc-ah)"/>
+  <text class="dt" x="334" y="349" dominant-baseline="central">L1 = D1 = 30 [3]</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="412">Variables</text>
+  <text class="vs" x="40" y="428">Illustrative except D1 [2] · seconds</text>
+  <rect class="cell band" x="40" y="438" width="60" height="22"/>
+  <rect class="cell band" x="100" y="438" width="540" height="22"/>
+  <rect class="cell band" x="640" y="438" width="80" height="22"/>
+  <text class="cap ink" x="50" y="449" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="449" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="449" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,460H720V592H40Z"/>
+  <path class="ln ink" d="M100,460V592M640,460V592"/>
+  <path class="ln" d="M40,482H720M40,504H720M40,526H720M40,548H720M40,570H720"/>
+  <text class="t" x="50" y="471" dominant-baseline="central">Q1</text>
+  <text class="t" x="110" y="471" dominant-baseline="central">run time the analytical query needs</text>
+  <text class="t" x="710" y="471" text-anchor="end" dominant-baseline="central">300</text>
+  <text class="t" x="50" y="493" dominant-baseline="central">C1</text>
+  <text class="t" x="110" y="493" dominant-baseline="central">when a conflicting cleanup record arrives</text>
+  <text class="t" x="710" y="493" text-anchor="end" dominant-baseline="central">60</text>
+  <text class="t b" x="50" y="515" dominant-baseline="central">D1</text>
+  <text class="t" x="110" y="515" dominant-baseline="central">max_standby_streaming_delay, the default</text>
+  <text class="t b" x="710" y="515" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t" x="50" y="537" dominant-baseline="central">X1</text>
+  <text class="t" x="110" y="537" dominant-baseline="central">query cancelled: C1 + D1</text>
+  <text class="t" x="710" y="537" text-anchor="end" dominant-baseline="central">90</text>
+  <text class="t" x="50" y="559" dominant-baseline="central">R1</text>
+  <text class="t" x="110" y="559" dominant-baseline="central">work left undone: Q1 - X1</text>
+  <text class="t" x="710" y="559" text-anchor="end" dominant-baseline="central">210</text>
+  <text class="t" x="50" y="581" dominant-baseline="central">L1</text>
+  <text class="t" x="110" y="581" dominant-baseline="central">peak replica lag for every other reader: D1</text>
+  <text class="t" x="710" y="581" text-anchor="end" dominant-baseline="central">30</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="610" width="680" height="66"/>
+  <text class="sl ink" x="52" y="630">notes</text>
+  <text class="n" x="110" y="630">[1] Vacuum on the primary removed row versions the query's snapshot can still see.</text>
+  <text class="n" x="110" y="648">[2] D1 is PostgreSQL's default max_standby_streaming_delay; Q1 and C1 are illustrative.</text>
+  <text class="n" x="110" y="666">[3] A larger D1 lags the whole replica longer; hot_standby_feedback trades it for primary bloat.</text>
+</svg>

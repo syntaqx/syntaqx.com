@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 860">
+  <defs>
+    <marker id="gm-mr-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-mr-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-MMR-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">rating updates, worked</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- View A: Elo under FIDE rules -->
+  <text class="vt" x="40" y="64">Plan view A: one Elo game, FIDE rules</text>
+  <text class="vs" x="40" y="80">Scale 1 rating point = 2.5 px · K = 20 · lower-rated A wins</text>
+
+  <!-- D1 -->
+  <path class="ext" d="M265,113V97M515,113V97"/>
+  <path class="dim" d="M265,102H515" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="390" y="98" text-anchor="middle">D1 = R2 - R1 = 100</text>
+
+  <!-- Before and after rows -->
+  <text class="sl" x="130" y="120" text-anchor="end" dominant-baseline="central">before</text>
+  <rect class="obj fill-1" x="259" y="114" width="12" height="12"/>
+  <rect class="obj fill-1" x="509" y="114" width="12" height="12"/>
+  <text class="sl ink" x="245" y="120" text-anchor="end" dominant-baseline="central">A</text>
+  <text class="sl ink" x="535" y="120" dominant-baseline="central">B</text>
+  <text class="sl" x="130" y="150" text-anchor="end" dominant-baseline="central">after</text>
+  <rect class="obj fill-2" x="291.5" y="144" width="12" height="12"/>
+  <rect class="obj fill-2" x="476.5" y="144" width="12" height="12"/>
+  <path class="phantom" d="M265,126V170M515,126V170"/>
+
+  <!-- U1, U2 -->
+  <path class="ext" d="M297.5,159V177"/>
+  <path class="dim hl" d="M265,172H297.5" marker-start="url(#gm-mr-ah-hl)" marker-end="url(#gm-mr-ah-hl)"/>
+  <text class="dt hl" x="258" y="172" text-anchor="end" dominant-baseline="central">U1 = +13</text>
+  <path class="ext" d="M482.5,159V177"/>
+  <path class="dim" d="M482.5,172H515" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="522" y="172" dominant-baseline="central">U2 = -13</text>
+
+  <!-- Rating axis -->
+  <path class="ln ink" d="M140,196H640"/>
+  <path class="ln ink" d="M140,192V200M265,192V200M390,192V200M515,192V200M640,192V200"/>
+  <text class="t" x="140" y="210" text-anchor="middle" dominant-baseline="central">1850</text>
+  <text class="t" x="265" y="210" text-anchor="middle" dominant-baseline="central">1900</text>
+  <text class="t" x="390" y="210" text-anchor="middle" dominant-baseline="central">1950</text>
+  <text class="t" x="515" y="210" text-anchor="middle" dominant-baseline="central">2000</text>
+  <text class="t" x="640" y="210" text-anchor="middle" dominant-baseline="central">2050</text>
+
+  <!-- Formulas A -->
+  <text class="t" x="60" y="240">E1 = 1 / (1 + 10^(D1/400)) = 1 / (1 + 10^0.25) = 0.36    [1]</text>
+  <text class="t" x="60" y="257">E2 = 1 - E1 = 0.64</text>
+  <text class="t" x="60" y="274">U1 = K x (S1 - E1) = 20 x (1 - 0.36) = +12.8, rounded +13    [2]</text>
+  <text class="t" x="60" y="291">U2 = K x (S2 - E2) = 20 x (0 - 0.64) = -12.8, rounded -13</text>
+  <text class="t" x="60" y="308">R1' = R1 + U1 = 1900 + 13 = 1913 · R2' = R2 + U2 = 2000 - 13 = 1987</text>
+
+  <!-- View B: Glicko-2 -->
+  <text class="vt" x="40" y="342">Plan view B: Glicko-2 interval, one rating period</text>
+  <text class="vs" x="40" y="357">Scale 1 rating point = 0.5 px · Glickman's example [3]</text>
+
+  <path class="ext" d="M190,393V377M590,393V377"/>
+  <path class="dim" d="M190,382H590" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="390" y="378" text-anchor="middle">W0 = 4 x RD = 4 x 200 = 800</text>
+  <text class="sl" x="130" y="402" text-anchor="end" dominant-baseline="central">before</text>
+  <rect class="obj fill-2" x="190" y="396" width="400" height="12"/>
+  <path class="ctr" d="M390,390V414"/>
+
+  <text class="sl" x="130" y="436" text-anchor="end" dominant-baseline="central">after</text>
+  <rect class="obj fill-1" x="220.5" y="430" width="303.05" height="12"/>
+  <path class="ctr" d="M372.03,424V448"/>
+  <path class="ext" d="M220.5,445V466M523.55,445V466"/>
+  <path class="dim" d="M220.5,461H523.55" marker-start="url(#gm-mr-ah)" marker-end="url(#gm-mr-ah)"/>
+  <text class="dt" x="372" y="457" text-anchor="middle">W1 = 4 x RD' = 606.08</text>
+
+  <path class="ln ink" d="M140,484H640"/>
+  <path class="ln ink" d="M140,480V488M265,480V488M390,480V488M515,480V488M640,480V488"/>
+  <text class="t" x="140" y="498" text-anchor="middle" dominant-baseline="central">1000</text>
+  <text class="t" x="265" y="498" text-anchor="middle" dominant-baseline="central">1250</text>
+  <text class="t" x="390" y="498" text-anchor="middle" dominant-baseline="central">1500</text>
+  <text class="t" x="515" y="498" text-anchor="middle" dominant-baseline="central">1750</text>
+  <text class="t" x="640" y="498" text-anchor="middle" dominant-baseline="central">2000</text>
+
+  <!-- Formulas B -->
+  <text class="t" x="60" y="528">r = 1500, RD = 200, sigma = 0.06, tau = 0.5; beat 1400, lost to 1550 and 1700</text>
+  <text class="t" x="60" y="545">v = 1.7785 · Delta = -0.4834 · sigma' = 0.05999</text>
+  <text class="t" x="60" y="562">r' = 1500 + 173.7178 x (-0.2069) = 1464.06</text>
+  <text class="t" x="60" y="579">RD' = 173.7178 x 0.8722 = 151.52 · W1 = 4 x 151.52 = 606.08</text>
+
+  <!-- Variable tables -->
+  <text class="vt" x="40" y="616">Variables</text>
+  <text class="vs" x="40" y="632">Rating points</text>
+  <rect class="cell band" x="40" y="642" width="50" height="22"/>
+  <rect class="cell band" x="90" y="642" width="200" height="22"/>
+  <rect class="cell band" x="290" y="642" width="80" height="22"/>
+  <text class="cap ink" x="50" y="653" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="653" dominant-baseline="central">item</text>
+  <text class="cap ink" x="360" y="653" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,664H370V752H40Z"/>
+  <path class="ln ink" d="M90,664V752M290,664V752"/>
+  <path class="ln" d="M40,686H370M40,708H370M40,730H370"/>
+  <text class="t b" x="50" y="675" dominant-baseline="central">R1</text>
+  <text class="t" x="100" y="675" dominant-baseline="central">A's rating</text>
+  <text class="t" x="360" y="675" text-anchor="end" dominant-baseline="central">1900</text>
+  <text class="t b" x="50" y="697" dominant-baseline="central">R2</text>
+  <text class="t" x="100" y="697" dominant-baseline="central">B's rating</text>
+  <text class="t" x="360" y="697" text-anchor="end" dominant-baseline="central">2000</text>
+  <text class="t b" x="50" y="719" dominant-baseline="central">K</text>
+  <text class="t" x="100" y="719" dominant-baseline="central">FIDE, rated under 2400</text>
+  <text class="t" x="360" y="719" text-anchor="end" dominant-baseline="central">20</text>
+  <text class="t b" x="50" y="741" dominant-baseline="central">S1/S2</text>
+  <text class="t" x="100" y="741" dominant-baseline="central">score: win 1, loss 0</text>
+  <text class="t" x="360" y="741" text-anchor="end" dominant-baseline="central">1/0</text>
+
+  <rect class="cell band" x="390" y="642" width="62" height="22"/>
+  <rect class="cell band" x="452" y="642" width="188" height="22"/>
+  <rect class="cell band" x="640" y="642" width="80" height="22"/>
+  <text class="cap ink" x="400" y="653" dominant-baseline="central">code</text>
+  <text class="cap ink" x="462" y="653" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="653" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M390,664H720V752H390Z"/>
+  <path class="ln ink" d="M452,664V752M640,664V752"/>
+  <path class="ln" d="M390,686H720M390,708H720M390,730H720"/>
+  <text class="t b" x="400" y="675" dominant-baseline="central">E1</text>
+  <text class="t" x="462" y="675" dominant-baseline="central">A's expected score</text>
+  <text class="t" x="710" y="675" text-anchor="end" dominant-baseline="central">0.36</text>
+  <text class="t b" x="400" y="697" dominant-baseline="central">U1</text>
+  <text class="t" x="462" y="697" dominant-baseline="central">A's change, rounded</text>
+  <text class="t" x="710" y="697" text-anchor="end" dominant-baseline="central">+13</text>
+  <text class="t b" x="400" y="719" dominant-baseline="central">RD/RD'</text>
+  <text class="t" x="462" y="719" dominant-baseline="central">deviation before/after</text>
+  <text class="t" x="710" y="719" text-anchor="end" dominant-baseline="central">200/151.52</text>
+  <text class="t b" x="400" y="741" dominant-baseline="central">W0/W1</text>
+  <text class="t" x="462" y="741" dominant-baseline="central">95% interval width</text>
+  <text class="t" x="710" y="741" text-anchor="end" dominant-baseline="central">800/606.08</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="768" width="680" height="76"/>
+  <text class="sl ink" x="52" y="786">notes</text>
+  <text class="n" x="52" y="802">[1] FIDE gives E as a table (gap 99 to 106: 0.36 lower, 0.64 higher); the logistic form gives 0.360.</text>
+  <text class="n" x="52" y="818">[2] FIDE rounds a rating period's change to a whole number, with 0.5 rounded away from zero.</text>
+  <text class="n" x="52" y="834">[3] Values from Glickman's Glicko-2 worked example (2022); the 95% interval is r plus or minus 2 RD.</text>
+</svg>

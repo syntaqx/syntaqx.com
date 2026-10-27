@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 816">
+  <defs>
+    <marker id="gm-mw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-MMW-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">search widening over time</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- View A: skill window -->
+  <text class="vt" x="40" y="64">Plan view A: skill window of one ticket</text>
+  <text class="vs" x="40" y="80">Scale 1 s = 14 px · 1 skill level = 4 px · steps from [1]</text>
+
+  <!-- Stepped window: S0 to T1, S1 to T2, S2 after -->
+  <rect class="obj fill-2" x="120" y="180" width="210" height="40"/>
+  <rect class="obj fill-2" x="330" y="160" width="140" height="80"/>
+  <rect class="obj fill-2" x="470" y="120" width="210" height="160"/>
+  <path class="ctr" d="M120,200H680"/>
+  <text class="sl ink" x="112" y="200" text-anchor="end" dominant-baseline="central">R0</text>
+
+  <!-- Half-widths -->
+  <path class="dim" d="M140,200V180" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="146" y="190" dominant-baseline="central">S0 = 5</text>
+  <path class="dim" d="M350,200V160" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="356" y="180" dominant-baseline="central">S1 = 10</text>
+  <path class="dim" d="M560,200V120" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="566" y="160" dominant-baseline="central">S2 = 20</text>
+
+  <!-- The match -->
+  <circle class="obj hl" cx="386" cy="168" r="4"/>
+  <path class="leader" d="M386,168L398,104H420"/>
+  <text class="sl ink" x="424" y="104" dominant-baseline="central">match [3]</text>
+
+  <!-- Time axis -->
+  <path class="ln ink" d="M120,296H680"/>
+  <path class="ln ink" d="M120,292V300M190,292V300M260,292V300M330,292V300M400,292V300M470,292V300M540,292V300M610,292V300M680,292V300"/>
+  <text class="t" x="120" y="311" text-anchor="middle" dominant-baseline="central">0</text>
+  <text class="t" x="190" y="311" text-anchor="middle" dominant-baseline="central">5</text>
+  <text class="t" x="260" y="311" text-anchor="middle" dominant-baseline="central">10</text>
+  <text class="t" x="330" y="311" text-anchor="middle" dominant-baseline="central">15</text>
+  <text class="t" x="400" y="311" text-anchor="middle" dominant-baseline="central">20</text>
+  <text class="t" x="470" y="311" text-anchor="middle" dominant-baseline="central">25</text>
+  <text class="t" x="540" y="311" text-anchor="middle" dominant-baseline="central">30</text>
+  <text class="t" x="610" y="311" text-anchor="middle" dominant-baseline="central">35</text>
+  <text class="t" x="680" y="311" text-anchor="middle" dominant-baseline="central">40 s</text>
+
+  <!-- Chain: T1, then T2 - T1 -->
+  <path class="ext" d="M120,322V346M330,322V346M470,322V346"/>
+  <path class="dim" d="M120,341H330" marker-start="url(#gm-mw-ah)" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="225" y="337" text-anchor="middle">T1 = 15</text>
+  <path class="dim" d="M330,341H470" marker-start="url(#gm-mw-ah)" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="400" y="337" text-anchor="middle">T2 - T1 = 10</text>
+  <text class="t" x="400" y="370" text-anchor="middle">T2 = T1 + 10 = 15 + 10 = 25 s · window doubles at each step [4]</text>
+
+  <!-- View B: latency ceiling -->
+  <text class="vt" x="40" y="408">Plan view B: latency ceiling</text>
+  <text class="vs" x="40" y="424">Scale 1 s = 14 px · 1 ms = 0.5 px · illustrative [2]</text>
+  <rect class="obj fill-2" x="120" y="460" width="420" height="30"/>
+  <rect class="obj fill-1" x="540" y="445" width="140" height="45"/>
+  <path class="ln ink" d="M120,490H680"/>
+  <path class="dim" d="M140,490V460" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="146" y="475" dominant-baseline="central">L0 = 60 ms</text>
+  <path class="dim" d="M560,490V445" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="566" y="467" dominant-baseline="central">L1 = 90 ms</text>
+  <text class="t" x="120" y="505" text-anchor="middle" dominant-baseline="central">0</text>
+  <text class="t" x="540" y="505" text-anchor="middle" dominant-baseline="central">30</text>
+  <text class="t" x="680" y="505" text-anchor="middle" dominant-baseline="central">40 s</text>
+  <path class="ext" d="M120,516V540M540,516V540"/>
+  <path class="dim" d="M120,535H540" marker-start="url(#gm-mw-ah)" marker-end="url(#gm-mw-ah)"/>
+  <text class="dt" x="330" y="531" text-anchor="middle">T3 = 30 · next region joins the pool</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="576">Variables</text>
+  <text class="vs" x="40" y="592">Skill levels · seconds · ms</text>
+  <rect class="cell band" x="40" y="602" width="50" height="22"/>
+  <rect class="cell band" x="90" y="602" width="230" height="22"/>
+  <rect class="cell band" x="320" y="602" width="80" height="22"/>
+  <text class="cap ink" x="50" y="613" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="613" dominant-baseline="central">item</text>
+  <text class="cap ink" x="390" y="613" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,624H400V800H40Z"/>
+  <path class="ln ink" d="M90,624V800M320,624V800"/>
+  <path class="ln" d="M40,646H400M40,668H400M40,690H400M40,712H400M40,734H400M40,756H400M40,778H400"/>
+  <text class="t b" x="50" y="635" dominant-baseline="central">R0</text>
+  <text class="t" x="100" y="635" dominant-baseline="central">ticket's rating (center line)</text>
+  <text class="t" x="390" y="635" text-anchor="end" dominant-baseline="central">-</text>
+  <text class="t b" x="50" y="657" dominant-baseline="central">S0</text>
+  <text class="t" x="100" y="657" dominant-baseline="central">max skill distance at start</text>
+  <text class="t" x="390" y="657" text-anchor="end" dominant-baseline="central">5</text>
+  <text class="t b" x="50" y="679" dominant-baseline="central">S1</text>
+  <text class="t" x="100" y="679" dominant-baseline="central">max distance from T1</text>
+  <text class="t" x="390" y="679" text-anchor="end" dominant-baseline="central">10</text>
+  <text class="t b" x="50" y="701" dominant-baseline="central">S2</text>
+  <text class="t" x="100" y="701" dominant-baseline="central">max distance from T2</text>
+  <text class="t" x="390" y="701" text-anchor="end" dominant-baseline="central">20</text>
+  <text class="t b" x="50" y="723" dominant-baseline="central">T1</text>
+  <text class="t" x="100" y="723" dominant-baseline="central">first step, s</text>
+  <text class="t" x="390" y="723" text-anchor="end" dominant-baseline="central">15</text>
+  <text class="t b" x="50" y="745" dominant-baseline="central">T2</text>
+  <text class="t" x="100" y="745" dominant-baseline="central">second step, s: T1 + 10</text>
+  <text class="t" x="390" y="745" text-anchor="end" dominant-baseline="central">25</text>
+  <text class="t b" x="50" y="767" dominant-baseline="central">L0/L1</text>
+  <text class="t" x="100" y="767" dominant-baseline="central">ping ceiling before/after T3</text>
+  <text class="t" x="390" y="767" text-anchor="end" dominant-baseline="central">60/90</text>
+  <text class="t b" x="50" y="789" dominant-baseline="central">T3</text>
+  <text class="t" x="100" y="789" dominant-baseline="central">latency step, s</text>
+  <text class="t" x="390" y="789" text-anchor="end" dominant-baseline="central">30</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="420" y="602" width="300" height="198"/>
+  <text class="sl ink" x="432" y="620">notes</text>
+  <text class="n" x="432" y="640">[1] Skill steps from the AWS FlexMatch</text>
+  <text class="n" x="432" y="655">docs example: max distance 5, then 10</text>
+  <text class="n" x="432" y="670">at 15 s, then 20 at 25 s.</text>
+  <text class="n" x="432" y="690">[2] Latency ceilings and T3 are illustrative.</text>
+  <text class="n" x="432" y="710">[3] Illustrative: an opponent 8 levels away,</text>
+  <text class="n" x="432" y="725">found at 19 s, fits once the window is S1.</text>
+  <text class="n" x="432" y="745">[4] FlexMatch starts a step when the newest</text>
+  <text class="n" x="432" y="760">ticket in the incomplete match reaches the</text>
+  <text class="n" x="432" y="775">wait time; adding a ticket may reset it.</text>
+</svg>

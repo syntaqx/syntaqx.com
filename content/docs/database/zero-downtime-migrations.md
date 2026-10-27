@@ -42,6 +42,8 @@ ALTER TABLE users DROP COLUMN name;
 
 A single `ALTER TABLE users RENAME COLUMN` takes effect instantly, and every old instance still running fails on its next query until it's replaced.
 
+![Dimensional timeline of the rename from users.name to users.full_name over six deploys. The name column is read and written until d4, written only until d5, and unused until d6 drops it. The full_name column is added empty at d1, written from d2, filled by a batched backfill job from d3, and read and written from d4 on. A dimension marks at least one deploy cycle between d5 and the drop at d6, and a table lists each step's schema change, reads and writes.](/diagrams/pb-database-expand-contract.svg "Six deploys, each one compatible with the one before it, so any of them can roll back; only the drop is irreversible, and it ships last and alone.")
+
 ## Backfills
 
 - **Batch it.** Hundreds to low thousands of rows per batch, each in its own transaction, with a short pause between. One `UPDATE` across 50 million rows holds row locks for its whole duration, floods replicas with write-ahead log, and leaves a table full of dead tuples for vacuum.

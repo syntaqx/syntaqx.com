@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 718">
+  <defs>
+    <marker id="gm-bp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-bp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-PRD-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">build pipeline, check-in to results</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view -->
+  <text class="vt" x="40" y="64">Plan view: one change through the farm</text>
+  <text class="vs" x="40" y="80">Illustrative except S6 [1] · 1 min = 9 px · timeline</text>
+
+  <!-- B1: the whole pipeline -->
+  <path class="ext" d="M100,147V115M640,147V115"/>
+  <path class="dim" d="M100,120H640" marker-start="url(#gm-bp-ah)" marker-end="url(#gm-bp-ah)"/>
+  <text class="dt" x="370" y="116" text-anchor="middle">B1 = S1 + ... + S7 = 3 + 14 + 12 + 6 + 4 + 18 + 3 = 60</text>
+
+  <!-- Main lane: the critical path [3] -->
+  <text class="sl ink" x="88" y="170" text-anchor="end" dominant-baseline="central">main</text>
+  <rect class="obj fill-2" x="100" y="150" width="27" height="40"/>
+  <rect class="obj fill-1" x="127" y="150" width="126" height="40"/>
+  <rect class="obj fill-1" x="253" y="150" width="108" height="40"/>
+  <rect class="obj fill-2" x="361" y="150" width="54" height="40"/>
+  <rect class="obj fill-2" x="415" y="150" width="36" height="40"/>
+  <rect class="obj hl" x="451" y="150" width="162" height="40"/>
+  <rect class="obj fill-2" x="613" y="150" width="27" height="40"/>
+  <text class="t b" x="113.5" y="170" text-anchor="middle" dominant-baseline="central">S1</text>
+  <text class="t b" x="190" y="170" text-anchor="middle" dominant-baseline="central">S2</text>
+  <text class="t b" x="307" y="170" text-anchor="middle" dominant-baseline="central">S3</text>
+  <text class="t b" x="388" y="170" text-anchor="middle" dominant-baseline="central">S4</text>
+  <text class="t b" x="433" y="170" text-anchor="middle" dominant-baseline="central">S5</text>
+  <text class="t b" x="532" y="170" text-anchor="middle" dominant-baseline="central">S6</text>
+  <text class="t b" x="626.5" y="170" text-anchor="middle" dominant-baseline="central">S7</text>
+
+  <!-- Chain, upper line: S1, S2, S3, S6, S7 -->
+  <path class="ext" d="M100,193V217M127,193V217M253,193V217M361,193V237M415,193V237M451,193V237M613,193V217M640,193V217"/>
+  <path class="dim" d="M80,212H100" marker-end="url(#gm-bp-ah)"/>
+  <path class="dim" d="M100,212H127"/>
+  <text class="dt" x="76" y="212" text-anchor="end" dominant-baseline="central">S1 = 3</text>
+  <path class="dim" d="M127,212H253" marker-start="url(#gm-bp-ah)" marker-end="url(#gm-bp-ah)"/>
+  <text class="dt" x="190" y="208" text-anchor="middle">S2 = 14</text>
+  <path class="dim" d="M253,212H361" marker-start="url(#gm-bp-ah)" marker-end="url(#gm-bp-ah)"/>
+  <text class="dt" x="307" y="208" text-anchor="middle">S3 = 12</text>
+  <path class="dim hl" d="M451,212H613" marker-start="url(#gm-bp-ah-hl)" marker-end="url(#gm-bp-ah-hl)"/>
+  <text class="dt hl" x="532" y="208" text-anchor="middle">S6 = 18 [1]</text>
+  <path class="dim" d="M613,212H640"/>
+  <path class="dim" d="M660,212H640" marker-end="url(#gm-bp-ah)"/>
+  <text class="dt" x="664" y="212" dominant-baseline="central">S7 = 3</text>
+
+  <!-- Chain, lower line: S4, S5 -->
+  <path class="dim" d="M341,232H361" marker-end="url(#gm-bp-ah)"/>
+  <path class="dim" d="M361,232H451"/>
+  <path class="dim" d="M471,232H451" marker-end="url(#gm-bp-ah)"/>
+  <path class="ln ink" d="M415,228V236"/>
+  <text class="dt" x="337" y="232" text-anchor="end" dominant-baseline="central">S4 = 6</text>
+  <text class="dt" x="475" y="232" dominant-baseline="central">S5 = 4</text>
+
+  <!-- Start and finish -->
+  <path class="ctr" d="M100,217V252M640,217V252"/>
+  <text class="sl ink" x="100" y="264" text-anchor="middle" dominant-baseline="central">check-in</text>
+  <text class="sl ink" x="640" y="264" text-anchor="middle" dominant-baseline="central">results</text>
+
+  <!-- Side lane: uploads off the critical path [2] -->
+  <path class="phantom" d="M415,237V280"/>
+  <text class="sl ink" x="88" y="295" text-anchor="end" dominant-baseline="central">side</text>
+  <rect class="obj fill-2" x="415" y="283" width="45" height="24"/>
+  <text class="t b" x="437.5" y="295" text-anchor="middle" dominant-baseline="central">U1</text>
+  <path class="ext" d="M415,310V327M460,310V327"/>
+  <path class="dim" d="M395,322H415" marker-end="url(#gm-bp-ah)"/>
+  <path class="dim" d="M415,322H460"/>
+  <path class="dim" d="M480,322H460" marker-end="url(#gm-bp-ah)"/>
+  <text class="dt" x="484" y="322" dominant-baseline="central">U1 = 5 [2]</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="362">Variables</text>
+  <text class="vs" x="40" y="378">Minutes · basis per row</text>
+  <rect class="cell band" x="40" y="388" width="50" height="22"/>
+  <rect class="cell band" x="90" y="388" width="330" height="22"/>
+  <rect class="cell band" x="420" y="388" width="70" height="22"/>
+  <rect class="cell band" x="490" y="388" width="230" height="22"/>
+  <text class="cap ink" x="50" y="399" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="399" dominant-baseline="central">stage</text>
+  <text class="cap ink" x="480" y="399" text-anchor="end" dominant-baseline="central">value</text>
+  <text class="cap ink" x="500" y="399" dominant-baseline="central">basis</text>
+  <path class="cell" d="M40,410H720V608H40Z"/>
+  <path class="ln ink" d="M90,410V608M420,410V608M490,410V608"/>
+  <path class="ln" d="M40,432H720M40,454H720M40,476H720M40,498H720M40,520H720M40,542H720M40,564H720M40,586H720"/>
+  <text class="t b" x="50" y="421" dominant-baseline="central">B1</text>
+  <text class="t" x="100" y="421" dominant-baseline="central">check-in to results: S1 + ... + S7</text>
+  <text class="t b" x="480" y="421" text-anchor="end" dominant-baseline="central">60</text>
+  <text class="t" x="500" y="421" dominant-baseline="central">about an hour [1]</text>
+  <text class="t" x="50" y="443" dominant-baseline="central">S1</text>
+  <text class="t" x="100" y="443" dominant-baseline="central">queue for an agent, sync the change</text>
+  <text class="t" x="480" y="443" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t" x="500" y="443" dominant-baseline="central">illustrative</text>
+  <text class="t" x="50" y="465" dominant-baseline="central">S2</text>
+  <text class="t" x="100" y="465" dominant-baseline="central">compile code for each platform</text>
+  <text class="t" x="480" y="465" text-anchor="end" dominant-baseline="central">14</text>
+  <text class="t" x="500" y="465" dominant-baseline="central">illustrative</text>
+  <text class="t" x="50" y="487" dominant-baseline="central">S3</text>
+  <text class="t" x="100" y="487" dominant-baseline="central">cook content for each platform</text>
+  <text class="t" x="480" y="487" text-anchor="end" dominant-baseline="central">12</text>
+  <text class="t" x="500" y="487" dominant-baseline="central">illustrative</text>
+  <text class="t" x="50" y="509" dominant-baseline="central">S4</text>
+  <text class="t" x="100" y="509" dominant-baseline="central">package and stage the build</text>
+  <text class="t" x="480" y="509" text-anchor="end" dominant-baseline="central">6</text>
+  <text class="t" x="500" y="509" dominant-baseline="central">illustrative</text>
+  <text class="t" x="50" y="531" dominant-baseline="central">S5</text>
+  <text class="t" x="100" y="531" dominant-baseline="central">deploy to test machines</text>
+  <text class="t" x="480" y="531" text-anchor="end" dominant-baseline="central">4</text>
+  <text class="t" x="500" y="531" dominant-baseline="central">illustrative</text>
+  <text class="t" x="50" y="553" dominant-baseline="central">S6</text>
+  <text class="t" x="100" y="553" dominant-baseline="central">automated tests on the build</text>
+  <text class="t" x="480" y="553" text-anchor="end" dominant-baseline="central">18</text>
+  <text class="t" x="500" y="553" dominant-baseline="central">Riot, League, 2016 [1]</text>
+  <text class="t" x="50" y="575" dominant-baseline="central">S7</text>
+  <text class="t" x="100" y="575" dominant-baseline="central">report, label the build good or bad</text>
+  <text class="t" x="480" y="575" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t" x="500" y="575" dominant-baseline="central">illustrative</text>
+  <text class="t" x="50" y="597" dominant-baseline="central">U1</text>
+  <text class="t" x="100" y="597" dominant-baseline="central">upload symbols and the build</text>
+  <text class="t" x="480" y="597" text-anchor="end" dominant-baseline="central">5</text>
+  <text class="t" x="500" y="597" dominant-baseline="central">illustrative</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="624" width="680" height="76"/>
+  <text class="sl ink" x="52" y="642">notes</text>
+  <text class="n" x="52" y="660">[1] Riot (2016): about 5,500 tests in about 18 minutes per League build, reported within about an hour of check-in.</text>
+  <text class="n" x="52" y="676">[2] Symbols go to a store keyed by build ID; only the ID ships. Off the critical path: no time in B1.</text>
+  <text class="n" x="52" y="692">[3] One serial critical path; a build graph runs independent nodes (per platform, per chunk) on separate agents.</text>
+</svg>

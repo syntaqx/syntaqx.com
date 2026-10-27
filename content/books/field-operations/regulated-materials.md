@@ -90,6 +90,8 @@ Do the math in the system, not in the technician's head:
 3. It compares the rate to the label version's range and to the area treated, and warns or blocks when it's off, as PestPac does by preventing arbitrary concentrations.
 4. It stores the entered values and the computed ones, with the formula version, so a later dispute can reproduce the arithmetic.
 
+![A dimensional drawing of a tank mix. A measure of concentrate, C1, goes into a tank filled to 2 gallons of finished mix, F1. A variable table gives the label rate R1 of 0.8 fluid ounces per gallon, C1 = R1 × F1 = 1.6 fluid ounces, and the active ingredient A1 = C1 × a, with a taken from the label version. A plan view below shows the entered rate checked against the label's minimum and maximum, with the ranges outside it hatched as warn or block.](/diagrams/fo-regulated-materials-dwg-tank-mix.svg "The three numbers on one application line, from this chapter's example. The app computes concentrate and active ingredient from the label version and checks the rate against the label's range.")
+
 Store quantities as decimals with an explicit unit, never floats, and refuse a report rather than emit a unit the state doesn't accept.
 
 Tank mixes have a subtlety: one tank may hold two products applied in one pass. Record one application line per product, linked to the same mix, so each product's quantity and registration number are reportable on their own.
@@ -105,6 +107,8 @@ Some places carry extra rules:
 - **Sensitivity registries.** Pennsylvania distributes its Pesticide Hypersensitivity Registry of physician-verified people to licensed businesses by March 1 and July 15 each year. Applicators notify listed people whose property line is within 500 feet, 12 to 72 hours ahead, with a window of at most 24 hours, the products' brand names and EPA numbers, and the business's license number. Load each release as a dated dataset, geocode it, and run the 500-foot check at scheduling so the notice goes out in the window.
 - **Schools and day care.** FieldRoutes' docs describe California's annual report on applications at school and day care sites, driven by a "School" sub-property type. Make site type a property attribute, not a note.
 - **Customer-specific restrictions.** "No products in the garden," "pets on site," "beehives on the east fence." Store them on the property and show them before the first spray.
+
+![A dimensional drawing of Pennsylvania's hypersensitivity registry notice on an hour axis measured from the application's earliest start. The notice window runs from 72 to 12 hours before, 60 hours wide, with the last 12 hours hatched as too late; the application runs at most 24 hours from earliest start to latest finish; the record of the notice is due within 24 hours after. A plan view shows a 500-foot radius around the application site: a listed property whose line falls inside gets notice, one outside doesn't.](/diagrams/fo-regulated-materials-dwg-registry.svg "7 Pa. Code 128.112 as a scheduling constraint. The 500-foot check picks who is notified, and the notice has to go out between 72 and 12 hours ahead of the window it announces.")
 
 ## Safety Data Sheets
 

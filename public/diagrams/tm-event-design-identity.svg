@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 688">
+  <defs>
+    <marker id="tm-ed-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="tm-ed-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">TM-EVD-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">identity stitching, one person</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view -->
+  <text class="vt" x="40" y="64">Plan view: two devices, one person</text>
+  <text class="vs" x="40" y="80">Scale 1 day = 80 px · timeline · values in days</text>
+
+  <!-- P1: the stitched history -->
+  <path class="ext" d="M100,125V95M660,125V95"/>
+  <path class="dim hl" d="M100,100H660" marker-start="url(#tm-ed-ah-hl)" marker-end="url(#tm-ed-ah-hl)"/>
+  <text class="dt hl" x="380" y="96" text-anchor="middle">P1 = A1 + U2 = 5.00 + 2.00 = 7.00 [2]</text>
+
+  <!-- Phone lane -->
+  <text class="sl ink" x="88" y="148" text-anchor="end" dominant-baseline="central">phone</text>
+  <rect class="obj fill-2" x="100" y="128" width="400" height="40"/>
+  <rect class="obj fill-1" x="500" y="128" width="160" height="40"/>
+  <text class="sl ink" x="300" y="148" text-anchor="middle" dominant-baseline="central">anonymous a</text>
+  <text class="sl ink" x="580" y="148" text-anchor="middle" dominant-baseline="central">user u</text>
+  <text class="t" x="506" y="140" dominant-baseline="central">[1]</text>
+
+  <!-- Phone chain -->
+  <path class="ext" d="M100,171V197M500,171V197M660,171V197"/>
+  <path class="dim" d="M100,192H500" marker-start="url(#tm-ed-ah)" marker-end="url(#tm-ed-ah)"/>
+  <text class="dt" x="300" y="188" text-anchor="middle">A1 = 5.00</text>
+  <path class="dim" d="M500,192H660" marker-start="url(#tm-ed-ah)" marker-end="url(#tm-ed-ah)"/>
+  <text class="dt" x="580" y="188" text-anchor="middle">U2 = 2.00</text>
+
+  <!-- Laptop lane -->
+  <text class="sl ink" x="88" y="248" text-anchor="end" dominant-baseline="central">laptop</text>
+  <rect class="obj fill-2" x="180" y="228" width="240" height="40"/>
+  <rect class="obj fill-1" x="420" y="228" width="160" height="40"/>
+  <rect class="slot" x="580" y="228" width="80" height="40"/>
+  <text class="sl ink" x="300" y="248" text-anchor="middle" dominant-baseline="central">anonymous b</text>
+  <text class="sl ink" x="500" y="248" text-anchor="middle" dominant-baseline="central">user u</text>
+  <text class="sl ink" x="620" y="248" text-anchor="middle" dominant-baseline="central">anon c</text>
+  <text class="t" x="426" y="240" dominant-baseline="central">[1]</text>
+  <text class="t" x="666" y="248" dominant-baseline="central">[3]</text>
+
+  <!-- Laptop chain -->
+  <path class="ext" d="M180,271V297M420,271V297M580,271V297M660,271V297"/>
+  <path class="dim" d="M180,292H420" marker-start="url(#tm-ed-ah)" marker-end="url(#tm-ed-ah)"/>
+  <text class="dt" x="300" y="288" text-anchor="middle">A2 = 3.00</text>
+  <path class="dim" d="M420,292H580" marker-start="url(#tm-ed-ah)" marker-end="url(#tm-ed-ah)"/>
+  <text class="dt" x="500" y="288" text-anchor="middle">U1 = 2.00</text>
+  <path class="dim" d="M580,292H660" marker-start="url(#tm-ed-ah)" marker-end="url(#tm-ed-ah)"/>
+  <text class="dt" x="620" y="288" text-anchor="middle">C1 = 1.00</text>
+
+  <!-- Day axis -->
+  <path class="ln ink" d="M100,320H660M100,316V324M180,316V324M260,316V324M340,316V324M420,316V324M500,316V324M580,316V324M660,316V324"/>
+  <text class="t" x="100" y="336" text-anchor="middle" dominant-baseline="central">day 0</text>
+  <text class="t" x="180" y="336" text-anchor="middle" dominant-baseline="central">day 1</text>
+  <text class="t" x="260" y="336" text-anchor="middle" dominant-baseline="central">day 2</text>
+  <text class="t" x="340" y="336" text-anchor="middle" dominant-baseline="central">day 3</text>
+  <text class="t" x="420" y="336" text-anchor="middle" dominant-baseline="central">day 4</text>
+  <text class="t" x="500" y="336" text-anchor="middle" dominant-baseline="central">day 5</text>
+  <text class="t" x="580" y="336" text-anchor="middle" dominant-baseline="central">day 6</text>
+  <text class="t" x="660" y="336" text-anchor="middle" dominant-baseline="central">day 7</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="382">Variables</text>
+  <text class="vs" x="40" y="398">Illustrative [4] · days</text>
+  <rect class="cell band" x="40" y="408" width="50" height="22"/>
+  <rect class="cell band" x="90" y="408" width="530" height="22"/>
+  <rect class="cell band" x="620" y="408" width="100" height="22"/>
+  <text class="cap ink" x="50" y="419" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="419" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="419" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,430H720V562H40Z"/>
+  <path class="ln ink" d="M90,430V562M620,430V562"/>
+  <path class="ln" d="M40,452H720M40,474H720M40,496H720M40,518H720M40,540H720"/>
+  <text class="t b" x="50" y="441" dominant-baseline="central">P1</text>
+  <text class="t" x="100" y="441" dominant-baseline="central">stitched history of user u, first event to last</text>
+  <text class="t b" x="710" y="441" text-anchor="end" dominant-baseline="central">7.00</text>
+  <text class="t" x="50" y="463" dominant-baseline="central">A1</text>
+  <text class="t" x="100" y="463" dominant-baseline="central">phone, anonymous ID a before login</text>
+  <text class="t" x="710" y="463" text-anchor="end" dominant-baseline="central">5.00</text>
+  <text class="t" x="50" y="485" dominant-baseline="central">U2</text>
+  <text class="t" x="100" y="485" dominant-baseline="central">phone, identified as user u</text>
+  <text class="t" x="710" y="485" text-anchor="end" dominant-baseline="central">2.00</text>
+  <text class="t" x="50" y="507" dominant-baseline="central">A2</text>
+  <text class="t" x="100" y="507" dominant-baseline="central">laptop, anonymous ID b before login</text>
+  <text class="t" x="710" y="507" text-anchor="end" dominant-baseline="central">3.00</text>
+  <text class="t" x="50" y="529" dominant-baseline="central">U1</text>
+  <text class="t" x="100" y="529" dominant-baseline="central">laptop, identified as user u until logout</text>
+  <text class="t" x="710" y="529" text-anchor="end" dominant-baseline="central">2.00</text>
+  <text class="t" x="50" y="551" dominant-baseline="central">C1</text>
+  <text class="t" x="100" y="551" dominant-baseline="central">laptop, new anonymous ID c after logout, not linked</text>
+  <text class="t" x="710" y="551" text-anchor="end" dominant-baseline="central">1.00</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="580" width="680" height="88"/>
+  <text class="sl ink" x="52" y="598">notes</text>
+  <text class="n" x="52" y="616">[1] The first event carrying both the anonymous ID and the user ID records the link (identify at login).</text>
+  <text class="n" x="52" y="632">[2] Once linked, the earlier anonymous events on both devices count as user u: one person, two devices.</text>
+  <text class="n" x="52" y="648">[3] Logout resets the anonymous ID, so the next person on a shared laptop is not merged into user u.</text>
+  <text class="n" x="52" y="664">[4] Illustrative timeline, not a measurement.</text>
+</svg>

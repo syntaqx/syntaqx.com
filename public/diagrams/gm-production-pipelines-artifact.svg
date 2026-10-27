@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 626">
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-PRD-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">build artifact, one platform</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Exploded axonometric: a shippable build</text>
+  <text class="vs" x="40" y="80">Not to scale · layers separated along the stack axis</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M295,278V464M645,235V421"/>
+
+  <!-- 01 manifest -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 370)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="458.65" r="2"/>
+  <path class="leader" d="M309.5,458.65L297.5,446.65H270"/>
+  <text class="sl ink" x="264" y="446.65" text-anchor="end" dominant-baseline="central">01 manifest [2]</text>
+  <text class="n" x="264" y="462.65" text-anchor="end">build ID, file and chunk hashes</text>
+
+  <!-- 02 content archives -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 308)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="396.65" r="2"/>
+  <path class="leader" d="M309.5,396.65L297.5,384.65H270"/>
+  <text class="sl ink" x="264" y="384.65" text-anchor="end" dominant-baseline="central">02 content archives</text>
+  <text class="n" x="264" y="400.65" text-anchor="end">cooked assets, packed in chunks</text>
+
+  <!-- 03 shaders -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 246)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="334.65" r="2"/>
+  <path class="leader" d="M309.5,334.65L297.5,322.65H270"/>
+  <text class="sl ink" x="264" y="322.65" text-anchor="end" dominant-baseline="central">03 shaders</text>
+  <text class="n" x="264" y="338.65" text-anchor="end">compiled per graphics API</text>
+
+  <!-- 04 executable -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 184)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="272.65" r="2"/>
+  <path class="leader" d="M309.5,272.65L297.5,260.65H270"/>
+  <text class="sl ink" x="264" y="260.65" text-anchor="end" dominant-baseline="central">04 executable</text>
+  <text class="n" x="264" y="276.65" text-anchor="end">game code, symbols stripped</text>
+
+  <!-- Symbols: produced by the same build, kept, never shipped -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 610 100)">
+    <rect class="slot" width="120" height="80"/>
+  </g>
+  <circle class="dot" cx="593.9" cy="132.95" r="2"/>
+  <path class="leader" d="M593.9,132.95L581.9,120.95H566"/>
+  <text class="sl ink" x="560" y="120.95" text-anchor="end" dominant-baseline="central">symbols [1]</text>
+  <text class="n" x="560" y="136.95" text-anchor="end">kept in a symbol store</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="540" width="680" height="66"/>
+  <text class="sl ink" x="52" y="558">notes</text>
+  <text class="n" x="52" y="576">[1] Same build, matched to the executable by build ID; crash reports are symbolicated against them, never shipped.</text>
+  <text class="n" x="52" y="592">[2] The manifest is what the launcher and patcher read: it names every file and chunk by content hash.</text>
+</svg>

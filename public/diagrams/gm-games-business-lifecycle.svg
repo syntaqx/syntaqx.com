@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
+  <defs>
+    <marker id="gm-gbl-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-gbl-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- What the platform must have by the end of each stage -->
+  <text class="cap" x="30" y="30">done when the platform has</text>
+  <text class="n" x="85" y="56" text-anchor="middle">a playable build,</text>
+  <text class="n" x="85" y="70" text-anchor="middle">a way to playtest</text>
+  <text class="n" x="235" y="56" text-anchor="middle">pipelines, tests,</text>
+  <text class="n" x="235" y="70" text-anchor="middle">certification</text>
+  <text class="n" x="385" y="56" text-anchor="middle">accounts, store,</text>
+  <text class="n" x="385" y="70" text-anchor="middle">servers, support</text>
+  <text class="n" x="535" y="56" text-anchor="middle">live config, telemetry,</text>
+  <text class="n" x="535" y="70" text-anchor="middle">moderation</text>
+  <text class="n" x="685" y="56" text-anchor="middle">what happens to</text>
+  <text class="n" x="685" y="70" text-anchor="middle">purchases and data</text>
+
+  <!-- Stages -->
+  <rect class="cell" x="30" y="86" width="110" height="26"/>
+  <text class="t" x="85" y="99" text-anchor="middle" dominant-baseline="central">prototype</text>
+  <path class="ln hl" d="M140,99H178" marker-end="url(#gm-gbl-ah-hl)"/>
+  <rect class="cell" x="180" y="86" width="110" height="26"/>
+  <text class="t" x="235" y="99" text-anchor="middle" dominant-baseline="central">production</text>
+  <path class="ln hl" d="M290,99H328" marker-end="url(#gm-gbl-ah-hl)"/>
+  <rect class="cell" x="330" y="86" width="110" height="26"/>
+  <text class="t" x="385" y="99" text-anchor="middle" dominant-baseline="central">launch</text>
+  <path class="ln hl" d="M440,99H478" marker-end="url(#gm-gbl-ah-hl)"/>
+  <rect class="cell hl" x="480" y="86" width="110" height="26"/>
+  <text class="t hl b" x="535" y="99" text-anchor="middle" dominant-baseline="central">live</text>
+  <path class="ln" d="M590,99H628" marker-end="url(#gm-gbl-ah)"/>
+  <rect class="cell" x="630" y="86" width="110" height="26"/>
+  <text class="t" x="685" y="99" text-anchor="middle" dominant-baseline="central">sunset</text>
+
+  <!-- Live loop -->
+  <path class="ln hl" d="M560,112C560,152 510,152 510,114" marker-end="url(#gm-gbl-ah-hl)"/>
+  <text class="n hl" x="535" y="166" text-anchor="middle">patches, seasons, events</text>
+
+  <!-- Cancelled -->
+  <path class="ln dash" d="M85,112V164" marker-end="url(#gm-gbl-ah)"/>
+  <text class="n" x="93" y="142">not fun</text>
+  <rect class="cell ghost end" x="30" y="166" width="110" height="26"/>
+  <text class="t dim" x="85" y="179" text-anchor="middle" dominant-baseline="central">cancelled</text>
+</svg>

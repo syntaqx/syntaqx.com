@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 686">
+  <defs>
+    <marker id="pb-pg-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="pb-pg-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-REQ-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">offset and cursor walks</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: page 1 -->
+  <text class="vt" x="40" y="64">Plan view: page 1, newest first</text>
+  <text class="vs" x="40" y="80">Not to scale · one cell per row · limit L = 3 [1]</text>
+  <path class="ext" d="M100,125V103M268,125V103"/>
+  <path class="dim" d="M100,108H268" marker-start="url(#pb-pg-ah)" marker-end="url(#pb-pg-ah)"/>
+  <text class="dt" x="184" y="104" text-anchor="middle">page 1 = L rows</text>
+  <rect class="obj fill-1" x="100" y="128" width="56" height="32"/>
+  <rect class="obj fill-1" x="156" y="128" width="56" height="32"/>
+  <rect class="obj fill-1" x="212" y="128" width="56" height="32"/>
+  <rect class="obj fill-2" x="268" y="128" width="56" height="32"/>
+  <rect class="obj fill-2" x="324" y="128" width="56" height="32"/>
+  <rect class="obj fill-2" x="380" y="128" width="56" height="32"/>
+  <rect class="obj fill-2" x="436" y="128" width="56" height="32"/>
+  <rect class="obj fill-2" x="492" y="128" width="56" height="32"/>
+  <rect class="obj fill-2" x="548" y="128" width="56" height="32"/>
+  <text class="t b" x="128" y="144" text-anchor="middle" dominant-baseline="central">i9</text>
+  <text class="t b" x="184" y="144" text-anchor="middle" dominant-baseline="central">i8</text>
+  <text class="t b" x="240" y="144" text-anchor="middle" dominant-baseline="central">i7</text>
+  <text class="t" x="296" y="144" text-anchor="middle" dominant-baseline="central">i6</text>
+  <text class="t" x="352" y="144" text-anchor="middle" dominant-baseline="central">i5</text>
+  <text class="t" x="408" y="144" text-anchor="middle" dominant-baseline="central">i4</text>
+  <text class="t" x="464" y="144" text-anchor="middle" dominant-baseline="central">i3</text>
+  <text class="t" x="520" y="144" text-anchor="middle" dominant-baseline="central">i2</text>
+  <text class="t" x="576" y="144" text-anchor="middle" dominant-baseline="central">i1</text>
+  <path class="ctr" d="M268,120V172"/>
+  <text class="sl ink" x="268" y="184" text-anchor="middle" dominant-baseline="central">cursor K1 [2]</text>
+
+  <!-- Plan view: page 2, after a new row arrives -->
+  <text class="vt" x="40" y="226">Plan view: page 2, after i10 arrives</text>
+  <text class="vs" x="40" y="242">Not to scale · the same list, one new row at the top</text>
+  <text class="sl ink" x="32" y="268" dominant-baseline="central">offset</text>
+  <path class="ext" d="M100,281V263M268,281V263M436,281V263"/>
+  <path class="dim" d="M100,268H268" marker-start="url(#pb-pg-ah)" marker-end="url(#pb-pg-ah)"/>
+  <text class="dt" x="184" y="264" text-anchor="middle">skip O = 3</text>
+  <path class="dim" d="M268,268H436" marker-start="url(#pb-pg-ah)" marker-end="url(#pb-pg-ah)"/>
+  <text class="dt" x="352" y="264" text-anchor="middle">i7, i6, i5</text>
+  <rect class="obj hl" x="100" y="284" width="56" height="32"/>
+  <rect class="obj fill-2" x="156" y="284" width="56" height="32"/>
+  <rect class="obj fill-2" x="212" y="284" width="56" height="32"/>
+  <rect class="hatch" x="268" y="284" width="56" height="32" fill="url(#pb-pg-hatch)"/>
+  <rect class="obj fill-2" x="324" y="284" width="56" height="32"/>
+  <rect class="obj fill-2" x="380" y="284" width="56" height="32"/>
+  <rect class="obj fill-2" x="436" y="284" width="56" height="32"/>
+  <rect class="obj fill-2" x="492" y="284" width="56" height="32"/>
+  <rect class="obj fill-2" x="548" y="284" width="56" height="32"/>
+  <rect class="obj fill-2" x="604" y="284" width="56" height="32"/>
+  <text class="t b" x="128" y="300" text-anchor="middle" dominant-baseline="central">i10</text>
+  <text class="t" x="184" y="300" text-anchor="middle" dominant-baseline="central">i9</text>
+  <text class="t" x="240" y="300" text-anchor="middle" dominant-baseline="central">i8</text>
+  <text class="t b ko" x="296" y="300" text-anchor="middle" dominant-baseline="central">i7</text>
+  <text class="t" x="352" y="300" text-anchor="middle" dominant-baseline="central">i6</text>
+  <text class="t" x="408" y="300" text-anchor="middle" dominant-baseline="central">i5</text>
+  <text class="t" x="464" y="300" text-anchor="middle" dominant-baseline="central">i4</text>
+  <text class="t" x="520" y="300" text-anchor="middle" dominant-baseline="central">i3</text>
+  <text class="t" x="576" y="300" text-anchor="middle" dominant-baseline="central">i2</text>
+  <text class="t" x="632" y="300" text-anchor="middle" dominant-baseline="central">i1</text>
+  <text class="sl ink" x="32" y="336" dominant-baseline="central">cursor</text>
+  <path class="ctr" d="M324,276V352"/>
+  <path class="ext" d="M492,319V341"/>
+  <path class="dim" d="M324,336H492" marker-start="url(#pb-pg-ah)" marker-end="url(#pb-pg-ah)"/>
+  <text class="dt" x="408" y="332" text-anchor="middle">i6, i5, i4</text>
+  <text class="sl ink" x="324" y="364" text-anchor="middle" dominant-baseline="central">after K1</text>
+  <text class="t" x="380" y="398" text-anchor="middle">offset page 2 = rows O + 1 to O + L = rows 4 to 6 = i7, i6, i5 · i7 is returned twice [3]</text>
+  <text class="t" x="380" y="416" text-anchor="middle">cursor page 2 = first L rows after K1 = i6, i5, i4 · nothing repeated, nothing skipped</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="456">Variables</text>
+  <text class="vs" x="40" y="472">Illustrative [1]</text>
+  <rect class="cell band" x="40" y="482" width="50" height="22"/>
+  <rect class="cell band" x="90" y="482" width="460" height="22"/>
+  <rect class="cell band" x="550" y="482" width="170" height="22"/>
+  <text class="cap ink" x="50" y="493" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="493" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="493" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,504H720V570H40Z"/>
+  <path class="ln ink" d="M90,504V570M550,504V570"/>
+  <path class="ln" d="M40,526H720M40,548H720"/>
+  <text class="t" x="50" y="515" dominant-baseline="central">L</text>
+  <text class="t" x="100" y="515" dominant-baseline="central">rows per page, the limit</text>
+  <text class="t" x="710" y="515" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t" x="50" y="537" dominant-baseline="central">O</text>
+  <text class="t" x="100" y="537" dominant-baseline="central">rows an offset skips for page 2: L × (2 - 1)</text>
+  <text class="t" x="710" y="537" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t b" x="50" y="559" dominant-baseline="central">K1</text>
+  <text class="t" x="100" y="559" dominant-baseline="central">cursor: sort values and id of the last row returned</text>
+  <text class="t b" x="710" y="559" text-anchor="end" dominant-baseline="central">(created_at, id) of i7</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="586" width="680" height="80"/>
+  <text class="sl ink" x="52" y="604">notes</text>
+  <text class="n" x="52" y="622">[1] Illustrative limit, to keep the drawing short; the chapter's default is 25 and its maximum 100.</text>
+  <text class="n" x="52" y="638">[2] Opaque to clients; the server reads it as WHERE (created_at, id) &lt; K1, which an index answers on any page.</text>
+  <text class="n" x="52" y="654">[3] A delete does the opposite and skips a row. The cursor walk is immune to both because it never counts.</text>
+</svg>

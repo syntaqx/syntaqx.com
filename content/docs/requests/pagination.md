@@ -46,6 +46,8 @@ GET /payments?cursor=eyJpZCI6IjEyMyJ9&limit=25
 
 A cursor encodes *where you are* (the sort values and `id` of the last item returned) instead of *how many to skip*. The next query is `WHERE (created_at, id) < (…) ORDER BY created_at DESC, id DESC LIMIT 25`, which an index answers at the same speed on any page, and inserts elsewhere in the list don't move the reader. The `id` tiebreaker matters: without it, two items with the same `created_at` can be skipped or repeated at a page boundary.
 
+![Dimensional drawing of two ways to fetch page 2 of a list sorted newest first, with an illustrative limit of 3. Page 1 returns i9, i8 and i7, and the cursor marks i7. Then i10 arrives at the top. The offset walk skips three rows and returns i7, i6 and i5, repeating i7; the cursor walk returns the three rows after i7, which are i6, i5 and i4, with nothing repeated or skipped.](/diagrams/pb-requests-cursor-walk.svg "An offset counts from the top, so a new row shifts every page; a cursor remembers the last row, so it doesn't.")
+
 The cost is real: a cursor can't jump to page 40 or say how many pages there are. For APIs that's the right trade, because machine clients walk lists front to back, and correctness under change matters more than random access.
 
 ### Cursors Are Opaque

@@ -49,11 +49,21 @@ export const BOOKS: Book[] = [
       "It reads in seven parts, plus a reference. How the Work Flows: the business, the software landscape, customers and properties, the agreements they sign, repair, installs and commercial work, and last-mile delivery. Scheduling and Routing: recurring schedules, territories and capacity, booking, route optimization, weighing the routing objective, and dispatch. In the Field: the technician's app, proof of service, and fleet and safety. The Rules: regulated materials, licenses and permits, consumer protection, and audit trails. Selling: door to door, pricing, one-time services and upsells, signing the agreement, and the sales teams behind it. Customers and Billing: communications, self-service, billing recurring service, and collections and retention. Running the Platform: its architecture, AI, the metrics that run the business, and switching platforms. Reference: a glossary of every term.",
     ],
   },
+  {
+    slug: "gaming",
+    type: "industry",
+    name: "Gaming",
+    summary:
+      "How games are built and run, from the engine and the frame budget to netcode, game servers, patching, live operations and the rules around them.",
+    intro: [
+      "A game is a real-time simulation that has to feel instant on a player's machine, stay fair across a hundred thousand concurrent matches, ship a patch to millions of players overnight, and keep a store, an economy and a community running for years. This book surveys how the industry does each piece, from Unreal, Unity and in-house engines to the netcode, server fleets, launchers and backend services that public engineering write-ups describe, and how you'd build it, drawn as dimensioned technical sheets wherever a budget or a stack makes the point.",
+      "It reads in eight parts, plus a reference. How Games Get Made: the business and its data model, the engine landscape, building your own engine, and production pipelines. Clients and Delivery: game clients and launchers, and patching. Multiplayer: netcode, game servers, lockstep and rollback, matchmaking, and social systems. Backend and Live Services: backend architecture, accounts, economies, live operations and telemetry. Fair Play and Safety: anti-cheat, player behavior and player support. Money: monetization, and stores and payments. The Rules: ratings and children, loot boxes and consumer law, and accessibility. Running the Platform: metrics, AI and esports. Reference: a glossary of every term.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
 export const UPCOMING_BOOKS: { name: string; type: BookType }[] = [
-  { name: "Gaming", type: "industry" },
   { name: "Property Tech", type: "industry" },
   { name: "Commerce & Marketplaces", type: "industry" },
   { name: "Consumer Fintech", type: "industry" },

@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 846">
+  <defs>
+    <marker id="gm-fb-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-fb-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="gm-fb-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-FRM-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">frame budget, 60 Hz</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: one frame on a time axis -->
+  <text class="vt" x="40" y="64">Plan view: one frame at 60 Hz</text>
+  <text class="vs" x="40" y="80">Scale 1 ms = 33 px · timeline · values in ms</text>
+
+  <!-- F1: the whole frame -->
+  <path class="ext" d="M100,125V95M650,125V95"/>
+  <path class="dim hl" d="M100,100H650" marker-start="url(#gm-fb-ah-hl)" marker-end="url(#gm-fb-ah-hl)"/>
+  <text class="dt hl" x="375" y="96" text-anchor="middle">F1 = 1000 / 60 = 16.67 [1]</text>
+
+  <!-- The frame, by stage -->
+  <rect class="obj fill-2" x="100" y="128" width="16.5" height="40"/>
+  <rect class="obj fill-2" x="116.5" y="128" width="132" height="40"/>
+  <rect class="obj fill-2" x="248.5" y="128" width="99" height="40"/>
+  <rect class="obj fill-1" x="347.5" y="128" width="264" height="40"/>
+  <rect class="obj fill-2" x="611.5" y="128" width="38.5" height="40"/>
+  <text class="sl ink" x="182.5" y="148" text-anchor="middle" dominant-baseline="central">simulation</text>
+  <text class="sl ink" x="298" y="142" text-anchor="middle" dominant-baseline="central">render</text>
+  <text class="sl ink" x="298" y="155" text-anchor="middle" dominant-baseline="central">submit</text>
+  <text class="sl ink" x="479.5" y="148" text-anchor="middle" dominant-baseline="central">GPU</text>
+  <text class="t" x="604" y="140" text-anchor="end" dominant-baseline="central">[3]</text>
+  <circle class="dot" cx="630.75" cy="148" r="2"/>
+  <path class="leader" d="M630.75,148L642,136H662"/>
+  <text class="sl ink" x="666" y="136" dominant-baseline="central">present</text>
+
+  <!-- Detail circle on T1 -->
+  <circle class="detail" cx="108.25" cy="148" r="20"/>
+  <text class="sl ink" x="92" y="122" text-anchor="end" dominant-baseline="central">detail A</text>
+
+  <!-- Chain: T1 to T5 -->
+  <path class="ext" d="M100,171V197M116.5,171V197M248.5,171V197M347.5,171V197M611.5,171V197M650,171V197"/>
+  <path class="dim" d="M86,192H100" marker-end="url(#gm-fb-ah)"/>
+  <path class="dim" d="M100,192H116.5"/>
+  <text class="dt" x="82" y="192" text-anchor="end" dominant-baseline="central">T1 = 0.50</text>
+  <path class="dim" d="M116.5,192H248.5" marker-start="url(#gm-fb-ah)" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="182.5" y="188" text-anchor="middle">T2 = 4.00</text>
+  <path class="dim" d="M248.5,192H347.5" marker-start="url(#gm-fb-ah)" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="298" y="188" text-anchor="middle">T3 = 3.00</text>
+  <path class="dim" d="M347.5,192H611.5" marker-start="url(#gm-fb-ah)" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="479.5" y="188" text-anchor="middle">T4 = 8.00</text>
+  <path class="dim" d="M611.5,192H650"/>
+  <path class="dim" d="M670,192H650" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="674" y="192" dominant-baseline="central">T5 = 1.17</text>
+  <text class="t" x="375" y="224" text-anchor="middle">F1 = T1 + T2 + T3 + T4 + T5 = 0.50 + 4.00 + 3.00 + 8.00 + 1.17 = 16.67</text>
+
+  <!-- Plan view: two frames pipelined, CPU and GPU overlapping -->
+  <text class="vt" x="40" y="262">Plan view: two frames, pipelined [4]</text>
+  <text class="vs" x="40" y="278">Scale 1 ms = 22 px · timeline · values in ms</text>
+  <text class="sl ink" x="88" y="325" text-anchor="end" dominant-baseline="central">CPU</text>
+  <text class="sl ink" x="88" y="365" text-anchor="end" dominant-baseline="central">GPU</text>
+  <rect class="obj fill-2" x="100" y="310" width="165" height="30"/>
+  <rect class="obj fill-2" x="265" y="310" width="165" height="30"/>
+  <rect class="slot" x="430" y="310" width="36.74" height="30"/>
+  <rect class="obj fill-1" x="265" y="350" width="201.74" height="30"/>
+  <rect class="obj fill-1" x="466.74" y="350" width="201.74" height="30"/>
+  <text class="sl ink" x="182.5" y="325" text-anchor="middle" dominant-baseline="central">frame N</text>
+  <text class="sl ink" x="347.5" y="325" text-anchor="middle" dominant-baseline="central">frame N+1</text>
+  <text class="sl ink" x="365.87" y="365" text-anchor="middle" dominant-baseline="central">frame N</text>
+  <text class="sl ink" x="567.61" y="365" text-anchor="middle" dominant-baseline="central">frame N+1</text>
+
+  <!-- CPU side: T1 + T2 + T3, then the wait W1 -->
+  <path class="ext" d="M100,307V293M265,307V293M430,307V293M466.74,307V293"/>
+  <path class="dim" d="M100,298H265" marker-start="url(#gm-fb-ah)" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="182.5" y="294" text-anchor="middle">T1 + T2 + T3 = 7.50</text>
+  <path class="dim" d="M410,298H430" marker-end="url(#gm-fb-ah)"/>
+  <path class="dim" d="M430,298H466.74"/>
+  <path class="dim" d="M486.74,298H466.74" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="492" y="298" dominant-baseline="central">W1 = 1.67</text>
+
+  <!-- Latency of frame N, then the pipelined frame interval -->
+  <path class="ext" d="M100,343V405M466.74,383V405M668.48,383V405"/>
+  <path class="dim" d="M100,400H466.74" marker-start="url(#gm-fb-ah)" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="283.37" y="396" text-anchor="middle">L1 = T1 + T2 + T3 + T4 + T5 = 16.67</text>
+  <path class="dim" d="M466.74,400H668.48" marker-start="url(#gm-fb-ah)" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="567.61" y="396" text-anchor="middle">P1 = T4 + T5 = 9.17</text>
+  <text class="t" x="380" y="428" text-anchor="middle">P1 = max(T1 + T2 + T3, T4 + T5) = max(7.50, 9.17) = 9.17 · W1 = 9.17 - 7.50 = 1.67</text>
+
+  <!-- Detail A: the input window at 10:1 -->
+  <text class="vt" x="40" y="472">Detail A: input, T1</text>
+  <text class="vs" x="40" y="488">Scale 10:1 · 1 ms = 330 px</text>
+  <rect class="obj fill-2" x="60" y="522" width="165" height="40"/>
+  <rect class="hatch" x="225" y="522" width="110" height="40" fill="url(#gm-fb-hatch)"/>
+  <path class="ctr" d="M225,516V574"/>
+  <text class="sl ink" x="225" y="510" text-anchor="middle">latch [2]</text>
+  <circle class="dot" cx="85" cy="536" r="2.5"/>
+  <circle class="dot" cx="125" cy="536" r="2.5"/>
+  <circle class="dot" cx="180" cy="536" r="2.5"/>
+  <circle class="dot" cx="262" cy="536" r="2.5"/>
+  <circle class="dot" cx="305" cy="536" r="2.5"/>
+  <text class="sl ink" x="142.5" y="552" text-anchor="middle" dominant-baseline="central">device events</text>
+  <text class="sl" x="280" y="584" text-anchor="middle">waits for</text>
+  <text class="sl" x="280" y="597" text-anchor="middle">next frame</text>
+  <path class="ext" d="M60,565V595M225,577V595"/>
+  <path class="dim" d="M60,590H225" marker-start="url(#gm-fb-ah)" marker-end="url(#gm-fb-ah)"/>
+  <text class="dt" x="142.5" y="586" text-anchor="middle">T1 = 0.50</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="420" y="472">Variables</text>
+  <text class="vs" x="420" y="488">Illustrative split [1] · ms</text>
+  <rect class="cell band" x="420" y="498" width="50" height="22"/>
+  <rect class="cell band" x="470" y="498" width="180" height="22"/>
+  <rect class="cell band" x="650" y="498" width="70" height="22"/>
+  <text class="cap ink" x="430" y="509" dominant-baseline="central">code</text>
+  <text class="cap ink" x="480" y="509" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="509" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M420,520H720V718H420Z"/>
+  <path class="ln ink" d="M470,520V718M650,520V718"/>
+  <path class="ln" d="M420,542H720M420,564H720M420,586H720M420,608H720M420,630H720M420,652H720M420,674H720M420,696H720"/>
+  <text class="t b" x="430" y="531" dominant-baseline="central">F1</text>
+  <text class="t" x="480" y="531" dominant-baseline="central">frame at 60 Hz: 1000 / 60</text>
+  <text class="t b" x="710" y="531" text-anchor="end" dominant-baseline="central">16.67</text>
+  <text class="t" x="430" y="553" dominant-baseline="central">T1</text>
+  <text class="t" x="480" y="553" dominant-baseline="central">input</text>
+  <text class="t" x="710" y="553" text-anchor="end" dominant-baseline="central">0.50</text>
+  <text class="t" x="430" y="575" dominant-baseline="central">T2</text>
+  <text class="t" x="480" y="575" dominant-baseline="central">simulation</text>
+  <text class="t" x="710" y="575" text-anchor="end" dominant-baseline="central">4.00</text>
+  <text class="t" x="430" y="597" dominant-baseline="central">T3</text>
+  <text class="t" x="480" y="597" dominant-baseline="central">render submit</text>
+  <text class="t" x="710" y="597" text-anchor="end" dominant-baseline="central">3.00</text>
+  <text class="t" x="430" y="619" dominant-baseline="central">T4</text>
+  <text class="t" x="480" y="619" dominant-baseline="central">GPU</text>
+  <text class="t" x="710" y="619" text-anchor="end" dominant-baseline="central">8.00</text>
+  <text class="t" x="430" y="641" dominant-baseline="central">T5</text>
+  <text class="t" x="480" y="641" dominant-baseline="central">present</text>
+  <text class="t" x="710" y="641" text-anchor="end" dominant-baseline="central">1.17</text>
+  <text class="t" x="430" y="663" dominant-baseline="central">L1</text>
+  <text class="t" x="480" y="663" dominant-baseline="central">latency, input to present</text>
+  <text class="t" x="710" y="663" text-anchor="end" dominant-baseline="central">16.67</text>
+  <text class="t" x="430" y="685" dominant-baseline="central">P1</text>
+  <text class="t" x="480" y="685" dominant-baseline="central">pipelined frame interval</text>
+  <text class="t" x="710" y="685" text-anchor="end" dominant-baseline="central">9.17</text>
+  <text class="t" x="430" y="707" dominant-baseline="central">W1</text>
+  <text class="t" x="480" y="707" dominant-baseline="central">CPU waits for GPU</text>
+  <text class="t" x="710" y="707" text-anchor="end" dominant-baseline="central">1.67</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="734" width="680" height="92"/>
+  <text class="sl ink" x="52" y="752">notes</text>
+  <text class="n" x="52" y="770">[1] Illustrative split, not a measurement: real budgets come from profiling the target hardware.</text>
+  <text class="n" x="52" y="786">[2] Input that lands after the latch is read on the next frame, up to one more frame of latency.</text>
+  <text class="n" x="52" y="802">[3] A serial view of one frame's critical path; the pipelined view shows CPU and GPU overlapping.</text>
+  <text class="n" x="52" y="818">[4] The CPU builds frame N+1 while the GPU draws frame N: the slower side sets P1, the other waits W1.</text>
+</svg>

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 984">
+  <defs>
+    <marker id="gm-pb-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-pb-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-PCH-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">patch 9.9, rads vs chunked</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 2 of 2</text>
+
+  <!-- View A: average update time -->
+  <text class="vt" x="40" y="64">Plan view: average update time</text>
+  <text class="vs" x="40" y="80">Scale 1 s = 1.2 px · values in s</text>
+
+  <path class="ext" d="M100,117V93M676,117V93"/>
+  <path class="dim" d="M100,98H676" marker-start="url(#gm-pb-ah)" marker-end="url(#gm-pb-ah)"/>
+  <text class="dt" x="388" y="94" text-anchor="middle">T1 &gt; 480 (over 8 min)</text>
+  <text class="sl ink" x="92" y="132" text-anchor="end" dominant-baseline="central">rads</text>
+  <rect class="obj fill-2" x="100" y="120" width="576" height="24"/>
+  <text class="sl ink" x="92" y="168" text-anchor="end" dominant-baseline="central">new</text>
+  <rect class="obj hl" x="100" y="156" width="48" height="24"/>
+
+  <path class="ext" d="M100,183V203M148,183V203"/>
+  <path class="dim hl" d="M100,198H148" marker-start="url(#gm-pb-ah-hl)" marker-end="url(#gm-pb-ah-hl)"/>
+  <text class="dt hl" x="156" y="198" dominant-baseline="central">T2 &lt; 40</text>
+  <text class="t" x="400" y="228" text-anchor="middle">T1 / T2 &gt; 480 / 40 = 12, so over 12x faster on average [1]</text>
+
+  <!-- View B: download size -->
+  <text class="vt" x="40" y="272">Plan view: download size</text>
+  <text class="vs" x="40" y="288">Scale 1 MB = 6 px · values in MB</text>
+
+  <text class="sl ink" x="92" y="322" text-anchor="end" dominant-baseline="central">rads</text>
+  <rect class="obj fill-2" x="100" y="310" width="408" height="24"/>
+  <text class="sl ink" x="92" y="358" text-anchor="end" dominant-baseline="central">new</text>
+  <rect class="obj fill-1" x="100" y="346" width="498" height="24"/>
+
+  <path class="ext" d="M100,373V419M508,337V397M598,373V419"/>
+  <path class="dim" d="M100,392H508" marker-start="url(#gm-pb-ah)" marker-end="url(#gm-pb-ah)"/>
+  <text class="dt" x="304" y="388" text-anchor="middle">D1 = 68</text>
+  <path class="dim" d="M508,392H598" marker-start="url(#gm-pb-ah)" marker-end="url(#gm-pb-ah)"/>
+  <text class="dt" x="606" y="392" dominant-baseline="central">D2 - D1 = 15</text>
+  <path class="dim" d="M100,414H598" marker-start="url(#gm-pb-ah)" marker-end="url(#gm-pb-ah)"/>
+  <text class="dt" x="349" y="410" text-anchor="middle">D2 = D1 + 15 = 83</text>
+  <text class="t" x="400" y="442" text-anchor="middle">(D2 - D1) / D1 = 15 / 68 = 22% larger [2]</text>
+
+  <!-- View C: failure rate -->
+  <text class="vt" x="40" y="478">Plan view: failed updates</text>
+  <text class="vs" x="40" y="494">Scale 1% = 200 px · values in %</text>
+
+  <text class="sl ink" x="92" y="528" text-anchor="end" dominant-baseline="central">rads</text>
+  <rect class="obj fill-2" x="100" y="516" width="440" height="24"/>
+  <text class="sl ink" x="92" y="564" text-anchor="end" dominant-baseline="central">new</text>
+  <rect class="obj fill-1" x="100" y="552" width="60" height="24"/>
+
+  <path class="ext" d="M100,579V611M160,579V591M540,543V611"/>
+  <path class="dim" d="M100,586H160" marker-start="url(#gm-pb-ah)" marker-end="url(#gm-pb-ah)"/>
+  <text class="dt" x="168" y="586" dominant-baseline="central">F2 = 0.3</text>
+  <path class="dim" d="M100,606H540" marker-start="url(#gm-pb-ah)" marker-end="url(#gm-pb-ah)"/>
+  <text class="dt" x="320" y="602" text-anchor="middle">F1 = 2.2</text>
+  <text class="t" x="400" y="636" text-anchor="middle">F1 / F2 = 2.2 / 0.3 = 7.3, about one failure where there were seven</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="680">Variables</text>
+  <text class="vs" x="40" y="696">Riot tech blog, July 2019 · patch 9.9</text>
+  <rect class="cell band" x="40" y="706" width="50" height="22"/>
+  <rect class="cell band" x="90" y="706" width="510" height="22"/>
+  <rect class="cell band" x="600" y="706" width="120" height="22"/>
+  <text class="cap ink" x="50" y="717" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="717" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="717" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,728H720V904H40Z"/>
+  <path class="ln ink" d="M90,728V904M600,728V904"/>
+  <path class="ln" d="M40,750H720M40,772H720M40,794H720M40,816H720M40,838H720M40,860H720M40,882H720"/>
+  <text class="t" x="50" y="739" dominant-baseline="central">T1</text>
+  <text class="t" x="100" y="739" dominant-baseline="central">average update time, RADS</text>
+  <text class="t" x="710" y="739" text-anchor="end" dominant-baseline="central">&gt; 8 min</text>
+  <text class="t b" x="50" y="761" dominant-baseline="central">T2</text>
+  <text class="t" x="100" y="761" dominant-baseline="central">average update time, chunked patcher</text>
+  <text class="t b" x="710" y="761" text-anchor="end" dominant-baseline="central">&lt; 40 s</text>
+  <text class="t" x="50" y="783" dominant-baseline="central">D1</text>
+  <text class="t" x="100" y="783" dominant-baseline="central">patch download, RADS</text>
+  <text class="t" x="710" y="783" text-anchor="end" dominant-baseline="central">68 MB</text>
+  <text class="t" x="50" y="805" dominant-baseline="central">D2</text>
+  <text class="t" x="100" y="805" dominant-baseline="central">patch download, chunked patcher</text>
+  <text class="t" x="710" y="805" text-anchor="end" dominant-baseline="central">83 MB</text>
+  <text class="t" x="50" y="827" dominant-baseline="central">F1</text>
+  <text class="t" x="100" y="827" dominant-baseline="central">update failure rate, RADS</text>
+  <text class="t" x="710" y="827" text-anchor="end" dominant-baseline="central">2.2%</text>
+  <text class="t" x="50" y="849" dominant-baseline="central">F2</text>
+  <text class="t" x="100" y="849" dominant-baseline="central">update failure rate, chunked patcher</text>
+  <text class="t" x="710" y="849" text-anchor="end" dominant-baseline="central">0.3%</text>
+  <text class="t" x="50" y="871" dominant-baseline="central">P1</text>
+  <text class="t" x="100" y="871" dominant-baseline="central">time to deploy a new version, before</text>
+  <text class="t" x="710" y="871" text-anchor="end" dominant-baseline="central">5 h</text>
+  <text class="t" x="50" y="893" dominant-baseline="central">P2</text>
+  <text class="t" x="100" y="893" dominant-baseline="central">time to deploy a new version, after</text>
+  <text class="t" x="710" y="893" text-anchor="end" dominant-baseline="central">&lt; 1 min</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="922" width="680" height="48"/>
+  <text class="sl ink" x="52" y="940">notes</text>
+  <text class="n" x="52" y="956">[1] By region, updates were up to 14x faster and errors fell by up to 95%. [2] A changed byte costs a whole chunk.</text>
+</svg>

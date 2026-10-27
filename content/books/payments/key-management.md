@@ -89,6 +89,8 @@ Rotation is easy to promise and hard to do, so design for it:
 - **Rotation is a routine job,** run on a schedule and rehearsed, not a project that happens when someone remembers.
 - **Revocation is a runbook.** If a key is suspected compromised, the steps to replace it with every partner should already be written down and tested, because that's the day nobody has time to work them out.
 
+![An exploded view of the payment key hierarchy in four layers: the master key, clear only inside the HSM; the key-encrypting keys (zone master key, terminal KEK, vault KEK); the working keys (zone PIN key, base derivation key, data keys); and the protected data (PIN blocks, device keys, card numbers). A table gives NIST's suggested cryptoperiods: under 2 years for key-wrapping keys and for data keys' encrypting use, and decryption up to 3 years beyond that.](/diagrams/pm-keys-hierarchy-exploded.svg "Each layer is encrypted under the one above, so a rotation only reaches one layer down: a new KEK means re-wrapping data keys, and only a new data key means re-encrypting data.")
+
 ## Where the HSMs Run
 
 Running payment HSMs used to mean racks in two data centers, smart cards in safes, and quarterly trips for key ceremonies. The cloud options now cover most of it, with different trade-offs:
@@ -129,7 +131,7 @@ The same three questions apply to all of them: where can the clear key exist, wh
 
 - [NIST: FIPS 140-3](https://csrc.nist.gov/pubs/fips/140-3/final), four increasing levels of security for cryptographic modules
 - [NIST: SP 800-131A Rev. 2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf), two-key TDEA disallowed for encryption, three-key TDEA disallowed for encryption after 2023
-- [NIST: SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), general guidance on managing cryptographic keys
+- [NIST: SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), general guidance on managing cryptographic keys, and the suggested cryptoperiods in its Table 1
 - [PCI SSC: PCI DSS v4.0.1](https://www.pcisecuritystandards.org/document_library/), requirements 3.6.1.1, 3.6.1.2, 3.7.4 and 3.7.6 on key architecture, storage, cryptoperiods, split knowledge and dual control
 
 **Reference**

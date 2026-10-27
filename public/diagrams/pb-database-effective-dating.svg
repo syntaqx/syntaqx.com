@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 772">
+  <defs>
+    <marker id="pb-tmp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="pb-tmp-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-DB-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">effective-dated rows</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: one item's price in one region -->
+  <text class="vt" x="40" y="64">Plan view: item_prices, one item and region</text>
+  <text class="vs" x="40" y="80">Scale 1 day = 4 px · timeline · illustrative amounts [1]</text>
+  <text class="t" x="120" y="104" text-anchor="middle" dominant-baseline="central">2026-10-01</text>
+  <text class="t" x="244" y="104" text-anchor="middle" dominant-baseline="central">2026-11-01</text>
+  <text class="t" x="364" y="104" text-anchor="middle" dominant-baseline="central">2026-12-01</text>
+  <text class="t" x="488" y="104" text-anchor="middle" dominant-baseline="central">2027-01-01</text>
+  <text class="t" x="612" y="104" text-anchor="middle" dominant-baseline="central">2027-02-01</text>
+  <path class="ext" d="M120,112V125M244,112V125M364,112V125M488,112V125M612,112V125"/>
+  <rect class="obj fill-1" x="120" y="128" width="124" height="32"/>
+  <rect class="obj fill-2" x="244" y="128" width="120" height="32"/>
+  <rect class="obj fill-2" x="364" y="128" width="124" height="32"/>
+  <rect class="obj fill-2" x="488" y="128" width="212" height="32"/>
+  <path class="ln ink" d="M700,144H722" marker-end="url(#pb-tmp-ah)"/>
+  <text class="sl ink" x="182" y="144" text-anchor="middle" dominant-baseline="central">2400</text>
+  <text class="sl ink" x="304" y="144" text-anchor="middle" dominant-baseline="central">1499</text>
+  <text class="sl ink" x="426" y="144" text-anchor="middle" dominant-baseline="central">2400</text>
+  <text class="sl ink" x="594" y="144" text-anchor="middle" dominant-baseline="central">2600, open end</text>
+  <circle class="detail" cx="244" cy="144" r="18"/>
+  <text class="sl ink" x="266" y="120" dominant-baseline="central">detail A</text>
+
+  <!-- Chain: one row per period -->
+  <path class="ext" d="M120,163V189M244,163V189M364,163V189M488,163V189"/>
+  <path class="dim" d="M120,184H244" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="182" y="180" text-anchor="middle">V1 = 31 d</text>
+  <path class="dim" d="M244,184H364" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="304" y="180" text-anchor="middle">V2 = 30 d</text>
+  <path class="dim" d="M364,184H488" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="426" y="180" text-anchor="middle">V3 = 31 d</text>
+  <path class="dim" d="M488,184H700" marker-start="url(#pb-tmp-ah)"/>
+  <text class="dt" x="594" y="180" text-anchor="middle">V4 = open [3]</text>
+
+  <!-- A rejected overlapping row -->
+  <rect class="hatch" x="320" y="202" width="80" height="22" fill="url(#pb-tmp-hatch)"/>
+  <text class="n" x="408" y="213" dominant-baseline="central">rejected insert: overlaps V2 and V3 [2]</text>
+
+  <!-- Today and an as-of read -->
+  <path class="ctr" d="M220,112V232"/>
+  <text class="sl" x="220" y="242" text-anchor="middle" dominant-baseline="central">today</text>
+  <path class="ln ink" d="M260,252V164" marker-end="url(#pb-tmp-ah)"/>
+  <text class="t" x="260" y="264" text-anchor="middle" dominant-baseline="central">as of 2026-11-05 [4]</text>
+
+  <!-- Detail A: the boundary -->
+  <text class="vt" x="40" y="306">Detail A: the 2026-11-01 boundary</text>
+  <text class="vs" x="40" y="322">Scale 1 day = 80 px · closed-open ranges</text>
+  <rect class="obj fill-1" x="100" y="346" width="180" height="24"/>
+  <circle class="obj" cx="280" cy="358" r="4"/>
+  <text class="t" x="296" y="358" dominant-baseline="central">V1 = [2026-10-01, 2026-11-01)</text>
+  <rect class="obj fill-2" x="280" y="380" width="180" height="24"/>
+  <circle class="dot" cx="280" cy="392" r="4"/>
+  <text class="t" x="476" y="392" dominant-baseline="central">V2 = [2026-11-01, 2026-12-01)</text>
+  <path class="ctr" d="M280,336V414"/>
+  <path class="ext" d="M200,373V433M280,417V433M360,407V433"/>
+  <path class="dim" d="M200,428H280" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="240" y="446" text-anchor="middle">10-31 in V1</text>
+  <path class="dim" d="M280,428H360" marker-start="url(#pb-tmp-ah)" marker-end="url(#pb-tmp-ah)"/>
+  <text class="dt" x="320" y="446" text-anchor="middle">11-01 in V2</text>
+  <text class="t" x="380" y="472" text-anchor="middle">upper(V1) = lower(V2) = 2026-11-01 · V1 -|- V2 · no gap, no shared day</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="510">Rows</text>
+  <text class="vs" x="40" y="526">Illustrative [1] · amount in cents, USD · today 2026-10-26</text>
+  <rect class="cell band" x="40" y="536" width="50" height="22"/>
+  <rect class="cell band" x="90" y="536" width="300" height="22"/>
+  <rect class="cell band" x="390" y="536" width="150" height="22"/>
+  <rect class="cell band" x="540" y="536" width="180" height="22"/>
+  <text class="cap ink" x="50" y="547" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="547" dominant-baseline="central">valid_during</text>
+  <text class="cap ink" x="530" y="547" text-anchor="end" dominant-baseline="central">amount</text>
+  <text class="cap ink" x="550" y="547" dominant-baseline="central">state</text>
+  <path class="cell" d="M40,558H720V646H40Z"/>
+  <path class="ln ink" d="M90,558V646M390,558V646M540,558V646"/>
+  <path class="ln" d="M40,580H720M40,602H720M40,624H720"/>
+  <text class="t b" x="50" y="569" dominant-baseline="central">V1</text>
+  <text class="t" x="100" y="569" dominant-baseline="central">[2026-10-01, 2026-11-01)</text>
+  <text class="t" x="530" y="569" text-anchor="end" dominant-baseline="central">2400</text>
+  <text class="t" x="550" y="569" dominant-baseline="central">current</text>
+  <text class="t" x="50" y="591" dominant-baseline="central">V2</text>
+  <text class="t" x="100" y="591" dominant-baseline="central">[2026-11-01, 2026-12-01)</text>
+  <text class="t" x="530" y="591" text-anchor="end" dominant-baseline="central">1499</text>
+  <text class="t" x="550" y="591" dominant-baseline="central">scheduled</text>
+  <text class="t" x="50" y="613" dominant-baseline="central">V3</text>
+  <text class="t" x="100" y="613" dominant-baseline="central">[2026-12-01, 2027-01-01)</text>
+  <text class="t" x="530" y="613" text-anchor="end" dominant-baseline="central">2400</text>
+  <text class="t" x="550" y="613" dominant-baseline="central">scheduled</text>
+  <text class="t" x="50" y="635" dominant-baseline="central">V4</text>
+  <text class="t" x="100" y="635" dominant-baseline="central">[2027-01-01,)</text>
+  <text class="t" x="530" y="635" text-anchor="end" dominant-baseline="central">2600</text>
+  <text class="t" x="550" y="635" dominant-baseline="central">scheduled, open end</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="662" width="680" height="90"/>
+  <text class="sl ink" x="52" y="680">notes</text>
+  <text class="n" x="52" y="698">[1] Illustrative prices for one item in one region; ranges follow the chapter's valid_during and [) rules.</text>
+  <text class="n" x="52" y="714">[2] The exclusion constraint rejects any row whose valid_during overlaps another for the same item and region.</text>
+  <text class="n" x="52" y="730">[3] An open upper bound means until further notice: upper_inf(valid_during) is true, with no sentinel date.</text>
+  <text class="n" x="52" y="746">[4] The as-of moment is a parameter: valid_during @&gt; '2026-11-05' returns V2, 1499, whenever the query runs.</text>
+</svg>

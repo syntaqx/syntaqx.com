@@ -114,6 +114,7 @@ Set weights by experiment:
 - **Look at the frontier.** Plot profiles on two axes that conflict (cost against window adherence, or drive time against fairness spread). Profiles worse on both are out; choosing among the rest is a business decision, so make it deliberately.
 - **Change one weight at a time,** so a result can be traced to a cause.
 - **Compare distributions.** Skedulo and Bringg both document different results between runs on the same data, and a time-limited search can stop at a different point on a busier machine, so solve each day several times per profile. A 2% gain inside run-to-run noise isn't a gain.
+- **Replay is not an A/B test.** Routing days can't be split between profiles without the halves competing for the same technicians, which is the interference problem in [Experimentation](/docs/telemetry/experimentation#interference-and-network-effects); replay and shadow runs avoid it.
 - **Shadow before switching.** Run the new profile beside the live one for a branch for a few weeks, publish only the live plan, and compare both with what happened. Then switch on an effective date. Timefold's configuration profiles exist for the same comparison: to see how different priorities change the solution.
 
 ## Pitfalls

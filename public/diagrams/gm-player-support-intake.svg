@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 716">
+  <defs>
+    <marker id="gm-ps-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-ps-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-SUP-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">support intake, one day</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- View 1: one day of requests -->
+  <text class="vt" x="40" y="64">Plan view: one day of requests</text>
+  <text class="vs" x="40" y="80">Riot 2017 [1] · 1,000 = 25 px</text>
+  <rect class="obj fill-2" x="40" y="112" width="150" height="40"/>
+  <text class="sl ink" x="115" y="125" text-anchor="middle" dominant-baseline="central">intake</text>
+  <text class="t" x="115" y="141" text-anchor="middle" dominant-baseline="central">tickets, forms</text>
+  <path class="ln ink" d="M190,132H230" marker-end="url(#gm-ps-ah)"/>
+  <rect class="obj fill-2" x="230" y="112" width="150" height="40"/>
+  <text class="sl ink" x="305" y="125" text-anchor="middle" dominant-baseline="central">classifier</text>
+  <text class="t" x="305" y="141" text-anchor="middle" dominant-baseline="central">per language [2]</text>
+  <path class="ln ink" d="M380,132H420" marker-end="url(#gm-ps-ah)"/>
+  <rect class="obj fill-1" x="420" y="112" width="60" height="40"/>
+  <rect class="obj fill-2" x="480" y="112" width="240" height="40"/>
+  <text class="sl ink" x="450" y="132" text-anchor="middle" dominant-baseline="central">bot</text>
+  <text class="sl ink" x="600" y="132" text-anchor="middle" dominant-baseline="central">agents</text>
+  <path class="ext" d="M420,109V99M720,109V99"/>
+  <path class="dim" d="M420,104H720" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="570" y="100" text-anchor="middle">Q1 = B1 + H1 = 2,400 + 9,600 = 12,000</text>
+  <path class="ext" d="M420,155V181M480,155V181M720,155V181"/>
+  <path class="dim hl" d="M420,176H480" marker-start="url(#gm-ps-ah-hl)" marker-end="url(#gm-ps-ah-hl)"/>
+  <text class="dt hl" x="414" y="176" text-anchor="end" dominant-baseline="central">B1 = 2,400 (20%)</text>
+  <path class="dim" d="M480,176H720" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="600" y="172" text-anchor="middle">H1 = 9,600 (80%)</text>
+  <text class="t" x="380" y="208" text-anchor="middle">E1: the bot's share equals the daily output of about 50 agents</text>
+
+  <!-- View 2: one ticket before automation -->
+  <text class="vt" x="40" y="246">Plan view: one ticket before automation</text>
+  <text class="vs" x="40" y="262">Riot 2017 [1] · 1 h = 6 px · values in hours [3]</text>
+  <rect class="obj fill-2" x="100" y="300" width="150" height="40"/>
+  <rect class="obj fill-1" x="250" y="300" width="282" height="40"/>
+  <text class="sl ink" x="175" y="320" text-anchor="middle" dominant-baseline="central">queue</text>
+  <text class="sl ink" x="391" y="320" text-anchor="middle" dominant-baseline="central">back and forth</text>
+  <path class="ext" d="M100,297V279M532,297V279"/>
+  <path class="dim" d="M100,284H532" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="316" y="280" text-anchor="middle">L2 = L1 + L3 = 25 + 47 = 72 (3 days)</text>
+  <path class="ext" d="M100,343V369M250,343V369M532,343V369"/>
+  <path class="dim" d="M100,364H250" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="175" y="360" text-anchor="middle">L1 = 25</text>
+  <path class="dim" d="M250,364H532" marker-start="url(#gm-ps-ah)" marker-end="url(#gm-ps-ah)"/>
+  <text class="dt" x="391" y="360" text-anchor="middle">L3 = 47</text>
+  <circle class="dot" cx="100" cy="320" r="2.5"/>
+  <circle class="dot" cx="250" cy="320" r="2.5"/>
+  <circle class="dot" cx="532" cy="320" r="2.5"/>
+  <text class="sl" x="100" y="388" text-anchor="middle">opened</text>
+  <text class="sl" x="250" y="388" text-anchor="middle">first reply</text>
+  <text class="sl" x="532" y="388" text-anchor="middle">resolved</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="426">Variables</text>
+  <text class="vs" x="40" y="442">Riot 2017 [1] · requests per day, hours, shares</text>
+  <rect class="cell band" x="40" y="452" width="50" height="22"/>
+  <rect class="cell band" x="90" y="452" width="190" height="22"/>
+  <rect class="cell band" x="280" y="452" width="80" height="22"/>
+  <text class="cap ink" x="50" y="463" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="463" dominant-baseline="central">item</text>
+  <text class="cap ink" x="350" y="463" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,474H360V606H40Z"/>
+  <path class="ln ink" d="M90,474V606M280,474V606"/>
+  <path class="ln" d="M40,496H360M40,518H360M40,540H360M40,562H360M40,584H360"/>
+  <text class="t b" x="50" y="485" dominant-baseline="central">Q1</text>
+  <text class="t" x="100" y="485" dominant-baseline="central">requests a day</text>
+  <text class="t b" x="350" y="485" text-anchor="end" dominant-baseline="central">12,000</text>
+  <text class="t" x="50" y="507" dominant-baseline="central">B1</text>
+  <text class="t" x="100" y="507" dominant-baseline="central">routed or answered by bot</text>
+  <text class="t" x="350" y="507" text-anchor="end" dominant-baseline="central">2,400</text>
+  <text class="t" x="50" y="529" dominant-baseline="central">H1</text>
+  <text class="t" x="100" y="529" dominant-baseline="central">left for agents</text>
+  <text class="t" x="350" y="529" text-anchor="end" dominant-baseline="central">9,600</text>
+  <text class="t" x="50" y="551" dominant-baseline="central">E1</text>
+  <text class="t" x="100" y="551" dominant-baseline="central">bot work, in agents</text>
+  <text class="t" x="350" y="551" text-anchor="end" dominant-baseline="central">~50</text>
+  <text class="t" x="50" y="573" dominant-baseline="central">F1</text>
+  <text class="t" x="100" y="573" dominant-baseline="central">solved at first touch</text>
+  <text class="t" x="350" y="573" text-anchor="end" dominant-baseline="central">70%</text>
+  <text class="t" x="50" y="595" dominant-baseline="central">K1</text>
+  <text class="t" x="100" y="595" dominant-baseline="central">category chosen right</text>
+  <text class="t" x="350" y="595" text-anchor="end" dominant-baseline="central">~80%</text>
+
+  <rect class="cell band" x="400" y="452" width="50" height="22"/>
+  <rect class="cell band" x="450" y="452" width="190" height="22"/>
+  <rect class="cell band" x="640" y="452" width="80" height="22"/>
+  <text class="cap ink" x="410" y="463" dominant-baseline="central">code</text>
+  <text class="cap ink" x="460" y="463" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="463" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M400,474H720V584H400Z"/>
+  <path class="ln ink" d="M450,474V584M640,474V584"/>
+  <path class="ln" d="M400,496H720M400,518H720M400,540H720M400,562H720"/>
+  <text class="t" x="410" y="485" dominant-baseline="central">L1</text>
+  <text class="t" x="460" y="485" dominant-baseline="central">first response, up to</text>
+  <text class="t" x="710" y="485" text-anchor="end" dominant-baseline="central">25 h</text>
+  <text class="t" x="410" y="507" dominant-baseline="central">L3</text>
+  <text class="t" x="460" y="507" dominant-baseline="central">reply to resolution</text>
+  <text class="t" x="710" y="507" text-anchor="end" dominant-baseline="central">47 h</text>
+  <text class="t b" x="410" y="529" dominant-baseline="central">L2</text>
+  <text class="t" x="460" y="529" dominant-baseline="central">resolution, up to</text>
+  <text class="t b" x="710" y="529" text-anchor="end" dominant-baseline="central">72 h</text>
+  <text class="t" x="410" y="551" dominant-baseline="central">C1</text>
+  <text class="t" x="460" y="551" dominant-baseline="central">recovery tickets caught</text>
+  <text class="t" x="710" y="551" text-anchor="end" dominant-baseline="central">52%</text>
+  <text class="t" x="410" y="573" dominant-baseline="central">C2</text>
+  <text class="t" x="460" y="573" dominant-baseline="central">accuracy on those</text>
+  <text class="t" x="710" y="573" text-anchor="end" dominant-baseline="central">~93%</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="620" width="680" height="80"/>
+  <text class="sl ink" x="52" y="638">notes</text>
+  <text class="n" x="52" y="656">[1] Riot Games tech blog, "Blitzcrank Bot", June 1, 2017 (not current). B1 = 20% of Q1; H1 = Q1 minus B1.</text>
+  <text class="n" x="52" y="672">[2] Classifiers trained on about 100k completed tickets per major language; C1 and C2 are at launch.</text>
+  <text class="n" x="52" y="688">[3] Before automation, as "up to" values. L3 is derived: L2 minus L1. Denials stayed with agents.</text>
+</svg>

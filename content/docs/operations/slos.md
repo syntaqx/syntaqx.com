@@ -69,6 +69,8 @@ The [Workbook's recommended alerts](https://sre.google/workbook/alerting-on-slos
 | Page | 6 hours | 30 minutes | 6 | 5% |
 | Ticket | 3 days | 6 hours | 1 | 10% |
 
+![Dimensional drawing of an error budget. A 30-day window of 43,200 minutes at a 99.9% SLO leaves a budget of 43.2 minutes, shown enlarged in a detail view. A second view draws how long the budget lasts at each alert's burn rate: 50 hours at 14.4, 120 hours at 6, and the full 720 hours at 1, with a table of each alert's long and short windows and the share of budget spent before it fires.](/diagrams/pb-operations-error-budget.svg "The budget is a sliver of the window, and the burn rate decides how fast it goes: each alert fires after spending a fixed share of it, 2%, 5% or 10%.")
+
 An alert fires only when **both** windows are over the burn rate. The long window keeps it from paging on a blip, and the short window (one-twelfth of the long one) makes it stop firing soon after the problem is fixed.
 
 These replace threshold alerts like "error rate above 1% for 5 minutes", which page on spikes that don't matter and miss slow leaks that do. What happens after the page is [On-Call & Runbooks](/docs/operations/on-call).

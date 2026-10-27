@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 854">
+  <defs>
+    <marker id="gm-lo-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-lo-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-OPS-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">patch cadence and change paths</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: five patch intervals -->
+  <text class="vt" x="40" y="64">Plan view: patches 26.19 to 26.24</text>
+  <text class="vs" x="40" y="80">Scale 1 day = 7 px · timeline · values in days [1]</text>
+
+  <!-- C1: the whole cycle -->
+  <path class="ext" d="M100,125V95M639,125V95"/>
+  <path class="dim hl" d="M100,100H639" marker-start="url(#gm-lo-ah-hl)" marker-end="url(#gm-lo-ah-hl)"/>
+  <text class="dt hl" x="369.5" y="96" text-anchor="middle">C1 = I1 + I2 + I3 + I4 + I5 = 77</text>
+
+  <!-- Intervals -->
+  <rect class="obj fill-2" x="100" y="128" width="98" height="40"/>
+  <rect class="obj fill-2" x="198" y="128" width="98" height="40"/>
+  <rect class="obj fill-2" x="296" y="128" width="98" height="40"/>
+  <rect class="obj fill-2" x="394" y="128" width="98" height="40"/>
+  <rect class="obj fill-2" x="492" y="128" width="147" height="40"/>
+  <text class="sl ink" x="149" y="148" text-anchor="middle" dominant-baseline="central">26.19</text>
+  <text class="sl ink" x="247" y="148" text-anchor="middle" dominant-baseline="central">26.20</text>
+  <text class="sl ink" x="345" y="148" text-anchor="middle" dominant-baseline="central">26.21</text>
+  <text class="sl ink" x="443" y="148" text-anchor="middle" dominant-baseline="central">26.22</text>
+  <text class="sl ink" x="565.5" y="148" text-anchor="middle" dominant-baseline="central">26.23</text>
+  <circle class="dot" cx="639" cy="148" r="2"/>
+  <path class="leader" d="M639,148L651,136H660"/>
+  <text class="sl ink" x="664" y="136" dominant-baseline="central">26.24</text>
+
+  <!-- Detail circle on the 26.20 interval -->
+  <circle class="detail" cx="247" cy="148" r="28"/>
+  <text class="sl ink" x="214" y="114" text-anchor="end" dominant-baseline="central">detail A</text>
+
+  <!-- Chain: I1 to I5 -->
+  <path class="ext" d="M100,171V197M198,171V197M296,171V197M394,171V197M492,171V197M639,171V197"/>
+  <path class="dim" d="M100,192H198" marker-start="url(#gm-lo-ah)" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="149" y="188" text-anchor="middle">I1 = 14</text>
+  <path class="dim" d="M198,192H296" marker-start="url(#gm-lo-ah)" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="247" y="188" text-anchor="middle">I2 = 14</text>
+  <path class="dim" d="M296,192H394" marker-start="url(#gm-lo-ah)" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="345" y="188" text-anchor="middle">I3 = 14</text>
+  <path class="dim" d="M394,192H492" marker-start="url(#gm-lo-ah)" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="443" y="188" text-anchor="middle">I4 = 14</text>
+  <path class="dim" d="M492,192H639" marker-start="url(#gm-lo-ah)" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="565.5" y="188" text-anchor="middle">I5 = 21</text>
+  <text class="n" x="100" y="214" text-anchor="middle">Sep 23</text>
+  <text class="n" x="198" y="214" text-anchor="middle">Oct 7</text>
+  <text class="n" x="296" y="214" text-anchor="middle">Oct 21</text>
+  <text class="n" x="394" y="214" text-anchor="middle">Nov 4</text>
+  <text class="n" x="492" y="214" text-anchor="middle">Nov 18</text>
+  <text class="n" x="639" y="214" text-anchor="middle">Dec 9</text>
+  <text class="t" x="369.5" y="240" text-anchor="middle">C1 = 14 + 14 + 14 + 14 + 21 = 77 days</text>
+
+  <!-- Detail A: one interval, three change paths -->
+  <text class="vt" x="40" y="278">Detail A: inside 26.20, three paths</text>
+  <text class="vs" x="40" y="294">Scale 1 day = 35 px · illustrative events [3]</text>
+
+  <path class="ctr" d="M150,312V430M640,312V430"/>
+  <text class="sl ink" x="150" y="306" text-anchor="middle">26.20</text>
+  <text class="sl ink" x="640" y="306" text-anchor="middle">26.21</text>
+
+  <!-- Client lane -->
+  <text class="sl ink" x="140" y="332" text-anchor="end" dominant-baseline="central">client</text>
+  <rect class="obj fill-2" x="150" y="320" width="490" height="24"/>
+  <path class="slot" d="M360,316V348"/>
+  <circle class="dot" cx="360" cy="332" r="2.5"/>
+  <text class="sl ink" x="366" y="306">hotfix [3]</text>
+
+  <!-- Server lane -->
+  <text class="sl ink" x="140" y="372" text-anchor="end" dominant-baseline="central">server</text>
+  <rect class="obj fill-2" x="150" y="360" width="35" height="24"/>
+  <rect class="obj fill-1" x="185" y="360" width="455" height="24"/>
+  <text class="sl ink" x="500" y="372" text-anchor="middle" dominant-baseline="central">override live [2]</text>
+
+  <!-- Config lane -->
+  <text class="sl ink" x="140" y="412" text-anchor="end" dominant-baseline="central">config</text>
+  <rect class="obj fill-2" x="150" y="400" width="280" height="24"/>
+  <rect class="obj fill-1" x="430" y="400" width="210" height="24"/>
+  <circle class="dot" cx="255" cy="412" r="2.5"/>
+  <text class="sl ink" x="263" y="412" dominant-baseline="central">flip [4]</text>
+  <text class="sl ink" x="535" y="412" text-anchor="middle" dominant-baseline="central">event live</text>
+
+  <!-- D1 and E1 -->
+  <path class="ext" d="M150,433V459M185,387V459M430,427V459M640,433V459"/>
+  <path class="dim" d="M130,454H150" marker-end="url(#gm-lo-ah)"/>
+  <path class="dim" d="M150,454H185"/>
+  <path class="dim" d="M205,454H185" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="126" y="454" text-anchor="end" dominant-baseline="central">D1 = 1</text>
+  <path class="dim" d="M430,454H640" marker-start="url(#gm-lo-ah)" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="535" y="450" text-anchor="middle">E1 = 6</text>
+
+  <!-- H1 -->
+  <path class="ext" d="M150,459V483M360,351V483"/>
+  <path class="dim" d="M150,478H360" marker-start="url(#gm-lo-ah)" marker-end="url(#gm-lo-ah)"/>
+  <text class="dt" x="255" y="474" text-anchor="middle">H1 = 6</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="516">Variables</text>
+  <text class="vs" x="40" y="532">Schedule [1] and illustrative · days</text>
+  <rect class="cell band" x="30" y="542" width="60" height="22"/>
+  <rect class="cell band" x="90" y="542" width="520" height="22"/>
+  <rect class="cell band" x="610" y="542" width="120" height="22"/>
+  <text class="cap ink" x="40" y="553" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="553" dominant-baseline="central">item</text>
+  <text class="cap ink" x="720" y="553" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M30,564H730V740H30Z"/>
+  <path class="ln ink" d="M90,564V740M610,564V740"/>
+  <path class="ln" d="M30,586H730M30,608H730M30,630H730M30,652H730M30,674H730M30,696H730M30,718H730"/>
+  <text class="t b" x="40" y="575" dominant-baseline="central">C1</text>
+  <text class="t" x="100" y="575" dominant-baseline="central">cycle, 26.19 (Sep 23) to 26.24 (Dec 9, 2026)</text>
+  <text class="t b" x="720" y="575" text-anchor="end" dominant-baseline="central">77</text>
+  <text class="t" x="40" y="597" dominant-baseline="central">I1-I4</text>
+  <text class="t" x="100" y="597" dominant-baseline="central">each interval, 26.19 to 26.23</text>
+  <text class="t" x="720" y="597" text-anchor="end" dominant-baseline="central">14</text>
+  <text class="t" x="40" y="619" dominant-baseline="central">I5</text>
+  <text class="t" x="100" y="619" dominant-baseline="central">interval, 26.23 to 26.24</text>
+  <text class="t" x="720" y="619" text-anchor="end" dominant-baseline="central">21</text>
+  <text class="t" x="40" y="641" dominant-baseline="central">N1</text>
+  <text class="t" x="100" y="641" dominant-baseline="central">patches scheduled in 2026, 26.01 (Jan 8) to 26.24</text>
+  <text class="t" x="720" y="641" text-anchor="end" dominant-baseline="central">24</text>
+  <text class="t" x="40" y="663" dominant-baseline="central">A1</text>
+  <text class="t" x="100" y="663" dominant-baseline="central">mean interval: 335 days / (N1 - 1) = 335 / 23</text>
+  <text class="t" x="720" y="663" text-anchor="end" dominant-baseline="central">14.57</text>
+  <text class="t" x="40" y="685" dominant-baseline="central">D1</text>
+  <text class="t" x="100" y="685" dominant-baseline="central">patch to server-side override (illustrative)</text>
+  <text class="t" x="720" y="685" text-anchor="end" dominant-baseline="central">1</text>
+  <text class="t" x="40" y="707" dominant-baseline="central">H1</text>
+  <text class="t" x="100" y="707" dominant-baseline="central">patch to client hotfix (illustrative)</text>
+  <text class="t" x="720" y="707" text-anchor="end" dominant-baseline="central">6</text>
+  <text class="t" x="40" y="729" dominant-baseline="central">E1</text>
+  <text class="t" x="100" y="729" dominant-baseline="central">event start to next patch (illustrative)</text>
+  <text class="t" x="720" y="729" text-anchor="end" dominant-baseline="central">6</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="30" y="756" width="700" height="88"/>
+  <text class="sl ink" x="42" y="774">notes</text>
+  <text class="n" x="42" y="792">[1] Dates from Riot's published 2026 League of Legends patch schedule (Pacific Time); Riot notes dates can move.</text>
+  <text class="n" x="42" y="807">[2] Server data override: new values or logic loaded by game servers, no client download (Riot's TFT micropatch).</text>
+  <text class="n" x="42" y="822">[3] Client hotfix: a new build players must download before they can play. Event timings are illustrative.</text>
+  <text class="n" x="42" y="837">[4] Config flip: a flag or remote config value, live in seconds, no build and no server restart.</text>
+</svg>

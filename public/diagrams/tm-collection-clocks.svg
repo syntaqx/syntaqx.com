@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 712">
+  <defs>
+    <marker id="tm-cc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">TM-COL-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">two clocks, one event</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view -->
+  <text class="vt" x="40" y="64">Plan view: device and server clocks</text>
+  <text class="vs" x="40" y="80">Scale 1 s = 4 px · one true-time axis · values in s</text>
+
+  <!-- Q1 on the device clock -->
+  <path class="ext" d="M140,125V99M460,125V99"/>
+  <path class="dim" d="M140,104H460" marker-start="url(#tm-cc-ah)" marker-end="url(#tm-cc-ah)"/>
+  <text class="dt" x="300" y="100" text-anchor="middle">Q1 = S1 - O1 = 120.00 - 40.00 = 80.00</text>
+
+  <!-- Device lane -->
+  <text class="sl ink" x="88" y="148" text-anchor="end" dominant-baseline="central">device</text>
+  <rect class="obj fill-2" x="140" y="128" width="320" height="40"/>
+  <text class="sl ink" x="300" y="148" text-anchor="middle" dominant-baseline="central">queued offline</text>
+  <circle class="dot" cx="140" cy="148" r="3"/>
+  <circle class="dot" cx="460" cy="148" r="3"/>
+  <text class="t" x="146" y="160" dominant-baseline="central">O1</text>
+  <text class="t" x="454" y="160" text-anchor="end" dominant-baseline="central">S1</text>
+
+  <!-- Device clock axis: reads true time + 30 -->
+  <path class="ln ink" d="M100,182H620M100,178V186M180,178V186M260,178V186M340,178V186M420,178V186M500,178V186M580,178V186"/>
+  <text class="t" x="100" y="196" text-anchor="middle" dominant-baseline="central">30</text>
+  <text class="t" x="180" y="196" text-anchor="middle" dominant-baseline="central">50</text>
+  <text class="t" x="260" y="196" text-anchor="middle" dominant-baseline="central">70</text>
+  <text class="t" x="340" y="196" text-anchor="middle" dominant-baseline="central">90</text>
+  <text class="t" x="420" y="196" text-anchor="middle" dominant-baseline="central">110</text>
+  <text class="t" x="500" y="196" text-anchor="middle" dominant-baseline="central">130</text>
+  <text class="t" x="580" y="196" text-anchor="middle" dominant-baseline="central">150</text>
+  <text class="sl" x="88" y="196" text-anchor="end" dominant-baseline="central">clock</text>
+
+  <!-- Transit -->
+  <path class="ln ink" d="M460,206L464,236" marker-end="url(#tm-cc-ah)"/>
+  <text class="t" x="474" y="220" dominant-baseline="central">[2] transit</text>
+
+  <!-- Server lane -->
+  <text class="sl ink" x="88" y="258" text-anchor="end" dominant-baseline="central">server</text>
+  <rect class="obj fill-2" x="100" y="238" width="520" height="40"/>
+  <circle class="obj hl" cx="144" cy="258" r="4"/>
+  <circle class="dot" cx="464" cy="258" r="3"/>
+  <text class="t" x="154" y="258" dominant-baseline="central">T1</text>
+  <text class="t" x="454" y="258" text-anchor="end" dominant-baseline="central">R1</text>
+
+  <!-- Server clock axis: reads true time -->
+  <path class="ln ink" d="M100,292H620M100,288V296M180,288V296M260,288V296M340,288V296M420,288V296M500,288V296M580,288V296"/>
+  <text class="t" x="100" y="306" text-anchor="middle" dominant-baseline="central">0</text>
+  <text class="t" x="180" y="306" text-anchor="middle" dominant-baseline="central">20</text>
+  <text class="t" x="260" y="306" text-anchor="middle" dominant-baseline="central">40</text>
+  <text class="t" x="340" y="306" text-anchor="middle" dominant-baseline="central">60</text>
+  <text class="t" x="420" y="306" text-anchor="middle" dominant-baseline="central">80</text>
+  <text class="t" x="500" y="306" text-anchor="middle" dominant-baseline="central">100</text>
+  <text class="t" x="580" y="306" text-anchor="middle" dominant-baseline="central">120</text>
+  <text class="sl" x="88" y="306" text-anchor="end" dominant-baseline="central">clock</text>
+
+  <!-- Q1 subtracted from R1 -->
+  <path class="ext" d="M144,316V341M464,316V341"/>
+  <path class="dim" d="M144,336H464" marker-start="url(#tm-cc-ah)" marker-end="url(#tm-cc-ah)"/>
+  <text class="dt" x="304" y="332" text-anchor="middle">Q1 = 80.00 [1]</text>
+  <text class="t" x="380" y="362" text-anchor="middle" dominant-baseline="central">T1 = R1 - Q1 = 91.00 - 80.00 = 11.00 · E1 = T1 - 10.00 = 1.00</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="400">Variables</text>
+  <text class="vs" x="40" y="416">Illustrative [3] · seconds</text>
+  <rect class="cell band" x="40" y="426" width="50" height="22"/>
+  <rect class="cell band" x="90" y="426" width="530" height="22"/>
+  <rect class="cell band" x="620" y="426" width="100" height="22"/>
+  <text class="cap ink" x="50" y="437" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="437" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="437" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,448H720V602H40Z"/>
+  <path class="ln ink" d="M90,448V602M620,448V602"/>
+  <path class="ln" d="M40,470H720M40,492H720M40,514H720M40,536H720M40,558H720M40,580H720"/>
+  <text class="t" x="50" y="459" dominant-baseline="central">K1</text>
+  <text class="t" x="100" y="459" dominant-baseline="central">device clock ahead of server clock</text>
+  <text class="t" x="710" y="459" text-anchor="end" dominant-baseline="central">30.00</text>
+  <text class="t" x="50" y="481" dominant-baseline="central">O1</text>
+  <text class="t" x="100" y="481" dominant-baseline="central">created, by device clock (originalTimestamp)</text>
+  <text class="t" x="710" y="481" text-anchor="end" dominant-baseline="central">40.00</text>
+  <text class="t" x="50" y="503" dominant-baseline="central">S1</text>
+  <text class="t" x="100" y="503" dominant-baseline="central">sent, by device clock (sentAt)</text>
+  <text class="t" x="710" y="503" text-anchor="end" dominant-baseline="central">120.00</text>
+  <text class="t" x="50" y="525" dominant-baseline="central">Q1</text>
+  <text class="t" x="100" y="525" dominant-baseline="central">time in queue: S1 - O1</text>
+  <text class="t" x="710" y="525" text-anchor="end" dominant-baseline="central">80.00</text>
+  <text class="t" x="50" y="547" dominant-baseline="central">R1</text>
+  <text class="t" x="100" y="547" dominant-baseline="central">received, by server clock (receivedAt)</text>
+  <text class="t" x="710" y="547" text-anchor="end" dominant-baseline="central">91.00</text>
+  <text class="t b" x="50" y="569" dominant-baseline="central">T1</text>
+  <text class="t" x="100" y="569" dominant-baseline="central">derived event time on the server clock: R1 - Q1</text>
+  <text class="t b" x="710" y="569" text-anchor="end" dominant-baseline="central">11.00</text>
+  <text class="t" x="50" y="591" dominant-baseline="central">E1</text>
+  <text class="t" x="100" y="591" dominant-baseline="central">remaining error against the true time of 10.00</text>
+  <text class="t" x="710" y="591" text-anchor="end" dominant-baseline="central">1.00</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="620" width="680" height="72"/>
+  <text class="sl ink" x="52" y="638">notes</text>
+  <text class="n" x="52" y="656">[1] Segment: timestamp = receivedAt - (sentAt - originalTimestamp); Snowplow derived_tstamp matches.</text>
+  <text class="n" x="52" y="672">[2] Q1 is read on one clock, so the skew K1 cancels; what remains, E1, is the transit time.</text>
+  <text class="n" x="52" y="688">[3] Illustrative values in seconds from an arbitrary zero on the true clock.</text>
+</svg>

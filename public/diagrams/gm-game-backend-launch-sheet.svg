@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 944">
+  <defs>
+    <marker id="gm-bkl-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-bkl-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="gm-bkl-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-BKD-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">launch capacity, published figures</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- View A: traffic against plan -->
+  <text class="vt" x="40" y="64">View A: launch traffic against plan</text>
+  <text class="vs" x="40" y="80">Scale 1x target = 11 px · bars · Pokemon GO, 2016 [1]</text>
+
+  <rect class="obj fill-2" x="140" y="104" width="11" height="18"/>
+  <text class="sl ink" x="132" y="113" text-anchor="end" dominant-baseline="central">target</text>
+  <text class="dt" x="160" y="113" dominant-baseline="central">T1 = 1x</text>
+
+  <rect class="obj fill-2" x="140" y="132" width="55" height="18"/>
+  <text class="sl ink" x="132" y="141" text-anchor="end" dominant-baseline="central">worst case</text>
+  <text class="dt" x="204" y="141" dominant-baseline="central">W1 = 5 × T1 = 5x</text>
+
+  <rect class="obj hl" x="140" y="160" width="550" height="18"/>
+  <text class="sl ink" x="132" y="169" text-anchor="end" dominant-baseline="central">actual</text>
+
+  <path class="ext" d="M140,181V211M690,181V211"/>
+  <path class="dim hl" d="M140,206H690" marker-start="url(#gm-bkl-ah-hl)" marker-end="url(#gm-bkl-ah-hl)"/>
+  <text class="dt hl" x="415" y="202" text-anchor="middle">A1 = 10 × W1 = 50 × T1 = 50x</text>
+
+  <!-- View B: load-test harness chain -->
+  <text class="vt" x="40" y="252">View B: load test, one shard</text>
+  <text class="vs" x="40" y="268">Not to scale · harness processes · VALORANT, 2020 [1]</text>
+
+  <path class="ext" d="M140,297V279M530,297V279"/>
+  <path class="dim" d="M140,284H530" marker-start="url(#gm-bkl-ah)" marker-end="url(#gm-bkl-ah)"/>
+  <text class="dt" x="335" y="280" text-anchor="middle">N1 = 200 processes [2]</text>
+
+  <rect class="obj fill-2" x="140" y="300" width="60" height="30"/>
+  <rect class="obj fill-2" x="206" y="300" width="60" height="30"/>
+  <rect class="obj fill-2" x="272" y="300" width="60" height="30"/>
+  <rect class="obj fill-2" x="338" y="300" width="60" height="30"/>
+  <circle class="dot" cx="420" cy="315" r="2"/>
+  <circle class="dot" cx="434" cy="315" r="2"/>
+  <circle class="dot" cx="448" cy="315" r="2"/>
+  <rect class="obj fill-2" x="470" y="300" width="60" height="30"/>
+  <text class="t" x="170" y="315" text-anchor="middle" dominant-baseline="central">H1</text>
+  <text class="t" x="236" y="315" text-anchor="middle" dominant-baseline="central">H1</text>
+  <text class="t" x="302" y="315" text-anchor="middle" dominant-baseline="central">H1</text>
+  <text class="t" x="368" y="315" text-anchor="middle" dominant-baseline="central">H1</text>
+  <text class="t" x="500" y="315" text-anchor="middle" dominant-baseline="central">H1</text>
+
+  <circle class="dot" cx="530" cy="315" r="2"/>
+  <path class="leader" d="M530,315L546,303H570"/>
+  <text class="sl ink" x="576" y="303" dominant-baseline="central">mock shard</text>
+  <text class="n" x="576" y="319">fake game servers report results</text>
+
+  <path class="ext" d="M140,333V361M530,333V361"/>
+  <path class="dim" d="M140,356H530" marker-start="url(#gm-bkl-ah)" marker-end="url(#gm-bkl-ah)"/>
+  <text class="dt" x="335" y="352" text-anchor="middle">C1 = H1 × N1 = 10,000 × 200 = 2,000,000</text>
+
+  <!-- View C: game server CPU headroom -->
+  <text class="vt" x="40" y="402">View C: game server CPU headroom</text>
+  <text class="vs" x="40" y="418">Scale 1% = 5.5 px · one server · League Clash, 2020 [1]</text>
+
+  <rect class="obj fill-1" x="140" y="446" width="385" height="30"/>
+  <rect class="obj fill-2" x="525" y="446" width="82.5" height="30"/>
+  <rect class="hatch" x="607.5" y="446" width="82.5" height="30" fill="url(#gm-bkl-hatch)"/>
+  <text class="sl ink" x="332.5" y="461" text-anchor="middle" dominant-baseline="central">planned load</text>
+  <text class="t" x="648.75" y="436" text-anchor="middle" dominant-baseline="central">[3]</text>
+  <text class="t" x="132" y="461" text-anchor="end" dominant-baseline="central">0</text>
+  <text class="t" x="698" y="461" dominant-baseline="central">100</text>
+
+  <path class="ext" d="M140,479V533M525,479V511M607.5,479V533"/>
+  <path class="dim" d="M140,506H525" marker-start="url(#gm-bkl-ah)" marker-end="url(#gm-bkl-ah)"/>
+  <text class="dt" x="332.5" y="502" text-anchor="middle">U1 = 70 (target)</text>
+  <path class="dim" d="M140,528H607.5" marker-start="url(#gm-bkl-ah)" marker-end="url(#gm-bkl-ah)"/>
+  <text class="dt" x="373.75" y="524" text-anchor="middle">U2 = 85 (players see problems)</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="568">Variables</text>
+  <text class="vs" x="40" y="584">Published figures [1] · dated at source</text>
+  <rect class="cell band" x="40" y="594" width="50" height="22"/>
+  <rect class="cell band" x="90" y="594" width="480" height="22"/>
+  <rect class="cell band" x="570" y="594" width="150" height="22"/>
+  <text class="cap ink" x="50" y="605" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="605" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="605" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,616H720V836H40Z"/>
+  <path class="ln ink" d="M90,616V836M570,616V836"/>
+  <path class="ln" d="M40,638H720M40,660H720M40,682H720M40,704H720M40,726H720M40,748H720M40,770H720M40,792H720M40,814H720"/>
+
+  <text class="t" x="50" y="627" dominant-baseline="central">T1</text>
+  <text class="t" x="100" y="627" dominant-baseline="central">Pokemon GO planned traffic, the target</text>
+  <text class="t" x="710" y="627" text-anchor="end" dominant-baseline="central">1x</text>
+  <text class="t" x="50" y="649" dominant-baseline="central">W1</text>
+  <text class="t" x="100" y="649" dominant-baseline="central">worst-case estimate: about 5 × T1</text>
+  <text class="t" x="710" y="649" text-anchor="end" dominant-baseline="central">5x</text>
+  <text class="t b" x="50" y="671" dominant-baseline="central">A1</text>
+  <text class="t" x="100" y="671" dominant-baseline="central">actual launch traffic: 10 × W1 = 50 × T1</text>
+  <text class="t b" x="710" y="671" text-anchor="end" dominant-baseline="central">50x</text>
+  <text class="t" x="50" y="693" dominant-baseline="central">H1</text>
+  <text class="t" x="100" y="693" dominant-baseline="central">simulated players per harness process, on 4 CPUs</text>
+  <text class="t" x="710" y="693" text-anchor="end" dominant-baseline="central">10,000</text>
+  <text class="t" x="50" y="715" dominant-baseline="central">N1</text>
+  <text class="t" x="100" y="715" dominant-baseline="central">harness processes: C1 / H1</text>
+  <text class="t" x="710" y="715" text-anchor="end" dominant-baseline="central">200</text>
+  <text class="t" x="50" y="737" dominant-baseline="central">C1</text>
+  <text class="t" x="100" y="737" dominant-baseline="central">concurrent players per shard, the goal: H1 × N1</text>
+  <text class="t" x="710" y="737" text-anchor="end" dominant-baseline="central">2,000,000</text>
+  <text class="t" x="50" y="759" dominant-baseline="central">U1</text>
+  <text class="t" x="100" y="759" dominant-baseline="central">game server CPU target, percent</text>
+  <text class="t" x="710" y="759" text-anchor="end" dominant-baseline="central">70</text>
+  <text class="t" x="50" y="781" dominant-baseline="central">U2</text>
+  <text class="t" x="100" y="781" dominant-baseline="central">CPU where players see latency and missed requests</text>
+  <text class="t" x="710" y="781" text-anchor="end" dominant-baseline="central">85</text>
+  <text class="t" x="50" y="803" dominant-baseline="central">S1</text>
+  <text class="t" x="100" y="803" dominant-baseline="central">game starts per minute: 1.5 × p99 of peak starts</text>
+  <text class="t" x="710" y="803" text-anchor="end" dominant-baseline="central">1.5 × p99</text>
+  <text class="t" x="50" y="825" dominant-baseline="central">Q1</text>
+  <text class="t" x="100" y="825" dominant-baseline="central">FFXIV login queue cap per logical data center</text>
+  <text class="t" x="710" y="825" text-anchor="end" dominant-baseline="central">17,000</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="852" width="680" height="76"/>
+  <text class="sl ink" x="52" y="870">notes</text>
+  <text class="n" x="52" y="888">[1] Sources: Google Cloud, Sep 29, 2016; Riot, Dec 15, 2020 and May 19, 2020; Square Enix, Dec 2021.</text>
+  <text class="n" x="52" y="904">[2] About 200 processes ran as containers; the first full 2M run came under two weeks before launch.</text>
+  <text class="n" x="52" y="920">[3] Hatched: above U2. U1 to U2 is headroom for waves, such as a whole tournament round starting at once.</text>
+</svg>

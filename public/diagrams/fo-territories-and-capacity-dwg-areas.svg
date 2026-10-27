@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 544">
+  <defs>
+
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-TER-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">territory areas, nested</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Exploded axonometric: one branch's territory map -->
+  <text class="vt" x="40" y="64">Exploded axonometric: territory levels</text>
+  <text class="vs" x="40" y="80">Not to scale · levels separated along the stack axis [3]</text>
+
+  <!-- 01 branch service area -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 274)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <polygon class="cell band" points="20,100 150,90 280,104 270,190 30,186"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="362.65" r="2"/>
+  <path class="leader" d="M309.5,362.65L297.5,350.65H270"/>
+  <text class="sl ink" x="264" y="350.65" text-anchor="end" dominant-baseline="central">01 branch service area</text>
+  <text class="n" x="264" y="366.65" text-anchor="end">the whole map one branch serves</text>
+  <circle class="dot" cx="528.2" cy="383.6" r="2.5"/>
+
+  <!-- 02 territories -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 212)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <polygon class="cell band" points="20,100 150,91 158,188 30,186"/>
+    <polygon class="cell" points="150,91 280,104 270,190 158,188"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="300.65" r="2"/>
+  <path class="leader" d="M309.5,300.65L297.5,288.65H270"/>
+  <text class="sl ink" x="264" y="288.65" text-anchor="end" dominant-baseline="central">02 territories</text>
+  <text class="n" x="264" y="304.65" text-anchor="end">drawn areas with a priority [2]</text>
+  <circle class="dot" cx="528.2" cy="321.6" r="2.5"/>
+
+  <!-- 03 leaf territories -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 150)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <polygon class="cell band" points="150,91 214,97 216,189 158,188"/>
+    <polygon class="cell hl" points="214,97 280,104 270,190 216,189"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="238.65" r="2"/>
+  <path class="leader" d="M309.5,238.65L297.5,226.65H270"/>
+  <text class="sl ink" x="264" y="226.65" text-anchor="end" dominant-baseline="central">03 leaf territories</text>
+  <text class="n" x="264" y="242.65" text-anchor="end">parent_id links each to its parent</text>
+  <circle class="dot" cx="528.2" cy="259.6" r="2.5"/>
+
+  <!-- Assembly line through the property point -->
+  <path class="phantom" d="M528.2,149.6V383.6"/>
+
+  <!-- The property point above the stack -->
+  <circle class="dot" cx="528.2" cy="149.6" r="2.5"/>
+  <path class="leader" d="M528.2,149.6L540.2,137.6H560.2"/>
+  <text class="sl ink" x="564.2" y="137.6" dominant-baseline="central">property [1]</text>
+  <text class="n" x="564.2" y="153.6">one geocoded point</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="450" width="680" height="74"/>
+  <text class="sl ink" x="52" y="468">notes</text>
+  <text class="n" x="52" y="486">[1] The point resolves to the leaf (teal) whose dated area covers it; parents follow parent_id.</text>
+  <text class="n" x="52" y="502">[2] Overlaps: Salesforce assigns the highest or lowest level by setting; priority breaks ties within a level.</text>
+  <text class="n" x="52" y="518">[3] Every area is versioned with valid_during, so a boundary moving on the 1st is known before it moves.</text>
+</svg>

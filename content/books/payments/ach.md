@@ -90,6 +90,8 @@ A return is the RDFI rejecting an entry. A **reversal** is the Originator undoin
 - **It's not a collection tool.** Reversing because a customer turned out not to have paid, or because the Originator failed to fund the original credit, is an improper reversal. Since June 30, 2021 the RDFI can return one: as R11 for a consumer, within the 60-day window, or as R17 for a business account, within two banking days. Nacha can fine egregious cases.
 - **Model it as its own entry,** linked to the one it corrects, with its own states. Banks with ACH APIs treat a reversal as a separate transfer that can itself be returned, and so should your ledger.
 
+![A business-day timeline from a consumer debit's settlement date: administrative returns close after 2 banking days, when the debit becomes available; the Originator's reversal window runs 5 banking days; unauthorized consumer returns stay open for 60 calendar days, after which the debit is final.](/diagrams/pm-ach-return-windows.svg "Three clocks start at settlement. The bank's administrative returns close in 2 banking days and my own reversals in 5, but a consumer can still return the debit as unauthorized for 60 calendar days.")
+
 ## After a Return: Fees and Blocks
 
 A returned debit leaves two decisions: whether to charge the payer for it, and whether to let them pay from that account again.
@@ -201,6 +203,8 @@ Each line is one record, identified by its first character. Field positions are 
 | 76-78 | Settlement date | Blank: the ACH Operator fills it in |
 | 80-94 | ODFI and batch number | `12345678`, batch `0000001` |
 
+![A dimensioned drawing of the 94-character entry detail record split into eight field groups (type and transaction code, RDFI routing number, account number, amount, individual ID, name, payment type and addenda indicator, trace number), with a detail of the amount field showing 0000185000 as $1,850.00 in cents with no decimal point.](/diagrams/pm-ach-entry-record.svg "Every entry is exactly 94 characters, and every field sits at a fixed position. The amount is cents, zero-filled from the left, with the decimal point implied rather than written.")
+
 **Entry detail (`6`)**, one per payment, the record you'll build most:
 
 | Positions | Field | In the example (first entry) |
@@ -243,6 +247,7 @@ The return's entry uses transaction code `26` (return of a checking debit), is a
 
 - [Nacha: How ACH Works](https://achdevguide.nacha.org/how-ach-works), the parties, credits and debits, SEC codes and authorization requirements
 - [Nacha: ACH File Overview](https://achdevguide.nacha.org/ach-file-overview), record types, the 94-character format and blocking factor
+- [Nacha: ACH File Details](https://achdevguide.nacha.org/ach-file-details), the entry detail record's field positions and lengths
 - [CFPB: Regulation E, 12 CFR 1005.6](https://www.consumerfinance.gov/rules-policy/regulations/1005/6/), consumer liability for unauthorized transfers
 - [CFPB: Regulation E, 12 CFR 1005.11](https://www.consumerfinance.gov/rules-policy/regulations/1005/11/), error resolution notice and investigation timeframes
 

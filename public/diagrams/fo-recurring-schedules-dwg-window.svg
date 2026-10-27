@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 894">
+  <defs>
+    <marker id="fo-rsw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-rsw-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-REC-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">service window and anchor</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view 1: one occurrence's window -->
+  <text class="vt" x="40" y="64">Plan view: one occurrence, Q3</text>
+  <text class="vs" x="40" y="80">Scale 1 day = 28 px · August · values in days</text>
+  <path class="ext" d="M192,169V95M612,169V95"/>
+  <path class="ext" d="M388,137V117M416,137V117"/>
+  <path class="dim hl" d="M192,100H612" marker-start="url(#fo-rsw-ah-hl)" marker-end="url(#fo-rsw-ah-hl)"/>
+  <text class="dt hl" x="402" y="96" text-anchor="middle">W1 = E1 + 1 + L1 = 7 + 1 + 7 = 15</text>
+  <path class="dim" d="M192,122H388" marker-start="url(#fo-rsw-ah)" marker-end="url(#fo-rsw-ah)"/>
+  <text class="dt" x="290" y="118" text-anchor="middle">E1 = 7</text>
+  <path class="dim" d="M416,122H612" marker-start="url(#fo-rsw-ah)" marker-end="url(#fo-rsw-ah)"/>
+  <text class="dt" x="514" y="118" text-anchor="middle">L1 = 7</text>
+
+  <!-- Calendar strip -->
+  <rect class="cell" x="80" y="140" width="28" height="20"/>
+  <text class="t" x="94" y="150" text-anchor="middle" dominant-baseline="central">4</text>
+  <rect class="cell" x="108" y="140" width="28" height="20"/>
+  <text class="t" x="122" y="150" text-anchor="middle" dominant-baseline="central">5</text>
+  <rect class="cell" x="136" y="140" width="28" height="20"/>
+  <text class="t" x="150" y="150" text-anchor="middle" dominant-baseline="central">6</text>
+  <rect class="cell" x="164" y="140" width="28" height="20"/>
+  <text class="t" x="178" y="150" text-anchor="middle" dominant-baseline="central">7</text>
+  <rect class="cell" x="192" y="140" width="28" height="20"/>
+  <text class="t" x="206" y="150" text-anchor="middle" dominant-baseline="central">8</text>
+  <rect class="cell" x="220" y="140" width="28" height="20"/>
+  <text class="t" x="234" y="150" text-anchor="middle" dominant-baseline="central">9</text>
+  <rect class="cell" x="248" y="140" width="28" height="20"/>
+  <text class="t" x="262" y="150" text-anchor="middle" dominant-baseline="central">10</text>
+  <rect class="cell" x="276" y="140" width="28" height="20"/>
+  <text class="t" x="290" y="150" text-anchor="middle" dominant-baseline="central">11</text>
+  <rect class="cell" x="304" y="140" width="28" height="20"/>
+  <text class="t" x="318" y="150" text-anchor="middle" dominant-baseline="central">12</text>
+  <rect class="cell" x="332" y="140" width="28" height="20"/>
+  <text class="t" x="346" y="150" text-anchor="middle" dominant-baseline="central">13</text>
+  <rect class="cell" x="360" y="140" width="28" height="20"/>
+  <text class="t" x="374" y="150" text-anchor="middle" dominant-baseline="central">14</text>
+  <rect class="cell band" x="388" y="140" width="28" height="20"/>
+  <text class="t b" x="402" y="150" text-anchor="middle" dominant-baseline="central">15</text>
+  <rect class="cell" x="416" y="140" width="28" height="20"/>
+  <text class="t" x="430" y="150" text-anchor="middle" dominant-baseline="central">16</text>
+  <rect class="cell" x="444" y="140" width="28" height="20"/>
+  <text class="t" x="458" y="150" text-anchor="middle" dominant-baseline="central">17</text>
+  <rect class="cell" x="472" y="140" width="28" height="20"/>
+  <text class="t" x="486" y="150" text-anchor="middle" dominant-baseline="central">18</text>
+  <rect class="cell" x="500" y="140" width="28" height="20"/>
+  <text class="t" x="514" y="150" text-anchor="middle" dominant-baseline="central">19</text>
+  <rect class="cell" x="528" y="140" width="28" height="20"/>
+  <text class="t" x="542" y="150" text-anchor="middle" dominant-baseline="central">20</text>
+  <rect class="cell" x="556" y="140" width="28" height="20"/>
+  <text class="t" x="570" y="150" text-anchor="middle" dominant-baseline="central">21</text>
+  <rect class="cell" x="584" y="140" width="28" height="20"/>
+  <text class="t" x="598" y="150" text-anchor="middle" dominant-baseline="central">22</text>
+  <rect class="cell" x="612" y="140" width="28" height="20"/>
+  <text class="t" x="626" y="150" text-anchor="middle" dominant-baseline="central">23</text>
+  <rect class="cell" x="640" y="140" width="28" height="20"/>
+  <text class="t" x="654" y="150" text-anchor="middle" dominant-baseline="central">24</text>
+  <rect class="cell" x="668" y="140" width="28" height="20"/>
+  <text class="t" x="682" y="150" text-anchor="middle" dominant-baseline="central">25</text>
+  <rect class="cell" x="696" y="140" width="28" height="20"/>
+  <text class="t" x="710" y="150" text-anchor="middle" dominant-baseline="central">26</text>
+
+  <!-- The window, the due day and the visit -->
+  <rect class="obj hl" x="192" y="172" width="420" height="26"/>
+  <text class="sl ink" x="290" y="185" text-anchor="middle" dominant-baseline="central">early</text>
+  <text class="sl ink" x="514" y="185" text-anchor="middle" dominant-baseline="central">late</text>
+  <path class="ctr" d="M402,164V234"/>
+  <text class="sl ink" x="402" y="246" text-anchor="middle" dominant-baseline="central">due aug 15 [1]</text>
+  <rect class="obj fill-1" x="500" y="210" width="28" height="18"/>
+  <circle class="dot" cx="514" cy="219" r="2"/>
+  <path class="leader" d="M514,219L526,231H560"/>
+  <text class="sl ink" x="564" y="231" dominant-baseline="central">done aug 19 [2]</text>
+
+  <!-- Plan view 2: the next due date under each anchor -->
+  <text class="vt" x="40" y="300">Plan view: next due date by anchor</text>
+  <text class="vs" x="40" y="316">Scale 1 day = 5 px · August to November · values in days</text>
+  <path class="ln" d="M150,352H690M150,348V356M260,348V356M410,348V356M565,348V356"/>
+  <text class="sl" x="154" y="342">aug</text>
+  <text class="sl" x="264" y="342">sep</text>
+  <text class="sl" x="414" y="342">oct</text>
+  <text class="sl" x="569" y="342">nov</text>
+  <text class="sl ink" x="140" y="400" text-anchor="end" dominant-baseline="central">schedule</text>
+  <path class="ln" d="M150,400H690"/>
+  <rect class="slot" x="590" y="388" width="75" height="24"/>
+  <path class="ctr" d="M627.5,382V418"/>
+  <circle class="dot" cx="177.5" cy="400" r="3"/>
+  <text class="sl ink" x="140" y="480" text-anchor="end" dominant-baseline="central">completion</text>
+  <path class="ln" d="M150,480H690"/>
+  <rect class="slot" x="610" y="468" width="75" height="24"/>
+  <path class="ctr" d="M647.5,462V498"/>
+  <circle class="dot" cx="197.5" cy="480" r="3"/>
+  <path class="ext" d="M177.5,397V371M627.5,397V371"/>
+  <path class="dim" d="M177.5,376H627.5" marker-start="url(#fo-rsw-ah)" marker-end="url(#fo-rsw-ah)"/>
+  <text class="dt" x="402.5" y="372" text-anchor="middle">P1 = 90 from the due date</text>
+  <path class="ext" d="M197.5,477V451M647.5,477V451"/>
+  <path class="dim" d="M197.5,456H647.5" marker-start="url(#fo-rsw-ah)" marker-end="url(#fo-rsw-ah)"/>
+  <text class="dt" x="422.5" y="452" text-anchor="middle">P1 = 90 from the completed visit</text>
+  <text class="sl" x="177.5" y="422" text-anchor="middle" dominant-baseline="central">due aug 15</text>
+  <text class="sl" x="197.5" y="502" text-anchor="middle" dominant-baseline="central">done aug 19</text>
+  <text class="sl" x="619" y="422" text-anchor="end" dominant-baseline="central">nov 13</text>
+  <text class="sl" x="655" y="502" dominant-baseline="central">nov 17</text>
+
+  <!-- Lateness carried forward -->
+  <path class="ext" d="M627.5,421V535"/>
+  <path class="ext" d="M647.5,513V535"/>
+  <path class="dim" d="M627.5,530H647.5"/>
+  <path class="dim" d="M607.5,530H627.5" marker-end="url(#fo-rsw-ah)"/>
+  <path class="dim" d="M667.5,530H647.5" marker-end="url(#fo-rsw-ah)"/>
+  <text class="dt" x="603.5" y="530" text-anchor="end" dominant-baseline="central">Δ1 = 19 - 15 = 4 [3]</text>
+  <text class="t" x="380" y="566" text-anchor="middle">schedule: next = due + P1 = aug 15 + 90 = nov 13 · completion: next = done + P1 = aug 19 + 90 = nov 17</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="610">Variables</text>
+  <text class="vs" x="40" y="626">Window from the chapter's example · interval illustrative [4] · days</text>
+  <rect class="cell band" x="40" y="636" width="50" height="22"/>
+  <rect class="cell band" x="90" y="636" width="520" height="22"/>
+  <rect class="cell band" x="610" y="636" width="110" height="22"/>
+  <text class="cap ink" x="50" y="647" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="647" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="647" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,658H720V768H40Z"/>
+  <path class="ln ink" d="M90,658V768M610,658V768"/>
+  <path class="ln" d="M40,680H720M40,702H720M40,724H720M40,746H720"/>
+  <text class="t b" x="50" y="669" dominant-baseline="central">W1</text>
+  <text class="t" x="100" y="669" dominant-baseline="central">service window, the promise: aug 8 to aug 22</text>
+  <text class="t b" x="710" y="669" text-anchor="end" dominant-baseline="central">15</text>
+  <text class="t" x="50" y="691" dominant-baseline="central">E1</text>
+  <text class="t" x="100" y="691" dominant-baseline="central">early tolerance, window_before_days</text>
+  <text class="t" x="710" y="691" text-anchor="end" dominant-baseline="central">7</text>
+  <text class="t" x="50" y="713" dominant-baseline="central">L1</text>
+  <text class="t" x="100" y="713" dominant-baseline="central">late tolerance, window_after_days</text>
+  <text class="t" x="710" y="713" text-anchor="end" dominant-baseline="central">7</text>
+  <text class="t" x="50" y="735" dominant-baseline="central">P1</text>
+  <text class="t" x="100" y="735" dominant-baseline="central">interval, every 90 days</text>
+  <text class="t" x="710" y="735" text-anchor="end" dominant-baseline="central">90</text>
+  <text class="t" x="50" y="757" dominant-baseline="central">Δ1</text>
+  <text class="t" x="100" y="757" dominant-baseline="central">lateness the completion anchor carries forward</text>
+  <text class="t" x="710" y="757" text-anchor="end" dominant-baseline="central">4</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="784" width="680" height="90"/>
+  <text class="sl ink" x="52" y="802">notes</text>
+  <text class="n" x="52" y="820">[1] The occurrence keeps its identity (recurrence plus original due date) wherever the visit lands in the window.</text>
+  <text class="n" x="52" y="836">[2] Rebooked from aug 15 to aug 19: on time, because the window, not the due date, is the promise.</text>
+  <text class="n" x="52" y="852">[3] Schedule anchoring ignores the late visit; completion anchoring moves every later due date by it.</text>
+  <text class="n" x="52" y="868">[4] A label's minimum reapplication gap is measured like the completion row, from the last completed application.</text>
+</svg>

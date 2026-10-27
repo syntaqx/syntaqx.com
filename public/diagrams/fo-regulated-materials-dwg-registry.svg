@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 694">
+  <defs>
+    <marker id="fo-rmr-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-rmr-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="fo-rmr-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-REG-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">registry notice, 7 Pa. Code 128.112</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view 1: notice, application and record on a time axis -->
+  <text class="vt" x="40" y="64">Plan view: one application near a listed home</text>
+  <text class="vs" x="40" y="80">Scale 1 h = 5 px · timeline · hours from the earliest start</text>
+  <path class="ln" d="M100,112H700M100,108V116M160,108V116M220,108V116M280,108V116M340,108V116M400,108V116M460,108V116M520,108V116M580,108V116M640,108V116M700,108V116"/>
+  <text class="t" x="100" y="102" text-anchor="middle">-72</text>
+  <text class="t" x="160" y="102" text-anchor="middle">-60</text>
+  <text class="t" x="220" y="102" text-anchor="middle">-48</text>
+  <text class="t" x="280" y="102" text-anchor="middle">-36</text>
+  <text class="t" x="340" y="102" text-anchor="middle">-24</text>
+  <text class="t" x="400" y="102" text-anchor="middle">-12</text>
+  <text class="t" x="460" y="102" text-anchor="middle">0</text>
+  <text class="t" x="520" y="102" text-anchor="middle">12</text>
+  <text class="t" x="580" y="102" text-anchor="middle">24</text>
+  <text class="t" x="640" y="102" text-anchor="middle">36</text>
+  <text class="t" x="700" y="102" text-anchor="middle">48</text>
+  <path class="ctr" d="M460,120V296M580,120V296"/>
+
+  <!-- Notice -->
+  <text class="sl ink" x="40" y="146" dominant-baseline="central">notice</text>
+  <rect class="obj hl" x="100" y="136" width="300" height="20"/>
+  <rect class="hatch" x="400" y="136" width="60" height="20" fill="url(#fo-rmr-hatch)"/>
+  <text class="sl ink" x="250" y="146" text-anchor="middle" dominant-baseline="central">notify listed people</text>
+  <path class="ext" d="M100,159V177M400,159V177"/>
+  <path class="dim hl" d="M100,172H400" marker-start="url(#fo-rmr-ah-hl)" marker-end="url(#fo-rmr-ah-hl)"/>
+  <text class="dt hl" x="250" y="168" text-anchor="middle">N1 = 72 - 12 = 60 [1]</text>
+  <path class="dim" d="M400,172H460"/>
+  <path class="dim" d="M380,172H400" marker-end="url(#fo-rmr-ah)"/>
+  <path class="dim" d="M480,172H460" marker-end="url(#fo-rmr-ah)"/>
+  <text class="dt" x="484" y="172" dominant-baseline="central">L1 = 12</text>
+
+  <!-- Application -->
+  <text class="sl ink" x="40" y="200" dominant-baseline="central">apply</text>
+  <rect class="obj fill-1" x="460" y="190" width="120" height="20"/>
+  <text class="sl ink" x="520" y="200" text-anchor="middle" dominant-baseline="central">application</text>
+  <path class="dim" d="M460,226H580" marker-start="url(#fo-rmr-ah)" marker-end="url(#fo-rmr-ah)"/>
+  <text class="dt" x="520" y="222" text-anchor="middle">A1 ≤ 24 [2]</text>
+
+  <!-- Record -->
+  <text class="sl ink" x="40" y="254" dominant-baseline="central">record</text>
+  <rect class="slot" x="580" y="244" width="120" height="20"/>
+  <text class="sl ink" x="640" y="254" text-anchor="middle" dominant-baseline="central">record due</text>
+  <path class="ext" d="M700,267V285"/>
+  <path class="dim" d="M580,280H700" marker-start="url(#fo-rmr-ah)" marker-end="url(#fo-rmr-ah)"/>
+  <text class="dt" x="640" y="276" text-anchor="middle">R1 = 24 [3]</text>
+  <text class="sl ink" x="460" y="308" text-anchor="end" dominant-baseline="central">earliest start</text>
+  <text class="sl ink" x="580" y="308" dominant-baseline="central">latest finish</text>
+
+  <!-- Plan view 2: who gets notice -->
+  <text class="vt" x="40" y="352">Plan view: who gets notice</text>
+  <text class="vs" x="40" y="368">100 ft = 20 px</text>
+  <circle class="slot" cx="170" cy="470" r="100"/>
+  <rect class="obj fill-1" x="158" y="462" width="24" height="16"/>
+  <rect class="obj fill-2" x="210" y="400" width="70" height="40"/>
+  <rect class="obj fill-2" x="290" y="500" width="40" height="40"/>
+  <path class="dim" d="M158,470H70" marker-end="url(#fo-rmr-ah)"/>
+  <text class="dt" x="114" y="466" text-anchor="middle">D1 = 500 ft</text>
+  <text class="sl ink" x="288" y="420" dominant-baseline="central">listed: notify</text>
+  <text class="sl ink" x="250" y="556" dominant-baseline="central">listed: no notice</text>
+  <text class="sl" x="170" y="492" text-anchor="middle" dominant-baseline="central">site</text>
+
+  <!-- Variables -->
+  <text class="vt" x="440" y="352">Variables</text>
+  <text class="vs" x="440" y="368">7 Pa. Code 128.112 [1]</text>
+  <rect class="cell band" x="440" y="378" width="50" height="22"/>
+  <rect class="cell band" x="490" y="378" width="170" height="22"/>
+  <rect class="cell band" x="660" y="378" width="80" height="22"/>
+  <text class="cap ink" x="450" y="389" dominant-baseline="central">code</text>
+  <text class="cap ink" x="500" y="389" dominant-baseline="central">item</text>
+  <text class="cap ink" x="730" y="389" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M440,400H740V510H440Z"/>
+  <path class="ln ink" d="M490,400V510M660,400V510"/>
+  <path class="ln" d="M440,422H740M440,444H740M440,466H740M440,488H740"/>
+  <text class="t b" x="450" y="411" dominant-baseline="central">N1</text>
+  <text class="t" x="500" y="411" dominant-baseline="central">notice window</text>
+  <text class="t b" x="730" y="411" text-anchor="end" dominant-baseline="central">60 h</text>
+  <text class="t" x="450" y="433" dominant-baseline="central">L1</text>
+  <text class="t" x="500" y="433" dominant-baseline="central">shortest lead</text>
+  <text class="t" x="730" y="433" text-anchor="end" dominant-baseline="central">12 h</text>
+  <text class="t" x="450" y="455" dominant-baseline="central">A1</text>
+  <text class="t" x="500" y="455" dominant-baseline="central">start to finish, max</text>
+  <text class="t" x="730" y="455" text-anchor="end" dominant-baseline="central">24 h</text>
+  <text class="t" x="450" y="477" dominant-baseline="central">R1</text>
+  <text class="t" x="500" y="477" dominant-baseline="central">record notice, within</text>
+  <text class="t" x="730" y="477" text-anchor="end" dominant-baseline="central">24 h</text>
+  <text class="t" x="450" y="499" dominant-baseline="central">D1</text>
+  <text class="t" x="500" y="499" dominant-baseline="central">property line within</text>
+  <text class="t" x="730" y="499" text-anchor="end" dominant-baseline="central">500 ft</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="600" width="680" height="74"/>
+  <text class="sl ink" x="52" y="618">notes</text>
+  <text class="n" x="52" y="636">[1] Notice 12 to 72 h before the application to listed homes within 500 ft; drawn from the earliest start.</text>
+  <text class="n" x="52" y="652">[2] The notice gives earliest start and latest finish, at most 24 h apart, plus products and license.</text>
+  <text class="n" x="52" y="668">[3] A record of each notice, with time and method, within 24 hours after the application; kept at least 3 years.</text>
+</svg>

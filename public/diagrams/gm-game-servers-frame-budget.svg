@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 800">
+  <defs>
+    <marker id="gm-gsfb-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-gsfb-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="gm-gsfb-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-SRV-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">server frame budget, 128 tick</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: one core, one 128-tick frame</text>
+  <text class="vs" x="40" y="80">Scale 1 ms = 80 px · timeline · values in ms</text>
+
+  <!-- F1: the whole frame -->
+  <path class="ext" d="M60,125V103M685,125V103"/>
+  <path class="dim" d="M60,108H685" marker-start="url(#gm-gsfb-ah)" marker-end="url(#gm-gsfb-ah)"/>
+  <text class="dt" x="372.5" y="104" text-anchor="middle">F1 = 1000 / 128 = 7.8125 [1]</text>
+
+  <!-- The frame, shared by three games and the host reserve -->
+  <rect class="obj fill-2" x="60" y="128" width="187.5" height="40"/>
+  <rect class="obj fill-2" x="247.5" y="128" width="187.5" height="40"/>
+  <rect class="obj fill-2" x="435" y="128" width="187.5" height="40"/>
+  <rect class="hatch" x="622.5" y="128" width="62.5" height="40" fill="url(#gm-gsfb-hatch)"/>
+  <rect class="obj fill-1" x="60" y="136" width="160" height="24"/>
+  <text class="sl ink" x="140" y="148" text-anchor="middle" dominant-baseline="central">game 1 frame</text>
+  <text class="sl ink" x="341.25" y="148" text-anchor="middle" dominant-baseline="central">game 2</text>
+  <text class="sl ink" x="528.75" y="148" text-anchor="middle" dominant-baseline="central">game 3</text>
+
+  <!-- Chain: G1, G1, G1, O1 -->
+  <path class="ext" d="M60,171V231M247.5,171V231M435,171V195M622.5,171V195M685,171V195M220,163V231"/>
+  <path class="dim hl" d="M60,190H247.5" marker-start="url(#gm-gsfb-ah-hl)" marker-end="url(#gm-gsfb-ah-hl)"/>
+  <text class="dt hl" x="153.75" y="186" text-anchor="middle">G1 = 2.34 [3]</text>
+  <path class="dim" d="M247.5,190H435" marker-start="url(#gm-gsfb-ah)" marker-end="url(#gm-gsfb-ah)"/>
+  <text class="dt" x="341.25" y="186" text-anchor="middle">G1 = 2.34</text>
+  <path class="dim" d="M435,190H622.5" marker-start="url(#gm-gsfb-ah)" marker-end="url(#gm-gsfb-ah)"/>
+  <text class="dt" x="528.75" y="186" text-anchor="middle">G1 = 2.34</text>
+  <path class="dim" d="M622.5,190H685" marker-start="url(#gm-gsfb-ah)" marker-end="url(#gm-gsfb-ah)"/>
+  <text class="dt" x="653.75" y="208" text-anchor="middle">O1 = 0.78 [2]</text>
+
+  <!-- M1: measured frame, H1: headroom -->
+  <path class="dim" d="M60,226H220" marker-start="url(#gm-gsfb-ah)" marker-end="url(#gm-gsfb-ah)"/>
+  <text class="dt" x="140" y="222" text-anchor="middle">M1 &lt; 2.00 [4]</text>
+  <path class="dim" d="M220,226H247.5"/>
+  <text class="dt" x="256" y="226" dominant-baseline="central">H1 = G1 - M1 &gt; 0.34</text>
+
+  <text class="t" x="60" y="262" dominant-baseline="central">F1 = 3 x G1 + O1 = 3 x 2.34375 + 0.78125 = 7.8125</text>
+
+  <!-- Detail B: then and now, smaller scale -->
+  <text class="vt" x="40" y="306">Detail B: frame time, then and now</text>
+  <text class="vs" x="40" y="322">Scale 1 ms = 11 px · values in ms</text>
+  <path class="phantom" d="M215.94,340V452"/>
+
+  <text class="sl ink" x="122" y="354" text-anchor="end" dominant-baseline="central">budget</text>
+  <rect class="obj fill-2" x="130" y="346" width="85.94" height="16"/>
+  <text class="dt" x="226" y="354" dominant-baseline="central">F1 = 7.8125</text>
+
+  <text class="sl ink" x="122" y="386" text-anchor="end" dominant-baseline="central">22 clients</text>
+  <rect class="obj fill-1" x="130" y="378" width="57.2" height="16"/>
+  <text class="dt" x="226" y="386" dominant-baseline="central">E1 = 5.2 ≈ 2.2 x G1 [5]</text>
+
+  <path class="ext" d="M130,427V409M680,427V409"/>
+  <path class="dim" d="M130,414H680" marker-start="url(#gm-gsfb-ah)" marker-end="url(#gm-gsfb-ah)"/>
+  <text class="dt" x="405" y="410" text-anchor="middle">S1 = 50 = 6.4 x F1 [4]</text>
+  <text class="sl ink" x="122" y="438" text-anchor="end" dominant-baseline="central">start</text>
+  <rect class="obj fill-1" x="130" y="430" width="550" height="16"/>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="492">Variables</text>
+  <text class="vs" x="40" y="508">ms · Riot, 2020 and 2023 [1]</text>
+  <rect class="cell band" x="40" y="518" width="60" height="22"/>
+  <rect class="cell band" x="100" y="518" width="520" height="22"/>
+  <rect class="cell band" x="620" y="518" width="100" height="22"/>
+  <text class="cap ink" x="50" y="529" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="529" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="529" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,540H720V694H40Z"/>
+  <path class="ln ink" d="M100,540V694M620,540V694"/>
+  <path class="ln" d="M40,562H720M40,584H720M40,606H720M40,628H720M40,650H720M40,672H720"/>
+  <text class="t" x="50" y="551" dominant-baseline="central">F1</text>
+  <text class="t" x="110" y="551" dominant-baseline="central">frame at 128 ticks: 1000 / 128</text>
+  <text class="t" x="710" y="551" text-anchor="end" dominant-baseline="central">7.8125</text>
+  <text class="t" x="50" y="573" dominant-baseline="central">O1</text>
+  <text class="t" x="110" y="573" dominant-baseline="central">host reserve: 10% of F1</text>
+  <text class="t" x="710" y="573" text-anchor="end" dominant-baseline="central">0.78</text>
+  <text class="t b" x="50" y="595" dominant-baseline="central">G1</text>
+  <text class="t" x="110" y="595" dominant-baseline="central">target per game frame: (F1 - O1) / 3</text>
+  <text class="t b" x="710" y="595" text-anchor="end" dominant-baseline="central">2.34</text>
+  <text class="t" x="50" y="617" dominant-baseline="central">M1</text>
+  <text class="t" x="110" y="617" dominant-baseline="central">measured frame after the work: sub-2 ms</text>
+  <text class="t" x="710" y="617" text-anchor="end" dominant-baseline="central">&lt; 2.00</text>
+  <text class="t" x="50" y="639" dominant-baseline="central">H1</text>
+  <text class="t" x="110" y="639" dominant-baseline="central">headroom: G1 - M1, derived</text>
+  <text class="t" x="710" y="639" text-anchor="end" dominant-baseline="central">&gt; 0.34</text>
+  <text class="t" x="50" y="661" dominant-baseline="central">E1</text>
+  <text class="t" x="110" y="661" dominant-baseline="central">estimate for a 22-client game</text>
+  <text class="t" x="710" y="661" text-anchor="end" dominant-baseline="central">5.2</text>
+  <text class="t" x="50" y="683" dominant-baseline="central">S1</text>
+  <text class="t" x="110" y="683" dominant-baseline="central">server frame when the work started</text>
+  <text class="t" x="710" y="683" text-anchor="end" dominant-baseline="central">50</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="710" width="680" height="76"/>
+  <text class="sl ink" x="52" y="728">notes</text>
+  <text class="n" x="52" y="746">[1] Riot: each 128-tick frame must complete within 7.8125 ms. [2] About 10% reserved for the OS, scheduling</text>
+  <text class="n" x="52" y="762">and host software. [3] The target that beats 3 games per core. [4] Riot: 50 ms at the start, sub-2 ms by the end.</text>
+  <text class="n" x="52" y="778">[5] Riot, 2023: with 22 clients, frame time scales about 2.2 times, from 2.34 to 5.2 ms.</text>
+</svg>

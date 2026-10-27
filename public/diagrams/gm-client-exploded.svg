@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 620">
+  <defs>
+    <marker id="gm-cx-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-CLI-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">game client layer stack</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Exploded axonometric: game client</text>
+  <text class="vs" x="40" y="80">Not to scale · layers separated along the stack axis</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M295,190V500M645,147V457"/>
+
+  <!-- 01 platform layer -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 406)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="494.65" r="2"/>
+  <path class="leader" d="M309.5,494.65L297.5,482.65H270"/>
+  <text class="sl ink" x="264" y="482.65" text-anchor="end" dominant-baseline="central">01 platform layer</text>
+  <text class="n" x="264" y="498.65" text-anchor="end">OS, input devices, graphics API, audio</text>
+
+  <!-- 02 engine core -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 344)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="432.65" r="2"/>
+  <path class="leader" d="M309.5,432.65L297.5,420.65H270"/>
+  <text class="sl ink" x="264" y="420.65" text-anchor="end" dominant-baseline="central">02 engine core</text>
+  <text class="n" x="264" y="436.65" text-anchor="end">memory, jobs, assets, time</text>
+
+  <!-- 03 simulation -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 282)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="370.65" r="2"/>
+  <path class="leader" d="M309.5,370.65L297.5,358.65H270"/>
+  <text class="sl ink" x="264" y="358.65" text-anchor="end" dominant-baseline="central">03 simulation</text>
+  <text class="n" x="264" y="374.65" text-anchor="end">fixed-step world, physics, AI</text>
+
+  <!-- 04 rendering -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 220)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="308.65" r="2"/>
+  <path class="leader" d="M309.5,308.65L297.5,296.65H270"/>
+  <text class="sl ink" x="264" y="296.65" text-anchor="end" dominant-baseline="central">04 rendering</text>
+  <text class="n" x="264" y="312.65" text-anchor="end">scene, draw submission, GPU resources</text>
+
+  <!-- 05 UI -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 158)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="246.65" r="2"/>
+  <path class="leader" d="M309.5,246.65L297.5,234.65H270"/>
+  <text class="sl ink" x="264" y="234.65" text-anchor="end" dominant-baseline="central">05 UI</text>
+  <text class="n" x="264" y="250.65" text-anchor="end">menus, HUD, input focus</text>
+
+  <!-- 06 game code -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 96)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="184.65" r="2"/>
+  <path class="leader" d="M309.5,184.65L297.5,172.65H270"/>
+  <text class="sl ink" x="264" y="172.65" text-anchor="end" dominant-baseline="central">06 game code</text>
+  <text class="n" x="264" y="188.65" text-anchor="end">rules, content, modes</text>
+
+  <!-- Call direction -->
+  <text class="sl ink" x="700" y="140" text-anchor="middle">calls go</text>
+  <text class="sl ink" x="700" y="153" text-anchor="middle">down [1]</text>
+  <path class="ln ink" d="M700,162V520" marker-end="url(#gm-cx-ah)"/>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="568" width="680" height="34"/>
+  <text class="sl ink" x="52" y="589">notes</text>
+  <text class="n" x="110" y="589">[1] A layer calls only the layers beneath it; only the platform layer touches the OS and devices.</text>
+</svg>

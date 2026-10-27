@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 688">
+  <defs>
+    <marker id="fo-riw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-riw-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="fo-riw-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-REP-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">repair work order, call to claim</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: one repair work order -->
+  <text class="vt" x="40" y="64">Plan view: one work order, two visits</text>
+  <text class="vs" x="40" y="80">Scale 1 day = 13.5 px · timeline · values in days</text>
+
+  <!-- Day ruler -->
+  <path class="ln" d="M150,116H690M150,112V120M217.5,112V120M285,112V120M352.5,112V120M420,112V120M487.5,112V120M555,112V120M622.5,112V120M690,112V120"/>
+  <text class="t" x="150" y="106" text-anchor="middle">0</text>
+  <text class="t" x="217.5" y="106" text-anchor="middle">5</text>
+  <text class="t" x="285" y="106" text-anchor="middle">10</text>
+  <text class="t" x="352.5" y="106" text-anchor="middle">15</text>
+  <text class="t" x="420" y="106" text-anchor="middle">20</text>
+  <text class="t" x="487.5" y="106" text-anchor="middle">25</text>
+  <text class="t" x="555" y="106" text-anchor="middle">30</text>
+  <text class="t" x="622.5" y="106" text-anchor="middle">35</text>
+  <text class="t" x="690" y="106" text-anchor="middle">40</text>
+
+  <!-- Event lines: call, repair, deadlines -->
+  <path class="ctr" d="M150,124V340M231,124V340M636,124V340"/>
+
+  <!-- Visits -->
+  <text class="sl ink" x="40" y="150" dominant-baseline="central">visits</text>
+  <rect class="obj fill-1" x="150" y="140" width="10" height="20"/>
+  <rect class="obj fill-1" x="231" y="140" width="10" height="20"/>
+  <text class="sl ink" x="166" y="150" dominant-baseline="central">V1</text>
+  <text class="sl ink" x="247" y="150" dominant-baseline="central">V2 repair, closes the order</text>
+
+  <!-- Work order -->
+  <text class="sl ink" x="40" y="196" dominant-baseline="central">work order</text>
+  <rect class="obj fill-2" x="150" y="186" width="81" height="20"/>
+  <rect class="hatch" x="160" y="186" width="71" height="20" fill="url(#fo-riw-hatch)"/>
+  <circle class="dot" cx="190.5" cy="196" r="2"/>
+  <path class="leader" d="M190.5,196L216.5,222H247"/>
+  <text class="sl ink" x="251" y="222" dominant-baseline="central">on hold: part_needed [3]</text>
+  <path class="ext" d="M160,183V169M231,183V169"/>
+  <path class="dim hl" d="M160,174H231" marker-start="url(#fo-riw-ah-hl)" marker-end="url(#fo-riw-ah-hl)"/>
+  <text class="dt hl" x="195.5" y="170" text-anchor="middle">H1 = 6</text>
+  <text class="n" x="247" y="194">V1 diagnosed and quoted: visit completed, work order open [4]</text>
+
+  <!-- Clocks that start at the repair -->
+  <text class="sl ink" x="40" y="268" dominant-baseline="central">claim</text>
+  <rect class="slot" x="231" y="258" width="405" height="20"/>
+  <text class="sl ink" x="433.5" y="268" text-anchor="middle" dominant-baseline="central">warranty claim submit-by window</text>
+  <text class="sl ink" x="40" y="318" dominant-baseline="central">callback</text>
+  <rect class="slot" x="231" y="308" width="405" height="20"/>
+  <text class="sl ink" x="433.5" y="318" text-anchor="middle" dominant-baseline="central">workmanship callback window</text>
+  <path class="dim" d="M231,248H636" marker-start="url(#fo-riw-ah)" marker-end="url(#fo-riw-ah)"/>
+  <text class="dt" x="433.5" y="244" text-anchor="middle">W1 = 30 from the repair date [1]</text>
+  <path class="dim" d="M231,298H636" marker-start="url(#fo-riw-ah)" marker-end="url(#fo-riw-ah)"/>
+  <text class="dt" x="433.5" y="294" text-anchor="middle">K1 = 30 from the service call [2]</text>
+
+  <!-- Totals -->
+  <path class="ext" d="M150,343V365M636,343V365"/>
+  <path class="dim" d="M150,360H636" marker-start="url(#fo-riw-ah)" marker-end="url(#fo-riw-ah)"/>
+  <text class="dt" x="393" y="356" text-anchor="middle">T1 = H1 + W1 = 6 + 30 = 36</text>
+  <text class="sl ink" x="150" y="384" text-anchor="middle" dominant-baseline="central">call day 0</text>
+  <text class="sl ink" x="231" y="400" text-anchor="middle" dominant-baseline="central">repaired day 6</text>
+  <text class="sl ink" x="636" y="384" text-anchor="middle" dominant-baseline="central">last day to file</text>
+
+  <!-- Hold reasons -->
+  <text class="vt" x="40" y="432">Hold reasons</text>
+  <text class="vs" x="40" y="448">The book's hold_reason values [5] · each needs a release event</text>
+  <rect class="cell band" x="40" y="458" width="260" height="22"/>
+  <rect class="cell band" x="300" y="458" width="420" height="22"/>
+  <text class="cap ink" x="50" y="469" dominant-baseline="central">hold_reason</text>
+  <text class="cap ink" x="310" y="469" dominant-baseline="central">released by</text>
+  <path class="cell" d="M40,480H720V546H40Z"/>
+  <path class="ln ink" d="M300,480V546"/>
+  <path class="ln" d="M40,502H720M40,524H720"/>
+  <text class="t" x="50" y="491" dominant-baseline="central">part_needed</text>
+  <text class="t" x="310" y="491" dominant-baseline="central">part order received at branch or truck</text>
+  <text class="t" x="50" y="513" dominant-baseline="central">approval_needed</text>
+  <text class="t" x="310" y="513" dominant-baseline="central">approval recorded: who, amount, reference</text>
+  <text class="t" x="50" y="535" dominant-baseline="central">permit_needed</text>
+  <text class="t" x="310" y="535" dominant-baseline="central">permit issued; the inspection is its own visit</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="562" width="680" height="106"/>
+  <text class="sl ink" x="52" y="580">notes</text>
+  <text class="n" x="52" y="598">[1] Ferguson's HVAC process: claims within 30 days of the repair date.</text>
+  <text class="n" x="52" y="614">[2] ServiceTitan's guide: a recall is a technician error within 30 days of a service call.</text>
+  <text class="n" x="52" y="630">[3] Illustrative part wait; the hold ends when the special-order part arrives and the return visit is booked.</text>
+  <text class="n" x="52" y="646">[4] A visit can be completed while its work order is not; the open order carries hold_reason until V2.</text>
+  <text class="n" x="52" y="662">[5] ServiceTitan documents the same three: waiting for parts or materials, a pending permit, needing authorization.</text>
+</svg>

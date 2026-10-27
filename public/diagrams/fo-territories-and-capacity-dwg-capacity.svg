@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 582">
+  <defs>
+    <marker id="fo-tcc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-tcc-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-TER-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">shift capacity with a reserve</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: one shift's capacity -->
+  <text class="vt" x="40" y="64">Plan view: one shift's capacity</text>
+  <text class="vs" x="40" y="80">Scale 1 min = 1.3 px · quantities, not times of day [4] · minutes</text>
+  <path class="ext" d="M80,137V95M704,137V95"/>
+  <path class="dim" d="M80,100H704" marker-start="url(#fo-tcc-ah)" marker-end="url(#fo-tcc-ah)"/>
+  <text class="dt" x="392" y="96" text-anchor="middle">S1 = 8 h = 480</text>
+  <path class="ext" d="M392,137V117"/>
+  <path class="dim hl" d="M80,122H392" marker-start="url(#fo-tcc-ah-hl)" marker-end="url(#fo-tcc-ah-hl)"/>
+  <text class="dt hl" x="236" y="118" text-anchor="middle">M1 = r × S1 = 0.5 × 480 = 240 [1]</text>
+  <path class="dim" d="M392,122H704" marker-start="url(#fo-tcc-ah)" marker-end="url(#fo-tcc-ah)"/>
+  <text class="dt" x="548" y="118" text-anchor="middle">F1 = S1 - M1 = 240</text>
+
+  <!-- Quota row -->
+  <rect class="obj fill-2" x="80" y="140" width="312" height="30"/>
+  <rect class="obj fill-2" x="392" y="140" width="312" height="30"/>
+  <text class="sl ink" x="236" y="155" text-anchor="middle" dominant-baseline="central">movable: recurring, multi-day</text>
+  <text class="sl ink" x="548" y="155" text-anchor="middle" dominant-baseline="central">reserved: fixed and urgent</text>
+
+  <!-- Used row -->
+  <rect class="obj fill-1" x="80" y="186" width="273" height="30"/>
+  <rect class="slot" x="353" y="186" width="39" height="30"/>
+  <rect class="obj fill-1" x="392" y="186" width="117" height="30"/>
+  <rect class="slot" x="509" y="186" width="195" height="30"/>
+  <text class="sl ink" x="216.5" y="201" text-anchor="middle" dominant-baseline="central">booked movable</text>
+  <text class="sl ink" x="450.5" y="201" text-anchor="middle" dominant-baseline="central">booked</text>
+  <text class="sl ink" x="606.5" y="201" text-anchor="middle" dominant-baseline="central">held for urgent</text>
+  <path class="ctr" d="M392,132V280"/>
+
+  <!-- Chain under the used row -->
+  <path class="ext" d="M80,219V241M353,219V241M392,219V241M509,219V241M704,219V241"/>
+  <path class="dim" d="M80,236H353" marker-start="url(#fo-tcc-ah)" marker-end="url(#fo-tcc-ah)"/>
+  <text class="dt" x="216.5" y="232" text-anchor="middle">U1 = 210 [3]</text>
+  <path class="dim" d="M392,236H509" marker-start="url(#fo-tcc-ah)" marker-end="url(#fo-tcc-ah)"/>
+  <text class="dt" x="450.5" y="232" text-anchor="middle">U2 = 90 [3]</text>
+  <path class="dim" d="M509,236H704" marker-start="url(#fo-tcc-ah)" marker-end="url(#fo-tcc-ah)"/>
+  <text class="dt" x="606.5" y="232" text-anchor="middle">R2 = F1 - U2 = 150</text>
+  <path class="ext" d="M353,241V265"/>
+  <path class="dim" d="M353,260H392"/>
+  <path class="dim" d="M333,260H353" marker-end="url(#fo-tcc-ah)"/>
+  <path class="dim" d="M412,260H392" marker-end="url(#fo-tcc-ah)"/>
+  <text class="dt" x="329" y="260" text-anchor="end" dominant-baseline="central">C1 = M1 - U1 = 240 - 210 = 30 [2]</text>
+  <text class="sl ink" x="392" y="292" text-anchor="middle" dominant-baseline="central">threshold r = 0.5</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="336">Variables</text>
+  <text class="vs" x="40" y="352">r from Timefold's example [1] · bookings illustrative [3] · minutes</text>
+  <rect class="cell band" x="40" y="362" width="50" height="22"/>
+  <rect class="cell band" x="90" y="362" width="160" height="22"/>
+  <rect class="cell band" x="250" y="362" width="60" height="22"/>
+  <text class="cap ink" x="50" y="373" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="373" dominant-baseline="central">item</text>
+  <text class="cap ink" x="300" y="373" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,384H310V472H40Z"/>
+  <path class="ln ink" d="M90,384V472M250,384V472"/>
+  <path class="ln" d="M40,406H310M40,428H310M40,450H310"/>
+  <text class="t" x="50" y="395" dominant-baseline="central">S1</text>
+  <text class="t" x="100" y="395" dominant-baseline="central">shift</text>
+  <text class="t" x="300" y="395" text-anchor="end" dominant-baseline="central">480</text>
+  <text class="t" x="50" y="417" dominant-baseline="central">r</text>
+  <text class="t" x="100" y="417" dominant-baseline="central">movable share</text>
+  <text class="t" x="300" y="417" text-anchor="end" dominant-baseline="central">0.5</text>
+  <text class="t b" x="50" y="439" dominant-baseline="central">M1</text>
+  <text class="t" x="100" y="439" dominant-baseline="central">movable quota</text>
+  <text class="t b" x="300" y="439" text-anchor="end" dominant-baseline="central">240</text>
+  <text class="t" x="50" y="461" dominant-baseline="central">F1</text>
+  <text class="t" x="100" y="461" dominant-baseline="central">reserve</text>
+  <text class="t" x="300" y="461" text-anchor="end" dominant-baseline="central">240</text>
+  <rect class="cell band" x="390" y="362" width="50" height="22"/>
+  <rect class="cell band" x="440" y="362" width="220" height="22"/>
+  <rect class="cell band" x="660" y="362" width="60" height="22"/>
+  <text class="cap ink" x="400" y="373" dominant-baseline="central">code</text>
+  <text class="cap ink" x="450" y="373" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="373" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M390,384H720V472H390Z"/>
+  <path class="ln ink" d="M440,384V472M660,384V472"/>
+  <path class="ln" d="M390,406H720M390,428H720M390,450H720"/>
+  <text class="t" x="400" y="395" dominant-baseline="central">U1</text>
+  <text class="t" x="450" y="395" dominant-baseline="central">movable booked</text>
+  <text class="t" x="710" y="395" text-anchor="end" dominant-baseline="central">210</text>
+  <text class="t" x="400" y="417" dominant-baseline="central">C1</text>
+  <text class="t" x="450" y="417" dominant-baseline="central">movable left: M1 - U1</text>
+  <text class="t" x="710" y="417" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t" x="400" y="439" dominant-baseline="central">U2</text>
+  <text class="t" x="450" y="439" dominant-baseline="central">fixed or urgent booked</text>
+  <text class="t" x="710" y="439" text-anchor="end" dominant-baseline="central">90</text>
+  <text class="t" x="400" y="461" dominant-baseline="central">R2</text>
+  <text class="t" x="450" y="461" dominant-baseline="central">reserve left: F1 - U2</text>
+  <text class="t" x="710" y="461" text-anchor="end" dominant-baseline="central">150</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="488" width="680" height="74"/>
+  <text class="sl ink" x="52" y="506">notes</text>
+  <text class="n" x="52" y="524">[1] Timefold's movableOccupationRatioThreshold: at 0.5, an eight-hour shift keeps about four hours free.</text>
+  <text class="n" x="52" y="540">[2] The same arithmetic as Oracle's Capacity = Quota - Used: at C1 = 0 the shift takes no more movable work.</text>
+  <text class="n" x="52" y="556">[3] Illustrative bookings. [4] The bars are quantities; the solver decides when in the day each visit runs.</text>
+</svg>

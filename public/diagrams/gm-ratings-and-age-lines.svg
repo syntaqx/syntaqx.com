@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 700">
+  <defs>
+    <marker id="gm-ra-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-AGE-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">age lines by regime</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: an age axis -->
+  <text class="vt" x="40" y="64">Plan view: where the age lines fall</text>
+  <text class="vs" x="40" y="80">Scale 1 year = 30 px · ages 0 to 18 · values in years</text>
+
+  <!-- Ruler -->
+  <path class="ln ink" d="M180,108H720"/>
+  <path class="ln" d="M180,104V112M210,105V111M240,105V111M270,105V111M300,105V111M330,105V111M360,105V111M390,105V111M420,105V111M450,105V111M480,105V111M510,105V111M540,105V111M570,104V112M600,105V111M630,105V111M660,104V112M690,105V111M720,104V112"/>
+  <text class="t" x="180" y="96" text-anchor="middle">0</text>
+  <text class="t" x="570" y="96" text-anchor="middle">13</text>
+  <text class="t" x="660" y="96" text-anchor="middle">16</text>
+  <text class="t" x="720" y="96" text-anchor="middle">18</text>
+
+  <!-- Row 1: COPPA -->
+  <text class="sl ink" x="40" y="132" dominant-baseline="central">coppa (us)</text>
+  <rect class="obj fill-1" x="180" y="120" width="390" height="24"/>
+  <rect class="phantom" x="570" y="120" width="150" height="24"/>
+  <text class="t" x="375" y="132" text-anchor="middle" dominant-baseline="central">child: under 13</text>
+  <text class="t" x="645" y="132" text-anchor="middle" dominant-baseline="central">not a child</text>
+
+  <!-- Row 2: Utah -->
+  <text class="sl ink" x="40" y="170" dominant-baseline="central">utah sb 142</text>
+  <rect class="obj fill-1" x="180" y="158" width="390" height="24"/>
+  <rect class="obj fill-2" x="570" y="158" width="90" height="24"/>
+  <rect class="obj fill-2" x="660" y="158" width="60" height="24"/>
+  <text class="t" x="375" y="170" text-anchor="middle" dominant-baseline="central">child</text>
+  <text class="t" x="615" y="170" text-anchor="middle" dominant-baseline="central">13-15</text>
+  <text class="t" x="690" y="170" text-anchor="middle" dominant-baseline="central">16-17</text>
+
+  <!-- Row 3: UK code -->
+  <text class="sl ink" x="40" y="208" dominant-baseline="central">uk code [1]</text>
+  <rect class="obj fill-2" x="180" y="196" width="540" height="24"/>
+  <text class="t" x="450" y="208" text-anchor="middle" dominant-baseline="central">child: under 18</text>
+
+  <!-- Row 4: FTC order -->
+  <text class="sl ink" x="40" y="246" dominant-baseline="central">ftc order [2]</text>
+  <rect class="obj fill-2" x="180" y="234" width="480" height="24"/>
+  <text class="t" x="420" y="246" text-anchor="middle" dominant-baseline="central">loot boxes need parental consent: under 16</text>
+
+  <!-- Row 5: ESRB -->
+  <text class="sl ink" x="40" y="290" dominant-baseline="central">esrb</text>
+  <path class="ln ink" d="M180,296H720"/>
+  <path class="obj" d="M180,286V296M480,286V296M570,286V296M690,286V296M720,286V296"/>
+  <text class="t" x="180" y="278" text-anchor="middle">E</text>
+  <text class="t" x="480" y="278" text-anchor="middle">E10+</text>
+  <text class="t" x="570" y="278" text-anchor="middle">T</text>
+  <text class="t" x="690" y="278" text-anchor="middle">M</text>
+  <text class="t" x="720" y="278" text-anchor="middle">AO</text>
+
+  <!-- Row 6: PEGI -->
+  <text class="sl ink" x="40" y="334" dominant-baseline="central">pegi</text>
+  <path class="ln ink" d="M180,340H720"/>
+  <path class="obj" d="M270,330V340M390,330V340M540,330V340M720,330V340"/>
+  <rect class="obj hl" x="657" y="328" width="6" height="12"/>
+  <text class="t" x="270" y="322" text-anchor="middle">3</text>
+  <text class="t" x="390" y="322" text-anchor="middle">7</text>
+  <text class="t" x="540" y="322" text-anchor="middle">12</text>
+  <text class="t" x="660" y="322" text-anchor="middle">16</text>
+  <text class="t" x="720" y="322" text-anchor="middle">18</text>
+  <text class="t" x="630" y="322" text-anchor="end">[3]</text>
+
+  <!-- Chain: A1 to A3 -->
+  <path class="ext" d="M180,343V381M570,343V381M660,343V381M720,343V381"/>
+  <path class="dim" d="M180,376H570" marker-start="url(#gm-ra-ah)" marker-end="url(#gm-ra-ah)"/>
+  <text class="dt" x="375" y="372" text-anchor="middle">A1 = 13</text>
+  <path class="dim" d="M570,376H660" marker-start="url(#gm-ra-ah)" marker-end="url(#gm-ra-ah)"/>
+  <text class="dt" x="615" y="372" text-anchor="middle">A2 = 3</text>
+  <path class="dim" d="M660,376H720" marker-start="url(#gm-ra-ah)" marker-end="url(#gm-ra-ah)"/>
+  <text class="dt" x="690" y="372" text-anchor="middle">A3 = 2</text>
+
+  <!-- Overall: A0 -->
+  <path class="ext" d="M180,384V411M720,384V411"/>
+  <path class="dim" d="M180,406H720" marker-start="url(#gm-ra-ah)" marker-end="url(#gm-ra-ah)"/>
+  <text class="dt" x="450" y="402" text-anchor="middle">A0 = A1 + A2 + A3 = 13 + 3 + 2 = 18</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="440">Variables</text>
+  <text class="vs" x="40" y="456">From the cited texts · years</text>
+  <rect class="cell band" x="40" y="466" width="60" height="22"/>
+  <rect class="cell band" x="100" y="466" width="540" height="22"/>
+  <rect class="cell band" x="640" y="466" width="80" height="22"/>
+  <text class="cap ink" x="50" y="477" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="477" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="477" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,488H720V598H40Z"/>
+  <path class="ln ink" d="M100,488V598M640,488V598"/>
+  <path class="ln" d="M40,510H720M40,532H720M40,554H720M40,576H720"/>
+  <text class="t b" x="50" y="499" dominant-baseline="central">A0</text>
+  <text class="t" x="110" y="499" dominant-baseline="central">adulthood in every regime shown: A1 + A2 + A3</text>
+  <text class="t b" x="710" y="499" text-anchor="end" dominant-baseline="central">18</text>
+  <text class="t" x="50" y="521" dominant-baseline="central">A1</text>
+  <text class="t" x="110" y="521" dominant-baseline="central">COPPA child; Utah "child"; ESRB T starts</text>
+  <text class="t" x="710" y="521" text-anchor="end" dominant-baseline="central">13</text>
+  <text class="t" x="50" y="543" dominant-baseline="central">A2</text>
+  <text class="t" x="110" y="543" dominant-baseline="central">Utah "younger teenager": 16 - 13</text>
+  <text class="t" x="710" y="543" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t" x="50" y="565" dominant-baseline="central">A3</text>
+  <text class="t" x="110" y="565" dominant-baseline="central">Utah "older teenager": 18 - 16</text>
+  <text class="t" x="710" y="565" text-anchor="end" dominant-baseline="central">2</text>
+  <text class="t" x="50" y="587" dominant-baseline="central">R1</text>
+  <text class="t" x="110" y="587" dominant-baseline="central">PEGI default for paid random items, from June 2026 [3]</text>
+  <text class="t" x="710" y="587" text-anchor="end" dominant-baseline="central">16</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="614" width="680" height="76"/>
+  <text class="sl ink" x="52" y="632">notes</text>
+  <text class="n" x="52" y="650">[1] ICO Children's Code: a child is anyone under 18. UK GDPR's age for consent-based online services is 13.</text>
+  <text class="n" x="52" y="666">[2] FTC order with Cognosphere (HoYoverse), 17 Jan 2025: it binds one company, not the industry.</text>
+  <text class="n" x="52" y="682">[3] PEGI: newly submitted games from June 2026; existing PEGI 3, 7 and 12 digital games re-rated from October 2026.</text>
+</svg>

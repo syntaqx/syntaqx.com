@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 600">
+  <defs>
+    <marker id="dp-ds-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="dp-ds-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="dp-ds-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-DSP-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">point-in-time feature join</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: one training row</text>
+  <text class="vs" x="40" y="80">Scale 1 h = 40 px · event time · illustrative [1]</text>
+
+  <!-- t0: the label event; the centerline is the extension line for K1 and G1 -->
+  <path class="ctr" d="M500,100V262"/>
+
+  <!-- K1: TTL window -->
+  <path class="ext" d="M180,147V105"/>
+  <path class="dim" d="M180,110H500" marker-start="url(#dp-ds-ah)" marker-end="url(#dp-ds-ah)"/>
+  <text class="dt" x="340" y="106" text-anchor="middle">K1 = TTL = 8 h</text>
+
+  <!-- G1: feature age (the subject) -->
+  <path class="ext" d="M380,147V129"/>
+  <path class="dim hl" d="M380,134H500" marker-start="url(#dp-ds-ah-hl)" marker-end="url(#dp-ds-ah-hl)"/>
+  <text class="dt hl" x="440" y="130" text-anchor="middle">G1 = 3 h</text>
+
+  <!-- Feature values over time -->
+  <text class="sl ink" x="130" y="170" text-anchor="end" dominant-baseline="central">feature</text>
+  <rect class="obj fill-2" x="140" y="150" width="240" height="40"/>
+  <rect class="obj hl" x="380" y="150" width="200" height="40"/>
+  <rect class="hatch" x="580" y="150" width="80" height="40" fill="url(#dp-ds-hatch)"/>
+  <text class="sl ink" x="260" y="170" text-anchor="middle" dominant-baseline="central">v1</text>
+  <text class="sl ink" x="440" y="170" text-anchor="middle" dominant-baseline="central">v2 used</text>
+  <text class="sl ink ko" x="620" y="170" text-anchor="middle" dominant-baseline="central">v3 [3]</text>
+
+  <!-- Label event -->
+  <text class="sl ink" x="130" y="232" text-anchor="end" dominant-baseline="central">label</text>
+  <circle class="dot" cx="500" cy="232" r="3"/>
+  <path class="leader" d="M500,232L512,244H530"/>
+  <text class="sl ink" x="534" y="244" dominant-baseline="central">label event t0 [2]</text>
+
+  <!-- Axis -->
+  <path class="ln ink" d="M100,280H660M100,276V284M180,276V284M260,276V284M340,276V284M420,276V284M500,276V284M580,276V284M660,276V284"/>
+  <text class="t" x="100" y="296" text-anchor="middle" dominant-baseline="central">04:00</text>
+  <text class="t" x="180" y="296" text-anchor="middle" dominant-baseline="central">06:00</text>
+  <text class="t" x="260" y="296" text-anchor="middle" dominant-baseline="central">08:00</text>
+  <text class="t" x="340" y="296" text-anchor="middle" dominant-baseline="central">10:00</text>
+  <text class="t" x="420" y="296" text-anchor="middle" dominant-baseline="central">12:00</text>
+  <text class="t" x="500" y="296" text-anchor="middle" dominant-baseline="central">14:00</text>
+  <text class="t" x="580" y="296" text-anchor="middle" dominant-baseline="central">16:00</text>
+  <text class="t" x="660" y="296" text-anchor="middle" dominant-baseline="central">18:00</text>
+  <text class="t" x="660" y="318" text-anchor="end" dominant-baseline="central">event time</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="352">Variables</text>
+  <text class="vs" x="40" y="368">Illustrative [1] · hours</text>
+  <rect class="cell band" x="40" y="378" width="50" height="22"/>
+  <rect class="cell band" x="90" y="378" width="300" height="22"/>
+  <rect class="cell band" x="390" y="378" width="80" height="22"/>
+  <text class="cap ink" x="50" y="389" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="389" dominant-baseline="central">item</text>
+  <text class="cap ink" x="460" y="389" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,400H470V510H40Z"/>
+  <path class="ln ink" d="M90,400V510M390,400V510"/>
+  <path class="ln" d="M40,422H470M40,444H470M40,466H470M40,488H470"/>
+  <text class="t" x="50" y="411" dominant-baseline="central">T0</text>
+  <text class="t" x="100" y="411" dominant-baseline="central">label event time</text>
+  <text class="t" x="460" y="411" text-anchor="end" dominant-baseline="central">14:00</text>
+  <text class="t" x="50" y="433" dominant-baseline="central">K1</text>
+  <text class="t" x="100" y="433" dominant-baseline="central">feature TTL, chosen</text>
+  <text class="t" x="460" y="433" text-anchor="end" dominant-baseline="central">8 h</text>
+  <text class="t" x="50" y="455" dominant-baseline="central">U2</text>
+  <text class="t" x="100" y="455" dominant-baseline="central">v2 written</text>
+  <text class="t" x="460" y="455" text-anchor="end" dominant-baseline="central">11:00</text>
+  <text class="t b" x="50" y="477" dominant-baseline="central">G1</text>
+  <text class="t" x="100" y="477" dominant-baseline="central">feature age: T0 - U2, within K1</text>
+  <text class="t b" x="460" y="477" text-anchor="end" dominant-baseline="central">3 h</text>
+  <text class="t" x="50" y="499" dominant-baseline="central">U3</text>
+  <text class="t" x="100" y="499" dominant-baseline="central">v3 written, after T0</text>
+  <text class="t" x="460" y="499" text-anchor="end" dominant-baseline="central">16:00</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="526" width="680" height="62"/>
+  <text class="sl ink" x="52" y="546">notes</text>
+  <text class="n" x="110" y="546">[1] Illustrative times. Feast scans back from each row's timestamp up to the TTL, never forward.</text>
+  <text class="n" x="110" y="562">[2] What happened at t0: a chargeback, a cancellation, a no-show. Features are as served then.</text>
+  <text class="n" x="110" y="578">[3] Written after t0: joining it leaks the future into training. Online, the model never sees it.</text>
+</svg>

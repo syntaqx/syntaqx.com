@@ -49,6 +49,8 @@ This is "full jitter": a random delay between zero and the exponential ceiling. 
 
 For synchronous, user-facing calls, start around `base = 500ms` and `cap = 5s`. A user is waiting, so the retries have to fit inside the request's own deadline.
 
+![Dimensional drawing of one request's deadline budget. A 10-second caller deadline D1 is split into 0.5 s of API work, three attempts with a 2.5 s timeout each, full-jitter backoffs of up to 0.5 s and 1.0 s between them, and 0.5 s reserved for the response, summing to exactly 10 s. A second view compares three calls given a fresh 10 s timeout each, which can hold the user for 30 s, with one propagated deadline that ends everything at 10 s.](/diagrams/pb-architecture-deadline-budget.svg "Work backward from the deadline: once the response reserve and the worst-case backoffs are set aside, what's left divided by the attempts is each attempt's timeout.")
+
 - **Cap the attempts.** For synchronous calls, one or two retries. If each attempt fails independently with probability `p`, two retries take the failure rate from `p` to `p³`: a 1% transient error rate becomes one in a million. Past that, more attempts add latency and load without buying meaningful reliability, and the failure probably isn't independent anymore.
 - **Background jobs can be patient,** retrying over minutes or hours on a schedule like the one in [Webhooks](/docs/api-design/webhooks), because nobody is waiting on the response.
 - **Honor `Retry-After`** when the server sends it. The server knows when it will recover; your formula is a guess.

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 826">
+  <defs>
+    <marker id="pb-mt-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-ARC-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">tenant hierarchy</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Exploded axonometric: one tenant</text>
+  <text class="vs" x="40" y="80">Not to scale · levels separated along the tree axis</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M295,294V474M645,251V431"/>
+
+  <!-- 03 branches -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 380)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="obj hl" x="20" y="100" width="57.5" height="60"/>
+    <rect class="obj hl" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="468.65" r="2"/>
+  <path class="leader" d="M309.5,468.65L297.5,456.65H270"/>
+  <text class="sl ink" x="264" y="456.65" text-anchor="end" dominant-baseline="central">03 branches</text>
+  <text class="n" x="264" y="472.65" text-anchor="end">leaf rows carry tenant_id and branch_id</text>
+
+  <!-- 02 regions -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 290)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="obj hl" x="20" y="100" width="125" height="60"/>
+    <rect class="cell band" x="155" y="100" width="125" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="378.65" r="2"/>
+  <path class="leader" d="M309.5,378.65L297.5,366.65H270"/>
+  <text class="sl ink" x="264" y="366.65" text-anchor="end" dominant-baseline="central">02 regions</text>
+  <text class="n" x="264" y="382.65" text-anchor="end">overrides and grants live on the node</text>
+
+  <!-- 01 tenant -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 200)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="260" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="288.65" r="2"/>
+  <path class="leader" d="M309.5,288.65L297.5,276.65H270"/>
+  <text class="sl ink" x="264" y="276.65" text-anchor="end" dominant-baseline="central">01 tenant [1]</text>
+  <text class="n" x="264" y="292.65" text-anchor="end">isolation boundary: tenant_id and RLS</text>
+
+  <!-- The grant's subtree -->
+  <circle class="dot" cx="396.35" cy="365.1" r="2"/>
+  <path class="leader" d="M396.35,365.1L405,348H436"/>
+  <text class="sl ink ko" x="440" y="348" dominant-baseline="central">grant [4]</text>
+
+  <!-- What moves through the tree -->
+  <text class="sl ink" x="666" y="172" text-anchor="end" dominant-baseline="central">settings inherit down [2]</text>
+  <path class="ln ink" d="M660,182V522" marker-end="url(#pb-mt-ah)"/>
+  <path class="ln ink" d="M710,522V182" marker-end="url(#pb-mt-ah)"/>
+  <text class="sl ink" x="716" y="540" text-anchor="end" dominant-baseline="central">reports roll up [3]</text>
+
+  <!-- Flow table -->
+  <text class="vt" x="40" y="584">Flows</text>
+  <text class="vs" x="40" y="600">From the chapter · one tree per tenant</text>
+  <rect class="cell band" x="40" y="610" width="100" height="22"/>
+  <rect class="cell band" x="140" y="610" width="250" height="22"/>
+  <rect class="cell band" x="390" y="610" width="330" height="22"/>
+  <text class="cap ink" x="50" y="621" dominant-baseline="central">flow</text>
+  <text class="cap ink" x="150" y="621" dominant-baseline="central">direction</text>
+  <text class="cap ink" x="400" y="621" dominant-baseline="central">mechanism</text>
+  <path class="cell" d="M40,632H720V698H40Z"/>
+  <path class="ln ink" d="M140,632V698M390,632V698"/>
+  <path class="ln" d="M40,654H720M40,676H720"/>
+  <text class="t b" x="50" y="643" dominant-baseline="central">settings</text>
+  <text class="t" x="150" y="643" dominant-baseline="central">down, nearest override wins</text>
+  <text class="t" x="400" y="643" dominant-baseline="central">walk up to the nearest ancestor that sets it</text>
+  <text class="t b" x="50" y="665" dominant-baseline="central">grants</text>
+  <text class="t" x="150" y="665" dominant-baseline="central">down, cover the subtree</text>
+  <text class="t" x="400" y="665" dominant-baseline="central">ltree path or closure table, in the database</text>
+  <text class="t b" x="50" y="687" dominant-baseline="central">reports</text>
+  <text class="t" x="150" y="687" dominant-baseline="central">up, sum of the subtree</text>
+  <text class="t" x="400" y="687" dominant-baseline="central">every level reads the same leaf rows</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="714" width="680" height="92"/>
+  <text class="sl ink" x="52" y="732">notes</text>
+  <text class="n" x="52" y="750">[1] The tenant stays the isolation boundary; the tree sits inside it and never crosses into another tenant.</text>
+  <text class="n" x="52" y="766">[2] An override is stored on the node that has it, never copied into children, so a change at the top reaches them.</text>
+  <text class="n" x="52" y="782">[3] A parent's report sums its subtree's entries, each tagged with its leaf node, so every level's totals match.</text>
+  <text class="n" x="52" y="798">[4] A role granted on one region covers that region and its branches (accent), and nothing beside it.</text>
+</svg>

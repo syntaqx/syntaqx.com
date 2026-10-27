@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 688">
+  <defs>
+    <marker id="gm-es-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-es-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="gm-es-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-ESP-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">spectator feeds and delay</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view -->
+  <text class="vt" x="40" y="64">Plan view: one event, four feeds</text>
+  <text class="vs" x="40" y="80">Scale 1 s = 3 px · timeline · values in s</text>
+
+  <!-- Event line -->
+  <path class="ctr" d="M160,96V330"/>
+  <text class="sl ink" x="166" y="104" dominant-baseline="central">event at t = 0</text>
+
+  <!-- Lane 1: match server -->
+  <text class="sl ink" x="150" y="134" text-anchor="end" dominant-baseline="central">match server</text>
+  <circle class="dot" cx="160" cy="134" r="3"/>
+
+  <!-- Lane 2: observer -->
+  <text class="sl ink" x="150" y="176" text-anchor="end" dominant-baseline="central">observer</text>
+  <circle class="dot" cx="162" cy="176" r="3"/>
+  <text class="dt" x="174" y="176" dominant-baseline="central">O1 ~ 0 [2]</text>
+
+  <!-- Lane 3: broadcast -->
+  <text class="sl ink" x="150" y="220" text-anchor="end" dominant-baseline="central">broadcast</text>
+  <rect class="obj fill-2" x="160" y="210" width="90" height="20"/>
+  <path class="ext" d="M250,233V251"/>
+  <path class="dim" d="M160,246H250" marker-start="url(#gm-es-ah)" marker-end="url(#gm-es-ah)"/>
+  <text class="dt" x="256" y="246" dominant-baseline="central">B1 = 30 [1]</text>
+
+  <!-- Lane 4: public spectate -->
+  <text class="sl ink" x="150" y="280" text-anchor="end" dominant-baseline="central">spectate</text>
+  <rect class="obj fill-1" x="160" y="270" width="540" height="20"/>
+  <path class="ext" d="M700,293V311"/>
+  <path class="dim hl" d="M160,306H700" marker-start="url(#gm-es-ah-hl)" marker-end="url(#gm-es-ah-hl)"/>
+  <text class="dt hl" x="430" y="302" text-anchor="middle">D1 = 180 [3]</text>
+
+  <!-- Time axis -->
+  <path class="ln ink" d="M160,340H700"/>
+  <path class="ext" d="M160,340V345M250,340V345M340,340V345M430,340V345M520,340V345M610,340V345M700,340V345"/>
+  <text class="t" x="160" y="358" text-anchor="middle" dominant-baseline="central">0</text>
+  <text class="t" x="250" y="358" text-anchor="middle" dominant-baseline="central">30</text>
+  <text class="t" x="340" y="358" text-anchor="middle" dominant-baseline="central">60</text>
+  <text class="t" x="430" y="358" text-anchor="middle" dominant-baseline="central">90</text>
+  <text class="t" x="520" y="358" text-anchor="middle" dominant-baseline="central">120</text>
+  <text class="t" x="610" y="358" text-anchor="middle" dominant-baseline="central">150</text>
+  <text class="t" x="700" y="358" text-anchor="middle" dominant-baseline="central">180</text>
+
+  <!-- Detail A: what each feed shows -->
+  <text class="vt" x="40" y="400">Detail A: fog of war</text>
+  <text class="vs" x="40" y="416">Not to scale · one map</text>
+  <rect class="obj fill-2" x="60" y="440" width="140" height="80"/>
+  <rect class="hatch" x="130" y="440" width="70" height="80" fill="url(#gm-es-hatch)"/>
+  <circle class="dot" cx="90" cy="476" r="4"/>
+  <circle class="slot" cx="170" cy="490" r="4"/>
+  <text class="sl ink" x="165" y="430" text-anchor="middle" dominant-baseline="central">fog [4]</text>
+  <rect class="obj fill-2" x="240" y="440" width="140" height="80"/>
+  <circle class="dot" cx="270" cy="476" r="4"/>
+  <circle class="dot" cx="350" cy="490" r="4"/>
+  <text class="sl ink" x="130" y="536" text-anchor="middle" dominant-baseline="central">player client</text>
+  <text class="sl ink" x="310" y="536" text-anchor="middle" dominant-baseline="central">spectator feed</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="420" y="400">Variables</text>
+  <text class="vs" x="420" y="416">Sources in notes · seconds</text>
+  <rect class="cell band" x="420" y="426" width="50" height="22"/>
+  <rect class="cell band" x="470" y="426" width="180" height="22"/>
+  <rect class="cell band" x="650" y="426" width="70" height="22"/>
+  <text class="cap ink" x="430" y="437" dominant-baseline="central">code</text>
+  <text class="cap ink" x="480" y="437" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="437" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M420,448H720V536H420Z"/>
+  <path class="ln ink" d="M470,448V536M650,448V536"/>
+  <path class="ln" d="M420,470H720M420,492H720M420,514H720"/>
+  <text class="t" x="430" y="459" dominant-baseline="central">O1</text>
+  <text class="t" x="480" y="459" dominant-baseline="central">observer client delay</text>
+  <text class="t" x="710" y="459" text-anchor="end" dominant-baseline="central">~0</text>
+  <text class="t" x="430" y="481" dominant-baseline="central">B1</text>
+  <text class="t" x="480" y="481" dominant-baseline="central">broadcast to viewers</text>
+  <text class="t" x="710" y="481" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t b" x="430" y="503" dominant-baseline="central">D1</text>
+  <text class="t" x="480" y="503" dominant-baseline="central">public spectate delay</text>
+  <text class="t b" x="710" y="503" text-anchor="end" dominant-baseline="central">180</text>
+  <text class="t" x="430" y="525" dominant-baseline="central">G1</text>
+  <text class="t" x="480" y="525" dominant-baseline="central">sighting stays useful</text>
+  <text class="t" x="710" y="525" text-anchor="end" dominant-baseline="central">varies</text>
+  <text class="t" x="420" y="550" dominant-baseline="central">rule: D1 &gt; G1 + margin [5]</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="566" width="700" height="108"/>
+  <text class="sl ink" x="52" y="584">notes</text>
+  <text class="n" x="52" y="602">[1] Illustrative: real broadcast latency depends on encoding, production and the streaming platform.</text>
+  <text class="n" x="52" y="618">[2] Riot (Worlds 2019): the esports spectator system connects directly to the game server for near-zero delay.</text>
+  <text class="n" x="52" y="634">[3] Riot support (Wild Rift): friend games stream to spectators with a 3-minute delay; custom matches are live.</text>
+  <text class="n" x="52" y="650">[4] A spectator feed shows both teams; without fog of war it must be delayed past G1, or restricted to officials.</text>
+  <text class="n" x="52" y="666">[5] G1 is how long a sighting helps an opponent; set it per game and add a margin.</text>
+</svg>

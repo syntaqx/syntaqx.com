@@ -95,6 +95,8 @@ return { count, redis.call("PTTL", KEYS[1]) }
 
 Start with a fixed window. The boundary burst (a whole budget spent at the end of one window and again at the start of the next) matters at ten per second; at five thousand an hour it doesn't, and simplicity is worth more than smoothness. Move to a sliding window or token bucket when bursts are the thing you're protecting against. Libraries like [Upstash Ratelimit](https://upstash.com/docs/redis/sdks/ratelimit-ts/overview) package all three.
 
+![Dimensional drawing comparing two limiters at 5,000 requests per hour. In a fixed window, a client that spends its quota in the last 6 minutes of one window and again in the first 6 of the next sends 10,000 requests in 12 minutes. A token bucket of illustrative capacity 100, refilled at 5,000 per 3,600 seconds, allows a burst of 100 and then 1.39 requests per second, refilling from empty in 72 seconds, so at most 5,100 pass in any hour.](/diagrams/pb-requests-token-bucket.svg "A fixed window can pass twice its limit across a boundary; a token bucket caps any hour at its capacity plus one window's refill.")
+
 ### When the Store Is Down
 
 The rate limiter must never be the reason the API is down. If Redis errors or doesn't answer within a second, fall back to an in-memory count per instance: limits get looser for a while, but requests keep flowing. Failing closed would turn a cache outage into a full outage, to protect against abuse that probably isn't happening at that moment. (An [idempotency](/docs/payments/idempotency) store makes the opposite call, because there a looser check means a duplicate write.)

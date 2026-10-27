@@ -69,7 +69,7 @@ Where you sit among these parties is a choice with a price. A software company c
 
 What a checkout calls "a payment" is five separate events, each owned by a different party, each with its own timing and failure modes.
 
-1. **Authorization.** The merchant asks the issuer, through the acquirer and the network, whether this card is good for this amount. The issuer checks the account, its fraud models and any authentication, then approves with an authorization code or declines with a reason. An approval is a **hold**: it reduces the cardholder's available credit and moves no money. Holds expire, on windows the networks set (below).
+1. **Authorization.** The merchant asks the issuer, through the acquirer and the network, whether this card is good for this amount. The issuer checks the account, its fraud models and any authentication, then approves with an authorization code or declines with a reason. An approval is a **hold**: it reduces the cardholder's available credit and moves no money. Holds expire, on windows the networks set and processors may shorten (below).
 2. **Capture.** The merchant confirms the final amount it will collect: the full amount, less (a partial capture, when an item is out of stock), or occasionally more (a tip, where the rules allow). An authorization that's never captured simply lapses.
 3. **Clearing.** The acquirer sends captured transactions to the network in batches. The network matches each one to its authorization, works out which **interchange** category (the fee the acquirer pays the issuer on every transaction, the largest part of what acceptance costs) it qualifies for from the data it carries ([Interchange & Pricing](/books/payments/interchange-and-pricing)), and passes it to the issuer, which posts it to the cardholder's statement.
 4. **Settlement.** The network nets every issuer's and acquirer's position for the day and moves money between them: issuers pay, acquirers receive, less interchange.
@@ -86,6 +86,8 @@ Hold windows depend on the brand, the channel and who started the payment: a **c
 | Mastercard | Final authorization | 7 days |
 | Mastercard | Pre-authorization | 30 days |
 | Visa | Automated fuel pump | 2 hours |
+
+The table is the networks' limits, and Mastercard's are about fees rather than expiry: its Transaction Processing Excellence program charges an integrity fee on a final authorization not cleared or fully reversed within 7 calendar days, and on a pre-authorization not cleared or reversed within 30, with no separate card-present window. A processor can enforce shorter windows of its own. Stripe, as of October 2026, holds a standard Mastercard authorization for 7 days online (customer- or merchant-initiated) and 2 days in person, and only its extended authorization feature holds longer. The window your system tracks is the shorter of the two: the network's rule, or your processor's.
 
 Not every authorization is a purchase for a final amount. A **zero-amount verification** checks a card is valid without holding money, when a card is saved; a **partial approval** approves less than requested (common on prepaid cards) and leaves the merchant to collect the rest another way; **estimated** and **incremental** authorizations hold an amount that may change ([Payment States & Ledgers](/docs/payments/payment-states#holds-that-change-size)); and a refund can itself be authorized before it's sent.
 
@@ -182,4 +184,6 @@ The card number is the **PAN**, the primary account number, and almost everythin
 
 **In practice**
 
-- [Stripe: Place a hold on a payment method](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method), authorization validity windows by brand and channel, and capture rules
+- [Stripe: Place a hold on a payment method](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method), authorization validity windows by brand and channel (Mastercard 7 days card-not-present, 2 days card-present), and capture rules
+- [Evolve: Mastercard Transaction Processing Excellence Program](https://developers.getevolved.com/enterprise/docs/mastercard-transaction-processing-excellence-program), Mastercard's integrity fee thresholds: 7 calendar days for final and undefined authorizations, 30 for pre-authorizations
+- [PayPal: Navigating Mastercard's New Mandate](https://www.paypal.com/us/brc/article/navigating-mastercards-new-mandate), final authorization captured within 7 days and the July 2025 fee on undefined authorizations (March 27, 2025)

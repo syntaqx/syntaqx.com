@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 556">
+  <defs>
+    <marker id="dp-st-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="dp-st-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-STR-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">watermark and late data</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: event-time axis</text>
+  <text class="vs" x="40" y="80">Scale 1 min = 24 px · event time · values from [1]</text>
+
+  <!-- Watermark: centerline doubles as the extension line for D1 -->
+  <text class="sl ink" x="344" y="104" text-anchor="middle" dominant-baseline="central">watermark M1</text>
+  <path class="ctr" d="M344,114V256"/>
+
+  <!-- D1: watermark delay (the subject) -->
+  <path class="ext" d="M584,227V123"/>
+  <path class="dim hl" d="M344,128H584" marker-start="url(#dp-st-ah-hl)" marker-end="url(#dp-st-ah-hl)"/>
+  <text class="dt hl" x="464" y="124" text-anchor="middle">D1 = E1 - M1 = 10 min</text>
+
+  <!-- W1: window length -->
+  <path class="ext" d="M80,167V147M320,167V147"/>
+  <path class="dim" d="M80,152H320" marker-start="url(#dp-st-ah)" marker-end="url(#dp-st-ah)"/>
+  <text class="dt" x="200" y="148" text-anchor="middle">W1 = 10 min</text>
+
+  <!-- Windows -->
+  <rect class="obj fill-1" x="80" y="170" width="240" height="40"/>
+  <rect class="obj fill-2" x="320" y="170" width="240" height="40"/>
+  <text class="sl ink" x="200" y="190" text-anchor="middle" dominant-baseline="central">closed window</text>
+  <text class="sl ink" x="452" y="190" text-anchor="middle" dominant-baseline="central">open window</text>
+
+  <!-- Events by event time; the open circle is the late one -->
+  <circle class="dot" cx="128" cy="230" r="2.5"/>
+  <circle class="dot" cx="224" cy="230" r="2.5"/>
+  <circle class="dot" cx="296" cy="230" r="2.5"/>
+  <circle class="dot" cx="392" cy="230" r="2.5"/>
+  <circle class="dot" cx="440" cy="230" r="2.5"/>
+  <circle class="dot" cx="512" cy="230" r="2.5"/>
+  <circle class="dot" cx="584" cy="230" r="2.5"/>
+  <circle class="obj" cx="176" cy="230" r="4"/>
+
+  <!-- Axis -->
+  <path class="ln ink" d="M80,250H680M80,246V254M200,246V254M320,246V254M440,246V254M560,246V254M680,246V254"/>
+  <text class="t" x="80" y="266" text-anchor="middle" dominant-baseline="central">12:00</text>
+  <text class="t" x="200" y="266" text-anchor="middle" dominant-baseline="central">12:05</text>
+  <text class="t" x="320" y="266" text-anchor="middle" dominant-baseline="central">12:10</text>
+  <text class="t" x="440" y="266" text-anchor="middle" dominant-baseline="central">12:15</text>
+  <text class="t" x="560" y="266" text-anchor="middle" dominant-baseline="central">12:20</text>
+  <text class="t" x="680" y="266" text-anchor="middle" dominant-baseline="central">12:25</text>
+  <text class="t" x="680" y="290" text-anchor="end" dominant-baseline="central">event time</text>
+
+  <!-- Leaders -->
+  <path class="leader" d="M176,235V290H190"/>
+  <text class="sl ink" x="194" y="290" dominant-baseline="central">late event [2]</text>
+  <path class="leader" d="M584,233V290H570"/>
+  <text class="sl ink" x="566" y="290" text-anchor="end" dominant-baseline="central">newest event E1</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="334">Variables</text>
+  <text class="vs" x="40" y="350">From Spark's watermark example [1]</text>
+  <rect class="cell band" x="40" y="360" width="50" height="22"/>
+  <rect class="cell band" x="90" y="360" width="300" height="22"/>
+  <rect class="cell band" x="390" y="360" width="80" height="22"/>
+  <text class="cap ink" x="50" y="371" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="371" dominant-baseline="central">item</text>
+  <text class="cap ink" x="460" y="371" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,382H470V470H40Z"/>
+  <path class="ln ink" d="M90,382V470M390,382V470"/>
+  <path class="ln" d="M40,404H470M40,426H470M40,448H470"/>
+  <text class="t" x="50" y="393" dominant-baseline="central">W1</text>
+  <text class="t" x="100" y="393" dominant-baseline="central">window length, tumbling</text>
+  <text class="t" x="460" y="393" text-anchor="end" dominant-baseline="central">10 min</text>
+  <text class="t" x="50" y="415" dominant-baseline="central">E1</text>
+  <text class="t" x="100" y="415" dominant-baseline="central">newest event time seen</text>
+  <text class="t" x="460" y="415" text-anchor="end" dominant-baseline="central">12:21</text>
+  <text class="t b" x="50" y="437" dominant-baseline="central">D1</text>
+  <text class="t" x="100" y="437" dominant-baseline="central">watermark delay, chosen</text>
+  <text class="t b" x="460" y="437" text-anchor="end" dominant-baseline="central">10 min</text>
+  <text class="t" x="50" y="459" dominant-baseline="central">M1</text>
+  <text class="t" x="100" y="459" dominant-baseline="central">watermark: E1 - D1</text>
+  <text class="t" x="460" y="459" text-anchor="end" dominant-baseline="central">12:11</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="488" width="680" height="52"/>
+  <text class="sl ink" x="52" y="508">notes</text>
+  <text class="n" x="110" y="508">[1] Spark's guide: withWatermark("timestamp", "10 minutes"), newest event 12:21, watermark 12:11.</text>
+  <text class="n" x="110" y="526">[2] Stamped 12:04, it arrives after M1 passed 12:10: dropped, or sent to a side output.</text>
+</svg>

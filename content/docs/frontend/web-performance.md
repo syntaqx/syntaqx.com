@@ -20,6 +20,10 @@ I use the [Core Web Vitals](https://web.dev/articles/vitals) as targets because 
 | Interaction to Next Paint (INP) | Responsiveness: how fast the page reacts to input | 200 ms or less |
 | Cumulative Layout Shift (CLS) | Visual stability: how much content jumps around | 0.1 or less |
 
+Past the good threshold, each metric has a poor one: LCP over 4 seconds, INP over 500 ms and CLS over 0.25, with "needs improvement" in between ([Defining the Core Web Vitals thresholds](https://web.dev/articles/defining-core-web-vitals-thresholds)). The LCP target is also a budget to split: web.dev suggests roughly 40% of it for the server's first byte, 40% for loading the LCP resource, and under 10% each for the delays before the load and before the render ([Optimize LCP](https://web.dev/articles/optimize-lcp)).
+
+![Dimensional drawing of a Core Web Vitals budget. The 2.5-second good LCP threshold is split into time to first byte at about 40 percent, 1.00 s, a resource load delay of at most 0.25 s, a load duration of about 1.00 s, and a render delay of at most 0.25 s, summing to 2.50 s. A second view draws the good, needs improvement and poor bands for each metric at the 75th percentile: LCP at 2.5 and 4.0 s, INP at 200 and 500 ms, CLS at 0.1 and 0.25.](/diagrams/pb-frontend-vitals-budget.svg "The LCP target is a budget with four parts; a slow server spends the image's share before the image is even requested.")
+
 [INP replaced First Input Delay](https://web.dev/blog/inp-cwv-launch) as a Core Web Vital in March 2024. It measures every interaction, not just the first, which makes heavy JavaScript much harder to hide.
 
 ## Measure Real Users
@@ -78,9 +82,10 @@ Every tag, widget and pixel runs on your users' devices and counts against your 
 
 - [web.dev: Web Vitals](https://web.dev/articles/vitals), the Core Web Vitals and their thresholds
 - [web.dev: Interaction to Next Paint](https://web.dev/articles/inp), how INP is measured and its thresholds
+- [web.dev: Defining the Core Web Vitals metrics thresholds](https://web.dev/articles/defining-core-web-vitals-thresholds), the good and poor thresholds for each metric
 - [web.dev: INP is officially a Core Web Vital](https://web.dev/blog/inp-cwv-launch), INP replacing FID in March 2024
 - [Chrome for Developers: Chrome UX Report](https://developer.chrome.com/docs/crux), field data from real Chrome users
-- [web.dev: Optimize Largest Contentful Paint](https://web.dev/articles/optimize-lcp), prioritizing and never lazy-loading the LCP image
+- [web.dev: Optimize Largest Contentful Paint](https://web.dev/articles/optimize-lcp), the four LCP subparts and their suggested shares, and prioritizing and never lazy-loading the LCP image
 - [web.dev: Best practices for fonts](https://web.dev/articles/font-best-practices), preload and `font-display`
 - [MDN: fetchpriority](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/fetchpriority), hinting the priority of a resource
 

@@ -23,6 +23,8 @@ What the merchant pays, usually quoted as one **merchant discount rate**, is thr
 
 Interchange is the largest layer on most consumer credit transactions, and it isn't the acquirer's to give away: the network deducts it at settlement. Network fees are smaller and arrive as a long list of line items on the acquirer's bill. Only the markup is a price anyone in the merchant's chain actually sets, which is why every pricing model below is really a statement about how the first two layers are passed through.
 
+![A dimensioned drawing of one 100 dollar card-not-present payment on an exempt debit card under a 2.9% plus 30 cent blended rate: the merchant receives 96.80, and a detail view splits the 3.20 merchant discount into 1.80 of interchange, 0.14 of network fees (illustrative) and 1.26 of markup.](/diagrams/pm-interchange-fee-stack.svg "Where $100 goes: $1.80 to the issuer, $0.14 to the network, $1.26 of markup. On a blended rate the merchant pays the same $3.20 whatever the card, so the markup is whatever's left.")
+
 Network fees deserve a closer look than they usually get, because they're where cross-border costs live. They include assessments charged as a percentage of volume, per-transaction access and processing fees, and extra fees when the card was issued in a different country from the merchant's acquirer, or when a currency conversion happens. A platform that adds international customers or merchants sees its effective rate rise even though interchange tables didn't change; [Payments in Canada](/books/payments/canada) shows the effect at the nearest border. Model each line from the acquirer's bill, not one blended number.
 
 ## What Sets Interchange

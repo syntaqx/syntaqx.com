@@ -23,6 +23,8 @@ Most providers never connect to Visa or Mastercard themselves: an acquiring proc
 
 The clocks are set by the rules. Outside Europe, Visa gives an issuer 10 seconds to answer a point-of-sale authorization before Visa answers for it with stand-in (below), and in the US requires issuers to average no more than 5 seconds over each month. It also forbids an acquirer or merchant from timing out a point-of-sale transaction in less than 15 seconds, and an approval that arrives after a merchant timed out must be reversed. Your own timeouts sit inside those numbers, and every one of them produces the unknown outcome [Retries & Timeouts](/docs/architecture/retries-and-timeouts) warns about.
 
+![A timeline of one US point-of-sale authorization: the issuer has 10 seconds to answer before Visa's stand-in answers for it, must average no more than 5 seconds over a month, and the merchant may not time out before 15 seconds, which leaves 5 seconds for stand-in and the trip back. An approval that lands after a timeout must be reversed.](/diagrams/pm-processor-auth-clocks.svg "Three clocks, nested. The issuer's limit ends 5 seconds before the earliest a merchant may give up, so stand-in can answer first; an approval that arrives after a timeout gets reversed, never ignored.")
+
 **What the provider's request becomes.** Every field a merchant sends lands in a data element:
 
 | From the API | ISO 8583 data element |

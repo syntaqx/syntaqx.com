@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 682">
+  <defs>
+    <marker id="pm-er-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="pm-er-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PM-ACH-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">entry detail record, 94 characters</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: one 94-character record -->
+  <text class="vt" x="40" y="64">Plan view: entry detail record (6)</text>
+  <text class="vs" x="40" y="80">Scale 1 position = 7 px · positions 1 to 94</text>
+  <path class="ext" d="M60,125V95M718,125V95"/>
+  <path class="dim hl" d="M60,100H718" marker-start="url(#pm-er-ah-hl)" marker-end="url(#pm-er-ah-hl)"/>
+  <text class="dt hl" x="389" y="96" text-anchor="middle">L1 = 94</text>
+  <rect class="obj fill-2" x="60" y="128" width="21" height="40"/>
+  <rect class="obj fill-1" x="81" y="128" width="63" height="40"/>
+  <text class="sl ink" x="112.5" y="148" text-anchor="middle" dominant-baseline="central">P2</text>
+  <rect class="obj fill-2" x="144" y="128" width="119" height="40"/>
+  <text class="sl ink" x="203.5" y="148" text-anchor="middle" dominant-baseline="central">P3</text>
+  <rect class="obj fill-1" x="263" y="128" width="70" height="40"/>
+  <text class="sl ink" x="298" y="148" text-anchor="middle" dominant-baseline="central">P4</text>
+  <rect class="obj fill-2" x="333" y="128" width="105" height="40"/>
+  <text class="sl ink" x="385.5" y="148" text-anchor="middle" dominant-baseline="central">P5</text>
+  <rect class="obj fill-1" x="438" y="128" width="154" height="40"/>
+  <text class="sl ink" x="515" y="148" text-anchor="middle" dominant-baseline="central">P6</text>
+  <rect class="obj fill-2" x="592" y="128" width="21" height="40"/>
+  <rect class="obj fill-1" x="613" y="128" width="105" height="40"/>
+  <text class="sl ink" x="665.5" y="148" text-anchor="middle" dominant-baseline="central">P8</text>
+  <circle class="dot" cx="70.5" cy="148" r="2"/>
+  <path class="leader" d="M70.5,148V114H90.5"/>
+  <text class="sl ink" x="94.5" y="114" dominant-baseline="central">P1</text>
+  <circle class="dot" cx="602.5" cy="148" r="2"/>
+  <path class="leader" d="M602.5,148V114H622.5"/>
+  <text class="sl ink" x="626.5" y="114" dominant-baseline="central">P7</text>
+  <circle class="detail" cx="298" cy="148" r="22"/>
+  <text class="sl ink" x="274" y="118" text-anchor="end" dominant-baseline="central">detail A</text>
+
+  <!-- Chain P1 to P8 -->
+  <path class="ext" d="M60,171V197M81,171V197M144,171V197M263,171V197M333,171V197M438,171V197M592,171V197M613,171V197M718,171V197"/>
+  <path class="dim" d="M81,192H144" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="112.5" y="188" text-anchor="middle">P2 = 9</text>
+  <path class="dim" d="M144,192H263" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="203.5" y="188" text-anchor="middle">P3 = 17</text>
+  <path class="dim" d="M263,192H333" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="298" y="188" text-anchor="middle">P4 = 10</text>
+  <path class="dim" d="M333,192H438" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="385.5" y="188" text-anchor="middle">P5 = 15</text>
+  <path class="dim" d="M438,192H592" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="515" y="188" text-anchor="middle">P6 = 22</text>
+  <path class="dim" d="M613,192H718" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="665.5" y="188" text-anchor="middle">P8 = 15</text>
+  <path class="ext" d="M60,197V219M81,197V219M592,197V219M613,197V219"/>
+  <path class="dim" d="M40,214H60" marker-end="url(#pm-er-ah)"/>
+  <path class="dim" d="M60,214H81"/>
+  <path class="dim" d="M101,214H81" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="105" y="214" dominant-baseline="central">P1 = 3</text>
+  <path class="dim" d="M572,214H592" marker-end="url(#pm-er-ah)"/>
+  <path class="dim" d="M592,214H613"/>
+  <path class="dim" d="M633,214H613" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="637" y="214" dominant-baseline="central">P7 = 3</text>
+  <text class="t" x="380" y="248" text-anchor="middle">L1 = P1 + ... + P8 = 3 + 9 + 17 + 10 + 15 + 22 + 3 + 15 = 94</text>
+
+  <!-- Detail A: the amount field -->
+  <text class="vt" x="40" y="296">Detail A: amount, P4</text>
+  <text class="vs" x="40" y="312">Enlarged · 1 position = 30 px</text>
+  <rect class="cell" x="70" y="346" width="30" height="34"/>
+  <text class="t b" x="85" y="363" text-anchor="middle" dominant-baseline="central">0</text>
+  <rect class="cell" x="100" y="346" width="30" height="34"/>
+  <text class="t b" x="115" y="363" text-anchor="middle" dominant-baseline="central">0</text>
+  <rect class="cell" x="130" y="346" width="30" height="34"/>
+  <text class="t b" x="145" y="363" text-anchor="middle" dominant-baseline="central">0</text>
+  <rect class="cell" x="160" y="346" width="30" height="34"/>
+  <text class="t b" x="175" y="363" text-anchor="middle" dominant-baseline="central">0</text>
+  <rect class="cell" x="190" y="346" width="30" height="34"/>
+  <text class="t b" x="205" y="363" text-anchor="middle" dominant-baseline="central">1</text>
+  <rect class="cell" x="220" y="346" width="30" height="34"/>
+  <text class="t b" x="235" y="363" text-anchor="middle" dominant-baseline="central">8</text>
+  <rect class="cell" x="250" y="346" width="30" height="34"/>
+  <text class="t b" x="265" y="363" text-anchor="middle" dominant-baseline="central">5</text>
+  <rect class="cell" x="280" y="346" width="30" height="34"/>
+  <text class="t b" x="295" y="363" text-anchor="middle" dominant-baseline="central">0</text>
+  <rect class="cell" x="310" y="346" width="30" height="34"/>
+  <text class="t b" x="325" y="363" text-anchor="middle" dominant-baseline="central">0</text>
+  <rect class="cell" x="340" y="346" width="30" height="34"/>
+  <text class="t b" x="355" y="363" text-anchor="middle" dominant-baseline="central">0</text>
+  <path class="ctr" d="M310,338V388"/>
+  <text class="sl ink" x="310" y="332" text-anchor="middle">implied decimal [1]</text>
+  <path class="ext" d="M70,383V413M310,383V413M370,383V413"/>
+  <path class="dim" d="M70,408H310" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="190" y="404" text-anchor="middle">D1 = 8</text>
+  <path class="dim" d="M310,408H370" marker-start="url(#pm-er-ah)" marker-end="url(#pm-er-ah)"/>
+  <text class="dt" x="340" y="404" text-anchor="middle">C1 = 2</text>
+  <text class="t" x="220" y="440" text-anchor="middle">0000185000 = $1,850.00</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="420" y="288">Variables</text>
+  <text class="vs" x="420" y="304">Nacha · fill rules [2]</text>
+  <rect class="cell band" x="420" y="314" width="50" height="22"/>
+  <rect class="cell band" x="470" y="314" width="190" height="22"/>
+  <rect class="cell band" x="660" y="314" width="60" height="22"/>
+  <text class="cap ink" x="430" y="325" dominant-baseline="central">code</text>
+  <text class="cap ink" x="480" y="325" dominant-baseline="central">field, positions</text>
+  <text class="cap ink" x="710" y="325" text-anchor="end" dominant-baseline="central">len</text>
+  <path class="cell" d="M420,336H720V578H420Z"/>
+  <path class="ln ink" d="M470,336V578M660,336V578"/>
+  <path class="ln" d="M420,358H720M420,380H720M420,402H720M420,424H720M420,446H720M420,468H720M420,490H720M420,512H720M420,534H720M420,556H720"/>
+  <text class="t b" x="430" y="347" dominant-baseline="central">L1</text>
+  <text class="t b" x="480" y="347" dominant-baseline="central">whole record, 1-94</text>
+  <text class="t b" x="710" y="347" text-anchor="end" dominant-baseline="central">94</text>
+  <text class="t" x="430" y="369" dominant-baseline="central">P1</text>
+  <text class="t" x="480" y="369" dominant-baseline="central">record type, txn code, 1-3</text>
+  <text class="t" x="710" y="369" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t" x="430" y="391" dominant-baseline="central">P2</text>
+  <text class="t" x="480" y="391" dominant-baseline="central">RDFI routing + check, 4-12</text>
+  <text class="t" x="710" y="391" text-anchor="end" dominant-baseline="central">9</text>
+  <text class="t" x="430" y="413" dominant-baseline="central">P3</text>
+  <text class="t" x="480" y="413" dominant-baseline="central">account number, 13-29</text>
+  <text class="t" x="710" y="413" text-anchor="end" dominant-baseline="central">17</text>
+  <text class="t" x="430" y="435" dominant-baseline="central">P4</text>
+  <text class="t" x="480" y="435" dominant-baseline="central">amount in cents, 30-39</text>
+  <text class="t" x="710" y="435" text-anchor="end" dominant-baseline="central">10</text>
+  <text class="t" x="430" y="457" dominant-baseline="central">P5</text>
+  <text class="t" x="480" y="457" dominant-baseline="central">individual ID, 40-54</text>
+  <text class="t" x="710" y="457" text-anchor="end" dominant-baseline="central">15</text>
+  <text class="t" x="430" y="479" dominant-baseline="central">P6</text>
+  <text class="t" x="480" y="479" dominant-baseline="central">individual name, 55-76</text>
+  <text class="t" x="710" y="479" text-anchor="end" dominant-baseline="central">22</text>
+  <text class="t" x="430" y="501" dominant-baseline="central">P7</text>
+  <text class="t" x="480" y="501" dominant-baseline="central">pay type, addenda, 77-79</text>
+  <text class="t" x="710" y="501" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t" x="430" y="523" dominant-baseline="central">P8</text>
+  <text class="t" x="480" y="523" dominant-baseline="central">trace number, 80-94</text>
+  <text class="t" x="710" y="523" text-anchor="end" dominant-baseline="central">15</text>
+  <text class="t" x="430" y="545" dominant-baseline="central">D1</text>
+  <text class="t" x="480" y="545" dominant-baseline="central">dollars, 30-37</text>
+  <text class="t" x="710" y="545" text-anchor="end" dominant-baseline="central">8</text>
+  <text class="t" x="430" y="567" dominant-baseline="central">C1</text>
+  <text class="t" x="480" y="567" dominant-baseline="central">cents, 38-39</text>
+  <text class="t" x="710" y="567" text-anchor="end" dominant-baseline="central">2</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="594" width="680" height="60"/>
+  <text class="sl ink" x="52" y="612">notes</text>
+  <text class="n" x="52" y="630">[1] No decimal point is ever written: the last two positions are cents, zero-filled from the left.</text>
+  <text class="n" x="52" y="646">[2] Numeric fields are right-justified and zero-filled; text fields left-justified, upper case, space-filled.</text>
+</svg>

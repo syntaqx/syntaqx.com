@@ -54,6 +54,8 @@ When the side effect lives somewhere else, like a card network, a single transac
 | Same key, **different** request | `400 Bad Request`: the key is already bound to another operation |
 | Key older than the retention window | Treated as new |
 
+![Dimensional timeline of one idempotency key. The first attempt claims the key and the connection drops; a retry while the key is in progress gets 409; the key and the payment row commit together; a later retry gets the stored 201 replayed; the same key with a different body gets 400; and after at least 24 hours the key is pruned, so the same key starts a new operation.](/diagrams/pb-payments-idempotency-key.svg "One key, five attempts: the stored record decides every answer until it is pruned, and the side effect happens once.")
+
 A replayed response is byte-for-byte the original and adds one header, so the client can tell it's a replay:
 
 ```http

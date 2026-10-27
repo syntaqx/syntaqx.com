@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 700">
+  <defs>
+    <marker id="tm-pf-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="tm-pf-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">TM-PA-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">funnel, one weekly cohort</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view -->
+  <text class="vt" x="40" y="64">Plan view: four-step funnel, cohort W0</text>
+  <text class="vs" x="40" y="80">Scale 1,000 users = 50 px · uniques · illustrative [1]</text>
+  <rect class="obj fill-1" x="140" y="130" width="500" height="28"/>
+  <rect class="obj fill-2" x="140" y="180" width="200" height="28"/>
+  <rect class="obj fill-2" x="140" y="230" width="80" height="28"/>
+  <rect class="obj hl" x="140" y="280" width="20" height="28"/>
+  <text class="dt" x="140" y="125">S0 entered = 10,000</text>
+  <text class="dt" x="140" y="175">S1 started = 4,000</text>
+  <text class="dt" x="140" y="225">S2 core action = 1,600</text>
+  <text class="dt" x="140" y="275">S3 paid = 400 [2]</text>
+
+  <!-- Step conversion chain -->
+  <path class="ext" d="M643,144H695M343,194H695M223,244H695M163,294H695"/>
+  <path class="dim" d="M690,144V194" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
+  <text class="dt" x="684" y="169" text-anchor="end" dominant-baseline="central">C1 = 40.0%</text>
+  <path class="dim" d="M690,194V244" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
+  <text class="dt" x="684" y="219" text-anchor="end" dominant-baseline="central">C2 = 40.0%</text>
+  <path class="dim" d="M690,244V294" marker-start="url(#tm-pf-ah)" marker-end="url(#tm-pf-ah)"/>
+  <text class="dt" x="684" y="269" text-anchor="end" dominant-baseline="central">C3 = 25.0% [3]</text>
+
+  <!-- Overall conversion -->
+  <path class="ext" d="M137,144H95M137,294H95"/>
+  <path class="dim hl" d="M100,144V294" marker-start="url(#tm-pf-ah-hl)" marker-end="url(#tm-pf-ah-hl)"/>
+  <text class="dt hl" x="94" y="219" text-anchor="end" dominant-baseline="central">C = 4.0%</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="344">Variables</text>
+  <text class="vs" x="40" y="360">Illustrative [1] · users, %</text>
+  <rect class="cell band" x="40" y="370" width="60" height="22"/>
+  <rect class="cell band" x="100" y="370" width="500" height="22"/>
+  <rect class="cell band" x="600" y="370" width="120" height="22"/>
+  <text class="cap ink" x="50" y="381" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="381" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="381" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,392H720V568H40Z"/>
+  <path class="ln ink" d="M100,392V568M600,392V568"/>
+  <path class="ln" d="M40,414H720M40,436H720M40,458H720M40,480H720M40,502H720M40,524H720M40,546H720"/>
+  <text class="t" x="50" y="403" dominant-baseline="central">S0</text>
+  <text class="t" x="110" y="403" dominant-baseline="central">entered the flow (step 1)</text>
+  <text class="t" x="710" y="403" text-anchor="end" dominant-baseline="central">10,000</text>
+  <text class="t" x="50" y="425" dominant-baseline="central">S1</text>
+  <text class="t" x="110" y="425" dominant-baseline="central">started (step 2)</text>
+  <text class="t" x="710" y="425" text-anchor="end" dominant-baseline="central">4,000</text>
+  <text class="t" x="50" y="447" dominant-baseline="central">S2</text>
+  <text class="t" x="110" y="447" dominant-baseline="central">completed the core action (step 3)</text>
+  <text class="t" x="710" y="447" text-anchor="end" dominant-baseline="central">1,600</text>
+  <text class="t" x="50" y="469" dominant-baseline="central">S3</text>
+  <text class="t" x="110" y="469" dominant-baseline="central">paid (step 4)</text>
+  <text class="t" x="710" y="469" text-anchor="end" dominant-baseline="central">400</text>
+  <text class="t" x="50" y="491" dominant-baseline="central">C1</text>
+  <text class="t" x="110" y="491" dominant-baseline="central">S1 / S0</text>
+  <text class="t" x="710" y="491" text-anchor="end" dominant-baseline="central">40.0%</text>
+  <text class="t" x="50" y="513" dominant-baseline="central">C2</text>
+  <text class="t" x="110" y="513" dominant-baseline="central">S2 / S1</text>
+  <text class="t" x="710" y="513" text-anchor="end" dominant-baseline="central">40.0%</text>
+  <text class="t" x="50" y="535" dominant-baseline="central">C3</text>
+  <text class="t" x="110" y="535" dominant-baseline="central">S3 / S2</text>
+  <text class="t" x="710" y="535" text-anchor="end" dominant-baseline="central">25.0%</text>
+  <text class="t b" x="50" y="557" dominant-baseline="central">C</text>
+  <text class="t" x="110" y="557" dominant-baseline="central">S3 / S0 = C1 x C2 x C3 [4]</text>
+  <text class="t b" x="710" y="557" text-anchor="end" dominant-baseline="central">4.0%</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="588" width="680" height="92"/>
+  <text class="sl ink" x="52" y="606">notes</text>
+  <text class="n" x="52" y="624">[1] Illustrative counts for one weekly cohort, not data from any product.</text>
+  <text class="n" x="52" y="640">[2] Each user counts once, entering at their first step-1 event, with a 7-day window from it.</text>
+  <text class="n" x="52" y="656">[3] The lowest step rate; the largest loss in users is S0 to S1 (6,000). Read both.</text>
+  <text class="n" x="52" y="672">[4] C is the product of the step rates, so a gain at any step lifts it by the same factor.</text>
+</svg>

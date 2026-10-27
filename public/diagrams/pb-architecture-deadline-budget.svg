@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 892">
+  <defs>
+    <marker id="pb-rt-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="pb-rt-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="pb-rt-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-ARC-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">deadline budget, one request</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: one request, three attempts -->
+  <text class="vt" x="40" y="64">Plan view: one request, three attempts</text>
+  <text class="vs" x="40" y="80">Scale 1 s = 60 px · timeline · worst case · values in s</text>
+
+  <!-- D1: the caller's deadline -->
+  <path class="ext" d="M100,125V95M700,125V95"/>
+  <path class="dim hl" d="M100,100H700" marker-start="url(#pb-rt-ah-hl)" marker-end="url(#pb-rt-ah-hl)"/>
+  <text class="dt hl" x="330" y="96" text-anchor="middle">D1 = caller deadline = 10.00 [1]</text>
+
+  <!-- The request, by phase -->
+  <rect class="obj fill-2" x="100" y="128" width="30" height="40"/>
+  <rect class="obj fill-1" x="130" y="128" width="150" height="40"/>
+  <rect class="hatch" x="280" y="128" width="30" height="40" fill="url(#pb-rt-hatch)"/>
+  <rect class="obj fill-1" x="310" y="128" width="150" height="40"/>
+  <rect class="hatch" x="460" y="128" width="60" height="40" fill="url(#pb-rt-hatch)"/>
+  <rect class="obj fill-1" x="520" y="128" width="150" height="40"/>
+  <rect class="obj fill-2" x="670" y="128" width="30" height="40"/>
+  <text class="sl ink" x="200" y="152" text-anchor="middle" dominant-baseline="central">attempt 1</text>
+  <text class="sl ink" x="380" y="152" text-anchor="middle" dominant-baseline="central">attempt 2</text>
+  <text class="sl ink" x="590" y="152" text-anchor="middle" dominant-baseline="central">attempt 3</text>
+  <text class="t" x="274" y="138" text-anchor="end" dominant-baseline="central">[2]</text>
+  <text class="t" x="454" y="138" text-anchor="end" dominant-baseline="central">[2]</text>
+  <text class="t" x="664" y="138" text-anchor="end" dominant-baseline="central">[2]</text>
+  <circle class="dot" cx="490" cy="140" r="2"/>
+  <path class="leader" d="M490,140L502,116H530"/>
+  <text class="sl ink" x="534" y="116" dominant-baseline="central">backoff [3]</text>
+
+  <!-- Chain: attempts on the first row, the short phases on the second -->
+  <path class="ext" d="M100,171V219M130,171V219M280,171V219M310,171V219M460,171V219M520,171V219M670,171V219M700,171V219"/>
+  <path class="dim" d="M130,192H280" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="205" y="188" text-anchor="middle">A = 2.50</text>
+  <path class="dim" d="M310,192H460" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="385" y="188" text-anchor="middle">A = 2.50</text>
+  <path class="dim" d="M520,192H670" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="595" y="188" text-anchor="middle">A = 2.50</text>
+  <path class="dim" d="M100,214H130" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="115" y="232" text-anchor="middle">T1 = 0.50</text>
+  <path class="dim" d="M280,214H310" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="295" y="232" text-anchor="middle">J1 ≤ 0.50</text>
+  <path class="dim" d="M460,214H520" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="490" y="232" text-anchor="middle">J2 ≤ 1.00</text>
+  <path class="dim" d="M670,214H700" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="685" y="232" text-anchor="middle">T2 = 0.50</text>
+  <text class="t" x="400" y="258" text-anchor="middle">D1 = T1 + A + J1 + A + J2 + A + T2 = 0.50 + 2.50 + 0.50 + 2.50 + 1.00 + 2.50 + 0.50 = 10.00</text>
+  <text class="t" x="400" y="276" text-anchor="middle">A = (D1 - T1 - J1 - J2 - T2) / 3 = (10.00 - 0.50 - 0.50 - 1.00 - 0.50) / 3 = 2.50</text>
+
+  <!-- Section: three calls, fresh timeouts against one propagated deadline -->
+  <text class="vt" x="40" y="314">Section: three calls, two timeout policies</text>
+  <text class="vs" x="40" y="330">Scale 1 s = 20 px · timeline · values in s</text>
+  <path class="ctr" d="M300,346V478"/>
+  <text class="sl ink" x="100" y="350" dominant-baseline="central">fresh timeouts [4]</text>
+  <rect class="obj fill-1" x="100" y="358" width="200" height="24"/>
+  <rect class="obj fill-1" x="300" y="358" width="200" height="24"/>
+  <rect class="obj fill-1" x="500" y="358" width="200" height="24"/>
+  <text class="sl ink" x="200" y="370" text-anchor="middle" dominant-baseline="central">call 1</text>
+  <text class="sl ink" x="400" y="370" text-anchor="middle" dominant-baseline="central">call 2</text>
+  <text class="sl ink" x="600" y="370" text-anchor="middle" dominant-baseline="central">call 3</text>
+  <path class="ext" d="M100,385V403M700,385V403"/>
+  <path class="dim" d="M100,398H700" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="400" y="394" text-anchor="middle">W1 = 3 × 10.00 = 30.00</text>
+
+  <text class="sl ink" x="100" y="420" dominant-baseline="central">deadline propagated</text>
+  <rect class="obj fill-1" x="100" y="428" width="200" height="24"/>
+  <rect class="slot" x="300" y="428" width="400" height="24"/>
+  <text class="sl ink" x="200" y="440" text-anchor="middle" dominant-baseline="central">call 1</text>
+  <text class="sl" x="500" y="440" text-anchor="middle" dominant-baseline="central">calls 2 and 3 never start</text>
+  <path class="ext" d="M100,455V473M300,455V473"/>
+  <path class="dim" d="M100,468H300" marker-start="url(#pb-rt-ah)" marker-end="url(#pb-rt-ah)"/>
+  <text class="dt" x="200" y="464" text-anchor="middle">W2 = D1 = 10.00</text>
+  <text class="sl" x="300" y="490" text-anchor="middle" dominant-baseline="central">caller deadline</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="526">Variables</text>
+  <text class="vs" x="40" y="542">D1, base, cap from the chapter · split illustrative [5] · s</text>
+  <rect class="cell band" x="40" y="552" width="50" height="22"/>
+  <rect class="cell band" x="90" y="552" width="540" height="22"/>
+  <rect class="cell band" x="630" y="552" width="90" height="22"/>
+  <text class="cap ink" x="50" y="563" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="563" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="563" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,574H720V750H40Z"/>
+  <path class="ln ink" d="M90,574V750M630,574V750"/>
+  <path class="ln" d="M40,596H720M40,618H720M40,640H720M40,662H720M40,684H720M40,706H720M40,728H720"/>
+  <text class="t b" x="50" y="585" dominant-baseline="central">D1</text>
+  <text class="t" x="100" y="585" dominant-baseline="central">caller deadline, passed down to every hop</text>
+  <text class="t b" x="710" y="585" text-anchor="end" dominant-baseline="central">10.00</text>
+  <text class="t" x="50" y="607" dominant-baseline="central">T1</text>
+  <text class="t" x="100" y="607" dominant-baseline="central">API work before the first call</text>
+  <text class="t" x="710" y="607" text-anchor="end" dominant-baseline="central">0.50</text>
+  <text class="t" x="50" y="629" dominant-baseline="central">A</text>
+  <text class="t" x="100" y="629" dominant-baseline="central">per-attempt timeout: (D1 - T1 - J1 - J2 - T2) / 3</text>
+  <text class="t" x="710" y="629" text-anchor="end" dominant-baseline="central">2.50</text>
+  <text class="t" x="50" y="651" dominant-baseline="central">J1</text>
+  <text class="t" x="100" y="651" dominant-baseline="central">backoff before attempt 2, ceiling min(cap, base × 2^0)</text>
+  <text class="t" x="710" y="651" text-anchor="end" dominant-baseline="central">0.50</text>
+  <text class="t" x="50" y="673" dominant-baseline="central">J2</text>
+  <text class="t" x="100" y="673" dominant-baseline="central">backoff before attempt 3, ceiling min(cap, base × 2^1)</text>
+  <text class="t" x="710" y="673" text-anchor="end" dominant-baseline="central">1.00</text>
+  <text class="t" x="50" y="695" dominant-baseline="central">T2</text>
+  <text class="t" x="100" y="695" dominant-baseline="central">reserve to build and send the response</text>
+  <text class="t" x="710" y="695" text-anchor="end" dominant-baseline="central">0.50</text>
+  <text class="t" x="50" y="717" dominant-baseline="central">W1</text>
+  <text class="t" x="100" y="717" dominant-baseline="central">worst wait, three calls with a fresh 10 s timeout each</text>
+  <text class="t" x="710" y="717" text-anchor="end" dominant-baseline="central">30.00</text>
+  <text class="t" x="50" y="739" dominant-baseline="central">W2</text>
+  <text class="t" x="100" y="739" dominant-baseline="central">worst wait, one deadline propagated through the calls</text>
+  <text class="t" x="710" y="739" text-anchor="end" dominant-baseline="central">10.00</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="766" width="680" height="106"/>
+  <text class="sl ink" x="52" y="784">notes</text>
+  <text class="n" x="52" y="802">[1] The API promises a response within D1; every call it makes spends from that one budget.</text>
+  <text class="n" x="52" y="818">[2] The attempt hits its timeout A. A deadline header tells the callee how long it has left.</text>
+  <text class="n" x="52" y="834">[3] Full jitter: J = random(0, min(cap, base × 2^n)), base 0.50 and cap 5.00, drawn at its ceiling.</text>
+  <text class="n" x="52" y="850">[4] Each call gets its own 10 s: the user can wait 30 s and the request still fails.</text>
+  <text class="n" x="52" y="866">[5] T1, T2 and the three-attempt plan are illustrative; A follows from them and closes the chain.</text>
+</svg>

@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 716">
+  <defs>
+    <marker id="fo-ros-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="fo-ros-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <pattern id="fo-ros-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V6"/></pattern>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">FO-RTE-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">one technician's shift</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: one shift on a time axis -->
+  <text class="vt" x="40" y="64">Plan view: one technician's day</text>
+  <text class="vs" x="40" y="80">Scale 1 h = 67.2 px · timeline · values in minutes</text>
+
+  <!-- Overall dimensions -->
+  <path class="ext" d="M48,136V95M652.8,136V95M720,136V95"/>
+  <path class="dim" d="M48,100H720" marker-start="url(#fo-ros-ah)" marker-end="url(#fo-ros-ah)"/>
+  <text class="dt" x="384" y="96" text-anchor="middle">H1 = S1 + O1 = 540 + 60 = 600</text>
+  <path class="dim" d="M48,122H652.8" marker-start="url(#fo-ros-ah)" marker-end="url(#fo-ros-ah)"/>
+  <text class="dt" x="350.4" y="118" text-anchor="middle">S1 = 07:30 to 16:30 = 540 [1]</text>
+  <path class="dim" d="M652.8,122H720" marker-start="url(#fo-ros-ah)" marker-end="url(#fo-ros-ah)"/>
+  <text class="dt" x="686.4" y="118" text-anchor="middle">O1 = 60</text>
+
+  <!-- Shift edges as centerlines -->
+  <path class="ctr" d="M48,140V350M652.8,140V350M720,140V350"/>
+
+  <!-- Hour ruler -->
+  <path class="ln" d="M48,150H720M81.6,146V154M148.8,146V154M216,146V154M283.2,146V154M350.4,146V154M417.6,146V154M484.8,146V154M552,146V154M619.2,146V154M686.4,146V154"/>
+  <text class="t" x="81.6" y="142" text-anchor="middle">08:00</text>
+  <text class="t" x="148.8" y="142" text-anchor="middle">09:00</text>
+  <text class="t" x="216" y="142" text-anchor="middle">10:00</text>
+  <text class="t" x="283.2" y="142" text-anchor="middle">11:00</text>
+  <text class="t" x="350.4" y="142" text-anchor="middle">12:00</text>
+  <text class="t" x="417.6" y="142" text-anchor="middle">13:00</text>
+  <text class="t" x="484.8" y="142" text-anchor="middle">14:00</text>
+  <text class="t" x="552" y="142" text-anchor="middle">15:00</text>
+  <text class="t" x="619.2" y="142" text-anchor="middle">16:00</text>
+  <text class="t" x="686.4" y="142" text-anchor="middle">17:00</text>
+
+  <!-- Windows: stop 1 arrival window and the break window -->
+  <rect class="slot" x="81.6" y="164" width="268.8" height="20"/>
+  <text class="sl ink" x="216" y="174" text-anchor="middle" dominant-baseline="central">stop 1 window, hard</text>
+  <path class="ext" d="M81.6,187V207M350.4,187V207"/>
+  <path class="dim" d="M81.6,202H350.4" marker-start="url(#fo-ros-ah)" marker-end="url(#fo-ros-ah)"/>
+  <text class="dt" x="216" y="198" text-anchor="middle">W1 = 08:00 to 12:00 = 240</text>
+  <rect class="slot" x="283.2" y="212" width="168" height="20"/>
+  <text class="sl ink" x="367.2" y="222" text-anchor="middle" dominant-baseline="central">break window</text>
+  <path class="ext" d="M283.2,235V255M451.2,235V255"/>
+  <path class="dim" d="M283.2,250H451.2" marker-start="url(#fo-ros-ah)" marker-end="url(#fo-ros-ah)"/>
+  <text class="dt" x="367.2" y="246" text-anchor="middle">B1 = 150</text>
+
+  <!-- The route: drive, on site, break -->
+  <rect class="obj fill-2" x="48" y="262" width="33.6" height="40"/>
+  <rect class="obj fill-1" x="81.6" y="262" width="50.4" height="40"/>
+  <text class="sl ink" x="106.8" y="282" text-anchor="middle" dominant-baseline="central">1</text>
+  <rect class="obj fill-2" x="132" y="262" width="22.4" height="40"/>
+  <rect class="obj fill-1" x="154.4" y="262" width="67.2" height="40"/>
+  <text class="sl ink" x="188" y="282" text-anchor="middle" dominant-baseline="central">2</text>
+  <rect class="obj fill-2" x="221.6" y="262" width="28" height="40"/>
+  <rect class="obj fill-1" x="249.6" y="262" width="50.4" height="40"/>
+  <text class="sl ink" x="274.8" y="282" text-anchor="middle" dominant-baseline="central">3</text>
+  <rect class="hatch" x="300" y="262" width="33.6" height="40" fill="url(#fo-ros-hatch)"/>
+  <rect class="obj fill-2" x="333.6" y="262" width="22.4" height="40"/>
+  <rect class="obj fill-1" x="356" y="262" width="100.8" height="40"/>
+  <text class="sl ink" x="406.4" y="282" text-anchor="middle" dominant-baseline="central">4</text>
+  <rect class="obj fill-2" x="456.8" y="262" width="22.4" height="40"/>
+  <rect class="obj fill-1" x="479.2" y="262" width="50.4" height="40"/>
+  <text class="sl ink" x="504.4" y="282" text-anchor="middle" dominant-baseline="central">5</text>
+  <rect class="obj fill-2" x="529.6" y="262" width="22.4" height="40"/>
+  <rect class="obj fill-1" x="552" y="262" width="84" height="40"/>
+  <text class="sl ink" x="594" y="282" text-anchor="middle" dominant-baseline="central">6</text>
+  <rect class="obj fill-2" x="636" y="262" width="39.2" height="40"/>
+
+  <!-- Route length and overtime used -->
+  <path class="ext" d="M675.2,305V345"/>
+  <path class="dim" d="M48,318H675.2" marker-start="url(#fo-ros-ah)" marker-end="url(#fo-ros-ah)"/>
+  <text class="dt" x="361.6" y="314" text-anchor="middle">R1 = V1 + D1 + B2 = 360 + 170 + 30 = 560</text>
+  <path class="dim hl" d="M652.8,340H675.2"/>
+  <path class="dim hl" d="M632.8,340H652.8" marker-end="url(#fo-ros-ah-hl)"/>
+  <path class="dim hl" d="M695.2,340H675.2" marker-end="url(#fo-ros-ah-hl)"/>
+  <text class="dt hl" x="628.8" y="340" text-anchor="end" dominant-baseline="central">O2 = R1 - S1 = 560 - 540 = 20 [3]</text>
+
+  <!-- Edge labels -->
+  <text class="sl ink" x="48" y="366" dominant-baseline="central">start 07:30</text>
+  <text class="sl ink" x="652.8" y="366" text-anchor="end" dominant-baseline="central">soft end 16:30</text>
+  <text class="sl ink" x="720" y="384" text-anchor="end" dominant-baseline="central">hard end 17:30</text>
+
+  <!-- Legend -->
+  <rect class="obj fill-1" x="40" y="404" width="24" height="14"/>
+  <text class="sl ink" x="72" y="411" dominant-baseline="central">on site</text>
+  <rect class="obj fill-2" x="170" y="404" width="24" height="14"/>
+  <text class="sl ink" x="202" y="411" dominant-baseline="central">drive</text>
+  <rect class="hatch" x="280" y="404" width="24" height="14" fill="url(#fo-ros-hatch)"/>
+  <text class="sl ink" x="312" y="411" dominant-baseline="central">break</text>
+  <rect class="slot" x="390" y="404" width="24" height="14"/>
+  <text class="sl ink" x="422" y="411" dominant-baseline="central">window</text>
+
+  <!-- Variable tables -->
+  <text class="vt" x="40" y="448">Variables</text>
+  <text class="vs" x="40" y="464">Request example [1] · illustrative route [2] · minutes</text>
+  <rect class="cell band" x="40" y="474" width="50" height="22"/>
+  <rect class="cell band" x="90" y="474" width="220" height="22"/>
+  <rect class="cell band" x="310" y="474" width="60" height="22"/>
+  <text class="cap ink" x="50" y="485" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="485" dominant-baseline="central">item</text>
+  <text class="cap ink" x="360" y="485" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,496H370V606H40Z"/>
+  <path class="ln ink" d="M90,496V606M310,496V606"/>
+  <path class="ln" d="M40,518H370M40,540H370M40,562H370M40,584H370"/>
+  <text class="t" x="50" y="507" dominant-baseline="central">H1</text>
+  <text class="t" x="100" y="507" dominant-baseline="central">hard limit: start to hard end</text>
+  <text class="t" x="360" y="507" text-anchor="end" dominant-baseline="central">600</text>
+  <text class="t" x="50" y="529" dominant-baseline="central">S1</text>
+  <text class="t" x="100" y="529" dominant-baseline="central">paid shift: start to soft end</text>
+  <text class="t" x="360" y="529" text-anchor="end" dominant-baseline="central">540</text>
+  <text class="t" x="50" y="551" dominant-baseline="central">O1</text>
+  <text class="t" x="100" y="551" dominant-baseline="central">overtime allowed: S1 to H1</text>
+  <text class="t" x="360" y="551" text-anchor="end" dominant-baseline="central">60</text>
+  <text class="t" x="50" y="573" dominant-baseline="central">W1</text>
+  <text class="t" x="100" y="573" dominant-baseline="central">stop 1 arrival window</text>
+  <text class="t" x="360" y="573" text-anchor="end" dominant-baseline="central">240</text>
+  <text class="t" x="50" y="595" dominant-baseline="central">B1</text>
+  <text class="t" x="100" y="595" dominant-baseline="central">break window</text>
+  <text class="t" x="360" y="595" text-anchor="end" dominant-baseline="central">150</text>
+  <rect class="cell band" x="390" y="474" width="50" height="22"/>
+  <rect class="cell band" x="440" y="474" width="220" height="22"/>
+  <rect class="cell band" x="660" y="474" width="60" height="22"/>
+  <text class="cap ink" x="400" y="485" dominant-baseline="central">code</text>
+  <text class="cap ink" x="450" y="485" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="485" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M390,496H720V606H390Z"/>
+  <path class="ln ink" d="M440,496V606M660,496V606"/>
+  <path class="ln" d="M390,518H720M390,540H720M390,562H720M390,584H720"/>
+  <text class="t" x="400" y="507" dominant-baseline="central">B2</text>
+  <text class="t" x="450" y="507" dominant-baseline="central">break taken</text>
+  <text class="t" x="710" y="507" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t" x="400" y="529" dominant-baseline="central">V1</text>
+  <text class="t" x="450" y="529" dominant-baseline="central">on site, six stops</text>
+  <text class="t" x="710" y="529" text-anchor="end" dominant-baseline="central">360</text>
+  <text class="t" x="400" y="551" dominant-baseline="central">D1</text>
+  <text class="t" x="450" y="551" dominant-baseline="central">drive, seven legs</text>
+  <text class="t" x="710" y="551" text-anchor="end" dominant-baseline="central">170</text>
+  <text class="t b" x="400" y="573" dominant-baseline="central">R1</text>
+  <text class="t" x="450" y="573" dominant-baseline="central">route: V1 + D1 + B2</text>
+  <text class="t b" x="710" y="573" text-anchor="end" dominant-baseline="central">560</text>
+  <text class="t" x="400" y="595" dominant-baseline="central">O2</text>
+  <text class="t" x="450" y="595" dominant-baseline="central">overtime used: R1 - S1</text>
+  <text class="t" x="710" y="595" text-anchor="end" dominant-baseline="central">20</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="622" width="680" height="74"/>
+  <text class="sl ink" x="52" y="640">notes</text>
+  <text class="n" x="52" y="658">[1] From this chapter's request example: start 07:30, soft end 16:30, hard end 17:30, one 30-minute break.</text>
+  <text class="n" x="52" y="674">[2] Stop 1 (window 08:00 to 12:00, 45 min) is from the example too; other stops and drives are illustrative.</text>
+  <text class="n" x="52" y="690">[3] The solver may pass the soft end at an overtime cost to keep a visit; nothing crosses the hard end.</text>
+</svg>

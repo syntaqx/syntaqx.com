@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 906">
+  <defs>
+    <marker id="pb-rl-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="pb-rl-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PB-REQ-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">fixed window and token bucket</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: the fixed window's boundary burst -->
+  <text class="vt" x="40" y="64">Plan view: fixed window, boundary burst</text>
+  <text class="vs" x="40" y="80">Scale 1 min = 5 px · timeline · two windows of the chapter's limit</text>
+  <path class="ext" d="M100,125V95M400,125V95M700,125V95"/>
+  <path class="dim" d="M100,100H400" marker-start="url(#pb-rl-ah)" marker-end="url(#pb-rl-ah)"/>
+  <text class="dt" x="250" y="96" text-anchor="middle">w = 3,600 s, q = 5,000</text>
+  <path class="dim" d="M400,100H700" marker-start="url(#pb-rl-ah)" marker-end="url(#pb-rl-ah)"/>
+  <text class="dt" x="550" y="96" text-anchor="middle">w = 3,600 s, q = 5,000</text>
+  <rect class="obj fill-2" x="100" y="128" width="270" height="40"/>
+  <rect class="obj fill-1" x="370" y="128" width="30" height="40"/>
+  <rect class="obj fill-1" x="400" y="128" width="30" height="40"/>
+  <rect class="obj fill-2" x="430" y="128" width="270" height="40"/>
+  <text class="sl ink" x="235" y="148" text-anchor="middle" dominant-baseline="central">window 1</text>
+  <text class="sl ink" x="565" y="148" text-anchor="middle" dominant-baseline="central">window 2</text>
+  <path class="ctr" d="M400,122V200"/>
+  <path class="ext" d="M370,171V197M430,171V197"/>
+  <path class="dim hl" d="M370,192H430" marker-start="url(#pb-rl-ah-hl)" marker-end="url(#pb-rl-ah-hl)"/>
+  <text class="dt hl" x="400" y="214" text-anchor="middle">S1 = 6 + 6 = 12 min [1]</text>
+  <text class="t" x="400" y="240" text-anchor="middle">B1 = q + q = 5,000 + 5,000 = 10,000 requests inside S1, twice the limit</text>
+
+  <!-- Section and plan: token bucket -->
+  <text class="vt" x="40" y="284">Section and plan: token bucket</text>
+  <text class="vs" x="40" y="300">Section not to scale · plan 1 s = 2.5 px · C illustrative [2]</text>
+  <path class="ln ink" d="M170,312V336" marker-end="url(#pb-rl-ah)"/>
+  <text class="dt" x="182" y="322" dominant-baseline="central">r = 5,000 / 3,600 s = 1.39 / s</text>
+  <rect class="obj fill-2" x="120" y="340" width="100" height="120"/>
+  <rect class="cell band" x="120" y="400" width="100" height="60"/>
+  <text class="sl ink" x="170" y="430" text-anchor="middle" dominant-baseline="central">tokens</text>
+  <path class="ext" d="M223,340H252M223,460H252"/>
+  <path class="dim" d="M247,340V460" marker-start="url(#pb-rl-ah)" marker-end="url(#pb-rl-ah)"/>
+  <text class="dt" x="254" y="400" dominant-baseline="central">C = 100 [2]</text>
+  <path class="ln ink" d="M170,460V492" marker-end="url(#pb-rl-ah)"/>
+  <text class="n" x="182" y="488">each request spends one token</text>
+  <text class="n" x="182" y="504">an empty bucket answers 429</text>
+
+  <!-- Plan: tokens over time, a burst then the refill -->
+  <path class="ln ink" d="M400,336V460H700"/>
+  <text class="t" x="394" y="340" text-anchor="end" dominant-baseline="central">100</text>
+  <text class="t" x="394" y="460" text-anchor="end" dominant-baseline="central">0</text>
+  <text class="t" x="400" y="472" text-anchor="middle" dominant-baseline="central">0</text>
+  <text class="t" x="550" y="472" text-anchor="middle" dominant-baseline="central">60</text>
+  <text class="t" x="700" y="472" text-anchor="middle" dominant-baseline="central">120 s</text>
+  <path class="obj" d="M400,340H425V460L605,340H700"/>
+  <circle class="dot" cx="425" cy="380" r="2"/>
+  <path class="leader" d="M425,380L413,368H398"/>
+  <text class="sl ink" x="394" y="368" text-anchor="end" dominant-baseline="central">burst [3]</text>
+  <circle class="dot" cx="515" cy="400" r="2"/>
+  <path class="leader" d="M515,400L527,440H560"/>
+  <text class="sl ink" x="564" y="440" dominant-baseline="central">refill at r</text>
+  <path class="ext" d="M425,463V503M605,463V503"/>
+  <path class="dim" d="M425,498H605" marker-start="url(#pb-rl-ah)" marker-end="url(#pb-rl-ah)"/>
+  <text class="dt" x="515" y="494" text-anchor="middle">T1 = C / r = 72 s</text>
+  <text class="t" x="380" y="534" text-anchor="middle">N1 = C + r × w = C + q = 100 + 5,000 = 5,100 in any hour, against B1 = 10,000</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="572">Variables</text>
+  <text class="vs" x="40" y="588">q and w from the chapter · C and burst timing illustrative</text>
+  <rect class="cell band" x="40" y="598" width="50" height="22"/>
+  <rect class="cell band" x="90" y="598" width="520" height="22"/>
+  <rect class="cell band" x="610" y="598" width="110" height="22"/>
+  <text class="cap ink" x="50" y="609" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="609" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="609" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,620H720V796H40Z"/>
+  <path class="ln ink" d="M90,620V796M610,620V796"/>
+  <path class="ln" d="M40,642H720M40,664H720M40,686H720M40,708H720M40,730H720M40,752H720M40,774H720"/>
+  <text class="t" x="50" y="631" dominant-baseline="central">q</text>
+  <text class="t" x="100" y="631" dominant-baseline="central">requests allowed per window, per client</text>
+  <text class="t" x="710" y="631" text-anchor="end" dominant-baseline="central">5,000</text>
+  <text class="t" x="50" y="653" dominant-baseline="central">w</text>
+  <text class="t" x="100" y="653" dominant-baseline="central">window length</text>
+  <text class="t" x="710" y="653" text-anchor="end" dominant-baseline="central">3,600 s</text>
+  <text class="t b" x="50" y="675" dominant-baseline="central">S1</text>
+  <text class="t" x="100" y="675" dominant-baseline="central">span of the two bursts across the boundary</text>
+  <text class="t b" x="710" y="675" text-anchor="end" dominant-baseline="central">12 min</text>
+  <text class="t" x="50" y="697" dominant-baseline="central">B1</text>
+  <text class="t" x="100" y="697" dominant-baseline="central">requests a fixed window lets through inside S1: 2q</text>
+  <text class="t" x="710" y="697" text-anchor="end" dominant-baseline="central">10,000</text>
+  <text class="t" x="50" y="719" dominant-baseline="central">C</text>
+  <text class="t" x="100" y="719" dominant-baseline="central">bucket capacity, the largest burst</text>
+  <text class="t" x="710" y="719" text-anchor="end" dominant-baseline="central">100</text>
+  <text class="t" x="50" y="741" dominant-baseline="central">r</text>
+  <text class="t" x="100" y="741" dominant-baseline="central">refill rate: q / w</text>
+  <text class="t" x="710" y="741" text-anchor="end" dominant-baseline="central">1.39 / s</text>
+  <text class="t" x="50" y="763" dominant-baseline="central">T1</text>
+  <text class="t" x="100" y="763" dominant-baseline="central">time to refill an empty bucket: C / r</text>
+  <text class="t" x="710" y="763" text-anchor="end" dominant-baseline="central">72 s</text>
+  <text class="t" x="50" y="785" dominant-baseline="central">N1</text>
+  <text class="t" x="100" y="785" dominant-baseline="central">most a token bucket lets through in any hour: C + r × w</text>
+  <text class="t" x="710" y="785" text-anchor="end" dominant-baseline="central">5,100</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="812" width="680" height="74"/>
+  <text class="sl ink" x="52" y="830">notes</text>
+  <text class="n" x="52" y="848">[1] Illustrative timing: a whole quota in the last 6 minutes of one window, another in the first 6 of the next.</text>
+  <text class="n" x="52" y="864">[2] C is illustrative; r spreads the chapter's 5,000 per hour evenly across the hour.</text>
+  <text class="n" x="52" y="880">[3] A full bucket passes a burst of C at once; after that, requests pass only as fast as tokens refill.</text>
+</svg>

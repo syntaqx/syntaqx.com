@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 854">
+  <defs>
+    <marker id="gm-idl-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-IDN-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">identity linking and scope</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- View A: one account -->
+  <text class="vt" x="40" y="64">Plan view A: one account, many identities</text>
+  <text class="vs" x="40" y="80">Not to scale · links in, ownership out</text>
+
+  <!-- Links from identities into the account -->
+  <path class="ln ink" d="M210,118L300,200M210,158L300,200M210,198L300,200M210,238L300,200M210,278L300,200"/>
+  <text class="t" x="245" y="112" dominant-baseline="central">[1]</text>
+
+  <!-- Platform identities -->
+  <rect class="obj fill-2" x="60" y="104" width="150" height="28"/>
+  <rect class="obj fill-2" x="60" y="144" width="150" height="28"/>
+  <rect class="obj fill-2" x="60" y="184" width="150" height="28"/>
+  <rect class="obj fill-2" x="60" y="224" width="150" height="28"/>
+  <rect class="slot" x="60" y="264" width="150" height="28"/>
+  <text class="sl ink" x="135" y="118" text-anchor="middle" dominant-baseline="central">steam id</text>
+  <text class="sl ink" x="135" y="158" text-anchor="middle" dominant-baseline="central">psn account</text>
+  <text class="sl ink" x="135" y="198" text-anchor="middle" dominant-baseline="central">xbox user</text>
+  <text class="sl ink" x="135" y="238" text-anchor="middle" dominant-baseline="central">epic account</text>
+  <text class="sl ink" x="135" y="278" text-anchor="middle" dominant-baseline="central">device id [2]</text>
+
+  <!-- The account -->
+  <rect class="obj hl" x="300" y="160" width="160" height="80"/>
+  <text class="sl ink" x="380" y="190" text-anchor="middle" dominant-baseline="central">account</text>
+  <text class="n" x="380" y="212" text-anchor="middle">region, status, age band</text>
+
+  <!-- Per-game profiles -->
+  <path class="ln ink" d="M380,240L330,280M380,240L430,280"/>
+  <rect class="obj fill-1" x="285" y="280" width="90" height="28"/>
+  <rect class="obj fill-1" x="385" y="280" width="90" height="28"/>
+  <text class="sl ink" x="330" y="294" text-anchor="middle" dominant-baseline="central">game a</text>
+  <text class="sl ink" x="430" y="294" text-anchor="middle" dominant-baseline="central">game b</text>
+  <text class="n" x="380" y="326" text-anchor="middle">per-game profiles</text>
+
+  <!-- Entitlement scopes -->
+  <path class="ln ink" d="M460,200L550,125M460,200L550,185M460,200L550,245"/>
+  <rect class="obj fill-2" x="550" y="110" width="170" height="30"/>
+  <rect class="obj fill-2" x="550" y="170" width="170" height="30"/>
+  <rect class="obj fill-2" x="550" y="230" width="170" height="30"/>
+  <text class="sl ink" x="635" y="125" text-anchor="middle" dominant-baseline="central">portable</text>
+  <text class="sl ink" x="635" y="185" text-anchor="middle" dominant-baseline="central">platform-scoped</text>
+  <text class="sl ink" x="635" y="245" text-anchor="middle" dominant-baseline="central">time-bound</text>
+  <text class="n" x="635" y="156" text-anchor="middle">web store, rewards, grants</text>
+  <text class="n" x="635" y="216" text-anchor="middle">usable where bought [3]</text>
+  <text class="n" x="635" y="276" text-anchor="middle">passes, subscriptions</text>
+
+  <!-- View B: one identity's links over time -->
+  <text class="vt" x="40" y="370">Plan view B: one identity's links over time</text>
+  <text class="vs" x="40" y="386">Scale 1 day = 2 px · timeline · illustrative [4]</text>
+
+  <rect class="obj fill-2" x="140" y="410" width="420" height="24"/>
+  <text class="sl ink" x="132" y="422" text-anchor="end" dominant-baseline="central">account a</text>
+  <text class="sl ink" x="350" y="422" text-anchor="middle" dominant-baseline="central">linked</text>
+
+  <rect class="obj fill-1" x="620" y="450" width="100" height="24"/>
+  <path class="ln ink" d="M720,462H738" marker-end="url(#gm-idl-ah)"/>
+  <text class="sl ink" x="132" y="462" text-anchor="end" dominant-baseline="central">account b</text>
+  <text class="t" x="670" y="462" text-anchor="middle" dominant-baseline="central">V2</text>
+
+  <path class="ext" d="M140,437V551M560,437V527M620,477V551"/>
+  <path class="dim" d="M140,500H560" marker-start="url(#gm-idl-ah)" marker-end="url(#gm-idl-ah)"/>
+  <text class="dt" x="350" y="496" text-anchor="middle">V1 = 210</text>
+  <path class="dim" d="M540,522H560" marker-end="url(#gm-idl-ah)"/>
+  <path class="dim" d="M560,522H620"/>
+  <path class="dim" d="M640,522H620" marker-end="url(#gm-idl-ah)"/>
+  <text class="dt" x="644" y="522" dominant-baseline="central">G1 = 30</text>
+  <path class="dim" d="M140,546H620" marker-start="url(#gm-idl-ah)" marker-end="url(#gm-idl-ah)"/>
+  <text class="dt" x="380" y="542" text-anchor="middle">W1 = V1 + G1 = 210 + 30 = 240</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="586">Variables</text>
+  <text class="vs" x="40" y="602">Illustrative [4] · days</text>
+  <rect class="cell band" x="40" y="612" width="50" height="22"/>
+  <rect class="cell band" x="90" y="612" width="480" height="22"/>
+  <rect class="cell band" x="570" y="612" width="150" height="22"/>
+  <text class="cap ink" x="50" y="623" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="623" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="623" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,634H720V722H40Z"/>
+  <path class="ln ink" d="M90,634V722M570,634V722"/>
+  <path class="ln" d="M40,656H720M40,678H720M40,700H720"/>
+  <text class="t" x="50" y="645" dominant-baseline="central">V1</text>
+  <text class="t" x="100" y="645" dominant-baseline="central">linked to account A, then unlinked</text>
+  <text class="t" x="710" y="645" text-anchor="end" dominant-baseline="central">210</text>
+  <text class="t" x="50" y="667" dominant-baseline="central">G1</text>
+  <text class="t" x="100" y="667" dominant-baseline="central">cooldown before linking to a different account</text>
+  <text class="t" x="710" y="667" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t b" x="50" y="689" dominant-baseline="central">W1</text>
+  <text class="t" x="100" y="689" dominant-baseline="central">first link to relink: V1 + G1</text>
+  <text class="t b" x="710" y="689" text-anchor="end" dominant-baseline="central">240</text>
+  <text class="t" x="50" y="711" dominant-baseline="central">V2</text>
+  <text class="t" x="100" y="711" dominant-baseline="central">linked to account B, no end yet</text>
+  <text class="t" x="710" y="711" text-anchor="end" dominant-baseline="central">open</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="738" width="680" height="96"/>
+  <text class="sl ink" x="52" y="756">notes</text>
+  <text class="n" x="52" y="774">[1] One live link per platform identity, and one live identity per platform per account.</text>
+  <text class="n" x="52" y="790">[2] Device ID is anonymous; moving it into a real keychain discards the other progress permanently (EOS).</text>
+  <text class="n" x="52" y="806">[3] Scope comes from the purchase's source and platform agreements; clients show only what is usable.</text>
+  <text class="n" x="52" y="822">[4] Illustrative values: the relink cooldown G1 is policy, not a platform rule.</text>
+</svg>

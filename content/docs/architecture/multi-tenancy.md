@@ -63,6 +63,8 @@ A resource in another tenant returns `404`, never `403`, which would confirm the
 
 A flat tenant is rare once customers grow. A game publisher has studios, and studios ship titles. A SaaS customer has an organization with projects ([Google Cloud](https://docs.cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy) nests folders between them). A marketplace has sellers, and sellers run several stores. A field service company has regions, and regions have branches. The tenant is still the isolation boundary, but inside it sits a tree, and three things move through that tree in different directions.
 
+![Exploded axonometric drawing of one tenant's hierarchy as three stacked plates: the tenant on top as the isolation boundary, two regions beneath it where overrides and grants live, and four branches at the bottom whose rows carry tenant_id and branch_id. Arrows show settings inheriting down and reports rolling up, and an accented grant on one region covers that region and its two branches.](/diagrams/pb-architecture-tenant-hierarchy.svg "Settings and grants flow down the tree, reports roll up from the same leaf rows, and all of it stays inside the tenant.")
+
 **Configuration inherits down, with explicit overrides.** Prices, fee schedules, feature flags, cancellation windows and payout timing are set high in the tree and overridden only where a node needs something different. Store the override on the node that has it and resolve the effective value by walking up to the nearest ancestor that sets it. Never copy the parent's value into its children at creation: copies drift, so change the region's price list and half its branches keep the old one, with no record that anyone chose that.
 
 ```sql

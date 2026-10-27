@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 696">
+  <defs>
+    <marker id="gm-gbm-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-gbm-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-BIZ-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">games market by segment, 2025</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- View 1: global market -->
+  <text class="vt" x="40" y="64">Plan view: global market, 2025</text>
+  <text class="vs" x="40" y="80">Scale $1B = 2.8 px · values in $B · Newzoo [1]</text>
+
+  <!-- 2028 forecast envelope, behind the bar -->
+  <rect class="phantom" x="70" y="150" width="656.32" height="40"/>
+  <text class="sl" x="680.36" y="170" text-anchor="middle" dominant-baseline="central">2028</text>
+
+  <!-- Segments -->
+  <rect class="obj fill-1" x="70" y="150" width="317.24" height="40"/>
+  <rect class="obj fill-2" x="387.24" y="150" width="125.16" height="40"/>
+  <rect class="obj fill-2" x="512.40" y="150" width="122.08" height="40"/>
+  <text class="sl ink" x="228.62" y="170" text-anchor="middle" dominant-baseline="central">mobile</text>
+  <text class="sl ink" x="449.82" y="170" text-anchor="middle" dominant-baseline="central">console</text>
+  <text class="sl ink" x="573.44" y="170" text-anchor="middle" dominant-baseline="central">pc</text>
+
+  <!-- F1: forecast -->
+  <path class="ext" d="M70,147V95M726.32,147V95"/>
+  <path class="dim" d="M70,100H726.32" marker-start="url(#gm-gbm-ah)" marker-end="url(#gm-gbm-ah)"/>
+  <text class="dt" x="398.16" y="96" text-anchor="middle">F1 = 234.4 (2028 forecast)</text>
+
+  <!-- G1: the whole, the subject -->
+  <path class="ext" d="M634.48,147V119"/>
+  <path class="dim hl" d="M70,124H634.48" marker-start="url(#gm-gbm-ah-hl)" marker-end="url(#gm-gbm-ah-hl)"/>
+  <text class="dt hl" x="352.24" y="120" text-anchor="middle">G1 = M1 + C1 + P1 = 113.3 + 44.7 + 43.6 = 201.6</text>
+
+  <!-- Chain: M1, C1, P1 -->
+  <path class="ext" d="M70,193V219M387.24,193V219M512.40,193V219M634.48,193V219"/>
+  <path class="dim" d="M70,214H387.24" marker-start="url(#gm-gbm-ah)" marker-end="url(#gm-gbm-ah)"/>
+  <text class="dt" x="228.62" y="210" text-anchor="middle">M1 = 113.3</text>
+  <path class="dim" d="M387.24,214H512.40" marker-start="url(#gm-gbm-ah)" marker-end="url(#gm-gbm-ah)"/>
+  <text class="dt" x="449.82" y="210" text-anchor="middle">C1 = 44.7</text>
+  <path class="dim" d="M512.40,214H634.48" marker-start="url(#gm-gbm-ah)" marker-end="url(#gm-gbm-ah)"/>
+  <text class="dt" x="573.44" y="210" text-anchor="middle">P1 = 43.6</text>
+
+  <!-- View 2: United States -->
+  <text class="vt" x="40" y="262">Plan view: U.S. consumer spending, 2025</text>
+  <text class="vs" x="40" y="278">Scale $1B = 2.8 px · values in $B · ESA [2]</text>
+
+  <rect class="obj fill-1" x="70" y="330" width="146.44" height="40"/>
+  <rect class="obj fill-2" x="216.44" y="330" width="15.12" height="40"/>
+  <rect class="obj fill-2" x="231.56" y="330" width="8.26" height="40"/>
+  <text class="sl ink" x="143.22" y="350" text-anchor="middle" dominant-baseline="central">content</text>
+
+  <!-- U1: the whole, text outside -->
+  <path class="ext" d="M70,327V293M239.82,327V293"/>
+  <path class="dim" d="M70,298H239.82" marker-start="url(#gm-gbm-ah)" marker-end="url(#gm-gbm-ah)"/>
+  <text class="dt" x="248" y="298" dominant-baseline="central">U1 = S1 + S2 + S3 = 52.3 + 5.4 + 2.95 = 60.65 [3]</text>
+
+  <!-- S1 -->
+  <path class="ext" d="M216.44,327V313"/>
+  <path class="dim" d="M70,318H216.44" marker-start="url(#gm-gbm-ah)" marker-end="url(#gm-gbm-ah)"/>
+  <text class="dt" x="143.22" y="314" text-anchor="middle">S1 = 52.3</text>
+
+  <!-- S3 and S2 by leader -->
+  <circle class="dot" cx="235.69" cy="345" r="2"/>
+  <path class="leader" d="M235.69,345H262"/>
+  <text class="sl ink" x="268" y="345" dominant-baseline="central">S3 accessories 2.95</text>
+  <circle class="dot" cx="224" cy="362" r="2"/>
+  <path class="leader" d="M224,362L236,386H262"/>
+  <text class="sl ink" x="268" y="386" dominant-baseline="central">S2 hardware 5.4</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="432">Variables</text>
+  <text class="vs" x="40" y="448">Sources [1] [2] · $B</text>
+
+  <rect class="cell band" x="40" y="458" width="50" height="22"/>
+  <rect class="cell band" x="90" y="458" width="220" height="22"/>
+  <rect class="cell band" x="310" y="458" width="70" height="22"/>
+  <text class="cap ink" x="50" y="469" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="469" dominant-baseline="central">item</text>
+  <text class="cap ink" x="370" y="469" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,480H380V590H40Z"/>
+  <path class="ln ink" d="M90,480V590M310,480V590"/>
+  <path class="ln" d="M40,502H380M40,524H380M40,546H380M40,568H380"/>
+  <text class="t b" x="50" y="491" dominant-baseline="central">G1</text>
+  <text class="t" x="100" y="491" dominant-baseline="central">global 2025: M1 + C1 + P1</text>
+  <text class="t b" x="370" y="491" text-anchor="end" dominant-baseline="central">201.6</text>
+  <text class="t" x="50" y="513" dominant-baseline="central">M1</text>
+  <text class="t" x="100" y="513" dominant-baseline="central">mobile</text>
+  <text class="t" x="370" y="513" text-anchor="end" dominant-baseline="central">113.3</text>
+  <text class="t" x="50" y="535" dominant-baseline="central">C1</text>
+  <text class="t" x="100" y="535" dominant-baseline="central">console</text>
+  <text class="t" x="370" y="535" text-anchor="end" dominant-baseline="central">44.7</text>
+  <text class="t" x="50" y="557" dominant-baseline="central">P1</text>
+  <text class="t" x="100" y="557" dominant-baseline="central">PC</text>
+  <text class="t" x="370" y="557" text-anchor="end" dominant-baseline="central">43.6</text>
+  <text class="t" x="50" y="579" dominant-baseline="central">F1</text>
+  <text class="t" x="100" y="579" dominant-baseline="central">forecast, 2028</text>
+  <text class="t" x="370" y="579" text-anchor="end" dominant-baseline="central">234.4</text>
+
+  <rect class="cell band" x="400" y="458" width="50" height="22"/>
+  <rect class="cell band" x="450" y="458" width="220" height="22"/>
+  <rect class="cell band" x="670" y="458" width="70" height="22"/>
+  <text class="cap ink" x="410" y="469" dominant-baseline="central">code</text>
+  <text class="cap ink" x="460" y="469" dominant-baseline="central">item</text>
+  <text class="cap ink" x="730" y="469" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M400,480H740V568H400Z"/>
+  <path class="ln ink" d="M450,480V568M670,480V568"/>
+  <path class="ln" d="M400,502H740M400,524H740M400,546H740"/>
+  <text class="t b" x="410" y="491" dominant-baseline="central">U1</text>
+  <text class="t" x="460" y="491" dominant-baseline="central">U.S. 2025: S1 + S2 + S3</text>
+  <text class="t b" x="730" y="491" text-anchor="end" dominant-baseline="central">60.65</text>
+  <text class="t" x="410" y="513" dominant-baseline="central">S1</text>
+  <text class="t" x="460" y="513" dominant-baseline="central">content</text>
+  <text class="t" x="730" y="513" text-anchor="end" dominant-baseline="central">52.3</text>
+  <text class="t" x="410" y="535" dominant-baseline="central">S2</text>
+  <text class="t" x="460" y="535" dominant-baseline="central">hardware</text>
+  <text class="t" x="730" y="535" text-anchor="end" dominant-baseline="central">5.4</text>
+  <text class="t" x="410" y="557" dominant-baseline="central">S3</text>
+  <text class="t" x="460" y="557" dominant-baseline="central">accessories</text>
+  <text class="t" x="730" y="557" text-anchor="end" dominant-baseline="central">2.95</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="606" width="680" height="72"/>
+  <text class="sl ink" x="52" y="627">notes</text>
+  <text class="n" x="110" y="627">[1] Newzoo's 2025 estimate and 2028 forecast, as summarized by GameDev Reports, June 26, 2026.</text>
+  <text class="n" x="110" y="645">[2] ESA Essential Facts 2026: U.S. consumer spending on video games in 2025.</text>
+  <text class="n" x="110" y="663">[3] The parts sum to 60.65; the ESA reports the total, rounded, as $60.7 billion.</text>
+</svg>

@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 662">
+  <defs>
+    <marker id="pm-dd-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="pm-dd-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PM-DSP-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">visa dispute clock, consumer disputes</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <!-- Plan view: purchase to the last arbitration filing -->
+  <text class="vt" x="40" y="64">Plan view: one dispute, Visa categories 12 and 13</text>
+  <text class="vs" x="40" y="80">Scale 1 day = 2.6 px · calendar days · longest case</text>
+  <path class="ext" d="M80,147V95M652,147V95"/>
+  <path class="dim hl" d="M80,100H652" marker-start="url(#pm-dd-ah-hl)" marker-end="url(#pm-dd-ah-hl)"/>
+  <text class="dt hl" x="366" y="96" text-anchor="middle">L1 = F1 + C1 = 120 + 100 = 220 [1]</text>
+  <path class="ext" d="M392,147V119"/>
+  <path class="dim" d="M392,124H652" marker-start="url(#pm-dd-ah)" marker-end="url(#pm-dd-ah)"/>
+  <text class="dt" x="522" y="120" text-anchor="middle">C1 = R1 + A1 + A2 + A3 = 100 [3]</text>
+
+  <!-- The stages -->
+  <rect class="slot" x="80" y="150" width="312" height="34"/>
+  <text class="sl ink" x="236" y="167" text-anchor="middle" dominant-baseline="central">filing window</text>
+  <rect class="obj fill-1" x="392" y="150" width="78" height="34"/>
+  <text class="sl ink" x="431" y="167" text-anchor="middle" dominant-baseline="central">R1</text>
+  <rect class="obj fill-2" x="470" y="150" width="78" height="34"/>
+  <text class="sl ink" x="509" y="167" text-anchor="middle" dominant-baseline="central">A1</text>
+  <rect class="obj fill-1" x="548" y="150" width="78" height="34"/>
+  <text class="sl ink" x="587" y="167" text-anchor="middle" dominant-baseline="central">A2</text>
+  <rect class="obj fill-2" x="626" y="150" width="26" height="34"/>
+  <circle class="dot" cx="639" cy="167" r="2"/>
+  <path class="leader" d="M639,167V138H625"/>
+  <text class="sl ink" x="621" y="138" text-anchor="end" dominant-baseline="central">A3</text>
+
+  <!-- Chain -->
+  <path class="ext" d="M80,187V213M392,187V213M470,187V213M548,187V213M626,187V213M652,187V213"/>
+  <path class="dim" d="M80,208H392" marker-start="url(#pm-dd-ah)" marker-end="url(#pm-dd-ah)"/>
+  <text class="dt" x="236" y="204" text-anchor="middle">F1 = 120</text>
+  <path class="dim" d="M392,208H470" marker-start="url(#pm-dd-ah)" marker-end="url(#pm-dd-ah)"/>
+  <text class="dt" x="431" y="204" text-anchor="middle">R1 = 30</text>
+  <path class="dim" d="M470,208H548" marker-start="url(#pm-dd-ah)" marker-end="url(#pm-dd-ah)"/>
+  <text class="dt" x="509" y="204" text-anchor="middle">A1 = 30</text>
+  <path class="dim" d="M548,208H626" marker-start="url(#pm-dd-ah)" marker-end="url(#pm-dd-ah)"/>
+  <text class="dt" x="587" y="204" text-anchor="middle">A2 = 30</text>
+  <path class="dim" d="M626,208H652"/>
+  <path class="dim" d="M672,208H652" marker-end="url(#pm-dd-ah)"/>
+  <text class="dt" x="676" y="208" dominant-baseline="central">A3 = 10</text>
+
+  <!-- Merchant's deadline at a provider, inside R1 -->
+  <text class="t" x="380" y="247" text-anchor="end" dominant-baseline="central">merchant</text>
+  <rect class="obj fill-2" x="392" y="236" width="18.2" height="22"/>
+  <rect class="slot" x="410.2" y="236" width="36.4" height="22"/>
+  <text class="dt" x="454.6" y="247" dominant-baseline="central">P1 = 7 to 21 [2]</text>
+  <text class="t" x="380" y="290" text-anchor="middle">L1 = F1 + R1 + A1 + A2 + A3 = 120 + 30 + 30 + 30 + 10 = 220</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="320">Variables</text>
+  <text class="vs" x="40" y="336">Visa Rules Table 11-2, April 2026 · calendar days</text>
+  <rect class="cell band" x="40" y="346" width="60" height="22"/>
+  <rect class="cell band" x="100" y="346" width="520" height="22"/>
+  <rect class="cell band" x="620" y="346" width="100" height="22"/>
+  <text class="cap ink" x="50" y="357" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="357" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="357" text-anchor="end" dominant-baseline="central">days</text>
+  <path class="cell" d="M40,368H720V544H40Z"/>
+  <path class="ln ink" d="M100,368V544M620,368V544"/>
+  <path class="ln" d="M40,390H720M40,412H720M40,434H720M40,456H720M40,478H720M40,500H720M40,522H720"/>
+  <text class="t" x="50" y="379" dominant-baseline="central">F1</text>
+  <text class="t" x="110" y="379" dominant-baseline="central">cardholder's filing window from the purchase, typical [1]</text>
+  <text class="t" x="710" y="379" text-anchor="end" dominant-baseline="central">120</text>
+  <text class="t" x="50" y="401" dominant-baseline="central">R1</text>
+  <text class="t" x="110" y="401" dominant-baseline="central">acquirer's dispute response</text>
+  <text class="t" x="710" y="401" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t" x="50" y="423" dominant-baseline="central">A1</text>
+  <text class="t" x="110" y="423" dominant-baseline="central">issuer's pre-arbitration attempt</text>
+  <text class="t" x="710" y="423" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t" x="50" y="445" dominant-baseline="central">A2</text>
+  <text class="t" x="110" y="445" dominant-baseline="central">acquirer's pre-arbitration response</text>
+  <text class="t" x="710" y="445" text-anchor="end" dominant-baseline="central">30</text>
+  <text class="t" x="50" y="467" dominant-baseline="central">A3</text>
+  <text class="t" x="110" y="467" dominant-baseline="central">arbitration filing</text>
+  <text class="t" x="710" y="467" text-anchor="end" dominant-baseline="central">10</text>
+  <text class="t" x="50" y="489" dominant-baseline="central">C1</text>
+  <text class="t" x="110" y="489" dominant-baseline="central">dispute cycle: R1 + A1 + A2 + A3</text>
+  <text class="t" x="710" y="489" text-anchor="end" dominant-baseline="central">100</text>
+  <text class="t b" x="50" y="511" dominant-baseline="central">L1</text>
+  <text class="t b" x="110" y="511" dominant-baseline="central">purchase to the last arbitration filing</text>
+  <text class="t b" x="710" y="511" text-anchor="end" dominant-baseline="central">220</text>
+  <text class="t" x="50" y="533" dominant-baseline="central">P1</text>
+  <text class="t" x="110" y="533" dominant-baseline="central">merchant's evidence deadline at a provider [2]</text>
+  <text class="t" x="710" y="533" text-anchor="end" dominant-baseline="central">7 to 21</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="560" width="680" height="76"/>
+  <text class="sl ink" x="52" y="578">notes</text>
+  <text class="n" x="52" y="596">[1] Typical: for services paid in advance the window starts at the event, so L1 grows.</text>
+  <text class="n" x="52" y="612">[2] Providers ask merchants for evidence well inside R1 to leave room for their own review (Stripe: 7 to 21 days).</text>
+  <text class="n" x="52" y="628">[3] Each step runs from the processing date of the one before, so this is the longest case; a missed step loses.</text>
+</svg>

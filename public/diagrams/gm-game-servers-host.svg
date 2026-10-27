@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 796">
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-SRV-002</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">game server host, exploded</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Exploded axonometric: one host</text>
+  <text class="vs" x="40" y="80">Not to scale · counts per Riot, 2020 [1]</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M295,228V414M645,185V371"/>
+
+  <!-- 01 hardware -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 320)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="12" y="96" width="132" height="88"/>
+    <rect class="cell band" x="156" y="96" width="132" height="88"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="408.65" r="2"/>
+  <path class="leader" d="M309.5,408.65L297.5,396.65H270"/>
+  <text class="sl ink" x="264" y="396.65" text-anchor="end" dominant-baseline="central">01 hardware</text>
+  <text class="n" x="264" y="412.65" text-anchor="end">2 NUMA nodes, 36 physical cores</text>
+  <!-- 02 host OS -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 258)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="12" y="150" width="276" height="34"/>
+    <rect class="cell band" x="12" y="96" width="60" height="44"/>
+    <rect class="cell band" x="80" y="96" width="60" height="44"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="346.65" r="2"/>
+  <path class="leader" d="M309.5,346.65L297.5,334.65H270"/>
+  <text class="sl ink" x="264" y="334.65" text-anchor="end" dominant-baseline="central">02 host OS</text>
+  <text class="n" x="264" y="350.65" text-anchor="end">power states, clocksource, scheduler</text>
+  <!-- 03 cores -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 196)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="12.0" y="96" width="20" height="26"/>
+    <rect class="cell band" x="35.5" y="96" width="20" height="26"/>
+    <rect class="cell band" x="59.0" y="96" width="20" height="26"/>
+    <rect class="cell band" x="82.5" y="96" width="20" height="26"/>
+    <rect class="cell band" x="106.0" y="96" width="20" height="26"/>
+    <rect class="cell band" x="129.5" y="96" width="20" height="26"/>
+    <rect class="cell band" x="153.0" y="96" width="20" height="26"/>
+    <rect class="cell band" x="176.5" y="96" width="20" height="26"/>
+    <rect class="cell band" x="200.0" y="96" width="20" height="26"/>
+    <rect class="cell band" x="223.5" y="96" width="20" height="26"/>
+    <rect class="cell band" x="247.0" y="96" width="20" height="26"/>
+    <rect class="cell band" x="270.5" y="96" width="20" height="26"/>
+    <rect class="cell band" x="12.0" y="127" width="20" height="26"/>
+    <rect class="cell band" x="35.5" y="127" width="20" height="26"/>
+    <rect class="cell band" x="59.0" y="127" width="20" height="26"/>
+    <rect class="cell band" x="82.5" y="127" width="20" height="26"/>
+    <rect class="cell band" x="106.0" y="127" width="20" height="26"/>
+    <rect class="cell band" x="129.5" y="127" width="20" height="26"/>
+    <rect class="cell band" x="153.0" y="127" width="20" height="26"/>
+    <rect class="cell band" x="176.5" y="127" width="20" height="26"/>
+    <rect class="cell band" x="200.0" y="127" width="20" height="26"/>
+    <rect class="cell band" x="223.5" y="127" width="20" height="26"/>
+    <rect class="cell band" x="247.0" y="127" width="20" height="26"/>
+    <rect class="cell band" x="270.5" y="127" width="20" height="26"/>
+    <rect class="cell band" x="12.0" y="158" width="20" height="26"/>
+    <rect class="cell band" x="35.5" y="158" width="20" height="26"/>
+    <rect class="cell band" x="59.0" y="158" width="20" height="26"/>
+    <rect class="cell band" x="82.5" y="158" width="20" height="26"/>
+    <rect class="cell band" x="106.0" y="158" width="20" height="26"/>
+    <rect class="cell band" x="129.5" y="158" width="20" height="26"/>
+    <rect class="cell band" x="153.0" y="158" width="20" height="26"/>
+    <rect class="cell band" x="176.5" y="158" width="20" height="26"/>
+    <rect class="cell band" x="200.0" y="158" width="20" height="26"/>
+    <rect class="cell band" x="223.5" y="158" width="20" height="26"/>
+    <rect class="cell band" x="247.0" y="158" width="20" height="26"/>
+    <rect class="cell band" x="270.5" y="158" width="20" height="26"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="284.65" r="2"/>
+  <path class="leader" d="M309.5,284.65L297.5,272.65H270"/>
+  <text class="sl ink" x="264" y="272.65" text-anchor="end" dominant-baseline="central">03 cores</text>
+  <text class="n" x="264" y="288.65" text-anchor="end">36 per host, 18 per NUMA node</text>
+  <!-- 04 game servers -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 134)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="12.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="19.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="26.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="35.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="42.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="49.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="59.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="66.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="73.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="82.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="89.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="96.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="106.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="113.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="120.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="129.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="136.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="143.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="153.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="160.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="167.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="176.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="183.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="190.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="200.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="207.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="214.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="223.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="230.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="237.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="247.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="254.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="261.0" y="96" width="6" height="26"/>
+    <rect class="cell band" x="270.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="277.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="284.5" y="96" width="6" height="26"/>
+    <rect class="cell band" x="12.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="19.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="26.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="35.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="42.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="49.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="59.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="66.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="73.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="82.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="89.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="96.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="106.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="113.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="120.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="129.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="136.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="143.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="153.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="160.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="167.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="176.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="183.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="190.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="200.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="207.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="214.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="223.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="230.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="237.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="247.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="254.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="261.0" y="127" width="6" height="26"/>
+    <rect class="cell band" x="270.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="277.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="284.5" y="127" width="6" height="26"/>
+    <rect class="cell band" x="12.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="19.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="26.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="35.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="42.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="49.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="59.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="66.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="73.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="82.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="89.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="96.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="106.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="113.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="120.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="129.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="136.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="143.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="153.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="160.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="167.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="176.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="183.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="190.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="200.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="207.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="214.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="223.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="230.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="237.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="247.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="254.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="261.0" y="158" width="6" height="26"/>
+    <rect class="cell band" x="270.5" y="158" width="6" height="26"/>
+    <rect class="cell band" x="277.5" y="158" width="6" height="26"/>
+    <rect class="obj hl" x="284.5" y="158" width="6" height="26"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="222.65" r="2"/>
+  <path class="leader" d="M309.5,222.65L297.5,210.65H270"/>
+  <text class="sl ink" x="264" y="210.65" text-anchor="end" dominant-baseline="central">04 game servers</text>
+  <text class="n" x="264" y="226.65" text-anchor="end">108 processes, 3 per core</text>
+  <circle class="dot" cx="575.1" cy="263.2" r="2"/>
+  <path class="leader" d="M575.1,263.2L587.1,251.2H652"/>
+  <text class="sl ink" x="656" y="251.2" dominant-baseline="central">1 match</text>
+  <text class="n" x="656" y="267.2">10 players [2]</text>
+
+  <text class="t" x="40" y="492" dominant-baseline="central">N1 = C1 x G1 = 36 x 3 = 108 games · H1 = N1 x P1 = 108 x 10 = 1,080 players</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="530">Variables</text>
+  <text class="vs" x="40" y="546">counts · Riot, 2020 [1]</text>
+  <rect class="cell band" x="40" y="556" width="60" height="22"/>
+  <rect class="cell band" x="100" y="556" width="520" height="22"/>
+  <rect class="cell band" x="620" y="556" width="100" height="22"/>
+  <text class="cap ink" x="50" y="567" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="567" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="567" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,578H720V688H40Z"/>
+  <path class="ln ink" d="M100,578V688M620,578V688"/>
+  <path class="ln" d="M40,600H720M40,622H720M40,644H720M40,666H720"/>
+  <text class="t" x="50" y="589" dominant-baseline="central">C1</text>
+  <text class="t" x="110" y="589" dominant-baseline="central">physical cores per host (typical)</text>
+  <text class="t" x="710" y="589" text-anchor="end" dominant-baseline="central">36</text>
+  <text class="t" x="50" y="611" dominant-baseline="central">G1</text>
+  <text class="t" x="110" y="611" dominant-baseline="central">128-tick games per core, the target to beat</text>
+  <text class="t" x="710" y="611" text-anchor="end" dominant-baseline="central">3</text>
+  <text class="t b" x="50" y="633" dominant-baseline="central">N1</text>
+  <text class="t" x="110" y="633" dominant-baseline="central">games per host: C1 x G1</text>
+  <text class="t b" x="710" y="633" text-anchor="end" dominant-baseline="central">108</text>
+  <text class="t" x="50" y="655" dominant-baseline="central">P1</text>
+  <text class="t" x="110" y="655" dominant-baseline="central">players per game, 5 versus 5</text>
+  <text class="t" x="710" y="655" text-anchor="end" dominant-baseline="central">10</text>
+  <text class="t" x="50" y="677" dominant-baseline="central">H1</text>
+  <text class="t" x="110" y="677" dominant-baseline="central">players per host: N1 x P1</text>
+  <text class="t" x="710" y="677" text-anchor="end" dominant-baseline="central">1,080</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="704" width="680" height="76"/>
+  <text class="sl ink" x="52" y="722">notes</text>
+  <text class="n" x="52" y="740">[1] Riot's 128-tick post: hosts typically have 36 cores; beating 3 games per core gives 108 games and 1,080</text>
+  <text class="n" x="52" y="756">players per server. Two NUMA nodes follow its numactl pinning by game id modulo 2. [2] One game server</text>
+  <text class="n" x="52" y="772">process per match, per Riot's load-testing post; the highlighted process is one match.</text>
+</svg>

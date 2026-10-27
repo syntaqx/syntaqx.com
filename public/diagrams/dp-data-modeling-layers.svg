@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 790">
+  <defs>
+    <marker id="dp-dm-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">DP-MOD-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">analytics model layers</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Exploded axonometric: model layers</text>
+  <text class="vs" x="40" y="80">Not to scale · layers separated along the build axis</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M295,190V438M645,147V395"/>
+
+  <!-- 01 raw -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 344)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="432.65" r="2"/>
+  <path class="leader" d="M309.5,432.65L297.5,420.65H270"/>
+  <text class="sl ink" x="264" y="420.65" text-anchor="end" dominant-baseline="central">01 raw</text>
+  <text class="n" x="264" y="436.65" text-anchor="end">as loaded, append-only, per source</text>
+
+  <!-- 02 staging -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 282)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="370.65" r="2"/>
+  <path class="leader" d="M309.5,370.65L297.5,358.65H270"/>
+  <text class="sl ink" x="264" y="358.65" text-anchor="end" dominant-baseline="central">02 staging</text>
+  <text class="n" x="264" y="374.65" text-anchor="end">one per source table, renamed, typed</text>
+
+  <!-- 03 intermediate -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 220)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="308.65" r="2"/>
+  <path class="leader" d="M309.5,308.65L297.5,296.65H270"/>
+  <text class="sl ink" x="264" y="296.65" text-anchor="end" dominant-baseline="central">03 intermediate</text>
+  <text class="n" x="264" y="312.65" text-anchor="end">joins and reshaping, verb names</text>
+
+  <!-- 04 marts -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 158)">
+    <rect class="obj fill-1" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="246.65" r="2"/>
+  <path class="leader" d="M309.5,246.65L297.5,234.65H270"/>
+  <text class="sl ink" x="264" y="234.65" text-anchor="end" dominant-baseline="central">04 marts</text>
+  <text class="n" x="264" y="250.65" text-anchor="end">facts, conformed dimensions, wide tables</text>
+
+  <!-- 05 semantic layer -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 96)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="184.65" r="2"/>
+  <path class="leader" d="M309.5,184.65L297.5,172.65H270"/>
+  <text class="sl ink" x="264" y="172.65" text-anchor="end" dominant-baseline="central">05 semantic layer</text>
+  <text class="n" x="264" y="188.65" text-anchor="end">metrics, entities, dimensions</text>
+
+  <!-- Build direction -->
+  <text class="sl ink" x="700" y="456" text-anchor="middle">builds</text>
+  <text class="sl ink" x="700" y="469" text-anchor="middle">up [1]</text>
+  <path class="ln ink" d="M700,442V140" marker-end="url(#dp-dm-ah)"/>
+
+  <!-- Layer table -->
+  <text class="vt" x="40" y="520">Layers</text>
+  <text class="vs" x="40" y="536">Materialization per the dbt structure guide [2]</text>
+  <rect class="cell band" x="40" y="546" width="40" height="22"/>
+  <rect class="cell band" x="80" y="546" width="150" height="22"/>
+  <rect class="cell band" x="230" y="546" width="220" height="22"/>
+  <rect class="cell band" x="450" y="546" width="270" height="22"/>
+  <text class="cap ink" x="48" y="557" dominant-baseline="central">no</text>
+  <text class="cap ink" x="90" y="557" dominant-baseline="central">layer</text>
+  <text class="cap ink" x="240" y="557" dominant-baseline="central">materialized as</text>
+  <text class="cap ink" x="460" y="557" dominant-baseline="central">read by</text>
+  <path class="cell" d="M40,568H720V678H40Z"/>
+  <path class="ln ink" d="M80,568V678M230,568V678M450,568V678"/>
+  <path class="ln" d="M40,590H720M40,612H720M40,634H720M40,656H720"/>
+  <text class="t" x="50" y="579" dominant-baseline="central">01</text>
+  <text class="t" x="90" y="579" dominant-baseline="central">raw</text>
+  <text class="t" x="240" y="579" dominant-baseline="central">tables, as loaded</text>
+  <text class="t" x="460" y="579" dominant-baseline="central">staging models only</text>
+  <text class="t" x="50" y="601" dominant-baseline="central">02</text>
+  <text class="t" x="90" y="601" dominant-baseline="central">staging</text>
+  <text class="t" x="240" y="601" dominant-baseline="central">views</text>
+  <text class="t" x="460" y="601" dominant-baseline="central">intermediate, marts</text>
+  <text class="t" x="50" y="623" dominant-baseline="central">03</text>
+  <text class="t" x="90" y="623" dominant-baseline="central">intermediate</text>
+  <text class="t" x="240" y="623" dominant-baseline="central">ephemeral, or views</text>
+  <text class="t" x="460" y="623" dominant-baseline="central">marts</text>
+  <text class="t b" x="50" y="645" dominant-baseline="central">04</text>
+  <text class="t b" x="90" y="645" dominant-baseline="central">marts</text>
+  <text class="t" x="240" y="645" dominant-baseline="central">view, table, incremental</text>
+  <text class="t" x="460" y="645" dominant-baseline="central">people, BI, semantic layer</text>
+  <text class="t" x="50" y="667" dominant-baseline="central">05</text>
+  <text class="t" x="90" y="667" dominant-baseline="central">semantic</text>
+  <text class="t" x="240" y="667" dominant-baseline="central">metric definitions</text>
+  <text class="t" x="460" y="667" dominant-baseline="central">dashboards, notebooks, apps</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="696" width="680" height="76"/>
+  <text class="sl ink" x="52" y="716">notes</text>
+  <text class="n" x="110" y="716">[1] Each layer reads only the layer beneath it. Dashboards never read raw or staging.</text>
+  <text class="n" x="110" y="734">[2] Staging as views; intermediate ephemeral or views in a restricted schema; marts start</text>
+  <text class="n" x="110" y="752">as views, become tables when slow to query, incremental when slow to build.</text>
+</svg>

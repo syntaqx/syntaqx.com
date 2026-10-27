@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 778">
+  <defs>
+    <marker id="gm-tp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="gm-tp-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-TEL-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">telemetry event pipeline</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: event pipeline</text>
+  <text class="vs" x="40" y="80">Not to scale · illustrative [1] · latencies in s</text>
+
+  <!-- LH: the hot path, overall -->
+  <path class="ext" d="M40,157V111M560,157V111"/>
+  <path class="dim hl" d="M40,116H560" marker-start="url(#gm-tp-ah-hl)" marker-end="url(#gm-tp-ah-hl)"/>
+  <text class="dt hl" x="300" y="112" text-anchor="middle">LH = L1 + L2 + L3 + L4 = 126</text>
+
+  <!-- Chain L1 to L4 -->
+  <path class="ext" d="M170,157V135M300,157V135M430,157V135"/>
+  <path class="dim" d="M40,140H170" marker-start="url(#gm-tp-ah)" marker-end="url(#gm-tp-ah)"/>
+  <text class="dt" x="105" y="136" text-anchor="middle">L1 = 60</text>
+  <path class="dim" d="M170,140H300" marker-start="url(#gm-tp-ah)" marker-end="url(#gm-tp-ah)"/>
+  <text class="dt" x="235" y="136" text-anchor="middle">L2 = 1</text>
+  <path class="dim" d="M300,140H430" marker-start="url(#gm-tp-ah)" marker-end="url(#gm-tp-ah)"/>
+  <text class="dt" x="365" y="136" text-anchor="middle">L3 = 5</text>
+  <path class="dim" d="M430,140H560" marker-start="url(#gm-tp-ah)" marker-end="url(#gm-tp-ah)"/>
+  <text class="dt" x="495" y="136" text-anchor="middle">L4 = 60</text>
+
+  <!-- Row A: hot path -->
+  <rect class="obj fill-2" x="40" y="160" width="100" height="40"/>
+  <rect class="obj fill-2" x="170" y="160" width="100" height="40"/>
+  <rect class="obj fill-1" x="300" y="160" width="100" height="40"/>
+  <rect class="obj fill-2" x="430" y="160" width="100" height="40"/>
+  <rect class="obj fill-2" x="560" y="160" width="100" height="40"/>
+  <text class="sl ink" x="90" y="180" text-anchor="middle" dominant-baseline="central">client</text>
+  <text class="sl ink" x="220" y="180" text-anchor="middle" dominant-baseline="central">collect</text>
+  <text class="sl ink" x="350" y="180" text-anchor="middle" dominant-baseline="central">bus</text>
+  <text class="sl ink" x="480" y="180" text-anchor="middle" dominant-baseline="central">stream</text>
+  <text class="sl ink" x="610" y="180" text-anchor="middle" dominant-baseline="central">live</text>
+  <path class="ln ink" d="M140,180H169" marker-end="url(#gm-tp-ah)"/>
+  <path class="ln ink" d="M270,180H299" marker-end="url(#gm-tp-ah)"/>
+  <path class="ln ink" d="M400,180H429" marker-end="url(#gm-tp-ah)"/>
+  <path class="ln ink" d="M530,180H559" marker-end="url(#gm-tp-ah)"/>
+  <text class="n" x="90" y="218" text-anchor="middle">batched [2]</text>
+  <text class="n" x="220" y="218" text-anchor="middle">validate, enrich</text>
+  <text class="n" x="350" y="218" text-anchor="middle">partitioned log</text>
+  <text class="n" x="480" y="218" text-anchor="middle">1-min windows</text>
+  <text class="n" x="610" y="218" text-anchor="middle">alerts, live ops</text>
+
+  <!-- E1: volume entering the collector -->
+  <circle class="dot" cx="155" cy="180" r="2"/>
+  <path class="leader" d="M155,180V250H170"/>
+  <text class="dt" x="174" y="250" dominant-baseline="central">E1 = 10,000 events/s</text>
+
+  <!-- Row B: cold path -->
+  <path class="ln ink" d="M392,203V320H429" marker-end="url(#gm-tp-ah)"/>
+  <text class="sl ink" x="160" y="320" dominant-baseline="central">cold path [3]</text>
+  <rect class="obj fill-2" x="430" y="300" width="100" height="40"/>
+  <rect class="obj fill-2" x="560" y="300" width="100" height="40"/>
+  <text class="sl ink" x="480" y="320" text-anchor="middle" dominant-baseline="central">raw</text>
+  <text class="sl ink" x="610" y="320" text-anchor="middle" dominant-baseline="central">marts</text>
+  <path class="ln ink" d="M530,320H559" marker-end="url(#gm-tp-ah)"/>
+  <text class="n" x="480" y="358" text-anchor="middle">hourly files</text>
+  <text class="n" x="610" y="358" text-anchor="middle">scheduled models</text>
+
+  <!-- D1: raw volume -->
+  <circle class="dot" cx="500" cy="300" r="2"/>
+  <path class="leader" d="M500,300L512,270H560"/>
+  <text class="dt" x="564" y="270" dominant-baseline="central">D1 = 432 GB/day</text>
+
+  <!-- Chain L5, L6 -->
+  <path class="ext" d="M430,343V385M560,343V385M660,343V415"/>
+  <path class="dim" d="M430,380H560" marker-start="url(#gm-tp-ah)" marker-end="url(#gm-tp-ah)"/>
+  <text class="dt" x="495" y="376" text-anchor="middle">L5 = 3,600</text>
+  <path class="dim" d="M560,380H660" marker-start="url(#gm-tp-ah)" marker-end="url(#gm-tp-ah)"/>
+  <text class="dt" x="610" y="376" text-anchor="middle">L6 = 3,600</text>
+
+  <!-- LC: the cold path, overall -->
+  <path class="ext" d="M40,203V415"/>
+  <path class="dim" d="M40,410H660" marker-start="url(#gm-tp-ah)" marker-end="url(#gm-tp-ah)"/>
+  <text class="dt" x="350" y="406" text-anchor="middle">LC = L1 + L2 + L5 + L6 = 7,261</text>
+
+  <!-- Variables -->
+  <text class="vt" x="40" y="456">Variables</text>
+  <text class="vs" x="40" y="472">Illustrative [1] · latencies in seconds</text>
+
+  <!-- Left table: volume -->
+  <rect class="cell band" x="40" y="482" width="50" height="22"/>
+  <rect class="cell band" x="90" y="482" width="210" height="22"/>
+  <rect class="cell band" x="300" y="482" width="70" height="22"/>
+  <text class="cap ink" x="50" y="493" dominant-baseline="central">code</text>
+  <text class="cap ink" x="100" y="493" dominant-baseline="central">volume</text>
+  <text class="cap ink" x="360" y="493" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,504H370V614H40Z"/>
+  <path class="ln ink" d="M90,504V614M300,504V614"/>
+  <path class="ln" d="M40,526H370M40,548H370M40,570H370M40,592H370"/>
+  <text class="t" x="50" y="515" dominant-baseline="central">V1</text>
+  <text class="t" x="100" y="515" dominant-baseline="central">concurrent players</text>
+  <text class="t" x="360" y="515" text-anchor="end" dominant-baseline="central">100,000</text>
+  <text class="t" x="50" y="537" dominant-baseline="central">R1</text>
+  <text class="t" x="100" y="537" dominant-baseline="central">events per player per s</text>
+  <text class="t" x="360" y="537" text-anchor="end" dominant-baseline="central">0.1</text>
+  <text class="t b" x="50" y="559" dominant-baseline="central">E1</text>
+  <text class="t" x="100" y="559" dominant-baseline="central">events per s: V1 x R1</text>
+  <text class="t b" x="360" y="559" text-anchor="end" dominant-baseline="central">10,000</text>
+  <text class="t" x="50" y="581" dominant-baseline="central">B1</text>
+  <text class="t" x="100" y="581" dominant-baseline="central">mean event size, bytes</text>
+  <text class="t" x="360" y="581" text-anchor="end" dominant-baseline="central">500</text>
+  <text class="t b" x="50" y="603" dominant-baseline="central">D1</text>
+  <text class="t" x="100" y="603" dominant-baseline="central">per day: E1 x B1 x 86,400</text>
+  <text class="t b" x="360" y="603" text-anchor="end" dominant-baseline="central">432 GB</text>
+
+  <!-- Right table: latency -->
+  <rect class="cell band" x="400" y="482" width="50" height="22"/>
+  <rect class="cell band" x="450" y="482" width="200" height="22"/>
+  <rect class="cell band" x="650" y="482" width="70" height="22"/>
+  <text class="cap ink" x="410" y="493" dominant-baseline="central">code</text>
+  <text class="cap ink" x="460" y="493" dominant-baseline="central">latency</text>
+  <text class="cap ink" x="710" y="493" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M400,504H720V680H400Z"/>
+  <path class="ln ink" d="M450,504V680M650,504V680"/>
+  <path class="ln" d="M400,526H720M400,548H720M400,570H720M400,592H720M400,614H720M400,636H720M400,658H720"/>
+  <text class="t" x="410" y="515" dominant-baseline="central">L1</text>
+  <text class="t" x="460" y="515" dominant-baseline="central">client batch interval [2]</text>
+  <text class="t" x="710" y="515" text-anchor="end" dominant-baseline="central">60</text>
+  <text class="t" x="410" y="537" dominant-baseline="central">L2</text>
+  <text class="t" x="460" y="537" dominant-baseline="central">collector accept, validate</text>
+  <text class="t" x="710" y="537" text-anchor="end" dominant-baseline="central">1</text>
+  <text class="t" x="410" y="559" dominant-baseline="central">L3</text>
+  <text class="t" x="460" y="559" dominant-baseline="central">bus to stream job</text>
+  <text class="t" x="710" y="559" text-anchor="end" dominant-baseline="central">5</text>
+  <text class="t" x="410" y="581" dominant-baseline="central">L4</text>
+  <text class="t" x="460" y="581" dominant-baseline="central">stream window</text>
+  <text class="t" x="710" y="581" text-anchor="end" dominant-baseline="central">60</text>
+  <text class="t" x="410" y="603" dominant-baseline="central">L5</text>
+  <text class="t" x="460" y="603" dominant-baseline="central">raw file commit</text>
+  <text class="t" x="710" y="603" text-anchor="end" dominant-baseline="central">3,600</text>
+  <text class="t" x="410" y="625" dominant-baseline="central">L6</text>
+  <text class="t" x="460" y="625" dominant-baseline="central">warehouse model run</text>
+  <text class="t" x="710" y="625" text-anchor="end" dominant-baseline="central">3,600</text>
+  <text class="t b" x="410" y="647" dominant-baseline="central">LH</text>
+  <text class="t" x="460" y="647" dominant-baseline="central">hot: L1 + L2 + L3 + L4</text>
+  <text class="t b" x="710" y="647" text-anchor="end" dominant-baseline="central">126</text>
+  <text class="t b" x="410" y="669" dominant-baseline="central">LC</text>
+  <text class="t" x="460" y="669" dominant-baseline="central">cold: L1 + L2 + L5 + L6</text>
+  <text class="t b" x="710" y="669" text-anchor="end" dominant-baseline="central">7,261</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="696" width="680" height="66"/>
+  <text class="sl ink" x="52" y="716">notes</text>
+  <text class="n" x="110" y="716">[1] Illustrative except L1. Measure each stage in production and alert on LH and LC.</text>
+  <text class="n" x="110" y="734">[2] Unity Analytics batches recorded events and uploads them every 60 seconds.</text>
+  <text class="n" x="110" y="752">[3] The raw store keeps every accepted event, so a fixed model can rebuild history.</text>
+</svg>

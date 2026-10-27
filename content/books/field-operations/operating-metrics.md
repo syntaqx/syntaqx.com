@@ -110,11 +110,11 @@ membership_conversion =
 
 Credit the sale to the visit and seller recorded on the agreement, as FieldRoutes' API does with a subscription's `soldBy` field, "used in commissions and sales reporting." Decide in the definition whether renewals count. They usually shouldn't: a renewal is retention, not conversion. [Service Agreements & Plans](/books/field-operations/service-agreements) covers the agreement record.
 
-Door-to-door teams run a funnel instead (SPOTIO lists doors knocked, contact rate, conversation to demo, demo to close and deal size). The rate that matters most is the one the funnel leaves out: the share of sales that are still paying customers after the first service and after 90 days, because a sale that cancels before the first payment cost a commission and a truck roll. [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions) covers clawbacks against that number.
+Door-to-door teams run a [funnel](/docs/telemetry/product-analytics#funnels) instead (SPOTIO lists doors knocked, contact rate, conversation to demo, demo to close and deal size). The rate that matters most is the one the funnel leaves out: the share of sales that are still paying customers after the first service and after 90 days, because a sale that cancels before the first payment cost a commission and a truck roll. [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions) covers clawbacks against that number.
 
 ## Retention and Churn
 
-Stripe defines **subscriber churn rate** as churned subscribers in the past 30 days divided by active subscribers 30 days ago plus new subscribers in the past 30 days. FieldRoutes' **Cxl Rate** is cancelled subscriptions over active subscriptions per period, and its Retention Calendar groups cancellations by the period the subscription was added, which is a cohort view.
+Stripe defines **subscriber churn rate** as churned subscribers in the past 30 days divided by active subscribers 30 days ago plus new subscribers in the past 30 days. FieldRoutes' **Cxl Rate** is cancelled subscriptions over active subscriptions per period, and its Retention Calendar groups cancellations by the period the subscription was added, which is a cohort view ([Cohorts and Retention Curves](/docs/telemetry/product-analytics#cohorts-and-retention-curves)).
 
 The definitions that work for field service:
 
@@ -145,7 +145,7 @@ Store the raw events and the exposure (miles and drive hours), not just the vend
 
 ## Building the Pipeline
 
-Metrics that drive pay and SLA credits need a pipeline that is complete, replayable and kept off the production database; [Data Pipelines & Analytics](/docs/architecture/data-pipelines) covers each step. The field-specific parts are which facts to model and two common holes.
+Metrics that drive pay and SLA credits need a pipeline that is complete, replayable and kept off the production database ([Separating Production and Analytics](/docs/data/separating-production-and-analytics)); [Data Pipelines & Analytics](/docs/architecture/data-pipelines) covers each step. The field-specific parts are which facts to model ([Facts and Dimensions](/docs/data/data-modeling#facts-and-dimensions) covers grain and modeling in general) and two common holes.
 
 ![The metrics pipeline: platform database changes captured from the log into an append-only raw layer, then staging and marts, then one set of metric definitions feeding dashboards, commission runs, in-app scorecards and customer exports.](/diagrams/fo-operating-metrics-pipeline.svg "Metrics are defined once, after the marts, and every consumer reads the same definition, so the dashboard and the commission run cannot disagree.")
 

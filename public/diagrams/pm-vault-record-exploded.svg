@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 650">
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PM-VLT-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">stored card record</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+  <text class="vt" x="40" y="64">Exploded axonometric: one stored card</text>
+  <text class="vs" x="40" y="80">Not to scale · layers separated along the stack axis</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M275,190V500M625,147V457"/>
+
+  <!-- 01 key-encrypting key -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 343 406)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="260" height="60"/>
+  </g>
+  <circle class="dot" cx="289.5" cy="494.65" r="2"/>
+  <path class="leader" d="M289.5,494.65L277.5,482.65H250"/>
+  <text class="sl ink" x="244" y="482.65" text-anchor="end" dominant-baseline="central">01 key-encrypting key</text>
+  <text class="n" x="244" y="498.65" text-anchor="end">in the KMS or HSM, never here</text>
+
+  <!-- 02 data key [1] -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 343 344)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="125" height="60"/>
+    <rect class="cell band" x="155" y="100" width="125" height="60"/>
+  </g>
+  <circle class="dot" cx="289.5" cy="432.65" r="2"/>
+  <path class="leader" d="M289.5,432.65L277.5,420.65H250"/>
+  <text class="sl ink" x="244" y="420.65" text-anchor="end" dominant-baseline="central">02 data key [1]</text>
+  <text class="n" x="244" y="436.65" text-anchor="end">wrapped by 01, with its version</text>
+
+  <!-- 03 card number [2] -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 343 282)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="260" height="60"/>
+  </g>
+  <circle class="dot" cx="289.5" cy="370.65" r="2"/>
+  <path class="leader" d="M289.5,370.65L277.5,358.65H250"/>
+  <text class="sl ink" x="244" y="358.65" text-anchor="end" dominant-baseline="central">03 card number [2]</text>
+  <text class="n" x="244" y="374.65" text-anchor="end">AES-256-GCM under its data key</text>
+
+  <!-- 04 fingerprint -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 343 220)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="260" height="60"/>
+  </g>
+  <circle class="dot" cx="289.5" cy="308.65" r="2"/>
+  <path class="leader" d="M289.5,308.65L277.5,296.65H250"/>
+  <text class="sl ink" x="244" y="296.65" text-anchor="end" dominant-baseline="central">04 fingerprint</text>
+  <text class="n" x="244" y="312.65" text-anchor="end">keyed hash: same card, same value</text>
+
+  <!-- 05 card details -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 343 158)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="289.5" cy="246.65" r="2"/>
+  <path class="leader" d="M289.5,246.65L277.5,234.65H250"/>
+  <text class="sl ink" x="244" y="234.65" text-anchor="end" dominant-baseline="central">05 card details</text>
+  <text class="n" x="244" y="250.65" text-anchor="end">BIN, last four, brand, expiry</text>
+
+  <!-- 06 token -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 343 96)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="260" height="60"/>
+  </g>
+  <circle class="dot" cx="289.5" cy="184.65" r="2"/>
+  <path class="leader" d="M289.5,184.65L277.5,172.65H250"/>
+  <text class="sl ink" x="244" y="172.65" text-anchor="end" dominant-baseline="central">06 token</text>
+  <text class="n" x="244" y="188.65" text-anchor="end">tok_ prefix, random, one tenant</text>
+
+  <!-- What leaves the vault -->
+  <path class="leader" d="M640,150H648V300H640"/>
+  <text class="n" x="656" y="221">returned to</text>
+  <text class="n" x="656" y="235">the platform</text>
+  <path class="leader" d="M640,316H648V470H640"/>
+  <text class="n" x="656" y="389">stays in</text>
+  <text class="n" x="656" y="403">the vault</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="572" width="680" height="60"/>
+  <text class="sl ink" x="52" y="590">notes</text>
+  <text class="n" x="52" y="608">[1] Rotating 01 re-wraps the data keys in 02 and leaves 03 alone; retiring a data key means re-encrypting its 03.</text>
+  <text class="n" x="52" y="624">[2] The security code is never in the record, not even encrypted: it lives in memory for one authorization.</text>
+</svg>

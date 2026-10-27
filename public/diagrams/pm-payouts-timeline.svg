@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 690">
+  <defs>
+    <marker id="pm-pt-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+    <marker id="pm-pt-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">PM-PAY-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">one card payment to the merchant's bank</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+  <text class="vt" x="40" y="64">Plan view: one US card payment, established merchant</text>
+  <text class="vs" x="40" y="80">Scale 1 business day = 110 px · illustrative schedule [1]</text>
+
+  <!-- Ruler -->
+  <path class="ln ink" d="M120,112H670M690,112H716"/>
+  <path class="ln ink" d="M120,108V116M230,108V116M340,108V116M450,108V116M560,108V116M670,108V116M716,108V116"/>
+  <path class="ln ink" d="M676,117L682,107M682,117L688,107"/>
+  <text class="sl ink" x="120" y="100" text-anchor="middle">T</text>
+  <text class="sl" x="230" y="100" text-anchor="middle">T+1</text>
+  <text class="sl" x="340" y="100" text-anchor="middle">T+2</text>
+  <text class="sl" x="450" y="100" text-anchor="middle">T+3</text>
+  <text class="sl" x="560" y="100" text-anchor="middle">T+4</text>
+  <text class="sl" x="670" y="100" text-anchor="middle">T+5</text>
+  <path class="ctr" d="M340,118V194M340,216V352"/>
+
+  <!-- Payment row -->
+  <text class="t" x="108" y="150" text-anchor="end" dominant-baseline="central">payment</text>
+  <rect class="obj fill-2" x="120" y="136" width="110" height="28"/>
+  <rect class="obj fill-2" x="230" y="136" width="446" height="28"/>
+  <rect class="obj fill-2" x="690" y="136" width="26" height="28"/>
+  <text class="sl ink" x="175" y="150" text-anchor="middle" dominant-baseline="central">captured</text>
+  <text class="sl ink" x="520" y="150" text-anchor="middle" dominant-baseline="central">settled, disputable</text>
+  <path class="ext" d="M120,167V191M230,167V191"/>
+  <path class="dim" d="M120,186H230" marker-start="url(#pm-pt-ah)" marker-end="url(#pm-pt-ah)"/>
+  <text class="dt" x="175" y="182" text-anchor="middle">S1 = 1</text>
+  <path class="ext" d="M120,191V213"/>
+  <path class="ext" d="M716,167V213"/>
+  <path class="dim" d="M120,208H716" marker-start="url(#pm-pt-ah)" marker-end="url(#pm-pt-ah)"/>
+  <text class="dt" x="418" y="204" text-anchor="middle">D1 = 120 calendar days [4]</text>
+
+  <!-- Balance row: the subject -->
+  <text class="t" x="108" y="240" text-anchor="end" dominant-baseline="central">balance</text>
+  <rect class="obj fill-2" x="120" y="226" width="220" height="28"/>
+  <rect class="obj fill-1" x="340" y="226" width="110" height="28"/>
+  <text class="sl ink" x="230" y="240" text-anchor="middle" dominant-baseline="central">pending</text>
+  <text class="sl ink" x="395" y="240" text-anchor="middle" dominant-baseline="central">available</text>
+  <path class="ext" d="M120,257V281M340,257V281"/>
+  <path class="dim hl" d="M120,276H340" marker-start="url(#pm-pt-ah-hl)" marker-end="url(#pm-pt-ah-hl)"/>
+  <text class="dt hl" x="230" y="272" text-anchor="middle">A1 = 2 [2]</text>
+
+  <!-- Payout row -->
+  <text class="t" x="108" y="330" text-anchor="end" dominant-baseline="central">payout</text>
+  <rect class="obj fill-2" x="340" y="316" width="110" height="28"/>
+  <rect class="obj fill-1" x="450" y="316" width="220" height="28"/>
+  <text class="sl ink" x="395" y="330" text-anchor="middle" dominant-baseline="central">in transit</text>
+  <text class="sl ink" x="560" y="330" text-anchor="middle" dominant-baseline="central">paid, may fail [3]</text>
+  <path class="ext" d="M340,347V371M450,347V371M670,347V371"/>
+  <path class="dim" d="M340,366H450" marker-start="url(#pm-pt-ah)" marker-end="url(#pm-pt-ah)"/>
+  <text class="dt" x="395" y="362" text-anchor="middle">P1 = 1</text>
+  <path class="dim" d="M450,366H670" marker-start="url(#pm-pt-ah)" marker-end="url(#pm-pt-ah)"/>
+  <text class="dt" x="560" y="362" text-anchor="middle">R1 = 2</text>
+
+  <!-- Variable table -->
+  <text class="vt" x="40" y="404">Variables</text>
+  <text class="vs" x="40" y="420">Business days unless noted</text>
+  <rect class="cell band" x="40" y="430" width="60" height="22"/>
+  <rect class="cell band" x="100" y="430" width="520" height="22"/>
+  <rect class="cell band" x="620" y="430" width="100" height="22"/>
+  <text class="cap ink" x="50" y="441" dominant-baseline="central">code</text>
+  <text class="cap ink" x="110" y="441" dominant-baseline="central">item</text>
+  <text class="cap ink" x="710" y="441" text-anchor="end" dominant-baseline="central">value</text>
+  <path class="cell" d="M40,452H720V562H40Z"/>
+  <path class="ln ink" d="M100,452V562M620,452V562"/>
+  <path class="ln" d="M40,474H720M40,496H720M40,518H720M40,540H720"/>
+  <text class="t" x="50" y="463" dominant-baseline="central">S1</text>
+  <text class="t" x="110" y="463" dominant-baseline="central">capture to network settlement, illustrative [1]</text>
+  <text class="t" x="710" y="463" text-anchor="end" dominant-baseline="central">1</text>
+  <text class="t b" x="50" y="485" dominant-baseline="central">A1</text>
+  <text class="t b" x="110" y="485" dominant-baseline="central">capture to available balance, US standard [2]</text>
+  <text class="t b" x="710" y="485" text-anchor="end" dominant-baseline="central">2</text>
+  <text class="t" x="50" y="507" dominant-baseline="central">P1</text>
+  <text class="t" x="110" y="507" dominant-baseline="central">payout in transit, next-day ACH credit, illustrative</text>
+  <text class="t" x="710" y="507" text-anchor="end" dominant-baseline="central">1</text>
+  <text class="t" x="50" y="529" dominant-baseline="central">R1</text>
+  <text class="t" x="110" y="529" dominant-baseline="central">payout return window, banking days: R02-R04, R16</text>
+  <text class="t" x="710" y="529" text-anchor="end" dominant-baseline="central">2</text>
+  <text class="t" x="50" y="551" dominant-baseline="central">D1</text>
+  <text class="t" x="110" y="551" dominant-baseline="central">dispute window from the payment, calendar days, typical</text>
+  <text class="t" x="710" y="551" text-anchor="end" dominant-baseline="central">120</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="578" width="680" height="92"/>
+  <text class="sl ink" x="52" y="596">notes</text>
+  <text class="n" x="52" y="614">[1] Illustrative: settlement on T+1 and a next-day ACH payout are one common schedule; banks and providers vary.</text>
+  <text class="n" x="52" y="630">[2] Stripe's published standard timing for US accounts. A new account's first payout waits 7 to 14 days instead.</text>
+  <text class="n" x="52" y="646">[3] A payout can still come back as an ACH return after it shows paid; the amount returns to the balance.</text>
+  <text class="n" x="52" y="662">[4] Disputes keep arriving after the money has left, which is what reserves are for. Not to scale after the break.</text>
+</svg>

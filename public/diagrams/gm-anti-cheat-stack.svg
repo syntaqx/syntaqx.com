@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 600">
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-ACH-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">anti-cheat defense in depth</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Exploded axonometric: defense layers</text>
+  <text class="vs" x="40" y="80">Not to scale · layers separated along the stack axis</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M295,190V438M645,147V395"/>
+
+  <!-- 01 kernel driver -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 344)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="432.65" r="2"/>
+  <path class="leader" d="M309.5,432.65L297.5,420.65H270"/>
+  <text class="sl ink" x="264" y="420.65" text-anchor="end" dominant-baseline="central">01 kernel driver [2]</text>
+  <text class="n" x="264" y="436.65" text-anchor="end">boot-time load, memory and driver checks</text>
+
+  <!-- 02 client integrity -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 282)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="370.65" r="2"/>
+  <path class="leader" d="M309.5,370.65L297.5,358.65H270"/>
+  <text class="sl ink" x="264" y="358.65" text-anchor="end" dominant-baseline="central">02 client integrity</text>
+  <text class="n" x="264" y="374.65" text-anchor="end">encrypted code, anti-debug, scans</text>
+
+  <!-- 03 network -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 220)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="125" height="60"/>
+    <rect class="cell band" x="155" y="100" width="125" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="308.65" r="2"/>
+  <path class="leader" d="M309.5,308.65L297.5,296.65H270"/>
+  <text class="sl ink" x="264" y="296.65" text-anchor="end" dominant-baseline="central">03 network</text>
+  <text class="n" x="264" y="312.65" text-anchor="end">encrypted, obfuscated, rate-limited</text>
+
+  <!-- 04 server authority: the subject -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 158)">
+    <rect class="obj hl" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="246.65" r="2"/>
+  <path class="leader" d="M309.5,246.65L297.5,234.65H270"/>
+  <text class="sl ink" x="264" y="234.65" text-anchor="end" dominant-baseline="central">04 server authority [1]</text>
+  <text class="n" x="264" y="250.65" text-anchor="end">inputs validated, hidden state withheld</text>
+
+  <!-- 05 detection backend -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 363 96)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="309.5" cy="184.65" r="2"/>
+  <path class="leader" d="M309.5,184.65L297.5,172.65H270"/>
+  <text class="sl ink" x="264" y="172.65" text-anchor="end" dominant-baseline="central">05 detection backend</text>
+  <text class="n" x="264" y="188.65" text-anchor="end">signals, models, review, enforcement</text>
+
+  <!-- Where each layer runs -->
+  <path class="ctr" d="M660,150H666V262H660"/>
+  <text class="n" x="674" y="200">operator</text>
+  <text class="n" x="674" y="216">hardware</text>
+  <path class="ctr" d="M660,278H666V328H660"/>
+  <text class="n" x="674" y="300">in transit</text>
+  <path class="ctr" d="M660,344H666V452H660"/>
+  <text class="n" x="674" y="392">player's</text>
+  <text class="n" x="674" y="408">machine</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="520" width="680" height="62"/>
+  <text class="sl ink" x="52" y="540">notes</text>
+  <text class="n" x="110" y="540">[1] Highlighted: the only layer a cheat can't patch, because it runs on hardware the operator controls.</text>
+  <text class="n" x="110" y="558">[2] Valve's Proton guidance: kernel-space anti-cheat is not supported or recommended; user-space</text>
+  <text class="n" x="128" y="574">components work best on Linux and Steam Deck.</text>
+</svg>

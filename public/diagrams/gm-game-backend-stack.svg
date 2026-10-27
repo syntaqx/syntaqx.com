@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 671">
+  <defs>
+    <marker id="gm-bks-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-BKD-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">game backend layer stack</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Exploded axonometric: game backend</text>
+  <text class="vs" x="40" y="80">Not to scale · layers separated along the stack axis</text>
+
+  <!-- Assembly lines through the stack's outer corners, behind the plates -->
+  <path class="phantom" d="M262,268V484M612,225V441"/>
+
+  <!-- 01 data -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 390)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="87.5" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="155" y="100" width="57.5" height="60"/>
+    <rect class="cell band" x="222.5" y="100" width="57.5" height="60"/>
+  </g>
+  <circle class="dot" cx="276.5" cy="478.65" r="2"/>
+  <path class="leader" d="M276.5,478.65L264.5,466.65H237"/>
+  <text class="sl ink" x="231" y="466.65" text-anchor="end" dominant-baseline="central">01 data</text>
+  <text class="n" x="231" y="482.65" text-anchor="end">databases, caches, stream, warehouse</text>
+
+  <!-- 02 game services: the results module is the subject -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 318)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="37" height="60"/>
+    <rect class="cell band" x="64.6" y="100" width="37" height="60"/>
+    <rect class="cell band" x="109.2" y="100" width="37" height="60"/>
+    <rect class="obj hl" x="153.8" y="100" width="37" height="60"/>
+    <rect class="cell band" x="198.4" y="100" width="37" height="60"/>
+    <rect class="cell band" x="243" y="100" width="37" height="60"/>
+  </g>
+  <circle class="dot" cx="276.5" cy="406.65" r="2"/>
+  <path class="leader" d="M276.5,406.65L264.5,394.65H237"/>
+  <text class="sl ink" x="231" y="394.65" text-anchor="end" dominant-baseline="central">02 game services</text>
+  <text class="n" x="231" y="410.65" text-anchor="end">parties, queues, servers, results</text>
+
+  <!-- 03 platform services -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 246)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="46" height="60"/>
+    <rect class="cell band" x="73.5" y="100" width="46" height="60"/>
+    <rect class="cell band" x="127" y="100" width="46" height="60"/>
+    <rect class="cell band" x="180.5" y="100" width="46" height="60"/>
+    <rect class="cell band" x="234" y="100" width="46" height="60"/>
+  </g>
+  <circle class="dot" cx="276.5" cy="334.65" r="2"/>
+  <path class="leader" d="M276.5,334.65L264.5,322.65H237"/>
+  <text class="sl ink" x="231" y="322.65" text-anchor="end" dominant-baseline="central">03 platform services</text>
+  <text class="n" x="231" y="338.65" text-anchor="end">accounts, entitlements, chat, config</text>
+
+  <!-- 04 edge -->
+  <g class="iso" transform="matrix(.94 .17 -.34 .47 330 174)">
+    <rect class="obj fill-2" width="300" height="200"/>
+    <rect class="cell band" x="20" y="100" width="80" height="60"/>
+    <rect class="cell band" x="110" y="100" width="80" height="60"/>
+    <rect class="cell band" x="200" y="100" width="80" height="60"/>
+  </g>
+  <circle class="dot" cx="276.5" cy="262.65" r="2"/>
+  <path class="leader" d="M276.5,262.65L264.5,250.65H237"/>
+  <text class="sl ink" x="231" y="250.65" text-anchor="end" dominant-baseline="central">04 edge</text>
+  <text class="n" x="231" y="266.65" text-anchor="end">CDN, DDoS, load balancing, gateway</text>
+
+  <!-- Request direction -->
+  <text class="sl ink" x="692" y="124" text-anchor="middle">requests</text>
+  <text class="sl ink" x="692" y="137" text-anchor="middle">enter [4]</text>
+  <path class="ln ink" d="M692,148V330" marker-end="url(#gm-bks-ah)"/>
+
+  <!-- Game server fleet, beside the stack -->
+  <text class="sl ink" x="690" y="352" text-anchor="middle">game</text>
+  <text class="sl ink" x="690" y="365" text-anchor="middle">servers</text>
+  <rect class="obj fill-1" x="645" y="380" width="90" height="24"/>
+  <rect class="obj fill-1" x="645" y="408" width="90" height="24"/>
+  <rect class="obj fill-1" x="645" y="436" width="90" height="24"/>
+  <text class="t" x="690" y="472" text-anchor="middle" dominant-baseline="central">[1]</text>
+  <path class="ln ink" d="M580.9,412H643" marker-end="url(#gm-bks-ah)"/>
+  <path class="ln ink" d="M643,430H567.9" marker-end="url(#gm-bks-ah)"/>
+  <text class="t" x="622" y="404" dominant-baseline="central">[2]</text>
+  <text class="t" x="622" y="440" dominant-baseline="central">[3]</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="555" width="680" height="96"/>
+  <text class="sl ink" x="52" y="573">notes</text>
+  <text class="n" x="52" y="591">[1] Game servers run beside the stack, not in it: they meet it only at match start and at the result.</text>
+  <text class="n" x="52" y="607">[2] Match start: provisioning hands the assigned server a signed roster, map, mode and loadouts.</text>
+  <text class="n" x="52" y="623">[3] Result: the assigned server reports once per match; the highlighted results service accepts it once.</text>
+  <text class="n" x="52" y="639">[4] Riot, Dec 2020: VALORANT requests pass Cloudflare, then nginx; 30+ platform services sit below.</text>
+</svg>

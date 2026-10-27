@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 626">
+  <defs>
+    <marker id="gm-sf-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
+  </defs>
+
+  <!-- Title strip -->
+  <path class="ln" d="M20,12H740M20,36H740"/>
+  <text class="cap ink" x="30" y="24" dominant-baseline="central">GM-STR-001</text>
+  <text class="cap" x="380" y="24" text-anchor="middle" dominant-baseline="central">where a $9.99 purchase goes</text>
+  <text class="cap" x="730" y="24" text-anchor="end" dominant-baseline="central">sheet 1 of 1</text>
+
+  <text class="vt" x="40" y="64">Plan view: one purchase, by store</text>
+  <text class="vs" x="40" y="80">Scale $1 = 40 px · USD before tax [2] · rates as of Oct 2026 [4]</text>
+  <path class="ext" d="M220,125V95M619.6,125V95"/>
+  <path class="dim hl" d="M220,100H619.6" marker-start="url(#gm-sf-ah-hl)" marker-end="url(#gm-sf-ah-hl)"/>
+  <text class="dt hl" x="419.8" y="96" text-anchor="middle">P1 = 9.99</text>
+  <text class="cap ink" x="636" y="112" dominant-baseline="central">fee / net</text>
+  <!-- row 1: steam -->
+  <rect class="obj fill-1" x="220" y="128" width="120.0" height="26"/>
+  <rect class="obj" x="340.0" y="128" width="279.6" height="26"/>
+  <text class="sl ink" x="210" y="135" text-anchor="end" dominant-baseline="central">steam</text>
+  <text class="n" x="210" y="149" text-anchor="end" dominant-baseline="central">30% tier, sales under $10M [1]</text>
+  <text class="dt" x="636" y="134" dominant-baseline="central">F1 = 3.00</text>
+  <text class="dt" x="636" y="148" dominant-baseline="central">N1 = 6.99</text>
+  <!-- row 2: epic games store -->
+  <rect class="obj fill-1" x="220" y="172" width="48.0" height="26"/>
+  <rect class="obj" x="268.0" y="172" width="351.6" height="26"/>
+  <text class="sl ink" x="210" y="179" text-anchor="end" dominant-baseline="central">epic games store</text>
+  <text class="n" x="210" y="193" text-anchor="end" dominant-baseline="central">12% after the first $1M a year</text>
+  <text class="dt" x="636" y="178" dominant-baseline="central">F2 = 1.20</text>
+  <text class="dt" x="636" y="192" dominant-baseline="central">N2 = 8.79</text>
+  <!-- row 3: microsoft pc -->
+  <rect class="obj fill-1" x="220" y="216" width="48.0" height="26"/>
+  <rect class="obj" x="268.0" y="216" width="351.6" height="26"/>
+  <text class="sl ink" x="210" y="223" text-anchor="end" dominant-baseline="central">microsoft pc</text>
+  <text class="n" x="210" y="237" text-anchor="end" dominant-baseline="central">12% of Net Receipts, games</text>
+  <text class="dt" x="636" y="222" dominant-baseline="central">F3 = 1.20</text>
+  <text class="dt" x="636" y="236" dominant-baseline="central">N3 = 8.79</text>
+  <!-- row 4: xbox console -->
+  <rect class="obj fill-1" x="220" y="260" width="120.0" height="26"/>
+  <rect class="obj" x="340.0" y="260" width="279.6" height="26"/>
+  <text class="sl ink" x="210" y="267" text-anchor="end" dominant-baseline="central">xbox console</text>
+  <text class="n" x="210" y="281" text-anchor="end" dominant-baseline="central">30% of Net Receipts, games</text>
+  <text class="dt" x="636" y="266" dominant-baseline="central">F4 = 3.00</text>
+  <text class="dt" x="636" y="280" dominant-baseline="central">N4 = 6.99</text>
+  <!-- row 5: apple us -->
+  <rect class="obj fill-1" x="220" y="304" width="120.0" height="26"/>
+  <rect class="obj" x="340.0" y="304" width="279.6" height="26"/>
+  <text class="sl ink" x="210" y="311" text-anchor="end" dominant-baseline="central">apple us</text>
+  <text class="n" x="210" y="325" text-anchor="end" dominant-baseline="central">30% IAP, 15% small business</text>
+  <text class="dt" x="636" y="310" dominant-baseline="central">F5 = 3.00</text>
+  <text class="dt" x="636" y="324" dominant-baseline="central">N5 = 6.99</text>
+  <!-- row 6: apple eu -->
+  <rect class="obj fill-1" x="220" y="348" width="104.0" height="26"/>
+  <rect class="obj" x="324.0" y="348" width="295.6" height="26"/>
+  <text class="sl ink" x="210" y="355" text-anchor="end" dominant-baseline="central">apple eu</text>
+  <text class="n" x="210" y="369" text-anchor="end" dominant-baseline="central">26% IAP from 1 October 2026</text>
+  <text class="dt" x="636" y="354" dominant-baseline="central">F6 = 2.60</text>
+  <text class="dt" x="636" y="368" dominant-baseline="central">N6 = 7.39</text>
+  <!-- row 7: google play us -->
+  <rect class="obj fill-1" x="220" y="392" width="100.0" height="26"/>
+  <rect class="obj" x="320.0" y="392" width="299.6" height="26"/>
+  <text class="sl ink" x="210" y="399" text-anchor="end" dominant-baseline="central">google play us</text>
+  <text class="n" x="210" y="413" text-anchor="end" dominant-baseline="central">20% + 5% billing, new installs</text>
+  <text class="dt" x="636" y="398" dominant-baseline="central">F7 = 2.50</text>
+  <text class="dt" x="636" y="412" dominant-baseline="central">N7 = 7.49</text>
+  <!-- row 8: web store -->
+  <rect class="obj fill-1" x="220" y="436" width="23.6" height="26"/>
+  <rect class="obj" x="243.6" y="436" width="376.0" height="26"/>
+  <text class="sl ink" x="210" y="443" text-anchor="end" dominant-baseline="central">web store</text>
+  <text class="n" x="210" y="457" text-anchor="end" dominant-baseline="central">2.9% + $0.30 card fee [3]</text>
+  <text class="dt" x="636" y="442" dominant-baseline="central">F8 = 0.59</text>
+  <text class="dt" x="636" y="456" dominant-baseline="central">N8 = 9.40</text>
+
+  <!-- Legend -->
+  <rect class="obj fill-1" x="220" y="480" width="20" height="12"/>
+  <text class="sl ink" x="246" y="486" dominant-baseline="central">store or card fee</text>
+  <rect class="obj" x="430" y="480" width="20" height="12"/>
+  <text class="sl ink" x="456" y="486" dominant-baseline="central">net to developer</text>
+
+  <!-- Notes -->
+  <rect class="note-box" x="40" y="510" width="680" height="96"/>
+  <text class="sl ink" x="52" y="528">notes</text>
+  <text class="n" x="52" y="546">[1] Steam's 2018 tiers: 30% of sales under $10M, 25% from $10M to $50M, 20% above (as reported).</text>
+  <text class="n" x="52" y="562">[2] Fees apply to the price before tax: Microsoft's Net Receipts and Apple's EU commission both exclude it.</text>
+  <text class="n" x="52" y="578">[3] Stripe's standard US card rate; a web store also carries tax, fraud, refunds and chargebacks itself.</text>
+  <text class="n" x="52" y="594">[4] Programs lower several rates: Apple Small Business, Epic's first $1M a year, Play Games Level Up.</text>
+</svg>
