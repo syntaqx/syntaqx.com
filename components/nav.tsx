@@ -11,15 +11,15 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-// The active item's rail: a 2px teal line on the bar's bottom edge, as wide
-// as the label (on the left edge inside the Lab list). Absolutely placed, so
-// nothing shifts when it lights up.
+// The active item's rail: a 2px teal line on the bar's bottom edge, spanning
+// the whole item including its padding (on the left edge inside the Lab
+// list). Absolutely placed, so nothing shifts when it lights up.
 function Marker({ on, list = false }: { on: boolean; list?: boolean }) {
   if (!on) return null;
   return (
     <span
       aria-hidden
-      className={`absolute bg-accent ${list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-3 -bottom-px h-0.5"}`}
+      className={`absolute bg-accent ${list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-0 -bottom-px h-0.5"}`}
     />
   );
 }
