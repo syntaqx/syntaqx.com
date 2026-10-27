@@ -6,7 +6,7 @@ import { CYL_FRONT, circle, cylSide, type Projector, type Scene, type SceneState
  * into cells. `occlude` erases line work already drawn under a solid face.
  */
 
-export type Ink = "fg" | "dim" | "acc";
+export type Ink = "fg" | "dim" | "acc" | "warn";
 
 export interface Pen {
   occlude(pts: V2[], alpha: number): void;
@@ -56,11 +56,12 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
       }
       case "box": {
         const b = p.box;
-        const ink: Ink = p.accent ? "acc" : "fg";
-        const alpha = p.ghost ? 0.55 : p.accent ? 1 : p.small ? 0.65 : 0.9;
+        const ink: Ink = p.warn ? "warn" : p.accent ? "acc" : "fg";
+        const lit = p.accent || p.warn;
+        const alpha = p.ghost ? 0.55 : lit ? 1 : p.small ? 0.65 : 0.9;
         if (!p.ghost) [b.left, b.right, b.top].forEach((f) => pen.occlude(pts(f), 1));
         [b.left, b.right, b.top].forEach((f) =>
-          pen.path(pts(f), { alpha, ink, width: p.accent ? 1.4 : 1, dash: p.ghost }),
+          pen.path(pts(f), { alpha, ink, width: lit ? 1.4 : 1, dash: p.ghost }),
         );
         if (p.slots)
           for (let k = 1; k < 9; k++) {

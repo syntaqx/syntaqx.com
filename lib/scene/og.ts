@@ -1,5 +1,5 @@
 import { project, REST, type Scene } from "./iso";
-import { HOT, LEVELS, levels, rasterize, scan } from "./raster";
+import { HOT, LEVELS, WARN, levels, rasterize, scan } from "./raster";
 import { sceneAt, type SceneName } from "./scenes";
 import { walk, type Ink, type Pen } from "./walk";
 
@@ -10,7 +10,7 @@ import { walk, type Ink, type Pen } from "./walk";
  * then emitted as a handful of <path> elements (one per color and opacity).
  */
 
-export const OG_COLORS = { bg: "#0a0c0c", fg: "#e6ece9", dim: "#84908e", acc: "#00d1ca" };
+export const OG_COLORS = { bg: "#0a0c0c", fg: "#e6ece9", dim: "#84908e", acc: "#00d1ca", warn: "#ff5d52" };
 
 type RGB = [number, number, number];
 const rgb = (h: string): RGB => {
@@ -20,7 +20,7 @@ const rgb = (h: string): RGB => {
 const hex = (c: RGB) => `#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
 const mix = (a: RGB, b: RGB, t: number): RGB => a.map((v, i) => Math.round(v + (b[i] - v) * t)) as RGB;
 
-const KIND: Record<Ink | "bg", number> = { fg: 0, dim: 1, acc: 2, bg: 3 };
+const KIND: Record<Ink | "bg", number> = { fg: 0, dim: 1, acc: 2, bg: 3, warn: 4 };
 
 function render(scene: Scene, width: number, height: number, pitch: number, wide: boolean): string {
   const C = OG_COLORS;
@@ -35,7 +35,7 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
   const { field } = rasterize(scene, cols, rows, 0, wide);
   const lv = levels(field, 0);
   const size = pitch - 1;
-  const tilePaths = Array.from({ length: HOT + 1 }, () => [] as string[]);
+  const tilePaths = Array.from({ length: WARN + 1 }, () => [] as string[]);
   for (let y = 0; y < rows; y++)
     for (let x = 0; x < cols; x++) {
       const v = lv[y * cols + x];
@@ -88,7 +88,7 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
   };
   walk(scene, project(scene.ext, fc, fr, wide), pen, REST);
 
-  const inkColor = [C.fg, C.dim, C.acc, C.bg];
+  const inkColor = [C.fg, C.dim, C.acc, C.bg, C.warn];
   const inkPaths = new Map<string, string[]>();
   for (let y = 0; y < fr; y++)
     for (let x = 0; x < fc; x++) {
@@ -103,6 +103,7 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
   const parts: string[] = [`<rect width="${width}" height="${height}" fill="${C.bg}"/>`];
   for (let k = 1; k <= LEVELS; k++) if (tilePaths[k].length) parts.push(`<path fill="${ramp[k - 1]}" d="${tilePaths[k].join("")}"/>`);
   if (tilePaths[HOT].length) parts.push(`<path fill="${hot}" d="${tilePaths[HOT].join("")}"/>`);
+  if (tilePaths[WARN].length) parts.push(`<path fill="${C.warn}" d="${tilePaths[WARN].join("")}"/>`);
   for (const [key, d] of inkPaths) {
     const [k, a] = key.split(":");
     parts.push(`<path fill="${inkColor[+k]}" fill-opacity="${a}" d="${d.join("")}"/>`);

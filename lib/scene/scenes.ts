@@ -698,40 +698,70 @@ const missing: SceneFn = (s) => {
  */
 
 /**
- * Payments: a card taps a terminal, and each tap posts a line to the
- * ledger, a settlement stack whose layers part on hover.
+ * Payments: a card taps the terminal and the authorization runs out
+ * through the processor and the card network to the issuer and back. The
+ * approval ticks the terminal's screen and posts a row to the ledger above.
+ * On hover the network's layers part and the ledger lifts.
  */
 const tender: SceneFn = (s) => {
-  const H = 0.4;
-  const gap = 0.35 + s.spread * 0.9;
-  const sheet = 2 * (H + gap);
-  const T = 3.4;
+  const T = 4;
   const ph = (s.t % T) / T;
-  const tap = ph < 0.25 ? ease(ph / 0.25) : ph < 0.4 ? 1 : 1 - ease(Math.min(1, (ph - 0.4) / 0.35));
-  const tz = 0.9;
-  const lift = 1.4 + s.spread * 1.2;
-  const cz = tz + 0.12 + (1 - tap) * lift;
+  const n = Math.floor(s.t / T);
+  // the card comes down, taps, waits for the answer, then lifts
+  const [tx, ty, tz] = [6.4, 6.2, 0.9];
+  const down = ph < 0.18 ? ease(ph / 0.18) : ph < 0.82 ? 1 : 1 - ease((ph - 0.82) / 0.18);
+  const cz = tz + 0.12 + (1 - down) * (1.4 + s.spread * 1.2);
+  const approved = ph >= 0.78;
+  // terminal, processor, network, issuer, along the ground
+  const route: V3[] = [[7.4, ty, 0], [7.4, 2.6, 0], [7.4, 2.2, 0], [4.5, 2.2, 0], [3.4, 3.5, 0], [3.4, 6.5, 0], [2.9, 6.5, 0]];
+  const lens = route.slice(1).map((p, i) => Math.hypot(p[0] - route[i][0], p[1] - route[i][1]));
+  const total = lens.reduce((a, b) => a + b, 0);
+  const along = (k: number): [number, number] => {
+    let d = k * total;
+    let i = 0;
+    while (i < lens.length - 1 && d > lens[i]) d -= lens[i++];
+    const f = lens[i] ? d / lens[i] : 0;
+    return [route[i][0] + (route[i + 1][0] - route[i][0]) * f, route[i][1] + (route[i + 1][1] - route[i][1]) * f];
+  };
+  // out to the issuer, then back with the answer
+  const trip = ph < 0.2 || ph > 0.76 ? -1 : ph < 0.48 ? (ph - 0.2) / 0.28 : 1 - (ph - 0.48) / 0.28;
+  const [qx, qy] = along(Math.max(0, trip));
+  const layer = (k: number) => k * (0.42 + s.spread * 0.5);
+  const lz = 1.7 + s.spread * 1.6 + bob(s, 0.1);
+  const row = (((approved ? n : n - 1) % 4) + 4) % 4;
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    { kind: "cable", pts: [[6.4, 6.9, 0], [3.3, 6.9, 0], [3.3, 5.6, 0]], speed: 0.4, accent: true },
-    ...[0, 1].map((i): Part => ({ kind: "box", box: box(1, 1, i * (H + gap), 4.6, 4.6, H), vents: i === 0 })),
+    ...route.slice(1).map((p, i): Part => ({ kind: "line", a: route[i], b: p, alpha: 0.6 })),
+    // the processor, then the network's three layers
+    { kind: "box", box: box(6.6, 0.8, 0, 1.6, 1.6, 1.7), vents: true },
+    ...[0, 1, 2].map((k): Part => ({ kind: "cyl", cx: 3.4, cy: 2.3, z: layer(k), r: 1.05, h: 0.32 })),
+    ...(trip >= 0 ? [{ kind: "box", box: box(qx - 0.22, qy - 0.22, 0, 0.44, 0.44, 0.3), accent: true } as Part] : []),
+    // the issuer
+    { kind: "box", box: box(1, 5.6, 0, 1.9, 1.9, 2.1), slots: true },
+    // the ledger, floating over the middle
     {
       kind: "plane",
-      pts: quad(1, 1, sheet, 4.6, 4.6),
+      pts: quad(3.9, 3.6, lz, 3.2, 3.2),
       v: 0.2,
-      drops: { at: [[1, 5.6], [5.6, 5.6], [5.6, 1]], from: 0 },
-      rows: { lengths: [5, 3.6, 4.4, 2.6], accentRow: Math.floor(s.t / T) % 4 },
+      handles: true,
+      drops: { at: [[3.9, 6.8], [7.1, 6.8], [7.1, 3.6]], from: 0 },
+      rows: { lengths: [4.2, 3, 3.7, 2.2], accentRow: row },
     },
-    // the terminal: its screen, then the keypad
-    { kind: "box", box: box(6.4, 5.4, 0, 2.2, 3, tz) },
-    { kind: "plane", pts: quad(6.65, 5.65, tz, 1.7, 1.1), v: 0.03 },
-    { kind: "plane", pts: quad(6.65, 7, tz, 1.7, 1.2), v: 0.2 },
-    ...[1, 2].map((k): Part => ({ kind: "line", a: [6.65 + (k * 1.7) / 3, 7, tz], b: [6.65 + (k * 1.7) / 3, 8.2, tz], alpha: 0.4 })),
-    ...[1, 2].map((k): Part => ({ kind: "line", a: [6.65, 7 + k * 0.4, tz], b: [8.35, 7 + k * 0.4, tz], alpha: 0.4 })),
-    { kind: "line", a: [7.5, 6.2, tz], b: [7.5, 6.2, cz], dashed: true, alpha: 0.4 },
-    { kind: "box", box: box(6.5, 5.55, cz, 2, 1.3, 0.08), accent: true, handles: true },
+    // the terminal: its screen, with a tick once approved, then the keypad
+    { kind: "box", box: box(tx, ty, 0, 2, 2.6, tz) },
+    { kind: "plane", pts: quad(tx + 0.25, ty + 0.25, tz, 1.5, 1), v: 0.03 },
+    ...(approved
+      ? [
+          { kind: "line", a: [tx + 0.55, ty + 0.7, tz], b: [tx + 0.85, ty + 1, tz], alpha: 1, accent: true } as Part,
+          { kind: "line", a: [tx + 0.85, ty + 1, tz], b: [tx + 1.45, ty + 0.45, tz], alpha: 1, accent: true } as Part,
+        ]
+      : []),
+    { kind: "plane", pts: quad(tx + 0.25, ty + 1.45, tz, 1.5, 0.95), v: 0.2 },
+    ...[1, 2].map((k): Part => ({ kind: "line", a: [tx + 0.25 + k * 0.5, ty + 1.45, tz], b: [tx + 0.25 + k * 0.5, ty + 2.4, tz], alpha: 0.4 })),
+    { kind: "line", a: [tx + 1, ty + 0.75, tz], b: [tx + 1, ty + 0.75, cz], dashed: true, alpha: 0.4 },
+    { kind: "box", box: box(tx + 0.1, ty + 0.15, cz, 1.8, 1.2, 0.08), accent: true, handles: true },
   ];
-  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1, 1, sheet + 0.6], [6.5, 5.55, tz + lift + 0.6]], axes: ground(10) };
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [3.9, 3.6, lz + 0.6], [tx, ty, tz + 3]], axes: ground(10) };
 };
 
 /**
@@ -842,8 +872,8 @@ const route: SceneFn = (s) => {
 
 /**
  * Gaming: two soldiers trade fire across a low wall among trees, rocks and
- * crates, watched by a pixel drone, on a battlefield lifted off the game
- * servers that run it. On hover the field rises off the racks.
+ * crates, watched by a pixel drone, the game servers that run the match
+ * wired in from the back edge. On hover the drone climbs.
  */
 // an original sprite: a round drone with an antenna, its eye glancing side to
 // side and its thrusters flickering
@@ -856,17 +886,16 @@ const arcade: SceneFn = (s) => {
   const n = Math.floor(s.t / T);
   const p = (s.t - n * T) / T;
   // a soldier at x facing dir (+1 or -1): legs, torso, head and a rifle at the shoulder
-  const Z0 = 2.9 + s.spread * 1.8;
-  const gz = Z0 + 1.05;
+  const gz = 1.05;
   const soldier = (x: number, y: number, dir: number, firing: boolean, opts: { accent?: boolean } = {}): Part[] => {
     const kick = firing && p < 0.15 ? -0.08 * dir : 0;
     const rifle: Part = { kind: "box", box: box(dir > 0 ? x + 0.1 + kick : x - 1.3 + kick, y + 0.2, gz, 1.2, 0.14, 0.14), small: true };
     return [
       ...(dir < 0 ? [rifle] : []),
-      { kind: "box", box: box(x - 0.25, y + 0.05, Z0, 0.2, 0.2, 0.6), small: true },
-      { kind: "box", box: box(x - 0.25, y + 0.35, Z0, 0.2, 0.2, 0.6), small: true },
-      { kind: "box", box: box(x - 0.3, y, Z0 + 0.6, 0.6, 0.6, 0.7), ...opts },
-      { kind: "box", box: box(x - 0.18, y + 0.12, Z0 + 1.3, 0.36, 0.36, 0.36), ...opts },
+      { kind: "box", box: box(x - 0.25, y + 0.05, 0, 0.2, 0.2, 0.6), small: true },
+      { kind: "box", box: box(x - 0.25, y + 0.35, 0, 0.2, 0.2, 0.6), small: true },
+      { kind: "box", box: box(x - 0.3, y, 0.6, 0.6, 0.6, 0.7), ...opts },
+      { kind: "box", box: box(x - 0.18, y + 0.12, 1.3, 0.36, 0.36, 0.36), ...opts },
       ...(dir > 0 ? [rifle] : []),
     ];
   };
@@ -879,33 +908,32 @@ const arcade: SceneFn = (s) => {
   const at = (k: number): V3 => [m[0] + (t[0] - m[0]) * k, m[1] + (t[1] - m[1]) * k, gz + 0.07];
   // the drone: one bar per run of pixels in a row, bottom row first
   const [px, ix, iy] = [0.36, 2.4, 3.4];
-  const iz = Z0 + 2.4 + s.spread * 0.6 + bob(s, 0.2);
+  const iz = 2.4 + s.spread * 1.4 + bob(s, 0.2);
   const pixels = DRONE[Math.floor(s.t / 0.6) % 2].toReversed().flatMap((row, r) =>
     [...row.matchAll(/X+/g)].map((run): Part => ({ kind: "box", box: box(ix + run.index * px, iy, iz + r * px, run[0].length * px, 0.08, px), accent: true })),
   );
   // scenery: a trunk under two stacked cones, low rocks, crates and a barrel
   const tree = (x: number, y: number, h: number): [number, Part[]] => [x + y, [
-    { kind: "cyl", cx: x, cy: y, z: Z0, r: 0.12, h: 0.5 },
-    { kind: "cyl", cx: x, cy: y, z: Z0 + 0.5, r: 0.6, h: h * 0.6, rt: 0.15 },
-    { kind: "cyl", cx: x, cy: y, z: Z0 + 0.5 + h * 0.45, r: 0.45, h: h * 0.55, rt: 0.02 },
+    { kind: "cyl", cx: x, cy: y, z: 0, r: 0.12, h: 0.5 },
+    { kind: "cyl", cx: x, cy: y, z: 0.5, r: 0.6, h: h * 0.6, rt: 0.15 },
+    { kind: "cyl", cx: x, cy: y, z: 0.5 + h * 0.45, r: 0.45, h: h * 0.55, rt: 0.02 },
   ]];
-  const rock = (x: number, y: number, a: number, b: number, h: number): [number, Part[]] => [x + y + (a + b) / 2, [{ kind: "box", box: box(x, y, Z0, a, b, h), small: true }]];
+  const rock = (x: number, y: number, a: number, b: number, h: number): [number, Part[]] => [x + y + (a + b) / 2, [{ kind: "box", box: box(x, y, 0, a, b, h), small: true }]];
   const things: [number, Part[]][] = [
-    tree(1.5, 5.2, 2), tree(8.4, 2.2, 2.1), tree(8.7, 5.5, 1.5), tree(8.4, 7.9, 1.8), tree(1.6, 8.3, 1.5),
+    tree(1.5, 5.2, 2), tree(9, 3.4, 2.1), tree(8.7, 5.5, 1.5), tree(8.4, 7.9, 1.8), tree(1.6, 8.3, 1.5),
     rock(5.6, 1.6, 0.8, 0.6, 0.3), rock(1.3, 3, 0.6, 0.9, 0.35), rock(6.2, 8.2, 0.9, 0.5, 0.25),
-    [8.9, [{ kind: "box", box: box(5.8, 2.5, Z0, 0.6, 0.6, 0.6) }, { kind: "box", box: box(6.4, 2.6, Z0, 0.55, 0.55, 0.55) }, { kind: "box", box: box(5.95, 2.6, Z0 + 0.6, 0.5, 0.5, 0.5) }]],
-    [11.6, [{ kind: "cyl", cx: 3.7, cy: 7.9, z: Z0, r: 0.3, h: 0.7 }]],
-    [ix + iy + 2, [{ kind: "line", a: [ix + 2, iy, Z0], b: [ix + 2, iy, iz], dashed: true, alpha: 0.35 }, ...pixels]],
+    [8.9, [{ kind: "box", box: box(5.8, 2.5, 0, 0.6, 0.6, 0.6) }, { kind: "box", box: box(6.4, 2.6, 0, 0.55, 0.55, 0.55) }, { kind: "box", box: box(5.95, 2.6, 0.6, 0.5, 0.5, 0.5) }]],
+    [11.6, [{ kind: "cyl", cx: 3.7, cy: 7.9, z: 0, r: 0.3, h: 0.7 }]],
+    [ix + iy + 2, [{ kind: "line", a: [ix + 2, iy, 0], b: [ix + 2, iy, iz], dashed: true, alpha: 0.35 }, ...pixels]],
     [bx + by, soldier(bx, by, -1, !aFires)],
-    [4.65 + 5.9, [{ kind: "box", box: box(4.4, 4.6, Z0, 0.5, 2.6, 0.55), small: true }]],
+    [4.65 + 5.9, [{ kind: "box", box: box(4.4, 4.6, 0, 0.5, 2.6, 0.55), small: true }]],
     [ax + ay + 0.3, soldier(ax, ay, 1, aFires, { accent: true })],
   ];
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    // the game servers under the field, and the link up to it
-    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(3.1 + i * 1.4, 4.2, 0, 1, 1.8, 0.9), slots: true })),
-    { kind: "cable", pts: [[5, 5.1, 0.9], [5, 5.1, Z0]], speed: 0.5, accent: true },
-    { kind: "plane", pts: quad(1, 1, Z0, 8, 8), v: 0.12, drops: { at: [[1, 9], [9, 9], [9, 1]], from: 0 } },
+    // the game servers on the back edge, and the link into the match
+    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(6 + i * 1.2, 0.2, 0, 1, 1, 1.3), slots: true })),
+    { kind: "cable", pts: [[7.7, 1.2, 0], [7.7, 4, 0], [4.65, 4, 0], [4.65, 4.6, 0]], speed: 0.5, accent: true },
     ...things.sort((a, b) => a[0] - b[0]).flatMap(([, ps]) => ps),
     ...(p < 0.15 ? [{ kind: "box", box: box(m[0] - 0.12, m[1] - 0.12, gz - 0.05, 0.24, 0.24, 0.24), accent: true } as Part] : []),
     { kind: "line", a: at(Math.max(0, p * 1.4 - 0.3)), b: at(Math.min(1, p * 1.4)), accent: true },
@@ -973,30 +1001,348 @@ const tenancy: SceneFn = (s) => {
 };
 
 /**
- * User-Generated Platforms: stacks of posts and media, one tile at a time
- * rising off a stack into the live stream above.
+ * User-Generated Platforms: uploads drop onto a belt and pass under the
+ * trust and safety scanner. Most rise into the feed scrolling on the phone
+ * behind; every so often one is flagged and pushed off into quarantine. On
+ * hover the phone lifts and the scanner opens.
  */
 const feed: SceneFn = (s) => {
-  const Z = 5 + s.spread * 2.2;
-  const stacks: [number, number, number][] = [[0.8, 6.6, 4], [4, 7.2, 3], [7.2, 6.2, 5]];
+  const T = 3.2;
+  const ph = (s.t % T) / T;
+  const flagged = Math.floor(s.t / T) % 4 === 3;
+  const belt = 0.45;
+  const [x0, x1, by] = [0.8, 6.6, 6.4];
+  const [ax, beamZ] = [3.7, 1.9 + s.spread * 0.6];
+  const [fx, fy] = [7, 3];
+  const pz = 0.6 + s.spread * 1.4;
+  const [screenB, screenT] = [pz + 0.3, pz + 4.6];
+  const tile = (x: number, y: number, z: number, accent: boolean): Part => ({ kind: "box", box: box(x, y, z, 1, 0.8, 0.12), accent, small: !accent });
+  // the upload: drop on, ride under the scanner, then up to the feed or off to the bin
+  let at: V3;
+  if (ph < 0.15) at = [x0 + 0.3, by + 0.2, belt + (1 - ease(ph / 0.15)) * 2.4];
+  else if (ph < 0.55) at = [x0 + 0.3 + (5 - x0 - 0.3) * ((ph - 0.15) / 0.4), by + 0.2, belt];
+  else if (flagged) {
+    const k = ease(Math.min(1, (ph - 0.55) / 0.2));
+    at = [5 - k * 0.3, by + 0.2 + k * 1.8, belt + (0.05 - belt) * k + Math.sin(k * Math.PI) * 0.5];
+  } else {
+    const k = ease(Math.min(1, (ph - 0.55) / 0.4));
+    at = [5 + (fx - 0.5 - 5) * k, by + 0.2 + (fy + 0.4 - by - 0.2) * k, belt + (screenT - belt) * k];
+  }
+  const scanning = at[0] > ax - 1 && at[0] < ax + 0.6 && at[2] <= belt + 0.01;
+  const binned = flagged && ph >= 0.75;
+  const moving = tile(...at, !(flagged && ph >= 0.45));
+  // the feed: cards scrolling up the screen, cut off at its edges
+  const face = fy + 0.36;
+  const pitch = 1.3;
+  const off = ((s.t / T) * pitch) % pitch;
+  const [lo0, hi0] = [screenB + 0.15, screenT - 0.45];
+  const cards: Part[] = [];
+  for (let k = -1; k < 4; k++) {
+    const lo = Math.max(lo0, lo0 + k * pitch + off);
+    const hi = Math.min(hi0, lo0 + k * pitch + off + 1.05);
+    if (hi - lo > 0.08) cards.push({ kind: "plane", pts: [[fx - 1.1, face, lo], [fx + 1.1, face, lo], [fx + 1.1, face, hi], [fx - 1.1, face, hi]], v: 0.2 });
+  }
+  const slide = (s.t * 0.9) % 0.6;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // the phone on its stand, the feed on its screen, a live dot up top
+    { kind: "box", box: box(fx - 0.8, fy - 0.4, 0, 1.6, 1, 0.12) },
+    { kind: "line", a: [fx, fy + 0.2, 0.12], b: [fx, fy + 0.2, pz], dashed: true, alpha: 0.4 },
+    { kind: "box", box: box(fx - 1.4, fy, pz, 2.8, 0.36, 5) },
+    { kind: "plane", pts: [[fx - 1.25, face, screenB], [fx + 1.25, face, screenB], [fx + 1.25, face, screenT], [fx - 1.25, face, screenT]], v: 0.03 },
+    ...cards,
+    { kind: "box", box: box(fx - 1.05, face, screenT - 0.32, 0.2, 0.02, 0.2), accent: true },
+    { kind: "line", a: [fx - 0.7, face, screenT - 0.22], b: [fx + 0.2, face, screenT - 0.22], alpha: 0.6 },
+    // the scanner's back post, the belt and its sliding slats
+    { kind: "box", box: box(ax, by - 0.45, 0, 0.3, 0.3, 1.9) },
+    { kind: "box", box: box(x0, by, 0, x1 - x0, 1.2, belt) },
+    ...Array.from({ length: 10 }, (_, k): Part => ({ kind: "line", a: [x0 + slide + k * 0.6, by, belt], b: [x0 + slide + k * 0.6, by + 1.2, belt], alpha: 0.3 })),
+    ...(binned || ph >= 0.97 ? [] : [moving]),
+    { kind: "box", box: box(ax, by + 1.35, 0, 0.3, 0.3, 1.9) },
+    ...(s.spread > 0.05 ? [{ kind: "line", a: [ax + 0.15, by + 1.65, 1.9], b: [ax + 0.15, by + 1.65, beamZ], dashed: true, alpha: 0.4 } as Part] : []),
+    { kind: "box", box: box(ax - 0.05, by - 0.45, beamZ, 0.4, 2.1, 0.3), accent: scanning, small: !scanning },
+    // quarantine, in front of the scanner
+    ...tray(4.2, by + 1.6, 1.6, 1.2, 0.6, binned ? [tile(4.5, by + 1.8, 0.05, false)] : [], 0.12),
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [fx - 1.4, fy, screenT + 0.6], [fx + 1.4, fy, screenT + 0.6], [x0 + 0.3, by, 3]], axes: ground(10) };
+};
+
+/**
+ * Health Tech: a bedside monitor sweeps a heartbeat across its screen, fed
+ * by the patient's chart beside it, a pill bottle at its foot. On hover the
+ * screen rises off its stand.
+ */
+// one beat as [along, height]: a small wave, the spike, a wider wave
+const BEAT: [number, number][] = [[0, 0], [0.12, 0], [0.17, 0.12], [0.22, 0], [0.34, 0], [0.38, -0.15], [0.44, 1], [0.5, -0.3], [0.54, 0], [0.66, 0], [0.75, 0.22], [0.84, 0], [1, 0]];
+const pulse: SceneFn = (s) => {
+  const [sx, sy, sw, sh] = [1.4, 3.4, 5.2, 2.8];
+  const sz = 1.6 + s.spread * 1.2;
+  const face = sy + 0.36;
+  const beats = 3;
+  const trace = BEAT.flatMap(([u, v], i) => Array.from({ length: beats }, (_, k): [number, number] => [(k + u) / beats, v]).filter((_, k) => k === 0 || i > 0)).sort((p, q) => p[0] - q[0]);
+  const on = (u: number, v: number): V3 => [sx + 0.4 + u * (sw - 0.8), face, sz + 1.1 + v * 1.2];
+  const height = (u: number) => {
+    const i = trace.findIndex(([w]) => w >= u);
+    if (i <= 0) return trace[0][1];
+    const [[u0, v0], [u1, v1]] = [trace[i - 1], trace[i]];
+    return v0 + ((v1 - v0) * (u - u0)) / (u1 - u0 || 1);
+  };
+  const piece = (a: number, b: number, accent: boolean): Part[] => {
+    const pts: [number, number][] = [[a, height(a)], ...trace.filter(([u]) => u > a && u < b), [b, height(b)]];
+    return pts.slice(1).map(([u, v], i): Part => ({ kind: "line", a: on(...pts[i]), b: on(u, v), alpha: accent ? 1 : 0.35, accent }));
+  };
+  // the sweep writes the new trace over the old, leaving a small gap ahead of it
+  // offset so the resting frame (and a Soon card) has a trace drawn
+  const w = (s.t * 0.3 + 0.7) % 1;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // the chart feeds the monitor
+    { kind: "cable", pts: [[7, 7, 0], [4.1, 7, 0], [4.1, 4.4, 0]], speed: 0.35 },
+    { kind: "box", box: box(3.2, 3, 0, 1.8, 1.4, 0.14) },
+    { kind: "box", box: box(3.9, 3.4, 0.14, 0.4, 0.36, sz - 0.14) },
+    { kind: "box", box: box(sx, sy, sz, sw, 0.36, sh) },
+    { kind: "plane", pts: [[sx + 0.2, face, sz + 0.2], [sx + sw - 0.2, face, sz + 0.2], [sx + sw - 0.2, face, sz + sh - 0.2], [sx + 0.2, face, sz + sh - 0.2]], v: 0.03 },
+    ...piece(0, w, true),
+    ...(w + 0.06 < 1 ? piece(w + 0.06, 1, false) : []),
+    { kind: "line", a: [sx + sw - 0.75, face, sz + sh - 0.5], b: [sx + sw - 0.35, face, sz + sh - 0.5], alpha: 1, accent: true },
+    { kind: "line", a: [sx + sw - 0.55, face, sz + sh - 0.7], b: [sx + sw - 0.55, face, sz + sh - 0.3], alpha: 1, accent: true },
+    // a pill bottle and its cap
+    { kind: "cyl", cx: 8.4, cy: 4.4, z: 0, r: 0.45, h: 0.85 },
+    { kind: "cyl", cx: 8.4, cy: 4.4, z: 0.85, r: 0.5, h: 0.25, accent: true },
+    // the chart: a stack of folders, the top one tabbed
+    ...[0, 1, 2].map((k): Part => ({ kind: "box", box: box(7 + (k % 2) * 0.08, 6.2 - (k % 2) * 0.06, k * 0.16, 1.8, 1.4, 0.14), small: true })),
+    { kind: "box", box: box(7.2, 6.14, 0.48, 0.6, 0.2, 0.06), small: true },
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [sx, sy, sz + sh + 0.4], [sx + sw, sy, sz + sh + 0.4]], axes: ground(10) };
+};
+
+/**
+ * Commerce: products wait on a shelf, and one at a time is picked off it
+ * and dropped into a shopping bag, its slot restocked behind it. On hover
+ * the shelf rises.
+ */
+const basket: SceneFn = (s) => {
+  const zs = 1 + s.spread * 1.2;
+  // [x, y, height, round], back row first
+  const items: [number, number, number, boolean][] = [
+    [1.3, 1.3, 0.9, false], [2.9, 1.3, 1.2, true], [4.5, 1.3, 0.7, false],
+    [1.3, 2.9, 1.3, true], [2.9, 2.9, 0.8, false], [4.5, 2.9, 1.1, false],
+  ];
   const T = 3;
+  const ph = (s.t % T) / T;
+  const pick = [4, 0, 5, 2, 3, 1][Math.floor(s.t / T) % items.length];
+  const [bx, by, ba, bb, bh] = [6.2, 5.8, 2.4, 2, 1.8];
+  const product = ([x, y, h, round]: (typeof items)[number], z: number, accent = false): Part =>
+    round ? { kind: "cyl", cx: x + 0.5, cy: y + 0.5, z, r: 0.45, h, accent } : { kind: "box", box: box(x, y, z, 1, 1, h), accent, small: !accent };
+  // the pick: lift off the shelf, arc over to the bag, drop in
+  const [ix, iy, ih] = items[pick];
+  const [tx, ty] = [bx + ba / 2 - 0.5, by + bb / 2 - 0.5];
+  const lift = ease(Math.min(1, ph / 0.2));
+  const across = ease(Math.min(1, Math.max(0, (ph - 0.2) / 0.45)));
+  const drop = ease(Math.min(1, Math.max(0, (ph - 0.65) / 0.2)));
+  const top = bh + 1.4;
+  const moving: (typeof items)[number] = [ix + (tx - ix) * across, iy + (ty - iy) * across, ih, items[pick][3]];
+  const mz = ph < 0.2 ? zs + lift * 1.2 : ph < 0.65 ? zs + 1.2 + (top - zs - 1.2) * across + Math.sin(across * Math.PI) * 0.8 : top + (0.15 - top) * drop;
+  const inBag = mz < bh;
+  const held = ph >= 0.85;
+  // a handle arches over each long wall
+  const handle = (y: number): Part[] =>
+    Array.from({ length: 8 }, (_, k): Part => {
+      const at = (u: number): V3 => [bx + 0.6 + u * (ba - 1.2), y, bh + Math.sin(u * Math.PI) * 0.8];
+      return { kind: "line", a: at(k / 8), b: at((k + 1) / 8), alpha: 0.9 };
+    });
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "plane", pts: quad(0.8, 0.8, zs, 5.2, 3.6), v: 0.16, drops: { at: [[0.8, 4.4], [6, 4.4], [6, 0.8]], from: 0 } },
+    ...items.map((it, i): Part => (i === pick && !held ? { kind: "plane", pts: quad(it[0], it[1], zs, 1, 1), v: 0, dashed: true } : product(it, zs))),
+    ...handle(by + 0.15),
+    ...tray(bx, by, ba, bb, bh, [product([bx + 0.4, by + 0.4, 0.6, false], 0.15), ...(inBag ? [product(moving, mz, true)] : [])]),
+    ...handle(by + bb - 0.15),
+    ...(inBag ? [] : [product(moving, mz, true)]),
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1.3, 1.3, zs + 2.6], [bx, by, top + 1.6]], axes: ground(10) };
+};
+
+/**
+ * Banking & Lending: a bank on its plinth, columns along the front, and
+ * stacks of coins beside it, one coin at a time dropping onto a stack. On
+ * hover the roof lifts off the columns.
+ */
+const bank: SceneFn = (s) => {
+  const [x0, y0, a, b] = [1, 2, 5.2, 4];
+  const [x1, y1] = [x0 + a, y0 + b];
+  const floor = 0.55;
+  const colH = 1.9;
+  const rz = floor + colH + s.spread * 1.2;
+  const [px0, py0, px1, py1] = [x0 + 0.3, y0 + 0.3, x1 - 0.3, y1 - 0.3];
+  const pz = rz + 0.35;
+  const xm = (px0 + px1) / 2;
+  const ridge = 0.9;
+  const cols: [number, number][] = [
+    ...[0, 1, 2, 3].map((i): [number, number] => [x0 + 0.75 + (i * (a - 1.5)) / 3, y1 - 0.75]),
+    [x1 - 0.75, y0 + 0.9],
+    [x1 - 0.75, y0 + 2.1],
+  ];
+  // coin stacks: [x, y, coins]; one coin drops onto each in turn
+  const stacks: [number, number, number][] = [[7.6, 2.6, 4], [8.2, 4.6, 6], [7.4, 6.8, 3]];
+  const T = 2.4;
+  const ph = (s.t % T) / T;
   const n = Math.floor(s.t / T) % stacks.length;
-  const ph = ease((s.t % T) / T);
-  const [cx, cy] = [4.6, 3.4];
-  const tile = (x: number, y: number, z: number, accent = false): Part => ({ kind: "box", box: box(x, y, z, 2.2, 1.6, 0.14), accent, small: !accent });
-  const parts: Part[] = [{ kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 }];
-  stacks.forEach(([x, y, count]) => {
-    parts.push({ kind: "line", a: [x + 1.1, y + 0.8, count * 0.2], b: [cx, cy, Z], dashed: true, alpha: 0.3 });
-    for (let k = 0; k < count; k++) parts.push(tile(x + (k % 2) * 0.08, y - (k % 2) * 0.06, k * 0.2));
+  const [ch, step] = [0.14, 0.17];
+  const coin = (x: number, y: number, z: number, accent = false): Part => ({ kind: "cyl", cx: x, cy: y, z, r: 0.55, h: ch, accent });
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // plinth and step, then the hall behind the columns
+    { kind: "box", box: box(x0, y0, 0, a, b, 0.3) },
+    { kind: "box", box: box(x0 + 0.3, y0 + 0.3, 0.3, a - 0.6, b - 0.6, 0.25) },
+    { kind: "box", box: box(x0 + 0.8, y0 + 0.7, floor, a - 2.2, b - 2.2, colH) },
+    { kind: "plane", pts: [[xm - 0.8, y1 - 1.5, floor], [xm, y1 - 1.5, floor], [xm, y1 - 1.5, floor + 1.3], [xm - 0.8, y1 - 1.5, floor + 1.3]], v: 0.03 },
+    ...cols
+      .sort((p, q) => p[0] + p[1] - (q[0] + q[1]))
+      .map(([cx, cy]): Part => ({ kind: "cyl", cx, cy, z: floor, r: 0.24, h: colH })),
+    ...(s.spread > 0.05 ? cols.map(([cx, cy]): Part => ({ kind: "line", a: [cx, cy, floor + colH], b: [cx, cy, rz], dashed: true, alpha: 0.4 })) : []),
+    // the roof: a beam, both slopes, then the gable over the front
+    { kind: "box", box: box(px0, py0, rz, px1 - px0, py1 - py0, 0.35) },
+    { kind: "plane", pts: [[px0, py0, pz], [px0, py1, pz], [xm, py1, pz + ridge], [xm, py0, pz + ridge]], v: 0.3 },
+    { kind: "plane", pts: [[xm, py0, pz + ridge], [xm, py1, pz + ridge], [px1, py1, pz], [px1, py0, pz]], v: 0.22 },
+    { kind: "plane", pts: [[px0, py1, pz], [px1, py1, pz], [xm, py1, pz + ridge]], v: 0.4 },
+  ];
+  stacks.forEach(([x, y, count], i) => {
+    for (let k = 0; k < count; k++) parts.push(coin(x, y, k * step));
+    if (i !== n) return;
+    // the new coin falls, lands, and sits lit until the next one
+    const land = count * step;
+    const fall = ease(Math.min(1, ph / 0.45));
+    const z = land + (1 - fall) * 3;
+    if (fall < 1) parts.push({ kind: "line", a: [x, y, land + ch], b: [x, y, z], dashed: true, alpha: 0.35 });
+    parts.push(coin(x, y, z, true));
   });
-  const [sx, sy, sc] = stacks[n];
-  const [tx, ty, tz] = [sx + (cx - 1.1 - sx) * ph, sy + (cy - 0.8 - sy) * ph, sc * 0.2 + (Z - 0.2 - sc * 0.2) * ph];
-  parts.push(
-    tile(tx, ty, tz, true),
-    { kind: "plane", pts: quad(1.8, 1, Z, 5.6, 4.4), v: 0.2, window: true, handles: true },
-    { kind: "plane", pts: [[4, 2.6, Z], [4, 4.6, Z], [5.7, 3.6, Z]], v: 0.6 },
-  );
-  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1.8, 1, Z + 0.4], [7.4, 1, Z + 0.4]], axes: ground(10) };
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [xm, py0, pz + ridge + 0.4 + s.spread * 0.4], [8.2, 4.6, 4.2]], axes: ground(10) };
+};
+
+/**
+ * Hosting & Cloud: racks of real servers under a cloud, wired out to the
+ * websites they serve. One site at a time deploys, rising into place lit.
+ * On hover the cloud lifts off the servers it's made of.
+ */
+// the cloud's outline as circles along it, [along, radius, center height]
+const PUFFS: [number, number, number][] = [[1, 0.9, 0.9], [2.4, 1.3, 1.3], [3.9, 1.05, 1.15], [5, 0.75, 0.75]];
+const cloud: SceneFn = (s) => {
+  const T = 3;
+  const n = Math.floor(s.t / T);
+  const ph = (s.t % T) / T;
+  const rack = (i: number) => 0.8 + i * 1.25;
+  // the cloud: a flat outline standing over the racks, thick enough to read as a sign
+  const [cx0, cy0, cz0] = [0.5, 1.2, 3.3 + s.spread * 1.6 + bob(s, 0.1)];
+  const top = (u: number) => Math.max(...PUFFS.map(([c, r, h]) => (Math.abs(u - c) < r ? h + Math.sqrt(r * r - (u - c) ** 2) : 0)));
+  const [l, r] = [PUFFS[0], PUFFS[PUFFS.length - 1]];
+  const outline: [number, number][] = [
+    ...Array.from({ length: 49 }, (_, i): [number, number] => {
+      const u = l[0] - l[1] + ((r[0] + r[1] - l[0] + l[1]) * i) / 48;
+      return [u, top(u)];
+    }),
+    ...Array.from({ length: 9 }, (_, i): [number, number] => [r[0] + Math.cos((i / 8) * (Math.PI / 2)) * r[1], r[2] - Math.sin((i / 8) * (Math.PI / 2)) * r[1]]),
+    ...Array.from({ length: 9 }, (_, i): [number, number] => [l[0] - Math.sin((i / 8) * (Math.PI / 2)) * l[1], l[2] - Math.cos((i / 8) * (Math.PI / 2)) * l[1]]),
+  ];
+  const face = (y: number, v: number): Part => ({ kind: "plane", pts: outline.map(([u, h]): V3 => [cx0 + u, y, cz0 + h]), v });
+  // the sites: [x, y], each a browser window standing on its own feed from the racks
+  const sites: [number, number, V3[]][] = [
+    [6.6, 3.6, [[rack(3) + 1.1, 1.4, 0], [7.8, 1.4, 0], [7.8, 3.7, 0]]],
+    [7, 6.6, [[rack(3) + 0.3, 2.6, 0], [rack(3) + 0.3, 6.7, 0], [8.2, 6.7, 0]]],
+    [3, 7.6, [[rack(1) + 0.55, 2.6, 0], [rack(1) + 0.55, 7.7, 0], [4.2, 7.7, 0]]],
+  ];
+  const live = n % sites.length;
+  const [w, h] = [2.4, 1.6];
+  const site = ([x, y]: [number, number, V3[]], i: number): Part[] => {
+    const lit = i === live;
+    const z = 0.8 + s.spread * 0.6 + (lit ? -0.8 * (1 - ease(Math.min(1, ph / 0.35))) : 0);
+    const f = y + 0.13;
+    return [
+      { kind: "line", a: [x + w / 2, y + 0.1, 0], b: [x + w / 2, y + 0.1, z], dashed: true, alpha: 0.4 },
+      { kind: "box", box: box(x, y, z, w, 0.12, h), accent: lit, small: !lit },
+      { kind: "line", a: [x, f, z + h - 0.38], b: [x + w, f, z + h - 0.38], alpha: 0.7, accent: lit },
+      ...[0, 1, 2].map((k): Part => ({ kind: "box", box: box(x + 0.18 + k * 0.24, f, z + h - 0.26, 0.13, 0.01, 0.13), small: true })),
+      { kind: "plane", pts: [[x + 0.25, f, z + 0.25], [x + 1.25, f, z + 0.25], [x + 1.25, f, z + h - 0.6], [x + 0.25, f, z + h - 0.6]], v: lit ? 0.45 : 0.25 },
+      ...[0.95, 0.7, 0.45].map((zz, k): Part => ({ kind: "line", a: [x + 1.45, f, z + zz], b: [x + 1.45 + [0.75, 0.5, 0.65][k], f, z + zz], alpha: 0.6 })),
+    ];
+  };
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    ...[0, 1, 2, 3].map((i): Part => ({ kind: "box", box: box(rack(i), 0.8, 0, 1.1, 1.8, 2.4), slots: true })),
+    ...(s.spread > 0.05 ? [0.8, 5.85].map((x): Part => ({ kind: "line", a: [x, 2.6, 2.4], b: [x, 2.6, cz0], dashed: true, alpha: 0.35 })) : []),
+    face(cy0, 0.2),
+    face(cy0 + 0.35, 0.4),
+    ...sites.map(([, , route], i): Part => ({ kind: "cable", pts: route, speed: 0.4, accent: i === live })),
+    ...sites
+      .map((st, i) => [st, i] as const)
+      .sort(([p], [q]) => p[0] + p[1] - (q[0] + q[1]))
+      .flatMap(([st, i]) => site(st, i)),
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [cx0, cy0, cz0 + 2.6], [cx0 + 5.8, cy0, cz0 + 2.6]], axes: ground(10) };
+};
+
+/**
+ * Workplace & Collaboration: a board of three columns, a card working its
+ * way across and arcing back to the start, under a chat where someone's
+ * typing. Every third pass the card is blocked in the middle column and
+ * turns red. On hover the columns step apart.
+ */
+const board: SceneFn = (s) => {
+  const [y0, depth, cw] = [2.4, 5.4, 2.6];
+  const xs = [0.8, 3.7, 6.6];
+  const zc = (i: number) => 0.15 + s.spread * 0.5 * i;
+  const slot = (c: number, k: number): V3 => [xs[c] + 0.3, y0 + 0.8 + k * 1.05, zc(c)];
+  const card = ([x, y, z]: V3, o: { accent?: boolean; warn?: boolean } = {}): Part => ({ kind: "box", box: box(x, y, z, cw - 0.6, 0.8, 0.1), ...o, handles: o.accent || o.warn, small: !o.accent && !o.warn });
+  const counts = [3, 2, 1];
+  // rest, move across, rest (blocked, some passes), move, rest, arc back
+  const T = 8;
+  const ph = ((s.t + 0.6) % T) / T;
+  const blocked = Math.floor((s.t + 0.6) / T) % 3 === 2;
+  const [a, b, c] = [slot(0, 3), slot(1, 2), slot(2, 1)];
+  const legs: [number, V3, V3, number][] = [
+    [0.13, a, a, 0],
+    [0.3, a, b, 0.8],
+    [0.55, b, b, 0],
+    [0.7, b, c, 0.8],
+    [0.84, c, c, 0],
+    [1, c, a, 2],
+  ];
+  const li = legs.findIndex(([end]) => ph < end);
+  const start = li ? legs[li - 1][0] : 0;
+  const [end, from, to, lift] = legs[li];
+  const k = ease((ph - start) / (end - start));
+  const stuck = blocked && li === 2;
+  const shake = stuck ? Math.sin(s.t * 28) * 0.06 : 0;
+  const pos: V3 = [from[0] + (to[0] - from[0]) * k + shake, from[1] + (to[1] - from[1]) * k, from[2] + (to[2] - from[2]) * k + Math.sin(k * Math.PI) * lift];
+  // the chat: speech bubbles standing behind the board
+  const [cy, bz] = [y0 - 0.1, 1.9 + s.spread * 1.2];
+  const bubble = (x: number, z: number, w: number, tail: number): Part[] => [
+    { kind: "plane", pts: [[x + tail, cy, z - 0.4], [x + tail + 0.5, cy, z], [x + tail - 0.1, cy, z]], v: 0.2 },
+    { kind: "plane", pts: [[x, cy, z], [x + w, cy, z], [x + w, cy, z + 1.2], [x, cy, z + 1.2]], v: 0.2 },
+  ];
+  const dot = (i: number): Part => {
+    const up = Math.max(0, Math.sin(s.t * 6 - i * 0.9)) * 0.15;
+    return { kind: "box", box: box(5.9 + i * 0.55, cy, bz + 0.95 + up, 0.26, 0.02, 0.26), accent: true };
+  };
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    ...bubble(1, bz + 0.5, 3.6, 0.6),
+    { kind: "line", a: [1.4, cy, bz + 1.3], b: [4, cy, bz + 1.3], alpha: 0.6 },
+    { kind: "line", a: [1.4, cy, bz + 0.95], b: [3.2, cy, bz + 0.95], alpha: 0.6 },
+    ...bubble(5.5, bz, 2.4, 1.5),
+    ...[0, 1, 2].map(dot),
+  ];
+  xs.forEach((x, c) => {
+    if (c && s.spread > 0.05) parts.push({ kind: "line", a: [x, y0 + depth, 0], b: [x, y0 + depth, zc(c)], dashed: true, alpha: 0.35 });
+    parts.push(
+      { kind: "plane", pts: quad(x, y0, zc(c), cw, depth), v: 0.14 },
+      { kind: "line", a: [x + 0.3, y0 + 0.45, zc(c)], b: [x + 1.3, y0 + 0.45, zc(c)], alpha: 0.8 },
+    );
+    for (let k = 0; k < counts[c]; k++) parts.push(card(slot(c, k)));
+  });
+  // the moving card rides over the board, so nothing it passes covers it
+  parts.push(card(pos, stuck ? { warn: true } : { accent: true }));
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1, cy, bz + 2], [7.9, cy, bz + 1.6], [0.8, y0, zc(0) + 2.8]], axes: ground(10) };
 };
 
 /**
@@ -1038,11 +1384,11 @@ const library: SceneFn = (s) => {
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len, y0, top + t + 2.6]], axes: ground(10) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, library } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
-/** Book covers, one per book, never shared with a post or a page. */
-export const BOOK_SCENES = ["tender", "route", "arcade", "tenancy", "feed"] as const satisfies readonly SceneName[];
+/** Book covers, one per book (written or Soon), never shared with a post or a page. */
+export const BOOK_SCENES = ["tender", "route", "arcade", "tenancy", "feed", "pulse", "basket", "bank", "cloud", "board"] as const satisfies readonly SceneName[];
 export type BookSceneName = (typeof BOOK_SCENES)[number];
 
 /** The books index's own scene, shared with nothing else. */

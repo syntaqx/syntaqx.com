@@ -23,6 +23,8 @@ export interface Field {
 export const LEVELS = 4;
 /** Level value for the brightest accent tiles. */
 export const HOT = LEVELS + 1;
+/** Level value for red (warn) tiles. */
+export const WARN = HOT + 1;
 
 export const BAYER: number[][] = (() => {
   let b = [[0]];
@@ -119,7 +121,8 @@ export function rasterize(
   const S = 4;
   const cover = new Uint8Array(cols * rows);
   const touched: number[] = [];
-  const fill = (pts: V3[], v: number, accent = false, alpha = 1) => {
+  // mark: 0 plain, 1 accent, 2 warn
+  const fill = (pts: V3[], v: number, mark = 0, alpha = 1) => {
     const sub = pts.map((p): V2 => {
       const [x, y] = P(p);
       return [x * S, y * S];
@@ -132,7 +135,7 @@ export function rasterize(
     for (const i of touched) {
       if (cover[i] === S * S) {
         lum[i] = lum[i] * (1 - alpha) + v * alpha;
-        acc[i] = accent ? 1 : 0;
+        acc[i] = mark;
       } else {
         lum[i] = 0;
         acc[i] = 0;
@@ -143,17 +146,19 @@ export function rasterize(
   };
 
   for (const p of scene.parts) {
-    if (p.kind === "plane" && !p.dashed) fill(p.pts, p.v, false, 0.82);
+    if (p.kind === "plane" && !p.dashed) fill(p.pts, p.v, 0, 0.82);
     if (p.kind === "box" && !p.ghost) {
       const b = p.box;
-      const k = p.accent ? 1 : 0.85;
-      fill(b.left, (0.42 - light * 0.2) * k + (p.accent ? 0.2 : 0), p.accent);
-      fill(b.right, (0.24 + light * 0.2) * k + (p.accent ? 0.15 : 0), p.accent);
-      fill(b.top, p.accent ? 1 : 0.6, p.accent);
+      const lit = p.accent || p.warn;
+      const mark = p.warn ? 2 : p.accent ? 1 : 0;
+      const k = lit ? 1 : 0.85;
+      fill(b.left, (0.42 - light * 0.2) * k + (lit ? 0.2 : 0), mark);
+      fill(b.right, (0.24 + light * 0.2) * k + (lit ? 0.15 : 0), mark);
+      fill(b.top, lit ? 1 : 0.6, mark);
     }
     if (p.kind === "cyl") {
-      fill(cylSide(p), p.accent ? 0.6 : 0.34 + light * 0.08, p.accent);
-      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), p.accent ? 1 : 0.58, p.accent);
+      fill(cylSide(p), p.accent ? 0.6 : 0.34 + light * 0.08, p.accent ? 1 : 0);
+      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), p.accent ? 1 : 0.58, p.accent ? 1 : 0);
     }
   }
   return { field: { cols, rows, lum, acc }, P };
@@ -178,7 +183,7 @@ export function levels(field: Field, twinkle = 0): Uint8Array {
         Math.floor(v * LEVELS + BAYER[y & 7][x & 7] - 0.5),
       );
       if (lv <= 0) continue;
-      out[i] = acc[i] && lv >= LEVELS ? HOT : lv;
+      out[i] = acc[i] === 2 ? WARN : acc[i] && lv >= LEVELS ? HOT : lv;
     }
   return out;
 }

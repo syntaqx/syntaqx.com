@@ -6,11 +6,12 @@ import type { BookSceneName } from "@/lib/scene/scenes";
 /**
  * One card shape for every book: a cover, an instrument line, the name and
  * one line on what it covers. Written books link to their cover with live
- * art; the rest are dashed, dimmer and drawn as an empty wireframe.
+ * art; the rest are dashed and dimmer, Soon books with their cover held
+ * still and the ones I'm considering drawn as an empty wireframe.
  */
 export type BookCard =
   | { href: string; cover: BookSceneName; eyebrow: string; name: string; summary: string }
-  | { href?: undefined; cover?: undefined; eyebrow: string; name: string; summary: string };
+  | { href?: undefined; cover?: BookSceneName; eyebrow: string; name: string; summary: string };
 
 const COVER = "aspect-16/10 w-full border-b";
 
@@ -29,7 +30,17 @@ export function BookCards({ books }: { books: BookCard[] }) {
             </Link>
           ) : (
             <div className="flex h-full flex-col border border-dashed border-border">
-              <PlaceholderCover />
+              {book.cover ? (
+                <SceneArt
+                  scene={book.cover}
+                  grain={4}
+                  still
+                  label={`${book.name} cover art`}
+                  className={`${COVER} border-dashed border-border opacity-60`}
+                />
+              ) : (
+                <PlaceholderCover />
+              )}
               <CardText book={book} />
             </div>
           )}

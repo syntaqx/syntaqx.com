@@ -37,6 +37,11 @@ export interface FutureBook {
   summary: string;
 }
 
+/** A book I've committed to: its cover is drawn, and shows still until the book is written. */
+export interface UpcomingBook extends FutureBook {
+  cover: BookSceneName;
+}
+
 /** Written books, each with a cover at /books/<slug>. */
 export const BOOKS: Book[] = [
   {
@@ -102,30 +107,35 @@ export const BOOKS: Book[] = [
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
-export const UPCOMING_BOOKS: FutureBook[] = [
+export const UPCOMING_BOOKS: UpcomingBook[] = [
   {
     name: "Health Tech",
     type: "industry",
+    cover: "pulse",
     summary: "Practice management and patient engagement first, then EHRs, FHIR, claims, prior auth and pharmacy, under HIPAA.",
   },
   {
     name: "Commerce",
     type: "industry",
+    cover: "basket",
     summary: "Catalog, orders and inventory across your store, POS and marketplaces like Amazon, plus subscriptions and regulated goods.",
   },
   {
     name: "Banking & Lending",
     type: "industry",
+    cover: "bank",
     summary: "Deposit and loan ledgers on a core or a sponsor bank, credit decisions under TILA and ECOA, and business spend management.",
   },
   {
     name: "Hosting & Cloud",
     type: "industry",
+    cover: "cloud",
     summary: "Metered usage into invoices for compute, storage, domains and messaging, and the abuse, 10DLC and registrar rules around them.",
   },
   {
     name: "Workplace & Collaboration",
     type: "industry",
+    cover: "board",
     summary: "Tenants, seats and permissions for chat, docs and work tracking, where the customer owns the content and sets retention.",
   },
 ];

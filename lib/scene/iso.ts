@@ -45,6 +45,8 @@ export type Part =
       kind: "box";
       box: Box;
       accent?: boolean;
+      /** Red, for something gone wrong (a blocked card). */
+      warn?: boolean;
       small?: boolean;
       slots?: boolean;
       vents?: boolean;
