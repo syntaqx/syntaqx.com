@@ -1,11 +1,11 @@
 ---
 name: dimensional-drawing
-description: Draw a dimensional drawing (framed technical sheet with notes, coded dimensions and chain dimensions, detail views, exploded axonometric layer stacks and a variable table) for syntaqx.com docs, generated as a theme-aware SVG by the site's own drawing kit. Use when a doc needs a budget, timeline, stack, layout or architecture drawn as a measured technical sheet.
+description: Draw a dimensional drawing (technical sheet with notes, coded dimensions and chain dimensions, detail views, exploded axonometric layer stacks and a variable table) for syntaqx.com docs, generated as a theme-aware SVG by the site's own drawing kit. Use when a doc needs a budget, timeline, stack, layout or architecture drawn as a measured technical sheet.
 ---
 
 # Dimensional drawings for syntaqx.com
 
-The site's signature diagram for walking through systems: a framed technical
+The site's signature diagram for walking through systems: a technical
 sheet with notes top-left, views spread across it, each view titled and
 scaled underneath, dimensions as codes, values and formulas in a table.
 Monochrome ink on paper, told apart by line weight, dash and hatch; the teal
@@ -37,7 +37,7 @@ and `scripts/dwg/sheets/gm-client-exploded.mjs` (exploded layer stack).
    slice the `.diagram` rules out of `app/globals.css`, map the `--fig-*`
    variables to light colors, inject them as a `<style>`, render at density
    200). Check: no label crosses a line, box or another label; nothing crosses
-   the sheet border; gaps between views are even. Fix in the source, rebuild,
+   the sheet edge; gaps between views are even. Fix in the source, rebuild,
    look again.
 6. **Embed** as its own paragraph:
    `![Alt text describing the whole drawing, over 40 characters.](/diagrams/<file>.svg "Caption that states the point.")`
@@ -69,7 +69,7 @@ and `scripts/dwg/sheets/gm-client-exploded.mjs` (exploded layer stack).
 
 ## Sheet layout
 
-- `sheet({ prefix, width: 760 })`: rounded border, defs with prefixed ids.
+- `sheet({ prefix, width: 760 })`: defs with prefixed ids. No border: framing is up to the page (`frame: true` adds a rounded border only when a page asks for one).
   Set `s.height` after layout (bottom of the last view + about 30). Width 760
   matches the site's other diagrams; go wider only if a view genuinely needs it.
 - **Notes top-left** at (32, 40): `s.notes(x, y, items, { width })` returns the
@@ -80,7 +80,7 @@ and `scripts/dwg/sheets/gm-client-exploded.mjs` (exploded layer stack).
   sub)`; the subtitle gives scale and view type (`Scale 1 ms = 30 px ·
   timeline`, `Axonometric · not to scale`).
 - **Tables** beside or below the views that use them.
-- Keep everything 20 inside the border; leave 40 to 50 between views.
+- Keep everything 20 inside the sheet edge; leave 40 to 50 between views.
 
 ## Kit API (`scripts/dwg/kit.mjs`)
 
