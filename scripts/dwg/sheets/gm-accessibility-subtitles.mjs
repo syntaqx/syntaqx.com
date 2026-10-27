@@ -13,10 +13,10 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "XAG 104: avoid lines over 40 characters; show two lines at most (three in exceptional cases)."],
-    [2, "XAG 104: a solid background behind subtitles, color set by the player, opacity adjustable from 0 to 100%."],
-    [3, "XAG 102: on console, 52 px at 1080p is large text, so S5 needs C2 against its background; smaller text needs C1."],
-    [0, "Layout illustrative. Values in px at 1080p from XAG 101, 102 and 104, listed in the table."],
+    [1, "Guideline 104: avoid lines over 40 characters; show two lines at most (three in exceptional cases)."],
+    [2, "Guideline 104: a solid background behind subtitles, color set by the player, opacity adjustable from 0 to 100%."],
+    [3, "Guideline 102: on console, 52 px at 1080p is large text, so S5 needs C2 against its background; smaller text needs C1."],
+    [0, "Layout illustrative. Values in px at 1080p from a console maker's accessibility guidelines 101, 102 and 104, in the table."],
   ], { width: 696 });
 
   // ---- Plan view: the frame at 1:4 ----

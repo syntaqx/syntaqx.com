@@ -52,7 +52,7 @@ const layers = [
   },
   {
     label: "04 · Release manifest",
-    sub: "signed FlatBuffers · M1",
+    sub: "signed binary schema · M1",
     draw: (p) => [
       p.rect(0, 0, W, D, "obj hl"),
       // Signature header, then the chunk list.

@@ -13,8 +13,8 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "Illustrative: real broadcast latency depends on encoding, production and the streaming platform."],
-    [2, "Riot (Worlds 2019): the esports spectator system connects directly to the game server for near-zero delay."],
-    [3, "Riot support (Wild Rift): friend games stream to spectators with a 3-minute delay; custom matches are live."],
+    [2, "A publisher (2019 world championship): the esports spectator system connects directly to the game server for near-zero delay."],
+    [3, "A mobile game's support page: friend games stream to spectators with a 3-minute delay; custom matches are live."],
     [4, "A spectator feed shows both teams; without fog of war it must be delayed past G1, or restricted to officials."],
     [5, "G1 is how long a sighting helps an opponent; set it per game and add a margin."],
     [0, "Values in seconds. The drawing carries codes; values and the rule are in the table."],

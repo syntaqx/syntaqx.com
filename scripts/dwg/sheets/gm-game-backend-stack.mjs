@@ -98,7 +98,7 @@ export default function draw() {
     [1, "Game servers run beside the stack, not in it: they meet it only at match start and at the result."],
     [2, "Match start: provisioning hands the assigned server a signed roster, map, mode and loadouts."],
     [3, "Result: the assigned server reports once per match; the highlighted results service accepts it once."],
-    [4, "Riot, Dec 2020: VALORANT requests pass Cloudflare, then nginx; 30+ platform services sit below."],
+    [4, "A studio, Dec 2020: a shooter's requests pass a CDN and DDoS provider, then a reverse proxy; 30+ platform services sit below."],
     [0, "Not to scale. Layers separated along the stack axis; plate contents are schematic."],
   ], { width: 690 });
 

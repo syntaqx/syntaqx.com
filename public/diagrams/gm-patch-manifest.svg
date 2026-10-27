@@ -42,7 +42,7 @@
   <circle class="dot" cx="262" cy="256" r="1.6"/>
   <path class="leader" d="M262,256H238"/>
   <text class="lt" x="230" y="254" text-anchor="end">04 · RELEASE MANIFEST</text>
-  <text class="vs" x="230" y="266" text-anchor="end">SIGNED FLATBUFFERS · M1</text>
+  <text class="vs" x="230" y="266" text-anchor="end">SIGNED BINARY SCHEMA · M1</text>
   <!-- Client steps -->
   <path class="leader" d="M642,250.60000000000002V448.6" marker-end="url(#gm-pm-ah)"/>
   <text class="sl ink" x="652" y="286.6">VERIFY, DIFF</text>

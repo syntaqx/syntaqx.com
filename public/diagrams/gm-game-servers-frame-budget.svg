@@ -6,7 +6,7 @@
   <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
   <rect class="nb" x="32" y="53.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
-  <text class="nt" x="50" y="62">RIOT: EACH 128-TICK SERVER FRAME MUST COMPLETE WITHIN 7.8125 MS.</text>
+  <text class="nt" x="50" y="62">A STUDIO: EACH 128-TICK SERVER FRAME MUST COMPLETE WITHIN 7.8125 MS.</text>
   <rect class="nb" x="32" y="70.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
   <text class="nt" x="50" y="79">ABOUT 10% OF THE FRAME IS RESERVED FOR THE OS, SCHEDULING AND HOST SOFTWARE.</text>
@@ -15,10 +15,10 @@
   <text class="nt" x="50" y="96">THE PER-GAME TARGET THAT FITS THREE GAMES ON ONE CORE.</text>
   <rect class="nb" x="32" y="104.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
-  <text class="nt" x="50" y="113">RIOT: THE SERVER FRAME WAS 50 MS WHEN THE WORK STARTED AND UNDER 2 MS BY THE END.</text>
+  <text class="nt" x="50" y="113">THE STUDIO: THE SERVER FRAME WAS 50 MS WHEN THE WORK STARTED AND UNDER 2 MS BY THE END.</text>
   <rect class="nb" x="32" y="121.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="129.5" text-anchor="middle">5</text>
-  <text class="nt" x="50" y="130">RIOT, 2023: WITH 22 CLIENTS, FRAME TIME SCALES ABOUT 2.2 TIMES, FROM 2.34 TO 5.2 MS.</text>
+  <text class="nt" x="50" y="130">THE STUDIO, 2023: WITH 22 CLIENTS, FRAME TIME SCALES ABOUT 2.2 TIMES, FROM 2.34 TO 5.2 MS.</text>
   <text class="nt" x="50" y="147">VALUES IN MS. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
   <!-- Plan view: one core, one 128-tick frame -->
   <rect class="obj fill-2" x="67.5" y="226" width="187.5" height="40"/>

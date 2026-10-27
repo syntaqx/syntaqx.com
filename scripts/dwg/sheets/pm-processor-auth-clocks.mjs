@@ -13,11 +13,11 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Visa Rules Table 7-1, POS outside Europe: if the issuer misses I1, Visa answers by Stand-In Processing."],
-    [2, "Visa Rules 7.3.3: in the US the issuer, stand-in included, must average at most A1 over each calendar month."],
-    [3, "Visa Rules 7.3.4.2: no POS timeout sooner than M1 (not in Europe). My own timeouts sit inside these."],
+    [1, "Network rules table 7-1, POS outside Europe: if the issuer misses I1, the network answers by stand-in processing."],
+    [2, "Network rules 7.3.3: in the US the issuer, stand-in included, must average at most A1 over each calendar month."],
+    [3, "Network rules 7.3.4.2: no POS timeout sooner than M1 (not in Europe). My own timeouts sit inside these."],
     [4, "An approval that arrives after the merchant timed out must be reversed, never left to lapse."],
-    [0, "Values in seconds, Visa Rules, April 2026. Codes on the drawing; values in the table."],
+    [0, "Values in seconds, one card network's rules, April 2026. Codes on the drawing; values in the table."],
   ], { width: 690 });
 
   s.comment("Plan view: one POS authorization");

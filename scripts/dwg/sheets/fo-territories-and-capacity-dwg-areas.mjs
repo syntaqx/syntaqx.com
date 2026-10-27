@@ -46,7 +46,7 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "The point resolves to the leaf (accent) whose dated area covers it; parents follow parent_id."],
-    [2, "Overlaps: Salesforce assigns the highest or lowest level by setting; priority breaks ties within a level."],
+    [2, "Overlaps: one field-service platform assigns the highest or lowest level by setting; priority breaks ties within a level."],
     [3, "Every area is versioned with valid_during, so a boundary moving on the 1st is known before it moves."],
     [0, "Not to scale. Levels separated along the stack axis; areas are schematic."],
   ], { width: 690 });

@@ -14,7 +14,7 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "P1 is illustrative: a nightly purge plus a rebuild. T1 and T2 are BigQuery's documented defaults; Delta Lake keeps deleted files until VACUUM, which keeps 7 days by default."],
+    [1, "P1 is illustrative: a nightly purge plus a rebuild. T1 and T2 are a cloud warehouse's documented defaults; an open table format keeps deleted files until VACUUM, which keeps 7 days by default."],
     [2, "Within the warehouse. Backups, exports, streams and vendors have their own clocks."],
     [3, "GDPR Article 12(3): within one month of receipt, extendable by two further months for complex or numerous requests, if the person is told why within the first month."],
     [0, "Values in days; M1 is drawn as 30 days. The drawing carries codes; values and formulas are in the table."],

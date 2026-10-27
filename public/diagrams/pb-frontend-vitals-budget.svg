@@ -6,7 +6,7 @@
   <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
   <rect class="nb" x="32" y="53.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
-  <text class="nt" x="50" y="62">GOOD LCP IS 2.5 S OR LESS; THE SPLIT IS WEB.DEV'S GUIDELINE FOR WHERE THE TIME GOES, NOT A RULE.</text>
+  <text class="nt" x="50" y="62">GOOD LCP IS 2.5 S OR LESS; THE SPLIT IS PUBLISHED GUIDANCE ON WHERE THE TIME GOES, NOT A RULE.</text>
   <rect class="nb" x="32" y="70.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
   <text class="nt" x="50" y="79">EACH METRIC IS JUDGED AT THE 75TH PERCENTILE OF REAL PAGE LOADS, FOR MOBILE AND DESKTOP SEPARATELY.</text>
@@ -83,7 +83,7 @@
   <rect class="nb" x="560.65" y="563.5" width="11" height="11"/>
   <text class="nbt" x="566.15" y="571.7" text-anchor="middle">2</text>
   <!-- Variable table -->
-  <text class="vt" x="145" y="639">VARIABLES · WEB.DEV, OPTIMIZE LCP AND THRESHOLDS</text>
+  <text class="vt" x="145" y="639">VARIABLES · PUBLISHED LCP GUIDANCE AND THRESHOLDS</text>
   <rect class="tbl" x="145" y="646" width="470" height="150"/>
   <path class="tbl" d="M145,661L615,661"/>
   <path class="tbl" d="M145,676L615,676"/>

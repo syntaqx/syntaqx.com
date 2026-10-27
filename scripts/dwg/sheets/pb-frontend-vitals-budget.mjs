@@ -26,7 +26,7 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Good LCP is 2.5 s or less; the split is web.dev's guideline for where the time goes, not a rule."],
+    [1, "Good LCP is 2.5 s or less; the split is published guidance on where the time goes, not a rule."],
     [2, "Each metric is judged at the 75th percentile of real page loads, for mobile and desktop separately."],
     [3, "About 40% each for TTFB and load duration, under 10% each for the delays, drawn at their ceiling."],
     [0, "Values in s unless marked. The drawing carries codes; values and formulas are in the table."],
@@ -100,7 +100,7 @@ export default function draw() {
   ];
   const widths = [60, 220, 190];
   const tw = widths.reduce((a, b) => a + b, 0);
-  const tb = s.table((W - tw) / 2, bandBottom + 60, "Variables · web.dev, Optimize LCP and thresholds", rows, { widths });
+  const tb = s.table((W - tw) / 2, bandBottom + 60, "Variables · published LCP guidance and thresholds", rows, { widths });
   s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

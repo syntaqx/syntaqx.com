@@ -17,9 +17,9 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Riot, February 2021: bootstrap went from 29.5 s at the start of 2020 to 16 s for 90% of players."],
-    [2, "Riot's March 2020 goal: about 15 s at the 90th percentile."],
-    [3, "Illustrative split, not Riot's; it holds only if all outside the boot set waits for a usable home screen."],
+    [1, "A studio, February 2021: bootstrap went from 29.5 s at the start of 2020 to 16 s for 90% of players."],
+    [2, "The studio's March 2020 goal: about 15 s at the 90th percentile."],
+    [3, "Illustrative split, not the studio's; it holds only if all outside the boot set waits for a usable home screen."],
     [0, "Values in s. The drawing carries codes; values and formulas are in the table."],
   ], { width: 690 });
 
@@ -67,7 +67,7 @@ export default function draw() {
   // ---- Variable table ----
   s.comment("Variable table");
   const rows = [
-    ["B0", "League client bootstrap, start of 2020", "29.5"],
+    ["B0", "desktop client bootstrap, start of 2020", "29.5"],
     ["B1", "same, for 90% of players, February 2021", "16.0"],
     ["D1", "bootstrap saved", "B0 − B1 = 13.5, about 46%"],
     ["G1", "goal, about 15 s at p90", "P1 + … + P7 = 15.00"],

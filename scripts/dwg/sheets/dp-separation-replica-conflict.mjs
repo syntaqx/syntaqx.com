@@ -18,8 +18,8 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "Vacuum on the primary removed row versions the query's snapshot can still see."],
-    [2, "D1 is PostgreSQL's default max_standby_streaming_delay; Q1 and C1 are illustrative."],
-    [3, "A larger D1 lags the whole replica longer; hot_standby_feedback trades it for primary bloat."],
+    [2, "D1 is the database's default standby max delay setting; Q1 and C1 are illustrative."],
+    [3, "A larger D1 lags the whole replica longer; standby feedback trades it for primary bloat."],
     [0, "Values in seconds; lag height is schematic. The drawing carries codes; values and formulas are in the table."],
   ], { width: 690 });
 
@@ -77,7 +77,7 @@ export default function draw() {
   const rows = [
     ["Q1", "run time the analytical query needs", String(Q1)],
     ["C1", "when a conflicting cleanup record arrives", String(C1)],
-    ["D1", "max_standby_streaming_delay, the default", String(D1)],
+    ["D1", "standby max delay setting, the default", String(D1)],
     ["X1", "query cancelled", `C1 + D1 = ${X1}`],
     ["R1", "work left undone", `Q1 − X1 = ${R1}`],
     ["L1", "peak replica lag for every other reader", `D1 = ${L1}`],

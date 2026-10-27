@@ -7,13 +7,13 @@ import { sheet, widthOf } from "../kit.mjs";
 const P1 = 9.99;
 // [store, condition, fee]
 const STORES = [
-  ["Steam", "30% tier, sales under $10M", 3.0],
-  ["Epic Games Store", "12% after the first $1M a year", 1.2],
-  ["Microsoft PC", "12% of Net Receipts, games", 1.2],
-  ["Xbox console", "30% of Net Receipts, games", 3.0],
-  ["Apple US", "30% IAP, 15% small business", 3.0],
-  ["Apple EU", "26% IAP from 1 October 2026", 2.6],
-  ["Google Play US", "20% + 5% billing, new installs", 2.5],
+  ["PC store A", "30% tier, sales under $10M", 3.0],
+  ["PC store B", "12% after the first $1M a year", 1.2],
+  ["PC store C", "12% of Net Receipts, games", 1.2],
+  ["Console store", "30% of Net Receipts, games", 3.0],
+  ["Mobile store A, US", "30% IAP, 15% small business", 3.0],
+  ["Mobile store A, EU", "26% IAP from 1 October 2026", 2.6],
+  ["Mobile store B, US", "20% + 5% billing, new installs", 2.5],
   ["Web store", "2.9% + $0.30 card fee", 0.59],
 ];
 const m = (v) => v.toFixed(2);
@@ -24,10 +24,10 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Steam's 2018 tiers: 30% of sales under $10M, 25% from $10M to $50M, 20% above (as reported)."],
-    [2, "Fees apply to the price before tax: Microsoft's Net Receipts and Apple's EU commission both exclude it."],
-    [3, "Stripe's standard US card rate; a web store also carries tax, fraud, refunds and chargebacks itself."],
-    [4, "Programs lower several rates: Apple Small Business, Epic's first $1M a year, Play Games Level Up."],
+    [1, "PC store A's 2018 tiers: 30% of sales under $10M, 25% from $10M to $50M, 20% above (as reported)."],
+    [2, "Fees apply to the price before tax: store C's Net Receipts and mobile store A's EU commission both exclude it."],
+    [3, "A processor's standard US card rate; a web store also carries tax, fraud, refunds and chargebacks itself."],
+    [4, "Programs lower several rates: mobile store A's small business, store B's first $1M a year, mobile store B's games program."],
     [0, "USD, rates as of October 2026. The drawing carries codes; rates and values are in the table."],
   ], { width: 690 });
 

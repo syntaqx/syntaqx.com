@@ -14,9 +14,9 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Newzoo's 2025 estimate and 2028 forecast, as summarized by GameDev Reports, June 26, 2026."],
-    [2, "ESA Essential Facts 2026: U.S. consumer spending on video games in 2025."],
-    [3, "The parts sum to 60.65; the ESA reports the total, rounded, as $60.7 billion."],
+    [1, "A market-research firm's 2025 estimate and 2028 forecast, as summarized by a trade newsletter, June 26, 2026."],
+    [2, "A U.S. industry association's 2026 report: U.S. consumer spending on video games in 2025."],
+    [3, "The parts sum to 60.65; the association reports the total, rounded, as $60.7 billion."],
     [0, "Values in $B. The drawing carries codes; values and formulas are in the tables."],
   ], { width: 690 });
 

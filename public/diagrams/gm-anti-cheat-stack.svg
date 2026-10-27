@@ -9,8 +9,8 @@
   <text class="nt" x="50" y="62">HIGHLIGHTED: THE ONLY LAYER A CHEAT CAN'T PATCH, BECAUSE IT RUNS ON HARDWARE THE OPERATOR CONTROLS.</text>
   <rect class="nb" x="32" y="70.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
-  <text class="nt" x="50" y="79">VALVE'S PROTON GUIDANCE: KERNEL-SPACE ANTI-CHEAT IS NOT SUPPORTED OR RECOMMENDED; USER-SPACE COMPONENTS WORK</text>
-  <text class="nt" x="50" y="92">BEST ON LINUX AND STEAM DECK.</text>
+  <text class="nt" x="50" y="79">A PC STORE'S COMPATIBILITY-LAYER GUIDANCE: KERNEL-SPACE ANTI-CHEAT IS NOT SUPPORTED OR RECOMMENDED;</text>
+  <text class="nt" x="50" y="92">USER-SPACE COMPONENTS WORK BEST ON ITS HANDHELD AND COMPATIBILITY LAYER.</text>
   <text class="nt" x="50" y="109">NOT TO SCALE. LAYERS SEPARATED ALONG THE STACK AXIS; PLATE CONTENTS ARE SCHEMATIC.</text>
   <!-- Exploded view -->
   <path class="phantom" d="M372,400L372,152"/>

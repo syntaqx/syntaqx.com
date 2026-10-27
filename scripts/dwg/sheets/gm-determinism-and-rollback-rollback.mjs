@@ -19,7 +19,7 @@ export default function draw() {
   const ny = s.notes(32, 40, [
     [1, "Illustrative: a 60 Hz game, one late remote input, simulation and render costs chosen for the arithmetic."],
     [2, "Remote inputs for frames 5 to 9 arrive at the start of frame 9; frames 5 to 8 ran on predicted input."],
-    [3, "GGPO's MAX_PREDICTION_FRAMES is 8: past it, synchronizing inputs fails and the game waits (hatched)."],
+    [3, "An open-source rollback library's MAX_PREDICTION_FRAMES is 8: past it, synchronizing inputs fails and the game waits (hatched)."],
     [4, "At the limit the rollback frame overruns (L1 > F1), so one simulated frame must fit in S2."],
     [0, "Values in ms unless marked frames. The drawing carries codes; values and formulas are in the table."],
   ], { width: 690 });

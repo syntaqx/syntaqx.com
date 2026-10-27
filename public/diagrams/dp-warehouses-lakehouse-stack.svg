@@ -27,7 +27,7 @@
   <circle class="dot" cx="292" cy="425" r="1.6"/>
   <path class="leader" d="M292,425H258"/>
   <text class="lt" x="250" y="423" text-anchor="end">02 · DATA FILES</text>
-  <text class="vs" x="250" y="435" text-anchor="end">PARQUET OR ORC · STATISTICS PER FILE</text>
+  <text class="vs" x="250" y="435" text-anchor="end">COLUMNAR FILE FORMAT · STATISTICS PER FILE</text>
   <!-- 03 · Table metadata -->
   <g class="iso" transform="matrix(0.94 0.17 -0.34 0.47 360 265)"><rect class="obj plate" x="0" y="0" width="300" height="200"/><rect class="obj fill-2" x="16" y="92" width="84" height="92"/><circle class="obj fill-1" cx="30" cy="138" r="7"/><circle class="obj fill-1" cx="58" cy="138" r="7"/><circle class="obj fill-1" cx="86" cy="138" r="7"/><path class="obj" d="M37,138L51,138"/><path class="obj" d="M65,138L79,138"/><rect class="obj fill-2" x="112" y="92" width="84" height="92"/><rect class="obj fill-1" x="122" y="102" width="64" height="14"/><rect class="obj fill-2" x="134" y="122" width="52" height="12"/><rect class="obj fill-2" x="134" y="142" width="52" height="12"/><rect class="obj fill-2" x="134" y="162" width="52" height="12"/><path class="ext" d="M128,116L128,168"/><path class="ext" d="M128,128L134,128"/><path class="ext" d="M128,148L134,148"/><path class="ext" d="M128,168L134,168"/><rect class="obj fill-2" x="208" y="92" width="76" height="92"/><rect class="obj fill-1" x="218" y="102" width="12" height="12"/><path class="obj" d="M236,108L274,108"/><rect class="obj fill-1" x="218" y="120" width="12" height="12"/><path class="obj" d="M236,126L274,126"/><rect class="obj fill-1" x="218" y="138" width="12" height="12"/><path class="obj" d="M236,144L274,144"/><rect class="obj fill-1" x="218" y="156" width="12" height="12"/><path class="obj" d="M236,162L274,162"/></g>
   <circle class="dot" cx="292" cy="359" r="1.6"/>
@@ -45,7 +45,7 @@
   <circle class="dot" cx="292" cy="227" r="1.6"/>
   <path class="leader" d="M292,227H258"/>
   <text class="lt" x="250" y="225" text-anchor="end">05 · ENGINES</text>
-  <text class="vs" x="250" y="237" text-anchor="end">SPARK · TRINO · FLINK · WAREHOUSES</text>
+  <text class="vs" x="250" y="237" text-anchor="end">BATCH · SQL · STREAM · WAREHOUSES</text>
   <rect class="nb" x="150.1" y="282" width="11" height="11"/>
   <text class="nbt" x="155.6" y="290.2" text-anchor="middle">1</text>
   <rect class="nb" x="150.1" y="216" width="11" height="11"/>

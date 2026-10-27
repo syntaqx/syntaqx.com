@@ -59,23 +59,23 @@
   <text class="vt" x="437" y="558" text-anchor="middle">EXPLODED VIEW · ONE TENANT</text>
   <text class="vs" x="437" y="571" text-anchor="middle">AXONOMETRIC · NOT TO SCALE · BRANCHES AT THE BOTTOM</text>
   <!-- Flow table -->
-  <text class="vt" x="166.5" y="608">FLOWS · ONE TREE PER TENANT</text>
-  <rect class="tbl" x="166.5" y="615" width="427" height="60"/>
-  <path class="tbl" d="M166.5,630L593.5,630"/>
-  <path class="tbl" d="M166.5,645L593.5,645"/>
-  <path class="tbl" d="M166.5,660L593.5,660"/>
-  <path class="tbl" d="M224.5,615L224.5,675"/>
-  <path class="tbl" d="M372.5,615L372.5,675"/>
-  <text class="th" x="172.5" y="625.2">FLOW</text>
-  <text class="th" x="230.5" y="625.2">DIRECTION</text>
-  <text class="th" x="378.5" y="625.2">MECHANISM</text>
-  <text class="tc" x="172.5" y="640.7">settings</text>
-  <text class="tc" x="230.5" y="640.7">down, nearest override wins</text>
-  <text class="tc" x="378.5" y="640.7">walk up to the nearest ancestor that sets it</text>
-  <text class="tc" x="172.5" y="655.7">grants</text>
-  <text class="tc" x="230.5" y="655.7">down, cover the subtree</text>
-  <text class="tc" x="378.5" y="655.7">ltree path or closure table, in the database</text>
-  <text class="tc" x="172.5" y="670.7">reports</text>
-  <text class="tc" x="230.5" y="670.7">up, sum of the subtree</text>
-  <text class="tc" x="378.5" y="670.7">every level reads the same leaf rows</text>
+  <text class="vt" x="149" y="608">FLOWS · ONE TREE PER TENANT</text>
+  <rect class="tbl" x="149" y="615" width="462" height="60"/>
+  <path class="tbl" d="M149,630L611,630"/>
+  <path class="tbl" d="M149,645L611,645"/>
+  <path class="tbl" d="M149,660L611,660"/>
+  <path class="tbl" d="M207,615L207,675"/>
+  <path class="tbl" d="M355,615L355,675"/>
+  <text class="th" x="155" y="625.2">FLOW</text>
+  <text class="th" x="213" y="625.2">DIRECTION</text>
+  <text class="th" x="361" y="625.2">MECHANISM</text>
+  <text class="tc" x="155" y="640.7">settings</text>
+  <text class="tc" x="213" y="640.7">down, nearest override wins</text>
+  <text class="tc" x="361" y="640.7">walk up to the nearest ancestor that sets it</text>
+  <text class="tc" x="155" y="655.7">grants</text>
+  <text class="tc" x="213" y="655.7">down, cover the subtree</text>
+  <text class="tc" x="361" y="655.7">materialized path or closure table, in the database</text>
+  <text class="tc" x="155" y="670.7">reports</text>
+  <text class="tc" x="213" y="670.7">up, sum of the subtree</text>
+  <text class="tc" x="361" y="670.7">every level reads the same leaf rows</text>
 </svg>

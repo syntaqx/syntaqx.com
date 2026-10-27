@@ -36,11 +36,11 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Ferguson's HVAC process: claims within 30 days of the repair date."],
-    [2, "ServiceTitan's guide: a recall is a technician error within 30 days of a service call."],
+    [1, "A distributor's HVAC warranty process: claims within 30 days of the repair date."],
+    [2, "A field-service suite's guide: a recall is a technician error within 30 days of a service call."],
     [3, "Illustrative part wait; the hold ends when the special-order part arrives and the return visit is booked."],
     [4, "V1 diagnoses and quotes: a visit can be completed while its work order is not; the open order carries hold_reason until V2."],
-    [5, "ServiceTitan documents the same three: waiting for parts or materials, a pending permit, needing authorization."],
+    [5, "The same suite documents the same three: waiting for parts or materials, a pending permit, needing authorization."],
     [0, "Values in days. Visits are drawn as marks, not to scale. Codes on the drawing; values in the table."],
   ], { width: 690 });
 

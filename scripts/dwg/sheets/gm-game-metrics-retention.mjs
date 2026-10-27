@@ -17,7 +17,7 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "Illustrative counts for one install day, not data from any game."],
-    [2, "Exact-day retention (GameAnalytics, Unity): retained only if active on day N itself."],
+    [2, "Exact-day retention (two analytics vendors): retained only if active on day N itself."],
     [3, "Unbounded retention (this book's alternative): retained if active on day N or any later day."],
     [4, "Both vendors count days in UTC; whichever boundary you choose, name it in the definition."],
     [0, "Counts in players. The drawing carries codes; values and ratios are in the table."],

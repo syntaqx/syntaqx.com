@@ -6,7 +6,7 @@
   <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
   <rect class="nb" x="32" y="53.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
-  <text class="nt" x="50" y="62">SOURCES: GOOGLE CLOUD, SEP 29, 2016; RIOT, DEC 15 AND MAY 19, 2020; SQUARE ENIX, DEC 2021.</text>
+  <text class="nt" x="50" y="62">SOURCES: A CLOUD PROVIDER, SEP 29, 2016; A STUDIO, DEC 15 AND MAY 19, 2020; A PUBLISHER, DEC 2021.</text>
   <rect class="nb" x="32" y="70.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
   <text class="nt" x="50" y="79">ABOUT 200 PROCESSES RAN AS CONTAINERS; THE FIRST FULL 2M RUN CAME UNDER TWO WEEKS BEFORE LAUNCH.</text>
@@ -85,50 +85,50 @@
   <text class="vs" x="400" y="745" text-anchor="middle">SCALE 1% = 5 PX · ONE SERVER</text>
   <!-- Variable table -->
   <text class="vt" x="40" y="788">VARIABLES · PUBLISHED FIGURES</text>
-  <rect class="tbl" x="40" y="795" width="446" height="165"/>
-  <path class="tbl" d="M40,810L486,810"/>
-  <path class="tbl" d="M40,825L486,825"/>
-  <path class="tbl" d="M40,840L486,840"/>
-  <path class="tbl" d="M40,855L486,855"/>
-  <path class="tbl" d="M40,870L486,870"/>
-  <path class="tbl" d="M40,885L486,885"/>
-  <path class="tbl" d="M40,900L486,900"/>
-  <path class="tbl" d="M40,915L486,915"/>
-  <path class="tbl" d="M40,930L486,930"/>
-  <path class="tbl" d="M40,945L486,945"/>
+  <rect class="tbl" x="40" y="795" width="436" height="165"/>
+  <path class="tbl" d="M40,810L476,810"/>
+  <path class="tbl" d="M40,825L476,825"/>
+  <path class="tbl" d="M40,840L476,840"/>
+  <path class="tbl" d="M40,855L476,855"/>
+  <path class="tbl" d="M40,870L476,870"/>
+  <path class="tbl" d="M40,885L476,885"/>
+  <path class="tbl" d="M40,900L476,900"/>
+  <path class="tbl" d="M40,915L476,915"/>
+  <path class="tbl" d="M40,930L476,930"/>
+  <path class="tbl" d="M40,945L476,945"/>
   <path class="tbl" d="M77,795L77,960"/>
-  <path class="tbl" d="M364,795L364,960"/>
+  <path class="tbl" d="M354,795L354,960"/>
   <text class="th" x="46" y="805.2">CODE</text>
-  <text class="th" x="220.5" y="805.2" text-anchor="middle">VARIABLE</text>
-  <text class="th" x="425" y="805.2" text-anchor="middle">VALUE</text>
+  <text class="th" x="215.5" y="805.2" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="415" y="805.2" text-anchor="middle">VALUE</text>
   <text class="tc" x="46" y="820.7">T1</text>
-  <text class="tc" x="220.5" y="820.7" text-anchor="middle">planned traffic, the target (Pokémon GO)</text>
-  <text class="tc" x="425" y="820.7" text-anchor="middle">1x</text>
+  <text class="tc" x="215.5" y="820.7" text-anchor="middle">planned traffic, the target (location-based mobile game)</text>
+  <text class="tc" x="415" y="820.7" text-anchor="middle">1x</text>
   <text class="tc" x="46" y="835.7">W1</text>
-  <text class="tc" x="220.5" y="835.7" text-anchor="middle">worst-case estimate</text>
-  <text class="tc" x="425" y="835.7" text-anchor="middle">5 × T1 = 5x</text>
+  <text class="tc" x="215.5" y="835.7" text-anchor="middle">worst-case estimate</text>
+  <text class="tc" x="415" y="835.7" text-anchor="middle">5 × T1 = 5x</text>
   <text class="tc" x="46" y="850.7">A1</text>
-  <text class="tc" x="220.5" y="850.7" text-anchor="middle">actual launch traffic</text>
-  <text class="tc" x="425" y="850.7" text-anchor="middle">10 × W1 = 50 × T1 = 50x</text>
+  <text class="tc" x="215.5" y="850.7" text-anchor="middle">actual launch traffic</text>
+  <text class="tc" x="415" y="850.7" text-anchor="middle">10 × W1 = 50 × T1 = 50x</text>
   <text class="tc" x="46" y="865.7">H1</text>
-  <text class="tc" x="220.5" y="865.7" text-anchor="middle">simulated players per harness process, 4 CPUs (VALORANT)</text>
-  <text class="tc" x="425" y="865.7" text-anchor="middle">10,000</text>
+  <text class="tc" x="215.5" y="865.7" text-anchor="middle">simulated players per harness process, 4 CPUs (shooter)</text>
+  <text class="tc" x="415" y="865.7" text-anchor="middle">10,000</text>
   <text class="tc" x="46" y="880.7">N1</text>
-  <text class="tc" x="220.5" y="880.7" text-anchor="middle">harness processes</text>
-  <text class="tc" x="425" y="880.7" text-anchor="middle">C1 ÷ H1 = 200</text>
+  <text class="tc" x="215.5" y="880.7" text-anchor="middle">harness processes</text>
+  <text class="tc" x="415" y="880.7" text-anchor="middle">C1 ÷ H1 = 200</text>
   <text class="tc" x="46" y="895.7">C1</text>
-  <text class="tc" x="220.5" y="895.7" text-anchor="middle">concurrent players per shard, the goal</text>
-  <text class="tc" x="425" y="895.7" text-anchor="middle">H1 × N1 = 2,000,000</text>
+  <text class="tc" x="215.5" y="895.7" text-anchor="middle">concurrent players per shard, the goal</text>
+  <text class="tc" x="415" y="895.7" text-anchor="middle">H1 × N1 = 2,000,000</text>
   <text class="tc" x="46" y="910.7">U1</text>
-  <text class="tc" x="220.5" y="910.7" text-anchor="middle">game server CPU target, % (League Clash)</text>
-  <text class="tc" x="425" y="910.7" text-anchor="middle">70</text>
+  <text class="tc" x="215.5" y="910.7" text-anchor="middle">game server CPU target, % (MOBA tournament mode)</text>
+  <text class="tc" x="415" y="910.7" text-anchor="middle">70</text>
   <text class="tc" x="46" y="925.7">U2</text>
-  <text class="tc" x="220.5" y="925.7" text-anchor="middle">CPU where players see latency and missed requests, %</text>
-  <text class="tc" x="425" y="925.7" text-anchor="middle">85</text>
+  <text class="tc" x="215.5" y="925.7" text-anchor="middle">CPU where players see latency and missed requests, %</text>
+  <text class="tc" x="415" y="925.7" text-anchor="middle">85</text>
   <text class="tc" x="46" y="940.7">S1</text>
-  <text class="tc" x="220.5" y="940.7" text-anchor="middle">game starts per minute</text>
-  <text class="tc" x="425" y="940.7" text-anchor="middle">1.5 × p99 of peak starts</text>
+  <text class="tc" x="215.5" y="940.7" text-anchor="middle">game starts per minute</text>
+  <text class="tc" x="415" y="940.7" text-anchor="middle">1.5 × p99 of peak starts</text>
   <text class="tc" x="46" y="955.7">Q1</text>
-  <text class="tc" x="220.5" y="955.7" text-anchor="middle">FFXIV login queue cap per logical data center</text>
-  <text class="tc" x="425" y="955.7" text-anchor="middle">17,000</text>
+  <text class="tc" x="215.5" y="955.7" text-anchor="middle">MMO login queue cap per logical data center</text>
+  <text class="tc" x="415" y="955.7" text-anchor="middle">17,000</text>
 </svg>

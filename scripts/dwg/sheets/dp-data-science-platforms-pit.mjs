@@ -16,7 +16,7 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Illustrative times. Feast scans back from each row's timestamp up to the TTL, never forward."],
+    [1, "Illustrative times. The feature store scans back from each row's timestamp up to the TTL, never forward."],
     [2, "What happened at T0: a chargeback, a cancellation, a no-show. Features are as served then."],
     [3, "Written after T0: joining it leaks the future into training. Online, the model never sees it."],
     [0, "Event time in hours. The drawing carries codes; values and formulas are in the table."],

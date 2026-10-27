@@ -75,7 +75,7 @@ function table(s, x, y, title, head, body, rowH = 15) {
 
 const FLOWS = [
   ["settings", "down, nearest override wins", "walk up to the nearest ancestor that sets it"],
-  ["grants", "down, cover the subtree", "ltree path or closure table, in the database"],
+  ["grants", "down, cover the subtree", "materialized path or closure table, in the database"],
   ["reports", "up, sum of the subtree", "every level reads the same leaf rows"],
 ];
 

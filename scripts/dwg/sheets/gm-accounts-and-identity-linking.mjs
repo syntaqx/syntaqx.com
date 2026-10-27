@@ -13,7 +13,7 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "One live link per platform identity, and one live identity per platform per account."],
-    [2, "Device ID is anonymous; moving it into a real keychain discards the other progress permanently (EOS)."],
+    [2, "Device ID is anonymous; moving it into a real keychain discards the other progress permanently (one SDK)."],
     [3, "Scope comes from the purchase's source and platform agreements; clients show only what is usable."],
     [4, "Illustrative values: the relink cooldown G1 is policy, not a platform rule."],
     [0, "View A not to scale. Values in days, listed in the table."],
@@ -25,7 +25,7 @@ export default function draw() {
   {
     const top = ny + 40;
     const idW = 130, idH = 26, idGap = 12, idX = 52;
-    const ids = ["Steam ID", "PSN account", "Xbox user", "Epic account", "Device ID"];
+    const ids = ["PC store A ID", "Console A account", "Console B user", "PC store B account", "Device ID"];
     const accW = 150, accH = 70, accX = CX - accW / 2;
     const idsH = ids.length * idH + (ids.length - 1) * idGap;
     const accY = top + (idsH - accH) / 2;

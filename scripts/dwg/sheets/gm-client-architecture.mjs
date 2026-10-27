@@ -49,7 +49,7 @@ const client = [
   },
   {
     label: "03 · Web UI",
-    sub: "CEF renderer · front-end plugins",
+    sub: "Embedded browser · front-end plugins",
     draw: (p) => [
       // The renderer's window with three front-end plugin panes.
       p.rect(16, 20, 268, 166, "obj fill-2"),
@@ -73,7 +73,7 @@ export default function draw() {
     [1, "The host loads the plugins the manifest lists, if their versions agree, as the player's entitlements allow."],
     [2, "The UI rebuilds from the services with GETs and watches changes; it can close while services keep state."],
     [3, "Hand the game a short-lived token, never the account credential; the client steps back while the match runs."],
-    [0, "Not to scale; plate contents are schematic. Plugin model per Riot's 2016 and 2017 posts; figures in MB."],
+    [0, "Not to scale; plate contents are schematic. Plugin model per a studio's 2016 and 2017 posts; figures in MB."],
   ], { width: 690 });
 
   const gap = 66, split = 120, top = (client.length - 1) * gap;
@@ -108,8 +108,8 @@ export default function draw() {
   s.comment("Published figures");
   const rows = [
     ["M1", "desktop services memory, 2016", "about 20"],
-    ["M2", "front-end memory per session, p50, CEF 74", "597"],
-    ["M3", "same, p50, CEF 91, patch 11.17, September 2021", "275"],
+    ["M2", "front-end memory per session, p50, browser 74", "597"],
+    ["M3", "same, p50, browser 91, patch 11.17, September 2021", "275"],
     ["M4", "saved by the engine upgrade", "M2 − M3 = 322"],
   ];
   const tw = tableWidths(rows).reduce((a, b) => a + b, 0);

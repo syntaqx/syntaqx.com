@@ -20,10 +20,10 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Unreal (October 2026): 5% of gross above a product's first $1M; games pay royalties, not seats."],
-    [2, "Below K1 the Unity Pro seats cost more than the Unreal royalty; above it, the royalty costs more."],
-    [3, "Unity (Sept 12, 2024): Pro is $2,200 per seat-year from Jan 1, 2025. Unreal at 3.5%: EGS first."],
-    [4, "License fees only: no store fees, engineering or support. Godot is MIT, so L1 = 0."],
+    [1, "Engine A (October 2026): 5% of gross above a product's first $1M; games pay royalties, not seats."],
+    [2, "Below K1 engine B's seats cost more than engine A's royalty; above it, the royalty costs more."],
+    [3, "Engine B (Sept 12, 2024): $2,200 per seat-year from Jan 1, 2025. Engine A at 3.5%: its maker's store first."],
+    [4, "License fees only: no store fees, engineering or support. Engine C is MIT-licensed, so L1 = 0."],
     [0, "Illustrative revenue. Values in $M unless noted; codes on the drawing, values in the table."],
   ], { width: 690 });
 
@@ -55,10 +55,10 @@ export default function draw() {
   {
     const k = 1200, x0 = 140, X = (v) => x0 + v * k;
     const rows = [
-      ["Unreal 5%", R1, "R1", true],
-      ["Unreal 3.5%", R2, "R2", false, 3],
-      ["Unity Pro", U1, "U1"],
-      ["Godot", L1, "L1"],
+      ["Engine A 5%", R1, "R1", true],
+      ["Engine A 3.5%", R2, "R2", false, 3],
+      ["Engine B seats", U1, "U1"],
+      ["Engine C", L1, "L1"],
     ];
     const pitch = 46, h = 18;
     const end = rowTop + 22 + (rows.length - 1) * pitch + h + 10;
@@ -85,13 +85,13 @@ export default function draw() {
     ["G1", "lifetime gross", `E1+B1 = ${m(G1)}`],
     ["E1", "royalty-free first $1M", m(E1)],
     ["B1", "royalty base", `G1−E1 = ${m(B1)}`],
-    ["R1", "Unreal royalty at 5%", `0.05 × B1 = ${m(R1, 3)}`],
-    ["R2", "at 3.5%, EGS first", `0.035 × B1 = ${m(R2, 3)}`],
+    ["R1", "engine A royalty at 5%", `0.05 × B1 = ${m(R1, 3)}`],
+    ["R2", "at 3.5%, maker's store first", `0.035 × B1 = ${m(R2, 3)}`],
     ["N1", "seats", String(N1)],
-    ["P1", "Unity Pro, $ per seat-year", "2,200"],
+    ["P1", "engine B, $ per seat-year", "2,200"],
     ["Y1", "years on the subscription", String(Y1)],
-    ["U1", "Unity Pro seats", `N1 × P1 × Y1 = ${m(U1, 3)}`],
-    ["L1", "Godot license", m(L1, 3)],
+    ["U1", "engine B seats", `N1 × P1 × Y1 = ${m(U1, 3)}`],
+    ["L1", "engine C license", m(L1, 3)],
     ["K1", "break-even gross", `E1 + U1 ÷ 0.05 = ${m(K1)}`],
   ]);
   s.height = Math.ceil(Math.max(tb.y, costBottom) + 30);

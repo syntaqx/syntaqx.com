@@ -16,11 +16,11 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Riot: each 128-tick server frame must complete within 7.8125 ms."],
+    [1, "A studio: each 128-tick server frame must complete within 7.8125 ms."],
     [2, "About 10% of the frame is reserved for the OS, scheduling and host software."],
     [3, "The per-game target that fits three games on one core."],
-    [4, "Riot: the server frame was 50 ms when the work started and under 2 ms by the end."],
-    [5, "Riot, 2023: with 22 clients, frame time scales about 2.2 times, from 2.34 to 5.2 ms."],
+    [4, "The studio: the server frame was 50 ms when the work started and under 2 ms by the end."],
+    [5, "The studio, 2023: with 22 clients, frame time scales about 2.2 times, from 2.34 to 5.2 ms."],
     [0, "Values in ms. The drawing carries codes; values and formulas are in the table."],
   ], { width: 690 });
 

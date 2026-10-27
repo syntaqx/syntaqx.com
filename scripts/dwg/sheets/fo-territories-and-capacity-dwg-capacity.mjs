@@ -18,8 +18,8 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Timefold's movableOccupationRatioThreshold: at 0.5, an eight-hour shift keeps about four hours free."],
-    [2, "The same arithmetic as Oracle's Capacity = Quota - Used: at C1 = 0 the shift takes no more movable work."],
+    [1, "A solver's movable occupation ratio threshold: at 0.5, an eight-hour shift keeps about four hours free."],
+    [2, "The same arithmetic as a field-service suite's Capacity = Quota - Used: at C1 = 0 the shift takes no more movable work."],
     [3, "Illustrative bookings."],
     [4, "The bars are quantities, not times of day; the solver decides when in the day each visit runs."],
     [0, "Values in minutes. The drawing carries codes; values and formulas are in the table."],

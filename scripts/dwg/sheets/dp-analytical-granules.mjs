@@ -16,13 +16,13 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "One mark per granule, held in memory; the sort key (tenant_id, occurred_at) finds granules 3 and 4."],
-    [2, "G1 is the ClickHouse default; the part size and the query are illustrative."],
+    [2, "G1 is the engine's documented default; the part size and the query are illustrative."],
     [3, "C1: the query filters on tenant and time and groups by type; other columns stay closed."],
     [0, "Not to scale; values in rows. The drawing carries codes; values and formulas are in the table."],
   ], { width: 690 });
 
   // ---- Plan view: one part ----
-  s.comment("Plan view: one MergeTree part");
+  s.comment("Plan view: one table part");
   const cw = 60, ch = 24;
   const gw = GRANULES * cw, gh = COLS.length * ch;
   const x0 = CX - gw / 2;
@@ -63,13 +63,13 @@ export default function draw() {
   const py = bot + 34;
   s.dimH(X(0), X(GRANULES), py, "P1", { from: [bot + 18, bot + 18], below: true });
 
-  s.viewTitle(CX, py + 46, "Plan view · one MergeTree part", "Not to scale · column files as rows · granules 1 to 8 as columns");
+  s.viewTitle(CX, py + 46, "Plan view · one table part", "Not to scale · column files as rows · granules 1 to 8 as columns");
   const viewBottom = py + 46 + 13;
 
   // ---- Variable table ----
   s.comment("Variable table");
   const rows = [
-    ["G1", "rows per granule, index_granularity default", "8,192"],
+    ["G1", "rows per granule, rows-per-granule setting default", "8,192"],
     ["P1", "rows in the part", "8 x G1 = 65,536"],
     ["R1", "rows read, granules 3 and 4", "2 x G1 = 16,384"],
     ["C1", "column files opened, of 6", "3"],

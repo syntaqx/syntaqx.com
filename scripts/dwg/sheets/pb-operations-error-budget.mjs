@@ -24,7 +24,7 @@ export default function draw() {
     [2, "B1 is 43.2 minutes of full outage, or a partial one: 1% errors for 72 hours spends the same budget."],
     [3, "Burn rate R is the error rate over the rate the SLO allows; at R the budget is gone after E = N1 ÷ R."],
     [4, "An alert fires when both its long window L and its short window, L ÷ 12, burn faster than R."],
-    [0, "Rates and windows from the SRE Workbook, 99.9% over 30 days. Values and formulas are in the table."],
+    [0, "Rates and windows from published SRE alerting guidance, 99.9% over 30 days. Values and formulas are in the table."],
   ], { width: 690 });
 
   const k = 20 / 24; // 1 day = 20 px, in px per hour

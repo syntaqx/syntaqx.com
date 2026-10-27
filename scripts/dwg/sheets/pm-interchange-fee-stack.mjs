@@ -19,7 +19,7 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Visa exempt debit, CPS/e-Commerce Basic, from October 24, 2026. Regulation II debit would be 0.27."],
+    [1, "Card network exempt debit, card-not-present base program, from October 24, 2026. Regulation II debit would be 0.27."],
     [2, "Illustrative: real network fees are many lines on the acquirer's bill, some billed up to two months later."],
     [3, "A published blended rate: the merchant pays F1 whatever the card, so K1 shrinks as I1 grows."],
     [0, "Values in USD. The drawing carries codes; values and formulas are in the table."],

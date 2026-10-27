@@ -15,7 +15,7 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Sources: Google Cloud, Sep 29, 2016; Riot, Dec 15 and May 19, 2020; Square Enix, Dec 2021."],
+    [1, "Sources: a cloud provider, Sep 29, 2016; a studio, Dec 15 and May 19, 2020; a publisher, Dec 2021."],
     [2, "About 200 processes ran as containers; the first full 2M run came under two weeks before launch."],
     [3, "Hatched: above U2. U1 to U2 is headroom for waves, such as a whole tournament round starting at once."],
     [0, "Figures dated at source. The drawing carries codes; values and formulas are in the table."],
@@ -82,16 +82,16 @@ export default function draw() {
 
   s.comment("Variable table");
   const tb = s.table(40, cBottom + 50, "Variables · published figures", [
-    ["T1", "planned traffic, the target (Pokémon GO)", "1x"],
+    ["T1", "planned traffic, the target (location-based mobile game)", "1x"],
     ["W1", "worst-case estimate", "5 × T1 = 5x"],
     ["A1", "actual launch traffic", "10 × W1 = 50 × T1 = 50x"],
-    ["H1", "simulated players per harness process, 4 CPUs (VALORANT)", "10,000"],
+    ["H1", "simulated players per harness process, 4 CPUs (shooter)", "10,000"],
     ["N1", "harness processes", "C1 ÷ H1 = 200"],
     ["C1", "concurrent players per shard, the goal", "H1 × N1 = 2,000,000"],
-    ["U1", "game server CPU target, % (League Clash)", "70"],
+    ["U1", "game server CPU target, % (MOBA tournament mode)", "70"],
     ["U2", "CPU where players see latency and missed requests, %", "85"],
     ["S1", "game starts per minute", "1.5 × p99 of peak starts"],
-    ["Q1", "FFXIV login queue cap per logical data center", "17,000"],
+    ["Q1", "MMO login queue cap per logical data center", "17,000"],
   ]);
   s.height = Math.ceil(tb.y + 30);
   return s.toString();

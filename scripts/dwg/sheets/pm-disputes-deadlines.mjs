@@ -24,9 +24,9 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "Typical: for services paid in advance the window starts at the event, so L1 grows."],
-    [2, `Providers ask merchants for evidence well inside R1 to leave room for their own review (Stripe: ${P1[0]} to ${P1[1]} days).`],
+    [2, `Providers ask merchants for evidence well inside R1 to leave room for their own review (one processor: ${P1[0]} to ${P1[1]} days).`],
     [3, "Each step runs from the processing date of the one before, so this is the longest case; a missed step loses."],
-    [0, "Calendar days, from Visa Rules Table 11-2 (April 2026). Values and formulas are in the table."],
+    [0, "Calendar days, from one card network's rules, table 11-2 (April 2026). Values and formulas are in the table."],
   ], { width: 690 });
 
   // ---- Plan view: 1 day = 2.6 px ----
@@ -63,7 +63,7 @@ export default function draw() {
   s.nb(xs[1] + (P1[1] * k) / 2 + 20, my + mh + 24.5, 2);
 
   const vy = my + mh + 70;
-  s.viewTitle(CX, vy, "Plan view · one dispute, Visa categories 12 and 13", `Scale 1 day = ${k} px · calendar days · longest case`);
+  s.viewTitle(CX, vy, "Plan view · one dispute, network categories 12 and 13", `Scale 1 day = ${k} px · calendar days · longest case`);
 
   // ---- Variable table ----
   s.comment("Variable table");

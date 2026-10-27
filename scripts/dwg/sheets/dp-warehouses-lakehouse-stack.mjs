@@ -21,7 +21,7 @@ const layers = [
   },
   {
     label: "02 · Data files",
-    sub: "Parquet or ORC · statistics per file",
+    sub: "Columnar file format · statistics per file",
     draw: (p) =>
       // Columnar files: a statistics band on top, then the column chunks.
       [16, 86, 156, 226].flatMap((x) => [
@@ -66,7 +66,7 @@ const layers = [
   },
   {
     label: "05 · Engines",
-    sub: "Spark · Trino · Flink · warehouses",
+    sub: "Batch · SQL · stream · warehouses",
     draw: (p) =>
       // Four engines side by side, each reading through the catalog.
       [16, 86, 156, 226].flatMap((x) => [

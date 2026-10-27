@@ -9,10 +9,10 @@
   <text class="nt" x="50" y="62">VACUUM ON THE PRIMARY REMOVED ROW VERSIONS THE QUERY'S SNAPSHOT CAN STILL SEE.</text>
   <rect class="nb" x="32" y="70.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
-  <text class="nt" x="50" y="79">D1 IS POSTGRESQL'S DEFAULT MAX_STANDBY_STREAMING_DELAY; Q1 AND C1 ARE ILLUSTRATIVE.</text>
+  <text class="nt" x="50" y="79">D1 IS THE DATABASE'S DEFAULT STANDBY MAX DELAY SETTING; Q1 AND C1 ARE ILLUSTRATIVE.</text>
   <rect class="nb" x="32" y="87.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
-  <text class="nt" x="50" y="96">A LARGER D1 LAGS THE WHOLE REPLICA LONGER; HOT_STANDBY_FEEDBACK TRADES IT FOR PRIMARY BLOAT.</text>
+  <text class="nt" x="50" y="96">A LARGER D1 LAGS THE WHOLE REPLICA LONGER; STANDBY FEEDBACK TRADES IT FOR PRIMARY BLOAT.</text>
   <text class="nt" x="50" y="113">VALUES IN SECONDS; LAG HEIGHT IS SCHEMATIC. THE DRAWING CARRIES CODES; VALUES AND FORMULAS ARE IN THE TABLE.</text>
   <!-- Plan view: hot standby during a long query -->
   <path class="ext" d="M100,181L100,158"/>
@@ -82,7 +82,7 @@
   <text class="tc" x="340" y="555.7" text-anchor="middle">when a conflicting cleanup record arrives</text>
   <text class="tc" x="525" y="555.7" text-anchor="middle">60</text>
   <text class="tc" x="181" y="570.7">D1</text>
-  <text class="tc" x="340" y="570.7" text-anchor="middle">max_standby_streaming_delay, the default</text>
+  <text class="tc" x="340" y="570.7" text-anchor="middle">standby max delay setting, the default</text>
   <text class="tc" x="525" y="570.7" text-anchor="middle">30</text>
   <text class="tc" x="181" y="585.7">X1</text>
   <text class="tc" x="340" y="585.7" text-anchor="middle">query cancelled</text>

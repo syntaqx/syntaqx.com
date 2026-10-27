@@ -22,7 +22,7 @@ export default function draw() {
 
   s.comment("Notes");
   const ny = s.notes(32, 40, [
-    [1, "Segment: timestamp = receivedAt - (sentAt - originalTimestamp); Snowplow derived_tstamp matches."],
+    [1, "One CDP: event time = server receive time - (client send time - client event time); another pipeline's derived event time matches."],
     [2, "Q1 is read on one clock, so the skew K1 cancels; what remains, E1, is the transit time."],
     [3, "Illustrative values in seconds from an arbitrary zero on the true clock."],
     [0, "The drawing carries codes; values and formulas are in the table."],
@@ -114,10 +114,10 @@ export default function draw() {
   s.comment("Variable table");
   const rows = [
     ["K1", "device clock ahead of server clock", "30.00"],
-    ["O1", "created, device clock (originalTimestamp)", "40.00"],
-    ["S1", "sent, device clock (sentAt)", "120.00"],
+    ["O1", "created, device clock (client event time)", "40.00"],
+    ["S1", "sent, device clock (client send time)", "120.00"],
     ["Q1", "time in queue", "S1 - O1 = 80.00"],
-    ["R1", "received, server clock (receivedAt)", "91.00"],
+    ["R1", "received, server clock (server receive time)", "91.00"],
     ["T1", "event time on the server clock", "R1 - Q1 = 11.00"],
     ["E1", "error against the true time of 10.00", "T1 - 10.00 = 1.00"],
   ];

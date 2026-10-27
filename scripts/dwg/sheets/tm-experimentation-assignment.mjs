@@ -23,7 +23,7 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "bucket = hash(seed + unit id) mod 10,000: the same id always lands in the same bucket."],
-    [2, "Holdout buckets see no launched features; 1% to 2% is the size Statsig recommends."],
+    [2, "Holdout buckets see no launched features; 1% to 2% is the size one experimentation vendor recommends."],
     [3, "Fabijan et al., KDD 2019: a 50.2/49.8 split that chance explains less than 1 in 500,000."],
     [4, "Bucket counts are illustrative. A gap of 0.37 points is invisible in View B and decisive."],
     [0, "The drawing carries codes; values and formulas are in the table."],

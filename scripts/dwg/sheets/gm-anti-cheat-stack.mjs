@@ -95,7 +95,7 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "Highlighted: the only layer a cheat can't patch, because it runs on hardware the operator controls."],
-    [2, "Valve's Proton guidance: kernel-space anti-cheat is not supported or recommended; user-space components work best on Linux and Steam Deck."],
+    [2, "A PC store's compatibility-layer guidance: kernel-space anti-cheat is not supported or recommended; user-space components work best on its handheld and compatibility layer."],
     [0, "Not to scale. Layers separated along the stack axis; plate contents are schematic."],
   ], { width: 690 });
 

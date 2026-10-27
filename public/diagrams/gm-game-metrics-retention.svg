@@ -9,7 +9,7 @@
   <text class="nt" x="50" y="62">ILLUSTRATIVE COUNTS FOR ONE INSTALL DAY, NOT DATA FROM ANY GAME.</text>
   <rect class="nb" x="32" y="70.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
-  <text class="nt" x="50" y="79">EXACT-DAY RETENTION (GAMEANALYTICS, UNITY): RETAINED ONLY IF ACTIVE ON DAY N ITSELF.</text>
+  <text class="nt" x="50" y="79">EXACT-DAY RETENTION (TWO ANALYTICS VENDORS): RETAINED ONLY IF ACTIVE ON DAY N ITSELF.</text>
   <rect class="nb" x="32" y="87.3" width="11" height="11"/>
   <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
   <text class="nt" x="50" y="96">UNBOUNDED RETENTION (THIS BOOK'S ALTERNATIVE): RETAINED IF ACTIVE ON DAY N OR ANY LATER DAY.</text>

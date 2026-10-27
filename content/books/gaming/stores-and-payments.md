@@ -123,7 +123,7 @@ The notice doesn't state the fee amounts for those programs; read each program's
 
 Put the rates side by side on one purchase and the spread is the whole argument for web stores. The sheet takes a $9.99 price before tax through each store at the rate a typical mid-sized game would pay, and through a web store paying only a card fee.
 
-![Dimensional drawing of one 9.99 dollar purchase split into a store fee and net revenue for eight channels: Steam, Epic Games Store, Microsoft Store on PC, Xbox console, Apple US, Apple EU, Google Play US for new installs, and a web store paying a card fee, with coded fee and net dimensions, notes and a variable table of rates and values.](/diagrams/gm-store-fees.svg "On the same $9.99 purchase, the developer keeps between $6.99 and $9.40 depending on where the player bought, before refunds, chargebacks and the costs a web store carries itself.")
+![Dimensional drawing of one 9.99 dollar purchase split into a store fee and net revenue for eight channels: PC store A (Steam), PC store B (Epic Games Store), PC store C (Microsoft Store on PC), the console store (Xbox), mobile store A US and EU (Apple), mobile store B US (Google Play, new installs), and a web store paying a card fee, with coded fee and net dimensions, notes and a variable table of rates and values.](/diagrams/gm-store-fees.svg "On the same $9.99 purchase, the developer keeps between $6.99 and $9.40 depending on where the player bought, before refunds, chargebacks and the costs a web store carries itself.")
 
 | Code | Channel | Rate used | Fee | Net |
 | --- | --- | --- | --- | --- |

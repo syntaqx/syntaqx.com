@@ -15,7 +15,7 @@ export default function draw() {
   s.comment("Notes");
   const ny = s.notes(32, 40, [
     [1, "Illustrative: settlement on T+1 and a next-day ACH payout are one common schedule; banks and providers vary."],
-    [2, "Stripe's published standard timing for US accounts. A new account's first payout waits 7 to 14 days instead."],
+    [2, "A processor's published standard timing for US accounts. A new account's first payout waits 7 to 14 days instead."],
     [3, "A payout can still come back as an ACH return after it shows paid; the amount returns to the balance."],
     [4, "Disputes keep arriving after the money has left, which is what reserves are for."],
     [0, "Values in business days unless noted. Not to scale after the break. Codes on the drawing; values in the table."],
