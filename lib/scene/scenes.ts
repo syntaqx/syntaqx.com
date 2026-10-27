@@ -791,24 +791,59 @@ const route: SceneFn = (s) => {
 };
 
 /**
- * Gaming: a match on an arena floor, the players trading packets across a
- * capture point, lifted off the racks of game servers that run it.
+ * Gaming: a match on a map lifted off the racks of game servers that run
+ * it. Two bases face off across three lanes and the walls between them;
+ * the waves meet in the mid lane, where the player's shots fly at an enemy.
  */
 const arena: SceneFn = (s) => {
-  const Z = 3.2 + s.spread * 2;
-  const p1: [number, number] = [2.4 + Math.sin(s.t * 0.9) * 0.5, 2.6];
-  const p2: [number, number] = [6, 6.2 + Math.sin(s.t * 1.1 + 1) * 0.5];
+  const Z = 3.4 + s.spread * 2.2;
+  const [lo, hi, w] = [1.9, 8.1, 0.45];
+  const band = (a: [number, number], b: [number, number]): Part => {
+    // a lane of half-width w between two points, flat on the map
+    const [dx, dy] = [b[0] - a[0], b[1] - a[1]];
+    const n = Math.hypot(dx, dy);
+    const [px, py] = [(-dy / n) * w, (dx / n) * w];
+    return { kind: "plane", pts: [[a[0] + px, a[1] + py, Z], [b[0] + px, b[1] + py, Z], [b[0] - px, b[1] - py, Z], [a[0] - px, a[1] - py, Z]], v: 0.34 };
+  };
+  // the waves on the mid lane: ours from the near base, theirs from the far
+  const T = 5;
+  const wave = (k: number, ours: boolean): [number, number] => {
+    const d = 0.08 + 0.34 * ((((s.t / T + k) % 1) + 1) % 1);
+    const u = ours ? 1 - d : d;
+    return [lo + (hi - lo) * u, hi - (hi - lo) * u];
+  };
+  const me: [number, number] = [5.7 + Math.sin(s.t * 0.9) * 0.25, 5.2];
+  const foe: [number, number] = [4.2, 4.9 + Math.sin(s.t * 1.1 + 1) * 0.25];
+  const shot = (s.t * 1.3) % 1;
+  const unit = ([x, y]: [number, number], h: number, opts: { accent?: boolean; small?: boolean } = {}): Part => ({ kind: "box", box: box(x - 0.28, y - 0.28, Z, 0.56, 0.56, h), ...opts });
+  const wall = (x: number, y: number, a: number, b: number): [number, Part[]] => [x + y + (a + b) / 2, [{ kind: "box", box: box(x, y, Z, a, b, 0.45) }]];
+  const things: [number, Part[]][] = [
+    // bases: a pad and a tower in opposite corners, ours lit
+    [lo + hi, [{ kind: "box", box: box(lo - 0.9, hi - 0.9, Z, 1.8, 1.8, 0.18), small: true }, { kind: "cyl", cx: lo, cy: hi, z: Z + 0.18, r: 0.55, h: 1.5, rt: 0.32 }]],
+    [hi + lo, [{ kind: "box", box: box(hi - 0.9, lo - 0.9, Z, 1.8, 1.8, 0.18), small: true }, { kind: "cyl", cx: hi, cy: lo, z: Z + 0.18, r: 0.55, h: 1.5, rt: 0.32, accent: true }]],
+    // walls in the jungle between the lanes
+    wall(3.4, 2.9, 1.5, 0.45), wall(5.1, 6.6, 1.5, 0.45),
+    // the waves meeting mid
+    ...[0, 0.33, 0.66].map((k): [number, Part[]] => { const p = wave(k, true); return [p[0] + p[1], [unit(p, 0.35, { small: true })]]; }),
+    ...[0.15, 0.48, 0.81].map((k): [number, Part[]] => { const p = wave(k, false); return [p[0] + p[1], [unit(p, 0.35, { small: true })]]; }),
+    // the player and the enemy they're fighting
+    [me[0] + me[1], [unit(me, 0.85, { accent: true })]],
+    [foe[0] + foe[1], [unit(foe, 0.85)]],
+  ];
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(2.4 + i * 1.9, 4.4, 0, 1.4, 2.4, 1.8), slots: true })),
-    { kind: "cable", pts: [[5, 5.6, 1.8], [5, 5.6, Z]], speed: 0.5, accent: true },
-    { kind: "plane", pts: quad(1, 1, Z, 8, 8), v: 0.16, grid: 8, drops: { at: [[1, 9], [9, 9], [9, 1]], from: 0 } },
-    { kind: "cyl", cx: 5, cy: 5, z: Z, r: 1, h: 0.15 },
-    { kind: "box", box: box(p1[0], p1[1], Z, 1.1, 1.1, 1.5) },
-    { kind: "cable", pts: [[p1[0] + 0.55, p1[1] + 0.55, Z + 0.8], [5, 5, Z + 0.8], [p2[0] + 0.55, p2[1] + 0.55, Z + 0.8]], speed: 0.6, accent: true },
-    { kind: "box", box: box(p2[0], p2[1], Z, 1.1, 1.1, 1.5), accent: true, handles: true },
+    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(2.6 + i * 1.7, 4.6, 0, 1.3, 2, 1.4), slots: true })),
+    { kind: "cable", pts: [[5, 5.6, 1.4], [5, 5.6, Z]], speed: 0.5, accent: true },
+    { kind: "plane", pts: quad(0.6, 0.6, Z, 8.8, 8.8), v: 0.12, drops: { at: [[0.6, 9.4], [9.4, 9.4], [9.4, 0.6]], from: 0 } },
+    // three lanes base to base: two along the edges, one down the middle
+    band([lo, lo], [hi, lo]), band([hi, lo], [hi, hi]),
+    band([lo, lo], [lo, hi]), band([lo, hi], [hi, hi]),
+    band([lo, hi], [hi, lo]),
+    ...things.sort((p, q) => p[0] - q[0]).flatMap(([, ps]) => ps),
+    // the shot, from the player to the enemy
+    { kind: "line", a: [me[0], me[1], Z + 0.55], b: [me[0] + (foe[0] - me[0]) * shot, me[1] + (foe[1] - me[1]) * shot, Z + 0.55], accent: true },
   ];
-  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1, 1, Z + 0.6], [2.4, 2.6, Z + 1.8]], axes: ground(10) };
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [0.6, 0.6, Z + 0.4], [hi, lo, Z + 1.9]], axes: ground(10) };
 };
 
 /**
