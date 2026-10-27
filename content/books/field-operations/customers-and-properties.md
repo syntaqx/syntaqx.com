@@ -43,7 +43,7 @@ Every address goes through the same pipeline: capture with autocomplete and a se
 
 **A technician's pin outranks every rooftop.** A rooftop geocode is the center of the roof, not the gate, the side door or the meter. Store the precision with every point, flag anything below rooftop or parcel, and ask the technician to drop a pin on the first visit. That pin is the service point you route to from then on.
 
-![Address pipeline: the address as typed is standardized to Publication 28 form with ZIP+4, validated with DPV codes Y, S, D or N and the residential indicator, geocoded at rooftop or ZIP precision, and matched to a vendor or parcel property key; a failed validation or low-precision geocode goes to human review.](/diagrams/fo-customers-and-properties-address.svg "Four steps, each a vendor call. Keep what was typed beside what came back, because the vendor's answer changes over time.")
+![Address pipeline: the address as typed is standardized to standard postal form with ZIP+4 (USPS Publication 28), validated for deliverability (DPV codes Y, S, D or N) with a residential flag, geocoded at rooftop or ZIP precision, and matched to a vendor or parcel property key; a failed validation or low-precision geocode goes to human review.](/diagrams/fo-customers-and-properties-address.svg "Four steps, each a vendor call. Keep what was typed beside what came back, because the vendor's answer changes over time.")
 
 ## Property Keys and Enrichment
 

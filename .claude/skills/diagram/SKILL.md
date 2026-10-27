@@ -295,3 +295,7 @@ diagram avoids it. Keep each to one or two lines: what went wrong, the rule.
 - 2026-10-27: An actor flush to the right margin put its offset shadow 3
   past it; give an actor at an edge 3 of slack. Edge labels are caps, so
   cardinalities (`1..n`) need `tc ko` text placed beside the segment.
+- 2026-10-27: `kind: 'ghost'` with `end: true` drew a dashed box around a
+  solid one and read as broken; a terminal outcome is a plain `end` box.
+- 2026-10-27: Year gridlines on a bar chart ran through the value labels;
+  draw ticks on the axes only.
