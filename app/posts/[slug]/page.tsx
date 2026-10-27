@@ -212,7 +212,7 @@ export default async function PostPage({ params }: Props) {
             href="/feed.xml"
             className="inst flex items-center gap-2 text-dim transition-colors hover:text-accent"
           >
-            <span className="size-1.5 bg-accent" />
+            <span aria-hidden className="tick" />
             subscribe via rss
           </a>
         </aside>

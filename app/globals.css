@@ -169,7 +169,7 @@ body {
   text-transform: uppercase;
 }
 
-/* Section label: instrument text after a teal square (the art's handle). */
+/* Section label: instrument text after a teal tick at the site's tilt. */
 @utility eyebrow {
   display: inline-flex;
   align-items: center;
@@ -183,18 +183,24 @@ body {
   color: var(--dim);
 
   &::before {
+    @apply tick;
     content: "";
-    width: 5px;
-    height: 5px;
-    flex-shrink: 0;
-    background: var(--accent);
   }
+}
+
+/* A thin teal bar leaning at the site's tilt; the marker beside labels. */
+@utility tick {
+  width: 2px;
+  height: 1.15em;
+  flex-shrink: 0;
+  background: var(--accent);
+  transform: skewX(calc(-1 * var(--tilt-angle)));
 }
 
 /* A post list row and its title (components/post-list.tsx). Kept here, not
    inline, so a long list doesn't repeat these classes on every row. */
 @utility post-row {
-  @apply relative grid gap-x-8 gap-y-2 px-0 py-5 transition-colors before:absolute before:top-1/2 before:-left-4 before:size-1.5 before:-translate-y-1/2 before:scale-0 before:bg-accent before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-surface hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4;
+  @apply relative grid gap-x-8 gap-y-2 px-0 py-5 transition-colors before:absolute before:top-1/2 before:-left-4 before:h-3 before:w-0.5 before:-translate-y-1/2 before:-skew-x-(--tilt-angle) before:scale-0 before:bg-accent before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-surface hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4;
 }
 @utility post-row-title {
   @apply text-xl leading-none text-foreground transition-[color,translate] duration-200 ease-[steps(4)] group-hover:translate-x-1.5 group-hover:text-accent sm:text-[1.4rem];

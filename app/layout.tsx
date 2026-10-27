@@ -144,7 +144,7 @@ export default function RootLayout({
                   aria-label={`Deployed commit ${COMMIT.slice(0, 7)} on GitHub`}
                   className="hidden items-center gap-2 border-l border-border pl-4 font-mono text-[0.65rem] text-dim transition-colors hover:text-foreground focus-visible:-outline-offset-2 lg:flex"
                 >
-                  <span aria-hidden className="size-1 bg-accent" />
+                  <span aria-hidden className="tick" />
                   {COMMIT.slice(0, 7)}
                 </a>
               )}
