@@ -85,6 +85,8 @@ old system's closing trial balance       = new system's opening trial balance, a
 
 A difference isn't plugged to suspense and forgotten. It's a reconciling item with an owner and a deadline, because a deposit nobody can find at move-out is still owed to the resident.
 
+![One property's cutover as a pipeline: crosswalk (every identifier, matched once), close the last month (statements, fee run, trust reconciliation), load open items (side effects off, as a migration actor), the accented tie-outs gate (receivables, deposits, prepaid, trust and trial balance all agree), and go live (side effects on, rent posts on the 1st). A dashed line from the tie-outs leads to a reconciling item with an owner and a deadline, never plugged to suspense. A span under the first four stages reads old system holds the lease and ledger, and one under go live reads new system.](/diagrams/pt-sp-cutover.svg "A property goes live only when every tie-out holds, and until that day the old system remains its system of record. Cohorts repeat this property by property.")
+
 ## Trust Cutover and Deposit Transfer
 
 Money held for others has to be accounted for on the cutover date by both sides. For a platform switch with the same bank accounts, that's a three-way reconciliation at the close of the last old-system month, reproduced as the opening position in the new system ([Three-Way Reconciliation](/books/property-tech/trust-accounting#three-way-reconciliation)). For a manager change or a sale, money actually moves, and state law sets the steps for deposits:

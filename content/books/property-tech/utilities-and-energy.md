@@ -43,6 +43,8 @@ unit 204 (2 occupants, 900 sq ft) of totals (420 occupants, 180,000 sq ft):
 unit 204 charge                 $10,540 × 0.004881 = $51.45
 ```
 
+![A dimensional drawing of the worked example above. Notes say the bill is illustrative, the common area share and weights are the property's policy recorded with each charge, and vacant units' shares are the owner's operating expense. In the plan view, the master bill M1 is a bar split into a hatched common area C1 and the amount billable to units B1; below it, B1 is split into two equal halves, H1 weighted by occupants and H2 by square feet. Detail A enlarges unit 204's share as two pieces, U1 by occupants and U2 by area, which sum to its charge U3, accented. The variable table gives M1 12,400.00; P1 15%; C1 = M1 × P1 = 1,860.00; B1 = M1 − C1 = 10,540.00; H1 and H2 = B1 × 0.5 = 5,270.00 each; U1 = H1 × 2 ÷ 420 = 25.10; U2 = H2 × 900 ÷ 180,000 = 26.35; and U3 = U1 + U2 = 51.45.](/diagrams/pt-rubs-allocation.svg "An allocated charge is a chain of policy choices applied to one bill: the common area share, the weights, then the unit's ratios. All amounts are illustrative; each choice is stored with the charge so the resident's $51.45 can be rebuilt.")
+
 The design questions are the same whichever method:
 
 - **Who pays for vacant units.** The owner does: the vacant units' share of an allocated bill, and vacant units' metered usage, are an operating expense, never spread across occupied units. The formula has to know which units were occupied on which days, which comes from leases, not from a status column ([The Life of a Unit](/books/property-tech/property-business#the-life-of-a-unit)).

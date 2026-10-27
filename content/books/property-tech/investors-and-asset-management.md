@@ -85,6 +85,8 @@ total                   15,000,000         13,032,000     1,968,000
 
 The sponsor put in 10% of the capital and received about 13% of the proceeds; that difference is the promote, and it's why waterfall code is reviewed by both sides' accountants.
 
+![A dimensional drawing of the illustrative waterfall. The first plan view shows the 15,000,000 dollars of proceeds (P) as one bar split into return of capital (T1, 10,000,000), the 8% pref over three years (T2, 2,400,000), the 80% pro rata split of the remainder (T3, 2,080,000) and the accented 20% promote (T4, 520,000). The second plan view shows the same proceeds by party at the same scale: the capital partner's bar (C, 13,032,000) made of C1, C2 and C3, its 90% of the first three tiers, and the sponsor's much shorter bar. Detail A enlarges the sponsor's share (S, 1,968,000) at four times the scale: S1 capital back (1,000,000), S2 pref (240,000), S3 pro rata (208,000) and the accented S4 promote (520,000). A variable table gives each code with its formula and value.](/diagrams/pt-inv-waterfall.svg "The same proceeds, cut by tier and by party. The promote is a small slice of the whole and over a quarter of the sponsor's take. All numbers are the illustrative run above.")
+
 What a platform needs:
 
 - **The waterfall as versioned data, from the governing documents,** with tiers, hurdles, compounding convention, day count, catch-up and splits, and a citation to the section each came from ([Rules as Data](/docs/architecture/rules-as-data#stages-and-ordered-rules)). Amendments create versions with effective dates.

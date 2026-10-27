@@ -122,6 +122,8 @@ Move-out starts with notice and ends with a statement. In order:
 
 The deposit itemization rule is the clearest case in this chapter for [Rules as Data](/docs/architecture/rules-as-data): a handful of parameters per jurisdiction, effective-dated, that change by statute and decide real money. A selection, as of October 2026, from the statutes listed in References:
 
+![Deposit itemization deadlines as bars on a day axis from 0 to 30 days: New York, accented, 14 days from vacating; Florida with no claim, 15 days from termination; California, 21 days from vacating; Texas, 30 days from surrender; Washington, 30 days from termination and vacation; New Jersey, 30 days from termination; and, dashed because it is a notice of a claim rather than the return, Florida's 30 days to notice a claim. A footnote says this is a selection as of October 2026 and each clock starts at the event named.](/diagrams/pt-deposit-deadlines.svg "The same obligation runs from 14 to 30 days and starts at different events, so the deadline is computed per jurisdiction and stored on the statement, never assumed.")
+
 | Jurisdiction | Deadline | Clock starts | Itemization and evidence | If missed or in bad faith |
 | --- | --- | --- | --- | --- |
 | **California** | 21 calendar days | Tenant vacates | Itemized statement; copies of bills, invoices or receipts, and for the landlord's own labor the time spent and hourly rate, unless repair and cleaning deductions total $125 or less; a good-faith estimate when repairs take longer; photos as above | Bad-faith retention: statutory damages up to twice the deposit, plus actual damages (Civ. Code 1950.5(h), (m)) |

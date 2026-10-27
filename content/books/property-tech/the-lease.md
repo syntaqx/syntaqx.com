@@ -185,6 +185,8 @@ The rest of the lease follows: the terminating person's membership ends, other l
 
 The core model gives a lease seven states. Their transitions:
 
+![The lease state machine. Before possession, draft goes to out_for_signature when the packet is sent, back to draft when it is voided, and to signed when every signer has signed; draft and out_for_signature go to cancelled, dashed, when declined, withdrawn or expired, and signed goes to cancelled, dashed, before possession. Signed goes to current on the start date with the household in possession. Current goes to notice_given when a notice is served and back to current when it is rescinded; notice_given goes to ended when the household moves out, and current goes straight to ended when the lease is renewed, transferred, evicted or abandoned. The accented path runs draft, out_for_signature, signed, current, notice_given, ended; cancelled and ended are drawn with double outlines as terminal states.](/diagrams/pt-lease-states.svg "Seven states, two of them terminal. Everything before possession can still be cancelled; after it, every road ends in ended with a reason, and eviction is a case on the lease, not a state.")
+
 | From | To | When |
 | --- | --- | --- |
 | `draft` | `out_for_signature` | The packet is rendered from template versions and signature requests are sent |

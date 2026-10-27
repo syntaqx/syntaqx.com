@@ -107,6 +107,8 @@ For a renewal offer generated in October 2026 for a lease ending January 31, 202
 5. **Constrain the pricing engine's output** to the maximum, and schedule the notice so it's served in time. [Revenue Management & Pricing](/books/property-tech/revenue-management#rent-limits-in-the-engine) owns the offer; [The Lease](/books/property-tech/the-lease#notices) owns the notice document.
 6. **Store the evaluation** with the rule versions, inputs and results ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)), linked from the offer and the notice.
 
+![Evaluating a rent increase as a six-stage pipeline with accented arrows: 1, resolve jurisdictions from the parcel as of the date; 2, select rule versions by each rule's as-of date; 3, check applicability (tenancy, past increases, building, program); 4, compute limits (maximum rent, notice deadline); 5, constrain the offer (engine output capped, notice scheduled); and 6, store the evaluation (versions, inputs, results, linked). A dashed line from the applicability check leads to offer blocked when a fact is missing. A dashed back edge from the stored evaluation to rule selection is labeled figure not yet published: provisional, re-run when it arrives.](/diagrams/pt-ltl-evaluation.svg "One decision, six steps, every one recorded. Missing facts stop the offer rather than defaulting, and an evaluation made before a figure is published stays provisional until it's re-run.")
+
 If the 2027 figure had not yet been published when the offer was generated, the evaluation would have used the latest approved figure and flagged itself for re-evaluation when the new row arrived; offers generated in advance of a known publication date are provisional until then.
 
 ## The Rules Matrix

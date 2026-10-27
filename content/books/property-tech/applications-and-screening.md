@@ -65,6 +65,8 @@ For an operator's platform, the lesson isn't to rebuild the agency's matching; i
 
 ### Adverse action notices
 
+![The screening pipeline as five stages left to right: fee and consent, per member and before any report; pre-qualification on identity, income, credit and rental history; a conditional offer, with financials decided first; criminal history, drawn dashed because it runs only where allowed and after the offer; and the decision, accented, made against a criteria version with reason codes. The decision fans out to four outcomes: approve (the accented branch), approve with conditions such as a deposit or guarantor, deny, and pending for an assessment or dispute. Approve with conditions and deny both feed the adverse action notice, which names the agency and gives a free copy within 60 days and the right to dispute. A dashed path runs from the notice to a dispute, where the agency reinvestigates within 30 days, and back to the decision: a corrected report means a new decision supersedes the old one.](/diagrams/pt-screening-pipeline.svg "A conditional approval is an adverse action too, so two of the four outcomes generate a notice. The dispute runs at the agency, but its result comes back as a new decision on the operator's side.")
+
 A user that takes adverse action "based in whole or in part" on a consumer report owes the consumer a notice (1681m(a)), and the FTC is explicit that adverse action includes denying the application, "requiring a co-signer on the lease," or requiring a larger deposit than other applicants, and applies even when the report played a small role. The notice must give:
 
 - **The agency's name, address and phone number,** toll-free for a nationwide agency.

@@ -45,6 +45,8 @@ The policy is a record, not a PDF: carrier, policy number, named insureds, liabi
 - **A lapse starts a clock.** The lease and the jurisdiction say what happens: a cure period, then landlord-placed coverage with its charge, or a violation notice. Both RealPage and Entrata sell gap coverage for the lapse.
 - **Move-out ends the requirement,** and any landlord-placed charge stops with it.
 
+![Renters insurance compliance for one lease as states. Covered, accented, means a program policy or approved proof. A carrier notice of cancellation or nonrenewal moves the lease, on a dashed line, to pending cancellation, and from there to lapsed, where a cure period runs. From lapsed, dashed lines fan out to two terminal outcomes, landlord-placed coverage with its charge or a violation notice; a legend says the lease and the jurisdiction decide which. An accented line marked new proof approved runs from lapsed back to covered. A footnote says compliance is computed daily per lease, and move-out ends the requirement and any charge.](/diagrams/pt-insurance-lapse.svg "A lapse is a clock, not a flag. The carrier's notice starts the slide early enough to warn the resident, and an approved policy at any point puts the lease back to covered.")
+
 Document reading is a good use of extraction models, with a person approving anything below a confidence threshold ([Scores, Bands and the Human Middle](/docs/architecture/risk-scoring#scores-bands-and-the-human-middle)), because a wrongly approved policy is discovered only when there's a claim.
 
 ## Master and Force-Placed Policies

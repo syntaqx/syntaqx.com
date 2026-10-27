@@ -21,6 +21,8 @@ Delinquency features cluster in three places: automated outreach, notice and fil
 
 The vocabulary differs by vendor; the workflow doesn't. It's a case with stages and holds, driven by deadlines computed from the jurisdiction's rules.
 
+![The delinquency case. At the top, a boundary titled hold on the case, which pauses every path at once, holds four dashed boxes: bankruptcy stay, servicemember, rental assistance, and dispute or order. Below it, seven stages left to right: past grace, with reminders; late fee, within the state's cap; notice, accented, with its period, content and proof of service; filing, a package to counsel; hearing or settlement; judgment for possession, money or both; and the writ, executed by an officer. Two dashed exits leave the notice: paid in full and reinstated, drawn as a terminal box, and a payment plan, signed, which pauses what it says. From the writ, the unpaid balance after move-out becomes a collection account.](/diagrams/pt-delinquency-case.svg "The notice is the hinge: a defect there sends the case back to the start. A hold has to stop every stage and every collection path together, or it doesn't stop the case.")
+
 ## Notices
 
 A notice to pay or quit is the hinge of the process: get it wrong and the case is dismissed and starts over, weeks later, with a larger balance. Notice rules vary by state on period, counting, content and service, as of October 2026:
