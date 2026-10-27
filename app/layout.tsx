@@ -45,6 +45,10 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+// Deployed commit, shown in the header's status readout. Vercel sets this
+// on every build; locally it's unset and the readout is hidden.
+const COMMIT = process.env.VERCEL_GIT_COMMIT_SHA;
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -112,7 +116,7 @@ export default function RootLayout({
           data-pagefind-ignore
           className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md"
         >
-          <div className="mx-auto grid h-14 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
+          <div className="mx-auto grid h-12 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
             <Link
               href="/"
               className="group flex items-center gap-2.5 border-r border-border px-4 sm:pl-0 sm:pr-5"
@@ -132,6 +136,18 @@ export default function RootLayout({
             <div className="col-start-3 flex items-stretch">
               <SearchButton />
               <ThemeToggle />
+              {COMMIT && (
+                <a
+                  href={`https://github.com/syntaqx/syntaqx.com/commit/${COMMIT}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Deployed commit ${COMMIT.slice(0, 7)} on GitHub`}
+                  className="hidden items-center gap-2 border-l border-border pl-4 font-mono text-[0.65rem] text-dim transition-colors hover:text-foreground focus-visible:-outline-offset-2 lg:flex"
+                >
+                  <span aria-hidden className="size-1 bg-accent" />
+                  {COMMIT.slice(0, 7)}
+                </a>
+              )}
               <MobileMenu />
             </div>
           </div>

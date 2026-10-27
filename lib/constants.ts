@@ -41,15 +41,30 @@ export const bio = [
   },
 ];
 
-export const nav = [
+export type NavLink = { href: string; label: string };
+export type NavGroup = { label: string; links: NavLink[] };
+
+// Header navigation. A group renders as a disclosure ("lab") in the header
+// and as a labeled group in the mobile menu.
+export const nav: (NavLink | NavGroup)[] = [
   { href: "/posts", label: "posts" },
   { href: "/projects", label: "projects" },
   { href: "/docs", label: "docs" },
   { href: "/books", label: "books" },
-  { href: "/ui", label: "ui" },
-  { href: "/tools", label: "tools" },
+  {
+    label: "lab",
+    links: [
+      { href: "/ui", label: "ui" },
+      { href: "/tools", label: "tools" },
+    ],
+  },
   { href: "/about", label: "about" },
 ];
+
+// Every nav page, groups flattened, in header order.
+export const navLinks = nav.flatMap((item) =>
+  "links" in item ? item.links : [item],
+);
 
 // Footer link groups. Non-page routes (feeds, machine-readable files) are
 // flagged `file` so they render as plain anchors, not client-side Links.
@@ -57,7 +72,7 @@ export const footerNav: {
   label: string;
   links: { href: string; label: string; file?: boolean }[];
 }[] = [
-  { label: "site", links: nav },
+  { label: "site", links: navLinks },
   {
     label: "connect",
     links: [

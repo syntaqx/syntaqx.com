@@ -48,7 +48,7 @@ const noop = () => () => {};
 /**
  * The search shortcut as this device would press it: ⌘K on Apple devices,
  * Ctrl K elsewhere, nothing on touch-only devices (no keyboard to press).
- * null on the server, so the hint only appears after hydration.
+ * null on the server, so the button's title only names it after hydration.
  */
 function shortcutHint(): string | null {
   if (!matchMedia("(any-pointer: fine)").matches) return null;
@@ -57,6 +57,15 @@ function shortcutHint(): string | null {
   };
   const platform = nav.userAgentData?.platform || nav.platform || nav.userAgent;
   return /mac|iphone|ipad|ipod/i.test(platform) ? "⌘K" : "Ctrl K";
+}
+
+/** True when a keypress is going into a text field, where "/" is text. */
+function isTyping(target: EventTarget | null) {
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable ||
+      ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+  );
 }
 
 export function SearchButton() {
@@ -68,6 +77,15 @@ export function SearchButton() {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setOpen((o) => !o);
+      } else if (
+        e.key === "/" &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey &&
+        !isTyping(e.target)
+      ) {
+        e.preventDefault();
+        setOpen(true);
       }
     }
     // Escape is handled by Radix Dialog while open.
@@ -77,22 +95,19 @@ export function SearchButton() {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <div className="flex items-center border-l border-border lg:px-3">
-        <Dialog.Trigger
-          aria-label="Search"
-          className="flex h-full w-12 cursor-pointer items-center justify-center text-dim transition-colors hover:text-foreground lg:h-9 lg:w-60 lg:justify-start lg:gap-2.5 lg:border lg:border-border lg:bg-surface lg:px-3 lg:hover:border-border-hover"
-        >
-          <Search size={14} className="shrink-0" />
-          <span className="hidden flex-1 text-left text-sm lg:block">
-            Search
-          </span>
-          {shortcut && (
-            <kbd className="inst hidden border border-border bg-background px-1.5 py-1 text-foreground lg:inline-flex">
-              {shortcut}
-            </kbd>
-          )}
-        </Dialog.Trigger>
-      </div>
+      {/* The "/" hint is CSS-gated (md+, with a fine pointer) so the
+          button's width never changes on hydration. */}
+      <Dialog.Trigger
+        aria-label="Search"
+        aria-keyshortcuts="/ Control+K Meta+K"
+        title={shortcut ? `Search (/ or ${shortcut})` : "Search"}
+        className="flex w-12 cursor-pointer items-center justify-center gap-2.5 border-l border-border text-dim transition-colors hover:text-foreground focus-visible:-outline-offset-2 md:any-pointer-fine:w-auto md:any-pointer-fine:px-4"
+      >
+        <Search size={14} className="shrink-0" />
+        <kbd className="hidden min-w-4.5 justify-center border border-border px-1 font-mono text-[0.65rem] leading-4 md:any-pointer-fine:inline-flex">
+          /
+        </kbd>
+      </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-100 bg-background/70 backdrop-blur-sm" />
         <div className="fixed inset-0 z-100 flex items-start justify-center sm:px-4 sm:pt-[15vh] pointer-events-none">
