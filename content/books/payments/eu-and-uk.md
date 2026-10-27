@@ -21,7 +21,7 @@ Europe is where a US platform finds out how much of its design was US law in dis
 | **Bacs** | UK, sterling | Direct Debits and bulk Direct Credits | A three-day cycle | Direct Debits refundable under the Guarantee |
 | **CHAPS** | UK, sterling | High-value same-day payments | Settled gross in real time, business days | Yes |
 
-The volumes say which rails matter. In 2025 Faster Payments processed 5.55 billion payments worth £4.84 trillion, and Bacs 6.86 billion worth £6.05 trillion, 5.0 billion of them Direct Debits. Payment schemes in the UK are run by **Pay.UK** (Faster Payments, Bacs, the overlay services), CHAPS by the **Bank of England**, and the **Payment Systems Regulator** (PSR) regulates them, for now: the government announced in March 2025 that the PSR's functions will be consolidated, mainly into the FCA, which needs primary legislation, and as of September 2026 the FCA says nothing about the PSR's remit or work has changed yet.
+The volumes say which rails matter. In 2025 Faster Payments processed 5.55 billion payments worth £4.84 trillion, and Bacs 6.86 billion worth £6.05 trillion, 5.0 billion of them Direct Debits. Payment schemes in the UK are run by **Pay.UK** (Faster Payments, Bacs, the overlay services), CHAPS by the **Bank of England**, and the **Payment Systems Regulator** (PSR) regulates them, for now: the government announced in March 2025 that the PSR's functions will be consolidated, mainly into the FCA, which needs primary legislation, and as of October 2026 the FCA's guidance (last updated September 18, 2026) still says there are no immediate changes to the PSR's remit or work.
 
 ## Card Rules
 
@@ -30,11 +30,11 @@ The volumes say which rails matter. In 2025 Faster Payments processed 5.55 billi
 - **Unblended pricing.** Acquirers must offer and charge merchant service charges "individually specified for different categories and different brands", and the merchant agreement must state the interchange fees and scheme fees for each category and brand (Article 9).
 - **Per-transaction information.** After each transaction the acquirer gives the merchant the merchant service charge and the interchange fee separately (Article 12). That's a statement and reporting requirement, built into the pricing engine of [Interchange & Pricing](/books/payments/interchange-and-pricing#a-pricing-engine).
 - **Co-badging and choice.** Schemes can't stop issuers putting two brands on one card (Article 8), and nothing may automatically limit which brand or application pays; a merchant may set a priority, but the payer can override it. A checkout or terminal that silently picks the brand breaks the rule.
-- **Honour All Cards, narrowed.** A merchant accepting one issuer's cards can't be forced to accept every other card of the scheme (Article 10), only consumer cards of the same brand and category, which are the capped ones.
+- **Honor all cards, narrowed.** A merchant accepting one issuer's cards can't be forced to accept every other card of the scheme (Article 10), only consumer cards of the same brand and category, which are the capped ones.
 
 **The UK kept the caps for domestic payments.** The UK's retained version of the regulation applies the same 0.2% and 0.3% caps, but only to domestic consumer transactions where the issuer, acquirer and point of sale are all in the UK. Payments between the UK and the EEA stopped being intra-regional at Brexit, and the networks raised them: Visa set its default fees for UK-EEA card-not-present payments at 1.15% (debit) and 1.5% (credit) in October 2021, and Mastercard followed in April 2022, a fivefold rise the PSR estimated costs UK businesses £150 to 200 million a year.
 
-**The cap on those fees is still coming.** The PSR proposed a cap in December 2024, paused the work in March 2025 when Visa and Mastercard sought judicial review, and in October 2025 dropped its interim cap in favour of setting one with a firmer methodology (its consultation on that closed in November 2025). The High Court dismissed the networks' challenge on 15 January 2026, confirming the PSR's power to impose caps. Its 2026/27 plan commits only to "next steps", and as of October 2026 no cap level has been set. Price UK-EEA card-not-present transactions at the networks' rates, as effective-dated data, until a decision says otherwise.
+**The cap on those fees is still coming.** The PSR proposed a cap in December 2024, paused the work in March 2025 when Visa and Mastercard sought judicial review, and in October 2025 dropped its interim cap in favor of setting one with a firmer methodology (its consultation on that closed in November 2025). The High Court dismissed the networks' challenge on 15 January 2026, confirming the PSR's power to impose caps. Its 2026/27 plan commits only to "next steps", and as of October 2026 no cap level has been set. Price UK-EEA card-not-present transactions at the networks' rates, as effective-dated data, until a decision says otherwise.
 
 **Scheme fees are under the same regulator.** The PSR found in March 2025 that Visa and Mastercard raised core scheme and processing fees by more than 25% in real terms between 2017 and 2023, costing UK businesses at least £170 million a year. Its July 2026 decision directs both networks on pricing governance (fee decisions compliant from November 2026) and on information, transparency and complexity (from July 2027). For a provider, the practical effect is more detailed fee data from the networks to reconcile against, and more questions from merchants about the network lines on their statements.
 
@@ -44,7 +44,7 @@ The volumes say which rails matter. In 2025 Faster Payments processed 5.55 billi
 
 A SEPA Credit Transfer is the euro area's default bank transfer: an IBAN, a name, an amount and a reference, credited by the end of the business day after the payer's bank receives the order (the payment services rules set that execution time, and the UK's version carries the same one for sterling).
 
-**SEPA Instant** is now universal, by law. The Instant Payments Regulation (EU) 2024/886 requires banks and payment providers that offer credit transfers to offer instant ones, available at any hour, with the payee's provider making funds available within 10 seconds of the payer's provider receiving the order, and charging no more than for a standard transfer. The deadlines were staged:
+**SEPA Instant** is now mandatory in the euro area, by law. The Instant Payments Regulation (EU) 2024/886 requires banks and payment providers that offer credit transfers to offer instant ones, available at any hour, with the payee's provider making funds available within 10 seconds of the payer's provider receiving the order, and charging no more than for a standard transfer. The deadlines were staged:
 
 | Requirement | Euro area | Outside the euro area | Payment and e-money institutions |
 | --- | --- | --- | --- |
@@ -101,15 +101,15 @@ An **authorized push payment** (APP) scam is a customer tricked into sending mon
 
 The PSR's July 2026 review found reimbursement rates rose from 54% to 65% of claims and APP fraud losses fell by an estimated £73 million a year, and it announced a consultation on improving consistency before the end of 2026.
 
-For a platform the second bullet is the one that matters. A provider whose merchants or users receive Faster Payments is a receiving provider, liable for half of any reimbursement on scam money paid into an account it holds. That makes onboarding, monitoring of incoming payments, and the speed of freezing a mule account a direct cost, which is why receiving banks now question who a platform pays out to as well ([Fraud & Risk](/books/payments/fraud-and-risk)).
+For a platform the first bullet is the one that matters. A provider whose merchants or users receive Faster Payments is a receiving provider, liable for half of any reimbursement on scam money paid into an account it holds. That makes onboarding, monitoring of incoming payments, and the speed of freezing a mule account a direct cost, which is why receiving banks now question who a platform pays out to as well ([Fraud & Risk](/books/payments/fraud-and-risk)).
 
 ## Open Banking
 
 **PSD2** created two regulated services that let a third party reach a customer's bank account with their consent. In the UK's implementing regulations, a **payment initiation service** is "an online service to initiate a payment order at the request of the payment service user with respect to a payment account held at another payment service provider", and an **account information service** is an online service providing "consolidated information on one or more payment accounts". Pay-by-bank checkout is a payment initiation over Faster Payments or SEPA Instant; account verification at onboarding is account information.
 
-In the UK, the largest banks were required to build standard APIs under the CMA's Order, implemented through Open Banking Limited, which the CMA declared complete in January 2023; OBL is preparing to hand over to a successor entity. UK open banking passed one billion payments in July 2026. The Data (Use and Access) Act 2025 gives the Treasury power to require providers to use prescribed interfaces, the legal footing for the next phase. **Variable recurring payments**, open banking's answer to direct debit, are covered in [Wallets & Local Payment Methods](/books/payments/wallets-and-local-methods#bank-push-and-bank-pull).
+In the UK, the largest banks were required to build standard APIs under the CMA's Order, implemented through Open Banking Limited, which the CMA declared complete in January 2023; OBL is preparing to hand over to a successor entity. Open Banking Limited reported in September 2026 that UK open banking had passed one billion payments. The Data (Use and Access) Act 2025 gives the Treasury power to require providers to use prescribed interfaces, the legal footing for the next phase. **Variable recurring payments**, open banking's answer to direct debit, are covered in [Wallets & Local Payment Methods](/books/payments/wallets-and-local-methods#bank-push-and-bank-pull).
 
-PSD2's successors, the PSD3 directive and the Payment Services Regulation, were politically agreed in November 2025 and change open banking, fraud liability and licensing. The [Payments Rulebook](/books/payments/payments-rulebook#outside-the-us) owns their status; build against PSD2 as it applies today and plan for the transition on the dates the final texts set.
+PSD2's successors, the PSD3 directive and the EU Payment Services Regulation (not the UK regulator that shares its initials), were politically agreed in November 2025 and, as of October 2026, still await formal adoption; they change open banking, fraud liability and licensing. The [Payments Rulebook](/books/payments/payments-rulebook#outside-the-us) owns their status; build against PSD2 as it applies today and plan for the transition on the dates the final texts set.
 
 ## Who Regulates You
 
@@ -136,7 +136,7 @@ CREATE TABLE debit_mandates (
   creditor_id        TEXT NOT NULL,          -- SEPA creditor identifier, or the Bacs SUN
   signed_at          TIMESTAMPTZ NOT NULL,
   notice_days        SMALLINT NOT NULL,      -- two weeks by default for SEPA, 10 working days for Bacs
-  status             TEXT NOT NULL CHECK (status IN ('pending', 'active', 'cancelled', 'expired')),
+  status             TEXT NOT NULL CHECK (status IN ('pending', 'active', 'canceled', 'expired')),
   evidence_id        UUID NOT NULL,          -- the signed mandate document
   CONSTRAINT debit_mandates_ref_key UNIQUE (creditor_id, mandate_reference)
 );
@@ -144,7 +144,7 @@ CREATE TABLE debit_mandates (
 ALTER TABLE payments
   ADD COLUMN mandate_id        UUID REFERENCES debit_mandates (id),
   ADD COLUMN sequence_type     TEXT CHECK (sequence_type IN ('first', 'recurrent', 'one_off', 'final')),
-  ADD COLUMN end_to_end_id     TEXT,         -- our ID, echoed on every R-message
+  ADD COLUMN end_to_end_id     TEXT,         -- the provider's ID, echoed on every R-message
   ADD COLUMN refundable_until  DATE,         -- 8 weeks (Core), NULL for B2B, 13 months if unauthorized
   ADD COLUMN interchange_fee   BIGINT,       -- per transaction, for the Article 12 information
   ADD COLUMN scheme_fee        BIGINT;
@@ -211,7 +211,7 @@ European regulators and schemes expect records they can examine, and the FCA exp
 
 **Specifications**
 
-- [Regulation (EU) 2015/751 on interchange fees, as adopted](https://www.legislation.gov.uk/eur/2015/751/adopted), the 0.2% and 0.3% caps, scope and three-party schemes, co-badging and brand choice, unblending, Honour All Cards and per-transaction information
+- [Regulation (EU) 2015/751 on interchange fees, as adopted](https://www.legislation.gov.uk/eur/2015/751/adopted), the 0.2% and 0.3% caps, scope and three-party schemes, co-badging and brand choice, unblending, honor all cards and per-transaction information
 - [Regulation (EU) No 260/2012 (SEPA Regulation), as adopted](https://www.legislation.gov.uk/eur/2012/260/adopted), mandate data, the payer's right to limit or block debits, and ISO 20022 XML
 - [ECB: Instant Payments Regulation](https://www.ecb.europa.eu/paym/retail/instant_payments/html/instant_payments_regulation.en.html), the staged deadlines, equal charges and verification of payee results
 - [European Commission: Instant payments implementation Q&A (PDF)](https://finance.ec.europa.eu/document/download/f597b1a5-2a7b-481d-882c-80fb1c5cc3d5_en?filename=instant-payments-implementation-questions-answers_en.pdf), the 10-second rule and payer-set limits
@@ -239,10 +239,10 @@ European regulators and schemes expect records they can examine, and the FCA exp
 - [PSR: Payment fraud falls following the reimbursement scheme (July 2026)](https://www.psr.org.uk/news-and-updates/latest-news/news/payment-fraud-falls-by-73m-following-psr-reimbursement-scheme/), reimbursement rates and the consultation to come
 - [PSR: PS26/2, removing the expiry date of Specific Direction 17](https://www.psr.org.uk/publications/policy-statements/ps262-specific-direction-17-confirmation-of-payee-removing-the-expiry-date/), October 2026 and more than 320 organizations offering checks
 - [PSR: APP fraud reimbursement protections](https://www.psr.org.uk/information-for-consumers/app-fraud-reimbursement-protections/), payments on or after 7 October 2024
-- [FCA: Roles and responsibilities in payments regulation](https://www.fca.org.uk/firms/roles-responsibilities-payments-regulation), consolidating the PSR into the FCA, no immediate change to its work
+- [FCA: Roles and responsibilities in payments regulation](https://www.fca.org.uk/firms/roles-responsibilities-payments-regulation), the March 2025 announcement consolidating the PSR into the FCA, and no immediate change to its work (last updated September 18, 2026)
 - [HM Treasury: A streamlined approach to payment systems regulation, consultation response](https://www.gov.uk/government/consultations/a-streamlined-approach-to-payment-systems-regulation-consultation/outcome/a-streamlined-approach-to-payment-systems-regulation-consultation-response), primary legislation required
 - [FCA: Temporary permissions regime](https://www.fca.org.uk/brexit/temporary-permissions-regime-tpr), the end of passporting into the UK and the run-off dates
-- [European Commission: Payment services](https://finance.ec.europa.eu/consumer-finance-and-payments/payment-services/payment-services_en), the November 2025 political agreement on PSD3 and the PSR
+- [European Commission: Payment services](https://finance.ec.europa.eu/consumer-finance-and-payments/payment-services/payment-services_en), the November 2025 political agreement on PSD3 and the EU Payment Services Regulation
 - [European Commission: New EU rules make instant euro payments faster and safer](https://finance.ec.europa.eu/news/new-eu-rules-make-instant-euro-payments-faster-and-safer-2025-10-10_en), no higher charge for instant payments
 - [Deutsche Bundesbank: TIPS](https://www.bundesbank.de/en/tasks/payment-systems/tips/useful-information--937372), SCT Inst's ten-second target and 24/7/365 operation
 - [Deutsche Bundesbank: SEPA Direct Debit](https://www.bundesbank.de/en/tasks/payment-systems/services/sepa/content/sepa-direct-debit-626654), the 8-week and 13-month refund rights, no return of authorized B2B debits, and mandate references
@@ -256,7 +256,7 @@ European regulators and schemes expect records they can examine, and the FCA exp
 - [Bank of England: CHAPS](https://www.bankofengland.co.uk/payments/chaps), operating hours, the 5.40pm customer cutoff and gross settlement in RTGS
 - [Bank of England: RTGS future roadmap](https://www.bankofengland.co.uk/payments/rtgs-future-roadmap), CHAPS settlement from 01:30 from September 2027
 - [Bank of England: ISO 20022](https://www.bankofengland.co.uk/payments/rtgs-renewal-programme/iso-20022), the June 2023 migration and the enhanced data requirements
-- [Open Banking Limited: About us](https://www.openbanking.org.uk/about-us/), the CMA Order, completion of the roadmap and one billion payments
+- [Open Banking Limited: About us](https://www.openbanking.org.uk/about-us/), the CMA Order, completion of the roadmap, and one billion payments reported on 21 September 2026
 
 **In practice**
 

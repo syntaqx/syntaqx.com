@@ -56,17 +56,17 @@ Asking for everything up front (ID documents, ownership structure, bank statemen
 
 A merchant who has processed $500 can't do much damage; one who has processed $500,000 has earned, and needs, a full review. Each requirement has a deadline, and missing it moves the merchant to `restricted`: payouts stop until it's resolved.
 
-The networks set one volume threshold themselves. A platform onboarding sub-merchants as a payment facilitator signs them on its acquirer's behalf, but Visa requires the acquirer to be added to the merchant agreement once a sponsored merchant's annual Visa sales pass US$1,000,000 (or the local equivalent); Mastercard's direct-agreement threshold is higher ([The Hierarchy](/books/payments/software-platforms#the-hierarchy)). The facilitator can keep processing and settling for that merchant, so this is a contract and a requirement with a deadline, not an offboarding. Track each merchant's trailing twelve months per network so the requirement appears before the threshold passes.
+The networks set one volume threshold themselves. A platform onboarding sub-merchants as a payment facilitator signs them on its acquirer's behalf, but Visa requires the acquirer to be added to the merchant agreement once a sponsored merchant's annual Visa sales pass US$1,000,000 (or the local equivalent), and Mastercard requires a direct agreement above US$10,000,000 a year in combined Mastercard and Maestro volume, unless the facilitator meets the rule's exception conditions ([The Hierarchy](/books/payments/software-platforms#the-hierarchy)). The facilitator can keep processing and settling for that merchant, so this is a contract and a requirement with a deadline, not an offboarding. Track each merchant's trailing twelve months per network so the requirement appears before the threshold passes.
 
-**Approval provisions the merchant; it doesn't just flag it.** An approved application becomes accounts elsewhere: a MID and MCC at the acquirer ([How Card Payments Work](/books/payments/card-payments#merchant-identity)), a statement descriptor, Apple Pay domain registration ([Wallets & Local Payment Methods](/books/payments/wallets-and-local-methods#wallets-are-cards-in-disguise)), ACH origination limits ([ACH & Bank Transfers](/books/payments/ach#the-rules-you-inherit)), and any fee program the merchant's category needs, such as surcharge notice or Visa service-fee registration ([Surcharging & Fees](/books/payments/surcharging-and-fees)). A Canadian merchant adds Canada's registrations ([Payments in Canada](/books/payments/canada#who-regulates-you)). Each is a separate step that can fail, so track them as requirements on the merchant, not as a script that ran once.
+**Approval provisions the merchant; it doesn't just flag it.** An approved application becomes accounts elsewhere: a merchant ID (MID) and merchant category code (MCC) at the acquirer ([How Card Payments Work](/books/payments/card-payments#merchant-identity)), a statement descriptor, Apple Pay domain registration ([Wallets & Local Payment Methods](/books/payments/wallets-and-local-methods#wallets-are-cards-in-disguise)), ACH origination limits ([ACH & Bank Transfers](/books/payments/ach#the-rules-you-inherit)), and any fee program the merchant's category needs, such as surcharge notice or Visa service-fee registration ([Surcharging & Fees](/books/payments/surcharging-and-fees)). A Canadian merchant adds Canada's registrations ([Payments in Canada](/books/payments/canada#who-regulates-you)). Each is a separate step that can fail, so track them as requirements on the merchant, not as a script that ran once.
 
 ## The Application Is Not the Merchant
 
 Model the **application** and the **merchant** as separate objects. An application is a request, with its own states (draft, submitted, verifying, pending documents, in review, approved, declined, withdrawn) and a history of what was asked and answered; a merchant is what an approved application creates, with capabilities that change over its whole life. Keeping them apart lets a merchant reapply, add a line of business, or change ownership without rewriting the record of how it was first approved. The **legal entity** is a third object, linked to the people who own and control it, and one person can be behind several businesses, which is exactly the link fraud reviews want to see.
 
-The providers draw the same lines with their own nouns. Stripe keeps the business on an account and each owner, director and representative as a separate person with their own verification. Adyen separates the **legal entity** that's verified from the **account holder** that holds capabilities and the balance accounts that hold money. Finix verifies an **Identity** for the business, with an associated identity for each 25% owner, and creates a **Merchant** under it that starts in a provisioning state and moves to approved or rejected as review completes. In each, verification attaches to the entity and the people, and the ability to take payments is a separate object that can be granted, limited or revoked. [Software Platforms](/books/payments/software-platforms#the-hierarchy) maps the same nouns onto a platform's tree.
+The providers draw the same lines with their own nouns. Adyen separates the **legal entity** that's verified from the **account holder** that holds capabilities and the balance accounts that hold money. Finix verifies an **Identity** for the business, with an associated identity for each 25% owner, and creates a **Merchant** under it that starts in a provisioning state and moves to approved or rejected as review completes. Stripe keeps the business on an account and each owner, director and representative as a separate person with their own verification. In each, verification attaches to the entity and the people, and the ability to take payments is a separate object that can be granted, limited or revoked. [Software Platforms](/books/payments/software-platforms#the-hierarchy) maps the same nouns onto a platform's tree.
 
-Templates belong here too. A platform rarely onboards every merchant the same way: a template decides which fields an application asks for and which pricing it carries, by segment or vertical, so a food truck and a sixty-location restaurant group answer different questions on the way to the same kind of merchant.
+Templates belong here too. A platform rarely onboards every merchant the same way: a template decides which fields an application asks for and which pricing it carries, by segment or vertical, so a food truck and a sixty-location restaurant group answer different questions on the way to the same kind of merchant. On a platform with resellers or franchise groups, templates follow the tree: Payabli's boarding templates are edited in its portal, versioned on every save as immutable snapshots, and available to an organization both from its own set and from its ancestor organizations, with the API marking which are inherited. Record the template version each application was answered against, so a later edit to the template doesn't change what the record says a merchant was asked.
 
 Onboarding collects some of the most sensitive data a platform holds: government ID numbers, document images, dates of birth, bank account numbers. All of it follows [Sensitive Data](/docs/payments/sensitive-data) in full, and raw document images are kept only as long as verification or the law requires. The taxpayer data a platform needs for 1099-K reporting (the IRS form for payment volume) gets the same treatment: a legal name and taxpayer identification number (TIN), matched against the IRS before the year ends ([Software Platforms](/books/payments/software-platforms#1099-k-and-taxpayer-data)).
 
@@ -104,7 +104,7 @@ A **rolling reserve** holds a percentage of each payment for a fixed period, so 
 Underwriting assigns a **risk tier**, and the tier sets the controls:
 
 - **Payout timing and reserves.** Higher risk means a longer delay before funds can be paid out and a [reserve](/books/payments/payouts-and-settlement#payout-schedules-holds-and-reserves) sized as above.
-- **Volume limits** that trigger review before they're exceeded.
+- **Volume limits** that trigger review before they're exceeded. Payabli, for example, sets a per-transaction threshold and volume parameters from the average ticket and monthly volume on the boarding application, declines a payment above the threshold, and has merchants ask support to pre-approve a larger one.
 - **Review frequency.** Higher tiers are re-reviewed more often.
 
 Some businesses aren't a matter of tier at all: card networks, acquirers and the law prohibit or restrict whole categories (illegal goods, some financial services, unlicensed gambling and others). Check **prohibited and restricted business lists** at onboarding against the description, website and category code, and treat a restricted category as a requirement for extra diligence such as licenses, not an automatic rejection.
@@ -119,6 +119,12 @@ Onboarding is a moment; risk is continuous. A merchant who was fine in March can
 - **Watch for drift.** Sudden volume spikes, a jump in average ticket size, a new country mix, rising dispute or refund rates: each is a reason for review, and any of them can move a merchant back to `restricted`.
 - **Re-verify on material change.** A new owner, a new bank account for payouts, a new business name. A changed payout account re-verifies before the next payout, with the controls in [Vendor Payouts](/books/payments/vendor-payouts#stopping-the-changed-bank-account).
 - **Expire documents.** An ID that expires is a requirement that comes due again.
+
+### Changing the Settlement Account
+
+The bank account a merchant is paid into is the single field most worth stealing: change it, and every future payout goes to someone else, through a flow that otherwise looks normal. So a change to it is a case with a lifecycle, not an edit. Payabli models it this way: a bank account change moves from submitted through automatic verification (that the account exists, is open and belongs to the expected holder) to auto-approved, or to pending review when verification is inconclusive, where a reviewer can assign, escalate or ask the merchant for more before approving or denying; the switch then runs and completes when the processor confirms it. Its docs split who decides by partner type: a platform partner submits and tracks cases while Payabli makes the risk decision, and an enterprise partner reviews and approves or denies its own. The account and routing numbers are write-only, tokenized on submission and never returned in any response, and a change can be scheduled up to 30 days ahead. When automated verification can't confirm a vendor's or customer's account, Payabli falls back to microdeposits of $0.01 to $0.20 that the account holder confirms, logged in its risk center.
+
+My default follows the same shape whatever the provider: the old account keeps receiving payouts until the new one is verified and approved, a change made soon after a login from a new device or an email change goes to a person, the merchant is told on the contact details on file before the change, not the ones just submitted, and the case, its verification result and the reviewer are kept as the record of why money went where it did.
 
 ## The Merchant Agreement
 
@@ -153,9 +159,9 @@ A merchant's requirements change by country, business type, volume and whatever 
 
 - `currently_due` is what has to be resolved by `current_deadline` to stay active. `eventually_due` is what will be needed if the merchant grows. `past_due` is what already caused a restriction. `pending_verification` is what's submitted and being checked.
 - Errors name the requirement they belong to, so the client can show the message next to the right field. Validation failures on submitted fields are `422`s in the [standard error format](/docs/requests/error-responses).
-- Every change to requirements emits a `account.updated` [webhook](/docs/api-design/webhooks), so platforms building on the API can prompt the merchant before a deadline instead of after a restriction.
+- Every change to requirements emits an `account.updated` [webhook](/docs/api-design/webhooks), so platforms building on the API can prompt the merchant before a deadline instead of after a restriction.
 
-Verification rules can then change per country or risk tier without any client knowing in advance. Stripe Connect's `requirements` hash works the same way.
+Verification rules can then change per country or risk tier without any client knowing in advance. Stripe Connect's `requirements` hash works the same way. Adyen reaches the same result through capabilities: each has a verification status (pending, valid, invalid or rejected) and can be used only when it's both allowed and enabled, a failed check returns a `problems` object with verification errors and remediating actions on the legal entity, and the account holder webhooks carry the changes. A rejected status is final; an invalid one can be fixed with new data, sometimes while the capability stays usable until a deadline.
 
 ## How to Build It
 
@@ -163,57 +169,72 @@ Onboarding adds the application, the entity and its people, requirements with de
 
 ```sql
 CREATE TABLE legal_entities (
-  id            uuid PRIMARY KEY,
-  legal_name    text NOT NULL,
-  country       text NOT NULL,
-  tax_id_token  text,                  -- vaulted, never plaintext
-  website_url   text
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  legal_name    TEXT NOT NULL,
+  country       CHAR(2) NOT NULL,
+  tax_id_token  TEXT,                    -- vaulted, never plaintext
+  website_url   TEXT
 );
 
 CREATE TABLE persons (
-  id             uuid PRIMARY KEY,
-  full_name      text NOT NULL,
-  date_of_birth  date,
-  id_number_token text                 -- vaulted
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  full_name       TEXT NOT NULL,
+  date_of_birth   DATE,
+  id_number_token TEXT                   -- vaulted
 );
 
 CREATE TABLE entity_persons (
-  legal_entity_id uuid NOT NULL REFERENCES legal_entities (id),
-  person_id       uuid NOT NULL REFERENCES persons (id),
-  ownership_bps   int,                 -- 2500 and up is a beneficial owner
-  is_controller   boolean NOT NULL DEFAULT false,
+  legal_entity_id UUID NOT NULL REFERENCES legal_entities (id),
+  person_id       UUID NOT NULL REFERENCES persons (id),
+  ownership_bps   INT,                   -- 2500 and up is a beneficial owner
+  is_controller   BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (legal_entity_id, person_id)
 );
 
 CREATE TABLE merchant_applications (
-  id              uuid PRIMARY KEY,
-  legal_entity_id uuid NOT NULL REFERENCES legal_entities (id),
-  merchant_id     uuid REFERENCES merchants (id),   -- set on approval
-  template        text NOT NULL,       -- which segment's questions and pricing
-  status          text NOT NULL,       -- draft, submitted, in_review, approved, declined, withdrawn
-  submitted_at    timestamptz
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  legal_entity_id  UUID NOT NULL REFERENCES legal_entities (id),
+  merchant_id      UUID REFERENCES merchants (id),   -- set on approval
+  template_version UUID NOT NULL,        -- the segment's questions and pricing, as answered
+  status           TEXT NOT NULL,        -- draft, submitted, verifying, pending_documents,
+                                         -- in_review, approved, declined, withdrawn
+  submitted_at     TIMESTAMPTZ
 );
 
 CREATE TABLE merchant_requirements (
-  id           uuid PRIMARY KEY,
-  merchant_id  uuid NOT NULL REFERENCES merchants (id),
-  code         text NOT NULL,          -- representative.id_number, visa_direct_agreement
-  status       text NOT NULL,          -- currently_due, pending_verification, satisfied, past_due
-  due_by       timestamptz,
-  satisfied_at timestamptz
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id  UUID NOT NULL REFERENCES merchants (id),
+  code         TEXT NOT NULL,            -- representative.id_number, visa_direct_agreement
+  status       TEXT NOT NULL,            -- eventually_due, currently_due, pending_verification,
+                                         -- satisfied, past_due
+  due_by       TIMESTAMPTZ,
+  satisfied_at TIMESTAMPTZ
+);
+
+CREATE TABLE settlement_account_changes (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id       UUID NOT NULL REFERENCES merchants (id),
+  bank_token        TEXT NOT NULL,       -- vaulted; numbers are never read back
+  status            TEXT NOT NULL,       -- submitted, verifying, pending_review, approved,
+                                         -- completed, denied
+  verification      JSONB,               -- the provider's result codes, as returned
+  reviewed_by       UUID,                -- NULL when verification approved it cleanly
+  scheduled_for     TIMESTAMPTZ,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  completed_at      TIMESTAMPTZ
 );
 
 ALTER TABLE merchants
-  ADD COLUMN legal_entity_id    uuid REFERENCES legal_entities (id),
-  ADD COLUMN risk_tier          text,
-  ADD COLUMN payouts_enabled    boolean NOT NULL DEFAULT false,
-  ADD COLUMN reserve_bps        int NOT NULL DEFAULT 0,
-  ADD COLUMN reserve_hold_days  int NOT NULL DEFAULT 0,
-  ADD COLUMN terms_version      text,
-  ADD COLUMN terms_accepted_at  timestamptz;
+  ADD COLUMN legal_entity_id    UUID REFERENCES legal_entities (id),
+  ADD COLUMN risk_tier          TEXT,
+  ADD COLUMN payouts_enabled    BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN reserve_bps        INT NOT NULL DEFAULT 0,
+  ADD COLUMN reserve_hold_days  INT NOT NULL DEFAULT 0,
+  ADD COLUMN terms_version      TEXT,
+  ADD COLUMN terms_accepted_at  TIMESTAMPTZ;
 ```
 
-The merchant's `status` is derived from its requirements: any `past_due` row restricts it, and `payouts_enabled` is cleared in the same transaction. Verification results (which check, which provider, what it returned) go in their own append-only table, one row per check.
+The merchant's `status` is derived from its requirements: any `past_due` row restricts it, and `payouts_enabled` is cleared in the same transaction. A settlement account change switches the merchant's payout account only in the transaction that marks it `completed`, so a payout run in between still pays the verified account. Verification results (which check, which provider, what it returned) go in their own append-only table, one row per check.
 
 ## Auditing
 
@@ -233,6 +254,7 @@ Onboarding records are evidence in sponsor bank exams, network audits, merchant 
 - **Requirements by exposure,** each with a deadline, collected progressively, including network thresholds like Visa's direct-agreement volume.
 - **A risk tier and a reserve computed from exposure,** setting payout delay, limits and review cadence.
 - **Continuous sanctions, PEP and terminated-merchant screening,** and re-verification on any owner, bank or name change.
+- **A settlement account change as a reviewed case,** verified before it takes effect, with the old account paid until it completes.
 - **Sensitive data and document images kept only as long as required.**
 - **An API and webhooks that say what's due,** so the platform can show it in its own product.
 
@@ -244,6 +266,7 @@ Onboarding records are evidence in sponsor bank exams, network audits, merchant 
 - [FinCEN: Customer Due Diligence final rule](https://www.fincen.gov/resources/statutes-and-regulations/cdd-final-rule), the 25% ownership and control prongs for beneficial owners
 - [Visa: Visa Acceptance Entities (PDF)](https://usa.visa.com/dam/VCOM/global/support-legal/documents/visa-acceptance-entities.pdf), payment facilitators and sponsored merchants, and the US$1,000,000 threshold for adding the acquirer to the agreement
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), required merchant agreement terms
+- [Mastercard Rules, 2 June 2026 (archived PDF)](https://web.archive.org/web/20260928113643/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/mastercard-rules.pdf), Rule 7.8 Payment Facilitator Obligations: the USD 10,000,000 sponsored merchant threshold and its exception conditions
 
 **Reference**
 
@@ -256,5 +279,10 @@ Onboarding records are evidence in sponsor bank exams, network audits, merchant 
 - [Stripe: Manage risk on Connect](https://docs.stripe.com/connect/manage-risk), exposure as unfulfilled volume subject to refunds and disputes, and estimating it from rates and average payments
 - [Stripe: Connected account reserves](https://docs.stripe.com/connect/connected-account-reserves), rolling and fixed reserves and the 180-day limit
 - [Stripe: Prohibited and restricted businesses](https://stripe.com/legal/restricted-businesses), an example of the categories a platform has to screen for
+- [Adyen: Verification status and capabilities](https://docs.adyen.com/platforms/verification-overview/capabilities), pending, valid, invalid and rejected statuses, allowed and enabled, the `problems` object with verification errors and remediating actions, deadlines, and the account holder webhooks
 - [Adyen: Platform account structure](https://docs.adyen.com/platforms/account-structure-resources/), account holders, balance accounts and stores linked to a verified legal entity
 - [Finix: Seller onboarding via API](https://docs.finix.com/guides/platform-payments/onboarding-sellers/seller-onboarding-via-api), an Identity with associated identities for owners, and a Merchant created and reviewed under it
+- [Payabli: Bank account change lifecycle](https://docs.payabli.com/guides/pay-ops-bank-account-changes-overview), the case states, platform and enterprise partner roles, automatic verification, write-only account numbers, and scheduling between 1 hour and 30 days ahead
+- [Payabli: Verify bank accounts with microdeposits](https://docs.payabli.com/guides/pay-ops-microdeposit-portal-bank-account-verification), the $0.01 to $0.20 microdeposit fallback when automated verification can't confirm ownership, and the verification log
+- [Payabli: Manage boarding templates](https://docs.payabli.com/guides/pay-ops-developer-templates-manage), templates inherited from ancestor organizations and immutable versions on every save
+- [Payabli: Understanding thresholds](https://docs.payabli.com/guides/pay-ops-thresholds-overview), per-transaction thresholds and volume parameters set from the boarding application

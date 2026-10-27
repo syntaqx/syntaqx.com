@@ -5,7 +5,7 @@ category = "Payments Industry"
 order = 1411
 part = "The Rules"
 aliases = ["compliance/payments-rulebook"]
-tags = ["compliance", "payments", "regulation", "pci", "nacha"]
+tags = ["payments", "compliance", "regulation", "pci", "nacha"]
 +++
 
 A payments company answers to two kinds of rulebook at once. One is **law**: statutes and regulations, enforced by agencies with subpoenas and penalties. The other is **private network rules**: the card brands' rules, PCI DSS and the Nacha Operating Rules, which no government wrote and which bind you anyway, because every bank that lets you touch the networks made you sign them. Engineers tend to hear "compliance" and picture one checklist. In practice it's a stack of contracts and laws with different enforcers, and knowing which one a requirement comes from tells you who will ask about it, how hard, and what happens if you're wrong.
@@ -55,7 +55,7 @@ The rules fall into a few families. Each row names who sets the rule, how it rea
 | ---- | ----------- | ------------------ | ---------------------------- |
 | BSA/AML | FinCEN | Law; your bank's program | KYC, beneficial owners, suspicious activity, recordkeeping; [Merchant Onboarding](/books/payments/merchant-onboarding) |
 | Sanctions | OFAC | Law, every US person | Screening parties and payments before they move |
-| Cash reporting (Form 8300, CTRs) | IRS, FinCEN | Law, cash | Reporting cash over $10,000; [Cash Payments](/books/payments/cash-payments) |
+| Cash reporting (Form 8300, CTRs) | IRS, FinCEN | Law, cash | Reporting cash over $10,000 (CTRs from financial institutions, Form 8300 from businesses); [Cash Payments](/books/payments/cash-payments) |
 | Money transmission | States, harmonized by the MTMA | Law, if you hold others' money | Licenses, net worth, bonds, permissible investments; [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider) |
 
 ### Security, privacy and assurance
@@ -71,11 +71,11 @@ The rules fall into a few families. Each row names who sets the rule, how it rea
 
 | Rule | Who sets it | How it reaches you | What it means in engineering |
 | ---- | ----------- | ------------------ | ---------------------------- |
-| PSD2, PSD3 and the PSR | EU | Law, EU payment services | Strong customer authentication, licensing; [SCA](/books/payments/strong-customer-authentication) |
+| PSD2 (PSD3 and the PSR agreed, not yet adopted) | EU | Law, EU payment services | Strong customer authentication, licensing; [SCA](/books/payments/strong-customer-authentication) |
 
 ## The Consumer Protection Layer
 
-Two regulations decide who absorbs a consumer's disputed payment, and they differ by rail. **Regulation E** covers electronic fund transfers from consumer bank accounts, with error-resolution deadlines and capped liability ([ACH & Bank Transfers](/books/payments/ach#consumer-law-regulation-e) has the numbers). **Regulation Z** covers credit cards: a billing-error notice within 60 days of the statement, acknowledgment within 30 days, resolution within two billing cycles. The card networks' chargeback systems sit on top of these legal rights and extend them; that's why a cardholder can dispute for reasons the law never mentions, and why the merchant, not the bank, usually ends up paying.
+Two regulations decide who absorbs a consumer's disputed payment, and they differ by rail. **Regulation E** covers electronic fund transfers from consumer bank accounts, with error-resolution deadlines and capped liability ([ACH & Bank Transfers](/books/payments/ach#consumer-law-regulation-e) has the numbers). **Regulation Z** covers credit cards: a billing-error notice within 60 days of the statement, acknowledgment within 30 days, resolution within two complete billing cycles and never more than 90 days. The card networks' chargeback systems sit on top of these legal rights and extend them; that's why a cardholder can dispute for reasons the law never mentions, and why the merchant, not the bank, usually ends up paying.
 
 The engineering consequence is the same on every rail: a consumer payment isn't final when it settles, and the ledger has to model the window in which it can still come back ([Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final)).
 
@@ -85,7 +85,7 @@ The engineering consequence is the same on every rail: a consumer payment isn't 
 
 ## The Financial Crime Layer
 
-**The Bank Secrecy Act** is the root of KYC (know your customer: verifying who a customer is). Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers: anyone holding 25% or more of the equity. If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting.
+**The Bank Secrecy Act** is the root of KYC (know your customer: verifying who a customer is). Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers: anyone holding 25% or more of the equity, plus one individual with significant responsibility to control the business ([Merchant Onboarding](/books/payments/merchant-onboarding#know-who-you-re-paying)). If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting.
 
 Many payment companies aren't MSBs because of the **payment processor exemption**: the money transmitter definition excludes a business that acts as a payment processor to facilitate the purchase of, or payment of a bill for, a good or service, through a clearance and settlement system, by agreement with the creditor or seller. FinCEN's administrative rulings apply it as four conditions, all of which must hold:
 
@@ -102,7 +102,7 @@ A platform that moves money for people who aren't selling anything, or pays out 
 
 ## Outside the US
 
-In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/books/payments/strong-customer-authentication). Its successor is agreed but not yet law: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, the Council's member-state representatives confirmed it on April 22, 2026, and Parliament's ECON committee approved the agreed text on May 5, 2026. As of October 2026, neither the Parliament plenary vote, the Council's formal adoption nor publication in the Official Journal had happened, so neither text is in force and no application date is fixed. The provisional deal carried an implementation period of about 18 months after entry into force (the Council had pushed for 24), so the obligations bite well after adoption, not on it; check the final text's dates before planning against them. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. [Payments in the EU & UK](/books/payments/eu-and-uk) covers both regimes: their rails, card rules, licensing and safeguarding. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
+In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/books/payments/strong-customer-authentication). Its successor is agreed but not yet law (as of October 2026): the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, the Council's member-state representatives confirmed it on April 22, 2026, and Parliament's ECON committee approved the agreed text on May 5, 2026. As of October 2026, neither the Parliament plenary vote, the Council's formal adoption nor publication in the Official Journal had happened, so neither text is in force and no application date is fixed. The provisional deal carried an implementation period of about 18 months after entry into force (the Council had pushed for 24), so the obligations bite well after adoption, not on it; check the final text's dates before planning against them. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. [Payments in the EU & UK](/books/payments/eu-and-uk) covers both regimes: their rails, card rules, licensing and safeguarding. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
 
 Canada is closest to home and still different at every layer: Payments Canada's rules instead of Nacha's, a federal code of conduct for card fees, Bank of Canada supervision of payment providers under the Retail Payment Activities Act since 2025, and FINTRAC registration for anyone paying bills on others' behalf. [Payments in Canada](/books/payments/canada) covers it.
 
@@ -119,17 +119,31 @@ The same business moves through these rulebooks as it takes on more of the stack
 
 The useful question at each stage is not "are we compliant?" but "which contract or law put this requirement here, and who will test it?" A PCI requirement gets tested by an assessor once a year. A Nacha return rate gets measured by your bank every day. An OFAC miss gets found by a regulator, in hindsight, with the transaction already gone. Build the controls in proportion to how they fail.
 
+## What This Means for the System You Build
+
+- **Record where every requirement comes from.** Each control names its source (a network rule, a law, a contract), who tests it and how often, so a change in the rule can be traced to the code it affects.
+- **Rules as effective-dated data** wherever they vary by network, state or country (surcharge caps, dispute windows, authentication rules, licensing conditions), owned by someone accountable for them ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Measure what your bank measures,** daily: return rates, dispute and fraud ratios, the numbers a sponsor checks long before an assessor arrives.
+- **Sanctions screening as a gate, not a score,** at onboarding and before money moves, with a match stopping the payment.
+- **Reversal windows in the ledger** for every rail and consumer right, so a settled payment that can still come back is modeled as one ([Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final)).
+- **Evidence kept for whoever will ask,** for as long as they can ask: authorizations, verification results, attestations and dispute submissions.
+- **Know which stage you're at,** and design the next stage's obligations (a payfac's sub-merchant liability, a processor's direct network duties) before the business model commits to them.
+- **Track pending rules with a date,** such as PSD3 and the PSR or the Section 1033 rewrite, so their adoption is a planned change rather than a surprise.
+
 ## References
 
 **Specifications**
 
 - [CFPB: Regulation E, 12 CFR 1005.11](https://www.consumerfinance.gov/rules-policy/regulations/1005/11/), error resolution timeframes for electronic fund transfers
-- [CFPB: Regulation Z, 12 CFR 1026.13](https://www.consumerfinance.gov/rules-policy/regulations/1026/13/), credit card billing-error notice, acknowledgment and resolution deadlines
+- [CFPB: Regulation Z, 12 CFR 1026.13](https://www.consumerfinance.gov/rules-policy/regulations/1026/13/), credit card billing-error notice, acknowledgment, and resolution within two complete billing cycles and no later than 90 days
 - [31 CFR 1022.380](https://www.law.cornell.edu/cfr/text/31/1022.380), MSB registration within 180 days and renewal every two years
 - [31 CFR 1010.100](https://www.law.cornell.edu/cfr/text/31/1010.100), the money transmitter definition and its payment processor exclusion in (ff)(5)(ii)(B)
-- [31 CFR 1010.230](https://www.law.cornell.edu/cfr/text/31/1010.230), beneficial ownership identification for legal entity customers and the 25 percent threshold
+- [31 CFR 1010.230](https://www.law.cornell.edu/cfr/text/31/1010.230), beneficial ownership identification for legal entity customers: the 25 percent ownership prong and the control prong
+- [31 CFR 1010.311](https://www.law.cornell.edu/cfr/text/31/1010.311), currency transaction reports by financial institutions for cash over $10,000
+- [31 CFR 1010.330](https://www.law.cornell.edu/cfr/text/31/1010.330), Form 8300 reports by trades and businesses receiving more than $10,000 in cash
 - [16 CFR 314.4](https://www.law.cornell.edu/cfr/text/16/314.4), the GLBA Safeguards Rule's elements: written risk assessment, MFA, a written incident response plan, and FTC notice within 30 days for events affecting 500 or more consumers
 - [Council of the EU: Current financial services legislative proposals, 2 October 2026](https://data.consilium.europa.eu/doc/document/ST-13589-2026-INIT/en/pdf), PSD3 and PSR: provisional agreement on November 27, 2025 and COREPER confirmation on April 22, 2026
+- [European Parliament: Legislative Observatory, 2023/0210(COD)](https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0210(COD)), the PSR procedure as of October 2026: committee approval on May 5, 2026, awaiting the Council's position, no adoption or publication recorded
 - [European Parliament: Legislative Train, Payment services regulation](https://www.europarl.europa.eu/legislative-train/theme-an-economy-that-works-for-people/file-revision-of-eu-rules-on-payment-services), status as of September 20, 2026: provisional agreement November 27, 2025, ECON approval May 5, 2026, formal adoption still required before entry into force
 - [12 U.S.C. 5531](https://www.law.cornell.edu/uscode/text/12/5531), the prohibition on unfair, deceptive or abusive acts or practices
 - [CFPB: Personal Financial Data Rights Reconsideration](https://www.consumerfinance.gov/rules-policy/rules-under-development/personal-financial-data-rights-reconsideration/), the August 22, 2025 advance notice reopening the Section 1033 rule

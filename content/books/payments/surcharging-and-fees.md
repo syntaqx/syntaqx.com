@@ -25,7 +25,7 @@ The difference that trips people up: a **surcharge** is charged for the card, a 
 
 ## What the Networks Allow
 
-Surcharging on Visa and Mastercard credit cards has been allowed in the US since January 27, 2013, under the settlement of the merchant class action. The rules have converged, with differences that matter.
+Surcharging on Visa and Mastercard credit cards has been allowed in the US since January 27, 2013, under the 2012 settlement of the merchant class action. The rules have converged, with differences that matter.
 
 **Visa:**
 
@@ -68,15 +68,36 @@ Network rules are a contract; state law overrides them, and it varies more than 
 
 Those examples will age. The durable lesson is structural: the rules are per jurisdiction, they change by statute and court ruling, and they sometimes apply only to some merchant types, so they belong in data a compliance owner maintains, not in code ([Rules as Data](/docs/architecture/rules-as-data)). Outside the US the same table carries national law: Canada allows credit card surcharges within a cap ([Payments in Canada](/books/payments/canada#cards)), and the EU and UK ban surcharges on consumer cards outright ([Card Rules](/books/payments/eu-and-uk#card-rules)).
 
+## How the Platforms Do It
+
+Providers differ less in what they allow than in how much of the checking they do. All of them leave the legal answer with the merchant; the useful difference is which mistakes the API refuses. The platform side, where a fee is configured and who absorbs it down a tree of merchants, is in [Who Pays the Fee](/books/payments/software-platforms#who-pays-the-fee); this is the payment side.
+
+- **Moov** carries service and convenience fees as `lineItems` on a transfer or payment link, so the fee is disclosed as its own line. Its docs state that a surcharge can only be applied to credit card transactions, is percentage based and capped by the card brands, and needs 30 days' notice to Moov before it starts.
+- **Payabli** carries every payer fee type (convenience, service, surcharge, platform) in one `serviceFee` dollar amount, with `totalAmount` including it, and validates it against the merchant's configured fee. Its surcharge errors name the checks it makes: the card isn't credit, the card isn't US-issued, the merchant's or the payer's state restricts surcharging, the merchant hasn't completed network registration such as the notice period, a surcharge and a service fee are on the same payment, or the amount doesn't match Payabli's own calculation. Its docs also state that fees are non-refundable.
+- **Rainforest** documents its caps directly: a surcharge can't exceed 4%, Visa credit cards can't exceed 3%, and debit cards can't be surcharged. The integration calculates the fee, using BIN lookup in Rainforest's payment component to tell credit from debit.
+- **Stripe** has surcharging in public preview (API version `2026-03-25.preview`). The surcharge goes in `amount_details[surcharge][amount]` and the top-level amount must already include it. Once a payment method is attached, the PaymentIntent returns whether surcharging is available for that card and a `maximum_amount`, which Stripe calls a technical restriction rather than a suggested amount, and validation against it can be turned off. Its docs state that card network rules and some laws require returning the whole surcharge on a full refund and a prorated share on a partial one.
+
+Two things follow. A provider's ceiling isn't the merchant's ceiling: Stripe's maximum is technical, and Payabli by default accepts a fee above the configured one, so a cap from state law or the merchant's own cost still has to be enforced by your engine. And the refund rule isn't uniform across providers, so decide it in your engine and show it at checkout rather than inheriting whatever the provider does.
+
 ## What This Means for the System You Build
 
-- **Decide the fee on the server, from the card.** Look up the BIN before authorization and classify credit, debit or prepaid. Never surcharge debit or prepaid, even when the customer picked "credit" or the card network is ambiguous; when classification fails, charge no surcharge. Record the BIN data version used ([How Card Payments Work](/books/payments/card-payments)).
+- **Decide the fee on the server, from the card.** Look up the BIN before authorization and classify credit, debit or prepaid. Never surcharge debit or prepaid, even when the payer picked "credit" or the card network is ambiguous; when classification fails, charge no surcharge. Record the BIN data version used ([How Card Payments Work](/books/payments/card-payments)).
 - **Make eligibility configuration, per merchant.** Fee type, rate or flat amount, which channels and card types, the merchant's category, its jurisdiction, and dates: when it notified its acquirer and the networks, and when it may start. A surcharge can't switch on before its notice period has passed.
 - **Keep jurisdiction rules as effective-dated data.** Caps, prohibitions and disclosure requirements by state, owned by someone accountable for them, and versioned, so every historical fee can be explained by the rule that was in force ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 - **Show it before the payer commits.** The fee and the total, before authorization, with a way to cancel or pay another way. Then authorize the total, and itemize the fee on the receipt and in the API.
 - **Compute in minor units with a written rounding rule.** A percentage of an amount produces fractions of a cent; decide which way they round, once ([Money & Amounts](/docs/payments/money)).
 - **Refund the fee with the payment.** A full refund returns the fee; a partial refund returns a proportional share. Keeping a fee on money you've given back is indefensible, whatever a rule allows.
 - **Keep an audit trail.** For every fee: the inputs (card classification, merchant configuration, jurisdiction rule version) and the result. When an acquirer or a state asks why a fee was charged, the answer is a query, not an investigation.
+
+## Auditing
+
+A fee is a charge the payer didn't choose, so the record has to answer a payer's complaint, an acquirer's review and a state attorney general's inquiry. The general design is in [Audit Trails](/docs/architecture/audit-trails); for fees, make sure the record shows:
+
+- **The inputs and the rule behind every fee:** the BIN classification and its data version, the merchant's fee configuration version, the jurisdiction rule version, and the amount computed, stored on the payment ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **What the payer was shown and when,** the fee and total as displayed, before authorization, so disclosure is provable rather than assumed.
+- **Who turned surcharging on for a merchant and on what evidence,** including the dates it notified its acquirer and the networks, since the notice period is the gate.
+- **Every difference between the configured fee and the one charged,** the tolerance, absorbed difference or per-transaction override, with the caller that sent it.
+- **Every fee refunded or kept,** linked to the refund, so the refund rule can be shown to have been applied every time.
 
 ## References
 
@@ -97,10 +118,16 @@ Those examples will age. The durable lesson is structural: the rules are per jur
 - [Visa Inc. Form 8-K, November 10, 2025](https://www.sec.gov/Archives/edgar/data/1403161/000140316125000093/v-20251110.htm), the proposed injunctive relief class settlement: brand-level surcharging, acceptance by credit category, the 10 basis point reduction for five years and the 125 bps standard consumer cap, subject to court approval
 - [Capital One: Capital One Completes Acquisition of Discover](https://www.capitalone.com/about/newsroom/capital-one-completes-acquisition-of-discover/), May 18, 2025
 - [Visa Core Rules and Visa Product and Service Rules (PDF)](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the US Rent Payment Program for MCC 6513 merchants and its debit fee limit
+- [UNC School of Government: Local Governments Now Allowed to Charge Fees for Accepting Credit and Charge Card Payments](https://canons.sog.unc.edu/blog/2013/02/08/local-governments-now-allowed-to-charge-customers-fees-for-using-credit-and-charge-cards), February 2013: the settlement's surcharge permission effective January 27, 2013
 
 **In practice**
 
 - [ArentFox Schiff: Visa Reduces Its Merchant Surcharge Cap to 3%](https://www.afslaw.com/perspectives/alerts/visa-reduces-its-merchant-surcharge-cap-3-effective-april-15-2023-merchants), the April 15, 2023 change from 4%
 - [Payments Dive: Court approves Visa-Mastercard settlement](https://www.paymentsdive.com/news/court-approves-visa-mastercard-settlement/822440/), June 9, 2026: Judge Cogan's preliminary approval, the right to decline premium and commercial credit cards, and NACS's stated appeal
 - [American Banker: Judge approves card network-fee settlement with merchants](https://www.americanbanker.com/payments/news/judge-approves-card-network-fee-settlement-with-merchants), June 10, 2026: preliminary, not final, approval, with an objection period and a further hearing to come
+- [Moov: Fee types](https://docs.moov.io/guides/money-movement/accept-payments/fee-types/), service and convenience fees as line items, the flat fee for alternative channels, and surcharges credit only, brand-capped, with 30 days' notice to Moov
+- [Payabli: Payor fees](https://docs.payabli.com/guides/pay-in-payor-fees-overview), one `serviceFee` field for every fee type, validation against the configured fee, and fees as non-refundable
+- [Payabli: Unified response codes](https://docs.payabli.com/guides/pay-in-unified-response-codes-reference), surcharge errors E5050 to E5056: card type, non-US card, merchant and payer state, network registration, combination with a service fee, and amount mismatch
+- [Rainforest: Surcharging with BIN lookup](https://docs.rainforestpay.com/docs/surcharging-with-bin-lookup), the 4% cap, 3% for Visa credit, credit only, and BIN lookup in the payment component
+- [Stripe: Collect surcharges](https://docs.stripe.com/payments/cards/surcharge), the public preview API version, `amount_details[surcharge]`, `maximum_amount` as a technical restriction, and full and prorated surcharge refunds
 - [Fiserv: Understanding Surcharging, Convenience and Service Fees (PDF)](https://www.carat.fiserv.com/content/dam/firstdata/us/en/documents/pdf/Understanding_Surcharging_Convenience_Service_Fees_Whitepaper.pdf), a processor's summary of convenience and service fee conditions as of January 2023

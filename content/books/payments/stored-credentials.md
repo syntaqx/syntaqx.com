@@ -53,7 +53,7 @@ Declines fall into two groups. A **hard decline** won't succeed no matter how of
 
 The networks enforce the difference with fees:
 
-- **Visa** groups decline codes into categories. Category 1 means the issuer will never approve (codes like lost, stolen, closed or revoked), and any reattempt at all is excessive. For the other categories, Visa allows a limited number of reattempts per card in a 30-day period: 20 as of 2026, raised from 15, with a fee on each one past the limit.
+- **Visa** groups decline codes into categories. Category 1 means the issuer will never approve (codes like lost, stolen, closed or revoked), and any reattempt at all is excessive. For the other categories, Visa allows a limited number of reattempts per card in a 30-day period: 20 as of October 2026, raised from 15, with a fee on each one past the limit.
 - **Mastercard** returns a Merchant Advice Code (MAC) alongside the decline, and it tells you exactly what to do:
 
 | MAC | Meaning | What to do |
@@ -78,18 +78,18 @@ Subscriptions draw rules from both the networks and the law.
 
 **Visa's trial rules**, in force globally since April 18, 2020, apply to any merchant whose free trial or introductory offer rolls into a subscription. At enrollment the merchant sends the cardholder the terms (that they've agreed to a subscription, the start date, the amount and frequency, and a simple way to cancel online), even when nothing is charged yet. At least seven days before the first full-price charge, or before a change to price or billing period, it sends a reminder with a cancellation link. Receipts state the trial length and that the card will be charged unless the customer cancels. Visa recommends every subscription merchant adopt the same practices, and so do I: they're also what wins the disputes that follow a forgotten trial ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)).
 
-**In US law,** the Restore Online Shoppers' Confidence Act and state automatic renewal laws apply, and the FTC's attempt at a federal "click-to-cancel" rule is still unsettled; [The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal) has the details and what to build. Make cancellation as easy as sign-up either way: the card networks already require a simple online cancellation for trials.
+**In US law,** the Restore Online Shoppers' Confidence Act and state automatic renewal laws apply, and there is no federal "click-to-cancel" rule: the Eighth Circuit vacated the FTC's on July 8, 2025, days before it took effect, and the FTC has since taken comment on a petition to reopen the rulemaking; [The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal) has the details and what to build. Make cancellation as easy as sign-up either way: the card networks already require a simple online cancellation for trials.
 
 ## Autopay Against a Balance
 
 A subscription charges a fixed price on a schedule. Plenty of recurring bills don't work that way: a usage-based SaaS invoice changes every month, a B2B customer's open invoices add up to whatever they add up to, a clinic's patient balance moves as insurance pays its part, and a customer might pay some of it by hand before the scheduled charge runs. So the other common recurring shape charges, on a schedule, **whatever the account owes**.
 
-Billing systems model it the same way under different names. Zuora's payment runs pick up invoices with auto-pay on and a balance above zero, charge the account's default payment method, and leave a declined balance open for the next run once the method is updated. Stripe Invoicing collects open invoices automatically, retries failed card payments on a schedule, and can mark an invoice paid when a partial payment comes within a set amount of the total. What they share is the rule that matters: the amount is decided by the ledger at run time, not by the schedule.
+Billing systems model it the same way under different names. Zuora's payment runs pick up invoices with auto-pay on and a balance above zero, charge the account's default payment method, and leave a declined balance open for the next run once the method is updated. Stripe Invoicing collects open invoices automatically, retries failed card payments on a schedule, and can mark an invoice paid when a partial payment comes within a set amount of the total. Payabli's balance-driven autopay charges the customer's open balance on the first, the fifteenth or the last day of the month, skips the cycle when the balance is zero, and allows one per customer. The balance it reads is one the platform maintains through the API; Payabli reads it at execution and doesn't change it, so a platform that forgets to lower it after a payment taken by hand charges it again. What they share is the rule that matters: the amount is decided by the ledger at run time, not by the schedule.
 
 - **Compute the amount at execution, not at scheduling.** The customer who paid half by phone this morning owes half tonight. Read the balance in the same transaction that creates the payment, and skip the cycle, recording why, when the balance is zero or in credit.
 - **Cap it.** The customer agreed to pay their bill, not any amount at all. Store a maximum with the authorization, and route anything above it to the customer for approval instead of charging it.
 - **Tell consumers when the amount varies.** For a preauthorized debit from a consumer's bank account whose amount changes, Regulation E requires notice of the amount at least 10 days before the transfer, unless the consumer chose to be told only when it falls outside a range they set; Canada's pre-authorized debit rules require the same 10 days ([Payments in Canada](/books/payments/canada)). On cards, the same notice is good practice and good dispute evidence.
-- **One payment per cycle.** The idempotency key is the account, the billing period and the attempt, and a unique constraint allows one successful payment per period, so a rerun after a crash can't charge twice, and a failed run feeds the same [dunning](#dunning) as any renewal.
+- **One payment per cycle.** The idempotency key is the account, the billing period and the attempt, and a unique constraint allows one successful payment per period, so a rerun after a crash can't charge twice, and a failed run feeds the same [dunning](#dunning) as any renewal. Don't assume the provider retries for you: Stripe Invoicing retries failed card payments on a schedule, while Payabli's docs state that it doesn't retry declined autopays at all and leave the follow-up to the platform, built from its declined-payment events.
 - **Returns turn it off.** A bank debit that comes back unauthorized ends the authorization, and repeated insufficient-funds returns should pause the schedule and tell the customer, under the restrictions in [ACH & Bank Transfers](/books/payments/ach#after-a-return-fees-and-blocks).
 
 On cards, a balance charge is an unscheduled card-on-file MIT unless it falls on a fixed interval, in which case it's recurring; flag it accordingly. Field service businesses often use both shapes on one account; the Field Operations volume's [billing chapter](/books/field-operations/billing-recurring-service) covers charging per-visit invoices and service plans. Recurring bank debits have their own authorization rules: [ACH](/books/payments/ach) standing and recurring authorizations, recurring [TEL](/books/payments/phone-payments) authorizations by phone, and Canadian pre-authorized debits. On the bank side, notifications of change do the account updater's job.
@@ -133,40 +133,40 @@ Stored credentials add the agreement behind each saved method and the schedules 
 
 ```sql
 CREATE TABLE credential_agreements (
-  id                             uuid PRIMARY KEY,
-  payment_method_id              uuid NOT NULL REFERENCES payment_methods (id),
-  usage                          text NOT NULL,   -- recurring, installment, unscheduled
-  terms_version                  text NOT NULL,
-  consent_accepted_at            timestamptz NOT NULL,
-  consent_channel                text NOT NULL,   -- web, app, phone
-  initial_network_transaction_id text,            -- from the initial CIT
-  status                         text NOT NULL    -- active, expired, revoked
+  id                             UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_method_id              UUID NOT NULL REFERENCES payment_methods (id),
+  usage                          TEXT NOT NULL,   -- recurring, installment, unscheduled
+  terms_version                  TEXT NOT NULL,
+  consent_accepted_at            TIMESTAMPTZ NOT NULL,
+  consent_channel                TEXT NOT NULL,   -- web, app, phone
+  initial_network_transaction_id TEXT,            -- from the initial CIT
+  status                         TEXT NOT NULL    -- active, expired, revoked
 );
 
 ALTER TABLE payment_methods
-  ADD COLUMN network_token_status    text,        -- active, suspended, none
-  ADD COLUMN network_token_requestor text;        -- merchant, processor, vault
+  ADD COLUMN network_token_status    TEXT,        -- active, suspended, none
+  ADD COLUMN network_token_requestor TEXT;        -- merchant, processor, vault
 
 ALTER TABLE payments
-  ADD COLUMN credential_agreement_id uuid REFERENCES credential_agreements (id),
-  ADD COLUMN mit_type                text;         -- recurring, unscheduled, resubmission, no_show
+  ADD COLUMN credential_agreement_id UUID REFERENCES credential_agreements (id),
+  ADD COLUMN mit_type                TEXT;         -- recurring, unscheduled, resubmission, no_show
 
 CREATE TABLE balance_schedules (
-  id                      uuid PRIMARY KEY,
-  customer_id             uuid NOT NULL REFERENCES customers (id),
-  credential_agreement_id uuid NOT NULL REFERENCES credential_agreements (id),
-  day_of_month            int NOT NULL,
-  max_amount              bigint NOT NULL,         -- above this, ask the customer
-  status                  text NOT NULL            -- active, paused, ended
+  id                      UUID PRIMARY KEY DEFAULT uuidv7(),
+  customer_id             UUID NOT NULL REFERENCES customers (id),
+  credential_agreement_id UUID NOT NULL REFERENCES credential_agreements (id),
+  day_of_month            INT NOT NULL,
+  max_amount              BIGINT NOT NULL,         -- above this, ask the customer
+  status                  TEXT NOT NULL            -- active, paused, ended
 );
 
 CREATE TABLE balance_runs (
-  balance_schedule_id uuid NOT NULL REFERENCES balance_schedules (id),
-  period              date NOT NULL,
-  amount              bigint,                      -- read from the ledger at run time
-  outcome             text NOT NULL,               -- charged, skipped_zero, over_cap, failed
-  payment_id          uuid REFERENCES payments (id),
-  attempts            int NOT NULL DEFAULT 0,
+  balance_schedule_id UUID NOT NULL REFERENCES balance_schedules (id),
+  period              DATE NOT NULL,
+  amount              BIGINT,                      -- read from the ledger at run time
+  outcome             TEXT NOT NULL,               -- charged, skipped_zero, over_cap, failed
+  payment_id          UUID REFERENCES payments (id),
+  attempts            INT NOT NULL DEFAULT 0,
   PRIMARY KEY (balance_schedule_id, period)
 );
 ```
@@ -209,9 +209,13 @@ Stored-credential records are evidence in "I never agreed to this" disputes, reg
 - [TabaPay: Excessive Retry Rules](https://developers.tabapay.com/docs/excessive-retry-rules), Visa's Category 1 and 20-in-30-days limits and Mastercard's retry thresholds as a processor enforces them
 - [PayPal: How to avoid excessive retries penalties](https://www.paypal.com/us/brc/article/avoid-excessive-retries-penalties), Visa's 20 retries in 30 days and no retries on Category 1, and Mastercard's 10-in-24-hours, 35-in-30-days and MAC `03`/`21` rules
 - [Chargebacks911: Visa Excessive Reattempts Rule](https://chargebacks911.com/visa-excessive-reattempts-rule/), the increase from 15 to 20 reattempts
+- [Fenwick: Eighth Circuit vacates FTC's click-to-cancel rule](https://www.fenwick.com/insights/publications/eighth-circuit-vacates-ftcs-click-to-cancel-rule), the July 8, 2025 decision
+- [Kelley Drye: FTC quietly reopens click to cancel rulemaking in response to petition](https://www.kelleydrye.com/viewpoints/blogs/ad-law-access/ftc-quietly-reopens-click-to-cancel-rulemaking-in-response-to-petition), December 2025: the petition published for comment until January 2, 2026
 
 **In practice**
 
 - [Zuora: Payment run does not pick up old invoices](https://docs.zuora.com/en/zuora-payments/process-payments/process-payments-with-payment-runs/troubleshoot-payment-runs/payment-run-does-not-pick-up-old-invoices), which invoices a run picks up: auto-pay on, a balance above zero, due by the target date
 - [Zuora: Troubleshoot payment runs](https://docs.zuora.com/en/zuora-payments/process-payments/process-payments-with-payment-runs/troubleshoot-payment-runs), a declined balance picked up by the next run once the method is updated
+- [Payabli: Subscription utilities](https://docs.payabli.com/guides/pay-in-developer-subscriptions-utilities), building your own retry logic for declined subscription payments from declined-payment events
+- [Payabli: Autopays overview](https://docs.payabli.com/guides/pay-in-autopays-overview), schedule-driven and balance-driven autopays, the open balance read at execution and maintained by the platform, zero-balance skips, and no automatic retry of declined autopays
 - [Stripe: Automatic collection](https://docs.stripe.com/invoicing/automatic-collection), automatic recovery of open invoices, retries of failed payments, and partial payments reconciled within a set amount

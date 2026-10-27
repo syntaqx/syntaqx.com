@@ -25,7 +25,7 @@ It applies to customer-initiated online payments in the European Economic Area, 
 
 Two factors from different categories means one stolen thing isn't enough: a phished password without the phone fails, and so does a stolen phone without the PIN. That's why SCA moves fraud economics: stolen card data alone stops being sufficient.
 
-PSD2's successor, PSD3 and the Payment Services Regulation, keeps SCA as a core duty and isn't yet in force; where its adoption stands is in [Outside the US](/books/payments/payments-rulebook#outside-the-us), and what it changes for SCA is [below](#beyond-psd2).
+PSD2's successor, PSD3 and the Payment Services Regulation (PSR), keeps SCA as a core duty. As of October 2026 it isn't adopted, let alone in force: politically agreed in November 2025, it is awaiting the Council's position and Parliament's final vote; where its adoption stands is in [Outside the US](/books/payments/payments-rulebook#outside-the-us), and what it changes for SCA is [below](#beyond-psd2).
 
 ## How 3-D Secure Works
 
@@ -46,7 +46,7 @@ The data is the lever: the more context you send, the more often the issuer deci
 
 The messages come in pairs. The 3DS Server asks the Directory Server which card ranges participate (PReq/PRes) and caches the answer; it sends the authentication request (AReq), the ACS answers (ARes) frictionlessly or with a challenge; the challenge runs in the customer's browser or app (CReq/CRes); and the ACS reports the outcome to the 3DS Server (RReq/RRes). A data-only variant shares the context with the issuer without authenticating, to improve approval rates where a challenge isn't wanted.
 
-**The result has to reach the authorization.** A successful authentication returns an authentication value (Visa calls it the CAVV) and an **electronic commerce indicator** (ECI), and the authorization carries both. On Visa, ECI 05 means fully authenticated, 06 an attempt, 07 not authenticated, and Visa's rules make a fraud dispute invalid only when the authenticated or attempted result and its CAVV were in the authorization request. A 3DS integration that authenticates but drops the CAVV on the way to the processor gets the friction and none of the protection. Mastercard uses its own ECI values (02 authenticated, 01 attempted).
+**The result has to reach the authorization.** A successful authentication returns an authentication value (Visa calls it the CAVV) and an **electronic commerce indicator** (ECI), and the authorization carries both. On Visa, ECI 05 means fully authenticated, 06 an attempt, 07 not authenticated, and Visa's rules make a fraud dispute invalid only when the authenticated or attempted result and its CAVV were in the authorization request. A 3DS integration that authenticates but drops the CAVV on the way to the processor gets the friction and none of the protection. Mastercard uses its own ECI values (02 authenticated, 01 attempted or by a stand-in service).
 
 **Buy the 3DS Server, usually.** EMVCo approves 3DS Servers, SDKs and ACSs against specific versions of the specification and its test suites, and a provider that operates a 3DS Server, Directory Server or ACS falls under PCI's 3DS Core Security Standard ([Network Certification](/books/payments/network-certification#3-d-secure-and-tokens)). Most providers integrate an approved server instead. Version 2.3.1 replaced 2.3.0 in 2022, and EMVCo recommends 2.2 or higher.
 
@@ -56,23 +56,23 @@ Outside Europe, 3-D Secure is mostly optional; [Beyond PSD2](#beyond-psd2) cover
 
 By default the merchant bears the loss on a fraud dispute. When a payment was successfully authenticated with 3DS, the liability typically shifts to the issuer: the bank approved the cardholder's identity, so the bank owns that mistake. That's the business case for 3DS beyond compliance: a merchant selling high-value goods can request authentication on risky orders even where SCA doesn't require it, to move fraud losses off its books.
 
-It's not a guarantee. Stripe's documentation is explicit that networks exempt some business types, merchants in fraud monitoring programs can lose it, and it never covers non-fraud disputes such as "item not received". Record the authentication result and the ECI on the payment so the evidence exists when a [dispute](/books/payments/disputes-and-chargebacks) arrives.
+It's not a guarantee. Stripe's documentation is explicit that networks exempt some business types, merchants in fraud monitoring programs can lose it, and it never covers non-fraud disputes such as "item not received". Checkout.com's ECI reference shows where it stops at the protocol level: a Visa ECI 07, which covers a payment processed under an SCA exemption as well as a failed or unattempted authentication, carries no liability shift, nor does a Mastercard 00. Record the authentication result and the ECI on the payment so the evidence exists when a [dispute](/books/payments/disputes-and-chargebacks) arrives.
 
 ## Exemptions: When You Can Skip the Step
 
-Authenticating every payment would add friction to low-risk ones that never needed it, so the rules carve out exemptions, and using them well is most of the work of a good integration. The important ones, with thresholds as Stripe's SCA guide summarizes them:
+Authenticating every payment would add friction to low-risk ones that never needed it, so the rules carve out exemptions, and using them well is most of the work of a good integration. The important ones, with the EU thresholds from the regulatory technical standards on SCA (Commission Delegated Regulation (EU) 2018/389) and the UK's as Stripe's SCA guide summarizes them:
 
 | Exemption | Applies when | Why it exists |
 | --------- | ------------ | ------------- |
-| **Low value** | Under €30 (£25), until five exempted payments or €100 (£85) in total since the cardholder last authenticated | Small payments carry small losses; the counters stop a fraudster splitting a big purchase into small ones |
-| **Transaction risk analysis** | The payment provider's fraud rate is under 0.13% for payments up to €100, under 0.06% up to €250, under 0.01% up to €500 | Providers that prove low fraud earn the right to skip authentication on more of their traffic |
-| **Fixed-amount recurring** | The same amount to the same merchant, after the first payment was authenticated | The customer authenticated the agreement once; asking again every month adds nothing |
+| **Low value** (Art. 16) | Under €30 (£25), until five exempted payments or €100 (£85) in total since the cardholder last authenticated | Small payments carry small losses; the counters stop a fraudster splitting a big purchase into small ones |
+| **Transaction risk analysis** (Art. 18) | The payment provider's fraud rate is under 0.13% for payments up to €100, under 0.06% up to €250, under 0.01% up to €500 | Providers that prove low fraud earn the right to skip authentication on more of their traffic |
+| **Fixed-amount recurring** (Art. 14) | The same amount to the same merchant, after the first payment was authenticated | The customer authenticated the agreement once; asking again every month adds nothing |
 | **Merchant-initiated** | The customer isn't present, under a mandate they authenticated when the card was saved | Out of scope rather than exempt: there's nobody to authenticate |
 
 Three things make exemptions less straightforward than the table suggests:
 
 - **Exemptions are requests, not rights.** You (or your provider) ask; the issuer can refuse and demand authentication anyway, and an integration that can't handle that will decline real customers.
-- **Exemptions trade away the liability shift.** An exempted payment wasn't authenticated, so if it turns out to be fraud, the dispute is yours ([above](#the-liability-shift)). Skipping friction on a €480 order to save one tap is a bet on your fraud rate.
+- **Exemptions you request trade away the liability shift.** A payment exempted at your or your acquirer's request wasn't authenticated, so if it turns out to be fraud, the dispute is yours ([above](#the-liability-shift)). Exemptions the issuer applies on its own, such as a [trusted beneficiary](#who-performs-the-authentication), are the exception and keep it. Skipping friction on a €480 order to save one tap is a bet on your fraud rate.
 - **The counters belong to the issuer.** You can't know whether this €20 payment is the cardholder's sixth exempted one this week. Design for the issuer to ask, always.
 
 ## On-Session and Off-Session Payments
@@ -104,28 +104,28 @@ The general shape of a payment that waits on the customer (a `requires_action` s
 
 ```sql
 ALTER TABLE payment_attempts
-  ADD COLUMN three_ds_version         text,     -- 2.2.0, 2.3.1
-  ADD COLUMN three_ds_status          text,     -- Y, A, N, U, R, or C for a challenge
-  ADD COLUMN eci                      text,     -- 05/06/07 on Visa, 02/01 on Mastercard
-  ADD COLUMN has_authentication_value boolean,  -- the CAVV goes to the processor, not your logs
-  ADD COLUMN ds_transaction_id        text,
-  ADD COLUMN exemption_requested      text,     -- low_value, tra, trusted_beneficiary
-  ADD COLUMN exemption_granted        boolean;
+  ADD COLUMN three_ds_version         TEXT,     -- 2.2.0, 2.3.1
+  ADD COLUMN three_ds_status          TEXT,     -- Y, A, N, U, R, or C for a challenge
+  ADD COLUMN eci                      TEXT,     -- 05/06/07 on Visa, 02/01 on Mastercard
+  ADD COLUMN has_authentication_value BOOLEAN,  -- the CAVV goes to the processor, not your logs
+  ADD COLUMN ds_transaction_id        TEXT,
+  ADD COLUMN exemption_requested      TEXT,     -- low_value, tra, trusted_beneficiary
+  ADD COLUMN exemption_granted        BOOLEAN;
 ```
 
 ### Authentication-Required Declines
 
-One kind of soft decline ([Stored Cards & Recurring Billing](/books/payments/stored-credentials#declines-and-the-rules-on-retrying) covers the rest) means "try again with authentication", such as Stripe's `authentication_required`. If the customer is present, run 3DS and retry once, which turns a decline into a sale. If not ([off-session](#on-session-and-off-session-payments)), the payment fails and the customer has to come back on-session. Retrying without authentication is a hard decline in waiting, and repeated unauthenticated retries are exactly what card networks penalize.
+One kind of soft decline ([Stored Cards & Recurring Billing](/books/payments/stored-credentials#declines-and-the-rules-on-retrying) covers the rest) means "try again with authentication", such as Adyen's refusal reason 38, "Authentication required" (the issuer declined the exemption request), or Stripe's `authentication_required`. If the customer is present, run 3DS and retry once, which turns a decline into a sale. If not ([off-session](#on-session-and-off-session-payments)), the payment fails and the customer has to come back on-session. Retrying without authentication is a hard decline in waiting, and repeated unauthenticated retries are exactly what card networks penalize.
 
 ## Beyond PSD2
 
 SCA started in Europe, and it's spreading in two directions: the EU's next rules, and other countries' own mandates.
 
-- **The EU's PSR.** The Commission's proposal for the Payment Services Regulation adds accessibility to SCA: every customer, including people with disabilities, older people and those without digital channels, must have a way to authenticate, and SCA can't depend on owning a smartphone. It also takes mail and telephone orders out of SCA's scope. The final text may differ; check it before building against it. For a provider, the practical change is a non-smartphone path that issuers must offer and checkout must not break.
+- **The EU's PSR.** The Commission's proposal for the Payment Services Regulation adds accessibility to SCA: every customer, including people with disabilities, older people and those without digital channels, must have a way to authenticate, and SCA can't depend on owning a smartphone. It keeps mail and telephone orders out of SCA's scope, as PSD2 already does ([Phone Payments](/books/payments/phone-payments#the-rules-for-taking-a-payment-by-phone)); the EBA's advice for the review had found merchants labeling online payments as MOTO to skip SCA. As of October 2026 the text agreed in 2025 is still awaiting final adoption; check it before building against it. For a provider, the practical change is a non-smartphone path that issuers must offer and checkout must not break.
 - **India.** The Reserve Bank of India's 2025 authentication directions, in force from April 1, 2026, require at least two factors for domestic digital payments and let issuers add risk-based checks on top. They also require card issuers to validate an additional factor of authentication on non-recurring cross-border card-not-present payments when the overseas merchant or acquirer asks for it, which is a reason for a provider outside India to support requesting 3DS for Indian cards.
-- **The UK** kept PSD2's SCA rules after leaving the EU and supervises them through the FCA.
+- **The UK** supervises its own SCA rules through the FCA ([above](#what-sca-requires)).
 
-Elsewhere, 3-D Secure is optional: merchants in the US use it for the liability shift on risky payments, and an issuer may still ask for it on any payment. Keep the decision to request authentication a per-payment, per-country rule with effective dates, not a constant ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+Elsewhere, 3-D Secure is optional ([above](#how-3-d-secure-works)), and an issuer may still ask for it on any payment. Keep the decision to request authentication a per-payment, per-country rule with effective dates, not a constant ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 
 ## What This Means for the System You Build
 
@@ -141,16 +141,20 @@ Elsewhere, 3-D Secure is optional: merchants in the US use it for the liability 
 
 **Specifications**
 
+- [Commission Delegated Regulation (EU) 2018/389](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32018R0389), the regulatory technical standards on SCA: trusted beneficiaries (Art. 13), recurring transactions (Art. 14), low-value remote payments up to €30 with the €100 or five-payment cumulative limit (Art. 16), transaction risk analysis (Art. 18) and the Annex's reference fraud rates of 0.13%, 0.06% and 0.01% for €100, €250 and €500
 - [EMVCo: EMV 3-D Secure](https://www.emvco.com/emv-technologies/3-d-secure/), the protocol and the data issuers use for risk-based decisions
 - [FCA: Strong customer authentication](https://www.fca.org.uk/firms/strong-customer-authentication), the UK rules and their effective date
 - [RBI: Directions on authentication mechanisms for digital payment transactions](https://rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=61282), the September 2025 directions, compliance from April 1, 2026, and the additional factor on cross-border card-not-present payments
 
 **Reference**
 
-- [Stripe: Strong Customer Authentication guide](https://stripe.com/guides/strong-customer-authentication), exemption thresholds and how recurring and merchant-initiated payments are treated
+- [EBA: Opinion on the deadline for the migration to SCA (EBA-Op-2019-11)](https://www.eba.europa.eu/sites/default/files/documents/10180/2622242/e8b3ec84-c1c6-4e9a-96ea-3575361dc230/Opinion%20on%20the%20deadline%20for%20the%20migration%20to%20SCA.pdf), the end of supervisory flexibility for e-commerce card payments on 31 December 2020
+- [European Parliament: Legislative Observatory, 2023/0210(COD)](https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0210(COD)), the PSR procedure: committee approval of the agreed text on 5 May 2026, awaiting the Council's position
+- [Stripe: Strong Customer Authentication guide](https://stripe.com/guides/strong-customer-authentication), the UK exemption thresholds and how recurring and merchant-initiated payments are treated
 - [Stripe: SCA readiness](https://docs.stripe.com/strong-customer-authentication), saving cards for off-session use and the mandate agreement
 - [Stripe: Authenticate with 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow), the `requires_action` flow, frictionless vs challenge, and the limits of the liability shift
 - [Stripe: Decline codes](https://docs.stripe.com/declines/codes), `authentication_required` and other soft declines
+- [Adyen: Refusal reasons](https://docs.adyen.com/development-resources/refusal-reasons), refusal reason 38, "Authentication required", when the issuer declines an exemption request
 - [PCI SSC: 3DS Core Security Standard FAQ (PDF)](https://listings.pcisecuritystandards.org/documents/FAQs_for_PCI_3DS_Core_Security_Standard.pdf), the three domains and the 3DS Server, Directory Server and ACS
 - [Visa: Visa Secure processing requirements (PDF)](https://usa.visa.com/dam/VCOM/global/support-legal/documents/visa-secure-vbn-visa-public.pdf), PReq/PRes, the CAVV in authorization and ECI 05
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), fraud disputes invalid when the CAVV was in an authenticated authorization
@@ -160,6 +164,7 @@ Elsewhere, 3-D Secure is optional: merchants in the US use it for the liability 
 
 **In practice**
 
+- [Checkout.com: ECI values](https://checkout.com/docs/developer-resources/codes/eci-values), Mastercard 02, 01 and 00 and Visa 05, 06 and 07, and which shift liability
 - [Visa Acceptance: Merchant-initiated transactions (3RI)](https://developer.visaacceptance.com/docs/vas/en-us/payer-authentication/developer/all/rest/payer-auth/pa-3ri-intro.html), merchant-started 3DS for installments, split and delayed shipments, and unknown final amounts
 - [ProcessOut: SCA explainer](https://docs.processout.com/page/sca-explainer), delegated authentication with FIDO attestation and no liability shift, trusted beneficiaries, 3RI and decoupled authentication
 - [William Fry: PSR and PSD3 agreed](https://www.williamfry.com/knowledge/psr-psd3-eu-payment-services-legislation-is-agreed/), the November 2025 political agreement keeping SCA as a core duty

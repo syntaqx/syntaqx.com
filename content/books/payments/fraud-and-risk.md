@@ -35,7 +35,7 @@ No single signal identifies fraud. Each one shifts the odds, and the decision co
 | **Account age and history** | A years-old account with clean payments is evidence; a minutes-old one isn't |
 | **Order shape:** high-value resellable goods, unusual quantity, rush shipping to a new address | What fraudsters buy is predictable |
 
-Stripe's verification guidance draws the CVC and AVS distinction: a failed check is worth reviewing, but AVS failures happen to real customers. Signals are inputs to a score, not rules that decide alone.
+Providers draw the CVC and AVS distinction the same way. Stripe's verification guidance treats a failed check as worth reviewing but warns that AVS failures happen to real customers. Braintree lets a merchant reject a payment the issuer approved when its AVS or CVV response breaks the merchant's rules, voiding the authorization, and recommends against rejecting on street address mismatches, because the check compares only the numbers in an address, and against rejecting where the issuer doesn't support AVS. Signals are inputs to a score, not rules that decide alone.
 
 ## What the Networks Know
 
@@ -43,11 +43,11 @@ A merchant sees its own traffic. The networks and the large providers see everyo
 
 - **Network fraud reports.** When a cardholder tells their issuer a transaction wasn't theirs, the issuer reports it to the network: a **TC40** record on Visa, a **SAFE** report on Mastercard (now the Fraud and Loss Database). These aren't chargebacks and move no money, and not every one becomes a dispute. They matter twice. They're the ground truth your model never otherwise sees for frauds the merchant refunded or that weren't disputed. And on Visa they're half of the [VAMP ratio](/books/payments/disputes-and-chargebacks#monitoring-programs-the-threshold-that-ends-accounts), counted alongside disputes, so a merchant's fraud reports can push it into a monitoring program with no chargebacks at all. Merchants don't receive them directly; acquirers may pass them on, and since VAMP many do. Ask for them and load them into the same label store as disputes.
 - **Network risk scores.** The issuer's decision has its own model. Visa Advanced Authorization scores transactions in flight across VisaNet for issuers, and Mastercard's Decision Intelligence returns a single transaction risk score to issuers during authorization, built on patterns across cardholders and merchants. Merchants never see these scores, but they explain declines that look random from your side, and they reward the same things a merchant controls: complete authorization data, network tokens and 3-D Secure results ([SCA & 3-D Secure](/books/payments/strong-customer-authentication)).
-- **Consortium data.** A provider that processes for many merchants sees a card or device across all of them: the card tested at one shop and used at another an hour later. Stripe Radar's models are trained on data across Stripe's network, and the networks' alert services ([Prevention Beats Winning](/books/payments/disputes-and-chargebacks#prevention-beats-winning)) carry issuer-confirmed fraud back to merchants. A platform gets the same effect on a smaller scale by scoring across all its merchants instead of per merchant, which is one of the few advantages a platform has over a single merchant.
+- **Consortium data.** A provider that processes for many merchants sees a card or device across all of them: the card tested at one shop and used at another an hour later. Stripe Radar's models are trained on data across Stripe's network, Adyen's risk engine scores with machine learning on its global transaction data, and the networks' alert services ([Prevention Beats Winning](/books/payments/disputes-and-chargebacks#prevention-beats-winning)) carry issuer-confirmed fraud back to merchants. A platform gets the same effect on a smaller scale by scoring across all its merchants instead of per merchant, which is one of the few advantages a platform has over a single merchant.
 
 ## Rules, Models and Decisions
 
-A model score with explicit rules on top is the arrangement that works ([Rules and Models Together](/docs/architecture/risk-scoring#rules-and-models-together)), and commercial tools such as Stripe Radar are built that way: machine-learned scoring underneath, rules and lists on top. Keep the rules as versioned data, not code ([Rules as Data](/docs/architecture/rules-as-data)), so a rule written during an attack ships in minutes and the decision records which version decided. Which models score a payment before you see it (the provider's, the network's for the issuer) and what a model may and may not decide are in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
+A model score with explicit rules on top is the arrangement that works ([Rules and Models Together](/docs/architecture/risk-scoring#rules-and-models-together)), and commercial tools are built that way: Adyen and Stripe Radar both put machine-learned scoring underneath and custom rules, lists and manual review on top, and Adyen's evaluation ends in the same three actions a merchant would choose, block, allow or review, with backtesting of custom rules against historic data on its premium tier. Keep the rules as versioned data, not code ([Rules as Data](/docs/architecture/rules-as-data)), so a rule written during an attack ships in minutes and the decision records which version decided. Which models score a payment before you see it (the provider's, the network's for the issuer) and what a model may and may not decide are in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
 
 A risk check doesn't return yes or no ([More Outcomes Than Yes and No](/docs/architecture/risk-scoring#more-outcomes-than-yes-and-no)). In payments the outcomes have specific costs:
 
@@ -81,7 +81,7 @@ It hurts even when no money is lost. Every attempt is an authorization that can 
 
 Defenses, layered because each one alone is easy to route around:
 
-- **Rate limits per card, per IP, per account and per device**, not just per IP. Attackers rotate IPs cheaply; they can't rotate the card they're testing. See [What to Key On](/docs/requests/rate-limiting#what-to-key-on).
+- **Rate limits per card, per IP, per account and per device**, not just per IP. Attackers rotate IPs cheaply; they can't rotate the card they're testing. See [What to Key On](/docs/requests/rate-limiting#what-to-key-on). Providers ship defaults keyed this way: Payabli's, per merchant, are 3 declines per card, 3 per IP address and 3 per payer an hour, 10 declines per merchant an hour, 10 transactions per card an hour and 250 transactions per merchant in 15 minutes, each adjustable on request. A velocity alert on a payout capture returns a `202` with the capture held for review rather than refused.
 - **Limit the cheap paths.** Card-setup endpoints and guest checkout are preferred targets because a zero-amount verification doesn't show on the cardholder's statement. Require a session or an account before a card can be saved, and cap how many cards one account can add.
 - **CAPTCHA, applied by risk** and enforced on the server. A visible CAPTCHA on every payment costs conversions; a risk-triggered one costs almost nothing. Checking it only in the browser is no check at all.
 - **Watch the decline rate as an attack signal.** A sudden spike in declines, especially generic ones, on small amounts is the signature. Alert on it, and switch on tighter limits automatically when it fires.
@@ -128,44 +128,44 @@ Risk adds decisions, versioned rule sets, lists, and the fraud labels that arriv
 
 ```sql
 CREATE TABLE risk_rule_sets (
-  id           uuid PRIMARY KEY,
-  version      int NOT NULL UNIQUE,
-  rules        jsonb NOT NULL,
-  approved_by  text NOT NULL,
-  effective_at timestamptz NOT NULL
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  version      INT NOT NULL UNIQUE,
+  rules        JSONB NOT NULL,
+  approved_by  TEXT NOT NULL,
+  effective_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE risk_decisions (
-  id               uuid PRIMARY KEY,
-  subject_type     text NOT NULL,      -- payment, payout, merchant, payment_method
-  subject_id       uuid NOT NULL,
-  checkpoint       text NOT NULL,      -- pre_auth, post_auth, payout, setup
-  outcome          text NOT NULL,      -- allow, challenge, review, block
-  score            int,
-  model_version    text,
-  rule_set_id      uuid REFERENCES risk_rule_sets (id),
-  rules_matched    text[] NOT NULL DEFAULT '{}',
-  degraded         boolean NOT NULL DEFAULT false,
-  decided_by       text NOT NULL,      -- system, or the reviewer's ID
-  supersedes_id    uuid REFERENCES risk_decisions (id),
-  decided_at       timestamptz NOT NULL
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  subject_type     TEXT NOT NULL,      -- payment, payout, merchant, payment_method
+  subject_id       UUID NOT NULL,
+  checkpoint       TEXT NOT NULL,      -- pre_auth, post_auth, payout, setup
+  outcome          TEXT NOT NULL,      -- allow, challenge, review, block
+  score            INT,
+  model_version    TEXT,
+  rule_set_id      UUID REFERENCES risk_rule_sets (id),
+  rules_matched    TEXT[] NOT NULL DEFAULT '{}',
+  degraded         BOOLEAN NOT NULL DEFAULT false,
+  decided_by       TEXT NOT NULL,      -- system, or the reviewer's ID
+  supersedes_id    UUID REFERENCES risk_decisions (id),
+  decided_at       TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE risk_list_entries (
-  list         text NOT NULL,          -- block_card_fingerprint, block_ip, allow_customer
-  value        text NOT NULL,
-  reason       text NOT NULL,
-  added_by     text NOT NULL,
-  expires_at   timestamptz,
+  list         TEXT NOT NULL,          -- block_card_fingerprint, block_ip, allow_customer
+  value        TEXT NOT NULL,
+  reason       TEXT NOT NULL,
+  added_by     TEXT NOT NULL,
+  expires_at   TIMESTAMPTZ,
   PRIMARY KEY (list, value)
 );
 
 CREATE TABLE fraud_labels (
-  id          uuid PRIMARY KEY,
-  payment_id  uuid NOT NULL REFERENCES payments (id),
-  source      text NOT NULL,           -- dispute, early_fraud_warning, tc40, safe, review
-  reported_at timestamptz NOT NULL,
-  received_at timestamptz NOT NULL,
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_id  UUID NOT NULL REFERENCES payments (id),
+  source      TEXT NOT NULL,           -- dispute, early_fraud_warning, tc40, safe, review
+  reported_at TIMESTAMPTZ NOT NULL,
+  received_at TIMESTAMPTZ NOT NULL,
   UNIQUE (payment_id, source)
 );
 ```
@@ -185,9 +185,9 @@ Risk records are evidence when a customer asks why a payment was declined, when 
 ## What This Means for the System You Build
 
 - **Measure false declines as deliberately as fraud,** by segment, with sampled reviews of what you declined.
-- **A model score plus versioned rules,** producing four outcomes: allow, review, challenge, block.
+- **A model score plus versioned rules,** producing four outcomes: allow, challenge, review, block.
 - **Network fraud reports, disputes and early fraud warnings in one label store,** and scoring across all merchants, not one at a time.
-- **Velocity limits per card, IP, account and device** on every endpoint that tests cards, including setup and phone lines.
+- **Velocity limits per card, IP, account and device** on every endpoint that tests cards, including card setup.
 - **Alerts on decline-rate spikes,** the signature of card testing.
 - **Merchant monitoring against what was underwritten,** with a graduated, appealable response.
 - **Pre-send controls on instant and push payments,** with new payees and changed bank accounts as the strongest signals.
@@ -217,4 +217,8 @@ Risk records are evidence when a customer asks why a payment was declined, when 
 
 - [Stripe: Card verification checks](https://docs.stripe.com/disputes/prevention/verification), what CVC and AVS results mean and where they fail legitimate customers
 - [Stripe: Protect yourself from card testing](https://docs.stripe.com/disputes/prevention/card-testing), how card testing works, its consequences, and layered defenses
+- [Adyen: Risk management](https://docs.adyen.com/risk-management/), machine learning on global transaction data, custom rules with backtesting, risk lists, case management, and block, allow or review decisions
+- [Braintree: AVS and CVV rules](https://developer.paypal.com/braintree/articles/guides/fraud-tools/basic/avs-cvv-rules), rejecting approved payments on AVS or CVV responses, the void sent to the issuer, and the false rejections street address rules cause
+- [Payabli: API overview](https://docs.payabli.com/developers/api-reference/api-overview), default fraud controls: declines per card, IP address, payer and merchant, and transactions per card and per merchant
+- [Payabli: Manage payouts](https://docs.payabli.com/guides/pay-out-developer-payouts-manage), a velocity fraud alert returning `202` with code 9051 and the capture held for review
 - [Stripe: How Radar works](https://docs.stripe.com/radar/how-radar-works), machine-learned scoring across Stripe's network combined with rules, lists and manual review
