@@ -116,7 +116,7 @@ export default function RootLayout({
           data-pagefind-ignore
           className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md"
         >
-          <div className="mx-auto grid h-12 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
+          <div className="site-bar mx-auto grid h-12 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
             <Link
               href="/"
               className="group flex items-center gap-2.5 border-r border-border px-4 sm:pl-0 sm:pr-5"

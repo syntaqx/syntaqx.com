@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
 import { ChapterKeys } from "@/components/chapter-keys";
+import { DiagramViewer } from "@/components/diagram-viewer";
+import { TableScroll } from "@/components/table-scroll";
 import { JsonLd } from "@/components/json-ld";
 import { DocsHeader } from "@/components/docs-header";
 import { DocsToc } from "@/components/docs-toc";
@@ -50,7 +52,7 @@ export async function DocArticle({
   const rail = toc.length > 1;
 
   return (
-    <article className={rail ? "xl:grid xl:grid-cols-[minmax(0,1fr)_11rem] xl:gap-10" : undefined}>
+    <article className={`doc-article ${rail ? "xl:grid xl:grid-cols-[minmax(0,1fr)_11rem] xl:gap-10" : ""}`}>
       <JsonLd
         data={article({
           headline: doc.title,
@@ -60,29 +62,31 @@ export async function DocArticle({
           crumbs,
         })}
       />
-      <div className="min-w-0">
-        <DocsHeader title={doc.title} eyebrow={eyebrow}>
-          {doc.description && <p className="max-w-3xl text-dim">{doc.description}</p>}
-          <div className="inst mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
-            <span>{doc.readingMinutes} min read</span>
-            {modified && (
-              <span>
-                Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
-              </span>
-            )}
-            <a href={`${REPO}/blob/main/${source}`} className="transition-colors hover:text-accent">
-              Edit on GitHub
-            </a>
-            <a href={`${REPO}/commits/main/${source}`} className="transition-colors hover:text-accent">
-              History
-            </a>
-          </div>
-        </DocsHeader>
+      <div className="@container min-w-0">
+        <div className="mx-auto max-w-180">
+          <DocsHeader title={doc.title} eyebrow={eyebrow}>
+            {doc.description && <p className="max-w-3xl text-dim">{doc.description}</p>}
+            <div className="inst mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
+              <span>{doc.readingMinutes} min read</span>
+              {modified && (
+                <span>
+                  Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
+                </span>
+              )}
+              <a href={`${REPO}/blob/main/${source}`} className="transition-colors hover:text-accent">
+                Edit on GitHub
+              </a>
+              <a href={`${REPO}/commits/main/${source}`} className="transition-colors hover:text-accent">
+                History
+              </a>
+            </div>
+          </DocsHeader>
+        </div>
         <div className="prose prose-docs" dangerouslySetInnerHTML={{ __html: content }} />
         {(prev || next) && (
           <nav
             aria-label="Previous and next (or use the arrow keys)"
-            className="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2"
+            className="mx-auto mt-16 grid max-w-180 gap-4 border-t border-border pt-8 sm:grid-cols-2"
           >
             {prev && (
               <Link
@@ -114,6 +118,8 @@ export async function DocArticle({
         </aside>
       )}
       <CopyCodeScript />
+      <TableScroll />
+      <DiagramViewer />
       <ChapterKeys prev={prev?.href} next={next?.href} />
     </article>
   );
