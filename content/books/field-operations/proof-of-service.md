@@ -92,7 +92,7 @@ A visit that didn't happen needs as much evidence as one that did, often more: i
 
 Delivery platforms model failure as a first-class outcome with a reason catalog. Onfleet drivers select "Failure" and a reason (driver or vehicle incident, destination unreachable, recipient unavailable, refused, unable to locate, or other); higher plans add admin-defined reasons that can require notes, and edits to them "don't apply to completed tasks." eLogii lets operators fail tasks from the dashboard with a required reason, stores reasons in task history, and reports failed reasons by period, team, driver and customer.
 
-Field service needs the same, and each reason should drive behavior, not just a report. The `not_completed` reasons:
+Field service needs the same, and each reason should drive behavior, not just a report. My catalog of `not_completed` reasons:
 
 | Reason | Evidence | Billing | Next step |
 | ------ | -------- | ------- | --------- |

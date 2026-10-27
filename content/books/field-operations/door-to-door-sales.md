@@ -27,7 +27,7 @@ The recurring verticals optimize for density and retention; the high-ticket vert
 
 ## Territories and Areas
 
-A canvassing map is a hierarchy of polygons: a branch's **territory** contains team areas, which contain the **canvass areas** reps work this week, with addresses as pins. FieldRoutes draws these on **layers** (assignment layers place reps, reporting layers track areas, system layers show knocks); SPOTIO draws by ZIP, county or custom shape. Sales areas are separate from service territories ([Territories & Capacity](/books/field-operations/territories-and-capacity)) and are redrawn every few weeks, so assignments are effective-dated ([Temporal Data](/docs/database/temporal-data)).
+A canvassing map is nested polygons: larger **territories** contain the **canvass areas** reps are assigned to, with addresses as pins. FieldRoutes draws these on **layers** (assignment layers place reps, reporting layers track areas, system layers show knocks); SPOTIO draws by ZIP, county or custom shape. Sales areas are separate from service territories ([Territories & Capacity](/books/field-operations/territories-and-capacity)) and are redrawn as often as managers like, so assignments are effective-dated ([Temporal Data](/docs/database/temporal-data)).
 
 ```sql
 CREATE TABLE canvass_areas (
@@ -126,7 +126,7 @@ A **propensity score** estimates how likely a door is to buy. SalesRabbit sells 
 
 **Aggregate on an area grid.** Managers choose neighborhoods, not doors, so door scores roll up to an area grid: H3, S2, geohash or census block groups. The choice is a tradeoff. H3's hexagons have equidistant neighbors, so neighbor rings approximate distance and gradients look smoother than on squares, and a resolution 9 cell averages about 0.105 km², a few blocks. S2 cells nest cleanly from level 0 to 30 and are built for spatial indexing. A geohash is a sortable text prefix that PostGIS computes directly. Census block groups are the smallest unit ACS detailed tables reach, so area features attach directly, but they vary widely in size. My default is whichever grid the rest of the platform already uses for maps, at a resolution of a few blocks: score doors, roll up to cells for area ratings and heat maps, and use adjacent cells for neighbor features.
 
-**Models and metrics.** Faraday names logistic regression, random forests, gradient boosting and neural networks, uses boosted trees itself, reports AUC, lift, precision at k and calibration, and retrains at least quarterly. For canvassing, calibration and top-decile lift matter most: a manager choosing between neighborhoods needs honest expected sales per hundred doors.
+**Models and metrics.** Faraday names logistic regression, random forests, gradient boosting and neural networks, reports AUC, lift, precision at k and calibration, and retrains at least quarterly. For canvassing, calibration and top-decile lift matter most: a manager choosing between neighborhoods needs honest expected sales per hundred doors.
 
 **Holdout in the field.** A score may only predict where your best reps already went. Assign a random set of areas without the score each season and compare sales per door. RepCard's guide: if every street closes under 5%, "your problem is not the rep. It is the map."
 

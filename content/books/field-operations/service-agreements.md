@@ -197,6 +197,7 @@ Agreements are contracts, so their history is evidence: "I never agreed to auto-
 - [ServiceTitan: Edit customer memberships](https://help.servicetitan.com/docs/edit-customer-memberships), Active, Suspended, Expired, Canceled and Deleted and what each stops
 - [ServiceTitan: Cancel and delete customer memberships](https://help.servicetitan.com/docs/cancel-and-delete-customer-memberships), what cancellation stops and when to delete
 - [FieldRoutes: Adding a service type subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), subscription fields for service, billing and sales
+- [FieldRoutes API: Subscriptions](https://knowledgebase.fieldroutes.com/apidocs/subscriptions.md), `seasonalStart` and `seasonalEnd` on a subscription
 - [FieldRoutes: Frequency options](https://knowledgebase.fieldroutes.com/docs/frequency-options.md), frequencies as day counts
 - [FieldRoutes: Set up recurring billing](https://knowledgebase.fieldroutes.com/docs/set-up-recurring-billing.md), billing timers independent of service
 - [FieldRoutes: Placing subscriptions on hold](https://knowledgebase.fieldroutes.com/docs/placing-subscriptions-on-holds.md), holds, reasons and automatic holds from trigger rules

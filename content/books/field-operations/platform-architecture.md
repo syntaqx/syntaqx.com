@@ -19,7 +19,7 @@ The volume's canonical entities, their tables and the diagram are in [The Field 
 | A visit at a time (`visits`) | Booking (bookable resource booking) | Service appointment | Work order task, scheduled | Stop on a route |
 | Who does it | Bookable resource (people, equipment, facilities) | Service resource, crew | Field service agent | Worker or driver |
 | Where they may work | Territory | Service territory, territory members | Not published | Team, hub, depot, zone |
-| What they must be able to do | Characteristics | Skills | Not published | Skills (exact string match at Onfleet, Bringg) |
+| What they must be able to do | Characteristics | Skills | Not published | Skills or capabilities (a case-sensitive match at Onfleet) |
 | Recurring source (`agreements`, `recurrences`) | Agreement | Maintenance plan | Install base work plan, planned work schedule | Varies |
 
 Salesforce's **work type** is a template that sets duration and skill requirements and can create the appointment automatically; Dynamics runs work order statuses (Unscheduled to Posted) and booking statuses (Scheduled, Traveling, In Progress, Completed) on separate life cycles. Delivery platforms (Onfleet, Spoke, Bringg) flatten everything to a stop-level task, because most deliveries are one visit. Resources are more than technicians: Dynamics books equipment and facilities, and Salesforce models crews and capacity-based contractors, so give resources a kind from day one: the core model's `technician` (pointing at a staff member), `crew`, `contractor` and `equipment`, with vehicles in their own table.
@@ -42,7 +42,7 @@ Inside the monolith, the modules are **bounded contexts**, each with its own mod
 
 My default is a modular monolith, peeling out only what has a genuinely different runtime profile in field work:
 
-- **The optimizer.** CPU-heavy and asynchronous at every vendor that documents it (Onfleet, Spoke and OptimoRoute return a job ID and report completion later). Run it as a queue-fed worker pool ([Route Optimization](/books/field-operations/route-optimization)).
+- **The optimizer.** CPU-heavy and asynchronous at every vendor that documents it (Spoke, for one, returns a job ID and reports completion later). Run it as a queue-fed worker pool ([Route Optimization](/books/field-operations/route-optimization)).
 - **The messaging gateway,** with its own carriers, rate limits and consent rules ([Customer Communications](/books/field-operations/customer-communications)).
 - **Mobile sync, reporting and webhook delivery,** whose load follows technicians' days, month-end, and retry schedules rather than office traffic ([Data Pipelines & Analytics](/docs/architecture/data-pipelines)).
 
@@ -54,7 +54,7 @@ The SaaS vendors in this volume are multi-tenant: many businesses share one plat
 
 The playbook's [Multi-Tenancy](/docs/architecture/multi-tenancy) chapter covers the isolation models and enforcing them with row-level security; field operations adds two things:
 
-- **A tenant hierarchy, not a flat tenant.** Brands, regions, branches and territories, with permissions, numbering, pricing and tax varying by branch. Delivery platforms draw the same tree as teams and hubs (Onfleet) or teams, fulfillment centers and service areas (Bringg). How configuration resolves down it and reports roll up it is in [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies).
+- **A tenant hierarchy, not a flat tenant.** Brands, regions, branches and territories, with permissions, numbering, pricing and tax varying by branch. Delivery platforms draw the same tree as teams, fulfillment centers and service areas (Bringg). How configuration resolves down it and reports roll up it is in [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies).
 - **Everyone's night is the same night.** Recurring work is generated and routes are optimized overnight; Dynamics agreements carry a Record Generation Time setting for exactly that reason. Thousands of tenants in one time zone want the solver at the same hour, so queue the runs with per-tenant fairness and size the pool for the peak ([Background Jobs](/docs/architecture/background-jobs#scheduling)). The optimizer makes the peak worse than most jobs, since one large branch's solve can take minutes.
 
 ## Integration: Webhooks Out, Webhooks In
@@ -63,7 +63,7 @@ A field platform is both a webhook sender (to accounting, marketing, CRM and a c
 
 | Vendor | Signature | Retries | Stated caveats |
 | --- | --- | --- | --- |
-| FarEye | Bearer token | Up to 4 retries | Respond 200 within 30 seconds; duplicates and out-of-order after retries |
+| FarEye | Not documented | Up to 4 retries | Respond 200 within 30 seconds; duplicates and out-of-order after retries |
 | Motive | HMAC-SHA1, `X-KT-Webhook-Signature` | After 1 minute, 1 hour, 6 hours; 403 means bad signature, no retry | Handler must process each request only once |
 | Onfleet | HMAC-SHA512 over the raw body, hex secret, `X-Onfleet-Signature` | Not published | Numbered trigger IDs (taskStarted, taskEta, taskCompleted, taskFailed and more) |
 | Samsara | HMAC-SHA256 over `v1:<timestamp>:<body>`, `X-Samsara-Signature` with `X-Samsara-Timestamp` | 5 attempts in total, exponential backoff | No redirects; a webhook that never returns 2xx may be disabled |
@@ -74,7 +74,7 @@ A field platform is both a webhook sender (to accounting, marketing, CRM and a c
 
 The general practice (outbox, signatures, retries, replay) is in [Webhooks](/docs/api-design/webhooks) and [Events & Async Messaging](/docs/architecture/events#the-transactional-outbox). What the field adds:
 
-- **Verify each vendor's own scheme.** The table has four HMAC schemes and one bearer token. Write one verifier per inbound vendor against the raw bytes, reject stale timestamps where the vendor signs one, and accept either secret during a rotation, the way Stripe keeps a rolled secret valid for up to 24 hours and signs with both.
+- **Verify each vendor's own scheme.** The table has four HMAC schemes, and one vendor that doesn't document how it signs. Write one verifier per inbound vendor against the raw bytes, reject stale timestamps where the vendor signs one, and accept either secret during a rotation, the way Stripe keeps a rolled secret valid for up to 24 hours and signs with both.
 - **Expect duplicates and disorder from field feeds.** Spoke, FarEye and Stripe all say events can arrive out of order or twice, and telematics feeds are high-volume. Dedupe on event ID, acknowledge fast, process from a queue, and on any event about a task re-read the current state from the sender's API instead of trusting the payload ([Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent)).
 - **Offer a pull feed beside push.** Oracle Field Service lets a client subscribe to event types and poll with a page marker, and FieldRoutes exposes a Changelogs resource. Pull is how an accounting or marketing partner catches up after its own outage.
 - **Say where a change came from.** A visit completed offline syncs hours later; partners need the channel and both times to make sense of the event.
@@ -149,7 +149,7 @@ No two field businesses track exactly the same things, so every platform eventua
 The platform-level record is one layer every write passes through, with typed actors, before and after, and reasons ([Audit Trails](/docs/architecture/audit-trails)). What the field adds:
 
 - **The channel, including offline.** Web, mobile online, mobile offline (with device time, a sequence number and sync time), API app, webhook, AI agent. "The technician completed it at 2:10" and "the server heard at 5:05" are both facts.
-- **Optimizer runs as records:** inputs, settings, locks and the result, because "why did the route change" is a question a customer, a technician and a commission dispute will all ask. ServiceTitan logs route optimization runs in its audit trail.
+- **Optimizer runs as records:** inputs, settings, locks and the result, because "why did the route change" is a question a customer, a technician and a commission dispute will all ask. ServiceTitan writes an entry for each route optimization to the job's audit trail.
 - **Vendor history doesn't line up.** Salesforce keeps history objects per entity, Dataverse logs old and new values per column (exportable only through the API), and Housecall Pro's activity feed shows employee and device. When you integrate, keep your own record of what each system wrote.
 
 The field records regulators and courts ask for are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
@@ -193,7 +193,9 @@ The field records regulators and courts ask for are in [Audit Trails & Records](
 - [ServiceTitan: Audit trail on customer and location records](https://help.servicetitan.com/docs/use-the-audit-trail-on-customer-and-location-records), user, field, timestamp, old and new values, time zone per location
 - [Briostack: Public API](https://www.briostack.com/public-api/), OAuth 2.0 and request tiers
 - [FieldRoutes: API reference](https://knowledgebase.fieldroutes.com/apidocs), public resources including changelogs
+- [ServiceTitan: Optimize technician route](https://help.servicetitan.com/docs/use-optimize-technician-route), a job audit trail entry for each route optimization
 - [Onfleet: Webhooks](https://docs.onfleet.com/reference/webhooks) and [Onfleet: Secrets](https://docs.onfleet.com/reference/secrets), trigger IDs and HMAC-SHA512 signing
+- [Onfleet: Route optimization capabilities matching](https://docs.onfleet.com/reference/route-optimization-capabilities-matching), case-sensitive capability matching
 - [Samsara: Webhooks](https://developers.samsara.com/docs/webhooks), timestamped HMAC-SHA256, five attempts, no redirects, inactive webhooks disabled
 - [Motive: Webhooks v2](https://developer.gomotive.com/reference/webhooks-v2), HMAC-SHA1 and the 1 minute, 1 hour, 6 hour retry schedule
 - [Spoke: Webhook best practices](https://developer.dispatch.spoke.com/docs/webhooks/getting-started/best-practices), an hour of retries, out-of-order delivery, idempotent handling

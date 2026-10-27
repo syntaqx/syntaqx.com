@@ -108,7 +108,7 @@ Four decisions make the numbers honest:
 
 Cost per lead, lead booking rate, cost per booked job, attributed revenue, ROI and customer acquisition cost are defined once in [Calls and Leads](/books/field-operations/operating-metrics#calls-and-leads), so dashboards and budgets agree. What this chapter's records decide is the inputs: pay-per-lead spend is the lead charges net of credits by the lead's date, exposure spend is the campaign's monthly spend, revenue comes from the attribution table over its fixed horizon, and ROI is computed on margin for material-heavy trades.
 
-For orientation only: LocaliQ's sample of 3,211 US search advertising campaigns (April 2024 to March 2025, medians it calls averages) put median cost per lead on search ads at $127.74 for HVAC, $129.02 for plumbing, $93.69 for electricians and $46.99 for cleaning and maid services. That's one vendor's customer base and one channel. Benchmarks don't replace measuring cost per booked job yourself, because two sources with the same cost per lead can differ several times over in how many leads book.
+For orientation only: LocaliQ's sample of 3,211 US search advertising campaigns (April 2024 to March 2025, medians it calls averages) put median cost per lead on search ads at $127.74 for air conditioning installation and repair, $129.02 for plumbing, $93.69 for electricians and $46.99 for cleaning and maid services. That's one vendor's customer base and one channel. Benchmarks don't replace measuring cost per booked job yourself, because two sources with the same cost per lead can differ several times over in how many leads book.
 
 ## Purchased Leads and Consent
 

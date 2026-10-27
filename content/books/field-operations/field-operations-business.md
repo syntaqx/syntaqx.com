@@ -164,7 +164,7 @@ The diagram draws the recurring path; a repair customer runs the same stages fas
 
 **Sold.** The sale produces the agreement or approved estimate: service, frequency, price, term, renewal terms, payment method and the rep who sold it. A sale at the buyer's home can carry a federal right to cancel until midnight of the third business day, and state law adds more ([Consumer Protection](/books/field-operations/consumer-protection), [Signing the Agreement](/books/field-operations/signing-the-agreement)).
 
-**Initial visit.** The first service is longer, priced differently and sets the baseline: a pool's startup chemistry, a deep clean before recurring maid service, a pest inspection, the HVAC equipment recorded with model and serial numbers. It's also where many cancellations happen, because a sloppy first visit tells the customer what the next three years will be like.
+**Initial visit.** The first service is longer, priced differently and sets the baseline: a pool's startup chemistry, a deep clean before recurring maid service, a pest inspection, the HVAC equipment recorded with model and serial numbers. It also sets expectations: a sloppy first visit tells the customer what the rest of the agreement will be like.
 
 **Recurring.** Visits generate, get routed, happen, and bill. Most of a customer's lifetime and most of the platform's load is here: reminders, on-my-way texts, service reports, autopay, failed cards, reschedules.
 
@@ -353,7 +353,7 @@ CREATE TABLE visits (
                            'en_route', 'on_site', 'completed', 'not_completed', 'cancelled')),
   status_reason          TEXT CHECK (status_reason IN ('no_access', 'not_home',
                            'customer_declined', 'part_needed', 'weather',
-                           'unsafe_condition', 'tech_out', 'customer_asked',
+                           'unsafe_condition', 'technician_unavailable', 'customer_asked',
                            'expired', 'address_not_found', 'id_check_failed',
                            'item_damaged')),  -- required for not_completed and cancelled
   hold_expires_at        TIMESTAMPTZ,    -- only while held
@@ -383,7 +383,7 @@ Two differences matter when mapping. ServiceTitan's Hold sits on the appointment
 
 - **Work was performed** (a repair, a diagnosis, part of an install): the visit is `completed`. If the work order isn't finished, it stays `open` with a `hold_reason` (`part_needed`, `approval_needed`, `permit_needed`) until it can be booked again.
 - **Nothing could be done on site:** the visit is `not_completed` with `no_access`, `not_home`, `customer_declined`, `part_needed`, `weather` or `unsafe_condition`.
-- **Called off before the technician left:** the visit is `cancelled` with `weather`, `tech_out` or `customer_asked`. A booking hold that lapses is `cancelled` with `expired`.
+- **Called off before the technician left:** the visit is `cancelled` with `weather`, `technician_unavailable` or `customer_asked`. A booking hold that lapses is `cancelled` with `expired`.
 
 The twelve reason values (with `address_not_found`, `id_check_failed` and `item_damaged` for delivery) are my starting catalog, not any vendor's list. Platforms let each company configure its own reasons, so the fixed catalog is what tenant labels map onto ([Proof of Service](/books/field-operations/proof-of-service#when-the-work-can-t-be-done)).
 
@@ -462,7 +462,8 @@ The mechanics (typed actors, append-only history, snapshots) are in [Audit Trail
 - [Swept: Cleaning company time tracking](https://sweptworks.com/cleaning-company-time-tracking-app), scheduled versus actual hours to find underbid sites
 - [Successware: Price book](https://www.successware.com/blog/2021/november/did-you-know-price-book/), the flat-rate price book as the center of the platform
 - [ServiceTrade connector schema (Fivetran)](https://fivetran.com/docs/connectors/applications/servicetrade/connector-schema), contracts with separate service and invoice recurrences, deficiencies
-- [FieldRoutes: Adding a service type subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), frequency, seasonal dates, billing frequency and sold-by fields
+- [FieldRoutes: Adding a service type subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), frequency, season, billing frequency and sold-by fields
+- [FieldRoutes API: Subscriptions](https://knowledgebase.fieldroutes.com/apidocs/subscriptions.md), `seasonalStart` and `seasonalEnd` on a subscription
 - [FieldRoutes: Capacity tracking](https://knowledgebase.fieldroutes.com/docs/capacity-tracking.md), product capacity per route
 - [FieldRoutes: Change Log Report](https://knowledgebase.fieldroutes.com/docs/change-log-report.md), who changed what, field by field
 - [FieldRoutes: Route density blog](https://www.fieldroutes.com/blog/route-density), a PCT survey ranking route density first (vendor blog)

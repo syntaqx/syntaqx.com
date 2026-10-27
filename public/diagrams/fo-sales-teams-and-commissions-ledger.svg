@@ -27,7 +27,7 @@
   <text class="sl hl ko" x="584" y="53" text-anchor="middle">PAY PERIOD</text>
   <path class="flow" d="M536,65L584,65L584,138L632,138" marker-end="url(#fo-stl-ah)"/>
   <path class="flow hl" d="M686,152L686,204" marker-end="url(#fo-stl-ah-hl)"/>
-  <text class="sl hl ko" x="692" y="181">SEASON END</text>
+  <text class="sl hl ko" x="692" y="181">RELEASE DATE</text>
   <!-- Cancellations -->
   <path class="flow alt" d="M278,72L278,204" marker-end="url(#fo-stl-ah)"/>
   <text class="sl ko" x="272" y="135.5" text-anchor="end">CANCELLED</text><text class="sl ko" x="272" y="146.5" text-anchor="end">IN WINDOW</text>

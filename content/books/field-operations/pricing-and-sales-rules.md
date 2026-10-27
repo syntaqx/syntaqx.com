@@ -78,9 +78,9 @@ In a sales-led business the rep negotiates, so discounts need bounds. ServiceTit
 
 My default design:
 
-- **A band per item and role.** Each sellable item resolves to a list price and a **floor**; a role (new rep, senior rep, manager) has a maximum discount. Inside the band, the rep sells. Below it, the estimate goes to approval.
+- **A band per item and role.** Each sellable item resolves to a list price and a **floor**; each role has a maximum discount. Inside the band, the rep sells. Below it, the estimate goes to approval.
 - **Approval binds to a hash of the priced estimate.** If anything changes after approval (a line, a quantity, a discount), the approval is void. Salesforce's tracked fields exist for the same reason: an approver must see what they approved.
-- **Approvals must work at the door.** A rep offline in a driveway can't wait for an email. Offer synchronous approval by push notification with a timeout, a pre-approved "manager code" with its own limit and expiry, and a queued approval that lets the rep sign the customer conditionally only where the agreement allows it. The alternative, no discounts below the band offline at all, is simpler and loses some sales; pick one deliberately.
+- **Approvals must work at the door.** A rep offline in a driveway can't wait for an email. Offer a synchronous approval the approver can grant from their phone, and a queued approval that lets the rep sign the customer conditionally only where the agreement allows it. The alternative, no discounts below the band offline at all, is simpler and loses some sales; pick one deliberately.
 - **Discount reason codes are required,** because "why was this discounted?" is the question finance, commissions and fraud review all ask. FieldRoutes publishes an article on making technicians' commissions ignore a discount, which shows how quickly discounts reach pay ([Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions)).
 
 ## Rules Engines: Pricing as Configuration
@@ -106,7 +106,7 @@ A promotion rule in that shape, with its scope as conditions:
   "version": 3,
   "conditions": [
     { "field": "item", "op": "in", "value": ["lawn_plan_monthly"] },
-    { "field": "property.market", "op": "eq", "value": "north_metro" }
+    { "field": "property.market", "op": "eq", "value": "market_a" }
   ],
   "valid_during": "[2026-04-01,2026-06-01)",
   "stage": "promotion",
@@ -249,6 +249,7 @@ Record structure, actors and retention follow [Audit Trails](/docs/architecture/
 - [Jobber: Client Hub](https://help.getjobber.com/en/articles/what-do-your-clients-see-in-client-hub/), quote approval with optional line items and deposits
 - [FieldRoutes: Dynamic Pricing by Measurement](https://knowledgebase.fieldroutes.com/docs/dynamic-pricing-pricing-by-measurement.md), interval pricing for initial and recurring charges
 - [FieldRoutes: Discounts](https://knowledgebase.fieldroutes.com/docs/discounts.md), discount types, limits, editable ranges, codes and access controls
+- [FieldRoutes API: Subscriptions](https://knowledgebase.fieldroutes.com/apidocs/subscriptions.md), `initialQuote`, `recurringCharge`, `billingFrequency`, `agreementLength` and `soldBy`
 - [FieldRoutes: Adding a Service Type Subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), initial and recurring pricing, contract length and sold-by reps
 - [FieldRoutes: Commissions on Discounted Services](https://knowledgebase.fieldroutes.com/docs/how-do-i-make-sure-technicians-get-full-commission-when-service-discounted.md), how discounts reach commissions
 - [Housecall Pro: Create Service Plans](https://help.housecallpro.com/en/articles/2369524-create-service-plans), a plan discount applied to all jobs

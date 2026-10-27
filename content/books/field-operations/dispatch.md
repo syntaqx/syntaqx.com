@@ -80,7 +80,7 @@ Most of a dispatcher's day is a short list of exceptions, each with a known resp
 
 | Exception | What the system should do |
 | --- | --- |
-| **Technician out** | Release their route; offer to redistribute it across technicians with the right skills and licenses; cancel what doesn't fit (`tech_out`) and return its work to the pool |
+| **Technician out** | Release their route; offer to redistribute it across technicians with the right skills and licenses; cancel what doesn't fit (`technician_unavailable`) and return its work to the pool |
 | **Visit runs long** | Recompute downstream ETAs; flag visits whose ETA now passes the window; propose a swap or a move |
 | **Customer not home, or no access** | Technician picks a reason; the work order returns to the pool; re-optimize that route only |
 | **Part not on the truck** | Record `part_needed` where [the core data model](/books/field-operations/field-operations-business#the-core-data-model) puts it (it depends on whether any work was done); order or reserve the part ([Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety)) and book the return visit on the same work order when it's due. It isn't a callback |
@@ -197,6 +197,7 @@ They answer a customer disputing that anyone came, a chargeback for a service "n
 **Reference**
 
 - [National Weather Service: Lightning safety](https://www.weather.gov/safety/lightning-safety), no safe place outside during thunderstorms
+- [eLogii: Task history](https://help.elogii.com/en/articles/5623895-task-history), history that can't be deleted or altered
 - [EPA: Improving labels to reduce pesticide drift](https://www.epa.gov/reducing-pesticide-drift/improving-labels-reduce-pesticide-drift), minimum and maximum wind speeds on labels
 - [Esri GeoEvent: Spatial filters](https://gis.dot.ny.gov/hostingny/help/en/geoevent/11.5/analyze/spatial-filters.htm), ENTER, EXIT, INSIDE and OUTSIDE semantics with track state
 - [Samsara: Tiered plans for API and webhook access](https://developers.samsara.com/docs/tiered-plans-for-api-and-webhook-access), route stop arrival and departure webhooks and the routes audit-log feed

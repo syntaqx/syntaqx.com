@@ -66,7 +66,7 @@ The newest class claims the system of record should be designed for software age
 
 **Delivery dispatch** products are the reference for the live day: Onfleet's tracking links stop showing location after completion, eLogii keeps an immutable task history with the location of every state change, and Spoke can re-optimize only changed stops ([Dispatch & the Day of Service](/books/field-operations/dispatch)).
 
-**Field sales tools** own the door, and solar, roofing, security, lawn and pest all sell there. Property care suites have pulled this in (FieldRoutes' doors and knocks, GorillaDesk's DoorMamba), so a separate tool means a second system for leads and a sync for sold agreements.
+**Field sales tools** own the door, and solar, roofing, security, lawn and pest all sell there. Property care suites have pulled this in (FieldRoutes' doors and knocks, GorillaDesk's DoorMamba app), so a separate tool means a second system for leads and a sync for sold agreements.
 
 **AI front-office** vendors are the fastest-moving specialty. They sit on the phone line and text inbox, read the FSM's availability and write bookings back: Avoca lists ServiceTitan as a certified integration, Broccoli books calls straight onto ServiceTitan's dispatch board, and Netic says bookings go "directly into the customer's CRM or FSM, following the company's operational rules." Systems of record answer with built-in agents (ServiceTitan's Voice Agent, Jobber's Receptionist, Housecall Pro's CSR AI).
 
@@ -82,7 +82,7 @@ The newest class claims the system of record should be designed for software age
 | **Property data** | ATTOM, Regrid, Smarty, Nearmap, EagleView | License; own the key that joins a parcel to your property, and respect each license's use limits |
 | **Accounting** | QuickBooks and ERPs | Integrate or own; decide which system is the book of record for revenue |
 
-Almost nobody should build these. The work is in the glue, which has rules of its own: 10DLC registration through a campaign service provider, per-lead credit rules, and property data licenses that restrict caching, direct mail and AI training.
+Almost nobody should build these. The work is in the glue, which has rules of its own: 10DLC registration through a campaign service provider, per-lead credit rules, and property data licenses that restrict direct mail and AI training.
 
 ## Recent Moves, as of October 2026
 
@@ -218,6 +218,8 @@ The mechanics are in [Audit Trails](/docs/architecture/audit-trails), and the fi
 - [BuildOps: Service agreements](https://buildops.com/platform/service-agreements/), margin per agreement
 - [Aspire: Contract renewal settings](https://guide.youraspire.com/docs/understanding-contract-renewal-settings), renewal as a re-priced quote
 - [Skimmer](https://www.getskimmer.com/), pool routes, dosing and per-location pricing
+- [LMN: How LMN calculates overhead, labor burden and profit](https://support.golmn.com/hc/en-us/articles/47875213217691), estimates built from the operating budget's overhead recovery
+- [GorillaDesk: DoorMamba on the App Store](https://apps.apple.com/us/app/doormamba/id6745770368), GorillaDesk's door-to-door app
 - [Pool Brain: Features](https://www.poolbrain.com/features/), dosing from readings and chemical cost tracking
 - [Launch27: Frequencies overview](https://intercom.help/Launch27/en/articles/4259417-frequencies-overview), weekly and custom cleaning frequencies
 - [ZenMaid: Monthly cleans on a specific weekday](https://zenmaid.com/answers/en/articles/9952872-how-to-schedule-monthly-cleans-on-a-specific-weekday), "2nd Friday of every month" recurrence
@@ -234,6 +236,7 @@ The mechanics are in [Audit Trails](/docs/architecture/audit-trails), and the fi
 - [PPC Land: Yelp Smart Lead Reply](https://ppc.land/yelp-charges-30-a-month-for-ai-agent-that-answers-and-qualifies-leads/), October 20, 2026, an AI agent answering and qualifying leads
 - [Salesforce: Agentforce for Field Service](https://www.salesforce.com/news/stories/agentforce-for-field-service-announcement/), April 9, 2025
 - [ATDb: IFS Loops launches Agent Studio](https://www.theatdb.com/news/ifs-loops-launches-agent-studio), April 23, 2026
+- [Onfleet: Tracking page](https://intercom.help/onfleet-4f83d83093ac/en/articles/15254709-tracking-page), real-time location only for tasks not yet completed
 - [Onfleet: Notification triggers](https://intercom.help/onfleet-4f83d83093ac/en/articles/16090283-notification-set-up-triggers), ETA, arriving and completion messages
 - [eLogii: Task history](https://help.elogii.com/en/articles/5623895-task-history), immutable state and data history with locations
 - [eLogii: Webhooks](https://help.elogii.com/en/articles/5645384-webhooks), events and authentication options

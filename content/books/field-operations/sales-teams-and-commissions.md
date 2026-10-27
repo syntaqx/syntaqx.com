@@ -77,29 +77,29 @@ The components the industry uses, in roughly the order they appear in a door-to-
 
 - **Base rate:** a percentage of contract value, a flat amount per sale, or a per-product rate.
 - **Tiers and accelerators:** a higher rate once a rep passes a volume threshold, applied retroactively to the season or only above the threshold (the plan must say which).
-- **Quality adjustments:** less for sales below the price floor ([Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules)), more for autopay or prepaid sales.
+- **Adjustments:** a different rate for sales the plan treats differently, such as sales below the price floor ([Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules)).
 - **Overrides:** a manager's cut of their team's production, read from the hierarchy on the sale date.
 - **Splits:** two reps (or a rep and a technician) sharing one sale by percentage.
 - **Advances and draws:** pay before the commission is earned, recovered from later earnings.
-- **Holdback:** a share of earned commission withheld until a later date (often season end) to cover cancellations.
+- **Holdback:** a share of earned commission withheld until a later date the plan names to cover cancellations.
 - **Bonuses and contests:** one-time payouts for a target or a contest win.
 
 ```json
 {
   "id": "0194c3c8-1e2d-7a6f-9b03-4c7e2d8f1a55",
-  "plan": "d2d-2026-summer",
-  "version": 3,
-  "valid_during": "[2026-06-15,)",
-  "base": { "type": "percent_of_contract_value", "rate": 0.12 },
-  "tiers": [{ "min_accounts": 150, "rate": 0.15, "is_retroactive": true }],
+  "plan": "example-field-sales",
+  "version": 1,
+  "valid_during": "[2026-01-01,)",
+  "base": { "type": "percent_of_contract_value", "rate": 0.10 },
+  "tiers": [{ "min_accounts": 100, "rate": 0.12, "is_retroactive": false }],
   "earn_when": ["agreement.activated", "visit.completed"],
-  "holdback": { "rate": 0.25, "release_on": "2026-10-31" },
-  "clawback": { "days_after_earned": 120, "on": ["agreement.terminated", "never_paid"] },
-  "override": { "team_lead": 0.02, "manager": 0.01 }
+  "holdback": { "rate": 0.20, "release_on": "2026-12-31" },
+  "clawback": { "days_after_earned": 90, "on": ["agreement.terminated"] },
+  "override": { "manager": 0.01 }
 }
 ```
 
-The numbers here are illustrative; the shape is the point. `earn_when` names events, and the plan engine counts only the first `visit.completed` on the agreement; there is no separate first-visit event. Contract value itself is defined by the business (initial charge plus a year of recurring charges, or the full term), and FieldRoutes shows why it needs care: when billing frequency differs from service frequency, its docs set a "Custom Production" value to the full service price "to keep commissions whole". Commission must be computed from a declared production value, not from whatever the next invoice happens to be.
+The numbers here are made up and deliberately round; the shape is the point. `earn_when` names the milestones the plan pays on. Contract value itself is defined by the business (initial charge plus a year of recurring charges, or the full term), and FieldRoutes shows why it needs care: when billing frequency differs from service frequency, its docs set a "Custom Production" value to the full service price "to ensure the technician gets proper credit". Commission must be computed from a declared production value, not from whatever the next invoice happens to be.
 
 My rule: test plan changes against last season's real sales before they go live, the way CaptivateIQ describes testing against historical data. A tier change that looks small can move a top rep's pay by thousands.
 
@@ -107,7 +107,7 @@ My rule: test plan changes against last season's real sales before they go live,
 
 The single most important design decision is to treat commissions as a **ledger** of immutable entries, not as a number on the sale that gets updated. A sale produces a pending entry; later events produce more entries; a rep's balance is the sum. Nothing is ever edited after it's paid, which is what makes disputes answerable.
 
-![The commission ledger lifecycle. A signed sale creates a pending commission. If the agreement is cancelled inside the cooling-off window, the pending entry is voided. Once the agreement is active and the first visit is completed, the commission is earned; part is paid in the next pay period and part is held back. A termination within the clawback period after earning creates a negative clawback entry recovered from future pay. At season end the remaining holdback is released. The money that reaches the rep is accented; dashed arrows and boxes mark cancellations and reversals.](/diagrams/fo-sales-teams-and-commissions-ledger.svg "Each arrow is a new ledger entry, never an edit. A rep's balance is the sum of entries, so every number on a statement traces to an event.")
+![The commission ledger lifecycle. A signed sale creates a pending commission. If the agreement is cancelled inside the cooling-off window, the pending entry is voided. Once the agreement is active and the first visit is completed, the commission is earned; part is paid in the next pay period and part is held back. A termination within the clawback period after earning creates a negative clawback entry recovered from future pay. On the plan's release date the remaining holdback is released. The money that reaches the rep is accented; dashed arrows and boxes mark cancellations and reversals.](/diagrams/fo-sales-teams-and-commissions-ledger.svg "Each arrow is a new ledger entry, never an edit. A rep's balance is the sum of entries, so every number on a statement traces to an event.")
 
 The events that move it come from the rest of the system ([Signing the Agreement](/books/field-operations/signing-the-agreement) publishes the first ones):
 
@@ -118,8 +118,8 @@ The events that move it come from the rest of the system ([Signing the Agreement
 | `agreement.activated` and the first `visit.completed` (a milestone, not a state) | `earned`; split into payable and holdback |
 | Pay period closes | `payable` entries batched to payroll |
 | `agreement.terminated` within the clawback period | `clawback` entry, negative, linked to the original |
-| Customer never pays (`payment.failed` past the plan's limit), if the plan says so | `clawback` by the same path |
-| Season end or holdback date | `release` of remaining holdback, net of clawbacks |
+| Any other trigger the plan names | `clawback` by the same path |
+| Holdback release date | `release` of remaining holdback, net of clawbacks |
 | Manual correction | `adjustment` with reason and approver |
 
 **Clawbacks** are where trust is won or lost. QuotaPath's guidance (written for software sales) calls "a 3–4 month period post-sale" standard, recommends clawing back commission dollars rather than quota credit, and says reps should acknowledge the clause in writing and see which deals are at risk. Field-service windows are set by each business; what generalizes is that the window, the triggers and the recovery method are in the plan the rep signed, and the rep can see at-risk accounts on their statement.
@@ -138,10 +138,10 @@ Leads passed from technicians to sales reps (a "tech lead") need attribution too
 
 ## Leaderboards and Contests
 
-Leaderboards are how door-to-door teams manage motivation, and every D2D app has one. They're also the most common source of pay disputes, because a leaderboard shows sales that may never become customers. SalesRabbit and FieldRoutes both separate a **leaderboard**, which ranks reps on chosen metrics over time, from a **competition**, a specific event with rules participants must meet; FieldRoutes runs both for players and teams. SPOTIO's suggested metrics are doors knocked per day, contact rate, conversation to demo, demo to close, average deal size and pipeline velocity, reviewed weekly.
+Leaderboards are how door-to-door teams manage motivation, and every D2D app has one. They're also the most common source of pay disputes, because a leaderboard shows sales that may never become customers. SalesRabbit and FieldRoutes both separate a **leaderboard**, which ranks reps on chosen metrics over time, from a **competition**, a specific event with rules participants must meet; FieldRoutes runs both for players and teams. The KPIs SPOTIO suggests door-to-door managers track are doors knocked per day, contact rate, conversation to demo, demo to close, average deal size and pipeline velocity, reviewed weekly.
 
 - **Define each metric once.** "Sales" must mean the same on the leaderboard, in commissions and in finance ([Data Pipelines](/docs/architecture/data-pipelines#one-definition-per-metric)).
-- **Label what's counted.** Show leaderboards in near real time (reps expect a sale to appear within seconds), but say whether a number is signed today, net of cooling-off cancellations, first service done, or earned. A board of signed sales rewards pressure; rank on sales that survived cancellation and first service, or show both.
+- **Label what's counted.** Show leaderboards in near real time, but say whether a number is signed today, net of cooling-off cancellations, first service done, or earned. A board of signed sales rewards pressure; rank on sales that survived cancellation and first service, or show both.
 - **Freeze standings.** A contest result is a payout: version and publish its rules like a plan, snapshot the scoring with the metric definition version when the contest closes, and change it only through an audited adjustment entry.
 - **Rank names, not customers.** Leaderboards read aggregates, never other reps' lead records ([Authorization](/docs/security/authorization)).
 
@@ -162,7 +162,7 @@ The tools fall into three groups: door-to-door sales apps that manage the team i
 | RepCard | D2D | Leaderboards, sales contests, team chat; a recruiting module with onboarding documents, recruit tracker, background checks and ID badges; commissions |
 | SalesRabbit | D2D | Leaderboards in Team, Pro and Enterprise; Competitions in Pro and Enterprise; "Amplify" with spot rewards and coaching |
 | ServiceTitan | Trades suite (HVAC, plumbing, electrical) | Performance Pay: technician sales commission and item spiffs on completed jobs |
-| SPOTIO | D2D | Gamification and leaderboards; its guide suggests shadowing in week one, co-selling in week two and selling alone with daily debriefs in week three |
+| SPOTIO | D2D | Gamification and leaderboards; its guide suggests training and shadowing in week one, co-selling in week two, selling alone with daily debriefs in week three and a full territory from week four |
 
 How canvassing itself works (areas, knocks, door statuses, property data and scoring) is in [Door-to-Door Sales](/books/field-operations/door-to-door-sales).
 
@@ -235,12 +235,12 @@ The ledger itself is the record of every payout; record structure, actors and re
 
 - [ServiceTitan: Performance Pay overview](https://help.servicetitan.com/docs/performance-pay-overview), Sold By Rate commissions, pricebook spiffs, invoice splits and stacking
 - [FieldRoutes: Subscriptions API](https://knowledgebase.fieldroutes.com/apidocs/subscriptions.md), `soldBy` used in commissions and sales reporting
-- [FieldRoutes: Set up recurring billing](https://knowledgebase.fieldroutes.com/docs/set-up-recurring-billing.md), Custom Production to keep commissions whole when billing differs from service
+- [FieldRoutes: Set up recurring billing](https://knowledgebase.fieldroutes.com/docs/set-up-recurring-billing.md), Custom Production so the technician gets proper credit when billing differs from service
 - [FieldRoutes: Mobile offline mode](https://knowledgebase.fieldroutes.com/docs/fieldroutes-mobile-offline-mode.md), Leaderboard and Competitions needing a signal
 - [PestPac: Reporting](https://www.pestpac.com/features/pest-control-reporting-software), Commissions and Sales Team Performance reports
 - [RepCard](https://www.repcard.com/), leaderboards, contests, recruiting and onboarding, commissions
 - [SalesRabbit: Features](https://salesrabbit.com/features/), leaderboards and competitions by plan
-- [SPOTIO: Door-to-door sales guide](https://spotio.com/blog/door-to-door-sales/), a three-week onboarding plan and suggested leaderboard metrics
+- [SPOTIO: Door-to-door sales guide](https://spotio.com/blog/door-to-door-sales/), a four-week onboarding plan and the KPIs D2D managers should track
 - [Knockbase](https://www.knockbase.com/), routing, live tracking, leaderboards, a commission calculator and storm data integration
 - [Knockio](https://www.knockio.com/), area assignment, coverage tracking, pre-knocked data and per-user plans
 - [Badger Maps](https://www.badgermapping.com/), territories, lead routing, CRM sync and GPS-verified check-ins

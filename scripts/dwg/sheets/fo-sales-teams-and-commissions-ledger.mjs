@@ -1,5 +1,5 @@
 // The commission ledger lifecycle as a standard diagram: sale, pending,
-// earned, paid now, with the holdback released at season end; dashed exits
+// earned, paid now, with the holdback released on the plan's date; dashed exits
 // to void and clawback entries; the money that reaches the rep in the
 // accent. Embedded in content/books/field-operations/sales-teams-and-commissions.md.
 import { sheet } from "../kit.mjs";
@@ -27,7 +27,7 @@ export default function draw() {
   s.connect(pending, earned, { hl: true, label: "active,\nfirst visit" });
   s.connect(earned, paid, { hl: true, label: "pay period" });
   s.connect(earned, held, { at: [0.75, 0.5] });
-  s.connect(held, released, { from: "b", to: "t", hl: true, label: "season end", side: "right" });
+  s.connect(held, released, { from: "b", to: "t", hl: true, label: "release date", side: "right" });
 
   s.comment("Cancellations");
   s.connect(pending, voided, { from: "b", to: "t", alt: true, label: "cancelled\nin window", side: "left" });

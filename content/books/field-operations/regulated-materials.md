@@ -198,7 +198,7 @@ The decisions behind it:
 - **Reports are derived and reproducible.** A state report is a query over snapshots for a jurisdiction and period, rendered in that state's format. Store each generated file with its parameters and a hash, mark the period filed, and regenerate only as a new version. Vendors usually stop at the file: FieldRoutes' New York export produces a file for the state's upload site and its docs say the Arizona TARF feature doesn't send forms to the state, and Jobber's treatment records end in a CSV export. Record who filed it and when.
 - **Inventory follows the record.** Each application decrements the truck's stock of that product by the concentrate quantity; purchases minus applications minus transfers should equal the shelf, and unexplained gaps are a compliance signal as well as a cost.
 
-What goes wrong in practice: technicians log products from habit rather than what's in the tank (pre-fill from the service type, but require a confirmation), a license expires mid-season and surfaces only on the state report, and a merged catalog row points history at the wrong label. Each is invisible until an inspector asks.
+The failure modes to design against: technicians log products from habit rather than what's in the tank (pre-fill from the service type, but require a confirmation), a license expires and surfaces only on the state report, or a merged catalog row points history at the wrong label. Each stays invisible until an inspector asks.
 
 ## Auditing
 

@@ -134,7 +134,7 @@ revenue_per_visit =
 
 Booking rate and the marketing numbers that feed the top of the sales funnel are in [Calls and Leads](#calls-and-leads) below.
 
-Door-to-door teams run a [funnel](/docs/telemetry/product-analytics#funnels) instead (SPOTIO lists doors knocked, contact rate, conversation to demo, demo to close and deal size). The rate that matters most is the one the funnel leaves out: the share of sales that are still paying customers after the first service and after 90 days, because a sale that cancels before the first payment cost a commission and a truck roll. [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions) covers clawbacks against that number.
+Door-to-door teams run a [funnel](/docs/telemetry/product-analytics#funnels) instead (SPOTIO lists doors knocked, contact rate, conversation to demo, demo to close and deal size). The rate that matters most is the one the funnel leaves out: the share of sales that are still paying customers after the first service and after a fixed window the business picks, because a sale that cancels early still cost the commission and the visit. [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions) covers clawbacks against that number.
 
 ## Calls and Leads
 
@@ -323,7 +323,7 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 - [FieldRoutes: Route Summary Report](https://knowledgebase.fieldroutes.com/docs/route-summary-report.md), drive and on-site efficiency over clocked-in time, actual vs scheduled, location and timing flags
 - [FieldRoutes: Retention Report](https://knowledgebase.fieldroutes.com/docs/retention-report.md), subscription-level cancellation rate and retention calendar
 - [FieldRoutes: Accounts Receivable Report](https://knowledgebase.fieldroutes.com/docs/accounts-receivable-report.md), aging by invoice date or due date, by account or invoice
-- [FieldRoutes: API reference](https://knowledgebase.fieldroutes.com/apidocs), the subscription `soldBy` field used in commissions and sales reporting
+- [FieldRoutes API: Subscriptions](https://knowledgebase.fieldroutes.com/apidocs/subscriptions.md), the subscription `soldBy` field used in commissions and sales reporting
 - [Microsoft Learn: SLAs for work orders](https://learn.microsoft.com/en-us/dynamics365/field-service/sla-work-orders), arrival and resolution KPIs, the applicable-from clock start, business hours, pause and resume, warning and failure durations
 - [Aspire: Job costing and estimating](https://www.youraspire.com/go/job-costing-estimating), estimated labor and materials against actual job cost from division to work ticket
 - [Swept: Time tracking](https://sweptworks.com/cleaning-company-time-tracking-app), geofenced clock-in and scheduled vs actual hours to spot underbid sites

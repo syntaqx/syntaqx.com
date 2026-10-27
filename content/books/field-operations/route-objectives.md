@@ -52,7 +52,7 @@ The right ratio depends on where the trucks drive and who drives them:
 - **High-value commercial work** carries SLA credits or contract risk for lateness, so lateness penalties outweigh travel.
 - **Seasonal peaks** trade efficiency for throughput. Salesforce's High Intensity policy ranks travel minimization and grouping first to get through as many appointments as possible, for periods such as storms, and dispatchers switch policies during the day as conditions change.
 
-So weights are configuration, scoped to a branch, territory or policy, versioned, approved and effective from a date, like any other rule ([Rules as Data](/docs/architecture/rules-as-data); [Territories & Capacity](/books/field-operations/territories-and-capacity) owns the scopes). A sketch:
+So weights are configuration, scoped to a branch, territory or policy, versioned, approved and effective from a date, like any other rule ([Rules as Data](/docs/architecture/rules-as-data); [Territories & Capacity](/books/field-operations/territories-and-capacity) owns the scopes). A sketch, with made-up values:
 
 ```json
 {
