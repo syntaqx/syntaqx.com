@@ -42,7 +42,11 @@ The first request with a key records:
 
 The key record and the side effect are written in the **same database transaction** wherever possible. That's the whole trick: if the payment row commits, so does the key, and if either fails, neither exists. Storing the key in a separate system (a cache, a different database) reopens the gap the key was meant to close, because a crash between the two writes leaves a charge with no record of it.
 
-When the side effect lives somewhere else, like a card network, a single transaction isn't possible. Record the key as `in_progress` first, call the processor with its own idempotency key derived from ours, then complete the record. A crash in the middle leaves an `in_progress` key that a recovery job reconciles against the processor.
+When the side effect lives somewhere else, like a card network, a single transaction isn't possible. Record the key as `in_progress` first, call the processor with its own idempotency key derived from the client's, then complete the record. A crash in the middle leaves an `in_progress` key that a recovery job reconciles against the processor.
+
+Claiming a key is a single atomic operation: an insert against a unique constraint, or a set-if-absent in a key store. A read followed by a write lets two simultaneous first requests both see "new" and both run.
+
+If the key store is unreachable, fail closed: reject the request with a `503` and do nothing. A rate limiter can reasonably keep serving when its store is down ([Rate Limiting](/docs/requests/rate-limiting)), but a write without its idempotency protection is exactly what the key exists to prevent.
 
 ## Behavior
 
@@ -83,7 +87,7 @@ A retry window has to outlast realistic failures: seconds cover network blips, m
 
 The header protects the API boundary. The same rule applies at every hop inside the system, because every hop can fail halfway:
 
-- **Calls to processors** carry their own idempotency key, derived from ours, so our retry to the card network can't double-charge either.
+- **Calls to processors** carry their own idempotency key, derived from the client's, so a retry to the card network can't double-charge either.
 - **Queue consumers** dedupe by message ID, because every queue worth using delivers at least once.
 - **Webhook receivers** dedupe by event ID. See [Webhooks](/docs/api-design/webhooks).
 
@@ -96,21 +100,6 @@ Exactly-once delivery doesn't exist across a network. At-least-once delivery plu
 3. On `409`, retry the same key. A new key could start a second operation while the first is still running.
 4. On `400` for a key mismatch, you've reused a key for a different operation. Fix the client.
 5. To change the parameters, first confirm the original didn't succeed and isn't still running, then use a new key.
-
-## This Site
-
-The syntaqx API's `POST /echo` exists to show this working. Every call creates a new echo with its own `id` and timestamp, so without a key, two identical requests make two echoes:
-
-```bash
-curl -X POST https://api.syntaqx.com/echo \
-  -H "Content-Type: application/json" \
-  -H "Idempotency-Key: f47ac10b-58cc-4372-a567-0e02b2c3d479" \
-  -d '{"hello": "world"}'
-```
-
-Run it twice and the second response is the first one again, byte for byte, with `Idempotent-Replayed: true`. Change the body and keep the key, and it's a `400`. Keys live in Redis for 24 hours, scoped to the caller's IP since the API has no accounts, and a claim is a single `SET NX`, so two simultaneous first requests can't both run.
-
-The echo exists only in its stored response, so recording the key and the side effect is one write. And unlike the [rate limiter](/docs/requests/rate-limiting), which keeps serving when Redis is down, this fails closed: if the key store is unreachable, the request gets a `503` and nothing is created, because a write without its protection is exactly what the key exists to prevent.
 
 ## References
 
