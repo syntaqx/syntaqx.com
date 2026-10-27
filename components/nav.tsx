@@ -11,16 +11,21 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-// The active item's handle: a small teal square. Always rendered, so the
-// label doesn't shift when it lights up.
-function Marker({ on }: { on: boolean }) {
+// The active item's rail: a 2px teal line on the bar's bottom edge, as wide
+// as the label (on the left edge inside the Lab list). Absolutely placed, so
+// nothing shifts when it lights up.
+function Marker({ on, list = false }: { on: boolean; list?: boolean }) {
+  if (!on) return null;
   return (
-    <span aria-hidden className={`size-1.5 shrink-0 ${on ? "bg-accent" : ""}`} />
+    <span
+      aria-hidden
+      className={`absolute bg-accent ${list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-3 -bottom-px h-0.5"}`}
+    />
   );
 }
 
 const itemClass = (active: boolean) =>
-  `flex items-center gap-2 whitespace-nowrap px-3 transition-colors focus-visible:-outline-offset-2 ${
+  `relative flex items-center gap-2 whitespace-nowrap px-3 transition-colors focus-visible:-outline-offset-2 ${
     active ? "text-foreground" : "text-dim hover:text-foreground"
   }`;
 
@@ -129,7 +134,7 @@ function NavDisclosure({
                 onClick={() => setOpen(false)}
                 className={`${itemClass(on)} py-2.5`}
               >
-                <Marker on={on} />
+                <Marker on={on} list />
                 {link.label}
               </Link>
             </li>
