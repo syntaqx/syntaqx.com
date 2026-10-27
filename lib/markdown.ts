@@ -292,9 +292,11 @@ export function renderLlmsTxt(): string {
   const docs = getAllDocs()
     .map((d) => bullet(d.title, url(`/docs/${d.slug}`), d.description))
     .join("\n");
-  const books = getAllBookChapters()
-    .map((c) => bullet(c.title, url(`/books/${c.slug}`), c.description))
-    .join("\n");
+  // One entry per book: its cover lists the chapters, so agents follow that
+  // instead of reading every chapter link here.
+  const books = BOOKS.map((b) =>
+    bullet(b.name, url(`/books/${b.slug}`), `${b.summary} ${getBookChapters(b.slug).length} chapters.`),
+  ).join("\n");
   return `${[
     "# syntaqx",
     `> ${SUMMARY}`,

@@ -4,6 +4,7 @@ import { getAllDocs } from "./docs";
 import { getAllPosts } from "./posts";
 import { GET as markdownRoute } from "@/app/md/[[...path]]/route";
 import { GET as llmsRoute } from "@/app/llms.txt/route";
+import { BOOKS } from "@/lib/books";
 
 describe("renderMarkdownPage()", () => {
   it("renders the homepage with an H1, bio, posts and site links", () => {
@@ -132,6 +133,14 @@ describe("llms.txt", () => {
     expect(body).toContain("**How to call it.**");
     expect(body).toContain("**When not to use it.**");
     expect(body).toContain("https://www.syntaqx.com/docs/api-design/versioning");
+  });
+
+  it("lists each book's cover, not its chapters", () => {
+    const body = renderLlmsTxt();
+    const section = body.slice(body.indexOf("\n## Books\n"), body.indexOf("\n## Posts\n"));
+    const links = section.match(/\(https:\/\/www\.syntaqx\.com\/books\/[^)]+\)/g) ?? [];
+    expect(links).toHaveLength(BOOKS.length);
+    for (const link of links) expect(link).toMatch(/\/books\/[a-z-]+\)$/);
   });
 
   it("is served as text/plain", async () => {
