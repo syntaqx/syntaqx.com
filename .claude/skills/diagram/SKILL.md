@@ -299,3 +299,6 @@ diagram avoids it. Keep each to one or two lines: what went wrong, the rule.
   solid one and read as broken; a terminal outcome is a plain `end` box.
 - 2026-10-27: Year gridlines on a bar chart ran through the value labels;
   draw ticks on the axes only.
+- 2026-10-27: Centering by the nodes alone put a group boundary and side
+  brackets off center or inside the margin; center on the outermost
+  element (group padding, bracket labels).

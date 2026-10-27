@@ -1,81 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380">
-  <defs>
-    <marker id="fo-row-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="fo-row-ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,0.8L10,5L0,9.2Z"/></marker>
-    <marker id="fo-row-ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,0.8L10,5L0,9.2Z"/></marker>
-  </defs>
-
-  <!-- Left: weighted by time (cost per hour) -->
-  <rect class="zone" x="40" y="44" width="320" height="226"/>
-  <text class="cap hl" x="50" y="60">weighted by time: cost per hour</text>
-  <rect class="cell band" x="60" y="86" width="280" height="6"/>
-  <text class="n" x="340" y="80" text-anchor="end">highway: longer, faster</text>
-  <text class="n" x="200" y="262" text-anchor="middle">surface streets: shorter, slower</text>
-  <rect class="cell end" x="50" y="168" width="50" height="24"/>
-  <text class="t b" x="75" y="180" text-anchor="middle" dominant-baseline="central">depot</text>
-  <rect class="cell" x="118" y="120" width="24" height="20"/>
-  <text class="t" x="130" y="130" text-anchor="middle" dominant-baseline="central">A</text>
-  <rect class="cell" x="210" y="110" width="24" height="20"/>
-  <text class="t" x="222" y="120" text-anchor="middle" dominant-baseline="central">B</text>
-  <rect class="cell" x="300" y="120" width="24" height="20"/>
-  <text class="t" x="312" y="130" text-anchor="middle" dominant-baseline="central">C</text>
-  <rect class="cell" x="290" y="200" width="24" height="20"/>
-  <text class="t" x="302" y="210" text-anchor="middle" dominant-baseline="central">D</text>
-  <rect class="cell" x="200" y="220" width="24" height="20"/>
-  <text class="t" x="212" y="230" text-anchor="middle" dominant-baseline="central">E</text>
-  <rect class="cell" x="118" y="200" width="24" height="20"/>
-  <text class="t" x="130" y="210" text-anchor="middle" dominant-baseline="central">F</text>
-  <path class="ln hl" d="M75,168V89H312V118" marker-end="url(#fo-row-ah-hl)"/>
-  <path class="ln hl" d="M312,140L303,198" marker-end="url(#fo-row-ah-hl)"/>
-  <path class="ln hl" d="M290,213L226,227" marker-end="url(#fo-row-ah-hl)"/>
-  <path class="ln hl" d="M214,220L221,132" marker-end="url(#fo-row-ah-hl)"/>
-  <path class="ln hl" d="M210,121L144,129" marker-end="url(#fo-row-ah-hl)"/>
-  <path class="ln hl" d="M130,140V198" marker-end="url(#fo-row-ah-hl)"/>
-  <path class="ln hl" d="M118,212L102,190" marker-end="url(#fo-row-ah-hl)"/>
-  <text class="cap" x="50" y="292">order</text>
-  <text class="t" x="110" y="292">C D E B A F</text>
-  <text class="cap" x="50" y="308">drive</text>
-  <text class="t" x="110" y="308">3.0 h, 92 mi</text>
-  <text class="cap" x="50" y="324">day</text>
-  <text class="t" x="110" y="324">7.5 h, no overtime</text>
-  <text class="cap" x="50" y="340">cost</text>
-  <text class="t hl b" x="110" y="340">$407.42</text>
-
-  <!-- Right: weighted by distance (cost per mile) -->
-  <rect class="zone" x="400" y="44" width="320" height="226"/>
-  <text class="cap" x="410" y="60">weighted by distance: cost per mile</text>
-  <rect class="cell band" x="420" y="86" width="280" height="6"/>
-  <text class="n" x="700" y="80" text-anchor="end">highway: longer, faster</text>
-  <text class="n" x="560" y="262" text-anchor="middle">surface streets: shorter, slower</text>
-  <rect class="cell end" x="410" y="168" width="50" height="24"/>
-  <text class="t b" x="435" y="180" text-anchor="middle" dominant-baseline="central">depot</text>
-  <rect class="cell" x="478" y="120" width="24" height="20"/>
-  <text class="t" x="490" y="130" text-anchor="middle" dominant-baseline="central">A</text>
-  <rect class="cell" x="570" y="110" width="24" height="20"/>
-  <text class="t" x="582" y="120" text-anchor="middle" dominant-baseline="central">B</text>
-  <rect class="cell" x="660" y="120" width="24" height="20"/>
-  <text class="t" x="672" y="130" text-anchor="middle" dominant-baseline="central">C</text>
-  <rect class="cell" x="650" y="200" width="24" height="20"/>
-  <text class="t" x="662" y="210" text-anchor="middle" dominant-baseline="central">D</text>
-  <rect class="cell" x="560" y="220" width="24" height="20"/>
-  <text class="t" x="572" y="230" text-anchor="middle" dominant-baseline="central">E</text>
-  <rect class="cell" x="478" y="200" width="24" height="20"/>
-  <text class="t" x="490" y="210" text-anchor="middle" dominant-baseline="central">F</text>
-  <path class="ln ink" d="M460,188L477,204" marker-end="url(#fo-row-ah-ink)"/>
-  <path class="ln ink" d="M502,213L558,227" marker-end="url(#fo-row-ah-ink)"/>
-  <path class="ln ink" d="M584,228L648,213" marker-end="url(#fo-row-ah-ink)"/>
-  <path class="ln ink" d="M663,200L671,142" marker-end="url(#fo-row-ah-ink)"/>
-  <path class="ln ink" d="M660,129L596,121" marker-end="url(#fo-row-ah-ink)"/>
-  <path class="ln ink" d="M570,120L504,128" marker-end="url(#fo-row-ah-ink)"/>
-  <path class="ln ink" d="M482,140L456,166" marker-end="url(#fo-row-ah-ink)"/>
-  <text class="cap" x="410" y="292">order</text>
-  <text class="t" x="470" y="292">F E D C B A</text>
-  <text class="cap" x="410" y="308">drive</text>
-  <text class="t" x="470" y="308">4.0 h, 58 mi</text>
-  <text class="cap" x="410" y="324">day</text>
-  <text class="t" x="470" y="324">8.5 h, 0.5 h overtime</text>
-  <text class="cap" x="410" y="340">cost</text>
-  <text class="t b" x="470" y="340">$437.83</text>
-
-  <text class="n" x="40" y="366">illustrative: 270 service minutes, 8 h regular day, $45/h labor, $67.50/h overtime, $0.76/mi</text>
+<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 760 349">
+  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->
+  <defs><marker id="fo-rowt-ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah ink" d="M0,1.6L10,5L0,8.4Z"/></marker><marker id="fo-rowt-ah-hl" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="ah hl" d="M0,1.6L10,5L0,8.4Z"/></marker><pattern id="fo-rowt-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path class="hatch-ln" d="M0,0V5"/></pattern></defs>
+  <!-- weighted by time: cost per hour -->
+  <rect class="phantom" x="20" y="40" width="350" height="200"/>
+  <text class="lt hl" x="20" y="33">WEIGHTED BY TIME: COST PER HOUR</text>
+  <rect class="obj fill-2" x="40" y="77" width="310" height="6"/>
+  <text class="sl" x="350" y="70" text-anchor="end">HIGHWAY: LONGER, FASTER</text>
+  <text class="sl" x="195" y="228" text-anchor="middle">SURFACE STREETS: SHORTER, SLOWER</text>
+  <rect class="obj fill-2" x="137" y="117" width="26" height="22"/>
+  <text class="sl ink" x="150" y="131" text-anchor="middle">A</text>
+  <rect class="obj fill-2" x="217" y="117" width="26" height="22"/>
+  <text class="sl ink" x="230" y="131" text-anchor="middle">B</text>
+  <rect class="obj fill-2" x="297" y="117" width="26" height="22"/>
+  <text class="sl ink" x="310" y="131" text-anchor="middle">C</text>
+  <rect class="obj fill-2" x="137" y="179" width="26" height="22"/>
+  <text class="sl ink" x="150" y="193" text-anchor="middle">F</text>
+  <rect class="obj fill-2" x="217" y="179" width="26" height="22"/>
+  <text class="sl ink" x="230" y="193" text-anchor="middle">E</text>
+  <rect class="obj fill-2" x="297" y="179" width="26" height="22"/>
+  <text class="sl ink" x="310" y="193" text-anchor="middle">D</text>
+  <rect class="obj fill-2" x="42" y="147" width="60" height="24"/>
+  <rect class="obj" x="45" y="150" width="54" height="18"/>
+  <text class="sl ink" x="72" y="162" text-anchor="middle">DEPOT</text>
+  <path class="flow hl" d="M72,147L72,80L310,80L310,117" marker-end="url(#fo-rowt-ah-hl)"/>
+  <path class="flow hl" d="M310,139L310,179" marker-end="url(#fo-rowt-ah-hl)"/>
+  <path class="flow hl" d="M297,190L243,190" marker-end="url(#fo-rowt-ah-hl)"/>
+  <path class="flow hl" d="M230,179L230,139" marker-end="url(#fo-rowt-ah-hl)"/>
+  <path class="flow hl" d="M217,128L163,128" marker-end="url(#fo-rowt-ah-hl)"/>
+  <path class="flow hl" d="M150,139L150,179" marker-end="url(#fo-rowt-ah-hl)"/>
+  <path class="flow hl" d="M137,190L72,190L72,171" marker-end="url(#fo-rowt-ah-hl)"/>
+  <text class="sl" x="30" y="262">ORDER</text>
+  <text class="tc" x="80" y="262">C D E B A F</text>
+  <text class="sl" x="30" y="277">DRIVE</text>
+  <text class="tc" x="80" y="277">3.0 h, 92 mi</text>
+  <text class="sl" x="30" y="292">DAY</text>
+  <text class="tc" x="80" y="292">7.5 h, no overtime</text>
+  <text class="sl" x="30" y="307">COST</text>
+  <text class="tc hl" x="80" y="307">$407.42</text>
+  <!-- weighted by distance: cost per mile -->
+  <rect class="phantom" x="390" y="40" width="350" height="200"/>
+  <text class="lt" x="390" y="33">WEIGHTED BY DISTANCE: COST PER MILE</text>
+  <rect class="obj fill-2" x="410" y="77" width="310" height="6"/>
+  <text class="sl" x="720" y="70" text-anchor="end">HIGHWAY: LONGER, FASTER</text>
+  <text class="sl" x="565" y="228" text-anchor="middle">SURFACE STREETS: SHORTER, SLOWER</text>
+  <rect class="obj fill-2" x="507" y="117" width="26" height="22"/>
+  <text class="sl ink" x="520" y="131" text-anchor="middle">A</text>
+  <rect class="obj fill-2" x="587" y="117" width="26" height="22"/>
+  <text class="sl ink" x="600" y="131" text-anchor="middle">B</text>
+  <rect class="obj fill-2" x="667" y="117" width="26" height="22"/>
+  <text class="sl ink" x="680" y="131" text-anchor="middle">C</text>
+  <rect class="obj fill-2" x="507" y="179" width="26" height="22"/>
+  <text class="sl ink" x="520" y="193" text-anchor="middle">F</text>
+  <rect class="obj fill-2" x="587" y="179" width="26" height="22"/>
+  <text class="sl ink" x="600" y="193" text-anchor="middle">E</text>
+  <rect class="obj fill-2" x="667" y="179" width="26" height="22"/>
+  <text class="sl ink" x="680" y="193" text-anchor="middle">D</text>
+  <rect class="obj fill-2" x="412" y="147" width="60" height="24"/>
+  <rect class="obj" x="415" y="150" width="54" height="18"/>
+  <text class="sl ink" x="442" y="162" text-anchor="middle">DEPOT</text>
+  <path class="flow" d="M442,171L442,190L507,190" marker-end="url(#fo-rowt-ah)"/>
+  <path class="flow" d="M533,190L587,190" marker-end="url(#fo-rowt-ah)"/>
+  <path class="flow" d="M613,190L667,190" marker-end="url(#fo-rowt-ah)"/>
+  <path class="flow" d="M680,179L680,139" marker-end="url(#fo-rowt-ah)"/>
+  <path class="flow" d="M667,128L613,128" marker-end="url(#fo-rowt-ah)"/>
+  <path class="flow" d="M587,128L533,128" marker-end="url(#fo-rowt-ah)"/>
+  <path class="flow" d="M507,128L442,128L442,147" marker-end="url(#fo-rowt-ah)"/>
+  <text class="sl" x="400" y="262">ORDER</text>
+  <text class="tc" x="450" y="262">F E D C B A</text>
+  <text class="sl" x="400" y="277">DRIVE</text>
+  <text class="tc" x="450" y="277">4.0 h, 58 mi</text>
+  <text class="sl" x="400" y="292">DAY</text>
+  <text class="tc" x="450" y="292">8.5 h, 0.5 h overtime</text>
+  <text class="sl" x="400" y="307">COST</text>
+  <text class="tc" x="450" y="307">$437.83</text>
+  <!-- Assumptions -->
+  <text class="tc" x="20" y="331">illustrative: 270 service minutes, 8 h regular day, $45/h labor, $67.50/h overtime, $0.76/mi</text>
 </svg>
