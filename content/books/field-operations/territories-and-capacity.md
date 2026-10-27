@@ -21,7 +21,7 @@ A **territory** is the area a team serves. The design choices are how the area i
 | **FieldRoutes** | Routing regions | Region on the subscription | Routing groups by region or preferred tech |
 | **Esri Territory Design** | Multilevel territories built from base geography | Spatial | A planning tool, not an operational one |
 
-In Salesforce, resources "are assigned to one or more service territories as service territory members," a polygon "can be nested inside another polygon creating a hierarchy," and a location inside several is assigned "to either the highest or lowest-level territory in the hierarchy depending on your settings." ServiceTitan's online scheduler is built on Zones, "the ZIP codes you serve," and can't be configured without them; its capacity engine infers who can do what from the links among business units, job types, zones and skills. Territories sit below the branch in the [tenant hierarchy](/docs/architecture/multi-tenancy#tenant-hierarchies), and I still keep them out of chapter 1's `org_units`, in their own table with a `branch_id`. Org units carry what's licensed, staffed and accounted for (a time zone, licenses, a profit and loss); territories are drawings that change monthly and carry no books. Keeping them apart means a redraw never touches the tenant hierarchy, at the cost of one more link to follow (territory to branch) when rolling up. The alternative, a fourth `kind = 'territory'` in `org_units`, works if territories rarely change and need the same permissions as branches.
+In Salesforce, resources "are assigned to one or more service territories as service territory members," a polygon "can be nested inside another polygon creating a hierarchy," and a location inside several is assigned "to either the highest or lowest-level territory in the hierarchy depending on your settings." ServiceTitan's online scheduler is built on Zones, "the ZIP codes you serve," and can't be configured without them; its capacity engine infers who can do what from the links among business units, job types, zones and skills. Territories sit below the branch in the [tenant hierarchy](/docs/architecture/multi-tenancy#tenant-hierarchies), and I still keep them out of the `org_units` defined in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model), in their own table with a `branch_id`. Org units carry what's licensed, staffed and accounted for (a time zone, licenses, a profit and loss); territories are drawings that change monthly and carry no books. Keeping them apart means a redraw never touches the tenant hierarchy, at the cost of one more link to follow (territory to branch) when rolling up. The alternative, a fourth `kind = 'territory'` in `org_units`, works if territories rarely change and need the same permissions as branches.
 
 The two approaches trade precision for ease. A ZIP list is easy to sell, edit and explain to a franchisee, and it's coarse: one ZIP can straddle a river, a county line that matters for licensing, or a toll bridge that doubles the drive. A polygon follows the real boundary, at the cost of geocoding every address and maintaining shapes. My default: polygons as the source of truth, with ZIP lists generated from them for marketing and lead routing. The alternative, ZIP lists only, is fine for a single-branch lawn or cleaning business until the first boundary dispute between two branches or franchisees.
 
@@ -29,7 +29,7 @@ Territory *design* is a separate, strategic problem: where should the lines go s
 
 ## Point in Polygon with PostGIS
 
-If you build your own, territory lookup is a spatial join, and PostGIS does it well. Chapter 1's `properties` carry a geocoded `location GEOGRAPHY(POINT)` and a `branch_id`, and no territory link. This chapter adds territories, their dated areas, and the stored result of resolving a property against them. The areas are `GEOGRAPHY` too, so the join compares like with like and nothing is cast at query time (the exclusion constraints need `btree_gist`, as in [Booking Appointments](/books/field-operations/booking-appointments#idempotency-and-double-booking)):
+If you build your own, territory lookup is a spatial join, and PostGIS does it well. The `properties` in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model) carry a geocoded `location GEOGRAPHY(POINT)` and a `branch_id`, and no territory link. This chapter adds territories, their dated areas, and the stored result of resolving a property against them. The areas are `GEOGRAPHY` too, so the join compares like with like and nothing is cast at query time (the exclusion constraints need `btree_gist`, as in [Booking Appointments](/books/field-operations/booking-appointments#idempotency-and-double-booking)):
 
 ```sql
 CREATE TABLE territories (
@@ -88,10 +88,6 @@ What goes wrong is rarely the query:
 - **Bad geocodes.** A rural address geocoded to the center of its ZIP lands in the wrong territory, and a new subdivision may not geocode at all. Store the geocode's precision and route low-precision addresses to a person ([Addresses](/docs/fundamentals/addresses#geocode-and-precision)).
 - **Lookups at booking time.** Resolve the territory when the property is created or its address changes, store it in `property_territories`, and re-resolve when a territory area version is added. Don't run a spatial join on every slot search.
 
-## Effective Dating
-
-Territory areas, memberships, crew rosters, shifts, credentials and capacity rules all change on scheduled dates (a branch takes over three ZIP codes on the first of next month, a license expires December 31), so each carries a `valid_during` range and every availability question carries a date, as [Temporal Data](/docs/database/temporal-data) describes.
-
 ## Skills, Licenses and Certifications
 
 Territory narrows the pool by place. Skills narrow it by competence, and they're where vendors differ most.
@@ -148,7 +144,7 @@ Forecasting tells you whether the lever is set right. Oracle's forecasting analy
 
 ## How to Build It
 
-The engine is a filter pipeline over effective-dated data, in the order of the diagram, cheapest test first:
+Territory areas, memberships, crew rosters, shifts, credentials and capacity rules all change on scheduled dates (a branch takes over three ZIP codes on the first of next month, a license expires December 31), so each carries a `valid_during` range and every availability question carries a date, as [Temporal Data](/docs/database/temporal-data) describes. The engine is a filter pipeline over that effective-dated data, in the order of the diagram, cheapest test first:
 
 1. **Resolve the territory** from `property_territories` for the date (written by the spatial join on address or area change).
 2. **Find members** of that territory valid on the date, including members of neighboring territories if a soft-boundary policy allows them.

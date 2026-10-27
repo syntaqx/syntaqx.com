@@ -28,9 +28,7 @@ A repair moves through the same steps in every trade, whatever the vendor calls 
 
 The decision that matters is keeping the work order open across visits. In Dynamics 365 Field Service, completing a booking completes its work order by default, but a custom booking status with "Status completes work order" turned off (Microsoft's example is "Partially Completed") returns the work order to Unscheduled for follow-up. ServiceTitan uses holds: its documented reasons include waiting for parts or materials, a pending permit and needing authorization, and for a special-order part it suggests either booking from the sold estimate when the part arrives or booking now and holding the appointment with a waiting-for-parts tag, then reporting on held jobs so none are forgotten.
 
-My rule: a visit can be `completed` while its work order is not. A diagnosis or a partial repair completes the visit, and the unfinished work order stays open with a `hold_reason`; the full end-state rules are in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model).
-
-"Jobs waiting on parts" is then a query over work-order holds and open part orders, not free-text notes.
+The core model already makes this structural: a diagnosis or partial repair completes the visit while the work order stays open on a `hold_reason` ([The Core Data Model](/books/field-operations/field-operations-business#the-core-data-model) owns the end states and reasons). What repair adds is the part order behind the hold, so "jobs waiting on parts" is a query over work-order holds and open part orders, not free-text notes.
 
 ![A dimensional drawing of one repair work order on a day axis. Visit 1 on day 0 diagnoses and quotes and is completed while the work order stays open, on hold for a part for 6 days. Visit 2 on day 6 repairs and closes the order. Two 30-day windows start at the repair, the warranty claim submit-by window and the workmanship callback window, so the last day to file is day 36. A table lists the hold reasons part_needed, approval_needed and permit_needed and what releases each.](/diagrams/fo-repair-and-installation-dwg-work-order.svg "One work order, two visits, and two clocks that start at the repair. The 30-day windows come from Ferguson's claim process and ServiceTitan's recall definition; the six-day part wait is illustrative.")
 
@@ -50,9 +48,9 @@ Distance charges are the commercial cousin: Dynamics adds a travel charge item a
 
 Residential repair is mostly sold at a **flat rate**: one price per task ("replace a capacitor", "rebuild a toilet") from standard hours, parts and markup, so the customer approves a number before work starts. Commercial and unpredictable work is often **time and materials (T&M)**: labor by the hour at a rate that depends on when it happens, plus parts at cost plus markup.
 
-Most flat-rate shops start from a third-party book such as Profit Rhino's, which arrives with labor, materials and duration preset per task; in Housecall Pro's integration, optional content updates change only the items Profit Rhino still manages, so local edits survive. [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules) covers markup, margin, cost feeds and versioning.
+How flat-rate books are built, imported and priced (markup, margin, cost feeds, versioning, and the vendors that sell them) is in [Pricebooks: Where Prices Come From](/books/field-operations/pricing-and-sales-rules#pricebooks-where-prices-come-from). One repair-specific detail: a shop that starts from a third-party book will edit it locally, and the update path has to respect that; in Housecall Pro's Profit Rhino integration, optional content updates change only the items Profit Rhino still manages, so local edits survive.
 
-One work order can mix methods: a T&M commercial call that turns into a quoted compressor replacement. My default: the **pricing method lives on each line**, and T&M labor is time entries with a rate type (regular, overtime, after hours) resolved when recorded. Billable time comes from timestamped events, as Dynamics derives it from booking journals, not a number keyed at the end.
+One work order can mix methods: a T&M commercial call that turns into a quoted compressor replacement. My default: the **pricing method lives on each line**, and T&M labor is the technician's raw `time_punches` ([The Technician App](/books/field-operations/technician-app#how-to-build-it)) for the work order, priced with a rate type (regular, overtime, after hours) resolved when recorded. Billable time comes from timestamped events, as Dynamics derives it from booking journals, not a number keyed at the end.
 
 ## Options at the Door
 
@@ -132,10 +130,10 @@ Commercial customers buy coverage, not jobs: a service contract across their sit
 
 Emergency work jumps the queue, costs more and is staffed differently.
 
-- **Priority from triage.** No heat in a freeze, an active leak, a failing restaurant cooler: priority comes from rules on problem codes, recorded with who set it, because it decides who gets bumped and what rate applies.
+- **Priority from triage.** No heat in a freeze, an active leak, a failing restaurant cooler: priority comes from rules on problem codes, recorded with who set it, because it decides who gets bumped and what rate applies. Emergencies skip the route-cost ranking when slots are offered ([Customers, Fairness and Urgent Work](/books/field-operations/booking-appointments#customers-fairness-and-urgent-work)) and land in room held back for them ([Reserving Room and Forecasting](/books/field-operations/territories-and-capacity#reserving-room-and-forecasting)).
 - **After-hours rates** are pricebook rules by time of day and day type, with holidays from the branch's calendar ([Business Dates, Business Days and Holidays](/docs/fundamentals/time#business-dates-business-days-and-holidays)); commercial contracts may set them.
-- **On-call is availability, not capacity.** Oracle Field Service treats an active on-call shift as availability when picking a technician, while capacity quotas keep using regular working time: on-call technicians can be sent, but they don't make tomorrow look emptier than it is.
-- **On-call pay is a labor question.** Under the federal rule, on-call time restricted enough that the employee can't use it as their own is working time; record on-call periods and callouts as time entries so payroll can apply it and any state law.
+- **On-call technicians can be sent but don't add bookable capacity;** the rule and Oracle's version of it are in [Crews, Shifts and Operating Hours](/books/field-operations/territories-and-capacity#crews-shifts-and-operating-hours).
+- **On-call pay is a labor question.** Under the federal rule, on-call time restricted enough that the employee can't use it as their own is working time; keep on-call periods as shifts with their restrictions, and record each callout as `time_punches` ([The Technician App](/books/field-operations/technician-app#how-to-build-it)), so payroll can apply the rule and any state law.
 
 ## First-Time Fix and Callbacks
 
@@ -143,7 +141,7 @@ Emergency work jumps the queue, costs more and is staffed differently.
 
 What keeps the metric honest is the link: a callback is a new work order with `source = 'callback'` and `callback_of_work_order_id` set when it's booked, never inferred from "same address within 30 days". First-time fix is computed per work order: fixed on its first completed visit, with no callback work order inside the window ([Operating Metrics](/books/field-operations/operating-metrics) gives the definition and window). A return trip for a part that wasn't on the truck is not a callback, because the work order never closed, but it does fail first-time fix. The causes are mostly upstream and measurable: the part wasn't on the truck, the wrong skill was sent, or the asset history was missing.
 
-## A Data Model Sketch
+## How to Build It
 
 This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business). It adds an asset table and its warranty terms, columns on `work_orders`, and four tables of its own; existing columns are unchanged, and visits use the canonical states and reasons.
 
@@ -173,7 +171,8 @@ CREATE TABLE asset_warranty_terms (
   registered_at       TIMESTAMPTZ
 );
 
--- hold_reason and callback_of_work_order_id are already on work_orders (chapter 1)
+-- hold_reason and callback_of_work_order_id are already on work_orders
+-- (The Field Operations Business)
 ALTER TABLE work_orders
   ADD COLUMN asset_id                UUID REFERENCES assets (id),
   ADD COLUMN problem_code            TEXT,
@@ -191,7 +190,7 @@ CREATE TABLE work_order_parts (
   tenant_id           UUID NOT NULL,
   work_order_id       UUID NOT NULL REFERENCES work_orders (id),
   visit_id            UUID REFERENCES visits (id),
-  product_id          UUID NOT NULL,
+  item_id             UUID NOT NULL REFERENCES items (id),  -- the shared catalog
   quantity            NUMERIC NOT NULL,
   source              TEXT NOT NULL,             -- truck_stock | special_order | supplied
   purchase_order_id   UUID,
@@ -242,7 +241,7 @@ CREATE TABLE sla_clock_events (
 );
 ```
 
-A completed visit whose work order carries `hold_reason = 'part_needed'` leaves the work order open; clearing the hold makes it schedulable again. The clock's events are the truth, and `due_at`, `met_at` and `violated_at` can be rebuilt from them. The chapter adds outbox events `work_order.estimate_approved`, `work_order.part_received`, `sla_clock.warned`, `sla_clock.violated` and `warranty_claim.decided`, in the envelope from [Events & Async Messaging](/docs/architecture/events).
+`items` is the one sellable and stock catalog from [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#how-to-build-it); a part here is an item of kind `part` or `equipment`. Receiving the part order clears a `part_needed` hold and makes the work order schedulable again. The clock's events are the truth, and `due_at`, `met_at` and `violated_at` can be rebuilt from them. The chapter adds outbox events `work_order.estimate_approved`, `work_order.part_received`, `sla_clock.warned`, `sla_clock.violated` and `warranty_claim.decided`, in the envelope from [Events & Async Messaging](/docs/architecture/events).
 
 ## Auditing
 
@@ -282,7 +281,6 @@ The general mechanics are in [Audit Trails](/docs/architecture/audit-trails); fi
 - [Salesforce Trailhead: Create a maintenance plan](https://trailhead.salesforce.com/content/learn/modules/field_service_maint/field_service_maint_plan), calendar, criteria and usage-based rules, and floating work orders
 - [Microsoft Learn: Work order lifecycle and system statuses](https://learn.microsoft.com/en-us/dynamics365/field-service/work-order-status-booking-status), bookings that don't complete the work order, travel charges, billable duration and conversion to customer assets
 - [Microsoft Learn: Not-to-exceed values on work orders](https://learn.microsoft.com/en-us/dynamics365/field-service/work-order-not-to-exceed), price, cost and margin NTEs, automatic selection and warnings that don't block saving
-- [Oracle: Activity booking overview](https://docs.oracle.com/en/cloud/saas/field-service/faaca/c-activitybookingoverview.html), on-call shifts as availability for assignment but not as quota capacity
 
 **In practice**
 

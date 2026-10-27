@@ -2,7 +2,7 @@
 title = "Switching Platforms"
 description = "Moving between field service platforms: what imports and what doesn't, card token transfer, phased cutover, reconciliation, audit and data portability."
 category = "Field Operations Industry"
-order = 1532
+order = 1535
 part = "Running the Platform"
 tags = ["field-operations", "migration", "cutover", "data-portability", "payments", "reconciliation"]
 +++
@@ -52,65 +52,22 @@ ACH is similar: Stripe imports ACH Direct Debit details in the same encrypted fi
 
 ## Identity and Mapping
 
-Every migrated record needs a permanent link to where it came from, kept in a crosswalk of external IDs rather than a `legacy_id` column on each entity. The general rules (one row per source key, IDs kept as text with leading zeros intact, dated links instead of deletes, idempotent re-runs that find rows by source key) are in [Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids). A migration uses that shape, one crosswalk per entity it loads (`account_external_ids`, `property_external_ids`, `agreement_external_ids`, `asset_external_ids`, `payment_method_external_ids`), and adds one column, the batch:
+Every migrated record keeps a permanent link to where it came from, in a crosswalk of external IDs with the batch that created it; the shape, the run log and the rules for closing a wrong link are in [Crosswalks and ID Mapping](/docs/architecture/replacing-systems#crosswalks-and-id-mapping). A field migration needs one crosswalk per entity it loads (`account_external_ids`, `property_external_ids`, `agreement_external_ids`, `asset_external_ids`, `payment_method_external_ids`), and the processor's card mapping file lands in the last one with the old processor as its source, so a token can be traced back to the legacy account.
 
-```sql
-CREATE TABLE agreement_external_ids (
-  tenant_id     UUID NOT NULL,
-  source        TEXT NOT NULL,       -- 'legacy-fsm', 'old-processor'
-  source_xid    TEXT NOT NULL,       -- as the source wrote it
-  agreement_id  UUID NOT NULL REFERENCES agreements (id),
-  linked_at     TIMESTAMPTZ NOT NULL,
-  unlinked_at   TIMESTAMPTZ,
-  link_reason   TEXT NOT NULL,       -- migration | reviewed | merge
-  batch_id      UUID,                -- the load that created the link
-  PRIMARY KEY (tenant_id, source, source_xid, linked_at)
-);
-
--- one open link per source key at a time
-CREATE UNIQUE INDEX agreement_external_ids_open_idx
-  ON agreement_external_ids (tenant_id, source, source_xid)
-  WHERE unlinked_at IS NULL;
-```
-
-- **The batch.** Every link records the load that created it, so a bad batch can be found, compared and re-run, and any value can be traced to the export line it came from. A re-run finds its rows by open source key instead of inserting duplicates.
-- **Wrong links are closed, not fixed in place.** When reconciliation finds a legacy agreement loaded onto the wrong property, the bad link gets `unlinked_at` and a corrected one opens with `link_reason = 'reviewed'`, so the first batch's output still resolves when someone asks why a charge went where it did.
-- **The processor's mapping file lands in `payment_method_external_ids`** with the old processor as its source, so a card token can be traced from the new payment method back through the old processor's ID to the legacy account.
-
-Deduplication happens before the load, with rules the business agrees to, not inside it. FieldRoutes budgets weeks 3 to 8 of its timeline for import and cleanup, with duplicates removed and records verified before go-live. Merge candidates (same standardized address and unit, same name or phone) go to a review queue with thresholds, as in [Review Bands](/docs/architecture/record-linkage#review-bands). Two field rules: never auto-merge two accounts that both have active agreements or cards on file, and a landlord or property manager with fifty properties is one account with fifty properties, not fifty duplicate customers. Merged records keep every source ID in the crosswalk so history from both lands on the survivor.
+Deduplication happens before the load, with rules the business agrees to, and it takes real time (import and cleanup is the largest block in the vendor timelines below). Merge candidates (same standardized address and unit, same name or phone) go to a review queue ([Review Bands](/docs/architecture/record-linkage#review-bands)). Two field rules: never auto-merge two accounts that both have active agreements or cards on file, and a landlord or property manager with fifty properties is one account with fifty properties, not fifty duplicate customers.
 
 ## Big Bang, Phased or Parallel
 
-The engineering literature on replacing systems favors gradual displacement. Martin Fowler's Strangler Fig describes building the new system alongside the old and moving behavior over piece by piece, using **transitional architecture**, "code that will go away once the modernization is complete." Cartwright, Horn and Lewis name the cutover options: **Stop the World cutover**, "suspend normal business activities while cutting over"; **Canary Release** to a subset of users; **Event Interception**, routing some updates to the new component; and parallel run as one of several successful strategies.
+The options, the difference between parallel comparison and parallel operation, and the phases each cohort moves through (transitional load with side effects off, dark launch, cutover with a rollback window, retire) are general, in [Big Bang, Phased or Parallel](/docs/architecture/replacing-systems#big-bang-phased-or-parallel) and [Cutover and the Rollback Window](/docs/architecture/replacing-systems#cutover-and-the-rollback-window). My rule carries over unchanged: phase by cohort, compare each cohort's schedules and invoices against the old system's for one cycle before it goes live, and never let both systems bill or message the same customer. What changes in the field is what a cohort is and when it moves:
 
-For a field service business, those become three practical choices:
-
-- **Big bang.** Everything moves over one weekend, which is a Stop the World cutover. Simple to explain and the only option when the old vendor's contract ends on a date. The risk is that every error surfaces at once, on Monday, on every route.
-- **Phased by cohort.** One branch, one route group or one billing day at a time, which is a Canary Release with the cohort as the subset. Errors found in the first cohort are fixed before the second. The cost is that both systems are live for weeks and the office works in two of them.
-- **Parallel run.** Both systems process the same work and the results are compared. FieldRoutes advises against running paper and digital side by side because it confuses technicians, while migration services sell running alongside the old system as a safety net. Both are right about different things: parallel *comparison* of billing and schedules in the back office is cheap and catches mapping errors, while parallel *operation* in the field, technicians entering work twice, is expensive and error-prone.
-
-My rule: phase by cohort, compare the new system's schedules and invoices for each cohort against the old system's for one cycle before it goes live, and never let both systems bill or message the same customer. The alternative, a big bang with a long rehearsal, is right for a small single-branch business, where a cohort is the whole company anyway. Pick the season too: a lawn or pest company switches in winter, an HVAC company avoids the first heat wave, and a pool company avoids opening season.
+- **A cohort is a branch, a route group or a billing day.** Moving a route group keeps a technician's day in one system; moving a billing day keeps one billing run in one system. A small single-branch business is one cohort, which is when a big bang with a long rehearsal is the right call.
+- **Parallel operation fails in the truck.** FieldRoutes advises against running paper and digital side by side because it confuses technicians, while migration services sell running alongside the old system as a safety net. Both are right about different things: comparing billing and schedules in the back office is cheap, and asking technicians to enter work twice is not. During a phased cutover each technician needs to know which of their routes have moved.
+- **The season picks the date.** A lawn or pest company switches in winter, an HVAC company avoids the first heat wave, and a pool company avoids opening season.
+- **Suppression covers field messages too:** on-my-way texts, service reminders and reminder calls, not just receipts and charges, because a bulk load looks like a burst of real events to the notification service ([Customer Communications](/books/field-operations/customer-communications)).
 
 ![Cutover for one cohort in four phases named after the legacy displacement patterns: transitional load, dark launch, canary cutover and retire, with a loop back to the load when reconciliation finds a break and a rollback window from the canary cutover; the legacy system stays authoritative for the cohort until the cutover and remains a read-only archive afterwards.](/diagrams/fo-switching-platforms-cutover.svg "Each cohort moves through the same phases. The legacy system keeps billing the cohort until the canary cutover, and stays readable as an archive after it is retired.")
 
-Each cohort moves through four phases, each with an owner:
-
-1. **Transitional load.** A full export from the legacy system is archived unchanged with a checksum, then imported with crosswalk entries and agreements with their next dates intact. The crosswalk, the suppression switch and the comparison reports are **transitional architecture** in Fowler's sense: built to be removed. **Every outbound side effect is suppressed**: no welcome texts, reminders, receipts or charges, because a bulk load looks like a burst of real events to the notification service ([Customer Communications](/books/field-operations/customer-communications)).
-2. **Dark launch.** The pattern's definition is to "call a new back end feature without using results"; here the new system computes the cohort's next schedule and invoices, and nothing is sent or charged. The checks below compare its output with the legacy system's. A break loops back to the mapping and the load.
-3. **Canary cutover.** The legacy system stops scheduling, billing and charging this cohort, and its recurring billing is cancelled or paused; a final delta export catches anything that changed since the load. The new system schedules, bills and messages the cohort, while the remaining cohorts stay on the legacy system. A rollback window (a defined number of days) keeps the legacy records untouched so the cohort can be reverted.
-4. **Retire.** Once the rollback window closes for the last cohort, the legacy system is strangled in the Strangler Fig sense: nothing runs there any more, and what remains is a read-only archive kept for the retention period.
-
-## Reconciliation
-
-A migration is correct when the business can prove it, cohort by cohort, before go-live. The checks:
-
-- **Counts by type and status.** Active accounts, properties, active agreements by plan, equipment records, open invoices, payment profiles: legacy export vs new system, with every difference explained.
-- **Sums.** Total open AR, AR by aging bucket, prepaid balances, deferred revenue on prepaid agreements, and monthly recurring value by plan. Money must match to the cent ([Money](/docs/payments/money)).
-- **Next dates.** For every agreement, next service date and next bill date in both systems. A shift of one day across thousands of agreements is a time zone or end-of-month bug, not noise ([Time](/docs/fundamentals/time)).
-- **Payment profiles.** Every customer on autopay in the legacy system has a default payment method in the new one; the mapping file's last four digits and expiry match the legacy record.
-- **Shadow cycle.** The new system's generated schedule and invoices for the next cycle, compared line by line with the legacy system's.
-- **Samples.** A human reads twenty full accounts end to end, chosen to include the oddest plans, multi-property customers, commercial contracts and accounts in collections.
-- **After go-live.** Approval rates on the first recurring run, declines by code, refunds for double charges, and inbound "why was I charged" calls are the post-cutover signals; Stripe names `do_not_honor` and `generic_decline` as the codes a new merchant ID tends to raise.
+Reconciliation is the gate between dark launch and cutover; the general checks (counts, sums to the cent, credentials, a shadow cycle, people reading samples) are in [Reconciliation](/docs/architecture/replacing-systems#reconciliation). The field checks on top: next service date and next bill date for every agreement in both systems, remaining visits and paid-through dates on prepaid plans, equipment counts per property, and a sample that includes multi-property customers, commercial contracts with open SLA clocks and accounts in collections. After go-live, watch the first recurring run's approval rate and declines by code; Stripe names `do_not_honor` and `generic_decline` as the codes a new merchant ID tends to raise.
 
 ## Who Does the Conversion
 
@@ -147,13 +104,12 @@ A migration rewrites every record in the business at once, which makes it the ev
 
 ## Lock-In and Data Portability
 
-Switching cost is set by what the old system lets you take. Three layers decide it:
+What decides switching cost in general (self-serve exports, APIs, credentials) is in [Vendor Exports and Lock-In](/docs/architecture/replacing-systems#vendor-exports-and-lock-in). The field vendors' reality:
 
-- **Self-serve exports.** FieldRoutes' Customer Report exports selected fields such as contact details and account balance to CSV in batches. Exports built for spreadsheets rarely carry history, agreements, equipment or regulated records.
-- **APIs and connectors.** FieldRoutes publishes an API reference covering customers, subscriptions, appointments, tickets, payments, chemical uses and changelogs, and Fivetran syncs ServiceTitan data into a warehouse. Access terms differ: PestPac's API is limited to customers or approved developers with a one-time setup fee, and Briostack's public API is tiered by request volume. An API with rate limits and paid access is portability in principle, priced in practice.
-- **Payment credentials.** Card portability depends on the processor's export policy and who holds the tokens. Stripe notes the previous processor "might be contractually obligated to release your data on request"; read that clause before signing, not when leaving.
+- **Self-serve exports are spreadsheets.** FieldRoutes' Customer Report exports selected fields such as contact details and account balance to CSV in batches; exports like it rarely carry history, agreements, equipment or regulated records.
+- **APIs exist, on terms.** FieldRoutes publishes an API reference covering customers, subscriptions, appointments, tickets, payments, chemical uses and changelogs, and Fivetran syncs ServiceTitan data into a warehouse. PestPac's API is limited to customers or approved developers with a one-time setup fee, and Briostack's public API is tiered by request volume. An API with rate limits and paid access is portability in principle, priced in practice.
 
-If you build the platform, make leaving straightforward, because it is the honest version of the same features customers need anyway: a full tenant export (every entity, every version, history, equipment and regulated records, in documented formats), a stable API with bulk export, a written commitment to cooperate with PAN export through your processor, and a retention policy for a departed tenant's data that covers their record-keeping obligations ([Data Retention](/docs/architecture/data-retention)). The same export powers your own onboarding tool when you import from it in reverse, and a migration-grade importer with validation, a failure file and a dry run is a sales asset ([Platform Architecture](/books/field-operations/platform-architecture)).
+If you build the platform, the exit you owe tenants is in [Plan the Exit Before You Enter](/docs/architecture/replacing-systems#plan-the-exit-before-you-enter); the field addition is that the tenant export includes equipment and regulated records (pesticide applications, inspection reports) with their original values, because the tenant's record-keeping obligations outlast its subscription ([Platform Architecture](/books/field-operations/platform-architecture)).
 
 ## What This Means for the System You Build
 
@@ -169,11 +125,6 @@ If you build the platform, make leaving straightforward, because it is the hones
 - **Portability out.** Full tenant export, bulk API and cooperation with processor PAN export.
 
 ## References
-
-**Reference**
-
-- [Martin Fowler: Strangler Fig](https://martinfowler.com/bliki/StranglerFigApplication.html), gradual replacement of a legacy system and transitional architecture
-- [Cartwright, Horn and Lewis: Patterns of Legacy Displacement](https://martinfowler.com/articles/patterns-legacy-displacement/), Transitional Architecture, Dark Launching, Canary Release, Stop the World cutover, Event Interception, parallel run
 
 **In practice**
 

@@ -2,7 +2,7 @@
 title = "AI in Field Operations"
 description = "AI in field service: call answering and booking against live capacity, coaching, dispatch, summaries and diagnostics, what vendors ship, law and audit."
 category = "Field Operations Industry"
-order = 1530
+order = 1533
 part = "Running the Platform"
 tags = ["field-operations", "ai", "voice", "scheduling", "compliance", "audit"]
 +++
@@ -23,7 +23,7 @@ In field service, three parts of that shape carry most of the weight.
 
 **The trades have emergencies that skip the model.** Gas smell, carbon monoxide alarm, active flooding, no heat in a freeze, a sparking panel: deterministic triggers (keywords, a menu option, a dedicated line) transfer to a person or page the on-call technician, and the model's next turn isn't consulted. Some AI-native vendors sell exactly this: Broccoli AI, built for plumbing and HVAC companies, lists emergency alerts to technicians beside phone answering and booking. The greeting can say emergencies go straight to a person, which also tells the caller what to do.
 
-The rest is general: identity verification proportional to the action, payment by link so the model never hears a card number ([Phone Payments](/books/payments/phone-payments)), handoff with the summary and transcript, and evals before every prompt, model or tool change, graded against the schedule's state ([AI Agents in the Product](/docs/architecture/ai-agents#evals)). Two field details on evals: count only bookable calls toward booking rate, as ServiceTitan's Voice Intelligence does, or a wave of wrong numbers and out-of-area calls looks like a collapse; and include callers the trades actually get, such as a landlord booking for a tenant, a caller who doesn't know the equipment's make, and a Spanish speaker.
+The rest is general: identity verification proportional to the action, payment by link so the model never hears a card number ([Phone Payments](/books/payments/phone-payments)), handoff with the summary and transcript, and evals before every prompt, model or tool change, graded against the schedule's state ([AI Agents in the Product](/docs/architecture/ai-agents#evals)). Two field details on evals: count only bookable calls toward booking rate ([Operating Metrics](/books/field-operations/operating-metrics#sales-and-memberships)), as ServiceTitan's Voice Intelligence does, or a wave of wrong numbers and out-of-area calls looks like a collapse; and include callers the trades actually get, such as a landlord booking for a tenant, a caller who doesn't know the equipment's make, and a Spanish speaker.
 
 ## Use Cases, and What's Real
 
@@ -81,9 +81,11 @@ This is a summary for engineers, not legal advice; the rules vary by state and c
 - **Recording in the home is still recording.** Federal law needs one party's consent, but a minority of states require every party's, and in-home sales recording falls under the same statutes as calls. ServiceTitan's Field Pro documentation says "two-party consent states require you to inform the customer before recording begins," and Rilla lists the states where the customer must be told. The design that works everywhere: announce recording at the start of every call and every in-home conversation, and record the announcement ([Recording Calls](/docs/compliance/consumer-contact#recording-calls)).
 - **Disclosing AI.** ServiceTitan's docs note that telling callers they're speaking with AI "is a legal requirement in some locations." State laws differ in trigger and scope; the one behavior that satisfies them is the agent saying it's AI at the start of every call (as Housecall Pro's does) and answering honestly when asked ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)).
 
+My default is one script for every call and every recorded visit, everywhere: announce the recording and the AI at the start. One script is easier to get right than a map of states, and no caller is harmed by knowing. The alternative, disclosing only where required, saves a few seconds per call and adds a jurisdiction lookup that has to be right every time, including for the customer whose number has a different area code from the property.
+
 What the agent promises binds the business, and transcripts and recordings are personal data with retention and erasure; [AI Agents in the Product](/docs/architecture/ai-agents#the-ai-s-promises-are-the-business-s-promises) covers both. In field service the promise is usually a price or an arrival time, so the agent quotes only from the pricebook and the availability engine, and a job that needs a site visit to price gets a visit, not a number. Vendors differ on where recordings go: ServiceTitan's Atlas page says conversations may be stored and shared with third-party service providers, and Siro says its AI providers are contractually barred from training on its data.
 
-## Auditing AI Actions
+## Auditing
 
 When a customer says "your system cancelled my termite treatment" or a state inspector asks who recorded an application, "the AI did it" must be the start of an answer, not the end. The vendors show the floor: Jobber keeps a transcript and recording of every conversation for admins; ServiceTitan keeps call details with overview, transcript and playbook tabs; Dynamics' agent feed separates tasks completed by agents from tasks completed by users, and its insights chart shows the split over 7, 14 or 30 days.
 

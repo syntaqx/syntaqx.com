@@ -2,7 +2,7 @@
 title = "Platform Architecture"
 description = "How field platforms are built: vendor data models, monolith or services, multi-tenancy, webhooks and APIs, geospatial, time zones, sync and extensibility."
 category = "Field Operations Industry"
-order = 1529
+order = 1532
 part = "Running the Platform"
 tags = ["field-operations", "architecture", "data-model", "multi-tenancy", "webhooks", "integrations"]
 +++
@@ -36,11 +36,11 @@ The literature offers a short list of shapes, and the market has examples of eac
 | Vertical SaaS plus marketplace | A fixed domain model, extended by partner apps over an API | FieldRoutes, ServiceTitan, simPRO | Deep fit for one trade, partners fill gaps | Integration seams, data synced across products |
 | Single integrated system | One codebase owns every function, including AI agents | Some AI-native entrants | No sync between tools, one release cycle | Must build everything; less room for best-of-breed |
 
-Martin Fowler's **monolith first** argument applies directly: microservices carry a premium that slows small teams, and "you cannot assume that you can take an arbitrary system and break it into microservices"; you learn the right boundaries inside a modular monolith before you pay to lock them in. Solea's comparison page makes the integrated case in market terms ("One team builds all of it, so there's nothing to connect or keep in sync"), and the marketplace model makes the opposite bet: FieldRoutes' partner marketplace lists AI call answering from Avoca, and simPRO's lists a maintenance planner, because no single vendor ships every capability first.
+Why to start with a modular monolith and when to split is in [Service Boundaries](/docs/architecture/service-boundaries#start-with-a-modular-monolith). The field market argues the product-level version of the same question: Solea's comparison page makes the integrated case in market terms ("One team builds all of it, so there's nothing to connect or keep in sync"), and the marketplace model makes the opposite bet: FieldRoutes' partner marketplace lists AI call answering from Avoca, and simPRO's lists a maintenance planner, because no single vendor ships every capability first.
 
-Inside the monolith, the modules need boundaries, and domain-driven design gives the vocabulary. Fowler's summary of the **bounded context**: "DDD divides up a large system into Bounded Contexts, each of which can have a unified model," and "different contexts may have completely different models of common concepts." A property is a point and a service window to scheduling, a tax jurisdiction to billing, and a regulated application site to compliance. Where to draw the lines is a judgment, and there is no single right split. One option is to start from where the vendors already draw them in the table above (customer and place, the recurring source, the work, the resource and its territory and skills). Other teams split by product line or by team ownership instead. Whatever you choose, give each module its own tables and let others reach it only through interfaces and events, so a later extraction isn't a rewrite.
+Inside the monolith, the modules are **bounded contexts**, each with its own model of common concepts (Fowler's term): a property is a point and a service window to scheduling, a tax jurisdiction to billing, and a regulated application site to compliance. Where to draw the lines is a judgment. One option is to start from where the vendors already draw them in the table above (customer and place, the recurring source, the work, the resource and its territory and skills); others split by product line or by team ownership. Either way each module owns its tables, as [Every Piece of Data Has One Owner](/docs/architecture/service-boundaries#every-piece-of-data-has-one-owner) describes.
 
-My default is a modular monolith, peeling out only what has a genuinely different runtime profile:
+My default is a modular monolith, peeling out only what has a genuinely different runtime profile in field work:
 
 - **The optimizer.** CPU-heavy and asynchronous at every vendor that documents it (Onfleet, Spoke and OptimoRoute return a job ID and report completion later). Run it as a queue-fed worker pool ([Route Optimization](/books/field-operations/route-optimization)).
 - **The messaging gateway,** with its own carriers, rate limits and consent rules ([Customer Communications](/books/field-operations/customer-communications)).
@@ -105,20 +105,14 @@ Content-Type: application/json
 
 Public API terms range widely, and they shape what partners can build. ServiceTitan limits calls per application per tenant and throttles reporting separately, Spoke limits route optimizations apart from reads and writes, Briostack sells request tiers, and FieldRoutes publishes its whole API reference openly, down to chemical uses, doors and knocks.
 
-Design rules that follow: limit per application per tenant; return 429 with `Retry-After`; give bulk work an asynchronous import job instead of single-record loops; paginate with opaque cursors; version deliberately ([Versioning & Deprecation](/docs/api-design/versioning)); and authenticate partners with OAuth client credentials scoped to the tenants that installed them ([API Authentication](/docs/api-design/authentication)).
+The general rules are in the playbook: limits reported on every response with `RateLimit-Policy` and `RateLimit`, and a 429 with `Retry-After` when over ([Rate Limiting](/docs/requests/rate-limiting#headers)); opaque cursors in the `Link` header ([Pagination](/docs/requests/pagination)); batch endpoints and asynchronous jobs instead of single-record loops ([Bulk Operations](/docs/requests/bulk-operations), [Long-Running Operations](/docs/requests/long-running-operations)); deliberate versions ([Versioning & Deprecation](/docs/api-design/versioning)); and OAuth client credentials scoped to the tenants that installed the app ([API Authentication](/docs/api-design/authentication)). What the field adds is the key and the budgets: key limits on the application and the tenant together, since one partner serves many businesses and one business runs many partners, and give the expensive operations their own budgets, as ServiceTitan does for reporting and Spoke for optimization. A season-start import of a branch's customers or a nightly route solve is a job, not a burst of calls.
 
-## The Geospatial Stack
+## Geography and Time
 
-- **Store points as geography.** In PostGIS, `ST_DWithin` on the geography type takes meters and uses spatial indexes as a bounding-box prefilter, so "properties within 2 km of this tech" is one indexed query. Keep the geocode's source and precision (rooftop, parcel, street interpolation, ZIP centroid) on the property, because a ZIP-centroid geocode will route a technician to the middle of a neighborhood ([Accounts & Properties](/books/field-operations/customers-and-properties)).
-- **Territories as polygons or as lists.** Bringg defines service areas by map or by ZIP code; Salesforce assigns each work order one service territory. Support both, and resolve a property to its territory once, on save, recording which rule matched.
-- **Distance is not drive time.** Straight-line distance filters candidates; slot offers and ETAs need a road-network engine.
+Service points, geocode precision and the technician's pin are in [Customers, Accounts & Properties](/books/field-operations/customers-and-properties#addresses-for-service-work); territories as polygons or ZIP lists, resolved with PostGIS, are in [Territories & Capacity](/books/field-operations/territories-and-capacity#point-in-polygon-with-postgis); and the rules for instants, local times and zones are in [Time & Date Formats](/docs/fundamentals/time). What the platform layer has to hold together:
 
-## Time and Time Zones
-
-The playbook's rules (UTC instants, future local times stored as local time plus an IANA zone, never an offset) are in [Time & Date Formats](/docs/fundamentals/time). Field operations adds:
-
-- **Visit windows are local wall-clock promises.** "Tuesday 8 to noon" means 8 at the property, wherever the dispatcher sits. Store the window as local time plus the property's IANA zone, as the [core model](/books/field-operations/field-operations-business#the-core-data-model) does, and compute instants for routing and sorting, recomputed when the time zone database changes. ServiceTitan keeps a time zone on each location record, which is the right grain: the property, not the company, since one branch's territory can cross a zone line.
-- **Recurrence runs in local time.** "Every other Tuesday" survives a daylight-saving change only if it's expanded in the property's zone (iCalendar `RRULE` with a `TZID`), not as a fixed interval of hours ([Recurring Schedules](/books/field-operations/recurring-schedules)).
+- **Distance is not drive time.** Straight-line distance (`ST_DWithin` on geography, in meters) filters candidates; slot offers and ETAs need a road-network engine.
+- **The zone belongs to the property.** Visit windows are wall-clock promises at the property, stored as local time plus its IANA zone as the [core model](/books/field-operations/field-operations-business#the-core-data-model) does, and recurrences expand in that zone ([Recurring Schedules](/books/field-operations/recurring-schedules#rfc-5545-as-the-rule-language)). ServiceTitan keeps a time zone on each location record, which is the right grain, since one branch's territory can cross a zone line.
 - **Nightly generation and optimization run per business date,** in the branch's local time, idempotent per date, across the clock change ([Background Jobs](/docs/architecture/background-jobs#scheduling)).
 
 ## Roles and Permissions
@@ -140,13 +134,13 @@ Technicians work in basements, crawl spaces and rural routes. The enterprise ven
 | Dynamics 365 | Offline profile per table, sync from 5 minutes to 1 day | Table level, not field level; by default the technician's offline change wins, or a setting makes the dispatcher's win |
 | ServiceNow | Write-back actions queued in an outbox and replayed in order | A failed action is marked and not retried; conflicts are handled server side by administrators |
 
-Build the client as a queue of commands replayed in order, and decide conflicts per command type: facts from the field win (what was applied, photos, times), plans from the office win (assignments, schedule), and state transitions in conflict go to review ([Offline-First Sync](/docs/architecture/offline-sync#conflicts-choosing-who-wins)). Keep money server-authoritative. [The Technician App](/books/field-operations/technician-app) covers the field client, and [Mobile Releases](/docs/delivery/mobile-releases) the fact that old app versions keep syncing for months.
+The design (commands replayed in order, conflicts decided per command type) is in [Offline-First Sync](/docs/architecture/offline-sync#conflicts-choosing-who-wins), and the field rule for who wins is in [Conflicts in Field Work](/books/field-operations/technician-app#conflicts-in-field-work). At the platform layer, keep money server-authoritative and plan for [Mobile Releases](/docs/delivery/mobile-releases): old app versions keep syncing for months, so the server accepts every command version still in the field.
 
 ## Extensibility
 
 No two field businesses track exactly the same things, so every platform eventually grows three extension points:
 
-- **Custom fields.** Salesforce stores customer-defined objects and fields as metadata; Jobber offers property-level custom fields. Build custom fields as a definitions table (name, type, validation, which record type, who may edit) plus typed values (a JSONB column validated against the definition works), indexed where they're filtered on. Custom fields must flow into the API, exports, webhooks and the audit trail, or customers can't trust them.
+- **Custom fields.** Salesforce stores customer-defined objects and fields as metadata; Jobber offers property-level custom fields. The design (definitions, validation, indexing, and values that reach the API, exports, webhooks and the audit trail) is in [Custom Fields](/docs/architecture/custom-fields). In field work most of them land on the property and the visit (a gate code, a pool's volume, a commercial site's PO number), and the ones a technician fills in need to sync offline and validate on the device, not only on the server.
 - **Workflows.** "When a termite inspection finds activity, create a treatment estimate." Run rules as asynchronous subscribers to your domain events, with budgets; Salesforce's governor limits show why customer logic on a shared platform needs them.
 - **Marketplaces.** A public API, OAuth app installs per tenant, webhooks, and a listing with a review process. Avoca describes itself as a ServiceTitan "Certified App" and appears on FieldRoutes' marketplace; simPRO lists partner apps on its own. Certification is where you enforce scopes, rate limits and data handling before a partner reaches customer data.
 
@@ -166,8 +160,8 @@ The field records regulators and courts ask for are in [Audit Trails & Records](
 - **Start as a modular monolith** and peel out the optimizer, messaging, sync, reporting and webhook delivery when their load demands it.
 - **Scope every row by tenant and, where rules differ, by branch,** and queue nightly work per tenant with fairness.
 - **Send events through an outbox** with the channel and both times; verify each inbound vendor's scheme and receive idempotently.
-- **Store geography with provenance** and keep the property's IANA zone for windows and recurrences.
-- **Sync commands, not rows,** with conflicts decided per command type and money server-authoritative.
+- **Keep the property's IANA zone** for windows and recurrences, and use drive time, not distance, for offers.
+- **Sync commands, not rows,** per [Conflicts in Field Work](/books/field-operations/technician-app#conflicts-in-field-work), with money server-authoritative.
 - **Make custom fields first-class** and audit centrally, with the channel (offline included) and optimizer runs as records.
 
 ## References
@@ -179,8 +173,7 @@ The field records regulators and courts ask for are in [Audit Trails & Records](
 
 **Reference**
 
-- [Martin Fowler: MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html), the microservice premium, and why boundaries are learned inside a modular monolith
-- [Martin Fowler: BoundedContext](https://martinfowler.com/bliki/BoundedContext.html), dividing a large system into contexts, each with a unified model, and different models of common concepts
+- [Martin Fowler: BoundedContext](https://martinfowler.com/bliki/BoundedContext.html), contexts with different models of common concepts
 - [PostGIS: ST_DWithin](https://postgis.net/docs/ST_DWithin.html), meters on geography and index-assisted distance filtering
 - [Stripe: Receive events in your webhook endpoint](https://docs.stripe.com/webhooks), timestamped signatures, three days of retries, no ordering guarantee, and rolled secrets kept valid for up to 24 hours with one signature per secret
 

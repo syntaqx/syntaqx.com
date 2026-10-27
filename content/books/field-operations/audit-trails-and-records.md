@@ -2,7 +2,7 @@
 title = "Audit Trails & Records"
 description = "Audit trails applied to field service: who asks for records, what vendors expose, field retention, snapshots, e-sign evidence, offline capture and production."
 category = "Field Operations Industry"
-order = 1519
+order = 1520
 part = "The Rules"
 tags = ["field-operations", "compliance", "audit", "records", "retention"]
 +++
@@ -150,11 +150,10 @@ Legal holds, scoped exports and hash manifests are covered in [Producing Records
 
 ## What Goes Wrong
 
-- **History that covers some fields.** Visit status is tracked, but the product rate, the price or the clock-out time isn't.
+The general failures (partial field coverage, "system" as the actor, retention left in a vendor setting, purges that ignore holds) are listed in [Audit Trails](/docs/architecture/audit-trails#what-goes-wrong); in field work the missing field is usually the product rate or the clock-out time. What field records add:
+
 - **Server time only,** so offline work shows the sync time and a technician appears to treat six houses in the same minute.
-- **"System" as the actor** for everything automated, with no way to tell a trigger rule from a data fix, an import or an AI agent.
 - **Foreign keys instead of snapshots,** so last year's application records change when this year's label or license does.
-- **Retention in a vendor setting nobody reviews:** 90 days of activity in one tool, a year in another, gone before the dispute arrives.
 - **A visit purged as one unit,** taking a regulated application record with it.
 
 ## Auditing

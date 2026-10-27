@@ -1,7 +1,7 @@
 +++
 title = "Weighing the Routing Objective"
 nav_title = "Weighing the Objective"
-description = "Folding drive time, miles, overtime, lateness, skipped work and fairness into one solver cost: levels, real prices, profiles, units and calibration."
+description = "Pricing a field routing objective: labor and mileage rates, time versus distance, metro and rural profiles, a worked example and the pitfalls."
 category = "Field Operations Industry"
 order = 1511
 part = "Scheduling and Routing"
@@ -14,11 +14,9 @@ A solver minimizes one number. Everything the business cares about (drive time, 
 
 ## Two Ways to Fold
 
-There are two ways to fold. A **weighted sum** puts every term on one scale: cost equals so much per hour, plus so much per mile, per overtime hour and per minute late, plus a penalty for each skipped visit. Any term can be traded for enough of any other, which is the point: ten more minutes of driving is worth it if it saves a 30-minute late arrival, and the weights say exactly when. A **lexicographic** objective ranks the terms instead: minimize the top level first and use the next only to break ties. Timefold scores plans this way, in hard, medium and soft levels; its docs show a plan with no hard violations and a soft score of -1,000,000 beating one that breaks a hard rule with a soft score of 0. Dynamics' ranked goals work the same way. Inside a level, Timefold multiplies each constraint's match score by its weight (1 by default for active soft constraints; 0 switches one off) and takes overrides per dataset under `config.model.overrides` or from a saved configuration profile.
+The general choice, a **weighted sum** that prices every term on one scale or a **lexicographic** objective that ranks them in levels, and why most designs use both, is in [Two Ways to Fold](/docs/architecture/weighing-objectives#two-ways-to-fold). Field routing engines land on the same shape: Timefold scores plans in hard, medium and soft levels, with unassigned visits on the medium level and priced costs at the bottom, while Dynamics' RSO ranks its goals instead of weighting them. The level arrangement has a field cost: with unassigned visits above travel, the solver will add two hours of driving to place one low-priority inspection.
 
-Levels are easy to reason about and blunt: with unassigned visits on the medium level, the solver will add two hours of driving to place one low-priority inspection. A weighted sum prices everything, which means someone has to set the prices, and a bad one changes behavior without any error. Most designs end up with both: rules that must hold at the top, unserved work in the middle (Timefold's arrangement) and a weighted sum of everything else at the bottom.
-
-In a weighted sum, magnitudes interact. A skip penalty is the price at which the solver may sell a visit. If serving an outlying stop takes a 50-minute detour of 40 miles, and a minute of labor costs $0.75 and a mile $0.76 (the illustrative rates below), the detour costs 50 × 0.75 + 40 × 0.76 = $67.90. A skip penalty of $50 tells the solver to drop that customer, and nothing in the output says the weights did it. Google's Route Optimization API makes the safe choice the default: a shipment with no `penalty_cost` must be performed, and when one is set, it must be in the same unit as every vehicle cost.
+Inside the bottom level, magnitudes interact. A skip penalty is the price at which the solver may sell a visit. If serving an outlying stop takes a 50-minute detour of 40 miles, and a minute of labor costs $0.75 and a mile $0.76 (the rates below), the detour costs 50 × 0.75 + 40 × 0.76 = $67.90. A skip penalty of $50 tells the solver to drop that customer, and nothing in the output says the weights did it. Google's Route Optimization API makes the safe choice the default: a shipment with no `penalty_cost` must be performed.
 
 ## Time Is Not Distance
 
@@ -40,6 +38,8 @@ Every engine has a place for those numbers:
 
 A few details matter. Google's `cost_per_hour` also charges waiting and visit time, so it's where paid labor goes; `cost_per_traveled_hour` is for costs that accrue only while moving. In OR-Tools the arc cost is whatever the callback returns, so a money objective is one callback that prices a leg's seconds and meters together, and balance is a separate lever: the VRP guide sets a global span coefficient of 100, which "makes the global span the predominant factor in the objective function" and so minimizes the longest route. Timefold penalizes travel per second and distance per meter, units that can't be compared without weights, and its docs say the two goals are not typically used together; pick one, or convert both to money before they reach the solver. Salesforce states the trade-off in plain words: ASAP "can contradict other objectives," because the earliest slot often means more travel.
 
+Price every term in money and per leg, scaled to integers where the engine needs them ([One Unit, Preferably Money](/docs/architecture/weighing-objectives#one-unit-preferably-money); [Integer Scaling](/docs/architecture/weighing-objectives#integer-scaling)). At $0.76 a mile a per-meter price rounds to zero cents, while a 6,400-meter leg priced in one step is 302 cents.
+
 ## Why Places Weigh Differently
 
 The right ratio depends on where the trucks drive and who drives them:
@@ -48,7 +48,7 @@ The right ratio depends on where the trucks drive and who drives them:
 - **Rural and sprawling branches** spend hours on highway legs where the fastest and shortest routes diverge most, and fuel is a large share of cost. Weight distance more, and check the first and last legs from technicians' homes, which can dominate the day.
 - **Electric fleets** cost less per mile but have range and charging time. Range is a limit, not a price.
 - **Toll regions** need tolls on the arc as money, or a toll-avoiding matrix, chosen deliberately.
-- **Overtime-heavy or union labor** makes the overtime premium the dominant term; pair a steep overtime cost with soft and hard shift ends ([Route Optimization](/books/field-operations/route-optimization#how-to-build-it-the-problem-you-hand-the-solver)), and encode any seniority or route rules the agreement sets as rules, not weights.
+- **Overtime-heavy or union labor** makes the overtime premium the dominant term; pair a steep overtime cost with soft and hard shift ends ([Route Optimization](/books/field-operations/route-optimization#how-to-build-it)), and encode any seniority or route rules the agreement sets as rules, not weights.
 - **High-value commercial work** carries SLA credits or contract risk for lateness, so lateness penalties outweigh travel.
 - **Seasonal peaks** trade efficiency for throughput. Salesforce's High Intensity policy ranks travel minimization and grouping first to get through as many appointments as possible, for periods such as storms, and dispatchers switch policies during the day as conditions change.
 
@@ -97,30 +97,11 @@ The numbers here are illustrative. One technician, six stops, 270 minutes of ser
 
 The distance-weighted plan saves 34 miles and costs $30.41 more, because the extra hour of driving pushes the day into overtime. The comparison isn't fixed, though. The labor difference is $56.25, so the shorter route wins once a mile costs more than $56.25 ÷ 34, about $1.65. At $2.00 a mile (a heavy truck, illustrative), the time-weighted plan costs $337.50 + $184.00 = $521.50 and the distance-weighted one $393.75 + $116.00 = $509.75. Neither single-term weighting is right; the cost ratio decides, and a solve with both terms in money would choose between these routes, or find a third that beats both.
 
-## Units and Scaling
-
-Convert every term to one unit before it reaches the solver, and money is the one people can check: cents per minute of labor, per mile, per minute late, per minute of fairness spread, per skipped visit. Terms that aren't money by nature (a preferred technician, an even day) still get a price, which forces the useful question of what each is worth.
-
-Engines that work in integers need care. OR-Tools "does all computations with integers," so its callbacks must return integer costs. Price per leg, not per unit: $0.76 a mile is about 0.047 cents a meter, which rounds to zero, while a 6,400-meter leg priced in one step is 302 cents. Scale to cents or tenths of a cent, and keep the largest possible total well inside the integer range. Timefold caps weights at one trillion, so its scales have a ceiling too.
-
-Then watch for one term swamping the rest. A balance term that is predominant by design, like the guide's span coefficient of 100, is fine if you meant it; a lateness price set in dollars beside travel set in cents is not. Report each run's cost by term; if one term is nearly all of it and the others barely move when their weights change, the profile isn't doing what it says.
-
-## Calibrating and Testing Weights
-
-Set weights by experiment:
-
-- **Replay history.** Take snapshots of real days (the optimization audit trail keeps them) and re-solve each under the candidate profile, with the same inputs and time limit. Include calm days, storms and short-staffed days.
-- **Compare a scorecard, not a total.** Drive hours, miles, stops per hour, window adherence, overtime hours, unassigned visits and fairness spread, per branch and per technician. The objective value can't be compared across profiles, because the profile defines it.
-- **Look at the frontier.** Plot profiles on two axes that conflict (cost against window adherence, or drive time against fairness spread). Profiles worse on both are out; choosing among the rest is a business decision, so make it deliberately.
-- **Change one weight at a time,** so a result can be traced to a cause.
-- **Compare distributions.** Skedulo and Bringg both document different results between runs on the same data, and a time-limited search can stop at a different point on a busier machine, so solve each day several times per profile. A 2% gain inside run-to-run noise isn't a gain.
-- **Replay is not an A/B test.** Routing days can't be split between profiles without the halves competing for the same technicians, which is the interference problem in [Experimentation](/docs/telemetry/experimentation#interference-and-network-effects); replay and shadow runs avoid it.
-- **Shadow before switching.** Run the new profile beside the live one for a branch for a few weeks, publish only the live plan, and compare both with what happened. Then switch on an effective date. Timefold's configuration profiles exist for the same comparison: to see how different priorities change the solution.
-
 ## Pitfalls
 
+Weights are set by replay and shadow runs, not by meeting ([Calibrating Weights](/docs/architecture/weighing-objectives#calibrating-weights); [Replay and Shadow Testing](/docs/architecture/weighing-objectives#replay-and-shadow-testing)). For routing, replay a season of real days from the optimization audit trail, including storms and short-staffed days, and compare a scorecard of drive hours, miles, stops per hour, window adherence, overtime, unassigned visits and fairness spread. Routing days can't be split between profiles without the halves competing for the same technicians, and Skedulo and Bringg both document different results between runs on the same data, so solve each day several times per profile and shadow a branch for a few weeks before switching on an effective date. What goes wrong:
+
 - **Weights that encode hidden policy.** A low skip penalty for low-revenue customers, or a preference that keeps one technician off a neighborhood, is a business decision made in a number. Name it, and have someone accountable approve it.
-- **Tuning to last week.** A profile fitted to one storm or one short-staffed week overfits. Replay a season.
 - **Ignoring what dispatchers override.** If dispatchers keep moving the same kind of visit, the weights disagree with them. Override rates by reason ([Operating Metrics](/books/field-operations/operating-metrics#route-efficiency)) are the best calibration signal you have.
 - **Fairness that holds only on average.** Equal mean route minutes can hide one technician who gets every long Friday drive. Measure the worst technician over several weeks, not the branch average, and where pay is commissioned ([Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions)), measure revenue per technician too.
 
@@ -148,12 +129,10 @@ Recording which rule version decided is covered in [Rules as Data](/docs/archite
 
 - [IRS: Standard mileage rates](https://www.irs.gov/tax-professionals/standard-mileage-rates), the 2026 business rates of 72.5 cents a mile through June 30 and 76 cents from July 1
 - [Google OR-Tools: Vehicle Routing Problem](https://developers.google.com/optimization/routing/vrp), the arc cost evaluator and a global span coefficient that minimizes the longest route
-- [Google OR-Tools: Traveling Salesperson Problem](https://developers.google.com/optimization/routing/tsp), integer-only computation and rounding of distances
 - [VROOM: API documentation](https://github.com/VROOM-Project/vroom/blob/master/docs/API.md), vehicle costs (fixed, per hour, per km) and their defaults, and priority
-- [Timefold: Constraints](https://docs.timefold.ai/field-service-routing/latest/user-guide/constraints), hard, medium and soft levels, constraint weights, overrides and the weight cap
+- [Timefold: Constraints](https://docs.timefold.ai/field-service-routing/latest/user-guide/constraints), hard, medium and soft levels
 - [Timefold: Route optimization](https://docs.timefold.ai/field-service-routing/latest/vehicle-resource-constraints/route-optimization), travel time per second, travel distance per meter and why they're rarely combined
-- [Timefold: Metrics and optimization goals](https://docs.timefold.ai/field-service-routing/latest/user-guide/metrics-and-optimization-goals), goals as relative constraint weights and configuration profiles for comparing them
-- [Google Maps Platform: ShipmentModel](https://developers.google.com/maps/documentation/route-optimization/reference/rest/v1/ShipmentModel), vehicle cost per hour, per traveled hour and per kilometer, fixed cost, penalty cost and one cost unit
+- [Google Maps Platform: ShipmentModel](https://developers.google.com/maps/documentation/route-optimization/reference/rest/v1/ShipmentModel), vehicle cost per hour, per traveled hour and per kilometer, fixed cost, and a shipment with no penalty treated as mandatory
 - [Routific: Options](https://docs.routific.com/docs/options), default objective, shortest distance, balance and minimum vehicles
 - [Esri: Vehicle Routing Problem service](https://developers.arcgis.com/rest/services-reference/enterprise/vehicle-routing-problem-service/), cost per unit time, distance and overtime, fixed cost and order revenue
 

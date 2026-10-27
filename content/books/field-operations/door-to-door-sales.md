@@ -2,16 +2,16 @@
 title = "Door-to-Door Sales"
 description = "Selling at the door: canvass areas, the knock log and door statuses, property data, propensity scores, Do Not Knock lists, data licensing and rep safety."
 category = "Field Operations Industry"
-order = 1520
+order = 1522
 part = "Selling"
 tags = ["field-operations", "sales", "door-to-door", "geospatial", "lead-scoring", "compliance"]
 +++
 
-Most field service companies sell through a website, a phone line, referrals and paid leads. A minority grow at the front door: a rep walks a neighborhood, knocks on every house, and signs an agreement on a tablet in the driveway. Pest control is the best-known case; solar, security, storm roofing, lawn care and fiber do it too. It works for recurring service because every house signed on a street makes that route denser. It's hard because it runs on thin information at speed: hundreds of doors a day per rep, most of them "not home" or "no", under local solicitation ordinances, on patchy signal. The software is a geospatial system first, a data system second and a compliance system throughout: it decides who knocks where, records every door, keeps reps away from homes they must not knock, and turns a season of knocks into next season's plan.
+Most field service companies sell through a website, a phone line, referrals and paid leads. A minority grow at the front door: a rep walks a neighborhood, knocks on every house, and signs an agreement on a tablet in the driveway. Pest control and solar are the best-known cases; home security, storm roofing, lawn care and fiber do it too. It works for recurring service because every house signed on a street makes that route denser. It's hard because it runs on thin information at speed: hundreds of doors a day per rep, most of them "not home" or "no", under local solicitation ordinances, on patchy signal. The software is a geospatial system first, a data system second and a compliance system throughout: it decides who knocks where, records every door, keeps reps away from homes they must not knock, and turns a season of knocks into next season's plan.
 
 ## Who Sells at the Door
 
-Door-to-door is a minority channel, even in the industry most associated with it. In a 2023 PCT magazine reader poll, 26% of responding pest control operators said they use door-to-door sales professionals and 74% said they don't; PCT describes D2D as a rapid-growth strategy built on seasonal teams. The occupation is small in the federal statistics: BLS counted about 6,220 employed door-to-door sales workers in May 2023, with telecommunications the largest employing industry, and its count excludes the self-employed. Many field reps are paid as independent contractors on commission, so official counts understate the workforce; plan for that in how you model reps ([Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions)).
+Door-to-door is a minority channel, even in the industry most associated with it. In a 2023 PCT magazine reader poll, 26% of responding pest control operators said they use door-to-door sales professionals and 74% said they don't; PCT describes D2D as a rapid-growth strategy built on seasonal teams. The occupation is small in the federal statistics: BLS tracks it as one occupation (door-to-door sales workers, news and street vendors, and related workers) in its Occupational Employment and Wage Statistics, and those estimates exclude the self-employed. Many field reps are paid as independent contractors on commission, so official counts understate the workforce; plan for that in how you model reps ([Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions)).
 
 The verticals differ in what a sale is:
 
@@ -105,7 +105,7 @@ The best canvassing systems know something about a door before anyone knocks. Th
 | Mover and household data | Speedeon, Experian, Data Axle | New movers and pre-movers, homeowner status, modeled household attributes |
 | Imagery and computer vision | Nearmap, EagleView, Google Solar API | Roof condition, age, material and pitch; pools; vegetation; solar potential |
 
-Property keys, address validation and enrichment licensing in general are covered in [Customers, Accounts & Properties](/books/field-operations/customers-and-properties); key every knock, lead and sale to the same stable property key, never a raw address or APN. What's specific to the door:
+Property keys and address validation are covered in [Customers, Accounts & Properties](/books/field-operations/customers-and-properties), and licenses carried per imported row in [Record Linkage: Licensed Data](/docs/architecture/record-linkage#licensed-data); key every knock, lead and sale to the same stable property key, never a raw address or APN. What's specific to the door:
 
 - **Coverage and cadence are vendor claims.** Recorder data arrives county by county on each vendor's schedule, and Experian's own pages give both weekly and monthly mover cadences. A stale owner or a missed move-in sends a rep to the wrong door, so measure staleness against your own knocks.
 - **Owner occupancy is the workhorse field.** Precisely codes absentee, probable owner-occupied and owner-occupied; BatchData sells owner-occupied, absentee and recently sold lists. A renter can't sign for the building.
@@ -114,7 +114,7 @@ Property keys, address validation and enrichment licensing in general are covere
 
 ## Building a Propensity Score
 
-A **propensity score** estimates how likely a door is to buy. SalesRabbit sells "Buyer Scores" for homes and areas; RepCard lists lead scoring; Cotality's property lists filter on "likelihood-to-sell" indicators; Faraday, a consumer data and modeling vendor, describes its method publicly. You can buy the score, build it, or both.
+A **propensity score** estimates how likely a door is to buy. SalesRabbit sells "Buyer Scores" for homes and areas; RepCard lists lead scoring; Cotality's property lists filter on "likelihood-to-sell" indicators; Faraday, a consumer data and modeling vendor, describes its method publicly. You can buy the score, build it, or both. Building one is ordinary data science (reproducible training, one feature definition for training and serving, monitoring for drift), covered in [Data Science Platforms](/docs/data/data-science-platforms); what follows is the door's version.
 
 ![Pipeline for scoring doors: vendor property, mover and imagery data plus the company's own knock and sale history are matched to a stable property key, turned into features, scored by a model, aggregated into area grid cells with neighbor effects, then filtered by Do Not Knock lists, permits and license rules before reaching the rep's map.](/diagrams/fo-door-to-door-sales-scoring.svg "Scores are built per door, aggregated per area cell, and filtered last. The legal filters run after the model so no score can put an excluded door on a map.")
 
@@ -156,7 +156,7 @@ Door-to-door teams run on competition, and the knock log is what feeds it: doors
 
 Reps work alone, outdoors, in unfamiliar neighborhoods; customers open the door to a stranger. Protect both.
 
-**Make the rep verifiable.** Permits commonly require a visible photo ID badge, and RepCard's recruiting module includes background checks and badges. One operator PCT interviewed requires every door-to-door sale to pass a phone verification and a technician verification. Build the equivalents: a badge QR code that resolves to a company page with the rep's photo and permit status, a welcome call or message (separate from the rep) confirming price, term and cancellation right, and the technician confirming the agreement on the first visit.
+**Make the rep verifiable.** Permits commonly require a visible photo ID badge, and RepCard's recruiting module includes background checks and badges. Build a badge QR code that resolves to a company page with the rep's photo and permit status. Confirming the sale with someone other than the rep, by phone and again by the technician on the first visit, is covered in [Signing the Agreement](/books/field-operations/signing-the-agreement#verification-calls).
 
 **Know where reps are.** Live location on shift, shift check-ins, an alert when a device goes silent too long, and a one-tap unsafe-door flag that suppresses the door for everyone. Grey out the map after the local ordinance cutoff. Heat is the quiet hazard: NIOSH lists hot outdoor work, exertion, dehydration and lack of acclimatization as heat stress risk factors, and new reps in their first summer weeks are the unacclimatized group. Location data is sensitive too: collect it only on shift, disclose it, and retain it for a defined period ([Data Retention](/docs/architecture/data-retention)).
 
@@ -199,7 +199,7 @@ Permits per rep are credential records ([Licenses & Permits](/books/field-operat
 
 **Reference**
 
-- [BLS: Door-to-Door Sales Workers, May 2023](https://www.bls.gov/oes/2023/may/oes419091.htm), employment, wages and top industries, excluding the self-employed
+- [BLS: Door-to-Door Sales Workers, News and Street Vendors, and Related Workers](https://www.bls.gov/oes/2023/may/oes419091.htm), the OEWS occupation definition and the exclusion of the self-employed
 - [FTC: What To Know About Prescreened Offers](https://consumer.ftc.gov/articles/what-know-about-prescreened-offers-credit-and-insurance), how prescreening works and the consumer opt-out
 - [FindLaw: Trans Union Corp. v. FTC (D.C. Cir. 2001)](https://caselaw.findlaw.com/court/us-dc-circuit/1375325.html), target marketing lists built from credit data treated as consumer reports
 - [H3: Introduction](https://h3geo.org/docs/), hierarchical hexagonal indexing
@@ -210,6 +210,14 @@ Permits per rep are credential records ([Licenses & Permits](/books/field-operat
 - [PostGIS: ST_Intersection](https://postgis.net/docs/ST_Intersection.html), clipping one geometry by another
 - [Census Bureau: ACS 5-Year Data](https://www.census.gov/data/developers/data-sets/acs-5year.html), detailed tables down to block group
 - [NIOSH: About Heat Stress](https://www.cdc.gov/niosh/heat-stress/about/index.html), heat stress risk factors including lack of acclimatization
+- [ScienceDaily: Peer Effects in Solar Adoption](https://sciencedaily.com/releases/2012/10/121018162213.htm), Bollinger and Gillingham's neighbor effect estimate
+- [Novi, MI: Do Not Knock Registry](https://www.cityofnovi.org/services/city-clerk/do-not-knock-registry), daily download requirement for permitted solicitors
+- [Lakewood, OH: Do Not Knock](https://lakewoodoh.gov/do-not-knock/), annual expiry of registrations
+- [Beacon, NY: No Knock FAQ (PDF)](https://beaconny.gov/wp-content/uploads/2021/05/No_Knock_FAQ.pdf), a posted sign as notice
+
+**In practice**
+
+- [PCT: Door-to-Door Sales in the Pest Control Industry](https://www.pctonline.com/news/door-to-door-sales-pest-control-industry), the 26% poll result and D2D as a seasonal growth strategy
 - [ATTOM: Property Data](https://www.attomdata.com/data/property-data/), property fields and building permit data
 - [Precisely: Property Attributes Data Dictionary](https://docs.precisely.com/docs/sftw/precisely-apis/main/en-us/webhelp/apis/Appendix/appendix_v2_csvformat.html), absentee owner codes, roof fields and keys
 - [Smarty: US Address Enrichment API](https://www.smarty.com/docs/cloud/us-address-enrichment-api), property attributes keyed by SmartyKey
@@ -226,7 +234,6 @@ Permits per rep are credential records ([Licenses & Permits](/books/field-operat
 - [Verisk: Roof Underwriting Report](https://www.verisk.com/insurance/products/prometrix/roof-underwriting-report/), roof scoring for insurance underwriting
 - [Faraday: Predictive Lead Scoring](https://faraday.ai/blog/predictive-lead-scoring-consumer-brands), labels, splits, model families, metrics and retraining
 - [Faraday: Home Services Predictive Data Layer](https://faraday.ai/blog/home-services-crm-predictive-data-layer), home services features and the non-bureau credit proxy
-- [ScienceDaily: Peer Effects in Solar Adoption](https://sciencedaily.com/releases/2012/10/121018162213.htm), Bollinger and Gillingham's neighbor effect estimate
 - [FieldRoutes: Area Management](https://knowledgebase.fieldroutes.com/docs/area-management.md), layers, blocked regions that are visual only, and Region Stats
 - [FieldRoutes: Knocking Reports](https://knowledgebase.fieldroutes.com/docs/knocking-reports.md), knock outcomes and conversion ratios
 - [FieldRoutes: Mobile Offline Mode](https://knowledgebase.fieldroutes.com/docs/fieldroutes-mobile-offline-mode.md), knocks, customers, subscriptions and agreements offline
@@ -239,10 +246,3 @@ Permits per rep are credential records ([Licenses & Permits](/books/field-operat
 - [RepCard: Door-to-Door Canvassing](https://repcard.com/glossary/door-to-door-canvassing.md), outcome-specific next steps, neighborhood scoring and permit notes
 - [Enerflo](https://enerflo.com/), solar proposals with design, pricing and financing
 - [GorillaDesk: DoorMamba](https://intercom.help/gorilladesk/en/collections/15836875-doormamba), GorillaDesk's door-to-door app
-
-**In practice**
-
-- [PCT: Door-to-Door Sales in the Pest Control Industry](https://www.pctonline.com/news/door-to-door-sales-pest-control-industry), the 26% poll result and phone and technician verification of every sale
-- [Novi, MI: Do Not Knock Registry](https://www.cityofnovi.org/services/city-clerk/do-not-knock-registry), daily download requirement for permitted solicitors
-- [Lakewood, OH: Do Not Knock](https://lakewoodoh.gov/do-not-knock/), annual expiry of registrations
-- [Beacon, NY: No Knock FAQ (PDF)](https://beaconny.gov/wp-content/uploads/2021/05/No_Knock_FAQ.pdf), a posted sign as notice

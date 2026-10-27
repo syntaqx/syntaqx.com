@@ -79,7 +79,7 @@ Some of those forms are regulatory documents in their own right. Texas's backflo
 
 Readings increasingly arrive from instruments rather than thumbs. measureQuick, an HVAC diagnostic app, reads Bluetooth probes and compares measured superheat and subcooling with the target for the metering device. Its ServiceTitan integration attaches a PDF report, photos, notes and status tags to the job, but its documentation doesn't describe the readings themselves syncing as structured data. Pool apps go the other way: Pool Brain calculates chemical dosing in the app when the technician enters readings, and Skimmer gives real-time LSI calculations and dosing recommendations, so the reading drives the next action on the spot.
 
-To build it: a **form definition** is versioned data (sections, fields, types, units, validation, visibility conditions, which answers are required to complete). An answer set binds to the definition version it was filled against, so changing the form next month never reinterprets last month's answers. Evaluate required and conditional logic on the device (it must work offline) and again on the server (the device can be wrong or old). My default is to promote a few fields to typed data the rest of the platform reads, rather than leaving everything in a JSON blob:
+To build it (tables in [How to Build It](#how-to-build-it)): a **form definition** is versioned data (sections, fields, types, units, validation, visibility conditions, which answers are required to complete). An answer set binds to the definition version it was filled against, so changing the form next month never reinterprets last month's answers. Evaluate required and conditional logic on the device (it must work offline) and again on the server (the device can be wrong or old). My default is to promote a few fields to typed data the rest of the platform reads, rather than leaving everything in a JSON blob:
 
 - **Readings with units and their source** (typed, or from which probe and its serial), because a reading out of range creates a follow-up and a gauge past its calibration date invalidates a test.
 - **Findings** that create a quote or a deficiency on the property.
@@ -91,19 +91,13 @@ Repair and install work changes what the app has to know. A pest or lawn route c
 
 - **Parts on the truck.** The device holds what this truck should carry and what it has used today, so a technician can quote a capacitor replacement with confidence offline. Whether the warehouse has the compressor is a live question: ServiceTitan lists inventory availability and purchase orders among the things that need a connection. My default is to let the technician quote and sell offline with the part marked "to confirm," and have the server check stock and raise the order on sync, telling the office before the customer is promised a date.
 - **Parts used become stock movements.** A part added to the invoice on site is a deduction from that truck's stock, and ServiceTitan turns materials used into replenishment purchase orders. The inventory ledger lives with [Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety).
-- **Equipment is a record at the property.** Model, serial, install date, refrigerant type, warranty terms. Capture the data plate as a photo and as fields, scanned where the label has a barcode, and keep it on the property, not the job, so the next technician starts from it.
-- **Install work starts a warranty clock.** Manufacturer registration windows change what the owner is covered for, so the install form captures model, serial and install date, and the platform creates a registration task with a deadline the day the job completes. Warranty terms and claims are in [Repair, Install & Commercial Work](/books/field-operations/repair-and-installation#equipment-is-an-asset).
+- **The app is where equipment gets captured.** Assets, warranty terms and registration deadlines are owned by [Equipment Is an Asset](/books/field-operations/repair-and-installation#equipment-is-an-asset); the app's part is to capture the data plate as a photo and as fields (scanned where the label has a barcode), on the property rather than the job, and to make model, serial and install date required on the install form, because those three start the registration deadline when the job completes.
 
 Commercial work adds service-level terms (response within four hours, a quarterly inspection of every rooftop unit), so the app also shows which asset the visit covers and which contractual task it satisfies. [Service Agreements](/books/field-operations/service-agreements) covers the contract side.
 
 ## Selling From the Pricebook
 
-The technician is often the best salesperson the company has, because they're standing next to the failing equipment. Repair trades mostly sell from a **flat-rate pricebook**: a price per task (replace a capacitor, rebuild a toilet, clear a main line) rather than time and materials, so the customer approves a number before work starts. The platforms build for it:
-
-- **Successware** puts the price book at the center of the platform, with groups carrying markup formulas and a profit margin matrix by cost tier; it imports third-party flat-rate books and pulls pricing from the book in a mobile app with a dedicated offline mode.
-- **FieldEdge Flat Rate** sells a flat-rate book with a parts and repairs database for HVAC, electrical and plumbing, priced from a mobile app at the job.
-- **FieldPulse** builds flat-rate jobs from labor and material lines with markup categories, and presents variant proposals the customer picks, signs and pays a deposit on in the same visit.
-- **ServiceTitan proposal templates** group estimate templates into good, better and best options in the mobile app.
+The technician is often the best salesperson the company has, because they're standing next to the failing equipment. Repair trades mostly sell from a **flat-rate pricebook** (a price per task, so the customer approves a number before work starts), lawn, pest and cleaning from measured prices, and all of them present good, better and best options on the phone. How the books are built and what each vendor offers is in [Pricebooks: Where Prices Come From](/books/field-operations/pricing-and-sales-rules#pricebooks-where-prices-come-from) and [Good-Better-Best and Proposals](/books/field-operations/pricing-and-sales-rules#good-better-best-and-proposals).
 
 The engineering issue is that prices change and phones are offline. ServiceTitan's offline matrix shows the boundary: standard pricebook pricing works offline, but "dynamic pricing rates require a connection." Build the pricebook as versioned snapshots synced to the device, and stamp every estimate line with the pricebook version and price it was quoted from. When a sale quoted on yesterday's prices syncs, the server honors what the customer signed (the signed document is the contract) and flags the variance rather than repricing silently. A flat-rate task bundles parts and labor, so the line also records which parts it assumed, which is what lets the server check stock afterwards. Discount limits, approval thresholds, tax codes and the final price checks belong in [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules), and the signature ceremony in [Signing the Agreement](/books/field-operations/signing-the-agreement).
 
@@ -133,6 +127,8 @@ So:
 - **Keep raw punches immutable.** Rounding, if any, is a payroll computation over the raw record, never a rewrite of it.
 - **Store device time, server time and location for each punch,** and never require a signal to clock in.
 
+Payroll reads these entries per pay period; the export, earning types and cutoffs are in [Paying It: Payroll Integration](/books/field-operations/sales-teams-and-commissions#paying-it-payroll-integration).
+
 ## Devices and Peripherals
 
 The company either issues devices or lets technicians use their own, and the app behaves differently in each case.
@@ -141,6 +137,87 @@ The company either issues devices or lets technicians use their own, and the app
 - **Personal devices** can't be locked down, so the app protects itself: an app-level lock, encrypted local storage, a remote sign-out that deletes the local database on next launch, and a short expiry on cached data.
 
 Field apps also talk to hardware: card readers, Bluetooth gauges and probes, barcode scanners for bait stations and parts, label and receipt printers. That's most of why I'd build the technician app natively or in React Native with native modules for the database, outbox, payments and peripherals, and not as a progressive web app; the trade-offs are in [Native, React Native or a PWA](/docs/architecture/offline-sync#native-react-native-or-a-pwa). Either way, keep the fleet's app versions within a known window, because an old app replaying commands against a new server is a compatibility problem you'll otherwise discover in production ([Mobile Releases](/docs/delivery/mobile-releases)).
+
+## How to Build It
+
+This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model) with the three records the app creates that no other chapter owns: form answers, raw time punches and field payments. Payroll classifies hours from the punches; this table is only the immutable record of what the device saw. Each row carries both clocks; the outbox and sync machinery is in [Offline-First Sync](/docs/architecture/offline-sync).
+
+```sql
+CREATE TABLE form_definitions (          -- versioned; never edited once published
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  key          TEXT NOT NULL,            -- 'hvac_maintenance', 'tceq_20700', 'pool_chemistry'
+  version      INTEGER NOT NULL,
+  definition   JSONB NOT NULL,           -- sections, fields, types, units, validation, visibility
+  published_at TIMESTAMPTZ,
+  UNIQUE (tenant_id, key, version)
+);
+
+CREATE TABLE form_answer_sets (
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id          UUID NOT NULL,
+  form_definition_id UUID NOT NULL REFERENCES form_definitions (id),  -- the version filled
+  visit_id           UUID NOT NULL REFERENCES visits (id),
+  asset_id           UUID REFERENCES assets (id),
+  answers            JSONB NOT NULL,
+  status             TEXT NOT NULL CHECK (status IN ('saved', 'completed')),
+  device_recorded_at TIMESTAMPTZ NOT NULL,
+  received_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE readings (                  -- the answers the rest of the platform reads
+  id                       UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id                UUID NOT NULL,
+  form_answer_set_id       UUID NOT NULL REFERENCES form_answer_sets (id),
+  asset_id                 UUID REFERENCES assets (id),
+  quantity                 TEXT NOT NULL,  -- 'superheat', 'free_chlorine', 'check_valve_1'
+  value                    NUMERIC NOT NULL,
+  unit                     TEXT NOT NULL,  -- 'degF', 'ppm', 'psid'
+  source                   TEXT NOT NULL CHECK (source IN ('typed', 'probe')),
+  instrument_serial        TEXT,
+  instrument_calibrated_on DATE            -- a gauge past its date invalidates the test
+);
+
+CREATE TABLE time_punches (              -- raw punches; rows are never edited; corrections are new rows
+  id                     UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id              UUID NOT NULL,
+  staff_member_id        UUID NOT NULL REFERENCES staff_members (id),
+  work_order_id          UUID REFERENCES work_orders (id),  -- null for shift and break
+  kind                   TEXT NOT NULL CHECK (kind IN ('shift', 'travel', 'on_job', 'break')),
+  started_at             TIMESTAMPTZ NOT NULL,              -- device time of the event
+  ended_at               TIMESTAMPTZ,                       -- null while running
+  source                 TEXT NOT NULL CHECK (source IN ('status_event', 'punch', 'correction')),
+  corrects_punch_id      UUID REFERENCES time_punches (id),
+  correction_reason      TEXT,
+  rate_type              TEXT,           -- T&M billing: regular, after_hours; payroll computes overtime
+  location               GEOGRAPHY(POINT),
+  received_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK ((source = 'correction') = (corrects_punch_id IS NOT NULL)),
+  CHECK (source <> 'correction' OR correction_reason IS NOT NULL)
+);
+
+CREATE TABLE field_payments (
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id          UUID NOT NULL,
+  invoice_id         UUID NOT NULL REFERENCES invoices (id),
+  visit_id           UUID REFERENCES visits (id),
+  collected_by_id    UUID NOT NULL REFERENCES staff_members (id),  -- holds cash and checks until deposit
+  tender             TEXT NOT NULL CHECK (tender IN ('card_present', 'card_keyed', 'card_on_file',
+                       'ach', 'check', 'cash', 'financing', 'payment_link')),
+  amount             BIGINT NOT NULL,      -- minor units
+  currency           TEXT NOT NULL,
+  status             TEXT NOT NULL CHECK (status IN ('captured_offline', 'authorized', 'declined',
+                       'collected', 'deposited', 'voided')),
+  offline_limit      BIGINT,               -- the company limit applied when captured offline
+  processor_ref      TEXT,                 -- never a card number
+  card_last4         TEXT,
+  check_number       TEXT,
+  device_recorded_at TIMESTAMPTZ NOT NULL,
+  received_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+A card captured offline starts `captured_offline` and moves to `authorized` or `declined` when the processor answers, and a decline raises the follow-up task at that moment. Cash and checks go from `collected` to `deposited`, and the gap between the two, per technician, is the reconciliation report. Invoices and payment methods are sketched in [Billing Recurring Service](/books/field-operations/billing-recurring-service#how-to-build-it). Repair's time-and-materials labor prices `time_punches` of kind `on_job` and `travel` ([Flat Rate or Time and Materials](/books/field-operations/repair-and-installation#flat-rate-or-time-and-materials)), and the evidence a visit needs before it can complete is in [Proof of Service](/books/field-operations/proof-of-service#how-to-build-it).
 
 ## Auditing
 
@@ -187,14 +264,10 @@ The general sync design is in [Offline-First Sync](/docs/architecture/offline-sy
 
 - [ServiceTitan: Field Mobile App offline capabilities](https://help.servicetitan.com/docs/servicetitan-field-mobile-app-offline-capabilities), what works offline and what needs a connection, including inventory availability, purchase orders, deferred payments and dynamic pricing
 - [ServiceTitan: Technician forms](https://help.servicetitan.com/mobile/docs/add-technician-forms-in-the-servicetitan-field-mobile-app), triggers, required fields and offline completion
-- [ServiceTitan: Proposal templates](https://help.servicetitan.com/docs/proposal-templates), good, better and best options in the mobile app
 - [ServiceTitan: Truck replenishment workflows](https://help.servicetitan.com/how-to/truck-replenishment-workflows), materials used on invoices turned into purchase orders
 - [FieldRoutes: Mobile offline mode](https://knowledgebase.fieldroutes.com/docs/fieldroutes-mobile-offline-mode.md), offline service and sales flows, and payments needing a signal
 - [FieldRoutes: Mobile technician overview](https://knowledgebase.fieldroutes.com/docs/fieldroutes-mobile-technician-overview.md), sync with office and timer categories
-- [Successware: Field tools](https://www.successware.com/features/field-tools/), the dedicated offline mode and pricing pulled from the price book
-- [Successware: Price book](https://www.successware.com/blog/2021/november/did-you-know-price-book/), markup formulas, the profit margin matrix and imported flat-rate books
-- [FieldEdge: Flat rate pricing software](https://fieldedge.com/flat-rate-pricing-software/), a flat-rate book with a parts and repairs database for HVAC, electrical and plumbing, and the mobile app
-- [FieldPulse: Pricebook](https://help.fieldpulse.com/en/articles/8729090-pricebook), flat-rate jobs, markup categories and options
+- [Successware: Field tools](https://www.successware.com/features/field-tools/), the dedicated offline mode
 - [Zuper: Using Zuper offline](https://docs.zuper.co/Zuper_Mobile_Apps/Using_Zuper_Offline.md), data priming including assets and parts, and one-day expiry
 - [Housecall Pro: Mobile FAQ](https://help.housecallpro.com/en/articles/4747652-housecall-pro-mobile-faq), offline editing not supported and stored jobs
 - [GorillaDesk: App offline mode](https://intercom.help/gorilladesk/en/articles/6993151-app-offline-mode), the current week only, with read-only invoices

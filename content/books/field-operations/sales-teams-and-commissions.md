@@ -2,7 +2,7 @@
 title = "Sales Teams & Commissions"
 description = "Paying the people who sell: team structures, recruiting and onboarding gates, worker classification, commission plans as data, clawbacks, payroll and disputes."
 category = "Field Operations Industry"
-order = 1524
+order = 1526
 part = "Selling"
 tags = ["field-operations", "sales", "commissions", "payroll", "compliance"]
 +++
@@ -15,13 +15,13 @@ Four shapes cover most of the industry, and many businesses run more than one at
 
 - **Seasonal door-to-door teams.** Reps knock from spring to late summer ([Door-to-Door Sales](/books/field-operations/door-to-door-sales)). Above them sit team leads, managers and regional leaders who earn overrides on their team's production, and recruiters who earn on the reps they bring in. The hierarchy changes weekly as reps are promoted, moved or quit.
 - **Inside sales.** Call-center agents sell inbound leads and renewals by phone, typically on hourly pay plus commission.
-- **Technician-sold.** The technician on site recommends and sells repairs, replacements and plan upgrades, and earns a commission or spiff on what they sell.
+- **Technician-sold.** The technician on site recommends and sells repairs, replacements and plan upgrades (a water heater, a condenser, a variable-speed pool pump, a lawn plan's aeration add-on), and earns a commission or spiff on what they sell.
 - **Office and customer service upsell.** Service reps add services or convert one-time customers to plans during calls.
 
 The data model has to treat the org chart as history, not as a tree. An override is paid to whoever managed the rep *on the day of the sale*, so the reporting line is effective-dated, and a commission computed in September for a June sale reads the June hierarchy ([Temporal Data](/docs/database/temporal-data#as-of-queries)).
 
 ```sql
-CREATE EXTENSION IF NOT EXISTS btree_gist;  -- lets a GiST EXCLUDE compare UUIDs with =
+CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 CREATE TABLE sales_assignments (
   id                           UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -39,7 +39,7 @@ CREATE TABLE sales_assignments (
 );
 ```
 
-Reps are `staff_members`, the same identity table as technicians and office staff, because people move between selling, servicing and managing and their history should follow them. The exclusion constraint needs the `btree_gist` extension: plain GiST has no operator class for `=` on UUID columns, and `btree_gist` supplies one.
+Reps are `staff_members`, the same identity table as technicians and office staff, because people move between selling, servicing and managing and their history should follow them. The exclusion constraint is the standard one-row-per-moment pattern from [Temporal Data](/docs/database/temporal-data#one-naming-standard-range-columns).
 
 ## Recruiting and Onboarding
 
@@ -53,7 +53,7 @@ A seasonal sales business onboards hundreds of people in a few weeks, and each o
 
 **Background checks.** A background report from a consumer reporting agency is a consumer report under the FCRA. The FTC's employer guidance requires a written disclosure "in a stand-alone format," the person's written authorization, a pre-adverse action notice with a copy of the report and the summary of rights before rejecting someone, and an adverse action notice afterward naming the reporting company. State and local fair-chance laws add timing rules, so check where you hire. Screening vendors expose this as an API: Checkr's hosted flow sends the candidate an invitation to provide information and consent, a package determines what's screened, results arrive by webhook, and adverse action has its own resources.
 
-Pest management's QualityPro accreditation (standards US V6.1) sets a floor many companies adopt: accredited companies run criminal background checks "when appropriate and permitted under applicable law," run motor vehicle record checks "when appropriate," keep a drug-free workplace policy, and ensure "technicians and sales employees pass the QualityPro exam". Each of those is a dated record per person, and an exam not yet passed is a gate like any other.
+Accreditation can add gates of its own: pest control's QualityPro requires background and motor vehicle record checks and an exam for sales employees, each a dated record per person and an exam not yet passed a gate like any other ([Licenses & Permits](/books/field-operations/licensing-and-permits#accreditation-and-manufacturer-programs)).
 
 **Solicitor permits.** Many cities require door-to-door sellers to hold a permit and carry a badge, so an active permit for the city is one more onboarding gate: no territory assignment in a city where the rep has none. The credential model and per-city examples are in [Licenses & Permits](/books/field-operations/licensing-and-permits).
 
@@ -138,7 +138,7 @@ Leads passed from technicians to sales reps (a "tech lead") need attribution too
 
 ## Leaderboards and Contests
 
-Leaderboards are how door-to-door teams manage motivation, and every D2D app has one. They're also the most common source of pay disputes, because a leaderboard shows sales that may never become customers. FieldRoutes distinguishes a **leaderboard**, which ranks reps on chosen metrics over time, from a **competition**, a specific event with rules participants must meet, and supports both for players and teams. SPOTIO's suggested metrics are doors knocked per day, contact rate, conversation to demo, demo to close, average deal size and pipeline velocity, reviewed weekly.
+Leaderboards are how door-to-door teams manage motivation, and every D2D app has one. They're also the most common source of pay disputes, because a leaderboard shows sales that may never become customers. SalesRabbit and FieldRoutes both separate a **leaderboard**, which ranks reps on chosen metrics over time, from a **competition**, a specific event with rules participants must meet; FieldRoutes runs both for players and teams. SPOTIO's suggested metrics are doors knocked per day, contact rate, conversation to demo, demo to close, average deal size and pipeline velocity, reviewed weekly.
 
 - **Define each metric once.** "Sales" must mean the same on the leaderboard, in commissions and in finance ([Data Pipelines](/docs/architecture/data-pipelines#one-definition-per-metric)).
 - **Label what's counted.** Show leaderboards in near real time (reps expect a sale to appear within seconds), but say whether a number is signed today, net of cooling-off cancellations, first service done, or earned. A board of signed sales rewards pressure; rank on sales that survived cancellation and first service, or show both.
@@ -151,18 +151,18 @@ FieldRoutes' note that Leaderboard and Competitions need a signal is a reminder 
 
 The tools fall into three groups: door-to-door sales apps that manage the team in the field, field-service suites that record who sold what, and incentive compensation platforms that calculate pay.
 
-| Tool | Class | In the field | Team and pay |
-| ---- | ----- | ------------ | ------------ |
-| SalesRabbit | D2D | Rate and assign areas; leads on a map by status; DataGrid "Buyer Scores" for homes and areas | Leaderboards in Team, Pro and Enterprise; Competitions in Pro and Enterprise; "Amplify" with spot rewards and coaching |
-| SPOTIO | D2D | Boundaries by ZIP, county or custom map; color-coded statuses; offline "Download My Day" | Gamification and leaderboards; its guide suggests shadowing in week one, co-selling in week two and selling alone with daily debriefs in week three |
-| RepCard | D2D | Canvassing maps with live pins; outcome-driven follow-ups; lead scoring | Leaderboards, sales contests, team chat; a recruiting module with onboarding documents, recruit tracker, background checks and ID badges; commissions |
-| Knockio | D2D | Area assignment and coverage tracking; outcomes with notes and voice notes; pre-knocked property data | Per-user plans |
-| Knockbase | D2D | Territory mapping and auto-routing; forms, photos, appointments; storm data integration | Leaderboards, a commission calculator, live tracking |
-| Badger Maps | Field sales mapping | Territories, lead routing, GPS-verified check-ins, CRM sync | Scoreboard add-on |
-| FieldRoutes | Vertical FSM | Standard and blocked regions on map layers; knock outcomes from Not Home to Never Knock | Each subscription has a `soldBy` field "used in commissions and sales reporting"; player and team competitions; the mobile Leaderboard and Competitions need a signal |
-| Enerflo | Solar suite | Proposals with design, pricing and financing; signing packets; install milestones | Sales through to install on one record |
-| PestPac | Vertical FSM | Sales CRM with an approval process | Commissions and Sales Team Performance reports |
-| ServiceTitan | Trades suite | Technician-presented proposals | Performance Pay: technician sales commission and item spiffs on completed jobs |
+| Tool | Class | Team and pay |
+| ---- | ----- | ------------ |
+| SalesRabbit | D2D | Leaderboards in Team, Pro and Enterprise; Competitions in Pro and Enterprise; "Amplify" with spot rewards and coaching |
+| SPOTIO | D2D | Gamification and leaderboards; its guide suggests shadowing in week one, co-selling in week two and selling alone with daily debriefs in week three |
+| RepCard | D2D | Leaderboards, sales contests, team chat; a recruiting module with onboarding documents, recruit tracker, background checks and ID badges; commissions |
+| Knockio | D2D | Per-user plans |
+| Knockbase | D2D | Leaderboards, a commission calculator, live tracking |
+| Badger Maps | Field sales mapping | Scoreboard add-on |
+| FieldRoutes | Vertical FSM (pest, lawn) | Each subscription has a `soldBy` field "used in commissions and sales reporting"; player and team competitions; the mobile Leaderboard and Competitions need a signal |
+| Enerflo | Solar suite | Sales through to install on one record |
+| PestPac | Vertical FSM (pest) | Commissions and Sales Team Performance reports |
+| ServiceTitan | Trades suite (HVAC, plumbing, electrical) | Performance Pay: technician sales commission and item spiffs on completed jobs |
 
 How canvassing itself works (areas, knocks, door statuses, property data and scoring) is in [Door-to-Door Sales](/books/field-operations/door-to-door-sales).
 
@@ -185,7 +185,7 @@ Contractors are paid like vendors, by ACH or another payout rail, with the W-9 o
 
 The export is a batch with a cutoff: entries earned before the cutoff go in this period, later ones wait. Lock the batch when it's exported, store the provider's reference, and reconcile what the provider actually paid against the batch. A correction after export is a new ledger entry in the next period, never a change to the locked batch.
 
-## Disputes and Auditing
+## Auditing
 
 Every rep checks their statement, and many dispute it. The incentive compensation platforms converge on the same answer: show the calculation. Spiff's tracing shows how each component was calculated and lets reps open tickets on statements or deals; CaptivateIQ makes "deal-level data, applied rules, and calculation steps" reviewable; Xactly describes a built-in dispute system. Build the same: a statement where every line links to its ledger entry, the event that caused it, the plan version and the rule applied, and a dispute workflow with a status, an owner, comments and a resolution that, if it changes pay, posts an adjustment entry.
 
@@ -230,7 +230,6 @@ The ledger itself is the record of every payout; record structure, actors and re
 - [FTC: Using Consumer Reports, What Employers Need to Know](https://www.ftc.gov/business-guidance/resources/using-consumer-reports-what-employers-need-know), standalone disclosure, authorization, and pre-adverse and adverse action notices
 - [IRS: About Form W-4](https://www.irs.gov/forms-pubs/about-form-w-4), employee federal income tax withholding
 - [IRS: About Form W-9](https://www.irs.gov/forms-pubs/about-form-w-9), the TIN a payer needs for information returns
-- [NPMA QualityPro: Credentials](https://www.npmaqualitypro.org/available-credentials/qualitypro/), the V6.1 standards: background and motor vehicle record checks, a drug-free workplace policy and the exam for technicians and sales employees
 
 **In practice**
 
@@ -246,14 +245,9 @@ The ledger itself is the record of every payout; record structure, actors and re
 - [Knockio](https://www.knockio.com/), area assignment, coverage tracking, pre-knocked data and per-user plans
 - [Badger Maps](https://www.badgermapping.com/), territories, lead routing, CRM sync and GPS-verified check-ins
 - [Enerflo](https://enerflo.com/), solar proposals with design, pricing and financing
-- [SPOTIO](https://spotio.com/), territories by ZIP, county or custom map, and gamification
-- [SPOTIO: Door-to-Door Sales Software](https://demo.spotio.com/ppc-d2d-sales-software/), color-coded statuses and offline knocking
+- [SPOTIO](https://spotio.com/), gamification and leaderboards
 - [FieldRoutes: Leaderboards and Competitions](https://knowledgebase.fieldroutes.com/docs/whats-the-difference-between-sales-leaderboards-and-competitions.md), the difference between the two
-- [FieldRoutes: Area Management](https://knowledgebase.fieldroutes.com/docs/area-management.md), map layers and blocked regions
-- [FieldRoutes: Knocking Reports](https://knowledgebase.fieldroutes.com/docs/knocking-reports.md), knock outcomes
-- [SalesRabbit](https://salesrabbit.com/), DataGrid Buyer Scores, area rating and Amplify gamification
-- [PestPac: CRM Software](https://www.pestpac.com/features/pest-control-crm-software), the sales approval process
-- [ServiceTitan: Proposal Templates](https://help.servicetitan.com/docs/proposal-templates), proposals technicians present in the mobile app
+- [SalesRabbit](https://salesrabbit.com/), Amplify gamification
 - [Salesforce Trailhead: Salesforce Spiff features for sales teams](https://trailhead.salesforce.com/content/learn/modules/commission-management-with-salesforce-spiff/explore-features-for-sales-teams), statements, tracing, dispute tickets and the estimator
 - [CaptivateIQ: Incentives](https://captivateiq.com/incentives), versioned plans tested against historical data and audit trails
 - [Xactly: Incent](https://www.xactlycorp.com/products/incent), clawbacks, disputes, audit trail and payroll integrations

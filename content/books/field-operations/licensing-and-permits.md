@@ -2,7 +2,7 @@
 title = "Licenses & Permits"
 description = "Who may do what, where: business, trade and contractor licenses, applicator and tester credentials, solicitor permits, supervision, renewals and state lookups."
 category = "Field Operations Industry"
-order = 1517
+order = 1518
 part = "The Rules"
 tags = ["field-operations", "licensing", "permits", "compliance", "jurisdictions", "scheduling"]
 +++
@@ -58,7 +58,7 @@ Two gaps show in these docs. FieldRoutes' knowledge base suggests putting a sale
 
 ## A Licensing Model
 
-The vendor precedents combine into one workable design. Keep licenses as their own records linked to states and skills, as FieldRoutes does. Give each staff member's skills a level and a validity period, as Salesforce Field Service does. Treat a visit's required skills as a hard constraint, as Timefold does. And store what each jurisdiction requires for each kind of work as rows with their own validity, so a change in the law is a data change ([Rules as Data](/docs/architecture/rules-as-data)). The schema below adds licensing tables to the canonical model in [The Field Operations Business](/books/field-operations/field-operations-business); it doesn't redefine visits or properties.
+The vendor precedents combine into one workable design. Keep licenses as their own records linked to states and skills, as FieldRoutes' Licenses API does, with the license numbers printed onto treatment records the way Jobber's chemical tracking prints them. Give each staff member's skills a level and a validity period, as Salesforce Field Service does. Treat a visit's required skills as a hard constraint, as Timefold does. And store what each jurisdiction requires for each kind of work as rows with their own validity, so a change in the law is a data change ([Rules as Data](/docs/architecture/rules-as-data)). The schema below adds licensing tables to the canonical model in [The Field Operations Business](/books/field-operations/field-operations-business); it doesn't redefine visits or properties.
 
 ```sql
 CREATE TABLE jurisdictions (            -- each tenant loads the boundaries it works in
@@ -159,7 +159,7 @@ Other trades have the same shape under different names. A California contractor 
 
 Enforcement belongs at every point where work or a sale is committed, because each point can be reached without the others.
 
-- **Service types.** A service type declares the skills it needs (termite treatment, backflow testing, electrical service, public pool service, refrigerant recovery), resolved per jurisdiction from `skill_requirements`. FieldRoutes' skill-linked licenses are a working example of tying the two together.
+- **Service types.** A service type declares the skills it needs (termite treatment, backflow testing, electrical service, public pool service, refrigerant recovery), resolved per jurisdiction from `skill_requirements`. FieldRoutes' skill-linked licenses and PestPac's skill types such as "termite license" are two working examples of tying the two together.
 - **Routing and booking.** Required skills become hard constraints for the optimizer, the way Timefold's "Require skills" leaves a visit unassigned rather than give it to an unqualified technician ([Route Optimization](/books/field-operations/route-optimization)). Send time-bounded skills, like Timefold's `temporarySkillSets` or Salesforce's effective dates, so a license expiring on the 14th stops qualifying the technician for visits on the 15th even in a schedule built weeks ahead.
 - **Manual assignment.** A dispatcher dragging a job onto a technician sees PestPac-style warnings for soft problems and a block for hard ones. An override needs a reason and is recorded.
 - **Day-of dispatch and completion.** Re-check at dispatch and again when the technician completes the visit, since licenses can change after the route was built. The completion check must work offline, so sync each technician's skills, license states and expirations to the device.
@@ -189,7 +189,7 @@ A license number typed by an office manager is a claim. Verify it against the is
 
 ## Accreditation and Manufacturer Programs
 
-Some credentials sit outside the law but are run like licenses. NPMA's QualityPro is the pest industry's best-known accreditation: companies in business at least two years that meet the program's standards (background and motor vehicle record checks where appropriate, a drug-free workplace policy, an exam for technicians and sales employees, periodic audits). Manufacturer programs such as Certified Sentricon Specialists work the same way. The same model holds them: the accreditation as a business-level license, each employee's exam as an individual license with a skill resting on it, and background and MVR checks as dated records. How long those records are kept is set by law, not by the screening vendor's terms: EEOC rules keep personnel and hiring records for one year from the record or the personnel action, whichever is later (29 CFR 1602.14), and the FCRA's Disposal Rule governs how a consumer report is destroyed once you no longer need it (16 CFR 682.3); state law can require longer.
+Some credentials sit outside the law but are run like licenses. NPMA's QualityPro is the pest industry's best-known accreditation: companies in business at least two years that meet the program's US V6.1 standards (criminal background checks "when appropriate and permitted under applicable law" and motor vehicle record checks "when appropriate," a drug-free workplace policy, an exam technicians and sales employees must pass, periodic audits). The standards reach the paperwork too: an accredited company certifies that it "has a termite warranty/service agreement that meets requirements" of the program, so the agreement template resolution in [Signing the Agreement](/books/field-operations/signing-the-agreement#templates-by-state) treats accreditation as one more input, and the sales onboarding gates in [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions#recruiting-and-onboarding) include the exam. Manufacturer programs such as Certified Sentricon Specialists work the same way. The same model holds them: the accreditation as a business-level license, each employee's exam as an individual license with a skill resting on it, and background and MVR checks as dated records. How long those records are kept is set by law, not by the screening vendor's terms: EEOC rules keep personnel and hiring records for one year from the record or the personnel action, whichever is later (29 CFR 1602.14), and the FCRA's Disposal Rule governs how a consumer report is destroyed once you no longer need it (16 CFR 682.3); state law can require longer.
 
 ## Auditing
 
@@ -249,7 +249,7 @@ The record structure and typed actors are in [Audit Trails](/docs/architecture/a
 - [Glenview, IL: Peddlers and Solicitors](https://www.glenview.il.us/662), fee, badge, hours and December 31 expiration
 - [La Vergne, TN: No Knock Registry](https://www.lavergnetn.gov/531/No-Knock-Registry), the registry, permits and exempt noncommercial canvassers
 - [Rogers, AR: No-Knock List](https://www.rogersar.gov/FormCenter/City-Clerk-14/No-Knock-List-111), per-salesperson permit and list carried together
-- [NPMA QualityPro: Credentials](https://www.npmaqualitypro.org/available-credentials/qualitypro/), accreditation requirements and the V6.1 standards
+- [NPMA QualityPro: Credentials](https://www.npmaqualitypro.org/available-credentials/qualitypro/), accreditation requirements, the US V6.1 standards, background and motor vehicle record checks, the exam for technicians and sales employees, and the termite warranty or service agreement requirement
 
 **In practice**
 

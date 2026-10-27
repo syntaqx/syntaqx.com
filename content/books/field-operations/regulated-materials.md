@@ -2,7 +2,7 @@
 title = "Regulated Materials"
 description = "Pesticides, refrigerants and pool chemicals: FIFRA and the label, certified applicators, state use records, product catalogs, dilution, weather and SDS."
 category = "Field Operations Industry"
-order = 1516
+order = 1517
 part = "The Rules"
 tags = ["field-operations", "pesticides", "compliance", "recordkeeping", "regulation", "refrigerants"]
 +++
@@ -67,11 +67,13 @@ The pest and lawn verticals document the deepest chemical tooling; the horizonta
 | Arborgold | Materials with inventory | Crews record weather and chemical use at the job site | State regulatory reports "printed and filed in a couple of clicks" |
 | Pool Brain | Chemical categories with dosing defaults; custom chemicals with unit, cost and price | Dosing calculated from water readings using Orenda formulas | Use and cost per body of water and technician; per-unit billing |
 
-A few details in these docs are worth copying. FieldRoutes' New York output drops products not measured in accepted volume or weight units, so a product logged in "bottles" is invisible to the state. PestPac and Solea catch off-label concentrations at entry, not in a report. Pool Brain only deactivates a chemical that has been used, never deletes it.
+A few details in these docs are worth copying. States accept only certain units: FieldRoutes' New York output drops products not measured in accepted volume or weight units, so a product logged in "bottles" is invisible to the state, and PestPac limits entry to approved units. PestPac and Solea catch off-label concentrations at entry, not in a report. Pool Brain only deactivates a chemical that has been used, never deletes it.
 
 ## The Product Catalog
 
-- **Key products by registration number plus your own ID.** Distributor products share a base registration and one product comes in several sizes, so your `product_id` is the identity and the registration number a validated attribute.
+A regulated product is an entry in the platform's one item catalog (the `items` table in [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#how-to-build-it)), of kind `chemical`, with the regulatory attributes in an extension; the same row is what the truck stocks and what the invoice can bill.
+
+- **Key products by registration number plus your own ID.** Distributor products share a base registration and one product comes in several sizes, so your `item_id` is the identity and the registration number a validated attribute.
 - **Version the label.** Store the label's stamp date and the facts you validate against (sites, pests, rate ranges, RUP status, signal word, re-entry instructions) as a `label_version`. Applications reference the version in force that day.
 - **Fill from the registry, review by a human.** Look the product up by EPA registration number, pull name, registrant and active ingredients from the public registry, then have a licensed person confirm rates and sites, because label directions are prose.
 - **Carry the documents.** Label PDF and SDS on every product, available offline in the technician app.
@@ -105,7 +107,7 @@ Location needs to be as precise as the strictest state you serve. New York wants
 Some places carry extra rules:
 
 - **Sensitivity registries.** Pennsylvania distributes its Pesticide Hypersensitivity Registry of physician-verified people to licensed businesses by March 1 and July 15 each year. Applicators notify listed people whose property line is within 500 feet, 12 to 72 hours ahead, with a window of at most 24 hours, the products' brand names and EPA numbers, and the business's license number. Load each release as a dated dataset, geocode it, and run the 500-foot check at scheduling so the notice goes out in the window.
-- **Schools and day care.** FieldRoutes' docs describe California's annual report on applications at school and day care sites, driven by a "School" sub-property type. Make site type a property attribute, not a note.
+- **Schools and day care.** California reports structural applications at school and day care sites separately; FieldRoutes drives its school and day care report from a "School" sub-property type, and PestPac lists California exports among its state formats. Make site type a property attribute, not a note.
 - **Customer-specific restrictions.** "No products in the garden," "pets on site," "beehives on the east fence." Store them on the property and show them before the first spray.
 
 ![A dimensional drawing of Pennsylvania's hypersensitivity registry notice on an hour axis measured from the application's earliest start. The notice window runs from 72 to 12 hours before, 60 hours wide, with the last 12 hours hatched as too late; the application runs at most 24 hours from earliest start to latest finish; the record of the notice is due within 24 hours after. A plan view shows a 500-foot radius around the application site: a listed property whose line falls inside gets notice, one outside doesn't.](/diagrams/fo-regulated-materials-dwg-registry.svg "7 Pa. Code 128.112 as a scheduling constraint. The 500-foot check picks who is notified, and the notice has to go out between 72 and 12 hours ahead of the window it announces.")
@@ -118,23 +120,22 @@ My default is to meet the emergency test on the device rather than through a pho
 
 ## Other Trades
 
-- **HVAC refrigerants.** Under the Clean Air Act's Section 608, which covers ozone-depleting refrigerants (CFCs and HCFCs) and their substitutes, such as HFCs, technicians who maintain, service, repair or dispose of equipment that could release refrigerant must be certified (Core plus Type 1 small appliances, Type 2 high-pressure, Type 3 low-pressure, or Universal for all), and only certified technicians, or employers showing they employ one, may buy refrigerant for stationary equipment. The recordkeeping rules have changed several times, so date what you build to. As EPA's Section 608 guidance stood when last updated (February 24, 2026): technicians disposing of appliances holding 5 to 50 pounds keep, for three years, each appliance's location, recovery date and refrigerant type, monthly totals recovered by type, and transfers for reclamation; for appliances holding 50 pounds or more of ozone-depleting refrigerant, the technician gives the owner documentation of refrigerant added and of leak inspections. Separately, since January 1, 2026, EPA's AIM Act leak-repair rule (40 CFR 84.106) covers appliances holding 15 pounds or more of an HFC or a substitute with a global warming potential above 53, excluding residential and light commercial air conditioning and heat pumps, and requires service records (appliance, date, type of work, technician, refrigerant added or recovered) kept at least three years. The record either way is a refrigerant movement (type, quantity, charged or recovered, appliance, technician, certification) with cylinder inventory behind it, covered in [Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety).
+- **HVAC refrigerants.** Under the Clean Air Act's Section 608, which covers ozone-depleting refrigerants (CFCs and HCFCs) and their substitutes, such as HFCs, technicians who maintain, service, repair or dispose of equipment that could release refrigerant must be certified (Core plus Type 1 small appliances, Type 2 high-pressure, Type 3 low-pressure, or Universal for all), and only certified technicians, or employers showing they employ one, may buy refrigerant for stationary equipment. The recordkeeping rules have changed several times, so date what you build to. As EPA's Section 608 guidance stood when last updated (February 24, 2026): technicians disposing of appliances holding 5 to 50 pounds keep, for three years, each appliance's location, recovery date and refrigerant type, monthly totals recovered by type, and transfers for reclamation; for appliances holding 50 pounds or more of ozone-depleting refrigerant, the technician gives the owner documentation of refrigerant added and of leak inspections. Separately, as 40 CFR 84.106 reads as of October 2026, EPA's AIM Act leak-repair rule applies from January 1, 2026 to appliances holding 15 pounds or more of an HFC or a substitute with a global warming potential above 53, excluding residential and light commercial air conditioning and heat pumps, and requires service records (appliance, date, type of work, technician, refrigerant added or recovered) kept at least three years. EPA has been revisiting its AIM Act rules: in May 2026 it finalized changes to the technology transitions rule and proposed excluding road and intermodal transport refrigeration units from leak repair, so keep the covered-appliance test as dated configuration. The record either way is a refrigerant movement (type, quantity, charged or recovered, appliance, technician, certification) with cylinder inventory behind it, covered in [Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety).
 - **Pool chemicals.** Sanitizers and algaecides are registered pesticides; the operational record is a dosing record driven by water chemistry. Pool Brain calculates doses from the technician's readings with Orenda's formulas, tracks use and cost per body of water, and can append a "wait to swim" message to the customer's email when a flagged chemical was used. Store readings, recommended dose, dose added and product, so a complaint about the water can be answered from the record.
 - **Termite baiting.** Bait stations are long-lived devices with their own service history. GorillaDesk records materials per device; PestPac's app scans Sentricon bait stations and tracks termite activity; ServiceTitan's Property Care generates a report in Corteva's required format for a monthly upload.
 
-## Designing the Application Record
+## How to Build It
 
-The record is assembled from the catalog, the visit, the technician and the jurisdiction, validated, then frozen.
+The application record is assembled from the catalog, the visit, the technician and the jurisdiction, validated, then frozen.
 
 ![An application record is assembled from four inputs: the catalog product with its label version, the technician's licenses, the visit's address and jurisdiction rules, and weather at the device's location. Four checks run at entry: product allowed in this jurisdiction, applicator certified or supervised for the category, rate within the label, and required state fields present. The saved record carries a snapshot of the product and license and feeds the customer's service report, the state report, inventory and the audit trail. Corrections are new amendment records, never edits.](/diagrams/fo-regulated-materials-record.svg "The application record is checked at entry against the label version and the jurisdiction's rules, then frozen with its own copy of the product and license data. Reports and slips read the snapshot; corrections append.")
 
-A minimal schema, added alongside the canonical visits and properties rather than redefining them:
+A minimal schema, added alongside the canonical visits and properties and the shared `items` catalog rather than redefining them:
 
 ```sql
-CREATE TABLE products (
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+CREATE TABLE chemical_items (
+  item_id            UUID PRIMARY KEY REFERENCES items (id),  -- items.kind = 'chemical'
   tenant_id          UUID NOT NULL,
-  name               TEXT NOT NULL,
   epa_reg_no         TEXT,              -- null only for unregistered materials
   distributor_no     TEXT,
   is_restricted_use  BOOLEAN NOT NULL DEFAULT FALSE,  -- from EPA's RUP report
@@ -144,7 +145,7 @@ CREATE TABLE products (
 CREATE TABLE label_versions (
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id       UUID NOT NULL,
-  product_id      UUID NOT NULL REFERENCES products (id),
+  item_id         UUID NOT NULL REFERENCES chemical_items (item_id),
   stamped_on      DATE NOT NULL,
   valid_during    DATERANGE NOT NULL,      -- when this label governs use
   signal_word     TEXT,
@@ -153,7 +154,7 @@ CREATE TABLE label_versions (
   sites           TEXT[] NOT NULL,
   label_url       TEXT NOT NULL, sds_url TEXT,
   CONSTRAINT label_versions_valid_during_excl
-    EXCLUDE USING GIST (product_id WITH =, valid_during WITH &&)
+    EXCLUDE USING GIST (item_id WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE applications (
@@ -161,7 +162,8 @@ CREATE TABLE applications (
   tenant_id          UUID NOT NULL,
   visit_id           UUID NOT NULL REFERENCES visits (id),
   property_id        UUID NOT NULL REFERENCES properties (id),
-  label_version_id   UUID NOT NULL REFERENCES label_versions (id),
+  item_id            UUID NOT NULL REFERENCES chemical_items (item_id),
+  label_version_id   UUID NOT NULL REFERENCES label_versions (id),  -- a label of item_id
   applied_at         TIMESTAMPTZ NOT NULL,     -- device clock: when the product went down
   received_at        TIMESTAMPTZ NOT NULL,     -- server clock; later after offline sync
   applicator_id      UUID NOT NULL REFERENCES staff_members (id),
@@ -193,7 +195,7 @@ The decisions behind it:
 - **Validate at entry, record what you overrode.** Run the four checks in the diagram for every jurisdiction the address falls in. A hard failure blocks completion; a soft one (rate slightly high, weather missing) is allowed with a stored reason.
 - **Append-only.** A correction is a new row with `amends_id`, author, time and reason; reports read the latest amendment and the original stays ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)). FIFRA makes knowingly falsifying required records unlawful, so a system that lets anyone quietly rewrite last month's quantities is a liability.
 - **State requirements are data.** The `jurisdictions` table is defined in [Licenses & Permits](/books/field-operations/licensing-and-permits#a-licensing-model); an address can fall in several. Required fields, accepted units, location precision, filing frequency, due date and retention per jurisdiction drive both validation and report generation ([Rules as Data](/docs/architecture/rules-as-data)).
-- **Reports are derived and reproducible.** A state report is a query over snapshots for a jurisdiction and period, rendered in that state's format. Store each generated file with its parameters and a hash, mark the period filed, and regenerate only as a new version. Vendors usually stop at the file: FieldRoutes' New York export produces a file for the state's upload site, and its docs say the Arizona TARF feature doesn't send forms to the state. Record who filed it and when.
+- **Reports are derived and reproducible.** A state report is a query over snapshots for a jurisdiction and period, rendered in that state's format. Store each generated file with its parameters and a hash, mark the period filed, and regenerate only as a new version. Vendors usually stop at the file: FieldRoutes' New York export produces a file for the state's upload site and its docs say the Arizona TARF feature doesn't send forms to the state, and Jobber's treatment records end in a CSV export. Record who filed it and when.
 - **Inventory follows the record.** Each application decrements the truck's stock of that product by the concentrate quantity; purchases minus applications minus transfers should equal the shelf, and unexplained gaps are a compliance signal as well as a cost.
 
 What goes wrong in practice: technicians log products from habit rather than what's in the tank (pre-fill from the service type, but require a confirmation), a license expires mid-season and surfaces only on the state report, and a merged catalog row points history at the wrong label. Each is invisible until an inspector asks.
@@ -211,7 +213,7 @@ The record structure is in [Audit Trails](/docs/architecture/audit-trails); appl
 
 ## What This Means for the System You Build
 
-- **A product catalog keyed by your own ID,** with validated EPA registration numbers, restricted-use status from EPA's list, versioned labels, units, and offline labels and SDSs.
+- **Regulated products as `chemical` items in the shared catalog,** keyed by your own ID, with validated EPA registration numbers, restricted-use status from EPA's list, versioned labels, units, and offline labels and SDSs.
 - **An application record per product per visit** with concentrate, applied and active ingredient quantities, method, targets, treated areas, weather with its source, coordinates, and both the applied and received times.
 - **Snapshots of product and license data in every record,** so history never changes when the catalog or a license does.
 - **Validation at entry** against the label version, the applicator's certification or supervision, and every overlapping jurisdiction's required fields, with overrides recorded and reasoned.
@@ -235,6 +237,8 @@ The record structure is in [Audit Trails](/docs/architecture/audit-trails); appl
 - [7 Pa. Code 128.111: Registry](https://www.law.cornell.edu/regulations/pennsylvania/7-Pa-Code-SS-128-111), Pennsylvania's hypersensitivity registry and its March 1 and July 15 releases
 - [7 Pa. Code 128.112: Notification](https://www.law.cornell.edu/regulations/pennsylvania/7-Pa-Code-SS-128-112), 500 feet, 12 to 72 hours, notice contents and three-year records
 - [40 CFR 84.106: Leak repair](https://www.law.cornell.edu/cfr/text/40/84.106), the AIM Act leak-repair rule from January 1, 2026: 15-pound HFC appliances, exclusions and three-year service records
+- [Federal Register: Reconsideration of technology transitions requirements (May 26, 2026)](https://www.federalregister.gov/documents/2026/05/26/2026-10387/phasedown-of-hydrofluorocarbons-reconsideration-of-certain-regulatory-requirements-promulgated-under), EPA's final changes to the AIM Act technology transitions rule
+- [Federal Register: Excluding transport refrigeration units from leak repair (proposed, May 26, 2026)](https://www.federalregister.gov/documents/2026/05/26/2026-10388/phasedown-of-hydrofluorocarbons-excluding-road-and-intermodal-container-transport-refrigeration), the proposed leak-repair exclusion for road and intermodal transport refrigeration units
 - [29 CFR 1910.1200: Hazard communication](https://www.law.cornell.edu/cfr/text/29/1910.1200), SDS access each shift in (g)(8), and SDSs kept at the primary workplace for traveling employees if immediately obtainable in an emergency in (g)(9)
 
 **Reference**

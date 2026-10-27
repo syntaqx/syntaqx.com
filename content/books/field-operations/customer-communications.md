@@ -2,7 +2,7 @@
 title = "Customer Communications"
 description = "The messages around every job: confirmations, reminders, on-my-way texts, service reports, review requests, shared numbers and the inbox that answers them."
 category = "Field Operations Industry"
-order = 1525
+order = 1528
 part = "Customers and Billing"
 tags = ["field-operations", "sms", "email", "consent", "tcpa", "notifications", "reviews"]
 +++
@@ -37,7 +37,7 @@ Every suite ships the core lifecycle. They differ in how reminders are triggered
 | Housecall Pro | Scheduled and finished notifications, resent on time or technician change | Text when the button is clicked | Reviews app sends on finish, routes customers between review sites |
 | GorillaDesk | Confirmation automations (customer clicks to confirm) then reminders | Manual, live location link and/or arrival time | Pro plan |
 
-Two details are worth borrowing. FieldRoutes tracks each reminder's state (sent, don't send, pending confirmation, confirmed via office), turning reminders into a confirmation workflow: the unconfirmed visits on tomorrow's routes are the ones to call. And Housecall Pro resends the scheduled notification when the time or technician changes, so the customer's copy tracks the real appointment.
+Two details are worth borrowing. Reminders can be a confirmation workflow: GorillaDesk sends a confirmation the customer clicks before the reminders, and FieldRoutes tracks each reminder's state (sent, don't send, pending confirmation, confirmed via office), so the unconfirmed visits on tomorrow's routes are the ones to call. And Housecall Pro resends the scheduled notification when the time or technician changes, so the customer's copy tracks the real appointment.
 
 Delivery platforms go further on triggers, because a delivery customer waits by the door: Onfleet notifies on task started, an ETA threshold, driver arriving, completed, failed and a **delay** threshold, and Salesforce Field Service's Appointment Assistant notifies when the worker is en route and again about a mile away. The delay trigger is the one trades should copy: a message that the technician is running late beats a customer calling the office to ask. Delivery messages also collect: the tracking link is where a customer says where to leave a package or asks to hold it, and a failed-attempt message carries the next step ([Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery)).
 
@@ -63,9 +63,7 @@ The rules in [Calls, Texts & Email](/docs/compliance/consumer-contact) sort mess
 
 The trap is the mixed message. CTIA warns that adding a call to action such as a coupon code to an informational text "may place the message in the promotional category," and a reminder that ends "add a mosquito treatment for $49" or "ask about our duct cleaning special" is now marketing. Field businesses do this constantly, because the reminder is the message every customer reads. My rule: purpose is set on the template when it's written, and a template with an offer in it is a `marketing` template, gated by marketing consent, whatever it's called.
 
-**Revocation changed in the fall of 2026.** FCC 26-67, adopted September 30, 2026, replaced the "revoke all" rule before it ever took effect; the order's amendments take effect 30 days after Federal Register publication, so check the published effective date before relying on them. A STOP sent in reply to an informational message may now be treated as stopping only that category, so a customer who stops review requests can still get appointment reminders. A STOP in reply to a marketing message stops all marketing from that business. And a business may designate its revocation methods (a reply with one of the standard words, an automated key-press opt-out, a website or phone number) as the exclusive ones, if it discloses them in each message; one standard word such as "Reply STOP to opt out" satisfies that in a text. The ten-business-day limit for honoring a revocation is unchanged. The details are in [Calls, Texts & Email](/docs/compliance/consumer-contact#revoking-consent).
-
-For field service that raises a real design choice:
+**Revocation changed in the fall of 2026:** under FCC 26-67, a STOP in reply to an informational message may be treated as stopping only that category of message; the dates, the marketing rule and the designated revocation methods are in [Calls, Texts & Email](/docs/compliance/consumer-contact#revoking-consent). For field service that raises a real design choice:
 
 - **Scoped revocation, by message category.** A STOP to a review request stops review requests; reminders and on-my-way texts keep coming. The order allows it, and it keeps the customer informed about visits they're still paying for. The cost is a customer who has to opt out several times to get silence.
 - **STOP stops everything on that channel.** Stricter than the rule now requires, and fine as a policy: it's what most customers mean. The cost is a customer who no longer hears that the technician is ten minutes out.
@@ -145,8 +143,8 @@ Communications are evidence in TCPA suits, consumer complaints, chargebacks ("I 
 
 **Specifications**
 
-- [FCC 26-67: Report and Order and Further Notice of Proposed Rulemaking (PDF)](https://docs.fcc.gov/public/attachments/FCC-26-67A1.pdf), adopted September 30, 2026 and effective 30 days after Federal Register publication: scoped revocation for informational messages, marketing revocations covering all marketing, designated exclusive revocation methods and their disclosure, the ten-business-day limit, and the open questions on revoke-all
-- [Cornell LII: 47 CFR 64.1200](https://www.law.cornell.edu/cfr/text/47/64.1200), the ten-business-day revocation limit and the one-time confirmation text presumed within consent if sent within five minutes
+- [FCC 26-67: Report and Order and Further Notice of Proposed Rulemaking (PDF)](https://docs.fcc.gov/public/attachments/FCC-26-67A1.pdf), scoped revocation for informational messages and the further notice's open questions on revoke-all
+- [Cornell LII: 47 CFR 64.1200](https://www.law.cornell.edu/cfr/text/47/64.1200), the one-time confirmation text presumed within consent if sent within five minutes
 - [16 CFR 465.4](https://www.law.cornell.edu/cfr/text/16/465.4) and [16 CFR 465.7](https://www.law.cornell.edu/cfr/text/16/465.7), incentives conditioned on review sentiment and review suppression
 - [FTC: CAN-SPAM Act compliance guide](https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business), primary purpose and mixed messages
 

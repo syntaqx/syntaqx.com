@@ -26,6 +26,8 @@ The chapters follow the work, in seven parts plus a reference:
 
 The volume covers what field operations adds. The general engineering lives in the playbook, and chapters here link to it rather than repeat it: [Multi-Tenancy](/docs/architecture/multi-tenancy) (and its tenant hierarchies), [Events & Async Messaging](/docs/architecture/events), [Background Jobs](/docs/architecture/background-jobs), [Time & Date Formats](/docs/fundamentals/time), [Effective Dating & History](/docs/database/temporal-data), [Addresses & Geocoding](/docs/fundamentals/addresses), [Matching, Merging & Many Sources](/docs/architecture/record-linkage), [Rules as Data](/docs/architecture/rules-as-data), [Audit Trails](/docs/architecture/audit-trails), [Offline-First Sync](/docs/architecture/offline-sync), [Notifications & Consent](/docs/architecture/notifications), [Calls, Texts & Email](/docs/compliance/consumer-contact), [Electronic Signatures & Records](/docs/compliance/electronic-signatures), [Subscriptions & Recurring Billing](/docs/payments/subscriptions), [Sales Tax & VAT](/docs/payments/sales-tax), [AI Agents in the Product](/docs/architecture/ai-agents), [Webhooks](/docs/api-design/webhooks), [Support Access & Internal Tools](/docs/security/support-access) and [Data Pipelines & Analytics](/docs/architecture/data-pipelines). Taking card and bank payments is its own volume, [Payments](/books/payments/card-payments).
 
+The volume is US-centric: regulations are US federal and state law unless a passage says otherwise, and the vendors surveyed are the ones that sell into US field businesses. The data model travels; the legal specifics (cooling-off periods, pesticide records, licensing, calling rules) need local counsel elsewhere.
+
 ## The System You're Building
 
 Read end to end, the volume describes the components of a field operations platform. Each has a chapter:
@@ -233,6 +235,37 @@ CREATE TABLE resources (                 -- what the scheduler books
   CHECK (kind NOT IN ('crew', 'equipment') OR staff_member_id IS NULL)
 );
 
+CREATE TABLE accounts (                  -- who pays
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  branch_id  UUID NOT NULL REFERENCES org_units (id),
+  kind       TEXT NOT NULL CHECK (kind IN ('residential', 'commercial')),
+  name       TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE people (                    -- customer-side contacts; roles link them
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  name       TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE plans (                     -- the product: "Quarterly Pest", "Gold HVAC"
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  name       TEXT NOT NULL
+);
+
+CREATE TABLE plan_versions (             -- immutable once an agreement cites it
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  plan_id      UUID NOT NULL REFERENCES plans (id),
+  version      INT NOT NULL,
+  valid_during TSTZRANGE NOT NULL,       -- when it can be sold
+  UNIQUE (plan_id, version)
+);
+
 CREATE TABLE service_types (             -- what a work order performs
   id         UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id  UUID NOT NULL,
@@ -256,7 +289,7 @@ CREATE TABLE agreements (
   plan_version_id UUID NOT NULL REFERENCES plan_versions (id),
   status          TEXT NOT NULL CHECK (status IN ('draft', 'out_for_signature',
                     'signed', 'active', 'paused', 'on_hold', 'terminated',
-                    'void', 'cancelled')),
+                    'fulfilled', 'void', 'cancelled')),  -- fulfilled: one_time only
   status_reason   TEXT,                  -- required for cancelled, terminated, on_hold
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -278,6 +311,23 @@ CREATE TABLE work_orders (
   CHECK ((source = 'callback') = (callback_of_work_order_id IS NOT NULL))
 );
 
+CREATE TABLE estimates (                 -- options and snapshotted lines; Pricing owns them
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id     UUID NOT NULL,
+  work_order_id UUID NOT NULL REFERENCES work_orders (id),
+  status        TEXT NOT NULL CHECK (status IN ('draft', 'sent', 'approved',
+                  'declined', 'expired')),
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE routes (                    -- one resource's day
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id     UUID NOT NULL,
+  resource_id   UUID NOT NULL REFERENCES resources (id),
+  business_date DATE NOT NULL,           -- in the branch's zone
+  UNIQUE (resource_id, business_date)
+);
+
 CREATE TABLE visits (
   id                     UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id              UUID NOT NULL,
@@ -295,10 +345,27 @@ CREATE TABLE visits (
                            'expired', 'address_not_found', 'id_check_failed',
                            'item_damaged')),  -- required for not_completed and cancelled
   hold_expires_at        TIMESTAMPTZ,    -- only while held
+  arrived_at             TIMESTAMPTZ,    -- UTC instants of what happened
+  completed_at           TIMESTAMPTZ,
   is_locked              BOOLEAN NOT NULL DEFAULT FALSE,  -- pinned; optimizers leave it
   created_at             TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ```
+
+The visit states are this volume's vocabulary, not one vendor's. The platforms name the same life cycle differently, and the mapping is what an integration or a migration has to write down ([Switching Platforms](/books/field-operations/switching-platforms)); agreement states get the same treatment in [Service Agreements & Plans](/books/field-operations/service-agreements#term-renewal-and-cancellation):
+
+| This volume | ServiceTitan appointment | Dynamics 365 booking | Salesforce service appointment |
+| --- | --- | --- | --- |
+| `held` | No documented status | No default status | None (not yet scheduled) |
+| `scheduled` | Scheduled | Scheduled | Scheduled |
+| `dispatched` | Dispatched | Scheduled, with the technician notified | Dispatched (traveling to the site) |
+| `en_route` | Dispatched | Traveling | Dispatched |
+| `on_site` | Working | In Progress | In Progress |
+| `completed` | Done | Completed | Completed |
+| `not_completed` | Hold on the appointment or the job | A custom status such as Partially Completed | Cannot Complete |
+| `cancelled` | Canceled (only with the whole job) | Canceled | Canceled |
+
+Two differences matter when mapping. ServiceTitan's Hold sits on the appointment and the job, where this volume puts the visit's end state and the work order's `hold_reason` on separate records; Dynamics 365 lets a custom booking status complete the booking while returning the work order to Unscheduled for follow-up, which is the same split as a `completed` visit on an `open` work order.
 
 **Visit end states share one reason catalog,** `visits.status_reason`, and which state applies depends on what happened on site:
 
@@ -306,7 +373,11 @@ CREATE TABLE visits (
 - **Nothing could be done on site:** the visit is `not_completed` with `no_access`, `not_home`, `customer_declined`, `part_needed`, `weather` or `unsafe_condition`.
 - **Called off before the technician left:** the visit is `cancelled` with `weather`, `tech_out` or `customer_asked`. A booking hold that lapses is `cancelled` with `expired`.
 
-There is no separate outcome column; later chapters use these values. A **callback** is a new work order with `source = 'callback'` and `callback_of_work_order_id` pointing at the work it redoes, and first-time fix is computed per work order from that link ([Operating Metrics](/books/field-operations/operating-metrics)). A part that wasn't on the truck is a hold, not a callback. Occurrences have their own states (upcoming, open, booked, completed, skipped, missed), defined in [Recurring Schedules](/books/field-operations/recurring-schedules).
+The twelve reason values (with `address_not_found`, `id_check_failed` and `item_damaged` for delivery) are my starting catalog, not any vendor's list. Platforms let each company configure its own reasons, so the fixed catalog is what tenant labels map onto ([Proof of Service](/books/field-operations/proof-of-service#when-the-work-can-t-be-done)).
+
+Two reasons appear on both sides on purpose. `part_needed` is a `completed` visit with the work order on hold when the technician diagnosed and did what they could, and a `not_completed` visit when nothing useful happened before the missing part stopped the job; `weather` is a `not_completed` visit when the crew arrived and rain stopped the application, and a `cancelled` one when the office called the day off before anyone drove. The question is always whether billable or reportable work happened on site, because that decides whether the visit counts toward first-time fix, production and the technician's pay.
+
+There is no separate outcome column; later chapters use these values and add only their own detail: proof requirements in [Proof of Service](/books/field-operations/proof-of-service), make-ups for missed recurring work in [Recurring Schedules](/books/field-operations/recurring-schedules), same-day exceptions in [Dispatch & the Day of Service](/books/field-operations/dispatch). A **callback** is a new work order with `source = 'callback'` and `callback_of_work_order_id` pointing at the work it redoes, and first-time fix is computed per work order from that link ([Operating Metrics](/books/field-operations/operating-metrics)). A part that wasn't on the truck is a hold, not a callback. Occurrences have their own states (upcoming, open, booked, completed, skipped, missed), defined in [Recurring Schedules](/books/field-operations/recurring-schedules).
 
 Design decisions behind it:
 
@@ -355,9 +426,10 @@ The mechanics (typed actors, append-only history, snapshots) are in [Audit Trail
 - [BLS: Plumbers, Pipefitters, and Steamfitters](https://www.bls.gov/ooh/construction-and-extraction/plumbers-pipefitters-and-steamfitters.htm), employment, pay, on-call emergencies and licensing
 - [BLS: Heating, Air Conditioning, and Refrigeration Mechanics and Installers](https://www.bls.gov/ooh/installation-maintenance-and-repair/heating-air-conditioning-and-refrigeration-mechanics-and-installers.htm), employment, pay and peak-season overtime
 - [BLS: Pest Control Workers](https://www.bls.gov/ooh/building-and-grounds-cleaning/pest-control-workers.htm), employment, pay and state licensing
-- [PCT: Pest control industry grew 8 percent in 2024](https://pctonline.com/news/pest-control-industry-8-percent-growth-2024), Specialty Consultants survey: $12.654 billion revenue, 17,000 firms, 85.2% recurring
+- [PCT: Pest control industry grew 8 percent in 2024](https://pctonline.com/news/pest-control-industry-8-percent-growth-2024), Specialty Consultants survey: $12.654 billion revenue, 17,000 firms (two-thirds single-location), 85.2% recurring
 - [Microsoft Learn: Dynamics 365 Field Service overview](https://learn.microsoft.com/en-us/dynamics365/field-service/overview), reactive, preventive, predictive and project-based service models
-- [Microsoft Learn: Work order and booking statuses](https://learn.microsoft.com/en-us/dynamics365/field-service/work-order-status-booking-status), independent life cycles for work orders and bookings
+- [Microsoft Learn: Work order and booking statuses](https://learn.microsoft.com/en-us/dynamics365/field-service/work-order-status-booking-status), independent life cycles for work orders and bookings, default booking statuses, and a booking that completes without completing the work order
+- [Salesforce Trailhead: Track field service jobs](https://trailhead.salesforce.com/content/learn/projects/modify-the-field-service-center/track-field-service-jobs), default service appointment statuses including Cannot Complete
 - [Salesforce: Field Service Developer Guide (PDF)](https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/field_service_dev.pdf), work orders versus service appointments, service territories, entitlements and capacity
 - [Oracle: Overview of forecasting](https://docs.oracle.com/en/cloud/saas/field-service/fasfc/c-overview-of-forcasting.html), workload forecasting from historical data
 
@@ -373,6 +445,7 @@ The mechanics (typed actors, append-only history, snapshots) are in [Audit Trail
 - [FieldRoutes: Change Log Report](https://knowledgebase.fieldroutes.com/docs/change-log-report.md), who changed what, field by field
 - [FieldRoutes: Route density blog](https://www.fieldroutes.com/blog/route-density), a PCT survey ranking route density first (vendor blog)
 - [ServiceTitan: Customer and location records](https://help.servicetitan.com/docs/customer-and-location-records-overview.md), the bill-to customer and the service location
+- [ServiceTitan: Statuses and actions on jobs and appointments](https://help.servicetitan.com/docs/statuses-and-actions-on-jobs-and-appointments), appointment statuses Scheduled, Dispatched, Working, Hold, Done and Canceled
 - [ServiceTitan: Capacity planning](https://help.servicetitan.com/docs/capacity-planning.md), capacity from shifts, business units, job types and zones
 - [ServiceTitan: Audit trail on customer and location records](https://help.servicetitan.com/docs/use-the-audit-trail-on-customer-and-location-records), user, field, timestamp and old and new values
 - [Jobber: Client basics](https://help.getjobber.com/en/articles/client-basics/), clients, properties and when a lead becomes a client

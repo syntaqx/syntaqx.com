@@ -2,7 +2,7 @@
 title = "Operating Metrics"
 description = "The numbers field operations runs on: first-time fix, arrival windows, SLAs, utilization, job costing, close rate, retention, AR and safety."
 category = "Field Operations Industry"
-order = 1531
+order = 1534
 part = "Running the Platform"
 tags = ["field-operations", "metrics", "analytics", "retention", "data-pipelines", "reporting"]
 +++
@@ -86,19 +86,28 @@ Report early and late separately (an early arrival at a customer who isn't home 
 
 ## Route Efficiency
 
-Efficiency metrics share one denominator problem, drawn above. FieldRoutes' Route Summary defines **Drive** efficiency as total driving time divided by total clocked-in time and **Onsite** efficiency as time checked in on site divided by clocked-in time. ServiceTitan's guide defines **technician utilization** as time on field jobs divided by total time worked. Workable definitions, all on one clock:
+Efficiency metrics share one denominator problem, drawn above. ServiceTitan's guide defines **technician utilization** as time on field jobs divided by total time worked, and FieldRoutes' Route Summary divides both drive and on-site time by clocked-in time. Workable definitions, all on one clock:
 
 - **Utilization** = on-site time ÷ clocked-in time. Paid time is the alternative denominator; choose one and name it in the metric.
 - **Drive share** = drive time ÷ clocked-in time, where drive time is time moving between the first departure and the last arrival, from telematics or app location, not from planned route legs.
 - **Stops per hour** = completed stops ÷ clocked-in hours. Vendors don't publish a formula for this one; Upper reports average stops per route and average service time per stop instead.
-- **Revenue per route hour** = production value of completed visits ÷ clocked-in hours. FieldRoutes reports production value per technician through its Billing by Service Type report grouped by technician; dividing by hours is what makes a dense route and a sparse one comparable.
+- **Revenue per route hour** = production value of completed visits ÷ clocked-in hours. Dividing by hours is what makes a dense route and a sparse one comparable.
 - **Planned vs actual** drive and duration per route, which Track-POD exposes as plan and actual fields, is how you tell a bad plan from a bad day.
 
-Exclude re-services and no-charge callbacks from production value, or a technician who causes callbacks looks more productive; FieldRoutes' Route Summary shows re-service time next to production for that reason. A delivery or cleaning route adds failed stops by reason (not home, no access, refused), which Spoke reports alongside late stops and cost per delivery; a failed stop costs the drive and earns nothing. For delivery, **first-attempt delivery rate** is delivery work orders completed on their first visit ÷ delivery work orders closed (completed, or returned after a failed attempt), and cost per stop is reported beside cost per delivery so the gap shows what failed attempts cost ([Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery)).
+Exclude re-services and no-charge callbacks from production value, or a technician who causes callbacks looks more productive. A delivery or cleaning route adds failed stops by reason (not home, no access, refused), which Spoke reports alongside late stops and cost per delivery; a failed stop costs the drive and earns nothing. For delivery, **first-attempt delivery rate** is delivery work orders completed on their first visit ÷ delivery work orders closed (completed, or returned after a failed attempt), and cost per stop is reported beside cost per delivery so the gap shows what failed attempts cost ([Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery)).
 
 ## Sales and Memberships
 
-**Close rate** (conversion rate) in ServiceTitan's Dispatch Pro is jobs sold above the sold threshold divided by jobs completed, excluding recall and warranty jobs. **Average ticket** is the technician's "Job Avg," the total income from completed jobs divided by all completed, convertible jobs, and Dispatch Pro compares it with the job type's median average ticket and multiplies the two into a technician job score. That design is worth copying: comparing a technician with the median for the job types they ran removes the advantage of being dispatched the lucrative calls. On replacement work (a furnace, a water heater, a roof), report the replacement rate per diagnostic visit next to close rate, because a technician who recommends replacement on every old unit closes big tickets and loses customers who needed a repair.
+**Close rate** (conversion rate) in ServiceTitan's Dispatch Pro is jobs sold above the sold threshold divided by jobs completed, excluding recall and warranty jobs. **Average ticket** is the technician's "Job Avg," the total income from completed jobs divided by all completed, convertible jobs, and Dispatch Pro compares it with the job type's median average ticket and multiplies the two into a technician job score. That design is worth copying: comparing a technician with the median for the job types they ran removes the advantage of being dispatched the lucrative calls. **Replacement rate** is ServiceTitan's "Rep. Rate," completed jobs whose total passes both the sold threshold and a separate service/replacement threshold, over all completed jobs. On replacement work (a furnace, a water heater, a pool heater) report it per diagnostic visit next to close rate, because a technician who recommends replacement on every old unit closes big tickets and loses customers who needed a repair.
+
+**Booking rate** measures the phone, not the truck. ServiceTitan's legacy dashboard defines inbound call booking rate as "the percent of call leads that are booked into jobs," where a call lead is a call of at least 60 seconds or one marked as a lead; its Voice Intelligence version, which replaces the legacy number on Max accounts, is "the percentage of bookable calls that resulted in a booked job," with calls classed bookable by what was said, not by the CSR's category. My definition follows the second, and I call it **booked-call rate** to keep it apart from a scheduler's bookings:
+
+```text
+booking_rate (booked_call_rate) =
+  booked / (booked + unbooked)    -- inbound calls, excluding excused and abandoned calls
+```
+
+A call is booked when it produced a booked work order within the call or its callback, unbooked when it was a bookable service need at a served address that didn't, and excused when it was never bookable (technicians, dispatch, vendors, wrong numbers, out of area). Abandoned calls are a separate phone metric, not a failed booking. Report human and AI-answered calls separately ([AI in Field Operations](/books/field-operations/ai-in-field-operations)).
 
 **Membership conversion** is the share of eligible visits where a non-member bought a membership or service agreement. ServiceTitan doesn't publish a formula for it. A workable definition:
 
@@ -110,6 +119,28 @@ membership_conversion =
 
 Credit the sale to the visit and seller recorded on the agreement, as FieldRoutes' API does with a subscription's `soldBy` field, "used in commissions and sales reporting." Decide in the definition whether renewals count. They usually shouldn't: a renewal is retention, not conversion. [Service Agreements & Plans](/books/field-operations/service-agreements) covers the agreement record.
 
+The one-time and upsell numbers from [One-Time Services & Upsells](/books/field-operations/one-time-services-and-upsells) are defined here too:
+
+```text
+attach_rate =
+  count(active recurring agreements at period end with at least one add-on line in their current terms)
+  / count(active recurring agreements at period end)
+
+one_time_to_plan_conversion (cohort, window W days) =
+  count(properties in the cohort with a recurring agreement that reached active
+        within W days of the one-time work order's completion)
+  / count(properties with a one-time work order completed in the cohort period
+          and no active recurring agreement on the completion date)
+
+revenue_per_visit =
+  sum(net invoiced amount attributed to completed visits in the period, after credits)
+  / count(completed visits in the period, excluding callbacks)
+```
+
+- **Attach rate** is per agreement. A per-visit variant (completed plan visits on which an extra was sold, over completed plan visits) answers a different question, technician behavior rather than book composition; report it under its own name.
+- **One-time-to-plan conversion** counts agreements that reached `active`, so a sale cancelled inside the window doesn't count, and it needs a lag: a cohort can't be judged until its window closes. ServiceM8's quote win rate shows the shape: the share of quotes created 28 to 56 days ago that became work orders or completed within 28 days of creation. It isn't ServiceTitan's conversion rate, which is close rate on repair tickets.
+- **Revenue per visit** spreads periodic plan billing across visits at the per-visit value from the service balance ([Billing Recurring Service](/books/field-operations/billing-recurring-service#service-driven-or-calendar-driven-and-the-gap-between-them)), so a monthly-billed lawn or pool plan doesn't make winter visits look free. Split it into base and upsell revenue to see what upselling adds.
+
 Door-to-door teams run a [funnel](/docs/telemetry/product-analytics#funnels) instead (SPOTIO lists doors knocked, contact rate, conversation to demo, demo to close and deal size). The rate that matters most is the one the funnel leaves out: the share of sales that are still paying customers after the first service and after 90 days, because a sale that cancels before the first payment cost a commission and a truck roll. [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions) covers clawbacks against that number.
 
 ## Retention and Churn
@@ -119,13 +150,14 @@ Stripe defines **subscriber churn rate** as churned subscribers in the past 30 d
 The definitions that work for field service:
 
 - **Logo churn** = accounts whose last active agreement ended in the period ÷ accounts active at the start plus accounts added during it. Count the account once, as Stripe does.
-- **Agreement churn**, counted per agreement, as FieldRoutes does, for product decisions ("which plan loses customers").
+- **Agreement churn** = agreements `terminated` in the period ÷ agreements active at the start plus agreements activated during it, counted per agreement like FieldRoutes' Retention Report, for product decisions ("which plan loses customers"). A homeowner who keeps an HVAC membership but ends a separate plumbing plan is agreement churn and not logo churn.
 - **Cohort retention** by sale month, sales rep, lead source and service type, which is where door-to-door seasonality and rep quality show.
-- **Churn typed and reason-coded.** Churn is an `active` agreement ending as `terminated`, and every termination carries a `churn_type` and a reason; one without them is a gap in the data:
+- **Churn typed and reason-coded.** Churn is an `active` agreement ending as `terminated`, and every termination carries a `churn_type` and a reason; one without them is a gap in the data. The first two types are standard subscription-billing vocabulary: Chargebee defines voluntary churn as "the purposeful cancellation of a subscription" and involuntary churn as a payment failure "leading to their subscription being canceled," Recurly describes involuntary churn as loss "caused by factors outside their direct intent," and ServiceTitan uses the same term for memberships lost to failed payments. The third is my own addition:
   - `voluntary`: the customer chose to leave (price, dissatisfied, competitor, moved). A customer who moves is voluntary churn unless the agreement transfers to the new owner of the property, in which case nothing churned.
   - `involuntary`: payment failure or non-payment, fixed by billing, not service ([Collections & Retention](/books/field-operations/collections-and-retention)).
-  - `administrative`: ended for reasons neither side's behavior explains, such as a deceased customer, a property demolished, or the company leaving the service area.
-- **Saves and reinstatements.** FieldRoutes has a Cancellation Reinstatement report. A termination request that was saved is not churn, but it is a signal, and the save offer's cost belongs next to it.
+  - `administrative`: ended for reasons neither side's behavior explains, such as a deceased customer, a property demolished, or the company leaving the service area. A separate type keeps them out of both the retention team's and the billing team's numbers.
+- **Recovery rate** = failed amounts later recovered ÷ failed amounts, by channel (retry, dunning, technician, agency) and with days to recovery, from the channel recorded on each recovered payment ([Collections & Retention](/books/field-operations/collections-and-retention#retries-how-the-platforms-do-it)).
+- **Save rate** = cancellation requests ending `saved` ÷ cancellation requests received, by offer and by reason, with the 90-day survival of saved agreements beside it. A saved request is not churn, but it is a signal, and the offer's cost belongs next to it ([Retention Offers and Saves](/books/field-operations/collections-and-retention#retention-offers-and-saves)).
 
 Two field-specific cautions. Cancellations before activation, including inside the cooling-off window, are `cancelled`, not churn: the agreement never became `active`, and counting them inflates churn in exactly the months door-to-door sales peak. They belong in the sales funnel. And seasonal plans (lawn rounds, mosquito, pool opening and closing) go quiet every year by design, but they don't end: the off-season is the recurrence's season, and the agreement stays `active` through it unless its term ends there. A quiet winter is not churn, so count a seasonal agreement as churned only when it is `terminated`, and measure seasonal retention season over season.
 
@@ -133,7 +165,7 @@ Attribution of a termination to a technician ("last to service before cancellati
 
 ## Receivables
 
-**Accounts receivable aging** groups unpaid balances by how long they have been outstanding. FieldRoutes' AR report shows the decisions a definition must make: age measured from invoice date or due date, and the whole account balance placed in the bucket of the oldest unpaid invoice or each invoice aged separately. The two choices produce different totals per bucket from the same ledger. Your platform should produce aging as of any past date, which means computing it from the ledger's entries and their dates, never from current balances ([Payment States & Ledgers](/docs/payments/payment-states)).
+**Accounts receivable aging** groups unpaid balances by how long they have been outstanding, usually in 30-day buckets (current, 1 to 30, 31 to 60 days and so on). Collections works from it as a list, one row per customer aged by its oldest unpaid invoice ([Collections & Retention](/books/field-operations/collections-and-retention#ar-aging-and-write-offs)). FieldRoutes' AR report shows the decisions a definition must make: age measured from invoice date or due date, and the whole account balance placed in the bucket of the oldest unpaid invoice or each invoice aged separately. The two choices produce different totals per bucket from the same ledger. Your platform should produce aging as of any past date, which means computing it from the ledger's entries and their dates, never from current balances ([Payment States & Ledgers](/docs/payments/payment-states)).
 
 A common collection-speed metric is **days sales outstanding**, `DSO = (ending AR ÷ credit revenue for the period) × days in the period`, reported alongside the share of recurring revenue on autopay, since a residential book on stored cards has little AR to age and a commercial book on net-30 terms has a lot. Report residential and commercial separately; blended, a few large commercial invoices dominate the number.
 
@@ -199,7 +231,7 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 
 - **Tenant settings are definitions.** ServiceTitan's sold threshold, Geotab's weights, a callback window per service type and an SLA's clock start and pause conditions change a metric without touching code, so each change is logged with who, when and the before and after values.
 - **Reclassifications move pay.** Marking a re-service as "not caused by tech," excusing a late arrival for weather, pausing an SLA clock or recoding a cancellation reason is an attributed action with a reason, reviewable by someone other than the person it benefits.
-- **Watch for gaming.** Rising reschedules alongside a perfect completion rate, check-ins far from the property (FieldRoutes' one-mile flag), recorded times that diverge from app events, SLA pauses clustered just before the failure time, and terminations coded to reasons that carry no clawback are the patterns to alert on.
+- **Watch for gaming.** Rising reschedules alongside a perfect completion rate, check-ins far from the property, recorded times that diverge from app events, SLA pauses clustered just before the failure time, and terminations coded to reasons that carry no clawback are the patterns to alert on.
 
 [Audit Trails & Records](/books/field-operations/audit-trails-and-records) covers the field records these metrics are built from.
 
@@ -211,6 +243,7 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 - **First-time fix per work order.** Callbacks are work orders with `source = 'callback'` and `callback_of_work_order_id` set at booking, a tenant-configured window per service type, and second visits for parts (a work order hold, not a callback) reported apart from workmanship.
 - **SLA clocks as data.** Start field, business hours, pauses with reasons, warning and failure durations, and success from an observed event, reported per contract and priority.
 - **Job cost against the estimate.** Labor from clocked time and materials from recorded use, per job, site and route, so underbid work is visible.
+- **Sales numbers defined once:** close rate, average ticket, replacement rate, booked-call rate, membership and one-time-to-plan conversion, attach rate and revenue per visit.
 - **Count accounts and agreements separately.** Logo churn, agreement churn, cohort retention, and terminations typed voluntary, involuntary or administrative with a reason, with pre-activation cancellations and seasonal ends excluded.
 - **AR as of any date.** Aging and DSO computed from ledger entries, with the invoice-date or due-date choice named in the definition.
 - **Raw safety events and exposure.** Vendor scores, raw events and miles kept so scores can be recomputed and normalized.
@@ -221,11 +254,17 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 
 - [Debezium: Features](https://debezium.io/documentation/reference/stable/features.html), log-based change data capture that captures all changes, deletes and old record state without polling
 - [Stripe: Billing analytics](https://docs.stripe.com/billing/subscriptions/analytics), subscriber churn rate, counting a customer with several subscriptions once
+- [Chargebee: Voluntary and involuntary churn rate](https://support.chargebee.com/support/solutions/articles/257268-difference-between-voluntary-involuntary-churn-rate), voluntary churn as purposeful cancellation and involuntary churn as cancellation after a payment failure
+- [Recurly: Involuntary churn](https://docs.recurly.com/recurly-subscriptions/docs/involuntary-churn), customer loss from factors outside the customer's intent, such as expired cards and failed payments
 
 **In practice**
 
 - [ServiceTitan: Dispatch Pro technician performance report](https://help.servicetitan.com/v1/docs/dispatch-pro-technician-performance-report-template), conversion rate and average ticket formulas, the sold threshold and its $100 fallback, job-type medians
-- [ServiceTitan: Technician Performance Board](https://help.servicetitan.com/commercial/docs/technician-performance-board-legacy-report), revenue, close rate, job average and replacement rate definitions
+- [ServiceTitan: Technician's close or conversion rate does not look correct](https://help.servicetitan.com/docs/technicians-close-or-conversion-rate-does-not-look-correct), job opportunities, converted opportunities and the sold threshold
+- [ServiceTitan: Modular dashboard call metrics](https://help.servicetitan.com/how-to/modular-dashboard-call-metrics), inbound call booking rate over call leads of 60 seconds or marked as leads
+- [ServiceTitan: Monitor call performance with Voice Intelligence](https://help.servicetitan.com/docs/monitor-call-performance-with-voice-intelligence-in-servicetitan), booking rate over bookable calls, replacing the legacy rate on Max accounts
+- [ServiceTitan: Membership Renewal Protection](https://www.servicetitan.com/blog/membership-renewal-protection), failed payments described as involuntary churn (vendor blog, 2019)
+- [ServiceTitan: Technician Performance Board](https://help.servicetitan.com/commercial/docs/technician-performance-board-legacy-report), revenue, close rate, job average and the replacement rate (Rep. Rate) definition
 - [ServiceTitan: Field service metrics](https://www.servicetitan.com/blog/field-service-metrics), first-time fix rate and technician utilization definitions
 - [ServiceTitan: Set up arrival windows](https://help.servicetitan.com/docs/set-up-arrival-windows.md), the arrival window definition
 - [ServiceTitan: Memberships workflows](https://help.servicetitan.com/docs/basic-memberships-workflows), membership reports
@@ -233,14 +272,13 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 - [FieldRoutes: Route Summary Report](https://knowledgebase.fieldroutes.com/docs/route-summary-report.md), drive and on-site efficiency over clocked-in time, actual vs scheduled, location and timing flags
 - [FieldRoutes: Retention Report](https://knowledgebase.fieldroutes.com/docs/retention-report.md), subscription-level cancellation rate and retention calendar
 - [FieldRoutes: Accounts Receivable Report](https://knowledgebase.fieldroutes.com/docs/accounts-receivable-report.md), aging by invoice date or due date, by account or invoice
-- [FieldRoutes: Production value per technician](https://knowledgebase.fieldroutes.com/docs/how-can-i-view-production-value-per-technician.md), production value grouped by technician
-- [FieldRoutes: Knowledge base index](https://knowledgebase.fieldroutes.com/llms.txt), the report catalog
 - [FieldRoutes: API reference](https://knowledgebase.fieldroutes.com/apidocs), the subscription `soldBy` field used in commissions and sales reporting
 - [Microsoft Learn: SLAs for work orders](https://learn.microsoft.com/en-us/dynamics365/field-service/sla-work-orders), arrival and resolution KPIs, the applicable-from clock start, business hours, pause and resume, warning and failure durations
 - [Aspire: Job costing and estimating](https://www.youraspire.com/go/job-costing-estimating), estimated labor and materials against actual job cost from division to work ticket
 - [Swept: Time tracking](https://sweptworks.com/cleaning-company-time-tracking-app), geofenced clock-in and scheduled vs actual hours to spot underbid sites
 - [Pool Brain: Features](https://www.poolbrain.com/features/), chemical cost by customer, property, body of water and technician; route profit report and technician scorecards
 - [ServicePower: Warranty claims processing](https://www.servicepower.com/glossary/warranty-claims-processing), automated claim adjudication and validation before payment
+- [ServiceM8: Quote Win Rate in the Business Dashboard report](https://support.servicem8.com/hc/en-us/articles/360001157415-Quote-Win-Rate-in-the-Business-Dashboard-Report), a lagged cohort: quotes created 28 to 56 days ago that converted within 28 days
 - [Track-POD: API schema](https://api.track-pod.com/swagger/v1/swagger.json), planned vs actual cost, distance and times on routes
 - [Jobber: Reports basics](https://help.getjobber.com/en/articles/reports-basics/), financial, work and client reports and who can see them
 - [Upper: Available KPIs and metrics](https://support.upperinc.com/docs/crew/analytics/available-kpis-and-metrics), on-time rate as completion within the window, stops per route, service time per stop

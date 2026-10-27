@@ -2,12 +2,12 @@
 title = "Collections & Retention"
 description = "Collections and retention: failed payments, retries and dunning, holding service, AR aging and write-offs, agencies and Reg F, cancellations, saves and churn."
 category = "Field Operations Industry"
-order = 1528
+order = 1531
 part = "Customers and Billing"
 tags = ["field-operations", "collections", "dunning", "churn", "retention", "cancellation"]
 +++
 
-A recurring service business loses customers two ways. Some decide to leave: the bugs came back, a neighbor's company is cheaper, they moved. Others never decided anything: their card expired, the autopay failed, three statements went to an old email, and six months later the agreement is terminated with a balance nobody will pay. The first is **voluntary churn** and the second **involuntary churn**, and they need opposite responses. Voluntary churn is a service and sales problem you can only partly win back; involuntary churn is a systems problem, mostly recoverable if the platform notices in days instead of months. Field service makes both harder than software subscriptions, because the service is physical: the house may already be treated before anyone knows the payment failed, and stopping service is a truck that doesn't roll.
+A recurring service business loses customers two ways. Some decide to leave: the weeds came back, a neighbor's company is cheaper, they moved. Others never decided anything: their card expired, the autopay failed, three statements went to an old email, and six months later the agreement is terminated with a balance nobody will pay. The first is **voluntary churn** and the second **involuntary churn**, and they need opposite responses. Voluntary churn is a service and sales problem you can only partly win back; involuntary churn is a systems problem, mostly recoverable if the platform notices in days instead of months. Field service makes both harder than software subscriptions, because the service is physical: the house may already be treated before anyone knows the payment failed, and stopping service is a truck that doesn't roll.
 
 The general subscription machinery (retry schedules, dunning states, the cancellation flow and the automatic renewal law behind it) is in [Subscriptions](/docs/payments/subscriptions). This chapter is what field service adds: the technician as a collection channel, the decision to keep serving or hold, delinquency across properties, collection agencies and Regulation F, cancellations that arrive at the door, and churn typed by reason. What was billed is [Billing Recurring Service](/books/field-operations/billing-recurring-service).
 
@@ -19,15 +19,18 @@ Field agreements make card decay worse than in most subscriptions: a multi-year 
 
 ## Retries: How the Platforms Do It
 
-Vendors range from no automatic retry at all to machine-learned scheduling:
+The field suites' public docs say less about retries than a subscription engine's do, and most of what they describe is a person following up:
 
 | | Automatic retry | Customer told | What happens after |
 | --- | --- | --- | --- |
-| Jobber | None: one attempt, then admins are alerted | Receipt on success | Manual collection |
+| ServiceTitan | None documented for membership billing; staff check the failure reason | Staff contact the customer for another method | The failed payment is removed from the membership invoice; a suspended membership leaves billing runs |
+| Housecall Pro | Not documented; plans charge the card on file on schedule | Not documented | Payments due while a plan was inactive wait until staff collect or cancel all of them |
+| Jobber | None: "only attempted once," then admins are alerted | Receipt on success | The invoice stays unpaid until someone collects |
+| PestPac (WorkWave) | Account updater before billing cycles | A secure link to update the card when the updater can't fix it (vendor blog) | Autopay resumes on the new token |
 | FieldRoutes | Manual rerun from a Failed Payment Methods report; ACH returns automated | Bad-account ACH returns emailed | Collection stages, holds, freezes |
 | Stripe Billing | Smart Retries (recommended default 8 tries within 2 weeks) or custom retries | Failed-payment email with an update link | Cancel, unpaid, past due or pause, per configuration |
 
-FieldRoutes' ACH automation is the detail worth copying. On a return it reverses the payment, reopens the invoice, flags the bank account invalid and can add a return fee, and it emails the customer only for "bad account" return codes (R02, R03, R04 and similar), not for R01 insufficient funds, where a retry or a call is the better next step. The return code decides the response, the same way a decline code does on cards.
+Two details are worth copying. Prevention comes first: ServiceTitan's and WorkWave's account updater features refresh reissued cards before the charge, and ServiceTitan's own write-up calls a failed payment a risk of "involuntary churn." And the return code decides the response, the same way a decline code does on cards: on an ACH return FieldRoutes reverses the payment, reopens the invoice, flags the bank account invalid and can add a return fee, and it emails the customer only for "bad account" return codes (R02, R03, R04 and similar), not for R01 insufficient funds, where a retry or a call is the better next step.
 
 My default for a field platform is the processor's retry shape with field timing: soft declines retried over days, timed to paydays and the start of the month, hard declines never retried, and the attempt count persisted per invoice so the network limits are never crossed ([Subscriptions](/docs/payments/subscriptions#dunning)). What changes in the field is that a retry schedule competes with the route: if the next visit is in four days, a retry the evening before the visit, and a technician prompt the morning of, are worth more than a retry a week later.
 
@@ -49,8 +52,10 @@ The decision unique to field service is what to do with the next visit. Options,
 
 1. **Keep serving** through a grace period. Stripe's pause collection models this: the subscription stays active while collection pauses.
 2. **Collect at the door.** The technician takes payment before or at the visit.
-3. **Hold.** FieldRoutes distinguishes a hold from a freeze. A held subscription is a temporary suspension: it leaves the job pool (appointments can still be forced), shows as active, and the company is meant to resolve the dispute or collect meanwhile; customers can't be billed while on hold.
-4. **Terminate.** The agreement ends and nothing more is scheduled. FieldRoutes calls its version a freeze: a frozen subscription can't be scheduled, freezing requires a reason, and it can be reversed with the account data kept.
+3. **Hold.** A temporary stop that keeps the agreement alive. The vendors disagree on what it stops. ServiceTitan's Suspended status stops the membership's benefits and its billing runs but leaves its recurring services bookable; a FieldRoutes hold takes the subscription out of the job pool (appointments can still be forced) and also blocks billing while it lasts.
+4. **End the agreement.** Nothing more is scheduled or billed. Both vendors keep the record reversible: ServiceTitan's Canceled status marks a membership inactive before it expires and stops its benefits and recurring services, and FieldRoutes' freeze stops scheduling, requires a reason and can be reversed with the account data kept. In this volume's model that's `terminated` with `churn_type = 'involuntary'`, and a later reinstatement is a win-back, not an edit.
+
+Who moves the account is a choice too. In ServiceTitan suspending is a status a person sets; FieldRoutes offers hold reasons for past-due customers and bulk actions from its collections tools. My default is that a policy day moves the account and a person can override it with a reason, because a rule applied the same way to everyone is easier to defend than a judgment call made account by account.
 
 Holding has consequences beyond the balance, and they differ by trade. A termite warranty with an annual inspection can lapse; a pool left untreated for two weeks in summer turns green and costs more to recover than the balance; a commercial kitchen's pest service may be required for its health inspection; an HVAC membership's spring tune-up has a narrow season. So the agreement must say what non-payment does to service ([Service Agreements & Plans](/books/field-operations/service-agreements)), and the policy days must be the same for everyone and enforced by the system, which is what makes them defensible.
 
@@ -58,9 +63,11 @@ Holding has consequences beyond the balance, and they differ by trade. A termite
 
 ## AR Aging and Write-Offs
 
-**Accounts receivable (AR) aging** groups unpaid balances by how long they've been outstanding (current, 1 to 30, 31 to 60 days and so on). FieldRoutes' Collections report ages each customer from the oldest unpaid invoice (due dates come from the service type's net billing days) and tracks a collections stage per customer. A collections tool needs a short set of bulk actions: fees added as new invoices (never edits to old ones), holds that can be rolled back, agency placement, a stage change, and the write-off.
+The aging buckets and the choices behind them (invoice date or due date, account or invoice) are defined in [Receivables](/books/field-operations/operating-metrics#receivables). The collections work list runs on them, usually one row per customer aged by its oldest unpaid invoice, with a collections stage. A collections tool needs a short set of bulk actions: fees added as new invoices (never edits to old ones), holds that can be rolled back, agency placement, a stage change, and the write-off.
 
-Model the write-off as its own ledger entry with a reason and approver, rather than a credit or coupon: a coupon-based write-off makes bad debt look like a sales concession, and a later agency recovery needs something to reverse. The entry shown here (debit bad-debt expense, credit receivables) is the **direct write-off method**. A business reporting under GAAP uses the **allowance method** instead: it estimates uncollectible receivables each period into an allowance, and a write-off then debits the allowance rather than expense. The system should support both, because the bookkeeper picks, not the platform. Writing off doesn't forgive the debt. Late fees are subject to state rules, so check them before automating fees.
+A write-off is its own ledger entry with a reason and approver, never a coupon, and it doesn't forgive the debt; the direct and allowance methods are in [Write-Offs](/docs/payments/accounting#write-offs). The field twist is the agency: a recovery after placement reverses the write-off and posts the agency's fee as a collection cost.
+
+Late fees are subject to state rules, so check them before automating fees. Maryland's consumer contract statute is an example of how specific they get: a late fee on a contract for goods or services for personal, family or household purposes generally can't be imposed until 15 days after the bill, is capped at the greater of $5 or 10% of the past-due payment per month with no more than three fees per past-due amount (or 1.5% a month under the alternative), and has to be disclosed in at least 10-point bold type. That's a per-state rule stored as data, not a constant.
 
 ## Collection Agencies and the Law
 
@@ -77,9 +84,9 @@ Two events must stop collection everywhere at once. A **dispute** of the debt (i
 
 ## Cancellations
 
-Customers cancel by phone, in the portal, by text to the technician and at the door, and a platform must treat all of them as the same request with the same outcome. The outcome depends on the agreement's state: a request before the agreement is `active` (including in the cooling-off window) moves it to `cancelled`; ending an `active` agreement moves it to `terminated`, with a churn type and a reason. The general design (one cancellation request from any channel, stamped when received, an effective date, a confirmation, a reason from a controlled list) and the automatic renewal law behind it are in [Subscriptions](/docs/payments/subscriptions#cancellation); the field rules, including the door-to-door cooling-off right, are in [Consumer Protection](/books/field-operations/consumer-protection).
+Customers cancel by phone, in the portal, by text to the technician and at the door, and a platform must treat all of them as the same request with the same outcome. The outcome depends on the agreement's state: a request before the agreement is `active` (including in the cooling-off window) moves it to `cancelled`; ending an `active` agreement moves it to `terminated`, with a churn type and a reason. The general design (one cancellation request from any channel, stamped when received, an effective date, a confirmation, a reason from a controlled list) and the automatic renewal law behind it are in [Subscriptions](/docs/payments/subscriptions#cancellation); the legal clock, the channel list and the postmark rule, including the door-to-door cooling-off right, are in [Renewal and Cancellation in the Field](/books/field-operations/consumer-protection#renewal-and-cancellation-in-the-field). This section owns the field mechanics.
 
-FieldRoutes requires a cancellation reason before a customer can be cancelled, with reasons configured per office or globally and feeding its cancellation and reinstatement reports. Its online cancellation creates a task for staff, and its article advises consulting counsel on subscription disclosure and consent requirements. What's particular to the field:
+Vendors make the reason and the record explicit. FieldRoutes requires a cancellation reason before a customer can be cancelled, with reasons feeding its cancellation and reinstatement reports. ServiceTitan keeps a canceled membership on file, stops its discounts and recurring services on the cancellation date (a cancellation may also mean a refund), and it advises deleting only a membership sold by mistake. What's particular to the field:
 
 - **The technician hears it first.** "We're moving, this is the last time" said on the driveway is a cancellation request. The technician app needs a one-step "customer asked to cancel" that creates the same request, timestamped then, not when the office reads the note.
 - **The route has to know.** The effective date removes future visits from the schedule in the same transaction; a technician who shows up after the customer cancelled turns a clean exit into a complaint.
@@ -102,19 +109,13 @@ Saves must be recorded as carefully as sales: the request, the offer, who made i
 
 ## Win-Back
 
-**Win-back** is selling to former customers. FieldRoutes' Cancellation Reinstatement report lists subscriptions cancelled and later reactivated with the days between and the cancellation notes, and suggests using it to measure win-back tactics; Jobber lists a client re-engagement report among its client reports.
+**Win-back** is selling to former customers. Keeping the ended record makes it measurable: ServiceTitan keeps a canceled membership on file so it can be reactivated if the customer returns, FieldRoutes reports reinstated subscriptions with the days between cancellation and return, and Jobber lists a client re-engagement report among its client reports.
 
 Win-back campaigns are marketing, so they need consent under the `marketing` purpose ([Notifications & Consent](/docs/architecture/notifications#the-consent-ledger)), and a former customer who said stop must not be messaged. Segment by reason: a customer who left over price can take an offer; one who left over a damaged lawn needs an apology first; one who moved is a lead at the property they left, whose new owner the platform can reach ([Customers, Accounts & Properties](/books/field-operations/customers-and-properties)). A reinstatement should link to the original customer and its history rather than create a new account, so retention reports see a return, not a new sale.
 
 ## Churn Metrics
 
-Churn definitions (logo and agreement churn, cohorts, the churn types and what's excluded) are owned by [Operating Metrics](/books/field-operations/operating-metrics#retention-and-churn), so the retention team and the dashboard count the same way. What this chapter adds is the data they need:
-
-- **Every `terminated` agreement carries a `churn_type`** (`voluntary`, `involuntary` or `administrative`) and a reason from a controlled list. Non-payment is involuntary; a customer who moves is voluntary unless the agreement transfers to the new owner. A pre-activation `cancelled` agreement is a sales outcome, not churn.
-- **Recovery rate:** failed amounts recovered by retries, by dunning, by technicians and by agencies, and the time each took.
-- **Save rate** by offer and by reason, and the 90-day survival of saved customers.
-
-This system's job is to emit the events those metrics are computed from: `agreement.terminated` with churn type and reason (and `agreement.cancelled` for pre-active cancellations, which metrics keep out of churn), `payment.succeeded` on a recovered invoice with the channel that recovered it, and a save with its offer.
+Churn definitions (logo and agreement churn, cohorts, the churn types and what's excluded) and the recovery and save rates are owned by [Retention and Churn](/books/field-operations/operating-metrics#retention-and-churn), so the retention team and the dashboard count the same way. What this chapter adds is the data they need: every `terminated` agreement carries a `churn_type` and a reason from a controlled list, every recovered payment records the channel that recovered it (retry, dunning, technician, agency), and every save records its offer. The system's job is to emit the events those metrics are computed from: `agreement.terminated` with churn type and reason (and `agreement.cancelled` for pre-active cancellations, which metrics keep out of churn), `payment.succeeded` on a recovered invoice with the channel that recovered it, and a save with its offer.
 
 ## How to Build It
 
@@ -193,6 +194,7 @@ Collections and cancellations are where consumer complaints, regulator inquiries
 - [12 CFR 1006.30 (Cornell LII)](https://www.law.cornell.edu/cfr/text/12/1006.30), no furnishing to a consumer reporting agency before communicating with the consumer
 - [CFPB: Regulation F, 1006.34 Validation of debts](https://www.consumerfinance.gov/rules-policy/regulations/1006/34/), the validation notice, its itemization, timing and the validation period
 - [11 U.S.C. 362 (Cornell LII)](https://www.law.cornell.edu/uscode/text/11/362), a filed petition operates as a stay of any act to collect a pre-petition claim
+- [Maryland Commercial Law 14-1315](https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=gcl&section=14-1315&enactments=false), consumer contract late fees: 15 days after the bill, the $5 or 10% monthly cap with three fees per past-due amount, the 1.5% alternative and 10-point bold disclosure
 - [California Civil Code 1788.2 (FindLaw)](https://codes.findlaw.com/ca/civil-code/civ-sect-1788-2/), the Rosenthal Act's debt collector definition, which covers collecting "on behalf of that person or others"
 
 **Reference**
@@ -203,6 +205,12 @@ Collections and cancellations are where consumer complaints, regulator inquiries
 
 **In practice**
 
+- [ServiceTitan: Recurring billing FAQ](https://help.servicetitan.com/faq/membership-billing-faq), which payment method membership billing charges and what staff do after a failed payment
+- [ServiceTitan: Edit customer memberships](https://help.servicetitan.com/docs/edit-customer-memberships), Active, Suspended, Expired and Canceled statuses and what each stops
+- [ServiceTitan: Cancel and delete customer memberships](https://help.servicetitan.com/docs/cancel-and-delete-customer-memberships), cancellation dates, refunds, reactivation and deleting only mistakes
+- [ServiceTitan: Membership Renewal Protection](https://www.servicetitan.com/blog/membership-renewal-protection), automatic card updates and failed payments as involuntary churn (vendor blog, 2019)
+- [Housecall Pro: Service plans FAQs](https://help.housecallpro.com/en/articles/5485025-service-plans-faqs), automatic charging of the card on file and pending payments after reactivation
+- [PestPac: Payment processing for pest control](https://www.pestpac.com/blog/best-payment-processing-for-pest-control), account updater before billing cycles and update links after a failed charge (vendor blog)
 - [FieldRoutes: Collections](https://knowledgebase.fieldroutes.com/docs/collections.md), balance age, collection stages and exporting to a third-party agency
 - [FieldRoutes: Collections Actions](https://knowledgebase.fieldroutes.com/docs/collections-actions.md), fees, bulk freeze and rollback, agency placement and write-offs
 - [FieldRoutes: Failed Payment Methods](https://knowledgebase.fieldroutes.com/docs/failed-payment-methods.md), declined autopay customers and manual reruns
@@ -211,8 +219,7 @@ Collections and cancellations are where consumer complaints, regulator inquiries
 - [FieldRoutes: Freezing vs placing on hold](https://knowledgebase.fieldroutes.com/docs/whats-the-difference-between-freezing-and-placing-a-subscription-on-hold.md), temporary holds versus frozen subscriptions
 - [FieldRoutes: How to Freeze Customer Accounts](https://knowledgebase.fieldroutes.com/docs/how-to-freeze-customer-accounts.md), required reasons and reactivation
 - [FieldRoutes: Cancellation and Hold Reasons](https://knowledgebase.fieldroutes.com/docs/cancellation-reasons.md), required cancellation reasons, hold reasons for past-due customers and the reports they feed
-- [FieldRoutes: Online Service Cancellation](https://knowledgebase.fieldroutes.com/docs/online-service-cancellation.md), portal cancellation requests that create staff tasks
 - [FieldRoutes: Cancellation Reinstatement Report](https://knowledgebase.fieldroutes.com/docs/cancellation-reinstatement-report.md), reactivated subscriptions and measuring win-back
-- [Jobber: Automatic payments](https://help.getjobber.com/en/articles/automatic-payments/), a single automatic attempt and admin notification on failure
+- [Jobber: Automatic payments](https://help.getjobber.com/en/articles/automatic-payments/), a single automatic attempt, admin notification on failure and the invoice left unpaid
 - [Jobber: Reports basics](https://help.getjobber.com/en/articles/reports-basics/), the client report set including re-engagement
 - [GorillaDesk: Automated email and SMS](https://intercom.help/gorilladesk/en/articles/8944155-automated-email-sms), up to six late-payment reminders with a payment link

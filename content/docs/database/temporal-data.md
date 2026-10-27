@@ -186,7 +186,7 @@ The exclusion constraint becomes `(product_id WITH =, valid_during WITH &&, reco
 - **Versioned entities are immutable once published,** referenced by version ID, with new-customer offers as an effective-dated pointer.
 - **Snapshot values at the moment of the fact** when the source is mutable or external.
 
-For one industry's application, see effective-dated territories, memberships and shifts in [Territories & Capacity](/books/field-operations/territories-and-capacity#effective-dating).
+For one industry's application, see effective-dated territories, memberships and shifts in [Territories & Capacity](/books/field-operations/territories-and-capacity#how-to-build-it).
 
 ## References
 

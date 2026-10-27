@@ -2,7 +2,7 @@
 title = "Billing Recurring Service"
 description = "Billing recurring service: per-visit, periodic and prepaid models, the service balance, invoices, autopay, financing, tax on services and accounting sync."
 category = "Field Operations Industry"
-order = 1527
+order = 1530
 part = "Customers and Billing"
 tags = ["field-operations", "billing", "invoicing", "autopay", "sales-tax", "accounting"]
 +++
@@ -31,7 +31,7 @@ Underneath the four shapes is one question: does the bill follow the work, or th
 Calendar-driven billing is service-agnostic by design, and that creates a running gap between what the customer has paid for and what they've received. A quarterly pest plan billed monthly is ahead of the work in month one and behind it right after a visit. A lawn program with seven rounds, billed in twelve equal months, has delivered most of its rounds by late summer and keeps billing through winter. An annual charge on renewal day is all paid and nothing delivered. None of that is wrong; it's the deal. But the system has to know where each agreement stands:
 
 - **Keep a service balance per agreement:** visits (or rounds) paid for to date against visits delivered to date, valued at the plan's per-visit price. Positive means the business owes service; negative means the customer has received more than they've paid for.
-- **Price visit types separately, even under a flat bill.** The initial visit is usually priced on its own and billed on completion (or taken at signing as a refundable initial-service charge, the one exception in [How to Build It](#how-to-build-it)); recurring visits carry the plan's per-visit value; callbacks and reservices are free under the agreement; add-on services (a one-off wasp nest, a tree treatment) bill per service on top of the monthly charge. A customer on "$49 a month" can still see three kinds of line on one statement.
+- **Price visit types separately, even under a flat bill.** The initial visit is usually priced on its own and billed on completion (or taken at signing as a refundable initial-service charge, one of the exceptions in [Charging Inside the Window](/books/field-operations/consumer-protection#charging-inside-the-window)); recurring visits carry the plan's per-visit value; callbacks and reservices are free under the agreement; add-on services (a one-off wasp nest, a tree treatment) bill per service on top of the monthly charge. A customer on "$49 a month" can still see three kinds of line on one statement.
 - **Decide the true-up before the first termination.** A customer who ends a level-billed lawn program in August has received more than they've paid; one who ends an annual prepaid plan in March has paid for visits never made. The agreement should say what happens (the remaining balance is billed, refunded or forgiven), and billing should compute it from the service balance, not from a support agent's arithmetic. Where an early-termination charge applies, disclose it at signing ([Consumer Protection](/books/field-operations/consumer-protection)).
 - **Show the balance to the customer.** "4 of 7 rounds complete, paid through October" on the statement and in the portal answers most billing complaints before they're made ([Customer Self-Service](/books/field-operations/customer-self-service)).
 - **Mixed plans are normal.** A base program billed monthly, add-ons billed per visit, and an annual termite renewal billed once a year can all sit on one account; model each as its own billing plan against the same agreement rather than one plan with exceptions.
@@ -61,7 +61,8 @@ A subscription engine such as Stripe Billing fits the calendar-driven plans well
 Recurring plans are half of field billing. The other half is one-off work, whose job flow, pricing methods, warranty claims and SLA clocks are in [Repair, Install & Commercial Work](/books/field-operations/repair-and-installation). What it changes on the billing side:
 
 - **The invoice is built from approved lines.** Flat-rate tasks, time and materials and the diagnostic fee come from the options the customer approved, and a waived or credited diagnostic fee is a rule the invoice applies, not the technician's memory ([Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules)).
-- **Installs bill in stages.** Deposit, progress payments and the balance, often paid by a lender ([Financed Invoices](#financed-invoices)), each an invoice against the same work order. The deposit is a liability until the work it pays for is done, and a deposit taken at signing is refundable under the cooling-off rules ([How to Build It](#how-to-build-it)).
+- **Installs bill in stages.** Deposit, progress payments and the balance, each an invoice against the same work order. The deposit is a liability until the work it pays for is done, and a deposit taken at signing is refundable under the cooling-off rules ([Charging Inside the Window](/books/field-operations/consumer-protection#charging-inside-the-window)).
+- **A financed balance is paid by the lender.** Record the lender as payer, its fee as a cost of the sale, and funding as its own event after approval; an approved loan that hasn't funded is still a receivable. Lenders, presentment and when they pay out are in [Financing Presentment](/books/field-operations/pricing-and-sales-rules#financing-presentment).
 - **Warranty work has a second payer.** The manufacturer's share is a separate receivable from the customer's, paid late, partially or not at all; a rejected claim becomes a bill to the customer that someone has to explain.
 - **Commercial customers bill on their terms:** a PO number on every invoice, a not-to-exceed cap, monthly consolidation across sites, net 30 or later through the client's accounts-payable portal, and SLA credits computed from the work order's clock events.
 
@@ -69,7 +70,7 @@ Cleaning and delivery sit between: a cleaning company bills recurring visits lik
 
 ## Invoices and Statements
 
-An **invoice** bills specific work: one visit, one period, one round, one stage of an install. A **statement** is a snapshot of everything outstanding on an account at a date, and may cover several unpaid invoices; FieldRoutes draws exactly that line. Commercial accounts add **consolidated invoices**: several invoices grouped so a property manager or a school district pays once, while the original invoices still exist underneath. Payer and service location are often different parties, which [Customers, Accounts & Properties](/books/field-operations/customers-and-properties) models.
+An **invoice** bills specific work: one visit, one period, one round, one stage of an install. A **statement** is a snapshot of everything outstanding on an account at a date, and may cover several unpaid invoices. Commercial accounts add **consolidated invoices**: several invoices grouped so a property manager or a school district pays once, while the original invoices still exist underneath. Payer and service location are often different parties, which [Customers, Accounts & Properties](/books/field-operations/customers-and-properties) models.
 
 Rules that hold across vendors and accounting practice:
 
@@ -80,26 +81,22 @@ Rules that hold across vendors and accounting practice:
 
 ## Autopay
 
-Autopay is what makes recurring service economical; FieldRoutes says many of its clients run autopay rates of 80 to 90%. Two decisions shape it in field service:
+Autopay is what makes recurring service economical; FieldRoutes says many of its clients run autopay rates of 80 to 90% (vendor-reported). Two decisions shape it in field service:
 
-1. **Event-triggered or calendar-triggered.** Per-visit autopay charges on completion (FieldRoutes' trigger rule); fixed billing charges on the billing date. Completion-triggered charges need the visit's completion to be trustworthy, which is why [Proof of Service](/books/field-operations/proof-of-service) matters to billing: a technician who marks a visit complete from the truck without treating the yard has just charged a card.
+1. **Event-triggered or calendar-triggered.** Per-visit autopay charges on completion (Jobber creates and charges the invoice once the visit is marked complete); fixed billing charges on the billing date. Completion-triggered charges need the visit's completion to be trustworthy, which is why [Proof of Service](/books/field-operations/proof-of-service) matters to billing: a technician who marks a visit complete from the truck without treating the yard has just charged a card.
 2. **Charge the invoice or the balance.** Charging each invoice is simple and auditable. Charging the account balance on a schedule handles partial payments and credits, but must compute the amount at execution and be capped, as [Autopay Against a Balance](/books/payments/stored-credentials#autopay-against-a-balance) explains, including Regulation E's notice for varying ACH debits.
 
 Stored cards decay over a multi-year agreement, so run them through account updater ([Keeping the Card Alive](/books/payments/stored-credentials#keeping-the-card-alive)). Whoever holds the card tokens decides whether a business can leave with its autopay customers ([Switching Platforms](/books/field-operations/switching-platforms)), and card fees have network and state rules ([Surcharging & Fees](/books/payments/surcharging-and-fees)).
-
-## Financed Invoices
-
-Recurring plans rarely need financing; the one-time jobs sold alongside them do (a termite treatment, a replacement system, an irrigation install). The lenders the suites embed, how the monthly payment is presented and the disclosures are in [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules). For billing, a financed invoice is paid by the lender, not the customer: record the lender as payer, its fee as a cost of the sale, and funding as its own event, separate from approval (Jobber's Wisetack integration pays out only after the client confirms the work is complete). An approved loan that hasn't funded is still a receivable from the lender.
 
 ## Sales Tax on Services
 
 Many states tax some services, and field services are a common target. Texas taxes structural pest control "even when pests are not found," and its local tax is based on the provider's place of business in Texas rather than the customer's address, though a provider whose place of business has a local rate under 2 percent and who serves other local jurisdictions may also owe local use tax there; Ohio taxes exterminating and lawn care, excluding lawn care providers with less than $5,000 of such sales in the year. The same service can be taxable in one state and not the next, and an operator crossing state lines can owe collection where it has no office. The mechanics (tax codes per item, the quote that becomes a snapshot at finalization, sourcing, nexus, exemption certificates) are in [Sales Tax](/docs/payments/sales-tax#taxability-varies-by-place).
 
-What's field-specific is how the platforms wire it. FieldRoutes reports tax by zip-based city and county jurisdictions. ServiceTitan integrates Avalara with a choice that generalizes: recalculate on every edit (accurate, more calls, higher cost) or call once at booking and refresh when the invoice is emailed, printed, paid or viewed. Either way, the call at finalization is required, because that answer is the snapshot the invoice keeps ([Tax Is a Quote Until the Invoice Finalizes](/docs/payments/sales-tax#tax-is-a-quote-until-the-invoice-finalizes)). ServiceTitan's integration can send the business unit as ship-from and the service location as ship-to, exactly the pair Texas-style sourcing needs, and the technician's offline app shows an estimate until the server computes the real number. Invoice structure is a tax decision too: Texas taxes the whole charge when a taxable service above 5% of it isn't stated separately, so a treatment bundled into a nontaxable line needs its own line and tax code.
+What's field-specific is how the platforms wire it. ServiceTitan integrates Avalara with a choice that generalizes: recalculate on every edit (accurate, more calls, higher cost) or call once at booking and refresh when the invoice is emailed, printed, paid or viewed. Either way, the call at finalization is required, because that answer is the snapshot the invoice keeps ([Tax Is a Quote Until the Invoice Finalizes](/docs/payments/sales-tax#tax-is-a-quote-until-the-invoice-finalizes)). ServiceTitan's integration can send the business unit as ship-from and the service location as ship-to, exactly the pair Texas-style sourcing needs, and the technician's offline app shows an estimate until the server computes the real number. Invoice structure is a tax decision too: Texas taxes the whole charge when a taxable service above 5% of it isn't stated separately, so a treatment bundled into a nontaxable line needs its own line and tax code.
 
 ## Accounting Sync
 
-The FSM is the operational ledger; the business's books live in QuickBooks, Xero or Sage. Vendors differ mainly in what they push:
+The FSM is the operational ledger; the business's books live in QuickBooks, Xero or Sage. Summary journals versus detail sync, a log per sync batch and idempotent posting are general, in [Syncing to the Accounting System](/docs/payments/accounting#syncing-to-the-accounting-system); my default there (summary journals plus a CSV export) suits field businesses because their bookkeepers use whatever accounting system they already had. What the field vendors push:
 
 | Vendor | Systems | What syncs |
 | --- | --- | --- |
@@ -108,23 +105,55 @@ The FSM is the operational ledger; the business's books live in QuickBooks, Xero
 | Housecall Pro | QuickBooks Online and Desktop | Invoices, customers, line items and payments pushed automatically |
 | ServiceTitan | QuickBooks Desktop and Online, Sage Intacct, Xero | Invoices, payments and customers depending on the system, plus a general CSV export for unsupported systems |
 
-**Detail sync** (every customer, invoice and payment mirrored) lets the bookkeeper drill in but turns every edit into a reconciliation problem, which is why Jobber says post-sync edits must be made twice. **Summary sync** (journal entries by day and account) keeps the FSM authoritative. My default is summary journals plus a CSV export, because it works with any accounting system; detail sync only where the bookkeeper needs it. Keep a log per sync batch, because "the books don't match" is a monthly support ticket.
+Jobber's one-way, one-time invoice sync is the detail-sync cost in practice: an invoice edited after it synced has to be edited in both systems. The field-specific journal lines are deferred revenue on prepaid plans and install deposits, released as below, and the production value that commissions read, which never goes to the books.
 
 ## Revenue Metrics
 
-Recurring billing produces its own vocabulary. Stripe's definitions are a useful public reference: **MRR** is the monthly-normalized value of active and past-due subscriptions (a $600 annual plan contributes $50), excluding taxes. Field service adds metrics a pure subscription business doesn't need:
+Recurring billing produces its own vocabulary. **MRR** (the monthly-normalized value of active agreements, so a $600 annual plan contributes $50) is an operating number, not revenue ([Revenue Metrics Are Not Revenue](/docs/payments/accounting#revenue-metrics-are-not-revenue)). Field service adds metrics a pure subscription business doesn't need:
 
 - **Recurring revenue under contract,** by service line, and how much of it is on autopay.
 - **Billed versus performed.** For fixed billing, the gap between what was invoiced and what was serviced is a liability (visits owed) or a dispute waiting to happen.
-- **Deferred revenue** from prepayments and install deposits, released as it's earned. When that is, is an accounting judgment, not a system default: a plan whose promise is a set number of visits may release a share per completed visit, while a plan that promises unlimited reservices between visits can be a stand-ready promise recognized evenly over the term. Your accountant decides; the system keeps both the completed visits and the term dates so either method can be computed, and install deposits release by stage.
+- **Deferred revenue** from prepayments and install deposits, released as it's earned. When that is, is an accounting judgment, not a system default: a plan whose promise is a set number of visits may release a share per completed visit, while a plan that promises unlimited reservices between visits can be a stand-ready promise recognized evenly over the term. Your accountant decides; the system keeps both the completed visits and the term dates so either method can be computed ([Recognition Schedules](/docs/payments/accounting#recognition-schedules)), and install deposits release by stage.
 
-Collected versus billed and AR aging belong to [Collections & Retention](/books/field-operations/collections-and-retention), and the definitions and dashboards to [Operating Metrics](/books/field-operations/operating-metrics), with one definition per metric ([Data Pipelines](/docs/architecture/data-pipelines#one-definition-per-metric)); the billing system's job is to keep the events those metrics are computed from.
+Collecting what was billed is [Collections & Retention](/books/field-operations/collections-and-retention); AR aging and the other definitions are in [Operating Metrics](/books/field-operations/operating-metrics#receivables), with one definition per metric ([Data Pipelines](/docs/architecture/data-pipelines#one-definition-per-metric)); the billing system's job is to keep the events those metrics are computed from.
 
 ## How to Build It
 
-Keep the billing schedule a separate object from the service schedule, the way GorillaDesk lets an invoice follow its own frequency and FieldRoutes runs non-per-visit billing on its own timer. The visit generator ([Recurring Schedules](/books/field-operations/recurring-schedules)) and the billing generator both read the agreement and don't call each other; they meet at the work order, which invoice lines reference. The tables below extend the canonical `agreements`, `accounts` and `visits` from [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model); `invoices` and `payment_methods` come from the payments side.
+Keep the billing schedule a separate object from the service schedule, the way GorillaDesk lets an invoice follow its own frequency and ServiceTitan keeps the membership's billing invoice apart from each recurring service's. The visit generator ([Recurring Schedules](/books/field-operations/recurring-schedules)) and the billing generator both read the agreement and don't call each other; they meet at the work order, which invoice lines reference. The tables below extend the canonical `agreements`, `accounts` and `visits` from [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model).
+
+The volume's `invoices` and `payment_methods` start here, compactly; the payment and ledger mechanics underneath are in [Payment States & Ledgers](/docs/payments/payment-states). A payment method holds the processor's or vault's token and display details, never a card number ([Card Vault](/books/payments/card-vault)), plus the signed authorization the recurring or ACH debit relies on.
 
 ```sql
+CREATE TABLE payment_methods (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id        UUID NOT NULL,
+  account_id       UUID NOT NULL REFERENCES accounts (id),
+  kind             TEXT NOT NULL CHECK (kind IN ('card', 'ach')),
+  processor        TEXT NOT NULL,                         -- who issued the token
+  vault_token      TEXT NOT NULL,                         -- never a PAN or full account number
+  brand            TEXT,                                  -- display only
+  last4            CHAR(4),
+  expires_on       DATE,                                  -- cards; account updater refreshes it
+  authorization_document_id UUID REFERENCES agreement_documents (id),  -- the signed authorization
+  status           TEXT NOT NULL CHECK (status IN ('active', 'invalid', 'removed')),
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE invoices (
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id       UUID NOT NULL,
+  account_id      UUID NOT NULL REFERENCES accounts (id), -- the payer
+  number          TEXT,                                   -- assigned at finalization
+  status          TEXT NOT NULL CHECK (status IN ('draft', 'open', 'paid', 'void', 'uncollectible')),
+  currency        TEXT NOT NULL,
+  total_amount    BIGINT NOT NULL DEFAULT 0,              -- minor units, lines plus tax
+  issued_on       DATE,                                   -- branch business date
+  due_on          DATE,                                   -- aging runs from here or issued_on
+  finalized_at    TIMESTAMPTZ,                            -- immutable after this
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT invoices_tenant_number_key UNIQUE (tenant_id, number)
+);
+
 CREATE TABLE billing_plans (
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id         UUID NOT NULL,
@@ -170,7 +199,7 @@ Tax isn't a line kind. Each taxable line gets its tax rows in `invoice_line_taxe
 
 How it runs:
 
-1. **No recurring-period charge on an agreement that isn't `active`.** A `signed` agreement is still inside its cooling-off window or awaiting verification, and a `paused`, `on_hold`, `cancelled` or `terminated` one has nothing to bill. The run selects due periods only for active agreements, and a charge attempt rechecks the state at execution, because an agreement can be cancelled between draft and charge. Two exceptions, stated so nobody invents a third: an initial-service charge and an install deposit may be taken at signing, but only as refundable under the cooling-off rules, which means a refund within 10 business days of a valid cancellation ([Consumer Protection](/books/field-operations/consumer-protection#charging-inside-the-window) has the law). My default is still to charge nothing until the agreement is active. The state machine and the deadline that moves `signed` to `active` are in [Signing the Agreement](/books/field-operations/signing-the-agreement).
+1. **No recurring-period charge on an agreement that isn't `active`.** The run selects due periods only for active agreements, and a charge attempt rechecks the state at execution, because an agreement can be cancelled between draft and charge. ServiceTitan's billing runs skip a suspended membership the same way. The two refundable charges allowed at signing are in [Charging Inside the Window](/books/field-operations/consumer-protection#charging-inside-the-window), and the deadline that moves `signed` to `active` in [Signing the Agreement](/books/field-operations/signing-the-agreement).
 2. **A billing run is a scheduled job per branch per business day,** using the branch's business date from its `org_units` time zone ([Business Dates](/docs/fundamentals/time#business-dates-business-days-and-holidays), [Background Jobs](/docs/architecture/background-jobs#scheduling)): select due periods, draft, tax, finalize, charge. The unique period makes a rerun safe; the charge's idempotency key is the period and attempt, as in [Renewal Jobs](/docs/payments/subscriptions#renewal-jobs).
 3. **Per-visit invoices hang off the `visit.completed` event,** consumed idempotently by visit ID ([Events](/docs/architecture/events)). A reversed completion produces a credit note, not a deleted invoice.
 4. **Skipped visits are a per-plan policy:** keep billing and show "visits owed," auto-credit the missed visit, or defer the next period. Show the choice on statements and in the portal.
@@ -198,13 +227,14 @@ Billing records are evidence in disputes, chargebacks, tax audits and commission
 ## What This Means for the System You Build
 
 - **A billing plan separate from the service schedule,** with the model, payer, anchor and autopay method on it, and several plans per agreement when the customer has a mixed plan.
-- **No recurring-period charge on an agreement that isn't `active`,** checked when the run selects periods and again when the charge executes; an initial-service charge or install deposit at signing only as refundable under the cooling-off rules.
+- **No recurring-period charge on an agreement that isn't `active`,** checked when the run selects periods and again when the charge executes ([Charging Inside the Window](/books/field-operations/consumer-protection#charging-inside-the-window) has the exceptions).
+- **Payment methods as vault tokens** with their signed authorization, never card numbers.
 - **A service balance per agreement** that drives statements, the termination true-up and the reconciliation with deferred revenue.
 - **A configurable skipped-visit policy** per plan, visible to the customer, with a "billed but not serviced" report for support.
 - **Repair and install billing:** flat-rate lines, staged invoices with deposits as liabilities, warranty claims as their own receivables, and purchase orders, not-to-exceed limits and SLA credits for commercial accounts.
 - **Production value separate from billed price** on every service line.
 - **Tax by code and both addresses,** snapshotted on the invoice, and financing recorded as lender-paid.
-- **Accounting export as summary journals plus CSV,** with a log per sync batch.
+- **Accounting export** to the systems field businesses use, with deferred revenue for prepaid plans and deposits.
 
 ## References
 
@@ -216,25 +246,21 @@ Billing records are evidence in disputes, chargebacks, tax audits and commission
 **Reference**
 
 - [Stripe: Set the subscription billing renewal date](https://docs.stripe.com/billing/subscriptions/billing-cycle), billing cycle anchors and month-end behavior
-- [Stripe: Billing analytics](https://docs.stripe.com/billing/subscriptions/analytics), MRR as monthly-normalized active and past-due subscriptions
 - [QuickBooks: Receive an invoice payment using the QuickBooks Online mobile app](https://quickbooks.intuit.com/community/help-articles-128/receive-an-invoice-payment-using-the-quickbooks-online-mobile-app-284363), payments applied to the oldest open invoice first, with any excess unapplied
 
 **In practice**
 
 - [FieldRoutes: Set up Recurring Billing](https://knowledgebase.fieldroutes.com/docs/set-up-recurring-billing.md), billing frequency, invoices on skipped visits until frozen, and production value
-- [FieldRoutes: AutoPay Trigger Rule](https://knowledgebase.fieldroutes.com/docs/autopay-trigger-rule.md), per-visit autopay triggered by completion
 - [FieldRoutes: Prepayments Overview](https://knowledgebase.fieldroutes.com/docs/prepayments-overview.md), prepayment plans with tiered discounts
-- [FieldRoutes: Invoice vs account statement](https://knowledgebase.fieldroutes.com/docs/whats-the-difference-between-an-invoice-and-an-account-statement.md), the two documents defined
-- [FieldRoutes: Consolidated Invoices](https://knowledgebase.fieldroutes.com/docs/consolidated-invoices.md), grouping invoices for one payment while keeping the originals
 - [FieldRoutes: 3 Ways to Drastically Improve Collections](https://knowledgebase.fieldroutes.com/docs/3-ways-to-drastically-improve-collections.md), autopay rates of 80 to 90% among clients
-- [FieldRoutes: Sales Tax report](https://knowledgebase.fieldroutes.com/docs/sales-tax.md), zip-based tax jurisdictions and non-taxable revenue
 - [FieldRoutes: QBI overview](https://knowledgebase.fieldroutes.com/docs/qbi-overview.md), QuickBooks Online payment journal entries and sync logs
 - [ServiceTitan: Understanding membership setup](https://help.servicetitan.com/how-to/understanding-membership-setup), membership billing invoice templates and deferred revenue items
+- [ServiceTitan: Edit customer memberships](https://help.servicetitan.com/docs/edit-customer-memberships), suspended memberships left out of billing runs
 - [ServiceTitan: Basic memberships workflows](https://help.servicetitan.com/docs/basic-memberships-workflows), Charge Members and automatic charging of stored methods
 - [ServiceTitan: Avalara integration guide](https://help.servicetitan.com/docs/avalara-integration-guide), cache and no-cache tax calculation, ship-from and ship-to addresses, filing and the mobile estimate
 - [ServiceTitan: Accounting integrations](https://help.servicetitan.com/docs/accounting-integrations-overview), QuickBooks, Sage Intacct, Xero and the general CSV export
 - [Jobber: Create a recurring job](https://help.getjobber.com/en/articles/create-a-recurring-job/), per-visit and fixed-price billing and invoice schedules
-- [Jobber: Consumer financing with Wisetack](https://help.getjobber.com/hc/en-us/articles/360056100954), payout after the client confirms completion
+- [Jobber: Automatic payments](https://help.getjobber.com/en/articles/automatic-payments/), invoices created and charged when a visit is marked complete
 - [Jobber: QuickBooks Online sync](https://help.getjobber.com/hc/en-us/articles/115009786748), what syncs in each direction and edits after sync
 - [Housecall Pro: Create service plans](https://help.housecallpro.com/en/articles/2369524-create-service-plans), service plan payment options including yearly
 - [Housecall Pro: Service plans FAQs](https://help.housecallpro.com/en/articles/5485025-service-plans-faqs), locked billing frequency, pending payments on reactivation and add-on rounding

@@ -51,9 +51,9 @@ Prepaid agreements create a liability: the customer paid for visits not yet deli
 Agreements stop temporarily for two reasons, and the difference decides who can lift the stop and what billing does:
 
 - **Pause** (`paused`). The customer asked for a stop the plan doesn't already include: a winter away, a year with the pool drained for repairs. No visits, and usually no billing. A planned off-season is not a pause: it's the recurrence's `season`, and the agreement stays `active` through it ([Recurring Schedules](/books/field-operations/recurring-schedules)). FieldRoutes subscriptions carry seasonal start and end dates for that predictable case; GorillaDesk recurrences can skip selected months.
-- **Hold** (`on_hold`). The company stopped service: non-payment or a dispute. No new visits and no new charges, while collection of what's already owed continues ([Collections & Retention](/books/field-operations/collections-and-retention)). FieldRoutes' subscription hold removes services from the job pool, stays visible in reporting, can be placed automatically by an accounts-receivable trigger rule, and logs a note when placed, removed or edited.
+- **Hold** (`on_hold`). The company stopped service: non-payment or a dispute. No new visits and no new charges, while collection of what's already owed continues ([Collections & Retention](/books/field-operations/collections-and-retention)). Vendors differ on how it's placed: ServiceTitan's Suspended membership is set by staff and drops out of billing runs while its recurring services stay active, and FieldRoutes' subscription hold removes services from the job pool and can also be placed automatically by an accounts-receivable trigger rule. Whether a rule or a person places it is policy; either way, log who or what placed it and why.
 
-FieldRoutes also has a **freeze**, which in this volume's terms is a termination that keeps the data: a frozen subscription is no longer due for service, requires a cancellation category, and can be reactivated. Model it as `terminated`, and model reactivation as a new term or a new agreement, not as a return to `active`. Freezing "does not freeze any future scheduled appointments"; those must be cancelled separately.
+Ending a live agreement while keeping its history is the other common shape. ServiceTitan cancels a membership (benefits stop, recurring services are deactivated, the record stays for reporting, and deleting is only for mistakes), Housecall Pro cancels an active plan and can later restore it, and FieldRoutes freezes a subscription (no longer due for service, a cancellation category required, reactivation possible). In this volume's terms all three are `terminated`, and reactivation is a new term or a new agreement, not a return to `active`, so churn and win-back are counted once each. FieldRoutes notes that freezing "does not freeze any future scheduled appointments"; those must be cancelled separately.
 
 That last detail is the failure to design out. A pause or hold has to reach every derived object: future visits, open occurrences, recurring invoices and scheduled autopay. Two records carry it. `agreement_suspensions` holds the dated intervals (kind `pause` or `hold`, `valid_during`, reason, who), and they drive `agreements.status`, which is only the current state: `paused` or `on_hold` while today falls inside an interval, `active` otherwise. The occurrence generator and the billing run read the intervals, not the status, so a pause booked in October for January to March is honored by everything generated before January. Then decide whether the term extends by the paused time. My default is to extend prepaid and visit-count agreements ("four visits a year" still means four) and not extend month-to-month ones, and to tell the customer which at the moment they pause.
 
@@ -79,12 +79,28 @@ Renewal is either automatic re-generation or a sales event, and the industry doe
 
 ![Agreement states: draft goes out for signature, is signed, and becomes active when the cooling-off window closes; a packet never signed or expired ends void, and a signed agreement cancelled before activation ends cancelled with a reason. Active renews into a new term version, moves to and from paused when the customer asks and on hold when the company stops service, and ends terminated with a reason.](/diagrams/fo-service-agreements-states.svg "Active is the long middle and the only state that bills. The first visit is a milestone, not a state; void and cancelled end agreements that never went live, terminated ends one that did.")
 
+These states are this volume's own vocabulary, the union of what the platforms separate, not any one vendor's list. Most products collapse several of them, and an import or integration has to map them explicitly ([Switching Platforms](/books/field-operations/switching-platforms)):
+
+| This volume | ServiceTitan membership | FieldRoutes subscription | Housecall Pro service plan | Jobber (quote, then recurring job) | Dynamics 365 agreement |
+| --- | --- | --- | --- | --- | --- |
+| `draft` | Sold on an estimate or invoice, no draft state | Not documented | Draft | Quote: Draft | Estimate |
+| `out_for_signature` | Not documented | Not documented | Sent | Quote: Awaiting response | Estimate, with a substatus such as awaiting signature |
+| `signed` | Not documented | Not documented | Not documented | Quote: Approved, then Converted to a job | Estimate, until set Active |
+| `active` | Active | Active | Active | Active recurring job | Active |
+| `paused` | Suspended | On hold (often at the customer's request) or seasonal dates | Not documented | Not documented | Substatus of Active |
+| `on_hold` | Suspended | On hold, manual or by trigger rule | Not documented | Not documented | Substatus of Active |
+| `terminated` | Canceled, or Expired at the end of its duration | Frozen | Canceled (restorable) | Job closed, then archived | Canceled, or Expired at the end date |
+| `fulfilled` | Not applicable | Not applicable | Not applicable | One-off job closed, then archived | Expired |
+| `void`, `cancelled` | Deleted ("sold as a mistake") | Deleted | Draft or sent plan deleted | Quote archived | Canceled |
+
+"Not documented" means I found no public help page for it, not that the product can't represent it. The two places the mapping loses information are the ones to watch: a vendor with one suspended state can't say whether the customer or the company stopped service, and a vendor that deletes unsigned or rescinded agreements leaves no record of the cooling-off cancellation.
+
 ## Warranties and Guarantees
 
 Three different promises get called a warranty, and they need different models.
 
 - **The company's guarantee.** Free re-service between scheduled visits, or a labor warranty on a repair. Model it as a benefit that lets a callback job be created at zero price and tracked against the agreement or the original repair, because callback rate is a quality metric ([Operating Metrics](/books/field-operations/operating-metrics)).
-- **Renewable termite warranties,** often called termite bonds. FieldRoutes models them as renewal subscriptions: billing upon renewal, service as needed, a renewal date set at initial service completion or initial payment, and annual, semi-annual or two-year renewal. A full payment advances the renewal date from the renewal date, not the payment date; a partial payment doesn't advance it. The law reaches the document: Florida requires the first page of a new wood-destroying organism contract to state in bold whether it covers repair and retreatment, retreatment only, or nothing, and bars calling a limited guarantee "full" or "unlimited."
+- **Renewable termite warranties,** often called termite bonds. FieldRoutes models them as renewal subscriptions: billing upon renewal, service as needed, a renewal date set at initial service completion or initial payment, and annual, semi-annual or two-year renewal. There, a full payment advances the renewal date from the renewal date, not the payment date, and a partial payment doesn't advance it; that's one design, and the alternative is ServiceTitan's fixed-duration membership, which expires and renews through a renewal estimate. Whichever you choose, compute the next term from the old term's end, never from the payment date, so a late payer doesn't drift the anniversary. The law reaches the document: Florida requires the first page of a new wood-destroying organism contract to state in bold whether it covers repair and retreatment, retreatment only, or nothing, and bars calling a limited guarantee "full" or "unlimited."
 - **Manufacturer warranties on equipment.** These live on the asset, not the agreement; registration deadlines that change their terms, and the claims filed against them, are in [Repair, Install & Commercial Work](/books/field-operations/repair-and-installation#equipment-is-an-asset).
 
 ## Commercial Contracts and SLAs
@@ -171,13 +187,14 @@ Agreements are contracts, so their history is evidence: "I never agreed to auto-
 
 - [16 CFR 429.1: The Cooling-Off Rule](https://www.law.cornell.edu/cfr/text/16/429.1), the three-business-day cancellation right and ten-business-day refund for door-to-door sales
 - [California Business and Professions Code 17602](https://codes.findlaw.com/ca/business-and-professions-code/bpc-sect-17602/), automatic renewal disclosures, consent records, renewal and price-change notices
-- [Florida Statutes 482.227: Guarantees and warranties](https://www.flsenate.gov/Laws/Statutes/2024/482.227), first-page disclosure of repair and retreatment terms in termite contracts
+- [Florida Statutes 482.227: Guarantees and warranties](https://www.flsenate.gov/Laws/Statutes/2026/482.227), 2026 text: first-page disclosure of repair and retreatment terms in termite contracts
 
 **Reference**
 
 - [ServiceTitan: Understanding membership setup](https://help.servicetitan.com/how-to/understanding-membership-setup), the membership wizard, recurring service types and renewal items
 - [ServiceTitan: Memberships paid up front](https://help.servicetitan.com/residential-s-r/docs/configure-memberships-for-revenue-paid-up-front), fixed-duration memberships, renewal tasks and revenue recognition
 - [ServiceTitan: Basic memberships workflows](https://help.servicetitan.com/docs/basic-memberships-workflows), memberships sold as tasks, expiring memberships and add-ons
+- [ServiceTitan: Edit customer memberships](https://help.servicetitan.com/docs/edit-customer-memberships), Active, Suspended, Expired, Canceled and Deleted and what each stops
 - [ServiceTitan: Cancel and delete customer memberships](https://help.servicetitan.com/docs/cancel-and-delete-customer-memberships), what cancellation stops and when to delete
 - [FieldRoutes: Adding a service type subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), subscription fields for service, billing and sales
 - [FieldRoutes: Frequency options](https://knowledgebase.fieldroutes.com/docs/frequency-options.md), frequencies as day counts
@@ -190,10 +207,14 @@ Agreements are contracts, so their history is evidence: "I never agreed to auto-
 - [Housecall Pro: Create service plans](https://help.housecallpro.com/en/articles/2369524-create-service-plans), discounts, included visits, duration and payment cadence
 - [Housecall Pro: How to sell a service plan](https://help.housecallpro.com/en/articles/2921514-how-to-sell-a-service-plan), plans attached to addresses
 - [Housecall Pro: Service plans FAQs](https://help.housecallpro.com/en/articles/5485025-service-plans-faqs), automatic charges and fixed billing frequency
+- [Housecall Pro: Edit or delete a service plan](https://help.housecallpro.com/en/articles/2962784-edit-or-delete-a-service-plan), draft and sent plans deleted, active plans cancelled, cancelled plans restored
 - [Housecall Pro: Activity feed](https://help.housecallpro.com/en/articles/4154392-activity-feed), service plan lifecycle and automatic charge history
 - [Jobber: Create a recurring job](https://help.getjobber.com/en/articles/create-a-recurring-job/), recurring visits and invoice schedules
+- [Jobber: Quote list page and key metrics](https://help.getjobber.com/en/articles/quote-list-page-and-key-metrics/), quote statuses from draft through approved, converted and archived
+- [Jobber: What if a job gets canceled](https://help.getjobber.com/en/articles/what-if-a-job-gets-canceled/), closing a job, removing future visits and archiving
 - [GorillaDesk: Recurring jobs](https://intercom.help/gorilladesk/en/articles/1089485-recurring-jobs), separate invoice frequencies and month exceptions
 - [Microsoft: Agreements overview](https://learn.microsoft.com/en-us/dynamics365/field-service/set-up-customer-agreements), agreements generating work orders and invoices
+- [Microsoft Learn: Create agreements](https://learn.microsoft.com/en-us/training/modules/define-agreements/create-agreements), Estimate, Active, Expired and Canceled system statuses and substatuses
 - [Microsoft: Set up agreements to generate work orders](https://learn.microsoft.com/en-us/dynamics365/field-service/set-up-agreements-work-orders), invoices for completed agreement work orders and the negotiated price list
 - [Salesforce: Field Service Developer Guide](https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/field_service_dev.pdf), service contracts, contract line items, entitlements and maintenance plans
 - [Fivetran: ServiceTrade connector schema](https://fivetran.com/docs/connectors/applications/servicetrade/connector-schema), separate service and invoice recurrence tables

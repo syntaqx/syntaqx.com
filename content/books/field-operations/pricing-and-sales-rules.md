@@ -2,7 +2,7 @@
 title = "Pricing & Sales Rules"
 description = "Pricing field service: flat-rate pricebooks and markup, good-better-best proposals, recurring prices, discount bands, pricing rules, promotions and financing."
 category = "Field Operations Industry"
-order = 1521
+order = 1523
 part = "Selling"
 tags = ["field-operations", "sales", "pricing", "pricebook", "rules-engine", "financing"]
 +++
@@ -33,7 +33,7 @@ A worked flat-rate task shows the mechanism (the numbers are illustrative). An H
 
 **Visibility is part of the pricebook.** ServiceTitan suggests office-only categories, hidden from the mobile app, for items such as manager discounts; FieldPulse sets visibility per role.
 
-How to build it: version the pricebook. A price is computed from a pricebook version, a cost snapshot and a rule version, and the estimate stores all three references plus the computed amounts ([Temporal Data](/docs/database/temporal-data#versioned-entities)). ServiceTitan notes that editing a Dynamic Pricing rule updates pricing on all new estimates; existing estimates must keep the price they showed the customer. My rule for supplier cost feeds: a change beyond a set percentage goes to a review queue instead of the book, because a bad feed can reprice the whole book overnight.
+Version the pricebook. A price is computed from a pricebook version, a cost snapshot and a rule version, and the estimate stores all three references plus the computed amounts ([Temporal Data](/docs/database/temporal-data#versioned-entities)). ServiceTitan notes that editing a Dynamic Pricing rule updates pricing on all new estimates; existing estimates must keep the price they showed the customer. My rule for supplier cost feeds: a change beyond a set percentage goes to a review queue instead of the book, because a bad feed can reprice the whole book overnight.
 
 ## Good-Better-Best and Proposals
 
@@ -64,15 +64,15 @@ Snapshot every line: item name, description, unit price, cost and tax code as pr
 
 ## Recurring Prices
 
-A recurring service has at least two prices. FieldRoutes' subscription model carries an `initialQuote` for the first service, a `recurringCharge`, a `billingFrequency` (including billed after each service), an `agreementLength` in months, and `soldBy` "used in commissions and sales reporting." The initial price is usually higher, covering a heavier first treatment; the recurring price is what retention depends on.
+A recurring service has at least two prices: an initial price for a heavier first visit (a pest clean-out, a first lawn application, a green pool brought back, a first deep clean) and the recurring price retention depends on. Platforms model the pair in different places. FieldRoutes' subscription model, for one, carries an `initialQuote` for the first service, a `recurringCharge`, a `billingFrequency` (including billed after each service), an `agreementLength` in months, and `soldBy` "used in commissions and sales reporting"; membership-led trades put the recurring price on the plan and the first visit's work on a separate estimate.
 
-Membership pricing is the other recurring pattern. ServiceTitan's pricebook gives each service a static member price and a member add-on price, used when a customer has an active membership; a member price of $0.00 falls back to the standard price, and a toggle controls whether an item allows membership discounts. Housecall Pro service plans can apply a discount "to all jobs" for plan customers. Launch27 lets each cleaning frequency carry its own percent or dollar discount, and FieldRoutes offers prepayment discounts for paying ahead.
+Membership pricing is the other recurring pattern. ServiceTitan's pricebook gives each service a static member price and a member add-on price, used when a customer has an active membership; a member price of $0.00 falls back to the standard price, and a toggle controls whether an item allows membership discounts. Housecall Pro service plans can apply a discount "to all jobs" for plan customers. Launch27 lets each cleaning frequency carry its own percent or dollar discount.
 
 Renewal is where recurring pricing gets hard. Aspire's renewal settings show the real choices: keep the previous prices, recalculate from current catalog costs with the original markups, or recalculate with current system markups, with price overrides winning in every case. Build all three as policies and record which applied. Price increases on existing agreements are also a consumer protection question: whether you can raise a recurring price depends on the agreement's terms and state law ([Service Agreements & Plans](/books/field-operations/service-agreements), [Subscriptions](/docs/payments/subscriptions#plan-changes-and-proration)).
 
 ## Discounts and Approval Rules
 
-In a sales-led business the rep negotiates, so discounts need bounds. FieldRoutes' discount setup shows what the industry needs in one place: a discount is a percentage or a fixed amount, can be restricted to certain services, can be capped at a maximum number of invoices, can be editable within a minimum and maximum, can require a code, and has display start and end dates. Discounts can't be deleted, only hidden, and creating or editing them needs specific access controls. PestPac's sales CRM advertises a "baked-in approval process." Salesforce CPQ's Advanced Approvals is the enterprise version, and two of its ideas transfer: an approval rule can look at a summary of the whole quote (the largest discount on any line), and tracked fields record the values each approver saw.
+In a sales-led business the rep negotiates, so discounts need bounds. ServiceTitan keeps discounts as pricebook items, with office-only categories for the ones technicians shouldn't apply. FieldRoutes' discount setup is a more detailed example: a discount is a percentage or a fixed amount, can be restricted to certain services, can be capped at a maximum number of invoices, can be editable within a minimum and maximum, can require a code, and has display start and end dates. Discounts can't be deleted, only hidden, and creating or editing them needs specific access controls. PestPac's sales CRM advertises a "baked-in approval process." Salesforce CPQ's Advanced Approvals is the enterprise version, and two of its ideas transfer: an approval rule can look at a summary of the whole quote (the largest discount on any line), and tracked fields record the values each approver saw.
 
 ![State diagram of a priced estimate: a draft is priced; a price inside the rep's band goes straight to presented, a price below the band goes to pending approval, which is approved and presented or rejected back to draft; presented ends in accepted, declined or expired, and any edit after approval returns the estimate to priced.](/diagrams/fo-pricing-and-sales-rules-approval.svg "Approval belongs to a specific price. Any edit after approval re-prices the estimate and, if it falls below the band again, asks again.")
 
@@ -126,20 +126,79 @@ Decide for every promotion: does it apply to the initial price, the recurring pr
 
 ## Financing Presentment
 
-Large tickets sell on monthly payments. Most FSMs embed a lender: Wisetack through Jobber, Housecall Pro, Workiz and JobNimbus; GreenSky through AccuLynx; Service Finance and Affirm through ServiceTitan; Klarna through Housecall Pro; Synchrony, Hearth and WorkWave's Pay Over Time through other channels. The shape is the same across them: the lender sets eligibility, amount limits, APR and term ranges and a fee to the business, the customer applies in the lender's flow, and the business is paid by the lender, often after the customer confirms the work is complete. GreenSky's site notes that GreenSky is not a lender: loans are made by federally insured or chartered financial institutions.
+Large tickets (a furnace, a water heater, a pool heater, a termite treatment, a roof) sell on monthly payments. Many FSMs embed a lender: Wisetack through Jobber and JobNimbus, Service Finance and Affirm through ServiceTitan, Klarna through Housecall Pro, and WorkWave's Pay Over Time through PestPac. Others, such as Hearth and GreenSky, sell to contractors directly. The shape is the same across them: the lender sets eligibility, amount limits, APR and term ranges and a fee to the business, and the customer applies in the lender's flow on their own phone, which keeps a Social Security number and income off the rep's tablet. Wisetack's customer "gets a text with a link to apply," and the contractor is paid after "your customer confirms the work has been completed and releases the funds"; Hearth's pitch to contractors is that "Homeowners apply for financing directly, not you." GreenSky's site notes that GreenSky is not a lender: loans are made by federally insured or chartered financial institutions.
 
 The proposal shows an **"as low as"** monthly payment under each option: JobNimbus computes one per estimate option and notes that "All monthly payment amounts shown before signing are estimates." That number is a **trigger term** under Regulation Z. In an advertisement, stating the amount of any payment, the number of payments or the repayment period, the down payment or the finance charge requires also stating the down payment, the terms of repayment and the "annual percentage rate," using that term. The CFPB's official interpretation draws a line that matters for proposals: "cost estimates for individual consumers" and communication "relating to the negotiation of a specific transaction" are not advertisements. A proposal for one customer's job is likely on the negotiation side; the same "as low as $99/month" on a website, door hanger, truck wrap or email blast is an advertisement. Lenders impose their own rules on both: Wisetack requires merchants to copy its approved disclosure verbatim, beginning "All financing is subject to credit approval. Your terms may vary," with a sample payment and the APR and term ranges, and prohibits telling customers they'll be approved or get a particular rate.
 
-How to build it:
+What the system does:
 
 - **Get the payment from the lender, not your own math.** Lenders publish calculators or APIs; their rates change, and state rate caps apply. Label it as an estimate, with the APR and term it assumes.
 - **Disclosures are content with versions.** Store the lender's approved disclosure text as a versioned template and record the version shown with each proposal and each marketing asset.
-- **Keep the credit decision with the lender.** The application and its data go to the lender's flow; your system stores the application ID, status and approved terms, not the customer's financial details ([Sensitive Data](/docs/payments/sensitive-data)). Once the loan funds, the lender is the payer on the invoice ([Billing Recurring Service](/books/field-operations/billing-recurring-service)).
+- **Keep the credit decision with the lender.** The application and its data go to the lender's flow; the sales app and your system store that an application was sent, its ID, status and approved terms, not the customer's financial details ([Sensitive Data](/docs/payments/sensitive-data)). Once the loan funds, the lender is the payer on the invoice ([Billing Recurring Service](/books/field-operations/billing-recurring-service)).
 - **Purchase money loans carry the Holder Rule notice.** A seller can't accept proceeds of a purchase money loan unless the credit contract carries the FTC's notice that any holder is subject to the buyer's claims and defenses against the seller. The lender's contract normally includes it; verify that it does.
 
 ## Taxes on Services
 
-Whether a service is taxable depends on the state, the service and sometimes the seller's size, and the answer changes. The mechanics (a tax code per item, sourcing as data, quotes versus finalized tax, engines and exemptions) are in [Sales Tax](/docs/payments/sales-tax); worked field examples and the tax snapshot on the invoice are in [Billing Recurring Service](/books/field-operations/billing-recurring-service). Pricing's part is the input the engine needs: **a tax code on every pricebook item**, separate from its price, so a mixed ticket (a taxable part and a non-taxable labor line in one state, a lawn treatment and a pest treatment in another) splits into lines the engine can tax correctly. Tax is computed on the net price, after the waterfall, by the service location stored on the property.
+Which services are taxable, and how the platforms wire the tax engine, is in [Billing Recurring Service](/books/field-operations/billing-recurring-service#sales-tax-on-services); pricing's part is a tax category on every item, so a mixed ticket splits into lines the engine can tax, and tax is computed on the net price after the waterfall.
+
+## How to Build It
+
+Everything above prices one catalog. A service, a part, a material, a piece of equipment and a chemical are all **items**: one table the pricebook, estimates, van stock and work orders share, so a capacitor sold on a flat-rate task and the same capacitor pulled from a truck are one row. This chapter owns that table; other chapters extend it rather than redefine it.
+
+```sql
+CREATE TABLE items (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  kind         TEXT NOT NULL
+    CHECK (kind IN ('service', 'part', 'material', 'equipment', 'chemical')),
+  sku          TEXT,                 -- the tenant's or supplier's code
+  name         TEXT NOT NULL,
+  unit         TEXT NOT NULL,        -- 'each', 'hour', 'sq_ft', 'linear_ft', 'gallon', 'oz'
+  is_stocked   BOOLEAN NOT NULL DEFAULT FALSE,  -- tracked in warehouse and van stock
+  tax_category TEXT NOT NULL,        -- the tax engine's code for this item
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (tenant_id, sku)
+);
+
+CREATE TABLE item_components (       -- a flat-rate task built from parts and labor
+  parent_item_id    UUID NOT NULL REFERENCES items (id),
+  component_item_id UUID NOT NULL REFERENCES items (id),
+  quantity          NUMERIC(10, 3) NOT NULL,
+  PRIMARY KEY (parent_item_id, component_item_id)
+);
+
+CREATE TABLE pricebook_versions (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  pricebook_id UUID NOT NULL,
+  version      INTEGER NOT NULL,
+  effective_on DATE NOT NULL,
+  published_at TIMESTAMPTZ,          -- null while a draft
+  UNIQUE (pricebook_id, version)
+);
+
+CREATE TABLE pricebook_prices (
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id            UUID NOT NULL,
+  pricebook_version_id UUID NOT NULL REFERENCES pricebook_versions (id),
+  item_id              UUID NOT NULL REFERENCES items (id),
+  pricing_zone_id      UUID,         -- null: every zone
+  price_kind           TEXT NOT NULL
+    CHECK (price_kind IN ('one_time', 'initial', 'recurring', 'member', 'member_add_on')),
+  method               TEXT NOT NULL CHECK (method IN ('fixed', 'measured', 'cost_plus')),
+  unit_amount          BIGINT,       -- minor units; null when computed from the rule
+  currency             CHAR(3) NOT NULL,
+  standard_hours       NUMERIC(6, 2), -- flat-rate labor
+  floor_amount         BIGINT,       -- the bottom of the discount band
+  rule_id              UUID,         -- markup, margin matrix or measurement rule
+  rule_version         INTEGER,
+  UNIQUE NULLS NOT DISTINCT (pricebook_version_id, item_id, pricing_zone_id, price_kind)
+);
+```
+
+- **Prices live on the pricebook version, not the item.** The item says what something is; `pricebook_prices` says what it costs in a zone, as which kind of price, from which rule. A new version is a new set of rows, so an estimate that stored its `pricebook_version_id` can always be explained.
+- **Estimate lines reference `items (id)` and snapshot the rest** (name, unit price, cost and tax category as presented), as in the proposal above.
+- **Extensions hang off `items`.** Chemical attributes (EPA registration, label versions, signal words) are a `chemical_items` table keyed by `item_id` in [Regulated Materials](/books/field-operations/regulated-materials); parts used on a job are `work_order_parts.item_id` in [Repair, Install & Commercial Work](/books/field-operations/repair-and-installation); van and warehouse stock reference the same items in [Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety). None of them adds its own catalog.
 
 ## Auditing
 
@@ -162,7 +221,8 @@ Record structure, actors and retention follow [Audit Trails](/docs/architecture/
 - **Ship one pricing engine to every surface**, including the offline mobile app, and reconcile on sync.
 - **Treat promotions as contracts**: scope, duration in cycles, stacking order, cancellation treatment.
 - **Present financing from the lender's numbers** with versioned disclosures, and keep the credit decision with the lender.
-- **Attach a tax code to every pricebook item** and leave rates and sourcing to the tax engine.
+- **One item catalog** that pricebook prices, estimates, stock and work orders all reference, with chemical and part attributes as extension tables.
+- **Attach a tax category to every item** and leave rates and sourcing to the tax engine.
 
 ## References
 
@@ -171,9 +231,10 @@ Record structure, actors and retention follow [Audit Trails](/docs/architecture/
 - [CFPB: Regulation Z 1026.24, Advertising](https://www.consumerfinance.gov/rules-policy/regulations/1026/24/), trigger terms and the disclosures they require, including the annual percentage rate
 - [CFPB: Official Interpretation of 1026.2](https://www.consumerfinance.gov/rules-policy/regulations/1026/interp-2/), cost estimates for individual consumers and negotiation of a specific transaction are not advertisements
 - [CFPB: Regulation Z 1026.18, Content of Disclosures](https://www.consumerfinance.gov/rules-policy/regulations/1026/18/), closed-end credit disclosures the lender provides
+- [PostgreSQL: Unique Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS), `NULLS NOT DISTINCT` treating null zones as equal
 - [Cornell LII: 16 CFR 433.2](https://www.law.cornell.edu/cfr/text/16/433.2), the FTC Holder Rule notice in purchase money loans
 
-**Reference**
+**In practice**
 
 - [ServiceTitan: Pricebook](https://help.servicetitan.com/docs/pricebook), services, materials, equipment, discounts and fees, categories and dynamic pricing
 - [ServiceTitan: Pricebook Setup Guide in ServiceTitan Max](https://help.servicetitan.com/residential-s-r/docs/pricebook-pro-setup-guide-in-servicetitan-max), markup types by cost range, one rule per category, member prices, supplier costs and office-only categories
@@ -205,8 +266,10 @@ Record structure, actors and retention follow [Audit Trails](/docs/architecture/
 - [Stripe: Coupons and Promotion Codes](https://docs.stripe.com/billing/subscriptions/coupons#stackable-coupons-and-promotion-codes), durations, redemption limits, promotion code restrictions, and stacked discounts applying in order
 - [BookingKoala: Coupons](https://help.bookingkoala.com/help/coupons), coupons for one-time and recurring bookings, stacking and clawback
 - [Wisetack: Marketing Compliance](https://www.wisetack.com/marketing-toolkit/hs/compliance), trigger terms, the required disclosure and prohibited claims
+- [Wisetack: How to use](https://www.wisetack.com/resources/hs-how-to-use), customer applications by text link and funds released after the customer confirms completion
+- [Hearth](https://www.gethearth.com/), homeowners applying for financing directly
 - [Jobber: Wisetack Consumer Financing](https://help.getjobber.com/hc/en-us/articles/360056100954), eligibility, amount, APR and term ranges and the merchant fee
-- [JobNimbus: Add Financing to an Estimate](https://support.jobnimbus.com/how-do-i-add-financing-to-an-estimate), an "as low as" payment per option, shown as an estimate
+- [JobNimbus: Add Financing to an Estimate](https://support.jobnimbus.com/how-do-i-add-financing-to-an-estimate), Wisetack applications from an estimate and an "as low as" payment per option, shown as an estimate
 - [Housecall Pro: Klarna](https://www.housecallpro.com/resources/how-to-offer-and-market-klarna-to-customers/), residential invoice eligibility and the fee
 - [GreenSky](https://www.greensky.com/), loans made by chartered financial institutions with GreenSky as servicer
 - [ServiceTitan: Service Finance Integration](https://www.servicetitan.com/service-finance-integration), a sales finance company integrated with the FSM

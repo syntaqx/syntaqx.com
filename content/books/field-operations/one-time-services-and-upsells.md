@@ -2,7 +2,7 @@
 title = "One-Time Services & Upsells"
 description = "One-time work beside recurring plans: when it needs its own agreement, member pricing on a shared route, converting customers to plans, and upselling."
 category = "Field Operations Industry"
-order = 1522
+order = 1524
 part = "Selling"
 tags = ["field-operations", "sales", "one-time-services", "upselling", "conversion", "agreements"]
 +++
@@ -48,7 +48,7 @@ Two questions then stay separate:
 - **Has an agreement:** `work_orders.agreement_id` is set. True for plan visits, for work riding a plan, and for one-time work under a one-time agreement.
 - **Generates recurring occurrences:** the agreement owns `recurrences`. Only a `recurring` agreement may, and the schema enforces it (below), so a one-time agreement can never wake the generator.
 
-A one-time agreement uses the same states with one addition. Its `term_during` covers the work plus any guarantee period, and when the work is complete and the term has ended it moves to `fulfilled`, a terminal state allowed only for `one_time`. Without it a finished bed bug job would end `terminated` and count as churn. Dispatch reads the agreement's status: a work order under a one-time agreement that's still `signed` isn't dispatched unless the customer asked for service inside the window and the request is recorded ([Charging Inside the Window](/books/field-operations/consumer-protection#charging-inside-the-window)).
+A one-time agreement uses the same states as any agreement ([The Core Data Model](/books/field-operations/field-operations-business#the-core-data-model)), and this chapter is where `fulfilled` gets its meaning. Its `term_during` covers the work plus any guarantee period, and when the work is complete and the term has ended it moves to `fulfilled`, a terminal state the schema allows only for `one_time`. Without it a finished bed bug job would end `terminated` and count as churn. Dispatch reads the agreement's status: a work order under a one-time agreement that's still `signed` isn't dispatched unless the customer asked for service inside the window and the request is recorded ([Charging Inside the Window](/books/field-operations/consumer-protection#charging-inside-the-window)).
 
 My rule for which record a sale needs: a one-time agreement whenever the sale needs a signing packet (a home-solicitation sale the cancellation rule covers, a guarantee that outlives the visit, an authorization beyond price, or a contract with deposits or permits). Everything else, such as a phone-booked service priced in advance, a delivery order, or an extra line on a member's visit that the plan's terms already allow, is a work order with an approved estimate and no new agreement.
 
@@ -72,7 +72,7 @@ The rules behind the table:
 
 **Coverage is read from the terms, never remembered.** Each line on a plan customer's work order resolves to one of three outcomes: included (a benefit such as free re-service between visits), discounted (member pricing) or extra. The work order line records which benefit applied and from which terms version, as [Maintenance Agreements in the Repair Trades](/books/field-operations/repair-and-installation#maintenance-agreements-in-the-repair-trades) requires for member discounts, so a lapsed member isn't charged member prices and a member's discount survives a dispute.
 
-**Member pricing resolves from the agreement's state on the pricing date.** It's the member or contract stage of the price waterfall ([Rules Engines](/books/field-operations/pricing-and-sales-rules#rules-engines-pricing-as-configuration)), and only an `active` agreement grants it: not `signed`, not `paused` or `on_hold`, not one that terminated last month. ServiceTitan's membership discounts apply to all items, by business unit or by pricebook category (the most common setup), and when a static member price and a membership discount both apply, "the greater of the two discounts will be applied." Its invoices show members a Member Discount section and non-members a Potential Savings section "showing how much they could save by becoming a member." Housecall Pro plans can "automatically apply a discount to all jobs" for plan customers. Cleaning platforms scope discounts by frequency instead: Launch27 attaches a discount to each recurring frequency, and BookingKoala coupons apply to one-time bookings, recurring bookings or both, optionally charging "the difference between the one-time rate and the discounted rate if they cancel after only one service." Whichever shape, the price records the agreement it used.
+**Member pricing resolves from the agreement's state on the pricing date.** It's the member or contract stage of the price waterfall ([Rules Engines](/books/field-operations/pricing-and-sales-rules#rules-engines-pricing-as-configuration)), and only an `active` agreement grants it: not `signed`, not `paused` or `on_hold`, not one that terminated last month. How the vendors set member prices is in [Recurring Prices](/books/field-operations/pricing-and-sales-rules#recurring-prices). Whichever shape, the price records the agreement it used, and the invoice can show it: ServiceTitan shows members a Member Discount section and non-members a Potential Savings section "showing how much they could save by becoming a member."
 
 **Extra work rides the plan only when the plan already authorizes it.** If the terms say additional services are available at member price on approval, an approved estimate is enough and the work is a line on the occurrence's work order or a separate work order under the same agreement. If the work needs authority the plan doesn't carry (a landlord's consent, a chemical notice, a preparation agreement, a guarantee), it gets a one-time agreement of its own. Whether a sale in the home triggers the cancellation window is decided per sale by the rule in [Consumer Protection](/books/field-operations/consumer-protection), whichever record the sale lands on.
 
@@ -94,7 +94,7 @@ A renewal is not a conversion. It's retention, and counting it here inflates the
 
 - **The credit is a priced line with a reason code,** pointing at the one-time invoice it credits, so pricing, commissions and finance all see the net. It never exceeds the plan's initial price, applies once per invoice, and expires after a configured window.
 - **The one-time visit becomes the initial service** when the credit applies and the service types match, so the plan doesn't schedule a second clean-out the customer already had.
-- **Nothing posts until the plan is active.** The credit and the remaining initial charge post on activation; if the customer cancels inside the window, the credit is void and the one-time invoice stands.
+- **The credit posts on activation,** with the rest of the initial charge, under the rule in [Charging Inside the Window](/books/field-operations/consumer-protection#charging-inside-the-window); if the customer cancels inside the window, the credit is void and the one-time invoice stands.
 
 ![A dimensional drawing of one customer's first term as a plan-view timeline. A one-time treatment at day 0 is followed by a conversion offer; the customer signs at day 7, the cooling-off window runs to day 10, and the plan becomes active with the one-time price credited against the initial charge. Quarterly visits fall at days 90, 180, 270 and 360, and a mosquito add-on joins as an amendment at day 150, prorated over the 225 days left in the 365-day term. A detail view enlarges the offer, signature and cooling-off window, a variable table defines every code, and the closing formula sums first-term revenue to 986.92 dollars.](/diagrams/fo-one-time-and-upsells-first-term.svg "Illustrative values. The one-time price becomes a credit, nothing bills before the plan is active, and the add-on joins as a new terms version prorated by day.")
 
@@ -150,31 +150,9 @@ Upselling also invites the pushy version, and the guardrails belong in the syste
 
 ## Metrics
 
-Three numbers, defined once ([Data Pipelines](/docs/architecture/data-pipelines#one-definition-per-metric)):
+Attach rate, one-time-to-plan conversion and revenue per visit are defined in [Sales and Memberships](/books/field-operations/operating-metrics#sales-and-memberships), with the rest of the sales numbers. This chapter's job is to keep their inputs: add-on lines tagged on each terms version, the opportunity chain from one-time work order to activated agreement, and conversion credits that point at the invoice they credit.
 
-```text
-attach_rate =
-  count(active recurring agreements at period end with at least one add-on line in their current terms)
-  / count(active recurring agreements at period end)
-
-one_time_to_plan_conversion (cohort, window W days) =
-  count(properties in the cohort with a recurring agreement that reached active
-        within W days of the one-time work order's completion)
-  / count(properties with a one-time work order completed in the cohort period
-          and no active recurring agreement on the completion date)
-
-revenue_per_visit =
-  sum(net invoiced amount attributed to completed visits in the period, after credits)
-  / count(completed visits in the period, excluding callbacks)
-```
-
-Notes on each:
-
-- **Attach rate** is per agreement. A per-visit variant (completed plan visits on which an extra was sold, over completed plan visits) answers a different question, technician behavior rather than book composition; report it under its own name.
-- **Conversion** counts agreements that reached `active`, so a sale cancelled inside the window doesn't count, and it needs a lag: a cohort can't be judged until its window closes. ServiceM8's quote win rate shows the shape: the share of quotes created 28 to 56 days ago that became work orders or completed within 28 days of creation. This is not ServiceTitan's conversion rate, which is converted opportunities over job opportunities on repair tickets (a job that's "not a no charge, recall or warranty job," converted when its invoice subtotal reaches the sold threshold).
-- **Revenue per visit** spreads periodic plan billing across visits at the per-visit value from the service balance, so a monthly-billed plan doesn't make winter visits look free. Split it into base and upsell revenue to see what upselling adds.
-
-## A Data Model Sketch
+## How to Build It
 
 This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model), the agreement columns in [Service Agreements & Plans](/books/field-operations/service-agreements#how-to-build-it) and the documents in [Signing the Agreement](/books/field-operations/signing-the-agreement); `estimates`, `invoices` and `invoice_lines` are used as defined there and in billing.
 
@@ -184,10 +162,7 @@ ALTER TABLE agreements
     CHECK (kind IN ('recurring', 'one_time')),
   ADD COLUMN source_opportunity_id UUID,             -- FK added below
   ADD CONSTRAINT agreements_id_kind_key UNIQUE (id, kind),
-  DROP CONSTRAINT agreements_status_check,
-  ADD CONSTRAINT agreements_status_check CHECK (status IN ('draft', 'out_for_signature',
-    'signed', 'active', 'paused', 'on_hold', 'terminated', 'void', 'cancelled',
-    'fulfilled')),
+  -- 'fulfilled' is in the core status CHECK; only one-time agreements may use it
   ADD CONSTRAINT agreements_fulfilled_kind_check
     CHECK (status <> 'fulfilled' OR kind = 'one_time');
 
@@ -283,7 +258,7 @@ Record shape and capture are in [Audit Trails](/docs/architecture/audit-trails);
 - **Treat opportunities as records** with evidence, a finder, a seller, a status and an expiry.
 - **Add recurring add-ons as amendments:** a new terms version, effective on the first added visit, prorated by day, generating its own occurrences, signed when it adds a recurring charge.
 - **Gate campaigns on marketing consent,** and build guardrails into pay, evidence and reversal rather than into training alone.
-- **Define attach rate, conversion and revenue per visit once,** with cohorts and windows stated.
+- **Keep the inputs for attach rate, conversion and revenue per visit,** whose definitions live in Operating Metrics.
 
 ## References
 
@@ -292,25 +267,17 @@ Record shape and capture are in [Audit Trails](/docs/architecture/audit-trails);
 - [Cornell LII: 16 CFR 429.1, The Cooling-Off Rule](https://www.law.cornell.edu/cfr/text/16/429.1), the buyer's right to cancel a home-solicitation sale until midnight of the third business day
 - [Florida Statutes 482.227: Guarantees and warranties](https://www.flsenate.gov/Laws/Statutes/2024/482.227), first-page bold disclosure of repair and retreatment terms and the bar on "full" or "unlimited" with limits
 
-**Reference**
-
-- [ServiceTitan: Technician's close or conversion rate does not look correct](https://help.servicetitan.com/docs/technicians-close-or-conversion-rate-does-not-look-correct), job opportunities, converted opportunities and the sold threshold
-- [ServiceTitan: Understanding sales vocabulary](https://help.servicetitan.com/docs/understanding-sales-vocabulary), technician-generated leads and sales opportunities open in Follow Ups until sold
-- [ServiceM8: Quote Win Rate in the Business Dashboard report](https://support.servicem8.com/hc/en-us/articles/360001157415-Quote-Win-Rate-in-the-Business-Dashboard-Report), a lagged cohort: quotes created 28 to 56 days ago that converted within 28 days
-
 **In practice**
 
+- [ServiceTitan: Understanding sales vocabulary](https://help.servicetitan.com/docs/understanding-sales-vocabulary), technician-generated leads and sales opportunities open in Follow Ups until sold
 - [Jobber: Create a one-off job](https://help.getjobber.com/en/articles/create-a-one-off-job/), one-off and recurring jobs as separate kinds and invoicing at the end
 - [Jobber: Optional line items on quotes](https://help.getjobber.com/en/articles/optional-line-items-on-quotes/), client-selected add-ons, recommended pre-selection, and selected items becoming job lines
 - [FieldRoutes: Adding a service type subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), the One Time frequency, initial invoice timing and template, contract value and add-on services
 - [Skimmer: Create, edit or delete a work order](https://thepooldeck.getskimmer.com/create-and-schedule-work-orders-76/create-edit-or-delete-a-work-order-app-skimmer-help-center-270), unscheduled work orders that join the route once a technician and date are set
 - [FarEye: API self-guide](https://developer.fareyeconnect.com/self-guide.html), value-added service codes for installation, assembly and haul-away with extended dwell time
-- [ServiceTitan: Apply membership discounts](https://help.servicetitan.com/docs/apply-membership-discounts), discount methods, the greater of member price and discount, and Potential Savings for non-members
+- [ServiceTitan: Apply membership discounts](https://help.servicetitan.com/docs/apply-membership-discounts), Member Discount and Potential Savings sections on invoices
 - [ServiceTitan: Basic memberships workflows](https://help.servicetitan.com/docs/basic-memberships-workflows), selling memberships and add-ons on invoices and estimates
 - [ServiceTitan: Act on follow-up opportunities with fewer steps](https://help.servicetitan.com/release-hub/docs/act-on-follow-up-opportunities-with-fewer-steps-and-fewer-missed-sales), custom follow-up dates for unsold estimates and confirmation before marking sold
-- [Housecall Pro: Create service plans](https://help.housecallpro.com/en/articles/2369524-create-service-plans), a plan discount applied to all jobs and included visits
 - [Housecall Pro: Service plans FAQs](https://help.housecallpro.com/en/articles/5485025-service-plans-faqs), locked billing frequency, cancel and recreate, and add-on prices divided by months
 - [Aspire: How to change contracts in Aspire](https://guide.youraspire.com/docs/how-to-change-contracts-in-aspire), revisions, pending changes, revision start dates, repricing from a selected ticket, and new contracts for occurrence changes
-- [BookingKoala: Coupons](https://help.bookingkoala.com/help/coupons), discounts scoped to one-time or recurring bookings and the difference charged when a customer cancels after one service
-- [Launch27: Frequencies overview](https://intercom.help/Launch27/en/articles/4259417-frequencies-overview), recurring cleaning bookings with a discount per frequency
 - [PMP: Achieve bed bug control with customer cooperation](https://www.mypmp.net/achieve-bed-bug-control-with-customer-cooperation/), preparation sheets customers sign before treatment

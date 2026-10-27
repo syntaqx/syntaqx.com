@@ -59,7 +59,7 @@ The address is not a stable identifier. Cotality's identifier guide notes that a
 
 Store the vendor key as `property_xid` (with `property_vendor`) beside your own property ID, never instead of it, and store the county APN and FIPS code when you have them: you may change vendors, and an inspector or title company will ask for the APN, not the vendor's ID.
 
-Enrichment is what the key buys, and in field service it **prices work**. Smarty's address enrichment returns year built, building and lot square footage, owner occupancy, pool and roof attributes; Regrid adds parcel geometry, zoning and a FEMA flood zone field. Lot size sets a lawn or pest quote, linear feet a termite treatment, square footage a cleaning bid or a duct-cleaning estimate, structure age the likely furnace generation an HVAC tech will find. FieldRoutes' subscription invoice templates price by quantity or by square and linear feet for exactly this reason.
+Enrichment is what the key buys, and in field service it **prices work**. Smarty's address enrichment returns year built, building and lot square footage, owner occupancy, pool and roof attributes; Regrid adds parcel geometry, zoning and a FEMA flood zone field. Lot size sets a lawn or pest quote, linear feet a termite treatment, square footage a cleaning bid or a duct-cleaning estimate, structure age the likely furnace generation an HVAC tech will find. Measured pricing tables read these attributes directly ([Pricebooks: Where Prices Come From](/books/field-operations/pricing-and-sales-rules#pricebooks-where-prices-come-from)).
 
 Measure match rates on your own addresses rather than trusting coverage claims, read the license (Regrid's terms prohibit using its USPS vacancy data for direct mail), and record source and date on every attribute: a technician's on-site measurement wins over an assessor's record, and a disputed quote has to show which one it used.
 
@@ -140,7 +140,7 @@ The property is the record that accumulates. Beyond the address, service point a
 - **Service attributes.** Square footage, lot size, construction type, number of units, pool volume, structure age: the measurements quotes and chemical rates depend on, each with its source (assessor, vendor, technician measured, customer stated).
 - **Access and hazards.** Gate codes, lockbox locations, pets, "use side door", parking. Technicians need these offline, and gate codes deserve the handling of other secrets ([Sensitive Data](/docs/payments/sensitive-data)): encrypted, shown only on today's route, and logged when viewed. Safe-place and access instructions are standing on the property but can be overridden for a single order, below whatever the shipper requires ([Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery)).
 - **Routing defaults.** Zone, branch, preferred technician, preferred day. Each preference is a constraint the router must honor, so record only the ones the customer asked for ([Territories & Capacity](/books/field-operations/territories-and-capacity)).
-- **Assets.** Furnaces, condensers, water heaters, backflow devices, pool pumps, bait stations. Salesforce links work orders to assets so each asset carries its service history and records a replacement as an asset relationship; Dynamics nests assets in functional locations. An asset needs make, model, serial number, install date and warranty terms, because a manufacturer warranty claim and the next repair quote depend on them ([Repair, Install & Commercial Work](/books/field-operations/repair-and-installation) covers diagnostics, parts and warranty claims).
+- **Assets.** Furnaces, condensers, water heaters, backflow devices, pool pumps, bait stations. The asset record, its warranty terms and registration are owned by [Equipment Is an Asset](/books/field-operations/repair-and-installation#equipment-is-an-asset). The property's part is where an asset sits: on the property, never the account, so it survives a sale, and on a large site inside the site's own structure, as Dynamics nests assets in functional locations (campus, building, floor, room).
 
 ## People, Roles and Preferences
 
@@ -174,7 +174,7 @@ The exclusion constraint enforces ServiceTitan's one-payer rule over time; [Effe
 
 ## Notes and Alerts
 
-Every platform has free-text notes and most have something louder (FieldRoutes' alerts can become office tasks). Separate notes by:
+Every platform has free-text notes and most have something louder, an alert, which in some platforms can be turned into an office task (FieldRoutes' alerts can). Separate notes by:
 
 - **Scope:** account, property, asset or person.
 - **Audience:** office only, technician visible, or customer visible. A note printed on a service report is customer-facing whether you meant it or not.
@@ -185,7 +185,7 @@ Notes are where sensitive personal data leaks in (health conditions, family disp
 
 ## Duplicates and Merges
 
-Duplicates arrive from online bookings, double imports, spouses calling under different names and accounting syncs. FieldRoutes' merge moves appointments, payments, charges and documents to a master account, keeps the master's address, contact info and billing profiles, removes the other account, and "cannot be undone."
+Duplicates arrive from online bookings, double imports, spouses calling under different names and accounting syncs. The SMB and vertical platforms merge destructively: FieldRoutes' merge moves appointments, payments, charges and documents to a master account, keeps the master's address, contact info and billing profiles, removes the other account, and "cannot be undone"; Housecall Pro groups likely duplicates by name, phone or email, merges tags, notes, addresses, emails and attachments, carries a Do not service flag onto the survivor, and says "You cannot unmerge customers after completing this step."
 
 In this industry, **address plus unit is the strongest match signal**, stronger than name; then normalized phone and email; then fuzzy name similarity. Two people at one address are not duplicates (a sold house, roommates): review candidates, and auto-merge only exact matches created minutes apart ([Review Bands](/docs/architecture/record-linkage#review-bands)). The merge itself should be recorded and reversible, with a tombstone that redirects the loser's ID, as [Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible) describes. Two field rules sit on top: never merge two properties that both hold active agreements without deciding which agreement survives, and never merge two accounts that both hold stored payment methods without checking which mandate stays valid ([Stored Cards & Recurring Billing](/books/payments/stored-credentials)).
 
@@ -245,11 +245,12 @@ Disputes start here ("the invoice went to my ex-husband," "your technician treat
 - [ServiceTitan: Audit trail on customer and location records](https://help.servicetitan.com/docs/use-the-audit-trail-on-customer-and-location-records), fields logged with user, timestamp, old and new values
 - [FieldRoutes: Contacts overview](https://knowledgebase.fieldroutes.com/docs/contacts-overview.md), service, billing and additional contact types
 - [FieldRoutes: Properties tab, merge and link](https://knowledgebase.fieldroutes.com/docs/the-customer-card-properties-tab-merge-and-link.md), master accounts, linked properties and irreversible merges
-- [FieldRoutes: Adding a service type subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), billing accounts and square-foot pricing on subscriptions
+- [FieldRoutes: Adding a service type subscription](https://knowledgebase.fieldroutes.com/docs/adding-a-service-type-subscription.md), billing accounts other than the subscription's own
 - [FieldRoutes: Alerts](https://knowledgebase.fieldroutes.com/docs/alerts.md), alerts converted into tasks
 - [Jobber: Client basics](https://help.getjobber.com/en/articles/client-basics/), clients, properties and contact roles
+- [Housecall Pro: Manage and merge duplicate customers](https://help.housecallpro.com/en/articles/8500499-manage-and-merge-duplicate-customers), duplicate groups, what a merge combines, and no unmerge
 - [Housecall Pro: Sub-customers vs multiple addresses](https://help.housecallpro.com/en/articles/932653-what-is-the-difference-between-sub-customers-and-multiple-addresses), the two multi-site patterns
-- [Salesforce: Field Service Developer Guide](https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/field_service_dev.pdf), Location, AssociatedLocation, assets and asset relationships
+- [Salesforce: Field Service Developer Guide](https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/field_service_dev.pdf), Location, AssociatedLocation and assets
 - [Microsoft: Create and manage customer accounts in Field Service](https://learn.microsoft.com/en-us/dynamics365/field-service/accounts), service and billing accounts and work order defaults
 - [Microsoft: Create functional locations](https://learn.microsoft.com/en-us/dynamics365/field-service/functional-locations), location hierarchies and assets
 - [Google: Address Validation API overview](https://developers.google.com/maps/documentation/address-validation/overview), validation, geocoding and opt-in CASS for the US and Puerto Rico

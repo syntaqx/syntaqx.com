@@ -2,7 +2,7 @@
 title = "Customer Self-Service"
 description = "Portals and the contact center: sign-in, households and multi-site access, online booking, payments and autopay, history, cancellation and AI voice agents."
 category = "Field Operations Industry"
-order = 1526
+order = 1529
 part = "Customers and Billing"
 tags = ["field-operations", "customer-portal", "contact-center", "authentication", "payments", "ai"]
 +++
@@ -94,17 +94,17 @@ A visit inside the cutoff can still be cancelled or skipped online, with a reque
 
 ## Paying, Autopay and Saved Methods
 
-Paying is the most-used portal feature, and the vendors converge on it: open invoices, partial payments where enabled, tips (Jobber), a wallet of saved methods, and autopay enrollment. Financing appears at the payment step for larger tickets, which in practice means replacements and installs (a new AC system, a water heater, a sewer line): ServiceTitan adds Affirm to its customer portal, and Housecall Pro offers Klarna on residential invoices, with the financing company as the lender. Presentment, disclosures, Regulation Z and the Holder Rule are in [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules).
+Paying is the most-used portal feature, and the vendors converge on it: open invoices, partial payments where enabled, tips (Jobber), a wallet of saved methods, and autopay enrollment. Financing appears at the payment step for replacements and installs (ServiceTitan adds Affirm to its customer portal, Housecall Pro offers Klarna on residential invoices), presented under the rules in [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#financing-presentment).
 
 Three design rules:
 
-- **Card data never touches your servers.** Use the processor's hosted fields or hosted page. An embedded iframe can qualify for SAQ A, but PCI's FAQs 1604 and 1588 say the merchant still owes the SAQ A requirements, including scans, and must confirm the hosting page is protected from script attacks; a full redirect avoids that last criterion ([PCI DSS](/docs/compliance/pci-dss)).
+- **Card data never touches your servers.** Use the processor's hosted fields or hosted page, which keeps the portal on SAQ A under the conditions in [PCI DSS](/docs/compliance/pci-dss#payment-page-scripts). The field twist is that customers reach the portal from a text or email link to one invoice, so that invoice page is a payment page: keep marketing tags and chat widgets off it, or redirect to the processor to pay.
 - **Saving a method for autopay is a stored-credential agreement.** Show the terms (amount or how it is determined, frequency, how to cancel), record consent with the method, and flag the first charge correctly ([Stored Cards & Recurring Billing](/books/payments/stored-credentials)). Bank accounts need an ACH authorization the customer can keep a copy of ([ACH](/books/payments/ach)).
 - **Show the real balance and what autopay will do.** FieldRoutes' renewal Pay Now takes no partial payments; Jobber charges automatic payments once and notifies the business on failure rather than retrying. Whatever your rules are, the portal should state them where the customer decides. Billing logic itself is in [Billing Recurring Service](/books/field-operations/billing-recurring-service).
 
 ## History, Reports and Documents
 
-For recurring service the history is the value the customer is paying for and cannot see: the technician came while they were at work. FieldRoutes' portal shows each serviced appointment with technician, notes, invoice, products used and cost, plus a product usage tab. For pest and lawn this doubles as the customer's copy of an application record, and commercial clients use it in their own audits (PestPac markets inspection and trend reports and open conditions for commercial accounts). Other trades have their own documents customers come back for: the backflow test report a water utility asks for, the refrigerant and equipment readings from an HVAC maintenance visit, the cleaning checklist a property manager uses at move-out, the delivery's proof of signature. Commercial service agreements add one more: whether each work order met the contracted response and completion times, which the client will otherwise rebuild from its own records.
+For recurring service the history is the value the customer is paying for and cannot see: the technician came while they were at work. FieldRoutes' portal shows each serviced appointment with technician, notes, invoice, products used and cost, plus a product usage tab; Skimmer emails each pool visit's report with photos. For pest and lawn this doubles as the customer's copy of an application record, and commercial clients use it in their own audits (PestPac markets inspection and trend reports and open conditions for commercial accounts). Other trades have their own documents customers come back for: the backflow test report a water utility asks for, the refrigerant and equipment readings from an HVAC maintenance visit, the cleaning checklist a property manager uses at move-out, the delivery's proof of signature. Commercial service agreements add one more: whether each work order met the contracted response and completion times, which the client will otherwise rebuild from its own records.
 
 Decide what is customer-visible per field, not per record. A visit has internal notes ("dog bit last tech"), a customer-facing summary, photos some of which show neighbors or the inside of a home, and findings. ServiceTrade's choice of which job media each customer sees is the right granularity. Documents (agreements, signed quotes, warranties, WDO reports) should be the exact signed artifact, immutable, with the signature evidence behind it ([Signing the Agreement](/books/field-operations/signing-the-agreement)), not a re-rendered copy from current data.
 
@@ -112,7 +112,7 @@ Decide what is customer-visible per field, not per record. A visit has internal 
 
 Online cancellation is where self-service meets automatic renewal law. The general design (cancel in the medium of sign-up, stamp the receipt time, store the effective date, confirm it, save offers as configuration that one click declines) and the law behind it are in [Subscriptions](/docs/payments/subscriptions#cancellation); the field rules are in [Consumer Protection](/books/field-operations/consumer-protection).
 
-What's particular to field service is that cancellation touches the route. FieldRoutes lets a customer request cancellation from the portal's Account tab, with an optional feedback form, enabled per service type; the request creates a Service Cancellation task and a note on the customer card for staff to act on. That's a request, not a cancellation, and the difference matters: the customer's clock starts when they asked, while visits already on tomorrow's route still go out unless someone removes them. My rule: the portal records the request with its receipt time and an effective date the customer can see, and the same transaction takes future visits after that date off the schedule, leaving staff the exceptions (a prepaid balance, a termite warranty with a renewal inspection due, a final visit the customer asked to keep). The alternative, a task for staff as FieldRoutes does it, keeps a person in the loop for saves and exceptions, at the cost of a visit that shows up after the customer cancelled. Show any early termination fee the agreement actually contains, from the agreement version the customer signed. [Collections & Retention](/books/field-operations/collections-and-retention) covers the save side.
+The field mechanics (any channel, the route cleared in the same transaction, the final bill, obligations that outlive the agreement) are in [Collections & Retention](/books/field-operations/collections-and-retention#cancellations). The portal's own choice is whether its cancel button **requests** or **cancels**. A request (FieldRoutes' online cancellation, enabled per service type, creates a task for staff) keeps a person in the loop for saves and exceptions, at the cost of a visit that shows up after the customer cancelled if nobody acts in time; the customer's clock starts when they asked either way. My rule: the portal cancels, recording the receipt time and an effective date the customer can see and clearing future visits, and leaves staff only the exceptions (a prepaid balance, a termite warranty with a renewal inspection due, a final pool closing the customer asked to keep). Show any early termination fee from the agreement version the customer signed.
 
 Plan changes from the portal (adding mosquito service for the summer, moving a pool from weekly to biweekly in winter, upgrading an HVAC membership) are a new agreement version, not an edit, and change the recurrence that generates visits as well as the price; proration is in [Subscriptions](/docs/payments/subscriptions#plan-changes-and-proration).
 
@@ -130,7 +130,7 @@ The mistake to avoid is routing everyday work through support sessions (thousand
 
 The other self-service door is the phone, and AI agents now answer it: the major suites ship voice agents that book, reschedule and cancel within per-job-type permissions and hand off to a person on request. Which vendors ship what, and the field limits on what an agent may book and promise, are in [AI in Field Operations](/books/field-operations/ai-in-field-operations).
 
-The design point is the one this chapter keeps making: **the agent is another client of the same operations.** It should call the same reschedule policy check, slot search and payment-link flow the portal does, under its own service identity with delegation to the caller, so a rule changed once applies everywhere. What the law requires on these calls depends on the state: recording consent and AI disclosure rules differ ([Recording Calls](/docs/compliance/consumer-contact#recording-calls), [Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)). My default goes further than most of them: announce both the recording and the AI at the start of every call, everywhere, because one script is easier to get right than a map of states and no caller is harmed by knowing. The alternative, disclosing only where required, saves a few seconds per call and adds a jurisdiction lookup that has to be right every time. Taking card numbers by voice has its own rules ([Phone Payments](/books/payments/phone-payments)); sending a payment link is simpler.
+The design point is the one this chapter keeps making: **the agent is another client of the same operations.** It should call the same reschedule policy check, slot search and payment-link flow the portal does, under its own service identity with delegation to the caller, so a rule changed once applies everywhere; tickets, routing, bots and handoff in general are in [Customer Support](/docs/operations/customer-support). AI disclosure and recording announcements are covered in [AI in Field Operations](/books/field-operations/ai-in-field-operations#the-law). Taking card numbers by voice has its own rules ([Phone Payments](/books/payments/phone-payments)); sending a payment link is simpler.
 
 ## How to Build It
 
@@ -177,9 +177,9 @@ Self-service shifts actions from staff to customers and agents, so the record ha
 - **Reschedule through policy check, slot search, hold and commit,** where commit moves the original visit into the held slot, with a request-to-office fallback that carries the reason.
 - **Hosted payment fields,** SAQ A eligibility confirmed with the provider, and stored-credential and ACH consent recorded with each saved method.
 - **Field-level visibility** for history, photos and notes, and immutable signed documents.
-- **Online cancellation that also clears the route,** with the receipt time, effective date and fees from the signed agreement version.
+- **A deliberate request-or-cancel choice** for the portal's cancel button, with the receipt time, effective date and fees from the signed agreement version.
 - **Staff acting for a customer use their own permissions,** logged with the channel; delegated support sessions per [Support Access](/docs/security/support-access) only for seeing the customer's view.
-- **AI agents calling the same operations** under their own identity, with recording and AI announcements at the start of every call as a default.
+- **AI agents calling the same operations** under their own identity, with disclosure per [AI in Field Operations](/books/field-operations/ai-in-field-operations#the-law).
 - **Customer-facing documents by trade:** application records, backflow and inspection certificates, equipment readings, and SLA compliance for commercial accounts.
 
 ## References
@@ -187,8 +187,6 @@ Self-service shifts actions from staff to customers and agents, so the record ha
 **Specifications**
 
 - [NIST SP 800-63B](https://pages.nist.gov/800-63-4/sp800-63b.html), email excluded as an out-of-band authenticator, the phone network as restricted, the 10-minute single-use code, 100 failed attempts and 30-day reauthentication at the lowest level
-- [PCI SSC FAQ 1604](https://www.pcisecuritystandards.org/faqs/1604), SAQ A obligations, including ASV scans, for redirect and iframe merchants
-- [PCI SSC FAQ 1588](https://www.pcisecuritystandards.org/faqs/1588), the SAQ A script-attack eligibility criterion for embedded payment forms and how to meet it
 
 **Reference**
 

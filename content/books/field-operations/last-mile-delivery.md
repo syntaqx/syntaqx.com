@@ -27,7 +27,7 @@ Goods move through a chain, and each link has its own software:
 
 ## Why the Last Mile Costs the Most
 
-A linehaul truck moves thousands of items between two points; a last-mile van moves them one or two at a time to separate addresses, each with its own parking, walk and handoff. Capgemini Research Institute's survey of retail and consumer products firms put last-mile delivery at 41% of overall supply chain costs, "more than double any other category of spend, such as parceling or warehousing," and noted that much of that cost is variable, rising with volume. The same report found that organizations offering lockers and pickup points reported lower delivery costs, which is the density argument from the other side: one stop serving many customers.
+A linehaul truck moves thousands of items between two points; a last-mile van moves them one or two at a time to separate addresses, each with its own parking, walk and handoff. Capgemini Research Institute's survey of retail and consumer products firms, published in January 2019 (I found no newer primary study of the same share; the higher figures quoted since come from vendor blogs), put last-mile delivery at 41% of overall supply chain costs, "more than double any other category of spend, such as parceling or warehousing," and noted that much of that cost is variable, rising with volume. The same report found that organizations offering lockers and pickup points reported lower delivery costs, which is the density argument from the other side: one stop serving many customers.
 
 The arithmetic is the route density argument from [The Field Operations Business](/books/field-operations/field-operations-business) with smaller service times, so drive time is an even larger share of the day. Two numbers carry it:
 
@@ -98,7 +98,7 @@ An attended delivery ends with a signature or a PIN. An unattended one ends with
 
 ## Failed Attempts, Redelivery and Returns
 
-A failed delivery is a visit that ends `not_completed` with a reason, exactly as in the core model, and the next attempt is a new visit on the same work order. The existing reasons cover most cases (`not_home` for a delivery that needed someone, `no_access` for a locked lobby or gate, `customer_declined` for a refusal, `weather`, `unsafe_condition`). Delivery adds three, listed in the sketch below: `address_not_found`, `id_check_failed` and `item_damaged`. Onfleet's default failure reasons include recipient unavailable, refused and unable to locate; eLogii keeps tenant-defined reasons for pickup and delivery in task history and reports them by team, driver and customer.
+A failed delivery is a visit that ends `not_completed` with a reason from the one catalog in [The Core Data Model](/books/field-operations/field-operations-business#the-core-data-model), and the next attempt is a new visit on the same work order. The existing reasons cover most cases (`not_home` for a delivery that needed someone, `no_access` for a locked lobby or gate, `customer_declined` for a refusal, `weather`, `unsafe_condition`). Three values in that catalog exist for delivery and are used here: `address_not_found`, `id_check_failed` and `item_damaged`. Onfleet's default failure reasons include recipient unavailable, refused and unable to locate; eLogii keeps tenant-defined reasons for pickup and delivery in task history and reports them by team, driver and customer.
 
 What happens next is a policy per shipper or service type, not a driver's improvisation:
 
@@ -147,7 +147,7 @@ Whether a driver is an employee or a contractor is a legal question with differe
 
 ## Tracking, ETAs and the Customer
 
-Delivery customers watch the map closely, because a missed handoff costs them a trip to the depot. The live link, its token and when location sharing starts and stops are in [Dispatch & the Day of Service](/books/field-operations/dispatch#live-tracking-and-eta-links); the messages and their consent rules are in [Customer Communications](/books/field-operations/customer-communications). Delivery adds three triggers worth copying from Onfleet: a predicted ETA for stops later in the route, a delay threshold, and a message when the task fails. For attended deliveries, a few-stops-away message turns a two-hour window into a person at the door.
+Delivery customers watch the map closely, because a missed handoff costs them a trip to the depot. How an ETA is computed and smoothed and how a tracking link stays safe are general ([ETAs](/docs/architecture/location-tracking#etas), [Shareable Tracking Links](/docs/architecture/location-tracking#shareable-tracking-links)); the field platforms' links are in [Dispatch & the Day of Service](/books/field-operations/dispatch#live-tracking-and-eta-links), and the messages and their consent rules in [Customer Communications](/books/field-operations/customer-communications). Delivery adds three triggers worth copying from Onfleet: a predicted ETA for stops later in the route, a delay threshold, and a message when the task fails. For attended deliveries, a few-stops-away message turns a two-hour window into a person at the door.
 
 ## Who Pays: Shipper and Consignee
 
@@ -161,9 +161,9 @@ An appliance or a bed often arrives with work attached: install it, assemble it,
 
 Model it as one work order with the items to deliver and the services to perform, and one visit, so the route, the window and the proof stay together. The installed unit becomes an asset at the property, and a later repair or warranty claim works from it ([Repair, Install & Commercial Work](/books/field-operations/repair-and-installation)). If the install can't happen (no water shut-off, the wrong outlet), the visit is `completed` for the delivery, the work order stays open, and the install gets a second visit on it.
 
-## A Data Model Sketch
+## How to Build It
 
-This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business). A delivery is a work order whose service type is a delivery; this chapter adds columns to `work_orders`, `visits` and `vehicles`, two tables of its own, and three values to the visit reason catalog. Existing columns are unchanged.
+This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business). A delivery is a work order whose service type is a delivery; this chapter adds columns to `work_orders`, `visits` and `vehicles` (defined in [Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety#how-to-build-it), a later chapter) and two tables of its own, and uses the three delivery values already in the core visit reason catalog. Existing columns are unchanged.
 
 ```sql
 ALTER TABLE work_orders
@@ -185,6 +185,7 @@ CREATE TABLE work_order_items (                -- packages and goods lines
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id           UUID NOT NULL,
   work_order_id       UUID NOT NULL REFERENCES work_orders (id),
+  item_id             UUID REFERENCES items (id),             -- the tenant's own goods; null for shippers' parcels
   barcode             TEXT,
   description         TEXT NOT NULL,
   quantity            INTEGER NOT NULL DEFAULT 1,
@@ -224,13 +225,13 @@ ALTER TABLE visits
 -- address_not_found, id_check_failed and item_damaged are already in the core
 -- visits.status_reason catalog (The Field Operations Business)
 
-ALTER TABLE vehicles
+ALTER TABLE vehicles                          -- defined in Fleet, Inventory & Safety
   ADD COLUMN capacity_weight_g  INTEGER,
   ADD COLUMN capacity_volume_cm3 INTEGER,
   ADD COLUMN capacity_pallets   NUMERIC;
 ```
 
-The `work_orders` constraint makes the proof rule structural: an adult signature or age check can't sit on work that allows an unattended drop. Attempts are visits, so dispatch and metrics read attempts from rows they already have. Evidence (photos, the PIN result, the ID check result without the image) uses the model in [Proof of Service](/books/field-operations/proof-of-service). Shipper terms are resolved onto the work order at creation and snapshotted, so a shipper changing its attempt limit doesn't change orders in flight ([Rules as Data](/docs/architecture/rules-as-data)). The chapter adds outbox events `work_order_item.loaded`, `work_order_item.delivered` and `work_order.returned_to_shipper`, beside the visit events the core already emits.
+`items` is the shared catalog from [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#how-to-build-it): an appliance dealer delivering its own stock points each line at it, while a carrier delivering for shippers keeps only the barcode and description. The `work_orders` constraint makes the proof rule structural: an adult signature or age check can't sit on work that allows an unattended drop. Attempts are visits, so dispatch and metrics read attempts from rows they already have. Evidence (photos, the PIN result, the ID check result without the image) uses the model in [Proof of Service](/books/field-operations/proof-of-service). Shipper terms are resolved onto the work order at creation and snapshotted, so a shipper changing its attempt limit doesn't change orders in flight ([Rules as Data](/docs/architecture/rules-as-data)). The chapter adds outbox events `work_order_item.loaded`, `work_order_item.delivered` and `work_order.returned_to_shipper`, beside the visit events the core already emits.
 
 ## Auditing
 
@@ -258,7 +259,7 @@ The record shape and tamper evidence are in [Audit Trails](/docs/architecture/au
 
 **Reference**
 
-- [Capgemini Research Institute: The last-mile delivery challenge (PDF)](https://www.capgemini.com/wp-content/uploads/2019/01/Report-Digital-%E2%80%93-Last-Mile-Delivery-Challenge1.pdf), last mile at 41% of overall supply chain costs, mostly variable; lower delivery costs reported with lockers and pickup points
+- [Capgemini Research Institute: The last-mile delivery challenge (PDF)](https://www.capgemini.com/wp-content/uploads/2019/01/Report-Digital-%E2%80%93-Last-Mile-Delivery-Challenge1.pdf), January 2019: last mile at 41% of overall supply chain costs, mostly variable; lower delivery costs reported with lockers and pickup points
 - [FedEx: Delivery Manager](https://www.fedex.com/en-us/delivery-manager.html), delivery instructions, hold at location, remote signing, vacation hold, redirect and scheduled delivery
 - [FedEx: Signature services](https://www.fedex.com/en-us/delivery-options/signature-services.html), no, indirect, direct and adult signature, with reattempt or hold for direct signature
 - [USPS: Informed Delivery](https://www.usps.com/manage/informed-delivery.htm), mail previews, package tracking and status notifications

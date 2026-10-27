@@ -46,11 +46,11 @@ A route is a container; the visit is what moves through the day. Keep its states
 
 ![A visit's day as a row of states: scheduled, dispatched, en route, on site and completed, with the path from dispatched to completed highlighted. Above each, what moves it: booking, publishing the route, a tap or a geofence, a check-in or dwell, and captured proof. Dashed paths lead from dispatched, en route and on site to not completed with a reason (not home, no access, weather, unsafe), whose work order returns to the pool, and from scheduled to cancelled. Running late is a flag, not a state.](/diagrams/fo-dispatch-visit-day.svg "Visits move forward through the day or end without the work, and the work goes back to the pool with a reason. Lateness is a flag computed from the ETA, not a state of its own.")
 
-The states are the volume's canonical ones: `held` (a reservation while a customer [books](/books/field-operations/booking-appointments), rarely seen by dispatch), `scheduled`, `dispatched` (on a published route, so the customer can be told), `en_route`, `on_site` and `completed` (with [proof](/books/field-operations/proof-of-service)), plus two exits: `not_completed` (the technician got there and nothing could be done) and `cancelled` (called off before the technician left, with who called it off). Both carry a `visits.status_reason`, and which reasons go with which end state (including `completed` with a work order `hold_reason` when anything was done on site) is defined once in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model).
+The states, the end states and their reasons are the volume's canonical ones, defined once in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model). Dispatch owns the middle of the day: `dispatched` means the visit is on a published route, so the customer can be told; `en_route` and `on_site` come from a tap or a geofence; and whichever exit a visit takes, dispatch records who or what moved it there.
 
 Dynamics 365 keeps the split between the work and the visit explicit: work orders and bookings have independent lifecycles, and booking transitions drive the work order (Traveling sets it In Progress). Copy that separation. A furnace repair can need a diagnostic visit and a second visit when the part arrives; a visit can fail without the work being cancelled.
 
-**Unassigning** a visit is not **cancelling** the work, the same split Dynamics 365 draws between a booking and its work order. Unassigning ends that visit (`not_completed` if the technician got there, `cancelled` with the company as the actor if they never left) and returns its work order to the pool with the reason; the customer still has work owed and an appointment to rebook. Cancelling the work order ends it.
+**Unassigning** a visit is not **cancelling** the work, the same split Dynamics 365 draws between a booking and its work order. Unassigning ends that visit, with the company as the actor, and returns its work order to the pool with the reason; the customer still has work owed and an appointment to rebook. Cancelling the work order ends it.
 
 Each transition is a row, not just a new value on the visit:
 
@@ -82,15 +82,15 @@ Most of a dispatcher's day is a short list of exceptions, each with a known resp
 | --- | --- |
 | **Technician out** | Release their route; offer to redistribute it across technicians with the right skills and licenses; cancel what doesn't fit (`tech_out`) and return its work to the pool |
 | **Visit runs long** | Recompute downstream ETAs; flag visits whose ETA now passes the window; propose a swap or a move |
-| **Customer not home, or no access** | Technician picks a reason; the visit ends `not_completed` and its work order returns to the pool; re-optimize that route only |
-| **Part not on the truck** | If the technician diagnosed the problem, the visit ends `completed` and the work order stays open with `hold_reason = 'part_needed'`; if nothing could be done, the visit ends `not_completed` with `part_needed`. Either way, order or reserve the part ([Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety)) and book the return visit on the same work order when it's due. It isn't a callback |
+| **Customer not home, or no access** | Technician picks a reason; the work order returns to the pool; re-optimize that route only |
+| **Part not on the truck** | Record `part_needed` where [the core data model](/books/field-operations/field-operations-business#the-core-data-model) puts it (it depends on whether any work was done); order or reserve the part ([Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety)) and book the return visit on the same work order when it's due. It isn't a callback |
 | **Driver near an hours limit** | For drivers of commercial vehicles outside the short-haul exception, check remaining drive and on-duty time before inserting or redistributing work ([Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety)) |
 | **Urgent or emergency job** | Find technicians who can reach it soonest without breaking pinned or in-progress work, ranked by SLA deadline where one applies; let the dispatcher choose, or auto-insert under an emergency policy |
-| **Delivery fails** | Driver picks a reason and captures proof of the attempt; the visit ends `not_completed`, and the order's undeliverable action (retry, hold at a pickup point, return) decides what follows ([Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery)) |
+| **Delivery fails** | Driver picks a reason and captures proof of the attempt; the order's undeliverable action (retry, hold at a pickup point, return) decides what follows ([Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery)) |
 | **Truck breakdown or crash** | End the technician's route at their current stop; redistribute the rest; open an incident |
 | **Customer reschedules by text or portal** | Release and rebook through the booking rules ([Customer Self-Service](/books/field-operations/customer-self-service)); retract queued reminders |
 
-Run every manual change through the same rules booking and optimization use; FieldRoutes, for one, marks appointments with no matching technician or skill with a red X and won't schedule them. Show only valid drop targets, explain invalid ones ("no termite license in this state", "not backflow certified"), apply moves optimistically, and let the server reject a move that conflicts with someone else's change ([Transactions & Concurrency](/docs/database/transactions-and-concurrency#optimistic-concurrency)). A whole-route reassignment is one operation that revalidates every stop, not forty drags. Crews move as a unit: reassigning a cleaning team's house moves all three cleaners' days.
+Run every manual change through the same rules booking and optimization use. The platforms differ here: FieldRoutes marks appointments with no matching technician or skill with a red X and won't schedule them, while Dynamics 365 warns that booking outside its schedule assistant's recommendations means "constraints such as capacity, work hours, and time windows aren't verified or enforced." Show only valid drop targets, explain invalid ones ("no termite license in this state", "not backflow certified"), apply moves optimistically, and let the server reject a move that conflicts with someone else's change ([Transactions & Concurrency](/docs/database/transactions-and-concurrency#optimistic-concurrency)). A whole-route reassignment is one operation that revalidates every stop, not forty drags. Crews move as a unit: reassigning a cleaning team's house moves all three cleaners' days.
 
 Re-optimize narrowly: re-sequence one technician's unfrozen stops after a cancellation, redistribute across the branch after a sick call. Whole-branch re-runs mid-day reach customers as a stream of changed times. Freezing, pinning and the re-optimization scopes the engines offer are in [Route Optimization](/books/field-operations/route-optimization#re-optimization-freezing-and-pinning).
 
@@ -104,12 +104,11 @@ An arrival window says "between 8 and 12." A live ETA says "22 minutes, here's t
 - **Onfleet's** notification triggers include an ETA threshold, a "Driver Arriving" message and a delay threshold.
 - **Samsara's** live share link on each route stop needs no login, shows progress, location, status and ETA, and exposes no driver or vehicle personal information.
 
-Building it well:
+The general rules (the link is a short-lived bearer token scoped to one stop, location is shared only while en route to that customer, ETAs are travel plus remaining work and smoothed, lateness is computed and announced once) are in [Shareable Tracking Links](/docs/architecture/location-tracking#shareable-tracking-links) and [ETAs](/docs/architecture/location-tracking#etas). What dispatch adds:
 
-- **The link is a bearer token.** Anyone who has it sees a moving truck. Make it unguessable, scoped to one visit, and dead when the visit completes or after a maximum lifetime, as FieldRoutes' 90 minutes and Salesforce's end-of-appointment cutoff do. Never put the technician's full name, phone number or the next customer's address on it.
-- **Share location only while en route to that customer.** Not before the technician starts toward them, not after they arrive, never between other customers' stops.
-- **ETA is drive time plus remaining work.** Drive time from current position to the stop through the routing engine, plus the remaining service time on the current stop if they're not yet en route. Recompute on meaningful position change, not every GPS ping, and smooth it so it doesn't jump around.
-- **Lateness is computed, not reported.** When the ETA passes the window end by more than a threshold, flag the visit and send one "running late" message with the new estimate, before the customer has to call.
+- **End the link with the visit.** FieldRoutes' 90 minutes and Salesforce's end-of-appointment cutoff are the two shapes; whichever comes first, the link dies at check-in, and it never shows the technician's full name, phone number or the next customer's address.
+- **The ETA reads the route, not just the road.** A technician still on the previous stop is late by that stop's remaining service time, so the ETA comes from the dispatched route's sequence and the current visit's planned duration, recomputed when a stop runs long.
+- **Late is a dispatch event.** When the ETA passes the window end by more than the branch's threshold, the visit is flagged on the console as in jeopardy (below) and the customer gets one "running late" message with the new estimate before they have to call.
 
 ## Arrival and Departure Detection
 
@@ -117,10 +116,8 @@ Technicians forget to tap "arrived." Geofences fill the gap and keep the tap hon
 
 Telematics providers send these events (Motive's entry and exit webhook, Samsara's route stop arrival and departure webhooks, Geotab's ZoneStop rules for a device stopped in a zone), tracking APIs such as NextBillion's fire them over polygon, circle or isochrone fences, and Bringg records whether a geofence checked a driver in automatically.
 
-GPS is noisy and parking lots are big, so a geofence that fires on one point will produce phantom arrivals at the neighbor's house. Design for it:
+GPS is noisy and parking lots are big, so a geofence that fires on one point produces phantom arrivals at the neighbor's house. Require dwell (Geotab's ZoneStop models "stopped inside") and use a larger exit fence than entry fence, as [Arrival and Departure Detection](/docs/architecture/location-tracking#arrival-and-departure-detection) describes. What's specific to field work:
 
-- **Require dwell.** Arrival is "inside for N minutes" or "stopped inside," which is what Geotab's ZoneStop models, not "one point inside."
-- **Use hysteresis.** A larger exit fence than entry fence stops a truck parked on the boundary from flapping.
 - **Size per property.** A house needs a small fence; a hospital campus, an apartment complex or a farm needs a polygon. Store the fence on the property and let the office correct it.
 - **Record the source and keep both.** A geofence arrival is evidence alongside the technician's tap, not a replacement for it. Store each with its source, and when they disagree by a lot (a check-in tapped from three miles away), flag it. Arrival and departure times feed time on site, which feeds pay, time-and-materials billing for repair work, and disputes about whether anyone came.
 
@@ -136,9 +133,9 @@ Weather stops outdoor work across an area at once, and some of it is a matter of
 
 The platforms treat the stopping side as bulk rescheduling: Briostack markets rescheduling "by tech or branches" and texting customers "all at once about last-minute weather delays," and Salesforce's High Intensity policy is meant for "a storm scenario, where employee productivity is your top priority," so the catch-up runs under different rules from a normal day.
 
-Build a **stand-down** as one operation on an area (a branch, zones or a drawn polygon) and a time range:
+Build a **stand-down** as one bulk operation on an area (a branch, zones or a drawn polygon) and a time range, with per-item results so a partial failure is visible ([Bulk Operations](/docs/requests/bulk-operations)):
 
-1. **Stop the affected visits.** Visits whose technician hasn't left yet end `cancelled` with `status_reason = 'weather'` and the company as the actor; a visit stopped on site before any work ends `not_completed` with the same reason, and one where work was done ends `completed` with the work order left open. Leave indoor work alone if the business allows it.
+1. **Stop the affected visits.** Each ends with `status_reason = 'weather'` and the company as the actor, in whichever end state [the core data model](/books/field-operations/field-operations-business#the-core-data-model) gives it for how far the visit got. Leave indoor work alone if the business allows it.
 2. **Return the work to the backlog.** The occurrences behind those visits go back to `open` with their service windows intact, so the scheduler and optimizer refill them on later days like any other due work ([Recurring Schedules](/books/field-operations/recurring-schedules)). Dispatch doesn't pick the new dates by hand.
 3. **Notify customers once** that today's visit is off and when they'll hear about the new one, then send the new time when it's booked.
 4. **Record it** with the area, time range, who declared it and why, and a lift or extension as its own recorded action.
@@ -151,7 +148,7 @@ Drive messages from visit events through the one outbound gate that applies cons
 
 - **Message on meaningful change, coalesced.** A visit moving ten minutes within its window isn't news; leaving the window, changing day, or a technician on the way is. A dispatcher rebuilding a route makes many edits in a few minutes, so send one message per affected customer about the final state; ServiceTitan's one-dispatch-notification-per-day option and Housecall Pro's choice to save an optimized route with or without notifications are the same instinct.
 - **Retract what's stale.** A cancelled visit's queued reminder must not go out.
-- **Route replies to a person.** FieldRoutes turns replies to an on-my-way text into office alerts; "I'm not home today" must reach the dispatcher before the truck does.
+- **Route replies to a person.** FieldRoutes turns replies to an on-my-way text into office alerts, and Housecall Pro sends replies to the assigned technician's app while the job is in progress and to the office inbox either way; "I'm not home today" must reach the dispatcher before the truck does.
 
 The field message lifecycle as a whole is in [Customer Communications](/books/field-operations/customer-communications).
 
@@ -228,5 +225,7 @@ They answer a customer disputing that anyone came, a chargeback for a service "n
 - [Bringg: A day in the life of an ops manager](https://help.bringg.com/docs/a-day-in-the-life-of-a-bringg-ops-manager), managing by exception and AutoDispatch
 - [Spoke Dispatch: API reference](https://developer.dispatch.spoke.com/api), read-only distributed plans changed through the live-plans API
 - [FieldRoutes: An introduction to Intelligent Routing](https://knowledgebase.fieldroutes.com/docs/an-introduction-to-intelligent-routing.md), appointments without a matching technician or skill marked and left unscheduled
+- [Housecall Pro: Customer notifications overview](https://help.housecallpro.com/en/articles/357613-customer-notifications-overview), customer replies to text notifications routed to the assigned technician during a job and to the office inbox
+- [Microsoft Learn: Schedule assistant overview](https://learn.microsoft.com/en-us/dynamics365/field-service/schedule-assistant), capacity, work hours and time windows not verified for bookings outside its recommendations
 - [Housecall Pro: Optimize by Drive Time](https://help.housecallpro.com/en/articles/14093813-optimize-by-drive-time), saving an optimized route with or without customer notifications
 - [Briostack: Scheduling and routing software](https://www.briostack.com/pest-control-software/scheduling-routing-software/), rescheduling by technician or branch and SMS updates about weather delays (marketing)

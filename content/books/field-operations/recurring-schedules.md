@@ -73,11 +73,11 @@ RRULE doesn't express what's specific to service work: the window, the anchor, m
 
 Three seasonal shapes cover most residential work, and each stresses the model differently.
 
-**Lawn and plant health rounds.** A lawn program is a sequence of different services (pre-emergent, fertilizer, weed control, winterizer), each in its own date range. FieldRoutes models it as a Service Plan holding ordered Service Rounds, each with a "wait after" period before the next round becomes due, and rounds are permanent once saved: "You can't delete a Service Round after you save it," only opt a customer out. A round is not an interval: round 3 is a different product, constrained both to its date range and to N days after round 2 was actually done, a completion anchor nested inside a calendar anchor.
+**Lawn and plant health rounds.** A lawn program is a sequence of different services (pre-emergent, fertilizer, weed control, winterizer), each in its own date range. The lawn and pest tools model it the same way: LawnPro builds a program template from ordered steps with a set "number of days between steps," and FieldRoutes holds ordered Service Rounds in a Service Plan, each with a "wait after" period before the next round becomes due, and keeps rounds permanent once saved ("You can't delete a Service Round after you save it," only opt a customer out). A round is not an interval: round 3 is a different product, constrained both to its date range and to N days after round 2 was actually done, a completion anchor nested inside a calendar anchor.
 
 **Weekly pool and cleaning routes.** Pool service is a route first: the same stops on the same weekday all season. Skimmer calls these route assignments, "a tech's recurring, permanent schedule of service locations," and separates permanent changes (frequency, day, tech, a stop-after date) from one-time moves. Residential and commercial cleaning work the same way, often with the same crew each time because customers want the person they gave a key to. The split matters: an edit to the plan and an edit to one occurrence have different blast radii, and the UI should never make one look like the other.
 
-**Quarterly and seasonal pest, and HVAC seasons.** Pest plans are an interval with a seasonal envelope: FieldRoutes documents frequencies "in days, and multiples of 30 represent months (e.g., 90 = every 3 months)," with seasonal start and end dates. HVAC memberships are the calendar version: a cooling check in spring and a heating check in fall, each with a window of a month or more, because every member wants the visit in the same few weeks and the business needs to spread them.
+**Quarterly and seasonal pest, and HVAC seasons.** Pest plans are often an interval with a seasonal envelope; FieldRoutes' API, for one, stores frequencies "in days, and multiples of 30 represent months (e.g., 90 = every 3 months)," with seasonal start and end dates. HVAC memberships are the calendar version: a cooling check in spring and a heating check in fall, each with a window of a month or more, because every member wants the visit in the same few weeks and the business needs to spread them.
 
 Day-count and calendar intervals drift apart: four 90-day intervals are 360 days, so a "quarterly" day-count plan creeps five days earlier each year and eventually gives a customer an extra visit. Harmless if the agreement says "every 90 days," a billing problem if it says "four visits a year": store the unit the contract uses.
 
@@ -85,13 +85,13 @@ Day-count and calendar intervals drift apart: four 90-day intervals are 360 days
 
 The window turns a due date into something a scheduler can optimize. Dynamics fills date windows from pre and post flexibility: monthly maintenance on the 8th with seven days either side "can be scheduled between the first and the 15th of each month." FieldPulse is categorical: it "never books a job outside the due period."
 
-Wider windows give denser routes; narrower ones give predictability. Scale the window with the cadence (a day for weekly pool or cleaning, a week either side for monthly, wider for quarterly and seasonal work) and make it configurable per service type, agreement and customer. Customers add their own constraints on top (preferred, required or blocked days), and FieldRoutes' advice holds everywhere: "Only set these preferences if the customer specifically asks for them," because every preference shrinks the solution space.
+Wider windows give denser routes; narrower ones give predictability. Scale the window with the cadence (a day for weekly pool or cleaning, a week either side for monthly, wider for quarterly and seasonal work) and make it configurable per service type, agreement and customer. Customers add their own constraints on top (preferred, required or blocked days). My rule is to record them only when the customer asks (FieldRoutes' help says the same: "Only set these preferences if the customer specifically asks for them"), because every preference shrinks the solution space.
 
 Some windows are regulatory rather than commercial. A pesticide label says how often a product may be used, and "the label is the law." When the product sets a minimum reapplication interval, the earliest date in the window is a hard constraint that no customer request or capacity crunch can pull forward. Model it as a minimum gap from the last *completed* application of that product at that site, which is why the scheduler needs the treatment history from [Proof of Service](/books/field-operations/proof-of-service), not just the plan.
 
 ## The Backlog
 
-The **backlog** is the set of occurrences whose window has opened (or passed) with no booked visit. FieldRoutes' Job Pool is the familiar form: "visibility to all customers due for service during a specific date range" who "do not have a future scheduled Appointment," with a filter that can ignore wait-after periods to pull rounds forward.
+The **backlog** is the set of occurrences whose window has opened (or passed) with no booked visit. Platforms surface it in different shapes. FieldRoutes' Job Pool gives "visibility to all customers due for service during a specific date range" who "do not have a future scheduled Appointment," with a filter that can ignore wait-after periods to pull rounds forward. Jobber keeps "job visits that have been created but have not yet been assigned a specific date or time" in an unscheduled panel, sortable by age or value, and shows them on the map so a dispatcher can drop one into a nearby route.
 
 A healthy backlog isn't empty; it's the inventory the router draws from. What matters is its age profile:
 
@@ -110,20 +110,19 @@ Closures come in three kinds, and they need different handling.
 
 **Blackouts.** A school during exams, a restaurant during a renovation, a customer on vacation: property-level or occurrence-level exclusions (EXDATEs in RFC terms), each with a reason.
 
-**Weather.** Rain and wind cancel spray and lawn routes the same morning; ice cancels them in winter. Weather is a bulk reschedule: Briostack markets moving appointments "for a whole tech or branch at once" and texting every affected customer. The rained-out visits end with reason `weather` under the end-state rules in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model). Either way, a rained-out day should return its occurrences to the backlog with windows intact for the router to refill, not leave three hundred visits to rebook by hand.
+**Weather.** Rain and wind cancel spray and lawn routes the same morning; ice cancels them in winter. That's a same-day bulk operation, the stand-down in [Dispatch & the Day of Service](/books/field-operations/dispatch#weather-and-emergencies); what the schedule owes it is that the rained-out occurrences return to the backlog with their windows intact for the router to refill.
 
 ## Missed Visits and Make-Ups
 
-A visit can end in several ways, and each means something different for its occurrence and the invoice. The visit's status and reason (the catalog in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model)) and the occurrence's state are separate fields:
+How a visit ends (its status and reason) is defined once in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model). The occurrence keeps its own state, because the promise and the trip are different facts, and this chapter's part is what each ending does to the promise and the invoice:
 
-| What happened | Visit | Occurrence | Billing |
-| --- | --- | --- | --- |
-| **Performed** | `completed` | `completed`; next one per the anchor | Bill per the agreement |
-| **Customer skipped it** | `cancelled`, `customer_asked`, or never booked | `skipped`, with who asked | Not billed, or credited |
-| **No access** | `not_completed`, `no_access` or `not_home` | Back to `open` for a make-up inside the window | No charge, or a trip charge if the agreement allows it |
-| **Rained out** | `cancelled`, `weather` (on site: `not_completed`, `weather`) | Back to `open`, same window | Not billed until performed |
-| **Business cancelled** | `cancelled`, `tech_out` | Back to `open` | Not billed until performed |
-| **Window closed** | none performed | `missed` | Not billed; a make-up is owed or credited |
+| What happened | Occurrence | Billing |
+| --- | --- | --- |
+| **Performed** | `completed`; next one per the anchor | Bill per the agreement |
+| **Customer skipped it** (called off, or never booked) | `skipped`, with who asked | Not billed, or credited |
+| **No access or not home** | Back to `open` for a make-up inside the window | No charge, or a trip charge if the agreement allows it |
+| **Rained out, or the business called it off** | Back to `open`, same window | Not billed until performed |
+| **Window closed** | `missed` | Not billed; a make-up is owed or credited |
 
 The no-access charge is a policy choice the agreement states, not a default; the evidence that makes it defensible is in [Proof of Service](/books/field-operations/proof-of-service#when-the-work-can-t-be-done).
 
@@ -236,8 +235,9 @@ Recurring schedules generate disputes long after the fact: "you only came three 
 - [ServiceM8: Recurring Jobs and Reminders overview](https://support.servicem8.com/hc/en-us/articles/203323340-Recurring-Jobs-Reminders-Overview), inactive bookings activated by lead time
 - [ServiceM8: How the Recurring Jobs Auto-Routing add-on works](https://support.servicem8.com/hc/en-us/articles/115005363503-How-the-Recurring-Jobs-Auto-Routing-Add-on-works), never moving a job outside its recurrence date
 - [FieldPulse: Maintenance agreements](https://help.fieldpulse.com/en/articles/5722045-maintenance-agreements), generation windows and rules, due periods, kept edits, unused visit policy
+- [Jobber: New schedule](https://help.getjobber.com/en/articles/new-schedule/), unscheduled visits in a sortable panel and on the map
+- [LawnPro: Multi-step programs](https://lawnprosoftware.com/features/multi-step-programs), program templates of ordered steps with days between them
 - [GorillaDesk: Recurring jobs](https://intercom.help/gorilladesk/en/articles/1089485-recurring-jobs), next job on completion and month exceptions
 - [Skimmer: Manage route assignments](https://thepooldeck.getskimmer.com/manage-a-route-73/manage-route-assignments-web-skimmer-help-center-276), permanent weekly pool routes versus one-time moves
-- [Briostack: Scheduling and routing software](https://www.briostack.com/pest-control-software/scheduling-routing-software/), bulk weather rescheduling (marketing)
 - [Solea: Scheduling and dispatch](https://www.solea.ai/product/scheduling-dispatch), overnight auto-scheduling with a freeze window and a job pool for unplaced work
 - [ServiceNow: Field service holiday schedules](https://www.servicenow.com/docs/r/DBkKvgbNn2vmEpXdLk9O2w/6Gsx23mhIpgTjuMViPVB2w), location-based holiday calendars and shift conflict warnings

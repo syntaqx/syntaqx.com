@@ -2,7 +2,7 @@
 title = "Signing the Agreement"
 description = "Closing the sale: ESIGN consent at the door, customer-device signing, state templates, cooling-off deadlines, payment timing, B2B contracts and the handoff."
 category = "Field Operations Industry"
-order = 1523
+order = 1525
 part = "Selling"
 tags = ["field-operations", "sales", "e-signature", "consumer-protection", "contracts"]
 +++
@@ -55,7 +55,7 @@ My default is the last row: send the packet to the customer's phone, let them re
 
 ## Templates by State
 
-Contract terms vary by state, trade and product, so the agreement is assembled from a **template** chosen by rules, not picked by a rep. State home-solicitation laws differ in the length of the window, who gets a longer one, the wording of the notice and what counts as a business day ([Consumer Protection](/books/field-operations/consumer-protection#state-home-solicitation-laws) has the federal baseline and California's example). Accreditation adds its own layer: a QualityPro pest company certifies that it "has a termite warranty/service agreement that meets requirements" of the program's current US V6.1 standards. Check current state law with counsel; don't ship a fifty-state table you haven't verified.
+Contract terms vary by state, trade and product, so the agreement is assembled from a **template** chosen by rules, not picked by a rep. State home-solicitation laws differ in the length of the window, who gets a longer one, the wording of the notice and what counts as a business day ([Consumer Protection](/books/field-operations/consumer-protection#state-home-solicitation-laws) has the federal baseline and California's example). Accreditation can add its own clauses, such as QualityPro's termite agreement requirement ([Licenses & Permits](/books/field-operations/licensing-and-permits#accreditation-and-manufacturer-programs)). Check current state law with counsel; don't ship a fifty-state table you haven't verified.
 
 The model that survives this has three parts: a **clause library** (each clause versioned, with the jurisdictions, trades and products it applies to), **templates** that compose clauses and are versioned as a whole, and a **resolution rule** that picks the template from the service address's state, the product, the sale channel (`sold_via`: `door`, `phone`, `web`, `store` or `technician`) and buyer attributes like age where a state makes them matter ([Rules as Data](/docs/architecture/rules-as-data)). The resolved template version is pinned on the agreement at the moment it's generated. Never re-resolve a signed agreement against today's templates. The one table this chapter adds hangs signing documents off the canonical `agreements` table from [The Field Operations Business](/books/field-operations/field-operations-business):
 
@@ -99,17 +99,17 @@ The deadline is stored as `cancellation_deadline_at` with `cancellation_deadline
 
 ## Taking Payment at Signing
 
-Most recurring-service sales collect something at signing: the initial service fee, a deposit, or just a payment method for autopay. Where the card is typed decides your PCI DSS scope ([PCI DSS](/docs/compliance/pci-dss)).
+Most recurring-service sales collect something at signing: the initial service fee, a deposit, or just a payment method for autopay. Where the card is typed decides PCI DSS scope, and the questionnaire follows the architecture ([PCI DSS: Which SAQ](/docs/compliance/pci-dss#which-saq-architecture-decides)). At the door that means three cases:
 
-- **The customer types on their own device into a provider-hosted page.** SAQ A, the lightest questionnaire, requires that "the entirety of all payment pages delivered to the consumer's browser" come from a PCI DSS-validated third party, by redirect or iframe. If your page embeds the provider's fields in an iframe, you also need to confirm your page isn't susceptible to script attacks, with techniques like those in requirements 6.4.3 and 11.6.1 or with the provider's assurance.
+- **The customer types on their own device into a provider-hosted page.** That's the SAQ A shape, with its script-attack criterion if the provider's form is embedded in your page ([Payment Page Scripts](/docs/compliance/pci-dss#payment-page-scripts)).
 - **The rep keys the card into a web virtual terminal.** SAQ C-VT is meant for merchants who manually enter one transaction at a time by keyboard into a third-party-hosted virtual terminal, on an isolated device. A shared sales tablet running other apps fits that poorly.
 - **The rep taps or dips the card on a reader or the phone.** That's card-present acceptance, with its own validated-solution path ([Card-Present Payments](/books/payments/card-present)).
 
 The pattern that keeps reps out of scope and customers in control is the same one as for signing: the payment step is a hosted page on the customer's phone, opened from the same link as the packet, and the app never sees a card number. Store only the provider's token, brand, last four and expiry ([Sensitive Data](/docs/payments/sensitive-data)).
 
-Timing matters as much as scope: signing stores the payment method, and whether anything is charged before the agreement is `active` follows the rule and its two refundable exceptions in [Billing Recurring Service](/books/field-operations/billing-recurring-service#how-to-build-it), with the law in [Consumer Protection](/books/field-operations/consumer-protection#charging-inside-the-window).
+Timing matters as much as scope: signing stores the payment method, and nothing is charged before the agreement is `active` except the two refundable exceptions in [Consumer Protection](/books/field-operations/consumer-protection#charging-inside-the-window).
 
-**Financing** follows the same principle with higher stakes, because the application includes a Social Security number and income. Wisetack's flow sends the customer a text link, the customer sees and locks in options on their own phone, and the contractor is paid after "your customer confirms the work has been completed and releases the funds." Hearth's pitch is the same separation: "Homeowners apply for financing directly, not you." The rep's app should record that an application was sent, its status and the approved terms, never the credit data. Consumer credit brings its own disclosures, presented as [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules) describes, and its own sequencing (when the note may be transferred, and when a loan secured by the home may fund), which [Consumer Protection](/books/field-operations/consumer-protection#financing) covers.
+**Financing** follows the same principle with higher stakes: the customer applies in the lender's flow on their own phone, and the rep's app records only that an application was sent, its status and the approved terms ([Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#financing-presentment), with the sequencing in [Consumer Protection](/books/field-operations/consumer-protection#financing)).
 
 ## Verification Calls
 
@@ -161,9 +161,7 @@ Publish events with an outbox in the same transaction as the state change, so a 
 
 A cancellation inside the window is the reverse of the handoff, and every downstream effect needs an undo: cancel the booked visit and release its slot, void the pending commission, stop the billing schedule, refund anything collected within 10 business days, and cancel any financing application. Model it as an `agreement.cancelled` event with a reason (`buyer_cooling_off`, `verification_failed`, `rescission`, `duplicate`) that every consumer handles, and a saga that tracks each step to completion so a stuck refund is visible.
 
-Accept cancellations on every channel and record them as [Consumer Protection](/books/field-operations/consumer-protection#renewal-and-cancellation-in-the-field) describes. Retention offers are fine after the window; inside it, the cancellation is a right, not a negotiation, and a script that argues with it misrepresents that right.
-
-Cancellations after the window are governed by the agreement's own termination terms and state renewal and cancellation laws ([Subscriptions](/docs/payments/subscriptions#cancellation), [Collections & Retention](/books/field-operations/collections-and-retention)). Keep them separate in the data: a `cancelled` agreement that never became active is a sales outcome; a `terminated` one is a churned customer. Mixing them corrupts both the sales metrics and the retention metrics.
+Cancellations arrive on every channel ([Consumer Protection](/books/field-operations/consumer-protection#renewal-and-cancellation-in-the-field) has the legal clock and the channels, [Collections & Retention](/books/field-operations/collections-and-retention#cancellations) the field mechanics and the `cancelled` versus `terminated` split). The signing-specific point: inside the window the cancellation is a right, not a negotiation, so no save offer runs before the deadline, and a script that argues with it misrepresents that right.
 
 ## Auditing
 
@@ -181,7 +179,7 @@ Signing evidence in general is in [Electronic Signatures & Records](/docs/compli
 - **Customer-device signing by default,** with tablet signing as an offline fallback that can't complete until a copy reaches a verified contact.
 - **Templates resolved by rule and pinned by version,** from a versioned clause library keyed by jurisdiction, trade, product, channel and buyer attributes.
 - **Cancellation deadlines computed by the system** from a jurisdiction holiday calendar and the service address's time zone, printed on the notice and stored with their inputs.
-- **Payment and financing on hosted pages on the customer's device,** storing tokens only, with a deliberate choice between charging after activation and charging at signing with a tracked 10-business-day refund.
+- **Payment and financing on hosted pages on the customer's device,** storing tokens only, and nothing charged before activation beyond the two refundable exceptions.
 - **An agreement state machine with outbox events** that scheduling, billing, communications and commissions consume idempotently, and a cancellation saga that undoes each of them.
 - **Commercial contracts recorded as such:** no cooling-off notice, the MSA and purchase order referenced, and the signer's authority captured.
 - **Verification as a scripted, recorded workflow** with outcomes that can hold a commission or cancel a sale.
@@ -193,14 +191,11 @@ Signing evidence in general is in [Electronic Signatures & Records](/docs/compli
 - [15 U.S.C. 7001: Electronic Signatures in Global and National Commerce](https://www.law.cornell.edu/uscode/text/15/7001), the consumer consent and "reasonably demonstrates" requirement for records the law requires in writing
 - [eCFR: 16 CFR 429.1, The Cooling-Off Rule](https://www.law.cornell.edu/cfr/text/16/429.1), the cancellation notice with the transaction date and last day to cancel, no misrepresentation of the right, and refunds within 10 business days of cancellation
 - [eCFR: 16 CFR 429.0, Definitions](https://www.law.cornell.edu/cfr/text/16/429.0), consumer goods and services bought primarily for personal, family or household purposes, and business days excluding Sundays and federal holidays
-- [PCI SSC: FAQ 1292, SAQ A eligibility](https://www.pcisecuritystandards.org/faqs/1292/), payment pages delivered entirely by a validated third party, by redirect or iframe
-- [PCI SSC: FAQ 1588, SAQ A script criterion](https://www.pcisecuritystandards.org/faqs/1588/), two ways an embedded-form merchant confirms its page isn't susceptible to script attacks
 - [PCI SSC: FAQ 1229, SAQ C-VT](https://www.pcisecuritystandards.org/faqs/1229), the eligibility criteria for manually keyed virtual terminal transactions
 
 **Reference**
 
 - [FTC: Buyer's Remorse, the Cooling-Off Rule](https://consumer.ftc.gov/articles/buyers-remorse-ftcs-cooling-rule-may-help), Saturdays counting as business days, the four worked deadline examples, postmarked cancellations and exclusions
-- [NPMA QualityPro: Credentials](https://www.npmaqualitypro.org/available-credentials/qualitypro/), the US V6.1 standards and the termite warranty or service agreement requirement
 
 **In practice**
 
@@ -210,6 +205,4 @@ Signing evidence in general is in [Electronic Signatures & Records](/docs/compli
 - [Jobber: Quote approvals](https://help.getjobber.com/en/articles/quote-approvals/), drawn or typed signatures, approve and pay deposit, and signatures removed when an approved quote is edited
 - [SalesRabbit: Features](https://salesrabbit.com/features/), Digital Contracts and the Mobile eSignature add-on
 - [Enerflo](https://enerflo.com/), Docflo signing packets for solar sales
-- [Wisetack: How to use](https://www.wisetack.com/resources/hs-how-to-use), customer-side applications by text link and funds released after the customer confirms completion
-- [Hearth](https://www.gethearth.com/), homeowners applying for financing directly
 - [PCT: Door-to-door sales in the pest control industry](https://www.pctonline.com/news/door-to-door-sales-pest-control-industry), phone and technician verification of every sale, and first service within 24 hours

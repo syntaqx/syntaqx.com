@@ -88,13 +88,7 @@ A few rules make requirements enforceable without making technicians hate the ap
 
 ## When the Work Can't Be Done
 
-A visit that didn't happen needs as much evidence as one that did, often more: it decides whether the customer is billed, whether the work is rescheduled, and whether the customer is told. Three end states keep this honest, each with a `status_reason` from the one catalog in [The Field Operations Business](/books/field-operations/field-operations-business):
-
-- **`completed`** when any work was performed on site, a diagnosis or a partial service included. If the work order isn't finished, the work order stays open and carries the `hold_reason` (`part_needed`, `approval_needed`, `permit_needed`).
-- **`not_completed`** when the technician got there and nothing could be done.
-- **`cancelled`** when the visit was called off before the technician left: `weather`, `tech_out` or `customer_asked`, with who called it off.
-
-Either of the last two sends the work order or occurrence back to be scheduled again ([Dispatch & the Day of Service](/books/field-operations/dispatch)).
+A visit that didn't happen needs as much evidence as one that did, often more: it decides whether the customer is billed, whether the work is rescheduled, and whether the customer is told. Which end state applies (`completed` with the work order on hold, `not_completed` or `cancelled`), the one `status_reason` catalog, and why `part_needed` and `weather` can land on either side of the line are defined once in [The Core Data Model](/books/field-operations/field-operations-business#the-core-data-model). This section adds what each reason has to prove and what it sets off.
 
 Delivery platforms model failure as a first-class outcome with a reason catalog. Onfleet drivers select "Failure" and a reason (driver or vehicle incident, destination unreachable, recipient unavailable, refused, unable to locate, or other); higher plans add admin-defined reasons that can require notes, and edits to them "don't apply to completed tasks." eLogii lets operators fail tasks from the dashboard with a required reason, stores reasons in task history, and reports failed reasons by period, team, driver and customer.
 
@@ -109,9 +103,7 @@ Field service needs the same, and each reason should drive behavior, not just a 
 | `weather` (rain or wind above the label limit after arrival) | Conditions recorded | Not billed | The occurrence returns to the backlog with its window intact |
 | `unsafe_condition` (aggressive dog, hazard) | Photo, note | Not billed | Flag the property for future visits |
 
-`part_needed` appears twice on purpose. A technician who diagnoses a failed compressor and finds no compressor on the truck did work: the visit is `completed` (the diagnostic fee follows the agreement), and the work order holds with `hold_reason = 'part_needed'`. Only a visit where nothing could start ends `not_completed` with that reason. Weather works the same way across the line: a spray day called off in the morning is `cancelled` with `weather`, and rain that starts after the technician arrives makes the visit `not_completed` with `weather`.
-
-Partial service (the interior wasn't accessible, one of three rooftop units was locked out) is not a failure reason either: the visit is `completed` for what was done, with photos, the work order stays open for the remainder, and billing is pro-rated or full per the agreement.
+Partial service (the interior wasn't accessible, one of three rooftop units was locked out) is not a failure reason: the visit is `completed` for what was done, the evidence includes photos of what couldn't be reached, and billing is pro-rated or full per the agreement.
 
 Let each company label and subdivide reasons its own way, but map every one onto the fixed system catalog, so analytics can compare across tenants and the billing and rescheduling rules stay the same. Record who chose the reason (technician or office) and from where.
 
@@ -132,8 +124,7 @@ Photos are the most persuasive evidence and the easiest to undermine. A photo pi
 
 - **Capture in the app** where evidence matters, and record whether a photo came from the camera or the library.
 - **Hash on the device** at capture, store the hash in the visit record, and upload the file separately. The hash proves the file the server holds is the one taken on site, even if the upload finishes hours later.
-- **Record location with its accuracy.** Mobile and browser location APIs report accuracy in meters (the web Geolocation API defines it at a 95% confidence level). A point 15 meters from the property with 10 meters of accuracy is consistent; a point 15 meters away with 400 meters of accuracy proves little. Store both, and show the dispatcher both.
-- **Don't trust the device clock alone.** Keep device time and server receipt time, as in [The Technician App](/books/field-operations/technician-app).
+- **Record location with its accuracy, and both clocks,** on every status, photo and signature. Why a position is a measurement with an error bar, and why device time and received time are kept apart, is in [A Position Is a Measurement](/docs/architecture/location-tracking#a-position-is-a-measurement); geofence arrival as evidence is in [Evidence, Not Truth](/docs/architecture/location-tracking#evidence-not-truth). The field twist is what the point is compared with: the property's service point (a technician's pin, per [Customers, Accounts & Properties](/books/field-operations/customers-and-properties#addresses-for-service-work)), not a rooftop geocode, so a large lot or a commercial campus doesn't flag every visit.
 - **Mind what's in the frame.** Photos inside homes and offices capture people, documents and belongings. Set a retention period, restrict who can view them, and don't expose them in customer-facing reports without a reason ([Data Retention](/docs/architecture/data-retention)).
 
 ## Service Reports
@@ -175,6 +166,67 @@ Three field-specific rules on top of the general ones:
 
 ![Proof of service: photos, signature, notes, scans and products captured on site flow into a completion gate that checks the evidence required for that task; a done visit becomes a sealed record with a hash, times and place, which produces the service report; a visit that can't be done ends not completed with a reason and photo, and is sealed the same way; an edit after close creates an amendment as a new version with the reason.](/diagrams/fo-proof-of-service-record.svg "Completed and not-completed visits are both sealed records. Reports render from a sealed version, and later edits are amendments that keep the original.")
 
+## How to Build It
+
+This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model). Arrival and completion times are already on `visits` (`arrived_at`, `completed_at`); forms, readings and field payments are in [The Technician App](/books/field-operations/technician-app#how-to-build-it). This chapter adds the requirement rules, the captured evidence and the reports sent:
+
+```sql
+CREATE TABLE evidence_rule_sets (        -- one JSON document like the example above, per scope
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id    UUID NOT NULL,
+  scope        TEXT NOT NULL CHECK (scope IN ('company', 'service_type', 'account',
+                 'property', 'visit')),
+  scope_id     UUID,                     -- null for the company default
+  rules        JSONB NOT NULL,           -- on_complete, on_not_completed, capture
+  version      INTEGER NOT NULL,
+  valid_during TSTZRANGE NOT NULL,
+  CHECK ((scope = 'company') = (scope_id IS NULL))
+);
+
+CREATE TABLE visit_evidence (
+  id                    UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id             UUID NOT NULL,
+  visit_id              UUID NOT NULL REFERENCES visits (id),
+  kind                  TEXT NOT NULL CHECK (kind IN ('photo', 'signature', 'scan', 'note',
+                          'form', 'pin', 'id_check', 'reason')),
+  requirement_key       TEXT,            -- which rule it satisfies; null for extra evidence
+  is_unavailable        BOOLEAN NOT NULL DEFAULT FALSE,  -- the explained exception
+  unavailable_note      TEXT,
+  file_key              TEXT,            -- object storage: the photo, the signature strokes
+  sha256                BYTEA,           -- computed on the device at capture
+  capture_source        TEXT CHECK (capture_source IN ('camera', 'library', 'scanner', 'typed')),
+  form_answer_set_id    UUID REFERENCES form_answer_sets (id),
+  signer_name           TEXT,
+  signer_relationship   TEXT,            -- account holder, tenant, property manager, neighbor
+  signed_content_sha256 BYTEA,           -- the screen the signer saw
+  location              GEOGRAPHY(POINT),
+  accuracy_m            REAL,
+  staff_member_id       UUID REFERENCES staff_members (id),
+  device_recorded_at    TIMESTAMPTZ NOT NULL,
+  received_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (NOT is_unavailable OR unavailable_note IS NOT NULL)
+);
+
+ALTER TABLE visits
+  ADD COLUMN evidence_rules_applied JSONB,  -- the resolved rules, snapshotted at completion
+  ADD COLUMN completion_source      TEXT CHECK (completion_source IN ('field', 'office')),
+  ADD COLUMN sealed_at              TIMESTAMPTZ;
+
+CREATE TABLE service_reports (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id         UUID NOT NULL,
+  visit_id          UUID NOT NULL REFERENCES visits (id),
+  visit_version     INTEGER NOT NULL,     -- the sealed version it rendered
+  revises_report_id UUID REFERENCES service_reports (id),
+  audience          TEXT NOT NULL,        -- customer, water_system, fire_authority, manufacturer
+  file_key          TEXT NOT NULL,
+  sha256            BYTEA NOT NULL,
+  sent_at           TIMESTAMPTZ
+);
+```
+
+Completion checks `visit_evidence` against the resolved rules on the device and again on the server, then writes the snapshot and seals the visit. After `sealed_at`, changes are amendments with a reason ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)), and a corrected report is a new `service_reports` row pointing at the one it revises. A dispute package is a query over these tables by payment and billing period.
+
 ## Auditing
 
 Proof of service is itself an audit record, so the field-specific points are about the proof's own history:
@@ -200,7 +252,6 @@ The general record shape, access logging and tamper evidence are in [Audit Trail
 **Specifications**
 
 - [15 U.S.C. 7001: General rule of validity](https://www.law.cornell.edu/uscode/text/15/7001), electronic signatures given legal effect, and retained electronic records that are accurate and reproducible
-- [MDN: GeolocationCoordinates.accuracy](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy), location accuracy in meters at a 95% confidence level
 
 **Reference**
 

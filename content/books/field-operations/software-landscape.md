@@ -35,13 +35,13 @@ They're thinner in any one trade: Housecall Pro says offline editing "is not sup
 
 ### Trade suites
 
-Trade suites are built around the repair ticket and the sale that follows it. Their center of gravity shows in what they document most deeply. ServiceTitan's documentation runs deepest on memberships with recurring service and deferred revenue, arrival windows and capacity, good-better-best proposal templates, call scoring and marketing attribution. Successware says "the price book is what everything in the platform connects to" and imports third-party flat-rate books; FieldEdge sells its own. [Repair, Install & Commercial Work](/books/field-operations/repair-and-installation) covers that machinery.
+Trade suites are built around the repair ticket and the sale that follows it. Their center of gravity shows in what they document most deeply. ServiceTitan's documentation runs deepest on memberships with recurring service and deferred revenue, arrival windows and capacity, good-better-best proposal templates, call scoring and marketing attribution. The flat-rate pricebook sits at the center of all of them; how the suites and third-party books build it is in [Pricebooks: Where Prices Come From](/books/field-operations/pricing-and-sales-rules#pricebooks-where-prices-come-from), and the repair job around it in [Repair, Install & Commercial Work](/books/field-operations/repair-and-installation).
 
 Commercial suites add the contract layer: ServiceTrade turns inspection findings into deficiency quotes, and BuildOps tracks margin per service agreement. What suites optimize less is the dense recurring route: ServiceTitan's documented route optimization reorders one technician's day, up to 70 jobs, rather than building multi-day routes for a book of recurring customers.
 
 ### Vertical property care
 
-Property care vendors start from the agreement and the route. FieldRoutes generates due work into a job pool, routes it with drive time, skills and vehicle constraints, tracks product capacity per route, and exports state chemical reports in several states' formats. Pool vendors add chemistry: Pool Brain calculates dosing from the technician's readings and tracks chemical cost per body of water, and Skimmer prices "monthly, per service location." Cleaning tools center on the frequency (Launch27's weekly or biweekly bookings, ZenMaid's "2nd Friday of every month") and on paying cleaners by the hour or by revenue share. Lawn vendors diverge again: Aspire treats renewal as a re-quote with recalculated prices, and LMN builds every estimate from the company's budget and overhead recovery.
+Property care vendors start from the agreement and the route. In pest, FieldRoutes generates due work into a job pool, routes it with drive time, skills and vehicle constraints, tracks product capacity per route, and exports state chemical reports in several states' formats; PestPac has technicians complete state-specific material reports in the field (California and Arizona among them) and projects chemical needs from scheduled jobs. Pool vendors add chemistry: Pool Brain calculates dosing from the technician's readings and tracks chemical cost per body of water, and Skimmer prices "monthly, per service location." Cleaning tools center on the frequency (Launch27's weekly or biweekly bookings, ZenMaid's "2nd Friday of every month") and on paying cleaners by the hour or by revenue share. Lawn vendors diverge again: Aspire treats renewal as a re-quote with recalculated prices, and LMN builds every estimate from the company's budget and overhead recovery.
 
 ### Enterprise platforms
 
@@ -213,7 +213,7 @@ The mechanics are in [Audit Trails](/docs/architecture/audit-trails), and the fi
 - [Housecall Pro: CSR AI overview](https://help.housecallpro.com/en/articles/9740104-csr-ai-overview), AI call answering
 - [PYMNTS: Housecall Pro brings Klarna to home service pros](https://www.pymnts.com/bnpl/2026/housecall-pro-brings-klarna-payment-tools-to-home-service-pros/), August 2026
 - [ACHR News: Jessica is the new AI receptionist for contractors](https://www.achrnews.com/articles/163805-jessica-is-the-new-ai-receptionist-for-contractors), Workiz Genius Answering, December 2024
-- [Successware: Price book](https://www.successware.com/blog/2021/november/did-you-know-price-book/), the pricebook as the center of the platform
+- [PestPac: Chemical tracking](https://www.pestpac.com/features/chemical-tracking-software), state-specific material reports completed in the field and expected usage from scheduled jobs (marketing)
 - [ServiceTrade: AAA Fire Protection case study](https://servicetrade.com/resources/case-studies/aaa-fire-protection/), inspection deficiencies turned into quotes
 - [BuildOps: Service agreements](https://buildops.com/platform/service-agreements/), margin per agreement
 - [Aspire: Contract renewal settings](https://guide.youraspire.com/docs/understanding-contract-renewal-settings), renewal as a re-priced quote

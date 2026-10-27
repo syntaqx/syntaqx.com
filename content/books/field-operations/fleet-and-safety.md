@@ -46,47 +46,12 @@ Two patterns in these APIs shape any integration. First, the feeds resend: Geota
 The useful joins are between the vehicle's world and the job's world:
 
 - **Driver to vehicle, over time.** Telematics knows the vehicle; the field platform knows the technician. Keep an effective-dated assignment (who drove which van from when to when, per [Temporal Data](/docs/database/temporal-data)), because every downstream question (who was speeding, whose stock is this, whose hours are these) depends on it.
-- **Arrival from two sources.** The technician taps "arrived" on the phone; the vehicle stops inside the property's geofence. Samsara has route stop arrival and departure webhooks; Route4Me records both mobile and telematics distance per route. When the two disagree, the disagreement is the interesting fact: a check-in from 4 miles away, or a van parked at a customer for 3 minutes on a 30-minute service.
+- **Arrival from two sources.** The technician taps "arrived" on the phone; the vehicle stops inside the property's geofence. How geofence arrival is decided and recorded for a visit is in [Arrival and Departure Detection](/books/field-operations/dispatch#arrival-and-departure-detection), and why phone and vehicle are kept as separate sources is in [Combining Sources](/docs/architecture/location-tracking#combining-sources). What fleet adds is the vehicle side of the join: Samsara has route stop arrival and departure webhooks, and Route4Me records both mobile and telematics distance per route, so a van parked at a customer for 3 minutes on a 30-minute service shows up against the tap.
 - **Hours as a scheduling constraint.** Samsara documents a dispatch pattern that reads each driver's remaining drive, shift and cycle time and assigns a load only if the remaining time covers the route. For CMV drivers outside the short-haul exception, dispatch should check remaining drive and on-duty time the same way before inserting or redistributing work ([Dispatch & the Day of Service](/books/field-operations/dispatch)).
 - **Mileage.** Odometer readings feed vehicle maintenance, fuel tax reporting and mileage reimbursement. Take them from the vehicle, not the phone.
 - **Off the clock.** A vehicle taken home is tracked at night unless the platform says otherwise. Samsara exposes personal conveyance settings; whatever the vendor, decide what location is retained outside working hours, who can see it, and tell drivers.
 
-Vehicles are their own table, not a kind of resource: the scheduler books technicians and crews, and the vehicle is what they drive. The core model in [The Field Operations Business](/books/field-operations/field-operations-business) has no vehicle table, so this chapter defines it:
-
-```sql
-CREATE TABLE vehicles (
-  id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id         UUID NOT NULL,
-  branch_id         UUID NOT NULL REFERENCES org_units (id),
-  unit_number       TEXT NOT NULL,             -- what the shop calls it: "Van 14"
-  vin               TEXT,
-  plate             TEXT,
-  plate_region      TEXT,                      -- state or province of registration
-  telematics_ref    TEXT,                      -- the vendor's vehicle ID
-  gvwr_lbs          INTEGER,                   -- from the door-jamb label
-  gcwr_lbs          INTEGER,                   -- when it tows
-  is_cmv            BOOLEAN NOT NULL,
-  cmv_basis         TEXT,                      -- weight, passengers, placarded hazmat
-  capabilities      TEXT[] NOT NULL DEFAULT '{}',  -- liftgate, refrigerated, ladder rack, hazmat
-  status            TEXT NOT NULL CHECK (status IN ('active', 'out_of_service', 'retired')),
-  UNIQUE (tenant_id, unit_number)
-);
-
--- one driver per vehicle at a time; needs the btree_gist extension
-CREATE TABLE vehicle_assignments (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
-  vehicle_id      UUID NOT NULL REFERENCES vehicles (id),
-  staff_member_id UUID NOT NULL REFERENCES staff_members (id),  -- the driver
-  valid_during    TSTZRANGE NOT NULL,        -- closed-open; open upper bound while current
-  source          TEXT NOT NULL,             -- 'dispatch', 'eld_login', 'manual'
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CONSTRAINT vehicle_assignments_valid_during_excl
-    EXCLUDE USING GIST (vehicle_id WITH =, valid_during WITH &&)
-);
-```
-
-`is_cmv` is stored, not computed, because the answer depends on how the vehicle is used (towing, passengers, placarded loads), and `cmv_basis` says why. An `out_of_service` vehicle (an open DVIR defect, an expired periodic inspection) can't take a route. `capabilities` is what delivery work matches against: an appliance that needs a liftgate, a full-room furniture delivery that needs a long box, a pharmacy order that needs refrigeration are requirements on the work order, checked against the vehicle the crew will drive. A two-person delivery crew is one driver plus a helper: the assignment names the driver, because hours of service and safety events belong to whoever is at the wheel, and the helper rides on the crew resource. Delivery vehicles also need capacity in weight, volume and pallets, loaded in reverse stop order and scanned on; [Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery) adds those columns.
+Vehicles are their own table, not a kind of resource: the scheduler books technicians and crews, and the vehicle is what they drive. The core model in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model) has no vehicle table, so this chapter defines it in [How to Build It](#how-to-build-it), with an effective-dated driver assignment.
 
 ## Safety Scores and Dashcams
 
@@ -119,7 +84,7 @@ A technician's van holds parts, product and equipment, and the business needs to
 
 ![Van stock as a ledger: stock is received from a supplier into a branch warehouse, transferred to a van that is itself a warehouse, and used on a visit; returns and damaged items go back to the warehouse; usage or falling below a minimum triggers restocking; every movement, including counts and adjustments, is one row in an inventory journal that is never edited.](/diagrams/fo-fleet-and-safety-van-stock.svg "The van is just another warehouse. Quantities are derived from an append-only journal of movements, so every can and coil on board can be traced to where it came from and where it went.")
 
-Build it as a ledger, as Dynamics does. Quantity on hand per location is a sum of movements, never a field someone types over. Each movement records the product, quantity and unit, the from and to locations, the reason (receipt, transfer, used on a visit, return, count adjustment, damage), the actor and device, for regulated products the lot and registration number, and for serialized items (a compressor, a water heater, a refrigerant cylinder) the serial, so the unit installed at a property can be traced back to its receipt for a warranty claim. A count that disagrees with the ledger posts an adjustment with a reason rather than overwriting the quantity, so shrinkage is visible. Units deserve care: concentrate is bought by the gallon and applied by the ounce in a mix, and FieldRoutes' own chemical tracking report warns that inventory valuation depends on correct units and default dilution rates.
+Build it as a ledger, as Dynamics does. Quantity on hand per location is a sum of movements, never a field someone types over. Each movement records the item from the shared catalog, quantity and unit, the from and to locations, the reason (receipt, transfer, used on a visit, return, count adjustment, damage), the actor and device, for regulated products the lot and registration number, and for serialized items (a compressor, a water heater, a refrigerant cylinder) the serial, so the unit installed at a property can be traced back to its receipt for a warranty claim. A count that disagrees with the ledger posts an adjustment with a reason rather than overwriting the quantity, so shrinkage is visible. Units deserve care: concentrate is bought by the gallon and applied by the ounce in a mix. PestPac markets automatic unit conversion for this reason, and FieldRoutes' chemical tracking report warns that inventory valuation depends on correct units and default dilution rates.
 
 Whether to allow negative stock is a real choice. Dynamics allows it by default, which keeps the technician working when the books are wrong; the cost is that negative balances must be reviewed. The alternative, blocking usage the books can't cover, keeps the ledger clean and stops the technician in a customer's driveway. My default is to allow it with an immediate exception, and always for regulated products, because blocking an application record because the books say the product isn't there produces a worse record, not a better one.
 
@@ -163,6 +128,78 @@ What to record: the hazard assessments and their certification, PPE issued to ea
 When something goes wrong (a crash, a spill, an injury, a customer's pet exposed to product), the first hours decide what can be proven later. OSHA requires reporting a work-related fatality within 8 hours and an in-patient hospitalization, amputation or loss of an eye within 24 hours (29 CFR 1904.39). A motor vehicle accident on a public street or highway doesn't have to be reported to OSHA unless it happened in a construction work zone, but it still has to be recorded if the employer keeps injury records. Those records (the 300 log, the annual summary and 301 incident reports) are kept for five years after the end of the calendar year they cover (29 CFR 1904.33).
 
 Build an incident as its own record, linked to the employee, vehicle, visit, property and products involved, with a type (vehicle, injury, spill or exposure, property damage, customer complaint), a timeline, and the evidence: telematics events around the time, dashcam clips (download them before the vendor's retention expires), photos, witness statements and the product and lot. Start reporting deadlines from the time the company learned of the event, and alert the people responsible. Spill response and reporting for pesticides belong with [Regulated Materials](/books/field-operations/regulated-materials).
+
+## How to Build It
+
+This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model) with vehicles, who drove them, and the stock journal. Items come from the one sellable and stock catalog in [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#how-to-build-it); a branch warehouse and a van are both stock locations.
+
+```sql
+CREATE TABLE vehicles (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id         UUID NOT NULL,
+  branch_id         UUID NOT NULL REFERENCES org_units (id),
+  unit_number       TEXT NOT NULL,             -- what the shop calls it: "Van 14"
+  vin               TEXT,
+  plate             TEXT,
+  plate_region      TEXT,                      -- state or province of registration
+  telematics_ref    TEXT,                      -- the vendor's vehicle ID
+  gvwr_lbs          INTEGER,                   -- from the door-jamb label
+  gcwr_lbs          INTEGER,                   -- when it tows
+  is_cmv            BOOLEAN NOT NULL,
+  cmv_basis         TEXT,                      -- weight, passengers, placarded hazmat
+  capabilities      TEXT[] NOT NULL DEFAULT '{}',  -- liftgate, refrigerated, ladder rack, hazmat
+  status            TEXT NOT NULL CHECK (status IN ('active', 'out_of_service', 'retired')),
+  UNIQUE (tenant_id, unit_number)
+);
+
+-- one driver per vehicle at a time; needs the btree_gist extension
+CREATE TABLE vehicle_assignments (
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id       UUID NOT NULL,
+  vehicle_id      UUID NOT NULL REFERENCES vehicles (id),
+  staff_member_id UUID NOT NULL REFERENCES staff_members (id),  -- the driver
+  valid_during    TSTZRANGE NOT NULL,        -- closed-open; open upper bound while current
+  source          TEXT NOT NULL,             -- 'dispatch', 'eld_login', 'manual'
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT vehicle_assignments_valid_during_excl
+    EXCLUDE USING GIST (vehicle_id WITH =, valid_during WITH &&)
+);
+
+CREATE TABLE stock_locations (           -- a branch warehouse or a van
+  id         UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id  UUID NOT NULL,
+  branch_id  UUID NOT NULL REFERENCES org_units (id),
+  kind       TEXT NOT NULL CHECK (kind IN ('warehouse', 'vehicle')),
+  vehicle_id UUID REFERENCES vehicles (id),
+  name       TEXT NOT NULL,
+  CHECK ((kind = 'vehicle') = (vehicle_id IS NOT NULL))
+);
+
+CREATE TABLE inventory_movements (       -- append-only; on hand is a sum of these
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id          UUID NOT NULL,
+  item_id            UUID NOT NULL REFERENCES items (id),
+  quantity           NUMERIC NOT NULL,   -- positive, in unit
+  unit               TEXT NOT NULL,      -- 'gal', 'fl_oz', 'each'
+  from_location_id   UUID REFERENCES stock_locations (id),  -- null for a receipt
+  to_location_id     UUID REFERENCES stock_locations (id),  -- null when used or scrapped
+  reason             TEXT NOT NULL CHECK (reason IN ('receipt', 'transfer', 'used',
+                       'return', 'count_adjustment', 'damage')),
+  visit_id           UUID REFERENCES visits (id),           -- set when used on a visit
+  lot_number         TEXT,               -- regulated products
+  serial_number      TEXT,               -- serialized items: compressors, cylinders
+  staff_member_id    UUID REFERENCES staff_members (id),
+  device_id          TEXT,
+  device_recorded_at TIMESTAMPTZ NOT NULL,
+  received_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (from_location_id IS NOT NULL OR to_location_id IS NOT NULL),
+  CHECK (reason <> 'used' OR visit_id IS NOT NULL)
+);
+```
+
+`is_cmv` is stored, not computed, because the answer depends on how the vehicle is used (towing, passengers, placarded loads), and `cmv_basis` says why. An `out_of_service` vehicle (an open DVIR defect, an expired periodic inspection) can't take a route. `capabilities` is what delivery work matches against: an appliance that needs a liftgate, a full-room furniture delivery that needs a long box, a pharmacy order that needs refrigeration are requirements on the work order, checked against the vehicle the crew will drive. A two-person delivery crew is one driver plus a helper: the assignment names the driver, because hours of service and safety events belong to whoever is at the wheel, and the helper rides on the crew resource. Delivery vehicles also need capacity in weight, volume and pallets, loaded in reverse stop order and scanned on; [Last-Mile Delivery & Distribution](/books/field-operations/last-mile-delivery#how-to-build-it) adds those columns.
+
+A part used on a repair is one `used` movement and one `work_order_parts` row ([Repair, Install & Commercial Work](/books/field-operations/repair-and-installation#how-to-build-it)); the movement moves stock, the part row bills it and carries the warranty serials.
 
 ## Auditing
 
