@@ -34,7 +34,7 @@ The most common agent failure is claiming success without checking. Every change
 
 - **Tests that fail first.** A test that passes before the fix proves nothing.
 - **Real requests** against a running server: status codes, headers, response bodies.
-- **The browser** for anything visual, in each theme and at phone width.
+- **The browser** for anything visual, in each theme and at phone width. An agent with a browser can look for itself; see [AI-Assisted Testing](/docs/quality/ai-assisted-testing).
 - **Prove the mechanism, not just the result.** A rate-limit test that passes because both instances fell back to the same in-memory counter is a false positive. Assert the state where it should be (the key in Redis), not just the number you expected.
 
 ## Plausible but Wrong

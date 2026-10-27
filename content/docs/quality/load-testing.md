@@ -2,7 +2,7 @@
 title = "Load & Performance Testing"
 description = "Performance budgets tied to SLOs, the test types and when to run each, realistic traffic, capacity headroom, and the measurement trap that hides slow responses."
 category = "Quality"
-order = 1057
+order = 1058
 tags = ["operations", "performance", "load-testing", "reliability"]
 aliases = ["operations/load-testing"]
 +++

@@ -2,7 +2,7 @@
 title = "Defects & Triage"
 description = "A good bug report, severity and priority as separate axes, triage that keeps the backlog honest, a regression test for every fix, and escaped-defect reviews."
 category = "Quality"
-order = 1058
+order = 1059
 tags = ["quality", "bugs", "triage", "process"]
 +++
 

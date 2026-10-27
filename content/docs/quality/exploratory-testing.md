@@ -18,7 +18,7 @@ A script compares output to an expectation. A person notices things there was ne
 - **Combinations nobody wrote down.** Two features that each pass their tests and conflict when used together, or a flow that breaks when you change your mind halfway through.
 - **"That's odd."** The page that takes slightly too long, the flicker on load, the count that's off by one only for the second page. A person stops and pulls the thread; a script passes on.
 
-Each of those, once found, usually becomes an automated check. Exploration finds the question; automation keeps asking it.
+Each of those, once found, usually becomes an automated check. Exploration finds the question; automation keeps asking it. An agent driving a browser can take the tireless half of this, the breadth and the write-ups, and turn its confirmed findings into tests; see [AI-Assisted Testing](/docs/quality/ai-assisted-testing).
 
 ## Scripted Manual Testing Is a Smell
 

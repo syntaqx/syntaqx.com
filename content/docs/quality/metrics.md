@@ -2,7 +2,7 @@
 title = "Quality Metrics"
 description = "Quality metrics worth tracking (change fail rate, escaped defects, flake rate, time to detect), the ones that mislead, and mutation testing."
 category = "Quality"
-order = 1060
+order = 1061
 tags = ["quality", "metrics", "dora", "testing"]
 +++
 

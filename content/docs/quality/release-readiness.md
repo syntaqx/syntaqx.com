@@ -2,7 +2,7 @@
 title = "Release Readiness"
 description = "Readiness as pipeline gates, exit criteria by risk tier, when a go/no-go earns its place, the release checklist, the first hour, and when to freeze code."
 category = "Quality"
-order = 1059
+order = 1060
 tags = ["quality", "releases", "delivery", "process"]
 +++
 

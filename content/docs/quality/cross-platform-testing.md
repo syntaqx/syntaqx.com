@@ -3,7 +3,7 @@ title = "Visual & Cross-Platform Testing"
 nav_title = "Visual & Cross-Platform"
 description = "Deterministic visual regression tests, a browser and device matrix built from real usage with tiers of support, real devices vs emulators, and mobile checks."
 category = "Quality"
-order = 1056
+order = 1057
 tags = ["quality", "testing", "visual-regression", "browsers", "mobile"]
 +++
 

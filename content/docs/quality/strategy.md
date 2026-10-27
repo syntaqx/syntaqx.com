@@ -96,6 +96,7 @@ The left column is mostly automated and runs on every change. The right column n
 | The pyramid, test types, mocks, fixtures, flaky tests | [Testing Strategy](/docs/quality/testing) |
 | Frameworks, suites in CI, what to automate and what not to | [Automated Testing](/docs/quality/automated-testing) |
 | Charters, sessions, heuristics, when humans beat scripts | [Manual & Exploratory Testing](/docs/quality/exploratory-testing) |
+| Agents exploring in a browser, findings into tests | [AI-Assisted Testing](/docs/quality/ai-assisted-testing) |
 | Synthetic data, seeding, ephemeral environments | [Test Data & Environments](/docs/quality/test-data) |
 | Visual regression, browsers, devices | [Visual & Cross-Platform Testing](/docs/quality/cross-platform-testing) |
 | Budgets, load shapes, capacity | [Load & Performance Testing](/docs/quality/load-testing) |
