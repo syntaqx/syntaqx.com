@@ -128,9 +128,7 @@ The mistake to avoid is routing everyday work through support sessions (thousand
 
 ## The Contact Center and AI Voice Agents
 
-The other self-service door is the phone, and AI agents now answer it: the major suites ship voice agents that book, reschedule and cancel within per-job-type permissions and hand off to a person on request. Which vendors ship what, and the field limits on what an agent may book and promise, are in [AI in Field Operations](/books/field-operations/ai-in-field-operations).
-
-The design point is the one this chapter keeps making: **the agent is another client of the same operations.** It should call the same reschedule policy check, slot search and payment-link flow the portal does, under its own service identity with delegation to the caller, so a rule changed once applies everywhere; tickets, routing, bots and handoff in general are in [Customer Support](/docs/operations/customer-support). AI disclosure and recording announcements are covered in [AI in Field Operations](/books/field-operations/ai-in-field-operations#the-law). Taking card numbers by voice has its own rules ([Phone Payments](/books/payments/phone-payments)); sending a payment link is simpler.
+The other self-service door is the phone, answered by CSRs and increasingly by AI voice agents. Routing, the CSR's screen, recording and booking credit are in [The Contact Center](/books/field-operations/contact-center); which AI products ship what, and the field caps on what an agent may book, are in [AI in Field Operations](/books/field-operations/ai-in-field-operations). The design point is the one this chapter keeps making: **the CSR and the agent are other clients of the same operations,** calling the same reschedule policy check, slot search and payment-link flow the portal does, so a rule changed once applies everywhere.
 
 ## How to Build It
 

@@ -50,15 +50,7 @@ Every inbound call ends in an outcome, and the booking rate is computed from out
 - **Excused:** "any incoming call that was not related to a past, current, or future job" (a vendor, a wrong number, a job applicant). ServiceTitan's glossary also excuses calls under 60 seconds automatically.
 - **Abandoned:** the caller hung up before reaching a CSR, or no CSR and job can be attached to the call.
 
-A **lead call**, in ServiceTitan's glossary, is "an incoming call that lasts at least 60 seconds or is assigned the call reason, Is Lead," and its **Call Booking Rate** is "The percentage of inbound calls that result in a booked job." The working definition this volume uses, since [Operating Metrics](/books/field-operations/operating-metrics) and [AI in Field Operations](/books/field-operations/ai-in-field-operations) both rely on it:
-
-```text
-booking_rate (booked-call rate) =
-  count(inbound calls with outcome = booked)
-  / count(inbound calls with outcome IN (booked, unbooked))
-```
-
-Excused and abandoned calls are outside both terms: excused calls weren't opportunities, and abandoned calls are an answering problem measured separately (below). Three choices sit inside that formula, and each should be a versioned, tenant-visible setting:
+A **lead call**, in ServiceTitan's glossary, is "an incoming call that lasts at least 60 seconds or is assigned the call reason, Is Lead," and its **Call Booking Rate** is "The percentage of inbound calls that result in a booked job." This volume's booking rate is booked ÷ (booked + unbooked) over inbound calls, with excused and abandoned calls in neither term; the formula is owned by [Calls and Leads](/books/field-operations/operating-metrics#calls-and-leads), which [AI in Field Operations](/books/field-operations/ai-in-field-operations) also reads. Three choices sit inside it, and each should be a versioned, tenant-visible setting:
 
 - **What makes a call a lead.** A duration threshold (60 seconds), a call reason, or both. Duration alone excuses a short emergency call that booked fast, so a booked call is always a lead whatever its length.
 - **Who may excuse.** Excusing a call removes it from the CSR's denominator, so it's the easiest way to inflate a booking rate. ServiceTitan's own pages disagree about manual excusal; my rule is that excusal comes from a call reason chosen on the call, and any later change is an audited edit with the editor recorded.
@@ -144,14 +136,7 @@ AI voice agents now answer overflow, after-hours and sometimes all calls: Servic
 
 ## Measuring the Center
 
-Booking rate says how well calls are converted; the classic contact center metrics say how well calls are answered. Their definitions differ by vendor in ways that move the numbers, so define them once ([One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric)):
-
-- **Abandonment rate.** Amazon Connect computes contacts abandoned ÷ contacts queued, where an abandoned contact was "disconnected by the customer while in queue," and "Contacts queued for callback are not counted as abandoned." It doesn't exclude short abandons by default; Genesys makes the **short abandon** threshold configurable and notes "The abandon rate does include short abandons." Pick a threshold (callers who hang up within a few seconds are often misdials), state it, and report both.
-- **Average speed of answer.** Amazon Connect's queue answer time is the "average time that contacts waited in the queue before being answered by an agent... also known as average speed of answer (ASA)."
-- **Service level.** The share of calls answered within X seconds. Amazon Connect counts a contact as within service level when it leaves the queue within X, whether "an agent answers the contact, the customer abandons the contact, or the customer requests a call back"; Genesys offers a formula of (answered − answered over the threshold) ÷ (answered + abandoned). Those are different numbers from the same calls, so name the formula with the target.
-- **Booking rate,** as defined above, per CSR, per queue, per brand and per campaign.
-- **Revenue per call:** revenue invoiced within a fixed horizon on work orders booked from lead calls, divided by lead calls. It catches the CSR who books fast but books the cheapest option, and the campaign whose calls book but don't sell.
-- **Calls per job:** inbound calls about a work order after it was booked. Every "where's my technician?" call is a failure of the notifications upstream, and the cheapest call is the one that never had to happen.
+Booking rate says how well calls are converted; abandonment (with a stated short-abandon threshold), average speed of answer and service level say how well they're answered; revenue per call and calls per job say what they're worth and how many never had to happen. Vendors define the answering metrics differently in ways that move the numbers, so all of them are defined once in [Calls and Leads](/books/field-operations/operating-metrics#calls-and-leads), and the center reports them per CSR, queue, brand and campaign from the call records below.
 
 Report by hour of day and day of week. A field center's load follows weather (the first hot day for HVAC, the first freeze for plumbing), so abandonment by hour on those days tells you where the after-hours and overflow plan has to start.
 
@@ -172,7 +157,7 @@ CREATE TABLE calls (
   lead_id                   UUID REFERENCES leads (id),
   queue                     TEXT,
   ivr_path                  TEXT[],                -- options pressed, in order
-  answered_by_staff_id      UUID REFERENCES staff_members (id),
+  answered_by_id            UUID REFERENCES staff_members (id),
   answered_by_agent         TEXT,                  -- AI agent identity and version, if it answered
   queued_at                 TIMESTAMPTZ,
   answered_at               TIMESTAMPTZ,
@@ -191,6 +176,7 @@ CREATE TABLE calls (
 );
 
 CREATE TABLE call_links (                 -- what the call touched or produced
+  tenant_id                 UUID NOT NULL,
   call_id                   UUID NOT NULL REFERENCES calls (id),
   account_id                UUID REFERENCES accounts (id),
   work_order_id             UUID REFERENCES work_orders (id),
@@ -205,15 +191,15 @@ CREATE TABLE call_scores (
   tenant_id                 UUID NOT NULL,
   call_id                   UUID NOT NULL REFERENCES calls (id),
   scorecard_version_id      UUID NOT NULL,         -- exactly one per call
-  scored_by_staff_id        UUID REFERENCES staff_members (id),
+  scored_by_id              UUID REFERENCES staff_members (id),
   scored_by_model           TEXT,                  -- model and prompt version, if automated
   section_scores            JSONB NOT NULL,
   total                     NUMERIC(5, 2) NOT NULL,
   label                     TEXT CHECK (label IN ('positive', 'neutral', 'negative',
                               'attention')),
   created_at                TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CHECK (num_nonnulls(scored_by_staff_id, scored_by_model) = 1),
-  UNIQUE (call_id, scored_by_staff_id, scored_by_model)
+  CHECK (num_nonnulls(scored_by_id, scored_by_model) = 1),
+  UNIQUE (call_id, scored_by_id, scored_by_model)
 );
 ```
 
@@ -261,8 +247,6 @@ Record mechanics are in [Audit Trails](/docs/architecture/audit-trails); retenti
 - [Reporters Committee: Florida recording law](https://www.rcfp.org/reporters-recording-guide/florida/), all-party consent and the felony penalty
 - [PCI Security Standards Council: Protecting Telephone-Based Payment Card Data (PDF)](https://listings.pcisecuritystandards.org/documents/Protecting_Telephone_Based_Payment_Card_Data_v3-0_nov_2018.pdf), pause-and-resume versus DTMF masking and what each takes out of scope
 - [FCC Wireline Competition Bureau: STIR/SHAKEN triennial report (PDF)](https://docs.fcc.gov/public/attachments/DOC-416732A1.pdf), the June 30, 2021 implementation deadline, attestation levels and analytics-based labeling
-- [Amazon Connect: Metrics definitions](https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html), abandonment, queue answer time and service level
-- [Genesys Cloud: Performance view columns](https://help.genesys.cloud/articles/view-available-columns-in-performance-views-by-category/), service level with abandons and short abandons
 - [Salesforce Trailhead: Improve work distribution with Enhanced Omni-Channel](https://trailhead.salesforce.com/content/learn/modules/enhanced-omni-channel/improve-work-distribution-with-enhanced-omni-channel), skill-based routing and relaxing skill requirements
 - [Microsoft Learn: Manage overflow](https://learn.microsoft.com/en-us/dynamics365/customer-service/administer/manage-overflow), overflow conditions and actions for surges and after hours
 

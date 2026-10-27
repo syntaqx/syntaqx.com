@@ -17,7 +17,7 @@ Four kinds of credential show up in almost every trade, issued by different auth
 
 **Business licenses** let the company operate, and in the licensed trades the business license usually rests on a named individual. In Texas, an electrical contractor must employ a master electrician of record, who can serve only one contractor unless they own more than half of it, and must name a new one within 30 business days if that master leaves. A plumbing business works under a master plumber holding the Responsible Master Plumber designation, backed by at least $300,000 of commercial liability insurance. A structural pest control business needs a license for each location, branches included, each naming a **responsible certified applicator** who can't serve any other licensee or location, and has 20 business days to request a hardship in writing if that applicator dies or leaves. A Texas pest license that isn't renewed by its expiration date lapses; it can be renewed up to a year later, but the business can't operate in between. Local business licensing varies by city and county, so check it wherever a branch operates.
 
-**Individual licenses and certifications** let a person do a category of work, usually in tiers: apprentice, journeyman and master electricians at TDLR; tradesman-limited, journeyman and master plumbers, with endorsements such as medical gas piping, at the Texas plumbing board; **Applicators**, **Field Representatives** and **Operators** across California's three structural pest branches (fumigation, general pest, wood-destroying organisms). In pesticides the federal floor is 40 CFR 171: anyone who applies or supervises restricted use pesticides must be certified under an EPA-approved state plan, and many states certify all commercial application. Texas registers pest **apprentices** within 10 days of starting work, on a card valid 12 months from hire, by which time they must pass the technician exam. HVAC technicians who handle refrigerant need EPA Section 608 certification by appliance type.
+**Individual licenses and certifications** let a person do a category of work, usually in tiers: apprentice, journeyman and master electricians at TDLR; tradesman-limited, journeyman and master plumbers, with endorsements such as medical gas piping, at the Texas plumbing board; **Applicators**, **Field Representatives** and **Operators** across California's three structural pest branches (fumigation, general pest, wood-destroying organisms). In pesticides the federal floor is 40 CFR 171: anyone who applies or supervises restricted use pesticides must be certified under an EPA-approved state plan, and many states certify all commercial application. Texas registers pest **apprentices** within 10 days of starting work, on a card valid 12 months from hire, by which time they must pass the technician exam. HVAC technicians who handle refrigerant need EPA Section 608 certification by appliance type. How a credential fits into hiring, ride-alongs and time to first solo day is in [Hiring, Training and Credentials](/books/field-operations/technician-workforce#hiring-training-and-credentials).
 
 Some credentials ride on top of a trade. A Texas backflow tester holds a TCEQ Backflow Prevention Assembly Tester license (a 40-hour course and a state exam), and a city such as Austin adds its own tester registration, registered test gauges calibrated by an approved company, and a test report filed online within five calendar days of each test: a license, a local registration and an equipment calibration, each with its own expiry. Florida separates its pool contractor licenses (commercial, residential and servicing) from the public pool service technician certification anyone servicing a public pool needs, which takes a course of at least 16 hours, "does not imply any licensure" as a contractor, and can't be delegated to uncertified employees. A commercial driver's license is a credential too, needed for vehicles above the thresholds in [Fleet, Inventory & Safety](/books/field-operations/fleet-and-safety), and it belongs in the same model as any trade license.
 
@@ -191,6 +191,51 @@ A license number typed by an office manager is a claim. Verify it against the is
 
 Some credentials sit outside the law but are run like licenses. NPMA's QualityPro is the pest industry's best-known accreditation: companies in business at least two years that meet the program's US V6.1 standards (criminal background checks "when appropriate and permitted under applicable law" and motor vehicle record checks "when appropriate," a drug-free workplace policy, an exam technicians and sales employees must pass, periodic audits). The standards reach the paperwork too: an accredited company certifies that it "has a termite warranty/service agreement that meets requirements" of the program, so the agreement template resolution in [Signing the Agreement](/books/field-operations/signing-the-agreement#templates-by-state) treats accreditation as one more input, and the sales onboarding gates in [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions#recruiting-and-onboarding) include the exam. Manufacturer programs such as Certified Sentricon Specialists work the same way. The same model holds them: the accreditation as a business-level license, each employee's exam as an individual license with a skill resting on it, and background and MVR checks as dated records. How long those records are kept is set by law, not by the screening vendor's terms: EEOC rules keep personnel and hiring records for one year from the record or the personnel action, whichever is later (29 CFR 1602.14), and the FCRA's Disposal Rule governs how a consumer report is destroyed once you no longer need it (16 CFR 682.3); state law can require longer.
 
+## Bonds and Certificates of Insurance
+
+Commercial clients, general contractors and public agencies ask for two more credentials before they let anyone on site, and neither is a license.
+
+**Bonds** guarantee that the contractor will follow the law or finish the job. A **license bond** is often a condition of the license itself: California requires every contractor to carry one, and "The bond must be in the amount of $25,000" since Senate Bill 607 raised it on January 1, 2023; Washington raised its general contractor bond to $30,000, "more than double the previous amount of $12,000," with specialty contractors at $15,000, from July 1, 2024. **Performance and payment bonds** are per contract: the federal Miller Act "requires performance and payment bonds for any construction contract exceeding $150,000" (FAR 28.102-1), and states have their own versions for public work. A license bond belongs to the business and lapses with it; a performance bond belongs to one job.
+
+**Certificates of insurance** (COIs) prove coverage to someone who isn't the insured. The common form is ACORD 25, which says plainly that "THIS CERTIFICATE IS ISSUED AS A MATTER OF INFORMATION ONLY AND CONFERS NO RIGHTS UPON THE CERTIFICATE HOLDER," and that a client named as an **additional insured** is only covered if "the policy(ies) must be endorsed." Clients set the minimums: Auburn University's general vendor requirements, a typical public example, ask for "$1,000,000 Each Occurrence" and "$2,000,000 Aggregate" of general liability, statutory workers' compensation with "$1,000,000 Minimum Employers Liability Limits," and "$1,000,000 Combined Single Limit" of auto liability. Facilities networks track them for their clients: ServiceChannel's compliance product removes "the need individually to track documents such as insurance certificates, trade licenses & bonds" and alerts on policies "expiring in 30 days," and TrustLayer marks a vendor "non-compliant until a valid certificate is uploaded."
+
+Both run on the same rails as licenses: a holder, an issuer (the surety or insurer), a number, an amount, a validity range and a document. The differences are who asks and what they check against. So:
+
+- **Store coverage beside licenses, not in a folder.** One record per bond or policy, held by the business, a branch or a subcontractor, with its limits, its validity and the COI document issued to each client.
+- **Store each client's requirement as data:** the coverage types, minimum limits, additional-insured and waiver-of-subrogation wording, from the contract. A commercial work order then checks the requirement against coverage in force on the visit date, the same way a skill requirement is checked ([Enforcing in Scheduling and Sales](/books/field-operations/licensing-and-permits#enforcing-in-scheduling-and-sales)).
+- **Renewals send new certificates.** When a policy renews, every client holding the old COI needs a new one, so the renewal job lists them; a client's network that marks the business non-compliant stops paying invoices, not just dispatches.
+- **Subcontractors carry their own.** A sub dispatched without a current COI and license leaves the prime contractor exposed ([Subcontractors and Inbound Work Orders](/books/field-operations/repair-and-installation#subcontractors-and-inbound-work-orders)), so the sub's coverage gates its assignments like a technician's license.
+
+```sql
+CREATE TABLE coverages (                  -- bonds and insurance policies
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id          UUID NOT NULL,
+  org_unit_id        UUID REFERENCES org_units (id),        -- held by the business or a branch
+  subcontractor_id   UUID REFERENCES subcontractors (id),   -- or by a sub
+  kind               TEXT NOT NULL CHECK (kind IN ('license_bond', 'performance_bond',
+                       'payment_bond', 'general_liability', 'workers_comp', 'auto_liability',
+                       'umbrella')),
+  issuer             TEXT NOT NULL,          -- surety or insurer
+  number             TEXT NOT NULL,
+  limits             JSONB NOT NULL,         -- per occurrence, aggregate, bond amount
+  work_order_id      UUID REFERENCES work_orders (id),      -- performance and payment bonds
+  license_id         UUID REFERENCES licenses (id),         -- the license a license bond backs
+  valid_during       DATERANGE NOT NULL,
+  document_id        UUID,
+  CHECK (num_nonnulls(org_unit_id, subcontractor_id) = 1)
+);
+
+CREATE TABLE coverage_requirements (      -- what a client's contract demands
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id          UUID NOT NULL,
+  account_id         UUID NOT NULL REFERENCES accounts (id),
+  kind               TEXT NOT NULL,
+  min_limits         JSONB NOT NULL,
+  additional_insured BOOLEAN NOT NULL DEFAULT FALSE,
+  valid_during       DATERANGE NOT NULL
+);
+```
+
 ## Auditing
 
 Licensing records answer three questions later: did this person hold the right license on that date, who let them do the work if they didn't, and what did the business tell the state. The field-specific records:
@@ -212,6 +257,7 @@ The record structure and typed actors are in [Audit Trails](/docs/architecture/a
 - **Renewal windows, continuing education tracking and expiration jobs** that emit events the rest of the platform consumes.
 - **Verification against issuer lists and lookups** with recorded sources, and reconciliation that flags rather than overwrites.
 - **License numbers snapshotted onto every work and application record,** so history never changes when a license does.
+- **Bonds and insurance as dated coverage records,** checked against each commercial client's requirements and each subcontractor's assignments, with certificates reissued on renewal.
 
 ## References
 
@@ -224,6 +270,7 @@ The record structure and typed actors are in [Audit Trails](/docs/architecture/a
 - [16 CFR 682.3: Proper disposal of consumer information](https://www.law.cornell.edu/cfr/text/16/682.3), the FCRA Disposal Rule for consumer reports such as background checks
 - [Fla. Admin. Code 64E-9.018: Public pool service technician certification](https://www.law.cornell.edu/regulations/florida/Fla-Admin-Code-Ann-R-64E-9-018), who must be certified, the 16-hour course and the bar on delegating to uncertified employees
 - [Fla. Stat. 489.105](https://www.flsenate.gov/Laws/Statutes/2025/489.105), the commercial, residential and servicing pool/spa contractor categories
+- [FAR 28.102-1: Performance and payment bonds](https://www.acquisition.gov/far/28.102-1), Miller Act bonds for construction contracts over $150,000
 - [Watchtower Bible & Tract Society v. Village of Stratton (2002)](https://www.law.cornell.edu/supct/html/00-1737.ZS.html), permit requirements and the line between commercial and noncommercial canvassing
 
 **Reference**
@@ -242,6 +289,12 @@ The record structure and typed actors are in [Audit Trails](/docs/architecture/a
 - [CSLB: Check a License](https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx), contractor and Home Improvement Salesperson lookups
 - [CSLB: Licenses for Limited Liability Companies](https://www.cslb.ca.gov/about_us/llc.aspx), licenses qualified by a responsible managing officer or employee
 - [CSLB: Data Portal](https://www.cslb.ca.gov/OnlineServices/DataPortal/), contractor lists by classification and county
+- [CSLB: Bond requirements](https://cslb.ca.gov/Contractors/Maintain_License/Bond_Information/Bond_Requirements.aspx), the $25,000 contractor bond from Senate Bill 607
+- [Washington L&I: Contractor bond increase](https://www.lni.wa.gov/news-events/article/24-13/), $30,000 general and $15,000 specialty bonds from July 1, 2024
+- [UCF: Sample ACORD 25 certificate (PDF)](https://procurement.ucf.edu/wp-content/uploads/sites/3/2020/05/SampleCertificate-UCF-BOT.pdf), the information-only disclaimer and the additional insured endorsement note
+- [Auburn University: Insurance requirements for general vendors](https://ba.auburn.edu/rms/risk-management-insurance/insurance-requirements/insurance-requirements-for-general-vendors/), liability, workers' compensation and auto minimums
+- [ServiceChannel: Compliance Manager announcement](https://servicechannel.com/blog/servicechannel-helps-enterprises-increase-compliance-managing-contractors-suppliers), tracking insurance certificates, licenses and bonds with 30-day expiry alerts (2015)
+- [TrustLayer: Certificate of insurance tracking](https://www.trustlayer.io/pages/certificate-of-insurance-tracking-software), alerts on missing or expired certificates and non-compliant vendors
 - [Census Bureau: TIGER/Line Shapefiles](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.2026.html), public legal boundaries, as of January 1 of the release year
 - [Census Bureau: Boundary and Annexation Survey](https://www.census.gov/programs-surveys/bas.html), the annual survey that updates governments' legal boundaries and names
 - [MRSC: Regulation of Peddlers, Solicitors, Temporary Merchants](https://mrsc.org/Explore-Topics/Legal/Regulation/Regulation-of-Peddlers-Solicitors-Temporary-Merc), typical municipal permit requirements and constitutional limits

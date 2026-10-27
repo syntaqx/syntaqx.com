@@ -119,15 +119,13 @@ These are different risk positions, not different features. A payment captured o
 
 The app is usually also the time clock. ServiceTitan tracks clock in and out, meal breaks and timesheet entries offline; FieldRoutes has timer categories for working, paid break and lunch. Swept, for janitorial crews, only lets cleaners clock in on site and flags off-site punches.
 
-Wage law decides what the clock must capture. Under the federal rules, travel from job site to job site during the workday is hours worked (29 CFR 785.38), and so is travel from a designated reporting place to the first site; ordinary home-to-work travel is not. Employers must record hours worked each workday and each workweek (29 CFR 516.2). Rounding punches to the nearest 5 minutes, tenth or quarter hour is accepted only if, over time, it doesn't fail to pay for all the time actually worked (29 CFR 785.48). States add their own rules on breaks and overtime; check current state law. A technician who drives to a supply house mid-day for a part is working, and a clock that only runs "on site" undercounts.
-
-So:
+Wage law decides what the clock must capture: job-to-job travel, the supply house run and waiting on site are hours worked, so a clock that only runs "on site" undercounts. Which minutes count is in [What Counts as Hours Worked](/books/field-operations/technician-workforce#what-counts-as-hours-worked), and the record, rounding and correction rules in [Timekeeping and Pay Statements](/books/field-operations/technician-workforce#timekeeping-and-pay-statements). For the app:
 
 - **Derive time from status events where possible** (traveling, on site, at the supply house, on break), and keep manual edits as separate, attributed corrections.
 - **Keep raw punches immutable.** Rounding, if any, is a payroll computation over the raw record, never a rewrite of it.
 - **Store device time, server time and location for each punch,** and never require a signal to clock in.
 
-Payroll reads these entries per pay period; the export, earning types and cutoffs are in [Paying It: Payroll Integration](/books/field-operations/sales-teams-and-commissions#paying-it-payroll-integration).
+[Technicians: Time, Pay & Labor Rules](/books/field-operations/technician-workforce#how-to-build-it) classifies these punches into `time_entries` and earnings; the export, earning types and cutoffs are in [Paying It: Payroll Integration](/books/field-operations/sales-teams-and-commissions#paying-it-payroll-integration).
 
 ## Devices and Peripherals
 
@@ -247,9 +245,6 @@ The general sync design is in [Offline-First Sync](/docs/architecture/offline-sy
 
 **Specifications**
 
-- [29 CFR 785.38: Travel that is part of the day's work](https://www.law.cornell.edu/cfr/text/29/785.38), job site to job site travel and travel from a designated reporting place counted as hours worked
-- [29 CFR 785.48: Use of time clocks](https://www.law.cornell.edu/cfr/text/29/785.48), early and late punches, and rounding to 5 minutes, a tenth or a quarter hour only if it doesn't underpay over time
-- [29 CFR 516.2: Employees subject to minimum wage or overtime](https://www.law.cornell.edu/cfr/text/29/516.2), records of hours worked each workday and each workweek
 - [TCEQ: Form TCEQ-20700, Backflow Prevention Assembly Test and Maintenance Report](https://www.tceq.texas.gov/downloads/drinking-water/plan-technical-review/prevention/tceq-20700.docx), readings per check valve in psid, gauge serial and annual accuracy test, completion on site and the signed original to the public water system
 
 **Reference**

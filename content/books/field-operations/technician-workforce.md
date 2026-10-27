@@ -151,7 +151,7 @@ PPE, incidents, OSHA reporting and vehicle safety are in [Fleet, Inventory & Saf
 
 ### Heat
 
-Field work is outdoor work, and attics and mechanical rooms are often hotter than outside. As of October 2026 there is no federal heat standard. OSHA proposed "Heat Injury and Illness Prevention in Outdoor and Indoor Work Settings" on August 30, 2024, with an initial trigger at a heat index of 80°F and a high-heat trigger at 90°F; it held an informal hearing starting June 16, 2025 and extended post-hearing comments to October 30, 2025. OSHA's latest published regulatory agenda entry lists a supplemental proposal for December 2026 and a final action for October 2027, so treat the federal rule as pending. The states that act today:
+Field work is outdoor work, and attics and mechanical rooms are often hotter than outside. As of October 2026 there is no federal heat standard. OSHA proposed "Heat Injury and Illness Prevention in Outdoor and Indoor Work Settings" on August 30, 2024, with an initial trigger at a heat index of 80°F and a high-heat trigger at 90°F; it held an informal hearing starting June 16, 2025 and extended post-hearing comments to October 30, 2025. OSHA's latest published regulatory agenda entry lists a supplemental proposal for December 2026 and a final action for October 2027, so treat the federal rule as pending. Enforcement doesn't wait for it: OSHA replaced its heat National Emphasis Program with CPL 03-00-024 on April 10, 2026, in place for five years, which targets inspections in listed industries and treats days with a heat index of 80°F or more as heat priority days (as summarized by Littler; the directive's industry list is the authority). The states that act today:
 
 | Rule | Trigger | What it requires |
 | --- | --- | --- |
@@ -215,9 +215,9 @@ CREATE TABLE time_entries (               -- classified hours, derived from raw 
   labor_classification   TEXT,                   -- prevailing wage craft, when the work order has one
   during                 TSTZRANGE NOT NULL,     -- UTC instants from the punches
   business_on            DATE NOT NULL,          -- workday in the branch's zone
-  source_punch_ids       UUID[] NOT NULL,        -- the raw punches it came from
+  source_punch_ids       UUID[] NOT NULL,        -- the time_punches rows it came from
   supersedes_id          UUID REFERENCES time_entries (id),  -- corrections are new rows
-  corrected_by           UUID REFERENCES staff_members (id),
+  corrected_by_id        UUID REFERENCES staff_members (id),
   correction_reason      TEXT,
   CHECK ((supersedes_id IS NULL) = (correction_reason IS NULL))
 );
@@ -346,6 +346,7 @@ Retention periods for field records are in [Audit Trails & Records](/books/field
 
 **Reference**
 
+- [Littler: OSHA updates and extends its heat program five more years](https://www.littler.com/news-analysis/asap/osha-updates-and-extends-its-heat-program-five-more-years), CPL 03-00-024 issued April 10, 2026, five years, and heat priority days at a heat index of 80°F (law firm summary)
 - [U.S. Department of Labor: Fact Sheet 56A, Regular rate](https://www.dol.gov/agencies/whd/fact-sheets/56a-regular-rate), all remuneration for employment in the regular rate
 - [U.S. Department of Labor: Fact Sheet 22, Hours worked](https://www.dol.gov/agencies/whd/fact-sheets/22-flsa-hours-worked), ordinary home to work travel and paid short rest breaks
 - [U.S. Department of Labor: Opinion Letter FLSA2026-10 (PDF)](https://www.dol.gov/sites/dolgov/files/WHD/opinion-letters/FLSA/FLSA2026-10.pdf), pages during a vehicle commute versus scheduling calls that make travel compensable

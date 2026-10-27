@@ -106,20 +106,7 @@ Four decisions make the numbers honest:
 
 ## Cost per Lead, per Booked Job and ROI
 
-The definitions, so dashboards and budgets agree ([One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric)):
-
-```text
-cost_per_lead        = spend(campaign, period) / count(leads from campaign in period)
-                       -- leads net of duplicates; credited leads excluded from both terms
-lead_booking_rate    = count(leads with a booked work order) / count(leads)
-cost_per_booked_job  = spend(campaign, period) / count(leads that booked a work order)
-attributed_revenue   = sum(invoiced revenue within the horizon on work orders attributed
-                         to the campaign) + first-year value of agreements sold from them
-roi                  = (attributed_revenue - spend) / spend
-customer_acq_cost    = spend(source, period) / count(new accounts from source in period)
-```
-
-Housecall Pro's formula, "ROI = (Selected earnings − Marketing spend) ÷ Marketing spend," is the same shape. Two cautions. Spend for pay-per-lead sources is the sum of lead charges net of credits, by the lead's date, not the source's invoice date. And ROI on revenue overstates return for any trade with real material costs; a replacement-heavy HVAC business should compute it on gross margin.
+Cost per lead, lead booking rate, cost per booked job, attributed revenue, ROI and customer acquisition cost are defined once in [Calls and Leads](/books/field-operations/operating-metrics#calls-and-leads), so dashboards and budgets agree. What this chapter's records decide is the inputs: pay-per-lead spend is the lead charges net of credits by the lead's date, exposure spend is the campaign's monthly spend, revenue comes from the attribution table over its fixed horizon, and ROI is computed on margin for material-heavy trades.
 
 For orientation only: LocaliQ's sample of 3,211 US search advertising campaigns (April 2024 to March 2025, medians it calls averages) put median cost per lead on search ads at $127.74 for HVAC, $129.02 for plumbing, $93.69 for electricians and $46.99 for cleaning and maid services. That's one vendor's customer base and one channel. Benchmarks don't replace measuring cost per booked job yourself, because two sources with the same cost per lead can differ several times over in how many leads book.
 
@@ -182,6 +169,7 @@ CREATE TABLE campaigns (                  -- one spend inside a channel
 );
 
 CREATE TABLE campaign_spend (             -- exposure spend; per-lead charges live on leads
+  tenant_id           UUID NOT NULL,
   campaign_id         UUID NOT NULL REFERENCES campaigns (id),
   month_on            DATE NOT NULL,             -- first of the month
   amount_minor        BIGINT NOT NULL,

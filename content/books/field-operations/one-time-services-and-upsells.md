@@ -135,7 +135,7 @@ In this volume's model an add-on is an **amendment**: a new immutable `agreement
 
 ### Outreach Campaigns
 
-Open, lost and expired opportunities, declined estimate options and seasonal services (aeration in fall, pool closing in October) feed campaigns. A campaign is an opportunity source, and its messages are `marketing` by purpose: a reminder that ends with an add-on offer is a marketing message and needs marketing consent ([What the Rules Mean for Each Message](/books/field-operations/customer-communications#what-the-rules-mean-for-each-message)). Suppress customers with an open quote for the same service, and cap how often one property hears an offer.
+Open, lost and expired opportunities, declined estimate options and seasonal services (aeration in fall, pool closing in October) feed campaigns. A campaign is an opportunity source, and its messages are `marketing` by purpose: a reminder that ends with an add-on offer is a marketing message and needs marketing consent ([What the Rules Mean for Each Message](/books/field-operations/customer-communications#what-the-rules-mean-for-each-message)). Suppress customers with an open quote for the same service, and cap how often one property hears an offer. Campaigns to existing customers in general (suppression, and reporting them as retention rather than acquisition) are in [Marketing to Existing Customers](/books/field-operations/marketing-and-lead-sources#marketing-to-existing-customers).
 
 ### Commissions and Guardrails
 

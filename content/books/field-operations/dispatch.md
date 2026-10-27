@@ -129,7 +129,7 @@ Tracking a truck is tracking its driver, and some states regulate it. New Jersey
 
 ## Weather and Emergencies
 
-Weather stops outdoor work across an area at once, and some of it is a matter of law, not comfort. The National Weather Service is blunt that "there is no safe place outside when thunderstorms are in the area." Pesticide labels can carry minimum and maximum wind speeds to limit drift, so an exterior application in the wrong wind may be off-label ([Regulated Materials](/books/field-operations/regulated-materials)). Weather also creates work: a freeze fills plumbers' boards with burst pipes, a heat wave fills HVAC boards with no-cooling calls.
+Weather stops outdoor work across an area at once, and some of it is a matter of law, not comfort. The National Weather Service is blunt that "there is no safe place outside when thunderstorms are in the area." Pesticide labels can carry minimum and maximum wind speeds to limit drift, so an exterior application in the wrong wind may be off-label ([Regulated Materials](/books/field-operations/regulated-materials)). Weather also creates work: a freeze fills plumbers' boards with burst pipes, a heat wave fills HVAC boards with no-cooling calls. Heat is also a labor rule: state triggers that require shade, cool-down breaks and check-ins are in [Heat](/books/field-operations/technician-workforce#heat).
 
 The platforms treat the stopping side as bulk rescheduling: Briostack markets rescheduling "by tech or branches" and texting customers "all at once about last-minute weather delays," and Salesforce's High Intensity policy is meant for "a storm scenario, where employee productivity is your top priority," so the catch-up runs under different rules from a normal day.
 

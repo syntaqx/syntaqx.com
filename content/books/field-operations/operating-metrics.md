@@ -1,6 +1,6 @@
 +++
 title = "Operating Metrics"
-description = "The numbers field operations runs on: first-time fix, arrival windows, SLAs, utilization, job costing, close rate, retention, AR and safety."
+description = "The numbers field operations runs on: first-time fix, arrival windows, SLAs, utilization, job cost, close and booking rates, lead cost, churn, AR, safety."
 category = "Field Operations Industry"
 order = 1534
 part = "Running the Platform"
@@ -100,15 +100,6 @@ Exclude re-services and no-charge callbacks from production value, or a technici
 
 **Close rate** (conversion rate) in ServiceTitan's Dispatch Pro is jobs sold above the sold threshold divided by jobs completed, excluding recall and warranty jobs. **Average ticket** is the technician's "Job Avg," the total income from completed jobs divided by all completed, convertible jobs, and Dispatch Pro compares it with the job type's median average ticket and multiplies the two into a technician job score. That design is worth copying: comparing a technician with the median for the job types they ran removes the advantage of being dispatched the lucrative calls. **Replacement rate** is ServiceTitan's "Rep. Rate," completed jobs whose total passes both the sold threshold and a separate service/replacement threshold, over all completed jobs. On replacement work (a furnace, a water heater, a pool heater) report it per diagnostic visit next to close rate, because a technician who recommends replacement on every old unit closes big tickets and loses customers who needed a repair.
 
-**Booking rate** measures the phone, not the truck. ServiceTitan's legacy dashboard defines inbound call booking rate as "the percent of call leads that are booked into jobs," where a call lead is a call of at least 60 seconds or one marked as a lead; its Voice Intelligence version, which replaces the legacy number on Max accounts, is "the percentage of bookable calls that resulted in a booked job," with calls classed bookable by what was said, not by the CSR's category. My definition follows the second, and I call it **booked-call rate** to keep it apart from a scheduler's bookings:
-
-```text
-booking_rate (booked_call_rate) =
-  booked / (booked + unbooked)    -- inbound calls, excluding excused and abandoned calls
-```
-
-A call is booked when it produced a booked work order within the call or its callback, unbooked when it was a bookable service need at a served address that didn't, and excused when it was never bookable (technicians, dispatch, vendors, wrong numbers, out of area). Abandoned calls are a separate phone metric, not a failed booking. Report human and AI-answered calls separately ([AI in Field Operations](/books/field-operations/ai-in-field-operations)).
-
 **Membership conversion** is the share of eligible visits where a non-member bought a membership or service agreement. ServiceTitan doesn't publish a formula for it. A workable definition:
 
 ```text
@@ -141,7 +132,63 @@ revenue_per_visit =
 - **One-time-to-plan conversion** counts agreements that reached `active`, so a sale cancelled inside the window doesn't count, and it needs a lag: a cohort can't be judged until its window closes. ServiceM8's quote win rate shows the shape: the share of quotes created 28 to 56 days ago that became work orders or completed within 28 days of creation. It isn't ServiceTitan's conversion rate, which is close rate on repair tickets.
 - **Revenue per visit** spreads periodic plan billing across visits at the per-visit value from the service balance ([Billing Recurring Service](/books/field-operations/billing-recurring-service#service-driven-or-calendar-driven-and-the-gap-between-them)), so a monthly-billed lawn or pool plan doesn't make winter visits look free. Split it into base and upsell revenue to see what upselling adds.
 
+Booking rate and the marketing numbers that feed the top of the sales funnel are in [Calls and Leads](#calls-and-leads) below.
+
 Door-to-door teams run a [funnel](/docs/telemetry/product-analytics#funnels) instead (SPOTIO lists doors knocked, contact rate, conversation to demo, demo to close and deal size). The rate that matters most is the one the funnel leaves out: the share of sales that are still paying customers after the first service and after 90 days, because a sale that cancels before the first payment cost a commission and a truck roll. [Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions) covers clawbacks against that number.
+
+## Calls and Leads
+
+Two chapters produce these inputs: [The Contact Center](/books/field-operations/contact-center) classifies every call as booked, unbooked, excused or abandoned, and [Marketing & Lead Sources](/books/field-operations/marketing-and-lead-sources) ties each lead to a source, a campaign and its spend. The definitions live here so the CSR scorecard, the marketing dashboard and the commission run read the same numbers.
+
+**Booking rate** measures the phone, not the truck. ServiceTitan's legacy dashboard defines inbound call booking rate as "the percent of call leads that are booked into jobs," where a call lead is a call of at least 60 seconds or one marked as a lead; its Voice Intelligence version, which replaces the legacy number on Max accounts, is "the percentage of bookable calls that resulted in a booked job." Both leave out calls that were never a chance to book. I call mine **booked-call rate** to keep it apart from a scheduler's bookings:
+
+```text
+booking_rate (booked_call_rate) =
+  count(inbound calls with outcome = booked)
+  / count(inbound calls with outcome IN (booked, unbooked))
+  -- excused and abandoned calls are in neither term
+```
+
+A call is booked when a work order was booked on the call; a callback that books tomorrow is credited to the outbound call, not retroactively to the inbound one. Unbooked is a lead call that didn't book, with its reason (price, no availability, out of area, just shopping); excused is a call that was never an opportunity (a vendor, a wrong number, a job applicant). What makes a call a lead, who may excuse it and what counts as booked are versioned settings, described in [Call Outcomes and Booking Rate](/books/field-operations/contact-center#call-outcomes-and-booking-rate). Report it per CSR, queue, brand and campaign, with human and AI-answered calls separate on the same definition ([AI in Field Operations](/books/field-operations/ai-in-field-operations)), and by unbooked reason: a rise in `out_of_area` is a marketing problem, not a CSR one.
+
+**Answering metrics** say how well calls are answered, and vendors define them differently in ways that move the numbers:
+
+- **Abandonment rate.** Amazon Connect computes contacts abandoned ÷ contacts queued, where an abandoned contact was "disconnected by the customer while in queue," and "Contacts queued for callback are not counted as abandoned." It doesn't exclude short abandons by default; Genesys makes the **short abandon** threshold configurable and notes "The abandon rate does include short abandons." Pick a threshold (callers who hang up within a few seconds are often misdials), state it, and report both.
+- **Average speed of answer.** Amazon Connect's queue answer time is the "average time that contacts waited in the queue before being answered by an agent... also known as average speed of answer (ASA)."
+- **Service level.** The share of calls answered within X seconds. Amazon Connect counts a contact as within service level when it leaves the queue within X, whether "an agent answers the contact, the customer abandons the contact, or the customer requests a call back"; Genesys offers a formula of (answered − answered over the threshold) ÷ (answered + abandoned). Those are different numbers from the same calls, so name the formula with the target.
+
+**What a call is worth** completes the phone picture:
+
+```text
+revenue_per_call = sum(revenue invoiced within the horizon on work orders booked from lead calls)
+                   / count(lead calls)
+calls_per_job    = count(inbound calls about a work order after it was booked)
+                   / count(booked work orders)
+```
+
+Revenue per call catches the CSR who books fast but books the cheapest option, and the campaign whose calls book but don't sell. Calls per job counts failures upstream: every "where's my technician?" call is a notification that didn't go out.
+
+**Lead and campaign metrics** follow the lead from its source to revenue:
+
+```text
+cost_per_lead        = spend(campaign, period) / count(leads from campaign in period)
+                       -- leads net of duplicates; credited leads excluded from both terms
+lead_booking_rate    = count(leads with a booked work order) / count(leads)
+cost_per_booked_job  = spend(campaign, period) / count(leads that booked a work order)
+attributed_revenue   = sum(invoiced revenue within the horizon on work orders attributed
+                         to the campaign) + first-year value of agreements sold from them
+roi                  = (attributed_revenue - spend) / spend
+customer_acq_cost    = spend(source, period) / count(new accounts from source in period)
+```
+
+Housecall Pro's formula, "ROI = (Selected earnings − Marketing spend) ÷ Marketing spend," is the same shape. The choices inside them:
+
+- **Spend for pay-per-lead sources** is the sum of lead charges net of credits, by the lead's date, not the source's invoice date; exposure spend (clicks, mail) is the campaign's monthly spend.
+- **The horizon is fixed,** for example revenue in the first 12 months with an agreement counted at its first-year contract value. First invoice undervalues plans; lifetime revenue rewards old campaigns forever. The attribution model and its version are stored with each result ([Attribution: From Lead to Job to Agreement](/books/field-operations/marketing-and-lead-sources#attribution-from-lead-to-job-to-agreement)).
+- **Existing customers are out of acquisition.** Repeat work from an existing customer is reported under its own source, as retention, so the campaign that owns the main phone number doesn't take credit for the customer base.
+- **ROI on margin** for any trade with real material costs. ROI on revenue overstates return for a replacement-heavy HVAC business.
+
+Report cost per booked job beside cost per lead: two sources with the same cost per lead can differ several times over in how many leads book.
 
 ## Retention and Churn
 
@@ -243,7 +290,8 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 - **First-time fix per work order.** Callbacks are work orders with `source = 'callback'` and `callback_of_work_order_id` set at booking, a tenant-configured window per service type, and second visits for parts (a work order hold, not a callback) reported apart from workmanship.
 - **SLA clocks as data.** Start field, business hours, pauses with reasons, warning and failure durations, and success from an observed event, reported per contract and priority.
 - **Job cost against the estimate.** Labor from clocked time and materials from recorded use, per job, site and route, so underbid work is visible.
-- **Sales numbers defined once:** close rate, average ticket, replacement rate, booked-call rate, membership and one-time-to-plan conversion, attach rate and revenue per visit.
+- **Sales numbers defined once:** close rate, average ticket, replacement rate, membership and one-time-to-plan conversion, attach rate and revenue per visit.
+- **Phone and marketing numbers defined once:** booked-call rate with versioned outcome rules, abandonment with a stated short-abandon threshold, ASA and service level with named formulas, revenue per call, and cost per booked job and ROI over a fixed horizon.
 - **Count accounts and agreements separately.** Logo churn, agreement churn, cohort retention, and terminations typed voluntary, involuntary or administrative with a reason, with pre-activation cancellations and seasonal ends excluded.
 - **AR as of any date.** Aging and DSO computed from ledger entries, with the invoice-date or due-date choice named in the definition.
 - **Raw safety events and exposure.** Vendor scores, raw events and miles kept so scores can be recomputed and normalized.
@@ -255,6 +303,8 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 - [Debezium: Features](https://debezium.io/documentation/reference/stable/features.html), log-based change data capture that captures all changes, deletes and old record state without polling
 - [Stripe: Billing analytics](https://docs.stripe.com/billing/subscriptions/analytics), subscriber churn rate, counting a customer with several subscriptions once
 - [Chargebee: Voluntary and involuntary churn rate](https://support.chargebee.com/support/solutions/articles/257268-difference-between-voluntary-involuntary-churn-rate), voluntary churn as purposeful cancellation and involuntary churn as cancellation after a payment failure
+- [Amazon Connect: Metrics definitions](https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html), abandonment, queue answer time and service level
+- [Genesys Cloud: Performance view columns](https://help.genesys.cloud/articles/view-available-columns-in-performance-views-by-category/), service level with abandons and short abandons
 - [Recurly: Involuntary churn](https://docs.recurly.com/recurly-subscriptions/docs/involuntary-churn), customer loss from factors outside the customer's intent, such as expired cards and failed payments
 
 **In practice**
@@ -263,6 +313,7 @@ A metric that sets pay or an SLA credit will be disputed. Versioning definitions
 - [ServiceTitan: Technician's close or conversion rate does not look correct](https://help.servicetitan.com/docs/technicians-close-or-conversion-rate-does-not-look-correct), job opportunities, converted opportunities and the sold threshold
 - [ServiceTitan: Modular dashboard call metrics](https://help.servicetitan.com/how-to/modular-dashboard-call-metrics), inbound call booking rate over call leads of 60 seconds or marked as leads
 - [ServiceTitan: Monitor call performance with Voice Intelligence](https://help.servicetitan.com/docs/monitor-call-performance-with-voice-intelligence-in-servicetitan), booking rate over bookable calls, replacing the legacy rate on Max accounts
+- [Housecall Pro: Marketing dashboard ROI table](https://help.housecallpro.com/en/articles/14890593-marketing-dashboard-roi-table), the ROI formula per lead source
 - [ServiceTitan: Membership Renewal Protection](https://www.servicetitan.com/blog/membership-renewal-protection), failed payments described as involuntary churn (vendor blog, 2019)
 - [ServiceTitan: Technician Performance Board](https://help.servicetitan.com/commercial/docs/technician-performance-board-legacy-report), revenue, close rate, job average and the replacement rate (Rep. Rate) definition
 - [ServiceTitan: Field service metrics](https://www.servicetitan.com/blog/field-service-metrics), first-time fix rate and technician utilization definitions
