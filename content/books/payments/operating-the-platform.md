@@ -16,6 +16,7 @@ Support, risk and finance teams need a tool that sees what the platform sees, wi
 - **The identifiers are the industry's.** A merchant quotes a payout amount, a cardholder quotes the acquirer reference number (ARN) their bank gave them, the processor quotes its reference, the bank quotes an ACH trace number. The console finds the payment, refund, payout or return from any of them, and shows its full history across systems ([Inside a Processor](/books/payments/inside-a-processor#clearing)).
 - **The actions move money.** Refunds, holds and releases, payout pauses and reserve changes are recorded actions with an actor, a reason and, above a threshold, a second approver; a manual ledger adjustment is a transaction with a reason code, never an edit to a balance ([Payment States & Ledgers](/docs/payments/payment-states#append-only-records)).
 - **Revealing a card number is its own permission.** Support sees masked data; only the roles [Running a Card Vault](/books/payments/card-vault#who-gets-the-number-back) allows can reveal a number, and nobody can approve their own action.
+- **Scope follows the merchant hierarchy.** The internal console sees every merchant; the portals a platform hands to its partners and merchants see one branch of the tree, with the same roles. Payabli's portal shows the shape: four tiered roles (viewer, member, manager, admin), each assigned either to an organization, where it cascades through every sub-organization and paypoint beneath it, or to a single paypoint, where a user can hold a stronger role than they have across the organization, and a manager can manage only users at or below their own role. My rule for building it: a user's role on a record is the strongest assignment on the path from that record to the root, and the test suite proves that a partner's support user can't see a sibling partner's merchants ([Payments for Software Platforms](/books/payments/software-platforms)).
 
 ## Watching the Pipeline
 
@@ -40,7 +41,7 @@ The pipeline alarms above catch money that didn't move. The other quiet failure 
 
 - **Approval rate, sliced.** By processor, card brand, issuer or BIN range, card type, country, merchant category and channel, compared with the same slice's own history. A drop in one slice is a signal a platform-wide average hides ([Processor Routing](/books/payments/processor-routing)).
 - **Decline code mix.** A rise in one code (do not honor, invalid transaction, issuer unavailable) usually names the cause before anyone investigates.
-- **Authorization latency,** measured per hop against the networks' clocks, with an [SLO](/docs/operations/slos) well inside the 15-second timeout floor Visa sets for merchants.
+- **Authorization latency,** measured per hop against the networks' clocks, with an [SLO](/docs/operations/slos) well inside the 15 seconds Visa requires an acquirer or merchant to wait before timing out a point-of-sale transaction ([Inside a Processor](/books/payments/inside-a-processor)).
 - **Webhook delivery:** success rate, lag and backlog per merchant endpoint, because a merchant whose endpoint is failing is a merchant who thinks payments stopped ([Webhooks](/docs/api-design/webhooks)).
 - **A status page** merchants can read, fed by the same signals, so an incident is announced before the support queue announces it.
 
@@ -48,7 +49,7 @@ The pipeline alarms above catch money that didn't move. The other quiet failure 
 
 Merchants reconcile against what you send them, so statements are part of the product:
 
-- **A monthly statement** showing gross volume, refunds, disputes, every fee by type, payouts and the resulting balance. For interchange-plus pricing it separates interchange, network fees and markup, and shows the effective rate. Canada's Code of Conduct requires statements at least monthly with the effective rate per card type, interchange and network fees, and transaction counts and volumes ([Payments in Canada](/books/payments/canada#cards)); no federal rule sets US statement content, but merchants expect the same.
+- **A monthly statement** showing gross volume, refunds, disputes, every fee by type, payouts and the resulting balance. For interchange-plus pricing it separates interchange, network fees and markup, and shows the effective rate. Canada's Code of Conduct requires statements at least monthly with the effective rate per card type, interchange and network fees, and transaction counts and volumes ([Payments in Canada](/books/payments/canada#cards)); no federal rule sets US statement content, but merchants expect the same. Payabli's monthly processing-fees statement, emailed at the start of each month for the month before, is a typical layout: card processing fees (a percentage discount fee by card brand, a per-attempt authorization fee, chargeback fees), ACH processing fees (a percentage, which can be capped per transaction, or a per-transaction fee, plus return and dispute fees), gross fees due, the pass-through fees already collected from transactions as an offset, and the net fees debited from the merchant's bank account, each backed by a day-by-day table. Its authorization fee applies to every attempt, approved, declined or voided, so authorization counts exceed transaction counts, and the statement says so.
 - **Reports on demand,** as asynchronous jobs that produce files, with the payout reconciliation report, every transaction behind every payout, as the one merchants use most ([Designing the Payments API](/books/payments/payments-api#sdks-the-spec-and-reports)).
 - **Tax forms on schedule.** 1099-Ks for every merchant, from the same ledger ([Payments for Software Platforms](/books/payments/software-platforms#1099-k-and-taxpayer-data)).
 
@@ -72,7 +73,7 @@ The incident every provider plans for and hopes never to run. The general shape 
 - **A forensic investigator, if required.** When Visa requires one, the entity contracts a PCI Forensic Investigator within five business days, the investigator's preliminary report is due within five business days of being retained, and the final report within ten business days of the investigation's end. The investigator can't be affiliated with you or have provided you services (as your assessor or advisor, for example) recently.
 - **Preserve before you fix.** Don't power off or rebuild affected systems; isolate them and keep the logs and images, because the investigation depends on them.
 - **The rest of the law.** Every US state, the District of Columbia and several territories have breach notification laws, with deadlines that differ by state, and merchants on your platform have their own obligations to their customers.
-- **Have the plan ready.** PCI DSS requires an incident response plan that includes notifying the brands and acquirers, tested at least every 12 months, with people available around the clock (12.10.1 to 12.10.3), and a procedure for card numbers found where they shouldn't be (12.10.7).
+- **Have the plan ready.** PCI DSS v4.0.1 requires an incident response plan that includes notifying the brands and acquirers, tested at least every 12 months, with people available around the clock (12.10.1 to 12.10.3), and a procedure for card numbers found where they shouldn't be (12.10.7).
 
 ## How Long to Keep What
 
@@ -80,11 +81,11 @@ A payments platform keeps records for many rules at once, and each record's rete
 
 | Record | Keep for | Why |
 | --- | --- | --- |
-| Card numbers | Only as long as your documented business need, verified quarterly | PCI DSS 3.2.1 ([Running a Card Vault](/books/payments/card-vault#storing-the-number)) |
-| Security audit logs | At least 12 months, the latest 3 months immediately available | PCI DSS 10.5.1 |
+| Card numbers | Only as long as your documented business need, verified quarterly | PCI DSS v4.0.1 Req. 3.2.1 ([Running a Card Vault](/books/payments/card-vault#storing-the-number)) |
+| Security audit logs | At least 12 months, the latest 3 months immediately available | PCI DSS v4.0.1 Req. 10.5.1 |
 | Anti-money-laundering records and suspicious activity reports | 5 years | Bank Secrecy Act |
 | ACH authorizations | 2 years after the authorization ends | Nacha ([ACH & Bank Transfers](/books/payments/ach)) |
-| Electronic fund transfer and check records | At least 2 years | Regulation E, Regulation CC |
+| Electronic fund transfer and check records | At least 2 years | Regulation E (12 CFR 1005.13), Regulation CC |
 | Information returns (1099s) | 3 years, or 4 with backup withholding | IRS |
 | Tax and business records | 3 years by default, longer in specific cases | IRS |
 | Dispute evidence | At least the longest dispute window that could reach the payment | Network dispute rules |
@@ -108,7 +109,7 @@ The platform's own finances run on the same ledger, and the close follows [Month
 
 ## Offboarding a Merchant
 
-Merchants leave or are terminated, and both are processes, not deletes. Stop new payments, keep refunds and disputes flowing, hold a reserve through the dispute tail of what was sold (120 days and more for goods delivered later), then pay out the remainder after a final reconciliation. A merchant terminated for cause may need to be reported to the networks' terminated-merchant lists ([Inside a Processor](/books/payments/inside-a-processor#setting-up-a-merchant)), a merchant whose bank account no longer works leaves a balance that eventually becomes unclaimed property ([Payouts & Settlement](/books/payments/payouts-and-settlement)), and the records stay for the retention periods above. Moving a merchant to another provider means exporting its stored cards to a PCI-compliant recipient on request, with network transaction IDs, under the procedure in [Switching Processors](/books/payments/switching-processors#moving-card-numbers) and the export terms of [The Exit Plan](/books/payments/switching-processors#the-exit-plan).
+Merchants leave or are terminated, and both are processes, not deletes. Stop new payments, keep refunds and disputes flowing, hold a reserve through the dispute tail of what was sold (the filing windows in [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks), which run longer for goods and services delivered later), then pay out the remainder after a final reconciliation. A merchant terminated for cause may need to be reported to the networks' terminated-merchant lists ([Inside a Processor](/books/payments/inside-a-processor#setting-up-a-merchant)), a merchant whose bank account no longer works leaves a balance that eventually becomes unclaimed property ([Payouts & Settlement](/books/payments/payouts-and-settlement)), and the records stay for the retention periods above. Moving a merchant to another provider means exporting its stored cards to a PCI DSS compliant recipient on request, with network transaction IDs, under the procedure in [Switching Processors](/books/payments/switching-processors#moving-card-numbers) and the export terms of [The Exit Plan](/books/payments/switching-processors#the-exit-plan).
 
 ## When a Processor, Network or Bank Is Down
 
@@ -133,7 +134,7 @@ Operational records are evidence in sponsor bank and regulator examinations, in 
 - **Every compliance alert to its conclusion,** including the ones closed without a report, with who decided and why; automated dispositions record the rule or model version that made them ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
 - **Every deadline and when it was met:** SAR filings, network breach notices, Regulation E investigations and complaint responses, each with the computed due date stored beside the date it was done.
 - **Every incident and outage's effect on payments:** which payments were declined, queued, failed over or left unknown, how each resolved, and what merchants were told when.
-- **Every deletion under the retention schedule,** with the rule that allowed it, so "we deleted it" can be shown to have been on schedule.
+- **Every deletion under the retention schedule,** with the rule that allowed it, so every deletion can be shown to have been on schedule.
 
 ## What This Means for the System You Build
 
@@ -157,12 +158,14 @@ Operational records are evidence in sponsor bank and regulator examinations, in 
 - [12 CFR 229.21](https://www.law.cornell.edu/cfr/text/12/229.21), Regulation CC record retention
 - [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), account data compromise notification, preservation and card number deadlines (10.3.1)
 - [12 CFR 1005.11](https://www.law.cornell.edu/cfr/text/12/1005.11), Regulation E error resolution timeframes
+- [12 CFR 1005.13](https://www.law.cornell.edu/cfr/text/12/1005.13), Regulation E retention of evidence of compliance for at least two years
+- [PCI SSC: PCI DSS v4.0.1](https://www.pcisecuritystandards.org/document_library/), account data kept only as long as needed with a quarterly check (3.2.1), audit log retention of 12 months with 3 immediately available (10.5.1), the incident response plan, its yearly test and around-the-clock coverage (12.10.1 to 12.10.3), and card numbers found where they shouldn't be (12.10.7)
 - [12 CFR 1026.13](https://www.law.cornell.edu/cfr/text/12/1026.13), Regulation Z billing error notice, acknowledgment and resolution deadlines
 
 **Reference**
 
 - [FinCEN: Advisory on funnel accounts (FIN-2014-A005)](https://www.fincen.gov/resources/advisories/fincen-advisory-fin-2014-a005), the funnel account pattern
-- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), anti-money-laundering programs (1.9.1), issuer liability for stand-in processing (1.4.4.3) and contingency plans for processor failure (1.9.8.3)
+- [Visa Core Rules and Visa Product and Service Rules (April 2026)](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), no acquirer or merchant timeout of a point-of-sale transaction in less than 15 seconds (7.3.4.2), anti-money-laundering programs (1.9.1), issuer liability for stand-in processing (1.4.4.3) and contingency plans for processor failure (1.9.8.3)
 - [NCSL: Security breach notification laws](https://www.ncsl.org/technology-and-communication/security-breach-notification-laws), laws in every state, DC and the territories
 - [FCAC: Code of Conduct for the Payment Card Industry in Canada](https://www.canada.ca/en/financial-consumer-agency/services/industry/laws-regulations/credit-debit-code-conduct.html), monthly statement contents
 - [IRS: How long should I keep records?](https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records), default and extended retention periods
@@ -172,3 +175,5 @@ Operational records are evidence in sponsor bank and regulator examinations, in 
 **In practice**
 
 - [Braintree: Declines](https://developer.paypal.com/braintree/articles/control-panel/transactions/declines), the retryable "processor network unavailable" response distinguishing a network outage from a decline
+- [Payabli: User roles overview](https://docs.payabli.com/guides/pay-ops-roles-permissions-overview), four tiered roles, assigned to an organization (cascading to sub-organizations and paypoints) or to a single paypoint
+- [Payabli: Understanding processing fees statements](https://docs.payabli.com/guides/pay-ops-fees-statements-overview), the monthly statement's card and ACH sections, gross fees, pass-through offset and net fees, and authorization fees on every attempt

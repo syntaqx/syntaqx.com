@@ -4,7 +4,6 @@ description = "The numbers a payments platform runs on, one definition each: app
 category = "Payments Industry"
 order = 1435
 part = "Running a Provider"
-aliases = []
 tags = ["payments", "metrics", "analytics", "authorization", "disputes", "slos"]
 +++
 
@@ -16,8 +15,8 @@ This chapter gives one definition per metric, with its formula, and says which d
 
 Four choices make two dashboards show different numbers for the same month.
 
-- **What's in the denominator.** Stripe publishes two acceptance rates side by side. Its **payment success rate** divides authorized charges by "the number of unique payment attempts submitted through Stripe," including payments that failed 3-D Secure or were blocked by its fraud tools; its **authorization rate** divides by attempts "submitted to the card network for authorization," excluding those. Its worked example shows the gap: 93,000 authorized out of 100,000 valid requests is a 93% success rate, and out of the 98,000 that reached the network a 94.9% authorization rate.
-- **Whether retries count.** A customer who mistypes a CVC and tries again is two attempts and one purchase. Stripe's **raw** rate counts every attempt; its **deduplicated** rate groups retries of the same purchase and counts the final outcome, so three attempts ending in an approval are 33.3% raw and 100% deduplicated.
+- **What's in the denominator.** Stripe publishes two acceptance rates side by side. Its **payment success rate** divides authorized charges by "the number of unique payment attempts submitted through Stripe," including payments that failed 3-D Secure (3DS) or were blocked by its fraud tools; its **authorization rate** divides by attempts "submitted to the card network for authorization," excluding those. Its worked example shows the gap: 93,000 authorized out of 100,000 valid requests is a 93% success rate, and out of the 98,000 that reached the network a 94.9% authorization rate.
+- **Whether retries count.** A customer who mistypes a CVC and tries again is two attempts and one purchase. Stripe's **raw** rate counts every attempt; its **deduplicated** rate groups retries of the same purchase and counts the final outcome, so three attempts ending in an approval are 33.3% raw and 100% deduplicated. Adyen draws the same line under other names: its **gross** authorization rate counts every authorization message sent to the issuer, failed attempts included, and its **net** rate asks whether the order was eventually authorized. Adyen reports gross as standard, and notes that some providers that call their rate gross still leave out payments blocked before they reach the issuer.
 - **Which month a dispute belongs to.** Stripe's dispute analytics can count a dispute by the date it was filed or by the date of the original payment. Visa's monitoring divides a month's fraud reports and disputes by the same month's settled transactions; Mastercard divides a month's chargebacks by the previous month's transactions. Both networks assign a dispute to the month they received it, regardless of when the payment happened.
 - **Count or value.** Network program ratios are counts (Visa's VAMP ratio is explicitly "count-based"), while finance cares about amounts. A merchant with many small disputes and few large ones looks worse to Visa than to its CFO.
 
@@ -27,7 +26,10 @@ So every metric here names its unit, numerator, denominator, inclusion rules and
 
 | Source | Metric | Definition as published |
 | --- | --- | --- |
-| **Mastercard** | Chargeback rate (Excessive Chargeback Program) | Chargebacks raised this month / captured transactions in the previous month |
+| **Adyen** | Authorization rate, gross (its standard) | Approved authorization requests / every authorization request sent to the issuer, failed attempts and retries included |
+| **Adyen** | Authorization rate, net | Orders eventually authorized / orders, however many attempts each took |
+| **Canada's Code of Conduct** | Effective merchant discount rate | Total acquirer and processor fees and network fees paid / sales volume, per card type |
+| **Mastercard** | Chargeback rate (Excessive Chargeback Program, ECP) | Chargebacks raised this month / captured transactions in the previous month |
 | **Mastercard** | Fraud chargeback rate (Excessive Fraud Merchant) | Fraud-related chargebacks this month / e-commerce transactions in the previous month |
 | **Stripe** | Payment success rate | Authorized charges / unique payment attempts, including 3-D Secure failures and blocked payments; invalid API calls excluded |
 | **Stripe** | Authorization rate | Issuer-authorized payments / unique attempts submitted to the network |
@@ -35,9 +37,8 @@ So every metric here names its unit, numerator, denominator, inclusion rules and
 | **Stripe** | Win rate | Won / disputes challenged with evidence, by dispute date |
 | **Visa** | VAMP ratio | Count of fraud reports (TC40) plus disputes (TC15) / count of settled transactions (TC05), card-not-present, same month |
 | **Visa** | VAMP enumeration ratio | Enumerated authorization transactions / all authorization transactions, approved and declined |
-| **Canada's Code of Conduct** | Effective merchant discount rate | Total acquirer and processor fees and network fees paid / sales volume, per card type |
 
-Two practical notes. A provider's dashboard and a network's report will differ even with the same formula: Stripe notes that disputes it absorbs on a merchant's behalf don't count toward its own rates but do count in the networks' calculations, and that statement descriptors, multiple merchant IDs or a merchant ID change can make network data diverge from what the dashboard shows. And a platform computes all of these per merchant, per merchant ID and for itself, because the networks identify accounts by descriptor and acquirer, not by your merchant record.
+Two practical notes. A provider's dashboard and a network's report will differ even with the same formula: Stripe notes that disputes it absorbs on a merchant's behalf don't count toward its own rates but do count in the networks' calculations, and that statement descriptors, multiple merchant IDs (MIDs) or a merchant ID change can make network data diverge from what the dashboard shows. And a platform computes all of these per merchant, per merchant ID and for itself, because the networks identify accounts by descriptor and acquirer, not by your merchant record.
 
 ## Acceptance
 
@@ -55,7 +56,7 @@ payment success rate = authorized attempts / valid attempts
 authorization rate = issuer approvals / attempts sent to the network
 ```
 
-Report both **raw** and **deduplicated**. Deduplicate by grouping attempts for the same purchase (same invoice, or same customer or card, same amount, close in time, as Stripe does) and counting the final outcome. The raw rate is what issuers and the networks see, and the one that drives retry fees; the deduplicated rate is what the business experiences. A feature that adds retries can raise approvals in the raw count of approvals while lowering the raw rate, and only the deduplicated rate shows whether more purchases succeeded.
+Report both **raw** and **deduplicated**. Deduplicate by grouping attempts for the same purchase (same invoice, or same customer or card, same amount, close in time, as Stripe does) and counting the final outcome. The raw rate is what issuers and the networks see, and the one that drives retry fees; the deduplicated rate is what the business experiences. A feature that adds retries can raise the number of approvals while lowering the raw rate; only the deduplicated rate shows whether more purchases succeeded.
 
 **Soft and hard declines.** Classify every decline from its raw code, and report the share of each:
 
@@ -96,7 +97,7 @@ Visa excludes disputes resolved through pre-dispute services and fraud reports t
 
 **Enumeration ratio** (Visa's): enumerated authorizations, as identified by Visa's model, over all authorizations, approved and declined; Visa's fact sheet sets the excessive level at 2,000 basis points with at least 300,000 enumerated transactions. You can't reproduce Visa's model, so track your own proxy (attempts flagged by your card-testing rules over all attempts) and watch for divergence when Visa's report arrives.
 
-**Block rate and review rate** (this book's): the share of attempts your own risk system blocked or sent to review, by rule and by model version. Pair each with the fraud rate on what was allowed, and with the outcome of a held-out sample of what would have been blocked ([Feedback Loops](/books/payments/fraud-and-risk#labels-and-outages)).
+**Block rate and review rate** (this book's): the share of attempts your own risk system blocked or sent to review, by rule and by model version. Pair each with the fraud rate on what was allowed, and with the outcome of a held-out sample of what would have been blocked ([Labels and Outages](/books/payments/fraud-and-risk#labels-and-outages)).
 
 ## Disputes and Refunds
 
@@ -107,7 +108,7 @@ Mastercard chargeback rate = chargebacks raised in month M / captured transactio
 Mastercard fraud chargeback rate = fraud chargebacks in month M / e-commerce transactions in month M-1
 ```
 
-Mastercard's Excessive Chargeback Merchant level starts at 100 chargebacks and a 1.5% rate; its Excessive Fraud Merchant program combines a minimum of 1,000 e-commerce transactions, more than $50,000 of fraud chargebacks, a fraud chargeback rate above 0.50% and low 3-D Secure use. Those thresholds belong to [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks); the metric's job is to reproduce the network's arithmetic daily, so the month's number is known before the network reports it. Neither network subtracts refunds or won disputes: a dispute counts when it's raised.
+Mastercard's Excessive Chargeback Program (ECP) starts at its Excessive Chargeback Merchant (ECM) level, 100 chargebacks and a 1.5% rate; its Excessive Fraud Merchant program combines a minimum of 1,000 e-commerce transactions, more than $50,000 of fraud chargebacks, a fraud chargeback rate above 0.50% and low 3-D Secure use. Those thresholds belong to [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks); the metric's job is to reproduce the network's arithmetic daily, so the month's number is known before the network reports it. Neither network subtracts refunds or won disputes: a dispute counts when it's raised.
 
 **Dispute win rate.** Won disputes over disputes challenged with evidence, by dispute date. Stripe notes its win rate excludes disputes never challenged and looks low for recent months while outcomes are pending, which can take 60 to 75 days. Report **evidence submission rate** (disputes challenged over disputes received) beside it, because a high win rate on few challenges says little.
 
@@ -138,6 +139,15 @@ net revenue = fees billed to merchants
 ```
 
 **Take rate:** net revenue over gross volume, in basis points. It's the single number investors ask about and the least useful one operationally, because it moves with mix: more debit, more domestic, more large merchants on negotiated pricing all lower it without anything going wrong. Always report it with its mix (by card type, region and pricing model).
+
+**Residuals.** A platform that sells payments on a processor's rails, rather than being the processor, doesn't compute net revenue alone: the processor computes it too and pays it as a residual or commission. The published definitions are all the same shape, merchant fees minus the processor's cost, times a revenue share where the contract has one:
+
+- **Finix** states it as "Merchant Fees - Finix Costs = Residuals", generated monthly as a billing settlement with a Residual by Merchant report, and negative when the fees didn't cover the costs.
+- **Moov** computes net income as merchant fees minus partner cost and the residual as net income times the revenue share, settled one business day after the billing period closes, with a residuals API and monthly partner statements.
+- **NMI** returns a month's commission per merchant line through a commission report API, with the resale price, the cost and the commission earned, recollected and returned.
+- **Tilled** computes commission per fee type as merchant revenue minus platform cost times the revenue share, pays it the month after the activity, and gives its monthly commission statement a transaction-level tab for auditing the calculations.
+
+Compute your own number from the ledger and reconcile it against the processor's statement every month, per merchant and fee type. A gap is either your pricing engine billing something the contract doesn't pay a share of, or an error on the statement, and the transaction-level detail is what settles which ([Payments for Software Platforms](/books/payments/software-platforms)).
 
 **Effective rate**, from the merchant's side: total fees the merchant paid over its sales volume. Canada's Code of Conduct defines the effective merchant discount rate as total acquirer and processor fees and network fees paid, divided by sales volume, per card type, and requires it on statements at least monthly ([Statements and Reports](/books/payments/operating-the-platform#statements-and-reports)). Use the same definition everywhere, since a merchant comparing your statement with a competitor's quote will.
 
@@ -192,7 +202,7 @@ merchant credit loss = negative merchant balances written off
 operational loss = errors: duplicate payouts, mispriced fees, unrecoverable mistakes
 ```
 
-Merchant credit loss is the payfac's distinctive risk, the bust-out of [Merchant Fraud](/books/payments/fraud-and-risk#merchant-fraud) and the negative balances of [Payouts & Settlement](/books/payments/payouts-and-settlement#negative-balances), and it's written off only after the recovery steps fail, so it lags the risk by months.
+Merchant credit loss is the distinctive risk of a payment facilitator (payfac), the bust-out of [Merchant Fraud](/books/payments/fraud-and-risk#merchant-fraud) and the negative balances of [Payouts & Settlement](/books/payments/payouts-and-settlement#negative-balances), and it's written off only after the recovery steps fail, so it lags the risk by months.
 
 **Reserve coverage** (this book's): reserves held over estimated exposure, per merchant and for the portfolio.
 
@@ -285,8 +295,16 @@ A metric that sets a reserve, a merchant's pricing tier or a salesperson's commi
 - [Visa: Visa Acquirer Monitoring Program fact sheet (PDF)](https://corporate.visa.com/content/dam/VCOM/corporate/visa-perspectives/security-and-trust/documents/visa-acquirer-monitoring-program-fact-sheet-2025.pdf), the count-based VAMP ratio and its exclusions, acquirer and merchant thresholds, and the enumeration ratio
 - [FCAC: Code of Conduct for the Payment Card Industry in Canada](https://www.canada.ca/en/financial-consumer-agency/services/industry/laws-regulations/credit-debit-code-conduct.html), the effective merchant discount rate and monthly statement contents
 
+**Reference**
+
+- [Adyen: Payment acceptance rate](https://www.adyen.com/knowledge-hub/payment-acceptance-rate), acceptance rate versus authorization rate, gross versus net authorization rate with the four-attempt example, Adyen reporting gross as standard, and providers that exclude payments blocked before the issuer
+
 **In practice**
 
+- [Finix: Platform residuals](https://docs.finix.com/guides/platform-payments/monetizing-payments/platform-residuals), "Merchant Fees - Finix Costs = Residuals", monthly billing settlements, the Residual by Merchant report and negative residuals
+- [Moov: Partner billing](https://docs.moov.io/guides/billing/partner/), net income and residual formulas, residual settlement after the billing period, the residuals API and monthly partner statements
+- [NMI: See your commission](https://docs.nmi.com/reference/see-your-commission), the monthly commission report API with resale, cost and commission per merchant line
 - [Stripe: Acceptance analytics](https://docs.stripe.com/payments/analytics/acceptance), payment success rate and authorization rate, the worked example, raw and deduplicated rates, and the pivots by card attributes
 - [Stripe: Disputes analytics](https://docs.stripe.com/payments/analytics/disputes), dispute rate, fraud rate, win rate and evidence submission rate, dispute date versus payment date, and early fraud warnings
 - [Stripe: Dispute and fraud card monitoring programs](https://docs.stripe.com/disputes/monitoring-programs), Visa's same-month and Mastercard's previous-month calculations, VAMP counting and thresholds, Mastercard ECP and EFM thresholds, and why provider and network figures differ
+- [Tilled: Commissions](https://docs.tilled.com/docs/commissions), commission per fee type as revenue minus platform cost times revenue share, monthly statements, transaction details for auditing, and payment the following month

@@ -40,7 +40,7 @@ The design rule underneath is separation: a key has one purpose, and the system 
 
 For years, symmetric keys moved between systems as bare encrypted bytes. Nothing in the ciphertext said what the key was for, which made attacks possible that reorder or repurpose key material: take a PIN encryption key and convince an HSM it's a data key.
 
-A **key block** fixes that by wrapping the key together with authenticated attributes: its purpose, its algorithm, which operations it permits, whether it can be exported. Change any of it and the block fails integrity checks. The format the industry uses was ANSI X9 TR-31, since standardized as **ANSI X9.143**, and most people still call it TR-31.
+A **key block** fixes that by wrapping the key together with authenticated attributes: its purpose, its algorithm, which operations it permits, whether it can be exported. Change any of it and the block fails integrity checks. The format the industry uses was first defined as ASC X9 TR-31 (2018 edition), since standardized as **ANSI X9.143**, and most people still call it TR-31.
 
 PCI PIN made key blocks mandatory (requirement 18-3, introduced in December 2014) in three phases, with the later two extended in 2020:
 
@@ -60,7 +60,7 @@ The PIN itself travels as a **PIN block**, defined by ISO 9564. **Format 0**, th
 
 ## Leaving TDES
 
-Most of the installed base of payment cryptography still runs on Triple DES, and the rest of the world is leaving it. NIST's SP 800-131A Rev. 2 (2019) disallows two-key TDEA for encryption, and three-key TDEA has been disallowed for encryption since the end of 2023. The PCI Council stopped treating two-key TDEA as strong cryptography years ago and recommends AES.
+Most of the installed base of payment cryptography still runs on Triple DES, and the rest of the world is leaving it. NIST's SP 800-131A Rev. 2 (2019) disallows two-key TDEA for encryption, and three-key TDEA has been disallowed for encryption since the end of 2023. The PCI SSC stopped treating two-key TDEA as strong cryptography years ago and recommends AES.
 
 Payments moves slower than that, because every terminal, HSM and network link has to change together, and a terminal estate can take years to replace. AWS's own example of PIN translation shows the in-between state: a terminal encrypts an AES Format 4 PIN block under DUKPT, and the HSM translates it to a TDES Format 0 block for a downstream link that doesn't support AES yet. The practical stance for a new provider: build on AES (AES DUKPT, Format 4 PIN blocks, AES key blocks) from the start, support TDES only at the edges where a partner still requires it, and track every TDES key as a dated liability with an owner.
 
@@ -73,7 +73,7 @@ Some keys have to be moved by people: the first ZMK with a network, the master k
 - **Ceremonies:** a scripted, witnessed, logged procedure in a controlled room, where custodians enter their components, every step is recorded, and the record is signed.
 - **Key check values:** each component, and the assembled key, is verified by its check value, a short fingerprint made by encrypting a block of zeros with the key. Custodians compare check values to confirm they entered the right component and the parties built the same key, without anyone revealing the key itself. A component whose check value doesn't match is never used.
 
-PCI DSS requires split knowledge and dual control for any manual cleartext key operation on keys that protect stored card data (requirement 3.7.6), and PCI PIN applies the same principles to every PIN key. The engineering goal is to need ceremonies as rarely as possible: remote key loading and electronic key exchange replace most of them, which is why they're worth the effort. In September 2026 the Council published **Key Management and Operations (KMO) v1.0**, a standard of its own for the lifecycle of keys protecting account data, starting with the key management behind PIN and P2PE; expect assessors to start asking against it.
+PCI DSS requires split knowledge and dual control for any manual cleartext key operation on keys that protect stored card data (requirement 3.7.6), and PCI PIN applies the same principles to every PIN key. The engineering goal is to need ceremonies as rarely as possible: remote key loading and electronic key exchange replace most of them, which is why they're worth the effort. On September 14, 2026 the PCI SSC published **Key Management and Operations (KMO) v1.0**, a standard of its own for the whole lifecycle of a key, from generation to destruction. Its initial focus is the key management behind PIN and P2PE, so one KMO assessment can cover both kinds of key; expect assessors to start asking against it.
 
 ### Loading Terminals
 
@@ -81,7 +81,7 @@ A terminal needs its initial keys before it can take a PIN. Traditionally that m
 
 ## Cryptoperiods and Rotation
 
-Every key has a **cryptoperiod**: how long it may be used, set by its strength, its exposure and what it protects. PCI DSS requires a defined cryptoperiod for each key type and a process for changing keys at the end of it (requirement 3.7.4), and service providers must document their whole cryptographic architecture, including each key's strength and expiry, and must not reuse production keys in test (3.6.1.1). NIST SP 800-57 is the reference for choosing the periods.
+Every key has a **cryptoperiod**: how long it may be used, set by its strength, its exposure and what it protects. PCI DSS requires a defined cryptoperiod for each key type and a process for changing keys at the end of it (requirement 3.7.4), service providers must document their whole cryptographic architecture, including each key's strength and expiry, and must not reuse production keys in test (3.6.1.1), and secret keys are stored in as few places and forms as possible (3.6.1.2). NIST SP 800-57 is the reference for choosing the periods.
 
 Rotation is easy to promise and hard to do, so design for it:
 
@@ -121,7 +121,7 @@ The same three questions apply to all of them: where can the clear key exist, wh
 
 Key records are evidence in a PCI DSS or PCI PIN assessment, in a network's review of a new connection, and in any investigation of a suspected compromise. The general design is in [Audit Trails](/docs/architecture/audit-trails), and [Logging Key Use](/docs/security/encryption-at-rest#logging-key-use) covers what a KMS records; for payment keys, make sure the record shows:
 
-- **The key inventory as it stood on any date.** Each key's purpose, algorithm, strength, key block attributes, check value, cryptoperiod and status, versioned so an assessor can see what was live last March, not just today (the documented architecture 3.6.1.1 asks of service providers) ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **The key inventory as it stood on any date.** Each key's purpose, algorithm, strength, key block attributes, check value, cryptoperiod and status, versioned so an assessor can see what was live last March, not just today. That's the documented architecture 3.6.1.1 asks of service providers, kept as a series of snapshots ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
 - **Every ceremony, signed.** The script, the custodians and witnesses present, each component's and the final key's check values, and anything that deviated from the script, kept with the signatures that make it a record rather than a note.
 - **Who held what.** Custodian assignments per component over time, so split knowledge can be shown to have held, including when a custodian left and the component was replaced.
 - **Rotations and revocations with their reasons.** When each key was replaced, why (end of cryptoperiod or suspected compromise), and which partners confirmed the new key.
@@ -141,12 +141,14 @@ Key records are evidence in a PCI DSS or PCI PIN assessment, in a network's revi
 - [NIST: FIPS 140-3](https://csrc.nist.gov/pubs/fips/140-3/final), four increasing levels of security for cryptographic modules
 - [NIST: SP 800-131A Rev. 2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf), two-key TDEA disallowed for encryption, three-key TDEA disallowed for encryption after 2023
 - [NIST: SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), general guidance on managing cryptographic keys, and the suggested cryptoperiods in its Table 1
-- [PCI SSC: PCI DSS v4.0.1](https://www.pcisecuritystandards.org/document_library/), requirements 3.6.1.1, 3.6.1.2, 3.7.4 and 3.7.6 on key architecture, storage, cryptoperiods, split knowledge and dual control
+- [PCI SSC: PCI DSS v4.0.1](https://www.pcisecuritystandards.org/document_library/), requirements 3.6.1.1, 3.6.1.2, 3.7.4 and 3.7.6 on key architecture, storage, cryptoperiods, split knowledge and dual control (the v4.x line was still current in October 2026)
+- [PCI SSC Blog: Just Published: PCI Key Management and Operations (KMO) Standard v1.0](https://blog.pcisecuritystandards.org/just-published-pci-key-management-operations-kmo-standard-v1.0), published September 14, 2026: the full key lifecycle, an initial focus on PIN and P2PE keys, and one assessment for both
 
 **Reference**
 
 - [Visa: Key block effective dates extended (PDF)](https://usa.visa.com/content/dam/VCOM/global/partner-with-us/documents/visa-security-bulletin-to-pin-participants-pci-extends-key-block-dates.pdf), requirement 18-3 and the three key block phases and dates
 - [PCI SSC Blog: Cryptography expert on Triple DEA](https://blog.pcisecuritystandards.org/pci-ssc-cryptography-expert-on-triple-dea), two-key TDEA no longer strong cryptography, and the recommendation to move to AES
+- [IBM: Introduction to TR-31 symmetric key management](https://www.ibm.com/docs/en/linuxonibm/lxcc/wskc_zapgtr31.html), the TR-31 key block format first defined in ASC X9 TR 31-2018 and standardized as ANSI X9.143
 - [PCI SSC Blog: Key Blocks 104](https://blog.pcisecuritystandards.org/key-blocks-104), why key blocks protect a key's intended use
 - [Wikipedia: Derived unique key per transaction](https://en.wikipedia.org/wiki/Derived_unique_key_per_transaction), AES DUKPT in ANSI X9.24-3-2017 and the TDES variant in its annex
 - [Wikipedia: ISO 9564](https://en.wikipedia.org/wiki/ISO_9564), PIN block format 0, and the 2015 amendment adding an extended block for 128-bit ciphers

@@ -4,11 +4,10 @@ description = "Moving to a new processor: contracts, card and bank mandate migra
 category = "Payments Industry"
 order = 1428
 part = "Running a Provider"
-aliases = []
 tags = ["payments", "migration", "processors", "tokens", "cutover", "data-portability"]
 +++
 
-[Processor Routing](/books/payments/processor-routing) is about running two processors at once; this chapter is about leaving one. A merchant, a platform or a payment provider that switches processors is moving the one asset it can't recreate: the customers' stored credentials, and the permission to charge them. The card numbers live in the old processor's vault, the network tokens may belong to the old processor's token requestor ID, the ACH authorizations name someone, the subscriptions have billing anchors and retry counters, and every issuer has learned to trust the old merchant ID. None of that moves by API. It moves by an encrypted file between two PCI-compliant companies, on a timeline the old processor partly controls, followed by weeks of watching declines.
+[Processor Routing](/books/payments/processor-routing) is about running two processors at once; this chapter is about leaving one. A merchant, a platform or a payment provider that switches processors is moving the one asset it can't recreate: the customers' stored credentials, and the permission to charge them. The card numbers live in the old processor's vault, the network tokens may belong to the old processor's token requestor ID, the ACH authorizations name someone, the subscriptions have billing anchors and retry counters, and every issuer has learned to trust the old merchant ID (MID). None of that moves by API. It moves by an encrypted file between two PCI DSS compliant companies, on a timeline the old processor partly controls, followed by weeks of watching declines.
 
 The generic patterns for replacing a live system (transitional architecture, dark launches, canary cohorts, rollback windows) are in [Replacing Systems](/docs/architecture/replacing-systems). What payments adds is the credential transfer itself, the network rules around it, the money that keeps moving through both processors during the overlap, and an exit plan written before the contract is signed. The same procedure serves a software platform moving its merchants' cards, which is why [Switching Platforms](/books/field-operations/switching-platforms) in the Field Operations volume points here.
 
@@ -16,11 +15,11 @@ The generic patterns for replacing a live system (transitional architecture, dar
 
 - **Price.** The processor's markup, a blended rate that was fine at a smaller volume, or fees that appeared after signing ([Interchange & Pricing](/books/payments/interchange-and-pricing)).
 - **Approval rates and coverage.** A processor without local acquiring in a new market, a missing payment method, or approval rates that lag in a segment that matters ([Payments Metrics](/books/payments/payments-metrics#acceptance)).
-- **Moving up the ladder.** A software platform that outgrows referral or managed payfac and becomes a facilitator itself, or a provider adding its own processing ([Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#the-realistic-path)).
+- **Moving up the ladder.** A software platform that outgrows referral or a managed payment facilitator (payfac) and becomes a payfac itself, or a provider adding its own processing ([Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#the-realistic-path)).
 - **The processor changed.** An acquisition, a new risk policy, a product sunset, or a processor that terminates the merchant ([The Payments Landscape](/books/payments/payments-landscape#recent-moves-as-of-october-2026)).
 - **Consolidation.** Two acquired businesses on two processors, or a platform with merchants scattered across several, moving onto one.
 
-Only the last two are forced, and the forced ones are the most dangerous, because the timeline belongs to someone else. That's the argument for the exit plan at the end of this chapter: a migration you rehearsed is a project; one you didn't is an incident.
+A processor that changes under you is the switch you don't choose, and forced switches are the most dangerous, because the timeline belongs to someone else. That's the argument for the exit plan at the end of this chapter: a migration you rehearsed is a project; one you didn't is an incident.
 
 ## Read the Contract First
 
@@ -41,7 +40,9 @@ Every large processor publishes an import procedure, and they agree more than th
 | --- | --- | --- | --- | --- |
 | **Adyen** (import) | Previous provider encrypts with Adyen's PGP key; CSV of up to 1,000,000 lines or 1 GB | An output file with a `recurringDetailReference` per stored contract | "Usually takes 10 days or more"; Adyen doesn't charge | Missing Visa transaction IDs "might result in soft declines and non-compliance assessment fees" |
 | **Braintree** (import and export) | Encrypted SFTP; exports as GPG-encrypted CSV over SFTP, SCP or FTP over SSL, to a provider with an attestation of PCI compliance | A log file mapping customer IDs to payment method tokens | Timeline after intake; no fee for migrations | Two imports and two exports at most; no subscriptions or transactions |
-| **Checkout.com** (import) | Usually SFTP hosted by Checkout.com; files encrypted with its PGP key | A file mapping old tokens to new ones | "A minimum of 14 business days" | Scheme transaction ID required for merchant-initiated use, and Mastercard's Trace Link ID from October 23, 2026 |
+| **Checkout.com** (import) | Usually SFTP hosted by Checkout.com; files encrypted with its PGP key | A file mapping old tokens to new ones | "A minimum of 14 business days" | Scheme transaction ID required for merchant-initiated use, and Mastercard's Trace Link ID required since October 23, 2026 |
+| **Payabli** (import) | Previous processor encrypts with Payabli's PGP key and uploads to an SFTP server Payabli sets up; guides for Stripe, Authorize.net and a generic process | Tokenized data returned to the software platform, which imports its customer records | Outgoing processor typically 3 to 10 business days; Payabli's import 3 to 5 business days from receipt for Stripe and Authorize.net files, 5 to 10 for the generic process | The merchant must request the export; cards load only after the merchant account is approved and its paypoint is active; no payment history, invoices or recurring schedules |
+| **Payabli** (export) | Encrypted file to the new provider by a method agreed with it (its SFTP or PGP credentials), after collecting its PCI SAQ | The stored methods and customer data Payabli holds | 5 to 7 business days | Requested in writing only by the signer on file for the merchant account; only the data the software platform sent Payabli |
 | **Stripe** (export) | Encrypted JSON to a PCI DSS Level 1 processor, to a 4,096-bit or larger PGP key hosted on a domain in the recipient's AOC or Visa registry listing | Cards, emails and metadata | Not stated | No payment history, subscriptions or other objects |
 | **Stripe** (import) | Previous processor encrypts with Stripe's PGP key (RSA 4096) and uploads to a dedicated SFTP server per migration | Validation summary for the merchant to approve, then a mapping file (CSV or JSON) | Old processor's export "a few days to several months"; import "typically within 10 business days" | No CVC, subscriptions or invoices; Apple Pay device numbers on request, other wallet cards not |
 
@@ -51,13 +52,13 @@ Read the table for what it implies. **The transfer is processor to processor;** 
 
 The procedure, in the order it runs:
 
-1. **Request the export first.** The old processor's export is the long pole, from days to months, so file the request the day the decision is made, and ask for the field list (card number, expiry, cardholder name, billing address, customer reference, network transaction ID, and Mastercard's Trace Link ID where Checkout.com's requirement applies).
+1. **Request the export first.** The old processor's export is the long pole, from days to months, so file the request the day the decision is made, and ask for the field list (card number, expiry, cardholder name, billing address, customer reference, network transaction ID, and Mastercard's Trace Link ID where Checkout.com's requirement applies). On a platform, the merchant has to make the request: Payabli's guides say the merchant owns the data, so it asks the outgoing processor itself, and Payabli's own exports start only from a written request sent by the signer on file for the merchant account, never from the software platform or the new provider. Line up the merchant's signer before the project starts.
 2. **Agree the customer reference.** Adyen's guide starts here: pick the internal reference each stored card will carry on the new processor (its `shopperReference`) and confirm the old provider can map to it. Use your own customer ID, not the old processor's, so the mapping file joins straight to your records.
 3. **Transfer under the receiver's key.** The recipient publishes a PGP key; the sender encrypts to it and uploads to the recipient's SFTP server. PCI DSS requires strong cryptography for card numbers sent over open, public networks (requirement 4.2.1), and the encrypted file is how both sides meet it.
 4. **No card security codes.** PCI DSS forbids keeping sensitive authentication data after authorization, the card verification code included (3.3.1 and 3.3.1.2), and the PCI SSC's FAQ says the code isn't needed for card-on-file or recurring transactions and storing it for them is prohibited. A migrated card is charged without it; Stripe's guide says the same.
 5. **Validate before import.** Stripe sends a validation summary and may ask the merchant to confirm the last four digits for two customer IDs, then imports only on explicit approval. Do the same on your side: counts by brand and expiry year against your own records of who has a card on file, before anything is imported.
 6. **Decide about expired cards.** Processor files often contain them. Stripe lets you import or skip them and runs its card account updater on what it imports, possibly for a fee per updated card; its adoption guide recommends running account updates with the existing provider before migrating, so the file is as fresh as possible.
-7. **Load the mapping file.** The new processor returns old reference, new reference, and enough of the card (brand, last four, expiry) to verify. Your platform updates each payment method from it, and keeps the old reference in a crosswalk (below), never overwritten.
+7. **Load the mapping file.** The new processor returns old reference, new reference, and enough of the card (brand, last four, expiry) to verify. Your platform updates each payment method from it, and keeps the old reference in a crosswalk (below), never overwritten. Board the merchant on the new side first: Payabli adds imported cards to a merchant's paypoint only once the merchant account is approved and the paypoint is active.
 8. **Run a delta at cutover.** Cards saved on the old processor after the bulk export need a second, smaller transfer at cutover. Braintree's limit of two imports is exactly that: a bulk and a cutover file.
 
 **Wallets.** Device tokens are their own case. Stripe can migrate Apple Pay device numbers on request, given the device number, expiry and network transaction ID, and can't migrate other wallet cards such as Google Pay; Braintree's imports accept Google Pay device numbers but its exports exclude Apple Pay and Google Pay. Expect to ask some wallet customers to add the wallet again.
@@ -86,7 +87,7 @@ Migrate the signed authorization with the account, as a document linked to the p
 
 ## Recurring Schedules and Dunning State
 
-No processor exports subscriptions, so recurring billing moves from your own records. Two rules decide whether customers notice.
+No processor exports subscriptions, and Payabli's import guides say the same in reverse: payment history, invoices and recurring schedules don't transfer. Recurring billing moves from your own records. Two rules decide whether customers notice.
 
 **Keep the billing anchor.** Stripe's subscription migration guide says a customer with six months left on a yearly subscription must keep that term, with `billing_cycle_anchor` and `start_date` reflecting it; its toolkit says to "cancel old subscriptions before they charge so you don't double-bill," and if a billing date is close, to "schedule the new Stripe subscription to start after the last charge from the old subscription." The same rule holds on any processor: an imported subscription carries its original start date, current period, next billing date and price version ([Periods and Anchors](/docs/payments/subscriptions#periods-and-anchors)), and starts in the future so it can be reviewed before it bills.
 
@@ -100,13 +101,13 @@ Never let both processors bill the same subscription. The rule is mechanical: on
 
 ## Dual-Running and Cutover by Cohort
 
-Both Stripe and Adyen describe running the processors side by side. Adyen's guide has three stages: send new sign-ups and new stored cards to the new processor while the old one keeps charging existing customers, import the old processor's export, then move existing customers' recurring charges. Stripe's says "you can start accepting and charging new customers on Stripe while continuing to charge existing customers through your current processor."
+Both Adyen and Stripe describe running the processors side by side. Adyen's guide has three stages: send new sign-ups and new stored cards to the new processor while the old one keeps charging existing customers, import the old processor's export, then move existing customers' recurring charges. Stripe's says "you can start accepting and charging new customers on Stripe while continuing to charge existing customers through your current processor."
 
 The routing rule during the overlap: **each credential is charged by the processor that holds it.** A card saved before the export is charged on the old processor until its cohort cuts over; a card saved after cutover begins exists only on the new one. Captures, refunds and disputes follow the processor of the original payment, as in [Processor Routing](/books/payments/processor-routing#what-it-costs), so the old integration stays alive, refund-only, until the dispute tail of its last payment has closed.
 
 The order in which volume moves matters because issuers don't know the new merchant ID. Stripe's import guide recommends "ramping up your volume rather than switching everything at once," sending "one-time and customer-initiated payments before recurring ones, and domestic before international." Its adoption guide is more specific: ramp from 1% to 10% of volume over the first four weeks, then about 5% a week, reaching full volume over about six months, with performance typically stabilizing in the first six weeks. My cohort order follows from that:
 
-1. **New customer-initiated payments,** domestic first. They carry the CVC and often 3-D Secure, which gives issuers the most signal about the new merchant ID.
+1. **New customer-initiated payments,** domestic first. They carry the CVC and often 3-D Secure (3DS), which gives issuers the most signal about the new merchant ID.
 2. **Existing customers paying on-session,** with migrated cards.
 3. **Recurring and other merchant-initiated charges,** smallest cohort first, each with its network transaction ID, after the updater is enrolled.
 4. **International and high-value cohorts** last.
@@ -138,14 +139,14 @@ For weeks or months, money moves through both processors, and the ledger has to 
 
 Every processor contract should come with an exit plan written at signing, because the moment you need one is the moment you have least leverage. It covers:
 
-- **The clauses:** export on request to a PCI-compliant recipient, network transaction IDs included, a stated timeline and price, no automatic renewal you can't escape, and the reserve release schedule.
+- **The clauses:** export on request to a PCI DSS compliant recipient, who at the merchant may request it, network transaction IDs included, a stated timeline and price, no automatic renewal you can't escape, and the reserve release schedule.
 - **The identifiers:** your own customer and payment method IDs used as the processor's references, so a mapping file joins to your records directly.
 - **The tokens:** a vault you control or an export right for the cards, and network tokens under a requestor ID you control where you can ([Processor Routing](/books/payments/processor-routing#tokens-decide-how-free-you-are), [Running a Card Vault](/books/payments/card-vault)).
 - **The evidence:** network transaction IDs, consent records and mandate text stored on your side for every stored credential ([The Credential Record](/books/payments/stored-credentials#the-credential-record)), so nothing that proves an agreement exists only at the processor.
 - **The schedules:** subscriptions, retry counts and dunning state in your own database, never only in the processor's billing product.
 - **A rehearsal:** an annual test export of a small sample to a staging recipient, if the processor will do it, or at least a dry run of your import and crosswalk code.
 
-If you are the provider, the same plan is a product feature. A merchant that knows it can leave with its cards is easier to sign, and the large processors above already export to PCI-compliant recipients on request; [Offboarding a Merchant](/books/payments/operating-the-platform#offboarding-a-merchant) covers the outbound side.
+If you are the provider, the same plan is a product feature. A merchant that knows it can leave with its cards is easier to sign, and the large processors above already export to PCI DSS compliant recipients on request. Payabli's outbound procedure is a usable template: a written authorization from the merchant's signer on file, naming the legal entity (and its merchant ID if available), the receiving provider and a contact there; the recipient's PCI SAQ and transfer keys collected before anything moves; and a stated delivery time. [Offboarding a Merchant](/books/payments/operating-the-platform#offboarding-a-merchant) covers the rest of the outbound side.
 
 ## How to Build It
 
@@ -229,20 +230,24 @@ The audit record itself is in [Audit Trails](/docs/architecture/audit-trails).
 
 **In practice**
 
-- [Stripe: Import payment data](https://docs.stripe.com/get-started/data-migrations/pan-import), PGP and SFTP transfer, validation and approval, mapping file, timelines, export fees and forms, no DTA, new merchant ID decline codes and ramp-up
-- [Stripe: Payment method imports](https://docs.stripe.com/get-started/data-migrations/payment-method-imports), expired cards and account updater, Apple Pay device numbers, ACH mandates and Nacha responsibility, SEPA and Bacs
-- [Stripe: Request a payment data export](https://docs.stripe.com/get-started/data-migrations/pan-export), PCI DSS Level 1 recipients, AOC or Visa registry listing, 4,096-bit PGP key, what isn't exported
-- [Stripe: Migrate subscriptions using the APIs](https://docs.stripe.com/billing/subscriptions/import-subscriptions), billing cycle anchors and start dates for mid-term customers
-- [Stripe: Billing migration toolkit](https://docs.stripe.com/billing/subscriptions/import-subscriptions-toolkit), cancelling old subscriptions before they charge
-- [Stripe: Maintaining payments performance when adopting Stripe](https://stripe.com/guides/maintaining-payments-performance-when-adopting-stripe), the ramp schedule, stabilization, baseline data and running account updates before migrating
-- [Adyen: Migrating payment data](https://docs.adyen.com/development-resources/migrating-payment-data), shopper reference, PGP encryption, the three-stage parallel plan, no charge and timing
+- [Adyen: Forward payment details](https://docs.adyen.com/online-payments/tokenization/forward-payment-details), forwarding to a PCI DSS compliant third party and creating an Adyen token to forward network tokens
 - [Adyen: Import payment details for recurring payments](https://docs.adyen.com/development-resources/migrating-payment-data/import-payment-details-for-recurring-payments), file format and limits, Visa transaction ID and Mastercard Trace Link ID, output references
-- [Adyen: Forward payment details](https://docs.adyen.com/online-payments/tokenization/forward-payment-details), forwarding to a PCI-compliant third party and creating an Adyen token to forward network tokens
+- [Adyen: Migrating payment data](https://docs.adyen.com/development-resources/migrating-payment-data), shopper reference, PGP encryption, the three-stage parallel plan, no charge and timing
 - [Adyen: Real-time account updater](https://docs.adyen.com/online-payments/account-updater/real-time-account-updater), conditions for updating refused merchant-initiated payments
 - [Braintree: Data migration overview](https://developer.paypal.com/braintree/articles/get-started/data-migration/overview), no fees, no subscriptions or transactions, and ACH agreements tied to the processor
-- [Braintree: Imports](https://developer.paypal.com/braintree/articles/get-started/data-migration/imports), encrypted SFTP, the mapping log file, two imports and supported methods
 - [Braintree: Exports](https://developer.paypal.com/braintree/articles/get-started/data-migration/exports), PCI attestation of the recipient, GPG-encrypted CSV and two exports
+- [Braintree: Imports](https://developer.paypal.com/braintree/articles/get-started/data-migration/imports), encrypted SFTP, the mapping log file, two imports and supported methods
 - [Checkout.com: Token migration guide](https://www.checkout.com/docs/developer-resources/token-migration-guide), SFTP and PGP, required fields, the Trace Link ID date and the 14-business-day minimum
 - [IXOPAY: Migrating tokens between token service providers](https://www.ixopay.com/blog/how-to-migrate-tokens-when-switching-token-service-providers-tsps), network tokens move with the token requestor IDs
-- [PCI Proxy: What happens to stored cards when you switch PSP](https://www.pci-proxy.com/blog-posts/what-happens-to-stored-cards-when-you-switch-psp), the receiving provider as certified token requestor and re-linking time
 - [Merchant Risk Council: The challenges of MID warming](https://merchantriskcouncil.org/news-and-press/mrc-blog/2022/the-challenges-of-mid-warming), security and do-not-honor declines for 90 to 120 days and notifying issuers
+- [Payabli: Migrate from Authorize.net](https://docs.payabli.com/guides/platform-tokenization-migrate-authorizenet), the same flow and import time for Authorize.net exports
+- [Payabli: Migrate from Stripe](https://docs.payabli.com/guides/platform-tokenization-migrate-stripe), the merchant-initiated Stripe export, a 3 to 5 business day import, cards loaded only to an active paypoint, and no payment history, invoices or recurring schedules
+- [Payabli: Migrate token data from Payabli](https://docs.payabli.com/guides/platform-tokenization-migrate-out), export requests only from the signer on file, the recipient's PCI SAQ and SFTP or PGP details, 5 to 7 business days, and only the data the software partner sent
+- [Payabli: Migrate tokenized card data](https://docs.payabli.com/guides/platform-tokenization-migrate-in), the merchant requests the export, Payabli's PGP key and SFTP server, the outgoing processor's typical 3 to 10 business days and Payabli's 5 to 10
+- [PCI Proxy: What happens to stored cards when you switch PSP](https://www.pci-proxy.com/blog-posts/what-happens-to-stored-cards-when-you-switch-psp), the receiving provider as certified token requestor and re-linking time
+- [Stripe: Billing migration toolkit](https://docs.stripe.com/billing/subscriptions/import-subscriptions-toolkit), cancelling old subscriptions before they charge
+- [Stripe: Import payment data](https://docs.stripe.com/get-started/data-migrations/pan-import), PGP and SFTP transfer, validation and approval, mapping file, timelines, export fees and forms, no DTA, new merchant ID decline codes and ramp-up
+- [Stripe: Maintaining payments performance when adopting Stripe](https://stripe.com/guides/maintaining-payments-performance-when-adopting-stripe), the ramp schedule, stabilization, baseline data and running account updates before migrating
+- [Stripe: Migrate subscriptions using the APIs](https://docs.stripe.com/billing/subscriptions/import-subscriptions), billing cycle anchors and start dates for mid-term customers
+- [Stripe: Payment method imports](https://docs.stripe.com/get-started/data-migrations/payment-method-imports), expired cards and account updater, Apple Pay device numbers, ACH mandates and Nacha responsibility, SEPA and Bacs
+- [Stripe: Request a payment data export](https://docs.stripe.com/get-started/data-migrations/pan-export), PCI DSS Level 1 recipients, AOC or Visa registry listing, 4,096-bit PGP key, what isn't exported

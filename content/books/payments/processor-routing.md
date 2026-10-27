@@ -33,14 +33,14 @@ The bill is real, and it's paid forever, not once:
 
 ## Tokens Decide How Free You Are
 
-The deepest lock-in in payments isn't the API. It's the cards. If customers' cards are stored as processor tokens, they exist only inside that processor, and moving them means the processor exporting card numbers to another PCI-compliant provider, on its terms and its timeline. How that export runs, what it leaves behind and what to put in the contract before signing are in [Switching Processors](/books/payments/switching-processors#moving-card-numbers) and its [exit plan](/books/payments/switching-processors#the-exit-plan); the general rules of leaving any vendor are in [Vendor Exports and Lock-In](/docs/architecture/replacing-systems#vendor-exports-and-lock-in). For routing the point is narrower: a card only one processor can charge is a card the router can't route.
+The deepest lock-in in payments isn't the API. It's the cards. If customers' cards are stored as processor tokens, they exist only inside that processor, and moving them means the processor exporting card numbers to another PCI DSS compliant provider, on its terms and its timeline. How that export runs, what it leaves behind and what to put in the contract before signing are in [Switching Processors](/books/payments/switching-processors#moving-card-numbers) and its [exit plan](/books/payments/switching-processors#the-exit-plan); the general rules of leaving any vendor are in [Vendor Exports and Lock-In](/docs/architecture/replacing-systems#vendor-exports-and-lock-in). For routing the point is narrower: a card only one processor can charge is a card the router can't route.
 
 The alternative is owning the credential layer:
 
 - **A processor-agnostic vault,** your own or a vault provider's, holding card numbers and handing your systems tokens that any route can use. It's the design that makes routing real, and it puts the vault in [PCI scope](/docs/compliance/pci-dss), as a service provider if it holds cards for other merchants, whoever runs it. [Sensitive Data](/docs/payments/sensitive-data) is the case for keeping that vault small, and [Running a Card Vault](/books/payments/card-vault) is how to build and operate it.
 - **Network tokens** you provision as the token requestor, or through a vault that does, can travel with you between processors that support them. Provisioned by a processor on your behalf, they may stay with that processor.
 
-**Network-token portability in practice** comes down to who the [token requestor](/books/payments/stored-credentials#keeping-the-card-alive) is and who can get a cryptogram; what happens to tokens when you leave a processor is in [Network Tokens and Account Updater After the Move](/books/payments/switching-processors#network-tokens-and-account-updater-after-the-move). Every network-token payment carries a fresh cryptogram from the network's token service, so whoever holds the requestor relationship sits in the path of every charge, whichever processor receives it. Vault and orchestration providers sell exactly that: Gr4vy's vault forwarding provisions a network token on first use if none exists, generates a new cryptogram for each forwarded request, and can fall back to the card number when no token is available. The fallback matters, because not every route accepts a network token from a third-party requestor, and a router that assumes it does will decline cards it could have charged. Store the network token, its requestor and its status beside the vault token, and make "can this route take our network token?" a routing input.
+**Network-token portability in practice** comes down to who the [token requestor](/books/payments/stored-credentials#keeping-the-card-alive) is and who can get a cryptogram; what happens to tokens when you leave a processor is in [Network Tokens and Account Updater After the Move](/books/payments/switching-processors#network-tokens-and-account-updater-after-the-move). Every network-token payment carries a fresh cryptogram from the network's token service, so whoever holds the requestor relationship sits in the path of every charge, whichever processor receives it. Vault and orchestration providers sell exactly that: Gr4vy's vault forwarding provisions a network token on first use if none exists, generates a new cryptogram for each forwarded request, and can fall back to the card number when no token is available. The fallback matters, because not every route accepts a network token from a third-party requestor, and a router that assumes it does will decline cards it could have charged. Store the network token, its requestor and its status beside the vault token, and make "can this route take the platform's network token?" a routing input.
 
 Decide this before you have a million stored cards, not after. The cost of the decision grows with every card saved.
 
@@ -48,9 +48,9 @@ Decide this before you have a million stored cards, not after. The cost of the d
 
 Payment orchestration is the market built on this chapter: vendors that sit between a merchant and several processors, hold the cards in their own vault, and route, retry and fail over by configuration. They differ in the details that matter most:
 
-- **Spreedly** routes from a no-code workflow builder: one static gateway, a percentage split between gateways to compare approval rates and costs, or conditional branches on transaction, customer and card data where the first match wins. Failure handling is a separate, paid feature that retries soft declines and gateway outages on up to two failover gateways, and routing on card attributes needs a BIN lookup step first.
-- **Primer** sets a fallback processor on a workflow's authorize step and normalizes every processor's response into standard fields first. A fallback fires only on a short list: a gateway rejection, an application error, or an issuer soft decline with a generic reason (declined, do not honor, refer to issuer, issuer temporarily unavailable). It doesn't work when the processor runs 3-D Secure itself, because the authentication belongs to the first route.
 - **Gr4vy** routes through a rules engine with per-processor retry and timeout settings, and forwards stored cards, processor tokens or network tokens to whichever endpoint the rule picks.
+- **Primer** sets a fallback processor on a workflow's authorize step and normalizes every processor's response into standard fields first. A fallback fires only on a short list: a gateway rejection, an application error, or an issuer soft decline with a generic reason (declined, do not honor, refer to issuer, issuer temporarily unavailable). It doesn't work when the processor runs 3-D Secure (3DS) itself, because the authentication belongs to the first route.
+- **Spreedly** routes from a no-code workflow builder: one static gateway, a percentage split between gateways to compare approval rates and costs, or conditional branches on transaction, customer and card data where the first match wins. Failure handling is a separate, paid feature that retries soft declines and gateway outages on up to two failover gateways, and routing on card attributes needs a BIN lookup step first.
 - **Stripe,** one processor rather than an orchestrator, does a version of the same inside its own connections: it may retry an eligible US debit decline on a PINless debit network, reformats requests to issuers' preferences, and blocks attempts that would incur network retry fees.
 
 What every one of them separates is the lesson: routing (where the first attempt goes), recovery (whether a failed attempt may go somewhere else) and the vault (whether any route can charge the card at all). Buying orchestration buys those three; building means building the same three, under the same rules about which failures may be retried.
@@ -86,7 +86,7 @@ Make the router configuration data, versioned and reviewed like code, and record
 
 Debit cards in the US come with a routing right most platforms don't use. Regulation II, the Federal Reserve's rule implementing the Durbin Amendment, prohibits network exclusivity: an issuer must enable at least two unaffiliated networks on every debit card, and it protects the merchant's ability to direct which network a transaction goes over. In October 2022 the Fed clarified that this applies to card-not-present payments too, effective July 1, 2023, after finding that the market had built ways to route online debit across more than one network.
 
-In practice that means an online debit transaction on a Visa or Mastercard debit card can often go over an unaffiliated PIN-less debit network instead, at a different cost. Whether you can use that depends on your processor supporting those networks and on the networks the issuer enabled, so it's a routing rule like any other: identify debit by BIN, compare the routes available for it, choose. For a platform with real debit volume it's one of the largest cost levers there is, and it's the merchant's right, not the network's favor.
+In practice that means an online debit transaction on a Visa or Mastercard debit card can often go over an unaffiliated PINless debit network instead, at a different cost. Whether you can use that depends on your processor supporting those networks and on the networks the issuer enabled, so it's a routing rule like any other: identify debit by BIN, compare the routes available for it, choose. For a platform with real debit volume it's one of the largest cost levers there is, and it's the merchant's right, not the network's favor.
 
 ## Failover Without Double Charging
 
@@ -114,8 +114,8 @@ So failover follows rules:
 
 Routing is one lever on approvals among several, and the others are usually cheaper:
 
-- **Keep the card current.** Expired and reissued cards are the most avoidable declines. Account updater services refresh stored numbers and expiry dates from issuers, and network tokens stay current on their own ([Keeping the Card Alive](/books/payments/stored-credentials#keeping-the-card-alive)). Stripe reports that a network-token payment is significantly likelier to succeed when the card behind it had changed, and lists Mastercard's fee on attempts with outdated credentials among the costs tokens avoid.
-- **Send network tokens wherever the route accepts them.** Beyond freshness, some networks price token transactions lower in some markets and merchant categories.
+- **Keep the card current.** Expired and reissued cards are the most avoidable declines. Account updater services refresh stored numbers and expiry dates from issuers, and network tokens stay current on their own ([Keeping the Card Alive](/books/payments/stored-credentials#keeping-the-card-alive)). Stripe reports that a network-token payment is significantly likelier to succeed when the card behind it had changed, and lists Mastercard's fee on attempts with outdated credentials among the costs tokens avoid; Adyen likewise lists higher authorization rates than payments without network tokens, and a token that stays the same when the cardholder gets a new card.
+- **Send network tokens wherever the route accepts them.** Beyond freshness, some token payments cost less: Stripe notes that some qualify for reduced interchange (Visa discounts certain consumer card-not-present payments in some markets, depending on the MCC), less any token fees the networks charge.
 - **Read the advice codes.** A Mastercard advice code saying new account information is available is a prompt to run the updater, not to retry the same card.
 - **Authenticate when it helps.** 3-D Secure shifts fraud liability and is required in Europe; a frictionless or data-only exchange shares more data with the issuer without challenging the customer ([Strong Customer Authentication](/books/payments/strong-customer-authentication)).
 - **Route by BIN.** Send cards to an acquirer in the issuer's country where you have one, since a local acquirer tends to approve more and cost less than a cross-border one, and send US debit over the network the merchant chooses (above).
@@ -133,30 +133,40 @@ Routing adds a versioned rule set, each stored card's standing on each route, an
 
 ```sql
 CREATE TABLE routing_rule_sets (
-  id           uuid PRIMARY KEY,
-  version      int NOT NULL UNIQUE,
-  rules        jsonb NOT NULL,          -- ordered rules on BIN data, amount, currency, merchant
-  approved_by  text NOT NULL,
-  effective_at timestamptz NOT NULL
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  version      INTEGER NOT NULL UNIQUE,
+  rules        JSONB NOT NULL,          -- ordered rules on BIN data, amount, currency, merchant
+  approved_by  TEXT NOT NULL,
+  effective_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE payment_method_routes (
-  payment_method_id uuid NOT NULL REFERENCES payment_methods (id),
-  processor         text NOT NULL,
-  processor_token   text,               -- null when the vault forwards the card number
-  network_token_ok  boolean NOT NULL,   -- this route accepts our network token
+  payment_method_id UUID NOT NULL REFERENCES payment_methods (id),
+  processor         TEXT NOT NULL,
+  processor_token   TEXT,               -- null when the vault forwards the card number
+  network_token_ok  BOOLEAN NOT NULL,   -- this route accepts the platform's network token
   PRIMARY KEY (payment_method_id, processor)
 );
 
 ALTER TABLE payment_attempts
-  ADD COLUMN routing_rule_set_id  uuid REFERENCES routing_rule_sets (id),
-  ADD COLUMN routing_rule         text,  -- which rule chose this route
-  ADD COLUMN attempt_kind         text,  -- first, failover, cascade, retry
-  ADD COLUMN previous_attempt_id  uuid REFERENCES payment_attempts (id),
-  ADD COLUMN merchant_advice_code text;
+  ADD COLUMN routing_rule_set_id  UUID REFERENCES routing_rule_sets (id),
+  ADD COLUMN routing_rule         TEXT,  -- which rule chose this route
+  ADD COLUMN attempt_kind         TEXT,  -- first | failover | cascade | retry
+  ADD COLUMN previous_attempt_id  UUID REFERENCES payment_attempts (id),
+  ADD COLUMN merchant_advice_code TEXT;
 ```
 
 Count reattempts per card from `payment_attempts` joined through `payment_methods.fingerprint`, across every processor, and check the count before each cascade or retry.
+
+## Auditing
+
+Routing decisions are evidence when a processor questions a retry pattern, a network assesses excessive-retry fees, a merchant disputes a duplicate charge, or finance asks why costs moved. The general design is in [Audit Trails](/docs/architecture/audit-trails); for routing, make sure the record shows:
+
+- **Every rule set, versioned and approved.** Who changed the routing configuration, who approved it, and when it took effect, so any past payment's route can be explained by the rules live at the time.
+- **Every attempt's reason.** The rule that chose the route, the attempt kind (first, failover, cascade, retry), the attempt it followed, and the raw processor, issuer and advice codes that justified the next one.
+- **Every unknown outcome to its resolution.** The timeout, the query or reversal that resolved it, and only then the failover, so a duplicate-charge complaint can be answered from the record.
+- **Every circuit-breaker change,** when a route was opened or closed and on what health signal, with the payments it moved.
+- **The cascade agreements.** The soft declines each acquirer agreed are recoverable, as a dated document the cascade rules point to.
 
 ## What This Means for the System You Build
 
@@ -186,9 +196,10 @@ Count reattempts per card from `payment_attempts` joined through `payment_method
 
 **In practice**
 
-- [Spreedly: Transaction routing](https://developer.spreedly.com/docs/routing-rules-1), static, split and conditional routing, and Recover retrying soft declines and outages on up to two failover gateways
-- [Primer: Fallbacks](https://www.primer.io/docs/payment-services/fallbacks), the standardized declines and errors that trigger a fallback processor, and the processor 3-D Secure limitation
+- [Adyen: Network tokenization](https://docs.adyen.com/online-payments/network-tokenization), higher authorization rates than payments without network tokens, and tokens that stay valid when the card is reissued
 - [Gr4vy: Network tokens in vault forwarding](https://docs.gr4vy.com/guides/features/vault-forwarding/network-tokens), provisioning on first use, a new cryptogram per request and falling back to the card number
 - [Gr4vy: Payment optimization](https://gr4vy.com/payment-optimization/), rules-based routing with per-processor retry and timeout settings
-- [Stripe: Payments optimization](https://docs.stripe.com/payments/analytics/optimization), PINless debit retries, excessive retry prevention, card account updater and network tokens as approval and cost levers
 - [Martin Fowler: CircuitBreaker](https://martinfowler.com/bliki/CircuitBreaker.html), the closed, open and half-open states behind health-based failover
+- [Primer: Fallbacks](https://www.primer.io/docs/payment-services/fallbacks), the standardized declines and errors that trigger a fallback processor, and the processor 3-D Secure limitation
+- [Spreedly: Transaction routing](https://developer.spreedly.com/docs/routing-rules-1), static, split and conditional routing, and Recover retrying soft declines and outages on up to two failover gateways
+- [Stripe: Payments optimization](https://docs.stripe.com/payments/analytics/optimization), PINless debit retries, excessive retry prevention, card account updater and network tokens as approval and cost levers, and reduced interchange on some network-token payments by market and MCC
