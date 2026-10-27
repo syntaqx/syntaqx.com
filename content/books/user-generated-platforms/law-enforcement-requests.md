@@ -12,7 +12,7 @@ Every platform where people post, message and trade becomes a source of evidence
 
 The work is hard in three ways. **The law decides what each request can get,** and the answer depends on the type of process, the type of data, the country of the requester and the entity that holds the data, so a team that answers on instinct over-discloses (and breaks the law that protects users) or under-discloses (and stalls an investigation or misses an emergency). **Some requests are fake:** criminals send forged subpoenas and fake emergency requests from hacked police mailboxes, and Reddit caught 26 fraudulent government requests in one half-year. **The requests collide with the platform's other duties:** a preservation request freezes data a user has asked to erase, a nondisclosure order forbids telling them, and the transparency report must still count it all.
 
-This chapter covers the US framework (the Stored Communications Act's tiers of process, preservation, emergency disclosure, nondisclosure orders and civil subpoenas), international requests (mutual legal assistance, CLOUD Act agreements, the EU's e-evidence regime applying from August 2026), what the platforms publish about how they handle requests, fraud and verification, privacy rights against evidence, and the operating model. It extends [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#deletion-claims-and-legal-holds), whose `legal_holds` table this chapter's preservations use, and adds tables for requests, the accounts they name and what was produced. Child sexual exploitation reports to NCMEC run on a separate statutory path (Child Safety: Detection & Reporting); copyright subpoenas under 17 U.S.C. 512(h) are Copyright at Scale's. None of this is legal advice; every request is reviewed by counsel.
+This chapter covers the US framework (the Stored Communications Act's tiers of process, preservation, emergency disclosure, nondisclosure orders and civil subpoenas), international requests (mutual legal assistance, CLOUD Act agreements, the EU's e-evidence regime applying from August 2026), what the platforms publish about how they handle requests, fraud and verification, privacy rights against evidence, and the operating model. It extends [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#deletion-claims-and-legal-holds), whose `legal_holds` table this chapter's preservations use, and adds tables for requests, the accounts they name and what was produced. Child sexual exploitation reports to NCMEC run on a separate statutory path ([Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#the-reporting-duty)); copyright subpoenas under 17 U.S.C. 512(h) are covered in [Copyright at Scale](/books/user-generated-platforms/copyright#subpoenas-to-identify-infringers). None of this is legal advice; every request is reviewed by counsel.
 
 ## How the Platforms Do It
 
@@ -23,7 +23,7 @@ This chapter covers the US framework (the Stored Communications Act's tiers of p
 | **Pinterest** | Not covered here | Not covered here | 8 U.S. emergency requests in H2 2025 | 6 U.S. accounts notified in H2 2025 | H2 2025: 137 U.S. requests (101 with some information produced), 44 international (6 produced); national security requests reported as a range of 0 to 249 |
 | **Google** | Each request reviewed; overbroad requests narrowed | Not covered here | May disclose to prevent death or serious physical harm | Emails the user before disclosure except where prohibited, in emergencies, or if the account is hijacked; notifies after a prohibition ends | Not covered here |
 
-The patterns: **every platform maps process type to data type** (subpoena for subscriber data, court order for other records, warrant for content); **preservation and disclosure are separate steps**; **emergency requests are the riskiest door** because they skip court process; and **notice to the user is the default** with documented exceptions. The published volumes are themselves a duty under transparency regimes ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting)).
+The patterns: **every platform maps process type to data type** (subpoena for subscriber data, court order for other records, warrant for content); **preservation and disclosure are separate steps**; **emergency requests are the riskiest door** because they skip court process; and **notice to the user is the default** with documented exceptions. The published volumes are themselves a duty under transparency regimes ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting#what-the-voluntary-reports-count)).
 
 ## The US Framework
 
@@ -79,7 +79,7 @@ The controls:
 - **Out-of-band confirmation for emergencies.** Call the agency back on a number found independently (not the one in the request), and confirm the officer and the case. Reddit says it may validate the identity of the official seeking data.
 - **Ask what the emergency is.** Discord asks the requester to describe the emergency, the data needed and how it will help; a request that can't answer is either not an emergency or not real.
 - **Minimum disclosure.** Produce the least data that addresses the emergency (Reddit discloses "limited account information"), and require follow-up process for anything more.
-- **Report fakes** to the impersonated agency and to authorities, and count them ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting)).
+- **Report fakes** to the impersonated agency and to authorities, and count them ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting#what-the-voluntary-reports-count)).
 
 ## User Notice
 
@@ -112,7 +112,7 @@ The people who run this see the most sensitive data on the platform. Give them a
 
 ## How to Build It
 
-The chapter adds legal requests, the identifiers they name, and productions, and uses `legal_holds` from [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#how-to-build-it) for preservation.
+The chapter adds legal requests, the identifiers they name, and productions, and uses `legal_holds` from [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#how-to-build-it) for preservation. A legal request asks the platform to preserve or disclose data about users; an order to remove or disable content is a `legal_notices` row from [The Law of Hosting User Content](/books/user-generated-platforms/hosting-liability#how-to-build-it), and a regulator's information request about the service itself is a `regulator_requests` row from [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#how-to-build-it). A court order that does both gets a row in each, linked.
 
 ```sql
 CREATE TABLE legal_requests (            -- one request from an authority or a private party
@@ -141,6 +141,7 @@ CREATE TABLE legal_requests (            -- one request from an authority or a p
                        'produced', 'partially_produced', 'rejected', 'withdrawn',
                        'fraudulent')),
   legal_reviewer_id  UUID REFERENCES accounts (id),
+  legal_notice_id    UUID REFERENCES legal_notices (id),  -- the same process also orders removal
   closed_at          TIMESTAMPTZ,
   CHECK (process_type <> 'emergency' OR emergency_basis IS NOT NULL OR status <> 'produced')
 );

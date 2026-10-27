@@ -11,7 +11,7 @@ Search is how people find what a community already said. Someone with a broken d
 
 Search on user content is harder than search on a catalog because the corpus is hostile and mutable. Posts are edited, removed by moderators, deleted by authors, made private when a community closes, and hidden from the people who blocked their authors; every one of those changes has to reach the index before the next query, or search becomes the way to read what moderation took down. Spammers write for the ranking function. And the newest layer, AI answers composed from community posts, can repeat a removed comment as confident advice unless it's held to the same rules.
 
-This chapter covers what people search for on community platforms, the indexing pipeline and its consistency with moderation, ranking signals, typeahead and tags, visual search, machine translation of user content, AI answers with citations, safety interventions in search, and query logs as personal data. It adds translations, query logs, media embeddings and AI answer records to [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model). Search over chat messages and direct messages is [Real-Time Chat](/books/user-generated-platforms/real-time-chat); search engines and AI companies licensing the corpus are [Developer Platforms, APIs & Data Access](/books/user-generated-platforms/developer-platforms-and-apis); AI labeling and provenance are AI on User-Generated Platforms.
+This chapter covers what people search for on community platforms, the indexing pipeline and its consistency with moderation, ranking signals, typeahead and tags, visual search, machine translation of user content, AI answers with citations, safety interventions in search, and query logs as personal data. It adds translations, query logs, media embeddings and AI answer records to [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model). Search over chat messages and direct messages is [Real-Time Chat](/books/user-generated-platforms/real-time-chat#chat-search); search engines and AI companies licensing the corpus are [Developer Platforms, APIs & Data Access](/books/user-generated-platforms/developer-platforms-and-apis#data-licensing-as-an-engineering-obligation); AI labeling and provenance are [AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms#labeling-ai-generated-content).
 
 ## How the Platforms Do It
 
@@ -43,13 +43,13 @@ What makes community search different is that **deletion latency is a safety pro
 
 Text relevance (BM25 or its successors, now usually blended with embedding similarity) gets the candidate set; community signals order it:
 
-- **Community judgment:** the item's confidence score and vote count ([Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting)), with the same manipulation discounts.
+- **Community judgment:** the item's confidence score and vote count ([Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting#ranking-formulas)), with the same manipulation discounts.
 - **Answer-ness:** for question-shaped queries, threads with accepted or highly voted answers beat threads with only the question.
 - **Freshness by intent:** a query about a news event wants hours-old posts; a query about fixing a dishwasher wants the best thread regardless of age. Intent classification picks the decay.
 - **Community quality and fit:** results from active, well-moderated communities on the query's topic beat stray mentions elsewhere.
 - **Author standing:** accounts with penalties or spam signals are demoted or excluded.
 
-Spam is written for search. Keyword-stuffed posts, link farms that seed product names into old threads, and accounts that comment the same affiliate link under every popular question are search problems first. Search ranking reads the spam signals of Spam, Bots & Inauthentic Behavior and the community's own removals, and an item removed as spam anywhere teaches the ranker about the account and the link everywhere.
+Spam is written for search. Keyword-stuffed posts, link farms that seed product names into old threads, and accounts that comment the same affiliate link under every popular question are search problems first. Search ranking reads the spam signals of [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#how-to-build-it) and the community's own removals, and an item removed as spam anywhere teaches the ranker about the account and the link everywhere.
 
 **Typeahead** for communities and people is its own index: prefix matching on names and handles (the normalized handle keys from [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#accounts-and-handles)), ranked by size and activity, filtered for visibility and blocks, and conservative about minors (accounts that are private or not discoverable never appear). **Tags and hashtags** are user-supplied facets: normalize them like handles, cap how many an item carries, and moderate the tag itself, because a tag can become the meeting point for content the platform doesn't allow.
 
@@ -62,7 +62,7 @@ Visual search answers "more like this" and "what is this" for images. Pinterest'
 3. **Approximate nearest-neighbor search** over billions of vectors returns candidates in milliseconds.
 4. **Re-ranking** blends visual similarity with engagement and text signals, and filters by visibility and safety exactly as text search does.
 
-Embeddings are per model version: a new model means re-embedding the corpus and running both indexes until the switch. They also carry safety value: an embedding near known policy-violating images is a cheap prioritization signal, though perceptual hashes for known illegal content are a separate, list-matched system owned by Child Safety: Detection & Reporting, never a search feature.
+Embeddings are per model version: a new model means re-embedding the corpus and running both indexes until the switch. They also carry safety value: an embedding near known policy-violating images is a cheap prioritization signal, though perceptual hashes for known illegal content are a separate, list-matched system owned by [Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#hash-matching), never a search feature.
 
 ## Translation
 
@@ -83,7 +83,7 @@ The design rules follow from what can go wrong:
 - **Attribution is part of the bargain.** Answers that keep readers off the threads reduce the visibility and votes that motivate the people who wrote them; the citation design (who is named, how prominent the link is) is a creator-relations decision as much as a UX one.
 - **Evaluate before and after launch** with question sets that include removed content, adversarial prompts and sensitive topics ([Evals](/docs/architecture/ai-agents#evals)).
 
-AI-generated content labels, provenance and model training on community data are AI on User-Generated Platforms' subject.
+AI-generated content labels, provenance and model training on community data are [AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms)' subject.
 
 ## Safety in Search
 
@@ -97,7 +97,7 @@ A search history says what someone worried about, wanted, or was looking for at 
 
 - **Keep raw queries briefly.** Ranking and spelling models need aggregates; raw query text tied to an account is kept for a short window, then aggregated or de-identified ([Data Retention & Deletion](/docs/architecture/data-retention#retention-windows)).
 - **Separate safety logs.** Queries that matched a safety list are counted, and their retention follows the trust and safety policy rather than the analytics one.
-- **Expect legal requests.** Search history is among the records law enforcement asks for; what exists determines what can be disclosed, which is Law Enforcement Requests & User Data's subject.
+- **Expect legal requests.** Search history is among the records law enforcement asks for; what exists determines what can be disclosed, which is [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#the-us-framework)'s subject.
 - **Export and erase.** A user's search history is part of their data export and erasure scope under GDPR ([GDPR](/docs/compliance/gdpr#data-subject-rights)).
 
 ## How to Build It

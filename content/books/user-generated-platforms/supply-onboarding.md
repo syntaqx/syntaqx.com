@@ -55,7 +55,7 @@ The host or seller verifies the way a guest does, usually with the same vendor: 
 
 ### Payout and Tax
 
-A listing that books but can't pay out is a liability waiting to happen: the platform holds guest money it can't release. Outdoorsy makes bank account and W-9 part of publishing; eBay holds payouts for an unvalidated W-9. The mechanics (TIN matching, backup withholding, the 1099-K threshold, DAC7 reporting) belong to Paying Creators & Sellers and to the Payments volume's [Tax: W-9s, TIN Matching and 1099s](/books/payments/vendor-payouts#tax-w-9s-tin-matching-and-1099s). Onboarding's job is narrower: collect them at the right gate, tie them to the payee entity rather than the profile ([One Login, Many Roles](/books/user-generated-platforms/accounts-and-identity#one-login-many-roles)), and record which law asked for each field, because INFORM, the DSA and DAC7 ask for overlapping data with different retention and use limits.
+A listing that books but can't pay out is a liability waiting to happen: the platform holds guest money it can't release. Outdoorsy makes bank account and W-9 part of publishing; eBay holds payouts for an unvalidated W-9. The mechanics (TIN matching, backup withholding, the 1099-K threshold, DAC7 reporting) belong to [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#tax-interviews-and-withholding) and to the Payments volume's [Tax: W-9s, TIN Matching and 1099s](/books/payments/vendor-payouts#tax-w-9s-tin-matching-and-1099s). Onboarding's job is narrower: collect them at the right gate, tie them to the payee entity rather than the profile ([One Login, Many Roles](/books/user-generated-platforms/accounts-and-identity#one-login-many-roles)), and record which law asked for each field, because INFORM, the DSA and DAC7 ask for overlapping data with different retention and use limits.
 
 ## Private Individuals and Traders
 
@@ -110,7 +110,7 @@ Article 29 exempts platforms that are micro or small enterprises from these arti
 
 DAC7 (Council Directive (EU) 2021/514) makes platform operators report sellers of four activities to tax authorities each year: rental of immovable property, personal services, sale of goods and rental of means of transport. The Dutch tax authority's guidance lists what must be collected: name, primary address, date of birth for individuals, VAT number, financial account identifier, tax identification number and its issuing member state, business registration number, any EU permanent establishment, and for rented property its address and land registration number. Excluded sellers include government entities, listed companies, sellers with more than 2,000 rentals of the same property, and goods sellers with fewer than 30 sales totalling less than €2,000 in the year; the goods exclusion doesn't apply to services or vehicle rentals. Data is collected and verified by December 31 of the reporting year and reported by January 31 of the next.
 
-For onboarding, two consequences: the TIN and date of birth become required fields for EU sellers once they're likely to exceed the exclusion, and an RV or car host in the EU is reportable from the first rental, because the small-seller exclusion covers only goods. The filing, the seller notice and the US equivalents belong to Paying Creators & Sellers.
+For onboarding, two consequences: the TIN and date of birth become required fields for EU sellers once they're likely to exceed the exclusion, and an RV or car host in the EU is reportable from the first rental, because the small-seller exclusion covers only goods. The filing, the seller notice and the US equivalents belong to [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#dac7-and-uk-platform-reporting).
 
 ## Asset Eligibility
 
@@ -160,7 +160,7 @@ Onboarding isn't a one-time event. The records that need re-checking, and their 
 - **Payout account:** on change, with a hold on the next payout and notice to the old contact ([Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account)).
 - **Trader data:** INFORM's annual certification; DSA re-verification on reason to doubt.
 - **Assets:** inspection horizons, registration expiry, recall feed, value updates when the plan's caps depend on value.
-- **Thresholds:** the INFORM count daily, DAC7 exclusions annually, and Paying Creators & Sellers' 1099-K threshold.
+- **Thresholds:** the INFORM count daily, DAC7 exclusions annually, and the 1099-K threshold in [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#information-returns-1099-k-1099-misc-and-1042-s).
 
 The Payments volume's [Ongoing Monitoring](/books/payments/merchant-onboarding#ongoing-monitoring) covers the payee side. Supply quality is also a business choice beyond compliance: platforms remove listings that underperform or generate claims, which [Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking) covers.
 

@@ -86,7 +86,7 @@ The guest's remedy for a host cancellation is a refund plus, increasingly, a rep
 
 ### When the Platform Cancels Everything
 
-A marketplace that stops operating cancels its own bookings. Getaround announced on February 11, 2025 an orderly wind-down of its US business (car sharing and HyreCar), citing an ongoing lack of liquidity, while its European business continued. Every future booking becomes a platform-initiated cancellation with a full refund, hosts lose income on bookings they relied on, and coverage questions arise for trips in progress. Platform-initiated cancellation is a third initiator beside guest and host, with its own refund rule (always full) and no penalty on either side; Migrations, Purges & Shutdowns covers ending a service.
+A marketplace that stops operating cancels its own bookings. Getaround announced on February 11, 2025 an orderly wind-down of its US business (car sharing and HyreCar), citing an ongoing lack of liquidity, while its European business continued. Every future booking becomes a platform-initiated cancellation with a full refund, hosts lose income on bookings they relied on, and coverage questions arise for trips in progress. Platform-initiated cancellation is a third initiator beside guest and host, with its own refund rule (always full) and no penalty on either side; [Migrations, Purges & Shutdowns](/books/user-generated-platforms/migrations-and-shutdowns#ending-a-feature-or-a-service) covers ending a service.
 
 ## Guarantee Programs
 
@@ -125,7 +125,7 @@ A buyer can ask the platform for a refund and also ask their card issuer for a c
 
 ### Support and Safety Lines
 
-Cases arrive through support as often as through forms. Rental marketplaces run around-the-clock support because trips happen at night and on weekends: Outdoorsy offers support by phone, email and chat at all hours; Airbnb runs an urgent safety line. A safety report (an injury, a threat, an unsafe vehicle) is not a refund case; it routes to a trust and safety queue with a short response target and may involve emergency services and law enforcement (Law Enforcement Requests & User Data). Support actions on bookings and money go through logged, reasoned access ([Support Access & Internal Tools](/docs/security/support-access)).
+Cases arrive through support as often as through forms. Rental marketplaces run around-the-clock support because trips happen at night and on weekends: Outdoorsy offers support by phone, email and chat at all hours; Airbnb runs an urgent safety line. A safety report (an injury, a threat, an unsafe vehicle) is not a refund case; it routes to a trust and safety queue with a short response target and may involve emergency services and law enforcement ([Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#the-us-framework)). Support actions on bookings and money go through logged, reasoned access ([Support Access & Internal Tools](/docs/security/support-access)).
 
 ## Arbitration
 
@@ -133,7 +133,7 @@ Marketplace terms usually send disputes between the user and the platform to ind
 
 Marketplaces are a target because their users are many and their fees are uniform. A law firm has advertised individual arbitration claims against Outdoorsy over drip pricing (an advertisement for claimants, not a filed case or finding; [Pricing, Fees & All-In Prices](/books/user-generated-platforms/pricing-and-fees) covers the pricing law). For the system, two things follow: **the terms version each user accepted, and when,** decides which arbitration agreement applies, so acceptance records are evidence ([Re-acceptance on Change](/docs/compliance/electronic-signatures#re-acceptance-on-change)); and **demands are cases too,** tracked with the user, the claim, the representation and the deadlines, so a coordinated wave can be recognized and its exposure counted.
 
-Disputes about moderation decisions in the EU (the DSA's out-of-court settlement bodies) are Regulators & Enforcement's.
+Disputes about moderation decisions in the EU (the DSA's out-of-court settlement bodies) belong to [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#out-of-court-dispute-settlement).
 
 ## How to Build It
 

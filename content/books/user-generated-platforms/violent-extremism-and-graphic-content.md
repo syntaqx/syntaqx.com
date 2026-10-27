@@ -133,7 +133,7 @@ What the Regulation means for the build:
 - **Suppress the uploader notice** when the order carries a non-disclosure decision, until it lapses.
 - **Count from day one:** every Art. 7 figure (orders, items, failures with reasons, complaints, reinstatements) is a query over notices, decisions and appeals, published before 1 March.
 
-**The UK and Australia** add less that is terrorism-specific. In the UK, Ofcom's June 2025 consultation proposed that services use hash matching to detect terrorism content, have crisis response protocols for spikes in illegal content, and avoid recommending material with indicators of illegality until reviewed; as of October 2026 Ofcom said it would publish its decisions on these Additional Safety Measures before the end of the year. In Australia, eSafety's transparency notices under the Basic Online Safety Expectations include a series on terrorist and violent extremist material and activity, with published summaries of providers' responses; the notices, their penalties and the enforcement record are Regulators & Enforcement's.
+**The UK and Australia** add less that is terrorism-specific. In the UK, Ofcom's June 2025 consultation proposed that services use hash matching to detect terrorism content, have crisis response protocols for spikes in illegal content, and avoid recommending material with indicators of illegality until reviewed; as of October 2026 Ofcom said it would publish its decisions on these Additional Safety Measures before the end of the year. In Australia, eSafety's transparency notices under the Basic Online Safety Expectations include a series on terrorist and violent extremist material and activity, with published summaries of providers' responses; the notices, their penalties and the enforcement record are [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#australia-s-esafety-regime)'s.
 
 ## Livestreams
 
@@ -150,7 +150,7 @@ What platforms and regulators have converged on:
 - **Hash the recording immediately.** The moment a stream is confirmed as an attack, hash the recording and its key frames, block re-uploads, and contribute to the shared database or an incident activation.
 - **Delays for the riskiest broadcasters.** The NY Attorney General recommended tape delays; a short delay for new or low-standing accounts gives the classifiers and reviewers a head start without delaying everyone.
 
-The engineering of ingest, latency and recordings is in the Live Streaming chapters; this chapter owns what happens when a stream is the incident.
+The engineering of ingest, latency and recordings is in [Live Streaming: Ingest & Transcoding](/books/user-generated-platforms/live-ingest-and-transcoding) and [Live Latency, Playback & VODs](/books/user-generated-platforms/live-latency-and-vods#from-live-to-vod); this chapter owns what happens when a stream is the incident.
 
 ## Graphic Content
 
@@ -177,7 +177,7 @@ Three design rules make them work:
 
 - **They're decisions, not author settings.** An author can mark their own post sensitive; a reviewer applying a warning screen or an age restriction is a moderation decision, recorded with category, policy version and reason, and appealable like any other ([Appeals](/docs/security/trust-and-safety#appeals)). It's also a restriction the user is told about, with the reasons a statement of reasons requires in the EU ([Notices and Statements of Reasons](/docs/security/trust-and-safety#notices-and-statements-of-reasons)).
 - **Gates apply everywhere the item renders:** feeds, search results, embeds, link previews, notifications and the API. An interstitial that the embed player ignores is no interstitial.
-- **Age gates need an age.** An age restriction is only as good as the platform's knowledge of who is 18, and the signed-out viewer is treated as a minor. Age assurance methods and the law around them are Minors, Age Assurance & US State Law.
+- **Age gates need an age.** An age restriction is only as good as the platform's knowledge of who is 18, and the signed-out viewer is treated as a minor. Age assurance methods and the law around them are [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#age-assurance-on-a-general-audience-platform).
 
 ## Newsworthiness
 
@@ -261,7 +261,7 @@ Notes on the sketch:
 - **Every incident:** source, activation and close times, bands in force, hashes consumed and contributed, cases, removals and the debrief.
 - **Every hash-list action:** which list version matched, with what labels and distance, and what the platform did; and every hash the platform contributed, tied to the decision that confirmed it.
 - **Every gate and allowance:** who applied a warning screen or age restriction, under which rule, and every newsworthiness allowance with both sides of the balance and its approver.
-- **The annual TCO transparency report** and the platform's own transparency counts as queries over these records ([Transparency Reporting](/docs/security/trust-and-safety#transparency-reporting)); Transparency Reporting covers the formats.
+- **The annual TCO transparency report** and the platform's own transparency counts as queries over these records ([Transparency Reporting](/docs/security/trust-and-safety#transparency-reporting)); [Transparency Reporting](/books/user-generated-platforms/transparency-reporting) covers the formats.
 
 ## What This Means for the System You Build
 

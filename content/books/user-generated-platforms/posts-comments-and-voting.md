@@ -11,7 +11,7 @@ Posts and comments are the inventory of a community platform, and votes are how 
 
 They're also where manipulation pays. A vote is cheap to cast and valuable in aggregate, so vote rings, purchased upvotes, brigades from other communities and sockpuppet accounts follow any platform where votes move attention. The ranking design and the defenses have to be built together.
 
-This chapter covers post types and reposts, threading and its storage, the content state machine with removal versus deletion, edits, labels for mature content, votes and karma, the published ranking formulas (hot, confidence, controversy), viral galleries, and vote manipulation. It extends `content_items` and `content_revisions` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model) and adds votes, scores and labels. Feeds built from these scores are [Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations); account farms and coordinated campaigns are Spam, Bots & Inauthentic Behavior; image processing for media posts is Images at Scale.
+This chapter covers post types and reposts, threading and its storage, the content state machine with removal versus deletion, edits, labels for mature content, votes and karma, the published ranking formulas (hot, confidence, controversy), viral galleries, and vote manipulation. It extends `content_items` and `content_revisions` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model) and adds votes, scores and labels. Feeds built from these scores are [Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations); account farms and coordinated campaigns are [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#account-farms); image processing for media posts is [Images at Scale](/books/user-generated-platforms/images-at-scale).
 
 ## How the Platforms Do It
 
@@ -23,7 +23,7 @@ This chapter covers post types and reposts, threading and its storage, the conte
 | **YouTube** | Videos, Shorts, community posts | Two-level comments | Likes and dislikes, with dislike counts private since November 2021 | Recommendation-driven |
 | **Bluesky, Threads, X** | Short posts with media, quotes and reposts | Reply threads | Likes, reposts, quotes | Following and algorithmic feeds |
 
-Two families emerge. **Forums vote:** Reddit and Imgur use up and down votes as a ranking signal inside a community or gallery, and the score is visible. **Social feeds react:** likes, reposts and quotes are signals for a personalized feed, and the count is social proof more than a rank. The data model below supports both; the ranking chapter after this one decides how much each signal matters.
+Two families emerge. **Forums vote:** Reddit and Imgur use up and down votes as a ranking signal inside a community or gallery, and the score is visible. **Social feeds react:** likes, reposts and quotes are signals for a personalized feed, and the count is social proof more than a rank. The data model below supports both; the next chapter, [Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations#what-the-feed-optimizes), decides how much each signal matters.
 
 ## Post Types
 
@@ -31,9 +31,9 @@ Every post type is a content item of kind `post` (or `media_post` when the media
 
 - **Text** posts carry a title and a body in the revision.
 - **Link** posts carry a URL, which brings link previews (a fetch the server makes on the user's behalf, with the [server-side request forgery](/docs/security/api-security#api7-2023-server-side-request-forgery) risk any URL fetcher has), domain-level spam rules, and copyright and malware questions about the target.
-- **Image, gallery and video** posts carry media assets through `content_media`; one asset can sit in several posts, and the asset's pipeline (scanning, variants, GIF to video) is the Media part's.
+- **Image, gallery and video** posts carry media assets through `content_media`; one asset can sit in several posts, and the asset's pipeline (scanning, variants, GIF to video) is the Media part's ([The Upload Path](/books/user-generated-platforms/upload-path#scanning-before-publish), [Images at Scale](/books/user-generated-platforms/images-at-scale#gif-to-video)).
 - **Polls** carry options and a closing time; each poll vote is one per account, kept apart from the item's up and down votes.
-- **Crossposts, reblogs, reposts and quotes** point at another item. A crosspost or plain repost republishes the original into a new place; a reblog or quote adds the reposter's own text. Tumblr built its distribution on reblog chains, where each reblog can add commentary on top of the chain before it; Threads represents quote posts toward the fediverse with FEP-e232 object links and Misskey's `_misskey_quote` property, because ActivityPub has no formal quote-post specification (Federation & Open Protocols).
+- **Crossposts, reblogs, reposts and quotes** point at another item. A crosspost or plain repost republishes the original into a new place; a reblog or quote adds the reposter's own text. Tumblr built its distribution on reblog chains, where each reblog can add commentary on top of the chain before it; Threads represents quote posts toward the fediverse with FEP-e232 object links and Misskey's `_misskey_quote` property, because ActivityPub has no formal quote-post specification ([Federation & Open Protocols](/books/user-generated-platforms/federation#large-platforms-joining)).
 
 The repost rule that matters is **the original controls the copy.** When the original is removed or deleted, every repost and quote that embeds it must stop showing its content, whether it was reposted once or ten thousand times. Store the reference, never a copy of the original's text, and render the embedded post at read time through the same visibility checks as the original.
 
@@ -54,14 +54,14 @@ My default is adjacency plus a materialized path: the parent for integrity, the 
 
 The core model's content states are the industry's vocabulary: `draft`, `pending_review`, `published`, `hidden`, `removed`, `deleted`. On a community platform the transitions mean specific things:
 
-- **Pending review** is where a filter puts an item it isn't sure about: a community's automod rule, a new account's first post in a strict community, or a classifier score in the uncertain middle. Moderators approve or remove it (Volunteer Moderation & Community Governance).
+- **Pending review** is where a filter puts an item it isn't sure about: a community's automod rule, a new account's first post in a strict community, or a classifier score in the uncertain middle. Moderators approve or remove it ([Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation#queues-logs-and-mail)).
 - **Hidden** is a temporary state: collapsed by a spam filter, blurred behind a label, or held while a report is reviewed.
 - **Removed** is a moderator's or the platform's decision. The author usually still sees their item (and a notice of why); everyone else sees a placeholder that says it was removed.
 - **Deleted** is the author's own act. The placeholder says the author deleted it.
 
 The distinction between removed and deleted is a product feature and a legal record, not a label. Readers can tell a community that removes dissent from an author who changed their mind; the author knows a moderator acted and can appeal; and the platform's transparency counts (removals by moderators versus by admins) are queries over these states. Reddit's report for the second half of 2025 counts 2,210,675,258 posts and comments created and 154,198,211 removed, 52.7% by moderators and 44.7% by admins.
 
-Both are **tombstones, not holes.** A removed or deleted comment keeps its place in the tree so its replies still have a parent and the thread still reads; its text is cleared from what's served while the revisions stay as evidence for the retention period the [Data Retention & Deletion](/docs/architecture/data-retention#soft-vs-hard-delete) doc and any legal hold allow ([Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#deletion-claims-and-legal-holds)). Purges that remove content in bulk are Migrations, Purges & Shutdowns.
+Both are **tombstones, not holes.** A removed or deleted comment keeps its place in the tree so its replies still have a parent and the thread still reads; its text is cleared from what's served while the revisions stay as evidence for the retention period the [Data Retention & Deletion](/docs/architecture/data-retention#soft-vs-hard-delete) doc and any legal hold allow ([Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#deletion-claims-and-legal-holds)). Purges that remove content in bulk are [Migrations, Purges & Shutdowns](/books/user-generated-platforms/migrations-and-shutdowns#policy-driven-purges).
 
 **Edits are revisions.** An edit adds a `content_revisions` row and moves the item's pointer; reports and decisions keep pointing at the revision they judged, so an author can't edit a reported post into innocence before a moderator looks. Showing that an item was edited (and, on some platforms, its history) is a trust feature; a short grace period after posting during which edits don't mark the item is common.
 
@@ -74,7 +74,7 @@ A label says what a piece of content contains so readers and the platform can tr
 - **The author.** Tumblr's community labels, introduced in September 2022, let users tag their own posts for drug and alcohol addiction, violence and sexual content; readers choose to see labeled posts, see them behind a click-to-view, or block them; users under 18 can't see labeled content at all, and labeled posts can't be monetized through Tumblr's paid products. In the AT Protocol a record can carry self-labels, with the author's repository as the source and the record's version as the subject.
 - **Moderators,** applying a label when the author didn't.
 - **The platform,** from classifiers or review.
-- **Third-party labelers,** on Bluesky, which [Federation & Open Protocols](/books/user-generated-platforms/federation) covers.
+- **Third-party labelers,** on Bluesky, which [Federation & Open Protocols](/books/user-generated-platforms/federation#labels-and-stackable-moderation) covers.
 
 Labels sit beside the item's `content_rating` from the core model: the rating is the platform's summary for gating (general, mature, adult), and labels are the specific reasons with their sources. A community's rating sets a floor; an item can be rated higher than its community but never lower.
 
@@ -87,7 +87,7 @@ A vote is one account's judgment of one item: up, down, or withdrawn. The design
 - **Anonymity.** Reddit's votes are anonymous to other users. The platform still knows who voted, which it needs to discount manipulation, and which is personal data (a vote on a post in a health or political community says something about the voter). Reddit has also used vote records for safety: its transparency report for the second half of 2025 describes a feature that warns users who upvoted content later found to violate its violence policy, with warnings dropping off quickly after an initial spike.
 - **Exact or approximate counts.** An exact, instantly updated score lets a manipulator measure each fake vote's effect. Showing a rounded or slightly delayed count, and computing the ranking from a score that discounts suspect votes, makes the feedback loop slower without changing what honest users see.
 
-**Karma** is an account's accumulated score, a reputation summary that communities use as a gate: a minimum karma or account age to post, comment or message is one of the most common automod rules, because farmed accounts are young and low-karma. Some platforms have also used it as a payout input. A number that gates access or pays money will be farmed, so treat karma as derived from votes that survived manipulation checks, recompute it when votes are discounted, and never let it be the only gate. Payout programs are Creator Monetization's.
+**Karma** is an account's accumulated score, a reputation summary that communities use as a gate: a minimum karma or account age to post, comment or message is one of the most common automod rules, because farmed accounts are young and low-karma. Some platforms have also used it as a payout input. A number that gates access or pays money will be farmed, so treat karma as derived from votes that survived manipulation checks, recompute it when votes are discounted, and never let it be the only gate. Payout programs are [Creator Monetization](/books/user-generated-platforms/creator-monetization#the-spread)'s.
 
 ## Ranking Formulas
 
@@ -142,11 +142,11 @@ Manipulation takes four common forms: **self-voting with alternate accounts** (s
 
 - **Make the vote cheap to discount.** Votes are rows with the account, item, value and time, so a later finding can zero a set of votes and recompute scores and karma. A vote ring found tomorrow should be undone tomorrow, not live forever in a counter.
 - **Weight by trust.** New, unverified or low-standing accounts' votes can count less (or not at all) toward ranking while still counting for the voter's own feed, which costs honest new users nothing visible.
-- **Watch the graph, not the vote.** One vote is never suspicious; the same accounts voting on the same author's posts within minutes of posting, votes arriving from a link posted elsewhere, and accounts that only ever vote are. Detecting them is the linked-accounts and coordination work of Spam, Bots & Inauthentic Behavior, fed by `votes` and the referrer of each vote's session.
+- **Watch the graph, not the vote.** One vote is never suspicious; the same accounts voting on the same author's posts within minutes of posting, votes arriving from a link posted elsewhere, and accounts that only ever vote are. Detecting them is the linked-accounts and coordination work of [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#vote-rings-and-manipulation), fed by `votes` and the referrer of each vote's session.
 - **Enforce on accounts.** Reddit lists persistent vote manipulation among the reasons for automated permanent bans in its transparency report for the second half of 2025.
 - **Reduce the payoff.** Rounded counts, archived old threads, karma gates on posting and slower graduation from rising to front page all shrink what a fake vote buys.
 
-Brigading also has a community-governance answer: communities that link to others' threads can be required to use links that don't allow voting or commenting from the referral, and the moderators of the target community need tools to see that a surge came from elsewhere ([Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation)). Crowd-sourced context on misleading posts (Community Notes and its bridging algorithm) is covered in Spam, Bots & Inauthentic Behavior.
+Brigading also has a community-governance answer: communities that link to others' threads can be required to use links that don't allow voting or commenting from the referral, and the moderators of the target community need tools to see that a surge came from elsewhere ([Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation)). Crowd-sourced context on misleading posts (Community Notes and its bridging algorithm) is covered in [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#crowd-context).
 
 ## How to Build It
 

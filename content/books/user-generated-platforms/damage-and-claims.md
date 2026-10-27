@@ -31,7 +31,7 @@ The patterns:
 
 A handoff is the moment control of the asset changes, and it does three jobs: it proves the asset's condition, it records the readings that price the trip, and it marks when the booking's coverage period starts or ends. In-person handoffs, remote handoffs and delivery all produce the same record:
 
-- **In person.** Host and guest walk the vehicle together with the app open, both confirm the photos and readings, and the guest signs. Outdoorsy's digital key exchange is this flow, and completing it on time also releases the host's payout (Paying Creators & Sellers covers the trigger).
+- **In person.** Host and guest walk the vehicle together with the app open, both confirm the photos and readings, and the guest signs. Outdoorsy's digital key exchange is this flow, and completing it on time also releases the host's payout ([Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#payout-triggers) covers the trigger).
 - **Remote.** The guest unlocks a car with the app (Turo Go) or collects keys from a lockbox, and takes the photos alone. The evidence rules carry more weight because nobody else was there.
 - **Delivery.** The host brings the vehicle to the guest, often with live location shared, and for a stationary RV sets it up on site. The handoff happens at the delivery location, and a stationary rental that is later moved changes what's covered ([Deposits, Protection Plans & Insurance](/books/user-generated-platforms/deposits-and-protection)).
 

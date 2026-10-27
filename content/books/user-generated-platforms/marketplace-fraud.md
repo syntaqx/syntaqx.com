@@ -65,7 +65,7 @@ Airbnb describes an identity graph of about 7 billion nodes and 11 billion edges
 - **Rings:** many accounts sharing few devices or cards, booking or listing in a pattern.
 - **Payout concentration:** many hosts paid to one bank account.
 
-Link with evidence and review the uncertain middle; never merge two people because they share a household router ([Review Bands](/docs/architecture/record-linkage#review-bands); [Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible)). The account link records themselves are owned by Spam, Bots & Inauthentic Behavior, which covers detection across the platform; this chapter reads them.
+Link with evidence and review the uncertain middle; never merge two people because they share a household router ([Review Bands](/docs/architecture/record-linkage#review-bands); [Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible)). The account link records themselves are owned by [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#how-to-build-it), which covers detection across the platform; this chapter reads them.
 
 ## Takeover of Hosts and Sellers
 
@@ -86,7 +86,7 @@ The build:
 
 - **Duplicate listing detection.** Perceptual hashes of listing photos, normalized addresses and VINs, and text similarity find the same property or vehicle under two hosts ([Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking)); a match opens an investigation, and a VIN already active under another host is refused outright ([Supply Onboarding & Verification](/books/user-generated-platforms/supply-onboarding)).
 - **Message detection.** Payment requests, external links and contact details in messages are detected and blocked or warned on ([Messaging, Reviews & Reputation](/books/user-generated-platforms/messaging-and-reviews)); a host whose messages trigger payment-request detection is a fraud signal, not just a leakage one.
-- **Lookalike domains.** Fake checkout sites imitate the platform's domain; monitoring newly registered lookalikes and reporting them to registrars and hosts is part of the program (Abuse Desks for Hosts & Registrars covers the other side).
+- **Lookalike domains.** Fake checkout sites imitate the platform's domain; monitoring newly registered lookalikes and reporting them to registrars and hosts is part of the program ([Abuse Desks for Hosts & Registrars](/books/user-generated-platforms/abuse-desks#phishing-and-malware) covers the other side).
 - **New host, high value, far away.** A new account listing a high-value property in a market it has no history in, priced well below comparable listings, is the classic fake-listing profile; it can publish, but its first bookings are reviewed and its payouts held ([Payout Schedules, Holds and Reserves](/books/payments/payouts-and-settlement#payout-schedules-holds-and-reserves)).
 - **Report outcomes feed the score.** Every confirmed scam report becomes a label for the listing, the account and every linked account.
 
@@ -97,7 +97,7 @@ Goods marketplaces add fraud shaped by shipping:
 - **Counterfeits.** eBay's Authenticity Guarantee routes luxury goods and collectibles through an authenticator before they reach the buyer, turning a dispute into a pre-delivery check.
 - **Item not received and not-as-described abuse.** Buyers claim non-delivery of delivered items or return a different item; sellers ship empty boxes with valid tracking. eBay requires signature confirmation as delivery proof for items of $750 or more; the guarantee case process ([Cancellations, Guarantees & Disputes](/books/user-generated-platforms/cancellations-and-disputes)) and the buyer's and seller's case history are the defense.
 - **Prohibited items.** eBay's 10-K describes a 2024 settlement under the Controlled Substances Act of $59 million with enhanced listing monitoring; listing monitoring for prohibited and regulated goods is a compliance program, with the categories, the detection and the outcomes recorded.
-- **Holds on new sellers.** Etsy describes disbursement holds against fraud; a new seller's early payouts wait until delivery is confirmed (Paying Creators & Sellers covers the mechanics).
+- **Holds on new sellers.** Etsy describes disbursement holds against fraud; a new seller's early payouts wait until delivery is confirmed ([Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#risk-holds-negative-balances-and-clawbacks) covers the mechanics).
 
 ## Host and Seller Fraud
 
@@ -114,7 +114,7 @@ US persons, including US companies and their foreign branches, are generally pro
 
 Background checks are narrower: Airbnb runs them on certain users in the US and India. They're consumer reports in the US, with notice, consent and adverse action duties when used to deny someone ([Applications & Screening](/books/property-tech/applications-and-screening) covers the FCRA mechanics in another context), so they belong on the few decisions that need them.
 
-Vehicles add law enforcement. Rented vehicles have been used in crimes, and a car sharing platform receives warrants, subpoenas and emergency requests for trip and identity data; Law Enforcement Requests & User Data owns the process.
+Vehicles add law enforcement. Rented vehicles have been used in crimes, and a car sharing platform receives warrants, subpoenas and emergency requests for trip and identity data; [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#the-us-framework) owns the process.
 
 ## How to Build It
 
@@ -208,7 +208,7 @@ Design decisions behind it:
 - **Listing fraud is an investigation linked to a case,** with the matched listing, so duplicates, hijacks and prohibited items run through the same moderation pipeline as any content.
 - **Diversion reports keep the evidence:** the message, the method, the lookalike URL and the reported loss, so they feed takedowns, labels and linked-account review.
 - **Sanctions screening is per trigger and list version,** reviewed before any confirmed match, with the blocking report deadline stored.
-- **Account links are read, not owned.** The edges between accounts live in the table Spam, Bots & Inauthentic Behavior defines; risk features read them, and penalties on linked accounts are separate decisions.
+- **Account links are read, not owned.** The edges between accounts live in the table [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#how-to-build-it) defines; risk features read them, and penalties on linked accounts are separate decisions.
 - **Events:** `booking.risk_scored`, `booking.restricted`, `listing.investigation_opened`, `listing.investigation_confirmed`, `sanctions.potential_match` and `scam.reported` go to moderation queues, payouts (holds) and the feature store.
 
 ## Auditing

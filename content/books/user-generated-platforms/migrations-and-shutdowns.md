@@ -11,7 +11,7 @@ Everything a user-generated platform stores, it stores on someone else's behalf,
 
 These events are rare for any one platform and routine across the industry: Tumblr's 2018 adult content ban, Flickr's 2018 cap on free accounts, Imgur's 2023 purge of anonymous uploads and explicit content, Google's 2023 inactive account policy, Twitch's 2025 storage cap and its 2024 exit from Korea, Imgur's 2025 exit from the UK, Google+'s 2019 shutdown. They share a shape: an announcement with a date, a way for users to save what they want, a bulk change run in batches, a tombstone for what's gone, exceptions for what must be kept, and broken links across the web afterwards.
 
-This chapter covers policy-driven purges, storage caps, link rot and what a removed URL should serve, country withdrawals as an operation, data exports and portability, and ending a feature or a service. The decision to block a country is [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#geoblocking-withholding-and-withdrawal)'s, and its `geo_restrictions` table holds it; storage economics and dedup are Storage, Dedup & Delivery Economics'; generic migration technique is the playbook's [Replacing a System](/docs/architecture/replacing-systems) and retention is [Data Retention & Deletion](/docs/architecture/data-retention). The chapter extends `content_items` and `media_assets` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model) with purge policies and runs, tombstones, exports and sunsets.
+This chapter covers policy-driven purges, storage caps, link rot and what a removed URL should serve, country withdrawals as an operation, data exports and portability, and ending a feature or a service. The decision to block a country is [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#geoblocking-withholding-and-withdrawal)'s, and its `geo_restrictions` table holds it; storage economics and dedup are covered in [Storage, Dedup & Delivery Economics](/books/user-generated-platforms/storage-and-delivery); generic migration technique is the playbook's [Replacing a System](/docs/architecture/replacing-systems) and retention is [Data Retention & Deletion](/docs/architecture/data-retention). The chapter extends `content_items` and `media_assets` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model) with purge policies and runs, tombstones, exports and sunsets.
 
 ## How the Platforms Do It
 
@@ -38,7 +38,7 @@ A purge is a bulk moderation or retention decision applied to a population defin
 4. **Move through intermediate states.** Restrict or hide first, delete later: a private or hidden state lets a mistake be reversed and lets owners still export. Tumblr made existing adult posts visible only to their posters rather than deleting them.
 5. **Run in batches with a kill switch.** Deletes are load ([What Breaks at Scale](/books/user-generated-platforms/platform-architecture#what-breaks-at-scale)); a purge of millions of files and rows runs as throttled [background jobs](/docs/architecture/background-jobs), ordered by the rule (Twitch deleted least-viewed first), pausable, and idempotent.
 6. **Leave a tombstone** for every removed item (below), and remove derived copies: search indexes, feed caches, CDN caches, thumbnails, AI answer indexes and licensed exports.
-7. **Report what happened:** counts deleted, kept under holds, restored after mistakes; and for policy removals, the moderation decisions that the transparency report counts ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting)).
+7. **Report what happened:** counts deleted, kept under holds, restored after mistakes; and for policy removals, the moderation decisions that the transparency report counts ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting#making-the-report-a-query)).
 
 Automated classification at purge scale makes mistakes at purge scale. Tumblr enforced its 2018 ban with automated flagging of posts. A purge driven by a classifier needs the error budget and appeal path of any automated action ([AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms#ai-moderation-and-error-budgets)), sized for the burst.
 
@@ -82,7 +82,7 @@ The operation:
 - **Decide the scope** as a `geo_restrictions` row with scope `service`: who counts as being in the country (network location, account country, both), and whether accounts registered there are closed, frozen or left reachable from abroad.
 - **Keep the rights path open.** Data subjects in the country still have access, portability and erasure rights; an exit page that offers the export and deletion forms is the minimum.
 - **Settle money.** Subscriptions refunded or cancelled, creator and seller balances paid out, open bookings cancelled under policy ([Payouts & Settlement](/books/payments/payouts-and-settlement)).
-- **Mind the embeds and APIs.** Blocking the web app isn't blocking the media CDN, the API, the oEmbed endpoint or federation; each must apply the restriction, or the block is the leaky geoblock Ofcom fined a forum for.
+- **Mind the embeds and APIs.** Blocking the web app isn't blocking the media CDN, the API, the oEmbed endpoint or federation; each must apply the restriction, or the block is the leaky geoblock Ofcom fined a forum for ([Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#the-uk-online-safety-act)).
 - **Keep the records.** Past processing remains enforceable; the evidence of what was done and when stays.
 
 ## Exports and Portability
@@ -108,11 +108,11 @@ A shutdown is a sequence of states with dates, and users should be able to see w
 5. **Delete.** The erasure job runs over everything except records under holds or retention rules, and reports what it kept ([Erasure vs Append-Only Records](/docs/architecture/data-retention#erasure-vs-append-only-records)).
 6. **Tombstone and redirect.** URLs return 410 with a pointer to the announcement, or redirect to an archive if one exists.
 
-For a feature inside a living platform (a retired media type, an API version, a monetization program), the same sequence applies at smaller scale, and the playbook's [Keep the Old System as a Read-Only Archive](/docs/architecture/replacing-systems#keep-the-old-system-as-a-read-only-archive) and [Plan the Exit Before You Enter](/docs/architecture/replacing-systems#plan-the-exit-before-you-enter) cover the migration side. Third-party clients and integrations break when an API they depend on changes terms or shuts down; that history is Developer Platforms, APIs & Data Access's.
+For a feature inside a living platform (a retired media type, an API version, a monetization program), the same sequence applies at smaller scale, and the playbook's [Keep the Old System as a Read-Only Archive](/docs/architecture/replacing-systems#keep-the-old-system-as-a-read-only-archive) and [Plan the Exit Before You Enter](/docs/architecture/replacing-systems#plan-the-exit-before-you-enter) cover the migration side. Third-party clients and integrations break when an API they depend on changes terms or shuts down; that history is covered in [Developer Platforms, APIs & Data Access](/books/user-generated-platforms/developer-platforms-and-apis#api-pricing-what-changed-and-why).
 
 ## How to Build It
 
-The chapter adds purge policies and their runs, tombstones, exports and sunsets. Country withdrawals use `geo_restrictions` from [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#how-to-build-it).
+The chapter adds purge policies and their runs, tombstones, exports and sunsets. Standing storage rules (caps, idle and anonymous-upload purges) and the per-asset purge log are [Storage, Dedup & Delivery Economics](/books/user-generated-platforms/storage-and-delivery#how-to-build-it)' `media_retention_rules` and `media_purges`; a purge policy here is the announced, one-time event (a content policy change, a new cap) that may create such a rule and whose file removals land in that log. Country withdrawals use `geo_restrictions` from [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#how-to-build-it).
 
 ```sql
 CREATE TABLE purge_policies (            -- a bulk removal rule, announced and dated
@@ -128,6 +128,7 @@ CREATE TABLE purge_policies (            -- a bulk removal rule, announced and d
   restrict_at      TIMESTAMPTZ,          -- intermediate state from here
   delete_at        TIMESTAMPTZ,          -- deletion from here
   estimated_items  BIGINT,               -- counted before announcing
+  retention_rule_id UUID REFERENCES media_retention_rules (id),  -- a new standing cap, if any
   approved_by      UUID NOT NULL REFERENCES accounts (id),
   CHECK (delete_at IS NULL OR announced_at IS NULL OR delete_at > announced_at)
 );
@@ -144,6 +145,12 @@ CREATE TABLE purge_runs (                -- one batch of one policy
   items_restored   BIGINT NOT NULL DEFAULT 0,  -- reversed after review or appeal
   status           TEXT NOT NULL CHECK (status IN ('running', 'paused', 'completed', 'aborted'))
 );
+
+-- Files a bulk purge removes are Storage, Dedup & Delivery Economics' per-asset
+-- media_purges rows, pointing at the policy instead of a standing retention rule.
+ALTER TABLE media_purges
+  ADD COLUMN purge_policy_id UUID REFERENCES purge_policies (id),
+  ADD CONSTRAINT media_purges_one_source CHECK (rule_id IS NULL OR purge_policy_id IS NULL);
 
 CREATE TABLE content_tombstones (        -- what a removed item's URL answers, forever
   subject_type     TEXT NOT NULL CHECK (subject_type IN ('content_item', 'media_asset',
@@ -200,7 +207,7 @@ Notes on the sketch:
 - **A purge is a policy plus runs.** The policy carries the versioned population query, the dates and the approver; runs record what each batch selected, actioned, held and restored, so the totals are a sum and the run can stop and resume. Each item's removal is still a moderation decision or a retention action on that item, and the `media_assets` state moves to `removed` and then `purged` ([The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model)).
 - **Holds win.** The purge job skips any subject with a `legal_holds` row in force or an open case, counts it in `items_held`, and leaves it for the next run after the hold is released.
 - **Tombstones are the only thing left.** `content_tombstones` keeps the id, the coarse public reason and the status code, and points to the internal record; the serving path and the CDN read it to answer 404, 410 or 451, and nothing in it is personal data.
-- **Exports are re-authenticated and expire.** `reauthenticated_at` records the step-up ([Step-Up for Sensitive Actions](/docs/security/authentication#step-up-for-sensitive-actions)); `excluded` records what was left out (others' content, data under a nondisclosure order, as [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests) requires).
+- **Exports are re-authenticated and expire.** `reauthenticated_at` records the step-up ([Step-Up for Sensitive Actions](/docs/security/authentication#step-up-for-sensitive-actions)); `excluded` records what was left out (others' content, data under a nondisclosure order, as [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#user-notice) requires).
 - **A sunset is a state machine with dates.** Users, support and the API read its state; transitions emit events that close sign-ups, flip writes off, hide content and finally start the erasure job.
 - **Events:** `purge.announced`, `purge.run_completed`, `content.tombstoned`, `export.ready`, `sunset.state_changed` go through the outbox ([Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)) to search, feeds, the CDN purge service, notifications and licensed-data exports.
 

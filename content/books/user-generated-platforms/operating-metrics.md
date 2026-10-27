@@ -9,7 +9,7 @@ tags = ["user-generated-content", "metrics", "analytics", "trust-and-safety", "m
 
 A user-generated platform has more audiences for its numbers than most businesses. Investors read daily uniques and revenue per user in a 10-K; the European Commission designates a very large platform from its published average monthly users; regulators compare a platform's claims about its moderation with its data; creators and hosts are paid by metrics; and the operators need to know whether the supply side (posters, streamers, hosts, sellers) is growing, whether the demand side finds what it wants, whether the platform is getting safer, and what each view, upload or stream costs. The same events feed all of it, and the same words ("active," "removed," "booked") mean different things in each.
 
-This chapter covers the metrics as the platforms publish and define them: audience (daily and monthly actives, logged-in versus logged-out, revenue per user by region), engagement and creation, supply and creator health, marketplace volume and liquidity, trust and safety (prevalence, action and proactive rates, appeal overturns, time to action), and unit costs (per viewer-hour, per stored file, per moderated item). The general method (DAU, MAU and stickiness, cohorts, funnels, definitions as code, versions and frozen periods) is the playbook's: [Product Analytics](/docs/telemetry/product-analytics), [Data Pipelines & Analytics](/docs/architecture/data-pipelines#one-definition-per-metric), and the Gaming volume's [Game Metrics](/books/gaming/game-metrics). This chapter adds the industry's definitions and the tables that make them reproducible: metric definitions, a per-account activity fact, rolled-up values and prevalence samples, read by [Transparency Reporting](/books/user-generated-platforms/transparency-reporting#how-to-build-it) and the regulator responses in [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement).
+This chapter covers the metrics as the platforms publish and define them: audience (daily and monthly actives, logged-in versus logged-out, revenue per user by region), engagement and creation, supply and creator health, marketplace volume and liquidity, trust and safety (prevalence, action and proactive rates, appeal overturns, time to action), and unit costs (per viewer-hour, per stored file, per moderated item). The general method (DAU, MAU and stickiness, cohorts, funnels, definitions as code, versions and frozen periods) is the playbook's: [Product Analytics](/docs/telemetry/product-analytics), [Data Pipelines & Analytics](/docs/architecture/data-pipelines#one-definition-per-metric), and the Gaming volume's [Game Metrics](/books/gaming/game-metrics). This chapter adds the industry's definitions and the tables that make them reproducible: metric definitions, a per-account activity fact, rolled-up values and prevalence samples, read by [Transparency Reporting](/books/user-generated-platforms/transparency-reporting#how-to-build-it) and the regulator responses in [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#regulator-requests-and-their-clocks).
 
 ## How the Platforms Do It
 
@@ -30,7 +30,7 @@ The figures come from [The User-Generated Platform Business](/books/user-generat
 
 The playbook covers the arithmetic of DAU, MAU and stickiness and why "active" needs a definition ([Active Users and Stickiness](/docs/telemetry/product-analytics#active-users-and-stickiness)); the Gaming volume covers the unit question ([The Unit: Account, Device or Profile](/books/gaming/game-metrics#the-unit-account-device-or-profile)). What user-generated platforms add:
 
-- **Logged-out users are users.** Reddit's DAUq is intended to include "both traffic from those who have logged in to a registered account as well as from those who have not logged in," and the 10-K warns that "it is more challenging to accurately count logged-out traffic" because deduplication without an account identifier is imperfect. A platform with a large logged-out audience from search needs a stable anonymous identifier, a deduplication method that's written down, and the logged-in share tracked separately, because the two audiences monetize and retain differently (Feeds & Recommendations covers the economics).
+- **Logged-out users are users.** Reddit's DAUq is intended to include "both traffic from those who have logged in to a registered account as well as from those who have not logged in," and the 10-K warns that "it is more challenging to accurately count logged-out traffic" because deduplication without an account identifier is imperfect. A platform with a large logged-out audience from search needs a stable anonymous identifier, a deduplication method that's written down, and the logged-in share tracked separately, because the two audiences monetize and retain differently ([Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations#logged-out-economics) covers the economics).
 - **Automated traffic has to be removed and the method disclosed.** Reddit lists "our ability to identify automated agents on our platform" among the things that could change its count. Bot filtering is part of the definition, versioned with it.
 - **The same number can be regulated.** Under the DSA every online platform publishes average monthly active recipients in the EU at least every six months, and the Commission designates very large platforms from it ([Very Large Online Platforms](/books/user-generated-platforms/regulators-and-enforcement#very-large-online-platforms)). An investor metric and a regulatory metric computed by different teams with different definitions is a finding waiting to happen; compute both from the same activity fact with documented differences.
 - **Geography is the money dimension.** Pinterest's 2025 ARPU was $30.84 in the US and Canada and $0.83 in the rest of the world, and Reddit's ARPU is revenue in a geography divided by DAUq there, with ad revenue placed where impressions were delivered. Users counted by country, with a consistent rule for which country, is a requirement from the first day.
@@ -42,7 +42,7 @@ User-generated platforms track two funnels: people who consume, and people who c
 - **Creators as a share of actives:** accounts that posted, commented, uploaded, streamed or listed, divided by actives. Most users only read, so a small change in this share is a large change in supply.
 - **Content per creator and its concentration:** how much of the content comes from the top 1% of creators, and how much of the consumption goes to it. Concentration is a dependency risk (a creator leaving takes an audience) and a moderation risk (a few accounts produce most of the violations).
 - **Response and reach:** the share of new posts that get a reply, a vote or a view within a day. A community where new posts get no response loses its posters; this is the cold-start metric for creators, the analogue of a listing's first booking.
-- **Community health:** active communities (Reddit counts over 100,000), communities with an active moderator, and moderator actions per moderator. Reddit's 10-K discloses moderator recruitment as a risk, and banned 605,570 communities in the second half of 2025 mostly for being unmoderated or spam, so "communities without an active moderator" is an operating metric, not a curiosity (Volunteer Moderation & Community Governance).
+- **Community health:** active communities (Reddit counts over 100,000), communities with an active moderator, and moderator actions per moderator. Reddit's 10-K discloses moderator recruitment as a risk, and banned 605,570 communities in the second half of 2025 mostly for being unmoderated or spam, so "communities without an active moderator" is an operating metric, not a curiosity ([Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation#what-to-measure)).
 
 ## Supply and Creator Health
 
@@ -56,7 +56,7 @@ For creator and marketplace businesses the supply metrics are the leading indica
 | **Supply quality** | Creators in good standing; share with strikes | Listing quality scores; host cancellation rate; response rate |
 | **Eligibility** | Creators eligible for monetization; time to eligibility | Hosts and sellers verified; time from sign-up to first publish |
 
-Payout-linked metrics (watch hours toward partner thresholds, subscriber counts, a host's response rate for a status program) decide money, so they get the contract treatment in [Versions, Stamps and Frozen Periods](/docs/architecture/data-pipelines#versions-stamps-and-frozen-periods): versioned definitions, stamped outputs, frozen periods and adjustments rather than recomputation (Creator Monetization; Messaging, Reviews & Reputation).
+Payout-linked metrics (watch hours toward partner thresholds, subscriber counts, a host's response rate for a status program) decide money, so they get the contract treatment in [Versions, Stamps and Frozen Periods](/docs/architecture/data-pipelines#versions-stamps-and-frozen-periods): versioned definitions, stamped outputs, frozen periods and adjustments rather than recomputation ([Creator Monetization](/books/user-generated-platforms/creator-monetization#tiers-points-and-program-levels); [Messaging, Reviews & Reputation](/books/user-generated-platforms/messaging-and-reviews#status-programs)).
 
 ## Marketplace Volume and Liquidity
 
@@ -65,9 +65,9 @@ Marketplaces report volume and take rate: Airbnb's gross booking value and night
 Liquidity, the chance that a search turns into a transaction, isn't published by these platforms, but it's what operators run on:
 
 - **Search to booking or purchase:** searches with at least one result, searches that led to a booking request, and requests that confirmed.
-- **Acceptance and response:** share of requests accepted by hosts, median time to respond, share expired. A request-to-book marketplace with a low acceptance rate is failing its guests even if search conversion looks fine (Availability & Booking).
+- **Acceptance and response:** share of requests accepted by hosts, median time to respond, share expired. A request-to-book marketplace with a low acceptance rate is failing its guests even if search conversion looks fine ([Availability & Booking](/books/user-generated-platforms/availability-and-booking#request-to-book-and-instant-book)).
 - **Fill rate by place and date:** booked nights over available nights, by market; the supply gap where demand exceeds it.
-- **Time to first booking** for new listings, and the share that never book (Listings, Search & Ranking).
+- **Time to first booking** for new listings, and the share that never book ([Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking#cold-start-and-demand-rerouting)).
 - **Take rate decomposition:** revenue over GBV split by fee line (guest fee, host fee, protection, ads), because a change in fee model (Airbnb's move to a single host-only fee) shifts the mix without changing the total ([How the Money Is Made](/books/user-generated-platforms/platform-business#how-the-money-is-made)).
 
 ## Trust and Safety Metrics
@@ -82,7 +82,7 @@ Rules for building them:
 - **Label with the policy version.** A prevalence estimate is only comparable across periods if the labels used the same policy; store the policy version with each label.
 - **Report intervals and upper limits.** A rare category's estimate is a range; Meta reports a ceiling rather than a point.
 - **Keep reviewers blind to the action taken.** Labels on sampled views should be independent of whether the system already removed the content, or the estimate measures agreement with the system rather than harm.
-- **Measure the classifiers too.** Precision and recall per category and model version, from the same labeled samples, are what the DSA calls "indicators of the accuracy and the possible rate of error" ([AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms)). The Commission's AliExpress decision found the platform overestimated its detection system's effectiveness and underestimated reviewer workload ([Fines, Commitments and Findings](/books/user-generated-platforms/regulators-and-enforcement#fines-commitments-and-findings)); those are both metrics.
+- **Measure the classifiers too.** Precision and recall per category and model version, from the same labeled samples, are what the DSA calls "indicators of the accuracy and the possible rate of error" ([AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms#ai-moderation-and-error-budgets)). The Commission's AliExpress decision found the platform overestimated its detection system's effectiveness and underestimated reviewer workload ([Fines, Commitments and Findings](/books/user-generated-platforms/regulators-and-enforcement#fines-commitments-and-findings)); those are both metrics.
 - **Track reviewer load and exposure.** Items per reviewer per hour, queue age by priority, and exposure to the worst categories per person are capacity metrics and wellbeing metrics at once ([Moderator Wellbeing](/docs/security/trust-and-safety#moderator-wellbeing)).
 
 ## Unit Costs
@@ -97,7 +97,7 @@ The playbook says to measure cost per unit, not just in total ([Measure Cost per
 | **Per moderated item** | Share auto-actioned versus human-reviewed, review time, vendor rates | No public figure; computed from reviewer hours and vendor invoices over decisions |
 | **Per active user** | All of the above, divided by the audience metric | Twitch said network fees in Korea were about ten times most countries' and exited the country in February 2024 |
 
-Two disciplines make unit costs useful. **Allocate by community and by country,** because costs and revenue both vary by geography more than tenfold: Pinterest's ARPU differs by more than thirty times between regions, and Twitch's Korea exit was a unit cost that revenue couldn't cover. **Tie cost to the product decision that drives it:** a 720p source cap, a storage limit for free accounts, a GIF converted to video, an auto-action threshold that sends fewer items to people. Storage, Dedup & Delivery Economics and Video on Demand cover the levers.
+Two disciplines make unit costs useful. **Allocate by community and by country,** because costs and revenue both vary by geography more than tenfold: Pinterest's ARPU differs by more than thirty times between regions, and Twitch's Korea exit was a unit cost that revenue couldn't cover. **Tie cost to the product decision that drives it:** a 720p source cap, a storage limit for free accounts, a GIF converted to video, an auto-action threshold that sends fewer items to people. [Storage, Dedup & Delivery Economics](/books/user-generated-platforms/storage-and-delivery#why-platforms-cap-storage) and [Video on Demand](/books/user-generated-platforms/video-on-demand#cost-per-viewer-hour) cover the levers.
 
 ## Definitions as Code, Restatements as Rows
 
@@ -109,7 +109,7 @@ The playbook's rules ([One Definition per Metric](/docs/architecture/data-pipeli
 
 ## How to Build It
 
-The chapter adds the definitions every report reads, a per-account daily activity fact, rolled-up values, and labeled prevalence samples.
+The chapter adds the definitions every report reads, a per-account daily activity fact and rolled-up values, and extends the prevalence samples that [Moderation at Scale](/books/user-generated-platforms/moderation-at-scale#how-to-build-it) owns.
 
 ```sql
 CREATE TABLE metric_definitions (        -- one definition per metric, versioned
@@ -156,22 +156,12 @@ CREATE TABLE metric_values (             -- computed, frozen when published
   FOREIGN KEY (metric_key, metric_version) REFERENCES metric_definitions (key, version)
 );
 
-CREATE TABLE prevalence_samples (        -- one sampled view, labeled
-  id             UUID PRIMARY KEY DEFAULT uuidv7(),
-  sampled_at     TIMESTAMPTZ NOT NULL,   -- when the view happened
-  surface        TEXT NOT NULL,
-  stratum        TEXT NOT NULL,          -- the sampling stratum, with its weight
-  weight         NUMERIC NOT NULL,
-  content_item_id UUID REFERENCES content_items (id),
-  media_asset_id UUID REFERENCES media_assets (id),
-  viewer_country CHAR(2),
-  policy_version TEXT NOT NULL,
-  label          TEXT NOT NULL,          -- 'none' or a policy category
-  labeled_by     UUID NOT NULL REFERENCES accounts (id),
-  second_label   TEXT,                   -- second reviewer, where used
-  final_label    TEXT NOT NULL,          -- after tie-break
-  system_action_known BOOLEAN NOT NULL DEFAULT FALSE  -- reviewers should be blind to it
-);
+-- prevalence_samples (sampled views with stratum weights, the revision as seen, the
+-- policy version and blind labels via review assignments) belongs to Moderation at
+-- Scale; reporting adds the viewer's country and an audit of blindness.
+ALTER TABLE prevalence_samples
+  ADD COLUMN viewer_country      CHAR(2),  -- for per-country and EU-only estimates
+  ADD COLUMN system_action_known BOOLEAN NOT NULL DEFAULT FALSE;  -- labelers should be blind
 ```
 
 Notes on the sketch:
@@ -179,7 +169,7 @@ Notes on the sketch:
 - **One activity fact feeds every audience number.** DAU, DAUq-style logged-in-and-out counts, MAU of authenticated users and the DSA's EU recipients are different queries over `activity_days` (by `identity_kind`, by `country`, by window), so their differences are documented in `metric_definitions` rather than in separate pipelines. The anonymous identifier and its deduplication method are part of the definition.
 - **Bots are flagged, not deleted.** `is_automated` excludes rows under the rule in force; changing the rule is a new definition version, and the old numbers stay reproducible.
 - **Values freeze and restate.** A published DAUq, a filed EU recipients figure or a creator threshold computed for payout sets `frozen_at`; a correction is a new row that supersedes it, the property-management and gaming volumes' pattern applied here ([Operating Metrics](/books/property-tech/operating-metrics) in Property Tech).
-- **Prevalence is weighted sampling.** Each sample carries its stratum weight, so the estimate and its interval are computed from the table; labels carry the policy version, and `system_action_known` audits blindness.
+- **Prevalence is weighted sampling.** Each sample carries its stratum weight, so the estimate and its interval are computed from the table; samples carry the policy version, `viewer_country` splits the estimate by country, and `system_action_known` audits blindness. The published estimate is a `metric_values` row under the `prevalence` definition.
 - **Classifier accuracy comes from the same labels.** Joining samples to `moderation_decisions` by item gives precision and recall per category and model version, which [AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms#how-to-build-it) uses for thresholds and error budgets.
 - **Erasure and activity.** `activity_days` holds account ids; an erased account's rows are de-identified (the id replaced) rather than deleted where the metric's history is frozen, so published numbers still reconcile ([Erasure vs Append-Only Records](/docs/architecture/data-retention#erasure-vs-append-only-records)).
 - **Events:** `metric.frozen` and `metric.restated` go through the outbox to the reporting and investor relations tools.

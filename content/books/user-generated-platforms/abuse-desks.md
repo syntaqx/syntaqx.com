@@ -43,7 +43,7 @@ An abuse desk receives reports from people who aren't its customers, about custo
 
 **What isn't abuse.** A large share of what arrives is misrouted: a reporter writing to a registrar about content on another company's server, to a CDN about a site it only proxies, or to an abuse desk about a billing dispute. Cloudflare's policy is the clearest version of the answer: it "cannot remove from the Internet content that it does not host", so it forwards the complaint to the operator and the host and gives the host the origin IP. Namecheap tells reporters to escalate to the host when it's only the registrar. My rule: every report gets a disposition, and "forwarded to the party that can act" is a disposition with a timestamp and a recipient, not a silent close.
 
-Subpoenas, preservation letters and emergency requests arrive at the same desks (Newfold's form has a "Subpoena Request" category; Namecheap has a law enforcement address); they follow Law Enforcement Requests & User Data, not the abuse workflow.
+Subpoenas, preservation letters and emergency requests arrive at the same desks (Newfold's form has a "Subpoena Request" category; Namecheap has a law enforcement address); they follow [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#the-operating-model), not the abuse workflow.
 
 ## Phishing and Malware
 
@@ -59,7 +59,7 @@ Phishing and malware are most of an infrastructure abuse queue, and the volume i
 | **Notice** | Full, with evidence, so the owner can fix the hole | Minimal or none; M3AAWG says fraudulent accounts shouldn't retrieve their data and shouldn't be alerted |
 | **Recurrence** | Re-compromise if the vulnerability isn't patched; recheck after clean-up | New registrations by the same actor; Interisle recommends suspending "all related accounts and registrations" once a phisher is found |
 
-Signals that separate them: the domain's age and registration path (new, bulk, freshly paid), whether the rest of the site is a real business with history, whether the account has other legitimate sites, and the payment and sign-up data of the account. Spam, Bots & Inauthentic Behavior covers the account-farm side; [account farms](/books/user-generated-platforms/spam-and-bots#account-farms) that buy hosting and domains in bulk are the same problem one layer down. Interisle's recommendations aim at prevention rather than takedown: verify customer data at sign-up, vet and rate-limit access to high-volume registration, and monitor registrations before services activate.
+Signals that separate them: the domain's age and registration path (new, bulk, freshly paid), whether the rest of the site is a real business with history, whether the account has other legitimate sites, and the payment and sign-up data of the account. [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#account-farms) covers the account-farm side; account farms that buy hosting and domains in bulk are the same problem one layer down. Interisle's recommendations aim at prevention rather than takedown: verify customer data at sign-up, vet and rate-limit access to high-volume registration, and monitor registrations before services activate.
 
 **Clean-up versus suspension.** For a compromised site, the host's best outcome is a cleaned site and a patched install, not a dark one. The ladder is: block the malicious paths (or quarantine the files), notify the owner with what was found and how to fix it, give a deadline, then suspend the site if nothing changes. M3AAWG describes the step short of termination as "a suspended webpage that requires the owner to contact the hosting provider", or turning off one capability, such as outbound mail for a repeat spam source. AWS describes the same restraint: it endeavors to take "the least invasive suspension action possible" by disabling only the specific resource. If you sell clean-up services, keep the abuse decision independent of whether the customer buys one.
 
@@ -157,7 +157,9 @@ ALTER TABLE moderation_cases
 ALTER TABLE reports                      -- reporters here are rarely account holders
   ALTER COLUMN reporter_id DROP NOT NULL,
   ADD COLUMN reporter_contact   TEXT,    -- email or form contact when not an account
-  ADD COLUMN trusted_reporter   BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN trusted_reporter   BOOLEAN NOT NULL DEFAULT FALSE,  -- the desk's own program;
+                                         -- DSA trusted flaggers are notifier_kind, added in
+                                         -- Regulators & Enforcement
   ADD COLUMN intake_channel     TEXT NOT NULL DEFAULT 'in_product' CHECK (intake_channel IN
                                   ('in_product', 'web_form', 'role_mailbox', 'api',
                                    'structured_feed', 'blocklist', 'internal_scan')),
@@ -215,7 +217,7 @@ Notes on the sketch:
 - **Mitigations are rows, not statuses.** `hosted_resources.status` is a cache of the mitigations in force, recomputed when one is applied or lifted, the same rule the core model uses for penalties. Each row carries its layer, its blast radius (`affected_resources`), whether it can be undone, and the evidence behind it, so the narrowest-action rule can be audited.
 - **The ladder is time-bound.** A compromised-site case starts with `path_blocked` or `file_quarantined` and a `remediation_due_at`; a job ([Background Jobs](/docs/architecture/background-jobs#scheduling)) escalates to `site_suspended` when the deadline passes without a fix, and re-checks the site after the customer says it's clean.
 - **Copyright counts on the customer.** DMCA notices are `legal_notices` rows; a decision in category 'copyright' that disables material adds a `penalties` row against the customer account, which [Repeat Infringers](/books/user-generated-platforms/copyright#repeat-infringers) counts, so the strike belongs to the subscriber and not to the site's visitors.
-- **DNS abuse is a category, not a table.** The policy's category list marks which categories are DNS Abuse under ICANN's definition (phishing, malware, botnets, pharming, spam as delivery), so a registrar can produce ICANN's evidence (receipt, evidence reviewed, action, timestamps) and a registry can produce its periodic statistics as queries.
+- **DNS abuse is a category, not a table.** The policy's category list, kept as [rules as data](/docs/architecture/rules-as-data#what-belongs-in-data), marks which categories are DNS Abuse under ICANN's definition (phishing, malware, botnets, pharming, spam as delivery), so a registrar can produce ICANN's evidence (receipt, evidence reviewed, action, timestamps) and a registry can produce its periodic statistics as queries.
 - **Child safety leaves this table.** A CSAM report or match opens a child-safety case under [Child Safety](/books/user-generated-platforms/child-safety#how-to-build-it) and its restricted evidence store; this chapter records only the path block or account action.
 - **Events:** `abuse_report.acknowledged`, `abuse_report.forwarded`, `abuse_mitigation.applied`, `abuse_mitigation.lifted`, `hosted_resource.suspended` and `hosted_resource.restored` go through the outbox ([Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)) to the edge, DNS and network control planes, billing, support and the customer notice service.
 

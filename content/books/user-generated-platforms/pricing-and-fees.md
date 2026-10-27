@@ -9,7 +9,7 @@ tags = ["marketplaces", "pricing", "fees", "all-in-pricing", "sales-tax"]
 
 On a marketplace, three parties set parts of the price. The host sets a nightly or daily rate, discounts, cleaning and delivery fees and add-on prices; the platform sets its own fees (to the guest, the host or both), the price of protection and any deposit waiver; and governments set taxes the platform increasingly collects itself. The guest sees one number, or is supposed to: US federal law now requires the all-in price for short-term lodging, California requires it for nearly everything, and the claim that a marketplace showed a low base price and added mandatory fees at checkout is the drip-pricing complaint behind recent arbitration campaigns. Meanwhile usage charges (extra miles, generator hours, late return) can't be known until the trip ends.
 
-The engineering problem is to compute a quote from all of those sources once, freeze it as lines that say who pays each one, who earns it, whether it's mandatory and whether it's refundable, show the right total under the rules where the listing and the guest are, collect it on a schedule, and add post-trip charges later without rewriting what was agreed. This chapter covers host pricing and dynamic recommendations, fee models across the industry, usage charges, promotions, payment schedules and the merchant-of-record question, all-in price law, and marketplace facilitator tax. It extends `listings` and `bookings` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model). Nightly pricing tools from the host's side are in the Property Tech volume's [Nightly Pricing](/books/property-tech/short-term-rentals#nightly-pricing); how fees move in a payments platform is [Payments for Software Platforms](/books/payments/software-platforms#where-the-money-goes); the take rate as a business strategy is Monetization Strategies.
+The engineering problem is to compute a quote from all of those sources once, freeze it as lines that say who pays each one, who earns it, whether it's mandatory and whether it's refundable, show the right total under the rules where the listing and the guest are, collect it on a schedule, and add post-trip charges later without rewriting what was agreed. This chapter covers host pricing and dynamic recommendations, fee models across the industry, usage charges, promotions, payment schedules and the merchant-of-record question, all-in price law, and marketplace facilitator tax. It extends `listings` and `bookings` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model). Nightly pricing tools from the host's side are in the Property Tech volume's [Nightly Pricing](/books/property-tech/short-term-rentals#nightly-pricing); how fees move in a payments platform is [Payments for Software Platforms](/books/payments/software-platforms#where-the-money-goes); the take rate as a business strategy is [Monetization Strategies](/books/user-generated-platforms/monetization-strategies#take-rates-and-fee-splits).
 
 ## How the Platforms Do It
 
@@ -17,16 +17,18 @@ The engineering problem is to compute a quote from all of those sources once, fr
 | --- | --- | --- | --- |
 | **Airbnb** | Nothing under the host-only fee; 14.1% to 16.5% under the legacy split | Host-only fee of 15.5% for most hosts (14% to 16%; 16% in Brazil and Mexico), mandatory for hosts connected through software and for hotels; about 3% under the legacy split | Services 15% (minimum $6), experiences 20% |
 | **Outdoorsy** | 10% service fee on the booking total, excluding protection and taxes | 20% to 25% of the booking subtotal (rental, cleaning, delivery, add-ons), starting at 25% and falling with revenue; minimum $15 a night drivable, $10 towable | 6.5% host fee and no guest fee when the host refers a new guest; prep fee; young-driver fee in protection |
+| **Vrbo** | Service fee as a percentage of the reservation total before taxes and refundable fees, varying with the reservation amount | 12% pay-per-booking commission on the rent and host-set fees (cleaning, pet), with no separate processing fee; up to 15% under the Professional Plan in parts of Europe, Australia and New Zealand; the annual subscription is closed to new hosts, and most legacy subscribers move to pay-per-booking from October 2026 | Optional guest Property Damage Protection in place of a deposit |
 | **RVshare** | Service fee as a percentage of the reservation; a mandatory non-refundable screening fee | Not published | Mileage, generator and delivery set per listing |
 | **Turo** | Trip fee and protection plan | Host keeps 70%, 80% or 90% of the trip price, depending on the plan chosen (US, from January 7, 2026) | Turo Risk Score adjusts guest fees |
 | **Etsy** | Nothing to Etsy directly | $0.20 listing fee per four-month listing; 6.5% transaction fee on item, shipping and gift wrap; payment processing by country; offsite ads 15% (12% above $10,000 trailing sales), capped at $100 an order | 2.5% currency conversion |
 | **eBay** | Nothing to eBay directly | Final value fee of 13.6% up to $7,500 per item plus 2.35% above, plus $0.30 per order ($0.40 over $10), on the total including shipping and sales tax; 250 free listings a month, then $0.35 | +6% for below-standard sellers; 1.65% international fee |
 | **Vinted** | A mandatory buyer protection fee, typically 3% to 8% plus GBP 0.30 to 0.80 | Nothing for non-professional sellers | |
+| **Facebook Marketplace** | No buyer fee on Meta's shipping page | 10% selling fee (minimum $0.80) on shipped orders, deducted from the purchase amount | Prepaid shipping labels for select sellers; local pickup isn't covered by Purchase Protection |
 | **Depop** | A buyer marketplace fee | No US selling fee since July 2024; payment processing kept | |
 
 Four patterns:
 
-- **Fees migrate from guest to host.** Airbnb is moving home hosts to a single host-only fee; Depop moved its US fee from seller to buyer the other way. Who pays decides what the guest sees as the price, and the move changes every listing's displayed total at once.
+- **Fees migrate from guest to host.** Airbnb is moving home hosts to a single host-only fee; Depop moved its US fee from seller to buyer the other way; Vrbo is retiring its annual host subscription for a per-booking commission. Who pays decides what the guest sees as the price, and the move changes every listing's displayed total at once.
 - **Fees are tiered and floored.** Outdoorsy's host fee falls with revenue and has nightly minimums; eBay's rate falls above $7,500 and rises for poor performance. A fee is a schedule, not a percentage.
 - **Fees reward channel behavior.** Outdoorsy cuts its fee to 6.5% for guests the host brings; Etsy's offsite ads fee becomes mandatory above a sales threshold. Program terms, versioned, decide the line.
 - **Protection is priced in the fee structure.** Turo's host plans trade the host's share for damage responsibility; Vinted's buyer fee funds its protection. [Deposits, Protection Plans & Insurance](/books/user-generated-platforms/deposits-and-protection) covers the products.
@@ -127,7 +129,7 @@ The design follows the lodging tax model there:
 - **Every booking gets tax lines,** each marked with its remitter. Platform-remitted tax is the platform's liability to the authority; host-remitted tax is a line the host is responsible for, shown to them for filing.
 - **Tax is a quote until the booking finalizes,** and post-trip charges and refunds adjust it ([Tax Is a Quote Until the Invoice Finalizes](/docs/payments/sales-tax#tax-is-a-quote-until-the-invoice-finalizes)). Outdoorsy refunds taxes in proportion to the charges refunded.
 
-Seller tax reporting (1099-K, DAC7) belongs to Paying Creators & Sellers.
+Seller tax reporting (1099-K, DAC7) belongs to [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#information-returns-1099-k-1099-misc-and-1042-s).
 
 ## How to Build It
 
@@ -335,6 +337,11 @@ Design decisions behind it:
 - [eBay: Selling fees](https://www.ebay.com/help/selling/fees-credits-invoices/selling-fees?id=4822), insertion and final value fees, per-order fee, the base including tax, performance and international surcharges
 - [Vinted: Buyer Protection fee](https://www.vinted.co.uk/help/342-buyer-protection-fee-on-vinted), the buyer-paid fee and what it funds
 - [Wikipedia: Depop](https://en.wikipedia.org/wiki/Depop), removal of the US selling fee in July 2024 and the buyer marketplace fee
+- [Vrbo: About the pay-per-booking (PPB) model](https://help.vrbo.com/articles/How-is-the-booking-fee-calculated), the 12% commission and its base, no separate processing fee, up to 15% under the Professional Plan
+- [Vrbo: Pay for your listing subscription](https://help.vrbo.com/articles/How-do-I-pay-for-my-new-subscription), subscriptions closed to new hosts and legacy hosts moved to pay-per-booking from October 2026
+- [Vrbo: About Vrbo's service fee](https://help.vrbo.com/articles/what-is-the-service-fee), the traveler fee as a percentage of the reservation total that varies with the amount
+- [Facebook: About shipping on Facebook Marketplace](https://www.facebook.com/help/796066857221106/), the 10% selling fee with a $0.80 minimum on shipped orders, local pickup outside Purchase Protection
+- [Facebook: About prepaid shipping labels on Facebook Marketplace](https://www.facebook.com/help/637559426797189/), labels offered to select sellers
 
 **In practice**
 

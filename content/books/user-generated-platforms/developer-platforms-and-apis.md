@@ -12,7 +12,7 @@ Every successful community platform grows an outer ring of software it didn't wr
 
 The years from 2023 to 2026 rewrote the terms. Twitter ended free API access in early 2023; Reddit announced paid API access in April 2023, and the protest against it took thousands of communities dark; Reddit signed data licensing deals with Google and OpenAI in 2024 and sued companies that took its content without one; in September 2026 it said it would end RSS feeds and close remaining public API access by March 2027. At the same time the EU required the largest platforms to give vetted researchers access to data, and fined X in part for failing to.
 
-This chapter covers who builds on a community platform, bots and apps and how they're authorized, privileged data and its review, rate limits, on-platform app runtimes, webhooks, API pricing and why it changed, data licensing as an engineering obligation, researcher access, and anti-scraping enforcement in court. It adds apps, credentials, installations, privileged access reviews, API plans and usage, and data licenses to [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model). Generic API design is the playbook's ([Authentication](/docs/api-design/authentication), [Versioning](/docs/api-design/versioning), [Webhooks](/docs/api-design/webhooks), [API Security](/docs/security/api-security)); licensing revenue and its accounting are Ads, Brand Safety & Data Licensing; moderation bots' role in communities is [Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation).
+This chapter covers who builds on a community platform, bots and apps and how they're authorized, privileged data and its review, rate limits, on-platform app runtimes, webhooks, API pricing and why it changed, data licensing as an engineering obligation, researcher access, and anti-scraping enforcement in court. It adds apps, credentials, installations, privileged access reviews, API plans and usage, and data licenses to [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model). Generic API design is the playbook's ([Authentication](/docs/api-design/authentication), [Versioning](/docs/api-design/versioning), [Webhooks](/docs/api-design/webhooks), [API Security](/docs/security/api-security)); licensing revenue and its accounting are [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#data-licensing-as-revenue); moderation bots' role in communities is [Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation#apps-and-bots-for-moderation).
 
 ## How the Platforms Do It
 
@@ -90,7 +90,7 @@ Webhooks push events out: Mastodon offers webhooks on moderation events so admin
 
 **Twitter, 2023.** Twitter ended free read access to its API in early 2023. The tiers it published at the end of March 2023 were a write-only free tier of 1,500 posts a month, a Basic tier at $100 a month with up to 50,000 posts per app and 10,000 reads, and Enterprise pricing reported above $40,000 a month; a planned academic tier wasn't ready, so researchers had to pick a commercial one. The entry plan later rose to $200, and in April 2026 X replaced it with a pay-per-use option for hobbyist and prototype use, keeping commercial use on Enterprise.
 
-**Reddit, 2023.** Announced April 18, 2023 and effective July 1: free limits per OAuth client, $0.24 per 1,000 calls above them, with moderation tools exempted. The developer of Apollo, a popular third-party client, estimated his costs at $20 million a year and announced on June 8 that the app would shut down on June 30. The protest that followed is [Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation)'s case study.
+**Reddit, 2023.** Announced April 18, 2023 and effective July 1: free limits per OAuth client, $0.24 per 1,000 calls above them, with moderation tools exempted. The developer of Apollo, a popular third-party client, estimated his costs at $20 million a year and announced on June 8 that the app would shut down on June 30. The protest that followed is [Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation#the-2023-blackout)'s case study.
 
 **Reddit, 2026.** On September 30, 2026, Reddit said it would end RSS feeds on November 13, 2026, stop accepting new public API requests after October 31, cut off apps and users that hadn't registered by January 12, 2027, and close remaining public API access in March 2027, citing scraping and automated abuse, with Devvit as the path for developers.
 
@@ -112,7 +112,7 @@ A licensing deal reads like a commercial contract and lands as a set of technica
 - **Scope rules:** which content is in (public posts, not private communities or messages; not content from minors' accounts where the platform's policy excludes it), which fields (no IP addresses or emails), which jurisdictions.
 - **Usage records:** what was delivered to whom, when, under which license version, so a user's question ("was my post licensed?") and a regulator's can be answered.
 
-How licensing revenue is recognized and how it fits the business are Ads, Brand Safety & Data Licensing's subject.
+How licensing revenue is recognized and how it fits the business are [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#data-licensing-as-revenue)'s subject.
 
 ## Researcher Access
 
@@ -120,7 +120,7 @@ The DSA made data access for research a legal duty for the largest platforms. **
 
 Enforcement has started. The Commission's first non-compliance decision under the DSA, a €120 million fine on X announced December 5, 2025, covered three findings, one of them that X failed to give researchers access to public data and imposed unnecessary barriers on them; X was given 60 to 90 days to set out measures.
 
-For a platform that is or may become very large, researcher access is a third program beside the app platform and licensing: application intake tied to coordinator approvals, data delivered in a secure environment or by scoped export, terms that let researchers publish, and records of every dataset delivered. Which platforms are designated and on what clock is Regulators & Enforcement's.
+For a platform that is or may become very large, researcher access is a third program beside the app platform and licensing: application intake tied to coordinator approvals, data delivered in a secure environment or by scoped export, terms that let researchers publish, and records of every dataset delivered. Which platforms are designated and on what clock is [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#very-large-online-platforms)'s.
 
 ## Scraping and the Courts
 
@@ -131,7 +131,7 @@ Platforms that close their APIs turn to contracts, technical measures and lawsui
 - **Reddit v. Anthropic.** Filed June 4, 2025 in San Francisco Superior Court, alleging breach of contract, trespass to chattels, unjust enrichment, tortious interference and unfair competition, and that the AI company accessed Reddit more than 100,000 times without permission and disregarded robots.txt and Reddit's user agreement.
 - **Reddit v. SerpApi, Oxylabs, AWMProxy and Perplexity.** Filed in the Southern District of New York on October 22, 2025 (No. 25-cv-8736) on a different theory: that the defendants collected Reddit content from Google's search results pages by getting around Google's SearchGuard controls, in violation of the DMCA's anti-circumvention provisions, without alleging that they accessed Reddit's own servers. On July 31, 2026 the court denied the motions to dismiss in large part, keeping the Section 1201(a) circumvention claims against SerpApi and Perplexity, the trafficking claim under 1201(a)(2) against SerpApi and a New York civil conspiracy claim, while dismissing the 1201(b) claim and state unjust enrichment and unfair competition claims as preempted by the Copyright Act.
 
-Taken together as of October 2026: computer-intrusion claims over public data are weak; contract claims depend on how the scraper agreed to the terms and run into copyright preemption when they try to control what users own; anti-circumvention claims are the newest theory and have survived a first test. The technical measures (bot detection, rate limits, robots.txt, logged-in walls) matter both for stopping scraping and as the "measures" a later claim relies on, so their deployment and changes belong in the record. The law of hosting and copyright is The Law of Hosting User Content and Copyright at Scale.
+Taken together as of October 2026: computer-intrusion claims over public data are weak; contract claims depend on how the scraper agreed to the terms and run into copyright preemption when they try to control what users own; anti-circumvention claims are the newest theory and have survived a first test. The technical measures (bot detection, rate limits, robots.txt, logged-in walls) matter both for stopping scraping and as the "measures" a later claim relies on, so their deployment and changes belong in the record. The law of hosting and copyright is [The Law of Hosting User Content](/books/user-generated-platforms/hosting-liability) and [Copyright at Scale](/books/user-generated-platforms/copyright).
 
 ## How to Build It
 
@@ -189,13 +189,12 @@ CREATE TABLE app_privileged_access (     -- privileged intents and scopes, revie
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE api_plans (                 -- limits and prices, versioned
+CREATE TABLE api_plans (                 -- limits and terms of use, versioned
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   plan_key        TEXT NOT NULL,         -- 'free', 'paid_usage', 'enterprise', 'research'
   version         INT NOT NULL,
+  product_id      UUID REFERENCES products (id),  -- kind 'api_plan'; null: free or research
   rate_limits     JSONB NOT NULL,        -- per client, per user, per route class
-  unit_price_minor BIGINT,               -- per 1,000 calls, in minor units
-  currency        CHAR(3),
   commercial_use  BOOLEAN NOT NULL,
   valid_during    TSTZRANGE NOT NULL,
   UNIQUE (plan_key, version)
@@ -214,24 +213,17 @@ CREATE TABLE api_usage (                 -- metered usage per app per day
   PRIMARY KEY (app_id, usage_date, route_class)
 );
 
-CREATE TABLE data_licenses (             -- a licensee's terms as data
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  app_id          UUID NOT NULL REFERENCES apps (id),       -- the licensee's app
-  counterparty    TEXT NOT NULL,
-  terms_version   TEXT NOT NULL,
-  scope           JSONB NOT NULL,        -- content kinds, communities, fields, jurisdictions
-  excludes        JSONB NOT NULL,        -- private spaces, minors' content, opted-out users
-  deletion_sla    INTERVAL NOT NULL,     -- how fast removals must be applied downstream
-  freshness_slo   INTERVAL,
-  valid_during    TSTZRANGE NOT NULL
-);
+-- data_licenses (the contract: purposes, scope, freshness, deletion propagation, revenue
+-- program) belongs to Ads, Brand Safety & Data Licensing; access adds the licensee's app.
+ALTER TABLE data_licenses
+  ADD COLUMN app_id UUID REFERENCES apps (id);  -- kind 'licensee'; its credentials and plan
 
 CREATE TABLE license_deliveries (        -- what went out, and the removals that followed it
   id              UUID NOT NULL DEFAULT uuidv7(),
   delivered_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   data_license_id UUID NOT NULL REFERENCES data_licenses (id),
   kind            TEXT NOT NULL CHECK (kind IN ('backfill', 'increment', 'removal_notice',
-                    'erasure_notice')),
+                    'erasure_notice', 'opt_out_notice')),
   subject_type    TEXT NOT NULL,
   subject_ids     UUID[] NOT NULL,       -- batched
   acknowledged_at TIMESTAMPTZ,           -- the licensee confirmed applying it
@@ -245,8 +237,9 @@ Notes on the sketch:
 - **Secrets are hashed and prefixed.** A visible prefix lets secret scanning in public repositories recognize leaked tokens and revoke them automatically ([Store a Hash, Show the Key Once](/docs/api-design/authentication#store-a-hash-show-the-key-once)).
 - **Installations are ranges with granted bits.** The grant is checked against the installer's own effective permissions at install time; moderators can narrow `granted_permissions` or end the range; actions taken through an installation are logged in the mod log with the app id.
 - **Privileges expire.** Approved privileged access carries a reconfirmation date tied to the app's reach; crossing a reach threshold (servers, users) opens a review automatically.
-- **Plans are versioned data,** so a pricing change is a new version with an effective date, and usage is billed under the version in force ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
-- **Removals reach licensees.** Content and account life-cycle events (`content.removed`, `content.deleted`, `account.erased`) produce `removal_notice` and `erasure_notice` deliveries to every license whose deliveries included the subject; unacknowledged notices past `deletion_sla` page someone.
+- **Plans are versioned data,** so a limits change is a new version with an effective date. A paid plan points at an `api_plan` product, so its prices are [Monetization Strategies](/books/user-generated-platforms/monetization-strategies#how-to-build-it)' `product_prices` rows and its revenue a revenue program; usage is billed under the plan version and price in force ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **One license, two chapters.** The contract (purposes, content kinds, exclusions, freshness target, deletion propagation window, revenue program) is [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#how-to-build-it)' `data_licenses`; this chapter adds the licensee's app and the delivery log.
+- **Removals reach licensees.** Content and account life-cycle events (`content.removed`, `content.deleted`, `account.erased`) and new `data_license_opt_outs` rows produce `removal_notice`, `erasure_notice` and `opt_out_notice` deliveries to every license whose deliveries included the subject; unacknowledged notices past the license's `deletion_propagation` window page someone.
 - **Events:** `app.created`, `app.installed`, `app.uninstalled`, `app.privilege_requested`, `app.privilege_decided`, `credential.revoked`, `app.suspended` and `license.delivery_acknowledged` go through the outbox ([Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)).
 
 ## Auditing

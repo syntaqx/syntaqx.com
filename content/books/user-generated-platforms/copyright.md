@@ -64,7 +64,7 @@ A notice of claimed infringement under 512(c)(3)(A) is a written communication t
 
 ### Subpoenas to Identify Infringers
 
-Section 512(h) lets a copyright owner obtain a subpoena from a federal district court clerk ordering the platform to identify an alleged infringer. The request must include a copy of the notice, the proposed subpoena and a sworn declaration that the information will be used only to protect rights under Title 17; the clerk issues it if it's in proper form, without a judge's review, and the platform must "expeditiously disclose" information sufficient to identify the infringer "to the extent such information is available". Platforms do push back on breadth: Discord resisted a 2024 request from Nexon for identifying information about 24 users after an earlier disclosure, calling the demands overly burdensome and opposing requests that override users' choice to stay anonymous, and Nexon moved to enforce in a Texas federal court. Handle 512(h) subpoenas in the same legal-request pipeline as other subpoenas (scope check, user notice where allowed, minimal disclosure), which Law Enforcement Requests & User Data covers.
+Section 512(h) lets a copyright owner obtain a subpoena from a federal district court clerk ordering the platform to identify an alleged infringer. The request must include a copy of the notice, the proposed subpoena and a sworn declaration that the information will be used only to protect rights under Title 17; the clerk issues it if it's in proper form, without a judge's review, and the platform must "expeditiously disclose" information sufficient to identify the infringer "to the extent such information is available". Platforms do push back on breadth: Discord resisted a 2024 request from Nexon for identifying information about 24 users after an earlier disclosure, calling the demands overly burdensome and opposing requests that override users' choice to stay anonymous, and Nexon moved to enforce in a Texas federal court. Handle 512(h) subpoenas in the same legal-request pipeline as other subpoenas (scope check, user notice where allowed, minimal disclosure), which [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#the-us-framework) covers.
 
 ## Counter-Notices
 
@@ -158,7 +158,7 @@ What this means for a streaming platform's design:
 
 - **Separate live, recording and clip rights.** A license for live performance doesn't cover the VOD or the clip; the DJ Program's ban on keeping DJ-catalog music in on-demand recordings is the industry stating it. Store which rights cover which surface, and gate recording and clipping on them.
 - **Let creators control the archive.** Bulk delete, per-segment muting, and an audio track excluded from recordings (the tools Twitch said it lacked in 2020) are compliance features.
-- **Scan recordings, not just uploads,** because that is where notices land; Live Latency, Playback & VODs covers the recording pipeline.
+- **Scan recordings, not just uploads,** because that is where notices land; [Live Latency, Playback & VODs](/books/user-generated-platforms/live-latency-and-vods#from-live-to-vod) covers the recording pipeline.
 
 ## Article 17
 
@@ -186,7 +186,7 @@ What Article 17 adds to the system:
 - **Two thresholds, not one.** Block at upload only where the match is close to identical and long enough that no exception plausibly applies; route partial, short or transformed matches to keep-up-pending-review or to a claim that doesn't block. That is the line *C-401/19* drew.
 - **Stay-down is a fingerprint, not a URL.** A notified work becomes a reference so re-uploads match; for a small service under 17(6), that duty starts when it crosses 5 million monthly visitors.
 - **Complaints with human review,** and a statement of the outcome, sharing the appeal machinery in the playbook's [Appeals](/docs/security/trust-and-safety#appeals).
-- **Licensing is part of compliance.** Best efforts to obtain authorization is a record of whom the platform approached and what it signed; Ads, Brand Safety & Data Licensing and Creator Monetization cover the revenue side of licensed music and claims.
+- **Licensing is part of compliance.** Best efforts to obtain authorization is a record of whom the platform approached and what it signed; [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#ads-on-user-content) and [Creator Monetization](/books/user-generated-platforms/creator-monetization#music-costs-shared-with-creators) cover the revenue side of licensed music and claims.
 
 ## How to Build It
 
@@ -317,9 +317,9 @@ Notes on the sketch:
 - **The counter-notice's clock is a window.** The restore job runs between `earliest_action_at` and `due_at` on the `dmca_counter` row, checks `suit_notice_received_at` first, restores the items and revokes the strike; Twitch's warning that some material can't be reinstated is why removal keeps the media (`media_assets.state` stays recoverable) until the window closes.
 - **Claims aren't notices.** `content_claims` never touches `legal_notices` unless the claimant escalates; then a `dmca_takedown` row is created and linked, and the statutory process takes over. Claims don't strike; notices do. Transparency counts and the 512(i) policy read notices and penalties only.
 - **References carry their legal weight.** Under Article 17 a reference is the "relevant and necessary information"; `source = 'notice_stay_down'` records references created from a notice for stay-down, and `in_conflict` holds a reference two claimants assert until it is resolved, so neither gets the revenue.
-- **Territory everywhere.** References hold where rights exist; claims hold where an action applies; delivery enforces it per request, and monetization splits are per territory (Creator Monetization covers who gets paid).
+- **Territory everywhere.** References hold where rights exist; claims hold where an action applies; delivery enforces it per request, and monetization splits are per territory ([Creator Monetization](/books/user-generated-platforms/creator-monetization#ad-revenue-share) covers who gets paid).
 - **The agent is a scheduled check.** A job ([Background Jobs](/docs/architecture/background-jobs#scheduling)) alerts 90 days before `expires_on`, compares `alternate_names` against the domains and apps in service, and checks that `published_url` still shows the current agent.
-- **Matching runs in the upload path and on recordings.** New uploads and new VODs and clips are fingerprinted and matched before or just after publish (The Upload Path; Live Latency, Playback & VODs), and a new reference is matched against the back catalog as a background sweep, which is the moment claims spike.
+- **Matching runs in the upload path and on recordings.** New uploads and new VODs and clips are fingerprinted and matched before or just after publish ([The Upload Path](/books/user-generated-platforms/upload-path#scanning-before-publish); [Live Latency, Playback & VODs](/books/user-generated-platforms/live-latency-and-vods#from-live-to-vod)), and a new reference is matched against the back catalog as a background sweep, which is the moment claims spike.
 - **Events:** `copyright.notice_validated`, `copyright.item_removed`, `copyright.counter_received`, `copyright.restore_due`, `copyright.item_restored`, `copyright.strike_issued`, `copyright.strike_revoked`, `copyright.account_terminated`, `content_claim.created`, `content_claim.disputed` and `content_claim.released` go through the outbox ([Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)) to notices, monetization, search and the transparency counts.
 
 ## Auditing
@@ -331,7 +331,7 @@ Notes on the sketch:
 - **Reference provenance:** who supplied each reference, the exclusivity attestation, conflicts and suspensions.
 - **Revenue moved by claims,** reconciled to the ledger, because a wrong claim is also a wrong payment ([Payment States & Ledgers](/docs/payments/payment-states)).
 
-Reddit's published set (notices, items, actionability rates, invalid notices, counter-notices, withdrawals, repeat-infringer bans for accounts and communities) and YouTube's (claims, disputes, outcomes, active claimants) are the templates for the public report; Transparency Reporting covers the formats.
+Reddit's published set (notices, items, actionability rates, invalid notices, counter-notices, withdrawals, repeat-infringer bans for accounts and communities) and YouTube's (claims, disputes, outcomes, active claimants) are the templates for the public report; [Transparency Reporting](/books/user-generated-platforms/transparency-reporting#what-the-voluntary-reports-count) covers the formats.
 
 ## What This Means for the System You Build
 
