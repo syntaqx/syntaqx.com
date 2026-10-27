@@ -791,59 +791,70 @@ const route: SceneFn = (s) => {
 };
 
 /**
- * Gaming: a match on a map lifted off the racks of game servers that run
- * it. Two bases face off across three lanes and the walls between them;
- * the waves meet in the mid lane, where the player's shots fly at an enemy.
+ * Gaming: two soldiers trade fire across a low wall among trees, rocks and
+ * crates while a pixel invader hovers over the field, stepping its legs; on
+ * hover it lifts higher.
  */
-const arena: SceneFn = (s) => {
-  const Z = 3.4 + s.spread * 2.2;
-  const [lo, hi, w] = [1.9, 8.1, 0.45];
-  const band = (a: [number, number], b: [number, number]): Part => {
-    // a lane of half-width w between two points, flat on the map
-    const [dx, dy] = [b[0] - a[0], b[1] - a[1]];
-    const n = Math.hypot(dx, dy);
-    const [px, py] = [(-dy / n) * w, (dx / n) * w];
-    return { kind: "plane", pts: [[a[0] + px, a[1] + py, Z], [b[0] + px, b[1] + py, Z], [b[0] - px, b[1] - py, Z], [a[0] - px, a[1] - py, Z]], v: 0.34 };
+const INVADER = [
+  ["..X.....X..", "...X...X...", "..XXXXXXX..", ".XX.XXX.XX.", "XXXXXXXXXXX", "X.XXXXXXX.X", "X.X.....X.X", "...XX.XX..."],
+  ["..X.....X..", "X..X...X..X", "X.XXXXXXX.X", "XXX.XXX.XXX", "XXXXXXXXXXX", ".XXXXXXXXX.", "..X.....X..", ".X.......X."],
+];
+const arcade: SceneFn = (s) => {
+  const T = 1.2;
+  const n = Math.floor(s.t / T);
+  const p = (s.t - n * T) / T;
+  // a soldier at x facing dir (+1 or -1): legs, torso, head and a rifle at the shoulder
+  const gz = 1.05;
+  const soldier = (x: number, y: number, dir: number, firing: boolean, opts: { accent?: boolean } = {}): Part[] => {
+    const kick = firing && p < 0.15 ? -0.08 * dir : 0;
+    const rifle: Part = { kind: "box", box: box(dir > 0 ? x + 0.1 + kick : x - 1.3 + kick, y + 0.2, gz, 1.2, 0.14, 0.14), small: true };
+    return [
+      ...(dir < 0 ? [rifle] : []),
+      { kind: "box", box: box(x - 0.25, y + 0.05, 0, 0.2, 0.2, 0.6), small: true },
+      { kind: "box", box: box(x - 0.25, y + 0.35, 0, 0.2, 0.2, 0.6), small: true },
+      { kind: "box", box: box(x - 0.3, y, 0.6, 0.6, 0.6, 0.7), ...opts },
+      { kind: "box", box: box(x - 0.18, y + 0.12, 1.3, 0.36, 0.36, 0.36), ...opts },
+      ...(dir > 0 ? [rifle] : []),
+    ];
   };
-  // the waves on the mid lane: ours from the near base, theirs from the far
-  const T = 5;
-  const wave = (k: number, ours: boolean): [number, number] => {
-    const d = 0.08 + 0.34 * ((((s.t / T + k) % 1) + 1) % 1);
-    const u = ours ? 1 - d : d;
-    return [lo + (hi - lo) * u, hi - (hi - lo) * u];
-  };
-  const me: [number, number] = [5.7 + Math.sin(s.t * 0.9) * 0.25, 5.2];
-  const foe: [number, number] = [4.2, 4.9 + Math.sin(s.t * 1.1 + 1) * 0.25];
-  const shot = (s.t * 1.3) % 1;
-  const unit = ([x, y]: [number, number], h: number, opts: { accent?: boolean; small?: boolean } = {}): Part => ({ kind: "box", box: box(x - 0.28, y - 0.28, Z, 0.56, 0.56, h), ...opts });
-  const wall = (x: number, y: number, a: number, b: number): [number, Part[]] => [x + y + (a + b) / 2, [{ kind: "box", box: box(x, y, Z, a, b, 0.45) }]];
+  const [ax, bx] = [2.6, 7.4];
+  const ay = 6.2 + Math.sin(s.t * 0.8) * 0.5;
+  const by = 5.4 + Math.sin(s.t * 0.8 + 2) * 0.5;
+  const aFires = n % 2 === 0;
+  // the tracer: from the shooter's muzzle to the other's chest
+  const [m, t] = aFires ? [[ax + 1.3, ay + 0.27], [bx - 0.3, by + 0.3]] : [[bx - 1.3, by + 0.27], [ax + 0.3, ay + 0.3]];
+  const at = (k: number): V3 => [m[0] + (t[0] - m[0]) * k, m[1] + (t[1] - m[1]) * k, gz + 0.07];
+  // the invader: one bar per run of pixels in a row, bottom row first
+  const [px, ix, iy] = [0.36, 2.4, 3.4];
+  const iz = 2.6 + s.spread * 1.4 + bob(s, 0.2);
+  const pixels = INVADER[Math.floor(s.t / 0.6) % 2].toReversed().flatMap((row, r) =>
+    [...row.matchAll(/X+/g)].map((run): Part => ({ kind: "box", box: box(ix + run.index * px, iy, iz + r * px, run[0].length * px, 0.08, px), accent: true })),
+  );
+  // scenery: a trunk under two stacked cones, low rocks, crates and a barrel
+  const tree = (x: number, y: number, h: number): [number, Part[]] => [x + y, [
+    { kind: "cyl", cx: x, cy: y, z: 0, r: 0.12, h: 0.5 },
+    { kind: "cyl", cx: x, cy: y, z: 0.5, r: 0.6, h: h * 0.6, rt: 0.15 },
+    { kind: "cyl", cx: x, cy: y, z: 0.5 + h * 0.45, r: 0.45, h: h * 0.55, rt: 0.02 },
+  ]];
+  const rock = (x: number, y: number, a: number, b: number, h: number): [number, Part[]] => [x + y + (a + b) / 2, [{ kind: "box", box: box(x, y, 0, a, b, h), small: true }]];
   const things: [number, Part[]][] = [
-    // bases: a pad and a tower in opposite corners, ours lit
-    [lo + hi, [{ kind: "box", box: box(lo - 0.9, hi - 0.9, Z, 1.8, 1.8, 0.18), small: true }, { kind: "cyl", cx: lo, cy: hi, z: Z + 0.18, r: 0.55, h: 1.5, rt: 0.32 }]],
-    [hi + lo, [{ kind: "box", box: box(hi - 0.9, lo - 0.9, Z, 1.8, 1.8, 0.18), small: true }, { kind: "cyl", cx: hi, cy: lo, z: Z + 0.18, r: 0.55, h: 1.5, rt: 0.32, accent: true }]],
-    // walls in the jungle between the lanes
-    wall(3.4, 2.9, 1.5, 0.45), wall(5.1, 6.6, 1.5, 0.45),
-    // the waves meeting mid
-    ...[0, 0.33, 0.66].map((k): [number, Part[]] => { const p = wave(k, true); return [p[0] + p[1], [unit(p, 0.35, { small: true })]]; }),
-    ...[0.15, 0.48, 0.81].map((k): [number, Part[]] => { const p = wave(k, false); return [p[0] + p[1], [unit(p, 0.35, { small: true })]]; }),
-    // the player and the enemy they're fighting
-    [me[0] + me[1], [unit(me, 0.85, { accent: true })]],
-    [foe[0] + foe[1], [unit(foe, 0.85)]],
+    tree(1.5, 5.2, 2), tree(8.4, 2.2, 2.1), tree(8.7, 5.5, 1.5), tree(8.4, 7.9, 1.8), tree(1.6, 8.3, 1.5),
+    rock(5.6, 1.6, 0.8, 0.6, 0.3), rock(1.3, 3, 0.6, 0.9, 0.35), rock(6.2, 8.2, 0.9, 0.5, 0.25),
+    [8.9, [{ kind: "box", box: box(5.8, 2.5, 0, 0.6, 0.6, 0.6) }, { kind: "box", box: box(6.4, 2.6, 0, 0.55, 0.55, 0.55) }, { kind: "box", box: box(5.95, 2.6, 0.6, 0.5, 0.5, 0.5) }]],
+    [11.6, [{ kind: "cyl", cx: 3.7, cy: 7.9, z: 0, r: 0.3, h: 0.7 }]],
+    [ix + iy + 2, [{ kind: "line", a: [ix + 2, iy, 0], b: [ix + 2, iy, iz], dashed: true, alpha: 0.35 }, ...pixels]],
+    [bx + by, soldier(bx, by, -1, !aFires)],
+    [4.65 + 5.9, [{ kind: "box", box: box(4.4, 4.6, 0, 0.5, 2.6, 0.55), small: true }]],
+    [ax + ay + 0.3, soldier(ax, ay, 1, aFires, { accent: true })],
   ];
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(2.6 + i * 1.7, 4.6, 0, 1.3, 2, 1.4), slots: true })),
-    { kind: "cable", pts: [[5, 5.6, 1.4], [5, 5.6, Z]], speed: 0.5, accent: true },
-    { kind: "plane", pts: quad(0.6, 0.6, Z, 8.8, 8.8), v: 0.12, drops: { at: [[0.6, 9.4], [9.4, 9.4], [9.4, 0.6]], from: 0 } },
-    // three lanes base to base: two along the edges, one down the middle
-    band([lo, lo], [hi, lo]), band([hi, lo], [hi, hi]),
-    band([lo, lo], [lo, hi]), band([lo, hi], [hi, hi]),
-    band([lo, hi], [hi, lo]),
-    ...things.sort((p, q) => p[0] - q[0]).flatMap(([, ps]) => ps),
-    // the shot, from the player to the enemy
-    { kind: "line", a: [me[0], me[1], Z + 0.55], b: [me[0] + (foe[0] - me[0]) * shot, me[1] + (foe[1] - me[1]) * shot, Z + 0.55], accent: true },
+    { kind: "plane", pts: quad(1, 1, 0, 8, 8), v: 0.12 },
+    ...things.sort((a, b) => a[0] - b[0]).flatMap(([, ps]) => ps),
+    ...(p < 0.15 ? [{ kind: "box", box: box(m[0] - 0.12, m[1] - 0.12, gz - 0.05, 0.24, 0.24, 0.24), accent: true } as Part] : []),
+    { kind: "line", a: at(Math.max(0, p * 1.4 - 0.3)), b: at(Math.min(1, p * 1.4)), accent: true },
   ];
-  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [0.6, 0.6, Z + 0.4], [hi, lo, Z + 1.9]], axes: ground(10) };
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [ix, iy, iz + 3.2], [ix + 4, iy, iz + 3.2]], axes: ground(10) };
 };
 
 /**
@@ -964,11 +975,11 @@ const library: SceneFn = (s) => {
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len, y0, top + t + 2.6]], axes: ground(10) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arena, tenancy, feed, library } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, library } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Book covers, one per book, never shared with a post or a page. */
-export const BOOK_SCENES = ["tender", "route", "arena", "tenancy", "feed"] as const satisfies readonly SceneName[];
+export const BOOK_SCENES = ["tender", "route", "arcade", "tenancy", "feed"] as const satisfies readonly SceneName[];
 export type BookSceneName = (typeof BOOK_SCENES)[number];
 
 /** The books index's own scene, shared with nothing else. */

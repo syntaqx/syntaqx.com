@@ -67,7 +67,7 @@ export const BOOKS: Book[] = [
     slug: "gaming",
     type: "industry",
     name: "Gaming",
-    cover: "arena",
+    cover: "arcade",
     summary:
       "How games are built and run, from the engine and the frame budget to netcode, game servers, mobile, live operations, creator economies and the rules around them.",
     intro: [
