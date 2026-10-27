@@ -199,7 +199,7 @@ Notes on the definitions:
 
 ## Web Shops Off the Store
 
-Mobile publishers now sell outside the stores directly. Supercell runs a Supercell Store with stores for Brawl Stars, Clash of Clans, Clash Royale, Hay Day and Boom Beach, signed in with Supercell ID and with "Store-only special offers"; the Pokémon GO Web Store sells PokéCoins from 110 to 15,500. Both put the purchase on the publisher's own account rather than a device, which is the prerequisite.
+Mobile publishers now sell outside the stores directly. Supercell runs a Supercell Store with stores for Brawl Stars, Clash of Clans, Clash Royale, Hay Day and Boom Beach, signed in with Supercell ID and with "Store-only special offers"; the Pokémon GO Web Store, operated by Scopely as of October 2026, sells PokéCoins from 110 to 15,500. Both put the purchase on the publisher's own account rather than a device, which is the prerequisite.
 
 The legal status of in-app links to those shops differs by store and region, and in the US it is still in court: as of October 2026, the Supreme Court has granted Apple's petition in *Apple Inc. v. Epic Games* (No. 25-1311), limited to one question, with Epic's brief due 13 November 2026 and no argument date on the docket. The commission rules, the EU terms, Google's US programs and the attribution windows for link-outs are in [Stores, Fees & Payments](/books/gaming/stores-and-payments#web-stores-and-direct-payments). For the mobile backend, a web shop adds three things: a link token from the app to the checkout so the purchase lands on the right account and the commission window can be applied, a grant that reaches the device on its next sync or by push, and the same ledger, refund and fraud handling as the in-app store.
 
@@ -386,4 +386,4 @@ The disputes in mobile are about money moving between the studio and its partner
 
 - [Supercell Store](https://store.supercell.com/), web stores for five Supercell games
 - [Supercell Store: Clash of Clans](https://store.supercell.com/clashofclans), store-only offers and Supercell ID sign-in
-- [Pokémon GO Web Store](https://store.pokemongo.com/), PokéCoins sold on the web
+- [Pokémon GO Web Store](https://store.pokemongo.com/), PokéCoins sold on the web from 110 to 15,500, operated by Scopely Explore

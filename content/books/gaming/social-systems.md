@@ -292,7 +292,7 @@ The design rules that hold it together:
 - **Setting changes,** especially communication and visibility settings for younger players, with who changed them (the player, a parent through a platform control, an age check).
 - **Messages and their filter results,** kept for the retention period, with every moderator view logged ([Audit Trails](/docs/architecture/audit-trails#log-access-not-just-changes)).
 - **Voice recordings,** if any: what was recorded, under which notice, when it was deleted.
-- **Erasure:** a deleted account's messages, graph edges and settings are removed or anonymized on the schedule, while the moderation records the law requires you to keep are kept ([Data Retention](/docs/architecture/data-retention#erasure-requests)).
+- **Erasure:** a deleted account's messages, graph edges and settings are removed or anonymized on the schedule, while the moderation records the law requires you to keep are kept ([Data Retention](/docs/architecture/data-retention#erasure-requests); [Erasure Against Append-Only Records](/books/gaming/saves-and-player-data#erasure-against-append-only-records)).
 
 ## What This Means for the System You Build
 

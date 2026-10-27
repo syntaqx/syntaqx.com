@@ -9,7 +9,7 @@ tags = ["gaming", "loot-boxes", "consumer-law", "virtual-currency", "odds", "ref
 
 A loot box is a purchase whose contents the buyer doesn't know in advance. Apple defines loot boxes as "virtual containers that provide players with randomized virtual items for purchase"; the ESRB's label for them covers anything where "the player doesn't know prior to purchase the specific digital goods or premiums they will be receiving," including gacha, card packs, prize wheels and treasure chests, and including purchases made with currency bought for real money. Whether that's a game mechanic, a sales technique or gambling depends on the country, and the answers have been converging since 2025 on three demands: **tell people the odds, show them the real price, and keep children out unless a parent agrees.**
 
-This chapter covers the rules (country by country, store by store, and the EU consumer authorities' 2025 principles on virtual currencies), the FTC's orders against game companies over purchases, refund rights, and how to build drop tables and disclosures that are true by construction and can be audited. The monetization models themselves are in [Monetization Models](/books/gaming/monetization), the currency ledger in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements), store refund mechanics in [Stores, Fees & Payments](/books/gaming/stores-and-payments), and the rating consequences of paid random items in [Ratings, Age & Children](/books/gaming/ratings-and-age). Dates are as of October 2026. This isn't legal advice, and gambling law in particular turns on facts that only counsel can weigh.
+This chapter covers the rules (country by country, store by store, and the EU consumer authorities' 2025 principles on virtual currencies), the FTC's orders against game companies over purchases, refund rights, what the law asks when a game's servers shut down (the Stop Killing Games initiative, California's license disclosure law, refunds of unspent currency and offline modes), and how to build drop tables and disclosures that are true by construction and can be audited. The monetization models themselves are in [Monetization Models](/books/gaming/monetization), the currency ledger in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements), store refund mechanics in [Stores, Fees & Payments](/books/gaming/stores-and-payments), and the rating consequences of paid random items in [Ratings, Age & Children](/books/gaming/ratings-and-age). Dates are as of October 2026. This isn't legal advice, and gambling law in particular turns on facts that only counsel can weigh.
 
 ## The Rules by Jurisdiction
 
@@ -124,6 +124,47 @@ The CPC principles and the HoYoverse order turn currency design into something a
 - **Direct purchase of random items with money.** The HoYoverse order requires it for that company; it's also the simplest way to make the price of a draw unambiguous everywhere.
 - **No expiry on purchased currency.** Apple's Guideline 3.1.1 already says purchased credits and currencies "may not expire," and principle 6 warns against unilaterally changing their value.
 
+## When the Servers Shut Down
+
+Every online game eventually turns its servers off, and a game that can't run without them stops working for everyone who paid for it. Ubisoft's The Crew turned that into a legal question. Ubisoft delisted the game and stopped selling its microtransactions on December 14, 2023, took the always-online game's servers down on March 31, 2024, citing "upcoming server infrastructure and licensing constraints," and in April 2024 players found the game moved to an "inactive games" section of their Ubisoft Connect libraries, with existing installs launching a demo. A citizens' initiative, a UK petition and a lawsuit followed, and California passed a disclosure law on the same question of what a digital purchase is. As of October 2026, none of them makes keeping a game playable mandatory, but together they set out what a shutdown owes the people who paid.
+
+### The Citizens' Initiative and the UK Petition
+
+The European Citizens' Initiative "Stop Destroying Videogames", the EU arm of the Stop Killing Games campaign, asks the Commission to require publishers that sell or license games in the EU to leave them in a functional state. It collected about 1.45 million signatures and was submitted on January 26, 2026 with 1,294,188 verified statements of support, past the one-million threshold and the national minimums in 24 Member States. The organisers met Executive Vice-President Henna Virkkunen and Commissioner Michael McGrath on February 23, 2026, the European Parliament held a public hearing on April 16 and a plenary debate on May 21, and the Commission adopted its communication on June 16, 2026. Its answer: it "cannot propose a legal obligation to keep video games playable" at this stage, because existing consumer law already provides safeguards. What it committed to instead is talks, starting by the end of 2026, with industry and consumer representatives on an industry code of conduct for the end-of-life phase of games, awareness work with consumer authorities, and a report on the Digital Content Directive (below) before the end of 2026. That code and that report are the two things to watch.
+
+In the UK, e-petition 702074, "Prohibit publishers irrevocably disabling video games they have already sold," reached 189,886 signatures. The government's response of February 3, 2025 was that "There are no plans to amend UK consumer law on disabling video games," and when Parliament debated the petition on November 3, 2025, the minister held to it: "We do not think that mandating end-of-life plans is proportionate or enforceable."
+
+### The Crew Lawsuit
+
+Two California buyers sued Ubisoft over The Crew on November 4, 2024 (Cassell v. Ubisoft, Eastern District of California, No. 2:24-cv-03058), as a fraud claim arguing that buyers were sold what looked like a game and got a revocable license. An amended complaint followed on March 18, 2025, and the docket shows the case terminated on June 13, 2025; the campaign's own wiki records a voluntary dismissal without prejudice. No court ruled on the merits, so the case settled nothing except that the "you bought a license" question will be asked in court.
+
+### California's License Disclosure Law
+
+California answered the same question with a disclosure rule. AB 2426, signed on September 24, 2024 and in force from January 1, 2025, makes it unlawful to advertise or sell a digital good with "buy," "purchase" or similar terms that a reasonable person would understand to confer an unrestricted ownership interest, unless the seller does one of two things:
+
+- **Gets an affirmative acknowledgment** from the purchaser at the time of the transaction that they are receiving a license, with the license's restrictions and the fact that access may be revoked if the seller loses the rights to the good; or
+- **Shows a clear and conspicuous statement** before the transaction that the purchase is a license, with a hyperlink, QR code or similar access to the full license terms.
+
+Subscriptions, goods offered for free, and goods that can be permanently downloaded and stored offline are exempt. Steam's response, added to the cart in October 2024, is the second path in one line: "A purchase of a digital product grants a license for the product on Steam," with a link to the Subscriber Agreement. For a game with its own web store or in-game store selling paid items to California players, the statement belongs in the purchase flow, generated from the same offer record as the price, and logged with the transaction so the disclosure shown at purchase time is a fact, not an assumption. The offline exemption is also an engineering incentive: a good the player can keep without the publisher's servers isn't the thing the law is about.
+
+### What the Law Already Requires at Shutdown
+
+There's no shutdown statute, but existing law reaches a shutdown from several sides:
+
+- **EU conformity.** The Digital Content Directive (2019/770) requires content supplied continuously over a period, which describes a live service, to be "in conformity throughout the duration of that period" (Article 8(4)); for a one-off sale, updates are owed for the period "that the consumer may reasonably expect, given the type and purpose" of the content (Article 8(2)(b)). A modification that "negatively impacts" access or use, beyond a minor impact, lets the consumer terminate free of charge within 30 days (Article 19(2)), unless the trader lets them keep the unmodified content at no extra cost (Article 19(4)). On termination the trader refunds the price, or for continuous supply the proportionate part for the period of non-conformity and any advance payment for the rest of the term (Article 16(1)), and must make available content the consumer created or provided, other than personal data, free of charge and in a "commonly used and machine-readable format" (Article 16(4)). How these articles apply to a shutdown hasn't been settled in court that I know of, which is why the Commission's report on the directive matters.
+- **Unspent paid currency.** In the EU, the CPC principles above keep unused purchased currency withdrawable for 14 days. Japan goes further: under Article 20 of the Payment Services Act, an issuer that discontinues a prepaid payment instrument must refund the outstanding balance, after public notice, with a claims period of not less than 60 days. Game currency that qualifies is refunded this way when a game closes; LINE's notice for LINE HELLO BT21, which ended on June 28, 2024, cites Article 20(1), refunds the paid balance unused at the end of service, and ran applications from July 5 to October 4, 2024. Whether a given currency is a prepaid payment instrument depends on its design, which is counsel's call, but the ledger has to be able to answer "how much paid currency, bought for how much, was unspent at the end" either way.
+- **Store refunds.** Store policy still applies at shutdown, and stores add their own end-of-service rules: Valve's retirement guidance says all purchases stay covered by the normal Steam refund policy, that Valve may offer refunds beyond it, and that a free-to-play game owes players at least 90 days' notice with in-game purchasing disabled and time to use remaining currency. Per-store windows are in [Stores, Fees & Payments](/books/gaming/stores-and-payments#refunds-and-chargebacks). Publishers have also gone past the floors: Sony offered full refunds for Concord when it took the game offline on September 6, 2024, two weeks after launch, and Ubisoft refunded XDefiant's Ultimate Founder's Pack and any purchase made in the 30 days before its shutdown announcement.
+
+### Offline Modes and End-of-Life Patches
+
+The engineering answer to all of this is a game that keeps working without the publisher. Publishers have shipped it in three forms:
+
+- **An offline mode in the live game.** Ubisoft said in April 2025 that The Crew 2 and The Crew Motorfest would both get offline modes, and The Crew 2's shipped in a patch on October 20, 2025: the player picks online or offline at launch, offline progression is saved locally, and multiplayer, leaderboards, user-generated content and the shop are disabled. As of October 2026 I found no released offline mode for Motorfest.
+- **Private servers.** Velan Studios announced on February 2, 2023 that Knockout City's servers would close on June 6, 2023, and released a free PC edition that players can run on privately hosted servers. Console players got no equivalent.
+- **A separate offline edition.** Capcom released Mega Man X DiVE Offline on Steam on September 1, 2023, at $29.99, before the mobile game's online service ended on September 27, 2023.
+
+Each one is cheaper to build if the game was designed for it, which is the runbook's subject: [End of Service](/books/gaming/live-operations#end-of-service) covers the notice, the stop-sale, the delisting, the patch and the order of shutdown. Exporting saves and player data is in [Access and Portability](/books/gaming/saves-and-player-data#access-and-portability), and what a player's purchases entitle them to is the entitlement record in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#entitlements-are-the-source-of-truth). My rule: the end-of-life plan is part of what's sold. Disclose the license where the law asks, stop selling paid currency before anything else, refund unspent paid balances where any law in a market requires it, and say at launch what the game becomes when the servers go.
+
 ## How to Build It
 
 A drop table is the list of possible outcomes of a draw with their probabilities. Everything in this section follows from one rule: **the disclosure and the roll read the same rows.** Odds published from a spreadsheet and a roll coded in the game server will drift apart, and the first person to notice will be a player with a spreadsheet of their own.
@@ -223,6 +264,26 @@ CREATE TABLE spending_limits (
 
 Before a purchase starts, the server adds the purchase price to the sum of the account's `store_transactions` in the period that aren't `rejected` or `reversed` (pending ones count, so two quick purchases can't both slip under), and refuses if any live limit would be exceeded. Purchases in another currency are converted to the limit's currency at that day's reference rate before the comparison. Child accounts get a `default` row of zero at creation, which a parent's consent replaces; a platform's own limit still applies on its store, so this one matters most for the web store and any path the platform doesn't see ([Parental Controls on Consoles and PCs](/books/gaming/ratings-and-age#parental-controls-on-consoles-and-pcs)).
 
+### Unspent Paid Currency at Shutdown
+
+A shutdown refund, a Japanese Article 20 notice and a 14-day withdrawal all ask the same question at a cutoff instant: how much paid currency each account still held. With the ledger in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#wallets-are-ledgers) it's one query, run at the moment paid sales stop and again when the servers go off:
+
+```sql
+SELECT w.account_id, e.currency, SUM(e.delta_amount) AS unspent_paid_units
+FROM currency_ledger_entries e
+JOIN currency_ledger_transactions t ON t.id = e.transaction_id
+JOIN wallets w ON w.id = e.wallet_id
+WHERE t.tenant_id = $1
+  AND t.game_id = $2
+  AND e.ledger_account = 'player'
+  AND e.funding = 'paid'
+  AND e.created_at < $3                      -- the cutoff instant
+GROUP BY w.account_id, e.currency
+HAVING SUM(e.delta_amount) > 0;
+```
+
+Units aren't money, so the refund amount comes from the purchase lots, not a price per gem. Under first-in, first-out attribution ([Spend Order](/books/gaming/economies-and-entitlements#spend-order)), the units left are the newest purchases' remainders, and each one is refunded at what that purchase actually cost per unit, in the currency it was paid in, through the store or channel that took the money. The refund itself posts a `refund` transaction that moves the units out of `player_paid`, so the balance at the next query is zero and a second run refunds nothing.
+
 ## Auditing
 
 What gets asked for, and by whom:
@@ -242,6 +303,7 @@ What gets asked for, and by whom:
 - **One premium currency,** real-money prices from an undiscounted reference rate beside every currency price, packs that match the catalog, direct money purchase of draws, and no expiry.
 - **Refunds that know what's unspent,** with purchase lots in the ledger and no account locks for disputes.
 - **Gates for region, age and consent, and spending limits** evaluated on the server before payment.
+- **A shutdown that's planned at sale:** license disclosure where California requires it, logged with the transaction; paid sales stopped first; unspent paid balances computed from the ledger at a cutoff and refunded per lot where law or store policy requires; and an offline mode, private servers or an offline edition designed in rather than promised later.
 
 ## References
 
@@ -254,6 +316,11 @@ What gets asked for, and by whom:
 - [Planalto: Lei nº 15.211, de 17 de setembro de 2025](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15211.htm), the ECA Digital; Article 20's loot box prohibition and Article 41-A's entry into force on March 17, 2026
 - [Australian Classification: New classifications for gambling content in video games](https://www.classification.gov.au/about-us/media-and-news/news/new-classifications-for-gambling-content-video-games), the M minimum for in-game purchases linked to chance and R 18+ for simulated gambling from September 2024
 - [Japanese Law Translation: Act against Unjustifiable Premiums and Misleading Representations](https://www.japaneselawtranslation.go.jp/en/laws/view/2888/en), the act under which kompu gacha was held unlawful
+- [Directive (EU) 2019/770, Article 8](https://www.legislation.gov.uk/eudr/2019/770/article/8/2020-01-31), conformity throughout continuous supply and updates for the period the consumer may reasonably expect
+- [Directive (EU) 2019/770, Article 16](https://www.legislation.gov.uk/eudr/2019/770/article/16/2020-01-31), reimbursement on termination, proportionate for continuous supply, and retrieval of user-created content
+- [Directive (EU) 2019/770, Article 19](https://www.legislation.gov.uk/eudr/2019/770/article/19/2020-01-31), modifications that negatively impact access, the 30-day termination right and the exception for keeping the unmodified content
+- [Japanese Law Translation: Payment Services Act](https://www.japaneselawtranslation.go.jp/en/laws/view/4477), Article 20's refund of prepaid payment instrument balances on discontinuation and the claims period of not less than 60 days
+- [Steamworks: Retiring a product](https://partner.steamgames.com/doc/store/retire_app), refunds under the normal policy and beyond it, and 90 days' notice for free-to-play games with purchases disabled
 
 **Reference**
 
@@ -271,9 +338,27 @@ What gets asked for, and by whom:
 - [FTC: $126 million in refunds to Fortnite players](https://www.ftc.gov/news-events/news/press-releases/2025/06/ftc-sends-126-million-refunds-fortnite-players-who-were-charged-unwanted-items-reopens-claims), June 25, 2025; the refund rounds and the nearly $200 million total
 - [FTC: Genshin Impact developer will be banned from selling loot boxes to teens under 16 without parental consent](https://www.ftc.gov/news-events/news/press-releases/2025/01/genshin-impact-game-developer-will-be-banned-selling-lootboxes-teens-under-16-without-parental), January 17, 2025; odds and exchange-rate disclosure, direct money purchase and the under-16 rule
 - [Apple: Age requirements for apps distributed in Brazil, Australia, Singapore, Utah, and Louisiana](https://developer.apple.com/news/?id=f5zj08ey), February 24, 2026; loot boxes rated 18+ on the Brazil storefront
+- [European Citizens' Initiative: Stop Destroying Videogames](https://citizens-initiative.europa.eu/stop-destroying-videogames_en), the 1,294,188 verified signatures, the February meeting, the April hearing, the May plenary debate and the Commission's June 16, 2026 communication and follow-up
+- [European Citizens' Initiative: 14th valid initiative submitted to the Commission](https://citizens-initiative.europa.eu/news/14th-valid-initiative-stop-destroying-videogames-submitted-commission-examination-2026-01-26_en), January 26, 2026; submission, thresholds in 24 Member States and the July 27, 2026 reply deadline
+- [heise: 1,294,188 signatures for "Stop Destroying Videogames"](https://heise.de/-11154579), about 1.45 million signatures collected before verification
+- [UK Parliament: Petition 702074](https://petition.parliament.uk/petitions/702074), 189,886 signatures, the government response of February 3, 2025 and the November 3, 2025 debate
+- [VGC: UK parliament debates Stop Killing Games campaign](https://www.videogameschronicle.com/news/digital-ownership-must-be-respected-uk-parliament-debates-stop-killing-games-campaign-but-government-doesnt-budge), November 4, 2025; the minister's position that mandating end-of-life plans isn't proportionate
+- [CourtListener: Cassell v. Ubisoft Entertainment S.A.](https://www.courtlistener.com/docket/69344952/cassell-v-ubisoft-entertainment-sa/), E.D. Cal. 2:24-cv-03058; filed November 4, 2024, amended complaint March 18, 2025, terminated June 13, 2025
+- [Morgan Lewis: California becomes first state to pass law targeting advertising of digital media licenses](https://www.morganlewis.com/pubs/2024/10/california-becomes-first-state-to-pass-law-targeting-advertising-of-digital-media-licenses), October 17, 2024; AB 2426's signing, effective date, two compliance paths and exemptions
+- [Frankfurt Kurnit: Steam updates checkout disclosures in light of new California law](https://technologylaw.fkks.com/post/102jlqx/steam-updates-checkout-disclosures-in-light-of-new-california-false-advertising-l), October 14, 2024; Steam's license notice and the acknowledgment path's contents
+- [LY Corporation: LINE GAME title end and refund notice](https://www.lycorp.co.jp/ja/news/announcements/008711/), the Payment Services Act Article 20(1) refund for LINE HELLO BT21 and its application period, in Japanese
 
 **In practice**
 
 - [ESRB: In-Game Purchases (Includes Random Items)](https://www.esrb.org/blog/in-game-purchases-includes-random-items/), the label's scope, including purchases with bought currency
 - [PEGI: Expanded age rating criteria](https://pegi.info/news/pegi-expands-age-rating-criteria-interactive-risk-categories), paid random items PEGI 16 by default from June 2026
 - [Steam: Refunds](https://store.steampowered.com/steam_refunds/), the 14-day, two-hour rule and in-game purchase refunds by developer opt-in
+- [Insider Gaming: Ubisoft taking The Crew offline](https://insider-gaming.com/ubisoft-taking-the-crew-offline/), December 15, 2023; the March 31, 2024 shutdown and Ubisoft's stated infrastructure and licensing reasons
+- [Stop Killing Games wiki: The Crew](https://stopkillinggames.wiki.gg/wiki/The_Crew), the December 14, 2023 delisting and stop of microtransaction sales, and the lawsuit's voluntary dismissal
+- [Gfinity: Ubisoft pulls The Crew digital copies from libraries](https://www.gfinityesports.com/article/ubisoft-pulls-the-crew-digital-copies-from-libraries), April 2024; the "inactive games" section and installs launching a demo
+- [Ubisoft: The Crew 2 offline mode patch notes](https://www.ubisoft.com/en-us/game/the-crew/the-crew-2/news-updates/4kuseh7DXQ6fuf4tFoHix0/the-crew-2-offline-mode-patchnote), October 20, 2025; local saves and the systems disabled offline
+- [Pure Xbox: Ubisoft update on offline mode for two The Crew titles](https://purexbox.com/news/2025/04/ubisoft-provides-update-on-offline-mode-for-two-the-crew-titles), April 25, 2025; offline modes committed for The Crew 2 and Motorfest
+- [Gematsu: Knockout City to end service on June 6](https://gematsu.com/2023/02/knockout-city-to-end-service-on-june-6-private-hosted-server-edition-to-be-released-for-pc), February 2, 2023; end of service, the stop of real-money purchases and the PC private server edition
+- [Siliconera: Mega Man X DiVE Offline release date set](https://www.siliconera.com/mega-man-x-dive-offline-release-date-set/), the September 1, 2023 offline edition at $29.99 and the September 27, 2023 end of the online service
+- [TheSixthAxis: Concord is shutting down, refunds being issued](https://www.thesixthaxis.com/2024/09/03/concord-is-shutting-down-this-week-refunds-being-issued-while-they-explore-options/), September 3, 2024; the September 6 shutdown and full refunds
+- [Gematsu: XDefiant to end service on June 3, 2025](https://gematsu.com/2024/12/xdefiant-to-end-service-on-june-3-2025), December 3, 2024; refunds for the Ultimate Founder's Pack and purchases in the prior 30 days

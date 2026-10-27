@@ -9,7 +9,7 @@ tags = ["gaming", "game-engines", "unreal-engine", "unity", "godot", "licensing"
 
 A game engine is the part of a game that isn't the game: the loop that turns input into frames, the renderer, physics, audio, animation, networking, the asset pipeline that turns an artist's files into something a console can load, and the editor where designers build levels. It is the largest dependency a studio takes on. It decides which platforms the game can ship to, which language the team writes, how multiplayer works, what the build farm does all night, and what the studio pays when the game succeeds. Changing it later is possible, and a few studios have done it in public, but it costs years.
 
-This chapter surveys what exists as of October 2026: the two commercial engines most studios license (Unreal and Unity), the open-source engines that have become serious options (Godot, O3DE, Bevy, Defold, Cocos), GameMaker, the proprietary engines large studios run, the studios that changed engines and said why, and how to choose. Building one yourself has its own chapter, [Building Your Own Engine](/books/gaming/building-an-engine); the pipelines around any engine are in [Production Pipelines & Builds](/books/gaming/production-pipelines).
+This chapter surveys what exists as of October 2026: the two commercial engines most studios license (Unreal and Unity), the open-source engines that have become serious options (Godot, O3DE, Bevy, Defold, Cocos), GameMaker, the proprietary engines large studios run, the studios that changed engines and said why, the middleware licensed alongside an engine (audio, physics, video, vegetation), and how to choose. Building one yourself has its own chapter, [Building Your Own Engine](/books/gaming/building-an-engine); the pipelines around any engine are in [Production Pipelines & Builds](/books/gaming/production-pipelines).
 
 ## What an Engine Gives You
 
@@ -134,6 +134,31 @@ What a migration touches, in order of how much it usually hurts:
 5. **The client around the game** (launcher, patcher, crash reporting) is reconnected ([Game Clients & Launchers](/books/gaming/game-clients)).
 6. **The backend,** ideally, not at all.
 
+## Middleware
+
+An engine is rarely the only runtime library a game licenses. Middleware is a library for one subsystem, linked into the engine: audio, physics, video, vegetation. It is chosen per subsystem, usually licensed per title, and it changes both what the engine choice costs and what a migration touches. Terms as of October 2026, from each vendor's own page:
+
+| Middleware | What it does | License model (October 2026) | Engine integration |
+| --- | --- | --- | --- |
+| **Audiokinetic Wwise** | Interactive audio: an authoring tool for sound designers and a runtime sound engine | Per title, by production budget (International pricing): Indie free under $250K; Pro "starting at $8,000" from $250K to $2M; Premium from $25,000 and Platinum from $45,000 above $2M; royalty-free; a license "is tied to a specific project" | Unity and Unreal plug-ins from Audiokinetic; a Godot integration maintained on GitHub |
+| **FMOD** (Firelight) | Interactive audio: FMOD Studio for authoring, the FMOD Engine at runtime | Per game, by development budget: Indie under $600k, free when the developer's revenue is under $200k a year and $2,000 otherwise; Basic $6,000 ($600k to $1.8M); Premium $18,000 (over $1.8M); all platforms, lifetime distribution, FMOD logo required | FMOD for Unity and FMOD for Unreal from Firelight; a community GDExtension for Godot (MIT) |
+| **Havok Physics** | Rigid bodies, ragdolls, character controllers, ray and shape casts | $50,000 per Havok product for budgets up to $20M, no royalty, all platforms; above $20M by quote, with full source | Havok for Unreal as a drop-in replacement for engine physics; Havok Physics for Unity (DOTS) for Pro, Enterprise and Industrial Collection users, binary-only |
+| **Jolt Physics** | Multi-core rigid body physics and collision detection | MIT, free | The default 3D physics engine for new Godot projects since 4.4; used by Horizon Forbidden West and Death Stranding 2 |
+| **NVIDIA PhysX** | Rigid body physics SDK, with Flow (fluids, fire) and Blast (destruction) alongside | BSD-3-Clause | Unity's built-in 3D physics for GameObjects; replaced by Chaos as Unreal's default in UE5 |
+| **Bink** (RAD Game Tools, Epic) | Video codec for cutscenes and in-game video | RAD "generally license[s] per game and per platform," by quote; no public price | Built into Unreal Engine 5 as the Bink Media plugin, on all Unreal platforms including NDA platforms |
+| **SpeedTree** (Unity) | Vegetation modeling, a tree library and a runtime SDK | Subscriptions by funding or revenue: Indie $19 a month under $100k; Pro $899 a year under $1M; Enterprise by quote over $1M, the tier that includes the Runtime SDK | Unity calls its tools "engine agnostic" |
+
+The engines ship their own defaults, and those set the baseline a middleware fee has to beat. Unreal Engine 5 "uses the Chaos Physics engine for physical simulation, replacing PhysX as the default," with Chaos Destruction, Cloth and Vehicles; its audio designers get MetaSounds, "a high-performance audio system"; and Bink comes with the engine. Unity runs PhysX for 3D GameObjects and Box2D for 2D, and data-oriented projects install the Unity Physics package, with Havok as an optional backend. Godot ships Jolt. Ownership moves too: Epic bought RAD in January 2021, with RAD's tools reported to stay available to studios not on Unreal, and Unity bought SpeedTree's maker, IDV, in July 2021.
+
+What changes the calculus:
+
+- **The base is the budget, not revenue.** Wwise and FMOD price on production budget, Havok on budget, SpeedTree on funding or revenue, each per title. These are fixed fees paid whether or not the game sells, unlike the Unreal royalty, which only arrives with success ([The Cost of Ownership](#the-cost-of-ownership)).
+- **Integration is per engine.** An official plug-in for the engine you use is maintained by the vendor; a community integration (both audio middlewares on Godot) is maintained by whoever wrote it, and a studio that depends on it may end up maintaining it.
+- **Middleware can survive a migration when it integrates with both engines.** Audio authored in Wwise or FMOD can move with the game; physics tuned on Chaos or PhysX doesn't, because Epic's migration guide warns that Chaos "behaves differently from PhysX."
+- **Determinism is a middleware property.** Jolt is deterministic when the same binary makes the same API calls in the same order, with a cross-platform option that costs about 8%; Unity calls Havok "a deterministic but stateful engine" and points rollback projects to the stateless Unity Physics. A game that needs lockstep or rollback picks its physics for that before anything else ([Lockstep, Rollback & Determinism](/books/gaming/determinism-and-rollback#what-determinism-requires)).
+
+What these libraries do inside the frame, and when to write your own instead, is in [Building Your Own Engine](/books/gaming/building-an-engine#physics).
+
 ## The Cost of Ownership
 
 License fees are the visible part of an engine's cost, and they're easy to compare at one illustrative revenue figure. Take a game that grosses $5 million over its life, built by ten developers paying for three years of seats:
@@ -145,6 +170,7 @@ The sheet makes three points:
 - **The Unreal royalty scales with success; Unity seats scale with headcount.** Below the break-even K1, seats cost more than the royalty; above it, the royalty costs more. K1 moves with team size and years, so compute it for your own numbers rather than reading it off this sheet.
 - **The royalty base is gross revenue,** before the store's share. A store that takes its cut and an engine royalty on the same gross dollar compound ([Stores, Fees & Payments](/books/gaming/stores-and-payments)).
 - **License fees are the small number.** An in-house engine has no license fee and a payroll; an open-source engine has no license fee and makes the studio its own support desk. Neither appears on a pricing page, and both usually dwarf the fees on this sheet.
+- **Middleware sits on top.** Audio, physics and video libraries add per-title fees set by budget, not revenue, owed whether or not the game sells ([Middleware](#middleware)).
 
 ## How to Choose
 
@@ -180,6 +206,7 @@ The build-or-buy argument itself, from GDC 2012's public debate to the condition
 - **Report royalties from your own revenue data,** quarterly, from gross revenue across every store, not from net payouts.
 - **Pick the engine for the game and the team,** then compute license costs at the revenue you hope for, including the break-even between royalty and seats.
 - **Prefer engines with source access** for anything shipping on consoles or meant to run for years.
+- **Price middleware per subsystem and per title,** start from what the engine already ships (Chaos, PhysX, Jolt, Bink in Unreal), pick physics for determinism first if the netcode needs it, and record each middleware's version and license alongside the engine's on every build.
 - **Budget for engine upgrades** as ongoing work, and for migrations as multi-year projects.
 - **Design for a second engine** if you're a publisher: shared backend services and per-game engines are the normal shape.
 
@@ -191,6 +218,13 @@ The build-or-buy argument itself, from GDC 2012's public debate to the condition
 - [Godot: Complying with licenses](https://docs.godotengine.org/en/stable/about/complying_with_licenses.html), the MIT License and how to include it
 - [O3DE: LICENSE.txt](https://github.com/o3de/o3de/blob/development/LICENSE.txt), Apache 2.0 or MIT at the user's option
 - [Defold: License](https://defold.com/license/), the Defold License 1.0
+- [Audiokinetic: Wwise pricing](https://www.audiokinetic.com/en/wwise/pricing/), Indie, Pro, Premium and Platinum by production budget, royalty-free, licenses tied to one title (International pricing, October 2026)
+- [FMOD: Licensing](https://www.fmod.com/licensing), Indie, Basic and Premium fees per game by development budget, the $200k revenue condition, all platforms and the logo requirement (October 2026)
+- [Havok: Pricing](https://www.havok.com/pricing/), $50,000 per product up to a $20M budget, quote above it, no royalty (October 2026)
+- [SpeedTree store](https://store.speedtree.com/), Indie, Pro, Library and Enterprise subscriptions and their funding thresholds (October 2026)
+- [RAD Game Tools: Sales](https://www.radgametools.com/sales.htm), licensing per game and per platform by quote
+- [Jolt Physics on GitHub](https://github.com/jrouwe/JoltPhysics), MIT license, deterministic simulation, titles that use it
+- [NVIDIA PhysX on GitHub](https://github.com/NVIDIA-Omniverse/PhysX), BSD-3-Clause, with the Flow and Blast SDKs
 
 **Reference**
 
@@ -222,6 +256,23 @@ The build-or-buy argument itself, from GDC 2012's public debate to the condition
 - [GameMaker: Get GameMaker](https://gamemaker.io/en/get), the Free, Professional and Enterprise tiers
 - [GameMaker Language manual](https://manual.gamemaker.io/monthly/en/GameMaker_Language/GameMaker_Language_Index.htm), GML as GameMaker's proprietary language
 - [id Software on GitHub](https://github.com/id-Software), released source for older id engines under the GPL
+- [Audiokinetic: Wwise resources](https://www.audiokinetic.com/en/education/wwise-resources/), the Wwise Unity Integration and Wwise Unreal Integration plug-ins
+- [Wwise integration for Godot on GitHub](https://github.com/alessandrofama/wwise-godot-integration), a GDExtension-based Wwise integration
+- [FMOD for Unreal](https://www.fmod.com/docs/2.03/unreal/welcome.html) and [FMOD for Unity](https://www.fmod.com/docs/2.03/unity/welcome.html), Firelight's engine integrations
+- [fmod-gdextension on GitHub](https://github.com/utopia-rise/fmod-gdextension), a community FMOD integration for Godot 4 under MIT
+- [Havok Physics](https://www.havok.com/havok-physics/), features, Havok for Unreal as a drop-in replacement, shipped titles
+- [Unity Manual: Havok Physics for Unity](https://docs.unity3d.com/6000.1/Documentation/Manual/com.havok.physics.html), availability to Pro, Enterprise and Industrial Collection users
+- [Havok Physics for Unity: FAQ](https://docs.unity3d.com/Packages/com.havok.physics@1.3/manual/faq.html), deterministic but stateful, Unity Physics recommended for rollback
+- [Unity Manual: Physics integrations](https://docs.unity3d.com/Manual/physics-integrations.html), PhysX for 3D, Box2D for 2D, Unity Physics for DOTS
+- [Godot: Using Jolt Physics](https://docs.godotengine.org/en/stable/tutorials/physics/using_jolt_physics.html), Jolt added in 4.4 and the default for new projects
+- [Jolt Physics documentation](https://jrouwe.github.io/JoltPhysics/), the conditions for deterministic simulation and the cost of cross-platform determinism
+- [Epic Games: Physics](https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-in-unreal-engine), Chaos Physics, Destruction, Cloth and Vehicles
+- [Epic Games: Unreal Engine 5 migration guide](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-5-migration-guide), Chaos replacing PhysX as the default and behaving differently
+- [Epic Games: MetaSounds](https://dev.epicgames.com/documentation/en-us/unreal-engine/metasounds-the-next-generation-sound-sources-in-unreal-engine), Unreal's audio system for procedural sound sources
+- [Epic Games: Bink Video](https://dev.epicgames.com/documentation/en-us/unreal-engine/bink-video-for-unreal-engine), the Bink Media plugin built into Unreal Engine 5 on all platforms
+- [RAD Game Tools: Bink Video](https://www.radgametools.com/bnkmain.htm), Bink as a video codec for games
+- [GeekWire: Epic Games buys RAD](https://www.geekwire.com/2021/epic-games-buys-seattle-area-video-game-development-toolmaker-rad/), January 8, 2021, and RAD's tools staying available beyond Unreal
+- [Unity: Unity acquires IDV, creators of SpeedTree](https://unity.com/news/unity-acquires-interactive-data-visualization-inc-idv-creators-speedtreer), closed July 14, 2021, engine-agnostic tools
 
 **In practice**
 

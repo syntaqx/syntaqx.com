@@ -136,6 +136,37 @@ Consoles and phones have fixed memory, and a game that exceeds it doesn't slow d
 
 Asset references in the data should be stable IDs, not file paths, so the pipeline can repack content without breaking the game, and patches can replace content by ID ([Patching & Content Delivery](/books/gaming/patching)).
 
+## Physics
+
+Physics lives in the simulation layer and runs inside the fixed step from [Fixed and Variable Timesteps](#fixed-and-variable-timesteps), because a solver's stability depends on `dt`. Jolt's documentation puts it plainly: "the system is stable when running at 60 Hz with 1 collision step." When that isn't enough, Jolt runs more collision steps inside one physics step (two at 60 Hz means collision and integration each run at 1/120 s), which is the same trade as shortening the step. Erin Catto's comparison of solvers for Box2D reaches the same place from the other side: "smaller time steps are more effective than more iterations," and Box2D v3's Soft Step solver is built on sub-stepping.
+
+Each step runs the same stages in every engine:
+
+1. **Broadphase.** A cheap test on bounding volumes finds the pairs that might touch, so the expensive test doesn't run on every pair. Jolt's broadphase is a quad tree, "each node has 4 children."
+2. **Narrowphase.** For each candidate pair, exact contact points, normals and penetration depth. Jolt's narrow phase queries "are all handled through the GJK and EPA algorithms."
+3. **Solve.** Contacts and joints become constraints, solved iteratively: Jolt runs velocity and position iterations until the corrections are small "or a max iteration count is reached." More iterations buy stiffer stacks and joints, at a CPU cost.
+4. **Integrate.** Velocities move bodies to their new positions, which the rest of the frame reads.
+
+Physics is also where determinism is most often lost ([Determinism](#determinism)). Catto's account of Box2D v3's determinism lists the traps: "FMA must be disabled for cross-platform determinism," `atan2f` "gives different answers on different platforms" so Box2D carries its own, and a multithreaded solver "produces different results if the contact array has a different order," which Box2D v3 fixes by merging per-thread results in a fixed order. Jolt is deterministic when "the same binary code" makes the same API calls "in exactly the same order," and its cross-platform option makes it "approximately 8% slower." Rollback adds one more condition: re-simulating from a saved state needs every cache the solver keeps. Box2D says it "does not provide roll-back determinism," and Unity calls Havok "deterministic but stateful" and recommends its stateless Unity Physics for rollback ([Lockstep, Rollback & Determinism](/books/gaming/determinism-and-rollback#rollback)).
+
+My default is to buy physics: Jolt (MIT) and PhysX (BSD-3-Clause) are free, Havok is commercial, and every licensed engine ships one ([The Engine Landscape](/books/gaming/engine-landscape#middleware) has the terms). Writing your own pays when the physics is the game and is narrow: a fighting game with a few hitboxes, or a deterministic simulation where you need to own every operation's order. Either way, wrap it behind the engine's own interface, so the choice can change without rewriting gameplay.
+
+## Audio
+
+Audio is the one subsystem with a hard real-time deadline. A late render frame repeats the previous image; a late audio block is a click or a dropout. The mixer fills a ring buffer the device plays from, one block at a time. FMOD's defaults show the scale: blocks of 1024 samples, four of them, so at 48 kHz "the mixer updates every 21.33ms" and the whole buffer is 85.33 ms, with real latency "more like the (number of buffers - 1.5) multiplied by the buffer length." Smaller buffers lower latency "but can lead to stuttering/skipping/unstable sound on slower machines." So the mixer runs on its own thread, and game code sends it commands rather than calling into it; Unreal's MetaSounds are "rendered asynchronously to the main Audio Mixer." My rule: nothing on the mixer thread waits on a lock the game thread holds, allocates from a shared heap, or touches the disk.
+
+A game asks for more sounds than it can mix. The answer is **voice limits with virtualization**: FMOD's virtual voice system lets a game "play hundreds or even thousands" of sounds while only a few produce audio; the rest are "emulated with a simple position and audibility update." A voice goes virtual when it is inaudible or when the limit on real voices is exceeded, and then the lowest-priority, least audible voice goes first. Unreal does the same with Sound Concurrency: a Max Count per group and a resolution rule (stop the oldest, farthest, quietest or lowest-priority sound), with virtualization modes that either restart a looping sound when it becomes audible again or keep it playing silently on a voice. FMOD recommends few priority levels, because audibility-based stealing is the one players don't notice.
+
+Every sound is loaded one of three ways, and FMOD's guide describes the trade:
+
+- **Decompressed in memory:** PCM, "little to no CPU time to process," but much more memory. Short, frequent sounds on CPU-limited devices.
+- **Compressed in memory:** less memory, a decoder per playing voice (Vorbis costs 16 KB per voice in FMOD). Most short and medium sounds.
+- **Streamed:** read in small chunks into a ring buffer, at the cost of "constant file I/O." Music, ambience and dialogue. Streams compete with level streaming for the same disk ([Memory and Asset Streaming](#memory-and-asset-streaming)), so they belong in the I/O budget.
+
+**3D spatialization** turns positions from the simulation into what the player hears: distance attenuation (FMOD's default inverse roll-off halves volume with each doubling of distance past a per-sound minimum), panning to the speaker layout, Doppler, and occlusion. Each sound needs its position every frame, and split screen needs one listener per player.
+
+As with physics, buying is normal: Wwise and FMOD give sound designers an authoring tool and the runtime that plays what they author, with integrations for the major engines ([The Engine Landscape](/books/gaming/engine-landscape#middleware)). An engine that writes its own still needs the same three things: a mixer thread that never misses, a voice budget with virtualization, and an authoring path that doesn't need an engineer to change a volume.
+
 ## Determinism
 
 Some features need the simulation to produce the same result from the same inputs: lockstep and rollback multiplayer, replays recorded as inputs, server-side verification, and reproducing a bug from a recording. The engine is where determinism is won or lost, because every source of divergence is an engine decision: a wall clock read instead of simulation time, floating point that differs across compilers and CPUs, iteration in pointer or hash order, threads combined in completion order, uninitialized memory, unseeded randomness, and engine or middleware internals you can't see. [Lockstep, Rollback & Determinism](/books/gaming/determinism-and-rollback#what-determinism-requires) gives the rule and the detection tool for each, and explains how League's server was made deterministic for replays and Project Chronobreak.
@@ -181,6 +212,8 @@ Otherwise license, and spend the engineering on the parts players notice. The co
 - **A job system with declared reads and writes** and deterministic combination order.
 - **Objects for authored gameplay, data-oriented storage for large sets,** with stable entity and asset IDs.
 - **Streaming designed with the content,** packed by access pattern, with a defined fallback when data is late.
+- **Physics inside the fixed step,** bought unless the physics is the game, wrapped behind the engine's own interface, and chosen for determinism first if the netcode needs it.
+- **An audio mixer thread that never waits,** with a voice budget, virtualization by audibility, and a loading mode (in memory or streamed) chosen per sound.
 - **A determinism test from the first week** that replays recorded input and compares state hashes frame by frame.
 - **Tools as part of the engine:** reflection, versioned serialization, hot reload, designer scripting and import validation.
 - **A written build-or-license decision** naming the systems you'll own and why, revisited before each new game.
@@ -207,6 +240,19 @@ Otherwise license, and spend the engineering on the parts players notice. The co
 - [Godot Docs: Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html), per-frame processing and the 60 Hz default physics rate
 - [Godot Docs: Architecture diagram](https://docs.godotengine.org/en/stable/engine_details/architecture/godot_architecture_diagram.html), scene, server and driver layers
 - [Bevy](https://bevy.org/), a data-driven engine in Rust on its own ECS
+- [Jolt Physics documentation](https://jrouwe.github.io/JoltPhysics/), stability at 60 Hz with one collision step, the quad tree broadphase, GJK and EPA narrow phase, solver iterations and the conditions for determinism
+- [Jolt Physics on GitHub](https://github.com/jrouwe/JoltPhysics), MIT license
+- [NVIDIA PhysX on GitHub](https://github.com/NVIDIA-Omniverse/PhysX), BSD-3-Clause
+- [Box2D: Solver2D](https://box2d.org/posts/2024/02/solver2d/), Erin Catto's solver comparison: smaller steps over more iterations and the Soft Step solver
+- [Box2D: Determinism](https://box2d.org/posts/2024/08/determinism/), FMA, platform trigonometry, contact order in a multithreaded solver and no rollback determinism
+- [Havok Physics for Unity: FAQ](https://docs.unity3d.com/Packages/com.havok.physics@1.3/manual/faq.html), deterministic but stateful, the stateless Unity Physics recommended for rollback
+- [FMOD: System::setDSPBufferSize](https://www.fmod.com/docs/2.03/api/core-api-system.html), default mixer block size and count, the 21.33 ms update, latency and stutter
+- [FMOD: Managing resources in the Core API](https://www.fmod.com/docs/2.03/api/managing-resources-in-the-core-api.html), the virtual voice system, audibility and priority
+- [FMOD: Loading and playing sounds in the Core API](https://www.fmod.com/docs/2.03/api/loading-and-playing-sounds-in-the-core-api.html), decompressed, compressed and streamed sounds, and the 16 KB per voice Vorbis overhead
+- [FMOD: Spatializing sounds in the Core API](https://www.fmod.com/docs/2.03/api/spatializing-sounds-in-the-core-api.html), roll-off models, Doppler and multiple listeners
+- [Unreal Engine: Sound Concurrency reference](https://dev.epicgames.com/documentation/unreal-engine/sound-concurrency-reference-guide), Max Count and resolution rules
+- [Unreal Engine: VirtualizationMode](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/VirtualizationMode?application_version=5.3), restart and play-when-silent virtualization
+- [Unreal Engine: MetaSounds](https://dev.epicgames.com/documentation/en-us/unreal-engine/metasounds-the-next-generation-sound-sources-in-unreal-engine), MetaSounds rendered asynchronously to the Audio Mixer
 
 **In practice**
 

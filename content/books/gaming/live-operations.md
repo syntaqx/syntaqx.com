@@ -9,7 +9,7 @@ tags = ["gaming", "live-ops", "patching", "feature-flags", "remote-config", "inc
 
 A boxed game shipped once. A live game ships constantly: a balance patch every couple of weeks, a fix the day after, an event that starts at a set instant around the world, a store that rotates daily, a season that ends and resets the ladder, and every so often a change that breaks something for millions of players at once. **Live operations** is the discipline of changing a running game safely and on schedule, and the system underneath it decides how fast a change can reach players, how many players it can hurt, and how quickly it can be taken back.
 
-This chapter covers the paths a change can take (client patch, hotfix, server-side data, configuration), the cadence that organizes them, seasons and events as effective-dated content, flags and remote config, experiments, the version skew that every path creates, maintenance and player communication, incidents in a game that can't stop running, and the tables that hold it together. It links out for the rest: how builds get to players' disks, channels and the minimum client version are in [Patching & Content Delivery](/books/gaming/patching); the backend services, launch-day failures and login queues are in [Game Backend Architecture](/books/gaming/game-backend); experiment metrics and assignment are in [Game Metrics](/books/gaming/game-metrics#experiments); and compensation grants are in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#auditing).
+This chapter covers the paths a change can take (client patch, hotfix, server-side data, configuration), the cadence that organizes them, seasons and events as effective-dated content, flags and remote config, experiments, the version skew that every path creates, maintenance and player communication, incidents in a game that can't stop running, the end-of-service runbook for when it finally does, and the tables that hold it together. It links out for the rest: how builds get to players' disks, channels and the minimum client version are in [Patching & Content Delivery](/books/gaming/patching); the backend services, launch-day failures and login queues are in [Game Backend Architecture](/books/gaming/game-backend); experiment metrics and assignment are in [Game Metrics](/books/gaming/game-metrics#experiments); and compensation grants are in [Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#auditing).
 
 ## Four Ways to Change a Running Game
 
@@ -150,9 +150,53 @@ My rule: every dated thing live ops publishes (an event start, a season reset, a
 - **Mitigate with the fast paths first.** The kill switch, the config change and the queue limit exist so the first response to an incident takes seconds ([Mitigate First, Diagnose Later](/docs/operations/incident-response#mitigate-first-diagnose-later)).
 - **Make players whole deliberately.** Undoing ranked losses from a broken server is a `match.voided` fact that ranked reverses ([Game Results, Exactly Once per Match](/books/gaming/game-backend#game-results-exactly-once-per-match)); restoring lost items and granting compensation run as audited campaigns, not ad hoc grants ([Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#auditing)).
 
+## End of Service
+
+The last thing live ops runs is the shutdown. It's a maintenance window that never reopens, and it has a runbook like one, stretched over months. What the law and the stores require of it (license disclosure, refunds, unspent currency, the EU and UK debates) is in [When the Servers Shut Down](/books/gaming/consumer-law-and-loot-boxes#when-the-servers-shut-down); this section is the order of operations.
+
+**Decide, then date everything at once.** The announcement sets every date that follows: when new players are turned away, when paid sales stop, when servers go off, how long data export stays up. Publicly announced notice periods vary widely:
+
+| Game | Announced | Servers off | Notice |
+| --- | --- | --- | --- |
+| Concord (Sony) | September 3, 2024 | September 6, 2024 | 3 days, with full refunds |
+| The Crew (Ubisoft) | December 14, 2023 | March 31, 2024 | About 3.5 months |
+| Knockout City (Velan Studios) | February 2, 2023 | June 6, 2023 | About 4 months |
+| XDefiant (Ubisoft) | December 3, 2024 | June 3, 2025 | 6 months |
+| Anthem (EA) | July 2025 | January 12, 2026 | About 6 months |
+
+Steam sets a floor for one case: a free-to-play game owes players "at least 90 days notice" before it's retired. My default is six months for a game people paid for, with the date fixed at announcement and never pulled earlier, the same rule as an API sunset ([The Lifecycle](/docs/api-design/versioning#the-lifecycle)).
+
+**Stop selling before anything else.** New paid currency and real-money items go first, so nobody buys what they can't use. Knockout City removed real-money purchases when its final season began on February 28, 2023, more than three months before shutdown; Anthem took its premium currency off sale while letting players spend what they held; XDefiant stopped new downloads and registrations on the day of the announcement. Valve's guidance says the same: disable in-game purchasing and give players time to use remaining currency or items. The stop is a config change and a kill switch, tested like any other, and it covers every path that sells: in-game store, web store, platform catalog entries and bundles. The moment it takes effect is the cutoff for the unspent-currency query in [Unspent Paid Currency at Shutdown](/books/gaming/consumer-law-and-loot-boxes#unspent-paid-currency-at-shutdown).
+
+**Publish the refund policy with the announcement.** Store policy and law set the floor; publishers have gone further, from Concord's full refunds to XDefiant's refunds of the Ultimate Founder's Pack and of any purchase in the 30 days before the announcement. Refunds run as an audited campaign through the same clawback path as any other ([Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks)), never as hand grants.
+
+**Delist from every store.** The mechanics are documented for the PC and mobile stores:
+
+- **Steam:** the developer asks Valve to retire the product through a request form; Valve hides the purchase option, the game stays in owners' libraries and can still be downloaded, installed and launched, and selling Steam keys elsewhere has to stop, with unsold keys banned through the key tool.
+- **Apple:** removing the app from sale takes it off the App Store within 24 hours; users who downloaded it keep receiving updates and can redownload it from purchase history "as long as the necessary contract remains active." In-app purchases are taken off sale separately.
+- **Google Play:** unpublishing hides the app from new users while existing users keep using it and receiving updates.
+- **Consoles:** delisting runs through each platform holder's partner channels, whose terms aren't public; plan it with the platform account manager.
+
+The order matters: an end-of-life patch still has to reach players after the store listing is gone, and on all three documented stores existing owners keep receiving updates, so delist the purchase, not the update channel.
+
+**Run a final season, then close the doors.** A last season or event gives the community an ending; Knockout City shipped its ninth season as the final one, and XDefiant shipped its planned third season. It runs as dated content like any other, with the earn rates and no paid track.
+
+**Open the data export, then schedule deletion.** Players get a self-serve export window ([Access and Portability](/books/gaming/saves-and-player-data#access-and-portability)) that stays up past the server shutdown, and the export includes what players made in the game, which the EU's Digital Content Directive already expects a trader to hand back in a machine-readable format when a contract is terminated. After the window, personal data is deleted on a published schedule, and what must be kept is kept under its own retention ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+
+**Ship the end-of-life build, if there is one.** The three forms (an offline mode in the live game, as The Crew 2 shipped; a private server edition, as Knockout City shipped on PC; a separate offline edition, as Capcom shipped for Mega Man X DiVE) all depend on decisions made years earlier:
+
+- **The client starts without the backend.** Login, entitlement checks, config fetch and telemetry each need an offline path, or the build can't start once the services are gone. The Crew 2's offline mode disables the shop, leaderboards, multiplayer and user-generated content and saves progression locally; a game designed with local saves and cached entitlements gets there with a flag, one designed without them needs a port.
+- **The server binary is releasable.** A dedicated server that players can run must not embed secrets, call proprietary services, or link middleware whose license forbids redistribution. Knockout City's console players got no private servers.
+- **Licenses outlive the service, or are known not to.** Ubisoft cited "licensing constraints" as one reason The Crew went offline. Licensed music, cars, brands and middleware have terms; whether they allow continued play after the service ends is a contract question to ask at signing, not at sunset.
+- **Progress carries over, or the player is told it won't.** Capcom said user data from the online Mega Man X DiVE couldn't be transferred to the offline edition, which also dropped Battle Mode, co-op, rankings, guilds and the collaboration characters; The Crew 2 lets a player generate an offline save from their online progression before going offline. A save format the client owns ([Saves, Progression & Player Data](/books/gaming/saves-and-player-data#where-progress-lives)) is what makes the second possible.
+
+**Turn off in order.** The reverse of a launch: sales off, then matchmaking and logins (draining matches in progress, as in a maintenance window), then the game server fleets, then gameplay services, then the backend that players no longer reach. A small set stays up past the date: the status page, support, the refund and data-export flows, account deletion, and the store and payment reconciliation that keeps settling for months.
+
+**Keep the records.** Purchases, the currency ledger, refunds, entitlements and support tickets outlive the game: tax and accounting need them, chargebacks arrive late, and a regulator or a court can ask what was sold and refunded. Archive them read-only with their retention dates, and keep the service accounts and keys that read them; delete everything else on the published schedule.
+
 ## How to Build It
 
-Live ops runs on four kinds of record beside `live_events`: what config was published, which switches exist and what they do, which versions shipped together, and what each change did. The general shape of versioned, effective-dated rules is in [Rules as Data](/docs/architecture/rules-as-data); `tenant_id` is on every table because the model is written for a platform serving many games.
+Live ops runs on four kinds of record beside `live_events`: what config was published, which switches exist and what they do, which versions shipped together, and what each change did; a fifth, the end-of-service plan, comes once in a game's life. The general shape of versioned, effective-dated rules is in [Rules as Data](/docs/architecture/rules-as-data); `tenant_id` is on every table because the model is written for a platform serving many games.
 
 ```sql
 CREATE TABLE config_versions (              -- one immutable published snapshot per game
@@ -205,6 +249,30 @@ The decisions behind it:
 - **Every out-of-band fix names its train.** A hotfix or server-data release set without `merged_into_id` once the next full patch is cut is a fix about to be undone; the release checklist queries for them.
 - **Kill switches are tested.** A switch whose `last_tested_at` is older than the last full patch is flipped in a test environment as part of the release, because a switch that doesn't work is discovered during the incident it was built for.
 
+An end of service is dated content like an event, so its dates are one row that every service reads, not a calendar invite:
+
+```sql
+CREATE TABLE service_sunsets (              -- one end-of-service plan per game
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id          UUID NOT NULL,
+  game_id            UUID NOT NULL REFERENCES games (id),
+  announced_at       TIMESTAMPTZ NOT NULL,
+  new_players_off_at TIMESTAMPTZ,           -- downloads and registrations stop
+  paid_sales_off_at  TIMESTAMPTZ NOT NULL,  -- the unspent-currency cutoff
+  servers_off_at     TIMESTAMPTZ NOT NULL,
+  export_until       TIMESTAMPTZ NOT NULL,  -- self-serve data export stays up until
+  end_state          TEXT NOT NULL CHECK (end_state IN ('offline_mode', 'private_servers',
+                       'offline_edition', 'none')),
+  refund_policy_url  TEXT NOT NULL,
+  approved_by        TEXT NOT NULL,
+  CHECK (announced_at <= paid_sales_off_at AND paid_sales_off_at <= servers_off_at
+         AND servers_off_at <= export_until),
+  UNIQUE (tenant_id, game_id)
+);
+```
+
+The store, login, matchmaking and export services compute their state from these timestamps and the clock, as events do, so the stop-sale happens at its instant without anyone flipping it, and a test environment can play the whole sunset on an injected clock. A trigger refuses any update that moves a date earlier, which is the notice period's promise kept in the database.
+
 ## Auditing
 
 - **Config and flags.** Who published which version, the reason and approver, and which services and clients picked it up; a kill switch flip records the incident it served.
@@ -224,6 +292,7 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/ar
 - **A release set** naming the client, server, service, config and content versions shipped together, plus explicit compatibility rules between every pair of layers and a minimum client version.
 - **Maintenance as a sequence** (announce, drain ranked first, verify, reopen in stages, compensate), and a committed channel and clock for player updates.
 - **Capacity for synchronized peaks,** with a declared peak on every dated thing live ops publishes, staggered starts when it doesn't fit, admission control at login and match start, monitoring that doesn't share fate with what it watches, and compensation run as audited campaigns.
+- **End of service as a dated plan:** notice fixed at announcement and never shortened, paid sales stopped first, a published refund policy, delisting that keeps the update channel, an export window, an offline or private-server path designed in from the start, services turned off in order, and financial and support records kept after the servers go.
 
 ## References
 
@@ -235,6 +304,10 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/ar
 - [Unreal Engine: FNetworkVersion](https://dev.epicgames.com/documentation/unreal-engine/API/Runtime/Core/FNetworkVersion), network versions from an engine checksum, overrides and the compatibility check
 - [Xbox: Xbox requirements](https://devdocs.xbox.com/publishing/certification/xbox-requirements.md), saves and progress surviving content updates, and graceful handling of service errors
 - [Heroic Labs: Nakama](https://github.com/heroiclabs/nakama), seasonal leaderboards and tournaments in an open-source backend
+- [Steamworks: Retiring a product](https://partner.steamgames.com/doc/store/retire_app), the request form, owners keeping the game, stopping key sales, refunds and 90 days' notice for free-to-play games
+- [App Store Connect Help: Manage availability for your app](https://developer.apple.com/help/app-store-connect/manage-your-apps-availability/manage-availability-for-your-app-on-the-app-store), removal within 24 hours, continued updates and redownloads from purchase history
+- [App Store Connect Help: Remove an app](https://www.developer.apple.com/help/app-store-connect/create-an-app-record/remove-an-app), removing associated in-app purchases from sale
+- [Play Console Help: Unpublish your app](https://support.google.com/googleplay/android-developer/answer/9859350), existing users keep the app and its updates while new users can't find it
 
 **In practice**
 
@@ -248,3 +321,11 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/ar
 - [Roblox: Return to Service](https://about.roblox.com/newsroom/2022/01/roblox-return-to-service-10-28-10-31-2021), the October 2021 outage, its causes and the staged return of players
 - [Square Enix: Ongoing congestion situation and compensation](https://na.finalfantasyxiv.com/lodestone/news/detail/1c59de837cc84285ad1cdb4c9a9cad782363f25b), the login cap, the 17,000-player queue limit and compensation
 - [Google Cloud: Bringing Pokémon GO to life on Google Cloud](https://cloud.google.com/blog/products/containers-kubernetes/bringing-pokemon-go-to-life-on-google-cloud), launch traffic at 50 times the target
+- [TheSixthAxis: Concord is shutting down, refunds being issued](https://www.thesixthaxis.com/2024/09/03/concord-is-shutting-down-this-week-refunds-being-issued-while-they-explore-options/), September 3, 2024; the September 6 shutdown, the stop of sales and full refunds
+- [Stop Killing Games wiki: The Crew](https://stopkillinggames.wiki.gg/wiki/The_Crew), the December 14, 2023 delisting and announcement and the March 31, 2024 shutdown
+- [Insider Gaming: Ubisoft taking The Crew offline](https://insider-gaming.com/ubisoft-taking-the-crew-offline/), December 15, 2023; Ubisoft's "server infrastructure and licensing constraints"
+- [Gematsu: Knockout City to end service on June 6](https://gematsu.com/2023/02/knockout-city-to-end-service-on-june-6-private-hosted-server-edition-to-be-released-for-pc), February 2, 2023; real-money purchases removed from February 28, Season 9, the PC private server edition and no console equivalent
+- [Gematsu: XDefiant to end service on June 3, 2025](https://gematsu.com/2024/12/xdefiant-to-end-service-on-june-3-2025), December 3, 2024; downloads and registrations stopped, Season 3 and the refund scope
+- [Gamereactor: Anthem servers to shut down on January 12th](https://www.gamereactor.eu/anthem-servers-to-shut-down-on-january-12th-next-year-1568473/), July 4, 2025; the shutdown date and premium currency off sale but spendable until then
+- [Ubisoft: The Crew 2 offline mode patch notes](https://www.ubisoft.com/en-us/game/the-crew/the-crew-2/news-updates/4kuseh7DXQ6fuf4tFoHix0/the-crew-2-offline-mode-patchnote), October 20, 2025; local saves, generating an offline save from online progress and the systems disabled offline
+- [TheSixthAxis: Mega Man X DiVE Offline heading to Steam, iOS and Android](https://www.thesixthaxis.com/2023/06/13/mega-man-x-dive-offline-heading-to-steam-ios-and-android/), June 13, 2023; no data transfer and the online features left out

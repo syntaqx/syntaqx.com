@@ -89,7 +89,7 @@ Bungie's Cross Save rules for Destiny 2 show the shape most games end up with. T
 
 The patterns to take from it:
 
-- **Progression crosses; some purchases don't.** Characters, levels and earned items move with the account; paid currency and some licenses stay scoped to the store that sold them, which is the `platform_scope` column on entitlements and wallets.
+- **Progression crosses; some purchases don't.** Characters, levels and earned items move with the account; paid currency and some licenses stay scoped to the store that sold them, which is the `platform_scope` column on entitlements ([Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity#how-to-build-it)). A wallet holds one currency, so paid currency scoped to a store is a currency code of its own per platform (`SILVER_PSN`, `SILVER_STEAM`), shown to the player as one name.
 - **Choose, don't merge.** Destiny doesn't merge characters from two accounts; the player chooses which set is active. Merging two progressions is a game design problem (which level wins? both inventories?), and [Merging](/books/gaming/accounts-and-identity#merging) covers the account side.
 - **Platform-specific saves don't cross by themselves.** A Steam Cloud save is invisible to a PlayStation. Cross-progression for file-based progress means moving the authoritative copy to a backend all platforms reach, and treating each platform cloud as a local cache of it.
 

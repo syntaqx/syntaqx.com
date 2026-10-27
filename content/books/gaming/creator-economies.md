@@ -256,6 +256,7 @@ The record structure is in [Audit Trails](/docs/architecture/audit-trails).
 **Specifications**
 
 - [17 U.S.C. § 512](https://www.law.cornell.edu/uscode/text/17/512), designated agents, expeditious removal, the 10 to 14 business day restore window and the repeat infringer policy
+- [EUR-Lex: Regulation (EU) 2022/2065, the Digital Services Act](https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng), the official text of Articles 16 and 23; the article pages below reproduce it
 - [Digital Services Act, Article 16](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_16.html), notice and action mechanisms (unofficial consolidated text)
 - [Digital Services Act, Article 23](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_23.html), suspension for frequent manifestly illegal content and manifestly unfounded notices (unofficial consolidated text)
 - [IRS: Form 1099-K threshold under the One Big Beautiful Bill](https://www.irs.gov/newsroom/irs-issues-faqs-on-form-1099-k-threshold-under-the-one-big-beautiful-bill-dollar-limit-reverts-to-20000), the $20,000 and 200-transaction threshold reinstated (IR-2025-107, October 23, 2025)

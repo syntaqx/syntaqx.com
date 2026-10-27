@@ -153,7 +153,7 @@ What you take on is everything the store did:
 - **Identity.** The web purchase has to land on the right game account, which means signing in on the web with the same account the game uses ([Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity)) or carrying a signed token from the game to the checkout.
 - **Store rules.** Link placement, wording and parental gates are set per store and per region; Apple's EU terms put alternative payments behind a parental gate for 13- to 17-year-olds and don't permit out-of-app offers for under-13s.
 
-My default: keep store billing in the game and offer the web store as a link where the rules allow it, with a price or bundle advantage that's honest about why it exists. The web store gets a ledger, idempotent grants and refund handling just as complete as the store integrations; a cheaper channel that grants twice or never revokes costs more than the fee it saved.
+My default: keep store billing in the game and offer the web store as a link where the rules allow it, with a price or bundle advantage that's honest about why it exists. The web store gets a ledger, idempotent grants and refund handling just as complete as the store integrations; a cheaper channel that grants twice or never revokes costs more than the fee it saved. Mobile publishers' own shops (Supercell Store, the Pokémon GO Web Store) and what they add to the mobile backend are in [Web Shops Off the Store](/books/gaming/mobile-games#web-shops-off-the-store).
 
 ## Regional Pricing
 

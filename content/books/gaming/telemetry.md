@@ -100,7 +100,7 @@ The game-specific rules:
 
 ## Players, Consent and Children
 
-Consent flows, lawful bases, pseudonymous IDs and erasure are general ([Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy); [GDPR & Privacy Law](/docs/compliance/gdpr)). Three points are particular to games.
+Consent flows, lawful bases, pseudonymous IDs and erasure are general ([Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy); [GDPR & Privacy Law](/docs/compliance/gdpr)), and what erasure means for a game's append-only event history is in [Erasure Against Append-Only Records](/books/gaming/saves-and-player-data#erasure-against-append-only-records). Three points are particular to games.
 
 **Telemetry IDs are personal information for children.** Under COPPA, the device and account identifiers every telemetry SDK collects are personal information, usable without parental consent only for "support for the internal operations" of the game and never to profile a child ([COPPA in Games](/books/gaming/ratings-and-age#coppa-in-games); [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy#coppa)). For a game with child players, that is the line between crash and performance telemetry and behavioral profiling, and the pipeline enforces it by age band.
 

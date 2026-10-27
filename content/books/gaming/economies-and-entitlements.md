@@ -21,7 +21,7 @@ Entitlements are granted, never just set. Every one starts from an event with a 
 - **Purchases** in your own store, settled by your payment provider.
 - **Platform receipts** from Steam, PlayStation, Xbox, Nintendo, Apple or Google, which say that a storefront you don't control took the money.
 - **Drops and rewards** from play: end-of-match drops, achievements, battle pass tiers, event rewards.
-- **Promotions:** codes, partner bundles, pre-order bonuses, compensation after an outage.
+- **Promotions:** codes, partner bundles, pre-order bonuses, compensation after an outage. Viewer rewards for watching a stream and creator codes are covered in [Affiliate Codes and Drops](/books/gaming/creator-economies#affiliate-codes-and-drops).
 - **Support grants** by an agent, for a bug or a goodwill gesture.
 - **Migrations,** when an old system's ownership moves into a new one.
 
@@ -161,6 +161,7 @@ Paid and earned units can look identical to a player and still be different thin
 - **Accounting** treats paid currency as money received for something not yet delivered (next section). Earned currency has no cash behind it.
 - **Consumer law** cares about the paid side: the FTC's HoYoverse order and the EU's virtual currency principles both turn on the real-money cost of what a player buys, which only the paid side carries ([Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes#pricing-virtual-currency-honestly)).
 - **Regional rules** can differ for each. Store them apart and any rule can apply to one without a migration.
+- **Cash-out** applies only to a creator's earned currency on platforms that let creators convert it to money, and turns that balance into a payable ([Cash-Out](/books/gaming/creator-economies#cash-out)).
 
 So the ledger keeps them in separate accounts even when the client shows one number. The purchase that issued paid units links to the payment record (amount, currency, store, receipt), so for any paid unit you can find what was paid for it.
 

@@ -116,7 +116,7 @@ On Windows, Delivery Optimization is "a reliable HTTP downloader" that can also 
 
 ### Mobile
 
-Mobile stores own delivery and set hard limits:
+Mobile stores own delivery and set hard limits (what the size limits mean for a mobile game's first launch is in [App Size and On-Demand Assets](/books/gaming/mobile-games#app-size-and-on-demand-assets)):
 
 - **Google Play Asset Delivery** offers "auto-updates, compression, and delta patching," with three modes: `install-time` packs arrive with the app, `fast-follow` packs download automatically right after install without the app being opened, and `on-demand` packs download while the app runs. Install-time packs need free space of "at least two times the size of all the asset packs." As of October 2026 the limits are 500 MB for the base module, 1.5 GB per asset pack, 4 GB for everything installed up front, 30 GB for on-demand and fast-follow packs, and "the total maximum compressed download size for apps published on Google Play is 34 GB." Because the app binary can update before its asset packs finish patching, Google tells developers to handle an "Update in progress" state.
 - **Apple Background Assets.** At WWDC25 Apple introduced Managed Background Assets, where "the system automatically manages downloads, updates, compression, and more for your asset packs," with Apple hosting (200 GB included in the developer membership) or self-hosting, and three policies: essential (part of install, ready at first launch), prefetch (starts during install, may continue after) and on-demand. Apple said "On-Demand Resources is a legacy technology, and it will be deprecated." On-Demand Resources had limits of 512 MB per tag, 2 GB for initial-install tags and 20 GB hosted, with an ideal tag of 64 MB or less.

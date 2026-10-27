@@ -9,7 +9,7 @@ tags = ["gaming", "moderation", "player-behavior", "trust-and-safety", "voice", 
 
 [Anti-Cheat](/books/gaming/anti-cheat) deals with players who break the game. This chapter deals with players who break the experience for others without touching a line of code: the teammate who types slurs, the one who screams into voice, the one who walks into the enemy team on purpose because the match isn't going their way. In a competitive game those players are inside the product, on your team, for thirty minutes, and you can't leave without losing. That's what makes game moderation different from moderation anywhere else, and why the largest publishers report on it in public.
 
-The general machinery (policies, report queues, detection bands, penalty ladders, notices, appeals, child-safety reporting, audit and transparency) is the same as in any product with users, and it lives in the playbook's [Trust & Safety](/docs/security/trust-and-safety) chapter. This chapter is about what games add: the match as the unit of evidence, real-time text and voice, behavior that only shows up in gameplay telemetry, penalties that restrict a queue rather than an account, players who are often children, and the pipeline and tables that tie them together. The chat and voice services that carry the messages are in [Parties, Presence, Chat & Voice](/books/gaming/social-systems); cheating, its cases and hardware bans are in [Anti-Cheat](/books/gaming/anti-cheat); appeals that arrive as tickets are in [Player Support](/books/gaming/player-support#behavior-tickets-and-ban-appeals).
+The general machinery (policies, report queues, detection bands, penalty ladders, notices, appeals, child-safety reporting, audit and transparency) is the same as in any product with users, and it lives in the playbook's [Trust & Safety](/docs/security/trust-and-safety) chapter. This chapter is about what games add: the match as the unit of evidence, real-time text and voice, behavior that only shows up in gameplay telemetry, penalties that restrict a queue rather than an account, players who are often children, the duties the EU's Digital Services Act and the UK's Online Safety Act add, and the pipeline and tables that tie them together. The chat and voice services that carry the messages are in [Parties, Presence, Chat & Voice](/books/gaming/social-systems); cheating, its cases and hardware bans are in [Anti-Cheat](/books/gaming/anti-cheat); appeals that arrive as tickets are in [Player Support](/books/gaming/player-support#behavior-tickets-and-ban-appeals).
 
 ## The Scale of the Problem
 
@@ -158,7 +158,45 @@ When players build the game, moderation covers what they build. Roblox, whose au
 - **Chat is gated by age.** Roblox's January 7, 2026 announcement made an age check (facial age estimation through its vendor Persona, or ID) required to chat, rolling out globally wherever chat is available. Users chat with their own and adjacent age groups by default; under-9s need parental consent; users 13 and older can add "Trusted Connections" with people they know; and ID verification is the appeal path for a wrong estimate. Roblox says images and video used for the estimate are deleted immediately after processing, and reports a mean absolute error of 1.4 years for users under 18.
 - **Creators carry filtering duties** (the text filtering rules above), and experiences that don't meet them are removed until they do.
 
+How content is reviewed before it ships, and how scripts and assets move through a pipeline with versions, is in [Content Pipelines and Review](/books/gaming/creator-economies#content-pipelines-and-review).
+
 For any game with young players, default settings are moderation. The order the FTC announced against Epic Games in December 2022, as the FTC describes it, prohibits enabling voice and text communications for children and teens unless a parent (or, for teens, the teen or a parent) gives affirmative consent through a privacy setting. Ratings, parental controls and age in games are covered in [Ratings, Age & Children](/books/gaming/ratings-and-age), and the privacy law and age assurance design behind them in [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy).
+
+## Regulatory Duties
+
+Two laws turn parts of this pipeline from good practice into duties: the EU's Digital Services Act and the UK's Online Safety Act. The general machinery (notices, statements of reasons, appeals, transparency reports) is in the playbook's [Trust & Safety](/docs/security/trust-and-safety#notices-and-statements-of-reasons), and the children's side of both laws in [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy#the-uk-online-safety-act). This section covers where a game lands under them. Dates are as of October 2026, and none of it is legal advice.
+
+### The Digital Services Act
+
+The DSA has applied in full since February 17, 2024 (Article 93). Its duties stack by kind of service. A **hosting service** stores information "provided by, and at the request of, a recipient of the service"; an **online platform** is a hosting service that also "stores and disseminates information to the public," meaning to "a potentially unlimited number of third parties." Any game that stores chat, names, profiles or user-generated content is a hosting service; whether it is also an online platform depends on the feature:
+
+| Duty | Article | Applies to | In a game |
+| --- | --- | --- | --- |
+| Notice and action | 16 | Every hosting service | Anyone, player or not, can flag illegal content (a chat line, a name, a map, a stored voice clip); notices are handled "timely, diligent, non-arbitrary and objective," and automated processing is disclosed |
+| Statement of reasons | 17 | Every hosting service | Every removal or visibility restriction, partial or full suspension of the service (a chat or ranked restriction), account suspension or payment restriction, for illegal content or a terms breach |
+| Transparency report | 15 | Every intermediary service, at least once a year; micro and small enterprises exempt | Orders, notices, own-initiative moderation, complaints, and the automated tools with their accuracy and error rates |
+| Internal complaint handling | 20 | Online platforms; micro and small enterprises exempt (Article 19) | A free, electronic appeal for at least six months after the decision, decided under "appropriately qualified staff" and "not solely on the basis of automated means" |
+| Transparency Database | 24(5) | Online platforms; micro and small enterprises exempt (Article 19) | Every Article 17 decision and statement of reasons, submitted "without undue delay" and without personal data |
+
+The micro and small enterprise test is the EU's SME definition: fewer than 50 staff and turnover or balance sheet of at most €10 million for small, fewer than 10 and €2 million for micro, with a group's figures counted for a studio inside a larger publisher. The exemption covers Article 15 and the online platform duties; it never covers Articles 16 and 17. A three-person studio with match chat still needs a notice channel and a statement of reasons for every penalty.
+
+Where a game sits on the platform line is decided feature by feature. Recital 14 puts interpersonal communication "between a finite number of persons determined by the sender" outside the definition, and treats a closed group as public only where people are "automatically registered or admitted" without "a human decision or selection of whom to grant access." Party chat and direct messages between friends are close to messaging. Published user-generated content that any player can browse is the clear platform case. Match and lobby chat sits in between: the participants are few, but the sender didn't choose them and matchmaking admitted them automatically. The law hasn't settled that case, so my default is to treat matchmade chat, public lobbies and published UGC as platform features, and friends' messages and party chat as interpersonal.
+
+What the DSA changes in the system:
+
+- **Reports split into notices and reports.** An in-game report of griefing or feeding is a terms report; a report of a threat, of child sexual abuse material or of a hateful map is also an Article 16 notice of illegal content. Keep both in `reports`, mark which is which (the delta in [How to Build It](#how-to-build-it)), and give people who aren't players (a parent who saw a map, a rights holder) a web form, because Article 16 is open to any individual or entity.
+- **Every penalty carries a statement of reasons.** The in-client notice from the [penalty pipeline](#penalties-and-reform) becomes the statement when it carries Article 17(3)'s contents: the restriction with its territorial scope and duration, the facts relied on and whether a notice prompted it, the use of automated means, the legal or contractual ground, and the routes to redress. Auto-mute and before-send filtering are decisions too: record each block, and decide with counsel at which level a statement is owed.
+- **The decision record is the source.** The penalty's `decision_id` points at the playbook's `moderation_decisions` row, which already records whether detection and decision were automated; the DSA adds the ground, the territorial scope and the database submission, below. The statement, the Transparency Database entry, the appeal and the Article 15 counts are all queries over that row. The database held more than 4.5 billion statements submitted in the last 180 days as of October 26, 2026, so submission is a batch pipeline with retries, not a manual step.
+- **Appeals cover cheating too.** An account suspension for cheating is a decision on terms grounds like any other, so the [anti-cheat appeal](/books/gaming/anti-cheat#enforcement-bans-hardware-bans-and-appeals) meets Article 20's six-month window and human oversight in the same flow.
+
+### The Online Safety Act
+
+The UK's Online Safety Act applies to services where users "interact with each other," which covers match chat, voice and UGC ([the scope and penalties](/docs/compliance/childrens-privacy#the-uk-online-safety-act)). Its duties arrived in stages:
+
+- **Illegal harms.** Providers had to complete an illegal harms risk assessment by March 16, 2025, and the illegal content duties have been enforceable since March 17, 2025. Ofcom's codes include default settings for child users: profiles, locations and connections hidden from other users, no direct messages from non-connected accounts, and children left off lists of people others might add.
+- **Children.** Services had until April 16, 2025 to carry out a children's access assessment and until July 24, 2025 to complete a children's risk assessment; the protection of children duties have applied since July 25, 2025, with "highly effective" age assurance required to keep children from the most harmful content.
+
+The game twist is in where those defaults bite. "Players you recently played with" and "suggested friends" are suggested-connection lists; a whisper from a stranger met in matchmaking is a direct message from a non-connected account; a map browser is a feed. The risk assessments are also a per-feature exercise, and the feature list is the one [Ratings, Age & Children](/books/gaming/ratings-and-age#age-and-features) already keys by age band (text chat with strangers and friends, voice, UGC, friend requests, public profiles), so assess the features in that table and keep the assessment's version with the rule version that implements it.
 
 ## How to Build It
 
@@ -187,6 +225,27 @@ ALTER TABLE penalties
 
 The core table already carries the ladder step, and the policy version sits on the decision, so moderation adds only the match and what the player is shown. Separate `text_chat` and `voice_chat` values for `restricted_feature` let a chat restriction take voice and leave text, or the reverse. The penalty's `evidence_excerpt` is what the in-client notice shows (the chat lines, the rule), copied at decision time so a later retention deletion of the chat log doesn't empty the notice the player is reading. Every decision, automated or human, is recorded as the playbook's [moderation decision](/docs/security/trust-and-safety#auditing-moderation-decisions) with the model version, threshold and policy version. Behavior appeals and ban questions arrive through [Player Support](/books/gaming/player-support); route them to the moderation appeal flow rather than letting general support agents reverse penalties.
 
+The [regulatory duties](#regulatory-duties) add a notice path for people who aren't players and the DSA fields on the decision record:
+
+```sql
+ALTER TABLE reports
+  ALTER COLUMN reporter_profile_id DROP NOT NULL,          -- a notice from someone who isn't a player
+  ADD COLUMN is_illegal_content_notice BOOLEAN NOT NULL DEFAULT FALSE,  -- DSA Article 16
+  ADD COLUMN notifier_contact          TEXT,              -- name and email from a web notice
+  ADD CONSTRAINT reports_has_reporter
+    CHECK (reporter_profile_id IS NOT NULL OR notifier_contact IS NOT NULL);
+
+ALTER TABLE moderation_decisions
+  ADD COLUMN ground             TEXT CHECK (ground IN ('illegal_content', 'terms')),
+  ADD COLUMN ground_reference   TEXT,                       -- the law, or the terms clause, relied on
+  ADD COLUMN territorial_scope  TEXT[] NOT NULL DEFAULT '{}',  -- country codes; empty: everywhere
+  ADD COLUMN prompted_by_notice BOOLEAN,
+  ADD COLUMN statement_sent_at  TIMESTAMPTZ,                -- the Article 17 statement reached the player
+  ADD COLUMN transparency_db_id TEXT;                       -- set once submitted under Article 24(5)
+```
+
+A decision with a penalty and no `statement_sent_at` is a defect to alert on, and on a platform feature so is one still without a `transparency_db_id` after the submission batch has run. Appeals already work as the playbook describes them, a new decision that reviews the old one, so Article 20's "reverse its decision" is a `reversed` outcome that revokes the penalty.
+
 ## What This Means for the System You Build
 
 - **The playbook's trust and safety system,** with one category enum, cases, bands, ladders, notices, appeals and audit, extended for matches and channels.
@@ -198,6 +257,7 @@ The core table already carries the ladder step, and the policy version sits on t
 - **Four pipeline latencies** (before send, in match, after match, over time) with penalties enforced at chat, voice, matchmaking and login through events.
 - **Vendors behind your own thresholds,** proven in shadow mode on your own data.
 - **Age-aware defaults** for chat and content, with labels and age assurance where young players are present.
+- **Regulatory duties as queries:** DSA notices open to non-players, a statement of reasons for every penalty, database submissions and Article 20 appeals for platform features, and Online Safety Act risk assessments per feature, all built from the decision record.
 
 ## References
 
@@ -205,12 +265,27 @@ The core table already carries the ladder step, and the policy version sits on t
 
 - [Roblox Creator Docs: Text filtering](https://create.roblox.com/docs/ui/text-filtering), creators' filtering duty, cases that need filtering, the TextService API, failing closed and removal of experiences that don't filter
 - [Roblox Creator Docs: Content maturity labels](https://create.roblox.com/docs/production/promotion/content-maturity), labels, access by age group and restrictions on unlabeled experiences
+- [EUR-Lex: Regulation (EU) 2022/2065, the Digital Services Act](https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng), the official text of the regulation; the article pages below reproduce it
+- [Digital Services Act, Article 3](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_3.html), definitions of hosting service, online platform and dissemination to the public
+- [Digital Services Act, Recitals 11 to 20](https://www.eu-digital-services-act.com/Digital_Services_Act_Preamble_11_to_20.html), Recital 14 on interpersonal communication and closed groups
+- [Digital Services Act, Article 15](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_15.html), yearly transparency reports and the micro and small enterprise exemption
+- [Digital Services Act, Article 16](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_16.html), notice and action for hosting services
+- [Digital Services Act, Article 17](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_17.html), the restrictions that need a statement of reasons and its contents
+- [Digital Services Act, Article 19](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_19.html), the online platform duties micro and small enterprises are exempt from
+- [Digital Services Act, Article 20](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_20.html), internal complaint handling, six months, reversal and human oversight
+- [Digital Services Act, Article 24](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_24.html), submitting statements of reasons to the Commission's database without personal data
+- [Digital Services Act, Article 93](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_93.html), application from February 17, 2024
 
 **Reference**
 
 - [ADL: Disruption and Harms in Online Gaming Framework](https://www.adl.org/resources/report/disruption-and-harms-online-gaming-framework), the four axes and the definitions of disruptive behavior and harmful conduct
 - [Thriving in Games Group: Disruption and Harms in Gaming Framework](https://thrivingingames.org/disruption-and-harms-in-gaming-framework/), the framework by the Fair Play Alliance and ADL and its companion guides
 - [FTC: Epic Games to pay more than half a billion dollars](https://www.ftc.gov/news-events/news/press-releases/2022/12/fortnite-video-game-maker-epic-games-pay-more-half-billion-dollars-over-ftc-allegations), the order's voice and text defaults for children and teens
+- [European Commission: SME definition](https://single-market-economy.ec.europa.eu/smes/sme-fundamentals/sme-definition_en), staff, turnover and balance sheet ceilings for micro and small enterprises, and group figures
+- [European Commission: DSA Transparency Database](https://transparency.dsa.ec.europa.eu/), statements of reasons submitted in the last 180 days
+- [GOV.UK: Online Safety Act explainer](https://www.gov.uk/government/publications/online-safety-act-explainer/online-safety-act-explainer), illegal content duties enforceable from March 17, 2025, the children's access and risk assessment deadlines
+- [GOV.UK: What's changing for children on social media from 25 July 2025](https://www.gov.uk/government/news/whats-changing-for-children-on-social-media-from-25-july-2025), the protection of children duties and age checks from July 25, 2025
+- [Lewis Silkin: Ofcom publishes final illegal harms codes](https://www.lewissilkin.com/en/insights/2024/12/16/ofcom-publishes-final-illegal-harms-codes-102jrep), the March 16, 2025 risk assessment deadline and the default settings for child users (December 2024)
 
 **In practice**
 

@@ -9,7 +9,7 @@ tags = ["gaming", "game-servers", "hosting", "agones", "gamelift", "multiplayer"
 
 A dedicated game server is an odd thing to operate. It is a stateful process holding an entire match in memory, it lives for minutes, players connect to it directly by IP and port, it must finish every frame on time or the game visibly degrades, and you need thousands of them at peak and far fewer at 5 a.m. Google's announcement of Agones in 2018 summed up the difference from ordinary services: "Dedicated game servers are stateful applications that retain the full game simulation in memory. But unlike other stateful applications, such as databases, they have a short lifetime," running "for a few minutes or hours," and they "need a direct connection to a running game server process' hosting IP and port, rather than relying on load balancers."
 
-This chapter covers that process and the platform around it: what one server process is and how its life is managed, how much CPU a frame gets (with Riot's published VALORANT numbers as the worked example), how fleets are allocated and scaled, which hosting products exist and which have gone away, how servers are placed near players, the network between player and server, DDoS, and load testing. What the server computes each tick (prediction, lag compensation, relevancy) is in [Netcode Fundamentals](/books/gaming/netcode); how players are grouped before they get a server is in [Matchmaking & Ranked](/books/gaming/matchmaking); the services around matches (accounts, stores, parties) are in [Game Backend Architecture](/books/gaming/game-backend).
+This chapter covers that process and the platform around it: what one server process is and how its life is managed, how much CPU a frame gets (with Riot's published VALORANT numbers as the worked example), how fleets are allocated and scaled, which hosting products exist and which have gone away, how servers are placed near players, the network between player and server, DDoS, and load testing. It ends with persistent worlds, where a server holds a place instead of a match: shards and single-shard designs, zoning and server meshing, load handling such as EVE's Time Dilation, what is saved when, and maintenance windows. What the server computes each tick (prediction, lag compensation, relevancy) is in [Netcode Fundamentals](/books/gaming/netcode); how players are grouped before they get a server is in [Matchmaking & Ranked](/books/gaming/matchmaking); the services around matches (accounts, stores, parties) are in [Game Backend Architecture](/books/gaming/game-backend).
 
 ## One Process per Match
 
@@ -177,6 +177,102 @@ Day to day, the fleet is watched on a few numbers:
 
 Incidents follow the ordinary process ([Incident Response](/docs/operations/incident-response)), with one game-specific step: decide whether affected matches are remade, voided or compensated, because players care about the ranked points more than the uptime.
 
+## Persistent Worlds
+
+Everything above assumes the match ends. An MMO's world doesn't: a server holds a place rather than a match, players arrive and leave around it for years, and the state it holds (where a character stands, what's in a hold, who owns the station) has to outlive the process. Four of the per-match rules change: how the world is split across servers, what happens when players crowd one place, when state is written, and how servers are updated when they never empty.
+
+### Shards, Realms and Worlds
+
+Most persistent games run many copies of the world, each with its own population and its own database: realms in World of Warcraft, Worlds in Final Fantasy XIV, shards generically. Square Enix groups FFXIV's Worlds into logical data centers (Aether, Crystal, Dynamis and Primal in North America, for example) inside physical data centers in Japan, North America, Europe and Oceania. A character has a Home World; World Visit reaches other Worlds in the same data center and Data Center Travel reaches other logical data centers, but while visiting, "Retainers cannot be summoned, hired, or released from service" and "Items cannot be sold on the market, but purchasing is available," and a character that stays logged out elsewhere for 30 days is returned home. That split is the general shape: play travels, while anything tied to one world's economy (its market, its storage) stays on the home world.
+
+Copies divide the population, and populations shrink unevenly, so a long-lived sharded game should expect to join worlds. Blizzard's connected realms keep the old realms in the list but make them "Virtual," hosted by a "Native" realm, so "they no longer run on their own hardware"; names carry a realm suffix, and Blizzard's September 2025 FAQ for Mists of Pandaria Classic says connecting existing realms "involves a ton of bespoke work by our Database Engineers," which is why it opened new, empty connected realms for transfers instead. Two design rules make a later merge a re-pointing rather than a renumbering: global identifiers for every character, guild and item (never per-world sequences), and display names unique per world with the world as a qualifier, so a collision is resolved by a suffix instead of a forced rename.
+
+The alternative is one world for everyone. EVE Online runs a single shard; CCP's 2011 database post calls it "one world-wide single shard server." Tranquility, the cluster behind it, is "split into a series of nodes," each hosting one or more solar systems, and "those systems are distributed across the nodes every day during downtime": a busy system like Jita gets a node largely to itself, quiet systems share one, and CCP keeps "a few nodes in reserve" for large battles, which players announce in advance through a fleet fight notification so the system can be moved at the next downtime (CCP notes it may not be possible on the day of the fight). The unit of distribution is a place the design already has (a solar system, reached through a gate), so the server boundary falls where the game already has a transition. The cost of one shard is that its shared pieces are shared by everyone: before a 2011 database upgrade, when the SQL Server cluster failed over, "every node in the cluster died and all players were disconnected"; afterwards, a failover took down "only 3 nodes out of 208."
+
+### Zones, Seams and Server Meshing
+
+Within one world, the simulation is split across processes in one of two ways. **Zoning** gives each zone (a region, a dungeon, a solar system) its own server, and moving between zones is a transfer with a loading screen or a gate: simple, because an entity is only ever on one server. **Seamless** worlds let players cross server boundaries without noticing, which means authority over an entity has to move between servers while it's in motion.
+
+Public descriptions of seamless designs:
+
+- **New World (Amazon Games).** Per AWS's 2022 write-up, each world has four remote entry points, its only public IP addresses; behind them, a "hub" of seven EC2 C5.9xlarge instances simulates the world, which is overlaid with a grid whose cells are simulation volumes, each instance owning two nonconsecutive subdivisions of it. As a player moves, state passes from one instance to the next. One world simulates more than 7,000 AI entities and hundreds of thousands of objects for 2,500 players.
+- **Star Citizen (Cloud Imperium).** CIG's Server Meshing Q&A describes several server nodes sharing the simulation of one shard, with one node holding authority over each entity and the others holding views of it. A **static** mesh fixes the number of nodes and which locations each simulates; a **dynamic** mesh reassigns authority and adds or removes servers as load changes. A central replication layer streams entity state to servers and clients, and a persistence service (EntityGraph) stores every replicated entity's state so a replacement server can restore it. CIG's December 2024 Letter from the Chairman, for Alpha 4.0, says "Each planet, landing zone, or major station is now covered by different game servers."
+- **Improbable SpatialOS** sold a distributed simulation of this kind as a product for other studios. Several games built on it were cancelled or shut down (Worlds Adrift, Lazarus and Mavericks: Proving Grounds in 2019), and by 2022 Improbable had sold game studios as it shifted "its focus from game development to the metaverse." It belongs in the same lesson as the hosting table: the hardest part of a seamless world is a dependency, so keep it behind an interface you could replace.
+
+My default is zoning along boundaries the design already has, and a seamless world only when the design can't work without one. The seam is where the bugs are. Authority over an entity must have exactly one owner at a time, handed off with a version number so a late message from the old owner is rejected; an entity that crosses mid-fight needs its in-flight effects (projectiles, damage over time) handed off with it; and two servers that both believe they own an item is a duplication exploit, not a glitch. Relevancy also has to cross the boundary: a player near a seam must see entities simulated on the other side ([Interest Management and Relevancy](/books/gaming/netcode#interest-management-and-relevancy)).
+
+### Load: Time Dilation
+
+A match caps its players before it starts; a world can't stop players walking into the same place. The usual answers are a cap with a queue per zone, or extra copies of a crowded zone (instances, layers). EVE's answer to the battle that can't be split is **Time Dilation**, introduced in CCP Veritas's April 2011 dev blog: when a node is overloaded, the server slows the game clock "enough to maintain a very small queue of waiting tasklets," so module cycles, travel and shield recharge all run slower and the clock returns toward normal as load clears. Reinforcement timers are deliberately not dilated, because dilating them would let players time an attack around their expiry. During the Battle of Asakai on January 27, 2013, with more than 2,750 players in one system, Time Dilation reached its "configured limit of 10%," per Data Center Knowledge's report quoting CCP Veritas.
+
+The design lesson is to degrade fairly: everyone in the overloaded place slows by the same factor, instead of whoever's packets are dropped losing. Two details generalize. Anything tied to real time outside the fight (timers, auctions, events, other players' schedules) has to be named as exempt, as reinforcement timers are. And dilation follows the server, not the place: CCP notes that a quiet system sharing a node with a busy one can see "unusual time dilation," which is why the placement of places onto servers is itself an operational decision.
+
+### What Is Saved When
+
+A process per match writes its result once, at the end. A world server can't wait for an end that never comes, so it saves on three cadences, chosen per kind of state:
+
+- **Write-behind for character state.** Position, health, cooldowns and buffs live in the server's memory and are flushed periodically, on logout and on zone transfer. A crash loses the time since the last flush, which players feel as a rollback of a few seconds or minutes. The playbook calls write-behind a bad trade for data you care about ([Patterns](/docs/architecture/application-caching#patterns)); on a world server it's the only one that fits frame rates, so the rule is to keep only state whose rollback a player would shrug at on that cadence.
+- **Periodic snapshots of world state.** Entities, structures and dropped items are written in batches. AWS's New World post puts the game's writes to DynamoDB at about 800,000 every 30 seconds, which is the scale this reaches; Star Citizen's EntityGraph exists so a replacement server can restore the state of a crashed one, which CIG hopes takes under a minute while clients stay connected.
+- **Transactions for value.** Trades, purchases, currency, mail and rare drops are committed to the database before the game tells the player they happened. Anything that moves value between two owners is one database transaction, never two write-behind flushes: if player A's state flushes with the item and the server crashes before player B's flush without it, the item now exists twice, which is the classic duplication exploit. Currency goes through the ledger, not a balance in the character blob ([Wallets Are Ledgers](/books/gaming/economies-and-entitlements#wallets-are-ledgers)).
+
+Set the recovery point per kind of state, the same way a service sets one per system ([Set Targets From Impact](/docs/operations/disaster-recovery#set-targets-from-impact)), and say it to players: "a crash may lose up to a minute of movement, never a trade" is a promise support can stand behind. Which state is server-authoritative at all is decided in [Saves & Player Data](/books/gaming/saves-and-player-data#where-progress-lives).
+
+### Maintenance Windows and Long-Lived Servers
+
+Per-match servers update by draining: new matches go to the new build and old servers finish. A world server never drains, because it always has players, so persistent games keep scheduled downtime:
+
+- **EVE Online** has a daily downtime. CCP's 2010 post says it was 60 minutes (11:00 to 12:00 UTC) from launch in May 2003, became 30 minutes that November while the actual work took "just under 12 minutes," and covered database cleanups, asteroid belt resets, hotfixes and patches; in May 2016 CCP shortened it to "11:00 - 11:15 UTC." The same 2010 post set the goal of eliminating it and said "no new code has been produced that relies on downtime." The 2016 change is the latest I found.
+- **Final Fantasy XIV** announces All Worlds maintenance with start and end times on its official forum and the Lodestone; the April 30, 2020 notice ran five hours (10:00 p.m. to 3:00 a.m. PDT), said "Completion time is subject to change," and was later updated when it finished early.
+- **World of Warcraft** realms have a weekly maintenance day; on April 8, 2025, per Blizzard Watch, retail realms in North America were down for an hour while Classic realms were scheduled for eight. Blizzard's hotfix notes describe the other path: "Some of the hotfixes below take effect the moment they were implemented," others "may require scheduled realm restarts," and "some issues cannot be addressed without a client-side patch update."
+
+That gives three classes of change, and the architecture decides which class each change lands in:
+
+1. **Data hotfixes,** applied live: tuning values, drop tables, prices, feature flags, loaded by running servers without a restart. My rule is that anything designers tune ships as data, so most fixes need no restart at all ([Feature Flags](/docs/delivery/feature-flags)).
+2. **Server code,** applied by restarting servers one at a time where the world can tolerate it: a zone briefly closed and its players moved, or a mesh moving authority off a node before it restarts. This is a rolling deploy ([Rolling](/docs/delivery/deployment-strategies#rolling)) with the twist that the unit is a place, and players in it need a warning and a safe spot to land.
+3. **Full downtime,** for what genuinely needs the world stopped: schema migrations that can't run online, world merges, protocol changes that every client and server must take at once. These go in the scheduled window, run with the player-facing sequence in [Live Operations](/books/gaming/live-operations#maintenance-and-player-communication), and the window stays short and at a fixed time so players can plan around it.
+
+CCP's rule is the one to copy: new code must not depend on the window. Daily maintenance tasks (world resets, cleanups, rebalancing places across servers) should run while the world is up, so the window shrinks to the changes that truly need it.
+
+### The Schema for Worlds
+
+The core model's `game_servers` row is one process; in a persistent game, that process serves a slice of a world, and the record needs the world and the slice:
+
+```sql
+CREATE TABLE worlds (                          -- a realm, World or shard
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id            UUID NOT NULL,
+  game_id              UUID NOT NULL REFERENCES games (id),
+  name                 TEXT NOT NULL,
+  data_center          TEXT NOT NULL,         -- the travel and matchmaking group it belongs to
+  status               TEXT NOT NULL CHECK (status IN ('open', 'locked', 'maintenance',
+                         'retired')),          -- locked: no new characters
+  hosted_by_world_id   UUID REFERENCES worlds (id),  -- set when connected to another world
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (tenant_id, game_id, name)
+);
+
+CREATE TABLE zone_assignments (                -- which server simulates which place, over time
+  id             UUID PRIMARY KEY DEFAULT uuidv7(),
+  tenant_id      UUID NOT NULL,
+  world_id       UUID NOT NULL REFERENCES worlds (id),
+  zone_key       TEXT NOT NULL,                -- a solar system, region or grid cell
+  game_server_id UUID NOT NULL REFERENCES game_servers (id),
+  valid_during   TSTZRANGE NOT NULL,
+  EXCLUDE USING gist (world_id WITH =, zone_key WITH =, valid_during WITH &&)  -- one owner at a time
+);
+
+ALTER TABLE player_profiles
+  ADD COLUMN home_world_id    UUID REFERENCES worlds (id),
+  ADD COLUMN current_world_id UUID REFERENCES worlds (id),  -- differs while visiting
+  ADD COLUMN state_version    BIGINT NOT NULL DEFAULT 0,    -- each flush must increment it
+  ADD COLUMN state_saved_at   TIMESTAMPTZ;
+
+ALTER TABLE game_servers
+  ADD COLUMN world_id UUID REFERENCES worlds (id);
+```
+
+The exclusion constraint is the authority rule in the database: two servers can never be recorded as owning one place at the same time, and the history of assignments answers "which server was this player's zone on when it crashed." `state_version` makes a write-behind flush conditional (`UPDATE ... WHERE state_version = $expected`), so a stale flush from a server that lost authority is rejected instead of overwriting newer state.
+
 ## What You Can Adopt
 
 Everything in this chapter (the lifecycle, the allocator, the autoscaler, placement) can be built on plain VMs or bare metal, and large studios have. Most games adopt an orchestrator instead, open source or managed, and spend their engineering on the game server itself.
@@ -230,6 +326,7 @@ By game and team:
 - **Placement from client-measured latency,** a latency target, and a fairness cap on spread within a match.
 - **A network plan:** relay or protected network, per-ISP latency monitoring, and DDoS layers from hidden IPs to per-match rotation and connection tokens.
 - **Fleet load tests with mock game servers** for allocation bursts, the lifecycle at scale and location failover, and per-match performance tests of the real server.
+- **For a persistent world:** global identifiers so worlds can be merged, zones along boundaries the design already has (seamless only when the design needs it), one recorded owner per place and per entity, fair degradation under load, a save cadence per kind of state with value moved only in database transactions, data hotfixes that need no restart, and a short, fixed maintenance window that no new code depends on.
 
 ## References
 
@@ -251,6 +348,8 @@ By game and team:
 - [Agones repository](https://github.com/googleforgames/agones), the Apache-2.0 license and current activity
 - [Open Match repository](https://github.com/googleforgames/open-match), the Apache-2.0 matchmaking framework and its last activity
 - [Thundernetes repository](https://github.com/PlayFab/thundernetes), archived August 18, 2026, and described as an experiment not supported for production
+- [Square Enix: FFXIV Data Center Travel guide](https://na.finalfantasyxiv.com/lodestone/playguide/contentsguide/datacentertravel/), physical and logical data centers, Home Worlds, World Visit, the retainer and market restrictions while visiting, and the 30-day return
+- [World of Warcraft: Hotfixes (April 2025)](https://news.blizzard.com/en-us/article/24179333/hotfixes-april-4-2025), hotfixes that apply immediately, ones that need scheduled realm restarts, and issues that need a client patch
 
 **In practice**
 
@@ -267,3 +366,17 @@ By game and team:
 - [Riot Games: Fixing the Internet for Real Time Applications, Part II](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-ii), Riot Direct's hubs, fiber and peering, and players under 80 ms from 31% to 50% to 80% (February 12, 2016)
 - [Riot Games: Fixing the Internet for Real Time Applications, Part III](https://www.riotgames.com/en/news/fixing-internet-real-time-applications-part-iii), latency, loss and jitter telemetry, the 400M packets per second router and lower networking spend (July 25, 2016)
 - [AWS News Blog: AWS Local Zones expansion](https://aws.amazon.com/blogs/aws/aws-local-zones-expansion-taipei-and-delhi/), Riot serving League of Legends and VALORANT players from Local Zones (October 5, 2022)
+- [CCP: Full Suite of Upgrades to the Tranquility DB](https://www.eveonline.com/news/view/full-suite-of-upgrades-to-the-tranquility-db-yippie), EVE's single shard and a database failover that once disconnected every node, later 3 of 208 (March 24, 2011)
+- [CCP: Fleet Fight Notification Tool](https://www.eveonline.com/news/view/fleet-fight-notification-tool), Tranquility's nodes, solar systems redistributed daily at downtime, reserve nodes and time dilation from shared nodes (July 10, 2020)
+- [CCP: Introducing Time Dilation (TiDi)](https://www.eveonline.com/news/view/introducing-time-dilation-tidi), slowing the game clock under load and exempting reinforcement timers (April 22, 2011)
+- [Data Center Knowledge: Experiencing Heavy Server Load? Just Slow Down Time](https://www.datacenterknowledge.com/servers/experiencing-heavy-server-load-just-slow-down-time), the Battle of Asakai, more than 2,750 players and Time Dilation at its configured 10% limit (January 31, 2013)
+- [CCP: Death to Downtimes](https://www.eveonline.com/news/view/death-to-downtimes), EVE's downtime history from 60 to 30 minutes, what it does, and no new code relying on it (October 29, 2010)
+- [CCP: Daily Downtime Officially Shortened to 15 Minutes](https://www.eveonline.com/news/view/daily-downtime-officially-shortened-to-15-minutes), the 11:00 to 11:15 UTC window (May 11, 2016)
+- [Square Enix forum: All Worlds Maintenance (Apr. 30-May 1)](https://forum.square-enix.com/ffxiv/threads/418670-All-Worlds-Maintenance-(Apr.-30-May-1)), a five-hour FFXIV window, completion time subject to change, finished early (2020)
+- [Blizzard forums: Realm Consolidation FAQ](https://eu.forums.blizzard.com/en/wow/t/589384), Virtual realms hosted on a Native realm's hardware, realm suffixes and the database work of connecting realms (September 2025)
+- [Blizzard Watch: Quick WoW maintenance for US, long maintenance for Classic](https://blizzardwatch.com/2025/04/08/quick-wow-maintenance-us-long-wow-maintenance-classic-players), the weekly maintenance day, one hour for retail and eight scheduled for Classic (April 8, 2025)
+- [AWS for Games: The Unique Architecture behind Amazon Games' Seamless MMO New World](https://aws.amazon.com/blogs/gametech/the-unique-architecture-behind-amazon-games-seamless-mmo-new-world), remote entry points, hubs, the simulation grid, handoff between instances, 2,500 players per world and DynamoDB writes (April 6, 2022)
+- [Cloud Imperium: Server Meshing and Persistent Streaming Q&A](https://robertsspaceindustries.com/comm-link/transmission/18397-Server-Meshing-And-Persistent-Streaming-Q-A), authority per entity, static and dynamic meshes, the replication layer, EntityGraph and crash recovery
+- [Cloud Imperium: Letter From the Chairman (December 2024)](https://robertsspaceindustries.com/en/comm-link/transmission/20371-Letter-From-The-Chairman), Alpha 4.0 with each planet, landing zone or major station on different game servers
+- [PC Games Insider: Ambitious, visionary products always contain some risk, says Improbable](https://www.pcgamesinsider.biz/news/69519/ambitious-visionary-products-always-contain-some-risk-says-improbable-after-third-spatialos-project-bites-the-dust/), Worlds Adrift, Mavericks and Lazarus cancelled (August 13, 2019)
+- [PC Games Insider: Improbable continues games divestment with Midwinter sale](https://www.pcgamesinsider.biz/news/73029/improbable-continues-games-divestment-with-midwinter-sale/), Improbable shifting from game development to the metaverse (May 17, 2022)

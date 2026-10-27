@@ -96,7 +96,7 @@ How this shapes the system:
 
 - **Eligibility is evaluated per session, from the strictest member.** A party's cross-play eligibility is the intersection of every member's platform privileges, age-based settings and own preference. One member who can't cross-play keeps the party in a platform-only pool ([Matchmaking & Ranked](/books/gaming/matchmaking)). Communication between two players follows the stricter of their settings ([Parties, Presence, Chat & Voice](/books/gaming/social-systems)).
 - **Entitlements carry a scope.** Every entitlement records where it may be used: portable across platforms, scoped to the platform where it was bought, or bounded in time. The scope comes from the purchase's source and your platform agreements, and clients display only what's usable where they run ([Stores, Fees & Payments](/books/gaming/stores-and-payments)).
-- **Cross-progression is per game and per feature.** Rank may cross while some purchased content stays on its platform. Model each separately rather than one global switch.
+- **Cross-progression is per game and per feature.** Rank may cross while some purchased content stays on its platform. Model each separately rather than one global switch. How the progress itself moves between platform clouds and the backend is in [Cross-Progression](/books/gaming/saves-and-player-data#cross-progression).
 
 ## Sign-In and Tokens
 
@@ -110,7 +110,7 @@ The sign-in path has the same structure on every platform:
 
 Session design (server-side sessions, refresh, revocation, why not to use long-lived JWTs as the session) is in [Authentication](/docs/security/authentication#sessions-the-default). The game-specific parts are the platform verification at the front and the join ticket at the back, which keeps the game server's hot path free of calls to the identity service.
 
-Mobile stores add their own rules. Apple's App Store Review Guideline 4.8 says an app that uses a third-party or social login for the user's primary account must also offer an equivalent login that limits data collection to name and email, lets the user keep their email private and doesn't collect app interactions for advertising without consent; an app that uses only the company's own account system is exempt. Guideline 5.1.1(v) requires an app that supports account creation to offer account deletion in the app. Account deletion is therefore a feature of the client on iOS, and it must cascade through every service ([Data Retention](/docs/architecture/data-retention#erasure-requests)).
+Mobile stores add their own rules. Apple's App Store Review Guideline 4.8 says an app that uses a third-party or social login for the user's primary account must also offer an equivalent login that limits data collection to name and email, lets the user keep their email private and doesn't collect app interactions for advertising without consent; an app that uses only the company's own account system is exempt. Guideline 5.1.1(v) requires an app that supports account creation to offer account deletion in the app. Account deletion is therefore a feature of the client on iOS, and it must cascade through every service ([Data Retention](/docs/architecture/data-retention#erasure-requests)); Apple's and Google's deletion requirements, and what a game keeps after deletion, are in [Account Deletion the Stores Require](/books/gaming/saves-and-player-data#account-deletion-the-stores-require).
 
 ## Account Security
 

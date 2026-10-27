@@ -9,7 +9,7 @@ tags = ["gaming", "ratings", "esrb", "pegi", "coppa", "children", "parental-cont
 
 Every game that ships through a store carries an age rating, and every online game has to decide what it does when the player is a child. The two questions sound related and are handled by different people under different rules. A rating describes the **content** (violence, language, gambling themes) and, increasingly, the **interactive risks** (purchases, random items, chat). Children's privacy and safety law governs what the **service** does with a young player: what it collects, who they can talk to, what they can buy and who has to agree first.
 
-This chapter covers both from a game's point of view: the rating systems and their purchase labels, the age signals platforms now pass to games, COPPA as it applies to games, the FTC's orders against game companies, the parental controls players already have on their consoles and PCs, and how to build ratings and age rules as data. The general law of children's privacy (COPPA's text, consent methods, the UK Children's Code, age assurance and state app-store laws) is in the playbook's [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy); this chapter links to it rather than repeating it. Loot box regulation beyond ratings is in [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes). Dates are as of October 2026, and none of this is legal advice.
+This chapter covers both from a game's point of view: the rating systems and their purchase labels (ESRB, PEGI and IARC, then China, Japan, South Korea, Brazil, Australia and Germany), the age signals platforms now pass to games, COPPA as it applies to games, the FTC's orders against game companies, the parental controls players already have on their consoles and PCs, and how to build ratings and age rules as data. The general law of children's privacy (COPPA's text, consent methods, the UK Children's Code, age assurance and state app-store laws) is in the playbook's [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy); this chapter links to it rather than repeating it. Loot box regulation beyond ratings is in [Loot Boxes & Consumer Law](/books/gaming/consumer-law-and-loot-boxes). Dates are as of October 2026, and none of this is legal advice.
 
 ## Two Kinds of Rule
 
@@ -73,6 +73,21 @@ The engineering point is that a questionnaire is an input you own. The answers d
 
 ## Other Regions and Store Ratings
 
+Outside the ESRB and PEGI territories, rating bodies differ in what they rate, whether the rating is law, and what else the state requires before a game may run at all. As of October 2026:
+
+| Region | Body | Categories | What needs a rating | What it means for the system |
+| --- | --- | --- | --- | --- |
+| China | National Press and Publication Administration (NPPA) approves; the CADPA's group standard adds age reminders | No statutory age rating; voluntary 8+, 12+ and 16+ age-appropriateness reminders, announced December 2020 | Every online game, before it is published online: an application to the provincial publishing authority, then NPPA approval; publishing without it risks shutdown and fines of 5 to 10 times illegal revenue of 10,000 yuan or more | Real-name registration and login for every account, with no guest or trial mode; minors served only from 20:00 to 21:00 on Fridays, Saturdays, Sundays and public holidays, since September 1, 2021 |
+| Japan | CERO | A (all ages), B (12+), C (15+), D (17+), Z (18+ only) | Games sold in Japan on consoles, PC, phones and cloud services; for online console games, only the framework, not "variable components such as bulletin boards that can be modified by users" | The rating covers the shipped game, so live and user-made content is the moderation pipeline's job; complete gacha is banned by separate law ([South Korea and Japan](/books/gaming/consumer-law-and-loot-boxes#south-korea-and-japan)) |
+| South Korea | Game Rating and Administration Committee (GRAC) | All, 12+, 15+ and adults only (Apple shows it as 19+) | Nearly every game is rated by one of 11 designated self-classification operators, including Google, Apple and Epic Games, which rated 99.9% of 2,019,426 games in 2025, with GRAC monitoring after the fact; Epic's user-generated content alone was 52.1% | GRAC can override a store's rating; Apple requires a GRAC Rating Classification Number for frequent simulated gambling; paid random item odds must be published ([South Korea and Japan](/books/gaming/consumer-law-and-loot-boxes#south-korea-and-japan)) |
+| Brazil | Ministry of Justice and Public Security (ClassInd) | L (general), 6 (added by an October 2025 ordinance), 10, 12, 14, 16, 18 | Games, and since the October 2025 ordinance apps of every kind, including online games and apps where users interact; Decree 12,880 of March 18, 2026 names in-game interaction, loot boxes and microtransactions among the risks a game's rating weighs | Loot boxes are prohibited in games for minors or likely to be accessed by them; under the decree's Article 23 the supplier verifies age and blocks the feature for minors, ships a version without loot boxes, or turns the feature off by default ([Brazil, and the Stores as Regulators](/books/gaming/consumer-law-and-loot-boxes#brazil-and-the-stores-as-regulators)) |
+| Australia | Classification Board | G, PG and M advisory; MA 15+ and R 18+ legally restricted; RC (Refused Classification) can't be sold | Games supplied in Australia | Paid loot boxes carry a minimum M and simulated gambling a mandatory R 18+, for games classified from September 2024 ([Australia](/books/gaming/consumer-law-and-loot-boxes#australia)) |
+| Germany | USK | 0, 6, 12, 16, 18, under section 14 of the Youth Protection Act | Physical games by USK review; digital games through IARC; since January 1, 2023, new submissions are assessed for usage risks (chats, in-game purchases, random items, location sharing) | Usage risks can raise the age: just under 30% of digital games rated in 2024 had them, and about a third of those got a higher rating, mostly for pressure to keep playing and increased purchase incentives |
+
+Two patterns follow. In China the rules are gates on operation, not labels: approval decides whether the game runs, and the play-time window and real-name login are server-side rules on every session, keyed on a verified identity. Everywhere else the direction is PEGI's: interactive features (paid random items, chat, purchase pressure) increasingly move the age, so the build feature check in [Ratings as Data](#ratings-as-data) matters in every region, with one `game_ratings` row per authority.
+
+### Store Ratings
+
 Ratings aren't uniform even inside a single store. Apple's App Store uses its own scale (4+, 9+, 13+, 16+ and 18+) for regions without additional requirements, and region-specific values for Australia, Brazil and Korea. Its questionnaire asks about the features this chapter cares about, with Apple's definitions:
 
 - **Loot Boxes:** "Virtual containers that provide players with randomized virtual items for purchase," listed at 9+ in the default scale.
@@ -80,7 +95,7 @@ Ratings aren't uniform even inside a single store. Apple's App Store uses its ow
 - **Simulated Gambling** (13+ when infrequent, 18+ when frequent) and **Gambling** with real money or exchangeable currency (18+).
 - **In-app controls:** whether the app has **Parental Controls** and **Age Assurance**.
 
-Regional rules override the default. On February 24, 2026, Apple announced that on the **Brazil** storefront, an app that declares loot boxes in the questionnaire is updated to an **18+** rating, and that from the same date Apple blocks users in Australia, Brazil and Singapore from downloading 18+ apps unless they've been confirmed as adults. A loot box that is a 9+ feature in one country is an 18+ feature in another, decided by the same checkbox. National rules do the same off the stores: Australia's classification gives paid random items a minimum M and simulated gambling R 18+ from September 2024, and Brazil's ECA Digital bans loot boxes in games minors are likely to play from March 17, 2026 ([The Rules by Jurisdiction](/books/gaming/consumer-law-and-loot-boxes#the-rules-by-jurisdiction)).
+Regional rules override the default. On February 24, 2026, Apple announced that on the **Brazil** storefront, an app that declares loot boxes in the questionnaire is updated to an **18+** rating, and that from the same date Apple blocks users in Australia, Brazil and Singapore from downloading 18+ apps unless they've been confirmed as adults. Korea's App Store values put loot boxes at 12+ and frequent simulated gambling at 19+. A loot box that is a 9+ feature in one country is a 12+ or 18+ feature in another, decided by the same checkbox, and the national rules in the table above sit underneath ([The Rules by Jurisdiction](/books/gaming/consumer-law-and-loot-boxes#the-rules-by-jurisdiction)).
 
 ## Platform Age Signals
 
@@ -221,7 +236,7 @@ Evaluation takes every rule that matches the feature, the band and any jurisdict
 | Behavioral ads and third-party data sharing | Off (separate COPPA consent required) | Off | Off where DSA Article 28 applies |
 | Public profile and precise location | Off | Off by default | Off by default |
 
-That table is opinion, not law, and it's stricter than some regimes require. It's built to satisfy the strictest regimes in this chapter at once, so that a player's location doesn't have to be known precisely to be safe.
+That table is opinion, not law, and it's stricter than some regimes require. It's built to satisfy the strictest regimes in this chapter at once, so that a player's location doesn't have to be known precisely to be safe. Creators have their own age floors and payout rules, and content built by creators carries its own maturity labels ([Age Rules for Creators and Players](/books/gaming/creator-economies#age-rules-for-creators-and-players)).
 
 ### Failing Safe
 
@@ -244,6 +259,7 @@ Record structure is in [Audit Trails](/docs/architecture/audit-trails#automated-
 ## What This Means for the System You Build
 
 - **Ratings as effective-dated rows** per game, authority and region, with the questionnaire version and the build it described.
+- **Operating rules where a rating body is a gate,** such as China's approval, real-name login and play-time window, enforced on the server for every session.
 - **A declared feature list per build,** checked in CI against the live ratings, so adding paid random items, time-limited offers or chat triggers a re-rating and a significant-change notice before release.
 - **Age as signals, not a flag,** from platforms, the age screen, parents and moderation, with the effective band derived lowest-wins and unknown treated as under 13.
 - **A rule table for the feature list** (chat, voice, UGC, purchases, paid random items, ads, data sharing) keyed by jurisdiction, band and date, with consent scopes.
@@ -262,6 +278,15 @@ Record structure is in [Audit Trails](/docs/architecture/audit-trails#automated-
 - [PEGI: Updated ratings for existing games with paid random items](https://pegi.info/news/pegi-updates-age-ratings-existing-games-paid-random-items), October 6, 2026; re-rating existing PEGI 3, 7 and 12 digital games to PEGI 16
 - [IARC: About](https://www.globalratings.com/about.aspx), the global rating system for digital games and apps and its count of rated titles
 - [USK: Age classification for games and apps](https://usk.de/en/home/age-classification-for-games-and-apps/), the USK's procedures and its role within IARC
+- [USK: The USK age ratings](https://usk.de/die-usk-alterskennzeichen/), the five age labels under section 14 of the Youth Protection Act, in German
+- [USK: In-game purchases, chats and loot boxes: USK expands its criteria](https://usk.de/usk-pressemitteilung-umsetzung-neues-jugendschutzgesetz/), usage risks considered for new submissions from January 1, 2023, and the additional notices, in German
+- [USK: Annual statistics 2024](https://usk.de/usk-jahresstatistik-2024-30-jahre-jugendschutz-bei-games/), February 26, 2025; the share of games with usage risks and of those rated higher, in German
+- [CERO: Code of Ethics](https://www.cero.gr.jp/en/relays/download/3/78/49/289/?file=%2Ffiles%2Flibs%2F289%2F%2F20250327114356889.pdf), revised March 24, 2025; scope, online console games, the five categories and covered platforms
+- [CERO: Rating system](https://www.cero.gr.jp/en/publics/index/17/), what CERO rates and the content types it reviews
+- [China: NPPA notice on preventing minors' addiction to online games (2021 No. 14)](https://www.gov.cn/zhengce/zhengceku/2021-09/01/content_5634661.htm), August 30, 2021; the one-hour window, real-name registration and login, in Chinese
+- [China: Provisions on the Administration of Online Publishing Services](https://www.gov.cn/gongbao/content/2016/content_5074079.htm), Article 27 approval before an online game is published, and the Article 51 penalties, in Chinese
+- [Brazil: Decree 12,880 of March 18, 2026](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/decreto/d12880.htm), the risks a game's rating weighs, loot boxes for minors and the Article 23 options, in Portuguese
+- [Australian Classification: What are the ratings?](https://www.classification.gov.au/classification-ratings/what-are-ratings), advisory and legally restricted categories and Refused Classification
 - [Federal Register: Children's Online Privacy Protection Rule (April 22, 2025)](https://www.govinfo.gov/content/pkg/FR-2025-04-22/html/2025-05904.htm), definitions of child, personal information, directed to children, mixed audience and internal operations
 
 **Reference**
@@ -280,3 +305,6 @@ Record structure is in [Audit Trails](/docs/architecture/audit-trails#automated-
 - [Xbox: Family hub](https://www.xbox.com/en-US/family-hub), screen time, age filters, Ask a Parent and multiplayer controls
 - [PlayStation: Parental controls and spending limits on PS5](https://www.playstation.com/en-us/support/account/ps5-parental-controls-spending-limits/), age levels, the default monthly spending limit of 0 and communication restrictions
 - [Nintendo: Parental controls](https://www.nintendo.com/us/switch/parental-controls/), play time, ESRB-based restrictions, communication and spending limits
+- [Inven Global: GRAC's monitoring budget cut while rated games surge](https://www.invenglobal.com/articles/27035/game-classification-volume-up-but-monitoring-workforce-reduced), October 11, 2026; 2025 self-classification volumes, the 11 operators and Epic's user-generated content share
+- [National Business Daily: Online game age-appropriateness reminder standard released](https://www.nbd.com.cn/articles/2020-12-16/1573626.html), December 16, 2020; the CADPA group standard's 8+, 12+ and 16+ markers, in Chinese
+- [SBT News: Government creates a 6-year age band and extends ratings to apps](https://sbtnews.sbt.com.br/noticia/politica/governo-cria-nova-faixa-etaria-de-6-anos-na-classificacao-indicativa-e-amplia-regra-para-aplicativos), October 15, 2025; the new band and the extension to online games and interactive apps, in Portuguese

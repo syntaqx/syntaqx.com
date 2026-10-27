@@ -8,7 +8,7 @@ part = "How Games Get Made"
 tags = ["gaming", "build-pipelines", "ci", "source-control", "crash-reporting"]
 +++
 
-A game's source is mostly not code. It is textures, meshes, animations, audio, levels and the data that ties them together, measured in hundreds of gigabytes, edited by artists who can't merge their work, and converted into a different form for every platform before anyone can play it. The production pipeline is everything between a person saving a file and a player running the result: source control, asset conversion, build farms, automated tests, crash reporting, profiling and the certification gates platform holders run before a build can ship.
+A game's source is mostly not code. It is textures, meshes, animations, audio, levels and the data that ties them together, measured in hundreds of gigabytes, edited by artists who can't merge their work, and converted into a different form for every platform before anyone can play it. The production pipeline is everything between a person saving a file and a player running the result: source control, asset conversion, localization, build farms, automated tests, QA and playtests, crash reporting, profiling, the certification gates platform holders run before a build can ship, and the ports that take the game to another platform.
 
 This chapter covers that pipeline. The engine runtime is in [Building Your Own Engine](/books/gaming/building-an-engine), getting the finished build onto players' machines is [Patching & Content Delivery](/books/gaming/patching), and the general CI practice it builds on is [CI & Continuous Deployment](/docs/delivery/ci-pipelines). The `builds` table from [The Games Business](/books/gaming/games-business) is where all of it is recorded.
 
@@ -70,6 +70,27 @@ Cooking is expensive, so pipelines cache it. Each cooked output is keyed by a ha
 
 Validation belongs here too: textures over their size budget, meshes without LODs, missing references, names that break the platform's rules. Legends of Runeterra's pipeline runs asset validation as its own test stage, and errors caught at import or cook time cost minutes; caught at certification, they cost a submission.
 
+## Localization
+
+The general rules are in [Internationalization](/docs/frontend/internationalization): every string externalized under a stable key, grammar in the message instead of the code, room for text expansion and a pseudo-locale in CI. A game follows all of them. What changes is that its text lives in assets as much as in code, ships inside cooked builds, and renders in fonts the game carries itself.
+
+- **Keys and gathering.** Unreal identifies each localizable text by a namespace and a key, and its String Tables "can be defined in C++, loaded using a CSV file, or created as an Asset," so code and assets reuse one entry. The Localization Dashboard gathers text from source and assets, exports it (Epic recommends the PO pipeline for external translation tools), imports translations and compiles the runtime data per culture. Unity's Localization package covers the same ground: strings and assets that change per locale, Smart Strings for placeholders and plurals, and import and export through XLIFF, CSV and Google Sheets. The gather belongs on the build farm, so a string that never reached a table fails a build instead of a translator's schedule.
+- **Grammar in the message.** Unreal's text formatting has argument modifiers for plural forms (`{NumCats}|plural(one=is,other=are)`), gender (`{Gender}|gender(Le,La)`) and Korean post-positions (`{Arg}|hpp(은,는)`), the engine's counterpart to ICU's `plural` and `select` ([Plurals and Grammar](/docs/frontend/internationalization#plurals-and-grammar-icu-messageformat)). Games need them more than most software: item counts, a player character whose gender the player chose, a teammate's name in the middle of a sentence.
+- **Pseudo-localization before translation.** Unity's package supports it to "test how your project will adapt to different localizations at an early stage." In a game, run the pseudo-locale through the automated screenshot and bot passes, because overflow in a HUD, a subtitle or a button prompt doesn't show up in a grep ([Pseudo-Localization in CI](/docs/frontend/internationalization#pseudo-localization-in-ci), [Text Expansion](/docs/frontend/internationalization#text-expansion)).
+- **Localized assets.** Textures with words on them, voice lines and subtitles change per language too; Unity's package swaps "a texture, model, or audio file" by locale. Each language adds install size, so cook languages into their own chunks and download only the ones a player uses ([Patching & Content Delivery](/books/gaming/patching)).
+
+**Fonts and glyph budgets.** A game draws its own text, which makes it carry its own glyphs. China's Table of General Standard Chinese Characters, issued by the State Council in 2013, holds 8,105 characters, 3,500 of them in the first-level table of common characters; a font atlas holds a limited number of glyphs, and TextMesh Pro's documentation says "the exact number depends on the font, the size of the atlas texture, and the settings you use." Engines answer with fallback chains. TextMesh Pro searches the text's font, its fallback fonts recursively, then the project-wide fallbacks, and finally draws a missing-glyph character; it names Chinese, Japanese and Korean as the case for spreading a character set across several font assets. Unreal's composite fonts assign sub-fonts by character range and optionally by culture, and UMG supports only runtime-cached fonts, which rasterize glyphs as they're needed. My rule: build the glyph set from the gathered strings, give font atlases a line in the per-platform memory budget ([Performance Budgets](#performance-budgets)), and include CJK in the pseudo-locale so a missing glyph shows up in CI as an empty box. Player-entered text (names, chat) can contain any character, so it needs a fallback font even when the UI ships in one language.
+
+**Voice and lip sync.** Voice-over is recorded per language from a locked script, usually to the timing of the original line so cutscenes and subtitles still fit ([Subtitles and Captions](/books/gaming/accessibility#subtitles-and-captions)). Faces then need lip sync per language: animation authored for each, or generated from the recorded audio with audio-driven tools such as Speech Graphics' SGX and FaceFX. Either way it's per-language content in the cook, with its own budget.
+
+**Linguistic QA.** Translators work from tables; players see a running build. LQA (linguistic quality assurance) is a pass in which testers fluent in each language play a localized build and log truncation, untranslated strings, text out of context, wrong terminology and broken formatting. QA vendors sell it as its own service (Testronic lists localization QA beside functional and compliance QA, and so does Side). Each LQA bug names the build and the string key, so the fix lands in the table and the next build proves it.
+
+**Platform and regional requirements.** As of October 2026:
+
+- **Xbox.** XR-003 says "there's no requirement on the amount of localization a title must support," but "in areas where localized text is supported, the text must be legible regardless of the display setup." XR-022 requires the naming in Microsoft's Terminology List when referring to Xbox features, services and hardware, so platform terms belong in the translators' glossary, not to free translation.
+- **Steam.** Developers declare the languages a game supports in the store editor. For games without a Full Platform Support language, "English is Steam's fallback language and needs to have content, even if that content is actually another language."
+- **China.** New Zealand's trade ministry, in its September 2026 market report, describes localization as "an integral part of the ISBN application": games "must be fully localised using simplified Chinese," text on in-game road signs, building names and signboards included, and other foreign-language text is "typically required to be translated or minimised." A Chinese publisher holding a Web Publishing Service License submits the application.
+
 ## Build Farms and CI
 
 Building a game for several platforms is too slow for one machine, so the work is described as a **graph** and spread across a farm. Epic's BuildGraph is "a script-based build automation system that features graphs of building blocks," written in XML: nodes with dependencies, each producing outputs. For a distributed build, the graph is exported as JSON, each machine runs nodes, all sync the same changelist, and outputs pass between machines through a shared network location, running in parallel wherever dependencies allow.
@@ -113,6 +134,20 @@ Games add test types web services rarely need:
 
 Flaky tests are worse in games than elsewhere, because timing, frame rate and GPU drivers vary. Quarantine a flaky test immediately and fix it, or the farm teaches everyone to ignore red ([Testing Strategy](/docs/quality/testing)).
 
+## QA and Playtesting
+
+[Automated testing](#automated-testing-at-scale) catches regressions in what someone thought to check. People cover the rest: whether a feature works the way a player meets it, whether the build passes a platform's requirements, and whether the game is understood and enjoyed. Those are three different jobs with different staff.
+
+- **Functional QA** runs test plans against a specific build: a plan per feature written before it lands, a regression pass on every release candidate, and exploratory passes on whatever changed most. Every bug records the build it was found on and the build that verifies the fix, the same discipline as crash groups below. "Fixed on mainline" tells a tester on a release branch nothing; "verified in build 26.21.0412" does.
+- **Compliance QA** is pre-certification: running the platform holder's requirement test cases in-house before submitting, so the first failure costs a day instead of a submission ([Platform Certification](#platform-certification)). Microsoft publishes its test cases with the XRs; for Sony and Nintendo the requirements sit behind the developer portals, so this pass is run by people with portal access or a vendor under the same NDA.
+- **Compatibility QA** covers the hardware spread: PC GPUs, drivers and controllers, and on phones the device tiers ([Testing on Devices](/books/gaming/mobile-games#testing-on-devices)).
+
+Most of this can be bought. Large service companies sell QA beside localization and other production work: Keywords Studios lists QA testing and game localization in its Globalize division; Side (the company formerly called PTW, which unified its brands under that name in March 2025) lists quality assurance, localization QA and player support across more than 40 studios; Testronic lists functional, compliance, compatibility and localization QA. A vendor scales testers up for a launch and down after it. What it needs from the pipeline is what in-house QA needs: builds through the same promotion path, the same bug fields, and access to the build's symbols and logs.
+
+**Playtests and user research** answer a different question: not whether the game works, but whether players understand it and want to keep playing. Valve's Steam Playtest runs on a separate "child" app ID tied to the main game, with a sign-up on the main store page. Access is limited by default (Steam picks testers "at random from the set of Steam accounts that have requested access," optionally prioritizing countries to protect server capacity) or open to everyone who asks, and a player who only played the Playtest can't review the game. It isn't confidential: "there shouldn't be an expectation of secrecy," and an NDA test needs your own registration and release override keys on the unreleased app. "Collecting feedback from players is up to you." Platform holders run their own research labs as well: Xbox Research recruits players 18 and over for remote studies and onsite sessions in Redmond and Vancouver, and PlayStation Research recruits players for confidential playtests and interviews, sometimes paid. A third-party studio runs its own sessions or hires a user research vendor.
+
+My rule for playtests: a playtest build is a build. It gets a row in `builds`, its telemetry is tagged so it never mixes with live players' ([Telemetry & Analytics](/books/gaming/telemetry)), and every finding that becomes a bug names that build.
+
 ## Crash Reporting and Symbolication
 
 A game crashes on hardware you don't own, with drivers you didn't test, and the crash report is often the only evidence. The pipeline:
@@ -122,7 +157,7 @@ A game crashes on hardware you don't own, with drivers you didn't test, and the 
 3. **Symbolicate.** A minidump holds addresses. Turning them into functions, files and line numbers needs the debug information files from the exact build: PDBs on Windows, dSYMs on Apple platforms, ELF symbols on Linux and Android, or Breakpad symbols anywhere. Sentry matches them by debug identifiers that "uniquely identify debug information files across builds," from uploads or from a symbol server it downloads from on demand. This is why symbol upload is a pipeline step on every build that might reach a player.
 4. **Group.** Reports with the same faulting stack (after stripping addresses and normalizing inlined frames) become one issue, counted by build, platform, GPU and driver, so the team sees "this crash, 4,000 times, only on one driver version" instead of 4,000 reports.
 
-The crash pipeline sits beside the backend's ordinary error and trace pipeline, and joins it by build and session ID so a client crash can be read next to the server errors in the same match ([Observability](/docs/operations/observability)). Minidumps contain memory, and memory can contain chat text, names or tokens. Treat them as personal data: collect only what you need, scrub, restrict access and expire them ([GDPR & Privacy](/docs/compliance/gdpr), [Data Retention & Deletion](/docs/architecture/data-retention)). Crash rate per build is defined in [Game Metrics](/books/gaming/game-metrics#technical-health), and it's one of the signals that decides whether a staged rollout widens ([Patching & Content Delivery](/books/gaming/patching#rollouts-rollbacks-and-hotfixes)).
+The crash pipeline sits beside the backend's ordinary error and trace pipeline, and joins it by build and session ID so a client crash can be read next to the server errors in the same match ([Observability](/docs/operations/observability)). Phones add crashes the OS causes (jetsam and low-memory kills that leave no stack) and the stores' own crash consoles ([Crash Reporting on Mobile](/books/gaming/mobile-games#crash-reporting-on-mobile)). Minidumps contain memory, and memory can contain chat text, names or tokens. Treat them as personal data: collect only what you need, scrub, restrict access and expire them ([GDPR & Privacy](/docs/compliance/gdpr), [Data Retention & Deletion](/docs/architecture/data-retention)). Crash rate per build is defined in [Game Metrics](/books/gaming/game-metrics#technical-health), and it's one of the signals that decides whether a staged rollout widens ([Patching & Content Delivery](/books/gaming/patching#rollouts-rollbacks-and-hotfixes)).
 
 ## Profiling
 
@@ -147,7 +182,7 @@ A budget only works if a build can fail it. Set budgets per platform and subsyst
 | Install and patch size | Package and patch output | Over target, or a patch much larger than its change |
 | Content limits | Cook-time validation | Texture, mesh or audio over its limits |
 
-Runeterra's automated performance tests against its mobile memory budget are this pattern in practice. Two details make it work: measure on reference hardware, the low end you promised to support, not the build machine; and compare against the last good build as well as the absolute budget, so a slow creep of 2% a week gets caught before it adds up. The budget figures themselves come from the frame budget ([Building Your Own Engine](/books/gaming/building-an-engine#the-frame-budget)), and their history is the evidence for every argument about adding a feature.
+Runeterra's automated performance tests against its mobile memory budget are this pattern in practice. Two details make it work: measure on reference hardware, the low end you promised to support, not the build machine; and compare against the last good build as well as the absolute budget, so a slow creep of 2% a week gets caught before it adds up. The budget figures themselves come from the frame budget ([Building Your Own Engine](/books/gaming/building-an-engine#the-frame-budget)), and their history is the evidence for every argument about adding a feature. On phones the budget also includes heat and battery, which change the frame time a device can sustain ([Memory, Thermal and Battery Budgets](/books/gaming/mobile-games#memory-thermal-and-battery-budgets)).
 
 ## Platform Certification
 
@@ -165,6 +200,29 @@ What the pipeline needs for certification, whatever the platform:
 - **Requirement checks in the pipeline** for whatever can be automated (save data handling, account and network state changes, suspend and resume), run long before submission.
 - **A submission record** per platform: build ID, date, result, the requirements cited in any failure, and the fix.
 - **Calendar slack.** A patch date that depends on passing certification on the first try is a guess. Plan for a failure and a resubmission, and coordinate the date with the store's own review time.
+
+## Porting
+
+A port takes a game to a platform it wasn't built for, and very little of the work is the game itself. What changes:
+
+- **Platform SDK and services.** Sign-in, entitlements, the store, presence, friends and invites each have the platform's own API and rules ([Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity#accounts-and-platform-identities)).
+- **Certification.** A new platform brings its own requirements and submission process ([Platform Certification](#platform-certification)), and every patch goes through it again.
+- **Input.** Controllers, touch or keyboard and mouse, with button prompts in each platform's names and glyphs, and remapping that works with all of them ([Input and Remapping](/books/gaming/accessibility#input-and-remapping)).
+- **Performance targets.** Lower-end hardware means new frame, memory and install budgets, and usually content changes (texture resolution, draw distance, LODs) cooked as a separate platform target ([Performance Budgets](#performance-budgets)).
+- **Saves.** Each platform has its own save storage and cloud sync, and a save on one doesn't appear on another without your own service ([Saves, Progression & Player Data](/books/gaming/saves-and-player-data#how-the-platforms-do-it)).
+- **Achievements and trophies.** Xbox achievements, PlayStation trophies and Steam achievements are separate systems, each configured in its own platform's tools, so the game raises one unlock event and each platform target maps it to its own set.
+
+Engines carry part of this: platform support is what an engine's platform layer sells ([What an Engine Gives You](/books/gaming/engine-landscape#what-an-engine-gives-you)). The rest is labor, and a lot of it is contracted. Porting houses and co-development partners take a game, or part of one, to new platforms: Virtuos, a Singapore-based studio specializing in co-development and remastering, whose credits include Dark Souls Remastered for Switch and Batman: Return to Arkham; Panic Button, whose featured work includes Forza Horizon 5 for PlayStation 5, DOOM Eternal and The Elder Scrolls V: Skyrim Anniversary Edition; Iron Galaxy, whose co-development list includes Uncharted: Legacy of Thieves and Crash Bandicoot N. Sane Trilogy; and Room 8 Studio, whose porting guidance is one of the public descriptions of Nintendo's submission procedure.
+
+Before any of that, the studio needs access. As of October 2026:
+
+- **ID@Xbox** is Microsoft's route to publishing on Xbox, offering technical and publishing support, incentives and promotion. Its FAQ asks that you be 18 or older (or have a parent or guardian start the relationship), sign an NDA and be in a country Microsoft can do business with.
+- **PlayStation Partners** is where registration starts: basic studio details and a short project plan. Once the registration is approved and the Global Developer and Publisher Agreement (GDPA) signed, it opens development tools, documentation and publishing resources.
+- **The Nintendo Developer Portal** lets individuals register as well as companies; accounts accept an NDA and terms of service, access to Nintendo Switch information takes a separate application, and a game is submitted to Nintendo for review before it can be sold.
+
+Only Microsoft publishes its requirements (the Xbox Requirements); Sony's and Nintendo's sit behind those agreements. A port is planned around that: the requirements can't be read until the agreement is signed, and the certification calendar can't be estimated until they are read.
+
+In the pipeline, a port is new platform targets in the build graph, new rows in `builds` per platform, and new `certification_submissions`. My default for a game that might be ported: keep platform services behind interfaces from the start, so a port adds an implementation instead of searching the codebase for every call to one store.
 
 ## Recording Builds
 
@@ -262,18 +320,24 @@ Three smaller decisions make the tables useful later:
 - **Source control with tool-enforced locks** for binary assets, generated files kept out, and caches near every office.
 - **A branch per release,** fixes merged forward from the oldest branch that needs them, content locks, and dark features behind flags.
 - **Deterministic, cached cooking** keyed on every input, with asset validation at import and cook time.
+- **Localization as a pipeline step:** text gathered and checked on the farm, a pseudo-locale (CJK included) in automated runs, font atlases in the memory budget, languages in their own chunks, and an LQA pass on localized builds.
 - **A build graph on a farm** with compile and cook caches, warm agents and an hour or less from check-in to results, measured and tracked.
 - **Tiered automated tests,** including bots, replays, soak and performance runs against budgets on reference hardware, with flaky tests quarantined.
+- **Human QA tied to builds:** functional, compliance and compatibility passes (in-house or a vendor), and playtests on builds that are recorded like any other, with every bug naming where it was found and where its fix was verified.
 - **Symbols uploaded for every build** that can reach a player, crash reports captured out of process, symbolicated, grouped and treated as personal data.
 - **Profiling hooks** that compile out of shipping builds and write a standard trace format.
 - **A promotion path** from candidate to certified to released, recorded per platform, with certification time in the calendar.
+- **Platform services behind interfaces,** so a port adds a platform target and an implementation, and the platform program's agreement is signed before the port is scheduled.
 
 ## References
 
 **Specifications**
 
-- [Xbox: Xbox Requirements](https://devdocs.xbox.com/publishing/certification/xbox-requirements), what XRs are, the asterisk for certification-tested requirements, which devices they cover and rejected submissions
+- [Xbox: Xbox Requirements](https://devdocs.xbox.com/publishing/certification/xbox-requirements), what XRs are, the asterisk for certification-tested requirements, which devices they cover and rejected submissions; XR-003 on localization support and legibility, XR-022 on the Terminology List
+- [Xbox: XR-022 Official Naming Standards](https://devdocs.xbox.com/publishing/certification/xr/xr-022), a published requirement with its numbered test case
 - [Steamworks: Review process](https://partner.steamgames.com/doc/store/review_process), store page and build review times, the seven-day planning advice and what the build review checks
+- [State Council of China: Notice publishing the Table of General Standard Chinese Characters](https://www.gov.cn/zwgk/2013-08/19/content_2469793.htm), the 2013 notice (国发〔2013〕23号) issuing the table
+- [Wikisource: 通用规范汉字表](https://zh.wikisource.org/wiki/%E9%80%9A%E7%94%A8%E8%A7%84%E8%8C%83%E6%B1%89%E5%AD%97%E8%A1%A8), the table's text: 8,105 characters, 3,500 in the first-level table of common characters
 
 **Reference**
 
@@ -285,6 +349,21 @@ Three smaller decisions make the tables useful later:
 - [Unreal Engine: Cooking content](https://dev.epicgames.com/documentation/en-us/unreal-engine/cooking-content-in-unreal-engine), the definition of cooking
 - [Unreal Engine: Packaging your project](https://dev.epicgames.com/documentation/en-us/unreal-engine/packaging-your-project), build, cook, stage and package, pak archives and chunks
 - [Steamworks: Uploading to Steam](https://partner.steamgames.com/doc/sdk/uploading), SteamPipe chunking and pack file guidance for small patches
+- [Unreal Engine: Localization tools](https://dev.epicgames.com/documentation/en-us/unreal-engine/localization-tools-in-unreal-engine), the Localization Dashboard, gather, export, import and compile, and the PO pipeline
+- [Unreal Engine: Text localization](https://dev.epicgames.com/documentation/en-us/unreal-engine/text-localization-in-unreal-engine), namespaces and keys, String Tables, and plural, gender and hpp argument modifiers
+- [Unreal Engine: FCompositeSubFont](https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Runtime/SlateCore/FCompositeSubFont), composite sub-fonts by character range and culture
+- [Unreal Engine: Using fonts with UMG](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-fonts-with-umg-in-unreal-engine), UMG supporting only runtime-cached fonts
+- [Unity: Localization package](https://docs.unity3d.com/Packages/com.unity.localization@1.5/manual/index.html), string and asset localization, Smart Strings, pseudo-localization and XLIFF, CSV and Google Sheets
+- [Unity: TextMesh Pro fallback font assets](https://docs.unity3d.com/Packages/com.unity.textmeshpro@4.0/manual/FontAssetsFallback.html), atlas glyph limits, the fallback search order and CJK character sets
+- [Steamworks: Languages supported on Steam](https://partner.steamgames.com/doc/store/localization/languages), declaring supported languages and English as the fallback language
+- [Speech Graphics](https://www.speech-graphics.com/), audio-driven lip sync with SGX and FaceFX
+- [Steamworks: Playtest](https://partner.steamgames.com/doc/features/playtest), the child app ID, limited and open sign-up, random selection, no reviews, no confidentiality and feedback collection
+- [Xbox Research](https://xbox.com/community/research), age limit, remote and onsite studies and their locations
+- [PlayStation Research](https://research.playstation.com/en-gb/home), confidential playtests and interviews, sometimes compensated
+- [Microsoft: Publish on Xbox (ID@Xbox)](https://developer.microsoft.com/en-US/games/publish), what ID@Xbox offers and its age, NDA and country requirements
+- [Sony Interactive: Showing your Game to PlayStation](https://sonyinteractive.com/en/?p=3011416), PlayStation Partners registration, approval and the GDPA
+- [Nintendo Developer Portal](https://developer.nintendo.com/), registration for individuals and companies
+- [Nintendo Developer Portal: The Process](https://developer.nintendo.com/the-process), the NDA and terms, the separate Switch application and review before sale
 - [Unreal Engine: BuildGraph](https://dev.epicgames.com/documentation/en-us/unreal-engine/buildgraph-for-unreal-engine), XML build graphs and distribution across agents
 - [Unreal Engine: Horde](https://dev.epicgames.com/documentation/en-us/unreal-engine/horde-in-unreal-engine), CI for large Perforce repositories, remote execution, test results and analytics
 - [Incredibuild](https://www.incredibuild.com/), distributed compilation, shared caching and the Bandai Namco case figure
@@ -304,3 +383,10 @@ Three smaller decisions make the tables useful later:
 - [Riot Games: VALORANT's 128-Tick Servers](https://www.riotgames.com/en/news/valorants-128-tick-servers), per-subsystem server telemetry
 - [Room 8 Studio: How to submit a game to the store from the first attempt](https://room8studio.com/news/how-to-submit-game-to-store-from-the-first-attempt-game-porting-tips), the Nintendo Switch submission procedure called Lotcheck (secondary)
 - [iXie Gaming: Console compliance testing](https://www.ixiegaming.com/console-compliance-testing/), a QA vendor naming Sony's TRC (secondary)
+- [New Zealand MFAT: Entering China's mobile gaming market](https://www.mfat.govt.nz/cn/trade/mfat-market-reports/entering-chinas-mobile-gaming-market-a-guide-to-licensing-and-regulatory-approval), September 2026 report: full Simplified Chinese localization as part of the ISBN application, and the publisher's license
+- [Keywords Studios](https://www.keywordsstudios.com/en/), QA testing and game localization in the Globalize division
+- [Side: PTW rebrands as Side](https://pressreleases.triplepointpr.com/?p=26899), the March 2025 rebrand, more than 40 studios, and services including QA, localization QA and player support
+- [Testronic](https://www.testroniclabs.com/), functional, compliance, compatibility and localization QA
+- [Video Games Chronicle: Virtuos](https://www.videogameschronicle.com/companies/virtuos), co-development and remastering, and its Switch and console credits
+- [Panic Button](https://www.panicbuttongames.com/), featured multiplatform work
+- [Iron Galaxy: Games](https://www.irongalaxystudios.com/games), co-development projects

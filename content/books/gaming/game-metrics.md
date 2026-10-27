@@ -110,7 +110,7 @@ predicted_LTV(cohort, H) = realized_LTV(cohort, N) + forecast of days N+1..H,
                            labeled with the model version and horizon H
 ```
 
-Realized LTV is arithmetic and can be audited. Predicted LTV is a model (a retention curve times an ARPDAU curve, or a regression on early behavior), and its output must carry the model version and horizon so nobody compares a 180-day prediction with a 365-day one. Marketing bids against predicted LTV; finance reports realized.
+Realized LTV is arithmetic and can be audited. Predicted LTV is a model (a retention curve times an ARPDAU curve, or a regression on early behavior), and its output must carry the model version and horizon so nobody compares a 180-day prediction with a 365-day one. Marketing bids against predicted LTV; finance reports realized. The acquisition side (CPI, ROAS by day, payback, and iOS cohorts that are partly modeled) is in [CPI, ROAS and Payback](/books/gaming/mobile-games#cpi-roas-and-payback).
 
 ## Sessions and Concurrency
 
