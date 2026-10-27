@@ -3,7 +3,7 @@ title = "Running a Card Vault"
 nav_title = "Card Vault"
 description = "Building the one service that holds card numbers: token design, envelope encryption, who may detokenize, capture iframes, BIN data and the CDE around it."
 category = "Payments Industry"
-order = 1424
+order = 1429
 part = "Running a Provider"
 tags = ["payments", "pci", "tokenization", "security", "cryptography", "vault"]
 +++
@@ -54,12 +54,9 @@ A token is what the rest of your system stores, logs and passes around, so its d
 
 ## Storing the Number
 
-**Envelope encryption.** Each record, or each batch, is encrypted under its own data key with an authenticated cipher such as AES-256-GCM. The data key is stored beside the ciphertext, wrapped by a key-encrypting key that lives in a KMS or HSM and never leaves it. PCI DSS accepts exactly this, with the key-encrypting key at least as strong as the data key and stored separately (3.6.1, 3.6.1.2); it accepts keys inside a KMS built on secure cryptographic devices, and it doesn't accept a key "simply split into two parts" and kept in two files. The key-encrypting key never sits in the database it protects, in a config file, or in source. [HSMs & Key Management](/books/payments/key-management) covers the hierarchy above it.
+**Envelope encryption.** Card numbers are stored the way [Envelope Encryption](/docs/security/encryption-at-rest#envelope-encryption) describes for any sensitive field: each record under its own data key with an authenticated cipher, the data key wrapped by a key-encrypting key in a KMS or HSM, the ciphertext bound to its token and tenant. What PCI DSS adds for card numbers: the key-encrypting key is at least as strong as the data key and stored separately from it (3.6.1, 3.6.1.2); keys inside a KMS built on secure cryptographic devices are acceptable, and a key "simply split into two parts" and kept in two files is not. A dedicated KEK for card numbers, separate from every other purpose, is the hierarchy in [The Key Hierarchy](/docs/security/encryption-at-rest#the-key-hierarchy) applied to the most valuable data you hold; [HSMs & Key Management](/books/payments/key-management) covers the payment keys above it.
 
-**Every ciphertext names its key version,** as [HSMs & Key Management](/books/payments/key-management#cryptoperiods-and-rotation) requires of every key, so old and new keys can coexist. That matters because rotation in a KMS doesn't do what it sounds like. AWS states it plainly: rotating a KMS key "has no effect on the data that the KMS key protects. It does not rotate the data keys... or re-encrypt any data." Google and Azure say the same in their own words. So a vault runs two jobs:
-
-- **Re-wrap** data keys under the new key-encrypting key after it rotates. Cheap: the data keys are small and the card numbers are untouched.
-- **Re-encrypt** card numbers when a data key reaches the end of its cryptoperiod or is suspected compromised (3.7.4, 3.7.5). This one touches every affected record, so build it as a resumable job: work in batches, checkpoint progress, decrypt the new ciphertext and compare before committing each batch, and keep the retired key able to decrypt but never to encrypt until the job reports zero records left. NIST SP 800-57 suggests a data-encryption key be used to encrypt for up to two years, less for large volumes.
+**Rotation is two jobs,** because rotating a KMS key re-encrypts nothing: re-wrap the data keys when the KEK rotates, and re-encrypt card numbers under new data keys when a data key reaches the end of its cryptoperiod or is suspected compromised ([Rotation: Re-wrap and Re-encrypt](/docs/security/encryption-at-rest#rotation-re-wrap-and-re-encrypt) has the resumable, verified job). PCI DSS makes both explicit for card data: a defined cryptoperiod per key type and retirement or replacement at its end or on suspected compromise (3.7.4, 3.7.5), and every ciphertext names its key version so old and new keys coexist ([Cryptoperiods and Rotation](/books/payments/key-management#cryptoperiods-and-rotation)).
 
 **What sits next to the ciphertext.** The token, the tenant, the BIN, the last four, brand, expiry, the fingerprint, the [network transaction ID](/books/payments/stored-credentials) from the first payment, a network token reference if you have one, and when the card was created and last used. That's everything support, routing, receipts and recurring billing need, and none of it is the number.
 
@@ -80,14 +77,14 @@ Detokenization is the whole risk of a vault, so it gets the narrowest interface 
 - **Callers authenticate as services** (mutual TLS or signed workload identity), and each is authorized per operation and per tenant. Network rules are a second layer, not the authentication. A detokenizing endpoint that trusts anything able to reach it is one misrouted security group from an open card-number API.
 - **Destinations are an allowlist** of processor hostnames, enforced on egress, so the forwarder can't be pointed anywhere else (requirement 1.3.2 restricts outbound CDE traffic to what's necessary).
 - **Unusual volume is an alert and a throttle.** The guidelines suggest systems "throttle or reject abnormal requests". A service that normally detokenizes a few thousand cards an hour and suddenly asks for a million is either a bug or a breach, and either way the vault should stop first.
-- **Every detokenization is logged** with the caller, tenant, token, destination and purpose.
+- **Every detokenization is logged** with the caller, tenant, token, destination and purpose, as an access record rather than a debug line ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
 
-**People get it almost never.** Support rarely needs more than the BIN, last four, brand and expiry, and PCI DSS caps what a screen may show at the BIN and last four for anyone without a documented need (3.4.1). For the few who need more, typically fraud investigators and the team that handles card brand inquiries:
+**People get it almost never.** Support rarely needs more than the BIN, last four, brand and expiry, and PCI DSS caps what a screen may show at the BIN and last four for anyone without a documented need (3.4.1). The general controls on staff access (a reason per session, approvals nobody grants themselves, a log the customer could read) are in [Support Access & Internal Tools](/docs/security/support-access#approvals-and-nobody-approves-their-own) and [Logging Support Access](/docs/security/support-access#logging-support-access). For the few who need the number itself, typically fraud investigators and the team that handles card brand inquiries:
 
 - **A named role,** not "anyone who can log in", granted by approval and reviewed every six months (7.2.4).
 - **A reason and a ticket on every reveal,** MFA at the moment of the reveal, and a per-person daily cap that alerts when hit.
 - **No copying out.** Over remote access, controls must stop a number being copied or moved without explicit authorization (3.4.2); a reveal shows the number, it doesn't export it.
-- **Two people for anything in bulk,** like an export to another processor when a merchant leaves. [Processor Routing](/books/payments/processor-routing) describes those migrations, encrypted to the recipient's published key.
+- **Two people for anything in bulk,** like an export to another processor when a merchant leaves, encrypted to the recipient's published key. [Payment Credentials](/docs/architecture/replacing-systems#payment-credentials) describes how those migrations run, and [Processor Routing](/books/payments/processor-routing#tokens-decide-how-free-you-are) why holding the cards yourself makes them rare.
 
 **No back doors.** No magic token that returns a test card in production, no unauthenticated maintenance or deploy endpoint, no shared admin login. Each is convenient once and in scope forever.
 
@@ -102,19 +99,58 @@ The BIN table is how a vault answers "what kind of card is this?" without the ca
 
 ## Running the Environment
 
-The vault's code is a small part of its security. Most of what PCI DSS checks is the environment, and most of it is ordinary good platform engineering written down.
+The vault's code is a small part of its security; most of what PCI DSS checks is the environment around it. The general practice (segmentation as code, built images, MFA and no standing access, protected logs, one change path, a web application firewall, verified TLS, scheduled scans and tests) is in [Operating the Cardholder Data Environment](/docs/compliance/pci-dss#operating-the-cardholder-data-environment), and the service-provider additions in [What a Service Provider Adds](/docs/compliance/pci-dss#what-a-service-provider-adds). What the vault adds to it:
 
-- **Segmentation as code.** The CDE gets its own account or network, defined in [infrastructure as code](/docs/delivery/infrastructure-as-code). Inbound traffic only from the load balancer and named callers (1.3.1); outbound denied by default, with processor and KMS endpoints allowlisted through an egress proxy (1.3.2); data stores unreachable from anything untrusted (1.4.4). A rule allowing all outbound traffic to anywhere is the finding that undoes the rest. As a service provider, the segmentation is penetration-tested every six months (11.4.6).
-- **Images built, never hand-tuned.** Hardened to a recognized standard such as the CIS Benchmarks (2.2.1), built by a pipeline, and replaced rather than patched in place. Turning off a host's automatic updates is fine only if rebuilds are frequent enough to install critical patches within a month of release (6.3.3). File integrity monitoring watches critical files and compares them at least weekly (11.5.2); each system either runs anti-malware or has a documented, periodically re-evaluated reason it doesn't need it (5.2.3).
-- **No standing access.** MFA for every non-console access into the CDE (8.4.2), on top of the MFA for reaching the network remotely. Shell access through a session broker that records the session, not through SSH keys handed out to people. A **break-glass** role with hardware MFA, an alert on every use, and a test on a schedule, because an emergency path nobody has tried is a second outage. Passwords for any local accounts use a modern password hash ([Authentication & Sessions](/docs/security/authentication)), and nothing hard-codes a credential in a script, config file or source (8.6.2): processor keys and database passwords live in a secret manager.
-- **Logs that someone reads.** Every access to card data, every admin action, every reveal and detokenization, shipped to storage the CDE can't modify (10.2, 10.3), reviewed by automation rather than a person skimming email (10.4.1.1), and kept 12 months with three immediately available (10.5.1).
-- **Change goes through one door.** A reviewed pull request by someone other than the author, a [CI pipeline](/docs/delivery/ci-pipelines) whose tests actually run, and a deploy from the pipeline only. No `git pull` on a production host, no deploy triggered by an unauthenticated request, and infrastructure changes planned in review and applied with approval, not auto-applied on merge. Pre-production uses test cards, never live ones (6.5.5), and never production keys (3.6.1.1).
-- **A defense in front of every public endpoint.** Since March 31, 2025, public-facing web applications in scope need an automated technical solution that detects and prevents web attacks, a web application firewall or equivalent, running continuously (6.4.2). The capture iframe and tokenize endpoint are exactly those applications.
-- **TLS everywhere, verified everywhere.** Card data crosses networks only over strong cryptography with trusted, valid certificates (4.2.1), and nothing turns certificate verification off, not a staging flag, not a test client pointed at production. A disabled check that ships is a man-in-the-middle waiting for a route.
-- **The cloud's own audit log.** Changes to the CDE's accounts, networks, keys and roles are recorded by the cloud provider's control-plane log, sent to the same protected store as everything else. Most cloud breaches are a configuration change nobody saw.
-- **Scanned and tested on a schedule.** Internal vulnerability scans and external scans by an approved scanning vendor every three months (11.3.1, 11.3.2), internal and external penetration tests at least once a year and after significant change (11.4), and dependency and infrastructure-as-code scanning in CI; [Vulnerability Management](/docs/security/vulnerability-management) has the program around it.
-- **Accounts that lock.** The reveal console and every admin login lock after no more than ten failed attempts, for at least 30 minutes or until an administrator unlocks them (8.3.4).
-- **Scope reviewed every six months** as a service provider (12.5.2.1): where card data flows, where it's stored, including backups, and what can reach it.
+- **The forwarder is the egress rule.** Outbound traffic from the CDE is denied by default (1.3.2); the forwarder's processor allowlist and the KMS endpoints are the only exceptions, so a new processor is a reviewed network change as well as a config change.
+- **The capture iframe and the tokenize endpoint are the public applications** that need a continuously running web attack defense (6.4.2), and the tokenize endpoint also needs the card-testing limits above, which a firewall doesn't provide.
+- **Reveals, detokenizations and key use are the logs that matter most,** shipped to storage the CDE can't modify and reviewed by automation (10.2, 10.3, 10.4.1.1), alongside the cloud provider's control-plane log for changes to the vault's accounts, keys and roles.
+- **The reveal console locks** after no more than ten failed attempts, for at least 30 minutes or until an administrator unlocks it (8.3.4), and a break-glass role into the vault has hardware MFA, an alert on every use and a scheduled test.
+- **Pre-production never holds a real card or a production key** (6.5.5, 3.6.1.1); test vaults use test cards and their own key hierarchy.
+- **Scope reviewed every six months** as a service provider (12.5.2.1), including every backup and replica of the vault's store, and the segmentation around it penetration-tested on the same cycle (11.4.6).
+
+## How to Build It
+
+The platform's `payment_methods` row in [the core data model](/books/payments/card-payments#the-core-data-model) already holds the vault token, fingerprint, brand, last four and expiry. The vault's own store sits inside the CDE, in its own database, and adds the ciphertext, the key references and the access log:
+
+```sql
+CREATE TABLE vault_cards (
+  token             text PRIMARY KEY,         -- 'tok_' + random, never derived from the PAN
+  tenant_id         uuid NOT NULL,            -- the merchant that may use it
+  ciphertext        bytea,                    -- null once purged
+  wrapped_dek       bytea,
+  kek_id            text NOT NULL,            -- KMS key and version that wrapped the DEK
+  dek_version       int NOT NULL,
+  fingerprint       bytea NOT NULL,           -- keyed HMAC of the PAN
+  bin               text NOT NULL,            -- up to 8 digits
+  last4             text NOT NULL,
+  network_token_ref text,
+  replaced_by       text REFERENCES vault_cards (token),
+  last_used_at      timestamptz,
+  purged_at         timestamptz,
+  created_at        timestamptz NOT NULL
+);
+
+CREATE TABLE vault_access_log (
+  id          uuid PRIMARY KEY,
+  token       text NOT NULL,
+  kind        text NOT NULL,                  -- detokenize, reveal, export
+  actor       text NOT NULL,                  -- service identity or person
+  tenant_id   uuid NOT NULL,
+  destination text,                           -- processor host for a detokenize
+  reason      text,                           -- ticket for a reveal
+  approved_by text,                           -- second person for an export
+  at          timestamptz NOT NULL
+);
+```
+
+## Auditing
+
+Vault records are evidence in a PCI DSS assessment, in a card-data compromise investigation, and in any dispute over whether a merchant's export or a staff reveal was authorized. The general design is in [Audit Trails](/docs/architecture/audit-trails); for a vault, make sure the record shows:
+
+- **Every access, not just every change.** Each detokenization and reveal, with the actor, tenant, token, destination and reason, kept in a store the vault itself can't modify ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Which key protected each card when.** Key IDs and versions on every record, and the re-wrap and re-encryption runs with their counts, so an assessor can see no card is left under a retired key.
+- **Replacements and purges as entries.** A replaced token points at its successor and a purge records when and under which retention rule, instead of rows that quietly disappear ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Bulk exports end to end.** Who requested, who approved, the recipient and its attestation, the key the file was encrypted to, and the count of cards sent.
 
 ## What This Means for the System You Build
 
@@ -130,12 +166,11 @@ The vault's code is a small part of its security. Most of what PCI DSS checks is
 
 **Specifications**
 
-- [PCI SSC: PCI DSS v4.0.1](https://www.pcisecuritystandards.org/document_library/), requirements 1.3, 2.2, 3.2 to 3.7, 5.2.3, 6.3.3, 6.4.3, 6.5.5, 7.2, 8.4.2, 8.6, 10.2 to 10.5, 11.4.6, 11.5.2, 11.6.1, 12.5.2.1 and 12.10.7
+- [PCI SSC: PCI DSS v4.0.1](https://www.pcisecuritystandards.org/document_library/), requirements 1.3.2, 3.2 to 3.7, 6.4.2, 6.4.3, 6.5.5, 7.2.4, 8.3.4, 10.2 to 10.4, 11.4.6, 11.6.1, 12.5.2.1 and 12.10.7
 - [PCI SSC: Tokenization Guidelines (2011)](https://listings.pcisecuritystandards.org/documents/Tokenization_Guidelines_Info_Supplement.pdf), token generation, the vault as the most attractive target, detokenization controls, out-of-scope criteria and high-value tokens
 - [PCI SSC: Tokenization Product Security Guidelines (2015)](https://listings.pcisecuritystandards.org/documents/Tokenization_Product_Security_Guidelines.pdf), reversible and irreversible tokens, distinguishability, and the one-in-a-million guessing bar
 - [PCI SSC: Guidance for PCI DSS Scoping and Network Segmentation](https://listings.pcisecuritystandards.org/documents/Guidance-PCI-DSS-Scoping-and-Segmentation_v1_1.pdf), CDE, connected-to and out-of-scope systems
 - [NIST SP 800-38G Rev. 1, second public draft](https://csrc.nist.gov/pubs/sp/800/38/g/r1/2pd), format-preserving encryption with FF3 and FF3-1 removed, leaving FF1
-- [NIST SP 800-57 Part 1 Rev. 5](https://doi.org/10.6028/NIST.SP.800-57pt1r5), cryptoperiods for data-encryption and key-wrapping keys
 
 **Reference**
 
@@ -158,5 +193,5 @@ The vault's code is a small part of its security. Most of what PCI DSS checks is
 - [Basis Theory: Proxies](https://developers.basistheory.com/docs/concepts/proxies/), replacing token expressions in an outbound request
 - [Evervault: Relay](https://docs.evervault.com/primitives/relay), decrypting fields on the way to a processor
 - [AWS Well-Architected: Implement break-glass procedures](https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.5-implement-break-glass-procedures.html), hardware MFA and alerts on emergency access
-- [AWS Systems Manager: Session Manager logging](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-logging.html), recording administrative sessions
+- [Skyflow: Connections overview](https://docs.skyflow.com/connections-overview/), outbound connections and third-party URLs reviewed and allowlisted before production
 - [Plaid: Auth](https://plaid.com/docs/auth/), tokenized account numbers and processor tokens for bank accounts

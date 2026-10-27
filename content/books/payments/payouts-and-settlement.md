@@ -2,7 +2,7 @@
 title = "Payouts & Settlement"
 description = "How a card payment becomes money in a merchant's bank: settlement timing, fees as ledger entries, payout schedules and reserves, failures, and reconciliation."
 category = "Payments Industry"
-order = 1419
+order = 1422
 part = "Paying Out"
 aliases = ["payments/payouts-and-settlement"]
 tags = ["payments", "payouts", "settlement", "ledger"]
@@ -37,7 +37,7 @@ Recording only the net loses what you'll need later: a partial refund needs the 
 
 ### Collecting Your Own Fees
 
-The platform collects its fees one of two ways. **Net settlement** deducts fees from each payout, so the merchant receives $48.25 and the fee never has to be collected; it's simple, and it's the default for most platforms. **Gross settlement** pays the merchant the full $50.00 and collects fees separately, usually as one monthly debit from the merchant's bank account, which some businesses require so deposits match their sales exactly (property managers holding rent in trust accounts often do). Gross settlement turns fees into receivables that can fail: the monthly debit can come back insufficient or unauthorized, and then it's a collection, handled like the negative balances below. The same ledger serves both; only the payout instruction differs. These are the same words [Treasury](/books/payments/treasury#funding-the-day) uses for how the acquirer pays you; here they're how you pay the merchant, and the two choices are independent. Fees the platform charges merchants beyond processing (monthly service fees, return and chargeback fees, failed-authorization fees) are entries of their own types, never folded into the processing fee.
+The platform collects its fees one of two ways. **Net settlement** deducts fees from each payout, so the merchant receives $48.25 and the fee never has to be collected; it's simple, and it's the default for most platforms. **Gross settlement** pays the merchant the full $50.00 and collects fees separately, usually as one monthly debit from the merchant's bank account, which some businesses require so deposits match their sales exactly and fees appear as an expense of their own in their books. Gross settlement turns fees into receivables that can fail: the monthly debit can come back insufficient or unauthorized, and then it's a collection, handled like the negative balances below. The same ledger serves both; only the payout instruction differs. These are the same words [Treasury](/books/payments/treasury#funding-the-day) uses for how the acquirer pays you; here they're how you pay the merchant, and the two choices are independent. Fees the platform charges merchants beyond processing (monthly service fees, return and chargeback fees, failed-authorization fees) are entries of their own types, never folded into the processing fee.
 
 Platforms that [split a payment](/books/payments/software-platforms#where-the-money-goes) between several parties (a marketplace paying a seller and a delivery driver, say) post every share as its own entry in the same transaction. The rule from [Money & Amounts](/docs/payments/money) still applies: the shares must sum exactly to the gross, with any rounding remainder assigned deliberately.
 
@@ -57,7 +57,7 @@ Refunds and lost disputes can take a merchant's balance below zero, and on a pla
 
 ### Clawbacks
 
-The bank debit is the part that fails. Pulling funds back from a merchant who's already been paid, after a customer's payment returned or a dispute was lost, is an ACH debit to the merchant's account. A business account makes it a CCD entry, which needs the merchant's agreement to debit (collected at onboarding) and can be returned as unauthorized (R29) within two banking days. A sole proprietor's personal account makes it a PPD debit instead, returnable as unauthorized for 60 days.
+The bank debit is the part that fails. Pulling funds back from a merchant who's already been paid, after a customer's payment returned or a dispute was lost, is an ACH debit to the merchant's account. A business account makes it a CCD entry, which needs the merchant's agreement to debit (collected at onboarding) and can be returned as unauthorized (R29) within two banking days. A sole proprietor's personal account makes it a PPD debit instead, returnable as unauthorized for 60 days ([ACH & Bank Transfers](/books/payments/ach#returns-when-money-is-really-yours) has the return windows and their sources).
 
 A clawback that comes back is a debt with no automatic way to collect it, so its states continue: offset against future payouts, retry within the [reinitiation rules](/books/payments/ach#returns-when-money-is-really-yours) if it returned for insufficient funds, then collections, and finally termination, with a report to Mastercard's MATCH list where the cause qualifies, and the loss written off as [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#gatekeeping-sanctions-aml-and-losses) describes. Track every clawback as its own payout-in-reverse, linked to the payment that caused it, so a merchant can see why money left their account.
 
@@ -69,10 +69,12 @@ In the US, ACH payouts can be **returned** after they appear to succeed, typical
 
 | Code | Meaning | What to do |
 | ---- | ------- | ---------- |
-| R16 | Account frozen | Stop; it may be a sanctions hit |
+| R16 | Account frozen, or entry returned per OFAC instruction | Stop; it may be a sanctions hit |
 | R02 | Account closed | Stop paying out, ask the merchant for a new account |
-| R03 | No account, or unable to locate | Bank details are wrong; ask for new ones |
-| R04 | Invalid account number | Same as R03 |
+| R03 | No account, or unable to locate account | Bank details are wrong; ask for new ones |
+| R04 | Invalid account number structure | Same as R03 |
+
+Nacha has adopted a rule splitting R16: from March 17, 2028, R16 means only a frozen account, and a new R90 marks an entry the receiving bank returned to meet its sanctions obligations. Map both to the same stop, and keep the raw code on the payout.
 
 So a payout's state machine doesn't end at `paid`. It goes `pending`, then `in_transit`, then `paid`, and from `paid` it can still become `failed` when the return arrives. On ACH those map onto the rail's own states: `in_transit` while the credit is submitted (the amount sits in `payouts_in_transit`), `paid` at settlement, `failed` on a return. The returned amount goes back to the merchant's balance through a reversing ledger entry, and payouts to that account stop until the bank details change. Retrying a payout to a closed account just produces another return.
 
@@ -86,7 +88,7 @@ A payout sent twice is money that's very hard to get back. Payouts carry an [ide
 
 ## Reconciliation
 
-Every payout has to be explained three ways: by your ledger (which balance entries it pays), by the processor's settlement report (which transactions it settles), and by the merchant's bank deposit (what actually arrived). Reconcile all three daily, as [Payment States & Ledgers](/docs/payments/payment-states#reconciliation) describes. The question a merchant asks, "which payments make up this $3,812.40 deposit?", should have an answer you can produce from records in one query: each payout lists the balance transactions it includes.
+The three-way match of ledger, processor report and bank is in [Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline). What payouts add is the merchant as a reconciler: a merchant matches each deposit against its own sales, so every payout lists the ledger transactions it includes (payments, refunds, fees, dispute debits, reserve holds and releases), and the payout report is the same list the platform matched against the processor. A payout whose components don't sum to the deposit is a break on both sides.
 
 ## One Payment, Traced
 
@@ -108,6 +110,55 @@ Each chapter of this volume describes one layer, several of them still ahead in 
 
 Every row is a record somebody can find later, and the ledger ties them together: the $100 in, the $3.20 of fees split between costs and revenue, the $96.80 out, and the bank deposit that proves it.
 
+## How to Build It
+
+These are deltas against [the core data model](/books/payments/card-payments#the-core-data-model), which already has `payouts` and the ledger. A payout needs to know what it pays, how it went on the rail, and what's held back; a clawback is a payout in reverse.
+
+```sql
+ALTER TABLE payouts ADD COLUMN direction TEXT NOT NULL DEFAULT 'credit'
+  CHECK (direction IN ('credit', 'debit'));             -- 'debit' is a clawback
+ALTER TABLE payouts ADD COLUMN rail TEXT NOT NULL;      -- 'ach', 'rtp', 'fednow', 'push_to_card', ...
+ALTER TABLE payouts ADD COLUMN attempt SMALLINT NOT NULL DEFAULT 1;
+ALTER TABLE payouts ADD COLUMN return_code TEXT;        -- raw, e.g. 'R02'
+ALTER TABLE payouts ADD COLUMN returned_at TIMESTAMPTZ;
+ALTER TABLE payouts ADD COLUMN caused_by_payment_id UUID REFERENCES payments (id);  -- clawbacks
+-- status adds 'in_transit' and 'returned'; 'paid' is not terminal
+
+CREATE TABLE payout_items (                  -- what each payout pays
+  payout_id             UUID NOT NULL REFERENCES payouts (id),
+  ledger_transaction_id UUID NOT NULL REFERENCES ledger_transactions (id),
+  amount                BIGINT NOT NULL,     -- signed share of that transaction in this payout
+  PRIMARY KEY (payout_id, ledger_transaction_id)
+);
+
+CREATE TABLE balance_holds (                 -- holds and reserves, each one dated
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id   UUID NOT NULL REFERENCES merchants (id),
+  kind          TEXT NOT NULL CHECK (kind IN ('hold', 'rolling_reserve', 'fixed_reserve', 'first_payout_delay')),
+  payment_id    UUID REFERENCES payments (id),  -- for rolling reserves, the payment it came from
+  amount        BIGINT NOT NULL,
+  currency      TEXT NOT NULL,
+  release_on    DATE NOT NULL,
+  released_at   TIMESTAMPTZ,
+  reason        TEXT NOT NULL,
+  set_by        TEXT NOT NULL,
+  ledger_transaction_id UUID NOT NULL REFERENCES ledger_transactions (id)  -- the move into `reserves`
+);
+
+ALTER TABLE payments ADD COLUMN available_on DATE;  -- computed from the payment method at capture
+```
+
+The available balance is a query, not a column: posted entries whose payments are past `available_on`, less unreleased holds and pending outflows. The payout's idempotency key comes from the merchant, the balance period and `attempt`, and `payout_items` is the answer to "which payments make up this deposit?".
+
+## Auditing
+
+Payout records are evidence when a merchant disputes a hold, when a takeover redirects a payout, and when a sponsor bank or examiner asks why money left. The general design is in [Audit Trails](/docs/architecture/audit-trails); for payouts, make sure the record shows:
+
+- **Every hold and reserve with who set it and why,** the risk score or rule behind it, and its release date, so a merchant's complaint has an answer ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every change of payout account,** with the verification performed, the hold it triggered and who released it.
+- **The schedule and policy in force for each payout,** captured when it was created, not looked up later ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Returns and clawbacks linked to their causes:** the raw return code, the payment that caused a clawback, and the recovery step each one reached.
+
 ## What This Means for the System You Build
 
 - **Pending and available balances,** each tied to the event it reflects.
@@ -119,10 +170,15 @@ Every row is a record somebody can find later, and the ledger ties them together
 
 ## References
 
+**Specifications**
+
+- [Nacha: ISO 20022 Guide to Mapping U.S. ACH Return Items and Notifications of Change (PDF)](https://www.nacha.org/system/files/2023-08/NACHA_ISO20022_Guide_camt.053_returns%2008-09-23.pdf), the return reason codes and their Nacha names and descriptions (R02, R03, R04, R16)
+- [Nacha: New Return Reason Code for Sanctions Compliance Obligations](https://www.nacha.org/rules/new-return-reason-code-sanctions-compliance-obligations), R16 narrowed to frozen accounts and the new R90, effective March 17, 2028
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the 120-day dispute window
+
 **Reference**
 
 - [Nacha: Risk and Quality Rules fact sheet](https://www.nacha.org/system/files/2019-05/Risk-and-Quality-Rules-Fact-Sheet.pdf), return rate thresholds and the administrative return codes
-- [Modern Treasury: ACH return code R01](https://www.moderntreasury.com/ach-return-codes/r01), return reasons and the two-banking-day return window
 
 **In practice**
 

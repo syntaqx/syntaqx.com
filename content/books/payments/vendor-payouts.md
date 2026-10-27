@@ -2,7 +2,7 @@
 title = "Vendor Payouts"
 description = "Paying vendors and suppliers: ACH, virtual cards, push to card, checks and instant rails, enrollment, stopping redirect fraud, funding, 1099s."
 category = "Payments Industry"
-order = 1421
+order = 1425
 part = "Paying Out"
 tags = ["payments", "payouts", "accounts-payable", "fraud", "tax"]
 +++
@@ -46,7 +46,7 @@ The rebate isn't free money. It comes out of [interchange](/books/payments/inter
 
 - **Ask, don't assume.** Enrollment records whether a vendor accepts card, and at what price. Sending a card to a vendor that runs it with a 3% fee is worse for the payer than ACH.
 - **Deliver the card number like the card number it is.** It's cardholder data. Either the vendor retrieves it from a portal run by the issuer, or the issuer charges the vendor's terminal directly, and your systems hold a token, never the number ([Sensitive Data](/docs/payments/sensitive-data)).
-- **Single-use or standing.** Most payables cards are single-use, issued for one invoice and amount. Some vendors are paid often enough to justify a standing card per vendor, with its own spending limits, usage caps and merchant restrictions; Payabli calls those ghost cards.
+- **Single-use or standing.** Most payables cards are single-use, issued for one invoice and amount. A vendor paid every month (a software subscription, a linen service, a freight carrier) can justify a standing, multi-use card instead, kept on file at the vendor and bounded by its controls: Corpay offers multi-use cards with limits, expiration dates, allowed vendors and usage frequency; Marqeta's supplier payments cover recurring payouts with limits by amount, merchant, category and time; and Stripe Issuing sets per-authorization and per-interval spending limits and allowed merchant categories on any card. A standing card loses the one-card-one-invoice match, so each charge on it is matched to an open bill by amount and date, and an unmatched charge is a question for the vendor.
 - **Expire and fall back.** A card the vendor never charges is an unpaid invoice. Track issued, authorized, settled and expired, and when it expires, pay by another method rather than letting the invoice age.
 
 ## Push to Card
@@ -111,18 +111,96 @@ The rule that matters most is that **a payable is paid once**. Every disbursemen
 
 A vendor receiving $12,480 needs to know which invoices it covers, or its accounts receivable team calls yours. Send remittance data with the payment where the rail carries it: an ACH CCD entry carries one addenda record, and a CTX entry up to 9,999, enough for a full remittance document ([ACH & Bank Transfers](/books/payments/ach#files-batches-and-sec-codes)). Otherwise send a remittance advice by email or the portal, keyed to the payment's reference.
 
-Reconcile every rail daily against its own source of truth: ACH settlement and return files, card settlement reports, the bank's paid-check file, wire and instant payment confirmations. Each disbursement in the ledger matches exactly one external record, and anything that doesn't match by the end of the day is a break someone owns. The approach is the same as for [payouts](/books/payments/payouts-and-settlement#reconciliation); only the files differ.
+Reconciliation runs per rail against each rail's own source of truth, as [Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline) describes. What payables add is two more matches: each disbursement back through its payable to the approved bill, and the vendor's side, where an unapplied payment on the vendor's books usually means the remittance didn't arrive, not the money.
 
 ## Tax: W-9s, TIN Matching and 1099s
 
 Paying vendors in the US makes the payer an information reporter, and the payment method decides which form:
 
-- **Collect a W-9 at enrollment.** It gives you the legal name and taxpayer ID. The IRS TIN Matching service lets payers check name and TIN combinations before they file, which catches the typo now instead of as an IRS notice later.
+- **Collect a W-9 at enrollment.** It gives you the legal name and taxpayer ID, a field classified and protected like a bank account number, masked in support tools and never logged ([Sensitive Data](/docs/payments/sensitive-data#classify-every-field)). The IRS TIN Matching service lets payers check name and TIN combinations before they file, which catches the typo now instead of as an IRS notice later.
 - **Backup withholding.** If a vendor doesn't provide a correct TIN, the payer withholds 24% of payments and sends it to the IRS. The system has to support withholding as a ledger entry, not a manual adjustment.
 - **1099-NEC and 1099-MISC.** Nonemployee compensation, rents and similar payments are reported by the payer. For tax years beginning after 2025, the threshold is $2,000, up from $600, and may be adjusted for inflation from 2027.
 - **1099-K, not 1099-NEC, for card payments.** Payments made by credit or payment card, and third-party network transactions, are reported on Form 1099-K by the payment settlement entity, and not by the payer on 1099-NEC or 1099-MISC.
 
 That last rule means the tax totals depend on the method, so track totals per vendor, per year, per method. A vendor paid partly by ACH and partly by virtual card gets a 1099-NEC for the ACH portion only.
+
+## How to Build It
+
+These are deltas against [the core data model](/books/payments/card-payments#the-core-data-model). The core `payouts` table pays a merchant its own balance; payables are a different object with a different source of money, so they get their own tables, and every money movement still posts to the ledger.
+
+```sql
+CREATE TABLE vendors (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  payer_id         UUID NOT NULL REFERENCES merchants (id),  -- the business paying
+  legal_name       TEXT NOT NULL,
+  tin_token        TEXT,                    -- vaulted; TIN match result below
+  tin_match_status TEXT,
+  primary_method   TEXT NOT NULL,           -- 'ach', 'virtual_card', 'check', 'wire', 'rtp', 'push_to_card'
+  fallback_method  TEXT,
+  accepts_card_fee_bps INTEGER,             -- what the vendor charges to take a card, if anything
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE vendor_payment_details (       -- append-only: a change is a new row
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  vendor_id         UUID NOT NULL REFERENCES vendors (id),
+  method            TEXT NOT NULL,
+  destination_token TEXT NOT NULL,          -- vaulted bank account or card
+  verified_by       TEXT,                   -- who called the contact on file
+  verified_at       TIMESTAMPTZ,
+  first_payment_hold_until TIMESTAMPTZ,
+  superseded_at     TIMESTAMPTZ
+);
+
+CREATE TABLE bills (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  vendor_id    UUID NOT NULL REFERENCES vendors (id),
+  invoice_number TEXT NOT NULL,
+  amount       BIGINT NOT NULL,
+  currency     TEXT NOT NULL,
+  due_on       DATE,
+  status       TEXT NOT NULL CHECK (status IN ('entered', 'pending_approval', 'approved', 'rejected', 'funded', 'in_transit', 'partially_paid', 'paid')),
+  entered_by   TEXT NOT NULL,
+  UNIQUE (vendor_id, invoice_number)        -- the same invoice entered twice is caught here
+);
+
+CREATE TABLE bill_approvals (
+  bill_id     UUID NOT NULL REFERENCES bills (id),
+  approver    TEXT NOT NULL,
+  decision    TEXT NOT NULL CHECK (decision IN ('approved', 'rejected')),
+  decided_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (bill_id, approver)
+);
+
+CREATE TABLE disbursements (                -- one attempt on one rail
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  bill_id           UUID NOT NULL REFERENCES bills (id),
+  details_id        UUID NOT NULL REFERENCES vendor_payment_details (id),
+  method            TEXT NOT NULL,
+  attempt           SMALLINT NOT NULL,
+  amount            BIGINT NOT NULL,
+  status            TEXT NOT NULL,          -- per rail: submitted/settled/returned, issued/settled/expired, printed/mailed/cleared/voided/escheated
+  external_reference TEXT,                  -- trace number, check number, card token, end-to-end ID
+  tax_form          TEXT,                   -- '1099-NEC', '1099-MISC', or NULL when the 1099-K belongs to someone else
+  idempotency_key   TEXT NOT NULL UNIQUE,   -- bill and attempt
+  UNIQUE (bill_id, attempt)
+);
+
+CREATE UNIQUE INDEX one_live_disbursement ON disbursements (bill_id)
+  WHERE status NOT IN ('returned', 'expired', 'voided', 'rejected');
+```
+
+The partial unique index is the "paid once" rule in the database: a second attempt can't be created while the first is still alive. The approver check (not the person who entered the bill, not the person who changed the vendor's details) runs in the approval transaction, and 1099 totals are a sum over `disbursements` by vendor, year and `tax_form`.
+
+## Auditing
+
+Payables records are evidence in a business email compromise investigation, a vendor's claim it was never paid, an IRS notice and an unclaimed property audit. The general design is in [Audit Trails](/docs/architecture/audit-trails); for vendor payouts, make sure the record shows:
+
+- **Every change of payment details,** who requested it and through what channel, who verified it out of band and how, and the hold it triggered ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **The approval chain for each bill,** with the thresholds in force when it was approved, so separation of duties can be shown rather than asserted.
+- **Every disbursement attempt and why the last one died:** the return, the expiry, the bank's void confirmation.
+- **Escheatment outreach:** the notices sent to the payee for each outstanding check, and the report to the state.
+- **Who viewed a vendor's bank details or TIN,** because a fraudster's first step is often reading them ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 
@@ -148,7 +226,6 @@ That last rule means the tax totals depend on the method, so track totals per ve
 - [Visa: Virtual Card for Business](https://www.visa.com/en-us/business/cards/virtual-card), single-use cards tied to an invoice, with controls on amount, time and merchant category
 - [NAUPA: What Is Unclaimed Property](https://www.unclaimed.org/what-is-unclaimed-property/), dormancy periods, uncashed checks, and turning property over to the state
 - [Nacha: Fraud Monitoring Phase 1](https://www.nacha.org/rules/risk-management-topics-fraud-monitoring-phase-1), monitoring credit entries for payments sent under false pretenses
-
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), original credit transactions, Fast Funds timing, OCT reversals and account funding transactions
 - [Mastercard Send: At a glance](https://developer.mastercard.com/mastercard-send/documentation/send-at-a-glance/), funding and payment transactions and the account information API
 
@@ -157,5 +234,6 @@ That last rule means the tax totals depend on the method, so track totals per ve
 - [Stripe: Instant Payouts](https://docs.stripe.com/payouts/instant-payouts), limits and timing for payouts to debit cards
 - [Lob: Tracking your mail](https://help.lob.com/print-and-mail/getting-data-and-results/tracking-your-mail), print-and-mail tracking events by Intelligent Mail barcode
 - [FBI: 2025 Internet Crime Report (PDF)](https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf), 24,768 business email compromise complaints and $3.05 billion in reported losses
-- [Payabli: Pay Out status reference](https://docs.payabli.com/guides/pay-out-status-reference.md), bill, payout and batch lifecycles
-- [Payabli: Payables cards](https://docs.payabli.com/guides/pay-out-cards-overview.md), single-use and multi-use vendor cards
+- [Corpay: Virtual cards](https://corpay.com/commercial-cards/virtual-cards), single-use and multi-use cards for vendor payments, with limits, expiration dates, allowed vendors and usage frequency
+- [Marqeta: Supplier payments](https://www.marqeta.com/payment-solutions/supplier-payments), virtual cards for one-time and recurring payouts with controls by amount, merchant, category and time
+- [Stripe: Issuing spending controls](https://docs.stripe.com/issuing/controls/spending-controls), per-authorization and per-interval spending limits and allowed or blocked merchant categories on a card

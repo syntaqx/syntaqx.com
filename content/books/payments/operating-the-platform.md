@@ -1,8 +1,8 @@
 +++
 title = "Operating the Platform"
-description = "Running a payments platform day to day: the internal console, pipeline and approval-rate monitoring, statements, compliance operations, incidents and retention."
+description = "Running a payments platform day to day: the internal console, monitoring, statements, compliance, outages, card-data incidents and retention."
 category = "Payments Industry"
-order = 1428
+order = 1433
 part = "Running a Provider"
 tags = ["payments", "operations", "monitoring", "compliance", "incident-response", "retention"]
 +++
@@ -59,7 +59,7 @@ Every number on a statement comes from ledger entries, never a separate calculat
 The obligations in [The Payments Rulebook](/books/payments/payments-rulebook) and [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider) become daily work:
 
 - **Transaction monitoring for money laundering.** Rules and models that look for laundering patterns in payments: a merchant whose volume or ticket size changes abruptly, refunds to cards that never paid, structuring around reporting thresholds, and funnel accounts, which FinCEN describes as an account in one place receiving many cash deposits, often below reporting thresholds, withdrawn somewhere else soon after.
-- **Transaction laundering.** A merchant processing payments for another business it doesn't disclose, often one that couldn't get a merchant account itself. Visa's rules ban presenting transactions that don't come from a sale between the cardholder and that merchant, and both Visa's and Mastercard's merchant integrity programs fine acquirers for it, so merchant monitoring has to compare what's sold with what was underwritten ([Fraud & Risk](/books/payments/fraud-and-risk#merchant-fraud)).
+- **Transaction laundering** monitoring runs here as casework, comparing what each merchant actually sells with what was underwritten; the pattern and the network rules behind it are in [Merchant Fraud](/books/payments/fraud-and-risk#merchant-fraud).
 - **Suspicious activity reports on the clock.** A bank files within 30 days of first detecting suspicious activity, extendable by 30 more only to identify a suspect and never beyond 60; a money services business files within 30 days, at a $2,000 threshold. Reports and their supporting records are kept five years.
 - **Sanctions screening that never stops,** on merchants, their owners, and payouts, against lists that change daily.
 - **Case management.** Every alert becomes a case with an owner, a decision and a record of why, because an examiner will ask about the alerts you closed, not only the reports you filed.
@@ -94,19 +94,46 @@ Where rules collide, the longest wins and deletion is a scheduled job, not a jud
 
 ## Complaints and Error Resolution
 
-Sponsor banks and regulators expect a complaint process, and consumer law sets clocks on some of it. Log every complaint with a category, owner and outcome, so patterns surface and the bank's reports write themselves. For consumer bank debits, Regulation E's error resolution applies: a consumer has 60 days after their statement to report an error, and the institution investigates within 10 business days, or 45 with provisional credit ([ACH & Bank Transfers](/books/payments/ach#consumer-law-regulation-e)). Card complaints usually become disputes, which have their own process; everything else (a fee a merchant doesn't recognize, a payout they think is missing) needs a deadline of your own, published and kept.
+Sponsor banks and regulators expect a complaint process, and consumer law sets clocks on some of it. The general mechanics (complaints tagged as complaints, a deadline computed and stored on the ticket, your own published deadline where the law sets none) are in [Complaints With Legal Clocks](/docs/operations/customer-support#complaints-with-legal-clocks). What payments adds is which clock applies to which rail:
+
+- **Consumer bank debits** fall under Regulation E's error resolution: 60 days after the statement to report, and an investigation within 10 business days, or 45 with provisional credit. The duty sits with the institution holding the consumer's account, usually the consumer's own bank, and that bank will want your authorization records fast ([ACH & Bank Transfers](/books/payments/ach#consumer-law-regulation-e)).
+- **Card billing errors** fall under Regulation Z for credit cards, and the clock belongs to the issuer: 60 days from the statement for the cardholder to notify, acknowledgment within 30 days, and resolution within two billing cycles and never more than 90 days. That clock is why a card complaint arrives at a provider as a dispute with an evidence deadline, not as a ticket ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)).
+- **Merchant complaints** (a fee a merchant doesn't recognize, a payout they think is missing) have no regulatory clock, and get yours.
+
+Log the complaints the sponsor bank asks about by its categories, so its periodic reviews come from a query.
 
 ## Closing the Books
 
-The platform's own finances run on the same ledger. Each month, finance closes: every processor and network invoice reconciled against the fees the ledger expected, the platform's revenue recognized from ledger entries rather than from bank deposits, reserves and negative balances valued, and the custodial cash equation tied out on the last day. Enterprise merchants and partners will ask for a SOC 1 report on the controls behind these numbers, separate from the security-focused [SOC 2](/docs/compliance/soc-2).
+The platform's own finances run on the same ledger, and the close follows [Month-End Close](/docs/payments/accounting#month-end-close): a frozen cutoff, balances that tie out, reconciliations already done, and [closed periods that stay closed](/docs/payments/accounting#closed-periods-stay-closed). A payments platform adds three things to tie out on the last day: every processor and network invoice against the fees the ledger expected (with the fees that arrive months late accrued, not ignored), reserves and negative balances valued as the receivables they are, and the custodial cash equation, money held for merchants against the balances owed them ([Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance)). The platform's revenue is its fees, never the volume it processes ([Cash Is Not Revenue](/docs/payments/accounting#cash-is-not-revenue)).
 
 ## Offboarding a Merchant
 
 Merchants leave or are terminated, and both are processes, not deletes. Stop new payments, keep refunds and disputes flowing, hold a reserve through the dispute tail of what was sold (120 days and more for goods delivered later), then pay out the remainder after a final reconciliation. A merchant terminated for cause may need to be reported to the networks' terminated-merchant lists ([Inside a Processor](/books/payments/inside-a-processor#setting-up-a-merchant)), a merchant whose bank account no longer works leaves a balance that eventually becomes unclaimed property ([Payouts & Settlement](/books/payments/payouts-and-settlement)), and the records stay for the retention periods above. Moving a merchant to another provider means exporting its stored cards to a PCI-compliant recipient on request ([Processor Routing](/books/payments/processor-routing#tokens-decide-how-free-you-are)).
 
+## When a Processor, Network or Bank Is Down
+
+Most payment outages aren't yours. A processor, a card network, an issuer or a bank stops answering, and the platform has to keep as much working as it safely can and tell merchants the truth while it does.
+
+- **Know which hop failed.** An issuer that's down is usually invisible: the network's stand-in service answers for it on the issuer's parameters, and the issuer is liable for what stand-in approves ([When the Issuer Doesn't Answer](/books/payments/inside-a-processor#when-the-issuer-doesn-t-answer)), so a rise in issuer-unavailable codes or an odd approval pattern for one BIN range is the only sign. A processor that knows its own network link is down says so with an explicit, retryable response (Braintree's "processor network unavailable, try again" code is one). A timeout says nothing, and stays an unknown outcome until a query resolves it ([Failover Without Double Charging](/books/payments/processor-routing#failover-without-double-charging)).
+- **Decide degraded mode in advance.** For each dependency, write down what keeps working without it. With a second processor, new authorizations fail over; without one, checkout fails cleanly with a message the merchant's customer can act on. If the risk scorer is down, a fallback policy decides, not a default of approve-everything ([When the Scorer Is Down](/docs/architecture/risk-scoring#when-the-scorer-is-down)). Card-present terminals may approve offline, with the merchant carrying every later decline ([Offline: Approved Isn't Paid](/books/payments/card-present#offline-approved-isn-t-paid)).
+- **Queue what can wait, inside its deadline.** Authorization needs a live answer; capture, refunds, payouts and webhook delivery don't. Queue them with their [idempotency keys](/docs/payments/idempotency), drain at a controlled rate when the dependency returns, and watch each authorization's capture deadline while it waits ([Five Events, Not One Payment](/books/payments/card-payments#five-events-not-one-payment)), because a capture queued past the window is a late presentment.
+- **A bank outage moves dates, not money.** A bank or a central rail that misses a cutoff pushes every payout behind it to the next window. Mark the affected payouts with a new expected date rather than letting them sit "in transit", and run the overdue checks above against the new date.
+- **Tell merchants per component.** A status page that separates authorization, payouts, the dashboard, the API and webhooks, so "payouts delayed" doesn't read as "payments down". Post updates on a fixed cadence while an incident is open, and afterward give each affected merchant the list of its payments that were declined, delayed or left unknown, with what happened to each.
+- **Have the contingency plan before the outage.** Visa requires members to keep contingency plans for a processor that fails outright, through insolvency or otherwise, available to Visa on request. The same plan, extended to ordinary outages and rehearsed, is what turns a processor's bad day into a slow one for you.
+
 ## When a Region Fails
 
 [Disaster Recovery](/docs/operations/disaster-recovery) covers the general practice; payments adds specifics. Authorization needs the shortest recovery time, since every minute down is sales lost; payouts and file processing can wait hours. The vault's keys and the HSMs must be recoverable in the other region without ever existing in the clear, which means key backups made under the same dual control as everything else ([HSMs & Key Management](/books/payments/key-management)). And after a failover, every bank file and every unsettled payment is checked against what the bank and processor actually received before anything is resent, because a duplicated file is a duplicated payment ([Treasury & Bank Operations](/books/payments/treasury#bank-files)).
+
+## Auditing
+
+Operational records are evidence in sponsor bank and regulator examinations, in PCI DSS assessments, in card-data compromise investigations and in merchants' own disputes with you. The general design is in [Audit Trails](/docs/architecture/audit-trails); for operating a payments platform, make sure the record shows:
+
+- **Every money-moving action from the console** with its actor, reason, approver and the ledger entries it produced, never only the resulting balance ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Every compliance alert to its conclusion,** including the ones closed without a report, with who decided and why; automated dispositions record the rule or model version that made them ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every deadline and when it was met:** SAR filings, network breach notices, Regulation E investigations and complaint responses, each with the computed due date stored beside the date it was done.
+- **Every incident and outage's effect on payments:** which payments were declined, queued, failed over or left unknown, how each resolved, and what merchants were told when.
+- **Every deletion under the retention schedule,** with the rule that allowed it, so "we deleted it" can be shown to have been on schedule.
 
 ## What This Means for the System You Build
 
@@ -116,6 +143,7 @@ Merchants leave or are terminated, and both are processes, not deletes. Stop new
 - **Monthly statements and reports from the ledger,** so nothing a merchant sees can disagree with anything else.
 - **Compliance operations as casework:** monitoring, reports on deadline, screening that never stops.
 - **A card-data incident plan with the networks' deadlines in it,** rehearsed yearly.
+- **A degraded mode per dependency,** queued captures and payouts that respect their deadlines, and per-component status for merchants.
 - **A retention schedule** that takes the longest rule for each record, and deletes on schedule.
 
 ## References
@@ -129,11 +157,12 @@ Merchants leave or are terminated, and both are processes, not deletes. Stop new
 - [12 CFR 229.21](https://www.law.cornell.edu/cfr/text/12/229.21), Regulation CC record retention
 - [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), account data compromise notification, preservation and card number deadlines (10.3.1)
 - [12 CFR 1005.11](https://www.law.cornell.edu/cfr/text/12/1005.11), Regulation E error resolution timeframes
+- [12 CFR 1026.13](https://www.law.cornell.edu/cfr/text/12/1026.13), Regulation Z billing error notice, acknowledgment and resolution deadlines
 
 **Reference**
 
 - [FinCEN: Advisory on funnel accounts (FIN-2014-A005)](https://www.fincen.gov/resources/advisories/fincen-advisory-fin-2014-a005), the funnel account pattern
-- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), anti-money-laundering programs and the ban on laundering transactions (1.9.1, 5.2.1.6)
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), anti-money-laundering programs (1.9.1), issuer liability for stand-in processing (1.4.4.3) and contingency plans for processor failure (1.9.8.3)
 - [NCSL: Security breach notification laws](https://www.ncsl.org/technology-and-communication/security-breach-notification-laws), laws in every state, DC and the territories
 - [FCAC: Code of Conduct for the Payment Card Industry in Canada](https://www.canada.ca/en/financial-consumer-agency/services/industry/laws-regulations/credit-debit-code-conduct.html), monthly statement contents
 - [IRS: How long should I keep records?](https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records), default and extended retention periods
@@ -142,4 +171,4 @@ Merchants leave or are terminated, and both are processes, not deletes. Stop new
 
 **In practice**
 
-- [LegitScript: BRAM and VIRP basics (PDF)](https://www.legitscript.com/wp-content/uploads/2023/05/BRAM-and-VIRP-Basics-Info-Sheet.pdf), the networks' merchant integrity programs and acquirer fines
+- [Braintree: Declines](https://developer.paypal.com/braintree/articles/control-panel/transactions/declines), the retryable "processor network unavailable" response distinguishing a network outage from a decline

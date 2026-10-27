@@ -2,7 +2,7 @@
 title = "Comparing the Rails"
 description = "Every way money moves, side by side: who starts it, when you know it worked, when it settles, when it's final, how it comes back, and which accounts it crosses."
 category = "Payments Industry"
-order = 1408
+order = 1410
 part = "How Money Moves"
 tags = ["payments", "rails", "settlement", "ledger", "treasury"]
 +++
@@ -49,7 +49,7 @@ The tables describe timing. The money also physically crosses bank accounts, and
 
 - **Card money** settles from issuers to the network, then to the acquirer, which for most providers is a **sponsor bank**: the network member that lets a non-bank participate. From there it lands in an account the provider controls but doesn't own.
 - **Bank money** arrives through the provider's ODFI, usually the same bank, into the same account.
-- **That account is held for the merchants,** a for-benefit-of (FBO) account, and the provider's ledger says who owns what inside it ([Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance)). Apart from payouts, and what network settlement nets out for refunds and chargebacks, only the provider's earned fees leave it, for the provider's own operating account.
+- **That account is held for the merchants,** a for-benefit-of (FBO) account whose owners only the provider's ledger can name, with the commingling rule and pass-through insurance in [FBO Accounts and Pass-Through Insurance](/books/payments/treasury#fbo-accounts-and-pass-through-insurance).
 - **Payouts leave it** by ACH, instant rails or push to card, to each merchant's bank ([Payouts & Settlement](/books/payments/payouts-and-settlement)).
 
 Whether the provider ever holds that money in its own name is the question [money transmission](/books/payments/becoming-a-payment-provider#holding-other-people-s-money) law turns on, which is why this picture is drawn with counsel before the ledger is designed.
@@ -68,7 +68,6 @@ Whether the provider ever holds that money in its own name is the question [mone
 - [Nacha: ACH Network Risk and Enforcement Topics](https://www.nacha.org/rules/ach-network-risk-and-enforcement-topics), return windows that decide when an ACH debit is final
 - [Payments Canada: Rule H1, Pre-Authorized Debits](https://www.payments.ca/sites/default/files/h1eng.pdf), the 90-day reimbursement window for personal debits
 - [Deutsche Bundesbank: SEPA Direct Debit](https://www.bundesbank.de/en/tasks/payment-systems/services/sepa/content/sepa-direct-debit-626654), the eight-week and 13-month refund rights
-- [12 CFR 330.5](https://www.law.cornell.edu/cfr/text/12/330.5), the conditions for pass-through insurance on custodial accounts
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the 120-day dispute window and Fast Funds
 - [12 CFR 229.31](https://www.law.cornell.edu/cfr/text/12/229.31), when a returned check must reach the depositary bank
-- [Lewis Silkin: PSR confirms maximum reimbursement for APP fraud](https://www.lewissilkin.com/en/insights/2024/09/psr-confirms-maximum-reimbursement-for-app-fraud)
+- [Lewis Silkin: PSR confirms maximum reimbursement level for APP fraud](https://www.lewissilkin.com/insights/2024/09/27/updated-psr-confirms-maximum-reimbursement-level-for-app-fraud-102jii9), the UK's mandatory reimbursement of authorised push payment scam victims, from October 7, 2024

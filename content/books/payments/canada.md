@@ -3,12 +3,12 @@ title = "Payments in Canada"
 nav_title = "Canada"
 description = "Extending a US payments platform to Canada: ACSS and Standard 005 files, pre-authorized debits under Rule H1, Interac, card rules, RPAA and FINTRAC."
 category = "Payments Industry"
-order = 1411
+order = 1413
 part = "The Rules"
 tags = ["payments", "canada", "pad", "interac", "eft", "compliance"]
 +++
 
-Canada is the first country most US platforms add, and it looks close enough to home to be dangerous. The cards are Visa and Mastercard, the bank transfers are batch files, and rent is paid by debit. Then the details diverge: a different file format and holiday calendar, debit rules written by Payments Canada instead of Nacha, a 90-day consumer claim window, a domestic debit network, a federal code of conduct for card fees, a payments regulator that's only been supervising since 2025, and a province whose consumer contracts must be in French first. This chapter is what changes, with [ACH & Bank Transfers](/books/payments/ach) as the US baseline it's compared against.
+Canada is the first country most US platforms add, and it looks close enough to home to be dangerous. The cards are Visa and Mastercard, the bank transfers are batch files, and gym memberships, insurance premiums and subscriptions are paid by debit. Then the details diverge: a different file format and holiday calendar, debit rules written by Payments Canada instead of Nacha, a 90-day consumer claim window, a domestic debit network, a federal code of conduct for card fees, a payments regulator that's only been supervising since 2025, and a province whose consumer contracts must be in French first. This chapter is what changes, with [ACH & Bank Transfers](/books/payments/ach) as the US baseline it's compared against.
 
 ## The Rails
 
@@ -45,7 +45,7 @@ ISO 20022 is arriving here too: Rule F4 defines the ISO version of the exchange 
 
 - **A different set of holidays.** Payments Canada closes on New Year's Day, Good Friday, Victoria Day, Canada Day, Labour Day, the National Day for Truth and Reconciliation (September 30), Thanksgiving (the second Monday in October), Remembrance Day, Christmas and Boxing Day. Several of those are US business days, and US holidays like Juneteenth, July 4 and US Thanksgiving are Canadian ones. Provincial holidays like Family Day and the Civic Holiday aren't system closures. A platform that settles in both countries needs both calendars as data, as [Treasury](/books/payments/treasury#the-banking-calendar) describes.
 - **Account numbers have three parts.** A three-digit institution number and five-digit branch transit, written `0IIITTTTT` in files and `TTTTT-III` on a cheque, plus an account number of up to 12 digits whose length varies by bank. Validate the institution and transit against Payments Canada's directory, not a regex.
-- **Currency is explicit.** CAD has two decimal places, as [Money](/docs/payments/money) expects. USD accounts at Canadian banks are common, and a debit in the wrong currency for the account fails, days later; capture the account's currency at enrollment.
+- **Currency is explicit.** CAD has two decimal places, as [Money](/docs/payments/money) expects. USD accounts at Canadian banks are common, and a debit in the wrong currency for the account fails, days later; capture the account's currency at enrollment. A platform that bills in CAD and settles or reports in USD stores both amounts and the rate that joined them ([Multi-Currency & FX](/docs/payments/multi-currency#storing-both-amounts)).
 
 ## Pre-Authorized Debits: Rule H1
 
@@ -54,9 +54,9 @@ A pre-authorized debit (PAD) is Canada's ACH debit, governed by Payments Canada'
 - **Personal** PADs pay a consumer's bills: rent, utilities, mortgage, insurance, property tax. **Business** PADs pay for commercial activity. **Cash Management** moves funds between related businesses, and **Funds Transfer** between a person's own accounts.
 - Each is **one-time**, at **set intervals**, or **sporadic**. A sporadic PAD needs the payor's authorization for each debit, and the payor can't waive that; a one-time PAD needs a new agreement for any later debit.
 
-**The agreement** must be dated and signed or otherwise authorized, and state the account, the category, the amount and timing (or what triggers a debit, or that it's sporadic), the cancellation terms, the payee's contact details, and H1's recourse statement word for word. When a payment provider collects on a merchant's behalf, the agreement says so. The payor's identity is verified by "commercially reasonable methods", and the whole audit trail is kept at least 12 months after the last debit.
+**The agreement** must be dated and signed or otherwise authorized, and state the account, the category, the amount and timing (or what triggers a debit, or that it's sporadic), the cancellation terms, the payee's contact details, and H1's recourse statement word for word. When a payment provider collects on a merchant's behalf, the agreement says so. The payor's identity is verified by "commercially reasonable methods", and the whole audit trail is kept at least 12 months after the last debit. An online PAD agreement is an electronic signature, so keep the evidence one needs: the agreement as presented, the signer's identity evidence, server timestamps and the event trail ([Electronic Signatures & Records](/docs/compliance/electronic-signatures#what-the-evidence-holds)).
 
-**Two notices, ten days each.** A **confirmation** of the agreement goes to the payor at least 10 calendar days before the first debit, though the payor may waive or shorten that, in which case it's due within five days after the first debit (that's how a provider can debit right after signup). A **pre-notification** goes 10 calendar days before every variable-amount debit after the first, and before any change to a fixed amount or the dates. Fixed monthly rent needs no pre-notice until the rent changes; a utility bill that varies needs one every cycle, unless the agreement prominently waives or shortens it.
+**Two notices, ten days each.** A **confirmation** of the agreement goes to the payor at least 10 calendar days before the first debit, though the payor may waive or shorten that, in which case it's due within five days after the first debit (that's how a provider can debit right after signup). A **pre-notification** goes 10 calendar days before every variable-amount debit after the first, and before any change to a fixed amount or the dates. A fixed monthly membership fee needs no pre-notice until the price changes; a usage-based SaaS invoice that varies needs one every cycle, unless the agreement prominently waives or shortens it.
 
 **Cancellation** is the payor's right at any time, and the payee must stop within 30 days, making best efforts to stop at the next cycle. A dishonoured PAD may be re-presented, but for the same amount, with no fee added: Canada has no equivalent of a Nacha return fee entry.
 
@@ -73,7 +73,7 @@ The rules are still moving. Paper PADs leave clearing on December 1, 2028, and a
 Interac is the domestic debit network, and it's three different products:
 
 - **Interac Debit** is how Canadians pay with a bank card in person, including Interac Flash contactless, with per-tap limits set by each issuer, typically $250. Online and in-app it's reachable through wallets and payment providers; Stripe added it in February 2026.
-- **Interac e-Transfer** is a push payment to an email address or phone number, irrevocable once deposited. It's how many tenants pay rent. **Request Money** lets a payee send the request, which carries your reference and makes reconciliation possible; e-Transfer for Business raises limits to as much as $25,000 a transaction, depending on the institution, and supports bulk files and ISO 20022 remittance data.
+- **Interac e-Transfer** is a push payment to an email address or phone number, irrevocable once deposited. It's how many Canadians pay contractors, small businesses and invoices. **Request Money** lets a payee send the request, which carries your reference and makes reconciliation possible; e-Transfer for Business raises limits to as much as $25,000 a transaction, depending on the institution, and supports bulk files and ISO 20022 remittance data.
 - **Interac Online**, the old bank-redirect checkout, has been discontinued. Its successor is Interac Direct, an account-based online payment launched in November 2025 under the Konek brand.
 
 ## Cards
@@ -93,7 +93,7 @@ The networks are familiar, but the rules around them aren't.
 
 **Surcharging** has been allowed since October 2022, within limits the [Surcharging & Fees](/books/payments/surcharging-and-fees) engine has to encode per country: credit cards only, at most 2.4% and no more than the merchant's actual cost, disclosed before the payment, with notice to the acquirer, never combined with a convenience fee, and never in Quebec, whose consumer protection law prohibits it. Debit and prepaid cards can't be surcharged.
 
-**Acquiring is local.** Canadian interchange rates and Interac need a Canadian acquirer and a Canadian merchant location; a Canadian card run through a US merchant account is an international transaction, with cross-border fees on top (Stripe, for one, adds 1.5% for international cards and 1% more for currency conversion). Going to Canada properly means a Canadian entity and acquiring relationship, which is a [processor routing](/books/payments/processor-routing) decision as much as a legal one.
+**Acquiring is local.** Canadian interchange rates and Interac need a Canadian acquirer and a Canadian merchant location; a Canadian card run through a US merchant account is an international transaction, with cross-border fees on top (Stripe, for one, adds 1.5% for international cards and 1% more for currency conversion) and an exchange risk someone has to own ([Multi-Currency & FX](/docs/payments/multi-currency#who-takes-the-exchange-risk)). Going to Canada properly means a Canadian entity and acquiring relationship, which is a [processor routing](/books/payments/processor-routing) decision as much as a legal one.
 
 ## Who Regulates You
 
@@ -115,7 +115,7 @@ The networks are familiar, but the rules around them aren't.
 - **A Standard 005 writer per bank,** with file creation numbers allocated durably and Canadian transaction codes chosen from the payment's purpose.
 - **PAD agreements as records,** with category and frequency, confirmation and pre-notification scheduled 10 days out, cancellation honored within 30 days, and the audit trail kept a year past the last debit.
 - **A 90-day tail** in the ledger and risk limits for personal PADs, and no fees on re-presented debits.
-- **Interac e-Transfer Request Money** for tenants who push payments, with your reference in it.
+- **Interac e-Transfer Request Money** for payers who push payments, with your reference in it.
 - **Code of Conduct notices and statements** built into merchant pricing, and surcharging rules that know about Quebec.
 - **RPAA registration and FINTRAC registration** before launch, safeguarding in the treasury design, and French-first terms for Quebec.
 - **The Canadian holiday calendar** and account format as data, beside the US ones.

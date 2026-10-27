@@ -3,7 +3,7 @@ title = "Wallets & Local Payment Methods"
 nav_title = "Wallets & Local Methods"
 description = "Apple Pay and Google Pay as network tokens, PayPal, BNPL, and the bank rails other countries pay with: SEPA, iDEAL and Wero, Pix, UPI and UK pay-by-bank."
 category = "Payments Industry"
-order = 1407
+order = 1408
 part = "How Money Moves"
 tags = ["payments", "wallets", "apple-pay", "google-pay", "bnpl", "sepa", "pix", "upi", "open-banking"]
 +++
@@ -94,14 +94,13 @@ The engineering follows from that table:
 - [Deutsche Bundesbank: SEPA Direct Debit](https://www.bundesbank.de/en/tasks/payment-systems/services/sepa/content/sepa-direct-debit-626654), the eight-week and 13-month refund rights, and none for B2B
 - [KPMG: Instant Payment Regulation](https://kpmg.com/de/en/industries/financial-services/banking/instant-payment-regulation.html), receiving instant euro payments from January 2025 and sending from October 2025
 - [Mason Hayes & Curran: Instant Payments Regulation update](https://mhc.ie/latest/insights/instant-payments-regulation-update), free Verification of Payee from October 9, 2025
-- [Dutch Payments Association: Next phase of iDEAL migration to Wero](https://www.betaalvereniging.nl/en/?p=5309), banks connected by October 2026 and migration finished by December 31, 2027
 - [Wikipedia: Pix](https://en.wikipedia.org/wiki/Pix_%28payment_system%29), run by Brazil's central bank since November 2020, with keys and QR codes
 - [Banco Central do Brasil: Fórum Pix, June 2025 (PDF)](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Forum_Pix_Plenaria/20252606-Forum_Pix.pdf), Pix Automático rules in force from June 16, 2025, and the return mechanism (MED)
 - [Wikipedia: Unified Payments Interface](https://en.wikipedia.org/wiki/Unified_Payments_Interface), developed and run by NPCI, UPI IDs and AutoPay mandates
 - [Direct Debit: The Direct Debit Guarantee](https://www.directdebit.co.uk/direct-debit-explained/direct-debit-guarantee/), advance notice and an immediate refund on error
 - [PSR: Commercial variable recurring payments, update on delivery (PDF)](https://www.psr.org.uk/media/xgjcblmb/cvrp-update-on-delivery-_-dec-2025.pdf), the UK Payments Initiative and the plan for first live payments
 - [FCA: Launch of the UK Payments Initiative scheme](https://www.fca.org.uk/news/statements/open-banking-launch-uk-payments-initiative-scheme), the commercial VRP scheme's launch on June 2, 2026
-- [Dutch Payments Association: Next phase of iDEAL migration to Wero](https://www.betaalvereniging.nl/en/news/next-phase-of-ideal-migration-to-wero-begins-in-october/), connecting Dutch banks from October 2026 and full migration by the end of 2027
+- [Dutch Payments Association: Next phase of iDEAL migration to Wero](https://www.betaalvereniging.nl/en/news/next-phase-of-ideal-migration-to-wero-begins-in-october/), all Dutch banks connecting to Wero from October 2026 and the migration finished by December 31, 2027
 
 **In practice**
 

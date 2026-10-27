@@ -2,7 +2,7 @@
 title = "ACH & Bank Transfers"
 description = "How ACH really moves money: SEC codes and files, why settled isn't final, returns, reversals and fees, validating accounts, the Nacha rules, RTP and FedNow."
 category = "Payments Industry"
-order = 1404
+order = 1405
 part = "How Money Moves"
 aliases = ["payments/ach"]
 tags = ["payments", "ach", "nacha", "bank-transfers", "ledger"]
@@ -46,7 +46,7 @@ Two more families of codes live in other chapters: the check conversion codes (A
 
 ## Timing
 
-Entries settle on a business-day schedule: same day if submitted in a Same Day ACH window, otherwise the next banking day or a future date you choose. Same Day ACH settles at 1:00, 5:00 and 6:00 p.m. ET, and since March 18, 2022 a single Same Day entry can be up to $1 million ; international entries (the IAT SEC code) aren't eligible at all. An entry over the limit isn't rejected; it settles next day, and restructuring a payment to get under the cap isn't allowed. The submission deadline that matters is your bank's, which comes before the Operator's.
+Entries settle on a business-day schedule: same day if submitted in a Same Day ACH window, otherwise the next banking day or a future date you choose. Same Day ACH settles at 1:00, 5:00 and 6:00 p.m. ET, and since March 18, 2022 a single Same Day entry can be up to $1 million; international entries (the IAT SEC code) aren't eligible at all. An entry over the limit isn't rejected; it settles next day, and restructuring a payment to get under the cap isn't allowed. The submission deadline that matters is your bank's, which comes before the Operator's.
 
 There is no real-time leg. Nothing checks the Receiver's balance before settlement, and nothing tells you the account exists until it comes back. That's the core design fact: **settlement is when the money moves, not when it's yours.**
 
@@ -105,12 +105,12 @@ A returned debit leaves two decisions: whether to charge the payer for it, and w
 | Texas (Bus. & Com. Code 3.506) | $30 | Paper or electronic payments |
 | New York (General Obligations Law 5-328) | $20, or a landlord's actual costs if higher and the lease provides for it | Checks |
 
-Canada's Rule H1 lets a dishonoured debit be re-presented only for the same amount, with no fee added ([Payments in Canada](/books/payments/canada)). Keep return fees as data per jurisdiction with effective dates, the same way [Surcharging & Fees](/books/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
+Canada's Rule H1 lets a dishonoured debit be re-presented only for the same amount, with no fee added ([Payments in Canada](/books/payments/canada)). Keep return fees as data per jurisdiction with effective dates ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), the same way [Surcharging & Fees](/books/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
 
 **Blocks.** The return code decides what happens to the account:
 
 - **R02, R03, R04** (closed, no account, invalid number): the account number is dead. Stop using it for that payer and ask for a new one; don't retry.
-- **R01, R09** (insufficient or uncollected funds): reinitiate within the rules above. After repeated returns, many leases and billing terms move the payer to certified funds or another method for a period, and some states let a landlord demand cash or certified funds for a period after a bounce ([Accepting Checks](/books/payments/checks#rent-and-paper)).
+- **R01, R09** (insufficient or uncollected funds): reinitiate within the rules above. After repeated returns, many billing terms and leases move the payer to certified funds or another method for a period, and some states let a landlord demand cash or certified funds for a period after a bounce ([Accepting Checks](/books/payments/checks#who-still-pays-by-paper)).
 - **R05, R07, R10, R29** (unauthorized or revoked): stop debiting under that authorization at once, and don't debit the account again without a new one. These, with R11 and R51, count toward Nacha's 0.5% unauthorized return threshold ([below](#the-rules-you-inherit)), so a second debit to the same account is the most expensive mistake on the list.
 - **R16** (frozen): stop, and treat it as a possible sanctions hit.
 
@@ -160,15 +160,15 @@ RTP and FedNow are credit push only: the payer's bank sends the money, so there'
 
 ## Anatomy of a Nacha File
 
-Here is a complete, valid file: a property manager collecting November rent from three tenants by WEB debit, one of them with a remittance addenda. Every routing number in it is fictional, with a valid check digit, and every control total is real.
+Here is a complete, valid file: a private school collecting November tuition from three families by WEB debit, one of them with a remittance addenda. Every routing number in it is fictional, with a valid check digit, and every control total is real.
 
 ```text
-101 12345678012345678902610301405A094101FIRST EXAMPLE BANK     EXAMPLE PROPERTIES LLC         
-5225EXAMPLE PROPERTI                    1234567890WEBRENT      NOV 26261102   1123456780000001
-627987654320000123456789     0000185000LEASE-4471     JORDAN RIVERA         R 0123456780000001
-6275555555509876543          0000142500LEASE-4502     SAM OKAFOR            R 1123456780000002
-705RENT NOV 2026 UNIT 12B                                                          00010000002
-63798765432055500012         0000097500LEASE-4519     ALEX CHEN             R 0123456780000003
+101 12345678012345678902610301405A094101FIRST EXAMPLE BANK     EXAMPLE ACADEMY LLC            
+5225EXAMPLE ACADEMY                     1234567890WEBTUITION   NOV 26261102   1123456780000001
+627987654320000123456789     0000185000STU-4471       JORDAN RIVERA         R 0123456780000001
+6275555555509876543          0000142500STU-4502       SAM OKAFOR            R 1123456780000002
+705TUITION NOV 2026 GR 4                                                           00010000002
+63798765432055500012         0000097500STU-4519       ALEX CHEN             R 0123456780000003
 822500000402530864190000004250000000000000001234567890                         123456780000001
 9000001000001000000040253086419000000425000000000000000                                       
 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -194,10 +194,10 @@ Each line is one record, identified by its first character. Field positions are 
 | Positions | Field | In the example |
 | --- | --- | --- |
 | 2-4 | Service class | `225`: debits only (`220` credits only, `200` mixed) |
-| 5-20 | Company name | `EXAMPLE PROPERTI`: 16 characters, and what appears on the tenant's statement |
+| 5-20 | Company name | `EXAMPLE ACADEMY`: 16 characters with the trailing space, and what appears on the payer's statement |
 | 41-50 | Company identification | `1234567890`: usually `1` plus the originator's EIN (employer identification number, the federal tax ID) |
 | 51-53 | SEC code | `WEB`: authorized online |
-| 54-63 | Company entry description | `RENT`: also on the statement, and where `REVERSAL`, `RETURN FEE`, `RETRY PYMT` and `ACCTVERIFY` go |
+| 54-63 | Company entry description | `TUITION`: also on the statement, and where `REVERSAL`, `RETURN FEE`, `RETRY PYMT` and `ACCTVERIFY` go |
 | 64-69 | Descriptive date | `NOV 26`: free text, shown on the statement |
 | 70-75 | Effective entry date | `261102`: the banking day you want it to settle |
 | 76-78 | Settlement date | Blank: the ACH Operator fills it in |
@@ -213,31 +213,82 @@ Each line is one record, identified by its first character. Field positions are 
 | 4-12 | RDFI routing number | `98765432` and check digit `0` |
 | 13-29 | Account number | `000123456789`, left-justified |
 | 30-39 | Amount | `0000185000`: $1,850.00, in cents, never with a decimal point |
-| 40-54 | Individual ID | `LEASE-4471`: your own reference, echoed back on returns |
+| 40-54 | Individual ID | `STU-4471`: your own reference, echoed back on returns |
 | 55-76 | Individual name | `JORDAN RIVERA` |
 | 77-78 | Payment type code | `R`: recurring (`S` single), required on WEB and TEL debits |
 | 79 | Addenda indicator | `0`, or `1` when an addenda follows |
 | 80-94 | Trace number | `123456780000001`: the ODFI's 8 digits and a sequence, unique per file |
 
-**Addenda (`7`)** carries 80 characters of payment information after type code `05` (`RENT NOV 2026 UNIT 12B`), then its own sequence number and the last seven digits of its entry's trace number, which ties it to the second entry.
+**Addenda (`7`)** carries 80 characters of payment information after type code `05` (`TUITION NOV 2026 GR 4`), then its own sequence number and the last seven digits of its entry's trace number, which ties it to the second entry.
 
 **Batch control (`8`)** and **file control (`9`)** are where banks catch mistakes. Each carries the count of entry and addenda records (4), the debit and credit totals in cents ($4,250.00 and $0.00), and an **entry hash**: the sum of every entry's 8-digit RDFI routing number, keeping the rightmost ten digits. Here that's 98765432 + 55555555 + 98765432 = 253086419. The file control adds the batch count and the **block count**: the number of 10-line blocks, which is why the file ends in lines of 9s padding it to a multiple of ten. A file whose controls don't add up is rejected whole, and the acknowledgement says which check failed ([Treasury & Bank Operations](/books/payments/treasury#bank-files)).
 
-If the first tenant's account is short, a return comes back from the RDFI in its own file a day or two later, as an entry and an addenda:
+If the first family's account is short, a return comes back from the RDFI in its own file a day or two later, as an entry and an addenda:
 
 ```text
-626123456780000123456789     0000185000LEASE-4471     JORDAN RIVERA           1987654320000001
+626123456780000123456789     0000185000STU-4471       JORDAN RIVERA           1987654320000001
 799R01123456780000001      98765432                                            987654320000001
 ```
 
 The return's entry uses transaction code `26` (return of a checking debit), is addressed to the ODFI, and carries the same account, amount and individual ID. Its addenda (`799`) holds the reason code `R01`, the original entry's trace number `123456780000001`, and the original RDFI's identification. Match returns on that original trace number, never on name or amount: it's the one field guaranteed to point at exactly one entry you sent.
+
+## How to Build It
+
+ACH adds three things to the [core data model](/books/payments/card-payments#the-core-data-model): the authorization behind a debit, the entries that actually go into files, and the restrictions a return leaves behind. A `payments` row is still the payment; an ACH entry is one attempt to move it, the way a `payment_attempts` row is for cards, and a reversal, prenote or return fee is an entry of its own.
+
+```sql
+CREATE TABLE ach_authorizations (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_method_id UUID NOT NULL REFERENCES payment_methods (id),
+  sec_code          TEXT NOT NULL CHECK (sec_code IN ('PPD', 'WEB', 'TEL', 'CCD', 'CTX')),
+  terms_version     TEXT NOT NULL,          -- the wording accepted, incl. revocation and any return fee
+  evidence_ref      TEXT NOT NULL,          -- the stored acceptance record
+  authorized_at     TIMESTAMPTZ NOT NULL,
+  revoked_at        TIMESTAMPTZ             -- set by the payer, or by an R07/R10 return
+);
+
+CREATE TABLE ach_entries (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_id        UUID REFERENCES payments (id),   -- or payout_id for credits
+  payout_id         UUID REFERENCES payouts (id),
+  authorization_id  UUID REFERENCES ach_authorizations (id),
+  kind              TEXT NOT NULL CHECK (kind IN
+                      ('debit', 'credit', 'prenote', 'micro_entry', 'reversal', 'return_fee')),
+  corrects_entry_id UUID REFERENCES ach_entries (id), -- the original, for reversals and retries
+  amount            BIGINT NOT NULL,
+  effective_date    DATE NOT NULL,
+  file_id           TEXT,                   -- null until built into a file
+  trace_number      TEXT UNIQUE,
+  status            TEXT NOT NULL CHECK (status IN
+                      ('pending', 'submitted', 'settled', 'available', 'final', 'returned')),
+  settled_on        DATE
+);
+
+CREATE TABLE ach_returns (
+  ach_entry_id      UUID PRIMARY KEY REFERENCES ach_entries (id),  -- matched on the original trace number
+  return_code       TEXT NOT NULL,          -- R01, R10, ...
+  received_at       TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE payment_method_restrictions (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  scope             TEXT NOT NULL CHECK (scope IN ('account_number', 'customer', 'routing_number')),
+  fingerprint       TEXT NOT NULL,          -- keyed hash, like payment_methods.fingerprint
+  reason            TEXT NOT NULL,          -- the return code or rule that set it
+  starts_at         TIMESTAMPTZ NOT NULL,
+  ends_at           TIMESTAMPTZ,
+  lifted_by         TEXT
+);
+```
+
+A return posts a `ledger_transactions` row with `source_type = 'ach_return'`, reversing whatever the entry funded, and moves the entry to `returned`; the `available` and `final` transitions are computed from `settled_on` and the banking calendar, not set by hand ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## What This Means for the System You Build
 
 - **Generate files idempotently.** Every entry has a stable internal ID and a trace number, and a file is built from entries not yet submitted, so rebuilding it can't double them. See [Idempotency](/docs/payments/idempotency).
 - **Never resubmit a file blindly.** If a transmission fails ambiguously, ask the bank what it received before sending again. A duplicate file debits every customer in it twice, and every one of those comes back as a return against your rates.
 - **Reconcile daily against the bank's return and NOC files,** and against settlement, as [Payouts & Settlement](/books/payments/payouts-and-settlement) describes. An entry that never settled and never returned is a bug, not a delay.
-- **Store authorizations as records:** what the customer agreed to, when, how (the SEC code's justification), and the revocation terms. Producing it in 10 days is the requirement; producing it in 10 seconds is the goal.
+- **Store authorizations as records:** what the customer agreed to, when, how (the SEC code's justification), and the revocation terms, with the evidence an electronic acceptance needs ([What the Evidence Holds](/docs/compliance/electronic-signatures#what-the-evidence-holds)). Producing it in 10 days is the requirement; producing it in 10 seconds is the goal.
 - **Screen before you originate.** An OFAC-blocked Receiver is your problem before it's the RDFI's R16.
 - **Treat files and dates as operations.** Transmission, acknowledgements and the banking calendar are in [Treasury & Bank Operations](/books/payments/treasury#bank-files); an effective date on a holiday settles on the next banking day, whether you planned for it or not.
 
@@ -264,7 +315,6 @@ The return's entry uses transaction code `26` (return of a checking debit), is a
 - [Nacha: Fraud Monitoring, Phase 2](https://www.nacha.org/rules/risk-management-topics-fraud-monitoring-phase-2), extension to all parties on June 19, 2026, in practice June 22
 - [Nacha: Third-Party Sender Registration](https://www.nacha.org/rules/third-party-sender-registration), ODFIs registering the Third-Party Senders they serve
 - [Federal Reserve Financial Services: FedNow limit to $10 million](https://www.frbservices.org/news/press-releases/090525-fednow-transaction-limit-increase), the network limit raised from $1 million, effective November 2025
-
 - [Nacha: Reversals and Enforcement](https://www.nacha.org/rules/reversals-and-enforcement), permissible reasons, the five-banking-day window, and improper reversals returned as R11 or R17
 - [Nacha: Micro-Entries](https://www.nacha.org/rules/micro-entries), amounts, offsetting debits, `ACCTVERIFY` and fraud monitoring
 - [Nacha: ACH Operations Bulletin #4-2024](https://www.nacha.org/news/ach-operations-bulletin-4-2024-importance-maintaining-date-routing-transit-numbers), keeping routing numbers current, and why doing nothing isn't commercially reasonable

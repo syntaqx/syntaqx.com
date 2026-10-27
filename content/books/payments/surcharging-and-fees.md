@@ -2,12 +2,12 @@
 title = "Surcharging & Fees"
 description = "Passing card costs to the payer: surcharges, convenience and service fees, cash discounts, the network caps and state laws behind them, and safe fee math."
 category = "Payments Industry"
-order = 1410
+order = 1412
 part = "The Rules"
 tags = ["payments", "surcharging", "convenience-fees", "compliance", "pricing"]
 +++
 
-Every card payment costs the merchant something ([Interchange & Pricing](/books/payments/interchange-and-pricing)), and more merchants now pass that cost to the payer. For a county collecting property tax, a university collecting tuition, a utility or a property manager collecting rent, it's often the deciding factor in whether they take cards at all: their margins can't absorb 2 or 3 percent of a large payment. So a platform serving those verticals will be asked for fees on day one, and fee handling is only a feature if it's right. The verticals differ: government and education use service fee programs because statutory amounts leave no margin, utilities can't put convenience fees on their autopay payments, and property managers weigh surcharges and convenience fees against steering payers to [ACH](/books/payments/ach).
+Every card payment costs the merchant something ([Interchange & Pricing](/books/payments/interchange-and-pricing)), and more merchants now pass that cost to the payer. For a B2B distributor invoicing on thin margins, a restaurant group, a dental practice or a public agency collecting a fixed statutory amount, it's often the deciding factor in whether they take cards at all: their margins can't absorb 2 or 3 percent of a large payment. So a platform serving those verticals will be asked for fees on day one, and fee handling is only a feature if it's right. The verticals differ: government and education use service fee programs because statutory amounts leave no margin, a subscription business can't put a convenience fee on its recurring charges, and a B2B seller weighs a surcharge against steering buyers to [ACH](/books/payments/ach).
 
 The trouble is that "a card fee" is four different things, each allowed under different conditions by different rulebooks: the card networks' rules, which bind through the merchant's contract, and state law, which binds regardless ([The Payments Rulebook](/books/payments/payments-rulebook) explains why the two differ). Get the category wrong and a merchant is charging an illegal fee on every payment your system processes. This chapter is the map, and the engineering that keeps a platform inside it. None of it is legal advice; the specifics change, and a merchant's counsel and acquirer have the last word.
 
@@ -21,7 +21,7 @@ The trouble is that "a card fee" is four different things, each allowed under di
 | **Where** | Where state law allows | Not face-to-face, not on recurring payments | In person, online and recurring, for eligible merchants | Anywhere |
 | **Gate** | 30 days' notice; disclosure | The channel must be a real convenience | Network registration; eligible merchant categories | Clear disclosure |
 
-The difference that trips people up: a **surcharge** is charged for the card, a **convenience fee** for the channel. A utility that takes payments in person and by mail may add a flat fee for paying online, charged to every payment method in that channel. It may not add a percentage to card payments and call it a convenience fee.
+The difference that trips people up: a **surcharge** is charged for the card, a **convenience fee** for the channel. A medical practice that takes payments at the front desk and by mail may add a flat fee for paying online, charged to every payment method in that channel. It may not add a percentage to card payments and call it a convenience fee.
 
 ## What the Networks Allow
 
@@ -41,9 +41,13 @@ Surcharging on Visa and Mastercard credit cards has been allowed in the US since
 - The merchant notifies both **Mastercard and its acquirer** at least 30 days before it starts.
 - Disclosure at the point of interaction, with the surcharge amount on the receipt.
 
-Mastercard's rules add that a merchant accepting other networks, such as American Express or Discover, may face further conditions depending on those networks' costs and restrictions; both publish their own terms. In practice a platform applies the strictest rule that covers every card the merchant accepts, which today usually means **3%**, credit only, notice to everyone.
+Mastercard's rules add that a merchant accepting other networks, such as American Express or Discover, may face further conditions depending on those networks' costs and restrictions; both publish their own terms (Discover's now under Capital One, which completed its acquisition of Discover Financial Services on May 18, 2025). In practice a platform applies the strictest rule that covers every card the merchant accepts, which today usually means **3%**, credit only, notice to everyone.
 
 Federal law frames all of this. The Durbin Amendment forbids networks from stopping merchants offering a **discount** for paying by cash, check, debit or credit, as long as it doesn't vary by issuer or network, and lets merchants set a **minimum** for credit card purchases of up to **$10**.
+
+### The Pending Settlement
+
+These rules may loosen. On November 10, 2025, Visa and Mastercard announced a proposed settlement with the injunctive relief class in the interchange fee litigation (*In re Payment Card Interchange Fee and Merchant Discount Antitrust Litigation*, E.D.N.Y.). For surcharging it would let a merchant surcharge Visa credit without surcharging other credit networks, and it would replace honor-all-cards for US credit with a choice of which categories to accept: commercial, premium consumer and standard consumer. It also cuts the average effective credit interchange rate by 10 basis points for five years and caps standard consumer credit rates at 1.25%. Judge Brian Cogan granted **preliminary** approval on June 9, 2026. As of October 2026, final approval was still pending after the objection period, and a convenience-store trade group has said it will appeal if final approval is granted, so none of it governs a payment today. A fee engine built with per-brand and per-category rules as data absorbs the change when it comes; one with "3%, credit only" in code does not.
 
 ### Convenience and Service Fees
 
@@ -62,13 +66,13 @@ Network rules are a contract; state law overrides them, and it varies more than 
 - **Colorado** allows a surcharge of up to **2%** of the transaction, or up to the merchant's actual processing fee, at the merchant's choice, with prescribed disclosure, and never on cash, check, debit cards or gift cards.
 - **New York** has required since **February 11, 2024** that a seller who surcharges post the **total** credit card price, inclusive of the surcharge, and the surcharge may not exceed what the card company charges the seller.
 
-Those examples will age. The durable lesson is structural: the rules are per jurisdiction, they change by statute and court ruling, and they sometimes apply only to some merchant types, so they belong in data a compliance owner maintains, not in code.
+Those examples will age. The durable lesson is structural: the rules are per jurisdiction, they change by statute and court ruling, and they sometimes apply only to some merchant types, so they belong in data a compliance owner maintains, not in code ([Rules as Data](/docs/architecture/rules-as-data)).
 
 ## What This Means for the System You Build
 
 - **Decide the fee on the server, from the card.** Look up the BIN before authorization and classify credit, debit or prepaid. Never surcharge debit or prepaid, even when the customer picked "credit" or the card network is ambiguous; when classification fails, charge no surcharge. Record the BIN data version used ([How Card Payments Work](/books/payments/card-payments)).
 - **Make eligibility configuration, per merchant.** Fee type, rate or flat amount, which channels and card types, the merchant's category, its jurisdiction, and dates: when it notified its acquirer and the networks, and when it may start. A surcharge can't switch on before its notice period has passed.
-- **Keep jurisdiction rules as effective-dated data.** Caps, prohibitions and disclosure requirements by state, owned by someone accountable for them, and versioned, so every historical fee can be explained by the rule that was in force.
+- **Keep jurisdiction rules as effective-dated data.** Caps, prohibitions and disclosure requirements by state, owned by someone accountable for them, and versioned, so every historical fee can be explained by the rule that was in force ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 - **Show it before the payer commits.** The fee and the total, before authorization, with a way to cancel or pay another way. Then authorize the total, and itemize the fee on the receipt and in the API.
 - **Compute in minor units with a written rounding rule.** A percentage of an amount produces fractions of a cent; decide which way they round, once ([Money & Amounts](/docs/payments/money)).
 - **Refund the fee with the payment.** A full refund returns the fee; a partial refund returns a proportional share. Keeping a fee on money you've given back is indefensible, whatever a rule allows.
@@ -90,9 +94,13 @@ Those examples will age. The durable lesson is structural: the rules are per jur
 - [Mastercard: Merchant Surcharge Rules](https://www.mastercard.com/us/en/business/support/merchant-surcharge-rules.html), the 4% maximum, brand-level and product-level caps, notice to Mastercard and the acquirer, and disclosure
 - [Connecticut Department of Consumer Protection: Credit Card Surcharge](https://portal.ct.gov/DCP/Legal/Credit-Card-Surcharge), the surcharge prohibition and the cash discount allowance
 - [Erie County Consumer Protection: NYS General Business Law § 518 Changes](https://www3.erie.gov/consumerprotection/nys-general-business-law-ss518-changes-february-11-2024), the February 11, 2024 effective date
+- [Visa Inc. Form 8-K, November 10, 2025](https://www.sec.gov/Archives/edgar/data/1403161/000140316125000093/v-20251110.htm), the proposed injunctive relief class settlement: brand-level surcharging, acceptance by credit category, the 10 basis point reduction for five years and the 125 bps standard consumer cap, subject to court approval
+- [Capital One: Capital One Completes Acquisition of Discover](https://www.capitalone.com/about/newsroom/capital-one-completes-acquisition-of-discover/), May 18, 2025
 - [Visa Core Rules and Visa Product and Service Rules (PDF)](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the US Rent Payment Program for MCC 6513 merchants and its debit fee limit
 
 **In practice**
 
 - [ArentFox Schiff: Visa Reduces Its Merchant Surcharge Cap to 3%](https://www.afslaw.com/perspectives/alerts/visa-reduces-its-merchant-surcharge-cap-3-effective-april-15-2023-merchants), the April 15, 2023 change from 4%
+- [Payments Dive: Court approves Visa-Mastercard settlement](https://www.paymentsdive.com/news/court-approves-visa-mastercard-settlement/822440/), June 9, 2026: Judge Cogan's preliminary approval, the right to decline premium and commercial credit cards, and NACS's stated appeal
+- [American Banker: Judge approves card network-fee settlement with merchants](https://www.americanbanker.com/payments/news/judge-approves-card-network-fee-settlement-with-merchants), June 10, 2026: preliminary, not final, approval, with an objection period and a further hearing to come
 - [Fiserv: Understanding Surcharging, Convenience and Service Fees (PDF)](https://www.carat.fiserv.com/content/dam/firstdata/us/en/documents/pdf/Understanding_Surcharging_Convenience_Service_Fees_Whitepaper.pdf), a processor's summary of convenience and service fee conditions as of January 2023

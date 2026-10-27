@@ -2,7 +2,7 @@
 title = "Inside a Processor"
 description = "What an acquiring processor runs: the authorization switch, network connections, stand-in, clearing files, settlement, exceptions, merchant setup and billing."
 category = "Payments Industry"
-order = 1426
+order = 1431
 part = "Running a Provider"
 tags = ["payments", "processing", "iso-8583", "clearing", "settlement", "networks"]
 +++
@@ -74,9 +74,9 @@ In the dual-message world, captured transactions travel to the network as **clea
 - **Visa's BASE II** is the file-based service that collects, clears and settles between Visa and its members. Processors' documentation describes its transaction codes, such as `TC05` for a sales draft, `TC06` for a credit voucher (a refund) and `TC25` for a sale's reversal; the full record layouts are in Visa's licensed manuals.
 - **Mastercard's Global Clearing Management System** exchanges IPM files, in which a first presentment is a `1240` message, a chargeback a `1442`, administrative messages `1644` and fee collections `1740`. Processors report six clearing cycles a day.
 
-Clearing has deadlines measured from the authorization. Visa's rules allow 5 calendar days for card-present and merchant-initiated transactions, 10 for card-absent ones the cardholder started, 30 for those same card-absent transactions when they carry an extended authorization indicator and for estimated authorizations at hotels, cruise lines and car rentals (10 at other rental merchants), and 2 hours for a fuel pump. Mastercard allows 30 days after a pre-authorization and 7 after a final one. A late presentment can be disputed, and it's one more reason capture deadlines are states, not hopes ([Payment States & Ledgers](/docs/payments/payment-states#authorizations-expire)).
+Clearing has deadlines measured from the authorization, set per brand, channel and authorization type; [Five Events, Not One Payment](/books/payments/card-payments#five-events-not-one-payment) has the table. For a processor they're batch deadlines: a capture that misses the clearing cycle its deadline falls in is a late presentment, which can be disputed, and it's one more reason capture deadlines are states, not hopes ([Payment States & Ledgers](/docs/payments/payment-states#authorizations-expire)).
 
-**Interchange is decided at clearing.** The network prices each record from the data it carries: on Visa's exempt debit table, the same online purchase clears at 1.60% + $0.15 when it qualifies for the preferred e-commerce rate, 1.75% + $0.20 at the electronic rate, and 1.90% + $0.25 at the standard rate when it carries less ([Interchange & Pricing](/books/payments/interchange-and-pricing#downgrades)). The exact data elements each category needs are in the networks' manuals; the processor's job is to send them every time.
+**Interchange is decided at clearing.** The network prices each record from the data it carries, and a record missing what its category needs downgrades to a costlier one ([Downgrades](/books/payments/interchange-and-pricing#downgrades)). The exact data elements each category needs are in the networks' manuals; the processor's job is to send them every time.
 
 **A refund is a clearing record too.** It flows from acquirer to issuer as a credit, the money moves the other way at settlement, and the merchant's funding is reduced by it. A refund can also be authorized first, so the issuer can reject a credit to a closed card before it's sent.
 
@@ -86,7 +86,7 @@ Clearing has deadlines measured from the authorization. Visa's rules allow 5 cal
 
 Clearing says what happened; settlement moves the money. Visa's VisaNet Settlement Service computes each member's net position per settlement service and currency and delivers settlement reports (processors describe the daily summary as VSS-110, delivered in machine-readable and printable report records); Mastercard settles through its Settlement Account Management system, with clearing and settlement report files. Each member settles through a settlement bank in the settlement currency's country, and a member that submits clearing "must be ready to settle".
 
-The reconciliation is three-way at the network level just as it is at the bank ([Treasury & Bank Operations](/books/payments/treasury#bank-reconciliation-is-its-own-discipline)): the clearing you sent, summed by cycle, against the network's settlement report, against the transfer that arrived, which comes as a separate bank transfer per settlement service and currency. Only then does the acquirer fund merchants, which Visa's rules require "promptly", net of refunds, disputes, fees and reserves ([Payouts & Settlement](/books/payments/payouts-and-settlement)).
+The network-level twist on reconciliation is the grouping: the clearing you sent, summed by cycle, matches the network's settlement report, and the money arrives as a separate bank transfer per settlement service and currency, so the matching keys are cycle, service and currency rather than individual payments. The matching discipline itself is the one in [Bank Reconciliation Is Its Own Discipline](/books/payments/treasury#bank-reconciliation-is-its-own-discipline). Only then does the acquirer fund merchants, which Visa's rules require "promptly", net of refunds, disputes, fees and reserves ([Payouts & Settlement](/books/payments/payouts-and-settlement)).
 
 ## Exceptions
 
@@ -103,7 +103,13 @@ Before the first authorization, the processor and acquirer register the merchant
 
 ## Billing Merchants
 
-Merchants don't pay interchange; they pay their acquirer a merchant discount, and how that's built is the pricing model ([Interchange & Pricing](/books/payments/interchange-and-pricing#pricing-models)). Two operational facts shape the billing system. Networks can bill fees for a transaction up to two months after it was processed, so an interchange-plus statement is an estimate trued up later. And fees are either deducted from each day's funding or billed monthly and debited from the merchant's account, as Payabli's statements describe, which makes the monthly statement the document a merchant reconciles against ([Operating the Platform](/books/payments/operating-the-platform#statements-and-reports)). The acquiring entity, or a payment facilitator in its place, also files each merchant's 1099-K, reporting gross amounts without deducting refunds or fees ([Payments for Software Platforms](/books/payments/software-platforms#1099-k-and-taxpayer-data)).
+Merchants don't pay interchange; they pay their acquirer a merchant discount, and how that's built is the pricing model ([Interchange & Pricing](/books/payments/interchange-and-pricing#pricing-models)). Three operational facts shape the billing system:
+
+- **Fees arrive late.** Networks can bill fees for a transaction up to two months after it was processed, as Stripe warns its interchange-plus users, so an interchange-plus statement is an estimate trued up later.
+- **Fees are collected one of two ways.** Netted from each payout, so the deposit is already net of fees, which is how Square handles processing fees (it still issues a monthly fee invoice as the record); or totaled on a monthly invoice and settled afterward, which is how Adyen's monthly invoice works, with its fees and adjustments then flowing through settlement to the balance. The billing system supports whichever the merchant's contract says.
+- **The statement is a different document from the payout report.** A payout report explains one deposit; the monthly statement or fee invoice summarizes the month's fees and adjustments, and Adyen calls its monthly invoice required for full reconciliation. Merchants need both, and both come from the same ledger ([Operating the Platform](/books/payments/operating-the-platform#statements-and-reports)).
+
+The acquiring entity, or a payment facilitator in its place, also files each merchant's 1099-K, reporting gross amounts without deducting refunds or fees ([Payments for Software Platforms](/books/payments/software-platforms#1099-k-and-taxpayer-data)).
 
 ## Becoming the Processor
 
@@ -126,8 +132,8 @@ Instant payments have the same structure with different names: a FedNow particip
 
 **Specifications**
 
-- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), V.I.P. and BASE II, response times and timeouts (7.3), stand-in, processing timeframes (5.7.3.5), settlement (7.7), dispute processing in VROL (11.3), merchant MCC and name rules (1.5.1), third-party agent registration (1.9.8) and the terminated merchant file
-- [Mastercard Transaction Processing Rules (copy hosted by Moneris)](https://www.moneris.com/-/media/files/terms-and-conditions/card-brands/mastercard/mastercard-transaction-processing-rules.pdf), the Interchange System, connectivity and certification, stand-in, presentment timeframes and lifecycle identifiers
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), V.I.P. and BASE II, response times and timeouts (7.3), stand-in, settlement (7.7), dispute processing in VROL (11.3), merchant MCC and name rules (1.5.1), third-party agent registration (1.9.8) and the terminated merchant file
+- [Mastercard Transaction Processing Rules (copy hosted by Moneris)](https://www.moneris.com/-/media/files/terms-and-conditions/card-brands/mastercard/mastercard-transaction-processing-rules.pdf), the Interchange System, connectivity and certification, stand-in and lifecycle identifiers
 - [Visa USA Interchange Reimbursement Fees](https://usa.visa.com/content/dam/VCOM/download/merchants/visa-usa-interchange-reimbursement-fees.pdf), the categories clearing qualifies for, and merchant discount versus interchange
 - [Federal Reserve: Operating Circular 8](https://www.frbservices.org/wp-content/uploads/040126-operating-circular-8.pdf), FedNow participants and their service providers
 
@@ -147,4 +153,5 @@ Instant payments have the same structure with different names: a FedNow particip
 - [PayNet: MyDebit ISO 8583 specifications](https://docs.developer.paynet.my/mydebit/mydebit-cnp/mydebit-iso8583-specifications), sign-on, echo, key exchange and late-response reversals in a published network spec
 - [Adyen: Raw acquirer responses](https://docs.adyen.com/development-resources/raw-acquirer-responses), network response codes as a provider maps them
 - [Stripe: Interchange-plus fees and network costs](https://support.stripe.com/questions/reviewing-ic-fees-stripe-fees-and-network-costs?locale=en-GB), network fees billed up to two months later
-- [Payabli: Fees and statements](https://docs.payabli.com/guides/pay-ops-fees-statements-overview), monthly statements and fee debits
+- [Square: Fees and payments FAQs](https://squareup.com/help/gb/en/article/6109-fees-and-payments-faqs), processing fees deducted before each transfer, with monthly fee invoices as the record
+- [Adyen: Reports and fees for platforms](https://docs.adyen.com/platforms/reports-and-fees), the monthly invoice of fees and adjustments, required for full reconciliation, and how its adjustments flow through settlement

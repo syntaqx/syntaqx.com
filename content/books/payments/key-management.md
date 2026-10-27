@@ -2,7 +2,7 @@
 title = "HSMs & Key Management"
 description = "Payments cryptography as its own discipline: HSMs, key hierarchies, key blocks, DUKPT and PIN blocks, the move off TDES, key ceremonies and cryptoperiods."
 category = "Payments Industry"
-order = 1425
+order = 1430
 part = "Running a Provider"
 tags = ["payments", "security", "cryptography", "hsm", "pci", "keys"]
 +++
@@ -116,6 +116,15 @@ Most software platforms never touch a PIN: their terminals talk to a processor, 
 - **Partner credentials.** Processor API keys and certificates for mutual TLS are keys too, with the same lifecycle.
 
 The same three questions apply to all of them: where can the clear key exist, who can cause that, and how long until it's replaced?
+
+## Auditing
+
+Key records are evidence in a PCI DSS or PCI PIN assessment, in a network's review of a new connection, and in any investigation of a suspected compromise. The general design is in [Audit Trails](/docs/architecture/audit-trails), and [Logging Key Use](/docs/security/encryption-at-rest#logging-key-use) covers what a KMS records; for payment keys, make sure the record shows:
+
+- **The key inventory as it stood on any date.** Each key's purpose, algorithm, strength, key block attributes, check value, cryptoperiod and status, versioned so an assessor can see what was live last March, not just today (the documented architecture 3.6.1.1 asks of service providers) ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Every ceremony, signed.** The script, the custodians and witnesses present, each component's and the final key's check values, and anything that deviated from the script, kept with the signatures that make it a record rather than a note.
+- **Who held what.** Custodian assignments per component over time, so split knowledge can be shown to have held, including when a custodian left and the component was replaced.
+- **Rotations and revocations with their reasons.** When each key was replaced, why (end of cryptoperiod or suspected compromise), and which partners confirmed the new key.
 
 ## What This Means for the System You Build
 

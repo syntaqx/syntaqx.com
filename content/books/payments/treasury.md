@@ -2,7 +2,7 @@
 title = "Treasury & Bank Operations"
 description = "The bank accounts behind a payments ledger: FBO accounts, pass-through insurance, funding, bank files, the banking calendar and reconciliation."
 category = "Payments Industry"
-order = 1420
+order = 1423
 part = "Paying Out"
 tags = ["payments", "treasury", "banking", "reconciliation", "ledger"]
 +++
@@ -27,7 +27,7 @@ The cardinal sin is commingling: paying an expense out of the custodial account,
 
 ## FBO Accounts and Pass-Through Insurance
 
-An FBO account holds many owners' money in one pool at the bank, in the provider's name. Whether those owners are protected if the bank fails depends on pass-through deposit insurance, and the FDIC only recognizes the custodial relationship if two things are true. The relationship has to be expressly disclosed in the bank's deposit account records, and the details of each owner's interest have to be ascertainable, either from the bank's records or from records the depositor (or someone it engaged) maintains "in good faith and in the regular course of business" ([12 CFR 330.5(b)](https://www.law.cornell.edu/cfr/text/12/330.5)).
+An FBO account holds many owners' money in one pool at the bank, in the provider's name. Whether those owners are protected if the bank fails depends on pass-through deposit insurance, and the FDIC only recognizes the custodial relationship if two things are true. The relationship has to be expressly disclosed in the bank's deposit account records, and the details of each owner's interest have to be ascertainable, either from the bank's records or from records the depositor (or someone it engaged) maintains "in good faith and in the regular course of business" (12 CFR 330.5(b)).
 
 That second condition is your ledger. If it can't produce, on demand, who owns how much of the pool, the insurance the account was supposed to carry may not reach anyone. And the insurance has a limit people forget: it pays only when an insured bank fails. In the FDIC's words, it "does not provide consumers and businesses with general protection against the default, insolvency, or bankruptcy of any non-bank entities", which is to say it doesn't protect anyone from you, or from the middleware between you and the bank.
 
@@ -56,6 +56,7 @@ Every transfer out of a custodial account is irreversible enough to deserve cere
 
 - **Know the cutoffs.** The Fedwire Funds Service runs from 9:00 p.m. ET the previous day to 7:00 p.m. ET, with customer transfers cut off at 6:45 p.m. ET; your bank's own cutoffs are earlier, and they're the ones that matter. [ACH & Bank Transfers](/books/payments/ach) covers the ACH windows. Schedule sweeps, prefunding and payout runs backward from them.
 - **Wires for large, final moves.** Prefunding, collateral and bank-to-bank rebalancing go by wire because a wire is final; volume goes by ACH because it's cheap. The finality cuts both ways, which is why wires get the strictest controls.
+- **Wires speak ISO 20022 now.** The Fedwire Funds Service replaced its proprietary FAIM message format with ISO 20022 in a single-day cutover on July 14, 2025. Whether you reach Fedwire directly or through your bank's API, a wire is now in the same ISO 20022 family as the `pain` files in [Bank Files](#bank-files) and the `camt` statements reconciliation reads, with room for your own end-to-end reference and structured remittance; carry them through, because they're what you'll match on later.
 - **The system initiates, people approve.** No movement out of a custodial or operating account is typed by hand. The system creates the instruction from the ledger, and a second person approves it, with thresholds that add approvers as amounts grow. Nobody can both create and release a wire, and a change to a beneficiary's bank details is its own approved change, for the reasons [Vendor Payouts](/books/payments/vendor-payouts) gives.
 - **Lock what shouldn't move.** Positive pay on any account that issues checks, and ACH debit blocks or filters on accounts nobody should be debiting, which is usually all of them.
 - **Initiate idempotently.** A transfer instruction carries a key derived from what it represents, like the date and purpose of a sweep ([Idempotency](/docs/payments/idempotency)). Many bank APIs don't honor idempotency keys, so store the intent before sending, put your own end-to-end reference on the payment, and after a timeout ask the bank about that reference before sending anything again ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)).
@@ -88,6 +89,8 @@ Most bank connections are still files. ACH and wire instructions, positive pay i
 
 Banks report in two families of formats. In the US, BAI2 files are still everywhere. ISO 20022 replaces them with `camt.053`, the end-of-day statement of booked entries; `camt.052`, an intraday report of the account; and `camt.054`, notifications of individual debits and credits. Expect several versions across your banks and build a parser per bank, not one that assumes the standard means one shape.
 
+Every movement has to be explained three ways: by your ledger (which balance entries it moves), by the counterparty's report (the processor's settlement file, the ACH return and settlement files, the card issuer's settlement report, the bank's paid-check file, the wire or instant payment confirmation), and by the bank statement (what actually moved). Reconcile all three daily, each rail against its own source of truth, with the general rules from [Payment States & Ledgers](/docs/payments/payment-states#reconciliation): breaks are records with owners, fixed by correcting entries, on a data path separate from the payment flow. Each disbursement in the ledger matches exactly one external record, and a merchant's question, "which payments make up this $3,812.40 deposit?", is one query because each payout lists the ledger transactions it pays.
+
 Reconciliation is matching, and the shapes are uneven:
 
 - **One to one:** a wire matches a transfer you initiated, by your end-to-end reference.
@@ -96,7 +99,7 @@ Reconciliation is matching, and the shapes are uneven:
 
 What doesn't match goes to an unmatched-items queue, each item with an owner, an age and a deadline. Money that arrives and can't be identified, a credit with no reference, is one of those items: it sits in a suspense account until someone claims it, and goes back to the sender if nobody does. Tolerances exist only for documented costs with a reason, like a wire fee your bank charges per transfer; "within five dollars" is how a slow leak becomes a large one.
 
-An unexplained break is a stop, not a ticket: it holds the next payout run until someone explains it. Intraday reports earn their keep here: they tell you whether today's payouts are funded before the bank's cutoff, not after.
+An unexplained break is a stop, not a ticket: it holds the next payout run until someone explains it. Intraday reports earn their keep here: they tell you whether today's payouts are funded before the bank's cutoff, not after. At month end the reconciled bank balances are what finance closes the books against, so a break found after the close is a correction in the next open period, never an edit to a closed one ([Accounting](/docs/payments/accounting#closed-periods-stay-closed)).
 
 Monitoring this pipeline, from a failed connection or a missing acknowledgement to a file that arrived and never reached the ledger, is in [Operating the Platform](/books/payments/operating-the-platform#watching-the-pipeline).
 
@@ -106,9 +109,90 @@ In the UK, payment and e-money institutions don't rely on deposit insurance; the
 
 Read it as the US direction of travel written down: daily reconciliation, records that let someone else return the money if you can't, and an outside party checking.
 
+## How to Build It
+
+These are deltas against [the core data model](/books/payments/card-payments#the-core-data-model). Each real bank account gets a row and a `ledger_accounts` account of its own (`merchant_id` null), so the custodial equation is a sum over entries. Movements, files and statement lines are their own records, and matching links them.
+
+```sql
+CREATE TABLE bank_accounts (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  bank              TEXT NOT NULL,
+  purpose           TEXT NOT NULL CHECK (purpose IN ('fbo', 'reserve', 'operating', 'clearing', 'collateral')),
+  account_token     TEXT NOT NULL,             -- vaulted; never the account number
+  currency          TEXT NOT NULL,
+  ledger_account_id UUID NOT NULL REFERENCES ledger_accounts (id)
+);
+
+CREATE TABLE bank_transfers (                  -- sweeps, prefunding, wires, payout batches
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  from_account_id  UUID NOT NULL REFERENCES bank_accounts (id),
+  to_account_id    UUID REFERENCES bank_accounts (id),  -- null when paying out of the bank
+  rail             TEXT NOT NULL CHECK (rail IN ('ach', 'wire', 'rtp', 'fednow', 'book')),
+  amount           BIGINT NOT NULL,
+  currency         TEXT NOT NULL,
+  purpose          TEXT NOT NULL,              -- 'fee_sweep', 'prefund', 'payout_batch', ...
+  idempotency_key  TEXT NOT NULL UNIQUE,       -- e.g. 'fee_sweep:2026-10-26'
+  end_to_end_id    TEXT NOT NULL UNIQUE,       -- your reference on the payment message
+  status           TEXT NOT NULL CHECK (status IN ('draft', 'approved', 'sent', 'acknowledged', 'settled', 'rejected', 'unknown')),
+  created_by       TEXT NOT NULL,
+  approved_by      TEXT,                       -- never the creator
+  bank_reference   TEXT,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (approved_by IS NULL OR approved_by <> created_by)
+);
+
+CREATE TABLE bank_files (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  bank         TEXT NOT NULL,
+  direction    TEXT NOT NULL CHECK (direction IN ('outbound', 'inbound')),
+  kind         TEXT NOT NULL,                  -- 'nacha', 'pain.001', 'positive_pay', 'camt.053', 'bai2', ...
+  file_name    TEXT NOT NULL,
+  content_hash TEXT NOT NULL,
+  status       TEXT NOT NULL,                  -- built, transmitted, acknowledged, rejected, processed, failed
+  archive_uri  TEXT NOT NULL,                  -- the original bytes, encrypted and immutable
+  UNIQUE (bank, direction, file_name, content_hash)
+);
+
+CREATE TABLE bank_statement_lines (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  bank_account_id  UUID NOT NULL REFERENCES bank_accounts (id),
+  bank_file_id     UUID NOT NULL REFERENCES bank_files (id),
+  booked_on        DATE NOT NULL,
+  amount           BIGINT NOT NULL,            -- signed
+  bank_reference   TEXT,
+  end_to_end_id    TEXT,
+  matched_at       TIMESTAMPTZ
+);
+
+CREATE TABLE reconciliation_breaks (
+  id                     UUID PRIMARY KEY DEFAULT uuidv7(),
+  bank_account_id        UUID NOT NULL REFERENCES bank_accounts (id),
+  statement_line_id      UUID REFERENCES bank_statement_lines (id),
+  ledger_transaction_id  UUID REFERENCES ledger_transactions (id),
+  difference             BIGINT NOT NULL,
+  owner                  TEXT NOT NULL,
+  blocks_payouts         BOOLEAN NOT NULL DEFAULT TRUE,
+  status                 TEXT NOT NULL CHECK (status IN ('open', 'explained', 'corrected')),
+  resolution_ledger_transaction_id UUID REFERENCES ledger_transactions (id),
+  opened_at              TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+A match is a link table between statement lines and the ledger transactions or `bank_transfers` they explain, many to many, because one deposit settles thousands of payments and one batch debit pays thousands of payouts. The payout run checks for open breaks with `blocks_payouts` before it starts.
+
+## Auditing
+
+Treasury records are evidence in sponsor bank reviews, examinations, a safeguarding audit, and, if the bank or the provider fails, the claims process that decides who gets paid. The general design is in [Audit Trails](/docs/architecture/audit-trails); for treasury, make sure the record shows:
+
+- **Who created and who released every transfer,** with the approval thresholds in force at the time, as separate typed actors ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Beneficiary and bank-detail changes as their own approved events,** with the old and new values and the out-of-band verification, never an edited row ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **The original bank files,** hashed and archived as received, alongside what was parsed from them, so an examiner can check the parse.
+- **Every break and its resolution:** who explained it, the correcting entry, and the payout run it held.
+- **The daily per-owner balance file** as sent to the bank, so "what did your records say on the day the bank failed" has an exact answer.
+
 ## What This Means for the System You Build
 
-- **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)). The cash in custodial accounts equals what you owe merchants (pending and available balances), plus reserves you hold for them, plus fees you've earned but not yet swept, adjusted for money in transit either way (`acquirer_settlement_clearing` coming in, `payouts_in_transit` going out). That equation is checked daily and alerts when it doesn't hold.
+- **A treasury ledger, separate from the merchant ledger.** One account per real bank account, every movement as double entries ([Payment States & Ledgers](/docs/payments/payment-states)), synced to the general ledger finance keeps ([Accounting](/docs/payments/accounting#syncing-to-the-accounting-system)). The cash in custodial accounts equals what you owe merchants (pending and available balances), plus reserves you hold for them, plus fees you've earned but not yet swept, adjusted for money in transit either way (`acquirer_settlement_clearing` coming in, `payouts_in_transit` going out). That equation is checked daily and alerts when it doesn't hold.
 - **Per-owner balances on demand.** The file your bank or a regulator would need to pay each owner directly is a scheduled job, not a project you start during a crisis.
 - **Every movement is a record before it's a transfer.** Intent stored, approvals attached, bank reference captured, bank confirmation matched. A transfer that exists at the bank and not in your records is the worst finding a reconciliation can produce.
 - **Breaks stop payouts.** A reconciliation job that only reports is a dashboard. One that holds the next payout run on an unexplained difference is a control.
@@ -128,6 +212,7 @@ Read it as the US direction of travel written down: daily reconciliation, record
 
 **In practice**
 
+- [PYMNTS: FRFS completes implementation of ISO 20022 for Fedwire Funds Service](https://www.pymnts.com/news/banking/2025/frfs-completes-implementation-of-iso-20022-for-fedwire-funds-service/), the single-day cutover on July 14, 2025 and the retirement of the FAIM format
 - [CMS: FCA strengthens safeguarding regime for payments and e-money firms](https://cms.law/en/int/legal-updates/fca-strengthens-safeguarding-regime-for-payments-and-e-money-firms), daily reconciliations, the resolution pack, the monthly return and the audit exemption
 - [Federal Reserve: Holiday schedules](https://www.federalreserve.gov/aboutthefed/k8.htm), the Fed's holidays and its Saturday and Sunday rules
 - [Federal Reserve Financial Services: FedACH acknowledgement example](https://www.frbservices.org/binaries/content/assets/crsocms/resources/resource-centers/fedach-platform-modernization/achfahk691000134ain20200512085211959.ack), file status, counts, totals and batch edit codes

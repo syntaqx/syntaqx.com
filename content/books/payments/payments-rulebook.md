@@ -2,7 +2,7 @@
 title = "The Payments Rulebook"
 description = "How payments rules fit together: network contracts like PCI DSS and Nacha, the laws behind them, who enforces each, and which apply from merchant to provider."
 category = "Payments Industry"
-order = 1409
+order = 1411
 part = "The Rules"
 aliases = ["compliance/payments-rulebook"]
 tags = ["compliance", "payments", "regulation", "pci", "nacha"]
@@ -47,6 +47,7 @@ The rules fall into a few families. Each row names who sets the rule, how it rea
 | State surcharge and fee laws | States | Law | What a merchant may add to a payment; [Surcharging & Fees](/books/payments/surcharging-and-fees) |
 | Telemarketing Sales Rule | FTC | Law, sales by phone | Banned payment methods and recorded authorizations; [Phone Payments](/books/payments/phone-payments) |
 | UDAAP | CFPB | Law, consumer financial products | Disclosures and flows that don't mislead |
+| Personal financial data rights (Section 1033) | CFPB | Law, on account and card providers; enjoined as of October 2026 | Terms and cost of pulling bank data through aggregators |
 
 ### Financial crime and licensing
 
@@ -80,9 +81,20 @@ The engineering consequence is the same on every rail: a consumer payment isn't 
 
 **UDAAP**, the Consumer Financial Protection Act's ban on unfair, deceptive or abusive acts or practices, is the catch-all. It has no technical checklist, which is the point: a cancellation flow that's harder than signup, a fee disclosed after the fact, or a "free" trial that quietly converts are product decisions with legal exposure.
 
+**Personal financial data rights** (Section 1033 of the Dodd-Frank Act) are the open-banking rule: the CFPB's October 2024 final rule requires account and card providers to make a consumer's data available, free, to third parties the consumer authorizes. As of October 2026 it is on the books but not enforceable. A federal court in the Eastern District of Kentucky enjoined the CFPB from enforcing it on October 29, 2025, until the Bureau finishes reconsidering it; the CFPB opened that reconsideration with an advance notice in August 2025 and sent a proposed revision to the White House for review in August 2026, with whether data providers may charge for access among the open questions. For a payments system that pulls bank data (account verification, balance checks before an ACH debit), the practical reading is that access terms and costs are still moving: keep the aggregator behind an interface you can reprice or replace.
+
 ## The Financial Crime Layer
 
-**The Bank Secrecy Act** is the root of KYC (know your customer: verifying who a customer is). Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers: anyone holding 25% or more of the equity. If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting. Many payment companies aren't MSBs because FinCEN's payment processor exemption covers a business that facilitates purchases or bill payments, under an agreement with the seller, settling only through systems limited to BSA-regulated institutions. Whether you fit is fact-specific, and FinCEN's rulings on it are worth reading before the business model is set, not after.
+**The Bank Secrecy Act** is the root of KYC (know your customer: verifying who a customer is). Banks must know their customers, and the customer due diligence rule extends that to beneficial owners of business customers: anyone holding 25% or more of the equity. If you are a money services business, you register with FinCEN within 180 days of starting and renew every two years, and you run your own AML program with suspicious activity reporting.
+
+Many payment companies aren't MSBs because of the **payment processor exemption**: the money transmitter definition excludes a business that acts as a payment processor to facilitate the purchase of, or payment of a bill for, a good or service, through a clearance and settlement system, by agreement with the creditor or seller. FinCEN's administrative rulings apply it as four conditions, all of which must hold:
+
+1. The service facilitates the purchase of goods or services, or the payment of bills for them, not money transfer for its own sake.
+2. The business operates through clearance and settlement systems that admit only BSA-regulated financial institutions (the card networks, ACH, Fedwire), for money coming in and going out. Paying merchants out by check or through a system that admits non-banks breaks it.
+3. The service is provided under a formal agreement.
+4. That agreement is, at a minimum, with the seller or creditor that provided the goods or services and receives the funds.
+
+A platform that moves money for people who aren't selling anything, or pays out outside bank systems, has left the exemption. Whether you fit is fact-specific, and FinCEN's rulings are worth reading before the business model is set, not after.
 
 **OFAC sanctions** apply to every US person, with no threshold and no exemption. Screening happens at onboarding and again on payments, against the Specially Designated Nationals (SDN) list and against entities 50% or more owned by blocked persons. A match isn't a fraud signal to be weighed; it's a stop.
 
@@ -90,7 +102,7 @@ The engineering consequence is the same on every rail: a consumer payment isn't 
 
 ## Outside the US
 
-In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/books/payments/strong-customer-authentication). Its successor is agreed but not yet law: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, and the Council's member-state representatives confirmed it on April 22, 2026. As of the Council's October 2026 status report, formal adoption was still pending. Check where adoption and the application dates stand before planning against them; the obligations bite well after adoption, not on it. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
+In the EU, **PSD2** is law, not contract, and it covers both licensing (payment and e-money institutions) and conduct, most visibly [Strong Customer Authentication](/books/payments/strong-customer-authentication). Its successor is agreed but not yet law: the Council and Parliament reached a provisional agreement on PSD3 and a directly applicable Payment Services Regulation on November 27, 2025, the Council's member-state representatives confirmed it on April 22, 2026, and Parliament's ECON committee approved the agreed text on May 5, 2026. As of October 2026, neither the Parliament plenary vote, the Council's formal adoption nor publication in the Official Journal had happened, so neither text is in force and no application date is fixed. The provisional deal carried an implementation period of about 18 months after entry into force (the Council had pushed for 24), so the obligations bite well after adoption, not on it; check the final text's dates before planning against them. The UK runs its own regime under the Payment Services Regulations 2017 and Electronic Money Regulations 2011, overseen by the FCA. GDPR applies to the personal data in all of it ([GDPR](/docs/compliance/gdpr)).
 
 Canada is closest to home and still different at every layer: Payments Canada's rules instead of Nacha's, a federal code of conduct for card fees, Bank of Canada supervision of payment providers under the Retail Payment Activities Act since 2025, and FINTRAC registration for anyone paying bills on others' behalf. [Payments in Canada](/books/payments/canada) covers it.
 
@@ -114,11 +126,13 @@ The useful question at each stage is not "are we compliant?" but "which contract
 - [CFPB: Regulation E, 12 CFR 1005.11](https://www.consumerfinance.gov/rules-policy/regulations/1005/11/), error resolution timeframes for electronic fund transfers
 - [CFPB: Regulation Z, 12 CFR 1026.13](https://www.consumerfinance.gov/rules-policy/regulations/1026/13/), credit card billing-error notice, acknowledgment and resolution deadlines
 - [31 CFR 1022.380](https://www.law.cornell.edu/cfr/text/31/1022.380), MSB registration within 180 days and renewal every two years
-- [31 CFR 1010.100](https://www.law.cornell.edu/cfr/text/31/1010.100), the money transmitter definition and its payment processor exclusion
+- [31 CFR 1010.100](https://www.law.cornell.edu/cfr/text/31/1010.100), the money transmitter definition and its payment processor exclusion in (ff)(5)(ii)(B)
 - [31 CFR 1010.230](https://www.law.cornell.edu/cfr/text/31/1010.230), beneficial ownership identification for legal entity customers and the 25 percent threshold
 - [16 CFR 314.4](https://www.law.cornell.edu/cfr/text/16/314.4), the GLBA Safeguards Rule's elements: written risk assessment, MFA, a written incident response plan, and FTC notice within 30 days for events affecting 500 or more consumers
 - [Council of the EU: Current financial services legislative proposals, 2 October 2026](https://data.consilium.europa.eu/doc/document/ST-13589-2026-INIT/en/pdf), PSD3 and PSR: provisional agreement on November 27, 2025 and COREPER confirmation on April 22, 2026
+- [European Parliament: Legislative Train, Payment services regulation](https://www.europarl.europa.eu/legislative-train/theme-an-economy-that-works-for-people/file-revision-of-eu-rules-on-payment-services), status as of September 20, 2026: provisional agreement November 27, 2025, ECON approval May 5, 2026, formal adoption still required before entry into force
 - [12 U.S.C. 5531](https://www.law.cornell.edu/uscode/text/12/5531), the prohibition on unfair, deceptive or abusive acts or practices
+- [CFPB: Personal Financial Data Rights Reconsideration](https://www.consumerfinance.gov/rules-policy/rules-under-development/personal-financial-data-rights-reconsideration/), the August 22, 2025 advance notice reopening the Section 1033 rule
 
 **Reference**
 
@@ -126,7 +140,7 @@ The useful question at each stage is not "are we compliant?" but "which contract
 - [Nacha: Risk and Quality Rules fact sheet](https://www.nacha.org/system/files/2019-05/Risk-and-Quality-Rules-Fact-Sheet.pdf), enforcement through the ODFI and the 30-day reduction period
 - [Mastercard: Security Rules and Procedures, Merchant Edition, August 2026 (archived PDF)](https://web.archive.org/web/20260919122811/https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf), section 11.6: acquirers must check MATCH before signing a merchant
 - [Visa: Security and compliance](https://corporate.visa.com/en/resources/security-compliance.html), the brands requiring acquirers to ensure PCI DSS compliance of their merchants and agents
-- [FinCEN: FIN-2014-R009](https://www.fincen.gov/sites/default/files/administrative_ruling/FIN-2014-R009.pdf), the four conditions of the payment processor exemption
+- [FinCEN: FIN-2014-R009, Application of MSB Regulations to a Company Acting as an Independent Sales Organization and Payment Processor](https://www.fincen.gov/resources/statutes-regulations/administrative-rulings/application-money-services-business), August 27, 2014: the four conditions of the payment processor exemption, and disbursement outside BSA-regulated systems defeating it
 - [FinCEN: MSB Registration](https://www.fincen.gov/money-services-business-msb-registration), who registers and how
 - [OFAC: Sanctions compliance FAQs](https://ofac.treasury.gov/faqs/topic/1501), obligations of all US persons and the 50 percent rule
 - [CSBS: Money Transmission Modernization Act](https://www.csbs.org/csbs-money-transmission-modernization-act-mtma), nationwide standards for money transmitter licensing
@@ -135,4 +149,6 @@ The useful question at each stage is not "are we compliant?" but "which contract
 **In practice**
 
 - [Stripe: Connect risk management](https://docs.stripe.com/connect/risk-management), how a provider splits MATCH checks, licensing and negative balance liability with platforms
+- [Moore & Van Allen: CFPB Enjoined from Enforcing Personal Financial Data Rights Rule 1033](https://www.mvalaw.com/data-points/cfpb-enjoined-from-enforcing-personal-financial-data-rights-rule-1033), the Eastern District of Kentucky injunction of October 29, 2025, lasting until reconsideration is complete
+- [Consumer Finance Monitor: CFPB Sends New Section 1033 Open Banking Proposal to OIRA for Review](https://www.consumerfinancemonitor.com/2026/08/06/cfpb-sends-new-section-1033-open-banking-proposal-to-oira-for-review/), August 6, 2026: the proposed revision under White House review, and data access fees as an expected issue
 - [Hogan Lovells Cadwalader: Final texts for PSD3 and PSR awaited](https://www.hlc.com/en/publications/final-texts-for-psd3-and-psr-awaited-as-european-parliament-and-council-of-eu-announce-provisional), what the provisional agreement covers and its expected implementation period

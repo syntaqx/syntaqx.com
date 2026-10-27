@@ -3,12 +3,12 @@ title = "Designing the Payments API"
 nav_title = "The Payments API"
 description = "The surface merchants integrate with: payment objects and intents, modifications, keys and the client, test mode, versioning, errors, events and platforms."
 category = "Payments Industry"
-order = 1413
+order = 1416
 part = "Taking Payments"
 tags = ["payments", "api-design", "webhooks", "testing", "versioning", "sdk"]
 +++
 
-Onboarding decides who may take payments. Everything before it in this volume is machinery a merchant never sees: networks, rails and rules. What they see is an API, a set of client libraries, a dashboard and a stream of events, and the quality of those decides whether a provider gets integrated at all. The playbook's [API design principles](/docs/api-design/principles) apply in full; this chapter is what's particular to an API that moves money, drawn from how Stripe, Adyen, Braintree and Payabli have solved the same problems.
+Onboarding decides who may take payments. Everything before it in this volume is machinery a merchant never sees: networks, rails and rules. What they see is an API, a set of client libraries, a dashboard and a stream of events, and the quality of those decides whether a provider gets integrated at all. The playbook's [API design principles](/docs/api-design/principles) apply in full; this chapter is what's particular to an API that moves money, drawn from how Stripe, Adyen, Braintree and Checkout.com have solved the same problems.
 
 ## The Objects
 
@@ -33,6 +33,32 @@ A payments API is a small set of nouns, each with its own lifecycle:
 
 **The public states are not the internal ones.** Merchants need to know what they can do next; your system needs to know exactly where a payment is ([Payment States & Ledgers](/docs/payments/payment-states)). Map the internal machine, with its in-flight states and per-method finality, onto a smaller public one, and keep the mapping in one place. A merchant who sees `processing` doesn't need to know you're waiting on a processor timeout query.
 
+## Waiting on the Customer
+
+A payment that needs the customer mid-flight (a 3-D Secure challenge, a redirect to a bank, a wallet confirmation, a voucher to pay in a shop) is a real state, not a timeout: `requires_action` in the [payment state machine](/docs/payments/payment-states), carrying what the client has to do next.
+
+```json
+{
+  "id": "01932c6c-7616-7590-a8db-cb4b0e4d1c8a",
+  "status": "requires_action",
+  "amount": 12000,
+  "currency": "EUR",
+  "next_action": {
+    "type": "redirect",
+    "redirect_url": "https://acs.example-bank.eu/challenge/9f2c",
+    "return_url": "https://shop.example/checkout/complete",
+    "expires_at": "2026-10-22T14:38:45Z"
+  }
+}
+```
+
+- **The server resumes; the client never decides.** After the step, the client tells the server to continue (or the server hears from the authentication provider or the bank), and the server moves the payment on. A return to `return_url` proves nothing by itself.
+- **It expires.** A customer who walks away leaves the payment in `requires_action` forever unless it times out to a failure with a reason.
+- **The response is `200` with a status, not an error.** Needing the customer is a normal outcome of a valid request; a `402` makes every client treat a recoverable step as a failure. Reserve `402` for real declines.
+- **Webhooks report the transition,** so a client that loses its connection mid-step learns the outcome from the event, not the redirect ([Webhooks](/docs/api-design/webhooks)).
+
+The `next_action` types are an open list: Stripe's include redirects, SDK-driven 3-D Secure, and displaying bank transfer instructions or a voucher. [SCA & 3-D Secure](/books/payments/strong-customer-authentication#modeling-the-extra-step-in-an-api) covers what the 3-D Secure step adds.
+
 ## Modifications Are Requests
 
 After a payment is authorized, everything else is a request against it: capture (all or part), cancel before capture, refund after capture, and adjust the authorization amount. Adyen makes each a separate call with its own reference, with the outcome reported by webhook, and offers a fifth, **reversal**, for when the merchant isn't sure whether the payment was captured: it cancels or refunds, whichever applies. That's the honest model for an API sitting on networks that answer late.
@@ -51,14 +77,14 @@ A payments API has two kinds of caller, and they get different keys:
 
 The card number goes from the customer's device straight to the provider, through hosted fields or an SDK, and the merchant's server only handles the token. That's what keeps the merchant's [PCI scope](/docs/compliance/pci-dss) small, and it's why the client-side libraries are part of the API, not a convenience.
 
-**Keys need a lifecycle.** Prefix them by kind and mode (`pk_live_`, `sk_test_`) so a leaked key is recognizable, show live secrets once at creation, let a rotated key overlap its replacement for a few days (Stripe allows up to seven) so deploys can catch up, and let merchants restrict keys by IP range. [API Authentication](/docs/api-design/authentication) covers the general case.
+Key prefixes, show-once secrets and overlapping rotation follow [API Authentication](/docs/api-design/authentication#prefixes-say-what-a-key-is) and its [Rotation](/docs/api-design/authentication#rotation) section. The payments twist is the mode in the prefix (`pk_live_`, `sk_test_`), so a test key can never move money and a leaked live key is recognizable on sight.
 
 ## Test Mode
 
 Merchants build against a test environment for weeks before they process a real payment, so test mode is a product, not a staging server.
 
 - **Separate keys, separate data.** Test and live keys each see only their own objects, and nothing crosses between them. Card networks never see a test payment.
-- **Magic inputs for every outcome.** Test card numbers that succeed, decline generically, decline for insufficient funds, require 3-D Secure every time or only off-session, open a fraud dispute, or raise an early fraud warning (an issuer's fraud report, [Fraud & Risk](/books/payments/fraud-and-risk#the-two-costs)). Stripe's list is the model; Adyen and Payabli publish their own. Disputes in test mode resolve by evidence values that win or lose on purpose.
+- **Magic inputs for every outcome.** Test card numbers that succeed, decline generically, decline for insufficient funds, require 3-D Secure every time or only off-session, open a fraud dispute, or raise an early fraud warning (an issuer's fraud report, [Fraud & Risk](/books/payments/fraud-and-risk#the-two-costs)). Stripe's list is the model; Adyen and Braintree publish their own. Disputes in test mode resolve by evidence values that win or lose on purpose.
 - **Simulated time.** Subscriptions renew monthly and disputes take weeks, so test clocks advance a customer's time and run everything that would have happened.
 - **Simulated events.** A command-line tool that triggers any event type against a local endpoint, so merchants can build their webhook handlers before the events would naturally occur.
 - **Many sandboxes.** One per developer and one for CI, so tests don't trip over each other's data.
@@ -67,15 +93,16 @@ Build it as its own deployment of the same code: a separate ledger, processor ad
 
 ## Versioning
 
-A payments API can't break integrations, because a broken integration stops a business taking money. The pattern that works is **date-based versions pinned per account**: a merchant's requests run on the version they integrated against until they choose to upgrade, a header (`Stripe-Version`) overrides it per request, and webhook endpoints are pinned to a version when they're created. Stripe now ships monthly versions with no breaking changes and two named major releases a year, which are the only ones with breaking changes; Adyen versions in the URL path (`/v68/payments`, for one). Either way, upgrades are something the merchant does deliberately, endpoint by endpoint, with the old and new versions running side by side. [Versioning](/docs/api-design/versioning) covers the general strategy.
+A payments API can't break integrations, because a broken integration stops a business taking money. Date-based versions pinned per account, with a per-request override, are the general strategy ([Versioning](/docs/api-design/versioning#why-dates)). What payments adds: **webhook endpoints are pinned to a version too**, because an event shaped for the wrong version is a payment the merchant's handler can't read. Stripe ships monthly versions without breaking changes and two named major releases a year that carry them, and pins each webhook endpoint's payload to a version; Adyen versions in the URL path (`/v68/payments`, for one). Either way, upgrades are something the merchant does deliberately, endpoint by endpoint, with old and new running side by side.
 
 ## Errors, Lists and Limits
 
-- **Errors say what to do next.** A decline is not a bug: Stripe returns HTTP 402 with a type (`card_error`), a code, the issuer's decline code, and advice on whether retrying could help. Merchants need all of it to decide between asking for another card and trying again tomorrow ([Stored Cards & Recurring Billing](/books/payments/stored-credentials#declines-and-the-rules-on-retrying)). Every response carries a request ID support can look up ([Errors](/docs/requests/error-responses)).
+The general rules for [errors](/docs/requests/error-responses), [pagination](/docs/requests/pagination#cursors-by-default) and [rate limits](/docs/requests/rate-limiting) apply unchanged: one error shape with a request ID, cursors because payments arrive constantly, and a `429` that says which limit was hit. What a payments API adds:
+
+- **A decline is not a bug.** Stripe returns HTTP 402 with a type (`card_error`), a code, the issuer's decline code, and advice on whether retrying could help. Merchants need all of it to decide between asking for another card and trying again tomorrow ([Stored Cards & Recurring Billing](/books/payments/stored-credentials#declines-and-the-rules-on-retrying)).
 - **Idempotency is mandatory, and its window matters.** Every write accepts an idempotency key, and the stored result replays for retries ([Idempotency](/docs/payments/idempotency)). Providers keep keys for very different spans: at least 24 hours on Stripe's v1 API and 30 days on v2, 7 to 14 days on Adyen, 72 hours on Checkout.com. The window has to outlast the longest retry a client will make, and a key reused with different parameters is an error (Stripe returns `idempotency_error`), not a silent replay. An IETF draft standardizes the `Idempotency-Key` header but isn't an RFC yet.
-- **Lists use cursors,** not page numbers, because payments arrive constantly ([Pagination](/docs/requests/pagination)). Related objects expand on request instead of always being embedded.
 - **Metadata is the merchant's,** small and bounded (Stripe allows 50 keys of 500 characters), and never used for authorization decisions.
-- **Rate limits say why.** Stripe allows 100 requests a second globally in live mode and tells you, in a header, whether a 429 came from a global, endpoint, concurrency or resource-specific limit ([Rate Limiting](/docs/requests/rate-limiting)).
+- **Rate limits protect the money path first.** Stripe allows 100 requests a second globally in live mode and says in a header whether a `429` came from a global, endpoint, concurrency or resource-specific limit, so a reporting script can't starve checkout.
 
 ## Events
 
@@ -90,9 +117,9 @@ The API tells merchants what they asked for; events tell them what happened afte
 | Accounts | updated, requirements due (with a deadline), capabilities changed |
 | Payment methods | updated by an [account updater](/books/payments/stored-credentials#keeping-the-card-alive), mandate revoked |
 
-**Missed events can be listed.** Webhooks fail; an events endpoint that returns recent events, filterable by type, lets a merchant catch up without a support ticket (Stripe keeps full event payloads for 30 days).
+**Missed events can be listed.** Webhooks fail; an events endpoint that returns recent events, filterable by type, lets a merchant catch up without a support ticket. Stripe's lists events going back 30 days.
 
-Delivery is at least once, unordered and signed, as [Webhooks](/docs/api-design/webhooks) describes: Stripe retries for up to three days, Adyen for much longer, and both sign every delivery. Two newer choices are worth copying. **Thin events** carry only the event type and the object's ID, and the receiver fetches the current object, so payloads never go stale and don't depend on API version. **Event destinations** beyond webhooks, like a cloud event bus, suit merchants who'd rather not run a public endpoint.
+Delivery is at least once, unordered and signed, as [Webhooks](/docs/api-design/webhooks) describes. Stripe retries live-mode deliveries for up to three days; Adyen moves a failing webhook to a retry queue and keeps trying for up to 30 days; both sign every delivery. Two newer choices are worth copying. **Thin events** carry only the event type and the object's ID, and the receiver fetches the current object, so payloads never go stale and don't depend on API version. **Event destinations** beyond webhooks, like a cloud event bus, suit merchants who'd rather not run a public endpoint.
 
 ## Acting for Platforms
 
@@ -100,18 +127,83 @@ When a platform calls the API for one of its merchants, the request says so: Str
 
 ## SDKs, the Spec and Reports
 
-- **Publish the OpenAPI specification,** and generate typed client libraries from it, so every language gets every field on the same day. Stripe and Adyen both publish theirs. The libraries pin the API version they were built for and follow semantic versioning, so a breaking API change is a major SDK release.
-- **Reports are asynchronous jobs.** A merchant asks for a report over a period, the provider builds a file, and an event says it's ready to download. The payout reconciliation report, every transaction behind every payout, is the one merchants ask for most. Watch units: APIs speak in minor units and many CSV reports in major units.
+- **Publish the OpenAPI specification,** and generate typed client libraries from it, so every language gets every field on the same day. Stripe and Adyen both publish theirs. The libraries pin the API version they were built for and follow semantic versioning, so a breaking API change is a major SDK release ([SDK Design](/docs/api-design/sdk-design#versioning)).
+- **Reports are asynchronous jobs.** A merchant asks for a report over a period, the provider builds a file, and an event says it's ready to download ([Long-Running Operations](/docs/requests/long-running-operations)). The payout reconciliation report, every transaction behind every payout, is the one merchants ask for most. Watch units: APIs speak in minor units and many CSV reports in major units.
+
+## How to Build It
+
+The API surface adds keys, the next action on a waiting payment, idempotent replays and the event log, as deltas on [the core data model](/books/payments/card-payments#the-core-data-model):
+
+```sql
+CREATE TABLE api_keys (
+  id            uuid PRIMARY KEY,
+  merchant_id   uuid NOT NULL REFERENCES merchants (id),
+  kind          text NOT NULL,         -- publishable, secret, restricted
+  livemode      boolean NOT NULL,
+  prefix        text NOT NULL,         -- pk_live_, rk_test_, shown in logs
+  secret_hash   text NOT NULL,         -- never the key itself
+  permissions   jsonb,                 -- restricted keys only
+  expires_at    timestamptz,           -- set when rotated, for the overlap
+  last_used_at  timestamptz
+);
+
+ALTER TABLE payments
+  ADD COLUMN next_action        jsonb,        -- set only in requires_action
+  ADD COLUMN action_expires_at  timestamptz,
+  ADD COLUMN api_version        text NOT NULL;
+
+CREATE TABLE idempotency_records (
+  merchant_id     uuid NOT NULL REFERENCES merchants (id),
+  key             text NOT NULL,
+  request_hash    text NOT NULL,       -- same key, different body is an error
+  response_status int,
+  response_body   jsonb,
+  expires_at      timestamptz NOT NULL,
+  PRIMARY KEY (merchant_id, key)
+);
+
+CREATE TABLE events (
+  id           uuid PRIMARY KEY,
+  merchant_id  uuid NOT NULL REFERENCES merchants (id),
+  type         text NOT NULL,          -- payment.captured, dispute.created
+  object_type  text NOT NULL,
+  object_id    uuid NOT NULL,
+  api_version  text NOT NULL,
+  created_at   timestamptz NOT NULL
+);
+
+CREATE TABLE webhook_deliveries (
+  id           uuid PRIMARY KEY,
+  event_id     uuid NOT NULL REFERENCES events (id),
+  endpoint_id  uuid NOT NULL,
+  attempt      int NOT NULL,
+  status_code  int,
+  next_retry_at timestamptz
+);
+```
+
+Write the event row in the same transaction as the state change it reports, and deliver from the table, so an event is never announced for a change that rolled back.
+
+## Auditing
+
+API records are evidence when a merchant says "we never sent that refund", when a key leaks, and when a payment's history has to be explained to an issuer or a regulator. The general design is in [Audit Trails](/docs/architecture/audit-trails); for the API, make sure the record shows:
+
+- **Which key made every write,** by key ID and prefix, never the secret, with the request ID and source IP, so a leaked key's actions can be listed and reversed.
+- **Key lifecycle:** creation, scope changes, rotation and revocation, with the person who did each ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Requests made on a merchant's behalf,** with the platform and the merchant account both recorded, since either can be asked.
+- **Every webhook delivery attempt** and its response code, so "we never got the event" has an answer.
+- **Who in support viewed or acted on a merchant's account** ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 
 - **Intents for payments, separate objects for refunds, disputes and payouts,** and a public state machine mapped from the internal one.
+- **`requires_action` as a real, expiring state** with a typed next action, resumed by the server and confirmed by webhook.
 - **Modifications as requests with asynchronous results,** and refunds as transactions that can fail and take a balance negative.
 - **Publishable, restricted and secret keys,** client secrets per payment, and card data that never touches the merchant's server.
 - **A real test mode:** separate data, magic inputs for every outcome, test clocks, triggered events.
-- **Date-pinned versions,** with deliberate, side-by-side upgrades.
-- **Errors with decline codes and advice,** mandatory idempotency with a window longer than any retry, cursors, and rate limits that explain themselves.
-- **A stable, signed event catalog,** and a published spec that generates the SDKs.
+- **Date-pinned versions for requests and webhook endpoints,** with deliberate, side-by-side upgrades.
+- **Errors with decline codes and advice,** and mandatory idempotency with a window longer than any retry.
+- **A stable, signed event catalog,** written with the change it reports, and a published spec that generates the SDKs.
 
 ## References
 
@@ -122,25 +214,29 @@ When a platform calls the API for one of its merchants, the request says so: Str
 
 **In practice**
 
-- [Stripe: The PaymentIntent object](https://docs.stripe.com/api/payment_intents/object), statuses, capture methods and the client secret
+- [Stripe: The PaymentIntent object](https://docs.stripe.com/api/payment_intents/object), statuses, capture methods, the client secret and `next_action` types
 - [Stripe: Migrating from the Charges API](https://docs.stripe.com/payments/payment-intents/migration/charges), why intents replaced single-call charges
 - [Adyen: Modify payments](https://docs.adyen.com/online-payments/modify-payments), capture, cancel, refund, reversal and authorization adjustment as separate requests
 - [Braintree: Transaction statuses](https://developer.paypal.com/braintree/docs/reference/general/statuses), a transaction's lifecycle through settlement
 - [Stripe: API keys](https://docs.stripe.com/keys), publishable, secret and restricted keys, prefixes and rotation
 - [Stripe: Testing](https://docs.stripe.com/testing), test cards for declines, authentication and disputes
+- [Adyen: Test card numbers](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers), test cards per brand and outcome
+- [Braintree: Testing and going live](https://developer.paypal.com/braintree/docs/reference/general/testing), sandbox card numbers and amounts that trigger declines
 - [Stripe: Test clocks](https://docs.stripe.com/billing/testing/test-clocks/api-advanced-usage), simulated time for subscriptions
 - [Stripe: Sandboxes](https://docs.stripe.com/sandboxes), isolated test environments
 - [Stripe: Versioning](https://docs.stripe.com/api/versioning), date-based versions, monthly releases and twice-yearly majors
 - [Adyen: API versioning](https://docs.adyen.com/development-resources/versioning), versions in the URL path
 - [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests), key storage and replay, including errors
+- [Stripe: API v2 overview](https://docs.stripe.com/api-v2-overview), idempotent replay within 30 days on v2
 - [Adyen: API idempotency](https://docs.adyen.com/development-resources/api-idempotency), keys kept 7 to 14 days
 - [Checkout.com: Idempotency](https://www.checkout.com/docs/developer-resources/api/idempotency), keys kept 72 hours
 - [Stripe: Errors](https://docs.stripe.com/api/errors), error types, decline codes and advice codes
 - [Stripe: Rate limits](https://docs.stripe.com/rate-limits), global and per-endpoint limits and why a request was limited
+- [Stripe: Metadata](https://docs.stripe.com/api/metadata), limits on keys and values
+- [Stripe: Receive events in your webhook endpoint](https://docs.stripe.com/webhooks), live-mode retries for up to three days and versioned event payloads
+- [Stripe: List all events](https://docs.stripe.com/api/events/list), events listable going back 30 days
+- [Adyen: Troubleshoot webhooks](https://docs.adyen.com/development-resources/webhooks/troubleshoot/), the retry queue and retries for up to 30 days
 - [Stripe: Event destinations](https://docs.stripe.com/event-destinations), thin and snapshot events and non-webhook destinations
 - [Stripe: Connect authentication](https://docs.stripe.com/connect/authentication), acting on behalf of connected accounts
 - [Stripe: OpenAPI specification](https://github.com/stripe/openapi), the published spec behind the SDKs
 - [Stripe: Reporting API](https://docs.stripe.com/reports/api), asynchronous report runs
-- [Payabli: API overview](https://docs.payabli.com/developers/api-reference/api-overview.md), environments, idempotency and rate limits
-- [Stripe: API v2 overview](https://docs.stripe.com/api-v2-overview), idempotent replay within 30 days on v2
-- [Stripe: Metadata](https://docs.stripe.com/api/metadata), limits on keys and values

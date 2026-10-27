@@ -2,12 +2,12 @@
 title = "Cash Payments"
 description = "Letting customers pay in cash: retail bill-pay networks, real-time validation and posting, money orders, money transmitter rules, BSA reporting and vouchers."
 category = "Payments Industry"
-order = 1406
+order = 1407
 part = "How Money Moves"
 tags = ["payments", "cash", "bill-pay", "money-orders", "aml", "vouchers"]
 +++
 
-Cash looks like the payment method software doesn't need to think about, until the customers who rely on it show up. The FDIC's 2023 survey found 4.2% of US households unbanked, about 5.6 million, two thirds of them using cash only, and another 14.2% underbanked. They pay rent, utilities, loans, insurance and child support, and the businesses collecting from them still need those payments posted to the right account the same day. A platform reaches them through retail cash networks, where a customer pays at a store counter and the money arrives electronically, and through money orders. Outside the US, cash vouchers do the same job at much larger scale.
+Cash looks like the payment method software doesn't need to think about, until the customers who rely on it show up. The FDIC's 2023 survey found 4.2% of US households unbanked, about 5.6 million, two thirds of them using cash only, and another 14.2% underbanked. They pay phone bills, loans, insurance, online orders, rent and child support, and the businesses collecting from them still need those payments posted to the right account the same day. A platform reaches them through retail cash networks, where a customer pays at a store counter and the money arrives electronically, and through money orders. Outside the US, cash vouchers do the same job at much larger scale.
 
 ## How a Retail Cash Payment Works
 
@@ -19,7 +19,7 @@ The payer identifies the bill one of two ways: a **barcode** tied to their accou
 
 ## Integrating a Network
 
-**Payment references.** Each payer gets a barcode or reference tied to their account. Make it reusable for recurring bills like rent, or one-time with a fixed amount and an expiry for a specific invoice; VanillaDirect, for one, lets the biller set the amount, expiry and whether a barcode is single-use. Show the nearest locations, from the network's store locator data, wherever you show the barcode.
+**Payment references.** Each payer gets a barcode or reference tied to their account. Make it reusable for recurring bills like a phone plan or a loan installment, or one-time with a fixed amount and an expiry for a specific invoice; VanillaDirect, for one, lets the biller set the amount, expiry and whether a barcode is single-use. Show the nearest locations, from the network's store locator data, wherever you show the barcode.
 
 **Real-time validation at the counter.** The better networks call the biller before taking the cash. PayNearMe documents an order validation callback that checks the account and an authorization callback that accepts or declines the payment, with a 10-second default deadline; it doesn't retry, and a timeout declines the payment. That endpoint is now in the checkout path of a store you've never seen, so it's fast, highly available and decisive:
 
@@ -33,7 +33,7 @@ The payer identifies the bill one of two ways: a **barcode** tied to their accou
 
 **Settlement is a separate, slower event.** The network holds the funds and settles them later, net of its fees, to the biller's bank account. Few networks publish the timing, so measure it, and reconcile in two steps: confirmations against your postings, then confirmations net of fees against the settlement deposits ([Treasury](/books/payments/treasury)). The confirmation payload usually tells you the gross amount, the fee, the net and the store, which is everything the reconciliation needs.
 
-**Fees and limits are per biller and per store.** The payer typically pays a fee of $1.50 to $5.99, unless the biller absorbs it. Limits vary: some retailers cap a payment at $500, others allow $1,500 a day; the IRS's retail cash program allows $500 a payment and $1,000 a day. Rent above the cap means more than one payment or another method, so the product should say so before the customer is at the counter.
+**Fees and limits are per biller and per store.** The payer typically pays a fee of roughly $2 to $6 unless the biller absorbs it: one utility's retail partners charge $1.95, and Walmart's bill payment runs from $2.99 to $5.99. Limits vary: some retailers cap a payment at $500, others allow $1,500 a day; the IRS's retail cash program allows $500 a payment and $1,000 a day. A bill above the cap means more than one payment or another method, so the product should say so before the customer is at the counter.
 
 **Reversals and refunds.** A cash payment has no chargeback, but networks still send reversal events for voids at the counter and corrections, so handle them as reversing ledger entries. Refunds can't go back to someone's cash: refund by check, card or bank transfer, and collect the details when you need them.
 
@@ -41,7 +41,7 @@ The payer identifies the bill one of two ways: a **barcode** tied to their accou
 
 Money orders are the cash customer's check, and they're deposited like checks ([Accepting Checks](/books/payments/checks)).
 
-- **USPS money orders** max out at $1,000, so a $1,600 rent comes as two. They cost $2.65 up to $500 and $3.75 up to $1,000, never expire, and since 2025 carry a QR code for verification alongside the watermark and security thread.
+- **USPS money orders** max out at $1,000, so a $1,600 payment comes as two. They cost $2.65 up to $500 and $3.75 up to $1,000, never expire, and since 2025 carry a QR code for verification alongside the watermark and security thread.
 - **Availability depends on the issuer.** Under Regulation CC, a USPS money order deposited in person is available the next business day, otherwise the second; other issuers' money orders are ordinary checks.
 - **Counterfeits are the risk.** The FTC warns fake money orders can take weeks to be discovered, and the depositor repays the bank. Verify USPS orders with the Postal Service's tool, other issuers with theirs, and treat a money order like any check until its return window passes.
 - **They can't be converted to ACH.** Money orders are excluded from check conversion.
@@ -50,22 +50,22 @@ Money orders are the cash customer's check, and they're deposited like checks ([
 
 Taking someone's money and passing it to someone else is money transmission, which is licensed in nearly every state and registered federally. Bill payment avoids that through two exemptions, and the integration has to fit them.
 
-- **Federally, the payment processor exemption.** FinCEN's rules exclude a business that only facilitates the purchase of goods or services or the payment of bills "through a clearance and settlement system by agreement with the creditor or seller". FinCEN reads that as four conditions: it facilitates purchases or bill payments, it operates through clearance and settlement systems that admit only Bank Secrecy Act-regulated institutions, under a formal agreement, with the seller or creditor receiving the funds. A 2008 ruling found a gift shop collecting cash as a utility's authorized agent wasn't a money transmitter, because it took payments only for the utilities it contracted with.
+- **Federally, the payment processor exemption,** whose conditions are in [The Financial Crime Layer](/books/payments/payments-rulebook#the-financial-crime-layer). The cash-specific precedent is a 2008 FinCEN ruling that a gift shop collecting cash as a utility's authorized agent wasn't a money transmitter, because it took payments only for the billers it contracted with: the shape of every retail counter in a bill-pay network.
 - **In the states, the agent-of-payee exemption.** The Money Transmission Modernization Act, enacted in full or in part by 31 states by September 2026, exempts an agent collecting for a payee when there's a written agreement directing the agent to collect, the payee holds the agent out as accepting payments on its behalf, and the payer's obligation is extinguished when the agent receives the money. That last condition is a product requirement: the moment the network confirms a cash payment, the payer has paid, whether or not the money has reached the biller.
 
 [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider) covers the licensing question in general; for cash, the network usually holds the licenses and the biller's contract with the network carries the exemption.
 
 **Bank Secrecy Act reporting** follows the cash, and some of it reaches the biller directly:
 
-- **Form 8300.** Any trade or business that receives more than $10,000 in cash in one transaction, or in related transactions, must report it to the IRS within 15 days. Rental of property is a listed example, and payments within 24 hours are related. A landlord platform that lets a tenant pay a year's rent in cash at a counter is within reach of this rule.
+- **Form 8300.** Any trade or business that receives more than $10,000 in cash in one transaction, or in related transactions, must report it to the IRS within 15 days. Rental of property is a listed example, and payments within 24 hours are related. A platform that lets a customer pay a year's rent or a semester's tuition in cash at a counter is within reach of this rule.
 - **Structuring,** splitting cash to stay under $10,000, is a federal crime regardless of whether the money is clean. A payer making repeated $9,500 cash payments is a pattern to flag, not a convenience to offer.
 - **Networks and banks file the rest:** currency transaction reports for cash over $10,000, records of money order sales between $3,000 and $10,000, and suspicious activity reports. [OFAC screening](/books/payments/payments-rulebook#the-financial-crime-layer) applies to everyone, at any amount.
 
 ## Where Cash Is Required
 
-Some places require businesses to take cash. New Jersey (2019), New York City (2020), Colorado (2021), Philadelphia and, since March 21, 2026, New York State require in-person retail businesses to accept it, with exceptions that vary. None targets rent, but a platform serving retail can't go cashless there.
+Some places require businesses to take cash. Philadelphia (from July 1, 2019), New Jersey (2019), New York City (Local Law 34 of 2020, with rules effective October 8, 2020), Colorado (2021) and, since March 21, 2026, New York State require in-person retail businesses to accept it, with exceptions that vary. None targets bill payment, but a platform serving retail can't go cashless there.
 
-Rent has its own rules, like California's ([Accepting Checks](/books/payments/checks#rent-and-paper)). Rules like these are why a payer's allowed payment methods belong in data, per account and with an expiry, not in code.
+Some kinds of payment have their own rules, like California's for rent ([Accepting Checks](/books/payments/checks#who-still-pays-by-paper)). Rules like these are why a payer's allowed payment methods belong in data, per account and with an expiry, not in code.
 
 ## Cash Around the World
 
@@ -95,8 +95,6 @@ They share a design: the payment is **pending with an expiry**, most customers w
 
 **Specifications**
 
-- [31 CFR 1010.100: Definitions](https://www.law.cornell.edu/cfr/text/31/1010.100), money transmitter and the payment processor exclusion
-- [FinCEN: FIN-2014-R009](https://www.fincen.gov/sites/default/files/administrative_ruling/FIN-2014-R009.pdf), the four conditions of the payment processor exemption
 - [FinCEN: Authorized agent for receipt of utility payments](https://www.fincen.gov/resources/statutes-regulations/administrative-rulings/whether-authorized-agent-receipt-utility), a retail agent of billers that isn't a money transmitter
 - [CSBS: Money Transmission Modernization Act](https://mortgage.nationwidelicensingsystem.org/about/Documents/CSBS%20Money%20Transmission%20Modernization%20Act.pdf), the agent-of-payee exemption in section 3.01(b)
 - [31 U.S.C. 5324](https://www.law.cornell.edu/uscode/text/31/5324), structuring
@@ -110,6 +108,9 @@ They share a design: the payment is **pending with an expiry**, most customers w
 - [IRS: Pay with cash at a retail partner](https://www.irs.gov/payments/pay-with-cash-at-a-retail-partner), a government biller's limits, fees and barcode expiry
 - [USPS: Money orders](https://www.usps.com/shop/money-orders.htm), limits, fees and verification
 - [FTC: Fake check scams](https://consumer.ftc.gov/articles/how-spot-avoid-and-report-fake-check-scams), counterfeit money orders discovered weeks later
+- [Philadelphia: Regulations on cash payments in retail establishments](https://phila.gov/documents/regulations-on-cash-payments-in-retail-establishments), the city's ban on refusing cash, Chapter 9-1132 of the Philadelphia Code
+- [Local 21 News: Philadelphia mayor signs bill banning cashless stores](https://www.local21news.com/news/local/philadelphia-mayor-signs-bill-banning-cashless-stores), the 2019 signing and the July 1 effective date
+- [NYC Rules: Prohibition of Cashless Establishments](https://rules.cityofnewyork.us/rule/31891/), the rules implementing Local Law 34 of 2020, effective October 8, 2020
 - [New Jersey P.L.2019 c.50](https://pub.njleg.gov/Bills/2018/AL19/50_.HTM), requiring retail establishments to accept cash
 - [Colorado HB21-1048](https://leg.colorado.gov/bills/hb21-1048), retail businesses must accept cash
 - [California Civil Code 1947.3](https://california.public.law/codes/ca_civ_code_section_1947.3), how landlords may and may not restrict payment methods

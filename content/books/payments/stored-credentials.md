@@ -3,12 +3,12 @@ title = "Stored Cards & Recurring Billing"
 nav_title = "Stored Cards & Recurring"
 description = "Saving a card and charging it later: the stored credential framework, network transaction IDs, network tokens, account updater, retry rules and dunning."
 category = "Payments Industry"
-order = 1415
+order = 1418
 part = "Taking Payments"
 tags = ["payments", "cards", "recurring", "subscriptions", "tokens"]
 +++
 
-Most of the card volume on a software platform isn't a customer typing a card into checkout. It's the rent charged on the first of the month, the utility bill on autopay, the subscription that renews at midnight: a card saved once and charged many times by the merchant, with nobody watching. That changes three things about a payment. You have to prove the customer agreed to future charges, because the issuer will ask. You have to keep the card working as it expires and gets reissued, because a stale card is a lost customer. And you have to retry declines without being fined for it, because the networks count every attempt.
+Most of the card volume on a software platform isn't a customer typing a card into checkout. It's the gym membership billed on the first of the month, the usage-based software invoice charged when it closes, the streaming plan that renews at midnight: a card saved once and charged many times by the merchant, with nobody watching. That changes three things about a payment. You have to prove the customer agreed to future charges, because the issuer will ask. You have to keep the card working as it expires and gets reissued, because a stale card is a lost customer. And you have to retry declines without being fined for it, because the networks count every attempt.
 
 The card networks wrote a framework for exactly this, and following it is most of the job. [3-D Secure](/books/payments/strong-customer-authentication) covers authenticating the customer when they're present; this chapter is about what happens after they leave.
 
@@ -82,15 +82,17 @@ Subscriptions draw rules from both the networks and the law.
 
 ## Autopay Against a Balance
 
-A subscription charges a fixed price on a schedule. Bills don't work that way: rent changes with fees and credits, a utility bill varies every month, and a customer might pay part of it by hand before the autopay runs. So the other common recurring shape is **autopay against a balance**: on a schedule, charge whatever the account owes.
+A subscription charges a fixed price on a schedule. Plenty of recurring bills don't work that way: a usage-based SaaS invoice changes every month, a B2B customer's open invoices add up to whatever they add up to, a clinic's patient balance moves as insurance pays its part, and a customer might pay some of it by hand before the scheduled charge runs. So the other common recurring shape charges, on a schedule, **whatever the account owes**.
+
+Billing systems model it the same way under different names. Zuora's payment runs pick up invoices with auto-pay on and a balance above zero, charge the account's default payment method, and leave a declined balance open for the next run once the method is updated. Stripe Invoicing collects open invoices automatically, retries failed card payments on a schedule, and can mark an invoice paid when a partial payment comes within a set amount of the total. What they share is the rule that matters: the amount is decided by the ledger at run time, not by the schedule.
 
 - **Compute the amount at execution, not at scheduling.** The customer who paid half by phone this morning owes half tonight. Read the balance in the same transaction that creates the payment, and skip the cycle, recording why, when the balance is zero or in credit.
 - **Cap it.** The customer agreed to pay their bill, not any amount at all. Store a maximum with the authorization, and route anything above it to the customer for approval instead of charging it.
 - **Tell consumers when the amount varies.** For a preauthorized debit from a consumer's bank account whose amount changes, Regulation E requires notice of the amount at least 10 days before the transfer, unless the consumer chose to be told only when it falls outside a range they set; Canada's pre-authorized debit rules require the same 10 days ([Payments in Canada](/books/payments/canada)). On cards, the same notice is good practice and good dispute evidence.
-- **One payment per cycle.** The autopay's idempotency key is the account, the billing period and the attempt, and a unique constraint allows one successful payment per period, so a rerun after a crash can't charge twice, and a failed run feeds the same [dunning](#dunning) as any renewal.
-- **Returns turn autopay off.** A bank autopay that comes back unauthorized ends the authorization, and repeated insufficient-funds returns should pause it and tell the customer, under the restrictions in [ACH & Bank Transfers](/books/payments/ach#after-a-return-fees-and-blocks).
+- **One payment per cycle.** The idempotency key is the account, the billing period and the attempt, and a unique constraint allows one successful payment per period, so a rerun after a crash can't charge twice, and a failed run feeds the same [dunning](#dunning) as any renewal.
+- **Returns turn it off.** A bank debit that comes back unauthorized ends the authorization, and repeated insufficient-funds returns should pause the schedule and tell the customer, under the restrictions in [ACH & Bank Transfers](/books/payments/ach#after-a-return-fees-and-blocks).
 
-Providers model both shapes. Payabli's autopays, for example, run either on an interval until an end date or against the open balance on a fixed day of the month, skipping the cycle when nothing is owed. Field service businesses use both, sometimes on one account; the Field Operations volume's [billing chapter](/books/field-operations/billing-recurring-service) covers autopay against per-visit invoices and service plans. Recurring bank debits have their own authorization rules: [ACH](/books/payments/ach) standing and recurring authorizations, recurring [TEL](/books/payments/phone-payments) authorizations by phone, and Canadian pre-authorized debits. On the bank side, notifications of change do the account updater's job.
+On cards, a balance charge is an unscheduled card-on-file MIT unless it falls on a fixed interval, in which case it's recurring; flag it accordingly. Field service businesses often use both shapes on one account; the Field Operations volume's [billing chapter](/books/field-operations/billing-recurring-service) covers charging per-visit invoices and service plans. Recurring bank debits have their own authorization rules: [ACH](/books/payments/ach) standing and recurring authorizations, recurring [TEL](/books/payments/phone-payments) authorizations by phone, and Canadian pre-authorized debits. On the bank side, notifications of change do the account updater's job.
 
 ## The Credential Record
 
@@ -125,13 +127,69 @@ A stored card is more than a token. Keep the agreement with it:
 
 Recurring billing is a scheduled job charging money, which makes it the place an at-least-once [background job](/docs/architecture/background-jobs) can double-charge someone. The safe shape (period rows created ahead, claimed with a guarded update, charged with an [idempotency key](/docs/payments/idempotency) derived from the period and the attempt, one successful charge per period enforced by a unique constraint) is in [Renewal Jobs](/docs/payments/subscriptions#renewal-jobs). What the card networks add: a retry after a soft decline is a new attempt with a new key, never a replay of the first decline, and the attempt count is recorded on the period, not held in memory, so a restarted job can't push a card past the network retry limits above.
 
+## How to Build It
+
+Stored credentials add the agreement behind each saved method and the schedules that charge it, as deltas on [the core data model](/books/payments/card-payments#the-core-data-model):
+
+```sql
+CREATE TABLE credential_agreements (
+  id                             uuid PRIMARY KEY,
+  payment_method_id              uuid NOT NULL REFERENCES payment_methods (id),
+  usage                          text NOT NULL,   -- recurring, installment, unscheduled
+  terms_version                  text NOT NULL,
+  consent_accepted_at            timestamptz NOT NULL,
+  consent_channel                text NOT NULL,   -- web, app, phone
+  initial_network_transaction_id text,            -- from the initial CIT
+  status                         text NOT NULL    -- active, expired, revoked
+);
+
+ALTER TABLE payment_methods
+  ADD COLUMN network_token_status    text,        -- active, suspended, none
+  ADD COLUMN network_token_requestor text;        -- merchant, processor, vault
+
+ALTER TABLE payments
+  ADD COLUMN credential_agreement_id uuid REFERENCES credential_agreements (id),
+  ADD COLUMN mit_type                text;         -- recurring, unscheduled, resubmission, no_show
+
+CREATE TABLE balance_schedules (
+  id                      uuid PRIMARY KEY,
+  customer_id             uuid NOT NULL REFERENCES customers (id),
+  credential_agreement_id uuid NOT NULL REFERENCES credential_agreements (id),
+  day_of_month            int NOT NULL,
+  max_amount              bigint NOT NULL,         -- above this, ask the customer
+  status                  text NOT NULL            -- active, paused, ended
+);
+
+CREATE TABLE balance_runs (
+  balance_schedule_id uuid NOT NULL REFERENCES balance_schedules (id),
+  period              date NOT NULL,
+  amount              bigint,                      -- read from the ledger at run time
+  outcome             text NOT NULL,               -- charged, skipped_zero, over_cap, failed
+  payment_id          uuid REFERENCES payments (id),
+  attempts            int NOT NULL DEFAULT 0,
+  PRIMARY KEY (balance_schedule_id, period)
+);
+```
+
+The primary key on `balance_runs` is the one-run-per-period guarantee, and `attempts` is the persisted retry count the network limits are checked against. A revoked agreement (after MAC `21` or a Visa Category 1 decline) stops every schedule that uses it in the same transaction.
+
+## Auditing
+
+Stored-credential records are evidence in "I never agreed to this" disputes, regulators' questions about cancellation and renewal notices, and network reviews of excessive retries. The general design is in [Audit Trails](/docs/architecture/audit-trails); for stored credentials, make sure the record shows:
+
+- **The consent as it was given:** the terms text version, the disclosure shown, the time and the channel, snapshotted so a later edit to the terms doesn't rewrite it ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Every notice sent:** trial reminders, varying-amount notices and price-change notices, with what they said and when, since the rules are about timing.
+- **Every attempt on a credential,** with the decline code, MAC and the rule that chose to retry or stop, so the retry count can be proven to a network.
+- **Credential changes from updaters and token lifecycles,** recorded as amendments with the source, never as a silent overwrite of the card on file ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Cancellations and revocations,** who asked, through which channel, and when charges stopped.
+
 ## What This Means for the System You Build
 
 - **A CIT or MIT flag on every charge,** with the network transaction ID and the customer's consent stored with the credential.
 - **Account updater and network tokens** to keep saved cards alive.
 - **Hard and soft declines classified from the raw codes,** with per-card retry counters persisted and capped below the network limits.
 - **Dunning as states,** and trial reminders sent before the first charge.
-- **Renewal and autopay keys derived from the billing period and attempt,** one successful payment per period enforced by the database, and balance autopay computed at execution and capped.
+- **Renewal and balance-run keys derived from the billing period and attempt,** one successful payment per period enforced by the database, and balance charges computed at execution and capped.
 
 ## References
 
@@ -154,4 +212,6 @@ Recurring billing is a scheduled job charging money, which makes it the place an
 
 **In practice**
 
-- [Payabli: Autopays](https://docs.payabli.com/guides/pay-in-portal-autopays-create.md), scheduled and balance-driven recurring payments
+- [Zuora: Payment run does not pick up old invoices](https://docs.zuora.com/en/zuora-payments/process-payments/process-payments-with-payment-runs/troubleshoot-payment-runs/payment-run-does-not-pick-up-old-invoices), which invoices a run picks up: auto-pay on, a balance above zero, due by the target date
+- [Zuora: Troubleshoot payment runs](https://docs.zuora.com/en/zuora-payments/process-payments/process-payments-with-payment-runs/troubleshoot-payment-runs), a declined balance picked up by the next run once the method is updated
+- [Stripe: Automatic collection](https://docs.stripe.com/invoicing/automatic-collection), automatic recovery of open invoices, retries of failed payments, and partial payments reconciled within a set amount

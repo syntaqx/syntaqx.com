@@ -2,7 +2,7 @@
 title = "Disputes & Chargebacks"
 description = "How a dispute moves from inquiry to arbitration, what it does to the ledger, the monitoring thresholds that end merchant accounts, and who pays on a platform."
 category = "Payments Industry"
-order = 1418
+order = 1421
 part = "Taking Payments"
 aliases = ["payments/disputes-and-chargebacks"]
 tags = ["payments", "disputes", "chargebacks", "risk"]
@@ -61,7 +61,7 @@ A dispute is its own object with its own state machine, referencing the payment 
 | Lost | The held amount leaves for good, through the acquirer's settlement (`acquirer_settlement_clearing`), because the issuer kept it. |
 | Accepted without contest | Same as lost, without the countering fee. |
 
-Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts.
+Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts. On a cross-currency payment, the amount debited for a dispute can differ from what the merchant received for the sale, because it's converted at a different time; post the difference as an FX gain or loss, as [Multi-Currency](/docs/payments/multi-currency#refunds-and-fx-gains-and-losses) does for refunds.
 
 Post each fee as its own entry too. Stripe, for example, charges one fee when a dispute is received that isn't returned on a win, and a separate countering fee that is; explicit entries are what answer "why is this merchant down a fee on a dispute they won".
 
@@ -71,7 +71,7 @@ Once a dispute is open, the payment can't be refunded through the normal path. A
 
 Networks watch every merchant's fraud and dispute rates, and exceeding the thresholds brings fines, mandatory remediation and eventually the loss of card acceptance. For a platform it's existential: one merchant over the line affects the acquirer relationship every other merchant depends on.
 
-Visa's program, VAMP, combines fraud reports and disputes into one count-based ratio on card-not-present transactions:
+Visa's program, VAMP, combines fraud reports and disputes into one count-based ratio on card-not-present transactions. The figures below are current as of October 2026; the April 2026 reduction was the last announced change:
 
 ```text
 VAMP ratio = (fraud reports (TC40, in Visa's transaction codes) + disputes (TC15)) / settled transactions (TC05)
@@ -84,7 +84,15 @@ VAMP ratio = (fraud reports (TC40, in Visa's transaction codes) + disputes (TC15
 | Excessive merchant (CEMEA) | 220 basis points |
 | Minimum volume | 1,500 fraud reports and disputes in the month |
 
-Mastercard runs its own programs by merchant. Its Excessive Chargeback Program flags a merchant with at least 100 chargebacks and a 1.5% ratio in a month, and a high-excessive tier at 300 chargebacks and 3%, with assessments that start at $1,000 and climb to $100,000 a month or more the longer a merchant stays in; its Excessive Fraud Merchant program targets e-commerce merchants with high fraud chargebacks and low use of 3-D Secure. Acquirers' summaries of these are the public source; Mastercard's rule text isn't public.
+Mastercard runs its own programs by merchant, and as of October 2026 acquirers summarize them this way (Mastercard's rule text isn't public):
+
+| Program | A merchant qualifies when, in a month |
+| ------- | ------------------------------------- |
+| Excessive Chargeback Merchant | 100 to 299 chargebacks and a ratio of 150 to 299 basis points |
+| High Excessive Chargeback Merchant | 300 or more chargebacks and 300 or more basis points |
+| Excessive Fraud Merchant | E-commerce fraud chargebacks of at least $50,000 and 50 basis points, at least 1,000 e-commerce transactions, and 3-D Secure on under 10% of them (50% in countries that mandate SCA) |
+
+Two details differ from Visa: Mastercard's chargeback ratio divides this month's chargebacks by the **previous** month's transactions, so a month of falling sales raises it, and assessments start in the second month and grow the longer a merchant stays in, until three consecutive months below the thresholds release it.
 
 Two details make it harder than it looks. Fraud reports (the early fraud warnings of [Fraud & Risk](/books/payments/fraud-and-risk#the-two-costs)) count even when no dispute follows, so a [card-testing attack](/books/payments/fraud-and-risk#card-testing) can push a merchant over without a single chargeback. And the ratio counts disputes, not losses: winning doesn't remove one from the numerator. Track each merchant's rate daily, alerting at half the threshold; by the time a monthly report shows an excessive ratio, it's too late to change the month.
 
@@ -115,12 +123,65 @@ The failure to design for: a merchant takes a large volume of payments, is paid 
 
 Every dispute event reaches merchants through [webhooks](/docs/api-design/webhooks) (`dispute.created`, `dispute.closed`), with the evidence deadline in the payload, because the deadline is the one thing they can't miss.
 
+## How to Build It
+
+Disputes add evidence, the deadlines that run the process, their fees, and the daily ratios that warn of a monitoring program, as deltas on [the core data model](/books/payments/card-payments#the-core-data-model):
+
+```sql
+ALTER TABLE disputes
+  ADD COLUMN stage                text NOT NULL,  -- inquiry, chargeback, pre_arbitration, arbitration
+  ADD COLUMN network_due_by       timestamptz,    -- the acquirer's deadline
+  ADD COLUMN fraud_report_id      text,           -- the TC40 or SAFE record, when known
+  ADD COLUMN outcome              text,           -- won, lost, accepted, prevented
+  ADD COLUMN closed_at            timestamptz;
+
+CREATE TABLE dispute_evidence (
+  id            uuid PRIMARY KEY,
+  dispute_id    uuid NOT NULL REFERENCES disputes (id),
+  kind          text NOT NULL,     -- delivery_proof, three_ds_result, terms_accepted, prior_transactions
+  file_ref      text,              -- the stored document, never re-generated
+  submitted_at  timestamptz,
+  submitted_by  text NOT NULL
+);
+
+CREATE TABLE dispute_stage_changes (
+  dispute_id  uuid NOT NULL REFERENCES disputes (id),
+  stage       text NOT NULL,
+  status      text NOT NULL,
+  changed_at  timestamptz NOT NULL,
+  PRIMARY KEY (dispute_id, changed_at)
+);
+
+CREATE TABLE merchant_monitoring_ratios (
+  merchant_id      uuid NOT NULL REFERENCES merchants (id),
+  network          text NOT NULL,   -- visa, mastercard
+  program          text NOT NULL,   -- vamp, ecm, efm
+  day              date NOT NULL,
+  numerator        int NOT NULL,    -- fraud reports plus disputes, or chargebacks
+  denominator      int NOT NULL,    -- settled CNP transactions, or last month's
+  PRIMARY KEY (merchant_id, network, program, day)
+);
+```
+
+The fee and the held amount are ledger transactions with the dispute as their source, never columns on `disputes`. Compute `merchant_monitoring_ratios` nightly from the same disputes and fraud labels the risk system uses, and alert from it.
+
+## Auditing
+
+Dispute records are evidence in the dispute itself, in pre-arbitration and arbitration, in the merchant's argument with the platform over who pays, and in a network's review of a merchant in a monitoring program. The general design is in [Audit Trails](/docs/architecture/audit-trails); for disputes, make sure the record shows:
+
+- **Exactly what was submitted and when,** each file and field as sent, since the network judges the evidence it received, not what you hold now ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Both deadlines and who met or missed them,** the merchant's and the network's, with the stage change that started each clock.
+- **Who decided to accept, contest or escalate,** a person, the merchant or an automated rule such as a Rapid Dispute Resolution threshold.
+- **Every ledger movement the dispute caused,** linked to the dispute as its source, so the merchant's balance can be explained line by line.
+- **Who viewed or exported the customer's data** while assembling evidence ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+
 ## What This Means for the System You Build
 
 - **Evidence captured at payment time,** organized by what each reason code asks for.
 - **A dispute as its own object,** with holding-account ledger entries and its fee as a separate entry.
 - **Refunds blocked while a dispute is open,** enforced by the state machine.
-- **Every merchant's dispute and fraud ratios tracked daily,** alerting at half the threshold.
+- **Every merchant's dispute and fraud ratios tracked daily,** per network and program, alerting at half the threshold.
+- **Submitted evidence and stage history kept as sent,** for arbitration and for the merchant.
 - **Clear statement descriptors,** and refunds offered before customers reach for a dispute.
 - **The loss policy decided before the first dispute,** and the response deadline in the webhook.
 
@@ -132,8 +193,8 @@ Every dispute event reaches merchants through [webhooks](/docs/api-design/webhoo
 - [Mastercard Developers: Dispute resolution cycle](https://developer.mastercard.com/mastercom/documentation/dispute-resolution-cycle/), chargeback, second presentment and case filing
 - [Visa: Evolution of Compelling Evidence FAQ](https://usa.visa.com/content/dam/VCOM/regional/na/us/support-legal/documents/evolution-of-compelling-evidence-external-faqs.pdf), Compelling Evidence 3.0 qualification and Order Insight
 - [Visa: Sunset of retrieval requests](https://usa.visa.com/content/dam/VCOM/regional/na/us/support-legal/documents/sunset-of-retrieval-requests-and-impact-on-healthcare-auto-substantiation-transaction-receipt-requests.pdf), the end of US retrieval requests in October 2020
-- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), Compelling Evidence 3.0 conditions (11.7.5.6) and Rapid Dispute Resolution
-- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), dispute response and pre-arbitration time limits (Tables 11-1 and 11-2)
+- [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), Compelling Evidence 3.0 conditions (11.7.5.6), Rapid Dispute Resolution, and dispute response and pre-arbitration time limits (Tables 11-1 and 11-2)
+- [TabaPay: The next phase of Visa's VAMP initiative](https://developers.tabapay.com/docs/the-next-phase-of-visas-vamp-initiative), the October 2025 start of enforcement and the April 1, 2026 drop to 150 basis points
 
 **In practice**
 
@@ -142,5 +203,4 @@ Every dispute event reaches merchants through [webhooks](/docs/api-design/webhoo
 - [Verifi: Rapid Dispute Resolution](https://www.verifi.com/rdr-is-here.html), merchant-defined rules that resolve disputes before they're chargebacks
 - [Mastercard Developers: Ethoca Consumer Clarity](https://developer.mastercard.com/ethoca-consumer-clarity-for-merchants/documentation), purchase details and First-Party Trust over the merchant transaction API
 - [Stripe: The Dispute object](https://docs.stripe.com/api/disputes/object), dispute statuses and evidence deadlines
-- [Chase: Mastercard Excessive Chargeback Program FAQ (PDF)](https://merchantservices.chase.com/content/dam/jpm/merchant-services/documents/payment-network-updates/MC_ExcessiveChargebacks_FAQ_02092022.pdf), thresholds and assessments, as an acquirer summarizes them
-- [Chase: Mastercard Excessive Fraud Merchant FAQ (PDF)](https://merchantservices.chase.com/content/dam/jpm/merchant-services/documents/payment-network-updates/MC_ExcessiveFraud_FAQ_02092022.pdf), the fraud program's criteria, including 3-D Secure use
+- [BlueSnap: Dispute and fraud monitoring programs](https://support.bluesnap.com/docs/chargeback-monitoring-programs), Mastercard's ECM, HECM and EFM criteria, the previous-month denominator and release after three months, as a provider summarized them in June 2026

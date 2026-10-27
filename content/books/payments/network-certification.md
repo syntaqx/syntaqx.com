@@ -2,7 +2,7 @@
 title = "Network Certification"
 description = "Going live and staying live on card networks: processor and host certification, EMV levels, 3DS approval, and the twice-yearly network release calendar."
 category = "Payments Industry"
-order = 1427
+order = 1432
 part = "Running a Provider"
 tags = ["payments", "certification", "emv", "iso-8583", "testing", "release-management"]
 +++
@@ -66,7 +66,7 @@ Visa and Mastercard both change their specifications on a fixed rhythm, twice a 
 
 That rhythm should shape your own release planning:
 
-- **Track mandates like dependencies with deadlines.** Every network bulletin is triaged when it's published: affects us or not, by which date, owned by whom. The deadline is the network's, and missing it means transactions that no longer meet the specification your processor and the network expect.
+- **Track mandates like dependencies with deadlines.** Every network bulletin is triaged when it's published: affects the platform or not, by which date, owned by whom. The deadline is the network's, and missing it means transactions that no longer meet the specification your processor and the network expect.
 - **Ship ahead, enable on time.** Build support for a new field behind a [feature flag](/docs/delivery/feature-flags) per processor or network, deploy it early, and switch it on at the effective date, the same way any risky change rolls out.
 - **Version the message specification.** Your ISO 8583 or processor message definitions are code, versioned with the release they implement, so you can say which build supports which mandate.
 - **Freeze around the dates.** The weeks around April and October are when processors cut over. It's a poor time for unrelated changes to your payment path.

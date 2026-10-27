@@ -2,45 +2,38 @@
 title = "Becoming a Payment Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
 category = "Payments Industry"
-order = 1429
+order = 1436
 part = "Running a Provider"
 aliases = ["payments/becoming-a-payment-provider"]
 tags = ["payments", "compliance", "pci", "licensing"]
 +++
 
-The chapters before this one are the machinery: [Inside a Processor](/books/payments/inside-a-processor) is what runs between a provider and the networks, and [Operating the Platform](/books/payments/operating-the-platform) is what keeps it running every day. None of it may carry a real payment until a bank, the networks, an assessor and often a regulator say so. [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in) covered the first rungs, selling payments on someone else's provider; this chapter is the rest of the ladder. Becoming a provider is a regulated business that happens to need a lot of engineering, and the API is the smallest part of it. Underneath sit a bank that lets you into the card networks, an annual security assessment your customers will ask to see, licenses or exemptions for holding other people's money, and a balance sheet that absorbs whatever your merchants can't pay back. Every company that sells payments as a product, from Stripe and Adyen to a vertical software platform that started as a payfac, built or rented each of those layers.
+The chapters before this one are the machinery: [Inside a Processor](/books/payments/inside-a-processor) is what runs between a provider and the networks, and [Operating the Platform](/books/payments/operating-the-platform) is what keeps it running every day. None of it may carry a real payment until a bank, the networks, an assessor and often a regulator say so. [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in) covered what the first rungs, selling payments on someone else's provider, mean for a software company; this chapter is the whole ladder and the top of it. Becoming a provider is a regulated business that happens to need a lot of engineering, and the API is the smallest part of it. Underneath sit a bank that lets you into the card networks, an annual security assessment your customers will ask to see, licenses or exemptions for holding other people's money, and a balance sheet that absorbs whatever your merchants can't pay back. Every company that sells payments as a product, from Stripe and Adyen to a vertical software platform that started as a payfac, built or rented each of those layers.
 
 This chapter covers what each layer is, why it exists and who pays when it fails, then the order companies usually acquire them in. **It is not legal advice:** licensing in particular turns on facts a lawyer has to look at. Where it names a threshold or a rule, it has a source; where the answer is "it depends", it says so.
 
 ## Pick a Model, Pick a Risk
 
-"Payment provider" covers several businesses that look alike from the outside and carry very different risk. (The rungs below these, referral, reseller and managed payfac, are in [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in).) The question that separates them: when a merchant takes money it shouldn't have and disappears, who refunds the cardholder?
+"Payment provider" covers several businesses that look alike from the outside and carry very different risk. The question that separates them: when a merchant takes money it shouldn't have and disappears, who refunds the cardholder? Here is the whole ladder, from a software company referring merchants to a bank that settles them:
 
-| Model | What you do | Who holds merchant risk |
-| --- | --- | --- |
-| **Gateway** | Pass transactions from merchants to a processor; often store tokens | The acquirer, and the merchant's own contract with it |
-| **ISO / agent** | Sell and support another acquirer's merchant accounts, for a share of revenue | Usually the acquirer, unless your contract shifts liability onto you |
-| **Payment facilitator (registered)** | Contract with sub-merchants under your own master merchant account | You, first; your sponsor acquirer behind you |
-| **Processor** | Run the authorization and clearing systems that connect to the networks | Depends on the contract; the technology risk is yours |
-| **Acquirer** | Be the network member that settles funds to merchants | You, as the party the network holds responsible |
+| Rung | What you do | Who holds merchant risk | What it costs to stand here |
+| --- | --- | --- | --- |
+| **Referral** | Send merchants to a processor; integrate its product | The processor | Almost nothing; you earn a referral fee or small share |
+| **ISO / agent (reseller)** | Sell and support another acquirer's or processor's merchant accounts, for residuals | Usually the acquirer, unless your contract shifts liability onto you | Sales, onboarding handoff, reporting to check residuals |
+| **Managed payfac** | Board and serve merchants under a provider's payfac registration, under your brand | The provider first, then you, as the contract assigns | Embedded onboarding, payouts and support; liability for some losses |
+| **Registered payfac** | Contract with sub-merchants under your own master merchant account | You, first; your sponsor acquirer behind you | A sponsor bank, network registration, PCI service provider validation, a risk team, reserves, possibly licensing |
+| **Processor** | Run the authorization and clearing systems that connect to the networks | Depends on the contract; the technology risk is yours | HSM infrastructure ([HSMs & Key Management](/books/payments/key-management)), the full assessment scope, and the systems in [Inside a Processor](/books/payments/inside-a-processor), certified host by host ([Network Certification](/books/payments/network-certification)) |
+| **Acquirer** | Be the network member that settles funds to merchants | You, as the party the network holds responsible | Network membership or a licensed acquiring entity, and the capital behind it |
 
-Every step down the table moves risk onto you. A gateway that goes down loses revenue; a payfac whose sub-merchant commits fraud loses the money itself, because the acquirer recovers chargebacks from the payfac before anyone else. The further down you go, the more of the economics you keep and the more of the losses you own.
+A **gateway** sits beside the ladder rather than on it: it passes transactions from merchants to a processor and often stores tokens, and the acquirer and the merchant's own contract hold the risk. A gateway that goes down loses revenue; a payfac whose sub-merchant commits fraud loses the money itself, because the acquirer recovers chargebacks from the payfac before anyone else. Every step down the table moves risk onto you: the further down you go, the more of the economics you keep and the more of the losses you own. What the first four rungs mean for a software company's product and engineering is in [Four Ways In](/books/payments/software-platforms#four-ways-in).
 
 Most "Stripe competitors" are payfacs. Stripe's Connect docs are a useful map of what that means: they list MATCH checks, prohibited business checks and money transmitter and e-money licenses among what the provider handles for platforms, and say a connected account's negative balance belongs to either the platform or Stripe depending on the integration. A payfac makes that decision for its own sub-merchants, and backs it with capital.
 
 ## The Realistic Path
 
-Nobody starts as an acquirer. The providers that got there acquired the layers in roughly this order, each funded by the revenue of the one before:
+Nobody starts as an acquirer. The providers that got there climbed the ladder above roughly in order, each rung funded by the revenue of the one before: integrate a provider, run a managed payfac on it, become a registered payfac on a processor, and only then process or acquire directly. One step between those last two isn't a rung of its own: **a second sponsor and more processors**, which buy resilience and negotiating leverage at the price of duplicate integrations and reconciliation ([Processor Routing](/books/payments/processor-routing)).
 
-| Stage | What it unlocks | What it costs |
-| --- | --- | --- |
-| **1. Integrate a provider** | Payments in your product, with no regulatory footprint of your own | Margin; the provider owns pricing, risk and onboarding UX |
-| **2. Platform on a managed payfac** | Your own onboarding and pricing, revenue share | Liability for some losses, depending on the provider's terms |
-| **3. Payfac on a processor** | Your own sub-merchants, underwriting and payouts; most of the margin | A sponsor bank, network registration, PCI service provider validation, a risk team, reserves, possibly licensing |
-| **4. Add a second sponsor, more processors** | Resilience and negotiating leverage | Duplicate integrations and reconciliation |
-| **5. Direct acquiring / processing** | Network connectivity, the full margin, control over authorization | Network membership or a licensed acquiring entity, capital, HSM infrastructure ([HSMs & Key Management](/books/payments/key-management)), the full assessment scope, and the systems in [Inside a Processor](/books/payments/inside-a-processor), certified host by host ([Network Certification](/books/payments/network-certification)) |
-
-Stage 3 is where most companies that call themselves payment providers live, and it's a good business on its own. The jump from 3 to 5 is less about engineering than about capital and licenses, and it's worth making only when the processor's share of each transaction costs more than carrying everything the processor was carrying for you.
+The registered payfac is where most companies that call themselves payment providers live, and it's a good business on its own. The jump from there to processing or acquiring is less about engineering than about capital and licenses, and it's worth making only when the processor's share of each transaction costs more than carrying everything the processor was carrying for you.
 
 ## The Sponsor Bank
 
@@ -90,9 +83,11 @@ The moment funds pass through your control on their way from payer to merchant, 
 
 **UK.** The FCA authorizes payment institutions under the Payment Services Regulations 2017 and e-money institutions under the Electronic Money Regulations 2011. Above a monthly average of €3 million in payment transactions you need full authorization as a payment institution (below it you may register as a small one), and above €5 million of average outstanding e-money, full authorization as an e-money institution, with the capital, safeguarding and governance that brings.
 
-**European Union.** National regulators authorize payment and e-money institutions under PSD2 and the E-Money Directive, following EBA guidelines, and an authorization can be passported across member states. PSD3 and a Payment Services Regulation will replace the framework: the Council published the agreed texts in April 2026, formal adoption and publication were still pending in October, and the new rules apply roughly a year and a half after they enter into force, so check what applies on your launch date.
+**European Union.** National regulators authorize payment and e-money institutions under PSD2 and the E-Money Directive, following EBA guidelines, and an authorization can be passported across member states. PSD3 and a Payment Services Regulation are agreed to replace that framework but not yet in force, so check what applies on your launch date ([Outside the US](/books/payments/payments-rulebook#outside-the-us) tracks where adoption stands).
 
 Wherever you're licensed, the cost isn't the application: it's capital and safeguarding requirements, examinations, reporting, and a compliance function that has to exist before the license is granted.
+
+Where merchants' money sits on its way through, usually a for-benefit-of (FBO) account at the sponsor bank with your ledger saying who owns what inside it, is often what the licensing analysis turns on, and keeping it apart from your own money is a rule regardless; [FBO Accounts and Pass-Through Insurance](/books/payments/treasury#fbo-accounts-and-pass-through-insurance) covers the accounts, the commingling rule and the daily reconciliation that proves it.
 
 ## Gatekeeping: Sanctions, AML and Losses
 
@@ -102,13 +97,6 @@ A provider is a gatekeeper for the financial system. [Merchant Onboarding](/book
 - **AML is a program, not a check.** Your sponsor, and any regulator that licenses you, will expect a written anti-money-laundering program with a named officer, risk assessment, transaction monitoring and suspicious activity reporting. A vendor that "does KYC" is one input to it. [Operating the Platform](/books/payments/operating-the-platform#compliance-operations) covers the daily work.
 - **Terminated merchant lists** such as Mastercard's MATCH are checked at onboarding and fed when you terminate for cause ([Inside a Processor](/books/payments/inside-a-processor#setting-up-a-merchant) has the deadlines).
 - **Losses move up the chain.** When a merchant can't cover its refunds and [chargebacks](/books/payments/disputes-and-chargebacks), the loss goes to the payfac, then the acquirer, and each protects itself by holding back money it owes the party below: underwriting limits, [reserves](/books/payments/payouts-and-settlement), and finally your own capital. Losses are lumpy: a provider can run clean for a year and then lose a quarter's margin to one merchant that collapses with a large prepaid order book. Price for that.
-
-## How the Money Moves
-
-Funds settle from the network to the acquirer and onward, and where they land next has legal weight. A common arrangement is a **for-benefit-of (FBO) account**: an account at the sponsor bank, in the provider's name, held for the benefit of the merchants whose money it is. The bank holds the pooled balance; the provider's ledger says who owns what inside it. The structure is often what the licensing analysis turns on, and it decides what happens to merchants' money if the provider fails; [Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance) covers the accounts and the FDIC's conditions for pass-through insurance. Two rules hold regardless:
-
-- **Merchant funds are not operating funds.** Never pay your own expenses from the pool, even briefly, and keep your revenue in a separate account. Commingling turns a contract dispute into a regulatory one.
-- **The ledger reconciles to the bank, daily.** Every merchant balance, every reserve and your unswept fees add up to what the bank says the account holds, the equation [Treasury & Bank Operations](/books/payments/treasury#what-this-means-for-the-system-you-build) checks daily. A difference is a bug or a loss, and you need to know which before the next payout run.
 
 ## What This Means for the System You Build
 

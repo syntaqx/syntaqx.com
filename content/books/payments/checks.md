@@ -2,12 +2,12 @@
 title = "Accepting Checks"
 description = "Taking checks as payment: image clearing under Check 21, remote deposit capture, Reg CC holds, returns and late claims, conversion to ACH, lockbox and fraud."
 category = "Payments Industry"
-order = 1405
+order = 1406
 part = "How Money Moves"
 tags = ["payments", "checks", "check-21", "remote-deposit", "reg-cc", "ach"]
 +++
 
-Checks have ACH's central problem (money available isn't money final) on an older, slower clock. They keep shrinking and refuse to disappear. Americans wrote 9.2 billion of them in 2024, worth $24.45 trillion: 4% of noncash payments by number and 17% by value, because the ones that remain are big. Rent, invoices, insurance premiums, and every payment from a payer who won't hand over bank details still arrive on paper. A platform that collects for businesses gets them by mail, at a front desk, or through a lockbox, and has to turn them into money and ledger entries. This chapter is about receiving checks; issuing them, with positive pay and escheatment, is in [Vendor Payouts](/books/payments/vendor-payouts).
+Checks have ACH's central problem (money available isn't money final) on an older, slower clock. They keep shrinking and refuse to disappear. Americans wrote 9.2 billion of them in 2024, worth $24.45 trillion: 4% of noncash payments by number and 17% by value, because the ones that remain are big. Business invoices, insurance premiums, medical bills, tuition, rent, and every payment from a payer who won't hand over bank details still arrive on paper. A platform that collects for businesses gets them by mail, at a front desk, or through a lockbox, and has to turn them into money and ledger entries. This chapter is about receiving checks; issuing them, with positive pay and escheatment, is in [Vendor Payouts](/books/payments/vendor-payouts).
 
 ## How a Check Clears Now
 
@@ -37,21 +37,21 @@ What the capture side owes the bank, and itself:
 - **Both sides, read back.** The amount from the image (courtesy and legal amount) compared with what the user keyed, the MICR line parsed and validated, the payee checked against the account the deposit goes to, and the back checked for an endorsement.
 - **The bank's endorsement travels in the file.** Reg CC 229.35 requires each bank that handles a check to endorse it, and for an electronic check that endorsement is data, not ink: the bank of first deposit's routing number, endorsement date and item sequence ride in the check detail addendum records, and the official commentary says a bank that captures an image before spraying an endorsement should apply it electronically. Your bank adds its own; what it needs from you is an image with the customer's endorsement visible on the back.
 - **A restrictive endorsement.** "For mobile deposit only at [bank]", or whatever the bank's agreement specifies. Under Reg CC 229.34(f), a bank that takes a remote deposit and gets paid indemnifies a later bank that accepted the same paper check, unless the paper carried a restrictive endorsement inconsistent with how it was deposited. The endorsement is what puts the loss on whoever deposited it twice, not on you.
-- **Duplicate detection across every deposit you've ever taken.** The same check scanned twice, by two employees, or by one customer at two properties, is the most common RDC loss. Key on routing number, account number, serial number and amount, and keep the keys forever, not for a rolling window. Duplicates at other institutions you can't see; that's what the indemnity and return reason Y (duplicate presentment) are for.
+- **Duplicate detection across every deposit you've ever taken.** The same check scanned twice, by two employees, or by one customer at two locations, is the most common RDC loss. Key on routing number, account number, serial number and amount, and keep the keys forever, not for a rolling window. Duplicates at other institutions you can't see; that's what the indemnity and return reason Y (duplicate presentment) are for.
 - **The paper has a lifecycle.** Mark it as processed when scanned so it can't be scanned again, keep it securely for the period your bank agreement requires, then destroy it. A drawer of uncashed originals in an office is a second deposit waiting to happen.
 
 The bank side is set out in the Federal Financial Institutions Examination Council's (FFIEC) guidance on RDC risk, issued in 2009: customer suitability reviews, deposit limits, multi-factor authentication, and monitoring for duplicates, velocity and limit breaches. Expect your bank to impose all of it on you, and build the limits and reports into the product so its review is a formality.
 
 ## When the Money Is Available
 
-**Regulation CC** governs how long a bank may hold deposited checks, and its dollar amounts were adjusted for inflation on July 1, 2025. Your bank applies it to your deposits; you should apply the same thinking to the merchants or landlords you credit.
+**Regulation CC** governs how long a bank may hold deposited checks, and its dollar amounts were adjusted for inflation on July 1, 2025. Your bank applies it to your deposits; you should apply the same thinking to the merchants you credit.
 
 - **Next business day:** cash deposited in person, electronic payments, US Treasury checks, on-us checks (drawn on the same bank they're deposited at; the MICR line's "on-us field" is a different use of the word), and in-person deposits of cashier's, certified and government checks and USPS money orders. Deposited remotely, those official checks wait until the second business day.
 - **The first $275** of other check deposits on a day, by the next business day.
 - **Everything else by the second business day.**
 - **Exception holds** for new accounts in their first 30 days, deposits over $6,725 in a day, redeposited checks, accounts repeatedly overdrawn, and reasonable doubt that a check will be paid, each requiring a written notice with the reason and the release date, and generally limited to about five extra business days.
 
-Availability is not finality. Funds become available on a legal schedule, while returns arrive on the paying bank's, and the two overlap. A platform that releases a merchant's or landlord's funds the moment the bank does is extending credit on every check, which [Payouts & Settlement](/books/payments/payouts-and-settlement) turns into a policy: a hold for new payers, a limit per payer, and a reserve sized to return rates.
+Availability is not finality. Funds become available on a legal schedule, while returns arrive on the paying bank's, and the two overlap. A platform that releases a merchant's funds the moment the bank does is extending credit on every check, which [Payouts & Settlement](/books/payments/payouts-and-settlement) turns into a policy: a hold for new payers, a limit per payer, and a reserve sized to return rates.
 
 ## Returns, Fast and Slow
 
@@ -103,9 +103,43 @@ Check fraud grew while check volume fell. FinCEN, the Treasury bureau that enfor
 
 **Remotely created checks** deserve their own line. A remotely created check, or demand draft, is a check created by the payee from the payer's account number, with no signature. Since 2006, Reg CC makes the depositary bank warrant that the account holder authorized it, which pushes the loss onto whoever deposited it, and the FTC's Telemarketing Sales Rule has banned them in telemarketing since 2016 ([Phone Payments](/books/payments/phone-payments)). ACH debits do the same job with clearer rules; don't offer demand drafts as a product.
 
-## Rent and Paper
+## Who Still Pays by Paper
 
-Some payers can't be moved off checks, and in rent the law sometimes protects them. In California, Civil Code 1947.3 requires a landlord to accept at least one form of payment that is neither cash nor electronic, and forbids charging extra for paying by check: a rent platform there can't go electronic-only. The same statute lets a landlord demand cash for up to three months after a check bounces, with written notice, which a platform has to model as a temporary restriction on a payer's allowed methods. Returned-check fees are capped state by state; [ACH & Bank Transfers](/books/payments/ach#after-a-return-fees-and-blocks) collects those rules, since some caps cover bounced electronic payments too.
+Some payers can't be moved off checks: businesses whose accounts payable still runs on check runs, people mailing insurance premiums, medical bills or tuition from a bank account they won't share, and payers the law protects. Rent is the clearest example of the last. In California, Civil Code 1947.3 requires a landlord to accept at least one form of payment that is neither cash nor electronic, and forbids charging extra for paying by check: a rent platform there can't go electronic-only. The same statute lets a landlord demand cash for up to three months after a check bounces, with written notice, which a platform has to model as a temporary restriction on a payer's allowed methods. Returned-check fees are capped state by state; [ACH & Bank Transfers](/books/payments/ach#after-a-return-fees-and-blocks) collects those rules, since some caps cover bounced electronic payments too.
+
+## How to Build It
+
+A deposited check is a payment like any other in the [core data model](/books/payments/card-payments#the-core-data-model); what checks add is the item itself, with its images, its permanent duplicate key and the paper's lifecycle.
+
+```sql
+CREATE TABLE check_items (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_id       UUID NOT NULL REFERENCES payments (id),
+  routing_number   TEXT NOT NULL,
+  account_hash     TEXT NOT NULL,          -- keyed hash of the MICR account number
+  serial_number    TEXT,
+  amount           BIGINT NOT NULL,
+  is_business      BOOLEAN NOT NULL,       -- auxiliary on-us field present
+  front_image_ref  TEXT NOT NULL,
+  back_image_ref   TEXT NOT NULL,
+  capture_channel  TEXT NOT NULL CHECK (capture_channel IN ('scanner', 'mobile', 'lockbox')),
+  converted_as     TEXT CHECK (converted_as IN ('ARC', 'BOC', 'POP', 'RCK')),
+  paper_status     TEXT NOT NULL CHECK (paper_status IN ('held', 'destroyed', 'none')),
+  deposited_at     TIMESTAMPTZ NOT NULL,
+  UNIQUE NULLS NOT DISTINCT (routing_number, account_hash, serial_number, amount)  -- forever
+);
+
+CREATE TABLE check_returns (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  check_item_id    UUID NOT NULL REFERENCES check_items (id),
+  kind             TEXT NOT NULL CHECK (kind IN ('return', 'warranty_claim')),
+  reason_code      TEXT NOT NULL,          -- X9 reason (A, C, Y ...) or the claim's basis
+  amount           BIGINT NOT NULL,
+  received_at      TIMESTAMPTZ NOT NULL
+);
+```
+
+Each return or claim posts a reversing `ledger_transactions` row with `source_type = 'check_return'`; there can be more than one per item, because a late warranty claim can follow an ordinary return that was redeposited.
 
 ## What This Means for the System You Build
 
@@ -114,7 +148,7 @@ Some payers can't be moved off checks, and in rent the law sometimes protects th
 - **Model availability and finality separately,** with holds and limits sized to return rates, and late warranty claims as reversing entries.
 - **Convert eligible consumer checks to ARC or BOC** where it pays, with notices and image retention, and use RCK for bounced consumer checks.
 - **Lockbox files matched by scan line,** with an exceptions queue and images for everything else.
-- **Payment method restrictions as data,** so a payer can be moved to certified funds or cash for a period without code changes.
+- **Payment method restrictions as data,** so a payer can be moved to certified funds or cash for a period without code changes, and the payers who must be allowed to pay by check still can.
 
 ## References
 

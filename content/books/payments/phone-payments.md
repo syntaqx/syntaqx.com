@@ -2,12 +2,12 @@
 title = "Phone Payments"
 description = "Taking payments by phone and by link: MOTO and TEL rules, telephony in PCI scope, DTMF masking, text-to-pay, recordings, IVR design, remote agents."
 category = "Payments Industry"
-order = 1416
+order = 1419
 part = "Taking Payments"
 tags = ["payments", "pci", "moto", "ivr", "contact-center", "ach"]
 +++
 
-[Stored cards](/books/payments/stored-credentials) are charged with nobody there. A phone payment has the customer present but not online, which puts it outside [3-D Secure](/books/payments/strong-customer-authentication) and inside rules of its own. It's card-not-present, but it's worse than a web checkout in one specific way: the card number passes through a person's ears and a phone system's plumbing before it reaches anything built to protect it. Call centers take rent, premiums, utility bills, collections and every payment from a customer who won't use the app, and each one can leave a card number in a recording, a transcript, a log line or an agent's notebook. This chapter covers the rules for phone payments and the architecture that keeps card data out of the call.
+[Stored cards](/books/payments/stored-credentials) are charged with nobody there. A phone payment has the customer present but not online, which puts it outside [3-D Secure](/books/payments/strong-customer-authentication) and inside rules of its own. It's card-not-present, but it's worse than a web checkout in one specific way: the card number passes through a person's ears and a phone system's plumbing before it reaches anything built to protect it. Call centers take hotel and airline bookings, insurance premiums, patient balances, catalog orders, collections and every payment from a customer who won't use the app, and each one can leave a card number in a recording, a transcript, a log line or an agent's notebook. This chapter covers the rules for phone payments and the architecture that keeps card data out of the call.
 
 ## The Rules for Taking a Payment by Phone
 
@@ -54,7 +54,7 @@ Whichever you use, what comes out of the capture should be what a web checkout p
 
 ## Send a Link Instead
 
-The simplest way to keep card data out of a call is to take the payment out of the call: the agent, or an automated message, sends the customer a link, and the customer pays on a hosted payment page on their own phone. The same link works by text or email for a bill that's due, a balance after a call, or an invoice, which is why "text to pay" is a product of its own.
+The simplest way to keep card data out of a call is to take the payment out of the call: the agent, or an automated message, sends the customer a link, and the customer pays on a hosted payment page on their own phone. The same link works by text or email for a patient balance after a visit, a deposit on a booking, or a B2B invoice, which is why "text to pay" is a product of its own.
 
 - **It's an online payment now, not MOTO.** The customer is entering their own card in a browser, so 3-D Secure applies and its liability shift is available: the legitimate version of what the EBA criticized above.
 - **The link is a bearer token.** Anyone holding it can pay, and some links show a name and balance, so it's single-use, bound to one amount and payee, expiring, and carries no personal data in the URL. Behind it is a payment in `pending`, created with an [idempotency key](/docs/payments/idempotency), so a customer tapping twice pays once. Providers set their own bounds; Stripe's checkout sessions, for example, expire between 30 minutes and 24 hours after creation.

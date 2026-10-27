@@ -9,7 +9,7 @@ tags = ["payments", "cards", "iso-8583", "authorization", "settlement"]
 
 A card payment looks like one event: the customer taps, the screen says approved, the merchant has been paid. None of that is true. Approval moves no money, the merchant isn't paid for a day or more, and at least five companies touched the transaction, each with its own system, its own clock and its own rules. Almost every hard problem in a payments platform (holds that expire, funding that doesn't match sales, reversals after a timeout, disputes months later) is one of those companies doing exactly what it's supposed to. You can't build reliably on the system until you can draw it.
 
-This chapter is the map the rest of the volume uses. The engineering of money itself (amounts, idempotency, state machines, ledgers) lives in [Payments](/docs/payments/money); this volume is about the industry those systems plug into. It's about accepting payments and moving money for merchants; issuing cards and stablecoin payments are their own subjects and aren't covered. Terms are defined where they first appear, and all of them are collected in the [Glossary](/books/payments/glossary).
+This chapter is the map the rest of the volume uses. The engineering of money itself (amounts, idempotency, state machines, ledgers) lives in [Payments](/docs/payments/money); this volume is about the industry those systems plug into. It's about accepting payments and moving money for merchants; issuing cards and stablecoin payments are their own subjects and aren't covered. (Stablecoins got a US federal framework when the GENIUS Act was signed on July 18, 2025, but they settle on blockchains under their own issuer rules, not on the card and bank rails this volume follows.) Terms are defined where they first appear, and all of them are collected in the [Glossary](/books/payments/glossary).
 
 ## How to Read This Volume
 
@@ -57,11 +57,11 @@ Read end to end, the volume describes the components of a payment provider. Each
 | **Processor** | Runs the systems for an acquirer (front-end: authorizations; back-end: clearing, settlement, reporting) or for an issuer |
 | **Gateway** | Takes the payment from a website or app and hands it to the processor; often the same company |
 | **ISO or payfac** | Sells acquiring on an acquirer's behalf. (ISO here is an independent sales organization, not the standards body behind ISO 8583.) An ISO signs merchants to the acquirer; a payment facilitator signs them as its own sub-merchants under one master account ([Becoming a Payment Provider](/books/payments/becoming-a-payment-provider)) |
-| **Payment provider** | What this volume calls a company like Stripe, Adyen or Payabli that bundles gateway, processing and often acquiring or payfac services behind one API |
+| **Payment provider** | What this volume calls any company that bundles gateway, processing and often acquiring or payfac services behind one API: Stripe, Adyen, Checkout.com, Worldpay, Fiserv's Clover, Square and many smaller ones |
 
-Visa and Mastercard are **four-party** networks: the network sits between issuers and acquirers it doesn't own. American Express and Discover grew up as **three-party** networks that largely issue and acquire themselves, which is why their pricing and rules differ from Visa's and Mastercard's, as later chapters on pricing, surcharging and disputes show.
+Visa and Mastercard are **four-party** networks: the network sits between issuers and acquirers it doesn't own. American Express and Discover grew up as **three-party** networks that largely issue and acquire themselves, which is why their pricing and rules differ from Visa's and Mastercard's, as later chapters on pricing, surcharging and disputes show. Since May 18, 2025, Discover has belonged to Capital One, which completed its acquisition that day, so a large card issuer now also owns a network ([Interchange & Pricing](/books/payments/interchange-and-pricing#pricing-models) covers what that changes).
 
-Where you sit among these parties is a choice with a price. A software company can refer merchants to a provider, resell one, embed one as a managed payment facilitator, become a registered payfac, or go further and become a processor or acquirer itself. Each step takes on more of the risk and more of the work; [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in) covers the first rungs and [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider) the rest.
+Where you sit among these parties is a choice with a price. A software company can refer merchants to a provider, resell one, embed one as a managed payment facilitator, become a registered payfac, or go further and become a processor or acquirer itself. Each step takes on more of the risk and more of the work; [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#pick-a-model-pick-a-risk) lays out the whole ladder, and [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in) what each rung means for a software company.
 
 ![The four parties and the network: cardholder, merchant, acquirer, network and issuer in a row. Authorization runs from the merchant to the issuer and back in seconds; capture and clearing run toward the issuer in batches; settlement and funding run back toward the merchant later, less interchange and fees.](/diagrams/card-flow.svg "Messages go first and money goes last. Authorization asks and answers in seconds without moving anything; clearing tells the network what really happened; only settlement moves money, the other way, net of fees.")
 
@@ -149,7 +149,7 @@ BIN data drives real decisions: debit or credit for surcharging, regulated or ex
 The network knows a merchant by a handful of identifiers the acquirer assigns, and every authorization carries them:
 
 - **Merchant ID (MID)** and **terminal ID (TID):** which merchant account and which point of sale. One business can have many MIDs ([Payments for Software Platforms](/books/payments/software-platforms#one-merchant-several-merchant-accounts)).
-- **Merchant category code (MCC):** four digits from the networks' list describing what the merchant sells (5411 grocery, 6513 rent, 4900 utilities). It decides the interchange category, eligibility for fee programs, and how risky the networks consider the merchant.
+- **Merchant category code (MCC):** four digits from the networks' list describing what the merchant sells (5411 grocery, 5812 restaurants, 8011 doctors). It decides the interchange category, eligibility for fee programs, and how risky the networks consider the merchant.
 - **Statement descriptor:** the name, city or phone number the cardholder sees on their statement, and the most common reason a legitimate charge gets disputed when it's unrecognizable ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks#prevention-beats-winning)).
 
 ## Card Numbers and Tokens
@@ -159,8 +159,160 @@ The card number is the **PAN**, the primary account number, and almost everythin
 - **A vault token** stands in for a PAN inside one provider's or platform's systems. It's random, means nothing outside that vault, and is what keeps everything else out of [PCI scope](/docs/compliance/pci-dss) ([Running a Card Vault](/books/payments/card-vault)).
 - **A network token** is issued by the card network's token service for a specific card and merchant or device, and travels in the authorization in place of the PAN, with a one-time cryptogram. It works at the issuer and survives a card being reissued ([Stored Cards & Recurring Billing](/books/payments/stored-credentials#keeping-the-card-alive)). A **DPAN** is a network token bound to one phone, which is what Apple Pay and Google Pay send ([Wallets & Local Payment Methods](/books/payments/wallets-and-local-methods)).
 
+## The Core Data Model
+
+Every provider converges on the same handful of objects under different names. Stripe keeps a PaymentIntent for the whole attempt to collect and creates a charge each time it actually tries the card; Adyen gives the payment one reference and every capture, refund or cancel its own, with the outcome arriving later by webhook. This volume uses one set, and every later chapter's "How to Build It" adds tables and columns to it rather than redefining it:
+
+| Entity | Table | What it is |
+| --- | --- | --- |
+| **merchant** | `merchants` | A business that accepts payments; on a platform, a sub-merchant whose parent is the platform ([Merchant Onboarding](/books/payments/merchant-onboarding), [Payments for Software Platforms](/books/payments/software-platforms#the-hierarchy)) |
+| **customer** | `customers` | The payer, when the merchant knows who they are |
+| **payment method** | `payment_methods` | A tokenized card or bank account; never the number itself ([Running a Card Vault](/books/payments/card-vault)) |
+| **payment** | `payments` | The merchant's intent to collect an amount, and its state machine ([Designing the Payments API](/books/payments/payments-api#the-objects)) |
+| **attempt** | `payment_attempts` | One try at a processor: the authorization, its raw response, and what happened to it |
+| **refund** | `refunds` | Money going back, its own object against a payment |
+| **dispute** | `disputes` | A chargeback against a payment, with its deadlines ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)) |
+| **payout** | `payouts` | Money leaving a merchant's balance for their bank ([Payouts & Settlement](/books/payments/payouts-and-settlement)) |
+| **ledger** | `ledger_accounts`, `ledger_transactions`, `ledger_entries` | Every balance as the sum of balanced entries ([Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger)) |
+
+The split that matters most is **payment versus attempt**. The payment is what the merchant asked for and what its customer sees; the attempt is one conversation with one processor. A payment declined on one card and approved on another, retried after a timeout, sent through 3-D Secure, or failed over to a second processor ([Processor Routing](/books/payments/processor-routing)) has several attempts, and each keeps its own raw response code, network transaction ID and BIN data version, because disputes, retries and pricing all look at the attempt that actually went through.
+
+Two more rules recur in every chapter. **Refunds and disputes are their own records,** never a status on the payment ([Payment States & Ledgers](/docs/payments/payment-states#refunds-and-disputes-are-their-own-objects)), because each has its own lifecycle and can fail. **Amounts on the payment are a convenience; the ledger is the truth.** `amount_captured` and `amount_refunded` make queries cheap, but every movement of money posts a balanced ledger transaction keyed to the event that caused it, and balances are sums of entries.
+
+The spine, in the playbook's [naming conventions](/docs/database/naming-conventions), with amounts in integer minor units ([Money & Amounts](/docs/payments/money)):
+
+```sql
+CREATE TABLE merchants (
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  parent_id   UUID REFERENCES merchants (id),   -- the platform, for a sub-merchant
+  legal_name  TEXT NOT NULL,
+  country     CHAR(2) NOT NULL,
+  mcc         CHAR(4),
+  status      TEXT NOT NULL,                    -- Merchant Onboarding owns the states
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE customers (
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id UUID NOT NULL REFERENCES merchants (id),
+  email       TEXT,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE payment_methods (
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  customer_id UUID REFERENCES customers (id),
+  type        TEXT NOT NULL,                    -- 'card', 'us_bank_account', ...
+  vault_token TEXT NOT NULL,                    -- never the PAN or account number
+  fingerprint TEXT,                             -- same card, same value, across customers
+  brand       TEXT,
+  last4       CHAR(4),
+  exp_month   SMALLINT,
+  exp_year    SMALLINT,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE payments (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id       UUID NOT NULL REFERENCES merchants (id),
+  customer_id       UUID REFERENCES customers (id),
+  payment_method_id UUID REFERENCES payment_methods (id),
+  amount            BIGINT NOT NULL CHECK (amount > 0),
+  currency          CHAR(3) NOT NULL,
+  amount_captured   BIGINT NOT NULL DEFAULT 0,
+  amount_refunded   BIGINT NOT NULL DEFAULT 0,
+  status            TEXT NOT NULL CHECK (status IN ('requires_payment_method', 'requires_confirmation',
+                      'requires_action', 'processing', 'requires_capture', 'succeeded', 'canceled')),
+  channel           TEXT NOT NULL CHECK (channel IN ('ecommerce', 'card_present', 'moto')),
+  initiator         TEXT NOT NULL CHECK (initiator IN ('customer', 'merchant')),
+  idempotency_key   TEXT NOT NULL,
+  capture_before    TIMESTAMPTZ,                -- the shorter of the network's and the processor's window
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT payments_merchant_id_idempotency_key_key UNIQUE (merchant_id, idempotency_key)
+);
+
+CREATE TABLE payment_attempts (
+  id                     UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_id             UUID NOT NULL REFERENCES payments (id),
+  processor              TEXT NOT NULL,
+  processor_reference    TEXT,
+  amount                 BIGINT NOT NULL,
+  status                 TEXT NOT NULL CHECK (status IN ('pending', 'authorized', 'declined',
+                           'unknown', 'reversed', 'captured')),    -- 'unknown' is a timeout
+  response_code          TEXT,                  -- raw, as the processor sent it
+  decline_class          TEXT,                  -- 'soft' or 'hard', the platform's classification
+  authorization_code     TEXT,
+  network_transaction_id TEXT,
+  bin_data_version       TEXT,
+  requested_at           TIMESTAMPTZ NOT NULL,
+  responded_at           TIMESTAMPTZ
+);
+
+CREATE TABLE refunds (
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_id      UUID NOT NULL REFERENCES payments (id),
+  amount          BIGINT NOT NULL CHECK (amount > 0),
+  status          TEXT NOT NULL,                -- 'pending', 'succeeded', 'failed'
+  reason          TEXT,
+  idempotency_key TEXT NOT NULL UNIQUE,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE disputes (
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  payment_id      UUID NOT NULL REFERENCES payments (id),
+  network         TEXT NOT NULL,
+  reason_code     TEXT NOT NULL,                -- raw network code
+  amount          BIGINT NOT NULL,
+  currency        CHAR(3) NOT NULL,
+  status          TEXT NOT NULL,
+  evidence_due_by TIMESTAMPTZ,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE payouts (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id       UUID NOT NULL REFERENCES merchants (id),
+  amount            BIGINT NOT NULL,
+  currency          CHAR(3) NOT NULL,
+  status            TEXT NOT NULL,
+  destination_token TEXT NOT NULL,              -- the vaulted bank account or card
+  arrival_date      DATE,
+  idempotency_key   TEXT NOT NULL UNIQUE,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE ledger_accounts (
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id UUID REFERENCES merchants (id),   -- null for the platform's own accounts
+  name        TEXT NOT NULL,                    -- from the chart of accounts
+  currency    CHAR(3) NOT NULL,
+  UNIQUE NULLS NOT DISTINCT (merchant_id, name, currency)
+);
+
+CREATE TABLE ledger_transactions (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  source_type  TEXT NOT NULL,                   -- 'capture', 'refund', 'dispute', 'payout', ...
+  source_id    UUID NOT NULL,
+  status       TEXT NOT NULL CHECK (status IN ('pending', 'posted', 'archived')),
+  effective_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (source_type, source_id)               -- an event posts once
+);
+
+CREATE TABLE ledger_entries (
+  id                    UUID PRIMARY KEY DEFAULT uuidv7(),
+  ledger_transaction_id UUID NOT NULL REFERENCES ledger_transactions (id),
+  ledger_account_id     UUID NOT NULL REFERENCES ledger_accounts (id),
+  amount                BIGINT NOT NULL,        -- signed; entries per transaction and currency sum to zero
+  currency              CHAR(3) NOT NULL
+);
+```
+
+The accounts are the [chart of accounts](/docs/payments/payment-states#a-chart-of-accounts) the playbook names, and the sum-to-zero rule is enforced by a deferred constraint trigger, not trusted to application code. What's deliberately missing is anything a chapter owns: onboarding requirements, stored-credential agreements, risk decisions, settlement files, bank accounts and routing rules all arrive as deltas in their chapters.
+
 ## What This Means for the System You Build
 
+- **Keep payments and attempts apart,** with refunds, disputes and payouts as their own records and the ledger as the only source of balances.
 - **Model the five events as states,** with timestamps and the party that reported each, and never treat authorization as revenue.
 - **Track hold expiry per payment,** from the card brand and channel, and capture or release before it lapses.
 - **Treat timeouts as unknowns:** query or reverse, with the processor key derived from yours, and never re-authorize blind.
@@ -180,10 +332,15 @@ The card number is the **PAN**, the primary account number, and almost everythin
 - [Cornell LII: 15 U.S.C. § 1693o-2](https://www.law.cornell.edu/uscode/text/15/1693o-2), the Durbin Amendment behind regulated debit
 - [Federal Register: Debit Card Interchange Fees and Routing (2022)](https://www.federalregister.gov/documents/2022/10/11/2022-21838/debit-card-interchange-fees-and-routing), card-not-present debit routable over two unaffiliated networks from July 1, 2023
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), authorization types, approval validity windows (5.7.3.5, Table 5-12, 18 April 2026 edition) and the reversal requirement (5.7.3.6)
-- [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), merchant category codes such as 5411, 6513 and 4900
+- [Visa: Merchant Data Standards Manual](https://usa.visa.com/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf), merchant category codes such as 5411, 5812 and 8011
+
+- [Capital One: Capital One Completes Acquisition of Discover](https://capitalone.com/about/newsroom/capital-one-completes-acquisition-of-discover/), the acquisition completed in May 2025 (announced May 18, 2025)
+- [Covington: The GENIUS Act Becomes Law](https://www.cov.com/en/news-and-insights/insights/2025/07/the-genius-act-becomes-law-key-provisions-from-the-federal-stablecoin-regulatory-framework), the federal payment stablecoin framework signed July 18, 2025
 
 **In practice**
 
+- [Stripe: How Payment Intents and Setup Intents work](https://docs.stripe.com/payments/paymentintents/lifecycle), one PaymentIntent for the whole attempt to collect, creating charges as it tries, and its statuses
+- [Adyen: Capture](https://docs.adyen.com/online-payments/capture), a capture with its own PSP reference distinct from the authorization's, its result delivered by webhook
 - [Stripe: Place a hold on a payment method](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method), authorization validity windows by brand and channel (Visa 7 days card-not-present customer-initiated, 5 days merchant-initiated or card-present; Mastercard 7 days card-not-present, 2 days card-present), and capture rules
 - [Evolve: Mastercard Transaction Processing Excellence Program](https://developers.getevolved.com/enterprise/docs/mastercard-transaction-processing-excellence-program), Mastercard's integrity fee thresholds: 7 calendar days for final and undefined authorizations, 30 for pre-authorizations
 - [PayPal: Navigating Mastercard's New Mandate](https://www.paypal.com/us/brc/article/navigating-mastercards-new-mandate), final authorization captured within 7 days and the July 2025 fee on undefined authorizations (March 27, 2025)
