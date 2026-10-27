@@ -136,6 +136,8 @@ The UK's first fine under its children's data rules for a user-generated platfor
 
 Nothing in the findings required age verification for every user. They required knowing that children used the service, assessing the risk (the DPIA), and having a lawful basis for under-13s' data. A platform that can't show those three things for its own audience is exposed the same way, whatever its size.
 
+Reddit shows the same rule applied to a platform that stayed. On February 24, 2026 the ICO fined it £14.47 million: its terms barred under-13s, but it had no age checks until July 2025, so it had no lawful basis for processing the data of the under-13s who used it anyway, and it had not assessed the risks to children in a data protection impact assessment before January 2025. The age checks it added in July 2025, verification for mature content and a self-declared age at sign-up, did not settle it: the ICO said relying on self-declaration "presents risks to children as it is easy to bypass" and kept Reddit's processing under review. Reddit appealed the penalty to the First-tier Tribunal ([ICO](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2026/02/reddit-issued-with-1447m-fine-for-children-s-privacy-failures/)).
+
 ## How to Build It
 
 The chapter adopts `age_signals` and `parental_consents` from [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy#how-to-build-it), owns the `accounts.age_band` cache, and adds checks, rules, guardian links and restrictions.
@@ -259,6 +261,7 @@ Notes on the sketch:
 - [Ofcom: Online Safety industry bulletin, October 2026](https://www.ofcom.org.uk/online-safety/protecting-children/online-safety-industry-bulletin-october-2026), vendor due diligence, the "vet your vendor" resource, the June 15 age restrictions announcement and the assessment at 16
 - [ICO: Statement on the Imgur investigation (September 30, 2025)](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2025/09/statement-update-on-imgur-investigation/), the notice of intent and the investigation's subject
 - [ICO: Imgur owner MediaLab fined over children's privacy failures](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2026/02/imgur-owner-medialab-fined-over-children-s-privacy-failures/), the £247,590 fine and findings
+- [ICO: Reddit issued with £14.47m fine for children's privacy failures](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2026/02/reddit-issued-with-1447m-fine-for-children-s-privacy-failures/), the February 24, 2026 fine, findings, self-declaration and the appeal
 
 **Platform documentation**
 

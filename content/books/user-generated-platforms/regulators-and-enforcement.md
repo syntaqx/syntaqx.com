@@ -131,6 +131,7 @@ Every action below targets a platform's process; rows are in date order. Amounts
 | December 5, 2025 | European Commission | TikTok | DSA | Binding commitments on its ad repository |
 | February 5, 2026 | ICO | MediaLab (Imgur) | UK GDPR | £247,590: no age checks, under-13 data without consent, no DPIA |
 | February 6, 2026 | European Commission | TikTok | DSA | Preliminary findings on addictive design (Articles 34 and 35) |
+| February 24, 2026 | ICO | Reddit | UK GDPR | £14.47 million: no age checks until July 2025, under-13 data without a lawful basis, no children's DPIA before January 2025; appealed |
 | March 19, 2026 | Ofcom | 4chan | Online Safety Act | £520,000 with daily penalties after April 2 |
 | March 26, 2026 | European Commission | Pornhub, Stripchat, XNXX and XVideos | DSA | Preliminary findings on minors' access through self-declared age |
 | April 29, 2026 | European Commission | Meta | DSA | Preliminary findings on under-13s using Instagram and Facebook |
@@ -346,6 +347,7 @@ The record mechanics are [Audit Trails](/docs/architecture/audit-trails); the mo
 - [Federal Court of Australia: eSafety Commissioner v X Corp (Civil Penalty) [2026] FCA 629](https://www.judgments.fedcourt.gov.au/judgments/Judgments/fca/single/2026/2026fca0629), the admitted section 57 contravention for the manner and form of the report, the A$650,000 penalty and A$100,000 costs
 - [ICO: Statement on the Imgur investigation (September 30, 2025)](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2025/09/statement-update-on-imgur-investigation/), the notice of intent and "exiting the UK"
 - [ICO: Imgur owner MediaLab fined over children's privacy failures](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2026/02/imgur-owner-medialab-fined-over-children-s-privacy-failures/), the £247,590 fine, findings and period
+- [ICO: Reddit issued with £14.47m fine for children's privacy failures](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2026/02/reddit-issued-with-1447m-fine-for-children-s-privacy-failures/), the £14.47 million fine, findings and the First-tier Tribunal appeal
 - [New York Attorney General: Stop Hiding Hate Act](https://ag.ny.gov/resources/organizations/social-media-tos-reporting/stop-hiding-hate-act), coverage, report contents and penalties
 - [New York Attorney General: Social media terms of service reports](https://ag.ny.gov/resources/organizations/social-media-tos-reporting/reports), the filers
 
