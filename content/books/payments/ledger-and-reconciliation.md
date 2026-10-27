@@ -14,11 +14,11 @@ A merchant's ledger has one bank account and one processor. A provider's has eve
 
 The public providers all expose the same idea from different ends: every movement is an itemized record, and every lump sum (a payout, a settlement batch, a bank deposit) decomposes into those records and sums back to the cent.
 
-**Stripe** records every movement of funds in or out of an account as a **balance transaction**, and an automatic payout lists the balance transactions it contains: filter the list by payout ID and you get the charges, refunds, fees and the payout itself. Its payout reconciliation report groups them by reporting category, with an itemized export that carries the charge, payment and the bank's trace ID for the payout. Two details are worth copying. Instant and manual payouts can't be decomposed, because the merchant chose their timing and amount, so Stripe leaves those for the merchant to reconcile. And report data runs on its own schedule, so a payout can arrive before its reconciliation data does.
-
 **Adyen** reconciles at two levels. The batch-level report shows payout batches and their costs for matching to the bank statement; the transaction-level settlement details report lists every payment, refund and chargeback in a batch, with gross, net, commission, markup, scheme fees and interchange per row, keyed by Adyen's PSP reference and the merchant's own reference. Its stated rule is the one every provider's files obey: add up the net credits, subtract the net debits, and the result equals the batch's payout line.
 
 **Modern Treasury** reconciles bank activity to **expected payments**: records created ahead of time for money you expect to move, matched by rules made of field, operator and value conditions run in order, specific rules first. Many transactions can reconcile to one expected payment (it's `partially_reconciled` until the total is reached), and one transaction can reconcile to a group of expected payments whose amounts sum to it.
+
+**Stripe** records every movement of funds in or out of an account as a **balance transaction**, and an automatic payout lists the balance transactions it contains: filter the list by payout ID and you get the charges, refunds, fees and the payout itself. Its payout reconciliation report groups them by reporting category, with an itemized export that carries the charge, payment and the bank's trace ID for the payout. Two details are worth copying. Instant and manual payouts can't be decomposed, because the merchant chose their timing and amount, so Stripe leaves those for the merchant to reconcile. And report data runs on its own schedule, so a payout can arrive before its reconciliation data does.
 
 **TigerBeetle**, a ledger database built for this workload, models a hold as a **two-phase transfer**: a pending transfer reserves its amount in `debits_pending` and `credits_pending` without touching the posted balances, and is later posted (in full or part), voided, or expired by timeout.
 
@@ -213,7 +213,7 @@ ALTER TABLE ledger_accounts
 -- The third date, and corrections linked to what they correct.
 -- source_type gains 'file_row' and 'adjustment' alongside the payment events.
 ALTER TABLE ledger_transactions
-  ADD COLUMN created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),  -- when we recorded it
+  ADD COLUMN created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),  -- when the ledger recorded it
   ADD COLUMN period       DATE NOT NULL,                       -- accounting period it posts into
   ADD COLUMN corrects_id  UUID REFERENCES ledger_transactions (id);
 
@@ -237,7 +237,7 @@ CREATE TABLE external_records (
   source        TEXT NOT NULL,
   bank_account_id UUID REFERENCES bank_accounts (id),  -- set for statement lines
   source_ref    TEXT,                       -- PSP reference, trace ID, end-to-end ID
-  our_ref       TEXT,                       -- our ID, when the source echoed it
+  our_ref       TEXT,                       -- the platform's own ID, when the source echoed it
   kind          TEXT NOT NULL,              -- 'capture', 'refund', 'fee', 'deposit', 'payout', ...
   amount        BIGINT NOT NULL,            -- signed, minor units
   currency      CHAR(3) NOT NULL,

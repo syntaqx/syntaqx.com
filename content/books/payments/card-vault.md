@@ -34,7 +34,7 @@ Each is in [PCI scope](/docs/compliance/pci-dss), whoever runs it. On a platform
 - **Protect the tokenize endpoint from card testing:** a short-lived, origin-bound session token from the page, rate limits per merchant and per IP, and the signals in [Fraud & Risk](/books/payments/fraud-and-risk). An open tokenizer is a free card-checking service.
 - **Validate on both sides.** Luhn and brand checks in the field for fast feedback, again on the server as the authority, and a check that the brand matches what the merchant accepts.
 
-**Other doors** each need the same care: a server-to-server API for partners that are themselves PCI compliant; file imports when a merchant migrates its cards in from another provider, encrypted to your key and deleted after loading; [phone payments](/books/payments/phone-payments), which have their own capture problem; and [card-present](/books/payments/card-present#p2pe-encrypt-at-the-glass) data encrypted at the terminal and decrypted in your environment under DUKPT keys (a fresh key per transaction, derived from one root) ([HSMs & Key Management](/books/payments/key-management#dukpt-and-pin-blocks)), where track data is deleted the moment the authorization returns.
+**Other doors** each need the same care: a server-to-server API for partners that are themselves PCI compliant; file imports when a merchant migrates its cards in from another provider, encrypted to your key and deleted after loading; [phone payments](/books/payments/phone-payments), which have their own capture problem; and [card-present](/books/payments/card-present#p2pe-encrypt-at-the-glass) data encrypted at the terminal and decrypted in your environment under DUKPT keys, a fresh key per transaction derived from one root ([HSMs & Key Management](/books/payments/key-management#dukpt-and-pin-blocks)), where track data is deleted the moment the authorization returns.
 
 **Keep the number out of logs.** The classic leak isn't the vault's database; it's a debug log of a raw processor request, so the forwarder never logs bodies and the security code field is redacted everywhere it can appear. The general rules, allowlist serializers and a card-number scanner, are in [Sensitive Data](/docs/payments/sensitive-data#logging-and-errors). Then assume something will slip and write the procedure for finding a number where it shouldn't be: retrieve or delete it, check whether a security code is with it, find the source and close it (12.10.7).
 
@@ -48,7 +48,13 @@ A token is what the rest of your system stores, logs and passes around, so its d
 - **Scoped to the tenant that created it.** Every use checks that the caller owns the token. On a [multi-tenant](/docs/architecture/multi-tenancy) platform, a token that works for any merchant is a card number with extra steps.
 - **Tokens that can pay are still valuable.** The 2011 guidance warns that tokens usable to initiate payments "may therefore have the same value to an attacker" and may be in scope even though they can't reveal the number. Anything that charges a stored token needs the same authentication and authorization as a payment API, because that's what it is.
 
-**Format-preserving encryption** is the tempting alternative: encrypt the card number into another 16-digit number, with no vault lookup at all. It's stateless and drops into old schemas, but the token is an encrypted card number, every token ever issued falls to one key, and equal cards produce equal tokens. The algorithm choice has also narrowed: NIST declared FF3 unsuitable in 2017, and the second draft of SP 800-38G Revision 1 (February 2025) drops FF3-1 as well, leaving FF1. I use random tokens with a lookup, and FPE only where a legacy system leaves no choice.
+**Sharing a token across merchants is a scope decision.** Some platforms want one saved card to work at several of their merchants: a franchise whose locations are separate merchant accounts, or a property platform where one owner pays several associations. Payabli offers exactly that choice. Its default **merchant token** works only at the merchant (its "paypoint") that saved the card; a **universal token**, enabled per organization, works at any of the platform's merchants on the same processor, and only for tokens created after the feature was turned on. A shared token changes three things:
+
+- **The tenant becomes the portfolio.** The ownership check moves from "this merchant created it" to "this merchant is in the portfolio it was shared with", and a credential that can charge any merchant's customers is worth more to an attacker than one that can't. Shared tokens get the narrowest callers and the closest monitoring.
+- **Consent has to cover it.** The customer agreed to store a card with someone ([The Credential Record](/books/payments/stored-credentials#the-credential-record)). My rule is that a token is shared only when that agreement names the platform or the merchants it covers, and each merchant still records its own consent before its first charge.
+- **Portability narrows to the processor.** A token shared on one processor can't be charged through another, so moving that processor's merchants means migrating every shared card together ([Tokens Decide How Free You Are](/books/payments/processor-routing#tokens-decide-how-free-you-are)). Holding the card numbers in your own vault, as this chapter does, keeps the sharing rule yours rather than the processor's.
+
+**Format-preserving encryption** is the tempting alternative: encrypt the card number into another 16-digit number, with no vault lookup at all. It's stateless and drops into old schemas, but the token is an encrypted card number, every token ever issued falls to one key, and equal cards produce equal tokens. The algorithm choice has also narrowed: NIST concluded in April 2017 that FF3 is "no longer suitable as a general-purpose FPE method", and the second public draft of SP 800-38G Revision 1 (February 2025) drops FF3-1 as well, leaving FF1. I use random tokens with a lookup, and FPE only where a legacy system leaves no choice.
 
 **Replacing a card makes a new token.** When a customer re-enters a card, issue a new token and mark the old one replaced, rather than rewriting the number behind an existing token. Old payments, refunds and disputes keep pointing at the card they actually used. To spot the same card behind different tokens (duplicate customers, card testing, one card on many accounts), store a **fingerprint**: a keyed hash of the full number, under a key managed like any other (requirement 3.5.1.1). An unkeyed hash of a 16-digit number with a known BIN and Luhn digit is a short brute-force away from the number itself.
 
@@ -62,7 +68,7 @@ A token is what the rest of your system stores, logs and passes around, so its d
 
 **Never the security code.** PCI DSS forbids storing the card verification code after authorization, even encrypted (3.3.1.2). It passes through memory into the one authorization that needs it and is gone; charges against a stored credential don't use it. Make sure the "passes through memory" part is true, which means checking what your HTTP client and logger do with request bodies.
 
-![An exploded view of one stored card in six layers: the key-encrypting key in the KMS or HSM, the wrapped data key with its version, the card number encrypted with AES-256-GCM, a keyed fingerprint, the card details (BIN, last four, brand, expiry) and the random tenant-scoped token. The top three layers can be returned to the platform; the bottom three stay in the vault.](/diagrams/pm-vault-record-exploded.svg "One stored card, taken apart. Only the token, the card details and the fingerprint ever leave the vault; rotating the key-encrypting key re-wraps the data keys and never touches the card numbers.")
+![An exploded view of one stored card in six layers: the key-encrypting key in the KMS or HSM, the wrapped data key with its version, the card number encrypted with AES-256-GCM, a keyed fingerprint, the card details (BIN, last four, brand, expiry) and the random tenant-scoped token. The token, card details and fingerprint can be returned to the platform; the keys and ciphertext stay in the vault.](/diagrams/pm-vault-record-exploded.svg "One stored card, taken apart. Only the token, the card details and the fingerprint ever leave the vault; rotating the key-encrypting key re-wraps the data keys and never touches the card numbers.")
 
 **Retention is a decision with a job behind it.** Requirement 3.2.1 asks for a retention period with a business reason, and a check at least every three months that anything past it has been deleted. A reasonable rule: purge the number when the customer or merchant deletes the card, when the merchant leaves the platform, and when a card hasn't been used for a period just longer than your longest billing cycle (13 months covers annual renewals). Keep the token record and its BIN and last four so history still reads; delete the ciphertext, or with a data key per record, destroy the key. "Unused for seven years" is not a retention policy, it's an inventory.
 
@@ -72,7 +78,7 @@ A token is what the rest of your system stores, logs and passes around, so its d
 
 Detokenization is the whole risk of a vault, so it gets the narrowest interface you can build.
 
-**Systems get it only on the way to a processor.** The vault never returns a card number in an API response to the platform. Instead the platform sends its processor request through the **forwarder** with a placeholder where the card goes; the forwarder authenticates the caller, checks the token belongs to that tenant, substitutes the number and sends the request to the processor, and passes the response back. This is the pattern every vault provider sells: VGS calls them outbound routes on an HTTPS forward proxy, Basis Theory replaces `{{token}}` expressions in a proxied request, Evervault's Relay decrypts fields on the way out, and Skyflow requires processor URLs to be approved before production. Build your own the same way:
+**Systems get it only on the way to a processor.** The vault never returns a card number in an API response to the platform. Instead the platform sends its processor request through the **forwarder** with a placeholder where the card goes; the forwarder authenticates the caller, checks the token belongs to that tenant, substitutes the number and sends the request to the processor, and passes the response back. This is the pattern every vault provider sells: Basis Theory replaces `{{token}}` expressions in a proxied request, Evervault's Relay decrypts fields on the way out, Skyflow requires processor URLs to be approved before production, and VGS calls them outbound routes on an HTTPS forward proxy. Build your own the same way:
 
 - **Callers authenticate as services** (mutual TLS or signed workload identity), and each is authorized per operation and per tenant. Network rules are a second layer, not the authentication. A detokenizing endpoint that trusts anything able to reach it is one misrouted security group from an open card-number API.
 - **Destinations are an allowlist** of processor hostnames, enforced on egress, so the forwarder can't be pointed anywhere else (requirement 1.3.2 restricts outbound CDE traffic to what's necessary).
@@ -114,32 +120,37 @@ The platform's `payment_methods` row in [the core data model](/books/payments/ca
 
 ```sql
 CREATE TABLE vault_cards (
-  token             text PRIMARY KEY,         -- 'tok_' + random, never derived from the PAN
-  tenant_id         uuid NOT NULL,            -- the merchant that may use it
-  ciphertext        bytea,                    -- null once purged
-  wrapped_dek       bytea,
-  kek_id            text NOT NULL,            -- KMS key and version that wrapped the DEK
-  dek_version       int NOT NULL,
-  fingerprint       bytea NOT NULL,           -- keyed HMAC of the PAN
-  bin               text NOT NULL,            -- up to 8 digits
-  last4             text NOT NULL,
-  network_token_ref text,
-  replaced_by       text REFERENCES vault_cards (token),
-  last_used_at      timestamptz,
-  purged_at         timestamptz,
-  created_at        timestamptz NOT NULL
+  token             TEXT PRIMARY KEY,         -- 'tok_' + random, never derived from the PAN
+  tenant_id         UUID NOT NULL,            -- the merchant that may use it
+  portfolio_id      UUID,                     -- set only when the token is shared across a platform's merchants
+  ciphertext        BYTEA,                    -- NULL once purged
+  wrapped_dek       BYTEA,
+  kek_id            TEXT NOT NULL,            -- KMS key and version that wrapped the DEK
+  dek_version       INTEGER NOT NULL,
+  fingerprint       BYTEA NOT NULL,           -- keyed HMAC of the PAN
+  bin               TEXT NOT NULL,            -- up to 8 digits
+  last4             TEXT NOT NULL,
+  brand             TEXT NOT NULL,
+  exp_month         SMALLINT NOT NULL,
+  exp_year          SMALLINT NOT NULL,
+  network_transaction_id TEXT,                -- from the first payment, for stored-credential charges
+  network_token_ref TEXT,
+  replaced_by       TEXT REFERENCES vault_cards (token),
+  last_used_at      TIMESTAMPTZ,
+  purged_at         TIMESTAMPTZ,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE vault_access_log (
-  id          uuid PRIMARY KEY,
-  token       text NOT NULL,
-  kind        text NOT NULL,                  -- detokenize, reveal, export
-  actor       text NOT NULL,                  -- service identity or person
-  tenant_id   uuid NOT NULL,
-  destination text,                           -- processor host for a detokenize
-  reason      text,                           -- ticket for a reveal
-  approved_by text,                           -- second person for an export
-  at          timestamptz NOT NULL
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  token       TEXT NOT NULL,
+  kind        TEXT NOT NULL CHECK (kind IN ('detokenize', 'reveal', 'export')),
+  actor       TEXT NOT NULL,                  -- service identity or person
+  tenant_id   UUID NOT NULL,
+  destination TEXT,                           -- processor host for a detokenize
+  reason      TEXT,                           -- ticket for a reveal
+  approved_by TEXT,                           -- second person for an export
+  at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ```
 
@@ -154,7 +165,7 @@ Vault records are evidence in a PCI DSS assessment, in a card-data compromise in
 
 ## What This Means for the System You Build
 
-- **Random, prefixed, tenant-scoped tokens,** short-lived at capture and long-lived only server-side, with a keyed fingerprint for matching cards.
+- **Random, prefixed, tenant-scoped tokens,** short-lived at capture and long-lived only server-side, with a keyed fingerprint for matching cards, and shared across a platform's merchants only where consent covers it.
 - **Envelope encryption under a KMS or HSM key,** a key version on every ciphertext, and both a re-wrap job and a resumable, verified re-encryption job.
 - **A retention rule and the purge job behind it,** run and verified quarterly.
 - **Detokenization only through a forwarder to allowlisted processors,** with service authentication, tenant checks, throttles and a log line every time.
@@ -171,6 +182,7 @@ Vault records are evidence in a PCI DSS assessment, in a card-data compromise in
 - [PCI SSC: Tokenization Product Security Guidelines (2015)](https://listings.pcisecuritystandards.org/documents/Tokenization_Product_Security_Guidelines.pdf), reversible and irreversible tokens, distinguishability, and the one-in-a-million guessing bar
 - [PCI SSC: Guidance for PCI DSS Scoping and Network Segmentation](https://listings.pcisecuritystandards.org/documents/Guidance-PCI-DSS-Scoping-and-Segmentation_v1_1.pdf), CDE, connected-to and out-of-scope systems
 - [NIST SP 800-38G Rev. 1, second public draft](https://csrc.nist.gov/pubs/sp/800/38/g/r1/2pd), format-preserving encryption with FF3 and FF3-1 removed, leaving FF1
+- [NIST: Recent Cryptanalysis of FF3](https://csrc.nist.gov/news/2017/recent-cryptanalysis-of-ff3), the April 2017 conclusion that FF3 is no longer suitable as a general-purpose FPE method
 
 **Reference**
 
@@ -189,9 +201,11 @@ Vault records are evidence in a PCI DSS assessment, in a card-data compromise in
 
 **In practice**
 
-- [VGS: HTTP proxy](https://docs.verygoodsecurity.com/vault/http-proxy), inbound reverse-proxy and outbound forward-proxy routes
+- [AWS Well-Architected: Implement break-glass procedures](https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.5-implement-break-glass-procedures.html), hardware MFA and alerts on emergency access
 - [Basis Theory: Proxies](https://developers.basistheory.com/docs/concepts/proxies/), replacing token expressions in an outbound request
 - [Evervault: Relay](https://docs.evervault.com/primitives/relay), decrypting fields on the way to a processor
-- [AWS Well-Architected: Implement break-glass procedures](https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.5-implement-break-glass-procedures.html), hardware MFA and alerts on emergency access
-- [Skyflow: Connections overview](https://docs.skyflow.com/connections-overview/), outbound connections and third-party URLs reviewed and allowlisted before production
+- [Payabli: Payment method tokenization](https://docs.payabli.com/guides/platform-tokenization-overview), merchant tokens usable at one merchant and universal tokens usable across a portfolio on the same processor
+- [Payabli: Share payment method tokens](https://docs.payabli.com/guides/platform-developer-tokenization-share-tokens), universal tokens enabled per organization and only for tokens created after enablement
 - [Plaid: Auth](https://plaid.com/docs/auth/), tokenized account numbers and processor tokens for bank accounts
+- [Skyflow: Connections overview](https://docs.skyflow.com/connections-overview/), outbound connections and third-party URLs reviewed and allowlisted before production
+- [VGS: HTTP proxy](https://docs.verygoodsecurity.com/vault/http-proxy), inbound reverse-proxy and outbound forward-proxy routes

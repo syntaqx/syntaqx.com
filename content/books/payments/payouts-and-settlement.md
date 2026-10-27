@@ -16,13 +16,23 @@ Everything so far brings money in; this part sends it out, starting with the mer
 
 ## Settlement Timing
 
-Funds become available on a **rolling** schedule, written T+N: money captured on day T is available N business days later. Two business days is common for established US card accounts, but it varies by country and payment method. Stripe's published standard timing, for example, is 2 business days in the US and longer elsewhere, bank debits settle more slowly than cards, and a first payout waits longer still (below).
+Funds become available on a **rolling** schedule, written T+N: money captured on day T is available N business days later. Two business days is common for established US card accounts, but it varies by country and payment method. Stripe's published standard timing, for example, is 2 business days in the US and longer elsewhere, bank debits settle more slowly than cards, and a first payout waits longer still (below). Adyen's managed payouts for platforms offer two speeds, standard (funds arrive two days after settlement) and accelerated (the day after), on a weekday, weekly or monthly schedule, with an optional minimum payout amount and a retained amount that stays in the balance after each payout.
 
 Rolling beats "everything on Friday": each day's volume becomes available on its own day, so cash flow tracks sales, and a problem with one batch affects one day.
 
+### Cutoffs, Batches and Transfers
+
+"Day T" is a batch, not a calendar day. Payments are grouped into a batch that closes at a cutoff hour, and everything after the cutoff belongs to the next day's batch, so the hour a merchant's batch closes decides which day it's funded. Payabli's documentation makes this concrete. Its default cutoff is 5 PM Eastern: a payment at 4:59 PM on Monday is batched Monday and funded Tuesday, and one at 11:59 PM is batched Tuesday and funded Wednesday. A merchant can move its cutoff to any whole hour, so a Texas business can close at 8 PM Central, but a cutoff between 6 PM and 11 PM Eastern funds two days later at the earliest instead of the next day. A later cutoff gives the merchant's evening sales a same-day batch and costs a day of funding; show both sides of that trade when merchants choose.
+
+The deposit itself is a **transfer**, a net of everything due that day: the batch's payments, less returns, chargebacks, fees and adjustments posting the same day. Most days the net is positive and becomes a deposit. When debits outweigh sales, it's negative, and the platform debits the merchant's bank for the difference instead: Payabli's example is $100 of payments against $200 of returns, chargebacks and adjustments, which debits the merchant $100. Finix works the same way, eventually creating a funding transfer that debits the merchant's payout account when a negative settlement isn't offset by later transactions. A negative transfer is a [negative balance](#negative-balances) that has already been collected, with every risk of the [clawback](#clawbacks) below: it's an ACH debit, and it can come back.
+
+### Where the Money Lands
+
+A merchant can have several bank accounts, each for a different kind of money. Payabli models it as **usages** on each funding account: `deposits` (money received), `billing` (fees), `payOutFunding` (money sent to vendors), `refunds` and `returns` (returns, disputes and other rejected payments). One account can carry every usage, or a business can keep refunds and returns out of the account its deposits land in, and a merchant taking cards may have only one deposits account. Model the same split even if every merchant starts with one account: each money movement names the usage it's for, and the payout or debit goes to the account that carries it. A merchant that later separates fees from deposits is then a configuration change, not a migration, and a change to any of those accounts goes through the verification and hold in [Payout Failures](#payout-failures).
+
 ## Fees Are Separate Entries
 
-A $50.00 charge with a 2.9% plus 30 cent fee shouldn't be recorded as a $48.25 payment. It's a $50.00 payment and a $1.75 fee, posted together in one [ledger transaction](/docs/payments/payment-states#double-entry-ledger):
+A $50.00 charge with a 2.9% plus $0.30 fee shouldn't be recorded as a $48.25 payment. It's a $50.00 payment and a $1.75 fee, posted together in one [ledger transaction](/docs/payments/payment-states#double-entry-ledger):
 
 | Account | Amount |
 | ------- | ------ |
@@ -37,16 +47,16 @@ Recording only the net loses what you'll need later: a partial refund needs the 
 
 ### Collecting Your Own Fees
 
-The platform collects its fees one of two ways. **Net settlement** deducts fees from each payout, so the merchant receives $48.25 and the fee never has to be collected; it's simple, and it's the default for most platforms. **Gross settlement** pays the merchant the full $50.00 and collects fees separately, usually as one monthly debit from the merchant's bank account, which some businesses require so deposits match their sales exactly and fees appear as an expense of their own in their books. Gross settlement turns fees into receivables that can fail: the monthly debit can come back insufficient or unauthorized, and then it's a collection, handled like the negative balances below. The same ledger serves both; only the payout instruction differs. These are the same words [Treasury](/books/payments/treasury#funding-the-day) uses for how the acquirer pays you; here they're how you pay the merchant, and the two choices are independent. Fees the platform charges merchants beyond processing (monthly service fees, return and chargeback fees, failed-authorization fees) are entries of their own types, never folded into the processing fee.
+The platform collects its fees one of two ways. **Net settlement** deducts fees from each payout, so the merchant receives $48.25 and the fee never has to be collected; it's simple, and it's the default for most platforms. **Gross settlement** pays the merchant the full $50.00 and collects fees separately, usually as one monthly debit from the merchant's bank account, which some businesses require so deposits match their sales exactly and fees appear as an expense of their own in their books. Gross settlement turns fees into receivables that can fail: the monthly debit can come back insufficient or unauthorized, and then it's a collection, handled like the negative balances below. The same ledger serves both; only the payout instruction differs. Finix offers the same choice: net by default, where "deposits and fees are combined into one payout", or gross, where they're "distributed into two separate payouts". These are the same words [Treasury](/books/payments/treasury#funding-the-day) uses for how the acquirer pays you; here they're how you pay the merchant, and the two choices are independent. Fees the platform charges merchants beyond processing (monthly service fees, return and chargeback fees, failed-authorization fees) are entries of their own types, never folded into the processing fee.
 
 Platforms that [split a payment](/books/payments/software-platforms#where-the-money-goes) between several parties (a marketplace paying a seller and a delivery driver, say) post every share as its own entry in the same transaction. The rule from [Money & Amounts](/docs/payments/money) still applies: the shares must sum exactly to the gross, with any rounding remainder assigned deliberately.
 
 ## Payout Schedules, Holds and Reserves
 
-How soon a merchant can be paid is a risk decision, not a convenience setting: once money leaves the platform, getting it back depends on the merchant's goodwill and bank balance, and disputes arrive 120 days later, or more for anything paid in advance.
+How soon a merchant can be paid is a risk decision, not a convenience setting: once money leaves the platform, getting it back depends on the merchant's goodwill and bank balance, and disputes can arrive up to 120 days later, or more for anything paid in advance.
 
 - **New merchants wait longer.** A first payout delayed a week or two gives fraud and disputes time to surface; it stops the merchant who signs up with stolen cards and pays themselves out the same day. Stripe typically schedules a new account's first payout 7 to 14 days after its first live payment.
-- **Reserves come in a few shapes.** A **hold** is a fixed amount released on a date. A **rolling reserve** holds back a percentage of each payment for a set number of days, then releases it; Stripe's examples include 30% held for 60 days. A **fixed reserve** holds a percentage until one release date. Rolling reserves are the standard tool for merchants whose risk is real but acceptable (high ticket sizes, delivery months after payment, elevated dispute rates): they pay the disputes and refunds that arrive after the sales that caused them. Stripe caps any reserve at 180 days, and releases a hold early once refunds or disputes have used it.
+- **Reserves come in a few shapes.** A **hold** is a fixed amount released on a date. A **rolling reserve** holds back a percentage of each payment for a set number of days, then releases it; Stripe's examples include 30% held for 60 days. A **fixed reserve** holds a percentage until one release date. Rolling reserves are the standard tool for merchants whose risk is real but acceptable (high ticket sizes, delivery months after payment, elevated dispute rates): they pay the disputes and refunds that arrive after the sales that caused them. Stripe caps any reserve at 180 days, and releases a hold early once refunds or disputes have used it. A lighter version is a retained balance: Adyen's managed payouts can leave a set amount in the balance after every payout, its example being USD 100 to cover possible refunds.
 - **The payment method sets the clock.** Card money can come back as a dispute for months, a consumer ACH debit for 60 days and a business one for two banking days ([ACH & Bank Transfers](/books/payments/ach)), a Canadian pre-authorized debit for 90 ([Payments in Canada](/books/payments/canada)), and a check through warranty claims long after it cleared ([Accepting Checks](/books/payments/checks)). Cash confirmed by a retail network doesn't come back at all ([Cash Payments](/books/payments/cash-payments)). Availability is computed per payment from its method, not per merchant.
 - **Instant payouts are a different product.** A payout to a debit card or over RTP or FedNow is final on arrival ([Vendor Payouts](/books/payments/vendor-payouts#push-to-card)), so it's priced and limited like credit, and paying before settlement lands is a [treasury decision](/books/payments/treasury#funding-the-day).
 - **Holds are explicit and explained.** Every held amount is a ledger entry into the `reserves` account with a release date, never just a smaller "available" number. A merchant who can see "$1,200 held until March 12, rolling 10% reserve" is a merchant who doesn't open a support ticket.
@@ -92,7 +102,7 @@ The three-way match of ledger, processor report and bank is in [Three Sources of
 
 ## One Payment, Traced
 
-Each chapter of this volume describes one layer, several of them still ahead in Running a Provider. Here is a single $100 online card payment through all of them, with illustrative fees: the merchant pays 2.9% plus 30 cents, and the costs are the interchange chapter's example rate ($1.80) plus 14 cents of network fees.
+Each chapter of this volume describes one layer, several of them still ahead in Running a Provider. Here is a single $100 online card payment through all of them, with illustrative fees: the merchant pays 2.9% plus $0.30, and the costs are the interchange chapter's example rate ($1.80) plus $0.14 of network fees.
 
 | When | What happens | Where it's explained |
 | --- | --- | --- |
@@ -124,6 +134,20 @@ ALTER TABLE payouts ADD COLUMN returned_at TIMESTAMPTZ;
 ALTER TABLE payouts ADD COLUMN caused_by_payment_id UUID REFERENCES payments (id);  -- clawbacks
 -- status adds 'in_transit' and 'returned'; 'paid' is not terminal
 
+CREATE TABLE merchant_bank_accounts (         -- where each kind of money lands
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id   UUID NOT NULL REFERENCES merchants (id),
+  account_token TEXT NOT NULL,                -- vaulted; never the account number
+  usages        TEXT[] NOT NULL CHECK (usages <@ ARRAY['deposits', 'billing', 'payout_funding', 'refunds', 'returns']
+                                       AND cardinality(usages) > 0),
+  status        TEXT NOT NULL CHECK (status IN ('pending', 'active', 'inactive')),
+  verified_at   TIMESTAMPTZ,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE payouts ADD COLUMN bank_account_id UUID NOT NULL REFERENCES merchant_bank_accounts (id);
+ALTER TABLE payouts ADD COLUMN usage TEXT NOT NULL;  -- which usage the account was chosen for
+
 CREATE TABLE payout_items (                  -- what each payout pays
   payout_id             UUID NOT NULL REFERENCES payouts (id),
   ledger_transaction_id UUID NOT NULL REFERENCES ledger_transactions (id),
@@ -148,7 +172,7 @@ CREATE TABLE balance_holds (                 -- holds and reserves, each one dat
 ALTER TABLE payments ADD COLUMN available_on DATE;  -- computed from the payment method at capture
 ```
 
-The available balance is a query, not a column: posted entries whose payments are past `available_on`, less unreleased holds and pending outflows. The payout's idempotency key comes from the merchant, the balance period and `attempt`, and `payout_items` is the answer to "which payments make up this deposit?".
+The available balance is a query, not a column: posted entries whose payments are past `available_on`, less unreleased holds and pending outflows. A day's transfer is one payout whose `payout_items` net that day's payments against its returns, disputes and fees; when the sum is negative, the payout is created with `direction = 'debit'` against the account carrying the `returns` or `billing` usage. The payout's idempotency key comes from the merchant, the balance period and `attempt`, and `payout_items` is the answer to "which payments make up this deposit?".
 
 ## Auditing
 
@@ -164,6 +188,8 @@ Payout records are evidence when a merchant disputes a hold, when a takeover red
 - **Pending and available balances,** each tied to the event it reflects.
 - **Fees and every party's share as separate ledger entries,** with the platform's own fees collected net or gross by choice.
 - **Availability computed per payment from its method,** and holds as dated ledger entries.
+- **A cutoff per merchant that decides its funding day,** a daily transfer that nets everything due, and a debit when the net is negative.
+- **Bank accounts by usage** (deposits, fees, payout funding, refunds, returns), so every movement goes to the account meant for it.
 - **A recovery order for negative balances and clawbacks,** decided and published before the first loss.
 - **Payout states that continue past `paid`,** because a payout can still be returned.
 - **Deterministic payout keys,** and every payout listing the balance transactions it pays.
@@ -176,12 +202,13 @@ Payout records are evidence when a merchant disputes a hold, when a takeover red
 - [Nacha: New Return Reason Code for Sanctions Compliance Obligations](https://www.nacha.org/rules/new-return-reason-code-sanctions-compliance-obligations), R16 narrowed to frozen accounts and the new R90, effective March 17, 2028
 - [Visa Core Rules and Visa Product and Service Rules](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), the 120-day dispute window
 
-**Reference**
-
-- [Nacha: Risk and Quality Rules fact sheet](https://www.nacha.org/system/files/2019-05/Risk-and-Quality-Rules-Fact-Sheet.pdf), return rate thresholds and the administrative return codes
-
 **In practice**
 
+- [Adyen: Managed payouts](https://docs.adyen.com/platforms/managed-payouts), standard and accelerated payout timing, weekday, weekly and monthly schedules, minimum payout amounts and retained balances
+- [Finix: Payouts](https://docs.finix.com/guides/after-the-payment/payouts), net and gross payouts, and funding transfers that debit the merchant for a negative settlement
+- [Payabli: How money moves](https://docs.payabli.com/guides/platform-how-money-moves-overview), batches, the 5 PM Eastern default cutoff, funding-day examples, and transfers netting returns, chargebacks and fees, debiting the merchant when negative
+- [Payabli: Custom batch times](https://docs.payabli.com/guides/pay-in-batches-custom-times-overview), cutoffs on any whole hour and earliest funding of T+1 or T+2 by cutoff hour
+- [Payabli: Funding accounts](https://docs.payabli.com/guides/pay-ops-boarding-funding-accounts-overview), deposits, billing, payout funding, refunds and returns usages, and one deposits account with card services
 - [Stripe: Payouts](https://docs.stripe.com/payouts), settlement timing by country, first-payout delay and negative balances
 - [Stripe: Understanding Connect account balances](https://docs.stripe.com/connect/account-balances), pending and available balances, platform reserves and negative balances
 - [Stripe: Connected account reserves](https://docs.stripe.com/connect/connected-account-reserves), holds, rolling and fixed reserves, and exposure

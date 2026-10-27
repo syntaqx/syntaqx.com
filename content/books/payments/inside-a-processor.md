@@ -98,7 +98,7 @@ Before the first authorization, the processor and acquirer register the merchant
 
 - **The acquirer's own identifiers:** a Visa acquiring identifier and a Mastercard ICA, each licensed to a network member; a sponsor that lets another member use one is liable for it.
 - **The merchant's MCC and name.** The acquirer must assign the MCC that most accurately describes the business, and the name the merchant primarily uses with its customers, corrected if it confuses cardholders ([How Card Payments Work](/books/payments/card-payments#merchant-identity)).
-- **Payment facilitators and agents.** A payment facilitator gets an identifier from the network through its acquirer and assigns sub-merchant identifiers of its own, and both travel in every transaction. Visa requires members to register third-party agents before they provide any services, and from October 24, 2026 to disclose those agents' identifiers in the US and Canada; Mastercard's payment facilitators are registered by their acquirers.
+- **Payment facilitators and agents.** A payment facilitator (payfac) gets an identifier from the network through its acquirer and assigns sub-merchant identifiers of its own, and both travel in every transaction. Visa requires members to register third-party agents before they provide any services, and since October 24, 2026 to disclose those agents' identifiers in the US and Canada; Mastercard's payfacs are registered by their acquirers.
 - **Terminated-merchant screening.** Mastercard's MATCH system is mandatory for acquirers: inquire before signing a merchant, and add one within 5 days of terminating it for cause; Visa's terminated merchant file must be updated by close of business on the day after the merchant is notified ([Merchant Onboarding](/books/payments/merchant-onboarding#underwriting-and-risk-tiers)).
 
 ## Billing Merchants
@@ -109,7 +109,7 @@ Merchants don't pay interchange; they pay their acquirer a merchant discount, an
 - **Fees are collected one of two ways.** Netted from each payout, so the deposit is already net of fees, which is how Square handles processing fees (it still issues a monthly fee invoice as the record); or totaled on a monthly invoice and settled afterward, which is how Adyen's monthly invoice works, with its fees and adjustments then flowing through settlement to the balance. The billing system supports whichever the merchant's contract says.
 - **The statement is a different document from the payout report.** A payout report explains one deposit; the monthly statement or fee invoice summarizes the month's fees and adjustments, and Adyen calls its monthly invoice required for full reconciliation. Merchants need both, and both come from the same ledger ([Operating the Platform](/books/payments/operating-the-platform#statements-and-reports)).
 
-The acquiring entity, or a payment facilitator in its place, also files each merchant's 1099-K, reporting gross amounts without deducting refunds or fees ([Payments for Software Platforms](/books/payments/software-platforms#1099-k-and-taxpayer-data)).
+The acquiring entity, or a payfac in its place, also files each merchant's 1099-K, reporting gross amounts without deducting refunds or fees ([Payments for Software Platforms](/books/payments/software-platforms#1099-k-and-taxpayer-data)).
 
 ## Becoming the Processor
 
@@ -152,6 +152,8 @@ Instant payments have the same structure with different names: a FedNow particip
 - [Silverflow: Network funds transfers report](https://docs.silverflow.com/guides/network-funds-transfers-report), one transfer per settlement service and currency
 - [PayNet: MyDebit ISO 8583 specifications](https://docs.developer.paynet.my/mydebit/mydebit-cnp/mydebit-iso8583-specifications), sign-on, echo, key exchange and late-response reversals in a published network spec
 - [Adyen: Raw acquirer responses](https://docs.adyen.com/development-resources/raw-acquirer-responses), network response codes as a provider maps them
+- [Checkout.com: Payment tracking update, Mastercard TLID](https://www.checkout.com/blog/payment-tracking-update-mastercard-tlid), acquirers required to pass the transaction link identifier on lifecycle messages since October 2025, and the later dates for merchant-initiated transactions
+- [TabaPay: Visa OCT fraud reporting](https://developers.tabapay.com/docs/visa-oct-fraud-reporting), confirmed fraud reported no later than 60 days from the transaction date or 30 calendar days after the account holder's notification, under Visa's mandate
 - [Stripe: Interchange-plus fees and network costs](https://support.stripe.com/questions/reviewing-ic-fees-stripe-fees-and-network-costs?locale=en-GB), network fees billed up to two months later
 - [Square: Fees and payments FAQs](https://squareup.com/help/gb/en/article/6109-fees-and-payments-faqs), processing fees deducted before each transfer, with monthly fee invoices as the record
 - [Adyen: Reports and fees for platforms](https://docs.adyen.com/platforms/reports-and-fees), the monthly invoice of fees and adjustments, required for full reconciliation, and how its adjustments flow through settlement
