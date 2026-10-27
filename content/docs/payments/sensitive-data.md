@@ -13,8 +13,8 @@ Payments, ledgers and webhooks all carry data an attacker wants: card numbers, b
 
 [PCI DSS](/docs/compliance/pci-dss) applies to every system that stores, processes or transmits cardholder data, and to what's connected to it. Scope is the cost driver. A business that takes raw card numbers on its own servers owns the full standard, dedicated tooling and, at volume, an annual external assessment; one that never touches them answers a short questionnaire. The levels, questionnaires and assessments are in [PCI DSS](/docs/compliance/pci-dss); this chapter is about the engineering that keeps scope small.
 
-- **Tokenize at the edge.** Card data goes from the browser or device straight to a vault (hosted payment fields, a processor SDK, a tokenization service), and your servers receive a token. A token can't be turned back into a card number outside the vault that issued it, so the rest of the platform, its logs, backups and engineers' laptops fall out of scope. A token that can start a charge still needs the same protection as a payment API ([Running a Card Vault](/docs/industries/payments/card-vault#designing-the-token)).
-- **One small vault, if you need one at all.** Some businesses must hold card numbers, to route between processors for example. Then it's one isolated service on its own network segment, with its own keys and the smallest interface: tokenize, and detokenize only toward the processor. A vault with a convenient "get card number" endpoint is no longer a vault. [Running a Card Vault](/docs/industries/payments/card-vault) covers the design.
+- **Tokenize at the edge.** Card data goes from the browser or device straight to a vault (hosted payment fields, a processor SDK, a tokenization service), and your servers receive a token. A token can't be turned back into a card number outside the vault that issued it, so the rest of the platform, its logs, backups and engineers' laptops fall out of scope. A token that can start a charge still needs the same protection as a payment API ([Running a Card Vault](/books/payments/card-vault#designing-the-token)).
+- **One small vault, if you need one at all.** Some businesses must hold card numbers, to route between processors for example. Then it's one isolated service on its own network segment, with its own keys and the smallest interface: tokenize, and detokenize only toward the processor. A vault with a convenient "get card number" endpoint is no longer a vault. [Running a Card Vault](/books/payments/card-vault) covers the design.
 - **Never store the card verification code.** PCI DSS forbids it after authorization, even encrypted: it proves the cardholder has the card right now, and a stored one proves only that you were breached.
 
 What the rest of the system may keep:
@@ -35,7 +35,7 @@ Rules like "don't log PII" fail because nobody agrees what counts, so every fiel
 | Class | Examples | Handling |
 | ----- | -------- | -------- |
 | Secret | API keys, webhook secrets, card numbers | Vault or secrets manager only, never logged, never returned after creation |
-| Secret | Full bank account number | Vault only; Nacha requires stored account numbers be unreadable at volume ([ACH](/docs/industries/payments/ach#the-rules-you-inherit)) |
+| Secret | Full bank account number | Vault only; Nacha requires stored account numbers be unreadable at volume ([ACH](/books/payments/ach#the-rules-you-inherit)) |
 | Sensitive | Name, email, address, bank account last 4 | Encrypted at rest, masked in logs and support tools |
 | Internal | IDs, statuses, amounts | Normal handling |
 

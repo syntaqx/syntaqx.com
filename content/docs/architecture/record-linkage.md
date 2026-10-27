@@ -160,7 +160,7 @@ Content-Type: application/json
 }
 ```
 
-Some merges need domain rules on top. Merging two game accounts with purchases from different storefronts must keep each purchase's entitlement tied to the store that sold it. Merging two payers with stored cards needs a decision on which mandate stays valid ([Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials) is an example).
+Some merges need domain rules on top. Merging two game accounts with purchases from different storefronts must keep each purchase's entitlement tied to the store that sold it. Merging two payers with stored cards needs a decision on which mandate stays valid ([Stored Cards & Recurring Billing](/books/payments/stored-credentials) is an example).
 
 ## Overrides That Retire
 

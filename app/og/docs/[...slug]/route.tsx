@@ -1,5 +1,4 @@
 import { getAllDocs, getDocBySlug, getDocsByCategory } from "@/lib/docs";
-import { isIndustry } from "@/lib/industries";
 import { ogCard } from "@/lib/og-card";
 
 // The social preview for each doc. A route handler rather than an
@@ -20,16 +19,10 @@ export async function GET(
   const doc = getDocBySlug(slug);
   if (!doc) return new Response("Not found", { status: 404 });
 
-  const category = getDocsByCategory().find((c) => c.name === doc.category);
-  const section = category?.name ?? "Docs";
-  // Industry chapters read in order, so they carry their number.
-  const chapter =
-    category && isIndustry(category.section)
-      ? `  ·  Chapter ${String(category.docs.findIndex((d) => d.slug === doc.slug) + 1).padStart(2, "0")}`
-      : "";
+  const section = getDocsByCategory().find((c) => c.name === doc.category)?.name ?? "Docs";
 
   return ogCard({
-    kicker: chapter ? `${section}${chapter}` : `The playbook  ·  ${section}`,
+    kicker: `The playbook  ·  ${section}`,
     title: doc.title,
     description: doc.description,
     scene: "shelf",

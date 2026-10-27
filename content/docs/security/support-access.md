@@ -95,7 +95,7 @@ The tool support, risk and finance use every day is a product, with users, a des
 - **Scope by role.** Tier-one support sees masked data for the accounts in their queue; fraud and risk see more; very few people can reveal anything. Roles follow [least privilege](/docs/security/authorization#least-privilege), and nobody can grant themselves a role.
 - **Separate code path, separate front door.** Cross-tenant access belongs in internal tooling with its own permissions, not behind a flag in tenant code ([Multi-Tenancy](/docs/architecture/multi-tenancy)). The console sits behind staff [SSO](/docs/security/sso-and-federation) with phishing-resistant MFA, on its own origin, and off the public internet where you can manage it.
 
-For examples in one industry, [Operating the Platform](/docs/industries/payments/operating-the-platform#the-internal-console) shows a payments console that finds a payment by a card network reference or an ACH trace number.
+For examples in one industry, [Operating the Platform](/books/payments/operating-the-platform#the-internal-console) shows a payments console that finds a payment by a card network reference or an ACH trace number.
 
 ## Service Accounts Are Users
 

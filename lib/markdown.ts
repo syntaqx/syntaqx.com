@@ -4,7 +4,8 @@
  * app/md/[[...path]]/route.ts), plus /llms.txt.
  */
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
-import { getAllDocs, getDocBySlug, getDocsByCategory } from "@/lib/docs";
+import { getAllBookChapters, getAllDocs, getBookChapters, getDocBySlug, getDocsByCategory } from "@/lib/docs";
+import { BOOKS, getBook } from "@/lib/books";
 import { contactChannels, contactIntro } from "@/lib/contact";
 import { PUBLIC_CONTACT, resume as cv } from "@/lib/resume";
 import { bio, socials, SITE_URL } from "@/lib/constants";
@@ -50,6 +51,7 @@ function siteLinks(): string {
     bullet("Contact", url("/contact")),
     bullet("Posts", url("/posts")),
     bullet("Docs", url("/docs")),
+    bullet("Books", url("/books")),
     bullet("API reference", url("/docs/api")),
     bullet("OpenAPI spec", url("/openapi.json")),
     bullet("RSS feed", url("/feed.xml")),
@@ -167,6 +169,34 @@ function doc(slug: string): string | null {
   ].join("\n\n");
 }
 
+function booksIndex(): string {
+  return [
+    "# Books",
+    "Long reads that apply the playbook to one subject at a time.",
+    BOOKS.map((b) => bullet(b.name, url(`/books/${b.slug}`), b.summary)).join("\n"),
+  ].join("\n\n");
+}
+
+function book(slug: string): string | null {
+  const b = getBook(slug);
+  if (!b) return null;
+  const chapters = getBookChapters(slug)
+    .map((c) => bullet(c.title, url(`/books/${c.slug}`), c.description))
+    .join("\n");
+  return [`# ${b.name}`, `> ${b.summary}`, ...b.intro, `## Chapters\n\n${chapters}`].join("\n\n");
+}
+
+function chapter(slug: string): string | null {
+  const c = getAllBookChapters().find((d) => d.slug === slug);
+  if (!c) return null;
+  return [
+    `# ${c.title}`,
+    ...(c.description ? [`> ${c.description}`] : []),
+    c.content.trim(),
+    `---\n\nCanonical URL: ${url(`/books/${c.slug}`)}`,
+  ].join("\n\n");
+}
+
 function contact(): string {
   return [
     "# Contact",
@@ -240,7 +270,12 @@ export function renderMarkdownPage(path: string): MarkdownPage {
   // Docs nest in section folders: /docs/payments/idempotency.
   if (section === "docs")
     body = slug ? doc([slug, ...rest].join("/")) : docsIndex();
-  else if (rest.length === 0) {
+  // Books: /books, a cover at /books/payments, a chapter at /books/payments/ach.
+  else if (section === "books") {
+    if (!slug) body = booksIndex();
+    else if (rest.length === 0) body = book(slug);
+    else if (rest.length === 1) body = chapter(`${slug}/${rest[0]}`);
+  } else if (rest.length === 0) {
     if (!section) body = home();
     else if (section === "posts") body = slug ? post(slug) : postsIndex();
     else if (section === "contact" && !slug) body = contact();
@@ -257,6 +292,9 @@ export function renderLlmsTxt(): string {
   const docs = getAllDocs()
     .map((d) => bullet(d.title, url(`/docs/${d.slug}`), d.description))
     .join("\n");
+  const books = getAllBookChapters()
+    .map((c) => bullet(c.title, url(`/books/${c.slug}`), c.description))
+    .join("\n");
   return `${[
     "# syntaqx",
     `> ${SUMMARY}`,
@@ -264,6 +302,7 @@ export function renderLlmsTxt(): string {
     "Every page listed here is also available as Markdown: request it with an `Accept: text/markdown` header.",
     `## API\n\n${apiBullets()}`,
     `## Docs\n\n${docs}`,
+    `## Books\n\n${books}`,
     `## Posts\n\n${postBullets()}`,
     `## Optional\n\n${[
       bullet("About", url("/about"), "background on Chase Pierce"),

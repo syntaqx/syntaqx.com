@@ -134,7 +134,7 @@ Snapshots cost storage. Store each immutable version once, addressed by its hash
 
 ## Automated and AI Decisions
 
-A decision made by code needs a better record than one made by a person, because nobody can be asked afterwards what they were thinking. A fraud decision records its score, the rules that matched and the model version ([Fraud & Risk](/docs/industries/payments/fraud-and-risk#auditable-decisions) has an example). A rate-limit block, an automatic account suspension or a matchmaking ban records the signal and threshold that triggered it.
+A decision made by code needs a better record than one made by a person, because nobody can be asked afterwards what they were thinking. A fraud decision records its score, the rules that matched and the model version ([Fraud & Risk](/books/payments/fraud-and-risk#auditable-decisions) has an example). A rate-limit block, an automatic account suspension or a matchmaking ban records the signal and threshold that triggered it.
 
 AI agents add more, because they act through tools on a user's or the business's behalf:
 
@@ -214,7 +214,7 @@ The audit system needs its own record: changes to retention schedules and who ap
 - **Access logging** for exports, sensitive reads, impersonation and permission changes.
 - **Retention by record type with legal holds,** and scoped exports with manifests.
 
-For one industry's application of all this, with the regulators and record types involved, see [Audit Trails & Records](/docs/industries/field-operations/audit-trails-and-records) in the field operations volume.
+For one industry's application of all this, with the regulators and record types involved, see [Audit Trails & Records](/books/field-operations/audit-trails-and-records) in the field operations volume.
 
 ## References
 

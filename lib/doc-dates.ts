@@ -15,9 +15,11 @@ import { existsSync, readFileSync } from "node:fs";
 const SEP = "\u0001";
 
 /**
- * Parse `git log --format=<SEP>%H<SEP>%cI --name-only` output, newest first,
- * into each file's latest commit date. Files whose latest commit is a shallow
- * boundary are left out, because their real last change isn't in the history.
+ * Parse `git log --format=<SEP>%H<SEP>%cI --name-status -M` output, newest
+ * first, into each file's latest commit date. Files whose latest commit is a
+ * shallow boundary are left out, because their real last change isn't in the
+ * history. A pure move (R100) isn't an edit: the file keeps the date of its
+ * last change under the old path. Plain `--name-only` lines also parse.
  */
 export function parseLastModified(
   log: string,
@@ -25,14 +27,25 @@ export function parseLastModified(
 ): Map<string, string> {
   const dates = new Map<string, string>();
   const unknown = new Set<string>();
+  // Older paths of files that moved, mapped to where they live now.
+  const movedTo = new Map<string, string>();
+  const current = (path: string) => movedTo.get(path) ?? path;
   let commit = "";
   let date = "";
 
   for (const raw of log.split("\n")) {
-    const line = raw.trim();
-    if (!line) continue;
-    if (line.startsWith(SEP)) {
-      [, commit, date] = line.split(SEP);
+    const entry = raw.trim();
+    if (!entry) continue;
+    if (entry.startsWith(SEP)) {
+      [, commit, date] = entry.split(SEP);
+      continue;
+    }
+    const fields = entry.split("\t");
+    const line = current(fields[fields.length - 1]);
+    if (fields[0].startsWith("R")) {
+      movedTo.set(fields[1], line);
+      if (fields[0] === "R100") continue;
+    } else if (fields[0] === "D") {
       continue;
     }
     if (dates.has(line) || unknown.has(line)) continue;
@@ -59,7 +72,7 @@ export function docDates(): Map<string, string> {
         ? readFileSync(shallowFile, "utf8").split("\n").map((s) => s.trim()).filter(Boolean)
         : [],
     );
-    const log = git(["log", `--format=${SEP}%H${SEP}%cI`, "--name-only", "--", "content/docs"]);
+    const log = git(["log", `--format=${SEP}%H${SEP}%cI`, "--name-status", "-M", "--", "content/docs", "content/books"]);
     cache = parseLastModified(log, boundaries);
   } catch {
     // No git (or no repository) where this runs: show no dates.
@@ -68,7 +81,7 @@ export function docDates(): Map<string, string> {
   return cache;
 }
 
-/** When `content/docs/<slug>.md` last changed, or undefined if that isn't known. */
-export function docLastModified(slug: string): string | undefined {
-  return docDates().get(`content/docs/${slug}.md`);
+/** When `content/<root>/<slug>.md` last changed, or undefined if that isn't known. */
+export function docLastModified(slug: string, root: "docs" | "books" = "docs"): string | undefined {
+  return docDates().get(`content/${root}/${slug}.md`);
 }

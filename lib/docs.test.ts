@@ -1,16 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
-import { getAllDocs } from "./docs";
+import { getAllBookChapters, getAllDocs, type DocData } from "./docs";
 import { docRedirects } from "./doc-redirects";
 import { slugifyTag } from "./posts";
-import { INDUSTRIES, industryParts, industrySection, isIndustry } from "./industries";
+import { BOOKS, bookParts } from "./books";
 
-// The playbook's own guardrails (see /docs/delivery/ci-pipelines). A doc that breaks one of
-// these fails CI with the doc's slug in the message.
+// The playbook's own guardrails (see /docs/delivery/ci-pipelines). A doc or
+// book chapter that breaks one of these fails CI with its slug in the message.
 
 const docs = getAllDocs();
+const chapters = getAllBookChapters();
 const slugs = new Set([...docs.map((d) => d.slug), "api"]);
+/** Everything under /books: each cover and each chapter. */
+const bookSlugs = new Set([...BOOKS.map((b) => b.slug), ...chapters.map((c) => c.slug)]);
 const h2s = (content: string) => [...content.matchAll(/^## (.+)$/gm)].map((m) => m[1].trim());
 
 /** The ids the renderer gives h2 and h3 headings (lib/posts.ts), outside code blocks. */
@@ -24,8 +27,11 @@ function headingIds(content: string) {
   });
 }
 
-describe("playbook docs", () => {
-  it.each(docs.map((d) => [d.slug, d] as const))("%s has complete frontmatter", (_, doc) => {
+/** The rules every page of Markdown content follows, in /docs and in /books. */
+function contentRules(all: DocData[]) {
+  const each = all.map((d) => [d.slug, d] as const);
+
+  it.each(each)("%s has complete frontmatter", (_, doc) => {
     expect(doc.title).toBeTruthy();
     // Sidebars are narrow: anything longer wraps. Set a shorter nav_title.
     expect(doc.navTitle.length, `nav label "${doc.navTitle}"`).toBeLessThanOrEqual(30);
@@ -37,7 +43,7 @@ describe("playbook docs", () => {
     expect(doc.description.length).toBeLessThanOrEqual(160);
   });
 
-  it.each(docs.map((d) => [d.slug, d] as const))("%s ends with one References section", (_, doc) => {
+  it.each(each)("%s ends with one References section", (_, doc) => {
     const headings = h2s(doc.content);
     expect(headings.filter((h) => h === "References")).toHaveLength(1);
     expect(headings.at(-1)).toBe("References");
@@ -45,27 +51,31 @@ describe("playbook docs", () => {
     expect(references).toMatch(/^- \[.+\]\(https?:\/\/.+\)/m);
   });
 
-  it.each(docs.map((d) => [d.slug, d] as const))("%s has no em-dashes", (_, doc) => {
-    expect(`${doc.title} ${doc.description} ${doc.content}`).not.toContain("\u2014");
+  it.each(each)("%s has no em-dashes", (_, doc) => {
+    expect(`${doc.title} ${doc.description} ${doc.content}`).not.toContain("—");
   });
 
-  it.each(docs.map((d) => [d.slug, d] as const))("%s only links to docs that exist", (_, doc) => {
-    const linked = [...doc.content.matchAll(/\]\(\/docs\/([a-z0-9/-]+)/g)].map((m) => m[1]);
-    for (const slug of linked) expect(slugs, `/docs/${slug}`).toContain(slug);
-  });
-
-  it.each(docs.map((d) => [d.slug, d] as const))("%s only links to sections that exist", (_, doc) => {
-    for (const [, slug, anchor] of doc.content.matchAll(/\]\(\/docs\/([a-z0-9/-]+)#([a-z0-9-]+)\)/g)) {
-      const target = docs.find((d) => d.slug === slug);
-      if (target) expect(headingIds(target.content), `/docs/${slug}#${anchor}`).toContain(anchor);
+  it.each(each)("%s only links to docs and books that exist", (_, doc) => {
+    for (const [, slug] of doc.content.matchAll(/\]\(\/docs\/([a-z0-9/-]+)/g)) {
+      expect(slugs, `/docs/${slug}`).toContain(slug);
+    }
+    for (const [, slug] of doc.content.matchAll(/\]\(\/books\/([a-z0-9/-]+)/g)) {
+      expect(bookSlugs, `/books/${slug}`).toContain(slug);
     }
   });
 
-  it.each(docs.map((d) => [d.slug, d] as const))("%s never wraps JSON in a data envelope", (_, doc) => {
+  it.each(each)("%s only links to sections that exist", (_, doc) => {
+    for (const [, base, slug, anchor] of doc.content.matchAll(/\]\(\/(docs|books)\/([a-z0-9/-]+)#([a-z0-9-]+)\)/g)) {
+      const target = (base === "docs" ? docs : chapters).find((d) => d.slug === slug);
+      if (target) expect(headingIds(target.content), `/${base}/${slug}#${anchor}`).toContain(anchor);
+    }
+  });
+
+  it.each(each)("%s never wraps JSON in a data envelope", (_, doc) => {
     expect(doc.content).not.toMatch(/"data"\s*:/);
   });
 
-  it.each(docs.map((d) => [d.slug, d] as const))("%s draws diagrams as SVGs with alt text and a caption", (_, doc) => {
+  it.each(each)("%s draws diagrams as SVGs with alt text and a caption", (_, doc) => {
     // Box-drawing characters mean an ASCII diagram; those are SVGs in public/diagrams.
     expect(doc.content).not.toMatch(/[─-╿▶►▼◄]/);
     for (const [, alt, src, caption] of doc.content.matchAll(/!\[([^\]]*)\]\((\/diagrams\/[^\s)]+)(?: "([^"]*)")?\)/g)) {
@@ -75,58 +85,92 @@ describe("playbook docs", () => {
     }
   });
 
-  it("groups docs into section folders that share one category", () => {
+  it("groups pages into section folders that share one category", () => {
     const bySection = new Map<string, Set<string>>();
-    for (const doc of docs) {
+    for (const doc of all) {
       bySection.set(doc.section, (bySection.get(doc.section) ?? new Set()).add(doc.category));
     }
     for (const [section, categories] of bySection) {
       expect([...categories], section || "(root)").toHaveLength(1);
     }
-    expect(docs.filter((d) => !d.section).map((d) => d.slug)).toEqual(["playbook"]);
-  });
-
-  it("gives every industry volume a cover, and every cover a volume", () => {
-    const volumes = [...new Set(docs.map((d) => d.section).filter(isIndustry))].sort();
-    expect(INDUSTRIES.map((i) => industrySection(i.slug)).sort()).toEqual(volumes);
-  });
-
-  it("puts every industry chapter in a part, and keeps each part's chapters together", () => {
-    for (const section of new Set(docs.map((d) => d.section).filter(isIndustry))) {
-      const chapters = docs.filter((d) => d.section === section);
-      for (const doc of chapters) expect(doc.part, doc.slug).toBeTruthy();
-      const titles = industryParts(chapters).map((p) => p.title);
-      expect(new Set(titles).size, `${section} parts out of order: ${titles.join(", ")}`).toBe(titles.length);
-    }
   });
 
   it("keeps old URLs as unique aliases that never shadow a real doc", () => {
-    const aliases = docs.flatMap((d) => d.aliases);
+    const aliases = all.flatMap((d) => d.aliases);
     expect(new Set(aliases).size).toBe(aliases.length);
     for (const alias of aliases) expect(slugs, alias).not.toContain(alias);
   });
 
+  it("gives every page a unique order, so the index is stable", () => {
+    const orders = all.map((d) => d.order);
+    expect(new Set(orders).size).toBe(orders.length);
+  });
+}
+
+describe("playbook docs", () => {
+  contentRules(docs);
+
+  it("keeps only the playbook's start at the root", () => {
+    expect(docs.filter((d) => !d.section).map((d) => d.slug)).toEqual(["playbook"]);
+  });
+
   it("redirects every alias and section folder to a page that exists", () => {
     const redirects = docRedirects();
-    for (const doc of docs) {
-      for (const alias of doc.aliases) {
-        expect(redirects, alias).toContainEqual({
-          source: `/docs/${alias}`,
-          destination: `/docs/${doc.slug}`,
-          permanent: true,
-        });
+    for (const [all, base] of [
+      [docs, "/docs"],
+      [chapters, "/books"],
+    ] as const) {
+      for (const doc of all) {
+        for (const alias of doc.aliases) {
+          expect(redirects, alias).toContainEqual({
+            source: `/docs/${alias}`,
+            destination: `${base}/${doc.slug}`,
+            permanent: true,
+          });
+        }
       }
     }
     for (const { destination } of redirects) {
+      // The /docs/industries patterns carry their segments through to /books.
+      if (destination.includes(":") || destination === "/books") continue;
+      if (destination.startsWith("/books/")) {
+        expect(bookSlugs, destination).toContain(destination.slice("/books/".length));
+        continue;
+      }
       const [target, section] = destination.replace("/docs/", "").split("#");
       if (section) expect(docs.some((d) => d.section === section), destination).toBe(true);
       else expect(slugs, destination).toContain(target);
     }
   });
 
-  it("gives every doc a unique order, so the index is stable", () => {
-    const orders = docs.map((d) => d.order);
-    expect(new Set(orders).size).toBe(orders.length);
+  it("sends the books' old /docs/industries URLs to /books", () => {
+    expect(docRedirects()).toEqual(
+      expect.arrayContaining([
+        { source: "/docs/industries", destination: "/books", permanent: true },
+        { source: "/docs/industries/:book", destination: "/books/:book", permanent: true },
+        { source: "/docs/industries/:book/:chapter", destination: "/books/:book/:chapter", permanent: true },
+      ]),
+    );
+  });
+});
+
+describe("books", () => {
+  contentRules(chapters);
+
+  it("gives every book folder an entry in lib/books.ts, and every entry a folder", () => {
+    const folders = [...new Set(chapters.map((c) => c.section))].sort();
+    expect(BOOKS.map((b) => b.slug).sort()).toEqual(folders);
+    // A book is one folder of chapters, never nested.
+    for (const chapter of chapters) expect(chapter.slug.split("/"), chapter.slug).toHaveLength(2);
+  });
+
+  it("puts every chapter in a part, and keeps each part's chapters together", () => {
+    for (const book of BOOKS) {
+      const own = chapters.filter((c) => c.section === book.slug);
+      for (const chapter of own) expect(chapter.part, chapter.slug).toBeTruthy();
+      const titles = bookParts(own).map((p) => p.title);
+      expect(new Set(titles).size, `${book.slug} parts out of order: ${titles.join(", ")}`).toBe(titles.length);
+    }
   });
 });
 
@@ -137,10 +181,10 @@ describe("links from outside the site", () => {
     "README.md",
     ...fs.readdirSync(path.join(process.cwd(), "docs", "adr")).map((f) => path.join("docs", "adr", f)),
   ];
-  it.each(files)("%s only links to docs that exist", (file) => {
+  it.each(files)("%s only links to docs and books that exist", (file) => {
     const text = fs.readFileSync(path.join(process.cwd(), file), "utf8");
-    const linked = [...text.matchAll(/syntaqx\.com\/docs\/([a-z0-9/-]+)/g)].map((m) => m[1]);
-    for (const slug of linked) expect(slugs, slug).toContain(slug);
+    for (const [, slug] of text.matchAll(/syntaqx\.com\/docs\/([a-z0-9/-]+)/g)) expect(slugs, slug).toContain(slug);
+    for (const [, slug] of text.matchAll(/syntaqx\.com\/books\/([a-z0-9/-]+)/g)) expect(bookSlugs, slug).toContain(slug);
   });
 });
 
@@ -160,7 +204,7 @@ describe("architecture decision records", () => {
     for (const section of ["Context", "Decision", "Consequences"]) {
       expect(h2s(text), section).toContain(section);
     }
-    expect(text).not.toContain("\u2014");
+    expect(text).not.toContain("—");
     expect(index).toContain(`](${file})`);
   });
 });

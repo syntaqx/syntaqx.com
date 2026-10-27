@@ -135,8 +135,8 @@ CREATE TABLE plan_versions (
 
 - **Published versions never change.** Editing the plan creates version 4; a trigger or the table's permissions reject updates once `published_at` is set. Stripe's prices work this way: once created, only a price's metadata, nickname and active flag can be updated, a new amount is a new price, and archiving the old one leaves existing subscriptions on it ([Stripe: Manage products and prices](https://docs.stripe.com/products-prices/manage-prices)).
 - **"Which version do new customers get?" is an effective-dated pointer**, a `plan_offers` row with `valid_during` and a `plan_version_id`, so a launch can be scheduled like any other change.
-- **Moving existing customers is an explicit migration,** with notice where the law or the contract requires it, never a side effect of editing the plan. Price increases on renewal are where consumer automatic-renewal rules bite; [Service Agreements & Plans](/docs/industries/field-operations/service-agreements#upgrades-downgrades-and-changes) has one industry's version.
-- **Every derived record cites the version that produced it.** The invoice names the plan version, the payout names the fee schedule version, the settlement names the interchange table version ([Interchange & Pricing](/docs/industries/payments/interchange-and-pricing#a-pricing-engine)).
+- **Moving existing customers is an explicit migration,** with notice where the law or the contract requires it, never a side effect of editing the plan. Price increases on renewal are where consumer automatic-renewal rules bite; [Service Agreements & Plans](/books/field-operations/service-agreements#upgrades-downgrades-and-changes) has one industry's version.
+- **Every derived record cites the version that produced it.** The invoice names the plan version, the payout names the fee schedule version, the settlement names the interchange table version ([Interchange & Pricing](/books/payments/interchange-and-pricing#a-pricing-engine)).
 
 ## Snapshots
 
@@ -184,7 +184,7 @@ The exclusion constraint becomes `(product_id WITH =, valid_during WITH &&, reco
 - **Versioned entities are immutable once published,** referenced by version ID, with new-customer offers as an effective-dated pointer.
 - **Snapshot values at the moment of the fact** when the source is mutable or external.
 
-For one industry's application, see effective-dated territories, memberships and shifts in [Territories & Capacity](/docs/industries/field-operations/territories-and-capacity#effective-dating).
+For one industry's application, see effective-dated territories, memberships and shifts in [Territories & Capacity](/books/field-operations/territories-and-capacity#effective-dating).
 
 ## References
 

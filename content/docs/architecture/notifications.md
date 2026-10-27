@@ -9,7 +9,7 @@ aliases = ["notifications"]
 
 Every product ends up talking to its users outside the product. A game tells a player their energy has refilled, a SaaS app emails an admin that a seat limit was hit, a marketplace texts a buyer that the seller shipped, a bank pushes a fraud alert, a field service business texts that the technician is ten minutes out. Each of those starts as one line of code in whatever service noticed the event, and that's the problem: five services, five ways of deciding whether someone wants a message, and an opt-out that only reaches the one that happened to receive it.
 
-Messages can't be taken back, either: a text at 3 a.m., a reminder for a cancelled appointment, a marketing email after an unsubscribe. This chapter is the mechanics: how consent is recorded, how every message passes one gate, and how the log proves what happened. [Calls, Texts & Email](/docs/compliance/consumer-contact) covers the law behind the rules, and [Customer Communications](/docs/industries/field-operations/customer-communications) is a worked example in one industry.
+Messages can't be taken back, either: a text at 3 a.m., a reminder for a cancelled appointment, a marketing email after an unsubscribe. This chapter is the mechanics: how consent is recorded, how every message passes one gate, and how the log proves what happened. [Calls, Texts & Email](/docs/compliance/consumer-contact) covers the law behind the rules, and [Customer Communications](/books/field-operations/customer-communications) is a worked example in one industry.
 
 ## Purpose Decides Everything
 

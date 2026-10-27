@@ -55,7 +55,7 @@ type BookingResult =
 
 The model decides what to propose. Deterministic code decides what happens. Everything that is a rule lives outside the prompt, because a prompt is a suggestion the model usually follows and a policy check is not.
 
-- **Permissions per action, off by default.** Booking, rescheduling, cancelling and changing payment details are separate switches, each enabled deliberately and scoped further (per service type, per plan, per region). [AI in Field Operations](/docs/industries/field-operations/ai-in-field-operations) shows one industry's version, with toggles per capability and per job type.
+- **Permissions per action, off by default.** Booking, rescheduling, cancelling and changing payment details are separate switches, each enabled deliberately and scoped further (per service type, per plan, per region). [AI in Field Operations](/books/field-operations/ai-in-field-operations) shows one industry's version, with toggles per capability and per job type.
 - **Caps.** Maximum order or refund value, maximum credit a game support agent may grant, no same-day emergency slots, no actions on accounts flagged for fraud review. Caps are configuration with an owner, not numbers in a prompt.
 - **One policy function.** The tool handler calls the same policy layer every other caller goes through, with the agent as the actor: `can(actor, action, resource)`. That's the [Authorization](/docs/security/authorization) chapter's rule, and it means a policy change applies to the UI, the API and the agent at once.
 - **Reversible actions can be automatic; irreversible ones get a person.** A moderation agent can hide a reported chat message pending review or apply a short mute, because both undo cleanly. A permanent ban, a forfeited balance or a cancelled contract goes to a human queue with the agent's reasoning attached.
@@ -74,7 +74,7 @@ An agent on a phone line or an anonymous chat widget doesn't know who it's talki
 
 Caller ID is spoofable and chat is anonymous, so the strong checks happen through a channel the account already owns. A bank's card-freeze agent sends a push to the bank's app ("Freeze card ending 4417?") and freezes only when the customer approves there, so the decision is authenticated by the app, not by how convincing the caller sounded. Prefer actions whose worst case is mild for the weak tiers: a freeze is safe to make easy, an unfreeze is not.
 
-Never let the model hear, read or repeat card numbers, bank details or one-time codes. Send a payment link or route the customer to a secure capture step outside the conversation, so those values never reach transcripts ([Phone Payments](/docs/industries/payments/phone-payments), [Sensitive Data](/docs/payments/sensitive-data)).
+Never let the model hear, read or repeat card numbers, bank details or one-time codes. Send a payment link or route the customer to a secure capture step outside the conversation, so those values never reach transcripts ([Phone Payments](/books/payments/phone-payments), [Sensitive Data](/docs/payments/sensitive-data)).
 
 ## Emergencies Skip the Model
 

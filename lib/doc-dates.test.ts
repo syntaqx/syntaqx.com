@@ -33,4 +33,23 @@ describe("parseLastModified()", () => {
     // Changed after the boundary: still known.
     expect(dates.get("content/docs/api-design/webhooks.md")).toBe("2026-09-01T09:00:00-06:00");
   });
+
+  it("follows moves: a pure rename keeps the date of the last real edit", () => {
+    const moves = [
+      `${S}c3${S}2026-10-26T12:00:00-06:00`,
+      "",
+      "R100\tcontent/docs/industries/payments/ach.md\tcontent/books/payments/ach.md",
+      "R092\tcontent/docs/industries/payments/money.md\tcontent/books/payments/money.md",
+      `${S}c2${S}2026-09-01T09:00:00-06:00`,
+      "",
+      "M\tcontent/docs/industries/payments/ach.md",
+      "D\tcontent/docs/old.md",
+    ].join("\n");
+    const dates = parseLastModified(moves);
+    expect(dates.get("content/books/payments/ach.md")).toBe("2026-09-01T09:00:00-06:00");
+    // Edited while it moved: the move is its last change.
+    expect(dates.get("content/books/payments/money.md")).toBe("2026-10-26T12:00:00-06:00");
+    expect(dates.has("content/docs/industries/payments/ach.md")).toBe(false);
+    expect(dates.has("content/docs/old.md")).toBe(false);
+  });
 });

@@ -87,7 +87,7 @@ Show the resolved value and where it came from ("inherited from North Region") i
 
 **Put the hierarchy key wherever a rule can differ.** `tenant_id` goes on every row; the node key (`branch_id`, `store_id`, `project_id`) goes on every row whose rules, permissions or reports vary below the tenant. Discovering later that invoice numbering, tax or a cancellation window differs by branch, on a table that only knows its tenant, is a backfill across years of data.
 
-For worked examples, see [Payments for Software Platforms](/docs/industries/payments/software-platforms#the-hierarchy) and [The Field Operations Business](/docs/industries/field-operations/field-operations-business#branches-regions-and-the-org-chart).
+For worked examples, see [Payments for Software Platforms](/books/payments/software-platforms#the-hierarchy) and [The Field Operations Business](/books/field-operations/field-operations-business#branches-regions-and-the-org-chart).
 
 ## Noisy Neighbors
 

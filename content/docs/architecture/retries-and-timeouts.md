@@ -70,7 +70,7 @@ Asynchronous work gets more patience, retrying over minutes or hours and then la
 
 ## Payments Specifics
 
-- **Don't retry a decline as if it were an outage.** A `402` decline is an answer: the issuer said no. Some declines can never succeed (a lost, stolen or closed card), and retrying them looks like card testing. Others (insufficient funds) may clear later, on a schedule of days, not seconds. Card networks enforce this: Visa and Mastercard charge merchants for retrying a decline that can never succeed, and cap how often one card can be retried; [Stored Cards & Recurring Billing](/docs/industries/payments/stored-credentials) has the current limits.
+- **Don't retry a decline as if it were an outage.** A `402` decline is an answer: the issuer said no. Some declines can never succeed (a lost, stolen or closed card), and retrying them looks like card testing. Others (insufficient funds) may clear later, on a schedule of days, not seconds. Card networks enforce this: Visa and Mastercard charge merchants for retrying a decline that can never succeed, and cap how often one card can be retried; [Stored Cards & Recurring Billing](/books/payments/stored-credentials) has the current limits.
 - **Reconcile unknowns.** When a processor call times out and the outcome is unknown, record the payment as `pending`, then resolve it by querying the processor with the same idempotency key, not by charging again.
 
 ## References

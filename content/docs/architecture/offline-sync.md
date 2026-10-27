@@ -145,7 +145,7 @@ Whatever the choice, the sync protocol and the local database are the product, a
 - **Decide conflicts per command type,** log every one, and give state conflicts a review queue with an owner.
 - **List what stays online,** and show the user the queue.
 
-For one industry's version of all of this, see [The Technician App](/docs/industries/field-operations/technician-app).
+For one industry's version of all of this, see [The Technician App](/books/field-operations/technician-app).
 
 ## References
 

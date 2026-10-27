@@ -46,7 +46,7 @@ Every signing flow answers one question first: whose screen is the signer lookin
 | Embedded in your app, on the signer's device | Terms at signup, a seller agreement in a marketplace dashboard, an in-game EULA | The signer's authenticated session in your app | If you send or show one |
 | Remote link from the provider | A lease, a contractor agreement, loan documents | Control of the inbox or phone the link went to, plus any code checked | Yes, before and after signing |
 
-The seller's-device pattern is fast and works without the signer's email, and it's also the one where "I never saw those terms" is easiest to claim and hardest to rebut, because the signer never held a copy. I default to sending the document to the signer's own device and keeping the handed-over screen for when that's impossible, and then I don't count the agreement as complete until the signed copy has been delivered to a verified contact. An undelivered copy goes in a visible exception queue. [Signing the Agreement](/docs/industries/field-operations/signing-the-agreement#embedded-or-remote-whose-device) works through this for door-to-door sales, for example.
+The seller's-device pattern is fast and works without the signer's email, and it's also the one where "I never saw those terms" is easiest to claim and hardest to rebut, because the signer never held a copy. I default to sending the document to the signer's own device and keeping the handed-over screen for when that's impossible, and then I don't count the agreement as complete until the signed copy has been delivered to a verified contact. An undelivered copy goes in a visible exception queue. [Signing the Agreement](/books/field-operations/signing-the-agreement#embedded-or-remote-whose-device) works through this for door-to-door sales, for example.
 
 In embedded mode, identity is your job. Your app already authenticated the user (see [Authentication](/docs/security/authentication)), and that session is the attribution evidence, so record which session, which factor and when. For a high-stakes document, step the user up first rather than relying on a week-old cookie.
 
@@ -73,7 +73,7 @@ Whether the provider or your own code runs the ceremony, every signature or acce
 - **The certificate:** the provider's completion certificate or audit trail, stored next to the document.
 - **Delivery of the signed copy:** channel, address, time and result.
 
-This is personal data kept for legal reasons, so classify it like any other field ([Sensitive Data](/docs/payments/sensitive-data#classify-every-field)) and keep it out of general-purpose logs. [Audit Trails & Records](/docs/industries/field-operations/audit-trails-and-records#e-signature-evidence) shows the same list applied to field service, for example.
+This is personal data kept for legal reasons, so classify it like any other field ([Sensitive Data](/docs/payments/sensitive-data#classify-every-field)) and keep it out of general-purpose logs. [Audit Trails & Records](/books/field-operations/audit-trails-and-records#e-signature-evidence) shows the same list applied to field service, for example.
 
 ## Click-Through Terms Are Signatures Too
 

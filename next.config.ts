@@ -74,6 +74,8 @@ export const markdownRewrites = {
     "/posts/:slug",
     "/docs",
     "/docs/:path*",
+    "/books",
+    "/books/:path*",
     "/contact",
     "/resume",
   ].map((source) => ({

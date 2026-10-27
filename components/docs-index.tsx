@@ -1,9 +1,7 @@
-import { Fragment, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { isIndustry } from "@/lib/industries";
 import { ArrowRight } from "lucide-react";
 import { DocsHeader } from "@/components/docs-header";
-import { IndustryCards, type IndustryCard } from "@/components/industry-cards";
 
 export interface DocsIndexEntry {
   href: string;
@@ -19,26 +17,19 @@ export interface DocsIndexCategory {
 }
 
 interface DocsIndexProps {
-  /** Every doc, by section; industry chapters are listed by their volume's card. */
+  /** Every doc, by section. */
   categories: DocsIndexCategory[];
-  /** The industry volumes, listed as one section of cards. */
-  industries: IndustryCard[];
   /** The intro paragraph under the title. */
   intro: ReactNode;
 }
-
-/** The Industries section's anchor on /docs. */
-const INDUSTRIES_ANCHOR = "industries";
 
 /**
  * /docs, in the same reading layout as the chapters: the sidebar comes from
  * the docs layout, and search is the site's Ctrl K.
  */
-export function DocsIndex({ categories, industries, intro }: DocsIndexProps) {
-  // The first section is the featured "start here" strip; the rest are lists,
-  // with the industry volumes as one Industries section before Reference.
-  const listed = categories.filter((c) => !isIndustry(c.section));
-  const [featured, ...sections] = listed;
+export function DocsIndex({ categories, intro }: DocsIndexProps) {
+  // The first section is the featured "start here" strip; the rest are lists.
+  const [featured, ...sections] = categories;
 
   return (
     <div>
@@ -49,28 +40,17 @@ export function DocsIndex({ categories, industries, intro }: DocsIndexProps) {
       <div className="space-y-16">
         {featured && <Featured category={featured} />}
         {sections.map((category) => (
-          <Fragment key={category.section}>
-            {category === listed[listed.length - 1] && (
-              <section id={INDUSTRIES_ANCHOR} className="scroll-mt-24">
-                <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-3">
-                  <h2 className="eyebrow">Industries</h2>
-                  <span className="inst text-dim">{industries.length}</span>
-                </div>
-                <IndustryCards industries={industries} />
-              </section>
-            )}
-            <section id={category.section} className="scroll-mt-24">
-              <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
-                <h2 className="eyebrow">{category.name}</h2>
-                <span className="inst text-dim">{category.docs.length}</span>
-              </div>
-              <ul className="grid sm:grid-cols-2 sm:gap-x-10">
-                {category.docs.map((doc) => (
-                  <DocRow key={doc.href} doc={doc} />
-                ))}
-              </ul>
-            </section>
-          </Fragment>
+          <section key={category.section} id={category.section} className="scroll-mt-24">
+            <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+              <h2 className="eyebrow">{category.name}</h2>
+              <span className="inst text-dim">{category.docs.length}</span>
+            </div>
+            <ul className="grid sm:grid-cols-2 sm:gap-x-10">
+              {category.docs.map((doc) => (
+                <DocRow key={doc.href} doc={doc} />
+              ))}
+            </ul>
+          </section>
         ))}
       </div>
     </div>

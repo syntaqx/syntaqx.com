@@ -149,7 +149,7 @@ A metric is only as complete as the pipeline under it. Run daily checks that the
 
 The classic hole is deletes. Log-based CDC "can capture deletes" and needs no "Last Updated" column ([Debezium: Features](https://debezium.io/documentation/reference/stable/features.html)); a polling extract or a vendor connector's incremental sync that doesn't capture deletes never learns that a row is gone. A hard-deleted cancelled order then stays in the warehouse as a live one, and the completion rate quietly rises. When you sync from a system you don't control, check per table whether deletes are captured, and for tables where they aren't, schedule periodic full re-imports to find what disappeared.
 
-For a worked set of metric definitions with formulas, see [Operating Metrics](/docs/industries/field-operations/operating-metrics).
+For a worked set of metric definitions with formulas, see [Operating Metrics](/books/field-operations/operating-metrics).
 
 ## References
 

@@ -138,7 +138,7 @@ Many rules produce a date: a cancellation deadline, a renewal reminder, a creden
 }
 ```
 
-The US FTC's door-to-door rule shows why the inputs matter: the buyer may cancel "at any time prior to midnight of the third business day after the date of this transaction" ([16 CFR 429.1](https://www.law.cornell.edu/cfr/text/16/429.1)). That's a date of sale, a definition of business day, a holiday calendar, a time zone and a midnight. Store them all. A deadline recomputed on every read silently moves when a holiday calendar is corrected or a rule is edited, and a customer who was told one date gets held to another. If a rule change should affect deadlines already computed, that's a deliberate migration with a record, not a side effect. For example, [Signing the Agreement](/docs/industries/field-operations/signing-the-agreement) walks through one such calculation.
+The US FTC's door-to-door rule shows why the inputs matter: the buyer may cancel "at any time prior to midnight of the third business day after the date of this transaction" ([16 CFR 429.1](https://www.law.cornell.edu/cfr/text/16/429.1)). That's a date of sale, a definition of business day, a holiday calendar, a time zone and a midnight. Store them all. A deadline recomputed on every read silently moves when a holiday calendar is corrected or a rule is edited, and a customer who was told one date gets held to another. If a rule change should affect deadlines already computed, that's a deliberate migration with a record, not a side effect. For example, [Signing the Agreement](/books/field-operations/signing-the-agreement) walks through one such calculation.
 
 ## Record Which Rule Decided
 

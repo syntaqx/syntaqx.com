@@ -104,7 +104,7 @@ States differ on what is taxable at all, and the differences reach every kind of
 - **Software as a service.** Washington's Department of Revenue classifies remote access software, prewritten software the buyer uses on the seller's or a third party's servers, as a retail sale "subject to sales or use tax". States don't agree on this, so the same subscription can be taxable for one customer and not the next.
 - **Retail goods.** New York exempts clothing and footwear sold for less than $110 per item or pair from state sales tax, but not from local sales tax unless the county or city imposing it elects to provide the exemption. The same pair of shoes is taxed differently in neighboring counties, and a pair at $110 is taxable everywhere.
 
-Two lessons generalize. Taxability depends on the item *and* the place, and sometimes on the price, so never ship a hard-coded taxability table. And how you *bill* can change the tax: the Texas rule rewards separately stated lines, so invoice structure is a tax decision. [Billing Recurring Service](/docs/industries/field-operations/billing-recurring-service) covers how this plays out in one industry.
+Two lessons generalize. Taxability depends on the item *and* the place, and sometimes on the price, so never ship a hard-coded taxability table. And how you *bill* can change the tax: the Texas rule rewards separately stated lines, so invoice structure is a tax decision. [Billing Recurring Service](/books/field-operations/billing-recurring-service) covers how this plays out in one industry.
 
 ## Exemptions Are Documents
 

@@ -3,9 +3,17 @@ import path from "path";
 import { estimateReadingTime } from "@/lib/posts";
 
 const docsDirectory = path.join(process.cwd(), "content/docs");
+const booksDirectory = path.join(process.cwd(), "content/books");
 
+/**
+ * A doc, or a book's chapter: books read the same Markdown the same way, from
+ * content/books instead of content/docs.
+ */
 export interface DocData {
-  /** Path under /docs, e.g. "payments/idempotency": the section folder, then the file. */
+  /**
+   * Path under /docs (or /books), e.g. "payments/idempotency": the section
+   * folder, then the file. A book's folder is the book's slug.
+   */
   slug: string;
   /** Short label for sidebars: frontmatter `nav_title`, or the title. */
   navTitle: string;
@@ -17,7 +25,7 @@ export interface DocData {
   description: string;
   category: string;
   order: number;
-  /** An industry chapter's part of the volume, e.g. "How Money Moves". */
+  /** A book chapter's part of the book, e.g. "How Money Moves". */
   part?: string;
   tags: string[];
   /** Minutes to read, not counting code or the References list. */
@@ -86,28 +94,42 @@ function parseTomlFrontmatter(fileContents: string): {
 }
 
 /**
- * Every Markdown file under content/docs, as POSIX paths relative to it. One
- * recursive read of a fixed directory, so the bundler traces only content/docs
- * instead of the whole project.
+ * Every Markdown file under a content directory, as POSIX paths relative to
+ * it. One recursive read of a fixed directory, so the bundler traces only
+ * content/ instead of the whole project.
  */
-function docFiles(): string[] {
-  return (fs.readdirSync(docsDirectory, { recursive: true }) as string[])
+function markdownFiles(directory: string): string[] {
+  return (fs.readdirSync(directory, { recursive: true }) as string[])
     .filter((file) => file.endsWith(".md"))
     .map((file) => file.split(path.sep).join("/"));
 }
 
 export function getAllDocs(): DocData[] {
-  if (!fs.existsSync(docsDirectory)) return [];
+  return readDocs(docsDirectory);
+}
 
-  return docFiles()
+/** Every book's chapters, in each book's order; a chapter's section is its book's slug. */
+export function getAllBookChapters(): DocData[] {
+  return readDocs(booksDirectory);
+}
+
+/** One book's chapters, in reading order. */
+export function getBookChapters(book: string): DocData[] {
+  return getAllBookChapters().filter((c) => c.section === book);
+}
+
+function readDocs(directory: string): DocData[] {
+  if (!fs.existsSync(directory)) return [];
+
+  return markdownFiles(directory)
     .map((file) => {
       const slug = file.replace(/\.md$/, "");
-      const fileContents = fs.readFileSync(path.join(docsDirectory, file), "utf8");
+      const fileContents = fs.readFileSync(path.join(directory, file), "utf8");
       const { data, content } = parseTomlFrontmatter(fileContents);
 
       return {
         slug,
-        // The folder path, hyphenated: "payments", or "industries-payments" for a nested one.
+        // The folder path, hyphenated: "payments", or "a-b" for a nested one.
         section: slug.includes("/") ? slug.slice(0, slug.lastIndexOf("/")).replace(/\//g, "-") : "",
         aliases: (data.aliases as string[]) ?? [],
         title: (data.title as string) ?? slug,

@@ -9,10 +9,20 @@ import {
 } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Search, X, FileText, Loader2 } from "lucide-react";
+import { getBook } from "@/lib/books";
+
+/** Where a result lives, from its URL: "Book · Payments", "Docs", "Posts". */
+function sectionLabel(url: string): string | null {
+  const [section, book] = new URL(url, "https://x").pathname.split("/").filter(Boolean);
+  if (!section) return null;
+  if (section === "books") return book ? `Book · ${getBook(book)?.name ?? book}` : "Books";
+  return section[0].toUpperCase() + section.slice(1);
+}
 
 interface SearchResult {
   url: string;
   title: string;
+  label: string | null;
   excerpt: string;
 }
 
@@ -155,6 +165,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
           data.map((d) => ({
             url: d.url.replace(/\.html$/, ""),
             title: d.meta?.title || d.url,
+            label: sectionLabel(d.url),
             excerpt: d.excerpt,
           })),
         );
@@ -262,6 +273,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
               >
                 <FileText size={14} className="mt-0.5 shrink-0 opacity-50" />
                 <div className="min-w-0">
+                  {result.label && <p className="inst mb-1 text-[0.5rem] text-dim">{result.label}</p>}
                   <p className="text-sm font-medium truncate">{result.title}</p>
                   <p
                     className="text-xs text-dim line-clamp-2 mt-1 leading-relaxed"

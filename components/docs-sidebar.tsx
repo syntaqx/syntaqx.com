@@ -3,25 +3,21 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import type { DocCategory } from "@/lib/docs";
-import { UPCOMING_INDUSTRIES, industryName, industryParts, isIndustry } from "@/lib/industries";
-
-/** An industry volume's cover, e.g. /docs/industries/payments. */
-const coverHref = (category: DocCategory) => `/docs/${category.docs[0].slug.slice(0, category.docs[0].slug.lastIndexOf("/"))}`;
 
 interface DocsSidebarProps {
   categories: DocCategory[];
 }
 
-const linkClass = (active: boolean) =>
+export const linkClass = (active: boolean) =>
   `-ml-px flex items-center gap-2 border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
     active
       ? "border-accent font-semibold text-foreground"
       : "border-transparent text-dim hover:border-border-hover hover:text-foreground"
   }`;
 
-function Group({ title, children }: { title: string; children: React.ReactNode }) {
+export function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <h3 className="inst mb-2.5 text-[0.55rem] leading-[1.6] text-dim">{title}</h3>
@@ -31,25 +27,11 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 }
 
 /**
- * The playbook's sections, as they are. An industry volume is one row with a
- * caret, and opening it drills the sidebar into that volume's chapters, the
- * way Vercel's dashboard opens Settings. The back caret returns to the
- * sections without leaving the page. Each view slides in from the side it
- * came from.
+ * Keeps the current page's link in view: deep in a long list it starts below
+ * the fold. Scrolls the rail only, never the page.
  */
-function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: () => void }) {
+export function useCurrentLinkInView() {
   const pathname = usePathname();
-  // The page the reader pressed "back" on; navigating anywhere resets it.
-  const [rootOn, setRootOn] = useState<string | null>(null);
-  const core = categories.filter((c) => !isIndustry(c.section));
-  const industries = categories.filter((c) => isIndustry(c.section));
-  const current = industries.find(
-    (c) => pathname === coverHref(c) || c.docs.some((d) => pathname === `/docs/${d.slug}`),
-  );
-  const drilled = Boolean(current && rootOn !== pathname);
-
-  // Keep the current page's link in view: deep in the book it starts below
-  // the fold. Scrolls the rail only, never the page.
   const navRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const nav = navRef.current;
@@ -60,97 +42,50 @@ function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate
     if (top < rail.scrollTop || top > rail.scrollTop + rail.clientHeight - 40) {
       rail.scrollTop = top - rail.clientHeight / 3;
     }
-  }, [pathname, drilled]);
+  }, [pathname]);
+  return navRef;
+}
 
-  const docLinks = (docs: DocCategory["docs"]) =>
-    docs.map((doc) => {
-      const href = `/docs/${doc.slug}`;
-      return (
-        <li key={doc.slug}>
-          <Link
-            href={href}
-            onClick={onNavigate}
-            aria-current={pathname === href ? "page" : undefined}
-            className={linkClass(pathname === href)}
-          >
-            {doc.navTitle}
-          </Link>
-        </li>
-      );
-    });
-
-  if (current && drilled) {
+/** A sidebar's links as rows: the current page is marked and highlighted. */
+export function DocLinks({
+  docs,
+  hrefOf,
+  onNavigate,
+}: {
+  docs: { slug: string; navTitle: string }[];
+  hrefOf: (slug: string) => string;
+  onNavigate?: () => void;
+}) {
+  const pathname = usePathname();
+  return docs.map((doc) => {
+    const href = hrefOf(doc.slug);
     return (
-      <nav ref={navRef} key={current.section} aria-label={current.name} className="sidebar-in-right space-y-4">
-        <button
-          type="button"
-          onClick={() => setRootOn(pathname)}
-          className="group flex w-full items-center gap-2 text-left text-sm font-semibold text-foreground"
+      <li key={doc.slug}>
+        <Link
+          href={href}
+          onClick={onNavigate}
+          aria-current={pathname === href ? "page" : undefined}
+          className={linkClass(pathname === href)}
         >
-          <ChevronLeft size={15} aria-hidden className="text-dim transition-colors group-hover:text-accent" />
-          {industryName(current.name)}
-          <span className="sr-only">: back to all sections</span>
-        </button>
-        <ul className="border-l border-border">
-          <li>
-            <Link
-              href={coverHref(current)}
-              onClick={onNavigate}
-              aria-current={pathname === coverHref(current) ? "page" : undefined}
-              className={linkClass(pathname === coverHref(current))}
-            >
-              Overview
-            </Link>
-          </li>
-        </ul>
-        {industryParts(current.docs).map((part) =>
-          part.title ? (
-            <Group key={part.title} title={part.title}>
-              {docLinks(part.docs)}
-            </Group>
-          ) : (
-            <ul key="chapters" className="border-l border-border">
-              {docLinks(part.docs)}
-            </ul>
-          ),
-        )}
-      </nav>
+          {doc.navTitle}
+        </Link>
+      </li>
     );
-  }
+  });
+}
+
+/** The playbook's sections, then the API reference. */
+function SidebarTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: () => void }) {
+  const pathname = usePathname();
+  const navRef = useCurrentLinkInView();
 
   return (
-    <nav ref={navRef} key="playbook" aria-label="Documentation" className={`${current ? "sidebar-in-left " : ""}space-y-7`}>
-      {core.map((category) => (
+    <nav ref={navRef} aria-label="Documentation" className="space-y-7">
+      {categories.map((category) => (
         <Group key={category.name} title={category.name}>
-          {docLinks(category.docs)}
+          <DocLinks docs={category.docs} hrefOf={(slug) => `/docs/${slug}`} onNavigate={onNavigate} />
         </Group>
       ))}
-      <Group title="Industries">
-        {industries.map((c) => (
-          <li key={c.section}>
-            <Link
-              href={c === current ? pathname : coverHref(c)}
-              onClick={() => {
-                setRootOn(null);
-                onNavigate?.();
-              }}
-              className={`group ${linkClass(c === current)}`}
-            >
-              {industryName(c.name)}
-              <ChevronRight size={13} aria-hidden className="ml-auto text-dim transition-colors group-hover:text-accent" />
-            </Link>
-          </li>
-        ))}
-        {UPCOMING_INDUSTRIES.map((name) => (
-          <li
-            key={name}
-            className="-ml-px flex items-center gap-2 border-l border-transparent py-1.5 pl-3.5 text-[0.8rem] leading-snug text-dim/70"
-          >
-            {name}
-            <span className="inst ml-auto border border-border px-1.5 py-px text-[0.45rem] text-dim">Soon</span>
-          </li>
-        ))}
-      </Group>
       <Group title="Reference">
         <li>
           <Link href="/docs/api" onClick={onNavigate} className={linkClass(pathname === "/docs/api")}>
@@ -166,13 +101,15 @@ export function DocsSidebar({ categories }: DocsSidebarProps) {
   return <SidebarTree categories={categories} />;
 }
 
-export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
+/** Below lg, a sidebar folds into a button naming the current page. */
+export function MobileSidebar({
+  current,
+  children,
+}: {
+  current: string;
+  children: (close: () => void) => React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-  const cover = categories.find((c) => isIndustry(c.section) && pathname === coverHref(c));
-  const currentTitle = cover
-    ? `${industryName(cover.name)} overview`
-    : (categories.flatMap((c) => c.docs).find((d) => pathname === `/docs/${d.slug}`)?.navTitle ?? "Documentation");
 
   return (
     <div className="lg:hidden mb-6">
@@ -180,17 +117,25 @@ export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between gap-2 border border-border bg-surface px-3 py-2.5 text-sm text-foreground"
       >
-        <span className="truncate">{currentTitle}</span>
+        <span className="truncate">{current}</span>
         <ChevronDown
           size={14}
           className={`text-dim shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && (
-        <div className="mt-2 border border-border bg-surface p-3">
-          <SidebarTree categories={categories} onNavigate={() => setOpen(false)} />
-        </div>
-      )}
+      {open && <div className="mt-2 border border-border bg-surface p-3">{children(() => setOpen(false))}</div>}
     </div>
+  );
+}
+
+export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
+  const pathname = usePathname();
+  const current =
+    categories.flatMap((c) => c.docs).find((d) => pathname === `/docs/${d.slug}`)?.navTitle ?? "Documentation";
+
+  return (
+    <MobileSidebar current={current}>
+      {(close) => <SidebarTree categories={categories} onNavigate={close} />}
+    </MobileSidebar>
   );
 }

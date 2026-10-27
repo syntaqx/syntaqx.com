@@ -2,9 +2,9 @@ import fs from "fs";
 import path from "path";
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/posts";
-import { getAllDocs } from "@/lib/docs";
+import { getAllBookChapters, getAllDocs } from "@/lib/docs";
 import { docLastModified } from "@/lib/doc-dates";
-import { INDUSTRIES } from "@/lib/industries";
+import { BOOKS } from "@/lib/books";
 import { SITE_URL } from "@/lib/constants";
 
 /** Recursively find all static page routes under app/. */
@@ -61,8 +61,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Per-tag archive pages are noindex (thin content — see app/tags/[tag]),
   // so they're intentionally omitted here. The /tags index stays.
-  // Each industry volume's cover (a dynamic route, so not discovered above).
-  const covers = INDUSTRIES.map((i) => ({ url: `${baseUrl}/docs/industries/${i.slug}` }));
+  // Each book's cover and chapters (dynamic routes, so not discovered above).
+  const covers = BOOKS.map((b) => ({ url: `${baseUrl}/books/${b.slug}` }));
+  const chapters = getAllBookChapters().map((chapter) => {
+    const modified = docLastModified(chapter.slug, "books");
+    return {
+      url: `${baseUrl}/books/${chapter.slug}`,
+      ...(modified && { lastModified: new Date(modified) }),
+    };
+  });
 
-  return [...staticPages, ...docs, ...covers, ...posts];
+  return [...staticPages, ...docs, ...covers, ...chapters, ...posts];
 }

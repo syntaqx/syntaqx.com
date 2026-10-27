@@ -22,7 +22,7 @@ The rules look scattered, but they share one shape: **consent for a purpose, rev
 | AI chat and voice agents | State bot and AI disclosure laws | |
 | Commercial email | CAN-SPAM | Mailbox-provider sender requirements |
 
-Collection messages add debt-collection law for third-party collectors (the FDCPA and Regulation F); [Collections & Retention](/docs/industries/field-operations/collections-and-retention) is an example of how they shape contact limits.
+Collection messages add debt-collection law for third-party collectors (the FDCPA and Regulation F); [Collections & Retention](/books/field-operations/collections-and-retention) is an example of how they shape contact limits.
 
 ## TCPA Consent
 
@@ -53,7 +53,7 @@ Under the amended rule, from November 25, 2026:
 - **Ten business days and the five-minute confirmation text are unchanged.**
 - **Still open:** the order's further notice asks whether to require a one-step revoke-all method, shorten the honoring period, and require two-way texting. Expect more change.
 
-For the system, that means a STOP is recorded against the purpose of the message it answered, a reply to a marketing message revokes all marketing, and offering a "stop everything" option is cheap insurance against the rule the FCC is still considering. The [phone payments](/docs/industries/payments/phone-payments) and [field operations](/docs/industries/field-operations/customer-communications) volumes give examples in their industries.
+For the system, that means a STOP is recorded against the purpose of the message it answered, a reply to a marketing message revokes all marketing, and offering a "stop everything" option is cheap insurance against the rule the FCC is still considering. The [phone payments](/books/payments/phone-payments) and [field operations](/books/field-operations/customer-communications) books give examples in their industries.
 
 ## Calling Hours and Do-Not-Call
 
