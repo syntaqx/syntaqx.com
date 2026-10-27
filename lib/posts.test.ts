@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { getAllPosts, markdownToHtml } from "./posts";
-import { POST_SCENES } from "./scene/scenes";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { BOOKS } from "./books";
+import { BOOKS_INDEX_SCENE, BOOK_SCENES, POST_SCENES } from "./scene/scenes";
 import { REST } from "./scene/iso";
 import { scenes } from "./scene/scenes";
 import { levels, rasterize } from "./scene/raster";
@@ -20,6 +23,34 @@ describe("feature post heroes", () => {
 
   it("only allows post scenes, never page scenes like the home art", () => {
     expect(POST_SCENES).not.toContain("system");
+  });
+});
+
+describe("book covers", () => {
+  // Scenes pages pass by name: scene="x" on a header, scene: "x" on an OG card.
+  const pageScenes = new Set(
+    readdirSync("app", { recursive: true, encoding: "utf8" })
+      .filter((f) => f.endsWith(".tsx"))
+      .flatMap((f) => [...readFileSync(join("app", f), "utf8").matchAll(/scene(?:=|: )"(\w+)"/g)].map((m) => m[1])),
+  );
+
+  it("gives every book its own cover scene", () => {
+    const covers = BOOKS.map((b) => b.cover);
+    for (const book of BOOKS) expect(BOOK_SCENES, book.slug).toContain(book.cover);
+    expect(new Set(covers).size).toBe(covers.length);
+  });
+
+  it("never shares a cover with a post or a page", () => {
+    expect(pageScenes.size).toBeGreaterThan(0);
+    for (const scene of BOOK_SCENES) {
+      expect(POST_SCENES as readonly string[], scene).not.toContain(scene);
+      expect(pageScenes.has(scene), scene).toBe(false);
+    }
+  });
+
+  it("gives the books index a scene of its own", () => {
+    expect([...POST_SCENES, ...BOOK_SCENES] as string[]).not.toContain(BOOKS_INDEX_SCENE);
+    expect(pageScenes.has(BOOKS_INDEX_SCENE)).toBe(false);
   });
 });
 

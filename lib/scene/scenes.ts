@@ -692,8 +692,265 @@ const missing: SceneFn = (s) => {
   return { parts, ext: [[0, 9, 0], [9, 0, 0], [9, 9, 0], [0, 0, 0], [3, 3, z + 1.5], [8.6, 4.3, 3]], axes: ground(9) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing } satisfies Record<string, SceneFn>;
+/*
+ * Book covers: one small scene per book, drawn at card size, so a few
+ * strong forms and no labels.
+ */
+
+/**
+ * Payments: a card taps a terminal, and each tap posts a line to the
+ * ledger, a settlement stack whose layers part on hover.
+ */
+const tender: SceneFn = (s) => {
+  const H = 0.4;
+  const gap = 0.35 + s.spread * 0.9;
+  const sheet = 2 * (H + gap);
+  const T = 3.4;
+  const ph = (s.t % T) / T;
+  const tap = ph < 0.25 ? ease(ph / 0.25) : ph < 0.4 ? 1 : 1 - ease(Math.min(1, (ph - 0.4) / 0.35));
+  const tz = 0.9;
+  const lift = 1.4 + s.spread * 1.2;
+  const cz = tz + 0.12 + (1 - tap) * lift;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "cable", pts: [[6.4, 6.9, 0], [3.3, 6.9, 0], [3.3, 5.6, 0]], speed: 0.4, accent: true },
+    ...[0, 1].map((i): Part => ({ kind: "box", box: box(1, 1, i * (H + gap), 4.6, 4.6, H), vents: i === 0 })),
+    {
+      kind: "plane",
+      pts: quad(1, 1, sheet, 4.6, 4.6),
+      v: 0.2,
+      drops: { at: [[1, 5.6], [5.6, 5.6], [5.6, 1]], from: 0 },
+      rows: { lengths: [5, 3.6, 4.4, 2.6], accentRow: Math.floor(s.t / T) % 4 },
+    },
+    // the terminal: its screen, then the keypad
+    { kind: "box", box: box(6.4, 5.4, 0, 2.2, 3, tz) },
+    { kind: "plane", pts: quad(6.65, 5.65, tz, 1.7, 1.1), v: 0.03 },
+    { kind: "plane", pts: quad(6.65, 7, tz, 1.7, 1.2), v: 0.2 },
+    ...[1, 2].map((k): Part => ({ kind: "line", a: [6.65 + (k * 1.7) / 3, 7, tz], b: [6.65 + (k * 1.7) / 3, 8.2, tz], alpha: 0.4 })),
+    ...[1, 2].map((k): Part => ({ kind: "line", a: [6.65, 7 + k * 0.4, tz], b: [8.35, 7 + k * 0.4, tz], alpha: 0.4 })),
+    { kind: "line", a: [7.5, 6.2, tz], b: [7.5, 6.2, cz], dashed: true, alpha: 0.4 },
+    { kind: "box", box: box(6.5, 5.55, cz, 2, 1.3, 0.08), accent: true, handles: true },
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1, 1, sheet + 0.6], [6.5, 5.55, tz + lift + 0.6]], axes: ground(10) };
+};
+
+/**
+ * Field Operations: a truck runs its route around a block of houses, the
+ * next stop marked by a pin. On hover the roofs and the cargo lift off.
+ */
+const route: SceneFn = (s) => {
+  const [lo, hi] = [1.5, 8.5];
+  const side = hi - lo;
+  const d = (s.t * 1.1 + 10) % (side * 4);
+  const seg = Math.floor(d / side);
+  const u = d % side;
+  const heading: [number, number][] = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+  const start: [number, number][] = [[lo, lo], [hi, lo], [hi, hi], [lo, hi]];
+  const [hx, hy] = heading[seg];
+  const [px, py] = [start[seg][0] + hx * u, start[seg][1] + hy * u];
+  // a slab of the truck from u0 to u1 along its heading, 0.9 wide
+  const slab = (u0: number, u1: number, z: number, h: number) => {
+    const xs = [u0, u1].flatMap((k) => [-0.45, 0.45].map((w) => px + hx * k - hy * w));
+    const ys = [u0, u1].flatMap((k) => [-0.45, 0.45].map((w) => py + hy * k + hx * w));
+    const [x, y] = [Math.min(...xs), Math.min(...ys)];
+    return box(x, y, z, Math.max(...xs) - x, Math.max(...ys) - y, h);
+  };
+  const cargo = 0.25 + s.spread * 0.8;
+  const truck: Part[] = [
+    { kind: "box", box: slab(-1.15, 1.15, 0.05, 0.2), small: true },
+    { kind: "box", box: slab(0.5, 1.15, 0.25, 0.6) },
+    ...(s.spread > 0.05 ? [{ kind: "line", a: [px, py, 0.25], b: [px, py, cargo], dashed: true, alpha: 0.4 } as Part] : []),
+    { kind: "box", box: slab(-1.15, 0.4, cargo, 0.75), accent: true },
+  ];
+  const houses: [number, number][] = [[2.6, 2.6], [5.6, 2.6], [5.6, 5.6], [2.6, 5.6]];
+  const stop = (seg + 1) % 4;
+  const [a, b, h, r] = [1.8, 1.8, 0.9, 0.7];
+  const zr = h + s.spread * 0.9;
+  const house = ([x, y]: [number, number]): Part[] => [
+    { kind: "box", box: box(x, y, 0, a, b, h) },
+    ...(s.spread > 0.05 ? [{ kind: "line", a: [x + a, y + b, h], b: [x + a, y + b, zr], dashed: true, alpha: 0.35 } as Part] : []),
+    { kind: "plane", pts: [[x, y, zr], [x + a, y, zr], [x + a, y + b / 2, zr + r], [x, y + b / 2, zr + r]], v: 0.3 },
+    { kind: "plane", pts: [[x, y + b / 2, zr + r], [x + a, y + b / 2, zr + r], [x + a, y + b, zr], [x, y + b, zr]], v: 0.45 },
+    { kind: "plane", pts: [[x + a, y, zr], [x + a, y + b, zr], [x + a, y + b / 2, zr + r]], v: 0.2 },
+  ];
+  const [sx, sy] = houses[stop];
+  const pin = zr + r + 0.5 + bob(s, 0.15);
+  const behind = seg === 0 || seg === 3;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "line", a: [5.05, lo, 0], b: [5.05, hi, 0], alpha: 0.3 },
+    { kind: "line", a: [lo, 5.05, 0], b: [hi, 5.05, 0], alpha: 0.3 },
+    { kind: "cable", pts: [[lo, lo, 0], [hi, lo, 0], [hi, hi, 0], [lo, hi, 0], [lo, lo, 0]], speed: 0.05, accent: true },
+    ...(behind ? truck : []),
+    ...[...houses].sort((p, q) => p[0] + p[1] - (q[0] + q[1])).flatMap(house),
+    { kind: "line", a: [sx + a / 2, sy + b / 2, zr + r], b: [sx + a / 2, sy + b / 2, pin], dashed: true, alpha: 0.5 },
+    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin, r: 0.04, h: 0.5, rt: 0.3, accent: true },
+    ...(behind ? [] : truck),
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [5, 5, h + r + 2.2 + s.spread * 0.9]], axes: ground(10) };
+};
+
+/**
+ * Gaming: a match on an arena floor, the players trading packets across a
+ * capture point, lifted off the racks of game servers that run it.
+ */
+const arena: SceneFn = (s) => {
+  const Z = 3.2 + s.spread * 2;
+  const p1: [number, number] = [2.4 + Math.sin(s.t * 0.9) * 0.5, 2.6];
+  const p2: [number, number] = [6, 6.2 + Math.sin(s.t * 1.1 + 1) * 0.5];
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(2.4 + i * 1.9, 4.4, 0, 1.4, 2.4, 1.8), slots: true })),
+    { kind: "cable", pts: [[5, 5.6, 1.8], [5, 5.6, Z]], speed: 0.5, accent: true },
+    { kind: "plane", pts: quad(1, 1, Z, 8, 8), v: 0.16, grid: 8, drops: { at: [[1, 9], [9, 9], [9, 1]], from: 0 } },
+    { kind: "cyl", cx: 5, cy: 5, z: Z, r: 1, h: 0.15 },
+    { kind: "box", box: box(p1[0], p1[1], Z, 1.1, 1.1, 1.5) },
+    { kind: "cable", pts: [[p1[0] + 0.55, p1[1] + 0.55, Z + 0.8], [5, 5, Z + 0.8], [p2[0] + 0.55, p2[1] + 0.55, Z + 0.8]], speed: 0.6, accent: true },
+    { kind: "box", box: box(p2[0], p2[1], Z, 1.1, 1.1, 1.5), accent: true, handles: true },
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1, 1, Z + 0.6], [2.4, 2.6, Z + 1.8]], axes: ground(10) };
+};
+
+/**
+ * Property Tech: a mid-rise exploded floor by floor over its lobby, with
+ * balconies, a water tank and parking beside it. A unit on the top floor
+ * slides out like a drawer, its lease lifting off it, one at a time.
+ */
+const tenancy: SceneFn = (s) => {
+  const [x0, y0, ua, ub, n] = [1.5, 2.2, 1.6, 3, 3];
+  const face = y0 + ub;
+  const gap = 0.08 + s.spread * 0.7;
+  const [lobbyH, H] = [1, 0.9];
+  const zAt = (f: number) => lobbyH + gap + f * (H + gap);
+  const floors = 3;
+  const roof = zAt(floors - 1) + H;
+  const lit = Math.floor(s.t / 2.6) % n;
+  const out = 0.9 + s.spread * 0.5;
+  const sheetZ = roof + 0.5 + s.spread * 0.9 + bob(s, 0.1);
+  const win = (x: number, z: number, y = face): Part => ({ kind: "plane", pts: [[x + 0.35, y, z + 0.25], [x + ua - 0.35, y, z + 0.25], [x + ua - 0.35, y, z + 0.7], [x + 0.35, y, z + 0.7]], v: 0.03 });
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // parking beside the building: stalls and two cars
+    { kind: "plane", pts: quad(7, 1.4, 0, 2.4, 6.2), v: 0.12 },
+    ...[0, 1, 2, 3, 4, 5].map((k): Part => ({ kind: "line", a: [7, 1.4 + k * 1.2, 0], b: [8.3, 1.4 + k * 1.2, 0], alpha: 0.5 })),
+    { kind: "box", box: box(7.15, 1.55, 0, 1, 0.9, 0.45), small: true },
+    { kind: "box", box: box(7.15, 5.15, 0, 1, 0.9, 0.45), small: true },
+    // lobby: glass along the front, a door and its canopy
+    { kind: "box", box: box(x0, y0, 0, n * ua, ub, lobbyH) },
+    { kind: "plane", pts: [[x0 + 0.3, face, 0.15], [x0 + 2.4, face, 0.15], [x0 + 2.4, face, 0.8], [x0 + 0.3, face, 0.8]], v: 0.03 },
+    { kind: "plane", pts: [[x0 + 3.2, face, 0], [x0 + 3.9, face, 0], [x0 + 3.9, face, 0.8], [x0 + 3.2, face, 0.8]], v: 0.03 },
+    { kind: "box", box: box(x0 + 3, face, 0.85, 1.1, 0.5, 0.08), small: true },
+  ];
+  for (let f = 0; f < floors; f++) {
+    const z = zAt(f);
+    for (let u = 0; u < n; u++) {
+      const x = x0 + u * ua;
+      if (f === floors - 1 && u === lit) {
+        parts.push({ kind: "plane", pts: quad(x, y0, z, ua, ub), v: 0 , dashed: true });
+        continue;
+      }
+      parts.push({ kind: "box", box: box(x, y0, z, ua, ub, H), vents: u === n - 1 });
+      parts.push(win(x, z));
+      if (u === 1) {
+        parts.push({ kind: "box", box: box(x + 0.2, face, z, ua - 0.4, 0.4, 0.08), small: true });
+        parts.push({ kind: "line", a: [x + 0.2, face + 0.4, z + 0.4], b: [x + ua - 0.2, face + 0.4, z + 0.4], alpha: 0.6 });
+      }
+    }
+  }
+  // the roof: a water tank on legs and an air handler
+  parts.push(
+    ...[[2.1, 2.7], [2.9, 2.7], [2.1, 3.5], [2.9, 3.5]].map(([x, y]): Part => ({ kind: "line", a: [x, y, roof], b: [x, y, roof + 0.5], alpha: 0.6 })),
+    { kind: "cyl", cx: 2.5, cy: 3.1, z: roof + 0.5, r: 0.55, h: 0.9, rt: 0.5 },
+    { kind: "box", box: box(4.6, 2.6, roof, 1.2, 1, 0.5), vents: true, small: true },
+  );
+  // the leased unit, out like a drawer, and its lease above it
+  const lx = x0 + lit * ua;
+  const lz = zAt(floors - 1);
+  parts.push(
+    { kind: "box", box: box(lx, y0 + out, lz, ua, ub, H), accent: true },
+    win(lx, lz, face + out),
+    { kind: "line", a: [lx + ua / 2, face + out - 0.6, lz + H], b: [lx + ua / 2, face + out - 0.6, sheetZ], dashed: true, alpha: 0.45 },
+    { kind: "plane", pts: quad(lx - 0.1, face + out - 1.4, sheetZ, ua + 0.2, 1.3), v: 0.2, handles: true },
+    ...[1.2, 0.8, 1.05].map((len, i): Part => ({ kind: "line", a: [lx + 0.1, face + out - 1.1 + i * 0.35, sheetZ], b: [lx + 0.1 + len, face + out - 1.1 + i * 0.35, sheetZ], alpha: i === 0 ? 1 : 0.55, accent: i === 0 })),
+  );
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, roof + 1.6], [x0 + n * ua, y0 + out, sheetZ + 0.4]], axes: ground(10) };
+};
+
+/**
+ * User-Generated Platforms: stacks of posts and media, one tile at a time
+ * rising off a stack into the live stream above.
+ */
+const feed: SceneFn = (s) => {
+  const Z = 5 + s.spread * 2.2;
+  const stacks: [number, number, number][] = [[0.8, 6.6, 4], [4, 7.2, 3], [7.2, 6.2, 5]];
+  const T = 3;
+  const n = Math.floor(s.t / T) % stacks.length;
+  const ph = ease((s.t % T) / T);
+  const [cx, cy] = [4.6, 3.4];
+  const tile = (x: number, y: number, z: number, accent = false): Part => ({ kind: "box", box: box(x, y, z, 2.2, 1.6, 0.14), accent, small: !accent });
+  const parts: Part[] = [{ kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 }];
+  stacks.forEach(([x, y, count]) => {
+    parts.push({ kind: "line", a: [x + 1.1, y + 0.8, count * 0.2], b: [cx, cy, Z], dashed: true, alpha: 0.3 });
+    for (let k = 0; k < count; k++) parts.push(tile(x + (k % 2) * 0.08, y - (k % 2) * 0.06, k * 0.2));
+  });
+  const [sx, sy, sc] = stacks[n];
+  const [tx, ty, tz] = [sx + (cx - 1.1 - sx) * ph, sy + (cy - 0.8 - sy) * ph, sc * 0.2 + (Z - 0.2 - sc * 0.2) * ph];
+  parts.push(
+    tile(tx, ty, tz, true),
+    { kind: "plane", pts: quad(1.8, 1, Z, 5.6, 4.4), v: 0.2, window: true, handles: true },
+    { kind: "plane", pts: [[4, 2.6, Z], [4, 4.6, Z], [5.7, 3.6, Z]], v: 0.6 },
+  );
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [1.8, 1, Z + 0.4], [7.4, 1, Z + 0.4]], axes: ground(10) };
+};
+
+/**
+ * Books index: a bookcase of two shelves pulled apart, the volumes standing
+ * with their spines out, one lifted off the top shelf to read.
+ */
+const library: SceneFn = (s) => {
+  const [x0, y0, len, dep, t] = [1.2, 3.4, 7.6, 2.4, 0.3];
+  const top = 3.9 + s.spread * 2;
+  // [thickness, depth, height] per volume, left to right
+  const rows: [number, number, number][][] = [
+    [[0.8, 2, 2.4], [0.6, 1.8, 2.1], [0.9, 2.1, 2.6], [0.5, 1.7, 1.9], [0.7, 2, 2.3], [0.8, 1.9, 2.5], [0.6, 1.8, 2]],
+    [[0.7, 1.9, 2.2], [0.9, 2.1, 2.6], [0.6, 1.8, 2], [0.8, 2, 2.4], [0.5, 1.7, 1.8], [0.9, 2.1, 2.5]],
+  ];
+  const pick = 3;
+  const lift = 0.8 + s.spread * 1 + bob(s, 0.12);
+  const shelf = (z: number, books: [number, number, number][], upper: boolean): Part[] => {
+    const gap = 0.06 + s.spread * 0.18;
+    const parts: Part[] = [{ kind: "box", box: box(x0, y0, z, len, dep, t), small: true }];
+    let x = x0 + 0.3;
+    books.forEach(([a, b, h], i) => {
+      const lit = upper && i === pick;
+      const zz = z + t + (lit ? lift : 0);
+      const y = y0 + dep - b - 0.1;
+      if (lit) parts.push({ kind: "line", a: [x + a / 2, y + b, z + t], b: [x + a / 2, y + b, zz], dashed: true, alpha: 0.4 });
+      parts.push({ kind: "box", box: box(x, y, zz, a, b, h), accent: lit, handles: lit });
+      // bands across the spine
+      for (const k of [0.18, 0.82]) parts.push({ kind: "line", a: [x, y + b, zz + h * k], b: [x + a, y + b, zz + h * k], alpha: lit ? 0.9 : 0.45, accent: lit });
+      x += a + gap;
+    });
+    return parts;
+  };
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    ...shelf(0, rows[0], false),
+    ...[[x0, y0 + dep], [x0 + len, y0 + dep], [x0 + len, y0]].map(([x, y]): Part => ({ kind: "line", a: [x, y, t], b: [x, y, top], dashed: true, alpha: 0.35 })),
+    ...shelf(top, rows[1], true),
+  ];
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len, y0, top + t + 2.6]], axes: ground(10) };
+};
+
+export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arena, tenancy, feed, library } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
+
+/** Book covers, one per book, never shared with a post or a page. */
+export const BOOK_SCENES = ["tender", "route", "arena", "tenancy", "feed"] as const satisfies readonly SceneName[];
+export type BookSceneName = (typeof BOOK_SCENES)[number];
+
+/** The books index's own scene, shared with nothing else. */
+export const BOOKS_INDEX_SCENE = "library" satisfies SceneName;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */
 export const POST_SCENES = ["loop", "weld", "scaffold", "stack"] as const satisfies readonly SceneName[];

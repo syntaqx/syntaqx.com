@@ -20,7 +20,7 @@ export default async function Image({ params }: { params: Promise<{ book: string
     kicker: `Books  ·  ${BOOK_TYPES[book.type].replace(/s$/, "")}`,
     title: book.name,
     description: book.summary,
-    scene: "stack",
+    scene: book.cover,
     path: `/books/${slug}`,
     stat: `${chapters.length} chapters${parts ? `  ·  ${parts} parts` : ""}`,
   });

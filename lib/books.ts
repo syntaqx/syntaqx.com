@@ -5,6 +5,8 @@
  * entry here. No file system access, so client components can import it.
  */
 
+import type { BookSceneName } from "@/lib/scene/scenes";
+
 /** "industry": one industry's rules and money. "topic": one subject, across industries. */
 export type BookType = "industry" | "topic";
 
@@ -23,6 +25,16 @@ export interface Book {
   summary: string;
   /** The cover's opening paragraphs. */
   intro: string[];
+  /** The live art on the book's card and cover; every book has its own. */
+  cover: BookSceneName;
+}
+
+/** A book not written yet: a name and what it would cover. */
+export interface FutureBook {
+  name: string;
+  type: BookType;
+  /** One line, for the card. */
+  summary: string;
 }
 
 /** Written books, each with a cover at /books/<slug>. */
@@ -31,6 +43,7 @@ export const BOOKS: Book[] = [
     slug: "payments",
     type: "industry",
     name: "Payments",
+    cover: "tender",
     summary:
       "How the payments industry works, from a card tap to running a provider, and what each of its rules means for the systems you build.",
     intro: [
@@ -42,6 +55,7 @@ export const BOOKS: Book[] = [
     slug: "field-operations",
     type: "industry",
     name: "Field Operations",
+    cover: "route",
     summary:
       "How businesses that send people and trucks to customers work, from the lead and the call to the route, the technician, the service and the bill.",
     intro: [
@@ -53,6 +67,7 @@ export const BOOKS: Book[] = [
     slug: "gaming",
     type: "industry",
     name: "Gaming",
+    cover: "arena",
     summary:
       "How games are built and run, from the engine and the frame budget to netcode, game servers, mobile, live operations, creator economies and the rules around them.",
     intro: [
@@ -64,6 +79,7 @@ export const BOOKS: Book[] = [
     slug: "property-tech",
     type: "industry",
     name: "Property Tech",
+    cover: "tenancy",
     summary:
       "How the software that runs rental housing, associations, commercial space, storage and short-term rentals works, from the lease and the ledger to the law.",
     intro: [
@@ -75,6 +91,7 @@ export const BOOKS: Book[] = [
     slug: "user-generated-platforms",
     type: "industry",
     name: "User-Generated Platforms",
+    cover: "feed",
     summary:
       "How platforms where users supply the content or the inventory work, from communities, media and live streams to peer-to-peer marketplaces, trust and safety, and the law.",
     intro: [
@@ -85,12 +102,68 @@ export const BOOKS: Book[] = [
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
-export const UPCOMING_BOOKS: { name: string; type: BookType }[] = [
-  { name: "Health Tech", type: "industry" },
-  { name: "Commerce", type: "industry" },
-  { name: "Banking & Lending", type: "industry" },
-  { name: "Hosting & Cloud", type: "industry" },
-  { name: "Workplace & Collaboration", type: "industry" },
+export const UPCOMING_BOOKS: FutureBook[] = [
+  {
+    name: "Health Tech",
+    type: "industry",
+    summary: "Practice management and patient engagement first, then EHRs, FHIR, claims, prior auth and pharmacy, under HIPAA.",
+  },
+  {
+    name: "Commerce",
+    type: "industry",
+    summary: "Catalog, orders and inventory across your store, POS and marketplaces like Amazon, plus subscriptions and regulated goods.",
+  },
+  {
+    name: "Banking & Lending",
+    type: "industry",
+    summary: "Deposit and loan ledgers on a core or a sponsor bank, credit decisions under TILA and ECOA, and business spend management.",
+  },
+  {
+    name: "Hosting & Cloud",
+    type: "industry",
+    summary: "Metered usage into invoices for compute, storage, domains and messaging, and the abuse, 10DLC and registrar rules around them.",
+  },
+  {
+    name: "Workplace & Collaboration",
+    type: "industry",
+    summary: "Tenants, seats and permissions for chat, docs and work tracking, where the customer owns the content and sets retention.",
+  },
+];
+
+/** Books I'm weighing but haven't committed to, shown as "Considering". */
+export const CONSIDERING_BOOKS: FutureBook[] = [
+  { name: "Insurance", type: "industry", summary: "Policies, premiums and claim reserves, rated and filed state by state, from carriers to embedded coverage." },
+  { name: "Workforce", type: "industry", summary: "Gross-to-net payroll, tax by state and locality, garnishments, benefits enrollment and wage-hour law." },
+  {
+    name: "Logistics & Supply Chain",
+    type: "industry",
+    summary: "Loads, shipments and inventory across brokers, carriers and warehouses, through EDI, customs and recalls.",
+  },
+  {
+    name: "Travel, Hospitality & Events",
+    type: "industry",
+    summary: "Reservations, rates and inventory across GDS and channel managers, hotel systems and ticketed on-sales.",
+  },
+  {
+    name: "Advertising",
+    type: "industry",
+    summary: "Auctions, impressions and attribution across DSPs and SSPs, and the consent and privacy law that limits each.",
+  },
+  {
+    name: "Investing",
+    type: "industry",
+    summary: "Accounts, positions and tax lots at a broker or custodian, order routing and best execution, and digital asset custody.",
+  },
+  {
+    name: "Energy & Utilities",
+    type: "industry",
+    summary: "Meter reads into bills under tariffs, net metering and distributed energy, and settlement in wholesale markets.",
+  },
+  {
+    name: "Public Sector & Education",
+    type: "industry",
+    summary: "Permits and benefits eligibility for government, student records and aid for schools, donors and grants for nonprofits.",
+  },
 ];
 
 export const getBook = (slug: string) => BOOKS.find((b) => b.slug === slug);

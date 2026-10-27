@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getBookChapters } from "@/lib/docs";
-import { BOOKS, BOOK_TYPES, UPCOMING_BOOKS, formatMinutes, type BookType } from "@/lib/books";
-import { BookCards } from "@/components/book-cards";
+import { BOOKS, BOOK_TYPES, CONSIDERING_BOOKS, UPCOMING_BOOKS, formatMinutes, type BookType } from "@/lib/books";
+import { BookCards, type BookCard } from "@/components/book-cards";
 import { DocsHeader } from "@/components/docs-header";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
@@ -13,7 +13,16 @@ export const metadata = pageMetadata(
   "Long reads that apply the playbook to one subject at a time: how an industry's rules, money and regulators shape the systems you build.",
 );
 
-/** Every book, grouped by type, and the ones still to come. */
+function SectionHead({ title, count }: { title: string; count: number }) {
+  return (
+    <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-3">
+      <h2 className="eyebrow">{title}</h2>
+      <span className="inst text-dim">{count}</span>
+    </div>
+  );
+}
+
+/** Every book, grouped by type, then the ones still to come and the ones I'm weighing. */
 export default function BooksPage() {
   const types = (Object.keys(BOOK_TYPES) as BookType[]).filter(
     (type) => BOOKS.some((b) => b.type === type) || UPCOMING_BOOKS.some((b) => b.type === type),
@@ -32,27 +41,38 @@ export default function BooksPage() {
 
       <div className="space-y-16">
         {types.map((type) => {
-          const books = BOOKS.filter((b) => b.type === type).map((book) => {
-            const chapters = getBookChapters(book.slug);
-            return {
-              href: `/books/${book.slug}`,
-              name: book.name,
-              summary: book.summary,
-              chapters: chapters.length,
-              readingTime: formatMinutes(chapters.reduce((sum, c) => sum + c.readingMinutes, 0)),
-            };
-          });
-          const upcoming = UPCOMING_BOOKS.filter((b) => b.type === type).map((b) => b.name);
+          const written = BOOKS.filter((b) => b.type === type);
+          const cards: BookCard[] = [
+            ...written.map((book) => {
+              const chapters = getBookChapters(book.slug);
+              const minutes = chapters.reduce((sum, c) => sum + c.readingMinutes, 0);
+              return {
+                href: `/books/${book.slug}`,
+                cover: book.cover,
+                eyebrow: `${chapters.length} chapters · ${formatMinutes(minutes)} read`,
+                name: book.name,
+                summary: book.summary,
+              };
+            }),
+            ...UPCOMING_BOOKS.filter((b) => b.type === type).map((b) => ({ eyebrow: "Soon", name: b.name, summary: b.summary })),
+          ];
           return (
             <section key={type} id={type} className="scroll-mt-24">
-              <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-3">
-                <h2 className="eyebrow">{BOOK_TYPES[type]}</h2>
-                <span className="inst text-dim">{books.length}</span>
-              </div>
-              <BookCards books={books} upcoming={upcoming} />
+              <SectionHead title={BOOK_TYPES[type]} count={written.length} />
+              <BookCards books={cards} />
             </section>
           );
         })}
+
+        {CONSIDERING_BOOKS.length > 0 && (
+          <section id="considering" className="scroll-mt-24">
+            <SectionHead title="Considering" count={CONSIDERING_BOOKS.length} />
+            <p className="-mt-2 mb-6 max-w-3xl text-sm text-dim">
+              Industries I might write next, each with its own ledger and rules. One moves up to Soon once I commit to it.
+            </p>
+            <BookCards books={CONSIDERING_BOOKS.map((b) => ({ eyebrow: "Considering", name: b.name, summary: b.summary }))} />
+          </section>
+        )}
       </div>
     </article>
   );

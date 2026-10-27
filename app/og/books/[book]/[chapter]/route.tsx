@@ -26,7 +26,7 @@ export async function GET(
     kicker: `${book.name}  ·  Chapter ${String(index + 1).padStart(2, "0")}`,
     title: chapter.title,
     description: chapter.description,
-    scene: "shelf",
+    scene: book.cover,
     path: `/books/${chapter.slug}`,
     stat: chapter.part,
   });
