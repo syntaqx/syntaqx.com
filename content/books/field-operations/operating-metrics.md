@@ -19,7 +19,7 @@ Three things make field service metrics slippery.
 
 The design consequence: every metric is a named, versioned definition with a unit, a numerator, a denominator, inclusion rules and a clock, and every report that shows it computes it the same way. [What a Definition Contains](/docs/architecture/data-pipelines#what-a-definition-contains) lists the parts.
 
-![A technician's eight-hour clocked-in day split into load, drive, on-site, break and unload segments, with utilization, drive share and stops per hour computed from the same day.](/diagrams/fo-operating-metrics-day.svg "The same day yields different numbers depending on the denominator. Define the clock (clocked in, paid, or route hours) once and use it in every efficiency metric.")
+![A dimensional drawing of a technician's eight-hour clocked-in day, C1, split into coded load, drive, on-site, break and unload segments: 4.0 hours on site over three stops, 2.25 hours driving over four legs and 1.75 hours of load, break and unload. Tables give each segment's hours and the metrics from the same day: utilization V / C1 = 50%, drive share D / C1 = 28%, stops per hour N / C1 = 0.38.](/diagrams/fo-operating-metrics-day.svg "The same day yields different numbers depending on the denominator. Define the clock (clocked in, paid, or route hours) once and use it in every efficiency metric.")
 
 ## How the Platforms Report
 

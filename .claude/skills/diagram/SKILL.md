@@ -302,3 +302,5 @@ diagram avoids it. Keep each to one or two lines: what went wrong, the rule.
 - 2026-10-27: Centering by the nodes alone put a group boundary and side
   brackets off center or inside the margin; center on the outermost
   element (group padding, bracket labels).
+- 2026-10-27: Two boxed zones side by side cut the label of the connector
+  crossing between them; mark the zones as spans under the chain instead.
