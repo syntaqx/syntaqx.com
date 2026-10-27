@@ -17,12 +17,12 @@ The chapter extends `media_assets` and `content_media` from [The Core Data Model
 
 | Platform or vendor | Variants | Formats | Metadata | Animation |
 | --- | --- | --- | --- | --- |
-| **Facebook Haystack (2010 paper)** | Four sizes made at upload, each stored in three places | Not described | Not described | Not described |
+| **Apple iPhone (the uploader's side)** | Not applicable | Captures HEIF when the camera is set to High Efficiency; may share as JPEG | The share sheet's Options can turn off Location per share | Not covered |
 | **Cloudflare Images** | Named variants (up to 100 per account) and URL transformations, billed per unique transformation | `format=auto` picks AVIF, then WebP, from the Accept header; falls back to WebP or JPEG when an image is too large to encode to AVIF quickly | Default keeps only the EXIF copyright tag; only JPEG output can keep metadata; rotation and color profile applied even when stripped | All frames kept by default; `anim=false` recommended for user uploads |
 | **Cloudinary** | URL transformations | `f_auto` picks AVIF, JPEG XL or WebP per browser; images under 5,000 pixels get WebP, not AVIF | Any transformation strips metadata except a few resolution fields and IPTC DigitalSourceType (kept in JPEG and PNG, lost in AVIF, WebP and JPEG XL) | Publishes a 6.3 MB GIF that becomes a 319 KB MP4 |
-| **Imgur** | Not public | Not public | Not public | GIFs converted to an MP4-based format it called GIFV (October 2014) |
+| **Facebook Haystack (2010 paper)** | Four sizes made at upload, each stored in three places | Not described | Not described | Not described |
+| **Imgur** | Not public | Not public | Not public | GIFs converted to WebM or MP4 video under a `.gifv` extension (October 2014) |
 | **Wolt (public engineering post)** | On-demand encoding failed on a cold cache; moved to batch, then lazy encoding of requested combinations | AVIF and WebP by Accept header with `Vary: Accept` | Not covered | Not covered |
-| **Apple iPhone (the uploader's side)** | Not applicable | Captures HEIF when the camera is set to High Efficiency; may share as JPEG | The share sheet's Options can turn off Location per share | Not covered |
 | **YouTube and Meta (the reader's side)** | Not applicable | Not applicable | Read C2PA and IPTC metadata on upload to label capture or AI generation | Not applicable |
 
 Two patterns run through the table. **Vendors converge on the same defaults:** negotiate AVIF then WebP from the request, fall back to JPEG, strip metadata except a field or two, apply orientation into the pixels, and treat animation as a cost problem. **The fields worth keeping are the ones defaults drop:** Cloudflare's default keeps the copyright tag but not IPTC provenance, Cloudinary keeps the provenance field only in JPEG and PNG, and both lose everything when the output is AVIF or WebP, which is exactly what format negotiation picks. A platform that wants provenance to survive has to carry it outside the served bytes.
@@ -86,7 +86,7 @@ A user-generated platform should tune by content class, not by page: screenshots
 
 ## GIF to Video
 
-An animated GIF is a sequence of palette images with no inter-frame compression worth the name, and video codecs beat it by an order of magnitude. web.dev's example turns a 3.7 MB GIF into a 551 KB MP4 and a 341 KB WebM; Cloudinary's turns a 6.3 MB GIF into a 319 KB MP4, which it calls 95% smaller. Imgur made the same move at platform scale on October 9, 2014, converting uploaded GIFs into an MP4-based format it called GIFV and raising its GIF upload limit from 5 MB to 50 MB in the same announcement, because a video file of the bigger animation was still cheaper to serve than the old capped GIF.
+An animated GIF is a sequence of palette images with no inter-frame compression worth the name, and video codecs beat it by an order of magnitude. web.dev's example turns a 3.7 MB GIF into a 551 KB MP4 and a 341 KB WebM; Cloudinary's turns a 6.3 MB GIF into a 319 KB MP4, which it calls 95% smaller. Imgur made the same move at platform scale on October 9, 2014, converting uploaded GIFs into WebM or MP4 video served under a `.gifv` extension and raising its GIF upload limit from 5 MB to 50 MB in the same announcement, because a video file of the bigger animation was still cheaper to serve than the old capped GIF.
 
 The pipeline for an animation asset (core `kind = 'animation'`):
 
@@ -123,7 +123,7 @@ Stripping removes the one class of metadata a platform now needs to read: where 
 
 **C2PA Content Credentials** are a signed manifest. In the C2PA 2.2 explainer's words, a manifest is "a cryptographically bound structure that records an asset's provenance": assertions about origin, edits and AI use, signed with the claim generator's certificate, and bound to the content by a cryptographic hash, so that "any alteration to either the asset or the provenance, however insignificant" breaks the binding. Edits made in C2PA-aware tools record the source files as ingredients, building a tree of provenance; the specification records actions (one of `c2pa.created` or `c2pa.opened` is mandatory in version 2.2) and can carry a `digitalSourceType` on them. A manifest store can be embedded in the file or kept external to it, and soft bindings (invisible watermarks or fingerprints) let a credential be found again after it's been stripped from the file. Validation tells the reader the credential is intact and who signed it; the explainer is explicit that provenance "alone cannot tell you whether the digital content is true."
 
-Platforms read both. Meta said in February 2024 (updated April 2025) that it labels images using the C2PA and IPTC markers that Google, OpenAI, Microsoft, Adobe, Midjourney and Shutterstock add, while acknowledging that "there are ways that people can strip out invisible markers." YouTube shows a "Captured with a camera" disclosure on videos recorded with tools that have built-in C2PA support, and withholds it when edits or a re-upload through a non-supporting tool break the chain of provenance.
+Platforms read both. Meta said in February 2024 (updated April 2025) that it labels images using the C2PA and IPTC markers that Google, OpenAI, Microsoft, Adobe, Midjourney and Shutterstock add, while acknowledging that "there are ways that people can strip out invisible markers." YouTube shows a "Captured with a camera" disclosure on videos recorded with tools that have built-in C2PA support (version 2.1 or later), and withholds it when edits break the chain of provenance, for example saving the capture to a photo library that doesn't support C2PA.
 
 The conflict with the rest of this chapter is direct. Every variant is a re-encode, so its hash no longer matches the original's hard binding; most pipelines strip the IPTC field from AVIF and WebP output; and format negotiation picks AVIF and WebP. A platform that relies on metadata surviving in served files will lose it. The design that works:
 
@@ -264,8 +264,5 @@ Notes on the sketch:
 - [Apple: Using HEIF or HEVC media on Apple devices](https://support.apple.com/en-us/116944), HEIF capture from iPhone 7, Most Compatible, conversion to JPEG when shared
 - [Apple: Manage location metadata in Photos](https://support.apple.com/en-au/guide/personal-safety/ips0d7a5df82/web), turning off Location when sharing, removing location, Camera's Location Services access
 - [Meta: Labeling AI-generated images on Facebook, Instagram and Threads](https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/), reading C2PA and IPTC markers, the companies covered, stripping as a limit (February 2024, updated April 2025)
-
-**Press**
-
-- [TechSpot: Imgur introduces GIFV](https://www.techspot.com/news/58379-imgur-gifv-mp4-format.html), the October 9, 2014 conversion of GIFs to an MP4-based format and the 50 MB GIF limit
-- [Tubefilter: YouTube's "captured with a camera" disclosure](https://www.tubefilter.com/2024/10/16/youtube-transparency-disclosure-c2pa-cai-generative-ai/), C2PA-capable capture tools and broken provenance chains (October 16, 2024)
+- [Imgur: Introducing GIFV](https://web.archive.org/web/20141230053608/http://imgur.com/blog/2014/10/09/introducing-gifv/), October 9, 2014, GIFs converted on upload to WebM or MP4 under a `.gifv` extension and the GIF limit raised from 5 MB to 50 MB (Imgur's own post; archived copy, as the blog no longer serves it)
+- [YouTube: "Captured with a camera" disclosure](https://support.google.com/youtube/answer/15446725?hl=en), capture tools with built-in C2PA support (version 2.1 or later) and edits that break the chain of provenance

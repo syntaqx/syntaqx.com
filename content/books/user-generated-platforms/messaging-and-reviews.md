@@ -17,10 +17,10 @@ This chapter covers in-platform messaging as the transaction's system of record,
 | Platform | Messaging rules | Reviews | Status program |
 | --- | --- | --- | --- |
 | **Airbnb** | All pre-booking communication on Airbnb; messages reviewed, and those containing contact details or external links blocked; paying off-platform loses AirCover | Both sides have 14 days after checkout; published when both submit or the window closes; listing rating shown after three reviews; sub-ratings and private notes visible only to the host | Superhost: 4.8+ rating, 90% response within 24 hours, under 1% cancellations, 10 stays (or 3 totalling 100 nights), assessed quarterly over 12 months |
-| **Outdoorsy** | Messaging as a "digital paper trail"; never pay outside Outdoorsy; report fake-site links; off-platform payment loses terms, cancellation and insurance protection | Both sides have 14 days; overall stars, sub-ratings (host communication, cleanliness, mechanical performance, value, listing accuracy), recommend yes or no, photos; hosts respond once, no edits | Superhost: 90% of requests answered within 24 hours, 4.85+ with 3+ reviews, under 3% cancellations, 6+ departed bookings in 12 months, quarterly |
-| **RVshare** | Off-platform payment requests breach the terms and should be reported | Not published | Not published |
 | **eBay** | Only checkout payment methods; direct contact details exchanged only after checkout | Feedback; automated removal of violating feedback; removal requests within 90 days; negative or neutral feedback doesn't affect seller performance standards | Seller performance standards |
 | **Etsy** | Off-platform transactions prohibited | Buyer reviews | Not covered here |
+| **Outdoorsy** | Messaging as a "digital paper trail"; never pay outside Outdoorsy; report fake-site links; off-platform payment loses terms, cancellation and insurance protection | Both sides have 14 days; overall stars, sub-ratings (host communication, cleanliness, mechanical performance, value, listing accuracy), recommend yes or no, photos; hosts respond once, no edits | Superhost: 90% of requests answered within 24 hours, 4.85+ with 3+ reviews, under 3% cancellations, 6+ departed bookings in 12 months, quarterly |
+| **RVshare** | Off-platform payment requests breach the terms and should be reported | Not published | Not published |
 
 The patterns:
 

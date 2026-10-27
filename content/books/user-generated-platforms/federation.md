@@ -18,10 +18,10 @@ This chapter covers why platforms federate and what it costs, ActivityPub's deli
 
 | Network | Protocol | Unit of operation | Moderation | Portability |
 | --- | --- | --- | --- | --- |
-| **Mastodon and the fediverse** | ActivityPub | A server (instance) with its own users, rules and admins | Always local: each server acts on its own copy; domain blocks limit or suspend whole servers | Followers move to a new account; posts stay behind |
 | **Bluesky** | AT Protocol | Separate services: data hosts (PDS), relays, AppViews, feed generators, labelers | Bluesky's own service by default, plus independent labelers each user chooses | The account (DID) and its signed repository move to a new host, even without the old host's help |
-| **Threads** | ActivityPub, opt-in | Meta's servers | Meta's rules for its users; other servers decide about Threads | Not applicable |
 | **Bridgy Fed** | A bridge between ActivityPub, the AT Protocol and the web | A bridge service | Opt-in per user | Not applicable |
+| **Mastodon and the fediverse** | ActivityPub | A server (instance) with its own users, rules and admins | Always local: each server acts on its own copy; domain blocks limit or suspend whole servers | Followers move to a new account; posts stay behind |
+| **Threads** | ActivityPub, opt-in | Meta's servers | Meta's rules for its users; other servers decide about Threads | Not applicable |
 
 The pattern: **federation moves the moderation question from "what does the platform allow?" to "whom does each operator trust?"** On the fediverse that trust is per server and per domain; on the AT Protocol it's per user, through the labelers and feeds they subscribe to, with the app's own service as a floor. Both designs keep the legal duties where hosting happens: whoever stores and serves content on their own infrastructure has the host's obligations for it.
 
@@ -116,7 +116,7 @@ Meta's Threads began opt-in federation in March 2024: users 18 or older with pub
 
 A large platform joining changes the network's moderation math. Every fediverse server has to decide whether to federate with a platform whose users outnumber it and whose policies it doesn't set; a large platform has to decide which servers to reach, what to do with content arriving from servers it would never host, and how its own rules apply to replies from people who never agreed to its terms. The consent questions are sharper for bridges: **Bridgy Fed**, which bridges ActivityPub, the AT Protocol and the web, is opt-in, with bridging off until a user enables it (by following the bridge account or logging in) and off again when they block it, after which the bridged profile is deactivated though cached copies elsewhere may linger.
 
-Tumblr's owner Automattic planned to move Tumblr onto WordPress infrastructure, which would have made it a federated app, and in July 2025 put the migration on hold indefinitely, with its CEO calling it an infrastructure project and saying fediverse support would be built on Tumblr's existing code if it became a priority again. Federation for an existing platform is a migration of its data model as much as a protocol feature.
+Tumblr's owner Automattic planned to move Tumblr onto WordPress infrastructure, which would have made it a federated app, and in July 2025 put the migration on hold indefinitely, with its CEO, in an interview reported at the time, calling it an infrastructure project and saying fediverse support would be built on Tumblr's existing code if it became a priority again. Federation for an existing platform is a migration of its data model as much as a protocol feature.
 
 ## The Operator's Legal Position
 
@@ -271,4 +271,4 @@ Notes on the sketch:
 - [Bluesky: 2025 Transparency Report](https://bsky.social/about/blog/01-29-2026-transparency-report-2025), user growth, reports, labels, takedowns and legal requests
 - [Meta Engineering: Threads has entered the fediverse](https://engineering.fb.com/2024/03/21/networking-traffic/threads-has-entered-the-Fediverse/), opt-in conditions, what doesn't federate, quote posts through FEP-e232 (March 21, 2024)
 - [Thiel and DiResta: Child Safety on Federated Social Media (Stanford Internet Observatory, 2023)](https://purl.stanford.edu/vb515nd6874), known material detected in a two-day sample, the lack of default hash matching, and recommendations for PhotoDNA and CyberTipline integration
-- [TechCrunch: Automattic puts Tumblr migration to WordPress on hold](https://techcrunch.com/2025/07/01/automattic-puts-tumblr-migration-to-wordpress-on-hold/), the paused move that would have federated Tumblr
+- [TechCrunch: Automattic puts Tumblr migration to WordPress on hold](https://techcrunch.com/2025/07/01/automattic-puts-tumblr-migration-to-wordpress-on-hold/), the paused move that would have federated Tumblr (reported)

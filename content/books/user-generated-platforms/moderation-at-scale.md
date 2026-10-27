@@ -17,10 +17,10 @@ The transparency reports are the only public view of moderation at scale, and ea
 
 | Platform, period | Volume | Who acts | Automation | Appeals |
 | --- | --- | --- | --- | --- |
-| **Reddit**, Jul to Dec 2025 | 2.2 billion posts and comments created; 154,198,211 removed | 52.7% of removals by community moderators, 44.7% by Reddit admins | 68.6% of moderator removals handled by automated systems such as AutoModerator; admin figures include internal automated tooling | 481,416 appeals of content sanctions (20% of them) and 499,515 of account sanctions (4.4%); granted appeals down 66.6%; "appeals are always human-reviewed" |
-| **Pinterest**, Jul to Dec 2025 | 134.9 million (Q3) and 157.5 million (Q4) Pins deactivated for adult sexual content | Staff reviewers and automation | Each policy split into manual, hybrid and automated; adult content over 99% hybrid, spam Pins about 100% automated | Reported per policy as upheld and reversed |
 | **Bluesky**, 2025 | 9.97 million user reports from 1.24 million users; 2,446,334 takedowns; 16.49 million labels | Bluesky's moderation service, 24/7, plus independent labelers users choose | 95.34% of labels from automated systems; 2.54 million automated flags | Human reviewers handle all appeals |
 | **Discord**, Mar 2025 to Mar 2026 | 6,315,202 actions taken on accounts and 3,243,494 accounts disabled, excluding spam; 47,832,832 spam accounts disabled | Discord's safety team, plus server moderators with AutoMod | Not split in the report | Reported per category with grant rates |
+| **Pinterest**, Jul to Dec 2025 | 134.9 million (Q3) and 157.5 million (Q4) Pins deactivated for adult sexual content | Staff reviewers and automation | Each policy split into manual, hybrid and automated; adult content over 99% hybrid, spam Pins about 100% automated | Reported per policy as upheld and reversed |
+| **Reddit**, Jul to Dec 2025 | 2.2 billion posts and comments created; 154,198,211 removed | 52.7% of removals by community moderators, 44.7% by Reddit admins | 68.6% of moderator removals handled by automated systems such as AutoModerator; admin figures include internal automated tooling | 481,416 appeals of content sanctions (20% of them) and 499,515 of account sanctions (4.4%); granted appeals down 66.6%; "appeals are always human-reviewed" |
 
 Three patterns hold across them:
 
@@ -52,13 +52,13 @@ Detection and workflow are bought as often as built. The suppliers, as their own
 
 | Vendor | What it sells | How it describes the approach |
 | --- | --- | --- |
-| **Hive** | Visual, text and audio moderation models, CSAM detection, a vision language model | Categories including NSFW, hate, violence and CSAM; "Human level accuracy, machine level efficiency"; its site now says "Hive is now Deploy" |
 | **Alice (formerly ActiveFence)** | Trust and safety for user-generated and AI-generated content, adversarial intelligence, AI safety | An in-house research network ("Hundreds of researchers, billions of examples") collecting real attacks |
-| **Community Sift** (Microsoft) | Text, image and video classification for chat and user content | "Custom risk sliders" over curated topics, escalation of "the toughest cases to moderators," 22 premium languages, optional image blurring that "protects moderators' wellbeing" |
-| **Safer** (Thorn) | Hashing and classifiers for child sexual abuse material and exploitation text | Models trained on abuse data from trusted sources; covered in [Child Safety](/books/user-generated-platforms/child-safety#hash-matching) |
-| **Google Content Safety API** | A priority score for unseen abuse imagery | Free to approved partners; review required before action |
 | **Checkstep** | A moderation platform: policy management, scanning, queues, appeals, transparency | An "AI marketplace" to test and switch between models (it names AWS, OpenAI, Amazon Rekognition and Modulate), automatic filing of statements of reasons to the DSA database, human-in-the-loop review |
 | **Cinder** | A trust and safety operations platform | Policies turned into "agentic workflows," edge cases escalated to people with a suggested action, and the ability to "benchmark human reviewers and agents against the same labeled data" |
+| **Community Sift** (Microsoft) | Text, image and video classification for chat and user content | "Custom risk sliders" over curated topics, escalation of "the toughest cases to moderators," 22 premium languages, optional image blurring that "protects moderators' wellbeing" |
+| **Google Content Safety API** | A priority score for unseen abuse imagery | Free to approved partners; review required before action |
+| **Hive** | Visual, text and audio moderation models, CSAM detection, a vision language model | Categories including NSFW, hate, violence and CSAM; "Human level accuracy, machine level efficiency"; its site now says "Hive is now Deploy" |
+| **Safer** (Thorn) | Hashing and classifiers for child sexual abuse material and exploitation text | Models trained on abuse data from trusted sources; covered in [Child Safety](/books/user-generated-platforms/child-safety#hash-matching) |
 
 Two kinds of product sit in that table, and they're bought for different reasons. **Signal vendors** (Hive, Community Sift, Safer, Google) return scores or matches; changing one changes a signal. **Workflow vendors** (Checkstep, Cinder) hold the queues, policies, decisions and regulatory filings; changing one is a migration of the moderation system of record. My default: buy signals freely, and keep the system of record (cases, decisions, thresholds, penalties) in your own database even when a workflow vendor runs the screens, so the audit trail and the transparency report survive a vendor change ([Build, Buy or Rent](/books/user-generated-platforms/platform-landscape#build-buy-or-rent)).
 
@@ -71,7 +71,7 @@ Most human review at the largest platforms is done by outsourcing firms (busines
 - **TaskUs** reports Trust & Safety as 26% of its 2025 service revenue of $1,183.5 million, split into content moderation (reviewing user and advertiser content against guidelines, laws and policies) and financial crime and compliance. Meta was 26% of its revenue. It had about 65,500 people across 31 sites in 13 countries, 58% of them in the Philippines, delivering in more than 30 languages, and it warns investors that the long-term mental health effects of the work are unknown and that it "may lead to stress disorders and may create liabilities for us."
 - **Teleperformance** finalized its acquisition of Majorel in late 2023 (Majorel was delisted on December 11, 2023), and named content moderation among the sectors with robust momentum in its 2023 results.
 - **Accenture, Cognizant, Genpact and ProUnlimited** were the contractors named in coverage of the Scola settlement below, whose class covered moderators employed by Facebook's vendors.
-- **Sama** ran Meta's content review hub in Nairobi and announced in January 2023 that it would end content moderation in March 2023 and focus on data labeling, cutting about 200 staff and offering 12 months of mental health support. Former moderators sued Meta, Sama and Majorel in Kenya over dismissals and working conditions, seeking $1.6 billion. On September 20, 2024 Kenya's Court of Appeal dismissed Meta's appeals and upheld the labor court's rulings that Meta can be sued in Kenya; the merits were left for trial. I found no reported judgment on the merits as of October 2026.
+- **Sama** ran Meta's content review hub in Nairobi and, the Financial Times reported in January 2023, would end content moderation in March 2023 and focus on data labeling, cutting about 200 staff and offering 12 months of mental health support. Former moderators sued Meta and its contractors in Kenya over dismissals and working conditions, seeking $1.6 billion according to press reports. On September 20, 2024, Kenyan press reported, the Court of Appeal dismissed Meta's appeals and upheld the labor court's rulings that Meta can be sued in Kenya; the merits were left for trial. I found no reported judgment on the merits as of October 2026.
 
 What the model means for the platform:
 
@@ -82,7 +82,7 @@ What the model means for the platform:
 
 ## Reviewer Wellbeing
 
-The best-documented terms for protecting reviewers come from litigation. **Scola v. Facebook** (Superior Court of California, County of San Mateo, No. 18-civ-05135) was filed in September 2018 by moderators who alleged psychological harm from viewing graphic content; the court granted final approval of the settlement on July 14, 2021. Its terms, from the settlement notice and press coverage of the filing:
+The best-documented terms for protecting reviewers come from litigation. **Scola v. Facebook** (Superior Court of California, County of San Mateo, No. 18-civ-05135) was filed in September 2018 by moderators who alleged psychological harm from viewing graphic content; the court granted final approval of the settlement on July 14, 2021. Its terms, as reported in settlement listings, class counsel's account and press coverage of the filing (I couldn't reach the court's own settlement documents):
 
 - **Money:** a $52 million fund; at least $1,000 for each class member, more for a qualifying diagnosis (press reported an extra $1,500 for one diagnosis and up to $6,000 for several), up to $50,000 in total per person. The class was current and former moderators for Facebook in California, Arizona, Texas and Florida from September 15, 2015 to August 14, 2020, including those employed by vendors; the final count was over 14,000 people. Facebook denied liability.
 - **Tooling:** review tools changed so graphic video plays with audio muted and in black and white by default, reported as reaching about 80% of moderators by the end of 2020 and all by the end of 2021.
@@ -276,22 +276,20 @@ Notes on the sketch:
 
 **Statutes and regulations**
 
-- [DSA Article 15: Transparency reporting obligations](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_15.html), automated means, accuracy and error indicators, training and assistance for moderators
-- [DSA Article 20: Internal complaint-handling system](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_20.html), decisions under qualified staff and not solely automated
-- [DSA Article 42: Transparency reporting obligations for very large platforms](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_42.html), moderation staff, qualifications and accuracy by official language
+- [Regulation (EU) 2022/2065 (Digital Services Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065), Articles 15, 20 and 42: automated means with accuracy and error indicators (Art. 15(1)(e)), training and assistance for moderators (Art. 15(1)(c)), complaint decisions under qualified staff and not solely automated (Art. 20(6)), moderation staff, qualifications and accuracy indicators by official language (Art. 42(2))
 
 **Regulators and courts**
 
-- [Top Class Actions: Facebook moderators $52M class action settlement](https://topclassactions.com/lawsuit-settlements/open-lawsuit-settlements/facebook-moderators-52m-class-action-settlement/), Scola v. Facebook case number and court, class definition, final approval on July 14, 2021, $1,000 minimum and $50,000 maximum
-- [Impact Fund: Scola v. Facebook](https://www.impactfund.org/social-justice-blog/scola-v-facebook), over 14,000 class members at Facebook vendors in four states
-- [Tubefilter: Facebook agrees to pay $52 million to content moderators](https://tubefilter.com/2020/05/12/facebook-scola-lawsuit-settlement-content-moderators-ptsd/), muted and black-and-white video, the 80% and 100% rollout, weekly and monthly sessions, vendor screening and postings, diagnosis payments
-- [Silicon UK: Facebook moderators agree $52 million settlement](https://www.silicon.co.uk/e-regulation/facebook-moderators-52-million-settlement-343740), 11,250 moderators at filing, crisis counselor within 24 hours, the named contractors
-- [Tech-ish: Kenya Court of Appeal rules Meta can be sued](https://tech-ish.com/2024/09/20/meta-facebook-sama-court-of-appeal/), the September 20, 2024 ruling, the claims and the $1.6 billion sought
-- [StratNews Global: Meta can be sued for sacking of content moderators](https://stratnewsglobal.com/africa/meta-can-be-sued-for-sacking-of-content-moderators-rules-kenya-court/), the earlier labor court rulings and the merits left for trial
+- [Top Class Actions: Facebook moderators $52M class action settlement](https://topclassactions.com/lawsuit-settlements/open-lawsuit-settlements/facebook-moderators-52m-class-action-settlement/), Scola v. Facebook case number and court, class definition, final approval on July 14, 2021, $1,000 minimum and $50,000 maximum (settlement listing)
+- [Impact Fund: Scola v. Facebook](https://www.impactfund.org/social-justice-blog/scola-v-facebook), over 14,000 class members at Facebook vendors in four states (class counsel)
+- [Tubefilter: Facebook agrees to pay $52 million to content moderators](https://tubefilter.com/2020/05/12/facebook-scola-lawsuit-settlement-content-moderators-ptsd/), muted and black-and-white video, the 80% and 100% rollout, weekly and monthly sessions, vendor screening and postings, diagnosis payments (reported)
+- [Silicon UK: Facebook moderators agree $52 million settlement](https://www.silicon.co.uk/e-regulation/facebook-moderators-52-million-settlement-343740), 11,250 moderators at filing, crisis counselor within 24 hours, the named contractors (reported)
+- [Tech-ish: Kenya Court of Appeal rules Meta can be sued](https://tech-ish.com/2024/09/20/meta-facebook-sama-court-of-appeal/), the September 20, 2024 ruling, the claims and the $1.6 billion sought (reported; I couldn't reach the judgment)
+- [StratNews Global: Meta can be sued for sacking of content moderators](https://stratnewsglobal.com/africa/meta-can-be-sued-for-sacking-of-content-moderators-rules-kenya-court/), the earlier labor court rulings and the merits left for trial (reported)
 
 **Platforms**
 
-- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), removals by moderators and admins, automated share of moderator removals, admin spam share, appeals and the fall in granted appeals (copy hosted by TorrentFreak)
+- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), removals by moderators and admins, automated share of moderator removals, admin spam share, appeals and the fall in granted appeals (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)
 - [Pinterest: Transparency Report](https://policy.pinterest.com/en/transparency-report), manual, hybrid and automated definitions, adult content and spam deactivations for H2 2025
 - [Bluesky: 2025 Transparency Report](https://bsky.social/about/blog/01-29-2026-transparency-report-2025), reports, takedowns, labels and the automated share, human review of appeals
 - [Bluesky: Stackable moderation](https://bsky.social/about/blog/03-12-2024-stackable-moderation), the default moderation service, independent labelers, Ozone, user-configurable labels
@@ -311,7 +309,7 @@ Notes on the sketch:
 - [Cinder](https://cinder.ai/), agentic workflows, escalation with suggested actions, benchmarking humans and agents on the same labeled data
 - [TaskUs: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1829864/000182986426000012/task-20251231.htm), Trust & Safety share of revenue, content moderation scope, Meta concentration, headcount, sites, languages, wellbeing risk factor
 - [Teleperformance: Shareholders' newsletter, December 2023](https://www.tp.com/media/o0nphrjf/teleperformance-shareholders-newsletter-december-2023.pdf), the Majorel acquisition and delisting, content moderation momentum
-- [Business & Human Rights Resource Centre: Meta closes east African content moderation hub run by Sama](https://business-humanrights.org/en/latest-news/kenya-meta-closes-east-african-content-moderation-hub-run-by-sama), Sama's exit, staff cuts and mental health support
+- [Business & Human Rights Resource Centre: Meta closes east African content moderation hub run by Sama](https://business-humanrights.org/en/latest-news/kenya-meta-closes-east-african-content-moderation-hub-run-by-sama), Sama's exit, staff cuts and mental health support (summary of the Financial Times report of 10 January 2023)
 
 **Reference**
 

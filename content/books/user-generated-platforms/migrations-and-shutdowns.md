@@ -15,10 +15,12 @@ This chapter covers policy-driven purges, storage caps, link rot and what a remo
 
 ## How the Platforms Do It
 
+The events in the order this chapter covers them (purges and caps, country withdrawals, a shutdown), then by date:
+
 | Event | What changed | Notice | What users could do | What happened to the content |
 | --- | --- | --- | --- | --- |
 | **Tumblr adult content ban** | Real-life genitals, female-presenting nipples and depictions of sex acts banned (exceptions for breastfeeding, art, political speech, written erotica); announced December 3, 2018 | Two weeks: effective December 17, 2018 | Not covered here | Existing adult posts set to private, visible only to the poster; automated flagging of new posts |
-| **Flickr free account cap** | Free accounts limited to 1,000 photos, replacing a free terabyte offered since 2013 (announced November 1, 2018) | Not covered here | Upgrade to Pro ($5.99 a month or $50 a year) or download | Free accounts held to the cap |
+| **Flickr free account cap** | Free accounts limited to 1,000 photos, replacing a free terabyte offered since 2013 (announced November 1, 2018) | About ten weeks: limit from January 8, 2019 | Upgrade to Pro or download | Free accounts held to the cap |
 | **Imgur terms change** | Removal of "old, unused, and inactive content that is not tied to a user account" and of explicit content; announced April 19, 2023 | Under four weeks: effective May 15, 2023 | Download anything to keep | Anonymous uploads deleted; images embedded across Reddit and forums at risk of breaking |
 | **Google inactive accounts** | Personal accounts unused for two years may be deleted with their content; announced May 16, 2023, deletions from December 2023 | Over six months, and multiple notices to the account and recovery email before any deletion | Sign in; signing in to Photos specifically keeps photos | Accounts deleted after notices; no plans to delete accounts with YouTube videos at the time |
 | **Twitch storage cap** | 100 hours of highlights and uploads per channel; announced February 20, 2025 | Two months: effective April 19, 2025 | Download or export | Over-limit content deleted starting with the least viewed; clips and past broadcasts excluded; under 0.5% of active channels affected |
@@ -30,7 +32,7 @@ The patterns: **purges target what nobody can vouch for** (anonymous uploads, in
 
 ## Policy-Driven Purges
 
-A purge is a bulk moderation or retention decision applied to a population defined by a rule. The engineering is the same whether the reason is policy (Tumblr's and Imgur's explicit content), security (Google's inactive accounts: abandoned accounts are at least ten times less likely to have two-step verification), or cost (Twitch: "The storage of this content is costly"):
+A purge is a bulk moderation or retention decision applied to a population defined by a rule. The engineering is the same whether the reason is policy (Tumblr's and Imgur's explicit content), security (Google's inactive accounts: abandoned accounts are at least ten times less likely to have two-step verification), or cost (Twitch, as TechCrunch reported its announcement: "The storage of this content is costly"):
 
 1. **Define the population as a query, version it, and count it.** "Old, unused, and inactive content that is not tied to a user account" needs a definition (no account owner, no view in N months, older than a date), and How-To Geek noted at the time that Imgur hadn't said what "inactive" meant. The count, by community and by referrer, is what tells you how much of the web will break.
 2. **Exclude what must be kept.** Anything under a `legal_holds` row (a preservation request, a CyberTipline report's one-year preservation, litigation, an open claim) is skipped and stays as evidence ([Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#deletion-claims-and-legal-holds)). Content in an open moderation case or appeal is skipped until it closes.
@@ -44,7 +46,7 @@ Automated classification at purge scale makes mistakes at purge scale. Tumblr en
 
 ## Storage Caps
 
-A cap turns an open-ended liability into a product: free up to a limit, paid beyond it. Flickr's 2018 change replaced a free terabyte with 1,000 items, and its chief executive argued the free terabyte "largely attracted members who were drawn by the free storage"; Twitch's 100-hour cap affected under 0.5% of active channels and under 0.1% of hours watched. The design choices:
+A cap turns an open-ended liability into a product: free up to a limit, paid beyond it. Flickr's 2018 change replaced a free terabyte with 1,000 items, and its VP of Product argued the free terabyte "largely attracted members who were drawn by the free storage"; Twitch said its 100-hour cap affected under 0.5% of active channels and under 0.1% of hours watched. The design choices:
 
 - **Cap the unit users understand** (items, hours), not bytes, and show usage against it continuously.
 - **Exclude what the business depends on,** and say so: Twitch excluded clips and past broadcasts.
@@ -54,7 +56,7 @@ A cap turns an open-ended liability into a product: free up to a limit, paid bey
 
 ## Link Rot and Tombstones
 
-User-generated content is cited, embedded and linked from everywhere: Imgur launched in 2009 as an image host for Reddit links. When content goes, every one of those references breaks, and How-To Geek's 2023 critique of Imgur was that broken embeds would fill old Reddit threads, forums and tutorials with "image missing" placeholders. The platform can't prevent that, but it controls what the URL says afterwards, and that response is information to the user, to the embedding site, to search engines and to archivists.
+User-generated content is cited, embedded and linked from everywhere: Imgur, founded in 2009, hosts images embedded in threads, forums and tutorials across the web. When content goes, every one of those references breaks, and How-To Geek's 2023 critique of Imgur was that broken embeds would fill old Reddit threads, forums and tutorials with "image missing" placeholders. The platform can't prevent that, but it controls what the URL says afterwards, and that response is information to the user, to the embedding site, to search engines and to archivists.
 
 | What happened | Response | Body |
 | --- | --- | --- |
@@ -75,7 +77,7 @@ Rules for tombstones:
 
 ## Leaving a Country
 
-A country exit is a shutdown with a border. Imgur's UK block from September 30, 2025 shows the parts: UK users couldn't log in, view or upload; embeds stopped displaying to UK visitors on every third-party page; visitors first got a bare 400 error, later a page saying content "is not available in your region" with an explainer; and users could still request a copy of their data or its deletion under UK GDPR, while Imgur said it might keep limited data where necessary and lawful, such as to defend legal claims. The ICO said leaving didn't end its investigation and fined the owner months later ([Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#withdrawals)). Twitch's Korea exit had a different cause (network fees about ten times other countries', after a peer-to-peer delivery trial and a 720p source cap didn't close the gap) and a longer runway (twelve weeks), and Twitch said it would help Korean streamers move their communities to other services.
+A country exit is a shutdown with a border. Imgur's UK block from September 30, 2025, as The Register reported it, shows the parts: UK users couldn't log in, view or upload; embeds stopped displaying to UK visitors on every third-party page; visitors first got a bare 400 error, later a page saying content "is not available in your region" with an explainer; and users could still request a copy of their data or its deletion under UK GDPR, while Imgur said it might keep limited data where necessary and lawful, such as to defend legal claims. The ICO said leaving didn't end its investigation and fined the owner months later ([Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#withdrawals)). Twitch's Korea exit had a different cause (network fees about ten times other countries', after a peer-to-peer delivery trial and a 720p source cap didn't close the gap) and a longer runway (twelve weeks), and Twitch said it would help Korean streamers move their communities to other services.
 
 The operation:
 
@@ -238,7 +240,7 @@ Notes on the sketch:
 
 **Law and standards**
 
-- [GDPR Article 20: Right to data portability](https://gdpr-info.eu/art-20-gdpr/), scope, format, direct transfer and others' rights
+- [Regulation (EU) 2016/679 (GDPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679), Article 20, the portability right: scope, format, direct transfer and others' rights
 - [RFC 7725: An HTTP Status Code to Report Legal Obstacles](https://www.rfc-editor.org/rfc/rfc7725.html), status 451 and its explanation
 
 **Platform announcements and documentation**
@@ -249,12 +251,15 @@ Notes on the sketch:
 - [Mastodon: Moving or leaving accounts](https://docs.joinmastodon.org/user/moving/), follower redirects, aliases, the 30-day cooldown, what moves and what doesn't
 - [AT Protocol: Overview](https://atproto.com/guides/overview), DIDs, rotation keys and moving between hosts
 - [Data Transfer Initiative: About](https://dtinit.org/about), the nonprofit and the Data Transfer Project
+- [Tumblr Support: Updates to Tumblr's Community Guidelines](https://support.tumblr.com/post/180758979032/updates-to-tumblrs-community-guidelines), December 3, 2018, the December 17, 2018 effective date, what counts as adult content, the exceptions, flagged posts reverted to private and automated flagging
+- [Flickr: Why we're changing Flickr free accounts](https://blog.flickr.net/en/2018/11/01/changing-flickr-free-accounts-1000-photos/), November 1, 2018, the 1,000-item limit from January 8, 2019, the free terabyte offered since 2013 and the rationale
+- [Imgur: Terms of Service Update (April 19, 2023)](https://web.archive.org/web/20230420231041/https://help.imgur.com/hc/en-us/articles/14415587638029-Imgur-Terms-of-Service-Update-April-19-2023-), the May 15, 2023 effective date, what was removed and the advice to download (Imgur's own help article; archived copy, as the page is gone)
+- [Imgur: Celebrating Imgur's Next Chapter](https://web.archive.org/web/20220101001803id_/https://blog.imgur.com/2021/09/27/celebrating-imgurs-next-chapter/), the 2009 founding (Imgur's own post; archived copy)
+- [Twitch: On-Demand Content on Twitch](https://help.twitch.tv/s/article/video-on-demand?language=en_US), the 100-hour storage limit across Highlights and Uploads
+- [ICO: Statement on the Imgur investigation](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2025/09/statement-update-on-imgur-investigation/), September 30, 2025, the notice of intent, the withdrawal as a commercial decision and the investigation continuing
 
 **Reporting**
 
-- [TIME: Tumblr's adult content ban](https://time.com/5469831/tumblr-ban-december-2018), the December 17, 2018 ban, exceptions, private mode for existing posts and automated flagging
-- [TechCrunch: Flickr revamps under SmugMug with new limits on free accounts](https://techcrunch.com/2018/11/01/flickr-revamps-under-smugmug-with-new-limits-on-free-accounts-unlimited-storage-for-pros/), the 1,000-item cap, the earlier free terabyte, Pro pricing and the rationale
-- [How-To Geek: Imgur is about to break the web](https://www.howtogeek.com/887420/imgur-is-about-to-break-the-world-wide-web/), the April 19 and May 15, 2023 dates, what was removed, the undefined "inactive" and embed breakage
-- [TechCrunch: Twitch caps streamers' storage at 100 hours](https://techcrunch.com/2025/02/20/twitch-caps-streamers-storage-at-100-hours-of-highlights-and-uploads), the cap, exclusions, deletion order, share affected and rationale
-- [The Register: Imgur exits the UK](https://www.theregister.com/2025/10/01/imgur_exits_uk/), what UK users lost, embeds, the error and region pages, rights requests and the ICO's statements
-- [Wikipedia: Imgur](https://en.wikipedia.org/wiki/Imgur), the 2009 launch as an image host for Reddit
+- [How-To Geek: Imgur is about to break the web](https://www.howtogeek.com/887420/imgur-is-about-to-break-the-world-wide-web/), the undefined "inactive" and embed breakage (reported)
+- [TechCrunch: Twitch caps streamers' storage at 100 hours](https://techcrunch.com/2025/02/20/twitch-caps-streamers-storage-at-100-hours-of-highlights-and-uploads), Twitch's February 20, 2025 announcement: the April 19 effective date, exclusions, deletion order, share affected and rationale (reported)
+- [The Register: Imgur exits the UK](https://www.theregister.com/2025/10/01/imgur_exits_uk/), what UK users lost, embeds, the error and region pages, rights requests (reported)

@@ -17,12 +17,12 @@ This chapter covers the social graph that feeds read, feed types, fan-out, the m
 
 | Platform | Graph | Main surfaces | Public detail |
 | --- | --- | --- | --- |
-| **Reddit** | Community memberships, follows | Home feed, community feeds, popular | Logged-out visitors, mostly from search engines, are monetized with conversation-page and feed ads (10-K) |
-| **Pinterest** | Boards and follows; a pin-to-board graph | Home Feed, Related Pins, Search, notifications | Pixie random walks, PinSage graph network, TransAct sequence model, GPU serving (papers) |
-| **X (Twitter)** | One-way follows | Following and For You timelines | Recommendation code open-sourced in 2023: in-network and out-of-network candidate sources, light and heavy rankers, visibility filters, a mixer |
-| **YouTube** | Subscriptions | Home, Up Next, Shorts | Two-stage candidate generation and ranking with deep networks (2016 paper) |
 | **Bluesky** | One-way follows | Following, plus custom feeds users choose | Feed generators are independent services returning post lists that the app hydrates |
 | **Discord** | Servers and friends | No ranked feed of server content | Chronological channels; discovery through server directories |
+| **Pinterest** | Boards and follows; a pin-to-board graph | Home Feed, Related Pins, Search, notifications | Pixie random walks, PinSage graph network, TransAct sequence model, GPU serving (papers) |
+| **Reddit** | Community memberships, follows | Home feed, community feeds, popular | Logged-out visitors, mostly from search engines, are monetized with conversation-page and feed ads (10-K) |
+| **X (Twitter)** | One-way follows | Following and For You timelines | Recommendation code open-sourced in 2023: in-network and out-of-network candidate sources, light and heavy rankers, visibility filters, a mixer |
+| **YouTube** | Subscriptions | Home, Up Next, Shorts | Two-stage candidate generation and ranking with deep networks (2016 paper) |
 
 Three shapes of feed sit in that table. **Chronological graph feeds** (Bluesky's Following, a Discord channel) show what the people and places you chose posted, newest first. **Community-ranked feeds** (a Reddit community's hot list) rank by the community's votes. **Personalized recommendation feeds** (Pinterest Home Feed, X's For You, YouTube Home) rank by a model of each viewer, from candidates far beyond their graph. Most platforms now run all three and let the user switch, which regulation increasingly requires.
 
@@ -235,8 +235,7 @@ Notes on the sketch:
 
 **Law**
 
-- [EU Digital Services Act, Article 27](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_27.html), recommender system parameters in the terms and the control to choose and change the ordering
-- [EU Digital Services Act, Article 38](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_38.html), at least one option not based on profiling for very large platforms
+- [Regulation (EU) 2022/2065 (Digital Services Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065), Article 27 (recommender system parameters in the terms and the control to choose and change the ordering) and Article 38 (at least one option not based on profiling for very large platforms)
 
 **Papers**
 

@@ -16,15 +16,15 @@ The engineering problem is to compute a quote from all of those sources once, fr
 | Platform | Guest pays the platform | Host or seller pays the platform | Other published charges |
 | --- | --- | --- | --- |
 | **Airbnb** | Nothing under the host-only fee; 14.1% to 16.5% under the legacy split | Host-only fee of 15.5% for most hosts (14% to 16%; 16% in Brazil and Mexico), mandatory for hosts connected through software and for hotels; about 3% under the legacy split | Services 15% (minimum $6), experiences 20% |
+| **Depop** | A buyer marketplace fee | No US selling fee since July 2024; payment processing kept | |
+| **eBay** | Nothing to eBay directly | Final value fee of 13.6% up to $7,500 per item plus 2.35% above, plus $0.30 per order ($0.40 over $10), on the total including shipping and sales tax; 250 free listings a month, then $0.35 | +6% for below-standard sellers; 1.65% international fee |
+| **Etsy** | Nothing to Etsy directly | $0.20 listing fee per four-month listing; 6.5% transaction fee on item, shipping and gift wrap; payment processing by country; offsite ads 15% (12% above $10,000 trailing sales), capped at $100 an order | 2.5% currency conversion |
+| **Facebook Marketplace** | No buyer fee on Meta's shipping page | 10% selling fee (minimum $0.80) on shipped orders, deducted from the purchase amount | Prepaid shipping labels for select sellers; local pickup isn't covered by Purchase Protection |
 | **Outdoorsy** | 10% service fee on the booking total, excluding protection and taxes | 20% to 25% of the booking subtotal (rental, cleaning, delivery, add-ons), starting at 25% and falling with revenue; minimum $15 a night drivable, $10 towable | 6.5% host fee and no guest fee when the host refers a new guest; prep fee; young-driver fee in protection |
-| **Vrbo** | Service fee as a percentage of the reservation total before taxes and refundable fees, varying with the reservation amount | 12% pay-per-booking commission on the rent and host-set fees (cleaning, pet), with no separate processing fee; up to 15% under the Professional Plan in parts of Europe, Australia and New Zealand; the annual subscription is closed to new hosts, and most legacy subscribers move to pay-per-booking from October 2026 | Optional guest Property Damage Protection in place of a deposit |
 | **RVshare** | Service fee as a percentage of the reservation; a mandatory non-refundable screening fee | Not published | Mileage, generator and delivery set per listing |
 | **Turo** | Trip fee and protection plan | Host keeps 70%, 80% or 90% of the trip price, depending on the plan chosen (US, from January 7, 2026) | Turo Risk Score adjusts guest fees |
-| **Etsy** | Nothing to Etsy directly | $0.20 listing fee per four-month listing; 6.5% transaction fee on item, shipping and gift wrap; payment processing by country; offsite ads 15% (12% above $10,000 trailing sales), capped at $100 an order | 2.5% currency conversion |
-| **eBay** | Nothing to eBay directly | Final value fee of 13.6% up to $7,500 per item plus 2.35% above, plus $0.30 per order ($0.40 over $10), on the total including shipping and sales tax; 250 free listings a month, then $0.35 | +6% for below-standard sellers; 1.65% international fee |
 | **Vinted** | A mandatory buyer protection fee, typically 3% to 8% plus GBP 0.30 to 0.80 | Nothing for non-professional sellers | |
-| **Facebook Marketplace** | No buyer fee on Meta's shipping page | 10% selling fee (minimum $0.80) on shipped orders, deducted from the purchase amount | Prepaid shipping labels for select sellers; local pickup isn't covered by Purchase Protection |
-| **Depop** | A buyer marketplace fee | No US selling fee since July 2024; payment processing kept | |
+| **Vrbo** | Service fee as a percentage of the reservation total before taxes and refundable fees, varying with the reservation amount | 12% pay-per-booking commission on the rent and host-set fees (cleaning, pet), with no separate processing fee; up to 15% under the Professional Plan in parts of Europe, Australia and New Zealand; the annual subscription is closed to new hosts, and most legacy subscribers move to pay-per-booking from October 2026 | Optional guest Property Damage Protection in place of a deposit |
 
 Four patterns:
 
@@ -340,7 +340,7 @@ Design decisions behind it:
 - [Etsy: Fees & Payments Policy](https://www.etsy.com/legal/fees/), listing, transaction, offsite ads and conversion fees, sales tax collection by category
 - [eBay: Selling fees](https://www.ebay.com/help/selling/fees-credits-invoices/selling-fees?id=4822), insertion and final value fees, per-order fee, the base including tax, performance and international surcharges
 - [Vinted: Buyer Protection fee](https://www.vinted.co.uk/help/342-buyer-protection-fee-on-vinted), the buyer-paid fee and what it funds
-- [Wikipedia: Depop](https://en.wikipedia.org/wiki/Depop), removal of the US selling fee in July 2024 and the buyer marketplace fee
+- [Depop: Depop removes selling fees in the United States](https://news.depop.com/depop-removes-selling-fees-in-the-united-states-evolves-fee-structure/), July 15, 2024, the 10% US selling fee removed, payment processing kept, and the buyer marketplace fee from July 18, 2024
 - [Vrbo: About the pay-per-booking (PPB) model](https://help.vrbo.com/articles/How-is-the-booking-fee-calculated), the 12% commission and its base, no separate processing fee, up to 15% under the Professional Plan
 - [Vrbo: Pay for your listing subscription](https://help.vrbo.com/articles/How-do-I-pay-for-my-new-subscription), subscriptions closed to new hosts and legacy hosts moved to pay-per-booking from October 2026
 - [Vrbo: About Vrbo's service fee](https://help.vrbo.com/articles/what-is-the-service-fee), the traveler fee as a percentage of the reservation total that varies with the amount

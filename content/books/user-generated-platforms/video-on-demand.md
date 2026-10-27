@@ -17,13 +17,13 @@ The public record splits into platforms that built their own pipeline, sometimes
 
 | Platform or vendor | What's public about its VOD pipeline | The lesson |
 | --- | --- | --- |
-| **YouTube** | Built the Argos video coding unit (VCU), a transcoding ASIC deployed across tens of thousands of servers; for offline two-pass encoding it gives 8x (H.264) to 20x (VP9) the throughput of software encoding and an order of magnitude better performance per cost | At the largest scale, the transcode farm becomes a hardware program |
-| **Meta (Facebook and Instagram Reels)** | A cheap hardware AVC encode at upload; software AVC, VP9 or AV1 encodes chosen from a convex hull of 35 candidates only once projected watch time crosses a threshold; Instagram cut the cost of basic adaptive encodings 94% by repackaging instead of re-encoding | Spend compute where the watch time is, not where the uploads are |
-| **Netflix** | Replaced one fixed ladder (235 kbps at 320x240 up to 5,800 kbps at 1080p) with a ladder per title in December 2015 | The right bitrate depends on the content, not the resolution |
-| **Twitch** | Stores recorded segments, thumbnails and playlists in S3; a metadata and post-processing system tracks every VOD type and runs jobs such as MP4 downloads | A VOD is a set of objects plus a metadata service, not a file |
-| **Mux** | Basic, Plus and Premium quality levels: Basic has a reduced ladder and no encoding charge, Plus adds per-title encoding, Premium an extended ladder; just-in-time encoding; signed playback; DRM as an add-on | Quality is a product tier with a price, and encoding can wait for the first viewer |
 | **AWS Elemental MediaConvert** | Automated ABR picks 3 to 15 renditions per input with QVBR rate control and bills only the renditions it writes | Per-title ladders are a rentable job setting |
 | **Cloudflare Stream** | Free encoding and ingress; $5 per 1,000 minutes stored and $1 per 1,000 minutes delivered; signed tokens with geo and IP rules | Some vendors meter minutes, not bytes, which moves the cost to watch time |
+| **Meta (Facebook and Instagram Reels)** | A cheap hardware AVC encode at upload; software AVC, VP9 or AV1 encodes chosen from a convex hull of 35 candidates only once projected watch time crosses a threshold; Instagram cut the cost of basic adaptive encodings 94% by repackaging instead of re-encoding | Spend compute where the watch time is, not where the uploads are |
+| **Mux** | Basic, Plus and Premium quality levels: Basic has a reduced ladder and no encoding charge, Plus adds per-title encoding, Premium an extended ladder; just-in-time encoding; signed playback; DRM as an add-on | Quality is a product tier with a price, and encoding can wait for the first viewer |
+| **Netflix** | Replaced one fixed ladder (235 kbps at 320x240 up to 5,800 kbps at 1080p) with a ladder per title in December 2015 | The right bitrate depends on the content, not the resolution |
+| **Twitch** | Stores recorded segments, thumbnails and playlists in S3; a metadata and post-processing system tracks every VOD type and runs jobs such as MP4 downloads | A VOD is a set of objects plus a metadata service, not a file |
+| **YouTube** | Built the Argos video coding unit (VCU), a transcoding ASIC deployed across tens of thousands of servers; for offline two-pass encoding it gives 8x (H.264) to 20x (VP9) the throughput of software encoding and an order of magnitude better performance per cost | At the largest scale, the transcode farm becomes a hardware program |
 
 Three patterns run through the table. **Encode lazily and in stages:** a cheap, fast encode makes the video playable, and expensive encodes follow only for videos that earn them (Meta's watch-time gate, Mux's Basic tier and just-in-time encoding, YouTube's dedicated hardware for the volume that remains). **The ladder is per title:** a fixed ladder wastes bits on cartoons and starves sports, so every pipeline that can afford it searches for the ladder per video. **Delivery dominates at scale:** encoding happens once and storage grows slowly, but every view of every rendition is egress, so the codec and the top rung's bitrate decide the bill.
 
@@ -312,6 +312,7 @@ Notes on the sketch:
 - [Google: Warehouse-scale Video Acceleration, extended abstract (ASPLOS 2021)](https://www.asplos-conference.org/asplos2022/2021/abstracts/asplos21-paper388-extended_abstract.pdf), the VCU, 8x to 20x two-pass throughput for H.264 and VP9, order-of-magnitude performance per cost, inline scaling, bin-packing scheduler
 - [Meta: Bringing AV1 to Facebook and Instagram Reels](https://engineering.fb.com/2023/02/21/video-engineering/av1-codec-facebook-instagram-reels/), AV1's 30% gain, staged pipeline with a watch-time threshold, 35 candidate encodes and the convex hull, bitrate and watch-time results, device decode limits, mixed-codec manifests
 - [Meta: Reducing Instagram's basic video compute time by 94 percent](https://engineering.fb.com/2022/11/04/video-engineering/instagram-video-processing-encoding-reduction/), over 80% of compute on minimum functionality encodings, repackaging, the 0.36 s versus 86.17 s example, 33% more advanced coverage from a 15% base
+- [Netflix Technology Blog: Per-Title Encode Optimization](https://netflixtechblog.com/per-title-encode-optimization-7e99442b62a2), December 14, 2015, the fixed ladder from 235 kbps at 320x240 to 5,800 kbps at 1080p, and the *BoJack Horseman* and *Orange Is the New Black* per-title figures
 - [Twitch: State of Engineering 2023](https://blog.twitch.com/en/2023/09/28/twitch-state-of-engineering-2023/), VOD segments, thumbnails and playlists in S3, the metadata and post-processing system, MP4 downloads, the prototype ASIC at over 10x scale
 - [Mux: The fastest video publishing in the multiverse](https://www.mux.com/blog/the-fastest-video-publishing-in-the-multiverse), just-in-time encoding, chunking, and conventional encoding at 25% to 100% of duration with a 30-second minimum (2018)
 
@@ -335,8 +336,3 @@ Notes on the sketch:
 - [YouTube: Use automatic captioning](https://support.google.com/youtube/answer/6373554?hl=en), speech recognition, accuracy caveats, timing, editing and masked words
 - [YouTube: Multi-language audio](https://support.google.com/youtube/answer/13338784?hl=en), who can add tracks, viewer defaults, creator dubs versus automatic dubs
 - [YouTube: Download your own videos](https://support.google.com/youtube/answer/56100?hl=en), 720p or 360p MP4, Google Takeout, and the removal, strike, audio and five-per-24-hours restrictions
-
-**Press**
-
-- [RedShark News: Netflix lowers resolution to improve quality](https://www.redsharknews.com/technology/item/3118-netflix-lowers-resolution-to-improve-quality), the fixed ladder's 235 and 5,800 kbps rungs and the *BoJack Horseman* and *Orange Is the New Black* per-title figures
-- [The Register: Netflix per-title encode optimization](https://www.theregister.com/2015/12/16/netflix_per_title_encode_optimization/), the December 2015 change from a fixed ladder to per-title analysis

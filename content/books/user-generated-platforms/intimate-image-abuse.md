@@ -227,5 +227,5 @@ Notes on the sketch:
 
 **Platforms**
 
-- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), StopNCII (via the nonprofit SWGfL) in chat and the 89.6% increase, Take It Down added as a hash source
-- [TechCrunch: Meta sues AI nudify app Crush AI for advertising on its platforms](https://techcrunch.com/2025/06/12/meta-sues-ai-nudify-app-crush-ai-for-advertising-on-its-platforms), the Hong Kong suit, nudify ad detection, 3,800 URLs shared through Lantern
+- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), StopNCII (via the nonprofit SWGfL) in chat and the 89.6% increase, Take It Down added as a hash source (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)
+- [Meta: Taking action against nudify apps](https://about.fb.com/news/2025/06/taking-action-against-nudify-apps/), the Hong Kong suit against Joy Timeline HK (CrushAI), nudify ad detection without nudity, more than 3,800 unique URLs shared through Lantern since the end of March (12 June 2025)

@@ -15,12 +15,12 @@ This chapter collects them: the community as the unit of partitioning and what h
 
 | Platform | Partition unit | Store and services as published | Event and data spine | What forced the change |
 | --- | --- | --- | --- | --- |
-| **Discord** | The server (guild): a process per guild; gateway shard by `guild_id`; messages keyed by channel and a time bucket | Cassandra, then ScyllaDB with Rust data services in front; Elasticsearch in "cells" for search; Elixir for real-time, C++ selective forwarding units for voice | Pub/Sub queue into search indexing | Hot partitions, tombstones and garbage collection pauses at trillions of messages |
-| **Reddit** | The community (subreddit) as the product's unit; services by domain (comments, accounts, posts, subreddits) | Python monolith moving to Go services; PostgreSQL, Memcached, Redis | Kafka: more than 500 brokers, over a petabyte of live data, "tens of millions of messages every second" | Write latency spikes up to 15 seconds in the legacy path |
-| **Pinterest** | The graph (Pins and boards) for recommendation | Pixie: random walks over a 3 billion node, 17 billion edge graph held in memory | Not covered here | Engagement from real-time graph recommendations |
-| **Twitch** | The channel's stream, routed to an origin with transcoding capacity | Ingest proxies in nearly a hundred points of presence; a routing service picks origins; a replication tree distributes | Spade analytics at almost 3 million events per second; a data lake over 100 petabytes (2023) | Using all transcoding capacity at peak, and cost |
 | **Airbnb** | Not covered here | An identity graph of about 7 billion nodes and 11 billion edges on JanusGraph and DynamoDB | Not covered here | Linked accounts and suspicious activity |
 | **Bluesky (AT Protocol)** | The user's repository on a personal data server | Personal data servers, relays aggregating a firehose, app views indexing the network, independent feed generators and labelers | The relay firehose | A network no single operator owns |
+| **Discord** | The server (guild): a process per guild; gateway shard by `guild_id`; messages keyed by channel and a time bucket | Cassandra, then ScyllaDB with Rust data services in front; Elasticsearch in "cells" for search; Elixir for real-time, C++ selective forwarding units for voice | Pub/Sub queue into search indexing | Hot partitions, tombstones and garbage collection pauses at trillions of messages |
+| **Pinterest** | The graph (Pins and boards) for recommendation | Pixie: random walks over a 3 billion node, 17 billion edge graph held in memory | Not covered here | Engagement from real-time graph recommendations |
+| **Reddit** | The community (subreddit) as the product's unit; services by domain (comments, accounts, posts, subreddits) | Python monolith moving to Go services; PostgreSQL, Memcached, Redis | Kafka: more than 500 brokers, over a petabyte of live data, "tens of millions of messages every second" | Write latency spikes up to 15 seconds in the legacy path |
+| **Twitch** | The channel's stream, routed to an origin with transcoding capacity | Ingest proxies in nearly a hundred points of presence; a routing service picks origins; a replication tree distributes | Spade analytics at almost 3 million events per second; a data lake over 100 petabytes (2023) | Using all transcoding capacity at peak, and cost |
 
 Four decisions repeat: **partition by the unit people gather in** (server, community, channel), because that's where reads and moderation concentrate; **put a service layer between the application and a hot store** that coalesces and routes requests; **move to an event log** that every derived system reads; and **migrate incrementally with the old and new systems compared** on live traffic before cutover.
 
@@ -66,7 +66,7 @@ The services a user-generated platform ends up with follow the parts of this vol
 | Money | Payments, ledgers, payouts, tax | Bookings, creator programs |
 | Compliance | Regulator requests, legal requests, transparency reports, age rules | Moderation, accounts (read-only) |
 
-The playbook's advice holds: start with a [modular monolith](/docs/architecture/service-boundaries#start-with-a-modular-monolith), split when a part needs its own scaling or team, and give every piece of data [one owner](/docs/architecture/service-boundaries#every-piece-of-data-has-one-owner). Reddit's move of comments from its Python monolith to a Go service shows the split done safely: a share of live traffic was sent to the new service and its responses compared with the old one's while users still got the old responses ("tap compare"); writes touched three datastores (PostgreSQL for persistence, Memcached for caching, Redis for change data capture events), and three write endpoints across three stores meant eighteen validation paths, tested against sister datastores; p99 write latency halved. Comments and accounts were migrated by late 2025, posts and subreddits in progress. The general technique is the playbook's [Dark Launch and Shadow Reads](/docs/architecture/replacing-systems#dark-launch-and-shadow-reads).
+The playbook's advice holds: start with a [modular monolith](/docs/architecture/service-boundaries#start-with-a-modular-monolith), split when a part needs its own scaling or team, and give every piece of data [one owner](/docs/architecture/service-boundaries#every-piece-of-data-has-one-owner). Reddit's move of comments from its Python monolith to a Go service, as Reddit engineers described it (reported by InfoQ), shows the split done safely: a share of live traffic was sent to the new service and its responses compared with the old one's while users still got the old responses ("tap compare"); writes touched three datastores (PostgreSQL for persistence, Memcached for caching, Redis for change data capture events), and three write endpoints across three stores meant eighteen validation paths, tested against sister datastores; p99 write latency halved. Comments and accounts were migrated by late 2025, posts and subreddits in progress. The general technique is the playbook's [Dark Launch and Shadow Reads](/docs/architecture/replacing-systems#dark-launch-and-shadow-reads).
 
 Two splits are specific to this industry:
 
@@ -84,7 +84,7 @@ Almost everything that happens after a user presses "post" is asynchronous. The 
 
 ## The Event Spine
 
-The core model's design notes already require life-cycle events (`content.published`, `content.removed`, `penalty.applied` and the rest) through a [transactional outbox](/docs/architecture/events#the-transactional-outbox). At platform scale those events become the spine every derived system reads: Reddit runs Kafka with more than 500 brokers and over a petabyte of live data carrying "tens of millions of messages every second," migrated from EC2 to Kubernetes without downtime, and describes large parts of the site breaking if it failed; Twitch's Spade analytics pipeline handled almost 3 million events per second in 2023.
+The core model's design notes already require life-cycle events (`content.published`, `content.removed`, `penalty.applied` and the rest) through a [transactional outbox](/docs/architecture/events#the-transactional-outbox). At platform scale those events become the spine every derived system reads: Reddit, as its engineers described it (reported by ByteByteGo), runs Kafka with more than 500 brokers and over a petabyte of live data carrying "tens of millions of messages every second," migrated from EC2 to Kubernetes without downtime, and describes large parts of the site breaking if it failed; Twitch's Spade analytics pipeline handled almost 3 million events per second in 2023.
 
 What subscribes, and why the spine matters for correctness, not just scale:
 
@@ -105,21 +105,21 @@ Laws apply to the viewer's location, so the request path carries a jurisdiction:
 
 ## Published Scale
 
-Numbers from the platforms' own write-ups and filings, dated:
+Numbers from the platforms' own write-ups and filings (Reddit's engineering figures as reported by InfoQ and ByteByteGo), dated:
 
 | Platform | Measure | Figure | When |
 | --- | --- | --- | --- |
+| Airbnb | Identity graph | About 7 billion nodes and 11 billion edges | As published |
 | Discord | Messages stored | Trillions, across 72 ScyllaDB nodes after migrating from 177 Cassandra nodes | 2022 to 2023 |
 | Discord | Migration throughput | 3.2 million messages a second; nine days instead of an estimated three months | 2022 |
 | Discord | Search | 40 Elasticsearch clusters; median query from 500 ms to under 100 ms, p99 from 1 s to under 500 ms | 2025 |
 | Discord | Voice | 2.6 million concurrent voice users on 850-plus voice servers in 13 regions and 30-plus data centers, about 220 Gbps egress | 2018 |
+| Meta | Warm photo storage | f4 held over 65 PB and cut the effective replication factor from 3.6 to 2.8 or 2.1 | 2014 |
+| Pinterest | Recommendation graph | 3 billion nodes and 17 billion edges in memory; 1,200 requests a second per server at 60 ms | 2017 |
 | Reddit | Content | Over 2 billion posts and 22 billion comments to date; 4.4 billion posts and comments created in 2025 | 2025 |
 | Reddit | Event log | Kafka with 500-plus brokers, over a petabyte live, tens of millions of messages a second | 2026 |
-| Pinterest | Recommendation graph | 3 billion nodes and 17 billion edges in memory; 1,200 requests a second per server at 60 ms | 2017 |
 | Twitch | Live video | Average concurrent viewers over 2.5 million; hundreds of thousands of simultaneous streams ingested; nearly a hundred ingest points of presence | 2022 to 2023 |
 | Twitch | Data | Almost 3 million analytics events a second; a data lake over 100 petabytes | 2023 |
-| Airbnb | Identity graph | About 7 billion nodes and 11 billion edges | As published |
-| Meta | Warm photo storage | f4 held over 65 PB and cut the effective replication factor from 3.6 to 2.8 or 2.1 | 2014 |
 
 The numbers are a guide to proportion, not targets: chat and events dominate write volume, media dominates bytes, and the graph systems (recommendation, identity) dominate memory.
 
@@ -172,8 +172,8 @@ Notes on the sketch:
 - [Discord: Using Rust to scale Elixir for 11 million concurrent users](https://discord.com/blog/using-rust-to-scale-elixir-for-11-million-concurrent-users), guild processes and member list slices
 - [Discord: How Discord handles two and a half million concurrent voice users](https://discord.com/blog/how-discord-handles-two-and-half-million-concurrent-voice-users-using-webrtc), voice servers, regions and egress
 - [Discord Developer Documentation: Gateway](https://docs.discord.com/developers/events/gateway), the shard formula
-- [InfoQ: Reddit migrates comment backend from Python to Go](https://infoq.com/news/2025/11/reddit-comments-go-migration/), tap compare, three datastores, eighteen validation paths, latency, migration status
-- [ByteByteGo: How Reddit migrated petabyte-scale Kafka](https://blog.bytebytego.com/p/how-reddit-migrated-petabyte-scale), broker count, data volume, message rate, zero-downtime move to Kubernetes
+- [InfoQ: Reddit migrates comment backend from Python to Go](https://infoq.com/news/2025/11/reddit-comments-go-migration/), tap compare, three datastores, eighteen validation paths, latency, migration status (reported)
+- [ByteByteGo: How Reddit migrated petabyte-scale Kafka](https://blog.bytebytego.com/p/how-reddit-migrated-petabyte-scale), broker count, data volume, message rate, zero-downtime move to Kubernetes (reported)
 - [Pinterest: Pixie (arXiv)](https://arxiv.org/abs/1711.07601), graph size, request rate and latency
 - [Twitch: Ingesting live video streams at global scale](https://blog.twitch.tv/en/2022/04/26/ingesting-live-video-streams-at-global-scale/), points of presence, origin routing and peak compute use
 - [Twitch: State of Engineering 2023](https://blog.twitch.com/en/2023/09/28/twitch-state-of-engineering-2023/), concurrent viewers, simultaneous streams, Spade events per second, the data lake
@@ -185,4 +185,4 @@ Notes on the sketch:
 
 - [Amazon IVS: Chat service quotas](https://docs.aws.amazon.com/ivs/latest/ChatUserGuide/service-quotas.html), the 200 ms message review handler timeout
 - [Reddit: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1713445/000171344526000022/rddt-20251231.htm), posts and comments to date
-- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), posts and comments created in 2025
+- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), posts and comments created in 2025 (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)

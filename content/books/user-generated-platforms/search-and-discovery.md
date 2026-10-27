@@ -17,11 +17,11 @@ This chapter covers what people search for on community platforms, the indexing 
 
 | Platform | What people search | Notable public detail |
 | --- | --- | --- |
-| **Reddit** | Posts, comments, communities, people | Over 80 million weekly searchers; Reddit Answers (AI answers from threads) in beta from December 2024, upgraded with Google's Gemini through Vertex AI in April 2025, and integrated into core search during 2025; machine translation of posts into 35 languages |
-| **Pinterest** | Ideas, products, images | Over 90% of searches unbranded; visual search from Related Pins (2014) through Lens camera search (2017) |
+| **Bluesky** | Posts and people across the network | Search is an AppView function, separate from the user's data host ([Federation & Open Protocols](/books/user-generated-platforms/federation)) |
 | **Discord** | Messages inside servers and DMs | Elasticsearch in "cells" of smaller clusters, guilds sharded by id, DMs indexed per user ([Real-Time Chat](/books/user-generated-platforms/real-time-chat)) |
 | **Imgur, Tumblr** | Tags, titles, galleries | Tag-driven discovery |
-| **Bluesky** | Posts and people across the network | Search is an AppView function, separate from the user's data host ([Federation & Open Protocols](/books/user-generated-platforms/federation)) |
+| **Pinterest** | Ideas, products, images | Over 90% of searches unbranded; visual search from Related Pins (2014) through Lens camera search (2017) |
+| **Reddit** | Posts, comments, communities, people | Over 80 million weekly searchers; Reddit Answers (AI answers from threads) tested from December 2024, upgraded with Google's Gemini through Vertex AI in April 2025, and integrated into core search during 2025; machine translation of posts into 35 languages |
 
 The pattern: **community search is three searches.** People search for content (posts and comments), for places (communities and channels) and for people (accounts and handles), and each has different ranking and different safety rules. Content search ranks by relevance and community judgment; place search ranks by fit and activity and must respect community visibility and content rating; people search is where harassment and impersonation start, so it respects blocks, privacy and minors' defaults first.
 
@@ -72,7 +72,7 @@ Translation changes the moderation surface. A translated post is a derived rende
 
 ## AI Answers over Community Content
 
-An AI answer engine retrieves threads relevant to a question and has a model compose an answer from them, with citations back to the threads. Reddit Answers is the reference case: launched in beta in December 2024, upgraded with Google's Gemini through Vertex AI in April 2025, and integrated into Reddit's core search during 2025, with rollout to languages beyond English, per its 10-K. Reddit's licensing partnership with Google in February 2024 also included using Vertex AI to improve search on Reddit.
+An AI answer engine retrieves threads relevant to a question and has a model compose an answer from them, with citations back to the threads. Reddit Answers is the reference case: tested from December 2024, upgraded with Google's Gemini through Vertex AI in April 2025, and integrated into Reddit's core search during 2025, with rollout to languages beyond English, per its 10-K. Reddit's licensing partnership with Google in February 2024 also included using Vertex AI to improve search on Reddit.
 
 The design rules follow from what can go wrong:
 
@@ -208,6 +208,7 @@ Notes on the sketch:
 
 - [Reddit: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1713445/000171344526000022/rddt-20251231.htm), weekly searchers, Reddit Answers integrated into search and rolling out to other languages, share of English posts and international users, machine translation in 35 languages
 - [Pinterest: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1506293/000150629326000021/pins-20251231.htm), unbranded share of searches and search as a core surface
-- [TechCrunch: Reddit's conversational AI search tool leverages Google Gemini](https://techcrunch.com/2025/04/09/reddits-conversational-ai-search-tool-leverages-google-gemini/), Reddit Answers in beta from December 2024 and the Gemini on Vertex AI upgrade (April 9, 2025)
+- [Reddit: Form 10-K for 2024](https://www.sec.gov/Archives/edgar/data/1713445/000171344525000018/rddt-20241231.htm), Reddit Answers tested in December 2024
+- [Google Cloud: Google Cloud powers part of Reddit Answers](https://www.googlecloudpresscorner.com/2025-04-09-Google-Cloud-Powers-Part-of-Reddit-Answers,-On-Platform-Search-Experiences-with-Generative-AI), April 9, 2025, Gemini on Vertex AI as one of the features powering Reddit Answers
 - [Google: An expanded partnership with Reddit](https://blog.google/inside-google/company-announcements/expanded-reddit-partnership/), Vertex AI for Reddit's search features and Data API access (February 22, 2024)
 - [Internet Watch Foundation: reThink chatbot evaluation](https://iwf.org.uk/about-us/why-we-exist/our-research/rethink-chatbot-evaluation), banned-term warnings and chatbot on Pornhub UK, display and click-through counts, and the reduction in searches (March 2022 to August 2023)

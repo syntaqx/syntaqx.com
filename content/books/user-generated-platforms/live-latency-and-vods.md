@@ -15,11 +15,11 @@ This chapter covers the playback half of live video and what happens after: late
 
 | Platform or vendor | Latency choices | Live to VOD | Retention and clips |
 | --- | --- | --- | --- |
-| **YouTube Live** | Normal (all features, 4K), Low (under 10 seconds for most viewers, no 4K), Ultra-low (under 5 seconds, no 4K, more buffering) | Streams under 12 hours archived automatically; longer ones "may not be captured at all" | DVR rewind set by the creator; limited on streams over 12 hours |
-| **Twitch** | HLS from origins through a replication tree of data centers to edges near viewers | Segments, thumbnails and playlists saved to S3 when the streamer enables recording; MP4 downloads by a post-processing system | Past broadcasts expire after a period; highlights and uploads capped at 100 hours per channel since 2025; clips up to 60 seconds |
 | **Amazon IVS** | Channels under 5 seconds; real-time stages under 300 ms with up to 12 hosts; traditional OTT "as high as 30 seconds" for comparison | Auto-record to S3 with per-rendition HLS, byte-range playlists, thumbnails and reconnect merging | The customer's bucket, the customer's retention |
-| **Mux** | Standard (about 25 to 30 seconds), reduced (about 12 to 20), low (as low as about 5, using LL-HLS) | A new asset per broadcast, the same asset across reconnects inside the window | DVR not recommended over four hours |
 | **Cloudflare Stream** | HLS and DASH | A recording per broadcast, its own video ID, available within 60 seconds of the end | Recording access controlled by signed URLs and allowed origins |
+| **Mux** | Standard (about 25 to 30 seconds), reduced (about 12 to 20), low (as low as about 5, using LL-HLS) | A new asset per broadcast, the same asset across reconnects inside the window | DVR not recommended over four hours |
+| **Twitch** | HLS from origins through a replication tree of data centers to edges near viewers | Segments, thumbnails and playlists saved to S3 when the streamer enables recording; MP4 downloads by a post-processing system | Past broadcasts expire after a period; highlights and uploads capped at 100 hours per channel since 2025; clips up to 60 seconds |
+| **YouTube Live** | Normal (all features, 4K), Low (under 10 seconds for most viewers, no 4K), Ultra-low (under 5 seconds, no 4K, more buffering) | Streams under 12 hours archived automatically; longer ones "may not be captured at all" | DVR rewind set by the creator; limited on streams over 12 hours |
 
 The table shows two conventions the industry has settled on. **Latency is a per-stream setting with named tiers,** chosen by the creator or the platform before going live, not a dial that moves during a broadcast (Mux allows a change only while the stream is idle). **A broadcast becomes a normal on-demand asset** with its own ID, playback rules and retention clock, and every vendor merges short disconnects into one recording rather than producing a dozen fragments.
 
@@ -100,7 +100,7 @@ Once finalized, a recording follows [Video on Demand](/books/user-generated-plat
 Most of a live platform's stored video is recordings that almost nobody will watch again, and every platform eventually limits them:
 
 - **Expiring past broadcasts.** Twitch past broadcasts are deleted automatically after a period that has historically depended on the channel's program status; its help center didn't render for this chapter, so the exact days aren't cited here.
-- **Caps on what creators keep.** Twitch announced on February 20, 2025 a 100-hour cap on highlights and uploads per channel, with clips and past broadcasts exempt and over-limit content deleted starting "with highlights with the least views," effective April 19, 2025. It said the cap affected "less than 0.5% of active channels" and content accounting for "less than 0.1% of hours watched," and gave cost and weak discovery as reasons.
+- **Caps on what creators keep.** Twitch's help center sets a 100-hour storage limit across highlights and uploads per channel. As TechCrunch reported the February 20, 2025 announcement, clips and past broadcasts are exempt and over-limit content was deleted starting "with highlights with the least views," effective April 19, 2025. It said the cap affected "less than 0.5% of active channels" and content accounting for "less than 0.1% of hours watched," and gave cost and weak discovery as reasons.
 - **Archive limits by length.** YouTube automatically archives streams under 12 hours and warns that longer streams may not be captured.
 - **Customer-owned retention.** Rented video (IVS recording to the customer's bucket, Mux assets, Cloudflare recordings) leaves retention to the platform, which then has to write the rules itself.
 
@@ -123,7 +123,7 @@ What a builder has to get right:
 
 ## How to Build It
 
-The chapter's additions to the core model and to [Live Streaming: Ingest & Transcoding](/books/user-generated-platforms/live-ingest-and-transcoding#how-to-build-it):
+The chapter's additions to the core model and to [Live Streaming: Ingest & Transcoding](/books/user-generated-platforms/live-ingest-and-transcoding#how-to-build-it). VOD retention is a specialization of the general retention rules in [Storage & Delivery](/books/user-generated-platforms/storage-and-delivery#how-to-build-it), not a second rule engine: each `vod_retention_rules` row extends one `media_retention_rules` row, which keeps the versioning, cap, purge order and notice, so one purge job and one `media_purges` record cover uploads and recordings alike.
 
 ```sql
 ALTER TABLE streams
@@ -132,17 +132,15 @@ ALTER TABLE streams
   ADD COLUMN dvr_enabled  BOOLEAN NOT NULL DEFAULT TRUE,
   ADD COLUMN record       BOOLEAN NOT NULL DEFAULT TRUE;   -- the creator's choice
 
-CREATE TABLE vod_retention_rules (       -- how long recordings and edits are kept
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+CREATE TABLE vod_retention_rules (       -- a media_retention_rules row (target 'vod'),
+                                         -- specialized for recordings and edits
+  rule_id         UUID PRIMARY KEY REFERENCES media_retention_rules (id),
+                                         -- version, total cap (cap_duration_ms), purge order,
+                                         -- notice and effective dates live on the general rule
   applies_to      TEXT NOT NULL CHECK (applies_to IN ('past_broadcast', 'highlight',
                     'upload', 'clip')),
   creator_tier    TEXT NOT NULL,         -- 'default', 'affiliate', 'partner', ... as data
-  keep_days       INT CHECK (keep_days > 0),          -- null: no age limit
-  cap_hours       INT CHECK (cap_hours > 0),          -- null: no total cap
-  eviction        TEXT NOT NULL CHECK (eviction IN ('oldest_first', 'least_viewed_first')),
-  valid_during    TSTZRANGE NOT NULL,
-  announced_at    TIMESTAMPTZ,           -- creators were told before it took effect
-  EXCLUDE USING GIST (applies_to WITH =, creator_tier WITH =, valid_during WITH &&)
+  keep_days       INT CHECK (keep_days > 0)           -- null: no age limit
 );
 
 CREATE TABLE stream_recordings (         -- one broadcast's recording, across reconnects
@@ -156,7 +154,7 @@ CREATE TABLE stream_recordings (         -- one broadcast's recording, across re
   ended_at          TIMESTAMPTZ,
   duration_ms       BIGINT,
   failure_reason    TEXT,
-  retention_rule_id UUID REFERENCES vod_retention_rules (id),  -- the rule at finalization
+  retention_rule_id UUID REFERENCES vod_retention_rules (rule_id),  -- the rule at finalization
   retain_until      TIMESTAMPTZ,         -- computed and stored; holds override it
   saved_as          TEXT CHECK (saved_as IN ('highlight', 'creator_export')),
   CHECK ((state = 'failed') = (failure_reason IS NOT NULL))
@@ -270,4 +268,5 @@ Notes on the sketch:
 
 **Press**
 
-- [TechCrunch: Twitch caps streamers' storage at 100 hours of highlights and uploads](https://techcrunch.com/2025/02/20/twitch-caps-streamers-storage-at-100-hours-of-highlights-and-uploads), the cap, exemptions, least-viewed-first deletion, share of channels and hours affected, rationale and deadline
+- [Twitch: On-Demand Content on Twitch](https://help.twitch.tv/s/article/video-on-demand?language=en_US), the 100-hour storage limit across Highlights and Uploads
+- [TechCrunch: Twitch caps streamers' storage at 100 hours of highlights and uploads](https://techcrunch.com/2025/02/20/twitch-caps-streamers-storage-at-100-hours-of-highlights-and-uploads), Twitch's February 20, 2025 announcement: exemptions, least-viewed-first deletion, share of channels and hours affected, rationale and the April 19, 2025 deadline (reported)

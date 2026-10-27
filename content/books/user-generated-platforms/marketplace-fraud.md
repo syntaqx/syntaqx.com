@@ -16,11 +16,11 @@ The marketplace's advantage is that it sees both sides of every transaction, kee
 | Platform | Verification | Risk scoring | Restrictions and programs |
 | --- | --- | --- | --- |
 | **Airbnb** | Guest and host identity against third-party data, then government ID and sometimes a selfie | Reservation screening of "hundreds of factors" that blocks bookings at high risk of parties or property damage; risk scoring, sanctions screening and background checks (US and India, for certain users) named in its 10-K | Global party ban; restrictions on local entire-home bookings by guests under 25 in the US and Canada; same-city, short-notice restrictions; an identity graph for linked accounts |
-| **Turo** | Guests upload a photo, license, phone and payment method and are screened at checkout | Turo Risk Score on every trip since April 2020, more than 50 inputs, trained on over 90 million days and 10 years of claims; adjusts guest fees; not used to price protection plans | Verification costs of $16.2 million in 2023 |
-| **Outdoorsy** | Every driver: license front and back and a live face capture with head turns (Persona) | A "proprietary analysis of the overall booking" weighing "hundreds of factors" | Unverified drivers have no damage coverage |
-| **RVshare** | License or passport plus selfie; renters and owners vetted by DigiSure | Not published | Guarantee covers listing fraud on on-platform payments |
 | **eBay** | Third-party identity verification and sanctions screening vendors | Not published | Authenticity Guarantee for luxury goods and collectibles; enhanced listing monitoring after a 2024 settlement |
 | **Etsy** | Identity and background check vendors | Not published | Disbursement holds against fraud |
+| **Outdoorsy** | Every driver: license front and back and a live face capture with head turns (Persona) | A "proprietary analysis of the overall booking" weighing "hundreds of factors" | Unverified drivers have no damage coverage |
+| **RVshare** | License or passport plus selfie; renters and owners vetted by DigiSure | Not published | Guarantee covers listing fraud on on-platform payments |
+| **Turo** | Guests upload a photo, license, phone and payment method and are screened at checkout | Turo Risk Score on every trip since April 2020, more than 50 inputs, trained on over 90 million days and 10 years of claims; adjusts guest fees; not used to price protection plans | Verification costs of $16.2 million in 2023 |
 
 The patterns:
 

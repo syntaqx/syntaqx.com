@@ -17,12 +17,12 @@ This chapter covers what the platforms count and how their choices differ, the m
 
 | Platform | Period | Unit of enforcement | How found and decided | Appeals | Child safety | Legal requests |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Reddit** (H2 2025) | Half-year | Posts and comments removed, split by moderators (52.7%) and admins (44.7%) | Automated share of moderator removals (68.6%); share of admin chat reviews surfaced proactively (99%); share of user reports actionable (6.9%) | 481,416 content and 499,515 account appeals, 20% and 4.4% of sanctions | 32,747 CyberTips | Information requests by country and process type, emergency requests, preservation requests, fraudulent requests, user notice |
-| **Discord** (March 2025 to March 2026) | Year | "Actions taken" on accounts (6,315,202) versus "accounts disabled" (3,243,494), plus 47,832,832 spam accounts | Per policy category | Appeals and overturn rate per category (8.47% for child sexualization content) | 518,399 reports to NCMEC | Requests, preservation and emergency requests by country |
-| **Pinterest** (H2 2025) | Quarters within a half-year | Distinct images, Pins, boards and accounts deactivated per policy | Manual, hybrid and automated split per policy; reach bands of unique viewers before deactivation | Upheld and reversed per policy | About 235,769 CyberTipline reports | Government information and removal requests, by region |
-| **Snap** (H2 2025) | Half-year | Enforcements and unique accounts enforced (10,468,568 and 6,324,545) | In-app reports versus proactive detection; median turnaround about one minute | 471,892 account lock appeals, 31,951 reinstatements | 397,402 NCMEC submissions | On a separate page |
 | **Bluesky** (2025) | Year | Takedowns (2,446,334) and labels (16.49 million, 95.34% automatic) | Reports from 1.24 million users | Not covered here | Not covered here | Legal requests counted |
+| **Discord** (March 2025 to March 2026) | Year | "Actions taken" on accounts (6,315,202) versus "accounts disabled" (3,243,494), plus 47,832,832 spam accounts | Per policy category | Appeals and overturn rate per category (8.47% for child sexualization content) | 518,399 reports to NCMEC | Requests, preservation and emergency requests by country |
 | **Meta** | Not covered here | Not covered here | Prevalence: the share of views that were of violating content, estimated by sampling | Not covered here | Not covered here | Not covered here |
+| **Pinterest** (H2 2025) | Quarters within a half-year | Distinct images, Pins, boards and accounts deactivated per policy | Manual, hybrid and automated split per policy; reach bands of unique viewers before deactivation | Upheld and reversed per policy | About 235,769 CyberTipline reports | Government information and removal requests, by region |
+| **Reddit** (H2 2025) | Half-year | Posts and comments removed, split by moderators (52.7%) and admins (44.7%) | Automated share of moderator removals (68.6%); share of admin chat reviews surfaced proactively (99%); share of user reports actionable (6.9%) | 481,416 content and 499,515 account appeals, 20% and 4.4% of sanctions | 32,747 CyberTips | Information requests by country and process type, emergency requests, preservation requests, fraudulent requests, user notice |
+| **Snap** (H2 2025) | Half-year | Enforcements and unique accounts enforced (10,468,568 and 6,324,545) | In-app reports versus proactive detection; median turnaround about one minute | 471,892 account lock appeals, 31,951 reinstatements | 397,402 NCMEC submissions | On a separate page |
 
 Four choices make these reports incomparable, and each is a design decision for your own:
 
@@ -186,24 +186,20 @@ Notes on the sketch:
 
 **Law and regulation**
 
-- [DSA Article 15: Transparency reporting obligations for providers of intermediary services](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_15.html), annual reports, orders, notices, own-initiative moderation, complaints, accuracy of automated means, the exemption
-- [DSA Article 24: Transparency reporting obligations for providers of online platforms](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_24.html), dispute and suspension counts, average monthly active recipients, database submission, templates
-- [DSA Article 42: Transparency reporting obligations](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_42.html), six-monthly reports, staff per language, accuracy per language, recipients per member state
-- [Springlex: Implementing Regulation (EU) 2024/2835, Article 1](https://www.springlex.eu/en/packages/dsa/ttr-regulation/article-1/), CSV or XLSX templates for Articles 15, 24 and 42
-- [Springlex: Implementing Regulation (EU) 2024/2835, Article 3](https://www.springlex.eu/en/packages/dsa/ttr-regulation/article-3/), five-year retention and public availability of every version
-- [Inside Global Tech: Commission adopts implementing regulation on DSA transparency reporting](https://www.insideglobaltech.com/2024/11/12/european-commission-adopts-implementing-regulation-on-dsa-transparency-reporting-obligations/), adoption date, July 1, 2025 start, reporting periods, two-month deadline, quantitative and qualitative templates, transition
+- [Regulation (EU) 2022/2065 (Digital Services Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065), Article 15 (annual reports, orders, notices, own-initiative moderation, complaints, accuracy of automated means, the exemption), Article 24 (dispute and suspension counts, average monthly active recipients, database submission, templates) and Article 42 (six-monthly reports, staff per language, accuracy per language, recipients per member state)
+- [Commission Implementing Regulation (EU) 2024/2835](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R2835), adopted November 4, 2024: CSV or XLSX templates for Articles 15, 24 and 42 (Article 1), the calendar-year and six-monthly reporting periods and the two-month publication deadline (Article 2), five-year retention and public availability of every version (Article 3), use from July 1, 2025 and the transition to December 31, 2025
 - [New York Attorney General: Stop Hiding Hate Act](https://ag.ny.gov/resources/organizations/social-media-tos-reporting/stop-hiding-hate-act), coverage, report contents and penalties
 - [New York Attorney General: Social media terms of service reports](https://ag.ny.gov/resources/organizations/social-media-tos-reporting/reports), the companies that have filed
 
 **Regulators**
 
-- [Ofcom: Online Safety industry bulletin, October 2026](https://www.ofcom.org.uk/online-safety/protecting-children/online-safety-industry-bulletin-october-2026), annual transparency notices for categorised services and the November 2026 to January 2027 process
-- [RPC: Ofcom publishes register of categorised services](https://www.rpclegal.com/thinking/media/ofcom-publishes-register-of-categorised-services/), categories and section 77 duties
+- [Ofcom: Online Safety industry bulletin, October 2026](https://www.ofcom.org.uk/online-safety/protecting-children/online-safety-industry-bulletin-october-2026), the July 10, 2026 register, annual transparency notices for categorised services and the November 2026 to January 2027 process
+- [Ofcom: Register of categorised services and list of emerging Category 1 services](https://www.ofcom.org.uk/online-safety/illegal-and-harmful-content/register-of-categorised-services-and-list-emerging-category-1-services), Categories 1, 2A and 2B and the additional duties for categorised services
 - [eSafety Commissioner: Basic Online Safety Expectations](https://www.esafety.gov.au/industry/basic-online-safety-expectations), periodic and non-periodic notices and published summaries
 
 **Transparency reports**
 
-- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), volumes, moderator and admin removals, automation share, actionable reports, appeals, CyberTips, legal and fraudulent requests
+- [Reddit: Transparency Report, July to December 2025 (PDF, copy hosted by TorrentFreak)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), volumes, moderator and admin removals, automation share, actionable reports, appeals, CyberTips, legal and fraudulent requests
 - [Discord: Transparency Report, March 2025 to March 2026 (PDF)](https://cdn.discordapp.com/assets/transparency-reports/Discord-Transparency-Report-2026-Updated.pdf), actions taken versus accounts disabled, spam accounts, NCMEC reports, age assurance funnel, appeals by category
 - [Pinterest: Transparency report, July to December 2025](https://policy.pinterest.com/en/transparency-report), units per policy, enforcement method, reach bands, child safety, appeals, government requests
 - [Snap: Transparency report, H2 2025](https://values.snap.com/privacy/transparency-h2-2025), enforcements, turnaround, Violative View Rate, NCMEC submissions, appeals

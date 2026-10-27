@@ -17,11 +17,11 @@ The system problem is that each of these is a contract with a version, a clock a
 | Platform | Guest policies | Grace period | Host cancellation | Guarantee |
 | --- | --- | --- | --- | --- |
 | **Airbnb** | Flexible, Moderate, Limited (from October 1, 2025), Firm; Strict and Super strict by invitation; long-term Firm and Strict; non-refundable rate option | Full refund within 24 hours of booking if booked at least 7 days before check-in | Fee of 10%, 25% or 50% of the reservation by timing (minimum $50), calendar blocked, possible loss of Superhost status, suspension for repeated cancellations | AirCover for guests: rebooking or refund when the host cancels, can't be reached, or the listing is significantly different |
+| **eBay** | Not applicable | Not applicable | Seller cancellations counted in performance | Money Back Guarantee: item not received or not as described |
+| **Etsy** | Not applicable | Not applicable | Not covered here | Purchase Protection: not as described, damaged, 7+ days late or not delivered |
 | **Outdoorsy** | Flexible, Moderate, Strict (bookings from February 2, 2026); service fee non-refundable; protection, add-ons, prep fees and waiver always refunded | 24 hours after confirmation if the trip is 7+ days out, 1 hour if within 7 days, none same-day | Full refund to the guest; instant book paused after a second availability-related cancellation in six months | Not a separate program |
 | **RVshare** | Flexible, Standard, Strict | 24 hours if booked 7+ days out, otherwise 1 hour | Full refund except the screening fee | Worry-Free Rental Guarantee up to $10,000 per occurrence, on-platform payments only |
 | **Turo** | Free until 24 hours before start; outside that, a fee of half a day (trips of two days or less) or one day of the average trip price; non-refundable trips | 1 hour for bookings within 24 hours of start; 24 hours after booking for non-refundable trips | Full refund to the guest | Not covered here |
-| **eBay** | Not applicable | Not applicable | Seller cancellations counted in performance | Money Back Guarantee: item not received or not as described |
-| **Etsy** | Not applicable | Not applicable | Not covered here | Purchase Protection: not as described, damaged, 7+ days late or not delivered |
 | **Vinted** | Not applicable | Not applicable | Not covered here | Refunds for lost, damaged, significantly not-as-described items from non-professional sellers, reported within 2 days of delivery |
 
 The patterns:
@@ -94,11 +94,11 @@ A guarantee is the platform's promise to the guest or buyer that it will make th
 
 | Program | Covers | Process | Limits |
 | --- | --- | --- | --- |
+| **AirCover for guests** | Host cancels, can't be reached, listing significantly different | Contact Airbnb; rebooking or refund | Not insurance; minor issues excluded |
 | **eBay Money Back Guarantee** | Item not received; not as described | Report from the estimated delivery date up to 30 days after; seller has 3 business days to respond; eBay steps in after that, automatically if there's no valid tracking; appeals within 30 days | On-eBay payments only; signature confirmation required as delivery proof on items of $750 or more; excludes vehicles, real estate, services and more; one remedy (no chargeback for the same issue); eBay may hold seller funds while a claim is open and recover refunds |
 | **Etsy Purchase Protection** | Not as described, damaged, 7+ days late, not delivered | Buyer messages the seller first; a case can open 48 hours after the help request and once the estimated delivery window passes | Registered account required; eligible orders refunded by Etsy |
-| **Vinted buyer protection** | Not shipped or lost, damaged, significantly not as described, missing from a bundle, marked delivered but not received | Report within 2 calendar days of Vinted's delivery notice, or payment goes to the seller | Buy-now purchases from non-professional sellers; excludes fit, minor differences and payments outside Vinted |
-| **AirCover for guests** | Host cancels, can't be reached, listing significantly different | Contact Airbnb; rebooking or refund | Not insurance; minor issues excluded |
 | **RVshare Worry-Free Rental Guarantee** | Listing fraud, misrepresentation or denied access (report within 12 hours), last-minute owner cancellation, deposit disputes | Report to RVshare | Up to $10,000 per occurrence; on-platform payments only |
+| **Vinted buyer protection** | Not shipped or lost, damaged, significantly not as described, missing from a bundle, marked delivered but not received | Report within 2 calendar days of Vinted's delivery notice, or payment goes to the seller | Buy-now purchases from non-professional sellers; excludes fit, minor differences and payments outside Vinted |
 
 The remedy is funded by the platform first and recovered from the seller where the seller was at fault: eBay may hold seller funds during an open claim and recover refunds it paid on the seller's behalf; Etsy's 10-K says it may reimburse buyers itself to protect its reputation. Buyer protection and forced reversals raise eBay's loss costs, its 10-K says. The ledger has to show both: the refund to the buyer from the platform's funds, and the recovery from the seller's balance, which can go negative.
 

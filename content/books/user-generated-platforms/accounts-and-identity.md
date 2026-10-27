@@ -15,13 +15,13 @@ This chapter covers the identity layer every later chapter keys on: handles, inc
 
 | Platform | Handle | Verification | Standing and penalties | Deletion |
 | --- | --- | --- | --- | --- |
-| **Bluesky** | A domain name, resolved to a permanent DID | Blue checks from Bluesky, scalloped badges from Trusted Verifiers, domain handles as self-verification | Labels and takedowns from Bluesky's moderation service and chosen labelers | Account and repository can move to another host |
-| **Mastodon** | `user@server`, resolved by WebFinger | None built in | Local actions: sensitive, freeze, limit, suspend; one appeal within 20 days | Suspended data purged after 30 days |
-| **Discord** | Username, plus a server nickname | Not a public identity badge | Warning System with an Account Standing tab (October 2023) | Not covered here |
-| **YouTube** | Channel handle | Not covered here | A first violation usually gets a warning; strikes last 90 days; three in 90 days can remove the channel | Not covered here |
-| **X** | Handle | Paid checkmark | Not covered here | Not covered here |
 | **Airbnb** | Not covered here | Identity verification for primary hosts, co-hosts and booking guests | Not covered here | Government ID images kept three years in the EU; selfies for the life of the account |
+| **Bluesky** | A domain name, resolved to a permanent DID | Blue checks from Bluesky, scalloped badges from Trusted Verifiers, domain handles as self-verification | Labels and takedowns from Bluesky's moderation service and chosen labelers | Account and repository can move to another host |
+| **Discord** | Username, plus a server nickname | Not a public identity badge | Warning System with an Account Standing tab (October 2023) | Not covered here |
+| **Mastodon** | `user@server`, resolved by WebFinger | None built in | Local actions: sensitive, freeze, limit, suspend; one appeal within 20 days | Suspended data purged after 30 days |
 | **Outdoorsy** | Account name | Persona ID and selfie for hosts and every driver | Not covered here | Erasure of verification files 30 days after the last trip |
+| **X** | Handle | Paid checkmark | Not covered here | Not covered here |
+| **YouTube** | Channel handle | Not covered here | A first violation usually gets a warning; strikes last 90 days; three in 90 days can remove the channel | Not covered here |
 
 The table is sparse on purpose: each platform documents a different slice, and the chapter builds from the slices that are public. The pattern across them is consistent. **Names are claims that have to be checked** (Bluesky and Mastodon both verify a handle against something the account controls); **"verified" means different things** (identity checked, notability confirmed, a subscription paid); **standing is a history the user can see** (Discord's tab, YouTube's warning and strike counts); and **deletion is never instant for everything** (Mastodon's 30 days, Outdoorsy's post-trip window, Airbnb's ID retention).
 
@@ -105,7 +105,7 @@ A user-generated platform's accounts are worth stealing for more than their cont
 
 ## Minors
 
-Age changes what an account may do: who can message it, whether it's discoverable, what it sees, whether it can stream or earn, and whether a parent can see its activity. Platforms now default unknown-age accounts to teen settings until they verify age (Discord announced a global rollout of age verification for early March 2026), and the methods, vendors and laws (COPPA, the UK and EU regimes, Australia's under-16 minimum age, and US state laws with their court status) are [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#age-assurance-on-a-general-audience-platform). The playbook's [Designing Age Assurance](/docs/compliance/childrens-privacy#designing-age-assurance) holds the general model, including age as a record rather than a field; this chapter's tables only reserve the place where the derived age band lands.
+Age changes what an account may do: who can message it, whether it's discoverable, what it sees, whether it can stream or earn, and whether a parent can see its activity. Platforms now default unknown-age accounts to teen settings until they verify age (Discord's global teen-by-default settings, first announced for March 2026, launched on September 23, 2026), and the methods, vendors and laws (COPPA, the UK and EU regimes, Australia's under-16 minimum age, and US state laws with their court status) are [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#age-assurance-on-a-general-audience-platform). The playbook's [Designing Age Assurance](/docs/compliance/childrens-privacy#designing-age-assurance) holds the general model, including age as a record rather than a field; this chapter's tables only reserve the place where the derived age band lands.
 
 ## Deletion, Claims and Legal Holds
 
@@ -274,12 +274,13 @@ Notes on the sketch:
 - [Airbnb: Scaling Airbnb's identity graph](https://airbnb.tech/infrastructure/scaling-airbnbs-identity-graph-with-a-unified-knowledge-graph-infrastructure/), graph size and uses for linked accounts
 - [Outdoorsy: Your guide to your Outdoorsy account](https://support.outdoorsy.com/hc/en-us/articles/57236540510747-Your-guide-to-your-Outdoorsy-account-Hosting-and-Traveling), one account for hosting and traveling
 - [Outdoorsy: How do I delete my Outdoorsy account](https://support.outdoorsy.com/hc/en-us/articles/57132723095195-How-do-I-delete-my-Outdoorsy-account), closure, cancelled trips, archived records, the 30-day window before erasure
-- [Tubefilter: Discord's first creator monetization feature](https://www.tubefilter.com/2022/12/01/discord-creator-monetization-server-memberships-open-to-us-servers/), good standing as an eligibility requirement
-- [TechCrunch: Discord to roll out age verification](https://techcrunch.com/2026/02/09/discord-to-roll-out-age-verification-next-month-for-full-access-to-its-platform/), the early March 2026 global rollout
+- [Discord: Server and creator subscriptions](https://discord.com/blog/server-and-creator-subscriptions), good standing with no recent Terms of Service or Community Guidelines violations as an eligibility requirement (December 1, 2022)
+- [Discord: Discord Launches Teen-by-Default Settings Globally](https://discord.com/press-releases/discord-launches-teen-by-default-settings-globally), the February 2026 announcement for early March and its February 24, 2026 delay
+- [Discord: Safer for Teens, Same Discord for Adults](https://discord.com/blog/safer-for-teens-same-discord-for-adults), the global launch on September 23, 2026
 
 **Law and enforcement**
 
 - [Airbnb: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1559720/000155972026000004/abnb-20251231.htm), what "identity verified" means
-- [eucrim: EU fines X 120 million euros in first DSA non-compliance decision](https://eucrim.eu/news/eu-fines-x-120-million-in-first-dsa-non-compliance-decision/), the paid checkmark finding (December 5, 2025)
+- [European Commission: Commission fines X €120 million under the Digital Services Act (IP/25/2934)](https://ec.europa.eu/commission/presscorner/detail/en/ip_25_2934), the first non-compliance decision and the paid blue checkmark finding, including exposure to scams and impersonation (December 5, 2025)
 - [18 U.S.C. 2258A](https://www.law.cornell.edu/uscode/text/18/2258A), one-year preservation after a CyberTipline report
-- [DSA Article 30: Traceability of traders](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_30.html), trader data kept six months after the relationship ends
+- [Regulation (EU) 2022/2065 (Digital Services Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065), Article 30(5), trader data kept six months after the contractual relationship ends, then deleted

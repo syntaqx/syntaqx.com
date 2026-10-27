@@ -16,14 +16,14 @@ This chapter covers what happens to a file after it's accepted and processed: ex
 
 | Platform or vendor | What's public | What it shows |
 | --- | --- | --- |
-| **Meta (Haystack, 2010)** | Over 260 billion images and 20 PB; four sizes stored per upload; one billion new photos (60 TB) a week; over one million images a second at peak; a CDN serves the hottest photos and the long tail misses it | Storage systems are built for the long tail, not the popular files |
-| **Meta (f4, 2014)** | Warm storage for BLOBs whose request rate has cooled, chosen by age (one month for most types, three months for photos); Reed-Solomon (10,4) inside a datacenter and XOR across datacenters cut the effective replication factor from 3.6 to 2.8 or 2.1 over 65 PB; per-BLOB encryption keys, deleted to delete | Temperature tiers by age, erasure coding for warm data, deletion by key destruction |
+| **Amazon S3** | Storage classes from Standard to Glacier Deep Archive, with minimum storage durations of 30, 90 and 180 days on the colder classes; Intelligent-Tiering moves objects after 30 and 90 days without access | Cold tiers trade retrieval time and minimum charges for price |
+| **Cloudflare R2, Images, Stream** | R2 storage $0.015 per GB-month, infrequent access $0.01 plus $0.01 per GB retrieved, no egress fee; Images $1 per 100,000 delivered; Stream $5 per 1,000 minutes stored and $1 per 1,000 delivered (as of October 2026) | Vendors meter different things, and the meter decides which behavior costs money |
 | **Flickr (SmugMug)** | Free accounts capped at 1,000 photos and videos from January 8, 2019 (down from 1 TB); uploads blocked over the cap; deletion oldest first from February 5, 2019; Creative Commons photos exempt | A storage cap as a business model change, with notice, an export path and exemptions |
 | **Imgur** | April 2023 terms to remove "old, unused, and inactive content that is not tied to a user account," effective May 15, 2023; UK access blocked from September 30, 2025, with embeds on other sites showing "Content not viewable in your region" | Anonymous uploads are the first purge candidates; a geo-block reaches every embed |
-| **Twitch** | 100-hour cap on highlights and uploads in 2025, least-viewed deleted first, clips and past broadcasts exempt, storage called "costly"; Korean network fees "10 times more expensive than in most other countries," mitigated with peer-to-peer delivery and a 720p source cap before exiting Korea on February 27, 2024 | Caps aimed at content that doesn't earn; delivery cost decides product quality by country |
+| **Meta (Haystack, 2010)** | Over 260 billion images and 20 PB; four sizes stored per upload; one billion new photos (60 TB) a week; over one million images a second at peak; a CDN serves the hottest photos and the long tail misses it | Storage systems are built for the long tail, not the popular files |
+| **Meta (f4, 2014)** | Warm storage for BLOBs whose request rate has cooled, chosen by age (one month for most types, three months for photos); Reed-Solomon (10,4) inside a datacenter and XOR across datacenters cut the effective replication factor from 3.6 to 2.8 or 2.1 over 65 PB; per-BLOB encryption keys, deleted to delete | Temperature tiers by age, erasure coding for warm data, deletion by key destruction |
 | **Pinterest** | Its 2025 10-K names dependence on AWS for "the vast majority" of compute, storage and data transfer, and a $312.3 million AWS commitment | A media platform's infrastructure bill is a disclosed business risk |
-| **Cloudflare R2, Images, Stream** | R2 storage $0.015 per GB-month, infrequent access $0.01 plus $0.01 per GB retrieved, no egress fee; Images $1 per 100,000 delivered; Stream $5 per 1,000 minutes stored and $1 per 1,000 delivered (as of October 2026) | Vendors meter different things, and the meter decides which behavior costs money |
-| **Amazon S3** | Storage classes from Standard to Glacier Deep Archive, with minimum storage durations of 30, 90 and 180 days on the colder classes; Intelligent-Tiering moves objects after 30 and 90 days without access | Cold tiers trade retrieval time and minimum charges for price |
+| **Twitch** | 100-hour cap on highlights and uploads in 2025, least-viewed deleted first, clips and past broadcasts exempt, storage called "costly" (as reported); Korean network fees "10 times more expensive than in most other countries," mitigated with peer-to-peer delivery and a 720p source cap before exiting Korea on February 27, 2024 | Caps aimed at content that doesn't earn; delivery cost decides product quality by country |
 
 Four patterns run through the table. **Access decays with age, then occasionally comes back:** Meta measured week-old content at an order of magnitude fewer requests than content under a day old for eight of nine types, and designed tiers around it. **The long tail is the storage system's real customer,** because the CDN absorbs the popular files and everything else misses. **Free storage ends in a cap,** and the cap's order (oldest first, least viewed first), exemptions and notice period are product decisions with public consequences. **Delivery cost is geographic:** the same stream costs ten times more to deliver in one country, and a platform's response (lower quality, peer assist, exit) is visible to every user there.
 
@@ -86,7 +86,7 @@ My rule: compute the cost per thousand views of each surface, not the monthly to
 
 ## Hotlinking, Embeds and Signed URLs
 
-A hotlink is another site's page loading your file directly from your URL. For an image host, embeds were often the product: Imgur was built in 2009 to host images for Reddit, and its files sit inside forum posts, wikis and tutorials across the web. For a platform that earns on its own pages, every view through someone else's page is delivery without an ad impression. Three policies, set per surface:
+A hotlink is another site's page loading your file directly from your URL. For an image host, embeds were often the product: Imgur, founded in 2009, is the example: its files sit inside forum posts, wikis and tutorials across the web. For a platform that earns on its own pages, every view through someone else's page is delivery without an ad impression. Three policies, set per surface:
 
 | Policy | How it works | Costs |
 | --- | --- | --- |
@@ -133,23 +133,23 @@ Free storage is a liability that grows forever while the revenue it supports doe
 
 | Platform | Cap | Order and exemptions | Notice |
 | --- | --- | --- | --- |
-| **Flickr** (2018 to 2019) | 1,000 photos and videos for free accounts, replacing 1 TB | Uploads blocked over the cap; deletion oldest first; Creative Commons photos exempt | Announced November 2018; uploads blocked January 8, 2019; deletion from February 5, 2019; batch download offered |
-| **Twitch** (2025) | 100 hours of highlights and uploads per channel | Least-viewed highlights deleted first; clips and past broadcasts exempt; under 0.5% of active channels affected | Announced February 2025 with a download or export recommendation before the April deadline |
-| **Imgur** (2023) | Old, unused content not tied to an account | Anonymous uploads first; sexually explicit content removed separately | Announced April 19, 2023, effective May 15, 2023 |
 | **Cloudflare Stream** (vendor) | Prepaid minutes stored | Uploads and new live streams stop when storage is exhausted | Not a purge: the customer buys more or deletes |
+| **Flickr** (2018 to 2019) | 1,000 photos and videos for free accounts, replacing 1 TB | Uploads blocked over the cap; deletion oldest first; Creative Commons photos exempt | Announced November 2018; uploads blocked January 8, 2019; deletion from February 5, 2019 |
+| **Imgur** (2023) | Old, unused content not tied to an account | Anonymous uploads first; sexually explicit content removed separately | Announced April 19, 2023, effective May 15, 2023 |
+| **Twitch** (2025) | 100 hours of highlights and uploads per channel | Least-viewed highlights deleted first; clips and past broadcasts exempt; under 0.5% of active channels affected (reported) | Announced February 2025 with a download or export recommendation before the April deadline |
 
 Design rules from the cases:
 
 - **Cap what doesn't earn.** Twitch exempted clips and past broadcasts, which drive discovery, and capped highlights, which it said didn't; Flickr exempted Creative Commons work that others depend on.
 - **Block before deleting.** Stopping new uploads over the cap is reversible; deleting is not. Flickr did both, in that order, a month apart.
 - **Make the order explicit.** Oldest first and least viewed first remove different things; the rule is versioned data the platform can publish ([Rules as Data](/docs/architecture/rules-as-data)), not a constant in the purge job.
-- **Account for paid tiers.** A cap is usually also a pricing decision (Flickr's Pro at $50 a year when the cap took effect), so the rule reads the account's plan at the time it runs.
+- **Account for paid tiers.** A cap is usually also a pricing decision (Flickr said reducing free storage ensures it runs on subscriptions), so the rule reads the account's plan at the time it runs.
 
 The live-video version, with VOD expiry tiers by creator status and Twitch's cap in detail, is [Retention Tiers and Storage Caps](/books/user-generated-platforms/live-latency-and-vods#retention-tiers-and-storage-caps).
 
 ## Withdrawing From a Country
 
-Sometimes the cheapest compliance answer a platform finds is to stop serving a country. Imgur blocked UK access from September 30, 2025, after the ICO issued its owner a notice of intent to fine it over children's data; Imgur content embedded on third-party sites stopped displaying for UK visitors, replaced by a "Content not viewable in your region" placeholder. The ICO's statement called the restriction a commercial decision and said that "exiting the UK does not allow an organisation to avoid responsibility" for past breaches, and the fine followed in February 2026. The regulatory side of that case belongs to [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#the-imgur-case) and [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#withdrawals); the delivery side belongs here, because a geo-block on a media host is a CDN rule with three consequences:
+Sometimes the cheapest compliance answer a platform finds is to stop serving a country. Imgur blocked UK access from September 30, 2025, after the ICO issued its owner a notice of intent to fine it over children's data; Imgur content embedded on third-party sites stopped displaying for UK visitors, replaced, as BleepingComputer reported, by a "Content not viewable in your region" placeholder. The ICO's statement called the restriction a commercial decision and said that "exiting the UK does not allow an organisation to avoid responsibility" for past breaches, and the fine followed in February 2026. The regulatory side of that case belongs to [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#the-imgur-case) and [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#withdrawals); the delivery side belongs here, because a geo-block on a media host is a CDN rule with three consequences:
 
 - **It reaches every embed.** The files are served from the platform's domain wherever they appear, so a block on the domain blanks images across other people's sites in that country. A community platform that blocks only its own pages leaves its files loading elsewhere; a media host can't.
 - **It's decided on the request, not the row.** The country comes from the CDN's geolocation of the viewer, not from the uploader's account or the asset, which is why the core model keeps jurisdiction on rows for rules but enforces geography at the edge.
@@ -197,13 +197,14 @@ CREATE TABLE media_near_matches (        -- perceptual near-duplicates; leads, n
   CHECK (asset_a_id < asset_b_id)         -- one row per pair
 );
 
-CREATE TABLE media_retention_rules (     -- caps and purges as versioned data
+CREATE TABLE media_retention_rules (     -- caps and purges as versioned data; Live Latency,
+                                         -- Playback & VODs specializes it for recordings
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   name            TEXT NOT NULL,
   version         INT NOT NULL,
   target          TEXT NOT NULL CHECK (target IN ('anonymous_upload', 'unattached_asset',
                     'inactive_asset', 'over_account_cap', 'unused_variant',
-                    'abandoned_upload')),
+                    'abandoned_upload', 'vod')),  -- 'vod': extended by vod_retention_rules
   plan            TEXT,                  -- account plan it applies to; null: all
   kind            TEXT CHECK (kind IN ('image', 'animation', 'video', 'audio', 'file')),
   idle_days       INT CHECK (idle_days > 0),      -- since last access or creation
@@ -335,10 +336,12 @@ Notes on the sketch:
 
 **Platform policies and press**
 
-- [Engadget: Flickr will start deleting your photos tomorrow if you're over its limit](https://www.engadget.com/2019-02-04-flickr-1000-photo-limit-psa.html), the 1,000-item cap, oldest-first deletion from February 5, 2019, Creative Commons exemption, the prior 1 TB, Pro at $50 a year
-- [Pixel Envy: Flickr announces free account changes](https://pxlnv.com/linklog/flickr-announces-free-account-changes/), the November 1, 2018 announcement quoting Flickr, the January 8, 2019 upload block and the February 5 deletion schedule
-- [Wikipedia: Imgur](https://en.wikipedia.org/wiki/Imgur), founded in 2009 to address file retention for images shared on Reddit
-- [How-To Geek: Imgur is about to break the world wide web](https://www.howtogeek.com/887420/imgur-is-about-to-break-the-world-wide-web/), the April 19, 2023 announcement, the May 15 effective date, anonymous inactive content, link rot in embeds
-- [TechCrunch: Twitch caps streamers' storage at 100 hours of highlights and uploads](https://techcrunch.com/2025/02/20/twitch-caps-streamers-storage-at-100-hours-of-highlights-and-uploads), the cap, exemptions, least-viewed-first deletion, share of channels affected, "costly" storage
-- [BleepingComputer: Imgur blocks UK users after data watchdog signals possible fine](https://www.bleepingcomputer.com/news/technology/imgur-blocks-uk-users-after-data-watchdog-signals-possible-fine/), the September 30, 2025 block and embeds showing "Content not viewable in your region"
-- [ICO: Statement on the Imgur investigation](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2025/09/statement-update-on-imgur-investigation/), the notice of intent and "exiting the UK does not allow an organisation to avoid responsibility"
+- [Flickr: Why we're changing Flickr free accounts](https://blog.flickr.net/en/2018/11/01/changing-flickr-free-accounts-1000-photos/), November 1, 2018: the 1,000-item limit from January 8, 2019, the free terabyte offered since 2013 and the subscription rationale
+- [Flickr: Important service updates and dates to remember](https://blog.flickr.net/en/2018/12/17/important-service-updates-and-dates-to-remember/), the upload block over 1,000 items from January 8, 2019, deletion from February 5, 2019 starting with the oldest, and Creative Commons photos licensed before November 1, 2018 exempt
+- [Imgur: Celebrating Imgur's Next Chapter](https://web.archive.org/web/20220101001803id_/https://blog.imgur.com/2021/09/27/celebrating-imgurs-next-chapter/), the 2009 founding (Imgur's own post; archived copy)
+- [Imgur: Terms of Service Update (April 19, 2023)](https://web.archive.org/web/20230420231041/https://help.imgur.com/hc/en-us/articles/14415587638029-Imgur-Terms-of-Service-Update-April-19-2023-), the May 15, 2023 effective date and the removal of "old, unused, and inactive content that is not tied to a user account" and of sexually explicit content (Imgur's own help article; archived copy, as the page is gone)
+- [Twitch: On-Demand Content on Twitch](https://help.twitch.tv/s/article/video-on-demand?language=en_US), the 100-hour storage limit across Highlights and Uploads
+- [TechCrunch: Twitch caps streamers' storage at 100 hours of highlights and uploads](https://techcrunch.com/2025/02/20/twitch-caps-streamers-storage-at-100-hours-of-highlights-and-uploads), Twitch's February 2025 announcement: exemptions, least-viewed-first deletion, share of channels affected, "costly" storage (reported)
+- [BleepingComputer: Imgur blocks UK users after data watchdog signals possible fine](https://www.bleepingcomputer.com/news/technology/imgur-blocks-uk-users-after-data-watchdog-signals-possible-fine/), embeds showing "Content not viewable in your region" (reported)
+- [ICO: Statement on the Imgur investigation](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2025/09/statement-update-on-imgur-investigation/), September 30, 2025: the notice of intent, the restriction as "a commercial decision" and "exiting the UK does not allow an organisation to avoid responsibility"
+- [ICO: Imgur owner MediaLab fined over children's privacy failures](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2026/02/imgur-owner-medialab-fined-over-children-s-privacy-failures), the £247,590 fine of February 5, 2026

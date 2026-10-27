@@ -17,11 +17,11 @@ This chapter covers post types and reposts, threading and its storage, the conte
 
 | Platform | Post shapes | Replies | Reactions | Default ranking |
 | --- | --- | --- | --- | --- |
+| **Bluesky, Threads, X** | Short posts with media, quotes and reposts | Reply threads | Likes, reposts, quotes | Following and algorithmic feeds |
+| **Imgur** | Gallery posts of one or more images | Nested comments | Up and down votes, favorites | A public gallery with "most viral" and "newest" views |
 | **Reddit** | Text, link and media posts | Nested comment trees | Up and down votes; every item starts with the author's upvote; votes are anonymous | Hot, confidence and controversy sorts in its published code (below); current production ranking not public |
-| **Imgur** | Gallery posts of one or more images | Nested comments | Up and down votes, favorites | A public gallery ranked by an algorithm over views, shares and votes with time, with "most viral" and user-submitted sections |
 | **Tumblr** | Posts of several formats | Reblogs with added commentary, replies | Likes, reblogs | Following feed plus recommendations |
 | **YouTube** | Videos, Shorts, community posts | Two-level comments | Likes and dislikes, with dislike counts private since November 2021 | Recommendation-driven |
-| **Bluesky, Threads, X** | Short posts with media, quotes and reposts | Reply threads | Likes, reposts, quotes | Following and algorithmic feeds |
 
 Two families emerge. **Forums vote:** Reddit and Imgur use up and down votes as a ranking signal inside a community or gallery, and the score is visible. **Social feeds react:** likes, reposts and quotes are signals for a personalized feed, and the count is social proof more than a rank. The data model below supports both; the next chapter, [Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations#what-the-feed-optimizes), decides how much each signal matters.
 
@@ -71,7 +71,7 @@ Both are **tombstones, not holes.** A removed or deleted comment keeps its place
 
 A label says what a piece of content contains so readers and the platform can treat it differently: blurred, hidden, behind a click, unavailable to minors, or ineligible for ads. Labels come from four sources, and the model keeps them apart:
 
-- **The author.** Tumblr's community labels, introduced in September 2022, let users tag their own posts for drug and alcohol addiction, violence and sexual content; readers choose to see labeled posts, see them behind a click-to-view, or block them; users under 18 can't see labeled content at all, and labeled posts can't be monetized through Tumblr's paid products. In the AT Protocol a record can carry self-labels, with the author's repository as the source and the record's version as the subject.
+- **The author.** Tumblr's community labels, launched on September 27, 2022, let users tag their own posts for addiction, violence and adult content; readers choose to show labeled posts, blur them behind a click, or hide them; users under 18 can't see mature-labeled content, and at launch labeled posts were reported to be barred from Tumblr's paid products. In the AT Protocol a record can carry self-labels, with the author's repository as the source and the record's version as the subject.
 - **Moderators,** applying a label when the author didn't.
 - **The platform,** from classifiers or review.
 - **Third-party labelers,** on Bluesky, which [Federation & Open Protocols](/books/user-generated-platforms/federation#labels-and-stackable-moderation) covers.
@@ -129,7 +129,7 @@ My rule for a new platform: ship hot for community front pages, confidence for c
 
 ## Viral Galleries
 
-An image host's public gallery is a front page fed by uploads from anyone, and its ranking is about velocity: how fast a post gathers views, votes and shares relative to its age and to what's normal for its section. Imgur's public gallery is described as ranked by an algorithm computing views, shares and votes over time, with a "most viral" section beside a "user submitted" one where new posts are tried out. The pattern generalizes:
+An image host's public gallery is a front page fed by uploads from anyone, and its ranking is about velocity: how fast a post gathers views, votes and shares relative to its age and to what's normal for its section. Imgur's public gallery shows a "most viral" view beside a "newest" one where fresh posts first appear (as of October 2026). The pattern generalizes:
 
 - **A proving ground.** New posts enter a "new" or "rising" pool seen by a small share of readers; those that outperform the pool's baseline in the first hours graduate to the main gallery. The baseline is per section and per hour of day, because a post at 3 a.m. gets fewer votes for reasons that have nothing to do with quality.
 - **Views as the denominator.** Votes per view is a better quality signal than raw votes, and it needs view counting that discounts bots and repeated views, the same logged-out and bot filtering a platform's usage metrics need.
@@ -307,7 +307,9 @@ Notes on the sketch:
 **In practice**
 
 - [Reddit: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1713445/000171344526000022/rddt-20251231.htm), every post and comment starting with one upvote, anonymous voting, community-driven visibility
-- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), posts and comments created and removed, removals by moderators and admins, warnings to users who upvoted violent content, persistent vote manipulation as a ground for automated bans
+- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), posts and comments created and removed, removals by moderators and admins, warnings to users who upvoted violent content, persistent vote manipulation as a ground for automated bans (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)
 - [YouTube: An update to dislikes on YouTube](https://blog.youtube/news-and-events/update-to-youtube/), private dislike counts and dislike attacks (November 10, 2021)
-- [TechCrunch: Tumblr community labels](https://techcrunch.com/2022/09/27/tumblr-bring-back-porn-nsfw-community-labels), label categories, reader choices, under-18 restrictions and monetization limits (September 2022)
-- [Wikipedia: Imgur](https://en.wikipedia.org/wiki/Imgur), the public gallery ranked by views, shares and votes over time, and its viral and user-submitted sections
+- [Matt Mullenweg (Automattic CEO): Tumblr Updates](https://ma.tt/2022/09/tumblr-updates/), September 28, 2022, the community labels launched the day before for addiction, violent and adult content, and the hide, blur or show choice
+- [Tumblr Help: Community labels](https://help.tumblr.com/community-labels/), mature-labeled posts hidden from users under 18 and their label settings locked (as of October 2026)
+- [TechCrunch: Tumblr community labels](https://techcrunch.com/2022/09/27/tumblr-bring-back-porn-nsfw-community-labels), labeled posts barred from monetization at launch (September 2022, reported)
+- [Imgur: home page gallery](https://imgur.com/), the Most Viral and Newest views (as of October 2026)

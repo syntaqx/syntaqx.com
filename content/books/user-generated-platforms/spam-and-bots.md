@@ -16,11 +16,11 @@ The same machinery catches something more serious than spam: coordinated network
 
 | Platform | Scale of spam reported | What it describes |
 | --- | --- | --- |
-| **Reddit** (Jul to Dec 2025) | 54% of 54,399,238 admin removals of posts and comments were spam; 76.7% of 605,570 community bans were for spam | Automated permanent bans for "repeated evasion of community or sitewide bans, persistent vote manipulation" and severe content; spam sanctions rose with "adversarial spam attacks" late in the year |
-| **Discord** (Mar 2025 to Mar 2026) | 47,832,832 accounts disabled for spam; 1,457,752 disabled under Platform Manipulation | Spam counted separately from all other enforcement; servers can require a verified phone to participate; AutoMod has spam and mention-spam rules |
 | **Bluesky** (2025) | 2.49 million spam reports; 370.14K accounts given a temporary "needs review" label; 3,619 accounts removed for influence operations | Detection by "heuristics, pattern matching, hash databases, and machine learning models," with lower-confidence flags sent to people |
-| **Pinterest** (Jul to Dec 2025) | 5,877,185 (Q3) and 5,516,053 (Q4) spam accounts deactivated | Spam Pins deactivated by automation (100% and over 99% automated) |
+| **Discord** (Mar 2025 to Mar 2026) | 47,832,832 accounts disabled for spam; 1,457,752 disabled under Platform Manipulation | Spam counted separately from all other enforcement; servers can require a verified phone to participate; AutoMod has spam and mention-spam rules |
 | **Meta** | Blocks "millions of attempts to create fake accounts every day" before they count | Fake accounts and coordinated inauthentic behavior as separate policies; periodic adversarial threat reports |
+| **Pinterest** (Jul to Dec 2025) | 5,877,185 (Q3) and 5,516,053 (Q4) spam accounts deactivated | Spam Pins deactivated by automation (100% and over 99% automated) |
+| **Reddit** (Jul to Dec 2025) | 54% of 54,399,238 admin removals of posts and comments were spam; 76.7% of 605,570 community bans were for spam | Automated permanent bans for "repeated evasion of community or sitewide bans, persistent vote manipulation" and severe content; spam sanctions rose with "adversarial spam attacks" late in the year |
 
 What these have in common is that the unit of enforcement is the account and the network, not the post. A spam post is removed by the thousand; the account that posted it, the accounts it shares a device or payment instrument with, and the community created to host it are what stop the next thousand. The platforms also report spam separately from everything else, because counting it in would swamp every other number.
 
@@ -60,12 +60,12 @@ A challenge is a moment of friction for an uncertain request: most people pass, 
 
 | Product | How it challenges | What the server does |
 | --- | --- | --- |
-| **reCAPTCHA v3** (Google) | No interaction; returns a score from 0.0 ("very likely a bot") to 1.0 per named action | Verify the token server-side, check the action name, choose your own threshold (Google suggests 0.5 to start); tokens expire after two minutes |
-| **hCaptcha** | Interactive challenges when needed; enterprise customers get a risk score | POST the token to `siteverify`; tokens are single-use and expire after 120 seconds by default |
-| **Cloudflare Turnstile** | "Non-interactive JavaScript challenges" including proof of work, proof of space and browser API probes; managed mode shows a checkbox only to riskier visitors | Siteverify required; each token valid 300 seconds and validated once (`timeout-or-duplicate` on replay); stated WCAG 2.2 AA conformance |
-| **Private Access Tokens** | No challenge: the device vendor (Apple, from iOS 16 and macOS 13) attests a real device and a token issuer signs a Privacy Pass token | The site learns only that a valid token was presented, not who or which device |
-| **Friendly Captcha** | A proof-of-work puzzle solved in the background while the user fills the form, plus risk signals | Verify server-side; no image tasks, no cookies, WCAG 2.2 AA claimed |
 | **Anubis** (open source) | A SHA-256 proof-of-work challenge for browser-like clients, default difficulty five leading zeroes, then a signed cookie | Built to shield small sites from AI scrapers; its authors call it "a bit of a nuclear response" that can block good bots like the Internet Archive |
+| **Cloudflare Turnstile** | "Non-interactive JavaScript challenges" including proof of work, proof of space and browser API probes; managed mode shows a checkbox only to riskier visitors | Siteverify required; each token valid 300 seconds and validated once (`timeout-or-duplicate` on replay); stated WCAG 2.2 AA conformance |
+| **Friendly Captcha** | A proof-of-work puzzle solved in the background while the user fills the form, plus risk signals | Verify server-side; no image tasks, no cookies, WCAG 2.2 AA claimed |
+| **hCaptcha** | Interactive challenges when needed; enterprise customers get a risk score | POST the token to `siteverify`; tokens are single-use and expire after 120 seconds by default |
+| **Private Access Tokens** | No challenge: the device vendor (Apple, from iOS 16 and macOS 13) attests a real device and a token issuer signs a Privacy Pass token | The site learns only that a valid token was presented, not who or which device |
+| **reCAPTCHA v3** (Google) | No interaction; returns a score from 0.0 ("very likely a bot") to 1.0 per named action | Verify the token server-side, check the action name, choose your own threshold (Google suggests 0.5 to start); tokens expire after two minutes |
 
 **Proof of work** changes the economics without asking anything of a person: each request costs the client CPU time, trivial for one sign-up and expensive for a hundred thousand. It doesn't distinguish people from machines, only cheap from expensive, so it's the right tool for floods (sign-ups, scraping) and the wrong one for low-volume, high-value abuse. **Attestation** (Private Access Tokens) moves trust to the device vendor and leaves out people on unsupported devices, so it's a way to skip a challenge, never a requirement.
 
@@ -109,9 +109,9 @@ What makes CIB different from spam is that the content can be indistinguishable 
 Not every bot is abuse. Platforms run on helpful automation (moderation bots, alert accounts, feeds), and the problem is the bot that pretends to be a person. The fix is a label the platform controls:
 
 - **Discord** marks every account that belongs to an OAuth2 application with a `bot` flag on the user object and gives reviewed bots a `VERIFIED_BOT` flag, so clients render the bot tag; a bot can't hide it.
-- **Twitter** began testing an "Automated" profile label in September 2021 with over 500 developer accounts, aimed at "good bots" such as vaccine-appointment finders; it was explicitly not a way to flag malicious bots pretending to be people.
+- **Twitter** began testing an "Automated" profile label in September 2021, MediaNama reported, with over 500 developer accounts, aimed at "good bots" such as vaccine-appointment finders; it was explicitly not a way to flag malicious bots pretending to be people.
 
-The law now asks for disclosure in some cases. California's B.O.T. Act (Business and Professions Code 17940 to 17943, from SB 1001) makes it unlawful to use a bot to communicate with a person in California "with the intent to mislead the other person about its artificial identity" in order to sell goods or services or "to influence a vote in an election"; disclosure must be "clear, conspicuous, and reasonably designed" to inform people they're talking to a bot. It defines a bot as "an automated online account where all or substantially all of the actions or posts" "are not the result of a person," and it expressly "does not impose a duty on service providers of online platforms." The duty sits on the bot's operator; the platform's role is to make honest disclosure easy. In the EU, AI Act Article 50(1), applicable from August 2, 2026, requires providers to ensure that AI systems "intended to interact directly with natural persons" are designed so people are informed they're dealing with an AI, which reaches AI-driven accounts and chat features; [AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms#labeling-ai-generated-content) covers AI-generated content labels.
+The law now asks for disclosure in some cases. California's bot disclosure law (Business and Professions Code 17940 to 17943, from SB 1001, operative 1 July 2019) makes it unlawful to use a bot to communicate with a person in California "with the intent to mislead the other person about its artificial identity" in order to sell goods or services or "to influence a vote in an election"; disclosure must be "clear, conspicuous, and reasonably designed" to inform people they're talking to a bot. It defines a bot as "an automated online account where all or substantially all of the actions or posts" "are not the result of a person," and it expressly "does not impose a duty on service providers of online platforms." The duty sits on the bot's operator; the platform's role is to make honest disclosure easy. In the EU, AI Act Article 50(1), applicable from August 2, 2026, requires providers to ensure that AI systems "intended to interact directly with natural persons" are designed so people are informed they're dealing with an AI, which reaches AI-driven accounts and chat features; [AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms#labeling-ai-generated-content) covers AI-generated content labels.
 
 My default: an `automated` declaration on the account, set by the operator or by the platform, rendered by every client, tied to the human account responsible for it; undeclared automation found by detection is a violation in itself (inauthentic behavior), declared automation is just an account with different rate limits ([Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#verification-and-badges) for badges and what backs them).
 
@@ -278,15 +278,15 @@ Notes on the sketch:
 
 **Statutes and regulations**
 
-- [California Business and Professions Code 17940](https://codes.findlaw.com/ca/business-and-professions-code/bpc-sect-17940/), definitions of bot and online platform, the 10 million monthly US visitor threshold
-- [California Business and Professions Code 17941](https://codes.findlaw.com/ca/business-and-professions-code/bpc-sect-17941/), unlawful undisclosed bots for sales or votes, clear and conspicuous disclosure
-- [California Business and Professions Code 17942](https://codes.findlaw.com/ca/business-and-professions-code/bpc-sect-17942/), no duty on online platform service providers
-- [EU AI Act Article 50: Transparency obligations](https://artificialintelligenceact.eu/article/50/), disclosure for AI systems interacting with people, application from August 2, 2026
-- [DSA Article 34: Risk assessment](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_34.html), intentional manipulation by inauthentic use or automated exploitation
+- [California Business and Professions Code 17940](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=BPC&sectionNum=17940), definitions of bot and online platform, the 10 million monthly US visitor threshold
+- [California Business and Professions Code 17941](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=BPC&sectionNum=17941), unlawful undisclosed bots for sales or votes, clear and conspicuous disclosure
+- [California Business and Professions Code 17942](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=BPC&sectionNum=17942), no duty on online platform service providers
+- [Regulation (EU) 2024/1689 (AI Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689), Article 50(1), disclosure for AI systems intended to interact directly with natural persons, and Article 113, application from 2 August 2026
+- [Regulation (EU) 2022/2065 (Digital Services Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065), Article 34(2), intentional manipulation by inauthentic use or automated exploitation
 
 **Platforms**
 
-- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), spam share of admin removals, community bans for spam, automated bans for vote manipulation, the upvote warning feature (copy hosted by TorrentFreak)
+- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), spam share of admin removals, community bans for spam, automated bans for vote manipulation, the upvote warning feature (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)
 - [Discord: Transparency Report, March 2025 to March 2026](https://cdn.discordapp.com/assets/transparency-reports/Discord-Transparency-Report-2026-Updated.pdf), spam accounts disabled, Platform Manipulation disables
 - [Discord: Rate Limits](https://docs.discord.com/developers/topics/rate-limits), 50 requests per second per bot, headers, the invalid request limit and temporary restriction
 - [Discord: Guild resource](https://docs.discord.com/developers/resources/guild), server verification levels including account age and verified phone
@@ -299,8 +299,8 @@ Notes on the sketch:
 - [Meta: Fake accounts](https://transparency.meta.com/reports/community-standards-enforcement/fake-accounts/facebook/), the fake account definition and creation attempts blocked daily
 - [Meta: Testing begins for Community Notes](https://about.fb.com/news/2025/03/testing-begins-community-notes-facebook-instagram-threads/), the end of US fact-checking, X's algorithm, contributor requirements, limits and no distribution penalty
 - [YouTube: New ways to offer viewers more context](https://blog.youtube/news-and-events/new-ways-to-offer-viewers-more-context/), the June 2024 notes pilot, eligibility and bridging
-- [MediaNama: Twitter tests labels for automated accounts](https://www.medianama.com/2021/09/223-twitter-bot-account-label/), the September 2021 "Automated" label test
-- [Daily Dot: Reddit hides vote counts](https://dailydot.com/news/reddit-vote-count-percent-like/), vote fuzzing as an anti-spam measure and the June 2014 change
+- [MediaNama: Twitter tests labels for automated accounts](https://www.medianama.com/2021/09/223-twitter-bot-account-label/), the September 2021 "Automated" label test, over 500 developer accounts, good bots only (reported; the announcement was on X, which blocks automated access)
+- [Daily Dot: Reddit hides vote counts](https://dailydot.com/news/reddit-vote-count-percent-like/), vote fuzzing as an anti-spam measure and the June 2014 change (reported, 19 June 2014)
 
 **Vendors and programs**
 

@@ -19,7 +19,7 @@ The Gaming volume's [Voice](/books/gaming/social-systems#voice) section covers v
 | **Reddit** | Reddit Talk, live audio rooms in communities (2021 to 2023) | A third-party audio vendor | Shut down March 21, 2023, after the vendor shut down its service |
 | **Platforms renting rooms** | Any | LiveKit (open-source SFU), Amazon IVS real-time stages, other real-time vendors | Vendor docs and pricing |
 
-The pattern: **rooms are channels.** On every platform that does voice well, a room is a kind of channel inside a community, with the channel's permissions deciding who can join, speak, share video, and mute or move others. That keeps voice inside the permission model and the moderation model rather than beside them. The other pattern is how often community voice is rented, and how hard that bites when the vendor leaves: Reddit closed Reddit Talk two years after launch because its "3rd party audio vendor" was shutting down, which raised the cost of keeping it running, and it limited recording downloads to a few months.
+The pattern: **rooms are channels.** On every platform that does voice well, a room is a kind of channel inside a community, with the channel's permissions deciding who can join, speak, share video, and mute or move others. That keeps voice inside the permission model and the moderation model rather than beside them. The other pattern is how often community voice is rented, and how hard that bites when the vendor leaves: Reddit closed Reddit Talk two years after launch because, as reported at the time, its "3rd party audio vendor" was shutting down, which raised the cost of keeping it running, and it limited recording downloads to a few months.
 
 ## Room Types
 
@@ -76,7 +76,7 @@ A stage is a broadcast with a live microphone, and its controls are permissions 
 - **Connect, speak and request to speak** decide who can enter, talk and ask to talk; a listener's raised hand is a request a moderator accepts or ignores.
 - **Mute, deafen, move and disconnect** let moderators handle a disruptive participant in seconds. In the permission catalog these are separate bits (mute members, for example), and they obey rank: a moderator can't mute someone above them.
 - **Timeouts** remove the ability to speak with everything else, as in text ([Communities, Roles & Permissions](/books/user-generated-platforms/communities-and-permissions#how-to-build-it)).
-- **Age rules** reach the stage: under Discord's teen-by-default settings, phased in from March 2026, accounts not verified as adults can't speak on stage.
+- **Age rules** reach the stage: Discord's February 2026 announcement of its teen-by-default settings (launched globally on September 23, 2026, after a delay) reserved speaking on stage for accounts confirmed as adults.
 
 Every moderation action in a room is a moderator action with a record ([Volunteer Moderation & Community Governance](/books/user-generated-platforms/volunteer-moderation#how-to-build-it)): who was muted or disconnected, by whom, in which session. Without recordings, those records and participants' reports are the only evidence of what happened in a room.
 
@@ -85,7 +85,7 @@ Every moderation action in a room is a moderator action with a record ([Voluntee
 Recording a room creates evidence, content and legal exposure at once. The law sets the floor:
 
 - **US federal law is one-party consent.** Under 18 U.S.C. 2511(2)(d) it isn't unlawful for a party to a communication, or someone with one party's prior consent, to intercept it, unless the purpose is a criminal or tortious act.
-- **Some states require all parties.** California, Delaware, Florida, Illinois, Maryland, Massachusetts, Montana, Nevada, New Hampshire, Pennsylvania and Washington are commonly listed as all-party consent states, with others nuanced; a room has participants from many states, so the strictest rule governs in practice.
+- **Some states require all parties.** Washington, for one, prohibits recording a private conversation without first obtaining the consent of all the persons engaged in it, and several other states have all-party rules of their own; a room has participants from many states, so the strictest rule governs in practice.
 - **In the EU and UK,** a recording of identifiable voices is personal data; recording needs a lawful basis, transparency and a retention limit ([GDPR](/docs/compliance/gdpr#lawful-bases)).
 
 The design that satisfies all of them is **notice before capture and a visible indicator throughout:** a participant joining a recorded room sees that it's recorded before their audio is sent, everyone sees an indicator while recording runs, and a participant who doesn't consent can listen without speaking or leave. A consent record per participant per session (shown, accepted, declined) is the evidence the notice was given.
@@ -213,6 +213,7 @@ Notes on the sketch:
 
 - [RFC 7667: RTP Topologies](https://www.rfc-editor.org/rfc/rfc7667), point-to-point, mesh, media-mixing mixers and selective forwarding middleboxes, simulcast and SVC
 - [18 U.S.C. 2511](https://www.law.cornell.edu/uscode/text/18/2511), the federal one-party consent exception in (2)(d)
+- [RCW 9.73.030](https://app.leg.wa.gov/RCW/default.aspx?cite=9.73.030), Washington's all-party consent rule for recording private conversations
 
 **Reference**
 
@@ -220,11 +221,11 @@ Notes on the sketch:
 - [Discord Developer Docs: Permissions](https://docs.discord.com/developers/topics/permissions), connect, speak, mute members and request-to-speak bits, and rank rules
 - [LiveKit: livekit repository](https://github.com/livekit/livekit), an open-source distributed WebRTC SFU in Go with simulcast, SVC, selective subscription, E2EE and multi-region deployment
 - [Amazon IVS: Pricing](https://aws.amazon.com/ivs/pricing/), real-time participant-hour pricing
-- [Rev: Phone call recording laws by state](https://www.rev.com/blog/productivity/phone-call-recording-laws-state), the commonly listed all-party consent states (a vendor summary, not legal advice)
 
 **In practice**
 
 - [Discord: How Discord handles two and a half million concurrent voice users using WebRTC (2018)](https://discord.com/blog/how-discord-handles-two-and-half-million-concurrent-voice-users-using-webrtc), scale, Elixir signaling and C++ SFU, ICE, SDP and DTLS changes, Salsa20, silence suppression, etcd discovery, assignment and failover
 - [Discord: Meet DAVE, end-to-end encryption for audio and video](https://discord.com/blog/meet-dave-e2ee-for-audio-video), MLS group keys, per-sender media keys, verification codes, the SFU unable to decrypt, open-source protocol and audits (September 17, 2024)
-- [TechCrunch: Discord to roll out age verification next month](https://techcrunch.com/2026/02/09/discord-to-roll-out-age-verification-next-month-for-full-access-to-its-platform/), unverified accounts unable to speak on stage (February 2026)
-- [TechCrunch: Reddit is shutting down its Clubhouse clone, Reddit Talk](https://techcrunch.com/2023/03/09/reddit-is-shutting-down-its-clubhouse-clone-reddit-talk), shutdown date, the vendor shutting down, and the recording download window (March 9, 2023)
+- [Discord: Discord Launches Teen-by-Default Settings Globally](https://discord.com/press-releases/discord-launches-teen-by-default-settings-globally), only confirmed adults able to speak on stage, and the February 24, 2026 delay
+- [Discord: Safer for Teens, Same Discord for Adults](https://discord.com/blog/safer-for-teens-same-discord-for-adults), the September 23, 2026 global launch
+- [TechCrunch: Reddit is shutting down its Clubhouse clone, Reddit Talk](https://techcrunch.com/2023/03/09/reddit-is-shutting-down-its-clubhouse-clone-reddit-talk), shutdown date, the vendor shutting down, and the recording download window (March 9, 2023, reported)

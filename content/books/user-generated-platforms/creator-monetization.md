@@ -18,12 +18,12 @@ As of October 2026, from each platform's public pages:
 
 | Platform | What viewers and members pay for | Programs a creator joins | Notes |
 | --- | --- | --- | --- |
-| **YouTube** | Channel memberships, Super Chat, Super Stickers, Super Thanks; ads; Premium; tagged products | YouTube Partner Program modules (watch page, Shorts, commerce); Shopping affiliate | One program, accepted module by module; splits published per module |
-| **Twitch** | Subscriptions at three tiers, gift subs, Bits, ads, Prime subs | Affiliate, then Partner; the Plus Program for higher sub splits; Ads Incentive; DJ Program; sponsorship offers | Splits change with program level and points; currency is Bits |
-| **Kick** | Subscriptions | Creator incentive pay at an hourly rate | Kick says creators keep 95% of subscription earnings |
 | **Discord** | Server Subscriptions (up to three tiers), one-time purchases in a Server Shop | Server monetization through Stripe, US owners only | 90% to the owner before fees |
-| **Reddit** | Gold given on posts and comments | Contributor Program | Fixed cash per gold by karma tier |
-| **Patreon** | Memberships | The platform plan the creator's page was published under | 10% for pages published after August 4, 2025 |
+| **Kick** | Subscriptions | Creator incentive pay at an hourly rate | 95% of subscription earnings to creators, as Tubefilter reported in February 2024 |
+| **Patreon** | Memberships | The platform plan the creator's page was published under | 10% for pages published after August 4, 2025, as AlternativeTo reported |
+| **Reddit** | Gold given on posts and comments | Contributor Program | Fixed cash per gold by karma tier, with a $10 minimum payout |
+| **Twitch** | Subscriptions at three tiers, gift subs, Bits, ads, Prime subs | Affiliate, then Partner; the Plus Program for higher sub splits; Ads Incentive; DJ Program; sponsorship offers | Splits change with program level and points; currency is Bits |
+| **YouTube** | Channel memberships, Super Chat, Super Stickers, Super Thanks; ads; Premium; tagged products | YouTube Partner Program modules (watch page, Shorts, commerce); Shopping affiliate | One program, accepted module by module; splits published per module |
 
 Two models sit behind the table. **Direct support** (subscriptions, gifts, tips, paid messages) is money a fan pays for a specific creator, so the creator's share is a percentage or a fixed amount of an identifiable payment. **Pooled programs** (ad shares, Shorts, Premium, engagement pools) divide revenue the platform earned from someone else (advertisers, all subscribers) by a measure of each creator's contribution, so the creator's share is an allocation the platform computes after the period closes. The first is a ledger problem; the second is a measurement problem, and most of the fraud in this chapter lives there.
 
@@ -31,7 +31,7 @@ Two models sit behind the table. **Direct support** (subscriptions, gifts, tips,
 
 A creator subscription is a recurring payment from a fan to a creator or a community, at a price the platform or the creator sets from a fixed menu, with perks the platform delivers: badges, emotes, ad-free viewing on that channel, members-only posts and chats. The mechanics of renewal, dunning, proration and cancellation are the playbook's [Subscriptions](/docs/payments/subscriptions); what's different here is that every renewal also creates earnings for someone else.
 
-The menus are narrow on purpose. Twitch's Partner page lists subscriptions at $5.99, $9.99 and $24.99; Discord lets a server owner create one to three paid tiers; YouTube lets a creator define membership levels and perks, and its policy prohibits some perks outright (content downloads, in-person one-to-one meetings, random-selection prizes, perks aimed at children). A fixed menu keeps prices comparable across creators, lets the platform localize them, and keeps the platform's checkout, tax and store SKUs manageable; a creator-set free price would need a store SKU per amount on mobile.
+The menus are narrow on purpose. Twitch's Partner page lists subscriptions at $5.99, $9.99 and $24.99; Discord lets a server owner create paid tiers (up to three at launch, as Tubefilter reported); YouTube lets a creator define membership levels and perks, and its policy prohibits some perks outright (content downloads, in-person one-to-one meetings, random-selection prizes, perks aimed at children). A fixed menu keeps prices comparable across creators, lets the platform localize them, and keeps the platform's checkout, tax and store SKUs manageable; a creator-set free price would need a store SKU per amount on mobile.
 
 ### Tiers, Points and Program Levels
 
@@ -51,7 +51,7 @@ A $5.99 subscription is a different purchase in Istanbul than in Seattle. Twitch
 
 Two parts of that rollout are patterns any platform needs. **Existing subscribers moved too:** Twitch applied the local price to existing subs, new subs and gift subs. **Creators were protected through the transition:** Twitch covered 100% of a creator's baseline channel and Prime sub revenue for three calendar months including the month of the change, then reduced the top-up by 25% every three months over the next nine, for creators streaming at least 85% of their baseline hours. A price change that lowers a creator's income is a program change, and the guarantee is a time-limited earnings program of its own.
 
-Price increases run the other way. Twitch raised the US Tier 1 price from $4.99 to $5.99 on web from July 11, 2024, in over 30 countries; existing subscriptions renewed at the new price unless the viewer cancelled, mobile app prices were to follow with at least 30 days' notice, and the streamer's percentage stayed the same, so creators received more per sub. Whether an existing subscriber can be moved to a new price without fresh consent depends on the jurisdiction and the store ([The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal)); [Monetization Strategies](/books/user-generated-platforms/monetization-strategies#pricing-and-regional-pricing) covers how platforms set regional price tables.
+Price increases run the other way. Twitch raised the US Tier 1 price from $4.99 to $5.99 on web from July 11, 2024, in over 30 countries; Shacknews reported that existing subscriptions renewed at the new price unless the viewer cancelled, mobile app prices were to follow with at least 30 days' notice, and the streamer's percentage stayed the same, so creators received more per sub. Whether an existing subscriber can be moved to a new price without fresh consent depends on the jurisdiction and the store ([The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal)); [Monetization Strategies](/books/user-generated-platforms/monetization-strategies#pricing-and-regional-pricing) covers how platforms set regional price tables.
 
 ### Store Billing
 
@@ -69,9 +69,9 @@ With a currency, the creator's share is fixed in currency units and the viewer's
 | --- | --- | --- | --- |
 | 100 Bits on desktop web | $1.40 | $1.00 | $0.40 |
 | 95 Bits in the mobile app | $1.99 | $0.95 | $1.04, before the store's fee |
-| 1 Gold on Reddit | $1.99 | $0.90, or $1.00 for Top Contributors | $1.09 or $0.99 |
+| 1 Gold on Reddit (September 2023) | $1.99 | $0.90, or $1.00 for Top Contributors | $1.09 or $0.99 |
 
-Reddit's Contributor Program, which began rolling out in the US on September 25, 2023, paid $0.90 per gold to Contributors with 100 to 4,999 karma in a 12-month period and $1.00 to Top Contributors with 5,000 or more, with gold sold from $1.99 for one to $49.00 for 25. The spread pays for payment processing, store fees on mobile, fraud and chargebacks, and the platform's margin; it's also why the creator's figure is the one platforms publish.
+Reddit's Contributor Program, which began rolling out in the US on September 25, 2023, paid $0.90 per gold to Contributors with 100 to 4,999 karma in a 12-month period and $1.00 to Top Contributors with 5,000 or more, with gold sold from $1.99 for one to $49.00 for 25, as Social Media Today reported at launch. As of October 2026 Reddit's help center prices payouts per unit of gold used to give an award: $0.009 for Contributors (100 to 4,999 karma) and $0.01 for Top Contributors (5,000 or more), with a $10 minimum. The spread pays for payment processing, store fees on mobile, fraud and chargebacks, and the platform's margin; it's also why the creator's figure is the one platforms publish.
 
 Twitch's reason for ending Hype Chat shows the other side of a currency. When it announced in November 2023 that it would deprecate the feature, Twitch said viewers "saw more value in Cheering because it was easier to understand exactly how much streamers earned from Bits," and cited difficulty tracking earnings after currency conversion on direct Hype Chat purchases. A currency with a fixed creator value is easier to explain than a percentage of a local-currency payment after fees.
 
@@ -119,11 +119,11 @@ Both are earnings with no fan payment behind them. They're funded from the platf
 
 ## Music Costs Shared With Creators
 
-Music is the cost creators most often bring onto a platform. Two programs publish how they share it. YouTube's Shorts pool takes the music licensing share out before the Creator Pool is divided, so creators who use music and those who don't keep the same 45% of their allocation, and the cost falls on the pool. Twitch's DJ Program, announced in June 2024, licensed music from Universal, Warner, Sony and independent labels through Merlin, with Twitch splitting the licensing cost 50/50 with DJ Program partners and subsidizing existing DJs for a year. A cost share deducted from a creator's earnings is a line on the statement, computed by rule, and the rule is a program term with an effective date. Matching music in uploads and streams is [Copyright at Scale](/books/user-generated-platforms/copyright#fingerprinting-and-content-id).
+Music is the cost creators most often bring onto a platform. Two programs publish how they share it. YouTube's Shorts pool takes the music licensing share out before the Creator Pool is divided, so creators who use music and those who don't keep the same 45% of their allocation, and the cost falls on the pool. Twitch's DJ Program, announced in June 2024, licensed music from Universal, Warner, Sony and independent labels through Merlin, as Tubefilter reported, with Twitch splitting the licensing cost 50/50 with DJ Program partners and subsidizing existing DJs for a year. A cost share deducted from a creator's earnings is a line on the statement, computed by rule, and the rule is a program term with an effective date. Matching music in uploads and streams is [Copyright at Scale](/books/user-generated-platforms/copyright#fingerprinting-and-content-id).
 
 ## Sponsorships, Affiliates and Disclosure
 
-Much of what creators earn never passes through the platform: a brand pays the creator directly to mention a product. Platforms care because sponsored content competes with the ads they sell, and because the law requires disclosure. Twitch's June 2023 branded content guidelines would have banned burned-in video, display and audio ads in streams from July 1; Twitch withdrew them the next day, saying they were "bad for you and bad for Twitch." By 2025 Twitch was brokering deals instead, saying it would help 10 times more creators secure brand deals than in 2024 and rolling sponsorship offers out to Affiliates. Brokered sponsorships make the platform a party to the money, with a split, a contract and earnings like any other program.
+Much of what creators earn never passes through the platform: a brand pays the creator directly to mention a product. Platforms care because sponsored content competes with the ads they sell, and because the law requires disclosure. Twitch's June 2023 branded content guidelines would have banned burned-in video, display and audio ads in streams from July 1; Marketing Brew reported that Twitch withdrew them the next day, saying they were "bad for you and bad for Twitch." By 2025 Twitch was brokering deals instead, saying it would help 10 times more creators secure brand deals than in 2024 and rolling sponsorship offers out to Affiliates. Brokered sponsorships make the platform a party to the money, with a split, a contract and earnings like any other program.
 
 Affiliate commerce brings the merchant to the platform. In YouTube's Shopping affiliate program, a creator in the Partner Program, in an eligible country and not running a music or made-for-kids channel, tags products, and earns a commission when a viewer clicks the tag and buys on the retailer's site; sellers set the rates, may offer custom rates to some creators, and the commission is computed at the rate on the day of purchase, not the day the product was tagged. Attribution, rate on purchase date, and reversal on return are the parts a platform builds. Creator codes in game stores and Drops for watching streams are the same pattern inside games ([Affiliate Codes and Drops](/books/gaming/creator-economies#affiliate-codes-and-drops)).
 
@@ -135,18 +135,18 @@ The creator's share on each product, as published as of October 2026:
 
 | Platform | Product | Creator's share | Of what |
 | --- | --- | --- | --- |
+| Discord | Server Subscriptions | 90%, before fees | Each membership |
+| Kick | Subscriptions | 95% | Subscription earnings |
+| Patreon | Memberships | 90%, before processing (pages published after August 4, 2025) | Membership payments |
+| Reddit | Gold | $0.009 or $0.01 per unit of gold | Gold used to give awards |
+| Twitch | Subscriptions | 50%; 60% at 100 Plus Points; 70% at 300 | Net subscription revenue |
+| Twitch | Prime Gaming subscriptions | $2.25 (US, Canada), $1.80 (UK), as reported in January 2024 | Fixed per subscription |
+| Twitch | Bits | $0.01 per Bit; 80% of that in extensions | Bits used |
+| Twitch | Ads | 55% with at least three ad minutes an hour; 30% below | Net ad revenue |
 | YouTube | Watch-page ads | 55% | Net ad revenue on the creator's public videos |
 | YouTube | Shorts ads | 45% | The creator's allocation from the Creator Pool |
 | YouTube | Memberships, Super Chat, Super Stickers, Super Thanks | 70% | Net revenue |
 | YouTube | Premium (Shorts) | 45% | Net Premium revenue allocated by Shorts views |
-| Twitch | Subscriptions | 50%; 60% at 100 Plus Points; 70% at 300 | Net subscription revenue |
-| Twitch | Prime Gaming subscriptions | $2.25 (US, Canada), $1.80 (UK) | Fixed per subscription |
-| Twitch | Bits | $0.01 per Bit; 80% of that in extensions | Bits used |
-| Twitch | Ads | 55% with at least three ad minutes an hour; 30% below | Net ad revenue |
-| Kick | Subscriptions | 95% | Subscription earnings |
-| Discord | Server Subscriptions | 90%, before fees | Each membership |
-| Reddit | Gold | $0.90 or $1.00 per gold | Gold received |
-| Patreon | Memberships | 90%, before processing (pages published after August 4, 2025) | Membership payments |
 
 The percentages hide the base. "Net" excludes taxes (YouTube says transaction taxes aren't revenue to Google and are excluded) and may exclude store fees and processing; Discord's help center warns that "various fees" affect the final amount. A creator comparing platforms needs the base as much as the rate, which is why the terms record what the share is computed on.
 
@@ -348,25 +348,26 @@ Creator earnings are income someone will dispute, report to a tax authority and 
 - [YouTube: Invalid traffic on your videos](https://support.google.com/youtube/answer/10285842?hl=en), withheld or offset earnings, holds up to 90 days, no recovery by editing or deleting
 - [Twitch: Partners](https://www.twitch.tv/p/en/partners/), subscription prices of $5.99, $9.99 and $24.99, one cent per Bit, ad revenue share
 - [Twitch: A more flexible Ads Incentive Program coming in April](https://blog.twitch.tv/en/2023/03/09/a-more-flexible-ads-incentive-program-coming-in-april), 55% and 30% net ad revenue shares, the three-minute minimum, April 1, 2023
+- [Twitch: An update to several streamer payout programs](https://blog.twitch.tv/en/2024/01/24/an-update-to-several-streamer-payout-programs/), the January 24, 2024 Plus Program announcement: 60/40 at 100 points for three consecutive months, 70/30 at 300, point values, Affiliates eligible from May 1, 2024, the cap removal and fixed Prime Gaming rates by country
+- [Twitch: Introducing Hype Chat](https://blog.twitch.tv/en/2023/06/22/introducing-hype-chat-a-new-way-to-stand-out), prices from $1 to $500, Partners only, 70/30 (June 2023), and the November 2023 update deprecating it and Twitch's reasons
 - [Twitch: Local sub pricing expands worldwide](https://blog.twitch.com/en/2021/08/05/local-sub-pricing-expands-worldwide/), prices by location, existing subs included, the revenue adjustment, support rates by region, gifting results
 - [Twitch: Ten years of TwitchCon, Rotterdam](https://blog.twitch.tv/en/2025/05/31/ten-years-of-twitchcon-here-s-what-we-announced-in-rotterdam), gift sub promotions, pre-Affiliate earnings, over 1 million Affiliates
 - [Twitch: Ten years of TwitchCon, San Diego](https://blog.twitch.com/en/2025/10/17/ten-years-of-twitchcon-here-s-what-we-announced-in-san-diego/), gifting lift from promotions, Combos with Bits, sponsorship offers for Affiliates
 - [Twitch Developers: Extensions monetization](https://dev.twitch.tv/docs/extensions/monetization/), Bits products, revenue shared between broadcaster and developer
 - [Discord: Creator Revenue FAQ](https://creator-support.discord.com/hc/en-us/articles/10424143128343-Creator-Revenue-FAQ), the 90/10 split, eligibility, US only, Stripe and monthly payouts
+- [Discord: Server and creator subscriptions](https://discord.com/blog/server-and-creator-subscriptions), the December 1, 2022 US launch, tiers from $2.99 to $199.99 and the 90% owner share
+- [Reddit Help: Understanding Contributor Earnings & Payouts](https://support.reddithelp.com/hc/en-us/articles/17331720493972-Understanding-Contributor-Earnings-Payouts), payout per unit of gold by karma tier and the $10 minimum
 - [Patreon: Understanding Apple requirements for Patreon](https://news.patreon.com/articles/understanding-apple-requirements-for-patreon), the 30% fee on new iOS memberships, billing model changes, the iOS price tool (August 2024)
 - [FTC: FTC's Endorsement Guides, What People Are Asking](https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking), material connections, affiliate links, disclosure in video and livestreams, platform tools, the 2023 revision and 16 CFR Part 255
 
 **In practice**
 
-- [Insider Gaming: Twitch makes changes to streamer payouts](https://insider-gaming.com/twitch-makes-changes-to-streamer-payouts/), the Plus Program announcement of January 24, 2024: 60/40 at 100 points, 70/30 at 300, point values, the cap removal, Prime rates (secondary)
-- [AlternativeTo: Twitch expands Plus Program with a 60/40 split](https://alternativeto.net/news/2024/1/twitch-expands-plus-program-to-more-streamers-with-new-60-40-revenue-split/), Affiliates eligible and the three consecutive months rule (secondary)
-- [Shacknews: Twitch subscription price increase](https://shacknews.com/article/140084/twitch-subscription-price-increase-july-2024), $5.99 Tier 1 from July 11, 2024, existing subs renewing at the new price, mobile notice (secondary)
-- [Streamlabs: What are Twitch Bits worth](https://streamlabs.com/content-hub/post/what-are-twitch-bits-worth), Bits pack prices on desktop and mobile, updated February 2024 (secondary)
-- [Tubefilter: Twitch Hype Chat](https://tubefilter.com/2023/06/23/twitch-hype-chat-revenue/), prices from $1 to $500, Partners only, 70/30 (June 2023)
-- [Tubefilter: Twitch will deprecate Hype Chat](https://www.tubefilter.com/?p=176946), the November 2023 decision and Twitch's reasons
-- [Tubefilter: Kick's Creator Incentive Program](https://tubefilter.com/2024/02/01/kick-creator-incentive-program-launches-all-streamers/), hourly incentive pay and the 95% subscription share (February 2024)
-- [Tubefilter: Discord server subscriptions open to US servers](https://www.tubefilter.com/2022/12/01/discord-creator-monetization-server-memberships-open-to-us-servers/), up to three tiers from $2.99 to $199.99 (December 2022)
-- [Tubefilter: Twitch DJ Program](https://www.tubefilter.com/2024/06/07/twitch-dj-category-music-licensing-program/), the labels, the 50/50 cost split and the one-year subsidy (June 2024)
-- [Social Media Today: Reddit launches new Reddit Gold program](https://www.socialmediatoday.com/news/reddit-launches-new-reddit-gold-program-will-see-top-contributors-paid/694665/), the Contributor Program launch, gold prices and payout per gold by karma tier (September 2023)
-- [AlternativeTo: Patreon is increasing platform fees for new creators](https://alternativeto.net/news/2025/6/patreon-is-increasing-platform-fees-for-new-creators-starting-august-2025/), the 10% standard fee for pages published after August 4, 2025 (secondary)
-- [Marketing Brew: Twitch scraps new ad guidelines after creator uproar](https://www.marketingbrew.com/stories/2023/06/08/twitch-scraps-new-ad-guidelines-after-creator-uproar), the burned-in ad ban and its retraction (June 2023)
+- [Insider Gaming: Twitch makes changes to streamer payouts](https://insider-gaming.com/twitch-makes-changes-to-streamer-payouts/), the January 2024 Prime Gaming rates (reported)
+- [Shacknews: Twitch subscription price increase](https://shacknews.com/article/140084/twitch-subscription-price-increase-july-2024), $5.99 Tier 1 from July 11, 2024, existing subs renewing at the new price, mobile notice (reported)
+- [Streamlabs: What are Twitch Bits worth](https://streamlabs.com/content-hub/post/what-are-twitch-bits-worth), Bits pack prices on desktop and mobile, updated February 2024 (reported)
+- [Tubefilter: Kick's Creator Incentive Program](https://tubefilter.com/2024/02/01/kick-creator-incentive-program-launches-all-streamers/), hourly incentive pay and the 95% subscription share (February 2024, reported)
+- [Tubefilter: Discord server subscriptions open to US servers](https://www.tubefilter.com/2022/12/01/discord-creator-monetization-server-memberships-open-to-us-servers/), up to three tiers (December 2022, reported)
+- [Tubefilter: Twitch DJ Program](https://www.tubefilter.com/2024/06/07/twitch-dj-category-music-licensing-program/), the labels, the 50/50 cost split and the one-year subsidy (June 2024, reported)
+- [Social Media Today: Reddit launches new Reddit Gold program](https://www.socialmediatoday.com/news/reddit-launches-new-reddit-gold-program-will-see-top-contributors-paid/694665/), the Contributor Program launch, gold prices and payout per gold by karma tier (September 2023, reported)
+- [AlternativeTo: Patreon is increasing platform fees for new creators](https://alternativeto.net/news/2025/6/patreon-is-increasing-platform-fees-for-new-creators-starting-august-2025/), the 10% standard fee for pages published after August 4, 2025 (reported)
+- [Marketing Brew: Twitch scraps new ad guidelines after creator uproar](https://www.marketingbrew.com/stories/2023/06/08/twitch-scraps-new-ad-guidelines-after-creator-uproar), the burned-in ad ban and its retraction (June 2023, reported)

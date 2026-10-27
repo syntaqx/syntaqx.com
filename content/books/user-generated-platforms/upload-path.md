@@ -17,14 +17,14 @@ What platforms and upload vendors publish about their upload paths, as of Octobe
 
 | Platform or vendor | How bytes get in | Published limits | After the bytes land |
 | --- | --- | --- | --- |
-| **YouTube** | Resumable upload sessions in its Data API: a session URI, chunked `PUT`s, `308 Resume Incomplete` with the confirmed range | 256 GB or 12 hours, whichever is less; 15 minutes until the account is verified | Processing before the video plays; a published encoding spec for what to upload |
-| **Mastodon** | `POST /api/v2/media` to the instance | Published per instance through its API (the docs' example: 16,777,216 bytes and 33,177,600 pixels for images, 103,809,024 bytes and 120 fps for video) | Large video, GIF and audio return `202 Accepted`; clients poll until `206 Partial Content` becomes `200 OK` |
-| **Discord** | Attachment upload in the client | Per plan: the free limit was announced in September 2024 to drop from 25 MB to 10 MB, with Nitro Basic at 50 MB and Nitro at 500 MB | Attachments shown in the message |
+| **Amazon S3** | Presigned `PUT` URLs; multipart upload for large objects | Presigned URLs valid up to 7 days from the SDKs; parts numbered 1 to 10,000; multipart recommended from 100 MB | Parts are billed until the upload is completed or aborted |
 | **Cloudflare Images** | Direct Creator Upload: the backend requests a one-time upload URL, the user's browser uploads to it without the platform's token | 10 MB, 100 megapixels, 12,000 pixels on a side; animations limited by total megapixels across frames; HEIC accepted as input | A draft image record exists from the moment the URL is issued until the file arrives |
 | **Cloudflare Stream** | Direct creator uploads: a basic `POST` under 200 MB, the tus protocol above | A required `maxDurationSeconds` reserved against storage until the upload arrives | Webhooks or polling for the video's status |
-| **Mux** | Direct uploads: the API returns an authenticated, resumable URL with a CORS origin set to the platform's app | Chunks in multiples of 256 KB, sent in order | `video.upload.asset_created`, then `video.asset.ready` webhooks |
-| **Amazon S3** | Presigned `PUT` URLs; multipart upload for large objects | Presigned URLs valid up to 7 days from the SDKs; parts numbered 1 to 10,000; multipart recommended from 100 MB | Parts are billed until the upload is completed or aborted |
+| **Discord** | Attachment upload in the client | Per plan: the free limit is 20 MB (raised from 10 MB in August 2026), Nitro Basic 50 MB, Nitro up to 1 GB | Attachments shown in the message |
 | **Google Cloud Storage** | Resumable upload sessions | Sessions last up to a week; a size range can be enforced with a request header | The session URI itself is the credential |
+| **Mastodon** | `POST /api/v2/media` to the instance | Published per instance through its API (the docs' example: 16,777,216 bytes and 33,177,600 pixels for images, 103,809,024 bytes and 120 fps for video) | Large video, GIF and audio return `202 Accepted`; clients poll until `206 Partial Content` becomes `200 OK` |
+| **Mux** | Direct uploads: the API returns an authenticated, resumable URL with a CORS origin set to the platform's app | Chunks in multiples of 256 KB, sent in order | `video.upload.asset_created`, then `video.asset.ready` webhooks |
+| **YouTube** | Resumable upload sessions in its Data API: a session URI, chunked `PUT`s, `308 Resume Incomplete` with the confirmed range | 256 GB or 12 hours, whichever is less; 15 minutes until the account is verified | Processing before the video plays; a published encoding spec for what to upload |
 
 Four patterns run through the table. **Nobody proxies bytes through the application:** every vendor's design hands the client a scoped, expiring credential for one upload and keeps the platform's API in charge of permission, not transport. **Big files are resumable by default:** YouTube, Stream above 200 MB, Mux and S3 multipart all assume the connection will drop and give the client a way to ask "how much did you get?" **Limits are published and enforced in more than one place:** in bytes at the storage layer, in pixels and duration at the decoder, and in plan tiers at the product, and Mastodon goes as far as publishing them in its API so clients can resize before sending. **Upload is not publish:** every service returns an object that exists but isn't ready (a draft image, a `202`, an asset waiting for a webhook), and the product shows "processing" until the pipeline says otherwise.
 
@@ -250,7 +250,7 @@ Notes on the sketch:
 - **Every scan, with versions.** Scanner, version, list and list version, verdict, score, duration and raw result, so a CyberTipline report, a copyright dispute or an appeal can show exactly what matched and when, and a list update can be traced to the back-scan it triggered.
 - **Every rejection and its reason,** so a creator who says "the upload failed" gets an answer, and limit changes can be measured against how many honest uploads they turn away.
 - **Every state change of an asset,** including who or what released a quarantined asset and on which case decision.
-- **Limits in force at the time.** Which size, pixel and duration caps applied to an account's plan on the day of an upload, because the caps change (Discord's free tier went from 25 MB to 10 MB) and a dispute about a rejected file is judged against the rule of the day.
+- **Limits in force at the time.** Which size, pixel and duration caps applied to an account's plan on the day of an upload, because the caps change (Discord's free limit went from 10 MB to 20 MB in August 2026) and a dispute about a rejected file is judged against the rule of the day.
 
 ## What This Means for the System You Build
 
@@ -294,7 +294,7 @@ Notes on the sketch:
 - [Mastodon: Instance entity](https://docs.joinmastodon.org/entities/Instance/), media attachment limits published in the API
 - [Mastodon: Media API methods](https://docs.joinmastodon.org/methods/media/), `202 Accepted` for asynchronous processing, `206 Partial Content` while processing
 - [Apple: Using HEIF or HEVC media on Apple devices](https://support.apple.com/en-us/116944), HEIF and HEVC capture from iPhone 7, the Most Compatible setting, conversion depending on how media is shared
-- [Gigazine: Discord limits file size for free users to 10MB](https://gigazine.net/gsc_news/en/20240906-discord-file-size-upload-limit), the 25 MB to 10 MB change, Nitro Basic and Nitro limits, the storage rationale (September 2024)
+- [Discord: File Attachments FAQ](https://support.discord.com/hc/en-us/articles/25444343291031-File-Attachments-FAQ), the 20 MB free limit (up from 10 MB as of August 2026), Nitro Basic at 50 MB and Nitro at up to 1 GB
 
 **Vulnerabilities**
 

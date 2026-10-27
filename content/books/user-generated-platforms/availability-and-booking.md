@@ -15,11 +15,11 @@ Three tensions run through this chapter. **Control against conversion:** hosts w
 
 | Platform | Ways to book | Request window | Instant book | Calendar sync |
 | --- | --- | --- | --- | --- |
+| **Airbnb** | Request to book, Instant Book | Superhosts answer 90% of new messages and accept or decline requests within 24 hours | Host setting | iCal every three hours (Property Tech covers it) |
+| **eBay, Etsy** | Purchase at checkout | Not applicable | Every purchase is instant | Stock, not calendars |
 | **Outdoorsy** | Booking request, instant book, custom quote | Requests expire if the host doesn't respond in 24 hours | Per listing: all trips, only stationary (delivered) trips, only pickup trips, or manual approval for all; lightning-bolt badge and a ranking factor | iCal import and export, refreshed every two hours, one listing per connection; export carries only Outdoorsy-made bookings |
 | **RVshare** | Contact owner, request a quote, request to book | Not published | Not published | Not published |
-| **Airbnb** | Request to book, Instant Book | Superhosts answer 90% of new messages and accept or decline requests within 24 hours | Host setting | iCal every three hours (Property Tech covers it) |
 | **Turo** | Book; extensions and changes requested in-app | Not published | Host setting | Not a channel-manager market |
-| **eBay, Etsy** | Purchase at checkout | Not applicable | Every purchase is instant | Stock, not calendars |
 
 The guest's identity is part of booking. Airbnb gives a booking guest 12 hours to complete identity verification (1 hour if check-in is within 12 hours) or the reservation stays pending; Outdoorsy verifies every driver before coverage applies ([Marketplace Fraud & Risk](/books/user-generated-platforms/marketplace-fraud) covers the verification; here it's a state the booking waits in).
 

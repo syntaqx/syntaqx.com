@@ -15,14 +15,14 @@ This chapter covers the metrics as the platforms publish and define them: audien
 
 | Platform | Headline audience metric | How it's defined | Supply or volume metric | Money metric |
 | --- | --- | --- | --- | --- |
-| **Reddit** | DAUq and WAUq: 121.4 million and 471.6 million (fourth quarter 2025) | A user identifiable by a unique identifier who visited a page or opened an app at least once in 24 hours (seven days for WAUq), including logged-in and logged-out traffic | Over 100,000 active communities | ARPU: quarterly revenue in a geography divided by average DAUq there |
-| **Pinterest** | MAU: 619 million (December 31, 2025) | Authenticated users active in a 30-day window | Not covered here | ARPU by region: $30.84 US and Canada, $0.83 rest of world (2025) |
-| **Bluesky** | Users: 25.94 million to 41.41 million during 2025 | Registered users | 1.41 billion posts in 2025 | Not covered here |
-| **Twitch** | Over 2.5 million average concurrent viewers (2023) | Average concurrency | 7 million monthly streamers | Not published |
-| **Etsy** | 86.5 million active buyers (2025) | At least one purchase in the trailing twelve months | 5.6 million active sellers | $10.46 billion GMS on the Etsy marketplace; 24.2% take rate |
-| **eBay** | 135 million active buyers (2025) | Not covered here | 2.5 billion live listings | $79.6 billion GMV; 13.94% take rate |
 | **Airbnb** | 533 million nights and seats booked (2025) | Counted at booking, adjusted for cancellations and alterations | Not covered here | $91.3 billion gross booking value; revenue recognized at check-in |
+| **Bluesky** | Users: 25.94 million to 41.41 million during 2025 | Registered users | 1.41 billion posts in 2025 | Not covered here |
+| **eBay** | 135 million active buyers (2025) | Not covered here | 2.5 billion live listings | $79.6 billion GMV; 13.94% take rate |
+| **Etsy** | 86.5 million active buyers (2025) | At least one purchase in the trailing twelve months | 5.6 million active sellers | $10.46 billion GMS on the Etsy marketplace; 24.2% take rate |
+| **Pinterest** | MAU: 619 million (December 31, 2025) | Authenticated users active in a 30-day window | Not covered here | ARPU by region: $30.84 US and Canada, $0.83 rest of world (2025) |
+| **Reddit** | DAUq and WAUq: 121.4 million and 471.6 million (fourth quarter 2025) | A user identifiable by a unique identifier who visited a page or opened an app at least once in 24 hours (seven days for WAUq), including logged-in and logged-out traffic | Over 100,000 active communities | ARPU: quarterly revenue in a geography divided by average DAUq there |
 | **Turo** | About 350,000 active listings (September 2024) | Not covered here | About 150,000 active hosts | $2.41 billion gross booking value (2023) |
+| **Twitch** | Over 2.5 million average concurrent viewers (2023) | Average concurrency | 7 million monthly streamers | Not published |
 
 The figures come from [The User-Generated Platform Business](/books/user-generated-platforms/platform-business#how-big-it-is) and the filings it cites. The pattern: **each business picks the audience unit that matches how it earns** (daily uniques for ad-driven conversation, monthly authenticated users for a discovery product, buyers in twelve months for a marketplace, concurrency for live video), and **each defines "active" in a footnote that decides the number.** When two platforms' actives are compared, the comparison is usually between definitions.
 
@@ -210,7 +210,7 @@ Notes on the sketch:
 
 - [Meta: Prevalence](https://transparency.meta.com/policies/improving/prevalence-metric/), the definition, sampling, review and upper limits
 - [Snap: Transparency report, H2 2025](https://values.snap.com/privacy/transparency-h2-2025), Violative View Rate and turnaround
-- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), content and message volumes, actionable reports, community bans
+- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), content and message volumes, actionable reports, community bans (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)
 - [Pinterest: Transparency report, July to December 2025](https://policy.pinterest.com/en/transparency-report), reach before deactivation
 - [Bluesky: 2025 Transparency Report](https://bsky.social/about/blog/01-29-2026-transparency-report-2025), user growth and posts
 

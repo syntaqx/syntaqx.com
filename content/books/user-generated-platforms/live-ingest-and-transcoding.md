@@ -18,12 +18,12 @@ What each platform or vendor publicly says it accepts from a creator's encoder, 
 
 | Platform or vendor | Ingest protocols | Input codecs | Input limits | Server processing |
 | --- | --- | --- | --- | --- |
-| **Twitch** | RTMP; Enhanced RTMP multitrack for Enhanced Broadcasting; its ingest edge also terminates WebRTC | H.264; HEVC for the 2K beta; AV1 described for RTX 40 GPUs | Not published in a source opened for this chapter | Transcodes a ladder and transmuxes the top rendition; server transcodes kept "as needed" beside client-side multi-encode |
-| **YouTube Live** | RTMP, RTMPS, HLS, DASH | H.264 over RTMP(S); H.264 and HEVC over HLS; H.264 and VP9 over DASH; HEVC and AV1 in its encoder settings | Up to 60 fps; keyframes every 2 seconds, never over 4 | Transcodes every stream |
-| **Kick** | RTMP (OBS, XSplit, Streamlabs, MELD) | H.264 only | 1920x1080, 8,000 kbps, 60 fps, CBR, 2-second keyframes | Not published |
 | **Amazon IVS** | RTMPS (port 443, TLS 1.2+), RTMP, SRT (port 9000), Enhanced RTMP multitrack | H.264 and AAC-LC single-track; HEVC possible with multitrack | 1080p (2.1 million pixels, 1,920 per edge); 8.5 Mbps single-track, 15 Mbps multitrack; one stream key per channel | Four channel types: transcode, transcode to a lower ceiling, or transmux |
 | **Cloudflare Stream** | RTMPS, SRT; WHIP for WebRTC inputs | VP9, VP8 and H.264 Constrained Baseline over WHIP | Not published | Multiple qualities for RTMPS and SRT, every stream recorded; WHIP inputs played only over WHEP |
+| **Kick** | RTMP (OBS, XSplit, Streamlabs, MELD) | H.264 only | 1920x1080, 8,000 kbps, 60 fps, CBR, 2-second keyframes | Not published |
 | **Mux** | Not covered here | Not covered here | Not covered here | A reconnect window holds the stream open; restreams to up to six RTMP or RTMPS targets |
+| **Twitch** | RTMP; Enhanced RTMP multitrack for Enhanced Broadcasting; its ingest edge also terminates WebRTC | H.264; HEVC for the 2K beta; AV1 described for RTX 40 GPUs | Not published in a source opened for this chapter | Transcodes a ladder and transmuxes the top rendition; server transcodes kept "as needed" beside client-side multi-encode |
+| **YouTube Live** | RTMP, RTMPS, HLS, DASH | H.264 over RTMP(S); H.264 and HEVC over HLS; H.264 and VP9 over DASH; HEVC and AV1 in its encoder settings | Up to 60 fps; keyframes every 2 seconds, never over 4 | Transcodes every stream |
 
 Four patterns hold across them. **RTMP is still the front door.** Every platform takes it, because every encoder speaks it, and the newer protocols arrive beside it rather than replacing it. **The platform dictates the encoder settings.** Kick, YouTube and IVS all ask for constant bitrate and a keyframe every two seconds, because the server's segments and renditions have to line up with the creator's keyframes. **Transcoding is a tiered, metered resource:** IVS sells it per input hour at prices that differ by 10 times between its cheapest and dearest channel type, and Twitch has historically given full transcoding to some creators and not others. **The encoding is moving to the creator's machine:** Twitch's Enhanced Broadcasting and IVS's multitrack input have the broadcaster's GPU produce the ladder and the server only repackage it.
 
@@ -293,6 +293,7 @@ Notes on the sketch:
 - [Twitch: Introducing the Enhanced Broadcasting beta](https://blog.twitch.tv/en/2024/01/08/introducing-the-enhanced-broadcasting-beta), GPU multi-encode, automatic configuration, server transcodes as needed, AV1 efficiency claim (January 2024)
 - [Twitch: What we announced in Rotterdam](https://blog.twitch.tv/en/2025/05/31/ten-years-of-twitchcon-here-s-what-we-announced-in-rotterdam), the 2K and HEVC beta for Partners and Affiliates, dual-format horizontal and vertical streaming via Aitum Vertical (May 2025)
 - [Twitch: What we announced in San Diego](https://blog.twitch.com/en/2025/10/17/ten-years-of-twitchcon-here-s-what-we-announced-in-san-diego/), dual format moving to beta with more broadcast tools, native mobile vertical streaming, AI glasses streaming (October 2025)
+- [Twitch: Everything we announced at TwitchCon Las Vegas](https://blog.twitch.tv/en/2023/10/20/everything-we-announced-at-twitchcon-las-vegas/), October 20, 2023, simulcasting allowed on any live streaming service
 - [Twitch: An update on Twitch in Korea](https://blog.twitch.tv/en/2023/12/05/an-update-on-twitch-in-korea/), network fees 10 times most countries, peer-to-peer and 720p cap, closure on February 27, 2024
 
 **Vendor and platform documentation**
@@ -309,9 +310,6 @@ Notes on the sketch:
 - [YouTube: Live ingestion protocol comparison](https://developers.google.com/youtube/v3/live/guides/ingestion-protocol-comparison), RTMP, RTMPS, HLS and DASH with their codecs and latency suitability
 - [YouTube: Choose live encoder settings, bitrates and resolutions](https://support.google.com/youtube/answer/2853702?hl=en), RTMPS recommendation, H.264, HEVC and AV1, 60 fps, two-second keyframes never over four, CBR
 - [Kick: Streaming setup guide](https://help.kick.com/en/articles/7066931-how-to-become-a-kick-affiliate), 1920x1080, 8,000 kbps, 60 fps, CBR, H.264 only, two-second keyframes, resetting the stream key
+- [Twitch: Terms of Service, section 11 (Simulcasting)](https://legal.twitch.com/en/legal/terms-of-service/), the conditions: Twitch experience no less than elsewhere including chat engagement, no directing viewers away, no third-party services combining other platforms' activity on the stream
+- [Twitch: Simulcasting Guidelines FAQ](https://help.twitch.tv/s/article/simulcasting-guidelines), the exclusivity exception and tools for the streamer's personal use
 - [OBS Project: Transcodes / Transcoding](https://obsproject.com/kb/transcodes-transcoding), Twitch's tiered transcoding access and YouTube transcoding every stream (June 2021)
-
-**Press**
-
-- [Digital Music News: Twitch now allows users to simulcast on any platform or service](https://www.digitalmusicnews.com/2023/10/22/twitch-now-allows-users-to-simulcast-on-any-platform-or-service/), the simulcasting conditions: exclusivity, Twitch experience, chat engagement, no directing viewers away, no merged-activity overlays
-- [Engadget: Twitch will allow simulcasting to competitor streaming platforms](https://www.engadget.com/twitch-will-allow-simulcasting-to-competitor-streaming-platforms-222133289.html), the October 20, 2023 TwitchCon announcement

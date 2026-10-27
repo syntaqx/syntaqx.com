@@ -15,12 +15,12 @@ This chapter covers the industry detail: AI moderation as thresholds and error b
 
 | Platform | AI in moderation | Labels on AI-generated content | Provenance signals read | Training and answers |
 | --- | --- | --- | --- | --- |
-| **YouTube** | Not covered here | Creators must disclose realistic AI-generated or altered content at upload; label in the player for photorealistic content and AI music, in the description otherwise; YouTube may add labels itself | C2PA metadata can trigger an automatic label that the creator can't remove | Not covered here |
-| **Meta** | Not covered here | "AI info" (renamed from "Made with AI" on July 1, 2024); a more prominent label for high-risk deceptive media; labels instead of removal under the manipulated media policy from July 2024 | "Industry standard AI image indicators" plus self-disclosure | Not covered here |
-| **Reddit** | 68.6% of moderator removals automated (AutoModerator and Devvit apps); admin enforcement scaled with automated detection | Not covered here | Not covered here | Reddit Answers integrated into search; licensing revenue with API performance requirements; litigation against unlicensed use |
 | **Bluesky** | 16.49 million labels in 2025, 95.34% applied automatically | Labels from Bluesky and user-chosen labelers | Not covered here | Not covered here |
+| **Meta** | Not covered here | "AI info" (renamed from "Made with AI" on July 1, 2024); a more prominent label for high-risk deceptive media; labels instead of removal under the manipulated media policy from July 2024 | "Industry standard AI image indicators" plus self-disclosure | Not covered here |
 | **Pinterest** | Most policies enforced by "hybrid" means: a human decision expanded by machine | Not covered here | Not covered here | Not covered here |
+| **Reddit** | 68.6% of moderator removals automated (AutoModerator and Devvit apps); admin enforcement scaled with automated detection | Not covered here | Not covered here | Reddit Answers integrated into search; licensing revenue with API performance requirements; litigation against unlicensed use |
 | **Tumblr and WordPress.com** | Not covered here | Not covered here | Not covered here | A setting to opt out of sharing public content with third parties, including AI companies (February 2024) |
+| **YouTube** | Not covered here | Creators must disclose realistic AI-generated or altered content at upload; label in the player for photorealistic content and AI music, in the description otherwise; YouTube may add labels itself | C2PA metadata can trigger an automatic label that the creator can't remove | Not covered here |
 
 The patterns: **automation decides most volume and humans decide the contested middle;** **labels come from two sources,** what the uploader declares and what the platform detects, and a detected label from a signed manifest overrides the uploader; **removal gives way to labeling** for synthetic media that isn't otherwise violating; and **the corpus is now an asset** with licensing revenue, an opt-out, and lawsuits against those who take it without paying.
 
@@ -68,7 +68,7 @@ The design that holds up:
 Article 50 of the AI Act has applied since August 2, 2026, and reaches user-generated platforms in two roles:
 
 - **As a deployer** of AI that generates or manipulates content, a platform must disclose deepfakes ("image, audio or video content constituting a deep fake") as artificially generated or manipulated, with a lighter duty for evidently artistic, satirical or fictional work, and disclose AI-generated text published to inform the public on matters of public interest unless a person with editorial responsibility reviewed it. A platform's own generative features (an image generator in the post composer, AI-written summaries) put it in this role.
-- **As a provider** of a generative system, it must mark outputs "in a machine-readable format and detectable as artificially generated or manipulated" (Article 50(2)); under the Digital Omnibus agreement reported in 2026, systems already on the market before August 2, 2026 have until December 2, 2026 to comply, while new systems had to mark from the start. A Transparency Code of Practice was finalized in June 2026, with signatories committed to interoperable watermark detection by February 2, 2027.
+- **As a provider** of a generative system, it must mark outputs "in a machine-readable format and detectable as artificially generated or manipulated" (Article 50(2)); under the Digital Omnibus on AI (Regulation (EU) 2026/1744), systems already on the market before August 2, 2026 have until December 2, 2026 to comply, while new systems had to mark from the start. The Commission published a final, voluntary Code of Practice on marking and labelling AI-generated content on June 9, 2026, setting out how providers make outputs machine-readable and detectable.
 - **Chatbots** must tell people they're talking to an AI unless it's obvious (Article 50(1)), which reaches AI assistants and AI accounts that converse with users.
 
 For uploads by users, the platform isn't the deployer of the user's tool, but the DSA's systemic risk duties and the platforms' own policies push the same way: detect, label and let users declare. The practical overlap is that a platform which marks its own generated outputs with C2PA and IPTC metadata can also read the same marks from others' tools.
@@ -168,8 +168,9 @@ Notes on the sketch:
 
 **Law and standards**
 
-- [AI Act Article 50: Transparency obligations](https://artificialintelligenceact.eu/article/50/), marking duties, deepfake and public-interest text disclosure, chatbot disclosure, application from August 2, 2026
-- [Cloud Security Alliance: EU AI Act Article 50 watermarking deadline](https://labs.cloudsecurityalliance.org/research/csa-research-note-eu-ai-act-article50-watermarking-deadline/), the December 2, 2026 grace period for existing systems, the Transparency Code of Practice and its February 2, 2027 commitment
+- [Regulation (EU) 2024/1689 (AI Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689), Article 50 (chatbot disclosure, machine-readable marking of generated outputs, deepfake disclosure with the lighter duty for artistic, satirical or fictional work, public-interest text disclosure and the editorial review exception) and Article 113 (application from 2 August 2026)
+- [Regulation (EU) 2026/1744 (Digital Omnibus on AI)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32026R1744), the new Article 111(4): generative systems placed on the market before 2 August 2026 must comply with Article 50(2) by 2 December 2026
+- [European Commission: Commission publishes Code of Practice on marking and labelling AI-generated content](https://ec.europa.eu/commission/presscorner/detail/en/ip_26_1328), June 9, 2026, the final, voluntary code and its provider section on machine-readable marking and detection
 - [C2PA: Technical specification 2.2](https://spec.c2pa.org/specifications/specifications/2.2/specs/C2PA_Specification.html), manifests, claims, signatures, ingredients, embedded and external manifests, soft bindings, validation
 - [IPTC: Digital Source Type vocabulary](https://cv.iptc.org/newscodes/digitalsourcetype/), the source type codes and definitions
 
@@ -185,10 +186,10 @@ Notes on the sketch:
 **Filings and transparency reports**
 
 - [Reddit: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1713445/000171344526000022/rddt-20251231.htm), Reddit Answers, licensing concentration and API requirements, litigation over unlicensed use
-- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), automated share of moderator removals, the fall in granted appeals
+- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), automated share of moderator removals, the fall in granted appeals (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)
 - [Bluesky: 2025 Transparency Report](https://bsky.social/about/blog/01-29-2026-transparency-report-2025), automatic labels and influence operation removals
 - [Pinterest: Transparency report, July to December 2025](https://policy.pinterest.com/en/transparency-report), hybrid enforcement
 
 **In practice**
 
-- [Engadget: Tumblr and WordPress posts will reportedly be used for OpenAI and Midjourney training](https://www.engadget.com/tumblr-and-wordpress-posts-will-reportedly-be-used-for-openai-and-midjourney-training-204425798.html), the opt-out tool and Automattic's commitment to update partners
+- [Automattic: Protecting User Choice](https://automattic.com/2024/02/27/protecting-user-choice/), 27 February 2024, the opt-out settings, sharing only public content from sites that haven't opted out, updating partners about new opt-outs and asking them to remove that content from past sources and future training

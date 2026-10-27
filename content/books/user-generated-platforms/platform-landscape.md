@@ -34,7 +34,7 @@ The shapes blur. Pinterest is a media host with a recommendation engine and a sh
 
 ## Media Hosts
 
-**Imgur** launched on February 23, 2009 as an image host for Reddit links and was acquired by MediaLab AI, Inc. in a deal announced September 27, 2021. Its April 2023 terms change (no sexually explicit content, and deletion of old content not tied to an account, effective May 15, 2023) and its withdrawal from the UK in September 2025, after the ICO served notice of intent to fine its owner over children's data (the fine followed in February 2026), are the two most cited examples of a host reshaping its archive and its geography for policy and cost reasons ([Migrations, Purges & Shutdowns](/books/user-generated-platforms/migrations-and-shutdowns#policy-driven-purges); [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#the-imgur-case)).
+**Imgur** launched in 2009 as a bootstrapped image host and was acquired by MediaLab in a deal announced September 27, 2021. Its April 2023 terms change (no sexually explicit content, and deletion of old content not tied to an account, effective May 15, 2023) and its withdrawal from the UK in September 2025, after the ICO served notice of intent to fine its owner over children's data (the fine followed in February 2026), are the two most cited examples of a host reshaping its archive and its geography for policy and cost reasons ([Migrations, Purges & Shutdowns](/books/user-generated-platforms/migrations-and-shutdowns#policy-driven-purges); [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#the-imgur-case)).
 
 **YouTube** is the scale reference: $40.4 billion of advertising revenue in 2025 per Alphabet's 10-K, a partner program that shares ad revenue with creators, and Content ID for rights holders ([Copyright at Scale](/books/user-generated-platforms/copyright#fingerprinting-and-content-id)). **Vimeo** went private: Bending Spoons completed its $1.38 billion all-cash acquisition on November 24, 2025, and Vimeo's stock was delisted from Nasdaq that day.
 
@@ -61,10 +61,10 @@ The shapes blur. Pinterest is a media host with a recommendation engine and a sh
 | **Airbnb** | Stays, experiences, services | Public | $91.3 billion gross booking value, 533 million nights and seats (2025) |
 | **eBay** | New and used goods, vehicles via Caramel | Public | $79.6 billion GMV, 135 million active buyers (2025) |
 | **Etsy** | Handmade, vintage and supplies | Public | $10.46 billion GMS on the Etsy marketplace (2025) |
-| **Turo** | Cars | Private; IPO withdrawn | $2.41 billion gross booking value (2023, from its S-1/A) |
 | **Outdoorsy** | RVs, plus a car rental brand | Private | No public financials |
 | **RVshare** | RVs | Private | No public financials |
-| **Vinted** | Second-hand fashion (EU, UK) | Private | Reported GMV of EUR 10.8 billion for 2025 (company results via press, not audited filings) |
+| **Turo** | Cars | Private; IPO withdrawn | $2.41 billion gross booking value (2023, from its S-1/A) |
+| **Vinted** | Second-hand fashion (EU, UK) | Private | GMV of EUR 10.8 billion for 2025 (company-published results, not audited filings) |
 
 Rentals and goods differ in the shape of risk. A rental returns: the platform holds a deposit, insures the asset for the trip, collects evidence at handoff and settles damage claims, so protection products and insurers are central ([Deposits, Protection Plans & Insurance](/books/user-generated-platforms/deposits-and-protection#the-protection-stack); [Handoffs, Damage & Claims](/books/user-generated-platforms/damage-and-claims#the-handoff)). Goods leave: the risk is non-delivery, not-as-described and counterfeit, so buyer protection programs, shipping and authenticity checks are central, and the INFORM Consumers Act and the DSA's trader rules apply to high-volume sellers ([Supply Onboarding & Verification](/books/user-generated-platforms/supply-onboarding#private-individuals-and-traders)). The Property Tech volume's [Short-Term Rentals](/books/property-tech/short-term-rentals#how-the-platforms-do-it) covers the same stays from the host's and property manager's side.
 
@@ -78,9 +78,9 @@ Enterprise chat and collaboration (Slack, Microsoft Teams, Jira, Notion) share m
 
 | Vendor | What it sells | Published pricing shape (as of October 2026) |
 | --- | --- | --- |
-| **Mux** | Video API: upload, just-in-time encoding with Basic, Plus and Premium quality levels, signed playback, DRM, live streaming | On-demand input free at 1080p basic; storage $0.003 per minute per month; delivery $0.001 per minute after 100,000 free minutes a month; live input $0.03125 per minute; DRM $100 a month plus $0.003 per license |
 | **Amazon IVS** | Managed live video with Twitch lineage: RTMP, RTMPS and SRT ingest; standard, advanced and basic channel types; real-time stages; chat; auto-record to S3 | Input from $0.20 (basic) to $2.00 (standard) per hour; output from $0.0072 (audio) to $0.144 (Full HD) per viewer-hour in its first North American tier; real-time $0.072 per participant-hour |
 | **Cloudflare Stream** | Upload, encode, store and deliver video, live included | $5 per 1,000 minutes stored, $1 per 1,000 minutes delivered, encoding and ingress free |
+| **Mux** | Video API: upload, just-in-time encoding with Basic, Plus and Premium quality levels, signed playback, DRM, live streaming | On-demand input free at 1080p basic; storage $0.003 per minute per month; delivery $0.001 per minute after 100,000 free minutes a month; live input $0.03125 per minute; DRM $100 a month plus $0.003 per license |
 
 The pricing shapes differ in what they meter (minutes stored and delivered, viewer-hours by resolution, encoding minutes), and that choice decides which of a platform's behaviors cost money: long archives, a large catalog that few watch, or a few streams watched by many. [Video on Demand](/books/user-generated-platforms/video-on-demand#cost-per-viewer-hour) and [Live Latency, Playback & VODs](/books/user-generated-platforms/live-latency-and-vods#distribution-at-scale) turn those meters into a cost per viewer-hour.
 
@@ -94,15 +94,15 @@ Trust and safety tooling comes from three kinds of supplier: industry and nonpro
 
 | Supplier | What it provides | Access |
 | --- | --- | --- |
-| **Microsoft PhotoDNA** | Image hashing and matching against previously identified child sexual abuse imagery | Free to qualified organizations |
-| **Meta PDQ and TMK+PDQF** | Open-source perceptual hashes for photos and video, used across industry lists | Open source |
-| **Google CSAI Match and Content Safety API** | Video fingerprint matching against known abusive content; a classifier that returns a review priority for unseen images and video | Free to qualifying partners, by application |
-| **Thorn Safer** | Perceptual hashing for images and video, classifiers for novel abuse imagery, a text classifier for exploitation, grooming and sextortion; self-hosted or API | Commercial |
-| **Hive** | Visual, text and audio moderation models, and a CSAM detection API built on Safer that combines hash matching with classifier scores and integrates NCMEC reporting | Commercial; its site now carries a banner that Hive is "now Deploy" |
 | **Alice (formerly ActiveFence)** | Trust and safety intelligence and moderation; bought Spectrum Labs' contextual text moderation in September 2023; now sells red teaming and guardrails for AI systems | Commercial |
-| **Microsoft Community Sift (from Two Hat)** | Text filtering and classification for chat; Microsoft bought Two Hat in October 2021, whose technology already screened content on Xbox, Minecraft and MSN | Commercial |
 | **Cloudflare CSAM Scanning Tool** | Fuzzy-hash matching of content served through Cloudflare's cache against lists from child-safety organizations, blocking matches and notifying the customer | Free on all plans |
 | **GIFCT hash-sharing database** | Hashes of terrorist and violent extremist content, labeled by entity, behavior and incident, shared among members | Members with an information-sharing agreement |
+| **Google CSAI Match and Content Safety API** | Video fingerprint matching against known abusive content; a classifier that returns a review priority for unseen images and video | Free to qualifying partners, by application |
+| **Hive** | Visual, text and audio moderation models, and a CSAM detection API built on Safer that combines hash matching with classifier scores and integrates NCMEC reporting | Commercial; its site now carries a banner that Hive is "now Deploy" |
+| **Meta PDQ and TMK+PDQF** | Open-source perceptual hashes for photos and video, used across industry lists | Open source |
+| **Microsoft PhotoDNA** | Image hashing and matching against previously identified child sexual abuse imagery | Free to qualified organizations |
+| **Microsoft Community Sift (from Two Hat)** | Text filtering and classification for chat; Microsoft bought Two Hat in October 2021, whose technology already screened content on Xbox, Minecraft and MSN | Commercial |
+| **Thorn Safer** | Perceptual hashing for images and video, classifiers for novel abuse imagery, a text classifier for exploitation, grooming and sextortion; self-hosted or API | Commercial |
 
 Two facts shape how these fit together. **Lists and classifiers do different jobs:** a hash match finds a copy of something already judged and can act without a person looking at it; a classifier finds something new and returns a score that should order a human queue, which is how Google describes its Content Safety API ("Partners must conduct their own review"). **The vendor sees your users' content,** so the vendor's own security, retention and legal position (the REPORT Act now shields NCMEC's contracted vendors that meet its security requirements; a platform's moderation vendor has no such shield) belong in the contract, and vendor breaches are a real risk: Discord disclosed in October 2025 that a breach at a third-party vendor it used for age-related appeals may have exposed government ID photos of about 70,000 users ([Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#age-assurance-on-a-general-audience-platform)). [Moderation at Scale](/books/user-generated-platforms/moderation-at-scale#vendors) covers vendor selection and outsourced review; [Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#the-hash-lists) covers the lists.
 
@@ -110,18 +110,20 @@ Two facts shape how these fit together. **Lists and classifiers do different job
 
 **Payments.** Marketplaces almost all run on a payments platform's connected-accounts product. Stripe Connect is the commonly documented example, and its charge types are the decision a marketplace makes first: **destination charges**, where the platform takes the payment and transfers the host's share, which Stripe recommends for marketplaces such as home rentals; **separate charges and transfers**, where the platform charges first and decides later whom to pay, for multi-party or not-yet-assigned orders; and **direct charges**, where the seller is the merchant and the platform takes an application fee, which suits software platforms more than marketplaces. The choice decides whose balance a refund or chargeback hits and whose name is on the card statement. Outdoorsy's terms say it uses Stripe connected accounts and acts as a limited payment collection agent; Turo pays hosts through Stripe. The [Payments for Software Platforms](/books/payments/software-platforms#four-ways-in) chapter covers the models; [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#who-the-payee-is) covers the payout side.
 
-**Identity verification.** Hosts, sellers and guests verify with a document and a live selfie, sold by vendors such as Persona (named in Outdoorsy's host and driver verification pages) and DigiSure (which RVshare says vets its renters and owners). The category is consolidating: Entrust completed its acquisition of Onfido, an AI-based identity verification company, in April 2024. Airbnb runs its own flow against third-party data, with ID and selfie as fallbacks. [Supply Onboarding & Verification](/books/user-generated-platforms/supply-onboarding#the-onboarding-gates) and [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#verification-and-badges) cover the flows.
+**Identity verification.** Hosts, sellers and guests verify with a document and a live selfie, sold by vendors such as Persona (named in Outdoorsy's host and driver verification pages) and DigiSure (which RVshare says vets its renters and owners). The category is consolidating: Entrust completed its acquisition of Onfido, an identity verification provider, on April 9, 2024. Airbnb runs its own flow against third-party data, with ID and selfie as fallbacks. [Supply Onboarding & Verification](/books/user-generated-platforms/supply-onboarding#the-onboarding-gates) and [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#verification-and-badges) cover the flows.
 
 **Insurance and protection.** Rental marketplaces embed third-party coverage and sell contractual protection beside it. Turo's trips carry liability coverage from insurers including Travelers Excess and Surplus Lines, and its host plans are contractual reimbursement, "not insurance"; Outdoorsy names Mobilitas as its liability carrier; RVshare's third-party liability policy is from Crum & Forster, written as excess; Airbnb's AirCover damage protection is a guaranty rather than insurance, with host liability insurance distributed under a licensed firm. Which of these is insurance, and who must be licensed to sell it, is [Deposits, Protection Plans & Insurance](/books/user-generated-platforms/deposits-and-protection#insurance-law-who-may-sell-it).
 
 ## Consolidation and Capital, as of October 2026
 
+The table runs in date order.
+
 | Date | Event | Why it matters |
 | --- | --- | --- |
 | August 2014 | Amazon agrees to buy Twitch for about $970 million | Live streaming inside a cloud provider; the technology later sold as Amazon IVS |
 | August 2019 | Automattic agrees to buy Tumblr from Verizon | A community moved to an owner with its own publishing stack |
-| June 2021 | Etsy buys Depop for $1.6 billion | A goods marketplace buys a social resale app |
-| September 2021 | MediaLab AI acquires Imgur | A media host moves into a holding company of internet brands |
+| June 2021 | Etsy agrees to buy Depop for $1.625 billion | A goods marketplace buys a social resale app |
+| September 2021 | MediaLab acquires Imgur | A media host moves into a holding company of internet brands |
 | October 2021 | Microsoft acquires Two Hat | Moderation tooling brought in-house by a platform owner |
 | September 2023 | ActiveFence buys Spectrum Labs | Trust and safety vendors consolidate (ActiveFence now operates as Alice) |
 | March 2024 | Reddit completes its IPO on the NYSE (RDDT) | The first audited figures for a large community platform |
@@ -190,15 +192,17 @@ Vendor choices create records that matter later:
 - [Turo: Form S-1/A, Amendment No. 12](https://www.sec.gov/Archives/edgar/data/1514587/000162828024047889/turoinc-sx1a12.htm), gross booking value, Travelers Excess and Surplus Lines, protection plans
 - [Vimeo: Form 8-K (November 24, 2025)](https://www.sec.gov/Archives/edgar/data/1837686/000110465925115501/tm2532050d1_8k.htm), completion of the Bending Spoons merger, $1.38 billion, Nasdaq delisting
 - [Amazon: Amazon.com to Acquire Twitch](https://press.aboutamazon.com/2014/8/amazon-com-to-acquire-twitch), about $970 million in cash (August 25, 2014)
-- [Cooley: Automattic enters agreement to acquire Tumblr from Verizon](https://cooley.com/news/coverage/2019/2019-08-12-automattic-enters-agreement-to-acquire-tumblr-from-verizon), August 2019
+- [Matt Mullenweg (Automattic CEO): Tumblr](https://ma.tt/2019/08/tumblr/), August 13, 2019, Automattic buying Tumblr from Verizon
 - [Microsoft: Microsoft acquires Two Hat](https://blogs.microsoft.com/blog/2021/10/29/microsoft-acquires-two-hat-to-collaborate-on-online-safety-and-digital-wellness-solutions-for-online-communities/), October 29, 2021, use on Xbox, Minecraft and MSN
 - [Alice: Alice acquires Spectrum Labs](https://alice.io/company-news/alice-acquires-spectrumlabs), September 2023, "Alice, formerly ActiveFence," current products
-- [UKTN: Entrust completes Onfido acquisition](https://www.uktech.news/growth-strategy/exit-strategy/entrust-completes-onfido-acquisition-20240409), April 2024, Onfido's identity verification business
-- [Storyboard18: Discord files confidentially for IPO](https://www.storyboard18.com/social-media/discord-files-confidentially-for-ipo-reports-87132.htm), the January 2026 report, Goldman Sachs and JPMorgan, Nitro as the main revenue
-- [Wikipedia: Imgur](https://en.wikipedia.org/wiki/Imgur), launch date, MediaLab acquisition, the 2023 terms change
+- [Entrust: Entrust completes acquisition of Onfido](https://www.entrust.com/company/newsroom/entrust-completes-acquisition-of-onfido-creating-a-new-era-of-identity-centric-security), April 9, 2024, Onfido's identity verification business
+- [Storyboard18: Discord files confidentially for IPO](https://www.storyboard18.com/social-media/discord-files-confidentially-for-ipo-reports-87132.htm), the January 2026 Bloomberg report, Goldman Sachs and JPMorgan, Nitro as the main revenue (reported)
+- [Imgur: Celebrating Imgur's Next Chapter (Wayback Machine)](https://web.archive.org/web/20220101001803/https://blog.imgur.com/2021/09/27/celebrating-imgurs-next-chapter/), September 27, 2021, the 2009 founding and the MediaLab acquisition
+- [Imgur Help: Imgur Terms of Service Update, April 19, 2023 (Wayback Machine)](https://web.archive.org/web/20230420231041/https://help.imgur.com/hc/en-us/articles/14415587638029-Imgur-Terms-of-Service-Update-April-19-2023-), the 2023 terms change effective May 15, 2023
 - [ICO: Statement on the Imgur investigation](https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2025/09/statement-update-on-imgur-investigation/), the notice of intent and the UK withdrawal (September 2025)
-- [Wikipedia: Depop](https://en.wikipedia.org/wiki/Depop), Etsy's 2021 purchase and the 2026 sale to eBay after CMA approval
-- [FashionUnited: Vinted reaches 1.1 billion euros in revenue for 2025](https://fashionunited.com/news/business/vinted-reaches-1-1-billion-euros-in-revenue-for-2025-accepting-a-strategic-drop-in-profits/2026040971654), reported 2025 GMV
+- [Etsy: Form 8-K exhibit 99.1 (June 2, 2021)](https://www.sec.gov/Archives/edgar/data/1370637/000137063721000028/exhibit99106022021.htm), the agreement to acquire Depop for $1.625 billion
+- [Depop: eBay completes acquisition of Depop](https://news.depop.com/ebay-completes-acquisition-of-depop/), July 30, 2026, the completed purchase
+- [Vinted: Financial results 2025](https://company.vinted.com/newsroom/financial-results-2025), April 9, 2026, 2025 GMV of EUR 10.8 billion and revenue
 
 **Vendors**
 
@@ -237,4 +241,4 @@ Vendor choices create records that matter later:
 - [Twitch: Ingesting live video streams at global scale](https://blog.twitch.tv/en/2022/04/26/ingesting-live-video-streams-at-global-scale/), ingest PoPs and origin routing
 - [Twitch: Live video transmuxing and transcoding (2017)](https://blog.twitch.tv/en/2017/10/10/live-video-transmuxing-transcoding-f-fmpeg-vs-twitch-transcoder-part-i-489c1c125f28/), the transmuxed top rendition
 - [Twitch: State of Engineering 2023](https://blog.twitch.com/en/2023/09/28/twitch-state-of-engineering-2023/), origins and the replication tree
-- [TechCrunch: Discord to roll out age verification](https://techcrunch.com/2026/02/09/discord-to-roll-out-age-verification-next-month-for-full-access-to-its-platform/), the October 2025 vendor breach and government ID images
+- [Discord: Update on a security incident involving third-party customer service](https://discord.com/press-releases/update-on-security-incident-involving-third-party-customer-service), the October 2025 disclosure and about 70,000 users' government ID photos used for age-related appeals possibly exposed

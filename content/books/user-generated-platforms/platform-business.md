@@ -105,15 +105,15 @@ Audited filings and transparency reports give the scale; marketing figures are l
 
 | Measure | Figure | Source |
 | --- | --- | --- |
-| Reddit daily and weekly uniques | 121.4 million DAUq and 471.6 million WAUq (fourth quarter 2025); over 100,000 active communities | Reddit 10-K |
-| Pinterest monthly users | 619 million MAU (December 31, 2025) | Pinterest 10-K |
-| YouTube advertising | $40.4 billion (2025) | Alphabet 10-K |
-| Twitch audience | Over 2.5 million average concurrent viewers, over 1.3 trillion minutes watched a year, 7 million monthly streamers (2023) | Twitch engineering |
-| Bluesky | 25.94 million to 41.41 million users during 2025; 1.41 billion posts | Bluesky transparency report |
 | Airbnb | $91.3 billion gross booking value and 533 million nights and seats booked (2025) | Airbnb 10-K |
+| Bluesky | 25.94 million to 41.41 million users during 2025; 1.41 billion posts | Bluesky transparency report |
 | eBay | $79.6 billion GMV, 135 million active buyers, 2.5 billion live listings (2025) | eBay 10-K |
 | Etsy marketplace | $10.46 billion GMS, 86.5 million active buyers, 5.6 million active sellers (2025) | Etsy 10-K |
+| Pinterest monthly users | 619 million MAU (December 31, 2025) | Pinterest 10-K |
+| Reddit daily and weekly uniques | 121.4 million DAUq and 471.6 million WAUq (fourth quarter 2025); over 100,000 active communities | Reddit 10-K |
 | Turo | $2.41 billion gross booking value and $879.7 million revenue (2023); about 150,000 active hosts and 350,000 active listings (September 2024) | Turo S-1/A |
+| Twitch audience | Over 2.5 million average concurrent viewers, over 1.3 trillion minutes watched a year, 7 million monthly streamers (2023) | Twitch engineering |
+| YouTube advertising | $40.4 billion (2025) | Alphabet 10-K |
 | Moderation volume | 154 million posts and comments removed on Reddit in six months (second half of 2025) | Reddit transparency report |
 | Child safety reports | 21.3 million CyberTipline reports in 2025, 21.18 million of them from electronic service providers | NCMEC |
 
@@ -458,7 +458,7 @@ The mechanics (typed actors, append-only history, snapshots) are in [Audit Trail
 **Platform terms**
 
 - [YouTube: YouTube Partner Program revenue shares](https://support.google.com/youtube/answer/72902?hl=en), 55% watch-page ads, 45% Shorts, 70% fan funding
-- [Tubefilter: Discord's first creator monetization feature is live for all U.S. servers](https://www.tubefilter.com/2022/12/01/discord-creator-monetization-server-memberships-open-to-us-servers/), the 90/10 split and $2.99 to $199.99 tiers (December 2022)
+- [Discord: Server and creator subscriptions](https://discord.com/blog/server-and-creator-subscriptions), the 90% owner share and $2.99 to $199.99 tiers (December 1, 2022)
 - [Etsy: Fees & Payments Policy](https://www.etsy.com/legal/fees/), offsite ads fees and cap, Etsy Plus
 - [Airbnb: Airbnb service fees](https://www.airbnb.com/help/article/1857), the single host-only fee and the legacy split fee
 - [Outdoorsy: Fee structure and how hosts get paid](https://support.outdoorsy.com/hc/en-us/articles/37916164272283-What-is-your-fee-structure-And-how-do-I-get-paid), host fee range, payout 48 hours after trip start
@@ -472,6 +472,6 @@ The mechanics (typed actors, append-only history, snapshots) are in [Audit Trail
 - [Twitch: State of Engineering 2023](https://blog.twitch.com/en/2023/09/28/twitch-state-of-engineering-2023/), concurrent viewers, minutes watched and monthly streamers
 - [Twitch: Live video transmuxing and transcoding (2017)](https://blog.twitch.tv/en/2017/10/10/live-video-transmuxing-transcoding-f-fmpeg-vs-twitch-transcoder-part-i-489c1c125f28/), the two-second keyframe interval and transmuxed top rendition
 - [Bluesky: 2025 Transparency Report](https://bsky.social/about/blog/01-29-2026-transparency-report-2025), user growth and posts in 2025
-- [Reddit: Transparency Report, July to December 2025 (PDF)](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), removals by moderators and admins
+- [Reddit: Transparency Report, July to December 2025](https://torrentfreak.com/images/Reddit-Transparency-Report-H2-2025.pdf), removals by moderators and admins (Reddit's own PDF; copy hosted by TorrentFreak, as redditinc.com blocks automated access)
 - [NCMEC: CyberTipline data](https://www.missingkids.org/cybertiplinedata), 2025 report counts by source
-- [Wikipedia: Imgur](https://en.wikipedia.org/wiki/Imgur), the April 2023 terms change effective May 15, 2023
+- [Imgur Help: Imgur Terms of Service Update, April 19, 2023 (Wayback Machine)](https://web.archive.org/web/20230420231041/https://help.imgur.com/hc/en-us/articles/14415587638029-Imgur-Terms-of-Service-Update-April-19-2023-), removal of old content not tied to an account and of sexually explicit content, effective May 15, 2023

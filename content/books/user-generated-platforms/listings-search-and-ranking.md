@@ -16,11 +16,11 @@ The engineering is hard in three places. **The schema has to be structured enoug
 | Platform | What it publishes about listings | What it publishes about search and ranking |
 | --- | --- | --- |
 | **Airbnb** | A listing's star rating appears after three reviews | Moved search ranking from gradient-boosted trees to neural networks; published the lessons (KDD 2019) |
-| **Outdoorsy** | Listing content policy; standardized add-ons and amenities; snooze, unpublish and remove states | Four factors: quality, popularity, price and location; personalized by browsing; new listings appear within 24 hours with a cold-start visibility boost |
-| **Etsy** | $0.20 listing fee per four-month listing, auto-renewing | Unified embedding retrieval (graph, transformer and term embeddings in a two-tower model with approximate nearest neighbor serving): +5.58% search purchase rate in an A/B test |
 | **eBay** | 2.5 billion live listings (2025) | Promoted Listings sold as paid placement in its search |
-| **Vinted** | About 1 billion active searchable items | Moved from Elasticsearch to Vespa: about 20,000 requests a second at peak under 150 ms p99, time from update to searchable cut from 300 seconds to 5 |
+| **Etsy** | $0.20 listing fee per four-month listing, auto-renewing | Unified embedding retrieval (graph, transformer and term embeddings in a two-tower model with approximate nearest neighbor serving): +5.58% search purchase rate in an A/B test |
+| **Outdoorsy** | Listing content policy; standardized add-ons and amenities; snooze, unpublish and remove states | Four factors: quality, popularity, price and location; personalized by browsing; new listings appear within 24 hours with a cold-start visibility boost |
 | **Turo** | Search by location, vehicle type, availability, ratings and use case | Machine learning for search ranking and recommendations (S-1) |
+| **Vinted** | About 1 billion active searchable items | Moved from Elasticsearch to Vespa: about 20,000 requests a second at peak under 150 ms p99, time from update to searchable cut from 300 seconds to 5 |
 
 The patterns:
 
@@ -249,9 +249,7 @@ Design decisions behind it:
 
 **Law and regulation**
 
-- [DSA Article 27: Recommender system transparency](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_27.html), main parameters in the terms, their relative importance, user options and ordering controls
-- [DSA Article 31: Compliance by design](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_31.html), product information interface, best-efforts check before listing, random checks against official databases
-- [DSA Article 32: Right to information](https://www.eu-digital-services-act.com/Digital_Services_Act_Article_32.html), notifying buyers of the past six months about illegal products
+- [Regulation (EU) 2022/2065 (Digital Services Act)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065), Article 27 (recommender main parameters in the terms, the reasons for their relative importance, user options and an ordering control), Article 31 (the product information interface, the best-efforts check before listing, random checks against official databases), Article 32 (notifying buyers of the past six months about illegal products), and Articles 19 and 29 (the micro and small enterprise exclusions, except for very large platforms)
 
 **Engineering**
 
@@ -278,4 +276,4 @@ Design decisions behind it:
 
 **Press**
 
-- [OpenVan.camp: Outdoorsy pivots to broader mobility](https://openvan.camp/en/news/industry/outdoorsy-pivots-intros-broader-mobility), the reported 45% cut in RV inventory over 18 months
+- [OpenVan.camp: Outdoorsy pivots to broader mobility](https://openvan.camp/en/news/industry/outdoorsy-pivots-intros-broader-mobility), the 45% cut in RV inventory over 18 months (reported)
