@@ -84,6 +84,8 @@ The AT Protocol splits the jobs a social network does into separately operated s
 
 Identity is a **DID**, a permanent identifier whose document names the account's current PDS and holds its keys: a signing key that validates the repository and rotation keys that authorize changes to the document. The PLC method supports rotation keys; `did:web` doesn't. The **handle** is a domain name layered on the DID.
 
+![A map of separately operated services. Three personal data servers, each holding a signed repository (an account's DID names its PDS), feed a relay, the firehose. The relay is indexed by an app view that serves threads, counts and search, and the app view sends views to the app, which applies the user's choices. Above the app view, a feed generator that anyone can run sends ranked post identifiers. Below it, an accented labeler sends signed labels both to the app view and to the app, which uses them to hide, blur or warn. A footer says the app's own moderation service is always subscribed and others are added like accounts.](/diagrams/ugp-federation-at-services.svg "On the AT Protocol, hosting, aggregation, ranking and moderation are separate services. Bluesky runs its own of each, and anyone can run another.")
+
 ### Portability
 
 Portability is where the two protocols differ most:

@@ -78,6 +78,8 @@ What a routing service needs, whoever builds it:
 - **Outputs:** an origin, and the transcode mode and ladder to run there, recorded on the ingest session so the decision can be explained later.
 - **Moves:** draining an origin means asking encoders to reconnect elsewhere (Enhanced RTMP's reconnect request, a WHIP `307` or `503 Retry-After`) or re-homing the stream inside the backbone without the creator noticing.
 
+![The creator's encoder, holding the stream key, connects to an ingest edge that terminates RTMP, SRT or WHIP. The edge sends the stream's properties to a routing service, accented, which also takes two capacity feeds: origin compute net of maintenance and backbone link utilization. The routing service picks an origin, recorded on the session, and sends the origin, mode and ladder on the accented arrow to the origin, which transcodes or transmuxes the ladder; the stream travels from edge to origin over the backbone. A dashed path from the origin back to the encoder shows draining: reconnect elsewhere.](/diagrams/ugp-live-ingest-routing.svg "The edge is chosen for the creator and the origin for capacity. A routing service joins them per stream and records why.")
+
 The generic edge mechanics (sticky routing, draining, avoiding reconnect stampedes) are the playbook's [Realtime Connections](/docs/architecture/realtime-connections#edge-and-routing); the live-video twist is that the scarce resource behind the edge is transcoding compute, not connection slots.
 
 ## Transcode or Transmux

@@ -113,6 +113,8 @@ Guarantee claims, damage claims from guests, and complaints about the other side
 5. **Remedy.** Refund, partial refund, return and refund, rebooking, or denial.
 6. **Appeal.** A second decision on request within a deadline (eBay's 30 days).
 
+![Case lifecycle. Five numbered steps sit over a row of states: 1 contact over opened, 2 wait over awaiting_respondent, 3 escalate over escalated, 4 decide over in_review, and 5 remedy over decided. An accented remedy arrow leads from decided to closed, whose remedy is a refund, partial refund, return and refund, rebooking or denial. Step 6, appeal, leads from decided to appealed and back to in_review for a second decision. Dashed arrows from awaiting_respondent and escalated join on a chargeback on the payment and end in superseded_by_chargeback, where the dispute process takes the case's evidence. Doubled outlines are terminal states.](/diagrams/ugp-cancellations-and-disputes-case.svg "One case shape for every guarantee program, and one remedy: a chargeback on the same payment supersedes the case instead of paying twice.")
+
 The case is a platform decision about two users' money, so it carries the [Trust & Safety](/docs/security/trust-and-safety#appeals) machinery's virtues: reasons, evidence, notice to both sides, an appeal. It's a different queue from content moderation, staffed by people who know refunds and shipping, but the records have the same shape.
 
 ### One Remedy, Not Two

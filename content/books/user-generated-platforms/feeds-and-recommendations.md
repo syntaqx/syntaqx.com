@@ -55,6 +55,8 @@ Personalized feeds converge on the same stages, whatever the platform calls them
 
 Two rules keep the pipeline honest. **Filters run after ranking, and again at render.** Ranking is expensive and cached; state changes in the meantime, so the last check before the item reaches the screen reads current state. **Every served page is logged** with the candidates' sources, the model versions and the positions, because the next model is trained on what this one chose to show, and without the log there's no way to separate "people didn't like it" from "nobody saw it."
 
+![The recommendation pipeline. Five candidate sources (the viewer's graph, similar users, nearest embeddings, related items, trending) join into retrieve (thousands of candidates), then light rank (to hundreds), heavy rank (many predicted outcomes), filter, accented (after ranking, and again at render), mix (diversity, ads, freshness) and serve (the page). The served page goes to a page log, and the next model, drawn dashed, is trained on what was shown.](/diagrams/ugp-feeds-pipeline.svg "Cheap stages narrow, expensive stages score, and filtering runs last so it reads current state. The log of what was served is the next model's training data.")
+
 ### Graph Models
 
 Pinterest's published systems are the most detailed public account of recommendations built on a content graph rather than a social one. Users save pins to boards, which makes a bipartite graph of pins and boards: two pins are related when many boards hold both.

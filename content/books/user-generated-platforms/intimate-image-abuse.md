@@ -105,6 +105,8 @@ The Act's "reasonable efforts to identify and remove any known identical copies"
 
 The sweep runs as a job against the notice's deadline ([Background Jobs](/docs/architecture/background-jobs)), and the request isn't closed until it's done.
 
+![A dimensional drawing of one removal request on an hours timeline. Before a break, an incomplete request is logged as a dashed box; the valid request at T0 starts the clock, and the request lane runs to T0 plus 48 hours. Below it, dashed windows from T0 to the same bound hold each duty: remove the reported items; exact copies with the same file hash removed everywhere and derived stores purged; near matches through a review lane, then removed. The own hash list lane starts at T0 and runs past the bound, with hashes added so re-uploads are blocked. An accented dimension D1 spans T0 to T0 plus 48 hours. Notes give the four elements of a valid request, and a variable table gives T0 and D1 as as soon as possible, 48 hours at most.](/diagrams/ugp-intimate-image-abuse-removal-clock.svg "The TAKE IT DOWN Act's 48 hours run from a valid request and cover the whole sweep, not just the reported post: identical copies and the near-match review lane share the same deadline. The own hash list is what keeps working after the request closes.")
+
 ## Deepfakes
 
 Intimate image abuse no longer needs an intimate image: "nudify" or "undress" apps and general image generators make one from any photo of a real person. The law has moved to treat those images like authentic ones.

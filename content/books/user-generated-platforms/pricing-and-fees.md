@@ -90,6 +90,8 @@ Rentals booked far ahead are often paid in two parts. Outdoorsy charges trips 30
 
 A split schedule is a set of installments with due dates, each a payment against the booking, and the second one can fail. The schedule says what happens then: retries, notice to the guest, a deadline after which the booking is cancelled under the policy that applies. The balance charge is merchant-initiated against a stored card, with the consent recorded at booking ([Stored Credentials](/books/payments/stored-credentials)).
 
+![Split payment flowchart. A decision asks whether the trip is 30 days or less away; if yes, the booking is charged in full. If no, a deposit at booking takes 50% of the trip cost plus all of the service fee, protection and taxes, then the balance, the remaining 50%, is charged 30 days before departure on the stored card, and the booking is paid; that path is accented. A dashed path from a failed balance charge leads to retries and notice, then to cancelled after a deadline, under the policy. Doubled outlines are outcomes.](/diagrams/ugp-pricing-and-fees-schedule.svg "Outdoorsy's published schedule. The second installment can fail, so the schedule has to say what happens next.")
+
 ## All-In Prices
 
 Two regimes now govern how marketplaces show prices in the US, and they reach different marketplaces:
@@ -115,6 +117,8 @@ What the rules do to the quote:
 - **Search shows the total.** A search result, a map pin and a listing page show the price for the requested dates with mandatory fees included, which means pricing is computed for search, not only at checkout ([Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking)).
 - **A required protection product is a mandatory fee.** If the guest can't book without one of several protection plans, the cheapest is part of the total.
 - **Snapshot what was shown.** The quote shown at each step is recorded, because a drip-pricing claim asks what the guest saw before checkout.
+
+![Four classes of quote lines. Mandatory, accented: rental, cleaning or prep, platform service fee, required protection and screening fee, all in the total shown at search, listing and checkout. Optional: add-ons, protection upgrades, and a deposit waiver where optional, chosen by the guest and allowed to stay out of the advertised total. Government: taxes, which may stay out of the total but are disclosed before payment. Contingent: usage, late return and damage, out of the price, with the allowance and rate disclosed before booking. A footer says the displayed price is a sum over classes, computed from the lines, never typed separately.](/diagrams/ugp-pricing-and-fees-display.svg "Only the mandatory class sums into the advertised total under the FTC fees rule and California's SB 478; the other three are disclosed, not hidden.")
 
 ## Marketplace Facilitator Tax
 

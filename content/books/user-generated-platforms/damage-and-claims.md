@@ -90,6 +90,8 @@ Before the platform or an insurer decides, the other side is told and can answer
 - **Disputed:** the guest contests, with their own evidence; the claim goes to review with both sides' material.
 - **No response:** the deadline passes; the claim goes to review as if disputed.
 
+![Claim state machine. The host files in the window into awaiting_response. If the guest pays, the claim ends in accepted, paid from the deposit, the card on file or directly. If the guest contests, it moves to disputed and then to in_review with both sides' evidence; with no response by the deadline it goes straight to in_review. From in_review, the accented path leads to settled when approved, in whole or by item, paid from ordered sources with the lienholder first on a total loss; a dashed path ends in denied, with reasons. Doubled outlines are terminal states. A footer says a high risk score routes to inspection or reimbursement only, never to denial by itself.](/diagrams/ugp-damage-and-claims-states.svg "The counterparty gets a turn before review, and silence counts as a dispute. Airbnb's 24-hour guest response is the published example.")
+
 Messages about the claim stay in the booking's thread, because they're part of the record ([Messaging, Reviews & Reputation](/books/user-generated-platforms/messaging-and-reviews)).
 
 ### Review, Appraisal and Supplements

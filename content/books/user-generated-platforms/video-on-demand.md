@@ -93,6 +93,8 @@ Encoded renditions still have to be cut into segments and described in a manifes
 
 For years serving both meant storing two sets of segments, transport streams for HLS and fragmented MP4 for DASH, which doubled storage and halved CDN cache efficiency. **CMAF** (the Common Media Application Format, ISO/IEC 23000-19) removes the duplication: one set of fragmented MP4 segments, referenced by both an HLS playlist and a DASH manifest, so an Apple device and an Android device request the same object under the same cache key. Encryption was the last obstacle (below), and Fraunhofer FOKUS's survey of device support concluded in 2021 that "CMAF + 'cbcs' + HLS/DASH manifests is the way."
 
+![Two lanes compare packaging. Two formats, a set of segments each: renditions with aligned keyframes fan out to transport-stream segments, read by HLS playlists (multivariant and media), and fragmented MP4 segments, read by a DASH manifest (the MPD); a note says storage doubled and cache hits halved. CMAF, one set and two manifests: the same renditions become one accented segment set in fragmented MP4, which fans out to both the HLS playlists and the DASH manifest; a note says one object and one cache key.](/diagrams/ugp-video-on-demand-cmaf.svg "CMAF stores each segment once, so an Apple device and an Android device ask the CDN for the same object.")
+
 Packaging choices that a UGC platform makes once and lives with:
 
 - **Package at the edge or at rest.** Storing segments and manifests per format is simple and costs storage; packaging just in time from one stored copy of each rendition costs compute per cache miss and makes adding a format cheap. Vendors such as Mux do the latter for you.
