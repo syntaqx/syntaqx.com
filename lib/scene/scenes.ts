@@ -1,4 +1,4 @@
-import { box, quad, type Part, type Scene, type SceneFn, type SceneState, type V3 } from "./iso";
+import { box, quad, type Box, type Part, type Scene, type SceneFn, type SceneState, type V3 } from "./iso";
 
 /*
  * Scene registry. Each is a function of animation state returning parts in
@@ -739,28 +739,74 @@ const tender: SceneFn = (s) => {
  * next stop marked by a pin. On hover the roofs and the cargo lift off.
  */
 const route: SceneFn = (s) => {
-  const [lo, hi] = [1.5, 8.5];
-  const side = hi - lo;
-  const d = (s.t * 1.1 + 10) % (side * 4);
-  const seg = Math.floor(d / side);
-  const u = d % side;
+  const [lo, hi, R] = [1.5, 8.5, 1.2];
+  // the loop is a rounded square: per side, a straight run then a quarter turn
+  const run = hi - lo - 2 * R;
+  const piece = run + (Math.PI / 2) * R;
   const heading: [number, number][] = [[1, 0], [0, 1], [-1, 0], [0, -1]];
-  const start: [number, number][] = [[lo, lo], [hi, lo], [hi, hi], [lo, hi]];
-  const [hx, hy] = heading[seg];
-  const [px, py] = [start[seg][0] + hx * u, start[seg][1] + hy * u];
-  // a slab of the truck from u0 to u1 along its heading, 0.9 wide
-  const slab = (u0: number, u1: number, z: number, h: number) => {
-    const xs = [u0, u1].flatMap((k) => [-0.45, 0.45].map((w) => px + hx * k - hy * w));
-    const ys = [u0, u1].flatMap((k) => [-0.45, 0.45].map((w) => py + hy * k + hx * w));
-    const [x, y] = [Math.min(...xs), Math.min(...ys)];
-    return box(x, y, z, Math.max(...xs) - x, Math.max(...ys) - y, h);
+  const corner: [number, number][] = [[hi, lo], [hi, hi], [lo, hi], [lo, lo]];
+  const along = (d: number): [number, number, number, number] => {
+    const k = Math.floor(d / piece) % 4;
+    const w = d % piece;
+    const [ax, ay] = heading[k];
+    const [bx, by] = heading[(k + 1) % 4];
+    const [cx, cy] = corner[k];
+    if (w < run) return [cx - ax * (R + run - w), cy - ay * (R + run - w), ax, ay];
+    const f = (w - run) / R;
+    const [c, n] = [Math.cos(f), Math.sin(f)];
+    return [cx - ax * R + bx * R + (ax * n - bx * c) * R, cy - ay * R + by * R + (ay * n - by * c) * R, ax * c + bx * n, ay * c + by * n];
   };
-  const cargo = 0.25 + s.spread * 0.8;
+  const loop = piece * 4;
+  const d = (s.t * 1.1 + 10) % loop;
+  const seg = Math.floor(d / piece);
+  const [px, py, hx, hy] = along(d);
+  // a world point at u along the heading, v across it
+  const at = (u: number, v: number, z: number): V3 => [px + hx * u - hy * v, py + hy * u + hx * v, z];
+  // a box turned to the heading: the two sides facing the viewer become its left and right faces
+  const slab = (u0: number, u1: number, w: number, z: number, h: number): Box => {
+    const foot = [at(u0, -w, z), at(u1, -w, z), at(u1, w, z), at(u0, w, z)];
+    const up = (p: V3): V3 => [p[0], p[1], z + h];
+    const sides = [0, 1, 2, 3]
+      .map((i) => {
+        const [p, q] = [foot[i], foot[(i + 1) % 4]];
+        const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
+        const [nx, ny] = [(q[1] - p[1]) / len, (p[0] - q[0]) / len];
+        return { face: [p, q, up(q), up(p)], toward: nx + ny, lean: ny - nx };
+      })
+      .sort((m, n) => n.toward - m.toward)
+      .slice(0, 2)
+      .sort((m, n) => n.lean - m.lean);
+    const xs = foot.map((p) => p[0]);
+    const ys = foot.map((p) => p[1]);
+    const [x, y] = [Math.min(...xs), Math.min(...ys)];
+    return { x, y, z, a: Math.max(...xs) - x, b: Math.max(...ys) - y, h, left: sides[0].face, right: sides[1].face, top: foot.map(up) };
+  };
+  // a pane on the face at u (front or back) or v (a side), drawn only when that face is in view
+  const pane = (pts: V3[], nx: number, ny: number): Part[] => (nx + ny > 0.05 ? [{ kind: "plane", pts, v: 0.03 }] : []);
+  const [W, base] = [0.42, 0.34];
+  const cargo = base + s.spread * 0.8;
+  const front = 1.2;
+  const glass = (u: number): V3[] => [at(u, -0.3, 0.64), at(u, 0.3, 0.64), at(u, 0.3, 0.88), at(u, -0.3, 0.88)];
+  const sideGlass = (v: number): V3[] => [at(0.5, v, 0.64), at(0.8, v, 0.64), at(0.8, v, 0.88), at(0.5, v, 0.88)];
+  const depth = (u: number) => u * (hx + hy);
+  const pieces: [number, Part[]][] = [
+    [depth(-0.4), [
+      ...(s.spread > 0.05 ? [{ kind: "line", a: at(-0.4, 0, base), b: at(-0.4, 0, cargo), dashed: true, alpha: 0.4 } as Part] : []),
+      { kind: "box", box: slab(-1.15, 0.36, W, cargo, 0.78), accent: true },
+    ]],
+    [depth(0.62), [
+      { kind: "box", box: slab(0.42, 0.85, W, base, 0.6) },
+      ...pane(glass(0.851), hx, hy),
+      ...[W + 0.001, -W - 0.001].flatMap((v) => pane(sideGlass(v), -hy * Math.sign(v), hx * Math.sign(v))),
+    ]],
+    [depth(1.02), [{ kind: "box", box: slab(0.85, front, W, base, 0.3) }]],
+  ];
   const truck: Part[] = [
-    { kind: "box", box: slab(-1.15, 1.15, 0.05, 0.2), small: true },
-    { kind: "box", box: slab(0.5, 1.15, 0.25, 0.6) },
-    ...(s.spread > 0.05 ? [{ kind: "line", a: [px, py, 0.25], b: [px, py, cargo], dashed: true, alpha: 0.4 } as Part] : []),
-    { kind: "box", box: slab(-1.15, 0.4, cargo, 0.75), accent: true },
+    ...[-0.75, 0.82]
+      .sort((m, n) => depth(m) - depth(n))
+      .map((u): Part => ({ kind: "box", box: slab(u - 0.22, u + 0.22, W, 0, 0.26), small: true })),
+    { kind: "box", box: slab(-1.15, front, W - 0.04, 0.24, 0.1), small: true },
+    ...pieces.sort((m, n) => m[0] - n[0]).flatMap(([, p]) => p),
   ];
   const houses: [number, number][] = [[2.6, 2.6], [5.6, 2.6], [5.6, 5.6], [2.6, 5.6]];
   const stop = (seg + 1) % 4;
@@ -780,11 +826,15 @@ const route: SceneFn = (s) => {
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
     { kind: "line", a: [5.05, lo, 0], b: [5.05, hi, 0], alpha: 0.3 },
     { kind: "line", a: [lo, 5.05, 0], b: [hi, 5.05, 0], alpha: 0.3 },
-    { kind: "cable", pts: [[lo, lo, 0], [hi, lo, 0], [hi, hi, 0], [lo, hi, 0], [lo, lo, 0]], speed: 0.05, accent: true },
+    { kind: "cable", pts: Array.from({ length: 65 }, (_, i): V3 => {
+      const [x, y] = along((i / 64) * loop);
+      return [x, y, 0];
+    }), speed: 0.05, accent: true },
     ...(behind ? truck : []),
     ...[...houses].sort((p, q) => p[0] + p[1] - (q[0] + q[1])).flatMap(house),
     { kind: "line", a: [sx + a / 2, sy + b / 2, zr + r], b: [sx + a / 2, sy + b / 2, pin], dashed: true, alpha: 0.5 },
-    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin, r: 0.04, h: 0.5, rt: 0.3, accent: true },
+    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin, r: 0.03, h: 0.45, rt: 0.12, accent: true },
+    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin + 0.45, r: 0.34, h: 0.3, accent: true },
     ...(behind ? [] : truck),
   ];
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [5, 5, h + r + 2.2 + s.spread * 0.9]], axes: ground(10) };
