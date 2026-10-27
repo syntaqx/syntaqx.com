@@ -33,11 +33,11 @@ Field-service platforms split into those that own the signing experience and tho
 
 | Platform | Where the customer signs | What the public docs say |
 | -------- | ------------------------ | ------------------------ |
+| Enerflo | Email or in person | "Docflo" compiles a solar sale's documents into one signing packet |
 | FieldRoutes | Rep's device, in the field | "You can sign an agreement offline," but only one opened while online can be viewed, and "creating a new contract requires a connection" |
-| ServiceTitan | Customer's own device, by link | Forms are sent by email or text, customers "review and sign on their own devices," signed documents go to the job audit trail, and sending requires a connection |
 | Jobber | Client hub, on the customer's device | The client approves a quote and signs by drawing or typing a name; a required deposit turns the button into "Approve and Pay Deposit"; editing an approved quote removes the signature and saves the signed version as a PDF note |
 | SalesRabbit | Rep's device | "Digital Contracts" builds contracts, and "Mobile eSignature" is a paid add-on |
-| Enerflo | Email or in person | "Docflo" compiles a solar sale's documents into one signing packet |
+| ServiceTitan | Customer's own device, by link | Forms are sent by email or text, customers "review and sign on their own devices," signed documents go to the job audit trail, and sending requires a connection |
 
 ServiceTitan's offline guide saves form signatures locally but needs a connection for contracts, proposals and financing. That split is common: a signature image is easy offline; a complete packet with a delivered copy isn't. Platforms that want a portable, independently verifiable record embed an e-signature provider (DocuSign, Dropbox Sign, Acrobat Sign), and all of them put the same thing on you in embedded mode: identifying the signer. In remote signing the provider's link is evidence that the signer controls that inbox or phone; in embedded signing the provider records that your application said it checked, and nothing more.
 

@@ -125,8 +125,8 @@ Scale varies by orders of magnitude between games. Riot's one public figure is t
 | Tool | What it is | Event model | Notable |
 | --- | --- | --- | --- |
 | GameAnalytics | Analytics service built for games, with SDKs for the major engines | Fixed types: business, resource, progression, design, error, ad, impression | Design event hierarchies of 1 to 5 segments; guidance against high cardinality; metrics computed in UTC |
-| Unity Analytics | Part of Unity Gaming Services | Standard events plus custom events defined in the dashboard first | Rejects events off-schema, more than 30 days old or more than 24 hours in the future; uploads every 60 s; dormant until consent |
 | PlayFab | Microsoft's game backend, with analytics in it | PlayStream events and a cheaper Telemetry path | Real-time rules engine, segments, experiments, export to Blob or S3 |
+| Unity Analytics | Part of Unity Gaming Services | Standard events plus custom events defined in the dashboard first | Rejects events off-schema, more than 30 days old or more than 24 hours in the future; uploads every 60 s; dormant until consent |
 | Backend platforms (Pragma, AccelByte) | Game backends that include analytics modules | Vendor-specific | Pragma lists "Telemetry & Analytics" among its services; AccelByte places game analytics in its Foundations modules |
 | Your own pipeline | Collector, bus, lake or warehouse | Your schemas | Full control and the operating cost that comes with it |
 

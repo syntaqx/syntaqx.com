@@ -28,13 +28,13 @@ Every engine has a place for those numbers:
 
 | Engine | Time | Distance | Other terms |
 | --- | --- | --- | --- |
-| VROOM | `costs.per_hour` of travel (default 3600, so cost is travel seconds) | `costs.per_km` (default 0) | `costs.fixed` per vehicle used; priority |
+| Esri ArcGIS VRP | `CostPerUnitTime` over route duration | `CostPerUnitDistance` | `CostPerUnitOvertime`, `FixedCost`, order `Revenue` |
 | Google Route Optimization | `cost_per_hour` (whole route, incl. waiting and visits) or `cost_per_traveled_hour` (travel only) | `cost_per_kilometer` | `fixed_cost`; `penalty_cost` per shipment; global duration cost |
 | OR-Tools | Arc cost evaluator from a time callback | Arc cost evaluator from a distance callback | Span cost coefficients; disjunction penalties |
 | Routific | Default: driving time and working hours | `shortest_distance` | `balance` of shift times; `min_vehicles` |
-| Esri ArcGIS VRP | `CostPerUnitTime` over route duration | `CostPerUnitDistance` | `CostPerUnitOvertime`, `FixedCost`, order `Revenue` |
 | Salesforce Field Service | Minimize Travel and ASAP objectives | Not published | Preferred Resource, Skill Level, Minimize Overtime, weighted |
 | Timefold FSR | Minimize travel time, per second | Minimize travel distance, per meter (weight 0 by default) | Any soft constraint's weight |
+| VROOM | `costs.per_hour` of travel (default 3600, so cost is travel seconds) | `costs.per_km` (default 0) | `costs.fixed` per vehicle used; priority |
 
 A few details matter. Google's `cost_per_hour` also charges waiting and visit time, so it's where paid labor goes; `cost_per_traveled_hour` is for costs that accrue only while moving. In OR-Tools the arc cost is whatever the callback returns, so a money objective is one callback that prices a leg's seconds and meters together, and balance is a separate lever: the VRP guide sets a global span coefficient of 100, which "makes the global span the predominant factor in the objective function" and so minimizes the longest route. Timefold penalizes travel per second and distance per meter, units that can't be compared without weights, and its docs say the two goals are not typically used together; pick one, or convert both to money before they reach the solver. Salesforce states the trade-off in plain words: ASAP "can contradict other objectives," because the earliest slot often means more travel.
 

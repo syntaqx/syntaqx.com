@@ -97,9 +97,9 @@ Running payment HSMs used to mean racks in two data centers, smart cards in safe
 
 | Option | What you get | What you still own |
 | ------ | ------------ | ------------------ |
+| **AWS CloudHSM** | Single-tenant, general-purpose HSMs validated at FIPS 140-2 or 140-3 Level 3 | You build the payment functions; it's the right tool for vault and signing keys, not PIN processing |
 | **AWS Payment Cryptography** | A managed, elastic payment crypto API on PCI PTS HSM V3 and FIPS 140-2 Level 3 hardware, with TR-31 and TR-34 key exchange, DUKPT, PIN translation and EMV cryptogram validation | Key policy, key exchange with partners, and how your application uses it; no raw access to the hardware |
 | **Azure Payment HSM** | Single-tenant Thales payShield 10K devices (FIPS 140-2 Level 3, PCI HSM v3) in your virtual network, under your sole administrative control | Everything a payShield owner does, including capacity, backup and key ceremonies, just without the data center |
-| **AWS CloudHSM** | Single-tenant, general-purpose HSMs validated at FIPS 140-2 or 140-3 Level 3 | You build the payment functions; it's the right tool for vault and signing keys, not PIN processing |
 | **Google Cloud HSM** | A managed cluster of FIPS 140-2 Level 3 HSMs behind Cloud KMS | General-purpose keys only; not a payment HSM |
 | **On-premises payment HSMs** | Full control, any vendor feature | Hardware lifecycle, physical security, secure rooms and every procedure around them |
 

@@ -34,9 +34,9 @@ Fleet telematics vendors sell the hardware (a vehicle gateway on the diagnostic 
 
 | Vendor | Getting data out | Compliance surfaces | Safety | Notes |
 | ------ | ---------------- | ------------------- | ------ | ----- |
-| **Samsara** | REST API, a vehicle stats feed and webhooks | HOS clocks, logs and daily logs; DVIRs created, read and resolved through the API; IFTA reports | Harsh events, speeding and crash from the gateway; AI dash cam events with video; driver and vehicle safety scores | API and webhook access depends on license tier |
-| **Motive** | Webhooks over HTTP POST or to SQS and SNS | HOS logs and violation webhooks; inspection report webhooks for DVIRs; IFTA reports | Driver performance and speeding event webhooks | |
 | **Geotab** | `GetFeed` with a version token that returns only changes, resending modified old records with a newer version | Duty status logs, DVIR logs, fuel tax detail | Driver Safety Scorecard; a predictive Collision Risk model | Default limit of 60 requests a minute; some record types not guaranteed in chronological order |
+| **Motive** | Webhooks over HTTP POST or to SQS and SNS | HOS logs and violation webhooks; inspection report webhooks for DVIRs; IFTA reports | Driver performance and speeding event webhooks | |
+| **Samsara** | REST API, a vehicle stats feed and webhooks | HOS clocks, logs and daily logs; DVIRs created, read and resolved through the API; IFTA reports | Harsh events, speeding and crash from the gateway; AI dash cam events with video; driver and vehicle safety scores | API and webhook access depends on license tier |
 | **Verizon Connect** | REVEAL Vehicle API syncing drivers, vehicles and groups with back-office systems | Not published | Not published | Odometer and engine-hours updates can be backdated up to 30 days |
 
 Two patterns in these APIs shape any integration. First, the feeds resend: Geotab explicitly resends modified data, and Samsara's HOS logs reflect later edits by drivers and carriers, so consumers must upsert by the vendor's ID and version rather than append. Second, delivery is at-least-once: retries mean duplicates, so webhook handlers must be idempotent and verify each vendor's signature scheme; signing, retries and replay are in [Webhooks](/docs/api-design/webhooks) and [Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent).

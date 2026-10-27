@@ -19,12 +19,12 @@ The SMB and vertical suites all ship a portal; they differ in sign-in, schedulin
 
 | Platform | Sign-in | Scheduling | Payments | Notable |
 | --- | --- | --- | --- | --- |
-| ServiceTitan | Customer requests an invitation with the email on their record | Appointment requests when the web scheduler is on; staff book them | Pay one invoice partially or several in full; update the membership card; Affirm financing | History per service location; Memberships tab shows upcoming maintenance |
 | FieldRoutes | Portal account | Upcoming dates for active subscriptions | Pay balances, opt into AutoPay, default method in Wallet; renewals with Pay Now, no partials | Products-used tab; rate the technician; master account across properties |
-| Jobber client hub | Magic link; re-verify after 14 days without one | Submit requests; next five upcoming visits | Pay invoices with tips and partial payments if enabled; pay deposits; Wallet | Approve quotes or request changes, with optional line items |
-| Housecall Pro | Magic link valid 7 days | Book Online; message to request new, rescheduled or cancelled visits | Pay invoices; card on file | Approve estimates; statement summary |
 | GorillaDesk | Permanent unique portal URL | Not published | Manage payment options, pay invoices | Documents area; optional contact form |
+| Housecall Pro | Magic link valid 7 days | Book Online; message to request new, rescheduled or cancelled visits | Pay invoices; card on file | Approve estimates; statement summary |
+| Jobber client hub | Magic link; re-verify after 14 days without one | Submit requests; next five upcoming visits | Pay invoices with tips and partial payments if enabled; pay deposits; Wallet | Approve quotes or request changes, with optional line items |
 | PestPac | Not published | Appointment requests | Online payment, stored methods | Commercial dashboards, trend reports, pest sightings, audit-only users |
+| ServiceTitan | Customer requests an invitation with the email on their record | Appointment requests when the web scheduler is on; staff book them | Pay one invoice partially or several in full; update the membership card; Affirm financing | History per service location; Memberships tab shows upcoming maintenance |
 
 PestPac's row comes from its marketing pages; the rest from each vendor's help center (see References).
 

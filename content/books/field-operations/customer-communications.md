@@ -31,11 +31,11 @@ Every suite ships the core lifecycle. They differ in how reminders are triggered
 
 | Platform | Reminders | On my way | Review requests |
 | --- | --- | --- | --- |
-| ServiceTitan | Configured notifications | Sent automatically on dispatch; text or email; tracking link with distance, ETA, tech photo and rating | Marketing Pro Reputation: trigger and survey, resends, delivery metrics |
 | FieldRoutes | Per route day, SMS, voice or email by saved preference; statuses including Confirmed via Office | Tech taps a button; SMS with a Live Technician View link that ends at check-in or after 90 minutes | Customer reviews in the portal |
-| Jobber | Email on by default, text if the contact receives texts; relative or time-of-day timing | Manual, tech picks 5 to 60 minutes away | Triggers on job close, visit count or paid invoice; at most one per client per six months |
-| Housecall Pro | Scheduled and finished notifications, resent on time or technician change | Text when the button is clicked | Reviews app sends on finish, routes customers between review sites |
 | GorillaDesk | Confirmation automations (customer clicks to confirm) then reminders | Manual, live location link and/or arrival time | Pro plan |
+| Housecall Pro | Scheduled and finished notifications, resent on time or technician change | Text when the button is clicked | Reviews app sends on finish, routes customers between review sites |
+| Jobber | Email on by default, text if the contact receives texts; relative or time-of-day timing | Manual, tech picks 5 to 60 minutes away | Triggers on job close, visit count or paid invoice; at most one per client per six months |
+| ServiceTitan | Configured notifications | Sent automatically on dispatch; text or email; tracking link with distance, ETA, tech photo and rating | Marketing Pro Reputation: trigger and survey, resends, delivery metrics |
 
 Two details are worth borrowing. Reminders can be a confirmation workflow: GorillaDesk sends a confirmation the customer clicks before the reminders, and FieldRoutes tracks each reminder's state (sent, don't send, pending confirmation, confirmed via office), so the unconfirmed visits on tomorrow's routes are the ones to call. And Housecall Pro resends the scheduled notification when the time or technician changes, so the customer's copy tracks the real appointment.
 

@@ -112,13 +112,13 @@ Public documentation differs a lot in depth, so this table records only what eac
 
 | Vendor | Recurring work | Routing | Offline app | Change history | API |
 | --- | --- | --- | --- | --- | --- |
-| **ServiceTitan** | Memberships generate recurring service events | Reorders one technician's day, up to 70 jobs | Most field work offline; some payments, financing and inventory need a connection | Audit trail with old and new values on customers and locations | OAuth client credentials plus app key |
-| **FieldRoutes** | Subscriptions feed a job pool by due date | Multi-technician routing with vehicle, skill and capacity constraints | Service and sales offline; charging needs signal | Change Log Report; Changelogs API | Public reference |
-| **Jobber** | Recurring jobs create visits with the job's line items | Anytime visits, up to 7 days at once | Not published | Activity feed, kept up to a year | GraphQL, authorization code flow, app store |
-| **Housecall Pro** | Service plans with included visits | One technician's day by drive time | Editing offline not supported | Activity feeds with device | Not published |
-| **Salesforce Field Service** | Maintenance plans with calendar, criteria and usage rules | Policies of work rules and weighted objectives | Briefcase priming; automatic offline mode | History objects per field service object | The Salesforce platform |
 | **Dynamics 365 Field Service** | Agreements generate work orders and invoices | Schedule board, assistant, optimization add-on | Offline-first; admin sets who wins conflicts | Dataverse auditing, retention configurable | The Power Platform |
 | **eLogii** | Templates repeat tasks or routes on set dates | Auto-optimization; en route tasks excluded by default | Sync of offline task actions | Immutable task history with locations | Webhooks with HMAC or OAuth |
+| **FieldRoutes** | Subscriptions feed a job pool by due date | Multi-technician routing with vehicle, skill and capacity constraints | Service and sales offline; charging needs signal | Change Log Report; Changelogs API | Public reference |
+| **Housecall Pro** | Service plans with included visits | One technician's day by drive time | Editing offline not supported | Activity feeds with device | Not published |
+| **Jobber** | Recurring jobs create visits with the job's line items | Anytime visits, up to 7 days at once | Not published | Activity feed, kept up to a year | GraphQL, authorization code flow, app store |
+| **Salesforce Field Service** | Maintenance plans with calendar, criteria and usage rules | Policies of work rules and weighted objectives | Briefcase priming; automatic offline mode | History objects per field service object | The Salesforce platform |
+| **ServiceTitan** | Memberships generate recurring service events | Reorders one technician's day, up to 70 jobs | Most field work offline; some payments, financing and inventory need a connection | Audit trail with old and new values on customers and locations | OAuth client credentials plus app key |
 
 ## Build, Buy or Extend
 

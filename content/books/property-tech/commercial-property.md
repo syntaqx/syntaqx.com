@@ -17,12 +17,12 @@ Commercial is an edition of most multifamily suites and the core business of a f
 
 | Vendor | Commercial capabilities on its own pages |
 | --- | --- |
-| **Entrata** (Commercial) | CAM, insurance and tax expenses pooled by square feet, with each tenant's share and monthly and annual charges; automated triple net reconciliations; lease abstracts; clause and exclusion tracking; tenant insurance compliance; commercial rent roll; tenant portal with permissions |
-| **RealPage** (Commercial) | CAM calculation, billing and reconciliation; percentage rent calculated from tenant sales reported through the tenant portal; CPI escalations; scheduled rent postings; late fee and vacancy loss calculations; tenant portal where tenants pay invoices and upload insurance certificates |
-| **Yardi Breeze** (Commercial) | Triple net, gross or combined leases; custom expense pools with caps; estimates posted monthly, quarterly or annually for later reconciliation; percentage rent and retail sales tracking; escalations; lease expiration tracking; a tenant portal and app as a Premier add-on; $2 per unit per month with a $200 monthly minimum on an annual agreement |
-| **MRI Software** | Recoveries for office, industrial and retail; a retail product that automates "recoveries, percentage rent, and breakpoints"; lease abstraction; tenant portal; for occupiers, lease management with critical dates and lease accounting |
 | **AppFolio** | "Common Area Maintenance tracking and reconciliation" in its Core plan |
+| **Entrata** (Commercial) | CAM, insurance and tax expenses pooled by square feet, with each tenant's share and monthly and annual charges; automated triple net reconciliations; lease abstracts; clause and exclusion tracking; tenant insurance compliance; commercial rent roll; tenant portal with permissions |
+| **MRI Software** | Recoveries for office, industrial and retail; a retail product that automates "recoveries, percentage rent, and breakpoints"; lease abstraction; tenant portal; for occupiers, lease management with critical dates and lease accounting |
+| **RealPage** (Commercial) | CAM calculation, billing and reconciliation; percentage rent calculated from tenant sales reported through the tenant portal; CPI escalations; scheduled rent postings; late fee and vacancy loss calculations; tenant portal where tenants pay invoices and upload insurance certificates |
 | **Rent Manager** | CAM recovery with "commercial recoverable expenses" charged back with an optional markup; CAM reconciliation by pro-rata share; retail sales and commercial rent roll reports; charge escalations |
+| **Yardi Breeze** (Commercial) | Triple net, gross or combined leases; custom expense pools with caps; estimates posted monthly, quarterly or annually for later reconciliation; percentage rent and retail sales tracking; escalations; lease expiration tracking; a tenant portal and app as a Premier add-on; $2 per unit per month with a $200 monthly minimum on an annual agreement |
 
 Three patterns show up across them. **Recoveries are pools.** Entrata pools CAM, insurance and tax by square feet, Yardi Breeze lets a manager define custom pools with caps, Rent Manager reconciles recoverable expenses by pro-rata share, and MRI describes applying "each tenant's unique recoveries profile" to the pools. **Estimates are ordinary recurring charges.** MRI stores the monthly estimates in "the recurring charges table on each lease" and posts the year-end difference as a one-time charge or credit, which is the [core model's](/books/property-tech/property-business#the-core-data-model) schedule-and-charge split applied to recoveries. **Tenants feed the system.** RealPage and Yardi Breeze collect retail sales through the tenant portal for percentage rent, and RealPage takes insurance certificate uploads there.
 
@@ -241,10 +241,10 @@ The tenant posture flips. In the landlord model, the platform tenant owns or man
 
 | Vendor | Occupier capabilities |
 | --- | --- |
-| **Visual Lease** (part of CoStar Group) | Lease management across the life cycle; lease accounting producing "disclosures, journal entries, reports and footnotes" for ASC 842, IFRS 16 and GASB 87; real estate, fleet and equipment; AI lease abstraction |
 | **CoStar Real Estate Manager** | "Enterprise-class solution for lease accounting and lease administration" for ASC 842, IFRS 16 and GASB 87, positioned as a subledger feeding the financial close (per Trintech's partner page) |
 | **FinQuery** (formerly LeaseQuery) | Compliance with ASC 842, IFRS 16, FRS 102, GASB 87 and SFFAS 54; amortization schedules, journal entries and disclosure reports |
 | **MRI Software** | Prolease for ASC 842, GASB 87 and IFRS 16 across "property, vehicle or equipment leases," with an audit trail; lease management with "centralized data, obligations and critical dates"; IWMS and room and desk booking |
+| **Visual Lease** (part of CoStar Group) | Lease management across the life cycle; lease accounting producing "disclosures, journal entries, reports and footnotes" for ASC 842, IFRS 16 and GASB 87; real estate, fleet and equipment; AI lease abstraction |
 
 ### Lease Administration for Occupiers
 

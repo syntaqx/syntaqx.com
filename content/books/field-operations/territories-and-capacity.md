@@ -15,11 +15,11 @@ A **territory** is the area a team serves. The design choices are how the area i
 
 | Platform | Territory unit | How an address is placed | Membership |
 | --- | --- | --- | --- |
+| **Esri Territory Design** | Multilevel territories built from base geography | Spatial | A planning tool, not an operational one |
+| **FieldRoutes** | Routing regions | Region on the subscription | Routing groups by region or preferred tech |
+| **Oracle Field Service** | Capacity areas and work zones | Work zone matching | Resources in a capacity area |
 | **Salesforce Field Service** | Service territory, optionally drawn as map polygons that can nest into a hierarchy | Point in polygon; with overlapping polygons, the highest or lowest level wins per setting | Service territory members; a resource can belong to several |
 | **ServiceTitan** | Zones, defined by the ZIP codes served | ZIP code | Business units tie technicians, job types and zones together |
-| **Oracle Field Service** | Capacity areas and work zones | Work zone matching | Resources in a capacity area |
-| **FieldRoutes** | Routing regions | Region on the subscription | Routing groups by region or preferred tech |
-| **Esri Territory Design** | Multilevel territories built from base geography | Spatial | A planning tool, not an operational one |
 
 In Salesforce, resources "are assigned to one or more service territories as service territory members," a polygon "can be nested inside another polygon creating a hierarchy," and a location inside several is assigned "to either the highest or lowest-level territory in the hierarchy depending on your settings." ServiceTitan's online scheduler is built on Zones, "the ZIP codes you serve," and can't be configured without them; its capacity engine infers who can do what from the links among business units, job types, zones and skills. Territories sit below the branch in the [tenant hierarchy](/docs/architecture/multi-tenancy#tenant-hierarchies), and I still keep them out of the `org_units` defined in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model), in their own table with a `branch_id`. Org units carry what's licensed, staffed and accounted for (a time zone, licenses, a profit and loss); territories are drawings that change monthly and carry no books. Keeping them apart means a redraw never touches the tenant hierarchy, at the cost of one more link to follow (territory to branch) when rolling up. The alternative, a fourth `kind = 'territory'` in `org_units`, works if territories rarely change and need the same permissions as branches.
 
@@ -120,11 +120,11 @@ Capacity is how much more work a day can take, and the platforms measure it in t
 
 | Platform | Unit | How it's computed | Notable behavior |
 | --- | --- | --- | --- |
+| **FieldRoutes capacity tracking** | Product, such as gallons per route | Estimated product per service type against route capacity | A different meaning of capacity: what the truck carries |
 | **Oracle Field Service** | Man-minutes per capacity area, category and time slot | "Capacity = Quota – Used"; quota is the planned allocation of capacity | Booking by direct assignment, by quota per time slot or per booking interval, chosen per capacity area |
 | **Salesforce Field Service** | Hours or appointment count per period, for capacity-based resources | Minutes used versus the resource's capacity | The scheduler stops offering resources whose capacity is full |
 | **ServiceTitan Adaptive Capacity** | Technician time | Time provided by shifts or business hours minus time consumed | Jobs consume capacity even without a shift, so reports can go negative |
 | **Solea** | Slots per day per capacity schedule | Filled counts, counted down at booking | A held slot counts against the day |
-| **FieldRoutes capacity tracking** | Product, such as gallons per route | Estimated product per service type against route capacity | A different meaning of capacity: what the truck carries |
 
 Oracle's model is the most formal. Capacity is "time available in man-minutes based on the availability of the resources in the capacity area," quota is the "company's planned usage of capacity allocated across different capacity categories and time slots," and booking is accepted only when capacity remains. The quota layer is what lets an HVAC business reserve Tuesday afternoons for installs and not let repair calls eat them.
 

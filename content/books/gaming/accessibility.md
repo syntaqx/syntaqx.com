@@ -223,10 +223,10 @@ Players can now filter stores by accessibility, which turns a game's settings in
 
 | Store | Since | What it is |
 | --- | --- | --- |
-| Xbox (console store, PC and mobile apps, xbox.com) | November 16, 2021; Accessible Games Initiative tags from July 9, 2025 | 20 Xbox tags at launch, each with requirements for "a consistent bar for quality"; now the industry tags, keeping five Xbox tags with no equivalent ("Accessibility on launch," "On-demand tutorials," "Pausable," "Adjustable input sensitivity," "Single stick gameplay") |
+| Apple App Store | Announced May 13, 2025; shown on iOS 26 and the matching OS versions | Accessibility Nutrition Labels for nine features (VoiceOver, Voice Control, Larger Text, Dark Interface, Differentiate Without Color Alone, Sufficient Contrast, Reduced Motion, Captions, Audio Descriptions), declared per device |
 | PlayStation Store on PS5 | April 2023 | More than 50 tags across six categories (visual, audio, subtitles and captions, controls, gameplay, online communication), for PS4 and PS5 games |
 | Steam | June 2025 | 19 features in four groups (gameplay, audio, visual, input), declared through the Accessibility Feature Wizard on the store page's Basic Info tab, with search filters; Valve reported over 5,000 apps had filled them in at launch |
-| Apple App Store | Announced May 13, 2025; shown on iOS 26 and the matching OS versions | Accessibility Nutrition Labels for nine features (VoiceOver, Voice Control, Larger Text, Dark Interface, Differentiate Without Color Alone, Sufficient Contrast, Reduced Motion, Captions, Audio Descriptions), declared per device |
+| Xbox (console store, PC and mobile apps, xbox.com) | November 16, 2021; Accessible Games Initiative tags from July 9, 2025 | 20 Xbox tags at launch, each with requirements for "a consistent bar for quality"; now the industry tags, keeping five Xbox tags with no equivalent ("Accessibility on launch," "On-demand tutorials," "Pausable," "Adjustable input sensitivity," "Single stick gameplay") |
 
 The **Accessible Games Initiative** is the attempt at a shared vocabulary: announced by the Entertainment Software Association at GDC on March 20, 2025 with Electronic Arts, Google, Microsoft, Nintendo of America and Ubisoft, it defines 24 tags "all with clear criteria," which participating companies show on storefronts and product pages. Use is "completely voluntary for video game companies and storefronts," with timelines set company by company; Ubisoft began showing the tags on its product pages on May 21, 2026, starting with four games.
 

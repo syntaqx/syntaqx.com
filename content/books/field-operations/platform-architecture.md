@@ -13,14 +13,14 @@ A field operations platform is a scheduling system, a mobile app that works with
 
 The volume's canonical entities, their tables and the diagram are in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model). Every platform converges on the same handful of concepts under different names, which is what an integration or a migration maps between:
 
-| Concept | Salesforce Field Service | Dynamics 365 Field Service | ServiceNow FSM | Delivery platforms |
+| Concept | Dynamics 365 Field Service | Salesforce Field Service | ServiceNow FSM | Delivery platforms |
 | --- | --- | --- | --- | --- |
-| The work to be done (`work_orders`) | Work order, with line items | Work order, with incidents, products, services, tasks | Work order, with one or more tasks | Order or task |
-| A visit at a time (`visits`) | Service appointment | Booking (bookable resource booking) | Work order task, scheduled | Stop on a route |
-| Who does it | Service resource, crew | Bookable resource (people, equipment, facilities) | Field service agent | Worker or driver |
-| Where they may work | Service territory, territory members | Territory | Not published | Team, hub, depot, zone |
-| What they must be able to do | Skills | Characteristics | Not published | Skills (exact string match at Onfleet, Bringg) |
-| Recurring source (`agreements`, `recurrences`) | Maintenance plan | Agreement | Install base work plan, planned work schedule | Varies |
+| The work to be done (`work_orders`) | Work order, with incidents, products, services, tasks | Work order, with line items | Work order, with one or more tasks | Order or task |
+| A visit at a time (`visits`) | Booking (bookable resource booking) | Service appointment | Work order task, scheduled | Stop on a route |
+| Who does it | Bookable resource (people, equipment, facilities) | Service resource, crew | Field service agent | Worker or driver |
+| Where they may work | Territory | Service territory, territory members | Not published | Team, hub, depot, zone |
+| What they must be able to do | Characteristics | Skills | Not published | Skills (exact string match at Onfleet, Bringg) |
+| Recurring source (`agreements`, `recurrences`) | Agreement | Maintenance plan | Install base work plan, planned work schedule | Varies |
 
 Salesforce's **work type** is a template that sets duration and skill requirements and can create the appointment automatically; Dynamics runs work order statuses (Unscheduled to Posted) and booking statuses (Scheduled, Traveling, In Progress, Completed) on separate life cycles. Delivery platforms (Onfleet, Spoke, Bringg) flatten everything to a stop-level task, because most deliveries are one visit. Resources are more than technicians: Dynamics books equipment and facilities, and Salesforce models crews and capacity-based contractors, so give resources a kind from day one: the core model's `technician` (pointing at a staff member), `crew`, `contractor` and `equipment`, with vehicles in their own table.
 
@@ -63,11 +63,11 @@ A field platform is both a webhook sender (to accounting, marketing, CRM and a c
 
 | Vendor | Signature | Retries | Stated caveats |
 | --- | --- | --- | --- |
+| FarEye | Bearer token | Up to 4 retries | Respond 200 within 30 seconds; duplicates and out-of-order after retries |
+| Motive | HMAC-SHA1, `X-KT-Webhook-Signature` | After 1 minute, 1 hour, 6 hours; 403 means bad signature, no retry | Handler must process each request only once |
 | Onfleet | HMAC-SHA512 over the raw body, hex secret, `X-Onfleet-Signature` | Not published | Numbered trigger IDs (taskStarted, taskEta, taskCompleted, taskFailed and more) |
 | Samsara | HMAC-SHA256 over `v1:<timestamp>:<body>`, `X-Samsara-Signature` with `X-Samsara-Timestamp` | 5 attempts in total, exponential backoff | No redirects; a webhook that never returns 2xx may be disabled |
-| Motive | HMAC-SHA1, `X-KT-Webhook-Signature` | After 1 minute, 1 hour, 6 hours; 403 means bad signature, no retry | Handler must process each request only once |
 | Spoke | Not covered on the best-practices page | About an hour, independent backoff per message | May arrive out of order; handle idempotently; redirects are errors |
-| FarEye | Bearer token | Up to 4 retries | Respond 200 within 30 seconds; duplicates and out-of-order after retries |
 | Stripe | HMAC-SHA256 over `timestamp.body`, `Stripe-Signature` | Up to three days in live mode | Ordering not guaranteed; 5-minute default timestamp tolerance against replay |
 
 ![Webhook delivery: the business write and an outbox row commit in one transaction, a relay signs and posts, failures retry with backoff then disable and notify; the receiver verifies the signature, dedupes on event id, returns 2xx before real work, and processes from a queue.](/diagrams/fo-platform-architecture-webhooks.svg "Sending: write the event in the same transaction as the change, then deliver from a relay with retries. Receiving: verify, dedupe, acknowledge fast, process later.")
@@ -130,8 +130,8 @@ Technicians work in basements, crawl spaces and rural routes. The enterprise ven
 
 | Vendor | What syncs | Conflict rule |
 | --- | --- | --- |
-| Salesforce | Offline briefcase scoped to each worker's profile; critical changes every five minutes; auto-offline after 3 failed checks at 15-second intervals | Not published |
 | Dynamics 365 | Offline profile per table, sync from 5 minutes to 1 day | Table level, not field level; by default the technician's offline change wins, or a setting makes the dispatcher's win |
+| Salesforce | Offline briefcase scoped to each worker's profile; critical changes every five minutes; auto-offline after 3 failed checks at 15-second intervals | Not published |
 | ServiceNow | Write-back actions queued in an outbox and replayed in order | A failed action is marked and not retried; conflicts are handled server side by administrators |
 
 The design (commands replayed in order, conflicts decided per command type) is in [Offline-First Sync](/docs/architecture/offline-sync#conflicts-choosing-who-wins), and the field rule for who wins is in [Conflicts in Field Work](/books/field-operations/technician-app#conflicts-in-field-work). At the platform layer, keep money server-authoritative and plan for [Mobile Releases](/docs/delivery/mobile-releases): old app versions keep syncing for months, so the server accepts every command version still in the field.

@@ -30,17 +30,17 @@ The solvers split into libraries you run and hosted APIs you call. **OR-Tools** 
 
 | Engine | Kind | Windows | Objective controls |
 | --- | --- | --- | --- |
-| OR-Tools | Library | Hard via time dimension; drop with penalty | Arc costs, span costs, penalties, any mix you code |
-| VROOM | Library | Hard; plan mode reports violations | Vehicle costs (fixed, per hour, per km), priority 0 to 100 |
-| Timefold FSR | Library or hosted | Hard and soft, scored in hard/medium/soft levels | Weighted constraints, incl. overtime and fairness |
+| Esri ArcGIS VRP | Hosted | Hard when max violation is 0; two per order | Cost per time, distance, overtime; order revenue |
 | Google Route Optimization | Hosted | Hard plus soft windows with costs before or after | Per-hour, per-km, fixed and skip-penalty costs |
-| Routific | Hosted | Multiple windows per visit; capped lateness | Driving time plus working hours, or distance; balance |
-| OptimoRoute | Hosted | Windows, priority L/M/H/C | Balance by work time or order count |
+| GraphHopper | Hosted | Hard | Completion time, or min-max to finish together |
 | HERE Tour Planning | Hosted | List of windows per place | Vehicle-type costs; priorities 1 to 5 |
 | Mapbox Optimization v2 | Hosted (beta) | `strict`, `soft`, `soft_start`, `soft_end` | Total travel time or longest schedule, one only |
 | NextBillion | Hosted | Soft overtime and lateness limits | Objective and custom cost matrix |
-| Esri ArcGIS VRP | Hosted | Hard when max violation is 0; two per order | Cost per time, distance, overtime; order revenue |
-| GraphHopper | Hosted | Hard | Completion time, or min-max to finish together |
+| OptimoRoute | Hosted | Windows, priority L/M/H/C | Balance by work time or order count |
+| OR-Tools | Library | Hard via time dimension; drop with penalty | Arc costs, span costs, penalties, any mix you code |
+| Routific | Hosted | Multiple windows per visit; capped lateness | Driving time plus working hours, or distance; balance |
+| Timefold FSR | Library or hosted | Hard and soft, scored in hard/medium/soft levels | Weighted constraints, incl. overtime and fairness |
+| VROOM | Library | Hard; plan mode reports violations | Vehicle costs (fixed, per hour, per km), priority 0 to 100 |
 
 Where each engine puts the price of an hour and a mile is compared in [Weighing the Routing Objective](/books/field-operations/route-objectives#time-is-not-distance). The hosted APIs cap the size of a synchronous request and send anything larger through an asynchronous path, which shapes the integration more than any objective setting does ([Runs Are Jobs](#runs-are-jobs-and-results-go-stale) below).
 
@@ -56,13 +56,13 @@ Field service platforms wrap these engines in very different scopes, and the sco
 
 | Platform | What the optimizer may change | What it respects | Notes from public docs |
 | --- | --- | --- | --- |
-| ServiceTitan Optimize Technician Route | Order of one technician's day | Arrival windows; skips Confirmed jobs | Starts from the tech's validated home address; each run logged in the job Audit Trail |
+| Dynamics 365 RSO | Bookings across many jobs and resources | Characteristics, territories, promised windows | Paid add-on; ranked goals; overnight, intraday, simulation and emergency runs |
+| FieldRoutes Intelligent Routing | Builds routes from groups, then assigns them | Max stops, max minutes, skills, square or linear feet | Equal Stop vs Auto Optimize; truck, hazmat, bridge-height and same-side routing |
 | Housecall Pro Optimize by Drive Time | Order of one technician's day | Locked jobs; anytime jobs float in business hours | Never changes day or technician; save with or without customer notifications |
 | Jobber route optimization | Order of anytime visits | Fixed-time visits; optional fixed first and last stop | Up to 7 days at once |
-| FieldRoutes Intelligent Routing | Builds routes from groups, then assigns them | Max stops, max minutes, skills, square or linear feet | Equal Stop vs Auto Optimize; truck, hazmat, bridge-height and same-side routing |
 | Salesforce Field Service | Candidates, time and resource per appointment | Work rules (pass/fail) | Service objectives as weighted grades; default policies such as Customer First and High Intensity |
-| Dynamics 365 RSO | Bookings across many jobs and resources | Characteristics, territories, promised windows | Paid add-on; ranked goals; overnight, intraday, simulation and emergency runs |
 | SAP FSM | Assignments by policy | Policy: skills, distance, earliest | Manual, assisted and automatic scheduling |
+| ServiceTitan Optimize Technician Route | Order of one technician's day | Arrival windows; skips Confirmed jobs | Starts from the tech's validated home address; each run logged in the job Audit Trail |
 | Solea Auto-Scheduling | Places due and new work overnight | Freeze window, locked visits, windows, hours | Dry-run preview; unplaceable work goes to a job pool |
 
 The range runs from a single-technician reorder (the SMB tools, which assume the office already chose the day and the person) to whole-branch assignment with configurable policies (the enterprise suites) to an overnight run that builds tomorrow from the backlog (the vertical and AI-native tools for recurring work). Salesforce's model is the clearest vocabulary for the enterprise end: **work rules** reduce the candidates to those who can do the job, pass or fail, and **service objectives** grade the survivors, weighted by sliders; three work rules (Service Resource Availability, Earliest Start Permitted, Due Date Match Time) are mandatory. Dynamics' RSO ranks its **goals** instead of weighting them.

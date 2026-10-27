@@ -49,10 +49,10 @@ Public documentation on licensing is thin across the market; the pest verticals 
 | Platform | What's documented |
 | -------- | ----------------- |
 | FieldRoutes | Licenses on the user profile, each with a number and optional linked skills and states. A license linked to a state prints only on services in that state, one linked to a skill only on services using that skill, and the primary, additional and supervising technicians' licenses all print on the notification. An Arizona license is required before a technician can complete an Arizona termite action registration form (TARF) in the app. A Licenses API exposes the records, with states and skills linked separately. |
-| PestPac (WorkWave) | "Attempting to assign a job to a technician without required licensing triggers an automatic warning"; routing uses skill types such as "termite license." |
 | Jobber | Chemical tracking setup holds company licensing information and applicator license numbers, which appear on treatment records. |
-| Timefold | Technician `skills` on a shift and `temporarySkillSets` that grant skills only between a `start` and an `end`; visits list `requiredSkills` with an optional `minLevel`; "Require skills" is a hard constraint, so a visit no qualified technician can take stays unassigned. |
+| PestPac (WorkWave) | "Attempting to assign a job to a technician without required licensing triggers an automatic warning"; routing uses skill types such as "termite license." |
 | Salesforce Field Service | Skills on service resources with a skill level and effective start and end dates, where the end date can represent when a certification expires. |
+| Timefold | Technician `skills` on a shift and `temporarySkillSets` that grant skills only between a `start` and an `end`; visits list `requiredSkills` with an optional `minLevel`; "Require skills" is a hard constraint, so a visit no qualified technician can take stays unassigned. |
 
 Two gaps show in these docs. FieldRoutes' knowledge base suggests putting a sales rep's license number in permanent customer notes so it prints on the agreement, a sign of how often sales credentials end up outside the license model entirely. And its published license fields carry no issue or expiration date, which is what turns a list of numbers into something a scheduler can enforce.
 

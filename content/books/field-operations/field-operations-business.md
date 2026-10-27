@@ -366,16 +366,16 @@ CREATE TABLE visits (
 
 The visit states are this volume's vocabulary, not one vendor's. The platforms name the same life cycle differently, and the mapping is what an integration or a migration has to write down ([Switching Platforms](/books/field-operations/switching-platforms)); agreement states get the same treatment in [Service Agreements & Plans](/books/field-operations/service-agreements#term-renewal-and-cancellation):
 
-| This volume | ServiceTitan appointment | Dynamics 365 booking | Salesforce service appointment |
+| This volume | Dynamics 365 booking | Salesforce service appointment | ServiceTitan appointment |
 | --- | --- | --- | --- |
-| `held` | No documented status | No default status | None (not yet scheduled) |
+| `held` | No default status | None (not yet scheduled) | No documented status |
 | `scheduled` | Scheduled | Scheduled | Scheduled |
-| `dispatched` | Dispatched | Scheduled, with the technician notified | Dispatched (traveling to the site) |
-| `en_route` | Dispatched | Traveling | Dispatched |
-| `on_site` | Working | In Progress | In Progress |
-| `completed` | Done | Completed | Completed |
-| `not_completed` | Hold on the appointment or the job | A custom status such as Partially Completed | Cannot Complete |
-| `cancelled` | Canceled (only with the whole job) | Canceled | Canceled |
+| `dispatched` | Scheduled, with the technician notified | Dispatched (traveling to the site) | Dispatched |
+| `en_route` | Traveling | Dispatched | Dispatched |
+| `on_site` | In Progress | In Progress | Working |
+| `completed` | Completed | Completed | Done |
+| `not_completed` | A custom status such as Partially Completed | Cannot Complete | Hold on the appointment or the job |
+| `cancelled` | Canceled | Canceled | Canceled (only with the whole job) |
 
 Two differences matter when mapping. ServiceTitan's Hold sits on the appointment and the job, where this volume puts the visit's end state and the work order's `hold_reason` on separate records; Dynamics 365 lets a custom booking status complete the booking while returning the work order to Unscheduled for follow-up, which is the same split as a `completed` visit on an `open` work order.
 

@@ -27,12 +27,12 @@ Every major platform has a dispatch console, and they converge on the same three
 
 | Console | Panes and actions | Automation |
 | --- | --- | --- |
-| Salesforce Field Service Dispatcher Console | Appointment list; Gantt with appointments, absences, breaks, travel and crews; map; KPI bar including appointments in jeopardy | Scheduling policy per console, Customer First by default; switch policy for storms or emergencies |
 | Dynamics 365 schedule board | Drag and drop over resources (people, contractors, equipment) and a map with routes | Manual, a scheduling assistant, or the RSO add-on, including intraday and emergency runs |
+| Onfleet and Bringg | Task and order boards with drag-and-drop assignment | Onfleet's team auto-dispatch keeps a driver's tasks and interleaves new ones; Bringg's AutoDispatch assigns on-demand orders as they arrive |
+| Salesforce Field Service Dispatcher Console | Appointment list; Gantt with appointments, absences, breaks, travel and crews; map; KPI bar including appointments in jeopardy | Scheduling policy per console, Customer First by default; switch policy for storms or emergencies |
 | SAP FSM planning board | Drag and drop; Find Matching Technicians ranks candidates with each one's earliest valid slot | Fill Schedule, Rearrange Schedule, and autoscheduling on events or schedules |
 | ServiceTitan Daily Dispatch Board | Technician rows by team, a job tray (Unassigned, Alerts, Dispatched and more), status colors, live map | Dispatched, Working and Done appointments can't be reassigned; late appointments outlined in red |
 | Spoke Dispatch | Plans, stops and routes | A distributed plan is read-only; changes go through the live plans API to re-optimize and redistribute |
-| Onfleet and Bringg | Task and order boards with drag-and-drop assignment | Onfleet's team auto-dispatch keeps a driver's tasks and interleaves new ones; Bringg's AutoDispatch assigns on-demand orders as they arrive |
 
 Trades consoles are built around technicians and jobs of uneven length, delivery boards around many short stops assigned as orders arrive. Three ideas recur and are worth taking whichever you start from:
 

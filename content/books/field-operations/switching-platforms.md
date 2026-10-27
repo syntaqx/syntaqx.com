@@ -64,14 +64,14 @@ Vendors split into self-serve importers, vendor-run conversions and paid migrati
 
 | Vendor | Who does the work | What their docs say moves | Stated cost or time |
 | --- | --- | --- | --- |
-| ServiceTitan | Customer fills XLSX templates; Implementation Manager loads them | Customers, Equipment, Jobs, Estimates, plus an AR template "if you need to import incoming payment transactions" | Not published |
 | FieldRoutes | Implementation Specialist with the customer's project managers | "Historical data is transferred, duplicates removed, and records verified before go-live" | 2 to 3 months: training weeks 1 to 2, import and cleanup weeks 3 to 8, go-live weeks 9 to 12 |
+| GorillaDesk | Staff import free for paid subscribers, or self-import | Customers, contacts, addresses, a starting balance | "Can not import past service and payment history" |
 | Housecall Pro | Self-serve Import Wizard; Data Import team on the MAX plan | Customers, jobs, price book; job rows carry payment amount, method type and date | "Basic transfer option is free" |
 | Jobber | Admin self-import | Clients and properties from delimited files | Sync QuickBooks first |
-| GorillaDesk | Staff import free for paid subscribers, or self-import | Customers, contacts, addresses, a starting balance | "Can not import past service and payment history" |
 | JobNimbus | Paid migration service | Contacts, jobs, appointments, emails, notes, documents, photos, products, services, invoices, payments | Paid, priced separately |
-| Successware | Vendor conversion for a fee | "Most data from third-party systems"; major third-party price books | About 30 days for migration, 4 to 6 weeks for implementation; financial data needs some manual setup |
+| ServiceTitan | Customer fills XLSX templates; Implementation Manager loads them | Customers, Equipment, Jobs, Estimates, plus an AR template "if you need to import incoming payment transactions" | Not published |
 | Skimmer | Vendor migration team | "Service history, customer info, and route data" | "Within days, not weeks" |
+| Successware | Vendor conversion for a fee | "Most data from third-party systems"; major third-party price books | About 30 days for migration, 4 to 6 weeks for implementation; financial data needs some manual setup |
 | ZenMaid | Vendor, free from Launch27 | Customer data; automations recreated; schedule set up | Not published |
 
 Read the table for what it implies. The enterprise and vertical vendors (ServiceTitan, FieldRoutes) run conversion as an implementation project measured in months, and FieldRoutes gives the largest block of its timeline to import and cleanup. SMB tools (Jobber, GorillaDesk, Commusoft) give the customer a template and validation rules. Trade specialists in pool (Skimmer) and cleaning (ZenMaid) compete on doing it for you quickly, which works because their data is simpler: a route of recurring stops with a few readings, not an install base with warranties.

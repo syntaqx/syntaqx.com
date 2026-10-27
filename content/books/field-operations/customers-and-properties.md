@@ -22,12 +22,12 @@ The SMB tools (Jobber, Housecall Pro) start from the homeowner and add propertie
 
 | Vendor | Payer vs site | Multi-site | Where equipment lives |
 | ------ | ------------- | ---------- | --------------------- |
-| ServiceTitan | Customer (bill-to) owns many locations; a location has one customer | Many locations per customer | Location |
-| FieldRoutes | Customer card per property; billing account can be another card | Linked properties under a master; multi-unit | Customer card, units |
-| Jobber | Client owns properties | Many properties per client | Not published |
-| Housecall Pro | Billing address flag, or parent and sub-customers | Addresses or sub-customers | Not published |
-| Salesforce | Account linked to locations through associated locations | Many accounts per location and vice versa | Asset, with maintenance plans linked to a location |
 | Dynamics 365 | Service account and billing account | Billing account shared across service accounts | Asset in a functional location tree |
+| FieldRoutes | Customer card per property; billing account can be another card | Linked properties under a master; multi-unit | Customer card, units |
+| Housecall Pro | Billing address flag, or parent and sub-customers | Addresses or sub-customers | Not published |
+| Jobber | Client owns properties | Many properties per client | Not published |
+| Salesforce | Account linked to locations through associated locations | Many accounts per location and vice versa | Asset, with maintenance plans linked to a location |
+| ServiceTitan | Customer (bill-to) owns many locations; a location has one customer | Many locations per customer | Location |
 
 The column that decides your design is the last one. Equipment, treatment history and warranties attach to the place, so the place has to be its own record with a stable identity, and the payer has to be a link that can change underneath it.
 

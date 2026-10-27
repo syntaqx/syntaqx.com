@@ -31,13 +31,13 @@ The field suites approach telephony three ways: bring your own phone system and 
 
 | Platform | Telephony | What the CSR gets |
 | --- | --- | --- |
-| ServiceTitan | Three tiers: Basic Phones ("routing lives with your own phone provider"), Phones Pro ("Routing, queues, IVR, and voicemail continue to be managed in Dialpad"), and Contact Center Pro, where "Inbound queues, IVR, and routing workflows" are managed in ServiceTitan | Call classification (booked, unbooked, excused, abandoned), recording and tracking-number attribution on every tier; Contact Center Pro "automatically links agents and jobs to calls," with AI agents for "overflow and after-hours calls" (marketed as early access) |
-| Housecall Pro | Voice, built in: "a call menu (IVR), call queues, routing, and live transfers" | "call logs, notes, and recordings in one place"; CSR AI answers forwarded calls and can book if allowed |
-| Workiz | Built-in phone system | "Every call in Workiz is recorded, summarized, and searchable"; Genius Answering picks up missed calls and schedules |
-| GorillaDesk | VoIP "directly integrated within GorillaDesk" | Call history in the CRM, ring groups, supervisors who can "listen, barge or whisper" |
-| PestPac | Dialpad integration | Dialpad "automatically searches PestPac for matching location records by phone number" and logs a note to the location after the call |
 | FieldRoutes | Partner integrations (Voice for Pest on its marketplace) | "Account Screen Pop," "Intelligent Call Routing," "Automatic Noting" and "Click-to-Call" |
+| GorillaDesk | VoIP "directly integrated within GorillaDesk" | Call history in the CRM, ring groups, supervisors who can "listen, barge or whisper" |
+| Housecall Pro | Voice, built in: "a call menu (IVR), call queues, routing, and live transfers" | "call logs, notes, and recordings in one place"; CSR AI answers forwarded calls and can book if allowed |
+| PestPac | Dialpad integration | Dialpad "automatically searches PestPac for matching location records by phone number" and logs a note to the location after the call |
 | Salesforce, Dynamics 365 | Enterprise contact center routing (Omni-Channel, unified routing) | Skills-based routing and overflow rules, covered below |
+| ServiceTitan | Three tiers: Basic Phones ("routing lives with your own phone provider"), Phones Pro ("Routing, queues, IVR, and voicemail continue to be managed in Dialpad"), and Contact Center Pro, where "Inbound queues, IVR, and routing workflows" are managed in ServiceTitan | Call classification (booked, unbooked, excused, abandoned), recording and tracking-number attribution on every tier; Contact Center Pro "automatically links agents and jobs to calls," with AI agents for "overflow and after-hours calls" (marketed as early access) |
+| Workiz | Built-in phone system | "Every call in Workiz is recorded, summarized, and searchable"; Genius Answering picks up missed calls and schedules |
 
 The convergence is clear. Whoever owns the phones, the field platform needs three things from them: the caller's number matched to accounts before the CSR says hello, the call tied to the job it produced, and the recording kept with the account. The design question is where routing lives. When it lives in a separate contact center, the platform must expose the matching and booking operations as an API the contact center calls; when it lives in the platform, the platform becomes a contact center and inherits its standards.
 

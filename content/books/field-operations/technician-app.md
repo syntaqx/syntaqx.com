@@ -31,14 +31,14 @@ Offline support ranges from "the job you opened stays loaded" to a full local da
 
 | Platform | Works offline | Needs a connection |
 | -------- | ------------- | ------------------ |
-| ServiceTitan Field Mobile | Status, time, notes, signatures, photos, findings, forms, most estimate work, standard pricebook pricing | Purchase orders, inventory availability, financing, contracts and proposals, swipe and Tap to Pay, dynamic pricing |
+| Dynamics 365 Field Service | Offline-first after first download, with sync intervals per table in an offline profile | Maps and Dataverse search |
 | FieldRoutes Mobile | Check in and out, completion, notes, products, equipment scans, signatures, photos; sales flows including new customers and signed agreements | Unopened routes, scheduling, charging cards or ACH, texting, new contracts, login |
+| GorillaDesk | The current week, loaded online first; status, check-in times, notes, materials | Invoices and job details are read-only |
+| Housecall Pro | Jobs opened online beforehand are stored, up to a cap; editing offline "is not supported at this time" | Everything else |
+| Salesforce Field Service | Offline briefcases prime the records each worker's profile needs; critical changes sync every five minutes | Varies by flow |
+| ServiceTitan Field Mobile | Status, time, notes, signatures, photos, findings, forms, most estimate work, standard pricebook pricing | Purchase orders, inventory availability, financing, contracts and proposals, swipe and Tap to Pay, dynamic pricing |
 | Successware | A dedicated offline mode, with jobs staying active once loaded and syncing when a stable connection returns | Not published |
 | Zuper | Opt-in per company; assigned jobs "primed" at login with related records two levels deep, including assets and parts, expiring after one day | Accepting jobs, quotes and invoices, chat, previously added attachments |
-| Housecall Pro | Jobs opened online beforehand are stored, up to a cap; editing offline "is not supported at this time" | Everything else |
-| GorillaDesk | The current week, loaded online first; status, check-in times, notes, materials | Invoices and job details are read-only |
-| Salesforce Field Service | Offline briefcases prime the records each worker's profile needs; critical changes sync every five minutes | Varies by flow |
-| Dynamics 365 Field Service | Offline-first after first download, with sync intervals per table in an offline profile | Maps and Dataverse search |
 
 The pattern is consistent: the work itself (status, notes, photos, forms, readings) is offline everywhere that offers offline at all, and anything touching shared, scarce or external state (inventory availability, purchase orders, live card authorization, financing, new contracts) needs a signal, the same line [What Stays Online](/docs/architecture/offline-sync#what-stays-online) draws in general. Solea draws it further in: its field app keeps the schedule and inspections working offline, while "checkout, signatures and payments need a connection." Where to draw it, per flow, is the first real decision, and the answer differs by trade: a pest route that's 90% exterior service can live offline all day, while an HVAC repair that needs a part checked against the warehouse can't finish the sale without one.
 

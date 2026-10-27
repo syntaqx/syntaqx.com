@@ -19,14 +19,14 @@ The first question about any store is who sells the item to the player, because 
 
 | Store | Fee on a game or in-game purchase | Store billing required? | Source date |
 | --- | --- | --- | --- |
-| Steam | 30% of sales under $10M, 25% to $50M, 20% above | Yes for in-game purchases (Steam Wallet) | Tiers from 2018 |
-| Epic Games Store | 0% on the first $1M per app per year, then 12% | Epic processes store sales; webshops offered | June 2025 |
-| Microsoft Store (PC) | 12% of Net Receipts for games | Yes for games | ADA v8.11, April 2026 |
-| Xbox console | 30% of Net Receipts for console games and non-subscription in-app products | Yes | ADA v8.11, April 2026 |
-| Apple App Store (US) | 30% on In-App Purchase; 15% for small developers | IAP for in-app digital goods; links out allowed in the US | Court orders 2025 |
 | Apple App Store (EU) | 26% on IAP; 20% with alternative payments; 15% on link-out sales | No; DMA terms | 1 October 2026 |
+| Apple App Store (US) | 30% on In-App Purchase; 15% for small developers | IAP for in-app digital goods; links out allowed in the US | Court orders 2025 |
+| Epic Games Store | 0% on the first $1M per app per year, then 12% | Epic processes store sales; webshops offered | June 2025 |
 | Google Play (US, UK, EEA) | 20% + 5% billing fee for new installs | No in the US since 29 October 2025 | 30 June 2026 |
+| Microsoft Store (PC) | 12% of Net Receipts for games | Yes for games | ADA v8.11, April 2026 |
 | PlayStation, Nintendo | Not public | Yes | n/a |
+| Steam | 30% of sales under $10M, 25% to $50M, 20% above | Yes for in-game purchases (Steam Wallet) | Tiers from 2018 |
+| Xbox console | 30% of Net Receipts for console games and non-subscription in-app products | Yes | ADA v8.11, April 2026 |
 
 The sections that follow give each row its sources and caveats.
 
@@ -175,13 +175,13 @@ Every store has a refund policy, and most of them put the decision with the stor
 
 | Store | Policy, as of October 2026 | How you learn about it |
 | --- | --- | --- |
-| Steam | Games within 14 days with under two hours played; in-game purchases in third-party games only if the developer opts in; subscriptions within 48 hours if unused; refunds issued within a week of approval | `GetReport` lists refunded and charged-back transactions |
-| PlayStation Store (US) | Games and add-ons within 14 days unless downloading or streaming has started; currency bought outside gameplay within 14 days if the game hasn't been launched; currency bought in gameplay not cancellable unless faulty; wallet funds non-refundable | Platform-specific; not public |
 | Apple | Apple decides refunds | App Store Server Notifications report refunds; you can send consumption information when Apple asks |
+| Epic Games Store | Products marked self-refundable within 14 days of purchase with under two hours of runtime; unreleased pre-orders; separate rules for mobile | Not public |
 | Google Play | Varies by product, payment method and location; "The developer can help with purchase issues and can process refunds" | The Voided Purchases API lists purchases "canceled, revoked, or charged back" |
 | Microsoft Store (Xbox games) | Eligible games under two hours of total play, released more than 24 hours ago, not part of a bundle; other digital goods "aren't refundable unless the offer or applicable law states" otherwise | Not public |
-| Epic Games Store | Products marked self-refundable within 14 days of purchase with under two hours of runtime; unreleased pre-orders; separate rules for mobile | Not public |
 | Nintendo eShop (Australia) | Generally no refunds for change of mind or accidental purchase; consumer-law remedies for faults | Not public |
+| PlayStation Store (US) | Games and add-ons within 14 days unless downloading or streaming has started; currency bought outside gameplay within 14 days if the game hasn't been launched; currency bought in gameplay not cancellable unless faulty; wallet funds non-refundable | Platform-specific; not public |
+| Steam | Games within 14 days with under two hours played; in-game purchases in third-party games only if the developer opts in; subscriptions within 48 hours if unused; refunds issued within a week of approval | `GetReport` lists refunded and charged-back transactions |
 
 Steam's policy also shows a rule worth knowing: "If you have been banned by VAC (the Valve Anti-Cheat system) on a game, you lose the right to refund that game." Store terms sit under consumer law, not over it: in Germany the Higher Regional Court of Frankfurt confirmed in January 2022 that the 14-day right of withdrawal applied to digital pre-orders that couldn't yet be played, and Nintendo changed its eShop order form in Germany and Norway.
 

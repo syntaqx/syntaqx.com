@@ -148,9 +148,9 @@ Studios that don't build detection in-house buy it. As their own pages describe 
 | Vendor | What it moderates | How it describes the approach |
 | --- | --- | --- |
 | Community Sift (Microsoft) | Text, images, videos, usernames, reports | AI plus human expertise; curated topics and "risk sliders"; escalation of hard cases to moderators; 22 "premium" languages |
-| ToxMod (Modulate) | Voice | Live analysis producing events with clips, timestamps and context for moderators |
 | GGWP | Chat, voice, usernames, images, player reports, Discord | Modules for scanning content on arrival, behavior over time, automated decisions and escalation of serious risks |
 | Hive | Images, video, text, audio | Classification across categories including NSFW, hate, violence and CSAM |
+| ToxMod (Modulate) | Voice | Live analysis producing events with clips, timestamps and context for moderators |
 
 Vendor claims about accuracy and automation rates are marketing until you measure them on your own traffic. My default: run a vendor in shadow mode against a labeled sample of your own reports for a few weeks before it's allowed to act ([Changing Rules and Models Safely](/docs/architecture/risk-scoring#changing-rules-and-models-safely)), and keep the decision thresholds and the penalty ladder in your own system, so changing vendors changes a signal, not your policy.
 

@@ -27,14 +27,14 @@ So every metric here names its unit, numerator, denominator, inclusion rules and
 
 | Source | Metric | Definition as published |
 | --- | --- | --- |
+| **Mastercard** | Chargeback rate (Excessive Chargeback Program) | Chargebacks raised this month / captured transactions in the previous month |
+| **Mastercard** | Fraud chargeback rate (Excessive Fraud Merchant) | Fraud-related chargebacks this month / e-commerce transactions in the previous month |
 | **Stripe** | Payment success rate | Authorized charges / unique payment attempts, including 3-D Secure failures and blocked payments; invalid API calls excluded |
 | **Stripe** | Authorization rate | Issuer-authorized payments / unique attempts submitted to the network |
 | **Stripe** | Dispute rate | "Percentage of payments that led to disputes, out of all accepted payments"; by dispute date by default, early fraud warnings included by default |
 | **Stripe** | Win rate | Won / disputes challenged with evidence, by dispute date |
 | **Visa** | VAMP ratio | Count of fraud reports (TC40) plus disputes (TC15) / count of settled transactions (TC05), card-not-present, same month |
 | **Visa** | VAMP enumeration ratio | Enumerated authorization transactions / all authorization transactions, approved and declined |
-| **Mastercard** | Chargeback rate (Excessive Chargeback Program) | Chargebacks raised this month / captured transactions in the previous month |
-| **Mastercard** | Fraud chargeback rate (Excessive Fraud Merchant) | Fraud-related chargebacks this month / e-commerce transactions in the previous month |
 | **Canada's Code of Conduct** | Effective merchant discount rate | Total acquirer and processor fees and network fees paid / sales volume, per card type |
 
 Two practical notes. A provider's dashboard and a network's report will differ even with the same formula: Stripe notes that disputes it absorbs on a merchant's behalf don't count toward its own rates but do count in the networks' calculations, and that statement descriptors, multiple merchant IDs or a merchant ID change can make network data diverge from what the dashboard shows. And a platform computes all of these per merchant, per merchant ID and for itself, because the networks identify accounts by descriptor and acquirer, not by your merchant record.

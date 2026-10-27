@@ -15,11 +15,11 @@ A **pricebook** is the catalog of everything a company sells, with the rules tha
 
 | Platform | Structure | How prices are computed | Notable |
 | --- | --- | --- | --- |
-| ServiceTitan | Services, materials, equipment, plus discounts and fees, in categories | Dynamic Pricing: billable rate, markups and optional surcharges per category | Markup by cost range as gross margin, percent, dollar or multiplier; member prices; supplier cost sync |
 | FieldPulse | Categories of flat-rate jobs; each job is a labor line plus material lines | Labor cost and overhead cost per hour, default markup percent, Markup Categories | Markup Categories override by labor rate, supply price band or material type; upsell option lists |
-| Successware | Parts, labor, overhead, miscellaneous items and flat-rate tasks | Group markup formulas; a Profit Margin Matrix sets markup by cost tier | Separate "Our Price" and "Retail Price" per task; imports third-party books |
-| Profit Rhino | A prebuilt flat-rate book for HVAC, plumbing, drain cleaning and electrical | National average prices, adjusted by your labor rate and material markups | Optional, typically quarterly updates; sold through FSM platforms |
 | FieldRoutes | Service types with initial and recurring charges | Dynamic Pricing by measurement: square feet, linear feet or count, in intervals | Separate tables for initial and recurring prices |
+| Profit Rhino | A prebuilt flat-rate book for HVAC, plumbing, drain cleaning and electrical | National average prices, adjusted by your labor rate and material markups | Optional, typically quarterly updates; sold through FSM platforms |
+| ServiceTitan | Services, materials, equipment, plus discounts and fees, in categories | Dynamic Pricing: billable rate, markups and optional surcharges per category | Markup by cost range as gross margin, percent, dollar or multiplier; member prices; supplier cost sync |
+| Successware | Parts, labor, overhead, miscellaneous items and flat-rate tasks | Group markup formulas; a Profit Margin Matrix sets markup by cost tier | Separate "Our Price" and "Retail Price" per task; imports third-party books |
 
 Three pricing methods coexist:
 

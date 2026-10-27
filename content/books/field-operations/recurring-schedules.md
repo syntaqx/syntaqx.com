@@ -29,11 +29,11 @@ Every platform has to decide how far ahead to turn a rule into concrete work. Mo
 | Platform | How recurring work appears | Notable controls |
 | --- | --- | --- |
 | **Dynamics 365 Field Service** | Agreement booking setups hold a recurrence; booking dates turn into work orders a set number of days ahead | Days in advance; pre and post booking flexibility in days |
-| **Salesforce Field Service** | Maintenance plans with maintenance work rules generate work orders in batches | Generation timeframe and horizon; calendar, criteria or usage rules; floating work orders |
-| **FieldRoutes** | Due subscriptions enter the Job Pool for routing; seasonal programs are Service Plans made of Service Rounds | Day-count frequencies; seasonal dates; per-round "wait after" |
-| **ServiceM8** | Future bookings sit inactive until a lead time before the date, then activate as real jobs | Activation lead time in weeks |
 | **FieldPulse** | Agreements create occurrences on a calendar, and a rolling window decides which become jobs | Generation window; per-routine generation rule; due period |
+| **FieldRoutes** | Due subscriptions enter the Job Pool for routing; seasonal programs are Service Plans made of Service Rounds | Day-count frequencies; seasonal dates; per-round "wait after" |
 | **GorillaDesk** | The next job is created when the current one is completed or cancelled | Month, condition and frequency exceptions |
+| **Salesforce Field Service** | Maintenance plans with maintenance work rules generate work orders in batches | Generation timeframe and horizon; calendar, criteria or usage rules; floating work orders |
+| **ServiceM8** | Future bookings sit inactive until a lead time before the date, then activate as real jobs | Activation lead time in weeks |
 | **Skimmer** (pool) | Route assignments: each technician's permanent weekly stops | Permanent changes separate from one-time moves |
 
 **Rolling horizon.** Dynamics is the clearest example, and Microsoft names the tradeoff directly: generate too far in advance and "your backlog of work orders might become larger than desired," too few days and "you might not have time to prepare." Two warnings on the same page apply to every generator. Auto-generated bookings follow the recurrence "without considering any other factors, including if the resource is active or their working hours," so generated work needs the same validation as manual booking. And agreement processes "run with the permissions of their owners. If the owner leaves the organization, agreement processes fail," which argues for running the generator under a service identity.

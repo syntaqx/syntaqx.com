@@ -20,9 +20,9 @@ Field service platforms ship building blocks and leave the policy to their custo
 | Platform | What its public docs describe | Where the responsibility sits |
 | -------- | ----------------------------- | ----------------------------- |
 | **FieldRoutes** | Online Service Cancellation from the customer portal, enabled per service type, which creates a cancellation task and a note for staff. SMS opt-in and opt-out by reply, each change logged on the customer card. An Electronic Consent Agreement the customer signs once before any other e-signature | The company writes the consent text; the docs say the system doesn't supply a vetted version |
-| **ServiceTitan** | A Voice Agent that books, reschedules and cancels. Field Pro recording that can start automatically when a technician arrives at a job | AI disclosure and recording consent are left to the account, with a note that they're legal requirements in some states |
-| **Jobber** | Receptionist, an AI that answers calls and texts, with recordings and transcripts for admins | Encourages a greeting saying the phone is answered by AI and tells owners to check local recording law |
 | **Housecall Pro** | CSR AI, which introduces itself as AI at the start of each call; service plans that charge the card on file "year after year" | Booking, rescheduling and cancelling are separate permissions the owner grants |
+| **Jobber** | Receptionist, an AI that answers calls and texts, with recordings and transcripts for admins | Encourages a greeting saying the phone is answered by AI and tells owners to check local recording law |
+| **ServiceTitan** | A Voice Agent that books, reschedules and cancels. Field Pro recording that can start automatically when a technician arrives at a job | AI disclosure and recording consent are left to the account, with a note that they're legal requirements in some states |
 
 The platforms that make compliance easiest do it with defaults and records: an AI that discloses by default, an opt-out logged with its source, a cancellation request that becomes a task. None ships a rules engine that knows each state's law, and a new platform shouldn't promise one.
 

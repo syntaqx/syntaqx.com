@@ -81,17 +81,17 @@ Renewal is either automatic re-generation or a sales event, and the industry doe
 
 These states are this volume's own vocabulary, the union of what the platforms separate, not any one vendor's list. Most products collapse several of them, and an import or integration has to map them explicitly ([Switching Platforms](/books/field-operations/switching-platforms)):
 
-| This volume | ServiceTitan membership | FieldRoutes subscription | Housecall Pro service plan | Jobber (quote, then recurring job) | Dynamics 365 agreement |
+| This volume | Dynamics 365 agreement | FieldRoutes subscription | Housecall Pro service plan | Jobber (quote, then recurring job) | ServiceTitan membership |
 | --- | --- | --- | --- | --- | --- |
-| `draft` | Sold on an estimate or invoice, no draft state | Not documented | Draft | Quote: Draft | Estimate |
-| `out_for_signature` | Not documented | Not documented | Sent | Quote: Awaiting response | Estimate, with a substatus such as awaiting signature |
-| `signed` | Not documented | Not documented | Not documented | Quote: Approved, then Converted to a job | Estimate, until set Active |
+| `draft` | Estimate | Not documented | Draft | Quote: Draft | Sold on an estimate or invoice, no draft state |
+| `out_for_signature` | Estimate, with a substatus such as awaiting signature | Not documented | Sent | Quote: Awaiting response | Not documented |
+| `signed` | Estimate, until set Active | Not documented | Not documented | Quote: Approved, then Converted to a job | Not documented |
 | `active` | Active | Active | Active | Active recurring job | Active |
-| `paused` | Suspended | On hold (often at the customer's request) or seasonal dates | Not documented | Not documented | Substatus of Active |
-| `on_hold` | Suspended | On hold, manual or by trigger rule | Not documented | Not documented | Substatus of Active |
-| `terminated` | Canceled, or Expired at the end of its duration | Frozen | Canceled (restorable) | Job closed, then archived | Canceled, or Expired at the end date |
-| `fulfilled` | Not applicable | Not applicable | Not applicable | One-off job closed, then archived | Expired |
-| `void`, `cancelled` | Deleted ("sold as a mistake") | Deleted | Draft or sent plan deleted | Quote archived | Canceled |
+| `paused` | Substatus of Active | On hold (often at the customer's request) or seasonal dates | Not documented | Not documented | Suspended |
+| `on_hold` | Substatus of Active | On hold, manual or by trigger rule | Not documented | Not documented | Suspended |
+| `terminated` | Canceled, or Expired at the end date | Frozen | Canceled (restorable) | Job closed, then archived | Canceled, or Expired at the end of its duration |
+| `fulfilled` | Expired | Not applicable | Not applicable | One-off job closed, then archived | Not applicable |
+| `void`, `cancelled` | Canceled | Deleted | Draft or sent plan deleted | Quote archived | Deleted ("sold as a mistake") |
 
 "Not documented" means I found no public help page for it, not that the product can't represent it. The two places the mapping loses information are the ones to watch: a vendor with one suspended state can't say whether the customer or the company stopped service, and a vendor that deletes unsigned or rescinded agreements leaves no record of the cooling-off cancellation.
 

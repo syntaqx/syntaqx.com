@@ -31,13 +31,13 @@ What the networks and providers publish, as of October 2026. Performance figures
 
 | Vendor | Product | What its documentation says |
 | --- | --- | --- |
-| **Visa** | Visa Advanced Authorization | A "network-agnostic risk score" that helps issuers detect fraud at authorization, analyzing "400 risk attributes"; Visa credits its fraud tools with $30 billion of fraud prevented annually (VisaNet data, July 2023 to June 2024) |
+| **Adyen** | Adyen Protect (risk management) | Enabled by default; every payment gets a risk evaluation ending in "block, allow, or review", with machine learning trained on "global transaction data" and custom rules on top |
+| **Adyen** | Uplift | Modules for personalizing checkout, tokenizing, protecting, authenticating and optimizing; vendor-reported up to 6% higher conversion and up to 5% lower payment costs |
 | **Mastercard** | Decision Intelligence | A network risk score for issuers at authorization |
 | **Stripe** | Radar | Evaluates "transactions, accounts, and customers in real time, using AI algorithms"; a payments foundation model trained on "tens of billions of transactions" was announced in May 2025 |
-| **Adyen** | Adyen Protect (risk management) | Enabled by default; every payment gets a risk evaluation ending in "block, allow, or review", with machine learning trained on "global transaction data" and custom rules on top |
 | **Stripe** | Authorization Boost | Bundles Adaptive Acceptance ("machine learning to increase acceptance rates"), network tokens, card account updater and retry controls, priced at 0.2% per successful online card transaction |
-| **Adyen** | Uplift | Modules for personalizing checkout, tokenizing, protecting, authenticating and optimizing; vendor-reported up to 6% higher conversion and up to 5% lower payment costs |
 | **Stripe** | Smart Disputes | "Uses an AI rules engine" to compile evidence from Stripe, transaction and cardholder data, and submits it "just before the dispute times out", for a fee only if the dispute is won |
+| **Visa** | Visa Advanced Authorization | A "network-agnostic risk score" that helps issuers detect fraud at authorization, analyzing "400 risk attributes"; Visa credits its fraud tools with $30 billion of fraud prevented annually (VisaNet data, July 2023 to June 2024) |
 | **Visa** | Dispute services (April 2026) | Dispute Intelligence "powered by predictive AI models", a document analyzer for acquirers and issuers, and a recovery manager that drafts responses and predicts win likelihood |
 
 Read the table for what it implies. **Networks score for issuers, providers score for merchants,** and a payment passes through both, so a merchant's own fraud model is the third opinion, not the first. **Optimization is sold as a bundle** of model-driven retries and formatting with network services (tokens, updater) that aren't models at all; measure the bundle against a holdout, not against the vendor's average. And **dispute automation is arriving on both sides:** providers assemble merchants' evidence, and Visa sells acquirers and issuers tools to read and judge it.

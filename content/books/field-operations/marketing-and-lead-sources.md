@@ -35,11 +35,11 @@ The field suites all record a lead source; they differ in whether the source arr
 
 | Platform | How the source gets there | What's reported |
 | --- | --- | --- |
-| ServiceTitan | Campaigns grouped by campaign categories; "Phone integration is required to automatically track the source of incoming leads," and ServiceTitan says to "attach a unique tracking number to each of your campaigns" | Campaign Summary report; a campaign without a business unit is associated "with all business units by default" |
 | Housecall Pro | A lead source on customers, jobs and estimates, with bulk "Update lead source" | Marketing dashboard ROI table, one row per lead source ("Google, Thumbtack, Angi, or referrals"); "Marketing spend is recorded by month"; "A large No lead source total usually means the applicable lead-source field was not completed" |
 | Jobber | A lead source on the client | Lead Source Report on "which marketing channels are bringing in the most valuable leads," valuing each by "the first invoice linked to the lead" |
-| Workiz | Lead sources on jobs, with marketplace integrations (Angi) | "reports on your marketing spend and the lead source of your booked jobs" |
 | PestPac | Campaigns with "unique URLs and phone numbers" so "every lead" traces "back to its source" | Cost per lead, acquisition cost, conversion rates and ROI |
+| ServiceTitan | Campaigns grouped by campaign categories; "Phone integration is required to automatically track the source of incoming leads," and ServiceTitan says to "attach a unique tracking number to each of your campaigns" | Campaign Summary report; a campaign without a business unit is associated "with all business units by default" |
+| Workiz | Lead sources on jobs, with marketplace integrations (Angi) | "reports on your marketing spend and the lead source of your booked jobs" |
 
 The pattern across them: a **source** (the channel), a **campaign** (a specific spend inside it), a tracking number or URL per campaign so the source is captured without asking, monthly spend entered by hand, and an ROI report that divides revenue by spend. The weaknesses are just as consistent. A source typed by a CSR is often blank (Housecall Pro's own help says so). Jobber values a lead by its first invoice, so a lead that became a four-year maintenance plan looks like a $150 diagnostic. And a source on the customer can't tell a new customer's first job from their fifth.
 

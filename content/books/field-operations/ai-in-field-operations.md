@@ -47,18 +47,18 @@ The market splits into four groups: AI built into the FSM suites, AI-native star
 
 | Product | Kind | What its public docs say it does | Human control described |
 | --- | --- | --- | --- |
-| ServiceTitan Voice Agent | Suite, voice | Books, confirms, reschedules and cancels; books after hours; sends payment links by SMS after caller-ID verification | Per-capability and per-job-type toggles; keyword escalation paths; email when a call ends without a booking |
-| ServiceTitan Atlas and Field Pro | Suite, assistant and coaching | Answers in technician mobile, AI-guided diagnostics, capacity rules in plain language; records in-home sales visits | Admin access by company position; accuracy warning; customers informed in two-party consent states |
-| Jobber Receptionist | SMB suite, voice and text | Answers 24/7, books through Online Booking settings, reschedules, cancels, takes messages | "For actions that are turned off, Receptionist will ask before taking action"; transcripts and recordings for admins |
-| Housecall Pro CSR AI | SMB suite, voice | Answers calls, summarizes, flags urgency; can book, reschedule or cancel if permitted | Per-action permissions; escalation to a number or an HCP Assist agent; introduces itself as AI |
-| Solea | AI-native FSM (pest control) | Voice agent checks the live schedule and writes bookings; overnight auto-scheduling | Booking rules per service, cap on added travel time, dry-run preview, locks, escalation rules |
 | Avoca | AI-native, voice and coaching | Inbound AI CSR, outbound campaigns, speed-to-lead, Coach scoring calls in real time | Certified ServiceTitan app; also listed on FieldRoutes' marketplace |
-| Netic | AI-native, revenue | Books across calls, text, web chat; outbound membership and upsell campaigns; call scoring | Bookings "following the company's operational rules" |
 | Broccoli AI | AI-native, plumbing and HVAC | Phone answering, booking, lead follow-up, emergency alerts to technicians | Not published |
+| Dynamics 365 Field Service Copilot | Enterprise | Work order updates by text or speech (preview), summaries, inspection templates from PDFs, agent feed | Agent feed: humans complete, accept or dismiss agent tasks |
 | Hatch (Yelp) | AI-native, voice and follow-up | Answers calls, responds to leads, follows up on estimates, re-engages past customers; syncs with ServiceTitan booking | Routes complex conversations to staff |
+| Housecall Pro CSR AI | SMB suite, voice | Answers calls, summarizes, flags urgency; can book, reschedule or cancel if permitted | Per-action permissions; escalation to a number or an HCP Assist agent; introduces itself as AI |
+| Jobber Receptionist | SMB suite, voice and text | Answers 24/7, books through Online Booking settings, reschedules, cancels, takes messages | "For actions that are turned off, Receptionist will ask before taking action"; transcripts and recordings for admins |
+| Netic | AI-native, revenue | Books across calls, text, web chat; outbound membership and upsell campaigns; call scoring | Bookings "following the company's operational rules" |
 | Rilla, Siro | In-person sales coaching | Record in-home conversations, score against your process, coach | Rilla lists states where the customer must be told |
 | Salesforce Agentforce for Field Service | Enterprise | Customer self-scheduling in chat, schedule-gap proposals, pre-work briefs, troubleshooting with photos, post-work summaries | "The dispatcher can then choose from these options"; technician refines summaries |
-| Dynamics 365 Field Service Copilot | Enterprise | Work order updates by text or speech (preview), summaries, inspection templates from PDFs, agent feed | Agent feed: humans complete, accept or dismiss agent tasks |
+| ServiceTitan Atlas and Field Pro | Suite, assistant and coaching | Answers in technician mobile, AI-guided diagnostics, capacity rules in plain language; records in-home sales visits | Admin access by company position; accuracy warning; customers informed in two-party consent states |
+| ServiceTitan Voice Agent | Suite, voice | Books, confirms, reschedules and cancels; books after hours; sends payment links by SMS after caller-ID verification | Per-capability and per-job-type toggles; keyword escalation paths; email when a call ends without a booking |
+| Solea | AI-native FSM (pest control) | Voice agent checks the live schedule and writes bookings; overnight auto-scheduling | Booking rules per service, cap on added travel time, dry-run preview, locks, escalation rules |
 
 A few things stand out from reading the help centers rather than the launch posts:
 

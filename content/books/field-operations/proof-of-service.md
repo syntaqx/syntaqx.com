@@ -34,9 +34,9 @@ Delivery platforms expose proof as structured data on the task, and most let it 
 
 | Platform | What it captures | Required per | Notes |
 | -------- | ---------------- | ------------ | ----- |
-| Onfleet | Signature, photo, notes; ID scan with minimum age (Scale plan and up); recipient PIN (Enterprise) | Task, via `completionDetails` requirements | Completion in the app captures location; signature and photo upload IDs arrive on the `taskUpdated` webhook |
 | Bringg | Signature, picture, note, scan, customer PIN, forms, branching questions, inventory rejection | Step in an order flow, timed as optional or mandatory "before checkout" | Waypoints record check-in and check-out time, coordinates and whether they were automatic |
 | eLogii | Signatures, photos, numeric codes, barcode scans, comments, confirmations, cash on delivery, custom types | Separately for pickup, delivery and failed tasks | Each item records where it was captured; a geofence can limit when proof can be collected |
+| Onfleet | Signature, photo, notes; ID scan with minimum age (Scale plan and up); recipient PIN (Enterprise) | Task, via `completionDetails` requirements | Completion in the app captures location; signature and photo upload IDs arrive on the `taskUpdated` webhook |
 
 Others add details worth copying: Locate2u stores signatures as vector data with timestamped, geotagged photos, and FarEye records who received the delivery and their relationship to the recipient.
 

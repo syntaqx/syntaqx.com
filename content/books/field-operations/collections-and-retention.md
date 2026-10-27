@@ -23,11 +23,11 @@ The field suites' public docs say less about retries than a subscription engine'
 
 | | Automatic retry | Customer told | What happens after |
 | --- | --- | --- | --- |
-| ServiceTitan | None documented for membership billing; staff check the failure reason | Staff contact the customer for another method | The failed payment is removed from the membership invoice; a suspended membership leaves billing runs |
+| FieldRoutes | Manual rerun from a Failed Payment Methods report; ACH returns automated | Bad-account ACH returns emailed | Collection stages, holds, freezes |
 | Housecall Pro | Not documented; plans charge the card on file on schedule | Not documented | Payments due while a plan was inactive wait until staff collect or cancel all of them |
 | Jobber | None: "only attempted once," then admins are alerted | Receipt on success | The invoice stays unpaid until someone collects |
 | PestPac (WorkWave) | Account updater before billing cycles | A secure link to update the card when the updater can't fix it (vendor blog) | Autopay resumes on the new token |
-| FieldRoutes | Manual rerun from a Failed Payment Methods report; ACH returns automated | Bad-account ACH returns emailed | Collection stages, holds, freezes |
+| ServiceTitan | None documented for membership billing; staff check the failure reason | Staff contact the customer for another method | The failed payment is removed from the membership invoice; a suspended membership leaves billing runs |
 | Stripe Billing | Smart Retries (recommended default 8 tries within 2 weeks) or custom retries | Failed-payment email with an update link | Cancel, unpaid, past due or pause, per configuration |
 
 Two details are worth copying. Prevention comes first: ServiceTitan's and WorkWave's account updater features refresh reissued cards before the charge, and ServiceTitan's own write-up calls a failed payment a risk of "involuntary churn." And the return code decides the response, the same way a decline code does on cards: on an ACH return FieldRoutes reverses the payment, reopens the invoice, flags the bank account invalid and can add a return fee, and it emails the customer only for "bad account" return codes (R02, R03, R04 and similar), not for R01 insufficient funds, where a retry or a call is the better next step.

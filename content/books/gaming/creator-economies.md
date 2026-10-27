@@ -18,11 +18,11 @@ As of October 2026, from each platform's public documentation:
 
 | Platform | What creators make | How creators earn | Who may earn |
 | --- | --- | --- | --- |
-| **Roblox** | Whole experiences in Roblox Studio with Luau scripts; avatar items; Creator Store assets | Robux from passes, products and items, exchanged for cash through Developer Exchange; engagement-based Creator Rewards | DevEx: 13 or older, verified email, tax form, 30,000 earned Robux minimum |
-| **Fortnite** (UEFN and Fortnite Creative) | Islands built in Unreal Editor for Fortnite with Verse, or in Creative | A share of an engagement pool funded by Item Shop revenue; a share of in-island V-Bucks transactions | Fortnite Developer Program: 18 or older, a qualifying purchase, tax verification |
-| **Steam Workshop** | Items, maps and mods for a specific game | Paid items in a curated Workshop, at a share each developer sets | Contributors who accept the Workshop Legal Agreement; Steam accounts are 13+ |
-| **mod.io** | Mods and UGC across PC, console and mobile, embedded in a game's own UI | Studio-run marketplaces with a split each studio defines; partner program for creators | Vetted by each studio's criteria; KYC at cash-out |
 | **CurseForge** | Mods and add-ons, largely for Minecraft and World of Warcraft | Points from a project's popularity, worth $0.05 each, redeemed for payouts | Authors who opt in to the rewards program |
+| **Fortnite** (UEFN and Fortnite Creative) | Islands built in Unreal Editor for Fortnite with Verse, or in Creative | A share of an engagement pool funded by Item Shop revenue; a share of in-island V-Bucks transactions | Fortnite Developer Program: 18 or older, a qualifying purchase, tax verification |
+| **mod.io** | Mods and UGC across PC, console and mobile, embedded in a game's own UI | Studio-run marketplaces with a split each studio defines; partner program for creators | Vetted by each studio's criteria; KYC at cash-out |
+| **Roblox** | Whole experiences in Roblox Studio with Luau scripts; avatar items; Creator Store assets | Robux from passes, products and items, exchanged for cash through Developer Exchange; engagement-based Creator Rewards | DevEx: 13 or older, verified email, tax form, 30,000 earned Robux minimum |
+| **Steam Workshop** | Items, maps and mods for a specific game | Paid items in a curated Workshop, at a share each developer sets | Contributors who accept the Workshop Legal Agreement; Steam accounts are 13+ |
 
 The split is between **platforms where the game is the creators' work** (Roblox, Fortnite), which run a full economy with payouts, rating, moderation and fraud control, and **mod hosts attached to someone else's game** (Workshop, mod.io, CurseForge), where the studio decides what is allowed and the host provides distribution, review tooling and, increasingly, payments. A studio adding UGC to its own game usually starts as the second and grows toward the first.
 

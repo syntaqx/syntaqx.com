@@ -49,10 +49,10 @@ My rule: let the customer choose calendar or service billing where the business 
 | | Billing driven by | Fixed-schedule billing when a visit is skipped | Prepay and deferral |
 | --- | --- | --- | --- |
 | FieldRoutes | Subscription billing frequency | Still invoiced until frozen or closed | Prepayment plans with discounts |
-| ServiceTitan | Membership type | Membership invoice independent of visits | Upfront or deferred-revenue configuration |
-| Jobber | Recurring job billing method | Fixed price bills per period regardless | Quote deposits |
-| Housecall Pro | Service plan payment option | Plan charges on its schedule | Yearly payment option |
 | GorillaDesk | Invoice frequency | Separate frequency is unaffected by the job | Standalone recurring invoices |
+| Housecall Pro | Service plan payment option | Plan charges on its schedule | Yearly payment option |
+| Jobber | Recurring job billing method | Fixed price bills per period regardless | Quote deposits |
+| ServiceTitan | Membership type | Membership invoice independent of visits | Upfront or deferred-revenue configuration |
 
 A subscription engine such as Stripe Billing fits the calendar-driven plans well and per-visit billing poorly, because the trigger is a field event it doesn't see. Anchors and month-end clamping are in [Subscriptions](/docs/payments/subscriptions#periods-and-anchors).
 
@@ -102,8 +102,8 @@ The FSM is the operational ledger; the business's books live in QuickBooks, Xero
 | Vendor | Systems | What syncs |
 | --- | --- | --- |
 | FieldRoutes | QuickBooks Online | Reads the chart of accounts; sends payment journal entries built from account mappings, scheduled or on demand, with a sync log |
-| Jobber | QuickBooks Online | Clients two-way; products and services two-way with QuickBooks as the source of truth; invoices and payments one-way, one time, so later edits are made in both systems |
 | Housecall Pro | QuickBooks Online and Desktop | Invoices, customers, line items and payments pushed automatically |
+| Jobber | QuickBooks Online | Clients two-way; products and services two-way with QuickBooks as the source of truth; invoices and payments one-way, one time, so later edits are made in both systems |
 | ServiceTitan | QuickBooks Desktop and Online, Sage Intacct, Xero | Invoices, payments and customers depending on the system, plus a general CSV export for unsupported systems |
 
 Jobber's one-way, one-time invoice sync is the detail-sync cost in practice: an invoice edited after it synced has to be edited in both systems. The field-specific journal lines are deferred revenue on prepaid plans and install deposits, released as below, and the production value that commissions read, which never goes to the books.

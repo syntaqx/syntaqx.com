@@ -19,11 +19,11 @@ The large providers sell the same three things, priced differently: acceptance o
 
 | | Foreign card surcharge | Who pays conversion | Rate held for | Settlement currencies |
 | --- | --- | --- | --- | --- |
-| Stripe standard | 1.5% international, +1% conversion (US) | Merchant | Converted at processing | Default currency, more on request |
-| Stripe Adaptive Pricing | Same card fees | Customer, 2 to 4% | 24 hours | As above |
-| Stripe FX Quotes | n/a | Whoever the integrator chooses | 5 minutes, 1 hour or 1 day | As above |
 | Adyen | Depends on acquiring entity | Merchant | Per contract | Multiple, via local entities |
 | Airwallex | n/a | Account holder | A validity period per quote | Multi-currency wallets |
+| Stripe Adaptive Pricing | Same card fees | Customer, 2 to 4% | 24 hours | As above |
+| Stripe FX Quotes | n/a | Whoever the integrator chooses | 5 minutes, 1 hour or 1 day | As above |
+| Stripe standard | 1.5% international, +1% conversion (US) | Merchant | Converted at processing | Default currency, more on request |
 
 ## Three Currencies, Not Two
 

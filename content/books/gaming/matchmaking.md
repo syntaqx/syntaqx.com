@@ -163,9 +163,9 @@ Account sharing, boosting (a better player playing on someone else's account) an
 
 | Option | What it is | Notes |
 | --- | --- | --- |
+| **Amazon GameLift FlexMatch** | Managed rule sets with teams and expansions | 2 to 200 players, with separate large-match rule sets from 40 players; backfill |
 | **Open Match** (Google, open source) | A framework: you write the matching logic | Version 1.8.0 (docs last modified June 17, 2025); an "Open Match 2" appears in the docs navigation without explanation |
 | **PlayFab Matchmaking** (Microsoft) | Managed queues and rules, built on Xbox SmartMatch | Rule types above; backfill tickets; queue statistics |
-| **Amazon GameLift FlexMatch** | Managed rule sets with teams and expansions | 2 to 200 players, with separate large-match rule sets from 40 players; backfill |
 | **Backend suites** (Nakama, EOS, Unity, AccelByte, Pragma) | Matchmaking as one service of a backend, open source or managed | Compared in [What You Can Adopt](/books/gaming/game-backend#what-you-can-adopt) |
 
 Open Match is worth reading even if you never run it, because its architecture names the parts every matchmaker has. The **Game Frontend** "receives the matchmaking request from the game client," authenticates it and creates a **Ticket**, whose search fields are indexed. The **Director** "understands the types of matches (MatchProfiles) that can be served," periodically asks the backend for matches for each profile, gets a game server from the allocator, and writes an **Assignment** with the connection details back to the tickets. The **Match Function** holds "the core matchmaking logic," run against the **Ticket Pool** "actively being considered." An optional **Evaluator** deduplicates match proposals when several match functions propose overlapping matches. That separation (intake, pool, proposal, arbitration, assignment) is the right shape for a matchmaker you build too.

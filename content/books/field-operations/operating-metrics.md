@@ -27,13 +27,13 @@ The range runs from SMB tools with fixed report menus to configurable enterprise
 
 | Platform | What its public docs report | How definitions are set |
 | --- | --- | --- |
-| ServiceTitan | Technician performance boards: revenue, jobs, close rate, average sale by service or replacement, replacement rate, holds, cancels; membership reports | Tenant sets sold threshold and service/replacement threshold; Dispatch Pro scores technicians against job-type medians |
-| FieldRoutes | Technician Stats (completion, re-service, cancels caused by tech), Route Summary (drive and on-site efficiency, flags), Retention, AR, Commission, Sales, Knocking reports | Fixed formulas documented per report; filters and grouping by office, tech, source |
-| Jobber | Financial, Work and Client reports under Insights, web only, for admins or users with a Reports permission | Fixed report set by plan |
-| Dynamics 365 Field Service | SLA KPIs on work orders, such as arrival time and resolution, with warning and failure durations | Tenant defines each SLA, its start field, business hours and pause conditions |
-| Upper | Routes and stops completed, on-time rate ("Share of deliveries completed within the time window"), missed or skipped stops, average stops per route, average service time per stop | Fixed cards; on-time named "On-Time Service Rate" in service workspaces |
 | Bringg | On-time percentage and consumer ratings; on-time is configurable as ETA and ETL within window, only ETA within window, or allow late | Tenant choice |
+| Dynamics 365 Field Service | SLA KPIs on work orders, such as arrival time and resolution, with warning and failure durations | Tenant defines each SLA, its start field, business hours and pause conditions |
+| FieldRoutes | Technician Stats (completion, re-service, cancels caused by tech), Route Summary (drive and on-site efficiency, flags), Retention, AR, Commission, Sales, Knocking reports | Fixed formulas documented per report; filters and grouping by office, tech, source |
 | Geotab | Driver Safety Scorecard, 0 to 100 from weighted rule violations | Tenant adjusts weights (must total 100%) and risk bands |
+| Jobber | Financial, Work and Client reports under Insights, web only, for admins or users with a Reports permission | Fixed report set by plan |
+| ServiceTitan | Technician performance boards: revenue, jobs, close rate, average sale by service or replacement, replacement rate, holds, cancels; membership reports | Tenant sets sold threshold and service/replacement threshold; Dispatch Pro scores technicians against job-type medians |
+| Upper | Routes and stops completed, on-time rate ("Share of deliveries completed within the time window"), missed or skipped stops, average stops per route, average service time per stop | Fixed cards; on-time named "On-Time Service Rate" in service workspaces |
 
 Two patterns stand out. The trade suites (ServiceTitan, FieldRoutes) attribute outcomes to people, because pay and coaching depend on it: FieldRoutes charges a subscription cancel to the technician who "was the last to service before cancellation." The delivery platforms (Upper, Bringg, Spoke) measure the stop and the window, because their customers' contracts are written in those terms. A platform that serves both needs both views over the same facts.
 

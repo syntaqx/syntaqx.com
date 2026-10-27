@@ -153,16 +153,16 @@ The tools fall into three groups: door-to-door sales apps that manage the team i
 
 | Tool | Class | Team and pay |
 | ---- | ----- | ------------ |
-| SalesRabbit | D2D | Leaderboards in Team, Pro and Enterprise; Competitions in Pro and Enterprise; "Amplify" with spot rewards and coaching |
-| SPOTIO | D2D | Gamification and leaderboards; its guide suggests shadowing in week one, co-selling in week two and selling alone with daily debriefs in week three |
-| RepCard | D2D | Leaderboards, sales contests, team chat; a recruiting module with onboarding documents, recruit tracker, background checks and ID badges; commissions |
-| Knockio | D2D | Per-user plans |
-| Knockbase | D2D | Leaderboards, a commission calculator, live tracking |
 | Badger Maps | Field sales mapping | Scoreboard add-on |
-| FieldRoutes | Vertical FSM (pest, lawn) | Each subscription has a `soldBy` field "used in commissions and sales reporting"; player and team competitions; the mobile Leaderboard and Competitions need a signal |
 | Enerflo | Solar suite | Sales through to install on one record |
+| FieldRoutes | Vertical FSM (pest, lawn) | Each subscription has a `soldBy` field "used in commissions and sales reporting"; player and team competitions; the mobile Leaderboard and Competitions need a signal |
+| Knockbase | D2D | Leaderboards, a commission calculator, live tracking |
+| Knockio | D2D | Per-user plans |
 | PestPac | Vertical FSM (pest) | Commissions and Sales Team Performance reports |
+| RepCard | D2D | Leaderboards, sales contests, team chat; a recruiting module with onboarding documents, recruit tracker, background checks and ID badges; commissions |
+| SalesRabbit | D2D | Leaderboards in Team, Pro and Enterprise; Competitions in Pro and Enterprise; "Amplify" with spot rewards and coaching |
 | ServiceTitan | Trades suite (HVAC, plumbing, electrical) | Performance Pay: technician sales commission and item spiffs on completed jobs |
+| SPOTIO | D2D | Gamification and leaderboards; its guide suggests shadowing in week one, co-selling in week two and selling alone with daily debriefs in week three |
 
 How canvassing itself works (areas, knocks, door statuses, property data and scoring) is in [Door-to-Door Sales](/books/field-operations/door-to-door-sales).
 
@@ -170,10 +170,10 @@ The field-service suites record attribution; few run a full commission plan. Tha
 
 | Platform | What its public pages describe |
 | -------- | ------------------------------ |
-| Salesforce Spiff | Real-time rep statements, "tracing" that shows how each commission component was calculated, dispute tickets on statements or deals, and an estimator on open opportunities |
 | CaptivateIQ | A guided plan builder; plans "versioned, tested against historical data, and validated before being deployed"; "full audit trails and calculation transparency" |
-| Xactly Incent | Handles "caps, clawbacks, and team-based bonuses," a built-in dispute system, a complete audit trail, and add-ons that connect to payroll, HRIS and ERP |
 | QuotaPath | Automatic "Overpaid" records when earnings drop after a payout is scheduled; clawbacks recovered in one payout, split across several, or in installments |
+| Salesforce Spiff | Real-time rep statements, "tracing" that shows how each commission component was calculated, dispute tickets on statements or deals, and an estimator on open opportunities |
+| Xactly Incent | Handles "caps, clawbacks, and team-based bonuses," a built-in dispute system, a complete audit trail, and add-ons that connect to payroll, HRIS and ERP |
 
 These platforms were built for B2B software sales: annual contracts, CRM opportunities, quarterly quotas. Field service brings different inputs (a sale is an agreement that may cancel in three days; "booked" isn't "serviced"; revenue arrives per visit), so the integration work is mapping agreement and service events into whatever the platform calls a deal.
 

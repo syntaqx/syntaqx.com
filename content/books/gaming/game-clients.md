@@ -102,12 +102,12 @@ In-game UI (menus, HUDs, the store inside the game) has its own lineage, and a g
 
 | Technology | What it is (per its makers) | Notes |
 | --- | --- | --- |
-| Scaleform | Flash-based game UI middleware | Autodesk stopped selling it in July 2017, honoring maintenance contracts and giving customers the final source (PocketGamer.biz, secondary) |
-| Coherent Gameface | "a game UI middleware" with HTML, CSS and JavaScript authoring | Its layout engine "is not a 'WebView' and is not based on WebKit/Chromium/Gecko/IE"; integrations for custom engines, Unreal and Unity |
-| Ultralight | "a GPU-accelerated toolkit for embedding HTML in games and native apps," "a custom fork of WebKit" | Single-process; vendor figures of 9 MB of RAM on Windows against 72 MB for Chromium or Electron; same team as Awesomium |
 | CEF in the game | Chromium rendering "off-screen" into a custom drawing framework, one of CEF's listed uses | Full browser compatibility at a browser's memory cost; Guild Wars 2 moved its in-game Trading Post and books to it from the unsupported Coherent UI in 2023 |
-| Unreal Slate and UMG | Slate is Epic's "completely custom and platform agnostic user interface framework" for the editor and in-game UI; UMG widgets are "wrapped Slate controls that are exposed to UObjects" | Built in, designer-friendly through Widget Blueprints |
+| Coherent Gameface | "a game UI middleware" with HTML, CSS and JavaScript authoring | Its layout engine "is not a 'WebView' and is not based on WebKit/Chromium/Gecko/IE"; integrations for custom engines, Unreal and Unity |
+| Scaleform | Flash-based game UI middleware | Autodesk stopped selling it in July 2017, honoring maintenance contracts and giving customers the final source (PocketGamer.biz, secondary) |
+| Ultralight | "a GPU-accelerated toolkit for embedding HTML in games and native apps," "a custom fork of WebKit" | Single-process; vendor figures of 9 MB of RAM on Windows against 72 MB for Chromium or Electron; same team as Awesomium |
 | Unity uGUI and UI Toolkit | Unity's manual recommends uGUI for a list of runtime cases; UI Toolkit (UXML and USS, a "web-like approach") is recommended for complex editor tools and "in active development" | Check the current manual's comparison before choosing |
+| Unreal Slate and UMG | Slate is Epic's "completely custom and platform agnostic user interface framework" for the editor and in-game UI; UMG widgets are "wrapped Slate controls that are exposed to UObjects" | Built in, designer-friendly through Widget Blueprints |
 
 The tradeoff is the launcher one at a smaller scale, with one addition: middleware can be discontinued under a shipping game (Scaleform, Coherent UI), so the exit path matters as much as the feature list. Web-style authoring gets a large talent pool and fast iteration; a purpose-built engine (Gameface's custom subset, Ultralight's stripped WebKit, or the engine's own UI) gets predictable memory and frame cost, which matters more inside a game than in a launcher, because UI time comes out of the frame budget ([Building Your Own Engine](/books/gaming/building-an-engine)).
 

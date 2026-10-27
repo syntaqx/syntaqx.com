@@ -25,12 +25,12 @@ Slot search is the [availability engine](/books/field-operations/territories-and
 
 | Platform | How slots are offered | What decides them |
 | --- | --- | --- |
-| **Salesforce Field Service** | `AppointmentBookingService.GetSlots` returns slots, sortable by grade or date | Operating hours define the slot structure; the scheduling policy's work rules and objectives grade each slot |
-| **Oracle Field Service** | Direct assignment, or quota by time slot or booking interval, chosen per capacity area | Remaining quota and qualified workers |
-| **Timefold** | Time window recommendations for a requested visit | The existing plan; the accepted visit is optimized afterward |
-| **Jobber** | Online booking slots by booking interval | Earliest availability, drive time limit, buffer time, team member availability |
 | **Housecall Pro** | Flexible times or specific start times | Earliest availability and employees marked available for booking |
+| **Jobber** | Online booking slots by booking interval | Earliest availability, drive time limit, buffer time, team member availability |
+| **Oracle Field Service** | Direct assignment, or quota by time slot or booking interval, chosen per capacity area | Remaining quota and qualified workers |
+| **Salesforce Field Service** | `AppointmentBookingService.GetSlots` returns slots, sortable by grade or date | Operating hours define the slot structure; the scheduling policy's work rules and objectives grade each slot |
 | **ServiceTitan Scheduling Pro** | Online or call-center scheduler | Zones, job type mapping, business hours, capacity, buffers, blocked dates |
+| **Timefold** | Time window recommendations for a requested visit | The existing plan; the accepted visit is optimized afterward |
 
 Salesforce's flow is the clearest public one. `GetSlots` takes the appointment, a scheduling policy and an operating hours record that "represents various slots offered to the customer during appointment booking (for example, Mondays 9 to 11 AM, 11 AM to 1 PM...)," and returns available slots without scheduling anything. After the customer picks one, the code sets the arrival window and calls `ScheduleService`, which "performs resource locking and collision detection" and can, with sliding and reshuffling on, let "a higher-priority incoming appointment ... cause an existing appointment to be dropped." Recurring visits have their own call, `getRecurringAppointmentsSlots`, which returns up to three sets of options for a whole weekly series.
 

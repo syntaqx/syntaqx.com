@@ -66,12 +66,12 @@ Software platforms (a gym system, a dental practice suite, a marketplace) want t
 
 | Vendor | What its docs say it is | What the platform still owns |
 | --- | --- | --- |
-| **Stripe Connect** | "Embed payments and financial products in your SaaS platform, marketplace, or fintech" | Onboarding UX and pricing to the extent the account configuration allows; fraud and dispute liability depending on it ([Payments for Software Platforms](/books/payments/software-platforms#four-ways-in)) |
 | **Adyen for Platforms** | "Onboard users of your platform, process payments for them, and pay out their funds" | The platform experience and the split of funds |
 | **Finix** | A registered processor (sponsor Pathward) and a registered payment facilitator (sponsor Fifth Third), directly connected to Visa, Mastercard, Amex and Discover since May 2023 | Whatever the chosen model leaves it; Finix carries both the processor and the facilitator role |
+| **Global Payments for Platforms** | Embedded payments for SaaS, in tiers from integrated payments to "PayFac-as-a-Service Pro" and a self-managed "PayFac Developer" tier; payrix.com now redirects here | The platform layer on a large acquirer, with a documented path to self-managed facilitation |
 | **Rainforest** | "Embedded payments purpose-built for vertical SaaS" | The vertical product and its merchants |
 | **Stax Connect** | Embedded payments "without having to build your own payments organization"; Stax handles bank sponsorship, disputes and funds movement | Distribution and merchant experience |
-| **Global Payments for Platforms** | Embedded payments for SaaS, in tiers from integrated payments to "PayFac-as-a-Service Pro" and a self-managed "PayFac Developer" tier; payrix.com now redirects here | The platform layer on a large acquirer, with a documented path to self-managed facilitation |
+| **Stripe Connect** | "Embed payments and financial products in your SaaS platform, marketplace, or fintech" | Onboarding UX and pricing to the extent the account configuration allows; fraud and dispute liability depending on it ([Payments for Software Platforms](/books/payments/software-platforms#four-ways-in)) |
 
 Read the table for what it implies. The managed providers compete on how much of the payments organization they take off the platform (underwriting, sponsorship, disputes, compliance), and the more they take, the less of the margin and the merchant relationship the platform keeps. Global Payments' tiers, from payfac-as-a-service to a self-managed facilitator tier on the same platform, describe the route some platforms want: start managed, then take on facilitation without changing processors. The questions to ask any of them are the same as for a PSP, plus three: who underwrites a new merchant and how fast, whose name the merchant agreement is in, and whether the platform can move its merchants, with their stored cards, if it outgrows the provider.
 
@@ -81,12 +81,12 @@ A second infrastructure market sits on the bank rails rather than the card netwo
 
 | Vendor | What it says it is | Shape |
 | --- | --- | --- |
-| **Modern Treasury** | A "Multi-Rail Payment Service Provider" with "one API to... move money across fiat and stablecoins" | Payment operations over your banks, or its own |
-| **Increase** | "Direct connections to the networks for money movement", with wire details "directly from Fedwire" | Direct rail access through a bank partner |
 | **Column** | "The only nationally chartered bank designed to help you build and fund new financial products" | A bank that sells to developers |
-| **Unit** | "Build financial products on real infrastructure"; "Unit is a financial technology company and not a bank" | Accounts, cards and payments through partner banks |
-| **Moov** | "Orchestrates the entire money movement story" | Money movement API across rails |
 | **Dwolla** | "The payments operations layer for bank transfers", over ACH and real-time payments | ACH and instant payments API |
+| **Increase** | "Direct connections to the networks for money movement", with wire details "directly from Fedwire" | Direct rail access through a bank partner |
+| **Modern Treasury** | A "Multi-Rail Payment Service Provider" with "one API to... move money across fiat and stablecoins" | Payment operations over your banks, or its own |
+| **Moov** | "Orchestrates the entire money movement story" | Money movement API across rails |
+| **Unit** | "Build financial products on real infrastructure"; "Unit is a financial technology company and not a bank" | Accounts, cards and payments through partner banks |
 
 The structural question here is **who keeps the ledger of whose money is where**, and the industry learned it the hard way. Synapse, a middleware company that sat between fintech apps and partner banks, filed for bankruptcy on April 22, 2024; its partner banks found a shortfall the CFPB later put at $60 million to $90 million, and consumers lost access to their funds for weeks or months. Two months later, on June 14, 2024, the Federal Reserve and the Arkansas State Bank Department announced a cease-and-desist order against Evolve Bank & Trust, one of the banks in that arrangement, over anti-money-laundering, risk-management and consumer-compliance weaknesses in its fintech partnerships. The lesson for a buyer is to ask which bank holds the funds, in what kind of account, and whether the bank's own records can identify each end customer's balance without the middleware ([FBO Accounts and Pass-Through Insurance](/books/payments/treasury#fbo-accounts-and-pass-through-insurance)).
 

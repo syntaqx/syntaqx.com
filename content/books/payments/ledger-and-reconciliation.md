@@ -24,9 +24,9 @@ The public providers all expose the same idea from different ends: every movemen
 
 | | Unit of record | What decomposes | Matching keys | Unmatched handling |
 | --- | --- | --- | --- | --- |
-| Stripe | Balance transaction | Automatic payout into its transactions | Payout ID, charge ID, bank trace ID | Manual and instant payouts left to the merchant |
 | Adyen | Settlement detail row | Batch into payments, refunds, chargebacks and costs | PSP reference, merchant reference, batch number | Net credits less net debits must equal the payout |
 | Modern Treasury | Expected payment | Bank transactions against expectations | Rule conditions on amount, date, custom identifiers | Partial reconciliation; rules ordered to catch exceptions |
+| Stripe | Balance transaction | Automatic payout into its transactions | Payout ID, charge ID, bank trace ID | Manual and instant payouts left to the merchant |
 | TigerBeetle | Transfer | Pending reserved, then posted or voided | Transfer ID (idempotent) | Pending expires on timeout |
 
 None of them reconciles for you across sources. A provider holds the processor's view, the bank's view and its own, and the work of this chapter is the join.
