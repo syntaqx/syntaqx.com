@@ -118,7 +118,7 @@ My default for a platform that originates calls is its own SPC token and certifi
 
 ## How to Build It
 
-The chapter adds SIP trunks, calls, attestations and RMD filings to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). A SIP trunk is a resource; calls, like messages, are operational records that reference resources and emit usage events on minute meters (`voice.minutes`, with direction, destination and number type as dimensions).
+The chapter adds SIP trunks, calls, attestations and RMD filings to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). A SIP trunk is a new resource kind (the constraint below keeps every kind the core model and earlier chapters define); calls, like messages, are operational records that reference resources and emit usage events on minute meters (`voice.minutes`, with direction, destination and number type as dimensions).
 
 ```sql
 ALTER TABLE resources
@@ -131,7 +131,8 @@ ALTER TABLE resources
     'registry', 'ci_pipeline', 'gpu_reservation', 'model_endpoint',
     'hosting_account', 'site', 'mailbox',
     'domain', 'dns_zone', 'certificate', 'cdn_zone',
-    'phone_number', 'sender_identity', 'sip_trunk'));
+    'phone_number', 'sender_identity', 'message_broker',  -- message_broker: Managed Queues
+    'sip_trunk'));                       -- added: a SIP trunk
 
 CREATE TABLE sip_trunks (                -- side table: kind = 'sip_trunk'
   resource_id      UUID PRIMARY KEY REFERENCES resources (id),
