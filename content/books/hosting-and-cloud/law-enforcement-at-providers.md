@@ -3,7 +3,7 @@ title = "Law Enforcement at Infrastructure Providers"
 nav_title = "Law Enforcement at Providers"
 description = "What police and courts ask infrastructure providers for, the published volumes, and resolving an IP and timestamp to the customer who held it."
 category = "Hosting & Cloud Industry"
-order = 2201
+order = 2202
 part = "Abuse, Trust and the Law"
 tags = ["law-enforcement", "transparency", "ecpa", "cloud-act", "data-requests"]
 +++

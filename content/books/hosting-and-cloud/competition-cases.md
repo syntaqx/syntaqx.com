@@ -2,7 +2,7 @@
 title = "Competition Cases"
 description = "The UK CMA's cloud market investigation and Microsoft SMS case, the EU's DMA cloud investigations, and the FTC's inquiry: what each found, decided and when."
 category = "Hosting & Cloud Industry"
-order = 2204
+order = 2205
 part = "Market Rules and Compliance"
 tags = ["competition", "antitrust", "cma", "dma", "ftc", "regulation"]
 +++

@@ -253,10 +253,11 @@ CREATE TABLE registration_reviews (      -- every submission to an external revi
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   sender_identity_id UUID NOT NULL REFERENCES resources (id),
   reviewer           TEXT NOT NULL,      -- 'tcr', 'aegis', 'us.tmobile', 'tf_aggregator',
-                                         -- 'csca', 'google_rbm'
+                                         -- 'csca', 'google_rbm', 'meta', 'in.dlt'
   kind               TEXT NOT NULL CHECK (kind IN ('brand_registration', 'auth_plus',
                        'secondary_vetting', 'campaign_review', 'tf_verification',
-                       'short_code_certification', 'rcs_launch', 'appeal')),
+                       'short_code_certification', 'rcs_launch', 'business_verification',
+                       'display_name_review', 'sender_id_registration', 'appeal')),
   submitted_payload  JSONB NOT NULL,     -- exactly what was sent
   submitted_at       TIMESTAMPTZ NOT NULL,
   outcome            TEXT CHECK (outcome IN ('approved', 'rejected', 'expired',

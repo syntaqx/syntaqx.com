@@ -2,7 +2,7 @@
 title = "Free-Tier Fraud & Stolen Keys"
 description = "Abuse aimed at the provider's own resources: free-tier farming, cryptomining, leaked cloud keys and their quarantine, LLMjacking and secret scanning."
 category = "Hosting & Cloud Industry"
-order = 2198
+order = 2199
 part = "Abuse, Trust and the Law"
 tags = ["fraud", "free-tier", "cryptomining", "credentials", "secret-scanning"]
 +++

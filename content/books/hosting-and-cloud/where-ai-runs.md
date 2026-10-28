@@ -3,7 +3,7 @@ title = "Where AI Runs: Home, Colo, Cloud or Frontier"
 nav_title = "Where AI Runs"
 description = "Where inference runs: frontier APIs, hosted open models, rented GPUs, colocation or home; prices, data terms, breakeven, the quality gap and routing."
 category = "Hosting & Cloud Industry"
-order = 2208
+order = 2209
 part = "Running the Provider"
 tags = ["ai", "inference", "llm", "pricing", "routing"]
 +++

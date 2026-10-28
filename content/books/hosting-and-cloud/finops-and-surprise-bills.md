@@ -3,7 +3,7 @@ title = "Cost Data, FinOps & Surprise Bills"
 nav_title = "FinOps & Surprise Bills"
 description = "What providers give customers to see and control spend: cost exports, CUR and FOCUS, budgets, anomaly detection, spend caps and pauses, and bill forgiveness."
 category = "Hosting & Cloud Industry"
-order = 2196
+order = 2197
 part = "Metering and Billing"
 tags = ["finops", "cost-data", "budgets", "anomaly-detection", "billing"]
 +++

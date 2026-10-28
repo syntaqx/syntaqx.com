@@ -2,7 +2,7 @@
 title = "Metering & Rating"
 description = "How providers measure usage and turn it into money: meters, units and granularity, minimums, allowances and caps, pass-through fees, corrections and re-rating."
 category = "Hosting & Cloud Industry"
-order = 2188
+order = 2189
 part = "Metering and Billing"
 tags = ["metering", "rating", "usage-billing", "pass-through", "billing"]
 +++

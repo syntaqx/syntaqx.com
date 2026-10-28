@@ -2,7 +2,7 @@
 title = "Tax on Hosting & Cloud"
 description = "Seller entities by region, VAT and GST on electronic services, US sales tax on hosting, IaaS and SaaS, Chicago's cloud tax, telecom taxes and USF on CPaaS."
 category = "Hosting & Cloud Industry"
-order = 2194
+order = 2195
 part = "Metering and Billing"
 tags = ["tax", "vat", "sales-tax", "telecom-tax", "billing"]
 +++

@@ -2,7 +2,7 @@
 title = "Inbox Rules"
 description = "Gmail, Yahoo and Outlook sender rules and how they are enforced, feedback loops, BIMI, blocklists, and how an email platform enforces them on its own customers."
 category = "Hosting & Cloud Industry"
-order = 2187
+order = 2188
 part = "Communications Platforms"
 tags = ["email", "deliverability", "dmarc", "bimi", "feedback-loops", "enforcement"]
 +++

@@ -2,7 +2,7 @@
 title = "Email Sending Platforms"
 description = "Email sending providers from the inside: SES, SendGrid, Mailgun, Postmark and Resend; onboarding, shared and dedicated IPs, warmup, streams and pricing."
 category = "Hosting & Cloud Industry"
-order = 2186
+order = 2187
 part = "Communications Platforms"
 tags = ["email", "esp", "deliverability", "ip-warmup", "multi-tenancy"]
 +++

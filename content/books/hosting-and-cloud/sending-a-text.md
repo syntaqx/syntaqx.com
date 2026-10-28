@@ -149,7 +149,9 @@ CREATE TABLE messages (                  -- one row per message; partitioned by 
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id          UUID NOT NULL REFERENCES accounts (id),
   project_id          UUID REFERENCES projects (id),
-  channel             TEXT NOT NULL CHECK (channel IN ('sms', 'mms', 'rcs')),
+  channel             TEXT NOT NULL CHECK (channel IN ('sms', 'mms', 'rcs', 'whatsapp',
+                        'apple_messages', 'messenger', 'instagram', 'telegram', 'viber',
+                        'line', 'kakao')),
   direction           TEXT NOT NULL CHECK (direction IN ('outbound', 'inbound')),
   from_number_id      UUID REFERENCES resources (id),   -- kind = 'phone_number'
   campaign_id         UUID REFERENCES resources (id),   -- the campaign at send time
@@ -209,11 +211,11 @@ CREATE TABLE opt_outs (                  -- the platform's backstop suppression
 CREATE TABLE throughput_limits (         -- every bucket the sender enforces
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
   scope_kind    TEXT NOT NULL CHECK (scope_kind IN ('campaign', 'brand', 'number', 'account',
-                  'upstream')),
+                  'upstream', 'sender_identity')),
   scope_id      TEXT NOT NULL,           -- the resource id, account id or upstream id
   carrier_id    TEXT REFERENCES carriers (id),           -- null: all carriers
-  channel       TEXT NOT NULL CHECK (channel IN ('sms', 'mms', 'rcs')),
-  unit          TEXT NOT NULL CHECK (unit IN ('messages', 'segments')),
+  channel       TEXT NOT NULL CHECK (channel IN ('sms', 'mms', 'rcs', 'whatsapp')),
+  unit          TEXT NOT NULL CHECK (unit IN ('messages', 'segments', 'unique_recipients')),
   per           INTERVAL NOT NULL,       -- '1 second', '1 minute', '1 day'
   limit_value   INT NOT NULL CHECK (limit_value > 0),
   source        TEXT NOT NULL,           -- 'carrier_grant', 'platform_plan', 'risk'

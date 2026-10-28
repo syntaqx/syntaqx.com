@@ -2,7 +2,7 @@
 title = "Repatriation"
 description = "Leaving the cloud for owned hardware: Dropbox's Magic Pocket and S-1, 37signals' numbers, exit egress waivers, and a cost model for when owning wins."
 category = "Hosting & Cloud Industry"
-order = 2213
+order = 2214
 part = "Running the Provider"
 tags = ["repatriation", "cloud-exit", "cost-model", "colocation", "egress"]
 +++

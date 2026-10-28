@@ -2,7 +2,7 @@
 title = "911, CPNI & Telecom Duties"
 description = "The telephone-company duties a voice platform inherits: 911 and dispatchable location, Kari's Law, CPNI and breach rules, and universal service and 911 fees."
 category = "Hosting & Cloud Industry"
-order = 2184
+order = 2185
 part = "Communications Platforms"
 tags = ["911", "cpni", "usf", "telecom-regulation", "voip", "breach-notification"]
 +++
