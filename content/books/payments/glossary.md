@@ -173,6 +173,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **Exposure:** the money a provider could lose if a merchant stopped paying: refunds, disputes and undelivered orders still able to come back ([Merchant Onboarding](/books/payments/merchant-onboarding#exposure-and-reserves)).
 - **Frictionless, challenge:** a 3-D Secure authentication the cardholder never sees, and one where they're asked to prove who they are ([SCA & 3-D Secure](/books/payments/strong-customer-authentication#how-3-d-secure-works)).
 - **Friendly fraud:** a cardholder disputing a charge they made ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks#prevention-beats-winning)).
+- **High integrity risk MCC:** a merchant code Visa monitors under its Integrity Risk Program, card-absent crypto sellers on 6051 and 6012 among them ([Payments by Vertical](/books/payments/payments-by-vertical#crypto-purchases)).
 - **Hosted payment page:** a payment page served entirely by the provider and reached by redirect or link, keeping the merchant on SAQ A without the script criterion ([Checkout, Invoices & Payment Links](/books/payments/checkout-and-invoicing#six-surfaces)).
 - **Idempotency key:** a key the client sends with a write, so a retry replays the stored result instead of acting twice ([Designing the Payments API](/books/payments/payments-api#errors-lists-and-limits)).
 - **Inquiry, pre-arbitration, arbitration:** the issuer's request for transaction details before a dispute (a retrieval request), and the escalations after the merchant's evidence is rejected, ending with the network's own ruling ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks#the-lifecycle)).
@@ -188,6 +189,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **Payment intent:** an object that lives across a whole payment and its steps, such as 3-D Secure; this volume's `payments` row ([Designing the Payments API](/books/payments/payments-api#the-objects)).
 - **Payment link:** a URL to a provider-hosted payment page, single-use or reusable, with a fixed, invoice-balance or payer-entered amount held on the server ([Checkout, Invoices & Payment Links](/books/payments/checkout-and-invoicing#links-that-can-t-be-tampered-with)).
 - **Publishable, restricted and secret keys:** a key safe to put in a browser, a scoped server key, and an unrestricted server key ([Designing the Payments API](/books/payments/payments-api#keys-and-the-client)).
+- **Quasi-cash transaction:** the sale of something directly convertible to cash (money orders, foreign currency, gaming chips), processed as a purchase under its own MCC; crypto purchases share MCC 6051 ([Payments by Vertical](/books/payments/payments-by-vertical#crypto-purchases)).
 - **Representment:** the merchant's evidence-backed response to a chargeback ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks#the-lifecycle)).
 - **SCA (Strong Customer Authentication):** the European requirement for two-factor authentication on most online payments ([SCA & 3-D Secure](/books/payments/strong-customer-authentication#what-sca-requires)).
 - **TC40, SAFE:** Visa's and Mastercard's issuer fraud reports, which count toward network ratios even without a dispute ([Fraud & Risk](/books/payments/fraud-and-risk#what-the-networks-know)).
@@ -273,6 +275,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **Push provisioning:** adding a card to a wallet from the issuer's app or site, which needs each wallet's approval ([Card Issuing](/books/payments/card-issuing#tokenization-on-the-issuer-side)).
 - **Spend controls:** per-card or per-cardholder rules on merchant category, country, channel, amount and velocity, checked at authorization ([Issuer Processing](/books/payments/issuer-processing#spend-controls)).
 - **Spend management:** a commercial charge card bundled with expense software (limits, approvals, receipts, accounting sync), paid for mostly by commercial interchange ([Card Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)).
+- **Stablecoin-linked card:** a card that spends from a stablecoin or crypto balance, converted to fiat by top-up, at authorization or against collateral, while the network settles in fiat or a settlement stablecoin ([Card Issuing](/books/payments/card-issuing#crypto-and-stablecoin-linked-cards)).
 - **Visa Account Screen:** the list of blocked and lost or stolen card numbers that Visa's stand-in declines, which issuers must update immediately ([Issuer Processing](/books/payments/issuer-processing#stand-in-and-offline)).
 
 ## Running a Provider

@@ -10,7 +10,7 @@ tags = ["payments", "cards", "issuing", "sponsor-banks", "tokenization"]
 
 Everything before this part of the volume sits on the acceptance side: the merchant, the acquirer, the processor that speaks for them. Issuing is the other end of the same wire. The issuer holds the cardholder's account, answers every authorization, pays the network for every purchase, and carries the cardholder's legal rights. Until about 2015 that meant a bank running a card portfolio on a mainframe processor. Now a software company can put its own cards in its users' hands in weeks, because the bank, the processor and the operations can each be rented. What can't be rented away is the bank's liability, so every program is a stack of contracts that move risk around without making it disappear.
 
-This chapter covers that stack: who the parties are and which contract binds each, what the platforms that sell issuing offer, what a sponsor bank requires before it lends its BIN, what each program type (prepaid, debit, credit, commercial) brings in law, where the money comes from, the businesses built on issuing, a card's life from creation to closing, and network tokens from the issuer's side. What happens inside the authorization (real-time decisioning, just-in-time funding, spend controls, stand-in, issuer fraud and disputes, and error resolution under Regulations E and Z) is in [Issuer Processing](/books/payments/issuer-processing).
+This chapter covers that stack: who the parties are and which contract binds each, what the platforms that sell issuing offer, what a sponsor bank requires before it lends its BIN, what each program type (prepaid, debit, credit, commercial) brings in law, where the money comes from, the businesses built on issuing (cards that spend from crypto balances among them), a card's life from creation to closing, and network tokens from the issuer's side. What happens inside the authorization (real-time decisioning, just-in-time funding, spend controls, stand-in, issuer fraud and disputes, and error resolution under Regulations E and Z) is in [Issuer Processing](/books/payments/issuer-processing).
 
 ## The Parties and the Stack
 
@@ -140,6 +140,53 @@ Most companies that issue cards don't sell cards; they sell software or a servic
 
 What these models share is that the card is a feature of someone else's product, so the program agreement, the losses and the bank's examiners still land on the stack described above. The bank side of the business (deposit accounts, lending, underwriting and credit risk) belongs to the Banking & Lending volume; this chapter stops at the card.
 
+## Crypto- and Stablecoin-Linked Cards
+
+A fifth model has grown fast enough to need its own section: a card that spends from a crypto or stablecoin balance. Visa counted more than 130 stablecoin-linked card programs in more than 50 countries on March 31, 2026, and more than 160 by its September 8, 2026 release, with payment volume on them up nearly 200% year over year. To the merchant, nothing is different: the card is a Visa or Mastercard credential, the purchase clears in fiat, and the merchant is paid in its own currency. Everything that differs sits behind the issuer, in where the asset is held, when it becomes dollars, and who carries the gap. What a stablecoin is, how it moves and how a provider screens and reconciles it is in [Stablecoins & Crypto Rails](/books/payments/stablecoins); this section covers only the card.
+
+### Where the Conversion Happens
+
+The network settles in fiat, or in a stablecoin it accepts for settlement, never in the cardholder's arbitrary token. Visa's rules put it plainly: "Any non-fiat currency funds must be converted to a fiat currency before deposit into a Cardholder account linked to a Visa Card," and the issuer needs Visa's approval before launching a program linked to an account that accepts funds previously converted from non-fiat currency (Visa Core Rules 1.4.4.6). Mastercard said the same in 2021: crypto spent on its network "must enter and settle on Mastercard's network as traditional fiat currency." Programs differ in when that conversion happens, and the published ones fall into three models:
+
+| Model | When the asset becomes spendable money | Who holds the asset | Example, from its public docs |
+| --- | --- | --- | --- |
+| **Top-up** | Before the purchase: the cardholder converts crypto into a fiat card balance | The exchange, until converted; then a bank, in dollars | Crypto.com's US prepaid card holds "Only US Dollars (USD)"; a top-up quote is held for 15 seconds |
+| **Just-in-time pull** | At authorization: the program pulls stablecoins from a wallet on chain | The cardholder (self-custody, with an on-chain approval) or a custodian | Bridge with Stripe Issuing pulls "at the time of authorization" from a non-custodial wallet or a Bridge-custodied one; Rain's real-time funding (beta) commits the amount at authorization "where it stays until settlement" |
+| **Collateral or credit** | After clearing: the program extends a line backed by stablecoins locked as collateral, and settles from it | A collateral contract or a program-level account | Rain's corporate card limit is "backed by the stablecoins you deposit into your account's smart contracts", with balances unpaid by the 8th of the month "automatically liquidated from your collateral"; Reap's user-funded model settles cleared spend "on a schedule" from each user's wallet, and its program-funded model collateralizes every card from one master account |
+
+The top-up model is an ordinary [prepaid](#prepaid) program with a crypto exchange in front of it, and it's the easiest to defend to a bank: Crypto.com's agreement says "No cryptocurrency debits, credits or balances will take place" on the card, and that the crypto isn't held at the bank or FDIC-insured. The just-in-time model is [JIT funding](/books/payments/issuer-processing#real-time-decisions-webhooks-and-jit-funding) where the funding source is a chain: an on-chain transaction inside a two-second authorization budget, which is why Stripe doesn't hand the program its real-time authorization webhook by default "because of transaction submission latency requirements". The collateral model is a [credit](#credit) program whose security is a token, which brings Regulation Z if it's consumer credit and a liquidation policy either way.
+
+### Who Issues and Who Settles
+
+A crypto card still has an issuing bank or a network principal member behind it, and the public programs name theirs:
+
+- **Crypto.com (US):** issued by Community Federal Savings Bank, with Foris, Inc. as program manager, as of the agreement effective September 1, 2026.
+- **Bridge:** Lead Bank, named in Stripe's partnership announcement with Visa (April 30, 2025) and in the cardholder terms a commercial program must pass to each cardholder. Visa and Bridge reported cards live in 18 countries on March 3, 2026.
+- **Rain:** its US debit cards are "Visa® debit cards issued by Cross River Bank" with Rain as program manager, while Visa describes Rain as a Visa Principal Member that powers programs around the world. One company can be a program manager under a sponsor in one market and the issuer in another.
+- **Reap:** announced stablecoin-linked Visa credit programs for more than 100 markets with Visa on September 23, 2026, with partners using stablecoins as collateral and cardholders repaying in them. <!-- source-gap: reap-issuer | missing | which bank or principal member issues Reap's cards | closes with: Reap's cardholder terms or a Visa or Reap page naming the issuer | checked: 2026-10-28 --> Its public docs don't name the issuer.
+- **Mastercard** gave Wirex principal membership in 2020, "allowing it to directly issue payment cards", and said it would only work with crypto partners that follow its core principles.
+
+Settlement is where the networks are changing. Visa describes two models: in the traditional one, "program managers convert stablecoins to fiat before settling with Visa"; in the emerging one, adopted by its principal members, issuers settle directly with Visa in supported stablecoins such as USDC, which is the network settlement in [How the Platforms Do It](/books/payments/stablecoins#how-the-platforms-do-it). Settling in stablecoins lets a program settle every day including weekends, which matters because its cardholders spend every day, and Visa's own write-up on financing these programs starts from the same constraint every issuer has: it "has to fund its daily settlement obligation before it collects from cardholders."
+
+**KYC doesn't get easier because the money is on chain.** The bank's [customer identification program](#bin-sponsorship) applies as for any card, and Stripe's Bridge guide shows a sponsor tightening it: "Per existing bank partner rules," a cardholder must have completed KYC or confirmed their information within the past 24 hours before a card is created. On top of the bank's program sits the screening in [Screening Wallets and Addresses](/books/payments/stablecoins#screening-wallets-and-addresses), because a self-custody wallet that funds a card is a counterparty address like any other.
+
+### The Ledger When the Balance Is a Token
+
+A card ledger already handles authorizations and clearing that disagree ([The Ledger for an Issuer](/books/payments/issuer-processing#the-ledger-for-an-issuer)). Funding from a chain adds a second ledger that must agree with the first, and four places where they drift:
+
+- **The pull is not the hold.** Bridge "might also proactively pull an additional amount at the time of authorization based on the MCC and the overcapture upper bound, and refunds any difference when they know the final amount at capture time"; if capture still exceeds what was pulled, "another crypto transaction is submitted"; when an authorization expires, "any remaining authorized funds are pushed back" to the wallet. Every authorization can therefore produce several on-chain transfers in both directions, and each needs to be matched to the authorization, the increment or the capture that caused it.
+- **Price moves between authorization and clearing.** With a dollar stablecoin the amount is stable and the risk is the peg and the fees. With a volatile asset, whoever converts at authorization and settles at clearing holds the asset's price for the days in between, plus the over-capture margin. My rule: convert at authorization at a quoted rate, record the rate and the asset amount on the hold, and price the program's spread to cover the move on a clearing that arrives days later, rather than reconverting at clearing and passing the difference to the cardholder.
+- **Refunds return to a volatile asset, or don't.** Crypto.com's refunds credit the card's dollar balance. Bridge returns refunds on chain to the cardholder's wallet, "asynchronously," and "can batch multiple refunds into the same onchain transaction," so one on-chain transfer can carry several refunds and the match is one-to-many. Decide and disclose which asset and which rate a refund comes back in; a refund of a $50 purchase returned as the token amount spent can be worth more or less than $50 by the time it lands.
+- **Provisional credit can't be clawed back from a wallet you don't control.** Stripe's Bridge guide pushes dispute "provisional credits and other refunds associated with the dispute directly to your non-custodial wallet." Regulation E lets an issuer reverse a provisional credit when it finds no error ([Debit and Prepaid: Regulation E](/books/payments/issuer-processing#debit-and-prepaid-regulation-e)); on a self-custody wallet, the reversal is a new pull that depends on the cardholder's approval still being active and funded. Book a provisional credit sent on chain as a receivable from the cardholder until the dispute closes.
+
+Reconcile both sides daily: the card ledger against the processor's clearing, as for any program, and every pull, refund and return against the chain at a block height, as in [Reconciliation Against the Chain](/books/payments/stablecoins#reconciliation-against-the-chain).
+
+**Tax follows every swipe.** The IRS treats digital assets as property, and "If you pay for services using digital assets, then you have disposed of the digital assets" with a capital gain or loss; that holds for stablecoins held as capital assets too. Brokers report gross proceeds for transactions from January 1, 2025 and basis for certain transactions from January 1, 2026. A card that spends a cardholder's crypto turns each purchase into a disposal, so the program keeps the asset amount, rate and time of every conversion, in the form its broker reporting needs.
+
+### When Not To
+
+A crypto-linked card helps where the cardholder's money already lives on chain and a bank account is the hard part: users of an exchange or wallet who want to spend without cashing out first, payroll or payouts received in stablecoins in countries where local banking is slow, and businesses that keep treasury in stablecoins. It doesn't help a program whose users hold dollars in a bank, because it adds an exchange, a chain, wallet screening and possibly custody licensing ([Custody or Not](/books/payments/stablecoins#custody-or-not)) to a product that works without them. My rule: launch with a dollar stablecoin and a top-up or just-in-time model before any volatile asset, keep the conversion and custody with a licensed partner, and treat a collateral-backed credit card as a lending product first and a crypto product second.
+
 ## The Card Lifecycle
 
 A card is not an account. The account holds the balance and the legal relationship; the card is one credential for it, with its own number, expiry, state and history, and an account outlives many cards. Keep them separate from the first table.
@@ -244,7 +291,8 @@ CREATE TABLE card_products (
   account_range_high  TEXT NOT NULL,
   dedicated_range     BOOLEAN NOT NULL,
   regulated_debit     BOOLEAN,                 -- Regulation II status, NULL for credit
-  funding_model       TEXT NOT NULL CHECK (funding_model IN ('prefunded', 'jit', 'credit_line')),
+  funding_model       TEXT NOT NULL CHECK (funding_model IN ('prefunded', 'jit', 'credit_line',
+                        'onchain_jit', 'crypto_collateral')),
   form_factors        TEXT[] NOT NULL,         -- 'virtual', 'physical'
   wallets_enabled     BOOLEAN NOT NULL DEFAULT false,
   disclosure_version  TEXT,                    -- prepaid short and long form, or credit agreement
@@ -328,9 +376,35 @@ CREATE TABLE card_lifecycle_events (           -- append-only: every change to a
   reason       TEXT,
   occurred_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE card_funding_wallets (            -- crypto-linked products: the wallet a card spends from
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  card_account_id    UUID NOT NULL REFERENCES card_accounts (id),
+  asset_id           UUID NOT NULL REFERENCES assets (id),           -- token per chain, from Stablecoins
+  wallet_address_id  UUID NOT NULL REFERENCES wallet_addresses (id),
+  custody            TEXT NOT NULL CHECK (custody IN ('self_hosted', 'custodian', 'program')),
+  approval_limit     NUMERIC(78,0),            -- the on-chain approval, in base units, when self-hosted
+  approval_tx_hash   TEXT,
+  status             TEXT NOT NULL CHECK (status IN ('active', 'approval_revoked', 'closed')),
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE card_funding_movements (          -- every pull, top-up, return and refund on chain
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  funding_wallet_id   UUID NOT NULL REFERENCES card_funding_wallets (id),
+  authorization_id    UUID REFERENCES issuer_authorizations (id),     -- from Issuer Processing
+  clearing_id         UUID REFERENCES clearing_records (id),
+  kind                TEXT NOT NULL CHECK (kind IN ('auth_pull', 'buffer_pull', 'capture_pull',
+                        'buffer_return', 'expiry_return', 'refund', 'provisional_credit', 'liquidation')),
+  asset_amount        NUMERIC(78,0) NOT NULL,   -- token base units
+  fiat_amount         BIGINT NOT NULL,          -- card currency, minor units
+  rate                NUMERIC(38,18) NOT NULL,  -- the conversion used; the tax and dispute record
+  onchain_transfer_id UUID REFERENCES onchain_transfers (id),          -- one transfer can carry several refunds
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 ```
 
-The card's status changes only by writing a lifecycle event in the same transaction, so the history can't drift from the state. A replacement is a new row pointing at the old one through `replaces_card_id`; its unique constraint stops two replacements of one card, which is how a double-clicked "report lost" becomes one new card instead of two. Closing a card writes a `token_terminated` event for each of its active tokens in the same transaction. The account's balance is the sum of its ledger entries, never a column, and a prepaid program's daily per-cardholder balance file for the bank is a query over `card_accounts` and the ledger. `cardholders` holds no identity numbers; they're in the vault behind `identity_token`, with `cip_procedure_version` recording which version of the bank's procedure each verification satisfied.
+The card's status changes only by writing a lifecycle event in the same transaction, so the history can't drift from the state. A replacement is a new row pointing at the old one through `replaces_card_id`; its unique constraint stops two replacements of one card, which is how a double-clicked "report lost" becomes one new card instead of two. Closing a card writes a `token_terminated` event for each of its active tokens in the same transaction. The account's balance is the sum of its ledger entries, never a column, and a prepaid program's daily per-cardholder balance file for the bank is a query over `card_accounts` and the ledger. For a crypto-linked product, each authorization, capture, expiry and refund writes a `card_funding_movements` row in the same transaction as its hold or posting, so the card ledger and the chain can be matched row by row: the sum of an authorization's pulls minus its returns equals what cleared, and a `provisional_credit` stays open as a receivable until the dispute closes. `cardholders` holds no identity numbers; they're in the vault behind `identity_token`, with `cip_procedure_version` recording which version of the bank's procedure each verification satisfied.
 
 ## Auditing
 
@@ -342,6 +416,7 @@ The sponsor bank, its examiners, the networks and the CFPB can each ask for an i
 - **Every token decision:** the request, each party's recommendation, the decision, the ID&V method and its outcome, because provisioning fraud is investigated from these.
 - **Disclosures as shown:** the version of the prepaid short and long form or credit agreement each cardholder received, and when.
 - **Who saw a full card number or PIN-related data,** including support agents revealing a card in the console ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every conversion on a crypto-linked card:** the asset, amount, rate and time of each pull, return and refund, matched to its authorization and to the chain, for disputes, the bank and tax reporting.
 - **Balances the bank can rely on:** the daily per-cardholder file, its reconciliation to the bank's account, and every break and how it was resolved.
 
 ## What This Means for the System You Build
@@ -354,6 +429,7 @@ The sponsor bank, its examiners, the networks and the CFPB can each ask for an i
 - **Run cards through explicit lifecycle events:** inactive until activated, replacements linked to what they replace, closing that terminates tokens.
 - **Decide token provisioning like a payment,** with green only when every signal agrees and ID&V sent only to contact details that predate the request.
 - **Keep the PAN and PIN out of your systems,** in the processor's vault and HSM, with vault tokens everywhere else.
+- **Fund a crypto-linked card like a JIT program on a slower rail:** convert at authorization at a recorded rate, match every on-chain pull and return to its authorization, and decide which asset a refund returns in before launch.
 - **Build the sponsor audit file as you go:** CIP evidence per cardholder, complaints, marketing approvals, alerts and daily balances reconciled to the bank.
 
 ## References
@@ -377,6 +453,9 @@ The sponsor bank, its examiners, the networks and the CFPB can each ask for an i
 - [PCI SSC: Card Production bulletin (June 2022)](https://www.pcisecuritystandards.org/wp-content/uploads/2022/06/Card_Production_Bulletin_FINAL.pdf), v3.0.1 as an errata update to v3.0
 - [EMVCo: Payment Tokenisation](https://www.emvco.com/emv-technologies/payment-tokenisation/), tokens limited to a merchant, device or use, and registration of token service providers
 - [CFPB: Truth in Lending (Regulation Z); Non-application to Earned Wage Access Products (advisory opinion, December 2025)](https://files.consumerfinance.gov/f/documents/cfpb_earned-wage-access-advisory-opinion_2025-12.pdf), covered EWA as not credit under Regulation Z
+- [Visa Core Rules and Visa Product and Service Rules, 18 April 2026 (PDF)](https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf), non-fiat funds converted to fiat before deposit into an account linked to a Visa card, and Visa approval for programs taking previously converted funds (1.4.4.6)
+- [IRS: Frequently asked questions on digital asset transactions](https://www.irs.gov/individuals/international-taxpayers/frequently-asked-questions-on-digital-asset-transactions), digital assets as property, paying with them as a disposal with capital gain or loss, and stablecoins included
+- [IRS: Digital assets](https://www.irs.gov/filing/digital-assets), broker reporting of gross proceeds from January 1, 2025 and basis from January 1, 2026
 
 **Reference**
 
@@ -394,6 +473,12 @@ The sponsor bank, its examiners, the networks and the CFPB can each ask for an i
 - [Federal Reserve: Enforcement action against Evolve Bancorp and Evolve Bank & Trust (June 14, 2024)](https://www.federalreserve.gov/newsevents/pressreleases/enforcement20240614a.htm), unsafe practices in fintech partnerships, AML and consumer compliance, taken with the Arkansas State Bank Department
 - [Visa: Third Party Agent Registration](https://partner.visa.com/site/programs/third-party-agent-registration.html), registration of agents that provide payment services to Visa clients
 - [Visa: Visa Account Updater](https://developer.visa.com/capabilities/vau/vau-faq), issuer updates of account numbers, expiry dates, closed accounts and cardholder advices, and enrolling all BINs
+- [Visa: Stablecoin-linked cards monetize money movement (March 31, 2026)](https://www.visa.com/en-us/thought-leadership/innovation/stablecoin-linked-cards-monetize-money-movement), more than 130 programs in more than 50 countries, and the traditional and emerging settlement models
+- [Visa: Visa brings onchain lending into everyday payments (September 8, 2026)](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.22721.html), more than 160 stablecoin-linked card programs and volume growing nearly 200% year over year
+- [Visa: Financing stablecoin-linked card programs](https://www.visa.com/en-us/thought-leadership/innovation/financing-stablecoin-linked-card-programs), funding daily settlement before collecting from cardholders, settlement every day including weekends, and Rain as a Visa Principal Member
+- [Visa: Visa and Bridge expand stablecoin-linked cards (March 3, 2026)](https://corporate.visa.com/en/sites/visa-perspectives/newsroom/visa-bridge-stablecoin-linked-card-expansion.html), Bridge-enabled cards live in 18 countries
+- [Mastercard: Simplified payments card offering for cryptocurrency companies (July 20, 2021, PDF)](https://s25.q4cdn.com/479285134/files/doc_news/Mastercard-Creates-Simplified-Payments-Card-Offering-for-Cryptocurrency-Companies-2021.pdf), crypto entering and settling on the network as fiat
+- [Mastercard: Accelerates crypto card partner program (July 22, 2020)](https://newsroom.mastercard.com/news/press/2020/july/mastercard-accelerates-crypto-card-partner-program/), working only with crypto partners that follow its core principles, and Wirex's principal membership
 
 **In practice**
 
@@ -423,10 +508,19 @@ The sponsor bank, its examiners, the networks and the CFPB can each ask for an i
 - [Payactiv: Visa card](https://www.payactiv.com/card/), the Payactiv Visa Prepaid and Payroll Cards issued by Central Bank of Kansas City
 - [Payactiv: Get started](https://payactiv.com/get-started/), real-time EWA transfers free with a qualifying direct deposit of $200 or more per pay period to the Payactiv Card, and a fee that may apply to other instant transfers
 - [Ramp: How Ramp makes money](https://support.ramp.com/how-ramp-makes-money), revenue primarily from the card's interchange and Ramp Plus subscriptions, and no interest income because the card is a charge card
+- [Crypto.com: US Prepaid Visa cardholder agreement (effective September 1, 2026, PDF)](https://crypto.com/document/us_card.pdf), Community Federal Savings Bank as issuer, Foris, Inc. as program manager, US dollars only on the card, crypto not held at the bank or FDIC-insured, and refunds credited to the card
+- [Crypto.com: How do I fund my Crypto.com Visa Card (US)](https://help.crypto.com/en/articles/3131878-how-do-i-fund-my-crypto-com-visa-card-us/), top-ups from crypto with the rate held for 15 seconds
+- [Rain: Platform agreement](https://www.rain.xyz/legal/docs/rain-platform-agreement), US Visa debit cards issued by Cross River Bank with Rain as program manager
+- [Rain: Introducing real-time funding](https://www.rain.xyz/resources/introducing-real-time-funding), the prefunded collateral contract, and real-time funding committing the amount at authorization until settlement, in beta
+- [Rain: Rain Spend support](https://www.rain.xyz/rain-spend-support), spending limits backed by stablecoins in smart contracts, and unpaid balances liquidated from collateral after the 8th
+- [Reap: Funding models](https://docs.reap.global/program-configuration/funding-models.md), user-funded wallets settled on a schedule and program-funded master collateral
+- [Reap: Reap and Visa launch stablecoin-linked card programs in 100+ markets (September 23, 2026)](https://reap.global/newsroom/reap-visa-launch-100-markets-stablecoin-card-program), stablecoin-linked Visa credit programs, stablecoin collateral and repayment
 - [Stripe: Issuing](https://stripe.com/issuing), the issuing banks by product and program management or processing only
 - [Stripe: Charge card terms (Celtic Bank)](https://stripe.com/legal/issuing/celtic-acquiring-receivables-spend-card), the issuing bank extending credit and Stripe as the program manager it appointed
 - [Stripe: Set up an Issuing and Connect integration](https://docs.stripe.com/issuing/connect), Connect for cards issued to users who aren't your employees, the expense management example, platform requirements collection and loss liability, and funding the Issuing balance first
 - [Stripe: Issuing real-time authorizations](https://docs.stripe.com/issuing/controls/real-time-authorizations), the 2-second response window and network fallback for dedicated BINs
 - [Stripe: Use digital wallets with Issuing](https://docs.stripe.com/issuing/cards/digital-wallets.md?platform=ios), manual and push provisioning, Apple approval in one to two weeks, and the payment-pass-provisioning entitlement
+- [Stripe: Stablecoin-backed cards for Bridge, Privy, or third-party wallets](https://docs.stripe.com/issuing/bridge-stablecoin-cards), just-in-time pulls at authorization, MCC-based extra pulls and returns, refunds batched on chain, provisional credits to the wallet, Lead Bank terms, the 24-hour KYC rule and the withheld authorization webhook
+- [Stripe: Bridge partners with Visa (April 30, 2025)](https://stripe.com/newsroom/news/bridge-partners-with-visa), stablecoin balances converted to fiat at purchase and Lead Bank as the financial institution partner
 - [Stripe: Pricing](https://stripe.com/pricing), $0.10 per virtual card and $3.50 per standard physical card in the US
 - [The Bancorp: Annual report on Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1295401/000129540126000002/tbbk-20251231x10k.htm), $141.1 million of fintech fees in 2025
