@@ -2,7 +2,7 @@
 title = "Pricing, Fees & All-In Prices"
 description = "Host pricing and dynamic recommendations, marketplace fee models, usage charges, split payments, the FTC fees rule and drip pricing, and facilitator tax."
 category = "User-Generated Platforms Industry"
-order = 1827
+order = 1832
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "pricing", "fees", "all-in-pricing", "sales-tax"]
 +++

@@ -2,7 +2,7 @@
 title = "Availability & Booking"
 description = "Calendars, blocks and buffers, external calendar sync, request to book versus instant book, decline reasons, supply sanctions and trip modifications."
 category = "User-Generated Platforms Industry"
-order = 1826
+order = 1831
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "reservations", "calendars", "instant-book", "double-booking"]
 +++

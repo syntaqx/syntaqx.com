@@ -2,7 +2,7 @@
 title = "Marketplace Fraud & Risk"
 description = "Guest and driver verification, reservation risk scoring, linked accounts, fake listings and payment diversion, seller fraud, and sanctions screening."
 category = "User-Generated Platforms Industry"
-order = 1832
+order = 1837
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "fraud", "risk-scoring", "identity-verification", "sanctions"]
 +++

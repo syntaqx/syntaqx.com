@@ -3,7 +3,7 @@ title = "Messaging, Reviews & Reputation"
 nav_title = "Messaging & Reviews"
 description = "Messaging as the transaction record, off-platform leakage and contact detection, simultaneous-reveal reviews, the FTC reviews rule and host status programs."
 category = "User-Generated Platforms Industry"
-order = 1830
+order = 1835
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "messaging", "reviews", "reputation", "off-platform"]
 +++

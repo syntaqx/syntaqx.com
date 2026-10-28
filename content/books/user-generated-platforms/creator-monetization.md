@@ -2,7 +2,7 @@
 title = "Creator Monetization"
 description = "How creators earn on user-generated platforms: subscriptions, gifts, tips and virtual currencies, paid chat, ad shares, sponsorships and splits compared."
 category = "User-Generated Platforms Industry"
-order = 1822
+order = 1827
 part = "Creators and Money"
 aliases = []
 tags = ["user-generated-content", "creator-economy", "subscriptions", "virtual-currency", "revenue-share", "live-streaming"]

@@ -3,7 +3,7 @@ title = "Child Safety: Detection & Reporting"
 nav_title = "Child Safety"
 description = "How platforms detect, report and preserve child sexual abuse material: 2258A, CyberTipline reports, hash lists, the IWF, AI imagery, EU and UK rules."
 category = "User-Generated Platforms Industry"
-order = 1836
+order = 1841
 part = "Trust and Safety"
 tags = ["trust-and-safety", "child-safety", "csam", "hash-matching", "ncmec", "compliance"]
 +++

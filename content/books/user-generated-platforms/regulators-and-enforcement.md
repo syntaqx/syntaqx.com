@@ -2,7 +2,7 @@
 title = "Regulators & Enforcement"
 description = "The DSA, the UK Online Safety Act and Australia's eSafety regime as platforms meet them: tiers, designations, clocks, fines, withdrawals and a ledger."
 category = "User-Generated Platforms Industry"
-order = 1841
+order = 1846
 part = "The Rules"
 tags = ["user-generated-content", "regulation", "digital-services-act", "online-safety-act", "esafety", "trust-and-safety"]
 +++

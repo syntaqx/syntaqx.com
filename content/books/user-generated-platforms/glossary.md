@@ -3,7 +3,7 @@ title = "User-Generated Platforms Glossary"
 nav_title = "Glossary"
 description = "Every term the user-generated platforms volume uses, defined in a line and linked to its chapter: communities, media, money, marketplaces, safety and law."
 category = "User-Generated Platforms Industry"
-order = 1849
+order = 1854
 part = "Reference"
 tags = ["user-generated-content", "glossary", "reference"]
 +++
