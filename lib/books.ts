@@ -116,6 +116,18 @@ export const BOOKS: Book[] = [
       "It reads in six movements across seventeen parts, plus a reference. At home: The Business sets out the parties, the money, the core data model and a dated timeline, and Homelab builds the lab, from hardware, storage and hypervisors through Ethernet, Wi-Fi, routing, self-hosted apps, safe exposure and AI on a home GPU, to the point where upload, redundant lines and power push it into colocation. Up the stack: The Stack, Bottom to Top climbs from the colocation hall through bare metal, data center networking, virtualization, containers, schedulers, microVMs, functions, storage and regions to hybrid cloud, and Kubernetes follows as a strong option rather than the destination, since even a managed cluster leaves real work, observability included, with its owner. The platform: Managed Services, Deployment, CI/CD Platforms (GitHub's hosted runners until the minutes bite, then your own runners, then Actions-compatible forges off GitHub) and Infrastructure as Code, through governance and the resource catalog. The businesses: Web Hosting, Domains and DNS, Certificates, The Edge and Communications Platforms, all turned into invoices by Metering and Billing. The rules: Abuse, Trust and the Law, and Market Rules and Compliance. The top of the path, and back: Running the Provider, from hyperscale architecture, GPU clouds, outages and metrics to total cost of ownership and repatriation, the way back to owned metal. Reference: a glossary of every term, grouped by part.",
     ],
   },
+  {
+    slug: "commerce",
+    type: "industry",
+    name: "Commerce",
+    cover: "basket",
+    summary:
+      "How selling things works in software, starting with on-demand delivery: merchants, menus and catalogs, orders, dispatch, fees, memberships and the law.",
+    intro: [
+      "Every commerce system sells from a catalog to a customer and owes someone a fulfilled order: a restaurant's menu pushed to three apps, a grocery store's shelf priced for delivery, a courier batching two orders on one trip, a fee a city caps at 15%, a membership a regulator says was too hard to cancel. Underneath, the restaurant, the store, the marketplace and the point of sale share one set of records (merchants and their locations, items and modifiers, orders and their lines, fulfillments, payments and customers), and the hard problems are keeping those records agreeing across every channel that sells from them. This book surveys how the industry does each piece, benchmarked across DoorDash, Uber Eats, Instacart, Grubhub, Shipt, Gopuff, Deliveroo, Just Eat Takeaway and Wolt and the POS and ordering vendors behind them, such as Toast, Square and Olo, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in two parts so far, plus a reference. The Business: the parties, the channels and the core data model every later part extends. On-Demand Delivery: the landscape of marketplaces, logistics-only networks and first-party ordering with take rates from the filings, merchants, menus and grocery catalogs synced from the POS, orders, prep time, dispatch and batching, fees, commissions and the city and state laws that cap and police them, memberships and cancellation law, and refunds, missing items and fraud. Reference: a glossary of every term, grouped by part. The rest of the planned scope comes later, as parts that extend the same model: catalog, orders and inventory across your own store, the POS and marketplaces like Amazon, subscriptions and memberships beyond delivery, and regulated goods.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
@@ -125,12 +137,6 @@ export const UPCOMING_BOOKS: UpcomingBook[] = [
     type: "industry",
     cover: "pulse",
     summary: "Practice management and patient engagement first, then EHRs, FHIR, claims, prior auth and pharmacy, under HIPAA.",
-  },
-  {
-    name: "Commerce",
-    type: "industry",
-    cover: "basket",
-    summary: "Catalog, orders and inventory across your store, POS and marketplaces like Amazon, plus subscriptions and regulated goods.",
   },
   {
     name: "Banking & Lending",
