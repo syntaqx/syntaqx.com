@@ -149,7 +149,7 @@ Each of those rules turns into a record or a scheduled job:
 ```sql
 CREATE TABLE disclosures (
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  kind            TEXT NOT NULL CHECK (kind IN ('terms', 'renewal', 'cancellation', 'price_change')),
+  kind            TEXT NOT NULL CHECK (kind IN ('terms', 'renewal', 'cancellation', 'price_change', 'messaging_consent')),
   locale          TEXT NOT NULL,                            -- BCP 47: 'en-US', 'es-US'
   version         TEXT NOT NULL,                            -- '2026-10-01'
   content_sha256  TEXT NOT NULL,                            -- hash of the rendered text shown
