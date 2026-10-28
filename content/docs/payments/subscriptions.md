@@ -147,6 +147,18 @@ Goods shipped under an automatic renewal without that consent are an uncondition
 Each of those rules turns into a record or a scheduled job:
 
 ```sql
+CREATE TABLE disclosures (
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  kind            TEXT NOT NULL CHECK (kind IN ('terms', 'renewal', 'cancellation', 'price_change')),
+  locale          TEXT NOT NULL,                            -- BCP 47: 'en-US', 'es-US'
+  version         TEXT NOT NULL,                            -- '2026-10-01'
+  content_sha256  TEXT NOT NULL,                            -- hash of the rendered text shown
+  storage_key     TEXT NOT NULL,                            -- the rendered text, in WORM storage
+  effective_at    TIMESTAMPTZ NOT NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT disclosures_kind_locale_version_key UNIQUE (kind, locale, version)
+);
+
 CREATE TABLE renewal_consents (
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   subscription_id UUID NOT NULL REFERENCES subscriptions (id),
@@ -160,6 +172,7 @@ CREATE TABLE renewal_consents (
 );
 ```
 
+- **Disclosures are immutable versions.** A wording change, in any locale, is a new row with its own hash and stored rendering, never an edit, the same shape as [click-through terms](/docs/compliance/electronic-signatures#click-through-terms-are-signatures-too), so a consent or a notice always resolves to the exact text the customer saw.
 - **Consent is its own row,** separate from the terms of service, pointing at the versioned disclosure the customer saw, and captured again when terms change materially.
 - **Retention is computed:** `retain_until_on` is extended when the subscription ends.
 - **Reminders are scheduled from the period rows,** with windows stored as rules keyed by jurisdiction and effective date, sent on the transactional stream so a marketing unsubscribe never suppresses them.
