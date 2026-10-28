@@ -268,7 +268,7 @@ Every exporter has a sending queue and retries ([exporter helper](https://github
 
 The [resiliency guide](https://opentelemetry.io/docs/collector/resiliency/) spells out the consequences: the queue is in memory, so a restart loses it, and "once the queue is full, incoming data is dropped to prevent the Collector from running out of memory." Retries stop after five minutes. For a backend outage longer than that, or a gateway restart, the persistent queue writes to "a Write-Ahead Log (WAL) on disk before attempting to export it" through the `file_storage` extension. "Data loss can still occur if the disk fails or runs out of space," so size the volume for the outage you want to ride out.
 
-Backpressure is the other half. When the memory limiter refuses data, receivers return an error and SDKs retry with backoff; when the SDK's own queue fills, it drops. A healthy pipeline is one where each stage either holds data or says no, and where every drop is counted.
+Backpressure is the other half. When the memory limiter refuses data, receivers return an error and SDKs retry with backoff; when the SDK's own queue fills, it drops. A healthy pipeline is one where each stage either holds data or says no, and where every drop is counted. None of it may reach back into the application: what bounds the SDK, the sidecar and the Operator's webhook when a Collector is down is [Failing Open](/docs/observability/opentelemetry#failing-open).
 
 ## Monitoring the Collector
 
@@ -309,6 +309,7 @@ My default until those mature: Collector configuration in Git, rolled out by the
 - Redaction and filtering run in the gateway as a backstop to redaction at the source.
 - Tail sampling runs behind a trace-ID routing layer.
 - Exporters to a remote backend use a persistent queue sized for the outage you accept.
+- Every queue drops when full (`block_on_overflow: false`), so a Collector outage costs telemetry, never requests.
 - Refused, failed and dropped counts from the Collector's own metrics are alerted on, through a separate path.
 - A minimal custom build per role, pinned and upgraded in CI.
 - TLS and authentication on every receiver that accepts traffic from another host; no OTLP port on the internet.
