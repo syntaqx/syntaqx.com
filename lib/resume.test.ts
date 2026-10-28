@@ -50,7 +50,9 @@ describe("resume", () => {
   // Some parsers (OpenResume, for one) put no line break between pages, so
   // a page's last line fuses with the next page's first. That's harmless
   // inside one role, but a page that opens on a new role, company or section
-  // gets that heading swallowed into the entry above it.
+  // gets that heading swallowed into the entry above it. The page's second
+  // line can't open one either: OpenResume splits roles on the gap from the
+  // line above, and above it is now the fused line at the previous page's foot.
   it("breaks pages inside an entry, never before a heading", async () => {
     const pdf = new Uint8Array(await (await resumePdf()).arrayBuffer());
     const { text: pages } = await extractText(pdf, { mergePages: false });
@@ -66,9 +68,9 @@ describe("resume", () => {
       resume.education.selfTaught.title,
     ];
     for (const page of pages.slice(1)) {
-      const first = page.trim().split("\n")[0].trim();
-      for (const heading of headings)
-        expect(first.startsWith(heading)).toBe(false);
+      for (const line of page.trim().split("\n").slice(0, 2))
+        for (const heading of headings)
+          expect(line.trim().startsWith(heading)).toBe(false);
     }
   });
 
@@ -106,13 +108,14 @@ describe("resume", () => {
       resume.education.selfTaught.details,
     ];
     for (const fact of facts) expect(flat).toContain(fact.replace(/\s+/g, " "));
-    // Parsers find a role by its title and company lines; each must come out
-    // as a clean line of its own, never glued to a neighbor.
-    const lines = text.split("\n").map((l) => l.trim());
-    for (const job of [...resume.experience, ...resume.earlier]) {
-      expect(lines.some((l) => l.startsWith(job.title))).toBe(true);
-      expect(lines).toContain(job.company);
-    }
+    // Parsers find a role by its heading: title, company and dates on one
+    // line (Workday made two roles of a company on its own line), separated
+    // so neither glues to its neighbor.
+    const lines = text.split("\n").map((l) => l.replace(/\s+/g, " ").trim());
+    for (const job of [...resume.experience, ...resume.earlier])
+      expect(lines).toContain(
+        `${job.title} | ${job.company} ${job.start} - ${job.end}`,
+      );
     // No header or footer: running text repeated on every page bleeds into
     // the content around page breaks.
     expect(flat.match(new RegExp(resume.name, "gi"))).toHaveLength(1);

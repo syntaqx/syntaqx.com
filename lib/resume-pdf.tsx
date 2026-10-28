@@ -55,9 +55,9 @@ const s = StyleSheet.create({
     // Ligatures fuse "fi"/"fl" into one glyph, and text extraction (what an
     // applicant tracking system reads) then drops a letter: "frst".
     fontFeatureSettings: { liga: false, clig: false },
-    // A 2/3in top margin. It also lands the page break inside a role, never
+    // A 5/6in top margin. It also lands the page break inside a role, never
     // on a new one (see the page-break test in lib/resume.test.ts).
-    paddingTop: 48,
+    paddingTop: 60,
     paddingBottom: 36,
     paddingHorizontal: 54,
   },
@@ -109,7 +109,8 @@ const s = StyleSheet.create({
   },
   headline: { flex: 1, fontSize: 10.8 },
   role: { fontWeight: 700, color: INK },
-  company: { fontSize: 9.6, fontWeight: 600, color: ACCENT, marginTop: 1 },
+  jobSep: { fontWeight: 400, color: RULE },
+  company: { fontWeight: 600, color: ACCENT },
   // Nudged onto the title's baseline (react-pdf aligns tops, not baselines),
   // so text extraction reads the title and its dates as one line.
   dates: {
@@ -180,13 +181,18 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
           line and first bullet (and any section heading above) stay together. */}
       <View wrap={false}>
         {head}
-        {/* Title and company on their own lines, each a single text run:
-            parsers glue separately styled runs together ("Engineeringat"). */}
+        {/* Title, company and dates on one line, so Workday reads them as one
+            role (with the company on its own line it made two), each its own
+            run so OpenResume can tell them apart. The separator keeps runs
+            from gluing together ("Engineeringat"). */}
         <View style={s.jobHead}>
-          <Text style={[s.headline, s.role]}>{job.title}</Text>
+          <Text style={[s.headline, s.role]}>
+            {job.title}
+            <Text style={s.jobSep}>{"  |  "}</Text>
+            <Text style={s.company}>{job.company}</Text>
+          </Text>
           <Text style={s.dates}>{dates}</Text>
         </View>
-        <Text style={s.company}>{job.company}</Text>
         {job.progression && (
           <Text style={s.progression}>{job.progression.join("  >  ")}</Text>
         )}
@@ -287,7 +293,7 @@ function ResumeDocument({
               head={i === 0 ? <SectionHead label="Experience" /> : undefined}
             />
           ))}
-          {/* Same title, dates and company lines as the roles above, so a
+          {/* Same heading line as the roles above, so a
               parser reads each as its own role, not one under a heading. */}
           {resume.earlier.map((job) => (
             <Job key={job.company} job={job} />
