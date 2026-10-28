@@ -3,7 +3,7 @@ title = "Real-Time Analytical Databases"
 nav_title = "Analytical Databases"
 description = "ClickHouse, Druid, Pinot, StarRocks and DuckDB: how columnar storage and vectorized execution work, where real-time OLAP beats a warehouse, and update costs."
 category = "Data Platforms"
-order = 1273
+order = 1274
 tags = ["data", "olap", "clickhouse", "analytics", "observability"]
 +++
 

@@ -2,7 +2,7 @@
 title = "Data Science & ML Platforms"
 description = "Running data science without breaking production: notebooks, reproducibility, feature stores and skew, experiment tracking, model registries, serving and drift."
 category = "Data Platforms"
-order = 1276
+order = 1277
 tags = ["data", "machine-learning", "mlops", "feature-store", "data-science"]
 +++
 

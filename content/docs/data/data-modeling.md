@@ -2,7 +2,7 @@
 title = "Modeling Analytical Data"
 description = "Shaping warehouse data people can trust: grain, facts and dimensions, conformed dimensions, slowly changing history, dbt layers, semantic layers and tests."
 category = "Data Platforms"
-order = 1275
+order = 1276
 tags = ["data", "analytics", "data-modeling", "dbt", "warehouse"]
 +++
 
