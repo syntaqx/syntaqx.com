@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getBookChapters } from "@/lib/docs";
+import { Button } from "@/components/button";
 import { DocsHeader } from "@/components/docs-header";
 import { SceneArt } from "@/components/scene-art";
 import { BOOKS, bookParts, formatMinutes, getBook } from "@/lib/books";
@@ -60,13 +61,12 @@ export default async function BookCover({ params }: Props) {
                 <p key={p.slice(0, 32)}>{p}</p>
               ))}
             </div>
-            <Link
-              href={`/books/${chapters[0].slug}`}
-              className="inst group mt-5 inline-flex items-center gap-2 border border-accent px-4 py-2.5 text-accent transition-colors hover:bg-accent hover:text-background"
-            >
-              Start reading
-              <ArrowRight size={13} aria-hidden className="transition-transform group-hover:translate-x-0.5" />
-            </Link>
+            <div className="mt-5">
+              <Button href={`/books/${chapters[0].slug}`}>
+                Start reading
+                <ArrowRight size={13} aria-hidden />
+              </Button>
+            </div>
           </div>
           <SceneArt scene={book.cover} label={`${book.name} cover art`} className="aspect-square self-start max-lg:hidden" />
         </div>
