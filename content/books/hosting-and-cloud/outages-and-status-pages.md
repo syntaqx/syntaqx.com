@@ -32,7 +32,7 @@ Three patterns run through the table:
 - **Post-mortems are revised.** Google's mini report and full report characterize the June 2025 trigger differently; Azure's final PIR for Front Door replaced the preliminary account entirely. A provider's first explanation is a hypothesis, and the record should keep both.
 - **The status page is a dependency too.** Google's first report on June 12, 2025 came about an hour late, partly because its status infrastructure was affected, and one remediation is to keep "monitoring and communication infrastructure" running when Google Cloud is down.
 
-## How We Got Here
+## How It Got Here
 
 | Date | Incident | What it taught |
 | --- | --- | --- |

@@ -30,7 +30,7 @@ Three patterns run through the table:
 - **Hosted open models now price near frontier small models.** gpt-oss-120b at $0.15 input and $0.60 output per million tokens on Together, Fireworks and Groq sits next to Claude Haiku 5.5 and gpt-6-luna at $0.10 and $0.50. The argument for hosted open models in October 2026 is control, portability and a path to self-hosting, not price.
 - **Fixed cost wins only at utilization.** Every tier below the APIs swaps a per-token price for a cost that runs whether the GPU is busy or not, so the cheaper tier depends on how steadily the workload fills the hardware.
 
-## How We Got Here
+## How It Got Here
 
 | Date | Step | Problem it solved | What it cost |
 | --- | --- | --- | --- |

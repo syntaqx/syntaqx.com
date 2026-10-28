@@ -1,4 +1,4 @@
-+++
+﻿+++
 title = "Provider Architecture"
 description = "How a provider's parts fit: control and data planes, provisioning, cells and blast radius, metering, billing, support and abuse, and public scale figures."
 category = "Hosting & Cloud Industry"
@@ -56,10 +56,10 @@ A provider has the same components whatever it sells. The table maps each one to
 | Component | What it does | Tables | Chapters |
 | --- | --- | --- | --- |
 | **Identity and accounts** | Who the customer is, who may act for it, and its standing | `accounts`, `projects`, `account_holds`, organizations, members, roles, `api_credentials` | [The Hosting & Cloud Business](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model), [Accounts, Organizations & Resellers](/books/hosting-and-cloud/accounts-and-resellers#how-to-build-it) |
-| **Front door** | Authenticates, authorizes, rate-limits and checks quota on every API call | `quotas`, the request log; `control_plane_operations` below | This chapter; Regions, Zones, Cells & Quotas |
+| **Front door** | Authenticates, authorizes, rate-limits and checks quota on every API call | `quotas`, the request log; `control_plane_operations` below | This chapter; [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#how-to-build-it) |
 | **Catalog** | What can be bought, at what price, under which plan | `products`, `skus`, `price_versions`, `plans`, `plan_versions` | Core; Pricing Catalogs |
 | **Provisioning** | Turns an accepted request into a running thing: placement, workflows, state | `resources` and side tables, `resource_identifiers`, `deployments`, `iac_states` | The Stack, Bottom to Top; [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#how-to-build-it); [Provisioning: Terraform](/books/hosting-and-cloud/terraform-and-opentofu#how-to-build-it) |
-| **Capacity** | What can be promised in each zone, cell and fabric | Cells and cell assignments; `gpu_capacity_pools`, `gpu_reservations` | Regions, Zones, Cells & Quotas; [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#how-to-build-it) |
+| **Capacity** | What can be promised in each zone, cell and fabric | Cells and cell assignments, `capacity_reservations`; `gpu_capacity_pools` | [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#how-to-build-it); [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#how-to-build-it) |
 | **Data plane** | The running thing: hosts, fabrics, storage, proxies, DNS, carriers | Side tables per kind; nothing in the hot path reads the control plane's database | Every layer chapter |
 | **Metering** | Emits what each resource did, idempotently, in event time | `usage_events` | Core; Metering & Rating |
 | **Rating and billing** | Prices usage, applies credits and commitments, issues invoices, collects | `rated_usage`, `credit_grants`, `commitments`, invoices and payments | Core; the Metering and Billing part; the [Payments](/books/payments/card-payments) volume |

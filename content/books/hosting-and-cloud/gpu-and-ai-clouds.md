@@ -219,7 +219,7 @@ For a provider building a GPU product, my default is to sell three shapes from d
 
 ## How to Build It
 
-The core model already has the pieces: `resources` of kind `'gpu_reservation'` for a held block or contract, `commitments` of kind `'resource'` for the promise to pay for it, SKUs with unit `'gpu_hour'`, and `usage_events` for what ran. This chapter adds a side table for reservations, the capacity pools they draw from, and the meters. Reservations follow the playbook's [Reservations & Holds](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory) pattern for pooled inventory: a hold on a finite pool for a time range, checked atomically.
+The core model already has the pieces: `commitments` of kind `'resource'` for the promise to pay for capacity, SKUs with unit `'gpu_hour'`, and `usage_events` for what ran. [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#how-to-build-it) owns reservations: resources of kind `'capacity_reservation'` with the `capacity_reservations` side table. A GPU block, calendar booking or capacity contract is one of those reservations; this chapter extends that table with what GPUs add (the pool and fabric, the shape, the price at purchase, the partition key), and adds the capacity pools reservations draw from, and the meters. Reservations follow the playbook's [Reservations & Holds](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory) pattern for pooled inventory: a hold on a finite pool for a time range, checked atomically.
 
 ```sql
 CREATE TABLE gpu_capacity_pools (        -- what can be promised: one instance type in one fabric
@@ -234,26 +234,34 @@ CREATE TABLE gpu_capacity_pools (        -- what can be promised: one instance t
   UNIQUE (region_id, fabric_ref, instance_type, valid_during)
 );
 
-CREATE TABLE gpu_reservations (          -- side table: kind = 'gpu_reservation'
-  resource_id      UUID PRIMARY KEY REFERENCES resources (id),
-  pool_id          UUID NOT NULL REFERENCES gpu_capacity_pools (id),
-  shape            TEXT NOT NULL CHECK (shape IN ('capacity_reservation', 'block',
-                     'calendar', 'queued', 'contract')),
-  units            INT NOT NULL CHECK (units > 0),
-  reserved_during  TSTZRANGE NOT NULL,    -- the dates the capacity is held
-  commitment_id    UUID REFERENCES commitments (id),     -- kind = 'resource'; null if billed as used
-  price_version_id UUID NOT NULL REFERENCES price_versions (id),  -- the price at purchase
-  purchased_at     TIMESTAMPTZ NOT NULL,
-  partition_key    TEXT,                  -- fabric tenant isolation, e.g. an InfiniBand P-Key
-  end_action       TEXT NOT NULL CHECK (end_action IN ('terminate', 'convert_on_demand')),
-  status           TEXT NOT NULL CHECK (status IN ('queued', 'scheduled', 'active',
-                     'ended', 'cancelled', 'undelivered')),
-  CHECK ((shape = 'contract') = (commitment_id IS NOT NULL))
-);
+-- GPU blocks and contracts are capacity_reservations (Regions, Zones, Cells & Quotas),
+-- extended with what a GPU reservation adds. starts_at and committed_until are that
+-- table's dates; reserved_during is derived from them for the overlap check.
+ALTER TABLE capacity_reservations
+  ADD COLUMN pool_id          UUID REFERENCES gpu_capacity_pools (id),  -- null: not a GPU pool
+  ADD COLUMN shape            TEXT CHECK (shape IN ('capacity_reservation', 'block',
+                                'calendar', 'queued', 'contract')),
+  ADD COLUMN commitment_id    UUID REFERENCES commitments (id),  -- kind = 'resource'
+  ADD COLUMN price_version_id UUID REFERENCES price_versions (id), -- the price at purchase
+  ADD COLUMN purchased_at     TIMESTAMPTZ,
+  ADD COLUMN partition_key    TEXT,       -- fabric tenant isolation, e.g. an InfiniBand P-Key
+  ADD COLUMN end_action       TEXT CHECK (end_action IN ('terminate', 'convert_on_demand')),
+  ADD COLUMN reserved_during  TSTZRANGE GENERATED ALWAYS AS
+                                (tstzrange(starts_at, committed_until)) STORED,
+  ADD CONSTRAINT capacity_reservations_gpu_pool
+    CHECK (pool_id IS NULL OR (shape IS NOT NULL AND price_version_id IS NOT NULL
+                               AND purchased_at IS NOT NULL AND end_action IS NOT NULL)),
+  ADD CONSTRAINT capacity_reservations_contract_commitment
+    CHECK ((shape = 'contract') = (commitment_id IS NOT NULL)),
+  DROP CONSTRAINT capacity_reservations_state_check,
+  ADD CONSTRAINT capacity_reservations_state_check
+    CHECK (state IN ('assessing', 'scheduled', 'pending', 'active', 'expired',
+                     'cancelled', 'failed', 'queued', 'undelivered'));
+-- quantity counts instances (units of gpus_per_unit GPUs) for a GPU pool.
 
 -- Placement: instances launched inside a reservation point at it.
 ALTER TABLE virtual_machines
-  ADD COLUMN gpu_reservation_id UUID REFERENCES resources (id);  -- kind = 'gpu_reservation'
+  ADD COLUMN capacity_reservation_id UUID REFERENCES resources (id);  -- kind = 'capacity_reservation'
 ```
 
 Selling a block is a check against everything already promised from the pool over the same dates, run under a lock on the pool row so two sales can't both take the last units ([Preventing Double-Booking](/docs/architecture/reservations-and-holds#preventing-double-booking)):
@@ -262,10 +270,10 @@ Selling a block is a check against everything already promised from the pool ove
 -- Units still free in a pool for a requested window. The pool row is locked FOR UPDATE
 -- first. Overlap peaks at some reservation's start, so checking each start is enough.
 WITH held AS (
-  SELECT units, reserved_during
-  FROM gpu_reservations
+  SELECT quantity AS units, reserved_during
+  FROM capacity_reservations
   WHERE pool_id = :pool_id
-    AND status IN ('scheduled', 'active')
+    AND state IN ('scheduled', 'active')
     AND reserved_during && :window
 ), points AS (
   SELECT lower(:window) AS t
@@ -299,9 +307,9 @@ Notes on the sketch:
 
 - **A pool is an instance type inside one fabric,** because a reservation that spans fabrics can't run one job. `fabric_ref` is what makes a block of 64 instances a cluster rather than 64 machines.
 - **The price is fixed at purchase.** `price_version_id` is chosen when the block is bought, so a later rate change (AWS's 2026 increases) never reprices a block already sold, and a dispute can be answered with the rate card in effect on the purchase date.
-- **Undelivered is a status.** A contract whose capacity didn't arrive on its delivery date (the clause in Nebius's Microsoft agreement) is `undelivered`, which drives credits or termination rights under SLAs & Service Credits; capacity SLA credits on reservations are `credit_grants` of kind `'sla'`.
+- **Undelivered is a state.** A contract whose capacity didn't arrive on its delivery date (the clause in Nebius's Microsoft agreement) is `undelivered`, which drives credits or termination rights under SLAs & Service Credits; capacity SLA credits on reservations are `credit_grants` of kind `'sla'`.
 - **Export eligibility is data.** Which instance types an account may hold, by country, is a `quotas` row with `source = 'risk'` (zero for a restricted country and instance type), set by the screening process that Sanctions, Exports & Bulletproof Hosts owns, so a licence condition can be proved from the records.
-- **Events:** `gpu_reservation.purchased`, `gpu_reservation.started`, `gpu_reservation.ending_soon`, `gpu_reservation.ended` and `gpu_reservation.undelivered` go through the [outbox](/docs/architecture/events#the-transactional-outbox), because a block that ends terminates its instances and the customer needs the warning before their checkpoint window.
+- **Events:** `capacity_reservation.activated` and `capacity_reservation.failed` (the Regions chapter's), plus `capacity_reservation.purchased`, `capacity_reservation.ending_soon`, `capacity_reservation.ended` and `capacity_reservation.undelivered` for GPU pools, go through the [outbox](/docs/architecture/events#the-transactional-outbox), because a block that ends terminates its instances and the customer needs the warning before their checkpoint window.
 
 ## Auditing
 
