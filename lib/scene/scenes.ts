@@ -822,7 +822,7 @@ const route: SceneFn = (s) => {
   const pieces: [number, Part[]][] = [
     [depth(-0.4), [
       ...(s.spread > 0.05 ? [{ kind: "line", a: at(-0.4, 0, base), b: at(-0.4, 0, cargo), dashed: true, alpha: 0.4 } as Part] : []),
-      { kind: "box", box: slab(-1.15, 0.36, W, cargo, 0.78), accent: true },
+      { kind: "box", box: slab(-1.15, 0.36, W, cargo, 0.78), accent: true, soft: true },
     ]],
     [depth(0.62), [
       { kind: "box", box: slab(0.42, 0.85, W, base, 0.6) },
@@ -863,8 +863,8 @@ const route: SceneFn = (s) => {
     ...(behind ? truck : []),
     ...[...houses].sort((p, q) => p[0] + p[1] - (q[0] + q[1])).flatMap(house),
     { kind: "line", a: [sx + a / 2, sy + b / 2, zr + r], b: [sx + a / 2, sy + b / 2, pin], dashed: true, alpha: 0.5 },
-    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin, r: 0.03, h: 0.45, rt: 0.12, accent: true },
-    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin + 0.45, r: 0.34, h: 0.3, accent: true },
+    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin, r: 0.03, h: 0.45, rt: 0.12, accent: true, soft: true },
+    { kind: "cyl", cx: sx + a / 2, cy: sy + b / 2, z: pin + 0.45, r: 0.34, h: 0.3, accent: true, soft: true },
     ...(behind ? [] : truck),
   ];
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [5, 5, h + r + 2.2 + s.spread * 0.9]], axes: ground(10) };

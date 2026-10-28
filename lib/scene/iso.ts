@@ -45,6 +45,8 @@ export type Part =
       kind: "box";
       box: Box;
       accent?: boolean;
+      /** Accent outline over a plain fill, so a small accent doesn't dither to a block of hot tiles. */
+      soft?: boolean;
       /** Red, for something gone wrong (a blocked card). */
       warn?: boolean;
       small?: boolean;
@@ -54,7 +56,7 @@ export type Part =
       ghost?: boolean;
     }
   /** `rt` tapers the top rim (a bucket when wider than `r`). */
-  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number; rt?: number; accent?: boolean }
+  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number; rt?: number; accent?: boolean; soft?: boolean }
   | { kind: "cable"; pts: V3[]; speed: number; accent?: boolean }
   | { kind: "line"; a: V3; b: V3; alpha?: number; dashed?: boolean; accent?: boolean }
   | { kind: "label"; at: V3; text: string; dx: number; dy: number; accent?: boolean };
