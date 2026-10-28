@@ -1,64 +1,141 @@
 +++
 title = "The Commerce Business"
-description = "How selling things works in software: the parties, the channels an order arrives through, how the money splits, and the core data model every part extends."
+description = "How selling things works in software: the parties, the channels, how the money splits in each model, the life of an order, and the core data model."
 category = "Commerce Industry"
 order = 2301
 part = "The Business"
 tags = ["commerce", "business-models", "data-model", "orders", "catalog"]
 +++
 
-Commerce is a catalog, a customer and a promise. A restaurant lists a burger with a choice of cheese; a grocer lists forty thousand products whose prices change weekly; a convenience brand lists what is on the shelf of a warehouse it owns. A customer picks some of them, pays, and is owed something specific: food at the door in thirty minutes, groceries in a one-hour window, a parcel on Thursday. Between the two sit the channels the order came through (the merchant's own website, a delivery app, a phone call, the counter), the people who make and move it (cooks, shoppers, couriers, carriers), and the money each takes on the way.
+Commerce is a catalog, a customer and a promise. A phone accessory brand lists a screen protector in forty fits; a pest control subscription lists one plan that ships a different product every quarter; a distributor lists ten thousand SKUs at a price per company; a restaurant lists a burger with a choice of cheese. A buyer picks some of them, pays or promises to pay, and is owed something specific: a parcel on Thursday, a pallet at a distribution center inside a two-day window, a bag at the counter now, food at the door in thirty minutes. Between the two sit the channels the order came through (the brand's own site, Amazon, a retailer's purchase order, a store's register, a delivery app), the people and companies who make, store and move it (manufacturers, warehouses, carriers, couriers), and the money each takes on the way.
 
-The software is hard because one order lives in several systems at once. A delivery order exists in the app that took it, the point of sale that printed it in the kitchen, the dispatch system that found a courier, the payments processor that charged the card, and the merchant's statement at the end of the week, and each of them can be wrong about it in a different way. This chapter is the map the rest of the volume uses: how to read it, the parties, the channels, how the money splits, the life of a delivery order, and the data model every later chapter extends. Terms are collected in the volume's [Glossary](/books/commerce/glossary).
+The software is hard because one order lives in several systems at once. A screen protector sold through a marketplace exists in the marketplace that took it, the seller's order management system, the warehouse that shipped it, the carrier that tracked it, the tax engine that calculated it, the payments provider that settled it and the accounting system that booked it, and each can be wrong about it in a different way. This chapter is the map the rest of the volume uses: how to read it, the parties, the channels, how the money splits in each business model, the life of an order in each, and the data model every later chapter extends. Terms are collected in the volume's [Glossary](/books/commerce/glossary).
 
 ## How to Read This Volume
 
-The volume starts with on-demand delivery, the part of commerce where every piece (catalog, order, fulfillment, fees, memberships, refunds) runs on a clock measured in minutes, and later parts extend the same model to the rest of commerce:
+The volume follows an order from the business that sells it to the platform that runs it, in twelve parts plus a reference:
 
-- **The Business.** This chapter: the parties, the channels, the money, and the core data model.
-- **On-Demand Delivery.** [The Delivery Landscape](/books/commerce/delivery-landscape) (marketplaces, logistics-only networks, first-party ordering, owned inventory and shop-and-deliver, take rates from the filings, market share and consolidation); [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs) (onboarding, menus and modifiers synced from the point of sale, availability, grocery catalogs, substitutions, in-app prices); [Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching) (the order lifecycle, prep time and ETAs, assignment and batching, shop-and-deliver, scheduled orders, the handoff); [Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law) (consumer fees and all-in prices, merchant commission tiers, city caps, listing consent, data sharing, tips); [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions) (DashPass, Uber One, Instacart+ and Grubhub+, benefit rules, savings claims, cancellation law); and [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud) (who pays for an error, refund abuse, merchant error charges, courier fraud, account takeover, promotion abuse).
+- **The Business.** This chapter; [The Commerce Landscape](/books/commerce/commerce-landscape) (platforms, marketplaces, point of sale, order and warehouse systems, ERP, app ecosystems, market size and who owns whom); [Business Models & Unit Economics](/books/commerce/business-models) (direct to consumer, retailer and marketplace seller, wholesale, subscription, drop-ship, B2B and omnichannel, with margins from the filings); and [Choosing & Hosting a Store](/books/commerce/choosing-a-platform) (hosted, open source, headless or your own, and what running a store yourself involves).
+- **Catalog and Pricing.** Products, variants and bundles; product information and content; pricing and price lists; promotions, discounts and gift cards; site search and merchandising.
+- **Storefront and Checkout.** Storefronts; cart and checkout; taking payment in commerce; sales tax, VAT and duties; customers, accounts and privacy; consumer protection online.
+- **Orders, Inventory and Fulfillment.** Order management; inventory; warehouses, 3PLs and fulfillment networks; shipping and carriers; returns and exchanges; omnichannel fulfillment; purchasing and replenishment; cross-border commerce.
+- **Subscriptions and Memberships.** Subscription commerce; memberships and loyalty; auto-renewal and cancellation law.
+- **Marketplaces.** Selling on Amazon; retail media; Walmart, eBay, Etsy, TikTok Shop and others; multichannel listing and feeds; brand protection; running your own marketplace; reviews and ratings; agentic and AI shopping.
+- **Wholesale and B2B.** Wholesale and retail distribution; EDI; B2B commerce; drop ship and print on demand.
+- **Point of Sale and Stores.** Point of sale; store operations; restaurants and food service.
+- **On-Demand Delivery.** [The Delivery Landscape](/books/commerce/delivery-landscape) (marketplaces, logistics-only networks, first-party ordering, owned inventory and shop-and-deliver); [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs) (onboarding, menus and modifiers synced from the point of sale, availability, grocery catalogs, substitutions, in-app prices); [Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching) (the delivery order's lifecycle, prep time and ETAs, assignment and batching, the handoff); [Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law) (consumer fees, merchant commissions, city caps, tips); [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions) (DashPass, Uber One, Instacart+ and cancellation law); and [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud).
+- **Regulated Goods.** Alcohol, tobacco and age-restricted goods; cannabis and hemp; pesticides, chemicals and hazmat; product safety, compliance and recalls; automotive retail.
+- **Marketing and Customers.** Email, SMS and lifecycle marketing; acquisition and attribution; customer service.
+- **Running the Platform.** Commerce architecture; ERP and integrations; commerce accounting; commerce fraud and abuse; store security and PCI; peak season and drops; AI in commerce; commerce metrics; replatforming and migration.
 - **Reference.** A [Glossary](/books/commerce/glossary) of every term the volume defines, grouped by part.
 
-Later parts will cover retail and e-commerce, the point of sale, selling on marketplaces like Amazon, subscriptions and memberships beyond delivery, and regulated goods; each extends the tables below rather than redefining them.
+The volume covers what commerce adds. The general engineering lives in the playbook, and chapters link to it rather than repeat it: [Money & Amounts](/docs/payments/money), [Payment States & Ledgers](/docs/payments/payment-states), [Idempotency](/docs/payments/idempotency), [Subscriptions](/docs/payments/subscriptions), [Sales Tax](/docs/payments/sales-tax), [Accounting](/docs/payments/accounting), [PCI DSS](/docs/compliance/pci-dss), [Rules as Data](/docs/architecture/rules-as-data), [Events & Async Messaging](/docs/architecture/events), [Reservations & Holds](/docs/architecture/reservations-and-holds), [Multi-Tenancy](/docs/architecture/multi-tenancy), [Replacing Systems](/docs/architecture/replacing-systems), [Audit Trails](/docs/architecture/audit-trails) and [Addresses](/docs/fundamentals/addresses). Other volumes own topics this one leans on: [Payments](/books/payments/card-payments) for the card charge, the processor, payouts and disputes; [Field Operations](/books/field-operations/last-mile-delivery) for the last mile, proof of delivery and recurring service; [User-Generated Platforms](/books/user-generated-platforms/gig-work-and-worker-law) for marketplaces of people and services, reviews and the couriers who deliver; and [Hosting & Cloud](/books/hosting-and-cloud/managed-wordpress) for the servers a self-hosted store runs on.
 
-The volume covers what commerce adds. The general engineering lives in the playbook, and chapters link to it rather than repeat it: [Money & Amounts](/docs/payments/money), [Payment States & Ledgers](/docs/payments/payment-states), [Idempotency](/docs/payments/idempotency), [Subscriptions](/docs/payments/subscriptions), [Sales Tax](/docs/payments/sales-tax), [Rules as Data](/docs/architecture/rules-as-data), [Events & Async Messaging](/docs/architecture/events), [Reservations & Holds](/docs/architecture/reservations-and-holds), [Automated Risk Decisions](/docs/architecture/risk-scoring), [Location Tracking](/docs/architecture/location-tracking), [Audit Trails](/docs/architecture/audit-trails) and [Addresses](/docs/fundamentals/addresses). Other volumes own topics this one leans on: [Payments](/books/payments/card-payments) for the card charge, payouts to merchants and disputes; [Field Operations](/books/field-operations/last-mile-delivery) for the last mile, proof of delivery and failed attempts; and [User-Generated Platforms](/books/user-generated-platforms/gig-work-and-worker-law) for the people who deliver, how they are classified and paid, and the laws on deactivating them.
-
-The volume is US-centric, with the UK and EU platforms (Deliveroo, Just Eat Takeaway, Wolt) as contrast where they do something differently. No single company is the model: the vocabulary and tables are the industry's, and a platform's own product name appears only where the chapter is describing that platform.
+The volume is US-centric, with the EU, UK and Canada where their rules bind a US seller or where a platform there does something differently. No single company is the model: the vocabulary and tables are the industry's, benchmarked across platforms (Shopify, BigCommerce, Salesforce, Adobe, commercetools, WooCommerce and the open-source stores), marketplaces, retailers and brands, and a company's own product name appears only where the chapter is describing that company.
 
 ## Who's Who
 
 | Party | Who they are | What they need from the system |
 | --- | --- | --- |
-| **Merchants** | Restaurants, grocers, convenience and retail stores, brands; one location or thousands, often franchised | Orders that arrive in the kitchen or store correctly, menus and prices they control, payouts and statements they can check |
-| **Customers** | People ordering for delivery or pickup, often members of a subscription program | An accurate menu, an all-in price, a reliable ETA, and a refund when something is missing |
-| **Couriers and shoppers** | Independent contractors or employees who pick, shop and deliver | Offers they can judge, accurate pickup times, pay as promised, and a fair hearing before deactivation |
-| **Marketplaces** | Apps that list many merchants and take orders: DoorDash, Uber Eats, Grubhub, Instacart, Deliveroo, Just Eat Takeaway, Wolt | Supply (merchants and couriers), demand, and the fees and ads that pay for both |
-| **Logistics networks** | Delivery-only services that carry orders taken elsewhere: DoorDash Drive, Uber Direct, Olo Dispatch's network of providers | A delivery request with addresses, items and a ready time |
-| **Software vendors** | Points of sale and ordering platforms that sit between merchants and marketplaces: Toast, Square, Olo | Menus and orders in a shape each side accepts |
-| **Payments providers** | Processors and platforms that charge customers and pay merchants and couriers | The order's money as charges, refunds, transfers and payouts ([Payments for Software Platforms](/books/payments/software-platforms)) |
-| **Regulators** | City consumer agencies, state attorneys general, the FTC | Fee caps honored, prices disclosed, memberships cancellable, records on request |
+| **Brands** | Companies that design and own products and sell them under their name: a phone accessory brand, an eyewear brand, a subscription pest control brand. Many sell through several channels at once | One catalog that every channel draws from, inventory that is right everywhere, and margin they can see per channel |
+| **Retailers** | Companies that buy goods and resell them in stores and online: Walmart, Target, Best Buy, Costco | Products that arrive as their routing guide says, with the documents their systems expect, at a cost that leaves a margin |
+| **Marketplaces** | Operators that let other sellers list and sell to their customers: Amazon, Walmart Marketplace, eBay, Etsy, TikTok Shop, and delivery apps for restaurants | Listings that meet their rules, orders shipped on time, and the fees that pay for traffic, payments and often fulfillment |
+| **Marketplace sellers** | Brands, resellers and small businesses selling on someone else's marketplace (third party, or 3P) | Listings, orders and settlements they can reconcile; account health they can protect |
+| **Wholesalers and distributors** | Companies that buy from brands and sell to retailers, carriers or businesses, adding reach, credit and logistics | Purchase orders, price lists by customer, and shipments by pallet |
+| **B2B buyers** | Businesses buying for their own use or resale: a contractor, a dental office, a school district | Company accounts, contract prices, purchase orders, approvals and payment on terms |
+| **Consumers** | People buying for themselves, as guests, account holders or subscribers | An accurate listing, an all-in price, a delivery promise that holds, and a return or refund when something is wrong |
+| **Stores and restaurants** | Physical locations that sell at a counter, a table or a curb, often also online and through delivery apps | A point of sale that keeps working, stock that is right on the shelf, and orders from every channel in one place |
+| **Commerce platforms** | Software that runs stores: hosted (Shopify, BigCommerce, Wix, Squarespace), enterprise (Salesforce Commerce Cloud, Adobe Commerce, commercetools) and open source (WooCommerce, Medusa, Saleor, Sylius, Spree, PrestaShop) | Merchants who stay, apps that extend the platform, and payment volume |
+| **Service providers** | Third-party logistics warehouses (3PLs), carriers (USPS, UPS, FedEx), tax engines (Avalara, Stripe Tax), payment providers, fraud vendors, subscription apps, EDI networks | Clean requests in their formats, and the order's identifiers so their records can be matched back |
+| **Regulators** | The FTC, state attorneys general and tax departments, the CPSC, the EPA, city consumer agencies | Prices and fees disclosed, shipping promises kept, subscriptions cancellable, tax collected, unsafe products recalled, records on request |
 
-The split that shapes the data model is **merchant versus location.** A restaurant brand sets the menu; each location has its own hours, prices, availability, prep times, delivery radius and, often, its own franchisee as the legal seller. A city's fee cap applies per order at a location in that city, an item is out of stock at one location and not another, and a payout goes to whoever owns the location. Designs that keep only the merchant can't answer any of that; designs that keep only locations duplicate a brand's menu thousands of times.
+Two splits shape the data model. **Merchant versus location.** A brand or restaurant group sets the catalog; each location has its own hours, stock, prices, tax rules and, often, its own legal owner. A warehouse holds stock but sells nothing at a counter; a store sells and holds stock; an online store sells and holds nothing. Inventory is counted per location, a city's fee cap applies per location, and a payout goes to whoever owns the location. **Seller versus merchant of record.** On a brand's own site the brand sells, charges the card, collects the tax and owns the refund. On a marketplace the seller is still the seller, but the marketplace charges the customer and, as a marketplace facilitator, usually collects the sales tax ([Marketplaces and Facilitator Rules](/books/hosting-and-cloud/tax#marketplaces-and-facilitator-rules)); in a 1P sale to Amazon or a wholesale sale to Best Buy, the retailer buys the goods and is the seller to the consumer, and the brand's customer is the retailer. The same product reaches the same shopper through all three, and each puts a different party on the receipt.
 
 ## Channels
 
-An order reaches a merchant through one of a handful of channels, and the channel decides who owns the customer, who sets the price, who delivers and who pays whom:
+An order reaches a seller through one of a handful of channels, and the channel decides who owns the customer, who sets the price, who ships and who pays whom:
 
-| Channel | Who takes the order | Who delivers | Who pays whom |
-| --- | --- | --- | --- |
-| **Marketplace, platform delivery** | The marketplace's app | The marketplace's couriers | Customer pays the marketplace; marketplace pays the merchant net of commission |
-| **Marketplace, self-delivery** | The marketplace's app | The merchant's own drivers | As above, at a lower commission |
-| **First-party ordering** | The merchant's website or app, often run by an ordering vendor | The merchant, or a logistics network per order | Customer pays the merchant; merchant pays a flat delivery fee |
-| **Logistics only** | Any channel the merchant controls | DoorDash Drive, Uber Direct or a provider picked by an ordering platform | Merchant pays per delivery |
-| **Owned inventory** | The seller's own app | The seller's couriers from its own facilities | Customer pays the seller, which is also the merchant (Gopuff) |
-| **Shop and deliver** | The marketplace's app, or the retailer's site powered by it | A shopper who picks in the store and delivers | Customer pays the marketplace or the retailer; the retailer is paid for goods |
-| **Point of sale** | The counter, the phone, a kiosk | Nobody, or the merchant's drivers | Customer pays the merchant |
+| Channel | Who takes the order | Who sets the price | Who fulfills | Who pays whom |
+| --- | --- | --- | --- | --- |
+| **Own site or app (DTC)** | The brand's store, on a commerce platform | The brand | The brand's warehouse or a 3PL | Consumer pays the brand |
+| **Marketplace, 3P** | Amazon, Walmart Marketplace, eBay, Etsy, TikTok Shop | The seller, within the marketplace's rules | The seller, or the marketplace's network (Fulfillment by Amazon, Walmart Fulfillment Services) | Consumer pays the marketplace; marketplace pays the seller net of fees |
+| **Retailer, 1P (vendor)** | The retailer's purchase order to the brand | The retailer, to the consumer; a negotiated cost to the brand | The brand ships to the retailer's warehouses; the retailer ships or sells to the consumer | Retailer pays the brand on terms; consumer pays the retailer |
+| **Wholesale to retailers and carriers** | A purchase order, usually by EDI | The retailer | The brand or its distributor, to distribution centers or stores | Retailer pays the brand on terms, net of deductions |
+| **Distributor** | The distributor's purchase order | The distributor | The brand ships to the distributor | Distributor pays the brand |
+| **B2B portal** | The brand's or distributor's B2B store, by company account | A price list per company | The seller | Company pays on terms or by card |
+| **Store (POS)** | A register, a kiosk, a phone call | The merchant | Handed over at the counter, or picked up later | Customer pays the merchant |
+| **Social commerce** | TikTok Shop, Instagram and similar ([Social Commerce & Live Shopping](/books/user-generated-platforms/social-commerce-and-live-shopping)) | The seller | The seller or the platform's logistics | Consumer pays the platform |
+| **Delivery marketplace** | DoorDash, Uber Eats, Instacart | The merchant, sometimes with in-app markups | The platform's couriers or the merchant's drivers | Consumer pays the platform; platform pays the merchant net of commission |
+| **Logistics only** | Any channel the merchant controls | The merchant | DoorDash Drive, Uber Direct, a carrier | Merchant pays per delivery |
 
-[The Delivery Landscape](/books/commerce/delivery-landscape#business-models) covers each model's economics. For the data model the rule is that **channel is a property of the order, never of the merchant.** The same burger at the same location is sold through four channels at four prices (in-store, its own site, two marketplaces), and the same order can be taken by one channel and delivered by another.
+A subscription is not a channel: it is a promise to place orders on a schedule, and its renewal orders arrive through the channel where it was sold. [The Delivery Landscape](/books/commerce/delivery-landscape#business-models) covers the delivery models' economics, [Business Models & Unit Economics](/books/commerce/business-models) the rest. For the data model the rule is that **channel is a property of the order, never of the merchant.** The same screen protector is sold the same day on the brand's site, through Amazon as a 3P listing, on a Best Buy purchase order and in a carrier's store, at four prices, and the same order can be taken by one channel and fulfilled by another.
 
 ## How the Money Splits
 
-A marketplace delivery order is a bundle of separately priced lines, each with a payer and a payee:
+Every order is a bundle of separately priced lines, each with a payer and a payee. The lines differ by model, and the fees below are the published ones as of October 2026; a large seller often negotiates different terms.
+
+### A DTC order
+
+A consumer buys a $60 item on the brand's own Shopify store and pays shipping and tax:
+
+| Line | Who pays | Who receives |
+| --- | --- | --- |
+| Item, shipping charge | Consumer | Brand |
+| Sales tax | Consumer | The state, collected and remitted by the brand where it has nexus ([Sales Tax](/docs/payments/sales-tax)) |
+| Card processing | Brand | The payment provider: 2.9% + 30¢ on Shopify's Basic plan with Shopify Payments, 2.25% + 30¢ on Plus; 2.9% + 30¢ on Stripe's standard pricing; 3.49% + 49¢ for PayPal Checkout |
+| Third-party payment fee | Brand | Shopify, when the brand uses another provider: 2% on Basic down to 0.2% on Plus, on top of that provider's fee |
+| Platform subscription | Brand | Shopify, $39 a month on Basic billed monthly, from $2,300 on Plus |
+| Postage, warehouse, packaging | Brand | The carrier and the 3PL, outside the order |
+| Discount | Brand | Consumer |
+| Refund on return | Brand | Consumer; online purchases came back at 19.3% in NRF and Happy Returns' 2025 survey |
+
+The brand keeps the most per order of any model and pays for everything a marketplace would otherwise bundle: traffic, payments, fraud, fulfillment and support. The cost of acquiring the customer sits outside the order entirely, which is why [Business Models & Unit Economics](/books/commerce/business-models#the-unit-economics) treats it per customer, not per order.
+
+### A marketplace (3P) sale
+
+The same $60 item sold by the brand on Amazon:
+
+| Line | Who pays | Who receives |
+| --- | --- | --- |
+| Item, shipping charge | Consumer | Amazon, for the seller |
+| Sales tax | Consumer | The state, collected by the marketplace as facilitator |
+| Referral fee | Seller | Amazon: 15% of the total sales price in most categories, $0.30 minimum per item |
+| Selling plan | Seller | Amazon: $39.99 a month for a Professional account, or $0.99 per item sold on Individual |
+| Fulfillment fee | Seller, if it uses FBA | Amazon, per unit by size and weight, plus monthly storage |
+| Advertising | Seller | Amazon, per click on Sponsored Products |
+| Net proceeds | Amazon | Seller, on Amazon's settlement cycle |
+
+Other marketplaces split the same lines at different rates: Walmart Marketplace charges no monthly fee and a 15% referral fee in most categories (8% for consumer electronics); eBay charges a 13.6% final value fee in most categories plus $0.40 an order over $10; Etsy charges $0.20 per listing, a 6.5% transaction fee and 3% + $0.25 to process a US payment. Amazon books these fees as service revenue, its "net share of revenue of items sold by third-party sellers": $172.2 billion of third-party seller services in 2025, and third-party sellers were 61% of Amazon's paid units in the fourth quarter. The seller owns the product, the price and the inventory risk; the marketplace owns the customer, the payment and the rules (later chapters cover Selling on Amazon and Running Your Own Marketplace).
+
+### A 1P sale to Amazon
+
+The brand sells the same item to Amazon as a vendor. Amazon issues a purchase order at a negotiated cost, the brand ships cases to Amazon's warehouses, and Amazon sets the retail price and sells to the consumer as the seller of record; Amazon recognizes "gross revenue from items we sell from our inventory as product sales." The brand's money is the cost on the purchase order, net of whatever allowances and deductions the vendor agreement provides. Amazon's public pages describe only the third-party program in detail; its vendor program sits behind a login, so the purchasing process above is the general shape of 1P wholesale and the size of the deductions isn't public. <!-- source-gap: amazon-vendor-terms | missing | Amazon Vendor Central purchasing process, standard terms, allowances and deductions | closes with: an Amazon-published vendor terms page, or a filing or court record quoting the standard vendor agreement | checked: 2026-10-28 -->
+
+### A wholesale PO to a big-box retailer
+
+A retailer such as Best Buy sends a purchase order for 1,200 units at the brand's wholesale price, payable on terms after delivery:
+
+| Line | Who pays | Who receives |
+| --- | --- | --- |
+| Goods at wholesale cost | Retailer | Brand, on payment terms |
+| Freight to the distribution center | Brand or retailer, by the PO's terms | The carrier |
+| Compliance chargebacks (late, mislabeled, wrong advance ship notice) | Brand | Retailer, deducted from payment |
+| Promotional allowances, co-op and markdown support | Brand | Retailer, deducted or invoiced |
+| Retail price | Consumer | Retailer |
+
+The retailer's gross margin is the spread between the brand's cost and the shelf price, and the filings show how thin it is across a whole store: a 22.5% gross profit rate at Best Buy for fiscal 2026, 24.2% at Walmart and 27.9% at Target for their years ended January 2026. Those are blended rates over everything each sells, not the margin on any one brand. For the brand, wholesale trades margin per unit for volume and reach: ZAGG's last annual report, for 2019, put $453.7 million of its $521.9 million net sales through the indirect channel (big-box retailers, wireless retailers, distributors and resellers), with Verizon Wireless at 17% and Best Buy at 10% of net sales ([Business Models & Unit Economics](/books/commerce/business-models#omnichannel-brands)).
+
+### A store sale
+
+A shopper buys the item at a register. The lines are the item, the sales tax at the store's address, any discount and the tender. Card-present processing costs less than online: Shopify charges 2.6% + 10¢ in person on Basic against 2.9% + 30¢ online, Square 2.6% + 15¢ in person against 3.3% + 30¢ for its online store, because the chip and the terminal shift fraud liability ([Why Card-Present Is Cheaper](/books/payments/card-present#why-card-present-is-cheaper)). Cash has no processing fee and its own costs ([Cash Payments](/books/payments/cash-payments)). A membership warehouse adds a line outside the order: Costco's fiscal 2026 gross margin was 11.09% of net sales, alongside $5.9 billion of membership fees.
+
+### A subscription renewal
+
+A subscriber's quarterly shipment renews. The renewal is a new order created on schedule, charged to the saved card without the customer present, priced at the subscription's terms; its lines are a DTC order's plus the subscription app's cut. Recharge's Starter plan charges $99 a month plus 1.49% + 19¢ per transaction and Skio charges 1% + 20¢ on orders involving a subscription, both on top of the payment provider's fee. Subscriptions carry whole businesses: Chewy's Autoship customers bought $10.5 billion, 83.3% of its net sales, in fiscal 2025 ([Subscriptions](/docs/payments/subscriptions) for renewal mechanics).
+
+### A delivery order
+
+A marketplace delivery order adds parties with their own lines:
 
 | Line | Who pays | Who receives | Where it's covered |
 | --- | --- | --- | --- |
@@ -67,94 +144,153 @@ A marketplace delivery order is a bundle of separately priced lines, each with a
 | Tax | Customer | The taxing authority, collected by the marketplace or the merchant | [Sales Tax](/docs/payments/sales-tax) |
 | Tip | Customer | Courier, in full | [Tips](/books/commerce/delivery-fees-and-the-law#tips) |
 | Commission | Merchant | Marketplace | [Merchant Commission Tiers](/books/commerce/delivery-fees-and-the-law#merchant-commission-tiers) |
-| Courier pay | Marketplace | Courier | The User-Generated Platforms volume's [Minimum Pay Standards](/books/user-generated-platforms/gig-work-and-worker-law#minimum-pay-standards) and [Worker Payouts](/books/user-generated-platforms/gig-work-and-worker-law#worker-payouts) |
+| Courier pay | Marketplace | Courier | [Minimum Pay Standards](/books/user-generated-platforms/gig-work-and-worker-law#minimum-pay-standards) |
 | Membership fee | Customer | Marketplace, monthly or yearly | [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions) |
 | Promotion | Marketplace or merchant | Customer, as a discount | [Promotion Abuse](/books/commerce/refunds-and-delivery-fraud#promotion-abuse) |
 | Refund and error charge | Marketplace, then often merchant | Customer | [Who Pays for an Error](/books/commerce/refunds-and-delivery-fraud#who-pays-for-an-error) |
 
-Most of the law in this volume regulates one row of that table: what the customer must see before checkout, what a merchant may be charged, where a tip goes, how a membership ends. My rule: store every order as these lines, each with its kind, payer, payee and the rule or plan version that produced it, and compute every total (the customer's price, the merchant's net, the platform's revenue) as a sum over lines. A total stored without its lines can't be audited, refunded in part, or shown to a regulator.
+### One rule for all of them
 
-## The Life of a Delivery Order
+Most of the law in this volume regulates one row of these tables: what the customer must see before checkout, what tax was collected and by whom, what a merchant may be charged, where a tip goes, what a retailer may deduct, how a subscription ends. My rule: store every order as lines, each with its kind, payer, payee and the rule, plan or agreement version that produced it, and compute every total (the customer's price, the seller's net, the platform's revenue, the retailer's deduction) as a sum over lines. A total stored without its lines can't be audited, refunded in part, reconciled against a settlement or shown to a regulator.
 
-**Browse.** A customer opens an app at an address. Only locations that deliver there, are open and are accepting orders appear; each shows a delivery fee and an ETA computed for that address and that moment, and items marked unavailable are hidden or greyed out ([Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#availability)).
+## The Life of an Order
 
-**Build the cart.** The customer picks a burger, a required cheese and an optional extra patty, each a choice in a modifier group with minimum and maximum selections. The cart prices each line at the location's in-app price ([Menus, Modifiers and Items](/books/commerce/merchants-menus-and-catalogs#menus-modifiers-and-items)).
+The same few records move through every model; what differs is who creates them and when the money moves.
 
-**Check out.** Fees, tax, a tip and any membership benefit are added; where the law requires it the total was shown earlier ([Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law)). The card is authorized for the total, and the order is placed with an idempotency key so a retried tap can't place two ([Idempotency](/docs/payments/idempotency)).
+**A DTC parcel order.** A shopper builds a cart on the brand's site; the cart holds items at the prices shown and survives across sessions. Checkout validates the address, quotes shipping, calls the tax engine, and authorizes the card with an idempotency key so a retried click can't charge twice ([Idempotency](/docs/payments/idempotency)). The order is placed and passes a fraud check; inventory is committed at the warehouse chosen to ship it. A 3PL or the brand's warehouse picks, packs and buys a label; the carrier's tracking number goes on the shipment, the card is captured when the goods ship, inside the authorization's window ([Authorizations Expire](/docs/payments/payment-states#authorizations-expire)), and the shopper gets a shipping confirmation. Tracking events arrive until delivery. If the shopper returns it, a return authorization, a label, a received inspection and a refund follow, and the unit is restocked or written off.
 
-**Send to the merchant.** The order reaches the location's point of sale or tablet and must be accepted. The kitchen gets a ready-time estimate, and dispatch starts looking for a courier timed to arrive as the food is ready ([Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#the-order-lifecycle)).
+**A marketplace (3P) sale.** The order is created in the marketplace, which has already charged the consumer and calculated the tax. The seller's system pulls it through the marketplace's API, ships it (or the marketplace's own network does, from inventory the seller sent in earlier), and confirms shipment with tracking within the marketplace's deadline. Weeks later a settlement report pays the seller the order's price less referral, fulfillment, advertising and refund lines, and the seller reconciles the payout back to orders.
 
-**Assign and batch.** An optimizer offers the delivery to a courier, possibly together with a second order from the same or a nearby store ([Assignment and Batching](/books/commerce/orders-dispatch-and-batching#assignment-and-batching)).
+**A wholesale purchase order.** A retailer sends an X12 850 Purchase Order; the brand answers with an 855 Purchase Order Acknowledgment, accepting, changing or rejecting lines. The brand ships to the retailer's distribution center on the date and carrier its routing guide sets, labels each carton, sends an 856 Ship Notice/Manifest before the truck arrives, and invoices with an 810. The retailer pays on terms, short by any deductions, and the brand disputes the ones it can. A 1P sale to Amazon runs the same loop through Amazon's vendor systems (later chapters cover Wholesale & Retail Distribution and EDI).
 
-**Pick up and deliver.** The courier arrives, waits or doesn't, picks up, and delivers, recording the handoff and a photo when nobody is there to receive it ([Proof When Nobody Signs](/books/field-operations/last-mile-delivery#proof-when-nobody-signs)).
+**A store sale.** A cashier scans items at a register; the point of sale prices them, applies the store's tax, takes cash or a card on a terminal and prints or sends a receipt. Stock leaves the store's count at the moment of sale. The register keeps selling when the internet is down and uploads later ([Offline: Approved Isn't Paid](/books/payments/card-present#offline-approved-isn-t-paid)), and the drawer is counted at the end of the day. A buy-online, pick-up-in-store order is a DTC order whose fulfillment is a store's shelf and a pickup.
 
-**Settle.** The authorization is captured, the merchant's payout is computed net of commission and adjustments, the courier is paid with the tip in full, and the membership benefit is recorded against the customer's plan ([Payouts & Settlement](/books/payments/payouts-and-settlement)).
+**A subscription renewal.** A scheduler creates the renewal order a few days before the shipment date, after any skip, swap or pause the subscriber made, and charges the saved card as a merchant-initiated transaction ([Stored Credentials](/books/payments/stored-credentials)). A decline starts dunning: retries on a schedule, a message to update the card, and a pause or cancellation if nothing works. A paid renewal flows into fulfillment like any DTC order.
 
-**Fix what went wrong.** The customer reports a missing drink. The marketplace refunds or credits the customer, decides whether the merchant, the courier or nobody is at fault, and may charge the merchant for the error, which the merchant can dispute within a window ([Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud)).
+**A delivery order.** A customer orders from a restaurant in a delivery app; the order reaches the location's point of sale and must be accepted, dispatch times a courier to arrive as the food is ready, possibly batched with a second order, and the handoff is recorded with a photo when nobody is there to receive it ([Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#the-order-lifecycle), [Proof When Nobody Signs](/books/field-operations/last-mile-delivery#proof-when-nobody-signs)). The authorization is captured, the merchant is paid net of commission, the courier is paid with the tip in full, and a missing drink becomes a refund and possibly an error charge to the merchant ([Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud)).
+
+Across all six, the order is one record and the movement is another: a DTC order can ship in two parcels from two warehouses, a wholesale PO in three truckloads, a store sale in a bag, a delivery order on a courier's trip that also carries someone else's. That is the order-versus-fulfillment split the data model is built on.
 
 ## The Core Data Model
 
-Every company in this volume converges on the same concepts under different names: a DoorDash store, an Uber Eats store and an Instacart retailer location are all locations; a menu item, a SKU and a product listing are all items. The volume uses one set of names, and every later chapter's "How to Build It" extends it rather than redefining it:
+Every company in this volume converges on the same concepts under different names: a Shopify variant, a BigCommerce SKU, an Amazon ASIN under a seller SKU and a DoorDash menu item are all items; a Shopify location, a DoorDash store and an Amazon fulfillment center are all locations; a Shopify fulfillment order, a commercetools delivery and an Amazon shipment are all fulfillments. The volume uses one set of names, and every later chapter's "How to Build It" extends it rather than redefining it:
 
 | Entity | Table | What it is |
 | --- | --- | --- |
-| **merchant** | `merchants` | The business that sells: a restaurant group, a grocer, a brand, a franchisee under it |
-| **location** | `locations` | Where an order is made or picked: a store, a kitchen, a virtual brand, a dark store |
-| **item** | `items` | Something the merchant sells, once: a dish, a product, a modifier option, a bundle |
-| **location item** | `location_items` | An item as sold at one location: its price and whether it's available |
+| **merchant** | `merchants` | The business that sells: a brand, a retailer, a distributor, a restaurant group, a grocer, a franchisee under its brand |
+| **brand** | `brands` | A name products are sold under; a merchant can own several |
+| **location** | `locations` | A place that sells, stocks or makes goods: a store, a warehouse, a 3PL's or a marketplace's fulfillment center, an online store, a kitchen |
+| **product** | `products` | What a shopper picks before choosing options: "the screen protector", with its title and options |
+| **item** | `items` | Something sold and counted, once: a variant (SKU), a dish, a modifier option, a bundle, a digital good |
+| **bundle component** | `bundle_components` | An item inside a bundle or kit, with its quantity |
+| **location item** | `location_items` | An item as sold at one location: its in-store price and whether it's available |
 | **modifier group** | `modifier_groups`, `modifier_group_options`, `item_modifier_groups` | A choice attached to an item ("choose a cheese"), with selection limits and options that are items themselves |
-| **customer** | `customers` | The person or business ordering |
-| **order** | `orders` | One purchase at one location through one channel, with its timing and state |
-| **order line** | `order_lines` | An item ordered, with the modifiers chosen as child lines, priced as sold |
-| **order charge** | `order_charges` | Every non-item line: fees, tax, tip, discounts, commission, each with a payer and a payee |
-| **fulfillment** | `fulfillments` | How the order gets to the customer: delivery, pickup, dine-in or shipping, and by whom |
-| **payment reference** | `order_payments` | The order's charges and refunds as rows pointing at the [Payments](/books/payments/card-payments#the-core-data-model) volume's records |
+| **price list** | `price_lists`, `price_list_items` | Prices for a market, a currency, a customer group, a company or a channel, with quantity breaks |
+| **customer** | `customers` | The person or business buying |
+| **company** | `companies`, `company_contacts` | A business buyer and the people who buy for it |
+| **cart** | `carts`, `cart_lines` | A purchase being built, before it is an order |
+| **order** | `orders` | One purchase from one seller through one channel, with its timing, state and merchant of record |
+| **order line** | `order_lines` | An item ordered, with modifiers as child lines, priced and named as sold |
+| **order charge** | `order_charges` | Every non-goods line: shipping, fees, tax, tip, discounts, commissions, allowances, each with a payer and a payee |
+| **payment reference** | `order_payments` | The order's authorizations, captures and refunds as rows pointing at the [Payments](/books/payments/card-payments#the-core-data-model) volume's records |
+| **fulfillment** | `fulfillments`, `fulfillment_lines` | How some or all of the order's lines get to the buyer, from which location and by which provider |
+| **shipment** | `shipments` | A parcel or load in a carrier's hands, with its tracking number |
+| **inventory item and level** | `inventory_items`, `inventory_levels` | Whether and at what cost an item is stocked, and how many are on hand and committed at each location |
+| **return** | `returns`, `return_lines` | Goods coming back, with their reason and what happens to them |
+| **subscription** | `subscriptions`, `subscription_lines` | A promise to place orders on a schedule |
+| **listing** | `listings` | An item offered on an external channel, under that channel's ID |
+| **supplier and purchase order** | `suppliers`, `purchase_orders`, `purchase_order_lines` | Who the merchant buys from, and what it ordered |
+| **document** | `documents` | An invoice, credit memo, packing slip, advance ship notice or EDI transaction, as sent or received |
 
-Four splits matter in every chapter. **Item versus location item.** The item is what the merchant sells, defined once with its name, description, barcode and tax category; the location item is that item at one place, with its price and availability. A franchise brand updates a description once and every location shows it; one store runs out of an item and only that store hides it. **Order line versus order charge.** Lines are goods, priced by the merchant; charges are everything else, priced by the platform, the law or the customer (the tip). Keeping them apart is what lets a city's commission cap apply to the right base, a tip go to the courier untouched, and a refund for a missing item reverse the item's price and its tax without touching the delivery fee. **Order versus fulfillment.** The order is what was bought; the fulfillment is how it moves, by which provider, with which external ID and statuses. A pickup order that becomes a delivery, a courier who unassigns and is replaced, and a delivery taken by one app and carried by another network are fulfillment changes, not new orders. **Snapshots on the line.** An order line stores the item's name and unit price as sold, because the menu will change tomorrow and a refund, a dispute or a regulator asks what was sold today.
+The channel registry is `sales_channels`, with each location's listing on a channel in `merchant_channel_enrollments`, both from [The Delivery Landscape](/books/commerce/delivery-landscape#how-to-build-it); every channel in this volume, from a brand's own site to a retailer's EDI connection, is a row there.
 
-The spine, in the playbook's [naming conventions](/docs/database/naming-conventions), with amounts in integer minor units ([Money & Amounts](/docs/payments/money)); columns each chapter owns (menus and hours, fee plans, batches, memberships, issues) are added there:
+Seven splits matter in every chapter:
+
+- **Product versus item.** The product is what a shopper sees and picks options on; the item is the variant that has a SKU, a barcode, a weight, a stock count and a cost. A restaurant's dish is an item without a product; a T-shirt in five sizes and four colors is one product and twenty items. Everything that is counted, shipped or priced hangs off the item.
+- **Item versus location item.** The item is defined once; the location item is that item at one place, with its in-store price and availability. A franchise brand updates a description once and every location shows it; one store runs out and only that store hides it.
+- **Item versus listing.** A listing is the item on someone else's channel, under their ID (an ASIN, a Walmart item ID), with that channel's status. A listing can be suppressed while the item is fine, and two sellers can list the same ASIN.
+- **Order line versus order charge.** Lines are goods, priced by the seller; charges are everything else, priced by the platform, a carrier, the law, a retailer's agreement or the customer (the tip). Keeping them apart is what lets a tax apply to the right base, a tip go to the courier untouched, a referral fee reconcile against a settlement, and a refund for one item reverse that item's price and tax without touching shipping.
+- **Order versus fulfillment versus shipment.** The order is what was bought; a fulfillment is a decision to send some of its lines from one location by one provider; a shipment is a parcel or truckload with a tracking number. One order splits into fulfillments when stock sits in two warehouses; one fulfillment becomes several shipments when it doesn't fit in one box.
+- **Selling order versus purchase order.** An order is something a buyer bought from this merchant, including a retailer's purchase order received over EDI (its PO number is the order's external reference). A `purchase_orders` row is the reverse: what this merchant bought from its supplier. The same 850 document is an order to the brand and a purchase order to the retailer.
+- **Snapshots on the line.** An order line stores the item's name, SKU and unit price as sold, because the catalog will change tomorrow and a refund, a dispute, a deduction or a regulator asks what was sold today.
+
+The spine, in the playbook's [naming conventions](/docs/database/naming-conventions), with amounts in integer minor units ([Money & Amounts](/docs/payments/money)); columns each chapter owns (menus and hours, fee plans, options and attributes, holds, carriers, memberships, issues) are added there:
 
 ```sql
 CREATE TABLE merchants (                 -- the business that sells
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  parent_id           UUID REFERENCES merchants (id),  -- a franchisee under its brand
+  parent_id           UUID REFERENCES merchants (id),  -- a franchisee under its brand, a division
   legal_name          TEXT NOT NULL,
   display_name        TEXT NOT NULL,
-  kind                TEXT NOT NULL CHECK (kind IN ('restaurant', 'grocery', 'convenience',
-                        'retail', 'other')),
+  kind                TEXT NOT NULL CHECK (kind IN ('brand', 'retailer', 'wholesaler',
+                        'restaurant', 'grocery', 'convenience', 'retail', 'other')),
   payment_account_ref TEXT,              -- the payee in the Payments volume's model
   status              TEXT NOT NULL CHECK (status IN ('onboarding', 'active', 'paused',
                         'closed')),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE locations (                 -- where an order is made or picked
+CREATE TABLE brands (                    -- a name products are sold under
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id  UUID NOT NULL REFERENCES merchants (id),
+  name         TEXT NOT NULL,
+  UNIQUE (merchant_id, name)
+);
+
+CREATE TABLE locations (                 -- a place that sells, stocks or makes goods
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
   merchant_id  UUID NOT NULL REFERENCES merchants (id),
   kind         TEXT NOT NULL CHECK (kind IN ('store', 'kitchen', 'virtual_brand', 'dark_store',
-                 'warehouse')),
+                 'warehouse', 'online')),
+  operator     TEXT NOT NULL DEFAULT 'merchant' CHECK (operator IN ('merchant', 'third_party',
+                 'marketplace', 'supplier')),  -- a 3PL, FBA, a drop-ship supplier
   name         TEXT NOT NULL,
-  address_id   UUID NOT NULL,            -- the playbook's addresses table
+  address_id   UUID,                     -- the playbook's addresses table; null for 'online'
   time_zone    TEXT NOT NULL,            -- IANA, e.g. 'America/New_York'
   country      CHAR(2) NOT NULL,         -- ISO 3166-1 alpha-2
   subdivision  TEXT,                     -- ISO 3166-2; state rules resolve from here
   locality     TEXT,                     -- city; fee caps and disclosure rules resolve here
   currency     CHAR(3) NOT NULL,
   status       TEXT NOT NULL CHECK (status IN ('onboarding', 'active', 'paused', 'closed')),
-  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (kind = 'online' OR address_id IS NOT NULL)
 );
 
-CREATE TABLE items (                     -- what the merchant sells, defined once
+CREATE TABLE products (                  -- what a shopper picks before choosing options
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id  UUID NOT NULL REFERENCES merchants (id),
+  brand_id     UUID REFERENCES brands (id),
+  title        TEXT NOT NULL,
+  handle       TEXT NOT NULL,            -- the URL slug
+  status       TEXT NOT NULL CHECK (status IN ('draft', 'active', 'archived')),
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (merchant_id, handle)
+);
+
+CREATE TABLE items (                     -- sold and counted, defined once
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
   merchant_id   UUID NOT NULL REFERENCES merchants (id),
-  kind          TEXT NOT NULL CHECK (kind IN ('prepared', 'packaged', 'modifier', 'bundle')),
+  product_id    UUID REFERENCES products (id),  -- null for a dish or a modifier option
+  kind          TEXT NOT NULL CHECK (kind IN ('prepared', 'packaged', 'modifier', 'bundle',
+                  'digital', 'gift_card', 'service')),
+  sku           TEXT,                    -- the merchant's stock-keeping unit
   name          TEXT NOT NULL,
+  option_values JSONB NOT NULL DEFAULT '{}',  -- e.g. {"color": "black", "fit": "iPhone 17"}
   description   TEXT,
   gtin          TEXT,                    -- barcode for packaged goods; null for a dish
   sold_by       TEXT NOT NULL DEFAULT 'each' CHECK (sold_by IN ('each', 'weight')),
   tax_category  TEXT NOT NULL,           -- resolves to a rate per jurisdiction
-  external_refs JSONB NOT NULL DEFAULT '{}',  -- POS and partner IDs, keyed by system
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  external_refs JSONB NOT NULL DEFAULT '{}',  -- POS, ERP and partner IDs, keyed by system
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (merchant_id, sku)
+);
+
+CREATE TABLE bundle_components (         -- a kit or bundle sells as one item, ships as several
+  bundle_item_id    UUID NOT NULL REFERENCES items (id),
+  component_item_id UUID NOT NULL REFERENCES items (id),
+  quantity          INT NOT NULL CHECK (quantity > 0),
+  PRIMARY KEY (bundle_item_id, component_item_id),
+  CHECK (bundle_item_id <> component_item_id)
 );
 
 CREATE TABLE location_items (            -- an item as sold at one location
@@ -190,30 +326,92 @@ CREATE TABLE item_modifier_groups (      -- which groups an item offers; options
   PRIMARY KEY (item_id, modifier_group_id)
 );
 
-CREATE TABLE customers (
-  id          UUID PRIMARY KEY DEFAULT uuidv7(),
-  kind        TEXT NOT NULL CHECK (kind IN ('person', 'business')),
-  status      TEXT NOT NULL CHECK (status IN ('active', 'locked', 'closed')),
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+CREATE TABLE price_lists (               -- prices for a market, group, company or channel
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id  UUID NOT NULL REFERENCES merchants (id),
+  name         TEXT NOT NULL,
+  kind         TEXT NOT NULL CHECK (kind IN ('base', 'sale', 'market', 'channel', 'wholesale',
+                 'contract')),
+  currency     CHAR(3) NOT NULL,
+  valid_during TSTZRANGE NOT NULL,
+  status       TEXT NOT NULL CHECK (status IN ('draft', 'active', 'archived'))
 );
 
-CREATE TABLE orders (                    -- one purchase, one location, one channel
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  location_id      UUID NOT NULL REFERENCES locations (id),
-  customer_id      UUID REFERENCES customers (id),     -- null: a walk-in sale
-  channel          TEXT NOT NULL CHECK (channel IN ('marketplace', 'first_party', 'pos',
-                     'phone', 'kiosk')),
-  channel_partner  TEXT,                 -- e.g. 'doordash', 'ubereats'; null for own channels
-  external_ref     TEXT,                 -- the partner's order ID
-  fulfillment_type TEXT NOT NULL CHECK (fulfillment_type IN ('delivery', 'pickup',
-                     'dine_in', 'shipping')),
-  timing           TEXT NOT NULL CHECK (timing IN ('asap', 'scheduled')),
-  scheduled_for    TSTZRANGE,            -- the promised window for scheduled orders
-  status           TEXT NOT NULL CHECK (status IN ('placed', 'accepted', 'preparing',
-                     'ready', 'fulfilled', 'cancelled')),
-  currency         CHAR(3) NOT NULL,
-  idempotency_key  TEXT NOT NULL,
-  placed_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+CREATE TABLE price_list_items (
+  price_list_id    UUID NOT NULL REFERENCES price_lists (id),
+  item_id          UUID NOT NULL REFERENCES items (id),
+  min_quantity     INT NOT NULL DEFAULT 1 CHECK (min_quantity > 0),  -- quantity breaks
+  price            BIGINT NOT NULL CHECK (price >= 0),
+  compare_at_price BIGINT,               -- the "was" price, where the law allows showing it
+  PRIMARY KEY (price_list_id, item_id, min_quantity)
+);
+
+CREATE TABLE customers (
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id  UUID REFERENCES merchants (id),  -- null: a marketplace's own account holder
+  kind         TEXT NOT NULL CHECK (kind IN ('person', 'business')),
+  status       TEXT NOT NULL CHECK (status IN ('active', 'locked', 'closed')),
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE companies (                 -- a business buyer: a retailer, a contractor, a school
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id   UUID NOT NULL REFERENCES merchants (id),
+  name          TEXT NOT NULL,
+  price_list_id UUID REFERENCES price_lists (id),  -- its contract prices, if any
+  external_ref  TEXT,                    -- the ERP's customer number
+  status        TEXT NOT NULL CHECK (status IN ('active', 'on_hold', 'closed'))
+);
+
+CREATE TABLE company_contacts (          -- the people who buy for a company
+  company_id   UUID NOT NULL REFERENCES companies (id),
+  customer_id  UUID NOT NULL REFERENCES customers (id),
+  role         TEXT NOT NULL CHECK (role IN ('buyer', 'approver', 'admin')),
+  PRIMARY KEY (company_id, customer_id)
+);
+
+CREATE TABLE carts (                     -- a purchase being built
+  id           UUID PRIMARY KEY DEFAULT uuidv7(),
+  location_id  UUID NOT NULL REFERENCES locations (id),  -- the selling location
+  customer_id  UUID REFERENCES customers (id),           -- null: a guest
+  company_id   UUID REFERENCES companies (id),
+  currency     CHAR(3) NOT NULL,
+  status       TEXT NOT NULL CHECK (status IN ('open', 'converted', 'abandoned', 'merged')),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE cart_lines (
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  cart_id     UUID NOT NULL REFERENCES carts (id),
+  item_id     UUID NOT NULL REFERENCES items (id),
+  quantity    NUMERIC(12, 3) NOT NULL CHECK (quantity > 0),
+  unit_price  BIGINT NOT NULL,           -- as shown; repriced at checkout
+  added_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE orders (                    -- one purchase, one seller, one channel
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  location_id        UUID NOT NULL REFERENCES locations (id),  -- the selling location
+  customer_id        UUID REFERENCES customers (id),     -- null: a walk-in sale
+  company_id         UUID REFERENCES companies (id),     -- a business buyer
+  cart_id            UUID REFERENCES carts (id),
+  subscription_id    UUID,               -- subscriptions, below: a renewal order
+  channel            TEXT NOT NULL CHECK (channel IN ('marketplace', 'first_party', 'pos',
+                       'phone', 'kiosk', 'wholesale')),
+  channel_partner    TEXT,               -- e.g. 'amazon', 'bestbuy', 'doordash'; null for own
+  external_ref       TEXT,               -- the partner's order ID or the buyer's PO number
+  merchant_of_record TEXT NOT NULL DEFAULT 'merchant' CHECK (merchant_of_record IN
+                       ('merchant', 'marketplace')),  -- who charged the buyer and owes the tax
+  fulfillment_type   TEXT NOT NULL CHECK (fulfillment_type IN ('delivery', 'pickup',
+                       'dine_in', 'shipping', 'digital')),
+  timing             TEXT NOT NULL CHECK (timing IN ('asap', 'scheduled')),
+  scheduled_for      TSTZRANGE,          -- the promised window for scheduled orders
+  status             TEXT NOT NULL CHECK (status IN ('placed', 'accepted', 'preparing',
+                       'ready', 'partially_fulfilled', 'fulfilled', 'cancelled')),
+  currency           CHAR(3) NOT NULL,
+  bill_to            JSONB,              -- billing address as given, snapshot
+  idempotency_key    TEXT NOT NULL,
+  placed_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (channel_partner, external_ref),
   UNIQUE (idempotency_key),
   CHECK ((timing = 'scheduled') = (scheduled_for IS NOT NULL))
@@ -225,37 +423,27 @@ CREATE TABLE order_lines (               -- goods, priced as sold; modifiers are
   parent_line_id UUID REFERENCES order_lines (id),
   item_id        UUID NOT NULL REFERENCES items (id),
   name           TEXT NOT NULL,          -- snapshot
+  sku            TEXT,                   -- snapshot
   quantity       NUMERIC(12, 3) NOT NULL CHECK (quantity > 0),  -- weight for sold_by = 'weight'
   unit_price     BIGINT NOT NULL,        -- snapshot, the channel's price
   amount         BIGINT NOT NULL,        -- quantity x unit_price, rounded once
   status         TEXT NOT NULL DEFAULT 'ordered' CHECK (status IN ('ordered', 'substituted',
-                   'unavailable', 'refunded'))
+                   'unavailable', 'cancelled', 'returned', 'refunded'))
 );
 
 CREATE TABLE order_charges (             -- everything that isn't goods
-  id          UUID PRIMARY KEY DEFAULT uuidv7(),
-  order_id    UUID NOT NULL REFERENCES orders (id),
-  kind        TEXT NOT NULL CHECK (kind IN ('delivery_fee', 'service_fee', 'small_order_fee',
-                'regulatory_fee', 'tax', 'tip', 'discount', 'commission', 'processing_fee')),
-  payer       TEXT NOT NULL CHECK (payer IN ('customer', 'merchant', 'platform')),
-  payee       TEXT NOT NULL CHECK (payee IN ('merchant', 'platform', 'courier', 'authority',
-                'customer')),
-  amount      BIGINT NOT NULL,           -- positive; a discount is paid to the customer
-  rule_ref    TEXT,                      -- the fee plan, tax rule or promotion that produced it
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE fulfillments (              -- how the order moves, and by whom
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
   order_id      UUID NOT NULL REFERENCES orders (id),
-  kind          TEXT NOT NULL CHECK (kind IN ('delivery', 'pickup', 'dine_in', 'shipping')),
-  provider      TEXT NOT NULL CHECK (provider IN ('merchant', 'marketplace_network',
-                  'logistics_network', 'carrier')),
-  provider_name TEXT,                    -- e.g. 'doordash_drive', 'uber_direct'
-  provider_ref  TEXT,                    -- the provider's delivery ID
-  dropoff       JSONB,                   -- address and instructions as given, snapshot
-  status        TEXT NOT NULL CHECK (status IN ('pending', 'assigned', 'picked_up',
-                  'delivered', 'failed', 'cancelled', 'returned')),
+  order_line_id UUID REFERENCES order_lines (id),  -- null: applies to the whole order
+  kind          TEXT NOT NULL CHECK (kind IN ('shipping_fee', 'delivery_fee', 'service_fee',
+                  'small_order_fee', 'regulatory_fee', 'tax', 'duty', 'tip', 'discount',
+                  'commission', 'referral_fee', 'fulfillment_fee', 'processing_fee',
+                  'allowance', 'chargeback_deduction')),
+  payer         TEXT NOT NULL CHECK (payer IN ('customer', 'merchant', 'platform')),
+  payee         TEXT NOT NULL CHECK (payee IN ('merchant', 'platform', 'courier', 'authority',
+                  'customer')),
+  amount        BIGINT NOT NULL,         -- positive; a discount is paid to the customer
+  rule_ref      TEXT,                    -- the fee plan, tax rule, promotion or agreement
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -264,61 +452,311 @@ CREATE TABLE order_payments (            -- pointers into the Payments volume's 
   order_id     UUID NOT NULL REFERENCES orders (id),
   kind         TEXT NOT NULL CHECK (kind IN ('authorization', 'capture', 'refund', 'credit')),
   amount       BIGINT NOT NULL CHECK (amount > 0),
-  payment_ref  TEXT NOT NULL,            -- the processor's or ledger's ID
+  payment_ref  TEXT NOT NULL,            -- the processor's, marketplace's or ledger's ID
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE fulfillments (              -- some of the order's lines, from one place, by one provider
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  order_id      UUID NOT NULL REFERENCES orders (id),
+  location_id   UUID REFERENCES locations (id),  -- where it leaves from
+  kind          TEXT NOT NULL CHECK (kind IN ('delivery', 'pickup', 'dine_in', 'shipping',
+                  'digital')),
+  provider      TEXT NOT NULL CHECK (provider IN ('merchant', 'marketplace_network',
+                  'logistics_network', 'carrier', 'third_party_warehouse', 'supplier')),
+  provider_name TEXT,                    -- e.g. 'doordash_drive', 'amazon_mcf', a 3PL
+  provider_ref  TEXT,                    -- the provider's delivery or fulfillment ID
+  dropoff       JSONB,                   -- address and instructions as given, snapshot
+  status        TEXT NOT NULL CHECK (status IN ('pending', 'assigned', 'picked_up',
+                  'shipped', 'delivered', 'failed', 'cancelled', 'returned')),
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE fulfillment_lines (         -- which lines, and how many, this fulfillment carries
+  fulfillment_id UUID NOT NULL REFERENCES fulfillments (id),
+  order_line_id  UUID NOT NULL REFERENCES order_lines (id),
+  quantity       NUMERIC(12, 3) NOT NULL CHECK (quantity > 0),
+  PRIMARY KEY (fulfillment_id, order_line_id)
+);
+
+CREATE TABLE shipments (                 -- a parcel or load in a carrier's hands
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  fulfillment_id  UUID NOT NULL REFERENCES fulfillments (id),
+  carrier         TEXT NOT NULL,         -- 'usps', 'ups', 'fedex', an LTL carrier
+  service         TEXT,                  -- the carrier's service level
+  tracking_number TEXT,
+  status          TEXT NOT NULL CHECK (status IN ('label_created', 'in_transit', 'delivered',
+                    'exception', 'returned_to_sender')),
+  shipped_at      TIMESTAMPTZ,
+  delivered_at    TIMESTAMPTZ,
+  UNIQUE (carrier, tracking_number)
+);
+
+CREATE TABLE inventory_items (           -- whether and at what cost an item is stocked
+  item_id      UUID PRIMARY KEY REFERENCES items (id),
+  tracked      BOOLEAN NOT NULL DEFAULT TRUE,  -- false: a dish, a service, a made-to-order item
+  unit_cost    BIGINT,                   -- current cost, minor units; history in purchasing
+  cost_currency CHAR(3)
+);
+
+CREATE TABLE inventory_levels (          -- counts per item per location
+  item_id      UUID NOT NULL REFERENCES inventory_items (item_id),
+  location_id  UUID NOT NULL REFERENCES locations (id),
+  on_hand      INT NOT NULL DEFAULT 0,   -- physically there
+  committed    INT NOT NULL DEFAULT 0 CHECK (committed >= 0),  -- sold, not yet shipped
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (item_id, location_id)
+);
+
+CREATE TABLE returns (                   -- goods coming back
+  id          UUID PRIMARY KEY DEFAULT uuidv7(),
+  order_id    UUID NOT NULL REFERENCES orders (id),
+  method      TEXT NOT NULL CHECK (method IN ('mail', 'drop_off', 'in_store', 'returnless')),
+  status      TEXT NOT NULL CHECK (status IN ('requested', 'approved', 'in_transit', 'received',
+                'closed', 'rejected')),
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE return_lines (
+  return_id     UUID NOT NULL REFERENCES returns (id),
+  order_line_id UUID NOT NULL REFERENCES order_lines (id),
+  quantity      NUMERIC(12, 3) NOT NULL CHECK (quantity > 0),
+  reason        TEXT NOT NULL,           -- a code, not free text
+  disposition   TEXT CHECK (disposition IN ('restock', 'refurbish', 'liquidate', 'destroy',
+                  'return_to_vendor')),  -- set when received
+  PRIMARY KEY (return_id, order_line_id)
+);
+
+CREATE TABLE subscriptions (             -- a promise to place orders on a schedule
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  location_id        UUID NOT NULL REFERENCES locations (id),  -- the selling location
+  customer_id        UUID NOT NULL REFERENCES customers (id),
+  channel            TEXT NOT NULL,      -- where it was sold; renewals inherit it
+  status             TEXT NOT NULL CHECK (status IN ('active', 'paused', 'past_due',
+                       'cancelled', 'expired')),
+  interval_unit      TEXT NOT NULL CHECK (interval_unit IN ('day', 'week', 'month', 'year')),
+  interval_count     SMALLINT NOT NULL CHECK (interval_count > 0),
+  next_order_at      TIMESTAMPTZ,        -- null when paused or ended
+  payment_method_ref TEXT,               -- a stored credential in the Payments volume
+  ship_to            JSONB,
+  started_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ended_at           TIMESTAMPTZ
+);
+
+CREATE TABLE subscription_lines (
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  subscription_id UUID NOT NULL REFERENCES subscriptions (id),
+  item_id         UUID NOT NULL REFERENCES items (id),
+  quantity        INT NOT NULL CHECK (quantity > 0),
+  unit_price      BIGINT                 -- null: the current price, less the plan's discount
+);
+
+CREATE TABLE listings (                  -- an item on an external channel, under its ID
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  item_id              UUID NOT NULL REFERENCES items (id),
+  channel_id           TEXT NOT NULL REFERENCES sales_channels (id),
+  external_listing_ref TEXT,             -- an ASIN, a Walmart item ID, an eBay item number
+  status               TEXT NOT NULL CHECK (status IN ('draft', 'pending', 'active',
+                         'suppressed', 'ended')),
+  updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (channel_id, item_id)
+);
+
+CREATE TABLE suppliers (                 -- who the merchant buys from
+  id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id   UUID NOT NULL REFERENCES merchants (id),
+  name          TEXT NOT NULL,
+  kind          TEXT NOT NULL CHECK (kind IN ('manufacturer', 'distributor', 'drop_ship',
+                  'print_on_demand')),
+  currency      CHAR(3) NOT NULL,
+  payment_terms TEXT,                    -- e.g. 'net_30'
+  status        TEXT NOT NULL CHECK (status IN ('active', 'on_hold', 'closed'))
+);
+
+CREATE TABLE purchase_orders (           -- what this merchant ordered from a supplier
+  id             UUID PRIMARY KEY DEFAULT uuidv7(),
+  merchant_id    UUID NOT NULL REFERENCES merchants (id),
+  supplier_id    UUID NOT NULL REFERENCES suppliers (id),
+  ship_to_id     UUID NOT NULL REFERENCES locations (id),
+  number         TEXT NOT NULL,
+  status         TEXT NOT NULL CHECK (status IN ('draft', 'sent', 'acknowledged',
+                   'partially_received', 'received', 'closed', 'cancelled')),
+  currency       CHAR(3) NOT NULL,
+  expected_at    DATE,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (merchant_id, number)
+);
+
+CREATE TABLE purchase_order_lines (
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  purchase_order_id UUID NOT NULL REFERENCES purchase_orders (id),
+  item_id           UUID NOT NULL REFERENCES items (id),
+  quantity_ordered  INT NOT NULL CHECK (quantity_ordered > 0),
+  quantity_received INT NOT NULL DEFAULT 0 CHECK (quantity_received >= 0),
+  unit_cost         BIGINT NOT NULL CHECK (unit_cost >= 0)
+);
+
+CREATE TABLE documents (                 -- business documents as sent or received
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  kind              TEXT NOT NULL CHECK (kind IN ('invoice', 'credit_memo', 'packing_slip',
+                      'purchase_order', 'po_acknowledgment', 'po_change', 'ship_notice',
+                      'inventory_advice', 'product_activity', 'receipt', 'bill_of_lading',
+                      'commercial_invoice')),
+  direction         TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+  counterparty      TEXT NOT NULL,       -- a trading partner, supplier or customer ID
+  number            TEXT NOT NULL,       -- the document's own number
+  order_id          UUID REFERENCES orders (id),
+  purchase_order_id UUID REFERENCES purchase_orders (id),
+  fulfillment_id    UUID REFERENCES fulfillments (id),
+  format            TEXT NOT NULL CHECK (format IN ('pdf', 'x12', 'edifact', 'json', 'csv')),
+  content_ref       TEXT NOT NULL,       -- object storage key; the bytes as exchanged
+  issued_at         TIMESTAMPTZ NOT NULL,
+  UNIQUE (kind, direction, counterparty, number)
 );
 ```
 
 Design notes:
 
-- **Location is where rules resolve.** Fee caps are per city, disclosure laws per state, tax per jurisdiction, time per zone: `locations.country`, `subdivision`, `locality` and `time_zone` are what [Rules as Data](/docs/architecture/rules-as-data) looks up. A virtual brand (a delivery-only menu cooked in another restaurant's kitchen) is a location of its own merchant whose address is the kitchen's.
-- **Modifier options are items.** A modifier option has a price, a stock level, a barcode sometimes and its own modifiers (a combo's drink has a size). Making it an item gives it all of those, and lets an option be "86'd" exactly like a dish.
-- **External IDs are a map, not columns.** Every item carries a POS ID and an ID per marketplace; `external_refs` keyed by system, plus the `(channel_partner, external_ref)` uniqueness on orders, is how the same order injected twice is caught.
-- **No tenant above merchants, unless you sell software.** A marketplace is one operator; the merchant is the unit of scope. A point-of-sale or ordering vendor selling to many merchants adds a tenant above merchants exactly as [Multi-Tenancy](/docs/architecture/multi-tenancy#tenant-hierarchies) describes, and the later POS part does.
-- **Money is the Payments model.** `order_payments` points at authorizations, captures and refunds in the [Payments](/books/payments/card-payments#the-core-data-model) volume; merchant payouts are that volume's [Payouts & Settlement](/books/payments/payouts-and-settlement); a dispute is its own object ([Refunds and Disputes Are Their Own Objects](/docs/payments/payment-states#refunds-and-disputes-are-their-own-objects)).
-- **Emit life-cycle events.** `order.placed`, `order.accepted`, `order.ready`, `fulfillment.assigned`, `fulfillment.picked_up`, `fulfillment.delivered`, `order.cancelled` and `order.refunded` are what dispatch, notifications, payouts and reporting subscribe to ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)).
+- **Location is where rules resolve.** Fee caps are per city, disclosure laws per state, store tax per jurisdiction, time per zone: `locations.country`, `subdivision`, `locality` and `time_zone` are what [Rules as Data](/docs/architecture/rules-as-data) looks up. An online store is a location with `kind = 'online'` and no address: it sells and holds nothing, and tax on its orders resolves from the ship-to address instead. A virtual brand (a delivery-only menu cooked in another restaurant's kitchen) is a location of its own merchant whose address is the kitchen's.
+- **Stock lives where it is, whoever runs the building.** A 3PL's warehouse, an Amazon fulfillment center holding the seller's units and a drop-ship supplier are locations with `operator` set; inventory is counted there and fulfillments leave from there. The seller doesn't control their counts directly, which is why later chapters reconcile them.
+- **Available is a computation.** `on_hand - committed` at a location, less safety stock and reservations, is what a channel may sell; storing "available" as a column invites drift ([Reservations & Holds](/docs/architecture/reservations-and-holds)). `location_items.available` stays as the switch for places nobody counts, such as a kitchen that 86es a dish.
+- **Cost is not price.** `inventory_items.unit_cost` is what the merchant paid; prices live on location items, price lists and the delivery volume's `channel_prices`. Cost is confidential and changes with every receipt, so it never sits on the catalog row a storefront reads.
+- **Modifier options and bundle components are items.** A modifier option has a price, a stock level and its own modifiers; a bundle component has a SKU and a count in the warehouse. Making both items gives them all of that, and lets a kit sell as one line and ship as its parts.
+- **External IDs are a map, not columns.** Every item carries POS, ERP and marketplace IDs in `external_refs` keyed by system; listings carry the channel's own ID; the `(channel_partner, external_ref)` uniqueness on orders is how the same marketplace order or retailer PO injected twice is caught.
+- **No tenant above merchants, unless you sell software.** A brand or a marketplace is one operator, and the merchant is the unit of scope. A commerce platform, point-of-sale vendor or ordering vendor selling to many merchants adds a tenant above merchants exactly as [Multi-Tenancy](/docs/architecture/multi-tenancy#tenant-hierarchies) describes.
+- **Money is the Payments model.** `order_payments` points at authorizations, captures and refunds in the [Payments](/books/payments/card-payments#the-core-data-model) volume; payouts are that volume's [Payouts & Settlement](/books/payments/payouts-and-settlement); a dispute is its own object ([Refunds and Disputes Are Their Own Objects](/docs/payments/payment-states#refunds-and-disputes-are-their-own-objects)). Marketplace settlements and retailer remittances are documents and charges here, reconciled to orders.
+- **A subscription is a recurring promise, wherever it lives.** A Commerce `subscriptions` row, a delivery app's membership ([Subscriptions & Loyalty](/books/commerce/delivery-subscriptions#how-to-build-it)) and a Field Operations [service agreement](/books/field-operations/service-agreements) are the same shape: a schedule, terms, a stored payment method and a renewal. The difference is what each renewal produces (an order, a fee waiver, a visit), and the same renewal and cancellation law applies to all three ([Subscriptions](/docs/payments/subscriptions#the-law-of-automatic-renewal)).
+- **Documents are kept as exchanged.** An EDI 856 or a retailer's remittance is evidence in a deduction dispute; storing the bytes as received, with a parsed copy in the owning tables, is what makes a dispute winnable.
+- **Emit life-cycle events.** `order.placed`, `order.cancelled`, `fulfillment.created`, `shipment.shipped`, `shipment.delivered`, `return.received`, `inventory_level.changed`, `subscription.renewed` and the delivery events are what fulfillment, notifications, channels, accounting and reporting subscribe to ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)).
 
-Each later chapter extends a defined part of this spine:
+Each later chapter extends a defined part of this spine. Chapters already published link; the rest are listed by title and slug, and their table names are the plan each chapter is written to:
 
-| Table | Extended by |
-| --- | --- |
-| `merchants`, `locations` | [The Delivery Landscape](/books/commerce/delivery-landscape#how-to-build-it) (`sales_channels`, `merchant_channel_enrollments`, `delivery_providers`); [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#how-to-build-it) (`listing_agreements`, `location_hours`, `location_pauses`); [Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law#how-to-build-it) (`commission_plans`, `fee_rules`, `merchant_statements`) |
-| `items`, `location_items`, modifiers | [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#how-to-build-it) (`menus`, `menu_hours`, `menu_categories`, `menu_category_items`, `channel_prices`, `menu_publications`, `availability_changes`, `catalog_imports`, availability prediction columns) |
-| `orders`, `order_lines` | [Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#how-to-build-it) (`order_status_changes`, `prep_estimates`); [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#how-to-build-it) (`substitution_preferences`, `line_substitutions`); [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#how-to-build-it) (`order_issues`, `issue_lines`, `issue_resolutions`, `error_charges`, `error_charge_disputes`) |
-| `order_charges` | [Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law#how-to-build-it) (charge classes, `price_displays`); [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions#how-to-build-it) (`benefit_applications`) |
-| `fulfillments` | [Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#how-to-build-it) (`fulfillment_events`, `delivery_offers`, `batches`, `batch_stops`) |
-| `customers` | [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions#how-to-build-it) (`membership_plans`, `memberships`, `membership_periods`, `membership_cancellations`); [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#how-to-build-it) (`identity_links`, `promotion_redemptions`) |
+| Chapter | Extends | Adds |
+| --- | --- | --- |
+| [The Commerce Landscape](/books/commerce/commerce-landscape#how-to-build-it) | `merchants`, `external_refs` | `connected_systems` |
+| [Business Models & Unit Economics](/books/commerce/business-models#how-to-build-it) | `order_charges`, `inventory_items` | `item_costs`, `acquisition_spend`, contribution views |
+| [Choosing & Hosting a Store](/books/commerce/choosing-a-platform#how-to-build-it) | `connected_systems` | `export_runs` |
+| Products, Variants & Bundles (`products-and-variants`) | `products`, `items`, `bundle_components` | `product_options`, `product_option_values`, `item_identifiers`, `pack_sizes`, `digital_deliveries` |
+| Product Information & Content (`product-information`) | `products`, `items` | `attributes`, `attribute_values`, `categories`, `item_categories`, `media_assets`, `localized_content` |
+| Pricing & Price Lists (`pricing`) | `price_lists`, `price_list_items`, `companies` | `price_list_assignments`, `price_history`, `map_policies` |
+| Promotions, Discounts & Gift Cards (`promotions-and-gift-cards`) | `order_charges`, `promotion_redemptions` | `promotions`, `discount_codes`, `discount_allocations`, `gift_cards`, `gift_card_transactions`, `store_credit_accounts` |
+| Site Search & Merchandising (`site-search-and-merchandising`) | `products`, `items` | `collections`, `collection_items`, `search_synonyms`, `merchandising_rules` |
+| Storefronts (`storefronts`) | `locations` (online) | `storefronts`, `url_redirects` |
+| Cart & Checkout (`cart-and-checkout`) | `carts`, `cart_lines`, `orders` | `checkouts`, `shipping_quotes` |
+| Taking Payment in Commerce (`taking-payment`) | `order_payments`, `fulfillments` | `capture_plans` |
+| Sales Tax, VAT & Duties (`sales-tax-vat-and-duties`) | `order_charges`, `items.tax_category` | `tax_registrations`, `exemption_certificates`, `tax_calculations` |
+| Customers, Accounts & Privacy (`customers-and-accounts`) | `customers` | `customer_addresses`, `marketing_consents`, `customer_merges`, `privacy_requests`, `customer_segments` |
+| Consumer Protection Online (`online-consumer-protection`) | `orders`, `fulfillments` | `shipping_promises`, `delay_notices`, `warranty_terms` |
+| Order Management (`order-management`) | `orders`, `fulfillments`, `order_status_changes` | `order_holds`, `order_edits`, `sourcing_rules`, `sourcing_decisions` |
+| Inventory (`inventory`) | `inventory_items`, `inventory_levels` | `inventory_movements`, `inventory_reservations`, `cycle_counts`, `safety_stock_rules` |
+| Warehouses, 3PLs & Fulfillment Networks (`warehouses-and-3pls`) | `locations`, `fulfillments` | `fulfillment_provider_accounts`, `inbound_transfers`, `pick_tasks` |
+| Shipping & Carriers (`shipping-and-carriers`) | `shipments` | `carrier_accounts`, `rate_quotes`, `packages`, `tracking_events` |
+| Returns & Exchanges (`returns-and-exchanges`) | `returns`, `return_lines` | `return_policies`, `return_inspections`, `exchanges` |
+| Omnichannel Fulfillment (`omnichannel-fulfillment`) | `fulfillments`, `inventory_levels` | `pickup_slots`, `store_fulfillment_capacity` |
+| Purchasing & Replenishment (`purchasing-and-replenishment`) | `suppliers`, `purchase_orders`, `purchase_order_lines` | `supplier_items`, `receipts`, `receipt_lines`, `reorder_rules`, `landed_cost_allocations` |
+| Cross-Border Commerce (`cross-border-commerce`) | `price_lists` (market), `items` | `markets`, `item_customs`, `customs_declarations` |
+| Subscription Commerce (`subscription-commerce`) | `subscriptions`, `subscription_lines` | `subscription_changes`, `billing_attempts`, `prepaid_periods` |
+| Memberships & Loyalty (`memberships-and-loyalty`) | `membership_plans`, `memberships` | `loyalty_accounts`, `loyalty_ledger`, `loyalty_tiers` |
+| Auto-Renewal & Cancellation Law (`auto-renewal-law`) | `subscriptions`, `membership_cancellations` | `renewal_consents`, `renewal_notices`, `subscription_cancellations` |
+| Selling on Amazon (`selling-on-amazon`) | `listings`, `orders`, `documents` | `marketplace_settlements`, `settlement_lines`, `account_health_events` |
+| Retail Media & Marketplace Ads (`retail-media`) | `listings`, `acquisition_spend` | `ad_campaigns`, `ad_spend_daily`, `attributed_sales` |
+| Walmart, eBay, Etsy, TikTok Shop & Others (`other-marketplaces`) | `listings`, `sales_channels` | `marketplace_fee_schedules`, `listing_requirements` |
+| Multichannel Listing & Feeds (`multichannel-listing`) | `listings` | `feeds`, `feed_runs`, `listing_errors`, `channel_category_mappings` |
+| Brand Protection (`brand-protection`) | `brands`, `listings` | `brand_registrations`, `authorized_resellers`, `infringement_reports`, `map_violations` |
+| Running Your Own Marketplace (`running-a-marketplace`) | `merchants`, `order_charges` | `seller_agreements`, `commission_rules`, `seller_verifications` |
+| Reviews & Ratings (`reviews-and-ratings`) | `products`, `order_lines` | `reviews`, `review_media`, `review_moderation_actions` |
+| Agentic & AI Shopping (`agentic-commerce`) | `carts`, `orders` | `agent_clients`, `agent_checkout_sessions` |
+| Wholesale & Retail Distribution (`wholesale-and-retail-distribution`) | `companies`, `orders`, `documents` | `trading_partners`, `routing_guides`, `deductions`, `deduction_disputes`, `coop_agreements`, `sell_through_reports` |
+| EDI (`edi`) | `documents` | `edi_interchanges`, `edi_partner_maps`, `functional_acks` |
+| B2B Commerce (`b2b-commerce`) | `companies`, `company_contacts`, `price_lists` | `company_locations`, `payment_terms`, `credit_limits`, `quotes`, `quote_lines`, `approval_rules`, `punchout_sessions` |
+| Drop Ship & Print on Demand (`drop-ship-and-print-on-demand`) | `suppliers`, `fulfillments`, `locations` | `supplier_routes`, `print_files` |
+| Point of Sale (`point-of-sale`) | `orders`, `order_payments`, `locations` | `pos_devices`, `tenders`, `receipts` |
+| Store Operations (`store-operations`) | `locations`, `inventory_levels` | `staff`, `staff_roles`, `cash_drawers`, `drawer_counts`, `shrink_events` |
+| Restaurants & Food Service (`restaurants`) | `orders`, `items`, modifiers | `dining_tables`, `kitchen_tickets`, `kitchen_stations`, `tip_pools` |
+| [The Delivery Landscape](/books/commerce/delivery-landscape#how-to-build-it) | `merchants`, `locations` | `sales_channels`, `merchant_channel_enrollments`, `delivery_providers` |
+| [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#how-to-build-it) | `merchants`, `locations`, `items`, `location_items`, modifiers, `order_lines` | `listing_agreements`, `location_hours`, `location_pauses`, `menus`, `menu_hours`, `menu_categories`, `menu_category_items`, `channel_prices`, `menu_publications`, `availability_changes`, `catalog_imports`, `substitution_preferences`, `line_substitutions` |
+| [Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#how-to-build-it) | `orders`, `fulfillments` | `order_status_changes`, `prep_estimates`, `fulfillment_events`, `delivery_offers`, `batches`, `batch_stops` |
+| [Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law#how-to-build-it) | `order_charges`, `locations` | `commission_plans`, `fee_rules`, `price_displays`, `merchant_statements` |
+| [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions#how-to-build-it) | `customers`, `order_charges` | `membership_plans`, `memberships`, `membership_periods`, `membership_cancellations`, `benefit_applications` |
+| [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#how-to-build-it) | `orders`, `order_lines`, `customers` | `order_issues`, `issue_lines`, `issue_resolutions`, `error_charges`, `error_charge_disputes`, `identity_links`, `promotion_redemptions` |
+| Alcohol, Tobacco & Age-Restricted Goods (`age-restricted-goods`) | `items`, `orders`, `fulfillments` | `restricted_categories`, `age_verifications`, `shipping_eligibility_rules` |
+| Cannabis & Hemp (`cannabis-and-hemp`) | `inventory_levels`, `orders` | `compliance_tags`, `state_reporting_events`, `purchase_limits` |
+| Pesticides, Chemicals & Hazmat (`pesticides-chemicals-and-hazmat`) | `items`, `shipments`, `documents` | `product_registrations`, `hazmat_classifications`, `prop65_warnings` |
+| Product Safety, Compliance & Recalls (`product-safety-and-recalls`) | `items`, `documents` | `certificates`, `recalls`, `recall_notifications`, `safety_incidents` |
+| Automotive Retail (`automotive-retail`) | `items`, `orders` | `vehicles`, `deals`, `fi_products`, `title_registrations` |
+| Email, SMS & Lifecycle Marketing (`email-sms-and-lifecycle`) | `customers`, `marketing_consents` | `campaigns`, `flows`, `message_sends`, `suppressions` |
+| Acquisition & Attribution (`acquisition-and-attribution`) | `acquisition_spend`, `orders` | `touchpoints`, `attributions`, `affiliates` |
+| Customer Service (`customer-service`) | `orders`, `order_issues` | `tickets`, `ticket_messages` |
+| Commerce Architecture (`commerce-architecture`) | every table | `webhook_subscriptions`, `webhook_deliveries`, `app_installations` |
+| ERP & Integrations (`erp-and-integrations`) | `connected_systems`, `external_refs` | `sync_jobs`, `record_mappings` |
+| Commerce Accounting (`commerce-accounting`) | `order_charges`, `order_payments`, `inventory_items` | `journal_entries`, `payout_reconciliations`, `inventory_cost_layers`, `deferred_revenue_schedules` |
+| Commerce Fraud & Abuse (`commerce-fraud`) | `orders`, `identity_links` | `risk_assessments`, `bot_signals` |
+| Store Security & PCI (`store-security-and-pci`) | `locations` (online) | `payment_page_scripts`, `script_change_events`, `admin_access_grants` |
+| Peak Season & Drops (`peak-season`) | `items`, `inventory_levels` | `drops`, `drop_allocations`, `waiting_room_tokens` |
+| AI in Commerce (`ai-in-commerce`) | `products`, `localized_content` | `ai_generations` |
+| Commerce Metrics (`commerce-metrics`) | `orders`, `order_charges`, `returns` | `metric_definitions`, `metric_snapshots` |
+| Replatforming & Migration (`replatforming`) | `export_runs`, `url_redirects` | `migration_batches`, `id_crosswalks`, `token_migrations` |
 
 ## Auditing
 
-The records in this chapter are the ones merchants, customers, regulators and courts ask about later:
+The records in this chapter are the ones customers, retailers, marketplaces, tax authorities, regulators and courts ask about later:
 
-- **What was sold, as sold.** Every order line with its name, price, modifiers and channel at the moment of sale, so a refund, an error charge or a pricing complaint is judged against what the customer actually bought.
-- **What was charged, line by line.** Every fee, tax, tip, discount and commission with its payer, payee and the rule or plan version that produced it; a city regulator checking a cap and an attorney general checking tips both read these rows.
-- **Who moved the order.** Every fulfillment with its provider, external ID and status history, so a missing order can be placed with a courier or a network.
-- **Every money movement.** Authorizations, captures, refunds, credits and payouts as append-only records tied to the order ([Payment States & Ledgers](/docs/payments/payment-states)).
+- **What was sold, as sold.** Every order line with its name, SKU, price, modifiers and channel at the moment of sale, so a refund, a deduction or a pricing complaint is judged against what the buyer actually bought.
+- **What was charged, line by line.** Every shipping charge, fee, tax, tip, discount, commission, referral fee and allowance with its payer, payee and the rule, plan or agreement that produced it; a city regulator checking a cap, a state auditor checking tax and a seller checking a settlement all read these rows.
+- **Who moved the goods.** Every fulfillment with its location, provider, lines and shipments, and every shipment with its carrier and tracking number, so a missing parcel or a short-shipped PO can be placed.
+- **What was exchanged with partners.** Every purchase order, acknowledgment, ship notice, invoice and remittance as received or sent, kept as bytes.
+- **Every money movement.** Authorizations, captures, refunds, credits, settlements and payouts as append-only records tied to the order ([Payment States & Ledgers](/docs/payments/payment-states)).
 
 The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/architecture/audit-trails).
 
 ## What This Means for the System You Build
 
-- **Separate merchant from location,** and resolve hours, prices, availability, fee caps, tax and payees at the location.
-- **Define an item once and sell it per location,** with price and availability on the location item.
-- **Model modifier options as items** in groups with selection limits, so they can be priced, stocked and nested.
-- **Make channel a property of the order,** with the partner's order ID unique per partner.
+- **Separate merchant from location,** and resolve hours, stock, prices, tax and payees at the location; treat an online store, a 3PL and a marketplace warehouse as locations too.
+- **Separate product from item,** and hang SKU, barcode, stock, cost and price off the item.
+- **Make channel a property of the order,** with the partner's order ID or the buyer's PO number unique per partner, and keep the merchant of record on the order.
 - **Store every non-goods amount as a charge line** with a payer, a payee and the rule that produced it, and compute totals from lines.
-- **Keep fulfillment separate from the order,** so providers can change without the order changing.
-- **Snapshot names and prices on order lines.**
+- **Keep fulfillments and shipments separate from the order,** so splits, providers and carriers can change without the order changing.
+- **Compute available stock** from on hand and committed per location, never store it.
+- **Keep the two directions of purchase orders apart:** a retailer's PO is your order; your PO is a purchase order to a supplier.
+- **Snapshot names, SKUs and prices on order lines,** and keep partner documents as exchanged.
 - **Point at the Payments model** for every authorization, capture, refund and payout instead of rebuilding it.
-- **Emit life-cycle events** for orders and fulfillments, and let dispatch, payouts and reporting consume them.
+- **Emit life-cycle events** for orders, fulfillments, shipments, inventory and subscriptions, and let every other system consume them.
 
 ## References
 
-**Reference**
+**Filings**
 
-- [DoorDash: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1792789/000179278926000013/dash-20251231.htm), the Marketplace and Commerce Platform, including Drive white-label delivery fulfillment
-- [Uber Technologies: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1543151/000154315126000015/uber-20251231.htm), the Delivery segment and Uber Direct as white-label delivery for retailers and restaurants
-- [Maplebear (Instacart): Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1579091/000157909126000018/cart-20251231.htm), the marketplace, the Enterprise platform and storefront technology for grocers
-- [Olo: Rails](https://www.olo.com/rails), syncing menus, pricing, location data and item availability with marketplaces and ending manual entry of marketplace orders into the POS
-- [Olo: Dispatch](https://www.olo.com/dispatch), delivery from a restaurant's own site and app through a network of delivery service providers
-- [Gopuff: Introducing Gopuff's new website (September 18, 2025)](https://markets.financialcontent.com/ms.intelvalue/article/bizwire-2025-9-18-introducing-gopuffs-new-website-the-future-of-shopping), owning the inventory and operating its own micro-fulfillment centers
+- [Amazon.com: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm), gross revenue for items sold from inventory and net revenue for third-party sales, net sales by group including third-party seller services
+- [Amazon.com: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000002/amzn-20251231xex991.htm), third-party sellers' 61% of paid units in the fourth quarter
+- [Best Buy: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/764478/000076447826000009/bby-20260131.htm), the 22.5% gross profit rate
+- [Walmart: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/104169/000010416926000055/wmt-20260131.htm), the 24.2% consolidated gross profit rate
+- [Target: Form 10-K for fiscal 2025](https://www.sec.gov/Archives/edgar/data/27419/000002741926000016/tgt-20260131.htm), the 27.9% gross margin rate
+- [Costco: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm), gross margin of 11.09% of net sales and membership fees
+- [ZAGG Inc: Form 10-K for 2019](https://www.sec.gov/Archives/edgar/data/1296205/000129620520000040/zagg-20191231.htm), net sales by channel and customers over 10% of net sales
+- [Chewy: Form 10-K for fiscal 2025](https://www.sec.gov/Archives/edgar/data/1766502/000176650226000034/chwy-20260201.htm), Autoship customer sales and their share of net sales
+- [DoorDash: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1792789/000179278926000013/dash-20251231.htm), the Marketplace and Drive white-label delivery fulfillment
+- [Uber Technologies: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1543151/000154315126000015/uber-20251231.htm), the Delivery segment and Uber Direct
+
+**Published fees**
+
+- [Shopify: Pricing](https://www.shopify.com/pricing), plan prices, online and in-person card rates and the fee for third-party payment providers
+- [Stripe: Pricing](https://stripe.com/pricing), standard online card pricing
+- [PayPal: Merchant fees](https://www.paypal.com/us/business/paypal-business-fees), the PayPal Checkout rate and fixed fee
+- [Square: Our fees](https://squareup.com/us/en/payments/our-fees), in-person and online store rates
+- [Amazon: Selling plans and fees](https://sell.amazon.com/pricing), the Professional and Individual plans and referral fees
+- [Walmart Marketplace: Referral fees](https://marketplace.walmart.com/referral-fees/), no monthly fee and referral fees by category
+- [eBay: Selling fees](https://www.ebay.com/help/selling/fees-credits-invoices/selling-fees?id=4822), the final value fee and per-order fee
+- [Etsy: Fees and Payments Policy](https://help.etsy.com/hc/en-us/articles/360035902374-Fees-and-Payments-Policy), listing and transaction fees
+- [Etsy: Payment processing fees](https://help.etsy.com/hc/en-us/articles/115015628847), the US processing fee
+- [Recharge: Pricing](https://getrecharge.com/pricing/), the Starter plan fee and transaction fee
+- [Skio: Pricing](https://skio.com/pricing), the transaction fee on subscription orders
+
+**Standards and research**
+
+- [X12: Transaction sets](https://x12.org/products/transaction-sets), the 810, 850, 855 and 856 transaction sets and their names
+- [NRF: Consumers expected to return nearly $850 billion in merchandise in 2025](https://nrf.com/media-center/press-releases/consumers-expected-to-return-nearly-850-billion-in-merchandise-in-2025), the 19.3% online return rate
+
+**Platforms**
+
+- [Olo: Rails](https://www.olo.com/rails), syncing menus, pricing, location data and item availability with marketplaces
+- [Olo: Dispatch](https://www.olo.com/dispatch), delivery from a restaurant's own site through a network of delivery service providers
