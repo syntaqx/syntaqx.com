@@ -80,6 +80,31 @@ describe("markdownToHtml diagrams", () => {
     // The first render loads the syntax highlighter, which can take seconds.
   }, 30_000);
 
+  it("renders GitHub Flavored Markdown: tables, strikethrough, task lists, autolinks, footnotes", async () => {
+    const html = await markdownToHtml(
+      "| a | b |\n| - | - |\n| 1 | 2 |\n\n~~gone~~\n\n- [x] done\n- [ ] todo\n\nSee https://example.com.\n\nNoted.[^1]\n\n[^1]: The footnote.",
+    );
+    expect(html).toContain("<table>");
+    expect(html).toContain("<del>gone</del>");
+    expect(html).toContain('<input type="checkbox" checked disabled>');
+    expect(html).toContain('<a href="https://example.com">https://example.com</a>');
+    expect(html).toContain('data-footnotes');
+  });
+
+  it("turns a GitHub alert blockquote into a titled callout", async () => {
+    const html = await markdownToHtml("> [!NOTE] Lucky me\n> Bought in **2014**.");
+    expect(html).toMatch(/^<aside class="callout callout-note"><p class="callout-title"><svg viewBox="0 0 16 16" aria-hidden="true">.*<\/svg>Lucky me<\/p>/);
+    expect(html).toContain("<p>Bought in <strong>2014</strong>.</p>");
+    expect(html).not.toContain("[!NOTE]");
+    expect(html).not.toContain("<blockquote");
+  });
+
+  it("defaults the callout title to its type and leaves plain quotes alone", async () => {
+    expect(await markdownToHtml("> [!warning]\n> Careful.")).toContain('<p class="callout-title"><svg viewBox="0 0 16 16" aria-hidden="true">');
+    expect(await markdownToHtml("> [!warning]\n> Careful.")).toContain("</svg>Warning</p>");
+    expect(await markdownToHtml("> Just a quote.")).toContain("<blockquote>");
+  });
+
   it("leaves other images alone", async () => {
     const html = await markdownToHtml("![A photo](/images/photo.png)");
     expect(html).toContain('<img src="/images/photo.png" alt="A photo">');

@@ -370,6 +370,43 @@ function rehypeDiagrams() {
   };
 }
 
+const CALLOUT_ICONS: Record<string, string> = {
+  note: '<circle cx="8" cy="8" r="6.5"/><path d="M8 7.25v4M8 4.75v.01"/>',
+  tip: '<path d="M5.75 12.5h4.5M6.5 14.75h3M8 1.75a4.5 4.5 0 0 0-2.6 8.17c.4.3.6.7.6 1.2v.38h4v-.38c0-.5.2-.9.6-1.2A4.5 4.5 0 0 0 8 1.75Z"/>',
+  important: '<rect x="1.75" y="1.75" width="12.5" height="10" rx="2"/><path d="M5 11.75v2.5l3-2.5M8 4.5v3.5M8 9.75v.01"/>',
+  warning: '<path d="M8 1.75 1.25 13.5h13.5L8 1.75Z"/><path d="M8 6v3.5M8 11.25v.01"/>',
+  caution: '<path d="M5.25 1.75h5.5l3.5 3.5v5.5l-3.5 3.5h-5.5l-3.5-3.5v-5.5l3.5-3.5Z"/><path d="M8 4.75v4M8 10.75v.01"/>',
+};
+
+/**
+ * Callouts, in GitHub's alert syntax so the Markdown reads right everywhere:
+ * a blockquote that opens with `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`,
+ * `[!WARNING]` or `[!CAUTION]` becomes an aside with an icon. Text after the
+ * marker on its line replaces the default title. Styled under `.callout`.
+ */
+function rehypeCallouts() {
+  return (tree: HastNode) => {
+    const walk = (n: HastNode) => {
+      n.children?.forEach(walk);
+      if (n.tagName !== "blockquote") return;
+      const first = n.children?.find((c) => c.tagName === "p");
+      const lead = first?.children?.[0];
+      const match = lead?.type === "text" ? /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*([^\n]*)\n?/i.exec(lead.value ?? "") : null;
+      if (!first || !lead || !match) return;
+      const kind = match[1].toLowerCase();
+      const title = escapeHtml(match[2].trim() || kind[0].toUpperCase() + kind.slice(1));
+      lead.value = (lead.value ?? "").slice(match[0].length);
+      if (!lead.value) first.children = first.children?.slice(1).filter((c, i) => i || c.tagName !== "br");
+      if (!first.children?.some((c) => c.type !== "text" || c.value?.trim())) n.children = n.children?.filter((c) => c !== first);
+      const icon = `<svg viewBox="0 0 16 16" aria-hidden="true">${CALLOUT_ICONS[kind]}</svg>`;
+      n.tagName = "aside";
+      n.properties = { className: ["callout", `callout-${kind}`] };
+      n.children = [{ type: "raw", value: `<p class="callout-title">${icon}${title}</p>` }, ...(n.children ?? [])];
+    };
+    walk(tree);
+  };
+}
+
 export async function markdownToHtml(
   markdown: string,
   toc?: Heading[],
@@ -379,6 +416,7 @@ export async function markdownToHtml(
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeSectionIds(toc))
     .use(rehypeDiagrams)
+    .use(rehypeCallouts)
     .use(rehypeShiki, {
       themes: {
         dark: "vitesse-dark",
