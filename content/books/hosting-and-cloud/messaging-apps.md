@@ -20,9 +20,11 @@ Every large CPaaS sells WhatsApp next to SMS, as a partner of Meta's, and the pr
 | **Twilio** | $0.005 per message, "inbound or outbound" | "Meta's per-template message fee, which Twilio passes through to customers"; its calculator shows utility and authentication starting at $0.0034 a message | $0.001 for a message that ends in a failed state; pricing "current as of September 2026" |
 | **Bird** (formerly MessageBird) | A processing fee "on every outbound message, in every category," $0.0050 in the US | "Pay Bird's processing rate plus any Meta fee" | Monthly deposit plans from $0 to $2,500 that become spendable balance |
 | **360dialog** | A monthly license per number: €49, €99 or €500 by tier; a partner platform from €250 a month plus a fee per channel | Listed on every plan as "+Meta WhatsApp Messaging Fees"; the partner platform states "zero message markup" | Prices in euros, page stamped October 26, 2026 |
+| **Vonage** | A platform fee per message that starts "as low as 0.0001 Euros (0.00016 USD)" and "adjusts per volume and region" | "WhatsApp fees apply on a per message basis for each delivered message. See Meta for pricing details." | WhatsApp calling carries a separate platform fee of $0.004 a minute; page viewed October 28, 2026 |
+| **Sinch** | A Sinch fee set by "your agreement with Sinch - platform access, per-message service fees and any inclusions in your plan"; no per-message figure is published | "Meta WhatsApp fees are separate from, and in addition to, the fees Sinch charges you" | Sinch's fee still applies to the 1,000 service messages a month that are free of Meta's fee |
 | **Infobip** | "WhatsApp is charged per message. Each type of message template and free-form message has its price." | Not stated separately | Neither its own fee nor Meta's is broken out on the page |
 
-Three models, then: a per-message markup on top of Meta's fee (Twilio, Bird), a flat license per number with Meta's fee passed through (360dialog), and a bundled per-message price (Infobip). Each has to change when Meta changes its own prices, which it did four times in 2026 alone.
+Three models, then: a per-message markup on top of Meta's fee (Twilio, Bird and Vonage publish theirs; Sinch sets its own by contract), a flat license per number with Meta's fee passed through (360dialog), and a bundled per-message price (Infobip). Each has to change when Meta changes its own prices, which it did four times in 2026 alone.
 
 ## How It Got Here
 
@@ -67,7 +69,7 @@ Each number also has a quality rating (the API returns values such as `GREEN`), 
 
 ### The Customer Service Window
 
-The rule at the center of the platform: when a user messages or calls the business, "a 24-hour timer called a customer service window starts," and "if the user messages or calls you again before the timer expires, the timer resets to 24 hours." While it is open the business may send any message type, free-form text included. "When the window closes, you can only send pre-approved template messages." Ads that click through to WhatsApp open a separate free entry point window in which Meta doesn't charge for template or service messages.
+The rule at the center of the platform: when a user messages or calls the business, "a 24-hour timer called a customer service window starts," and "if the user messages or calls you again before the timer expires, the timer resets to 24 hours." While it is open the business may send any message type, free-form text included. "When the window closes, you can only send pre-approved template messages." A user who messages from an ad that clicks to WhatsApp, on the Android or iOS app, opens a customer service window; the business's first reply inside it is free and opens a free entry point window, which "may remain open for up to 7 days" from that reply and in which Meta doesn't charge for marketing, utility, authentication or service messages (Meta Business Agent messages are still charged). Meta's page names only click-to-WhatsApp ads as the entry point; some resellers' help pages, Sinch's among them as of October 2026, still describe a 72-hour window that a Facebook Page call-to-action button also opens, so the platform should rate from Meta's documentation.
 
 For the platform this is a gate, not a guideline: a free-form send outside a window fails at Meta, so the sender should check the window before sending and either fail fast or require a template. The window is per business number and user, and an inbound message on any route to the customer's webhook has to update it.
 
@@ -351,7 +353,7 @@ Notes on the sketch:
 
 **Platform documentation**
 
-- [Meta: Pricing on the WhatsApp Business Platform](https://developers.facebook.com/docs/whatsapp/pricing), per-message pricing from July 1, 2025, charging on delivery, categories, free tier, October 1, 2026 changes, volume tiers and the 2026 rate updates
+- [Meta: Pricing on the WhatsApp Business Platform](https://developers.facebook.com/docs/whatsapp/pricing), per-message pricing from July 1, 2025, charging on delivery, categories, free tier, the free entry point window of up to 7 days, October 1, 2026 changes, volume tiers and the 2026 rate updates
 - [Meta: Conversation-based pricing](https://developers.facebook.com/docs/whatsapp/pricing/conversationpricing), deprecated and replaced on July 1, 2025; service conversations free from November 1, 2024
 - [Meta: Authentication-international rates](https://developers.facebook.com/docs/whatsapp/pricing/authentication-international-rates), cross-border eligibility, the 750,000-message threshold and market launch dates
 - [Meta: On-Premises API sunset](https://developers.facebook.com/docs/whatsapp/on-premises/sunset), January 9, 2024, July 1, 2024 and October 23, 2025
@@ -388,6 +390,8 @@ Notes on the sketch:
 - [Bird: WhatsApp pricing](https://bird.com/pricing/whatsapp), the processing fee on outbound messages and deposit plans
 - [360dialog: Pricing](https://www.360dialog.com/pricing), licenses per number and Meta's fees on every plan
 - [Infobip: WhatsApp Business pricing](https://www.infobip.com/whatsapp-business/pricing), per-message prices by template type
+- [Vonage: WhatsApp API pricing](https://www.vonage.com/communications-apis/messages/features/whatsapp/pricing/), the per-message platform fee from 0.0001 euros over Meta's fee, the calling fee
+- [Sinch Engage: How WhatsApp pricing works](https://support.app.sinch.com/hc/en-us/articles/17443227354895-How-WhatsApp-pricing-works), Meta's and Sinch's fees as separate layers, Sinch's fee set by agreement, the 72-hour entry point window it describes
 - [Twilio: What is an alphanumeric sender ID](https://www.twilio.com/docs/glossary/what-alphanumeric-sender-id), one-way brand senders and the 11-character limit
 - [Infobip: Alphanumeric senders](https://www.infobip.com/docs/resources-and-numbers/alphanumeric-senders), no replies and approval in most countries
 - [Twilio: SMS guidelines for the United States](https://www.twilio.com/en-us/guidelines/us/sms), alphanumeric not supported
