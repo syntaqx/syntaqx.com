@@ -57,7 +57,7 @@ The formats, as of October 2026, per MDN:
 | **JPEG** | Universal | The fallback for photographs, and the only format several pipelines can carry metadata in |
 | **WebP** | Every current major browser (Safari from 14 on macOS Big Sur) | The safe modern default, still and animated |
 | **AVIF** | Chrome 85, Edge 121, Firefox 93, Safari 16.1 | The smallest files for photographs; slow to encode |
-| **JPEG XL** | Chrome 155, Edge 155, Firefox 158, Safari 17 | Newly broad; MDN still advises an AVIF, WebP or JPEG alternative |
+| **JPEG XL** | Chrome 155, Firefox 158, Safari 17 (partial on caniuse); Edge 155 per MDN, not supported per caniuse | Newly broad; MDN still advises an AVIF, WebP or JPEG alternative |
 | **HEIC** | Safari only (caniuse puts global support at 16.93%) | Accept as input; never serve |
 | **GIF** | Universal | Accept as input; serve animation as video ([GIF to Video](#gif-to-video)) |
 
@@ -241,6 +241,7 @@ Notes on the sketch:
 **Browser and web platform**
 
 - [MDN: Image file type and format guide](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types), browser support and fallback advice for AVIF, WebP, JPEG XL, JPEG and GIF, the `<picture>` element
+- [Can I use: JPEG XL image format](https://caniuse.com/jpegxl), Chrome 155, Firefox 158, Safari partial from 17, Edge not supported (October 2026)
 - [MDN: List of default Accept values](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation/List_of_default_Accept_values), which browsers advertise `image/avif` and `image/webp`
 - [MDN: Save-Data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Save-Data), the header, its experimental status and `Vary: Save-Data`
 - [MDN: image-orientation](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/image-orientation), browsers apply EXIF orientation by default
