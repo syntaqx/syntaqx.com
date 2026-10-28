@@ -3,6 +3,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
+import { CodeTabsScript } from "@/components/code-tabs";
 import { ChapterKeys } from "@/components/chapter-keys";
 import { JsonLd } from "@/components/json-ld";
 import { DocsHeader } from "@/components/docs-header";
@@ -114,6 +115,7 @@ export async function DocArticle({
         </aside>
       )}
       <CopyCodeScript />
+      <CodeTabsScript />
       <ChapterKeys prev={prev?.href} next={next?.href} />
     </article>
   );
