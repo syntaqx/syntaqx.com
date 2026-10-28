@@ -2,7 +2,7 @@
 title = "Voice Platforms"
 description = "Voice from the provider's side: SIP trunking, STIR/SHAKEN signing and attestation, the Robocall Mitigation Database, and call labeling and branded calling."
 category = "Hosting & Cloud Industry"
-order = 2183
+order = 2184
 part = "Communications Platforms"
 tags = ["voice", "sip", "stir-shaken", "robocalls", "rmd", "branded-calling"]
 +++

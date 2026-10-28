@@ -2,7 +2,7 @@
 title = "GPU & AI Clouds"
 description = "Renting GPUs: hyperscaler instances and capacity blocks, neoclouds and take-or-pay contracts, marketplaces, serverless GPU, rack power and export controls."
 category = "Hosting & Cloud Industry"
-order = 2207
+order = 2208
 part = "Running the Provider"
 tags = ["gpu", "ai", "neoclouds", "capacity-reservations", "export-controls"]
 +++

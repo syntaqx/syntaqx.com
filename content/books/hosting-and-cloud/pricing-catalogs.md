@@ -2,7 +2,7 @@
 title = "Pricing Catalogs"
 description = "SKUs, attributes and price shapes, machine-readable price lists, the pricing page as the legal source of truth, and how providers change prices with notice."
 category = "Hosting & Cloud Industry"
-order = 2189
+order = 2190
 part = "Metering and Billing"
 tags = ["pricing", "catalog", "skus", "price-changes", "billing"]
 +++

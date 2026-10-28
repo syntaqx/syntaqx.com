@@ -2,7 +2,7 @@
 title = "Egress & Switching"
 description = "What providers charge to move data out, the 2024 exit waivers, multicloud transfer at cost, and the EU Data Act's switching rules and charge phase-out."
 category = "Hosting & Cloud Industry"
-order = 2203
+order = 2204
 part = "Market Rules and Compliance"
 tags = ["egress", "data-transfer", "switching", "eu-data-act", "pricing"]
 +++

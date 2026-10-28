@@ -3,7 +3,7 @@ title = "Commitments, Discounts & Marketplaces"
 nav_title = "Commitments & Marketplaces"
 description = "Reserved capacity, savings plans and committed use discounts, spend commitments and shortfalls, spot, GPU reservations, and marketplaces with private offers."
 category = "Hosting & Cloud Industry"
-order = 2191
+order = 2192
 part = "Metering and Billing"
 tags = ["commitments", "savings-plans", "spot", "marketplaces", "billing"]
 +++

@@ -2,7 +2,7 @@
 title = "SLAs & Service Credits"
 description = "How hosting and cloud SLAs measure uptime, credit tiers across providers, claims and deadlines, sole-remedy and exclusion clauses, and computing a credit."
 category = "Hosting & Cloud Industry"
-order = 2195
+order = 2196
 part = "Metering and Billing"
 tags = ["sla", "service-credits", "uptime", "contracts", "billing"]
 +++

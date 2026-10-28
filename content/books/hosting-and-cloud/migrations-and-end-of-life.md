@@ -3,7 +3,7 @@ title = "Migrations, Shutdowns & End of Life"
 nav_title = "Migrations & End of Life"
 description = "Product sunsets from Heroku's free tier to Google Domains and Chef Infra Server: notice, forced migrations, version end of life, data export and getting out."
 category = "Hosting & Cloud Industry"
-order = 2211
+order = 2212
 part = "Running the Provider"
 tags = ["end-of-life", "sunsets", "migrations", "data-export", "deprecation"]
 +++

@@ -2,7 +2,7 @@
 title = "Total Cost of Ownership"
 description = "What each stage from homelab to cloud and back really costs: the bill, staffing by platform, buying servers, a five-year model, and the SQL to run it."
 category = "Hosting & Cloud Industry"
-order = 2212
+order = 2213
 part = "Running the Provider"
 tags = ["tco", "cost-model", "finops", "staffing", "kubernetes", "repatriation"]
 +++

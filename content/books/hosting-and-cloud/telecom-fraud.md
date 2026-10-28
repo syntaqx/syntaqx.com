@@ -2,7 +2,7 @@
 title = "Telecom Fraud"
 description = "Fraud a communications platform carries: SMS pumping, international revenue share and toll fraud, the platform as a target, geo permissions, and who pays."
 category = "Hosting & Cloud Industry"
-order = 2185
+order = 2186
 part = "Communications Platforms"
 tags = ["fraud", "sms-pumping", "toll-fraud", "irsf", "geo-permissions"]
 +++

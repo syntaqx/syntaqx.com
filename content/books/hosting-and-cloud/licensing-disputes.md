@@ -2,7 +2,7 @@
 title = "Licensing Disputes"
 description = "Microsoft's Listed Providers rule and the CISPE settlement, Broadcom's VMware licensing changes and the lawsuits and complaints they drew, as of October 2026."
 category = "Hosting & Cloud Industry"
-order = 2205
+order = 2206
 part = "Market Rules and Compliance"
 tags = ["licensing", "microsoft", "vmware", "broadcom", "cispe", "competition"]
 +++

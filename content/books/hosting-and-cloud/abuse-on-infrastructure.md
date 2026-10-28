@@ -2,7 +2,7 @@
 title = "Abuse on Infrastructure"
 description = "Hosted, pass-through and core services as abuse tiers, AUPs, voluntary terminations, automated action and the narrowest effective response."
 category = "Hosting & Cloud Industry"
-order = 2197
+order = 2198
 part = "Abuse, Trust and the Law"
 tags = ["abuse", "trust-and-safety", "aup", "cdn", "termination"]
 +++

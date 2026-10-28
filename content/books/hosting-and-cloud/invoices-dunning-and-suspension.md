@@ -3,7 +3,7 @@ title = "Invoices, Dunning & Suspension"
 nav_title = "Invoices & Dunning"
 description = "Invoice runs from rated usage, payment terms and late interest, threshold charges, failed payments, suspension and deletion clocks, and data after termination."
 category = "Hosting & Cloud Industry"
-order = 2193
+order = 2194
 part = "Metering and Billing"
 tags = ["invoicing", "dunning", "suspension", "data-retention", "billing"]
 +++

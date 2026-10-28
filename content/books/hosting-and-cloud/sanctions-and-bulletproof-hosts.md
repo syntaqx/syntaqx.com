@@ -3,7 +3,7 @@ title = "Sanctions, Exports & Bulletproof Hosts"
 nav_title = "Sanctions & Bulletproof Hosts"
 description = "OFAC and EU sanctions on infrastructure, the 2022 Russia exits, bulletproof host designations, AI-chip export rules and the withdrawn IaaS KYC rule."
 category = "Hosting & Cloud Industry"
-order = 2200
+order = 2201
 part = "Abuse, Trust and the Law"
 tags = ["sanctions", "ofac", "export-controls", "kyc", "bulletproof-hosting"]
 +++

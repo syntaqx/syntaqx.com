@@ -3,7 +3,7 @@ title = "Free Tiers, Credits & Startup Programs"
 nav_title = "Free Tiers & Credits"
 description = "Always-free tiers, trials and credit plans across clouds and hosts, startup credit programs, spending limits as hard caps, credit accounting and fraud exposure."
 category = "Hosting & Cloud Industry"
-order = 2190
+order = 2191
 part = "Metering and Billing"
 tags = ["free-tier", "credits", "startup-programs", "spending-limits", "billing"]
 +++
