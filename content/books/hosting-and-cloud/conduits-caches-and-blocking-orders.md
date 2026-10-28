@@ -117,7 +117,7 @@ CREATE TABLE blocking_order_targets (    -- each domain, hostname or IP, as adde
                        'ipv6_prefix')),
   target             TEXT NOT NULL,      -- normalized: A-label, canonical address
   submitted_at       TIMESTAMPTZ NOT NULL,  -- the clock for dynamic additions starts here
-  resource_id        UUID REFERENCES resources (id),  -- our customer's zone, if we serve it
+  resource_id        UUID REFERENCES resources (id),  -- the customer zone, when the provider serves it
   shared_with_others INT NOT NULL DEFAULT 0,  -- other customers on that IP
   enforced_during    TSTZRANGE,          -- null until enforced
   refused_reason     TEXT CHECK (refused_reason IN ('shared_ip', 'not_served',

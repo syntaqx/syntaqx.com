@@ -154,7 +154,7 @@ WHERE r.country = a.country
 
 Notes on the sketch:
 
-- **Lists are versions.** Each screening names the list version it used, so "were we screening against the list in force that day" has an answer.
+- **Lists are versions.** Each screening names the list version it used, so "was the provider screening against the list in force that day" has an answer.
 - **Rescreen on every list update.** A job screens all active accounts against each new version; only potential matches reach a reviewer.
 - **Owners and end customers are screened parties.** Entities are screened with their beneficial owners; reseller sub-accounts with `end_customer_identity = 'collected'` are screened like direct customers, and resellers that don't collect identities are barred from restricted products.
 - **A confirmed match holds and freezes.** The hold is `full_suspension`; deletion and data-return jobs skip the account until counsel releases it.

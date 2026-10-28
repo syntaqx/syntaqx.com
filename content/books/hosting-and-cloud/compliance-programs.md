@@ -1,7 +1,7 @@
 +++
 title = "Shared Responsibility & Compliance Programs"
 nav_title = "Compliance Programs"
-description = "The shared responsibility model and the programs a provider holds for its customers: SOC 2, ISO 27001, PCI DSS for hosts, FedRAMP 20x, GovRAMP and sovereign cloud."
+description = "The shared responsibility model and the programs a provider holds for customers: SOC 2, ISO 27001, PCI DSS for hosts, FedRAMP 20x, GovRAMP, sovereign cloud."
 category = "Hosting & Cloud Industry"
 order = 2202
 part = "Market Rules and Compliance"

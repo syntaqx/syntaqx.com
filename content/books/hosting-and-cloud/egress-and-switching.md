@@ -47,7 +47,7 @@ Three models sit in the table. **Metered from the first gigabyte past a small al
 
 The three waivers differ in the one condition that matters: whether the customer has to leave entirely. Azure's requires cancelling every subscription (except the UK variant, which allows single services); AWS's requires moving all data, or all of one service's data, without closing the account; Google's covers any departure. None of them covers using two clouds at once, which is what regulators were most concerned about, and all of them are credits after the fact, so the customer still has to ask and wait.
 
-The best-documented use is 37signals' move off S3. DHH wrote on March 26, 2025 that "a free 60-day egress window" made moving almost 6 PB out of S3 cost nothing; The Register (May 9, 2025) put the waived egress at about $250,000 and quoted him that "we'll be able to delete our entire AWS account this summer." Repatriation owns the rest of that case.
+The best-documented use is 37signals' move off S3. DHH wrote on March 26, 2025 that "a free 60-day egress window" made moving almost 6 PB out of S3 cost nothing; The Register (May 9, 2025) put the waived egress at about $250,000 and quoted him that "we'll be able to delete our entire AWS account this summer." [Leaving: Egress, Commitments and Licenses](/books/hosting-and-cloud/repatriation#leaving-egress-commitments-and-licenses) owns the rest of that case.
 
 ## Multicloud Transfer, 2025
 
