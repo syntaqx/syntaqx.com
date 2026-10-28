@@ -247,7 +247,7 @@ Notes on the sketch:
 - **Make extended support opt-in and priced in advance,** with the version calendar published at release.
 - **Carry over authentication, locks and contacts** before migrating customers in a sale.
 
-The last migration in this volume runs the other way. Every sunset above moved a customer from one rented thing to another; the customer who has watched enough of them, or whose bill has grown steady enough, starts asking whether to rent at all. That decision, the cost model for owning, and the path back down the scaling ladder to owned metal are [Repatriation](/books/hosting-and-cloud/repatriation)'s, the chapter that closes the volume.
+The last migration in this volume runs the other way. Every sunset above moved a customer from one rented thing to another; the customer who has watched enough of them, or whose bill has grown steady enough, starts asking whether to rent at all. Answering it needs the whole cost of each placement, not its bill: the people, the off-bill tools, the migration and the exit, priced stage by stage from a homelab to owned metal, which is [Total Cost of Ownership](/books/hosting-and-cloud/total-cost-of-ownership). The move back down the ladder itself is [Repatriation](/books/hosting-and-cloud/repatriation), the chapter that closes the volume.
 
 ## References
 

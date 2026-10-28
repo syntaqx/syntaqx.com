@@ -167,7 +167,7 @@ Notes on the sketch:
 
 - **Every attestation with its scope history,** so the coverage of any product, region and date can be shown.
 - **Who downloaded which report,** under which NDA, since reports describe the provider's controls in detail ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
-- **Control evidence by control,** from configuration and policy runs, retained for the audit period plus the auditor's sampling window.
+- **Control evidence by control,** from configuration and policy runs, retained for the audit period plus the auditor's sampling window: guardrails in force, findings and expiring exceptions ([Exceptions, Drift and Evidence](/books/hosting-and-cloud/governance-and-catalog#exceptions-drift-and-evidence)).
 - **Changes to sovereignty facts** on regions, because contracts promise them.
 
 ## What This Means for the System You Build

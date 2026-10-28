@@ -7,7 +7,7 @@ part = "Running the Provider"
 tags = ["repatriation", "cloud-exit", "cost-model", "colocation", "egress"]
 +++
 
-This volume started with one server in a closet and followed it outward: to a colocation cage, to rented bare metal, to a cloud billed by the second, and into every product a provider builds on top. [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life) ended with customers moved from one rented thing to another on someone else's clock. This last chapter is the move the other way, back down the path to owned metal.
+This volume started with one server in a closet and followed it outward: to a colocation cage, to rented bare metal, to a cloud billed by the second, and into every product a provider builds on top. [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life) ended with customers moved from one rented thing to another on someone else's clock, and [Total Cost of Ownership](/books/hosting-and-cloud/total-cost-of-ownership) priced every stage of that path as bill plus people, through a [worked comparison](/books/hosting-and-cloud/total-cost-of-ownership#a-worked-tco) of one workload in four placements. This last chapter is the move the other way, back down the path to owned metal.
 
 Repatriation is moving a workload from rented cloud capacity back to hardware the company owns or leases, usually in colocation. The word arrived with the trade press; one of the engineers who has done it at scale objects to it ("I'm not a nation state, therefore I don't understand why it's called repatriation"), and the objection is fair, because what's happening is a placement decision made again with better data. A company that started in the cloud for good reasons (no capital, no lead time, unknown demand) reaches a size and a load shape where the provider's margin on steady capacity is larger than the cost of owning that capacity and the people to run it. At that point the same arithmetic that justified renting says to own.
 
@@ -62,21 +62,13 @@ Every published comparison sets two annual costs against each other for the same
 
 **Rented side.** The effective rate actually paid, after commitments and discounts, times the capacity used, plus data transfer out, support plans, and managed-service premiums (37signals' half million a year for RDS and Elasticsearch was a managed-service premium on top of compute). The trap is pricing the rented side at list, a difference that alone can move the answer; Ahrefs' own post (March 8, 2023) says it "compared the lowest price of a three-year reserved" instance, so its comparison already assumed commitments. The other trap is idle rented capacity: GEICO's 12% average utilization means the rented side was paying for about seven idle cores per busy one, which an owned design shouldn't copy, but which also isn't the cloud's fault.
 
-**Owned side.**
-
-- **Hardware capital, spread over a useful life.** 37signals amortized over five years; the hyperscalers' own accounting is a reference for how long servers last. Amazon extended the useful life of its servers from five to six years effective January 1, 2024, then shortened it from six to five years for a subset of servers and networking equipment effective January 1, 2025, citing the pace of AI and machine learning development. A five-year life is a defensible default for general compute; accelerators and anything on a fast refresh cycle deserve less.
-- **Colocation:** power, space, cross-connects and remote hands, priced mostly per kilowatt. [How Colocation Is Sold](/books/hosting-and-cloud/data-centers-and-colocation#how-colocation-is-sold) and the [power section](/books/hosting-and-cloud/data-centers-and-colocation#power) of that chapter carry the market figures; 37signals' published colo line was about $60,000 a month for eight racks.
-- **Network:** IP transit, cross-connects to carriers and clouds, and the hardware to run them ([Data Center Networking](/books/hosting-and-cloud/data-center-networking)).
-- **Spares, warranty and refresh:** support contracts (a bit under $1 million over five years on 37signals' $1.5 million storage purchase), spare parts and machines sized from failure rates ([Spares, Inventory and Failure](/books/hosting-and-cloud/dedicated-servers#spares-inventory-and-failure)).
-- **Licenses** the cloud bundled: hypervisors, storage software, operating systems and databases, which became a large term for VMware estates after 2023 ([Virtualization & the VPS](/books/hosting-and-cloud/virtualization-and-vps#epilogue-broadcom-and-vmware)).
-- **People:** the change in staff, not the whole team. 37signals and Dropbox both counted the incremental cost; a company without an infrastructure team has to count a whole one.
-- **Cost of capital:** money spent on hardware up front isn't spent elsewhere. Dropbox's S-1 shows the shift on the income statement as depreciation; a model should also carry the cash.
+**Owned side.** Hardware capital spread over a useful life (37signals amortized over five years, a defensible default for general compute; accelerators deserve less), colocation priced mostly per kilowatt (37signals' published line was about $60,000 a month for eight racks), network, spares, warranty and refresh, the licenses the cloud bundled, the change in staff, and the cost of capital on money spent up front; [Buying the Servers](/books/hosting-and-cloud/total-cost-of-ownership#buying-the-servers) prices each of those lines.
 
 **Capacity.** The owned side is sized to peak plus headroom (N+1, failure domains, growth during the procurement lead time), and it costs the same whether it's busy or not. The rented side, done well, is sized to use. That asymmetry is why load shape matters more than unit price.
 
 ## A Cost Model for Owning
 
-Reduced to its terms, owning a block of capacity for a year costs:
+Reduced to its terms, owning a block of capacity for a year costs the following; [Year over Year](/books/hosting-and-cloud/total-cost-of-ownership#year-over-year) runs the same terms month by month, with capital in month zero, to a break-even month:
 
 - **Owned annual cost** = hardware ÷ useful life + colocation (kW × price per kW-month × 12) + network + support and spares + licenses + staff change + cost of capital on the hardware.
 - **Rented annual cost** for the same work = effective rate × capacity actually used + transfer out + managed-service premiums.
@@ -106,7 +98,7 @@ The one-time costs of leaving are separate from the run-rate comparison and can 
 
 - **AWS** (announced March 5, 2024, updated September 30, 2025 and October 8, 2026): the customer contacts AWS Support, because AWS can't tell a routine transfer from a move to another provider or on premises; approved requests receive credits for the data migrated. The program covers moving all data off AWS from all eligible accounts, or all data for a particular service; an eligible account is a payer account in good standing; customers outside the EU have 180 days to complete the move, and EU customers follow the process in Section 2.3 of AWS's EU Data Act Addendum (UK customers have a UK Customer Switching and Portability Addendum). The account needn't be closed, and AWS says it will scrutinize repeat requests. Separately, AWS counts 100 GB a month of transfer out from Regions and 1 TB from CloudFront as free, and says "over 90 percent" of its customers pay nothing for data transfer out.
 - **Google Cloud** (January 11, 2024): free network data transfer for customers leaving for another provider or on premises, globally, with the request process on Google's exit page.
-- **Microsoft Azure**: free egress for customers taking data out "via the internet" to "switch to another cloud provider or an on-premises data center," claimed as a credit through a documented process, alongside the first 100 GB a month free for every customer. A separate at-cost credit for in-parallel multicloud transfer applies to EEA, EFTA and UK billing addresses.
+- **Microsoft Azure**: free egress for customers taking data out "via the internet" to "switch to another cloud provider or an on-premises data center," claimed as a credit through a documented process: a support request naming the planned start date and volume, 60 days from that date to move the data (more on request), every subscription cancelled afterwards, and a credit for at most 60 calendar days of egress charges, 180 days for UK billing addresses moving data from UK datacenters, per the Microsoft Learn page dated June 7, 2026; the first 100 GB a month are free for every customer. A separate at-cost credit for in-parallel multicloud transfer applies to EEA, EFTA and UK billing addresses.
 
 These are waivers for leaving, not changes to egress pricing: a hybrid design that keeps sending data between an owned site and a cloud pays normal rates, except where the EU and UK arrangements apply. The waiver's window is the schedule: 37signals' transfer took less than 10 days on a negotiated window because it had built the target first.
 
@@ -128,7 +120,7 @@ These are waivers for leaving, not changes to egress pricing: a hybrid design th
 
 ## My Default
 
-My default is to start in the cloud and keep a written exit: a cost model rerun every year against the effective rates actually paid, the commitment end dates, the egress the data would cost to move, and the team that would run it. I'd move a workload out when its load has been steady for a year or more, its owned cost at a five-year life and realistic utilization is under about half of its rented cost after discounts, and the people exist or the savings pay for them with margin. Storage is the first candidate, because it is steady, large and the least dependent on managed services; general compute follows; managed databases, queues and anything with spiky load come last or not at all. I'd own the baseline and rent the peak before owning the peak, and I'd time the move to the end of a commitment term and inside an exit waiver window, with the target built first so the transfer is days, not months.
+My default is to start in the cloud and keep a written exit: a cost model rerun every year against the effective rates actually paid, the commitment end dates, the egress the data would cost to move, and the team that would run it. I'd move a workload out when its load has been steady for a year or more, its owned cost at a five-year life and realistic utilization is under about half of its rented cost after discounts, and the people exist or the savings pay for them with margin (counted as the change in staff, per [Counting People](/books/hosting-and-cloud/total-cost-of-ownership#counting-people), with the work each platform leaves the team from [Staffing by Platform](/books/hosting-and-cloud/total-cost-of-ownership#staffing-by-platform)). Storage is the first candidate, because it is steady, large and the least dependent on managed services; general compute follows; managed databases, queues and anything with spiky load come last or not at all. I'd own the baseline and rent the peak before owning the peak, and I'd time the move to the end of a commitment term and inside an exit waiver window, with the target built first so the transfer is days, not months.
 
 What would change it: a company without an infrastructure team, where the staff line erases the saving; a load still growing or changing shape fast enough that a five-year hardware forecast is a guess; or a dependency on a managed service with no equivalent the team can operate. In those cases optimizing the rented side wins, and the exit stays on paper.
 
@@ -216,11 +208,11 @@ Notes on the sketch:
 
 ## What This Means for the System You Build
 
-- **Keep a written exit** for every rented layer, with the cost model that says when to take it, and rerun it yearly.
+- **Keep a written exit** for every rented layer, with the cost model that says when to take it, and rerun it yearly ([Total Cost of Ownership](/books/hosting-and-cloud/total-cost-of-ownership#how-to-build-it) keeps its inputs as effective-dated rows).
 - **Compare against the effective rate,** after commitments and discounts, never list price.
-- **Size the owned side to peak and judge it by utilization,** because idle owned capacity is the cost the cloud was hiding.
-- **Count only the staff change,** and count a whole team if none exists.
-- **Use a realistic useful life:** five years for general compute, less for accelerators.
+- **Size the owned side to peak and judge it by utilization,** because idle owned capacity is the cost the cloud was hiding, and judge the move by its break-even month, not one year's saving ([Year over Year](/books/hosting-and-cloud/total-cost-of-ownership#year-over-year)).
+- **Count only the staff change,** and count a whole team if none exists ([Counting People](/books/hosting-and-cloud/total-cost-of-ownership#counting-people)).
+- **Use a realistic useful life:** five years for general compute, less for accelerators, and model the refresh after it ([Buying the Servers](/books/hosting-and-cloud/total-cost-of-ownership#buying-the-servers)).
 - **Move storage first,** steady compute next, managed services last.
 - **Time the move** to commitment end dates and inside an exit waiver window, with the target built first.
 - **Be precise about cases:** a company that never moved in, or changed architecture inside one cloud, isn't evidence about leaving.
@@ -232,12 +224,12 @@ The path this volume followed runs in both directions. Dropbox built Magic Pocke
 **Filings**
 
 - [Dropbox: Form S-1 (February 2018)](https://www.sec.gov/Archives/edgar/data/0001467623/000119312518055809/d451946ds1.htm), Infrastructure Optimization, the $39.5 million and $35.1 million infrastructure cost decreases with their components, the Q4 2016 completion and gross margin by year
-- [Amazon: Form 10-K for 2024](https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/amzn-20241231.htm), server useful lives from five to six years (January 1, 2024) and from six to five for a subset (January 1, 2025)
 
 **Provider documentation**
 
 - [AWS News Blog: Free data transfer out to internet when moving out of AWS](https://aws.amazon.com/blogs/aws/free-data-transfer-out-to-internet-when-moving-out-of-aws/), March 5, 2024, updated September 30, 2025 and October 8, 2026, the support request, credits, eligible accounts, 180 days, the EU and UK addenda and the free baseline
 - [Microsoft Azure: Bandwidth pricing](https://azure.microsoft.com/en-us/pricing/details/bandwidth/), free egress when leaving Azure and the first 100 GB a month, as of October 2026
+- [Microsoft Learn: Cancel and delete your Azure subscription](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/cancel-azure-subscription), the exit request, the 60-day window and credit cap and the UK 180-day variant (page dated June 7, 2026)
 - [Microsoft Learn: Azure data transfer fees](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/data-transfer-fees), the at-cost multicloud credit for EEA, EFTA and UK billing addresses
 
 **Announcements and release notes**
