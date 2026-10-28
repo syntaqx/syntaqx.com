@@ -59,7 +59,7 @@ Accreditation can add gates of its own: pest control's QualityPro requires backg
 
 ## Employee or Contractor
 
-Whether a rep is an employee or an independent contractor decides almost everything downstream: the tax form, withholding, minimum wage and overtime, workers' compensation and how they're paid. It's a legal determination for counsel, and the rules are moving. What the system needs is to record the decision, per person and per period, and let it drive everything else.
+Whether a rep is an employee or an independent contractor decides almost everything downstream: the tax form, withholding, minimum wage and overtime, workers' compensation and how they're paid. It's a legal determination for counsel, and the rules are moving. What the system needs is to record the decision, per person and per period, and let it drive everything else. App-based platforms face the same tests plus statutes of their own (California's Proposition 22, city minimum pay and deactivation laws, the EU Platform Work Directive), covered in [Gig Work & Worker Law](/books/user-generated-platforms/gig-work-and-worker-law#classification).
 
 The federal tests a counsel will weigh:
 

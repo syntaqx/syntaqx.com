@@ -2,7 +2,7 @@
 title = "Moderation at Scale"
 description = "How platforms review billions of items: classifiers as prioritizers, vendors, outsourced review, reviewer wellbeing, prevalence sampling and language coverage."
 category = "User-Generated Platforms Industry"
-order = 1839
+order = 1841
 part = "Trust and Safety"
 tags = ["trust-and-safety", "content-moderation", "classifiers", "vendors", "wellbeing", "metrics"]
 +++

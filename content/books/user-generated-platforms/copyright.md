@@ -2,7 +2,7 @@
 title = "Copyright at Scale"
 description = "The DMCA agent, notices, counter-notices and repeat infringers; fingerprinting and Content ID; music in live streams; and the EU Article 17 regime."
 category = "User-Generated Platforms Industry"
-order = 1844
+order = 1846
 part = "Trust and Safety"
 tags = ["trust-and-safety", "copyright", "dmca", "content-id", "music-licensing", "article-17"]
 +++

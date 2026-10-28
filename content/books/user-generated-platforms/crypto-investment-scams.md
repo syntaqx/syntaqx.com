@@ -3,7 +3,7 @@ title = "Crypto Investment Scams & Impersonation"
 nav_title = "Crypto Investment Scams"
 description = "Relationship investment scams across platforms, scam centers, celebrity-bait ads and fake support, the law on fraudulent ads, signals, warnings and referral."
 category = "User-Generated Platforms Industry"
-order = 1846
+order = 1848
 part = "Trust and Safety"
 tags = ["trust-and-safety", "fraud", "scams", "crypto", "impersonation", "advertising"]
 +++

@@ -2,7 +2,7 @@
 title = "AI on User-Generated Platforms"
 description = "AI moderation and its error budgets, labels for AI-generated uploads, C2PA and IPTC provenance, EU AI Act disclosure, AI answers and training opt-outs."
 category = "User-Generated Platforms Industry"
-order = 1852
+order = 1854
 part = "Running the Platform"
 tags = ["user-generated-content", "ai", "moderation", "provenance", "c2pa"]
 +++

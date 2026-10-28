@@ -2,7 +2,7 @@
 title = "Migrations, Purges & Shutdowns"
 description = "Policy-driven purges, storage caps, link rot and tombstones, country withdrawals, data exports and portability, and how to end a feature or a whole service."
 category = "User-Generated Platforms Industry"
-order = 1854
+order = 1856
 part = "Running the Platform"
 tags = ["user-generated-content", "data-retention", "portability", "shutdowns", "storage"]
 +++
