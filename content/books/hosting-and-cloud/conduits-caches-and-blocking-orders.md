@@ -192,7 +192,7 @@ Notes on the sketch:
 - [TorrentFreak: OpenDNS leaves France](https://torrentfreak.com/?p=253822), the May 2024 orders and the June 28, 2024 exit
 - [TorrentFreak: Paris Court of Appeal upholds DNS blocking](https://torrentfreak.com/?p=277758), the March 27, 2026 orders and their reasoning
 - [TorrentFreak: Quad9 will leave France](https://torrentfreak.com/dns-resolver-quad9-will-leave-france-after-court-orders-piracy-blocking-penalty/), the October 21, 2026 order, the penalty and the November 24 exit
-- [Cloudflare: Transparency report H2 2025, abuse](https://cfl.re/h2-2025-transparency-report-abuse), blocking orders by country, disabling caching, and the resolver approach
+- [Cloudflare: Transparency report H2 2025, abuse](https://cf-assets.www.cloudflare.com/slt3lc6tev37/7IBPOyNLRJfQ7joWrmsVh0/d3947a86eb4d76801076094a85cf7ff7/2H_2025_Cloudflare_s_Transparency_Report_Abuse-v2.pdf), blocking orders by country, disabling caching, and the resolver approach
 
 **United States bills**
 

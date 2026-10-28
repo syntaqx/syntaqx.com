@@ -198,7 +198,7 @@ Notes on the sketch:
 **Provider policies and reports**
 
 - [Cloudflare: Cloudflare's abuse policies and approach](https://blog.cloudflare.com/cloudflares-abuse-policies-and-approach/), August 31, 2022 (modified July 15, 2026), hosted, pass-through and core services, the telephone analogy, legal process over popular opinion
-- [Cloudflare: Transparency report H2 2025, abuse](https://cfl.re/h2-2025-transparency-report-abuse), hosted-product reports and actions, automated actioning, related R2 accounts, interstitials, resolver orders, voluntary terminations
+- [Cloudflare: Transparency report H2 2025, abuse](https://cf-assets.www.cloudflare.com/slt3lc6tev37/7IBPOyNLRJfQ7joWrmsVh0/d3947a86eb4d76801076094a85cf7ff7/2H_2025_Cloudflare_s_Transparency_Report_Abuse-v2.pdf), hosted-product reports and actions, automated actioning, related R2 accounts, interstitials, resolver orders, voluntary terminations
 - [Cloudflare: Why we terminated Daily Stormer](https://blog.cloudflare.com/why-we-terminated-daily-stormer/), August 16, 2017
 - [Cloudflare: Terminating service for 8chan](https://blog.cloudflare.com/terminating-service-for-8chan/), August 5, 2019
 - [Cloudflare: Blocking Kiwifarms](https://blog.cloudflare.com/kiwifarms-blocked/), September 3, 2022
