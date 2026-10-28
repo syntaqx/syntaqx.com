@@ -2,7 +2,7 @@
 title = "Paying Creators & Sellers"
 description = "Getting money out to creators, hosts and sellers: eligibility gates, payee KYC, payout triggers, holds, tax interviews, withholding, 1099-K and DAC7."
 category = "User-Generated Platforms Industry"
-order = 1823
+order = 1828
 part = "Creators and Money"
 aliases = []
 tags = ["payouts", "creators", "marketplaces", "kyc", "tax", "1099-k", "dac7"]

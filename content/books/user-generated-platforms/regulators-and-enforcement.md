@@ -2,7 +2,7 @@
 title = "Regulators & Enforcement"
 description = "The DSA, the UK Online Safety Act and Australia's eSafety regime as platforms meet them: tiers, designations, clocks, fines, withdrawals and a ledger."
 category = "User-Generated Platforms Industry"
-order = 1841
+order = 1846
 part = "The Rules"
 tags = ["user-generated-content", "regulation", "digital-services-act", "online-safety-act", "esafety", "trust-and-safety"]
 +++
@@ -115,6 +115,8 @@ The US has no single online safety regulator, and Section 230 still shields most
 - **The FTC** enforces COPPA, its Section 5 authority over unfair and deceptive practices (a platform's own promises about moderation, privacy and safety), the fees and fake reviews rules for marketplaces, and the TAKE IT DOWN Act's 48-hour removal duty for intimate images. Minors are [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#coppa-and-age-checks); intimate images are [Intimate Image Abuse](/books/user-generated-platforms/intimate-image-abuse#the-take-it-down-act).
 - **State attorneys general** enforce state minors' laws and transparency statutes. New York's Stop Hiding Hate Act requires social media companies with more than $100 million in annual gross revenue to file their terms of service and moderation data with the Attorney General twice a year, with civil penalties of up to $15,000 per violation per day after a 30-day cure period. Reddit, Discord, Twitch (through Amazon), Kick, Snap and X are among the filers listed ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting#us-state-filings)).
 - **NCMEC** is not a regulator, but the CyberTipline is a statutory reporting duty with fines ([Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#the-reporting-duty)).
+
+The FTC's 2014 Snapchat order over disappearing messages that didn't disappear is in [Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#the-snapchat-order).
 
 ## The Enforcement Ledger
 

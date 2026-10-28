@@ -3,7 +3,7 @@ title = "Cancellations, Guarantees & Disputes"
 nav_title = "Cancellations & Disputes"
 description = "Cancellation policy catalogs, host cancellation penalties, guarantee programs in front of chargebacks, case lifecycles, and arbitration on marketplaces."
 category = "User-Generated Platforms Industry"
-order = 1831
+order = 1836
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "cancellations", "refunds", "buyer-protection", "disputes"]
 +++

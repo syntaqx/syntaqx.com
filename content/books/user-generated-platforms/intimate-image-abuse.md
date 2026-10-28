@@ -2,7 +2,7 @@
 title = "Intimate Image Abuse"
 description = "The TAKE IT DOWN Act's 48-hour removal duty, StopNCII and Take It Down hashes, deepfakes and nudify tools, state laws, and UK, EU and Australian duties."
 category = "User-Generated Platforms Industry"
-order = 1838
+order = 1843
 part = "Trust and Safety"
 tags = ["trust-and-safety", "intimate-image-abuse", "ncii", "deepfakes", "hash-matching", "take-it-down-act"]
 +++

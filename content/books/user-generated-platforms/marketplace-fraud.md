@@ -2,7 +2,7 @@
 title = "Marketplace Fraud & Risk"
 description = "Guest and driver verification, reservation risk scoring, linked accounts, fake listings and payment diversion, seller fraud, and sanctions screening."
 category = "User-Generated Platforms Industry"
-order = 1832
+order = 1837
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "fraud", "risk-scoring", "identity-verification", "sanctions"]
 +++
@@ -100,6 +100,8 @@ Goods marketplaces add fraud shaped by shipping:
 - **Item not received and not-as-described abuse.** Buyers claim non-delivery of delivered items or return a different item; sellers ship empty boxes with valid tracking. eBay requires signature confirmation as delivery proof for items of $750 or more; the guarantee case process ([Cancellations, Guarantees & Disputes](/books/user-generated-platforms/cancellations-and-disputes)) and the buyer's and seller's case history are the defense.
 - **Prohibited items.** eBay's 10-K describes a 2024 settlement under the Controlled Substances Act of $59 million with enhanced listing monitoring; listing monitoring for prohibited and regulated goods is a compliance program, with the categories, the detection and the outcomes recorded.
 - **Holds on new sellers.** Etsy describes disbursement holds against fraud; a new seller's early payouts wait until delivery is confirmed ([Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#risk-holds-negative-balances-and-clawbacks) covers the mechanics).
+
+Brushing, wash trading of sales and fake live viewers in shops run inside video apps are in [Social Commerce & Live Shopping](/books/user-generated-platforms/social-commerce-and-live-shopping#commerce-fraud).
 
 ## Host and Seller Fraud
 

@@ -3,7 +3,7 @@ title = "Spam, Bots & Inauthentic Behavior"
 nav_title = "Spam, Bots & Inauthenticity"
 description = "Account farms, vote rings, CAPTCHAs and proof of work, SMS pumping, coordinated inauthentic behavior, bot labels and crowd context notes with bridging ranking."
 category = "User-Generated Platforms Industry"
-order = 1835
+order = 1840
 part = "Trust and Safety"
 tags = ["trust-and-safety", "spam", "bots", "inauthentic-behavior", "captcha", "community-notes"]
 +++

@@ -2,7 +2,7 @@
 title = "Copyright at Scale"
 description = "The DMCA agent, notices, counter-notices and repeat infringers; fingerprinting and Content ID; music in live streams; and the EU Article 17 regime."
 category = "User-Generated Platforms Industry"
-order = 1839
+order = 1844
 part = "Trust and Safety"
 tags = ["trust-and-safety", "copyright", "dmca", "content-id", "music-licensing", "article-17"]
 +++
@@ -134,6 +134,8 @@ What to build, whatever the vendor:
 - **Match segments, not just items.** A claim on 20 seconds of a two-hour video should say which 20 seconds, so the action can be muting that segment or splitting revenue, and so a dispute can be judged.
 - **Disputes need clocks and a human.** The claimant's response window, automatic release on silence, and an escalation path that ends in a statutory notice or a release.
 - **Measure claimant accuracy.** Disputes won by uploaders, per claimant and per reference, are the signal for suspending access.
+
+Music matched inside short-video uploads, and what a lapsed label deal does to every post using a sound, are in [Sounds, Remix & Duets](/books/user-generated-platforms/sounds-remix-and-duets#matching-music-in-uploads).
 
 ## Music in Streams
 

@@ -3,7 +3,7 @@ title = "Minors, Age Assurance & US State Law"
 nav_title = "Minors & Age Assurance"
 description = "Age checks on user-generated platforms: methods and vendor risk, teen-by-default, family tools, minimum ages, US state laws in court, KOSA, COPPA, design suits."
 category = "User-Generated Platforms Industry"
-order = 1842
+order = 1847
 part = "The Rules"
 tags = ["user-generated-content", "age-assurance", "children", "coppa", "online-safety"]
 +++
@@ -69,6 +69,8 @@ The settings that change for minors on these platforms cluster into five groups,
 Discord's UK implementation shows how specific these get. Friend request alerts apply when there are no mutual friends or the only shared server has under 200 members; DMs from non-friends who share only servers of more than 200 members go to a Message Request inbox; activity status isn't shared to servers of 200 or more; turning off the filter or the inbox requires age verification as an adult. Every number in that list is a rule parameter that will differ by jurisdiction and change over time, which is why the rules belong in data ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)) and why `feature_age_rules` below carries a jurisdiction and an effective range.
 
 A design decision that saves a great deal of work: **apply the teen defaults to everyone whose age is unknown, and to everyone in a market with an age rule, and let verified adults opt out.** The UK Children's Code says applying its standards to all users is a legitimate alternative to knowing ages ([The UK Age Appropriate Design Code](/docs/compliance/childrens-privacy#the-uk-age-appropriate-design-code)), and Discord's global teen-by-default is that choice at platform scale.
+
+Short-form surfaces add their own defaults: who may duet, stitch or download a teen's posts ([Sounds, Remix & Duets](/books/user-generated-platforms/sounds-remix-and-duets#who-may-reuse-a-post)), appearance-altering effects for under-18s ([Camera & Effects](/books/user-generated-platforms/camera-and-effects#beauty-filters-and-body-image)), and disappearing media and location sharing ([Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#sextortion-and-teen-defaults)).
 
 ## Family Supervision
 

@@ -3,7 +3,7 @@ title = "Child Safety: Detection & Reporting"
 nav_title = "Child Safety"
 description = "How platforms detect, report and preserve child sexual abuse material: 2258A, CyberTipline reports, hash lists, the IWF, AI imagery, EU and UK rules."
 category = "User-Generated Platforms Industry"
-order = 1836
+order = 1841
 part = "Trust and Safety"
 tags = ["trust-and-safety", "child-safety", "csam", "hash-matching", "ncmec", "compliance"]
 +++
@@ -286,6 +286,8 @@ Imagery is half the problem. NCMEC received 1.4 million online enticement report
 - **Report it.** Enticement is a covered offense; the report uses the online enticement incident type and the `sextortion`, `csamSolicitation` or `minorToMinorInteraction` annotations as they apply, and goes to NCMEC or the NCA as above. A child in immediate danger is an emergency call to police, not a queue item.
 - **Follow the money.** Financial sextortion runs through payment handles and gift cards; the payment signals, and the payment companies' side of Lantern, connect to [Marketplace Fraud & Risk](/books/user-generated-platforms/marketplace-fraud) and [Messaging, Reviews & Reputation](/books/user-generated-platforms/messaging-and-reviews#off-platform-leakage).
 - **Help the victim remove images.** Point minors and their parents to NCMEC's Take It Down (US) and the IWF's Report Remove (UK), and ingest Take It Down hashes as a list ([Hash-Based Prevention](/books/user-generated-platforms/intimate-image-abuse#hash-based-prevention)).
+
+Disappearing media and the teen defaults that ephemeral platforms set against sextortion are in [Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#sextortion-and-teen-defaults).
 
 ## Reviewing Child Safety Cases
 

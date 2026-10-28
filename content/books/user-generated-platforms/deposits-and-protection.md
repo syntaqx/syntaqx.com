@@ -3,7 +3,7 @@ title = "Deposits, Protection Plans & Insurance"
 nav_title = "Deposits & Protection"
 description = "Deposit holds and waivers, post-trip charges, embedded insurance versus contractual protection, host and guest plan tiers, car-sharing law and licensing."
 category = "User-Generated Platforms Industry"
-order = 1828
+order = 1833
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "insurance", "deposits", "protection-plans", "car-sharing"]
 +++

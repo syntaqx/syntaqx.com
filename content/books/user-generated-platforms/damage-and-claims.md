@@ -2,7 +2,7 @@
 title = "Handoffs, Damage & Claims"
 description = "Check-in and check-out evidence, readings and signed agreements, claim windows, appraisal and total loss, subrogation, and fraud-aware settlement."
 category = "User-Generated Platforms Industry"
-order = 1829
+order = 1834
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "claims", "evidence", "insurance", "handoffs"]
 +++

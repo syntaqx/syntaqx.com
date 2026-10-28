@@ -3,7 +3,7 @@ title = "Abuse Desks for Hosts & Registrars"
 nav_title = "Abuse Desks"
 description = "The web host, CDN and registrar view of abuse: intake, phishing and malware, DMCA for hosts, ICANN DNS abuse duties, CDN scanning, suspension versus takedown."
 category = "User-Generated Platforms Industry"
-order = 1840
+order = 1845
 part = "Trust and Safety"
 tags = ["trust-and-safety", "hosting", "dns-abuse", "phishing", "copyright", "abuse-desk"]
 +++

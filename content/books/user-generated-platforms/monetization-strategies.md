@@ -2,7 +2,7 @@
 title = "Monetization Strategies"
 description = "Every way a user-generated platform earns, who pays, how each model shapes the product, app-store cuts, regional prices, conflicts and unit economics."
 category = "User-Generated Platforms Industry"
-order = 1820
+order = 1825
 part = "Creators and Money"
 aliases = []
 tags = ["monetization", "business-models", "advertising", "subscriptions", "take-rate", "app-stores"]

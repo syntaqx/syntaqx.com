@@ -3,7 +3,7 @@ title = "The Law of Hosting User Content"
 nav_title = "Hosting Liability Law"
 description = "Section 230, the DMCA safe harbors and the DSA hosting exemption, why knowledge is the trigger, the cases reshaping them, and the legal clocks platforms run on."
 category = "User-Generated Platforms Industry"
-order = 1833
+order = 1838
 part = "Trust and Safety"
 tags = ["trust-and-safety", "section-230", "dmca", "digital-services-act", "litigation", "legal-notices"]
 +++
@@ -133,6 +133,8 @@ The Supreme Court took two cases in its 2022 term that were expected to decide w
 ### Anderson v. TikTok (2024)
 
 The Third Circuit drew that conclusion. A ten-year-old died attempting the "Blackout Challenge" after TikTok's For You Page recommended a video of it; the district court dismissed under Section 230. The Third Circuit reversed in part, vacated in part and remanded on 27 August 2024: Section 230 immunizes a service "only if they are sued for someone else's expressive activity or content (i.e., third-party speech)", not for "their own expressive activity or content (i.e., first-party speech)", and, relying on *Moody*, TikTok's algorithmic curation of the feed was its own expressive activity. Claims about the videos' mere presence remain barred; claims about the recommendation can proceed. The ruling binds only the Third Circuit, so a platform's exposure for recommendations depends on where it is sued.
+
+Why a For You recommendation is so plainly the platform's own choice, with no follow behind it, is in [Interest-Graph Feeds](/books/user-generated-platforms/interest-graph-feeds#social-graph-versus-interest-graph).
 
 ### Cox v. Sony (2026)
 

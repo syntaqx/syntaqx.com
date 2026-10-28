@@ -2,7 +2,7 @@
 title = "Pricing, Fees & All-In Prices"
 description = "Host pricing and dynamic recommendations, marketplace fee models, usage charges, split payments, the FTC fees rule and drip pricing, and facilitator tax."
 category = "User-Generated Platforms Industry"
-order = 1827
+order = 1832
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "pricing", "fees", "all-in-pricing", "sales-tax"]
 +++
@@ -134,6 +134,8 @@ The design follows the lodging tax model there:
 - **Tax is a quote until the booking finalizes,** and post-trip charges and refunds adjust it ([Tax Is a Quote Until the Invoice Finalizes](/docs/payments/sales-tax#tax-is-a-quote-until-the-invoice-finalizes)). Outdoorsy refunds taxes in proportion to the charges refunded.
 
 Seller tax reporting (1099-K, DAC7) belongs to [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#information-returns-1099-k-1099-misc-and-1042-s).
+
+Sales tax and the end of the US de minimis exemption for cross-border sellers in video shops are in [Social Commerce & Live Shopping](/books/user-generated-platforms/social-commerce-and-live-shopping#sales-tax).
 
 ## How to Build It
 

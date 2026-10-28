@@ -3,7 +3,7 @@ title = "Supply Onboarding & Verification"
 nav_title = "Supply Onboarding"
 description = "Bringing hosts and sellers on: identity, payout and tax gates, asset eligibility, the INFORM Act, DSA trader traceability and DAC7 data."
 category = "User-Generated Platforms Industry"
-order = 1824
+order = 1829
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "onboarding", "identity-verification", "inform-act", "digital-services-act"]
 +++

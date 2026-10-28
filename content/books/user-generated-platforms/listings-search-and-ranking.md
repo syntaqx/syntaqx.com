@@ -2,7 +2,7 @@
 title = "Listings, Search & Ranking"
 description = "Listing schemas and quality scores, lifecycle states, product compliance fields, availability-aware geo search, ranking signals, indexing and cold start."
 category = "User-Generated Platforms Industry"
-order = 1825
+order = 1830
 part = "Peer-to-Peer Marketplaces"
 tags = ["marketplaces", "listings", "search", "ranking", "digital-services-act"]
 +++
