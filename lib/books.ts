@@ -172,9 +172,9 @@ export const CONSIDERING_BOOKS: FutureBook[] = [
     summary: "Auctions, impressions and attribution across DSPs and SSPs, and the consent and privacy law that limits each.",
   },
   {
-    name: "Investing",
+    name: "Investing & Digital Assets",
     type: "industry",
-    summary: "Accounts, positions and tax lots at a broker or custodian, order routing and best execution, and digital asset custody.",
+    summary: "Accounts, positions and tax lots at a broker or custodian, best execution, and crypto exchanges, custody, stablecoin issuers and DeFi.",
   },
   {
     name: "Energy & Utilities",
