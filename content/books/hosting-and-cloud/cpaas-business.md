@@ -119,6 +119,12 @@ The response across the providers is the same: move up the stack into products p
 
 The 10-K risk factors are a map of the rest of this part: TCPA class actions as the most common private enforcement (Twilio), 911 tax and surcharge litigation in California and Illinois (Bandwidth), carrier fee changes, fraud through artificially inflated traffic (Twilio names its Verify Fraud Guard product "aimed at automatically blocking fraudulent messages resulting from artificially inflated traffic or SMS pumping"), and outages. Bandwidth's late-September 2021 incident is the public example of the last: "a series of sophisticated DDoS attacks aimed at Bandwidth and our industry" cost it about $0.7 million of third-quarter revenue and an estimated $9 million to $12 million of full-year CPaaS revenue, in lost volume and credits.
 
+## My Default
+
+My default for a software company that needs to text or call is to be a customer or ISV on a CPaaS, with a second provider wired in for failover, and not to become a carrier to save on cost of goods: the recipient carrier's fee is the floor under every model, and the duties an owned network takes on (state certifications, 911, CPNI, USF, the robocall rules) are a business of their own. For a company building a CPaaS, I'd start as a software aggregator over one owned-network upstream per country and own more of the path only where the margin difference above pays for the regulatory burden, starting with numbers and porting in the home market. In either role I'd carry carrier fees as dated pass-through lines the customer sees, never folded into the per-segment price, because they changed several times in 2026 alone and a bundled price turns each change into lost margin or a repricing.
+
+What would change it: enough steady volume in one country that the lower cost of goods per unit outweighs the regulatory burden, which is the trade Bandwidth's owned network in 49 states and DC makes.
+
 ## How to Build It
 
 The chapter adds carriers and the rules that map a message to the carrier fee it owes, on top of [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Carrier fees are SKUs with `pass_through = 'carrier'`, priced with ordinary `price_versions`, so they are effective-dated and separable on every invoice like a registry fee. Fines and regulatory fees use the same mechanism with `pass_through = 'carrier'` or `'regulatory'`.

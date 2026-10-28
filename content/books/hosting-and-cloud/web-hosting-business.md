@@ -187,7 +187,7 @@ CREATE TABLE upsell_offers (             -- an add-on offered at a placement, ov
   eligibility              JSONB NOT NULL DEFAULT '{}',  -- plans, terms, markets: a rule
   trial_months             SMALLINT,              -- null: paid from the start
   preselected              BOOLEAN NOT NULL DEFAULT false,
-  disclosure_id            UUID NOT NULL REFERENCES disclosures (id),  -- the text shown
+  disclosure_id            UUID NOT NULL REFERENCES disclosures (id),  -- the playbook's versioned terms text
   valid_during             TSTZRANGE NOT NULL
 );
 

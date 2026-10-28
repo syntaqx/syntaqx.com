@@ -110,6 +110,20 @@ Four things make this work in practice:
 - **Data goes to the provider, not the complainant.** Namecheap's statement is the policy: the full registration data goes to the provider on its request, and the complainant gets it through the proceeding. The version given is the one in force at the verification request, from `registrant_data` ([Registration Data & RDAP](/books/hosting-and-cloud/registration-data-and-rdap#how-to-build-it)).
 - **Implementation is a transfer like any other.** Transferring to a complainant means moving the name into the complainant's account (a change of registrant made under the decision) or, if the complainant uses another registrar, releasing it for an inter-registrar transfer; cancelling means deleting it at the registry. Each is an EPP transaction linked to the decision, and ICANN's enforcement page is the backstop: a complainant whose decision wasn't implemented after the ten business days files a compliance complaint.
 
+## The Alternatives: Which Route Reaches the Name
+
+The routes side by side, from the complainant's side, as of October 2026:
+
+| Route | Who files | Who decides | Standard | Remedy | Speed | Where it goes next |
+| --- | --- | --- | --- | --- | --- | --- |
+| **UDRP** | A mark owner | A panel at an approved provider | The three elements of paragraph 4(a) | Transfer or cancellation only | 20 days to respond, a decision 14 days after the panel is appointed, implementation after ten business days | A court, if the registrant files in the window |
+| **URS** | A mark owner, in the new gTLDs | An examiner at a URS provider | The same three elements, by clear and convincing evidence; any genuine contestable issue defeats it | Suspension for the rest of the term, plus one optional year | Registry lock within 24 hours, 14 days to respond, a determination in about three to five business days | De novo appeal within 14 days |
+| **ACPA in rem** | A mark owner that can't reach or find the registrant | A US district court where the registrar or registry sits | Bad faith intent to profit from the mark | Forfeiture, cancellation or transfer | A lawsuit's pace; the name is frozen while it runs | The ordinary appeal |
+| **Other court order** | Any party with a claim a court will hear | The court | The claim's own law | Whatever the order says | A lawsuit's pace | The ordinary appeal |
+| **TDRP** | The gaining or losing registrar only | An approved provider | Whether the transfer followed the Transfer Policy | Approve, deny or reverse the transfer | Filed within 12 months; implemented 14 days after the decision | A court, if filed in the 14 days |
+
+The UDRP is the default because it moves the name at internet speed and price; the URS trades the transfer remedy for speed; the courts are for the cases the panels can't reach (an anonymous foreign registrant, liability beyond the name, a name a foreign registrar won't move); and the TDRP isn't a registrant's route at all, which is the gap the Transfer Policy Review asked the GNSO to study.
+
 ## My Default
 
 My default is to treat every dispute notice as a legal clock with an owner and the lock as a system state, not a support task: a verification request opens a `domain_disputes` row, applies a `domain_locks` row of kind `udrp` that no customer or support agent can lift, answers the provider with the registrant version in force, and confirms, all within the same business day, well inside the two allowed. Decisions are implemented by a scheduled job on the first business day after the ten-day window unless a court filing is recorded, and in rem notices freeze the name against every mutation including expiry, with the renewal paid by the registrar if necessary. I wouldn't publish more opinion than GoDaddy or IONOS do about the merits of trademark claims; neutrality is the right posture for a registrar.
