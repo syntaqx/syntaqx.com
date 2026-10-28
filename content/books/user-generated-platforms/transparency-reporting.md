@@ -2,7 +2,7 @@
 title = "Transparency Reporting"
 description = "What Reddit, Discord, Pinterest, Snap, Bluesky and others count, the DSA templates, OSA notices and state filings, and how to make the report a query."
 category = "User-Generated Platforms Industry"
-order = 1849
+order = 1850
 part = "The Rules"
 tags = ["user-generated-content", "transparency", "trust-and-safety", "digital-services-act", "metrics"]
 +++
