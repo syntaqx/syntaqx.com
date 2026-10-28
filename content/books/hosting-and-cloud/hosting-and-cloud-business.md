@@ -506,7 +506,11 @@ CREATE TABLE quotas (                    -- limits, defaults and overrides, over
   region_id    TEXT REFERENCES regions (id),    -- null: global quota
   limit_value  NUMERIC NOT NULL,
   source       TEXT NOT NULL CHECK (source IN ('default', 'applied', 'risk', 'abuse')),
-  valid_during TSTZRANGE NOT NULL
+  valid_during TSTZRANGE NOT NULL,
+  EXCLUDE USING GIST (quota_code WITH =, (COALESCE(account_id::text, '')) WITH =,
+    (COALESCE(project_id::text, '')) WITH =, (COALESCE(region_id, '')) WITH =,
+    source WITH =, valid_during WITH &&)  -- one limit per scope and source at a time;
+                                         -- the effective limit is the most specific row
 );
 
 -- Usage ---------------------------------------------------------------------
@@ -541,7 +545,7 @@ CREATE TABLE rated_usage (               -- priced usage per account, SKU and wi
   commitment_id    UUID REFERENCES commitments (id),
   rating_run_id    UUID NOT NULL,        -- which run produced it; reruns are diffable
   invoice_line_id  UUID REFERENCES invoice_lines (id),  -- set when invoiced
-  UNIQUE (account_id, sku_id, resource_id, rated_during, rating_run_id)
+  UNIQUE NULLS NOT DISTINCT (account_id, sku_id, resource_id, rated_during, rating_run_id)
 );
 
 -- Money: the Payments volume's tables. The provider's selling entity is a merchant; each
