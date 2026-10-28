@@ -138,7 +138,7 @@ The chapter adds no tables, as the [core data model](/books/hosting-and-cloud/ho
 - **A managed or distribution cluster** is a resource of kind `cluster` with [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters` side table, and its nodes are `node_pool` and `virtual_machine` resources from [Managed Kubernetes](/books/hosting-and-cloud/managed-kubernetes). A cluster's distribution and version are attributes of that side table; a customer cluster running on the customer's own hardware but managed by the provider (ECS Anywhere, Hybrid Nodes, Omni-style fleets) is a `cluster` whose region's `underlay` is the customer site, as Hybrid & On-Prem Cloud describes.
 - **A serverless container service** (a Cloud Run service, an ECS service on Fargate, a container app) is a resource of kind `container_service`, the side table From chroot to Containers defines, metered by vCPU-seconds, memory-seconds and requests in `usage_events`.
 - **A microVM** (a Fly Machine) is a `virtual_machine` whose isolation level Sandboxes & MicroVMs adds, with stopped Machines billing their image storage as a `volume`.
-- **A license-restricted component** (a BSL scheduler or fleet manager) is a fact about the product, recorded where Open Source & the Clouds puts license fields on `products`.
+- **A license-restricted component** (a BSL scheduler or fleet manager) is a fact about the product, recorded where [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds) puts license fields on `products`.
 
 The point of the mapping is that a provider doesn't need a billing model per orchestrator: clusters, container services and machines are all resources with usage, and the orchestrator is a detail of the side table.
 
@@ -214,4 +214,4 @@ The point of the mapping is that a provider doesn't need a billing model per orc
 
 **In practice**
 
-- [Ona (Gitpod): We're leaving Kubernetes](https://ona.com/stories/we-are-leaving-kubernetes), October 31, 2024, six years and 1.5 million users, the reasons, Gitpod Flex, application versus system workloads
+- [Ona (Gitpod): We are leaving Kubernetes](https://ona.com/stories/we-are-leaving-kubernetes), October 31, 2024, six years and 1.5 million users, the reasons, Gitpod Flex, application versus system workloads

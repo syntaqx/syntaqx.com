@@ -11,7 +11,7 @@ A Kubernetes cluster accepts objects, not applications. A web service is a Deplo
 
 For a provider, both are product surfaces as much as tools. Providers publish their own add-ons as Helm charts, so a chart's upgrade behavior becomes the provider's support burden; the GitOps controller is now something AWS, Google and Microsoft each run or install for the customer, priced or bundled, with its own support window; and the controller is the component holding credentials that can change every workload in a cluster, which makes its tenancy model a security decision. The ecosystem has also shown what happens when the company behind a tool fails: Weaveworks, which built Flux, shut down in February 2024, and the project survived because its maintainers found new employers and the CNCF found new backers.
 
-This chapter covers Helm's four versions at operator depth (charts, values, releases and hooks), Kustomize, charts and manifests as OCI artifacts, Argo CD and Flux, Weaveworks and Flux's continuity, progressive delivery with Argo Rollouts and Flagger, and GitOps sold as a managed add-on. The principles of GitOps (declarative, versioned and immutable, pulled automatically, continuously reconciled) belong to the playbook's [GitOps](/docs/operations/kubernetes#gitops) section; canary and blue-green as strategies belong to [Deployment Strategies](/docs/delivery/deployment-strategies#the-strategies). It adds cluster-workload columns to the `deployments` table that Platforms Take Over the Deploy defines, and a `gitops_sources` table. The CD platforms outside the cluster (Spinnaker, Harness and their peers) are Continuous Delivery Platforms; the registries that store charts are Artifacts & Registries; signing the artifacts is Pipeline Supply-Chain Security.
+This chapter covers Helm's four versions at operator depth (charts, values, releases and hooks), Kustomize, charts and manifests as OCI artifacts, Argo CD and Flux, Weaveworks and Flux's continuity, progressive delivery with Argo Rollouts and Flagger, and GitOps sold as a managed add-on. The principles of GitOps (declarative, versioned and immutable, pulled automatically, continuously reconciled) belong to the playbook's [GitOps](/docs/operations/kubernetes#gitops) section; canary and blue-green as strategies belong to [Deployment Strategies](/docs/delivery/deployment-strategies#the-strategies). It adds cluster-workload columns to the `deployments` table that Platforms Take Over the Deploy defines, and a `gitops_sources` table. The CD platforms outside the cluster (Spinnaker, Harness and their peers) are [Continuous Delivery Platforms](/books/hosting-and-cloud/continuous-delivery-platforms); the registries that store charts are [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries); signing the artifacts is [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security).
 
 ## How the Providers Do It
 
@@ -169,7 +169,7 @@ For a managed GitOps product, I'd offer Argo CD, because its UI, AppProjects and
 
 ## How to Build It
 
-The chapter adds cluster-workload columns to the `deployments` table owned by Platforms Take Over the Deploy, so a Helm release or a GitOps sync in a cluster is a deployment like any other, and adds `gitops_sources` for the controllers' source objects. Clusters are [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters (resource_id)`; the artifacts referenced by digest are Artifacts & Registries' concern.
+The chapter adds cluster-workload columns to the `deployments` table owned by [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#how-to-build-it), whose `resource_id` already admits a cluster and whose `source` already includes `'gitops'`, so a Helm release or a GitOps sync in a cluster is a deployment like any other, and adds `gitops_sources` for the controllers' source objects. Clusters are [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters (resource_id)`; the artifacts referenced by digest are Artifacts & Registries' concern.
 
 ```sql
 CREATE TABLE gitops_sources (            -- an Application, Kustomization, HelmRelease or RootSync
@@ -200,17 +200,17 @@ CREATE TABLE gitops_sources (            -- an Application, Kustomization, HelmR
   UNIQUE (cluster_id, object_uid)
 );
 
-ALTER TABLE deployments                  -- Platforms Take Over the Deploy's table
-  ADD COLUMN cluster_id        UUID REFERENCES clusters (resource_id),
+ALTER TABLE deployments                  -- Platforms Take Over the Deploy's table; for a cluster
+                                         -- workload resource_id is the cluster, source is 'gitops'
+                                         -- for a controller sync or 'cli', 'ci' or 'api' for a
+                                         -- push, and commit_sha or artifact_digest is the exact
+                                         -- revision applied
   ADD COLUMN namespace         TEXT,
   ADD COLUMN source_kind       TEXT CHECK (source_kind IN ('helm', 'kustomize', 'manifests')),
   ADD COLUMN gitops_source_id  UUID REFERENCES gitops_sources (id),  -- null: pushed by a person
                                          -- or a pipeline
-  ADD COLUMN applied_by        TEXT CHECK (applied_by IN ('gitops_controller', 'helm_cli',
-                                 'kubectl', 'provider_addon_manager')),
   ADD COLUMN chart_ref         TEXT,     -- 'oci://registry/charts/web' or repo/chart
   ADD COLUMN chart_version     TEXT,
-  ADD COLUMN source_revision   TEXT,     -- the commit SHA or artifact digest that was applied
   ADD COLUMN release_name      TEXT,     -- Helm release, when source_kind = 'helm'
   ADD COLUMN release_revision  INT,      -- Helm's revision number for that release
   ADD COLUMN tool_version      TEXT,     -- what rendered it: 'helm 4.0.0', 'kustomize 5.4.2'
@@ -219,17 +219,16 @@ ALTER TABLE deployments                  -- Platforms Take Over the Deploy's tab
   ADD COLUMN health_status     TEXT CHECK (health_status IN ('healthy', 'progressing',
                                  'degraded', 'suspended', 'missing', 'unknown')),
   ADD CONSTRAINT deployments_cluster_shape CHECK (
-    (cluster_id IS NULL) = (namespace IS NULL) AND
-    (cluster_id IS NULL) = (source_kind IS NULL) AND
+    (namespace IS NULL) = (source_kind IS NULL) AND
     (source_kind = 'helm') = (release_name IS NOT NULL)),
-  ADD CONSTRAINT deployments_gitops_applied CHECK (
-    gitops_source_id IS NULL OR applied_by = 'gitops_controller');
+  ADD CONSTRAINT deployments_gitops_source CHECK (
+    gitops_source_id IS NULL OR source = 'gitops');
 ```
 
 Notes on the sketch:
 
-- **A sync that changes the cluster is a deployment.** Each new `source_revision` a controller applies, or each `helm upgrade`, is one `deployments` row; reconciles that change nothing are not, so the table stays a history of changes, not of loops.
-- **Revisions are immutable references.** `source_revision` is a commit SHA or an OCI digest, never a branch or tag, so "what was running at 14:02" resolves to bytes; `target_ref` on the source records what it was following.
+- **A sync that changes the cluster is a deployment.** Each new revision a controller applies, or each `helm upgrade`, is one `deployments` row; reconciles that change nothing are not, so the table stays a history of changes, not of loops.
+- **Revisions are immutable references.** The row's `commit_sha` or `artifact_digest` is a commit SHA or an OCI digest, never a branch or tag, so "what was running at 14:02" resolves to bytes; `target_ref` on the source records what it was following.
 - **`tool_version` is the deprecation inventory.** Helm 3's end of security support on November 11, 2026, or a Kustomize version gap like kubectl's v2.0.3 years, becomes a query over `tool_version` by account and cluster.
 - **Verification is a column, not a promise.** `verify_provider` null means the source is applied without signature checks; a provider can require it for its own add-ons and report it for customers'.
 - **The controller's reach is recorded.** `apply_identity` and `destinations` say what each source could change, which is what an incident review needs when a repository is compromised.

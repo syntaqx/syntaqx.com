@@ -11,7 +11,7 @@ Kubernetes was designed around workloads that can die and be replaced anywhere, 
 
 For a provider the stakes are larger than for its customers. A claim in a customer's cluster creates a billable volume in the provider's block storage, through a driver the provider writes and ships as a managed add-on; the provider's per-instance attachment limits become the customer's scheduling limits; and a volume orphaned by a deleted cluster is the provider's to find, bill or credit. Providers that run customer workloads on Kubernetes themselves meet the hardest version of the problem: Gitpod, which ran developer environments on Kubernetes for six years, identified storage as "the crucial element" in why it left.
 
-This chapter covers the move from in-tree volume plugins to CSI, the claim, volume and class objects, binding and topology, provider CSI drivers and their per-node limits, StatefulSets, database and storage operators, backup and restore with Velero, and when state belongs outside the cluster. It links claims in [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters` to the `volumes` side table of Storage: Block, File & Object, which owns volume types, snapshots and their billing. Backup policies and restores are Backups, Restores & Migrations; managed databases as a product are Managed Databases; the playbook's [Disaster Recovery](/docs/operations/disaster-recovery) owns backup rules in general.
+This chapter covers the move from in-tree volume plugins to CSI, the claim, volume and class objects, binding and topology, provider CSI drivers and their per-node limits, StatefulSets, database and storage operators, backup and restore with Velero, and when state belongs outside the cluster. It links claims in [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters` to the `volumes` side table of Storage: Block, File & Object, which owns volume types, snapshots and their billing. Backup policies and restores are Backups, Restores & Migrations; managed databases as a product are [Managed Databases](/books/hosting-and-cloud/managed-databases); the playbook's [Disaster Recovery](/docs/operations/disaster-recovery) owns backup rules in general.
 
 ## How the Providers Do It
 
@@ -288,4 +288,4 @@ Notes on the sketch:
 
 **In practice**
 
-- [Ona (Gitpod): We're leaving Kubernetes](https://ona.com/stories/we-are-leaving-kubernetes), October 31, 2024, PVC attach and detach timing, disk limits, zone locality, IO bandwidth, local SSDs and S3 backups
+- [Ona (Gitpod): We are leaving Kubernetes](https://ona.com/stories/we-are-leaving-kubernetes), October 31, 2024, PVC attach and detach timing, disk limits, zone locality, IO bandwidth, local SSDs and S3 backups
