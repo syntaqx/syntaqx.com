@@ -408,6 +408,40 @@ body {
   color: var(--foreground);
   font-style: italic;
 }
+/* Callouts: `> [!NOTE]` and friends, GitHub's alert syntax (rehypeCallouts). */
+.prose aside.callout {
+  --callout: var(--jwt-cyan);
+  margin: 1.75em 0;
+  padding: 0.85em 1.1em;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--callout);
+  border-radius: 0 6px 6px 0;
+  background: color-mix(in srgb, var(--callout) 7%, var(--surface));
+  font-style: normal;
+}
+.prose aside.callout-tip { --callout: var(--accent); }
+.prose aside.callout-important { --callout: var(--jwt-purple); }
+.prose aside.callout-warning { --callout: var(--pink); }
+.prose aside.callout-caution { --callout: var(--mauve); }
+.prose aside.callout > p { margin: 0.5em 0 0; }
+.prose aside.callout > p.callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+  color: var(--callout);
+  font-weight: 600;
+}
+.prose aside.callout .callout-title svg {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 /* Feature posts: blockquotes become pull quotes in the voice face. */
 .prose-feature blockquote {
   padding: 0.4em 0 0.4em 0.9em;
