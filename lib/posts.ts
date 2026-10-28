@@ -26,14 +26,21 @@ export interface PostData {
 }
 
 export function estimateReadingTime(markdown: string): number {
-  // Strip code fences and inline code so they don't inflate the count.
+  // Count only what a reader reads as words. Code blocks are skimmed, not
+  // read, so they don't count; inline code reads as part of its sentence.
   const stripped = markdown
     .replace(/```[\s\S]*?```/g, " ")
-    .replace(/`[^`]*`/g, " ");
+    // An image's alt text is for screen readers; its caption is on the page.
+    .replace(/!\[[^\]]*\]\(\S*(?:\s+"([^"]*)")?\)/g, " $1 ")
+    // Link targets, table pipes and separator rows aren't words.
+    .replace(/\]\([^)]*\)/g, " ")
+    .replace(/^[\s|:-]+$/gm, " ")
+    .replace(/\|/g, " ")
+    .replace(/`/g, "");
   const words = stripped.split(/\s+/).filter(Boolean).length;
-  // 200 wpm: the standard average, and slower than a brisk skim, which
-  // better matches how these long-form essays actually get read.
-  return Math.max(1, Math.round(words / 200));
+  // 238 wpm: the average silent reading rate for English non-fiction in
+  // Brysbaert's 2019 meta-analysis of reading rate.
+  return Math.max(1, Math.round(words / 238));
 }
 
 /** Parse Hugo-style +++ TOML frontmatter */
