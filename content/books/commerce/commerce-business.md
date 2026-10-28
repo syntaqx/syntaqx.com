@@ -67,7 +67,7 @@ A marketplace delivery order is a bundle of separately priced lines, each with a
 | Tax | Customer | The taxing authority, collected by the marketplace or the merchant | [Sales Tax](/docs/payments/sales-tax) |
 | Tip | Customer | Courier, in full | [Tips](/books/commerce/delivery-fees-and-the-law#tips) |
 | Commission | Merchant | Marketplace | [Merchant Commission Tiers](/books/commerce/delivery-fees-and-the-law#merchant-commission-tiers) |
-| Courier pay | Marketplace | Courier | The User-Generated Platforms volume's [gig work chapter](/books/user-generated-platforms/gig-work-and-worker-law) |
+| Courier pay | Marketplace | Courier | The User-Generated Platforms volume's [Minimum Pay Standards](/books/user-generated-platforms/gig-work-and-worker-law#minimum-pay-standards) and [Worker Payouts](/books/user-generated-platforms/gig-work-and-worker-law#worker-payouts) |
 | Membership fee | Customer | Marketplace, monthly or yearly | [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions) |
 | Promotion | Marketplace or merchant | Customer, as a discount | [Promotion Abuse](/books/commerce/refunds-and-delivery-fraud#promotion-abuse) |
 | Refund and error charge | Marketplace, then often merchant | Customer | [Who Pays for an Error](/books/commerce/refunds-and-delivery-fraud#who-pays-for-an-error) |
