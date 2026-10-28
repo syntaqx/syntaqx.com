@@ -58,7 +58,7 @@ The cases sort into six kinds, and each has its own customer obligations:
 
 **Version end of life** is the most common forced migration and the one providers have turned into revenue. RDS Extended Support charges per vCPU-hour to run an engine version past its end of standard support, doubling in the third year, then upgrades automatically ([Extended Support and Forced Upgrades](/books/hosting-and-cloud/managed-databases#extended-support-and-forced-upgrades)); the managed Kubernetes services charge extra for clusters on minors past standard support (Managed Kubernetes). Hosts pass operating system end of life through the license bill: a cPanel partner listed a higher surcharge for servers on end-of-life CentOS and CloudLinux 6 and 7 from January 1, 2026 (Control Panel Licensing & the Alternatives). Extended support is a fair product when it is optional and priced in advance; it becomes a penalty when enrollment is automatic and the price appears on the bill first.
 
-**A business sold with its customers** carries a risk the others don't: the customer's security settings may not survive the move. In July 2024, after Google Domains customers had been migrated to Squarespace, attackers took over at least a dozen domains, mostly of cryptocurrency companies; researchers said accounts could be created for migrated domains' email addresses without verification and that multi-factor authentication was off after the migration, and Squarespace attributed the attacks to an OAuth login weakness it fixed within hours. A provider buying or selling a customer base has to carry over authentication, locks and contacts as part of the migration, not after it (Transfers, Locks & Registrar Security).
+**A business sold with its customers** carries a risk the others don't: the customer's security settings may not survive the move. In July 2024, after Google Domains customers had been migrated to Squarespace, attackers took over at least a dozen domains, mostly of cryptocurrency companies; researchers said accounts could be created for migrated domains' email addresses without verification and that multi-factor authentication was off after the migration, and Squarespace attributed the attacks to an OAuth login weakness it fixed within hours. A provider buying or selling a customer base has to carry over authentication, locks and contacts as part of the migration, not after it ([Transfers, Locks & Registrar Security](/books/hosting-and-cloud/transfers-and-locks)).
 
 ## The Lifecycle of a Sunset
 
@@ -87,9 +87,9 @@ For infrastructure, export is not one archive. It is a different mechanism for e
 | Object storage | Every object, with metadata | The S3-compatible API, bulk copy tools, and egress waived or priced for the move |
 | Databases | A consistent dump or a replication stream | Native dumps; logical replication to the destination for a low-downtime cutover |
 | Container images and artifacts | Every tag, with digests intact | Registry API pulls; the OCI format makes images portable |
-| Domains | The registration | An unlocked domain and its transfer authorization code, on request (Transfers, Locks & Registrar Security) |
+| Domains | The registration | An unlocked domain and its transfer authorization code, on request ([Transfers, Locks & Registrar Security](/books/hosting-and-cloud/transfers-and-locks)) |
 | DNS | Every record | A zone file export |
-| Phone numbers | The numbers themselves | Port-out to another carrier (Phone Numbers & Porting) |
+| Phone numbers | The numbers themselves | Port-out to another carrier ([Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting)) |
 | Configuration and IaC state | What was declared | State files and configuration exports (CDKTF's `synth --hcl` is the case) |
 | Billing history | Invoices and usage | Cost and usage exports, invoices as documents |
 

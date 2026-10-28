@@ -114,7 +114,7 @@ A CPaaS fails in ways the clouds don't, because money and carriers are in the pa
 - **Carrier-specific delivery.** Twilio's status page posted "SMS and MMS Delivery Delays from Twilio to Verizon United States" at 10:13 PDT on May 27, 2026 and resolved it at 22:54 PDT on May 28, about 37 hours, across long code, short code, toll-free and Zipwhip traffic. The failure was downstream of the platform, and the status component that mattered was the carrier, not the API.
 - **Social engineering.** In August 2022 attackers phished Twilio employees with fake login pages and used internal tools to reach 209 customers' data out of more than 270,000, and 93 Authy users; Twilio moved all staff to FIDO2 keys.
 
-Two lessons are specific to this industry. A billing system must fail closed for charging and open for service: when the ledger can't be written, stop taking money, keep carrying traffic. And a communications status page needs components per carrier and per number type, because that is how the failures arrive (Sending a Text; The CPaaS Business).
+Two lessons are specific to this industry. A billing system must fail closed for charging and open for service: when the ledger can't be written, stop taking money, keep carrying traffic. And a communications status page needs components per carrier and per number type, because that is how the failures arrive ([Sending a Text](/books/hosting-and-cloud/sending-a-text); [The CPaaS Business](/books/hosting-and-cloud/cpaas-business)).
 
 ## Vendor Risk
 
