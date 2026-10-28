@@ -14,8 +14,7 @@ export function renderResumeText(
     .join(" | ");
   const jobs = [...resume.experience, ...resume.earlier].map((job: ResumeJob) =>
     [
-      `${job.title} | ${dates(job)}`,
-      job.company,
+      `${job.title} | ${job.company} | ${dates(job)}`,
       job.progression && `Progression: ${job.progression.join(" > ")}`,
       ...(job.highlights ?? []).map((h) => `- ${h}`),
     ]
