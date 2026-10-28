@@ -47,7 +47,7 @@ The milestones after that, each dated to its primary source:
 | February 3, 2026 | Chef Infra Client 19 installed from rubygems.org needs a license key at runtime (`CHEF_LICENSE_KEY` or `--license-key`); native packages don't | The last unlicensed path to the official client closes |
 | August 20, 2026 | Deprecation and end-of-life table for the whole product line (Infra Server, Automate, Supermarket, Habitat below 2.0, InSpec 5 and 6, Workstation 25) | A dated migration map to Chef 360 and the current majors |
 
-The pattern is the one Open Source & the Clouds tells for databases, told here for a configuration tool: the code stays under a permissive license, and the vendor captures value at the binary, the key and the hosted control plane. The community response, Cinc, is in [Licensing, Chef 360 and Cinc](#licensing-chef-360-and-cinc).
+The pattern is the one [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds#the-license-spectrum) tells for databases, told here for a configuration tool: the code stays under a permissive license, and the vendor captures value at the binary, the key and the hosted control plane. The community response, Cinc, is in [Licensing, Chef 360 and Cinc](#licensing-chef-360-and-cinc).
 
 ## The Chef Run
 
