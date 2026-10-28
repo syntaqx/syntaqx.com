@@ -294,7 +294,7 @@ Notes on the sketch:
 - [GoDaddy: Report Abuse](https://legalportal.godaddy.com/abuse), report categories
 - [Namecheap: How and where can I file abuse complaints?](https://www.namecheap.com/support/knowledgebase/article.aspx/9196/5/how-and-where-can-i-file-abuse-complaints/), registrar and hosting mailboxes, registrar-only limits, processing times, holds, API reporting
 - [Cloudflare: Our approach to abuse](https://www.cloudflare.com/trust-hub/abuse-approach/), registrar scope at the domain level, action on technical abuse consistent with ICANN requirements
-- [Cloudflare: Transparency Report, Abuse, H2 2025](https://cfl.re/h2-2025-transparency-report-abuse), interstitials versus registrar suspension, 3,310 and 2,567 registrar actions, the 1.1.1.1 resolver position
+- [Cloudflare: Transparency Report, Abuse, H2 2025](https://cf-assets.www.cloudflare.com/slt3lc6tev37/7IBPOyNLRJfQ7joWrmsVh0/d3947a86eb4d76801076094a85cf7ff7/2H_2025_Cloudflare_s_Transparency_Report_Abuse-v2.pdf), interstitials versus registrar suspension, 3,310 and 2,567 registrar actions, the 1.1.1.1 resolver position
 - [Porkbun: Abuse](https://porkbun.com/abuse), the CleanDNS-hosted form, DNS-related scope, proof requirement, 24-hour confirmation
 - [Squarespace Help: Submit an abuse report](https://support.squarespace.com/hc/en-us/articles/11580957865869-Reporting-abuse), domain abuse forms and the registrar-only content limit
 - [Tucows: Abuse form](https://tucowsdomains.com/abuse-form/), registrars covered, acknowledgment and case number, name-server reset, registrant-first guidance

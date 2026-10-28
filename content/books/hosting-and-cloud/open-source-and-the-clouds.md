@@ -64,6 +64,7 @@ MongoDB's FAQ gives its reasoning plainly: it was "too easy for large cloud vend
 The longest fight, in steps:
 
 - **11 Mar 2019:** AWS launched Open Distro for Elasticsearch, with Adrian Cockcroft writing that "since June 2018, we have witnessed significant intermingling of proprietary code into the code base," and that distributions should stay "open and free of proprietary code."
+- **27 Sep 2019:** Elasticsearch, Inc. and elasticsearch B.V. sued Amazon.com and Amazon Web Services for trademark infringement and false advertising in the Northern District of California (No. 3:19-cv-06158), over Amazon Elasticsearch Service and Open Distro for Elasticsearch.
 - **14 Jan 2021:** Elastic moved Elasticsearch and Kibana from Apache 2.0 to a dual SSPL and Elastic License from version 7.11, to stop cloud providers offering them as a service "without contributing back."
 - **19 Jan 2021:** Shay Banon's "Amazon: NOT OK" called Amazon Elasticsearch Service (launched 2015) "a pretty obvious trademark violation," said Elastic had sued, and alleged that Open Distro contained code copied from Elastic's commercial features.
 - **21 Jan 2021:** AWS said it would create and maintain an Apache 2.0 fork from 7.10, called Elastic's "free and open" claim misleading, cited more than 230 Lucene contributions in 2020, and pointed to Grafana (a fork of Kibana 3) as a healthy fork precedent.
@@ -234,6 +235,7 @@ Notes on the sketch:
 **The chronology**
 
 - [AWS: Keeping open source open, Open Distro for Elasticsearch](https://aws.amazon.com/blogs/opensource/keeping-open-source-open-open-distro-for-elasticsearch/), the 2019 launch and reasoning
+- [Complaint, Elasticsearch, Inc. v. Amazon.com, Inc., N.D. Cal. No. 3:19-cv-06158, Dkt. 1](https://storage.courtlistener.com/recap/gov.uscourts.cand.348946/gov.uscourts.cand.348946.1.0_2.pdf), filed September 27, 2019 (RECAP copy): parties, trademark and false advertising claims
 - [Elastic: Licensing change](https://www.elastic.co/blog/licensing-change), the 2021 move to SSPL and the Elastic License
 - [Elastic: Amazon: NOT OK](https://www.elastic.co/blog/why-license-change-AWS), the trademark and copying allegations
 - [AWS: Stepping up for a truly open source Elasticsearch](https://aws.amazon.com/blogs/opensource/stepping-up-for-a-truly-open-source-elasticsearch/), the fork and Lucene contributions

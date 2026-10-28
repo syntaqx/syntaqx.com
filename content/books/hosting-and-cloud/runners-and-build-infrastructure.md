@@ -55,7 +55,7 @@ The economics follow. A Mac is held for at least a day, runs one or a few VMs, a
 
 ## Caches
 
-Caches make CI fast and are a shared-state problem on a provider's storage. GitHub's dependency cache is 10 GB per repository free, retained seven days after last access with least-recently-used eviction, larger on paid plans since November 20, 2025, and read-only when a budget is hit. Third parties price it as storage: Namespace bills Bazel cache hits at $0.10 per 1,000 and content-addressed storage at $0.20 per GB-month, and Depot's cache and registry storage is $0.20 per GB-month (as of October 2026). The playbook's [Fast](/docs/delivery/ci-pipelines#fast) section owns cache keys; the provider's concerns are scope (a pull request from a fork must not write a cache the main branch reads), eviction, and metering by peak or average size.
+Caches make CI fast and are a shared-state problem on a provider's storage. GitHub's dependency cache is 10 GB per repository free, retained seven days after last access with least-recently-used eviction, larger on paid plans since November 20, 2025 at $0.07 per GB-month beyond the 10 GB, and read-only when a budget is hit. Third parties price it as storage: Namespace bills Bazel cache hits at $0.10 per 1,000 and content-addressed storage at $0.20 per GB-month, and Depot's cache and registry storage is $0.20 per GB-month (as of October 2026). The playbook's [Fast](/docs/delivery/ci-pipelines#fast) section owns cache keys; the provider's concerns are scope (a pull request from a fork must not write a cache the main branch reads), eviction, and metering by peak or average size.
 
 ## Remote Build Execution
 
@@ -191,6 +191,7 @@ ORDER BY 2, 1;
 - [GitHub: nektos/act](https://github.com/nektos/act), running GitHub Actions workflows locally in Docker, MIT license
 - [GitHub Changelog: Self-hosted runners support Apple silicon](https://github.blog/changelog/2022-08-09-github-actions-self-hosted-runners-now-support-apple-m1-hardware), August 9, 2022
 - [GitHub Changelog: Cache size can now exceed 10 GB](https://github.blog/changelog/2025-11-20-github-actions-cache-size-can-now-exceed-10-gb-per-repository/), November 20, 2025
+- [GitHub Docs source: GitHub Actions billing](https://github.com/github/docs/blob/main/content/billing/concepts/product-billing/github-actions.md), $0.07 per GB-month for Actions cache beyond the included 10 GB
 - [GitLab Docs: Fleeting](https://docs.gitlab.com/runner/fleet_scaling/fleeting/), the plugin abstraction over instance groups
 - [GitLab: Docker Machine executor deprecation](https://gitlab.com/gitlab-org/gitlab/-/issues/498268), deprecated in 17.5, removal planned for 20.0
 - [AWS: Amazon EC2 Mac instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-mac-instances.html), Dedicated Hosts, the 24-hour minimum, purchase options, launch time, scrubbing and hardware
