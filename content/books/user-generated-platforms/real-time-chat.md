@@ -73,6 +73,8 @@ Chat messages are edited and deleted constantly, and they're also the evidence i
 
 Community owners also want retention controls (auto-delete in a channel after a period). They're compatible with the above if the owner's setting governs what's served and the platform's minimum governs what's kept for safety.
 
+Conversation timers, view-once media and what a screenshot notice can promise are in [Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#disappearing-messages-and-view-once-media).
+
 ## Direct Messages and the Stranger Problem
 
 Direct messages are where the most serious harms on community platforms start: grooming, sextortion, harassment, scams. They're private, so other members can't see or report them, and they often begin with someone the recipient met in a large public server. The industry's controls converge on **separating strangers from contacts:**

@@ -135,6 +135,8 @@ The design follows the lodging tax model there:
 
 Seller tax reporting (1099-K, DAC7) belongs to [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#information-returns-1099-k-1099-misc-and-1042-s).
 
+Sales tax and the end of the US de minimis exemption for cross-border sellers in video shops are in [Social Commerce & Live Shopping](/books/user-generated-platforms/social-commerce-and-live-shopping#sales-tax).
+
 ## How to Build It
 
 ```sql

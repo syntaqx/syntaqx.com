@@ -10,7 +10,7 @@ tags = ["user-generated-content", "short-form-video", "music-licensing", "remix"
 
 On a short-form video platform the audio is a thing in its own right. A creator records a clip of themselves talking over a beat; the platform pulls the audio out, names it after the creator, and gives it a page; a hundred thousand other people pick that audio from the page and make their own videos with it; some of them put their video beside the original, some clip its first five seconds and answer it, some reuse its cut timing with their own footage. Each of those is a new post with its own author, audience and moderation state, and each is also a derivative of something else: of a sound, of a parent video, of a template. The platform has to record those links, show them, rank by them, and pull them apart again when a sound is removed, a parent is deleted, or a record label's license runs out and every video using its catalog goes silent at once.
 
-This chapter covers the sound as an object (extraction, the sound page, attribution, renaming and removal), the remix primitives (side-by-side duets, clipped stitches and cuts, green-screen backgrounds, templates), per-post reuse permissions and the defaults for minors, lineage between posts and what happens when a parent goes, music licensing (general and commercial libraries, label and publisher deals, the account-type and region limits, and how a license decides which features exist), voiceover and synthetic voices, and how trends spread and get charted. Fingerprinting uploads against rights holders' references, Content ID-style claims and the Article 17 regime are [Copyright at Scale](/books/user-generated-platforms/copyright#fingerprinting-and-content-id); who bears music costs in revenue pools is [Music Costs Shared With Creators](/books/user-generated-platforms/creator-monetization#music-costs-shared-with-creators); the ranking that turns a sound into a trend is Interest-Graph Feeds; the camera, filters and the green-screen effect itself are Camera & Effects. None of this is legal advice.
+This chapter covers the sound as an object (extraction, the sound page, attribution, renaming and removal), the remix primitives (side-by-side duets, clipped stitches and cuts, green-screen backgrounds, templates), per-post reuse permissions and the defaults for minors, lineage between posts and what happens when a parent goes, music licensing (general and commercial libraries, label and publisher deals, the account-type and region limits, and how a license decides which features exist), voiceover and synthetic voices, and how trends spread and get charted. Fingerprinting uploads against rights holders' references, Content ID-style claims and the Article 17 regime are [Copyright at Scale](/books/user-generated-platforms/copyright#fingerprinting-and-content-id); who bears music costs in revenue pools is [Music Costs Shared With Creators](/books/user-generated-platforms/creator-monetization#music-costs-shared-with-creators); the ranking that turns a sound into a trend is [Interest-Graph Feeds](/books/user-generated-platforms/interest-graph-feeds); the camera, filters and the green-screen effect itself are [Camera & Effects](/books/user-generated-platforms/camera-and-effects). None of this is legal advice.
 
 ## How the Platforms Do It
 
@@ -91,7 +91,7 @@ The span is the fact to keep. A five-second clip from a three-minute video is a 
 
 ### Background
 
-YouTube's Green Screen uses "a video or Short as your Short's background". The rendering is a camera effect (segmentation of the creator from their own background, which Camera & Effects covers); for this chapter it's a side-by-side use with a full-frame layout, and it records the same edge.
+YouTube's Green Screen uses "a video or Short as your Short's background". The rendering is a camera effect (segmentation of the creator from their own background, which [Camera & Effects](/books/user-generated-platforms/camera-and-effects) covers); for this chapter it's a side-by-side use with a full-frame layout, and it records the same edge.
 
 ### Templates and Audio-Sync Editing
 
@@ -238,7 +238,7 @@ The signals I'd compute per sound, per territory, per day:
 - **Sound page visits and "use this sound" taps,** the funnel from watching to making.
 - **Off-platform saves,** such as Add to Music App taps, which are the signal labels care about most.
 
-Two cautions. Creation counts are cheap to fake with networks of accounts, so they go through the same inauthentic-behavior filtering as votes and follows ([Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#how-to-build-it)) before they feed a chart or a ranking. And how these signals feed the For You ranking is Interest-Graph Feeds' subject; this chapter only defines them.
+Two cautions. Creation counts are cheap to fake with networks of accounts, so they go through the same inauthentic-behavior filtering as votes and follows ([Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#how-to-build-it)) before they feed a chart or a ranking. And how these signals feed the For You ranking is [Interest-Graph Feeds](/books/user-generated-platforms/interest-graph-feeds)' subject; this chapter only defines them.
 
 ### Charts
 

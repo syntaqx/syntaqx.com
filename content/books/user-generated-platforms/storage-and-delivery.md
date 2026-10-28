@@ -109,6 +109,8 @@ Removing a post isn't the end of a takedown: the file is still in the CDN, in ev
 
 Edge scanning adds a second net. Cloudflare's CSAM Scanning Tool compares content served through its cache against known lists from child-safety organizations, blocks matches where it can and sends the customer a daily email with the file paths; [Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#hash-matching) covers what a platform must do when such a notice arrives. Copies outside the platform (search engine caches, archives, re-uploads elsewhere) aren't purged by any of this, which is why the decision record notes what was removed where ([Trust & Safety](/docs/security/trust-and-safety#auditing-moderation-decisions)).
 
+Content that expires by design makes every copy a clock: [Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#every-copy-has-a-clock).
+
 ## Orphans, Purges and Link Rot
 
 An orphan is stored data nothing points at, and a media pipeline makes them constantly:

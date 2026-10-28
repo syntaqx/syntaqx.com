@@ -116,6 +116,8 @@ The US has no single online safety regulator, and Section 230 still shields most
 - **State attorneys general** enforce state minors' laws and transparency statutes. New York's Stop Hiding Hate Act requires social media companies with more than $100 million in annual gross revenue to file their terms of service and moderation data with the Attorney General twice a year, with civil penalties of up to $15,000 per violation per day after a 30-day cure period. Reddit, Discord, Twitch (through Amazon), Kick, Snap and X are among the filers listed ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting#us-state-filings)).
 - **NCMEC** is not a regulator, but the CyberTipline is a statutory reporting duty with fines ([Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#the-reporting-duty)).
 
+The FTC's 2014 Snapchat order over disappearing messages that didn't disappear is in [Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#the-snapchat-order).
+
 ## The Enforcement Ledger
 
 Every action below targets a platform's process; rows are in date order. Amounts are as announced; appeals and payment status are noted where known, as of October 2026:

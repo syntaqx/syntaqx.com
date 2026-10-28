@@ -135,6 +135,8 @@ What to build, whatever the vendor:
 - **Disputes need clocks and a human.** The claimant's response window, automatic release on silence, and an escalation path that ends in a statutory notice or a release.
 - **Measure claimant accuracy.** Disputes won by uploaders, per claimant and per reference, are the signal for suspending access.
 
+Music matched inside short-video uploads, and what a lapsed label deal does to every post using a sound, are in [Sounds, Remix & Duets](/books/user-generated-platforms/sounds-remix-and-duets#matching-music-in-uploads).
+
 ## Music in Streams
 
 Live streaming is where copyright and product collide hardest. A streamer plays music in the background for hours; the live audience never triggers a notice; the archive (VODs, clips, highlights) is what rights holders find later, and one notice can cover hundreds of old clips.

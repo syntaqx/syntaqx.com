@@ -101,6 +101,8 @@ Goods marketplaces add fraud shaped by shipping:
 - **Prohibited items.** eBay's 10-K describes a 2024 settlement under the Controlled Substances Act of $59 million with enhanced listing monitoring; listing monitoring for prohibited and regulated goods is a compliance program, with the categories, the detection and the outcomes recorded.
 - **Holds on new sellers.** Etsy describes disbursement holds against fraud; a new seller's early payouts wait until delivery is confirmed ([Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#risk-holds-negative-balances-and-clawbacks) covers the mechanics).
 
+Brushing, wash trading of sales and fake live viewers in shops run inside video apps are in [Social Commerce & Live Shopping](/books/user-generated-platforms/social-commerce-and-live-shopping#commerce-fraud).
+
 ## Host and Seller Fraud
 
 Fraud by supply is quieter and costs more per case:

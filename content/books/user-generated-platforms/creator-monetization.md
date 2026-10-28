@@ -117,9 +117,13 @@ New platforms buy supply by paying creators for time, not results. Tubefilter re
 
 Both are earnings with no fan payment behind them. They're funded from the platform's marketing or transition budget, they need explicit conditions (hours streamed, exclusivity, a baseline period) checked from the platform's own records, and they end on a date. Model them as revenue programs with terms like any other, so a creator's statement shows them and finance can see their cost.
 
+Effect creators are paid the same way, on posts made with their effects: [Camera & Effects](/books/user-generated-platforms/camera-and-effects#creator-rewards).
+
 ## Music Costs Shared With Creators
 
 Music is the cost creators most often bring onto a platform. Two programs publish how they share it. YouTube's Shorts pool takes the music licensing share out before the Creator Pool is divided, so creators who use music and those who don't keep the same 45% of their allocation, and the cost falls on the pool. Twitch's DJ Program, announced in June 2024, licensed music from Universal, Warner, Sony and independent labels through Merlin, as Tubefilter reported, with Twitch splitting the licensing cost 50/50 with DJ Program partners and subsidizing existing DJs for a year. A cost share deducted from a creator's earnings is a line on the statement, computed by rule, and the rule is a program term with an effective date. Matching music in uploads and streams is [Copyright at Scale](/books/user-generated-platforms/copyright#fingerprinting-and-content-id).
+
+How sounds pay the artists behind them, through distribution services and charts, is in [Sounds, Remix & Duets](/books/user-generated-platforms/sounds-remix-and-duets#paying-artists).
 
 ## Sponsorships, Affiliates and Disclosure
 
@@ -128,6 +132,8 @@ Much of what creators earn never passes through the platform: a brand pays the c
 Affiliate commerce brings the merchant to the platform. In YouTube's Shopping affiliate program, a creator in the Partner Program, in an eligible country and not running a music or made-for-kids channel, tags products, and earns a commission when a viewer clicks the tag and buys on the retailer's site; sellers set the rates, may offer custom rates to some creators, and the commission is computed at the rate on the day of purchase, not the day the product was tagged. Attribution, rate on purchase date, and reversal on return are the parts a platform builds. Creator codes in game stores and Drops for watching streams are the same pattern inside games ([Affiliate Codes and Drops](/books/gaming/creator-economies#affiliate-codes-and-drops)).
 
 Disclosure is a legal duty on the creator that platforms build tools for. The FTC's Endorsement Guides (16 CFR Part 255, revised in 2023) treat free products and commissions as connections to disclose; say a disclosure in the video itself is more likely to be clear than one in the description; advise repeating it during a livestream because viewers join at any time; and say a platform's built-in tool isn't a guarantee, advising creators to add their own. YouTube asks creators to tick a paid promotion box, which adds a disclosure label at the start of the video, for branded content, sponsorships, endorsements or other commercial relationships. The platform's side is to record the declaration on the content item, show the label, and keep the declaration with the revision it applied to, because an undisclosed sponsorship is a policy violation and possibly an FTC matter.
+
+Affiliate commissions on products sold inside the platform's own shop, with open and targeted plans and view and click attribution, are in [Social Commerce & Live Shopping](/books/user-generated-platforms/social-commerce-and-live-shopping#affiliate-plans).
 
 ## Revenue Splits Compared
 

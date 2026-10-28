@@ -67,6 +67,8 @@ Whichever family the platform uses, the same rules apply:
 - **Make "create upload" idempotent.** A mobile client that retries the create call after a timeout must get the same session back, not a second asset ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
 - **Reserve, then reconcile.** Cloudflare Stream makes the uploader declare `maxDurationSeconds` and holds that much of the account's storage until the file arrives, then charges only the real duration. A platform with per-user quotas can do the same: reserve the declared size or duration against the quota at grant time, release the rest at confirm, and release everything when the session expires.
 
+In-app cameras push this onto the client: drafts encoded on the phone and uploaded in the background, before the user taps post, are in [Camera & Effects](/books/user-generated-platforms/camera-and-effects#drafts-and-the-offline-upload).
+
 ## Validation and Hostile Files
 
 Validation answers one question: is this a file of an allowed kind, within limits, that the platform's own decoders can safely read? Each layer of the answer is cheap to fool on its own.

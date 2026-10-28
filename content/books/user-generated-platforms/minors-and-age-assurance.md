@@ -70,6 +70,8 @@ Discord's UK implementation shows how specific these get. Friend request alerts 
 
 A design decision that saves a great deal of work: **apply the teen defaults to everyone whose age is unknown, and to everyone in a market with an age rule, and let verified adults opt out.** The UK Children's Code says applying its standards to all users is a legitimate alternative to knowing ages ([The UK Age Appropriate Design Code](/docs/compliance/childrens-privacy#the-uk-age-appropriate-design-code)), and Discord's global teen-by-default is that choice at platform scale.
 
+Short-form surfaces add their own defaults: who may duet, stitch or download a teen's posts ([Sounds, Remix & Duets](/books/user-generated-platforms/sounds-remix-and-duets#who-may-reuse-a-post)), appearance-altering effects for under-18s ([Camera & Effects](/books/user-generated-platforms/camera-and-effects#beauty-filters-and-body-image)), and disappearing media and location sharing ([Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#sextortion-and-teen-defaults)).
+
 ## Family Supervision
 
 Discord's Family Center is opt-in for the teen, connected by scanning a QR code on both phones, and can be disconnected at any time. A connected parent sees recently added friends, servers joined or participated in (with member counts), and who the teen messaged or called with the time of the last message, but "connected accounts will not have access to the contents of your messages." Pinterest announced a parent passcode for certain settings. The design rules common to them:

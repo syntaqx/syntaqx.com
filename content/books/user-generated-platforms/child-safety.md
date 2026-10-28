@@ -287,6 +287,8 @@ Imagery is half the problem. NCMEC received 1.4 million online enticement report
 - **Follow the money.** Financial sextortion runs through payment handles and gift cards; the payment signals, and the payment companies' side of Lantern, connect to [Marketplace Fraud & Risk](/books/user-generated-platforms/marketplace-fraud) and [Messaging, Reviews & Reputation](/books/user-generated-platforms/messaging-and-reviews#off-platform-leakage).
 - **Help the victim remove images.** Point minors and their parents to NCMEC's Take It Down (US) and the IWF's Report Remove (UK), and ingest Take It Down hashes as a list ([Hash-Based Prevention](/books/user-generated-platforms/intimate-image-abuse#hash-based-prevention)).
 
+Disappearing media and the teen defaults that ephemeral platforms set against sextortion are in [Stories & Disappearing Content](/books/user-generated-platforms/stories-and-disappearing-content#sextortion-and-teen-defaults).
+
 ## Reviewing Child Safety Cases
 
 The design goal is that people see as little of this material as the decision needs, and that every time they do, it's logged. Moderation at Scale's [Reviewer Wellbeing](/books/user-generated-platforms/moderation-at-scale#reviewer-wellbeing) covers the general tooling (grayscale, muted audio, blur, exposure limits, counseling, outsourced review); what's specific to child safety:

@@ -47,6 +47,8 @@ The platforms converge on three sources of a label:
 
 Two details matter for design. **Where the label shows depends on risk:** YouTube puts it on the player for photorealistic content and AI music and in the description otherwise; Meta added a more prominent label for media with a "particularly high risk of materially deceiving the public" and moved the label for content only edited with AI tools into the post's menu in September 2024 after users objected that minor edits were labeled "Made with AI." **Labels replace some removals:** Meta stopped removing content solely under its manipulated video policy in July 2024 and labels it instead unless it breaks other rules. A label is therefore a moderation outcome with its own decision record, notice and appeal path, not a cosmetic tag.
 
+Generative camera effects and content credentials signed at capture are in [Camera & Effects](/books/user-generated-platforms/camera-and-effects#generative-effects).
+
 ## Provenance: C2PA and IPTC
 
 Detection is easier when the file says where it came from. Two standards carry that:
