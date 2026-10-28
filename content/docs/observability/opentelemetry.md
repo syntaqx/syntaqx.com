@@ -1,7 +1,7 @@
 +++
 title = "Instrumenting with OpenTelemetry"
 nav_title = "OpenTelemetry"
-description = "API and SDK, zero-code agents per language and the Kubernetes Operator, resources, semantic conventions, OTLP, propagation, signal status and GenAI spans."
+description = "API and SDK, zero-code agents and the Kubernetes Operator, resources, failing open, semantic conventions, OTLP, propagation, signal status and GenAI spans."
 category = "Observability"
 order = 1232
 tags = ["observability", "opentelemetry", "instrumentation", "tracing", "kubernetes"]
@@ -220,6 +220,58 @@ tracer_provider:
 
 Its [data model](https://opentelemetry.io/docs/specs/otel/configuration/data-model/) is Stable, and the docs say "the declarative configuration schema is stable," with anything still experimental carrying a `/development` suffix; but "support for declarative configuration in various implementations is still experimental," and Java is the one SDK the page lists. When the file is set, the SDK ignores the other `OTEL_*` variables except those substituted into the file with `${...}`. My default as of October 2026: environment variables everywhere, and the file only where an SDK supports it and the variables can't express what I need.
 
+## Failing Open
+
+Telemetry runs inside every request, so a telemetry outage must never become an application outage. The [error handling principles](https://opentelemetry.io/docs/specs/otel/error-handling/) say the same: implementations "MUST NOT throw unhandled exceptions at runtime," the API or SDK "MAY _fail fast_ and cause the application to fail on initialization" but "MUST NOT cause the application to fail later at runtime," and "users would prefer to lose telemetry data rather than have the library significantly change the behavior of the instrumented application." The spec guarantees that much; the configuration and the deployment decide whether an outage costs a few minutes of data or your latency and memory.
+
+My rule: every hop between a request and the backend is bounded in time and memory, and drops what it can't hold. Here is what each failure costs when that holds:
+
+| What fails | What the application sees | What bounds it |
+| ---------- | ------------------------- | -------------- |
+| The backend or vendor | Nothing | The gateway's sending queue and persistent queue ([Not Losing Data](/docs/observability/collector#not-losing-data)) |
+| The gateway tier | Nothing | The agent's sending queue, which drops when full |
+| The node agent or sidecar Collector | Failed exports in the background | The SDK's export timeout and bounded queue (below) |
+| An overloaded Collector | Refused exports, retried in the background | The Collector's `memory_limiter` and the same SDK bounds |
+| The Operator's injection webhook | Pods start without instrumentation | A fail-open webhook (below) |
+| The SDK or agent itself | Whatever the bug does | A kill switch that needs no build (below) |
+
+### Bounding the SDK
+
+**Use the batch processor, never the simple one, in production.** The [trace SDK spec](https://opentelemetry.io/docs/specs/otel/trace/sdk/) has a simple processor that passes spans to the exporter "as soon as they are finished" and a batching processor that "create[s] batches of finished spans." A processor's `OnEnd` "MUST be called synchronously within the" `Span.End()` call, so the simple processor puts an export on every span's end. The batch processor queues the span and exports later, off the request's path. Getting-started examples sometimes wire the simple processor or a console exporter; neither belongs in production. The declarative file above uses `batch`. The [logs SDK](https://opentelemetry.io/docs/specs/otel/logs/sdk/) has the same pair, and its `OnEmit` runs "synchronously on the thread that emitted the `LogRecord`," so the same rule applies.
+
+**Know the bounds, and set them deliberately.** The batch processors' queues are bounded and drop when full ("After the size is reached, spans are dropped"), and every export has a timeout ([SDK environment variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/), [OTLP exporter](https://opentelemetry.io/docs/specs/otel/protocol/exporter/)):
+
+| Variable | Default | What it bounds |
+| -------- | ------- | -------------- |
+| `OTEL_BSP_MAX_QUEUE_SIZE` | 2048 | Spans held in memory while the exporter is failing |
+| `OTEL_BSP_EXPORT_TIMEOUT` | 30000 (ms) | One span export |
+| `OTEL_BLRP_MAX_QUEUE_SIZE` | 2048 | Log records held in memory |
+| `OTEL_BLRP_EXPORT_TIMEOUT` | 30000 (ms) | One log export |
+| `OTEL_METRIC_EXPORT_TIMEOUT` | 30000 (ms) | One metric export |
+| `OTEL_EXPORTER_OTLP_TIMEOUT` | 10s | "Each batch export, including all request attempts and waits between retries" |
+
+The exporter must retry transient errors with "an exponential back-off with jitter to avoid overwhelming the destination," and `Export()` "MUST NOT block indefinitely." Together that means a dead Collector costs a full queue of memory (queue size times your span size, so large attributes make it larger) and a background thread waiting on timeouts, and nothing on the request. The defaults are sane; I set them explicitly in the deployment template so they're visible and reviewed, and I lower the queue on memory-tight services rather than raise it.
+
+**Bound shutdown too.** `Shutdown` and `ForceFlush` "SHOULD complete or abort within some timeout." Flush after the server has drained its requests, with a timeout shorter than what's left of the pod's grace period ([Graceful Shutdown](/docs/operations/kubernetes#graceful-shutdown)), so an unreachable Collector can't hold a deploy hostage.
+
+**Keep logs on stdout as well.** A log record sent only over OTLP is lost once the queue drops it. Logs written to stdout and collected from the container's log files by the node agent ([Running the OpenTelemetry Collector](/docs/observability/collector#an-agent-configuration)) survive an agent restart, because the file is the buffer.
+
+### Collector Outages Close to the Application
+
+**A node agent that's down** fails the SDK's exports quickly (connection refused), and the bounds above take over. If services reach the DaemonSet through a Service with [`internalTrafficPolicy: Local`](https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/), "the Service behaves as if it has zero endpoints (for Pods on this node)" when that node's agent is down: the data from that node is lost until it's back, and nothing else is affected.
+
+**A sidecar Collector is in the pod's fate.** Declare it as a [native sidecar](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/) (an init container with `restartPolicy: Always`, stable since Kubernetes 1.33): "the kubelet postpones terminating sidecar containers until the main application container has fully stopped," so the final flush has somewhere to go. But "if a `readinessProbe` is specified for this init container, its result will be used to determine the `ready` state of the Pod." A readiness probe on a telemetry sidecar takes the application out of the load balancer when telemetry breaks. Give it a liveness probe, not a readiness probe.
+
+### The Operator's Webhook
+
+Agent injection runs through a mutating admission webhook, which sits on the path of every pod creation in the namespaces it covers. The Operator's [Helm chart](https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/values.yaml) sets the pod webhook to `failurePolicy: Ignore` and explains both options: "Ignore, the injection is fail-open. The pod will be created, but the sidecar won't be injected," and "Fail, the injection is fail-close. If the webhook pod is not ready, pods cannot be created." Keep it `Ignore`. With `Fail`, an Operator outage or an expired cert-manager certificate stops deploys, scale-ups and rescheduled pods across the cluster. If you install the Operator another way, check the `failurePolicy` on its `MutatingWebhookConfiguration`. The cost of `Ignore` is pods started during the outage run uninstrumented until their next restart, which shows up as a service going quiet in traces.
+
+### A Kill Switch
+
+When the SDK or an agent is the problem (a memory leak, an instrumentation that breaks a library, a startup cost you can't afford during an incident), turning it off has to be a configuration change, not a build. The spec's `OTEL_SDK_DISABLED=true` disables "the SDK for all signals," leaving the API as a no-op; check that your language's SDK honors it before you rely on it. The Java agent has its own: `OTEL_JAVAAGENT_ENABLED=false` (or `-Dotel.javaagent.enabled=false`) "to disable the agent entirely." Both take effect on restart, so they ride a normal rollout. With the Operator, removing the inject annotation and restarting does the same.
+
+**Test it.** In staging, under load: stop the node agent, then make the gateway unreachable, then fill the Collector's memory limit. The pass condition is that request latency and error rate don't move and the application's memory stays flat once the SDK's queue is full; the only signal should be the Collector's drop and failure metrics ([Monitoring the Collector](/docs/observability/collector#monitoring-the-collector)).
+
 ## Semantic Conventions
 
 [Semantic conventions](https://opentelemetry.io/docs/specs/semconv/) are the agreed names: `http.request.method`, `http.route`, `db.system.name`, `messaging.operation.type`. They're what let one dashboard, one alert or one vendor feature work across services written by different teams in different languages. Use them before inventing names, and put your own attributes in your own namespace (`app.` or a company prefix).
@@ -309,6 +361,9 @@ Span names "SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`," and the
 - Production agents enable only the instrumentations the service uses.
 - `service.name`, `service.version` and `deployment.environment.name` are set on every service.
 - Configuration comes from the standard `OTEL_*` variables, with exporter headers from the secret store.
+- Batch processors only; queue sizes and export timeouts set explicitly; shutdown flush bounded by the grace period.
+- The Operator's pod webhook is fail-open (`failurePolicy: Ignore`); sidecar Collectors have no readiness probe.
+- `OTEL_SDK_DISABLED` (or the agent's own switch) can turn telemetry off with a rollout, and stopping the Collector in staging doesn't move latency or memory.
 - Semantic conventions before custom names; custom names in your own namespace; stability opt-ins migrated deliberately.
 - Services export OTLP to a local Collector, not straight to a vendor.
 - Baggage carries no personal data or secrets, and is stripped at the edge and never sent to third parties.
@@ -320,8 +375,10 @@ Span names "SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`," and the
 
 - [OpenTelemetry: Specification overview](https://opentelemetry.io/docs/specs/otel/overview/), API and SDK and the rule that instrumentation depends on the API only
 - [OpenTelemetry: Library guidelines](https://opentelemetry.io/docs/specs/otel/library-guidelines/), no-op API without an SDK
-- [OpenTelemetry: SDK environment variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/), `OTEL_SERVICE_NAME`, sampler and propagator defaults
-- [OpenTelemetry: OTLP exporter configuration](https://opentelemetry.io/docs/specs/otel/protocol/exporter/), default endpoints, protocols and per-signal paths
+- [OpenTelemetry: SDK environment variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/), `OTEL_SERVICE_NAME`, sampler and propagator defaults, batch processor queue and timeout defaults, `OTEL_SDK_DISABLED`
+- [OpenTelemetry: OTLP exporter configuration](https://opentelemetry.io/docs/specs/otel/protocol/exporter/), default endpoints, protocols and per-signal paths, `OTEL_EXPORTER_OTLP_TIMEOUT` and retry with backoff
+- [OpenTelemetry: Error handling](https://opentelemetry.io/docs/specs/otel/error-handling/), no runtime failures and losing telemetry over changing the application's behavior
+- [OpenTelemetry: Tracing SDK](https://opentelemetry.io/docs/specs/otel/trace/sdk/) and [Logs SDK](https://opentelemetry.io/docs/specs/otel/logs/sdk/), simple and batching processors, queue drops, export and shutdown timeouts
 - [OpenTelemetry: Configuration data model](https://opentelemetry.io/docs/specs/otel/configuration/data-model/), the declarative configuration file and `OTEL_CONFIG_FILE`
 - [OpenTelemetry: OTLP](https://opentelemetry.io/docs/specs/otlp/), transports, ports and per-signal status
 - [OpenTelemetry: Service resource conventions](https://opentelemetry.io/docs/specs/semconv/resource/service/), `service.*` attributes and the `unknown_service` fallback
@@ -344,6 +401,10 @@ Span names "SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`," and the
 - [OpenTelemetry: Declarative configuration](https://opentelemetry.io/docs/languages/sdk-configuration/declarative-configuration/), the getting-started file and implementation status
 - [OpenTelemetry Operator: Auto-instrumentation](https://opentelemetry.io/docs/platforms/kubernetes/operator/automatic/), the `Instrumentation` resource and inject annotations
 - [OpenTelemetry Operator](https://opentelemetry.io/docs/platforms/kubernetes/operator/), the `OpenTelemetryCollector` resource
+- [OpenTelemetry Helm charts: Operator values](https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/values.yaml), the pod webhook's `failurePolicy` and what fail-open and fail-closed mean
+- [OpenTelemetry: Disabling the Java agent](https://opentelemetry.io/docs/zero-code/java/agent/disable/), `otel.javaagent.enabled`
+- [Kubernetes: Sidecar containers](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/), native sidecars, shutdown order and readiness
+- [Kubernetes: Service internal traffic policy](https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/), node-local endpoints
 - [OpenTelemetry: eBPF Instrumentation (OBI)](https://opentelemetry.io/docs/zero-code/obi/), protocols, kernel requirements and [capabilities](https://opentelemetry.io/docs/zero-code/obi/security/)
 - [OpenTelemetry eBPF Instrumentation repository](https://github.com/open-telemetry/opentelemetry-ebpf-instrumentation), development status
 - [Grafana: Beyla 2.5 and OpenTelemetry eBPF Instrumentation](https://grafana.com/blog/2025/08/04/building-on-the-foundation-of-opentelemetry-ebpf-instrumentation-what-s-new-in-grafana-beyla-2-5/), the donation of Beyla to OpenTelemetry
