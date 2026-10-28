@@ -2,7 +2,7 @@
 title = "Operating Metrics"
 description = "The numbers user-generated platforms run on: daily uniques and MAU, supply and creator health, GMV and take rate, prevalence and action rates, and unit costs."
 category = "User-Generated Platforms Industry"
-order = 1854
+order = 1855
 part = "Running the Platform"
 tags = ["user-generated-content", "metrics", "analytics", "trust-and-safety", "marketplaces"]
 +++

@@ -3,7 +3,7 @@ title = "The Law of Hosting User Content"
 nav_title = "Hosting Liability Law"
 description = "Section 230, the DMCA safe harbors and the DSA hosting exemption, why knowledge is the trigger, the cases reshaping them, and the legal clocks platforms run on."
 category = "User-Generated Platforms Industry"
-order = 1839
+order = 1840
 part = "Trust and Safety"
 tags = ["trust-and-safety", "section-230", "dmca", "digital-services-act", "litigation", "legal-notices"]
 +++

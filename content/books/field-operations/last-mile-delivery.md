@@ -143,7 +143,7 @@ Delivery runs on four labor models, often side by side in one tenant:
 
 The last model is different in kind: a delivery handed to DoorDash Drive or Uber Direct isn't routed by the tenant, and status and proof come back by webhook. Model it as a visit assigned to an external carrier rather than a resource: store the carrier, its delivery ID and tracking link, map its statuses onto the visit states, and copy its proof into your own records ([Webhooks](/docs/api-design/webhooks) covers receiving events that may arrive twice or out of order). Onfleet separates the organization shown to the recipient (`merchant`) from the one that fulfils the task (`executor`), which is the same split.
 
-Whether a driver is an employee or a contractor is a legal question with different tests by jurisdiction; the platform shouldn't encode an answer, only keep accurate the facts it turns on: who assigned the work, who set the route, who could decline it.
+Whether a driver is an employee or a contractor is a legal question with different tests by jurisdiction; the platform shouldn't encode an answer, only keep accurate the facts it turns on: who assigned the work, who set the route, who could decline it. How app-based networks meet those tests, and the minimum pay and deactivation laws that now apply to their couriers, is the User-Generated Platforms volume's [Gig Work & Worker Law](/books/user-generated-platforms/gig-work-and-worker-law).
 
 ## Tracking, ETAs and the Customer
 

@@ -2,7 +2,7 @@
 title = "Platform Architecture"
 description = "How user-generated platforms are built at scale: the community as partition key, hot communities, service splits, media and moderation pipelines, events."
 category = "User-Generated Platforms Industry"
-order = 1852
+order = 1853
 part = "Running the Platform"
 tags = ["user-generated-content", "architecture", "scalability", "partitioning", "events"]
 +++
