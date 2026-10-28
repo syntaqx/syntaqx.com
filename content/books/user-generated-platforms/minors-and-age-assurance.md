@@ -3,7 +3,7 @@ title = "Minors, Age Assurance & US State Law"
 nav_title = "Minors & Age Assurance"
 description = "Age checks on user-generated platforms: methods and vendor risk, teen-by-default, family tools, minimum ages, US state laws in court, KOSA, COPPA, design suits."
 category = "User-Generated Platforms Industry"
-order = 1847
+order = 1848
 part = "The Rules"
 tags = ["user-generated-content", "age-assurance", "children", "coppa", "online-safety"]
 +++

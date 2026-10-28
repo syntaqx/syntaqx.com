@@ -85,6 +85,8 @@ Direct messages are where the most serious harms on community platforms start: g
 - **DM settings per community.** Letting members refuse DMs from people whose only connection is a given community closes the path from a large public server to a private conversation.
 - **Blocks everywhere.** A block from [Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations#how-to-build-it) stops DMs, friend requests and group-DM additions in both directions.
 
+Investment scams use the same door with more patience: a friendly stranger, weeks of chat, then a request to move to another app and a trading tip. Scoring those conversations by stage and warning the recipient at the right moment is in [Crypto Investment Scams & Impersonation](/books/user-generated-platforms/crypto-investment-scams#signals).
+
 DM content is still subject to reports, and the report is the moment the platform sees it: the reporter's client sends the message ids, and the server attaches the stored messages (not a screenshot) to the case, with surrounding context ([Reports and Queues](/docs/security/trust-and-safety#reports-and-queues)). Whether and how a platform scans DM content proactively is a policy and legal decision ([Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#the-eu-derogation-and-the-csa-regulation) covers the EU derogation and its lapse); the architecture should make it possible to apply hash matching to attachments in DMs without reading text, because that's the narrowest proactive check.
 
 Reddit's report shows how quickly DM volume moves: private messages were progressively replaced by chat in 2025, with 3,893,884,194 chat messages exchanged in the second half of the year and 2,394,233 removed by admins.
