@@ -59,6 +59,8 @@ Apple calls these initial targets to evaluate against your content, makes the 2,
 
 **Per-title encoding** replaces the fixed table with one computed for each video. Netflix's December 2015 change is the reference case: under its fixed ladder, *BoJack Horseman*'s flat animation got 1,750 kbps for 480p, while the per-title ladder delivered 1080p at 1,540 kbps; live-action *Orange Is the New Black* got its top 1080p rung at 4,640 kbps instead of 5,800, about 20% less. The method generalizes as the **convex hull**: encode the video at many (resolution, quality) points, score each against the source with a perceptual metric, plot quality against bitrate, and keep only the points on the upper-left boundary, where no other encode gives better quality for fewer bits. Meta's Reels pipeline describes the search concretely: for a 1080p video, seven resolutions times five CRF values is 35 trial encodes, each upscaled back to the original resolution and scored on its own 0 to 100 quality metric, with rungs then picked off the hull by target quality or bitrate.
 
+The general mechanics underneath (inter-frame prediction, constant quality against target bitrate, perceptual metrics such as VMAF) are in [Media Compression](/docs/architecture/media-compression#rate-control-for-video).
+
 The search is expensive, which is why the platforms ration it:
 
 - **Gate it on expected watch time.** Meta stores only quality and bitrate measurements from its cheap upload-time encode, and runs the convex-hull optimization and advanced codecs only when projected watch time crosses a threshold. A video nobody watches never pays for its optimal ladder.
