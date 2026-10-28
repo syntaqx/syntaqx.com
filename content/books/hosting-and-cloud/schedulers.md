@@ -3,14 +3,14 @@ title = "Schedulers: Borg to Kubernetes"
 nav_title = "Schedulers"
 description = "Borg, Omega and Mesos to Swarm, Kubernetes, ECS and Nomad: how the orchestrator wars ended, and how placement, packing and preemption work."
 category = "Hosting & Cloud Industry"
-order = 2111
+order = 2120
 part = "The Stack, Bottom to Top"
 tags = ["schedulers", "history", "kubernetes", "bin-packing", "orchestration"]
 +++
 
 A cloud is a scheduler with a billing system attached. Every VM, container, function slot and build job a provider sells has to be placed on a machine that has room for it, kept running there, moved or killed when a more important workload needs the room, and accounted for the whole time. How well the provider does that decides how many machines it has to buy for a given amount of customer work, and that ratio is most of its margin. Google's Borg paper opens with the claim: Borg "achieves high utilization by combining admission control, efficient task-packing, over-commitment, and machine sharing with process-level performance isolation." Those four phrases are a hosting business in miniature.
 
-This chapter tells how cluster scheduling went from Google's internal systems to a public product: Borg, Omega and Mesos as the published designs; Marathon, Docker Swarm, Amazon ECS, Kubernetes and Nomad as the products; the orchestrator wars of 2014 to 2019 and how they ended; and the shift from schedulers customers run to schedulers customers rent without seeing (Fargate, Cloud Run, Lambda's placement service). Then it covers how a scheduler works at the depth a provider needs: admission and quota, filtering and scoring, bin packing against spreading, priorities and preemption, overcommit, and why pooling everything into big shared clusters is cheaper. Kubernetes itself has its own part, starting with Kubernetes Architecture and ending with Distributions & Alternatives; this chapter covers only how it arrived and won. Running Kubernetes well is the playbook's [Kubernetes Operations](/docs/operations/kubernetes) doc.
+This chapter tells how cluster scheduling went from Google's internal systems to a public product: Borg, Omega and Mesos as the published designs; Marathon, Docker Swarm, Amazon ECS, Kubernetes and Nomad as the products; the orchestrator wars of 2014 to 2019 and how they ended; and the shift from schedulers customers run to schedulers customers rent without seeing (Fargate, Cloud Run, Lambda's placement service). Then it covers how a scheduler works at the depth a provider needs: admission and quota, filtering and scoring, bin packing against spreading, priorities and preemption, overcommit, and why pooling everything into big shared clusters is cheaper. Kubernetes itself has its own part, starting with [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture) and ending with [Distributions & Alternatives](/books/hosting-and-cloud/kubernetes-distributions-and-alternatives); this chapter covers only how it arrived and won. Running Kubernetes well is the playbook's [Kubernetes Operations](/docs/operations/kubernetes) doc.
 
 ## How the Providers Do It
 
@@ -77,7 +77,7 @@ The contest was decided by the clouds and by Docker itself:
 | February 27, 2025 | IBM completes its acquisition of HashiCorp |
 | August 2025 | Apache board retires Mesos (to the Attic by October 2025) |
 
-Two things ended it. Once AWS, Microsoft and Google all sold managed Kubernetes, a customer choosing an orchestrator was also choosing portability between clouds, and only one option had it. And Docker, whose own Swarm was the main rival, shipped Kubernetes in its product. What survived alongside Kubernetes was not a competing open orchestrator but the clouds' own schedulers hidden behind products (ECS, Fargate, Cloud Run, Lambda), plus Nomad and Swarm for teams that wanted something smaller. Those alternatives today belong to Distributions & Alternatives.
+Two things ended it. Once AWS, Microsoft and Google all sold managed Kubernetes, a customer choosing an orchestrator was also choosing portability between clouds, and only one option had it. And Docker, whose own Swarm was the main rival, shipped Kubernetes in its product. What survived alongside Kubernetes was not a competing open orchestrator but the clouds' own schedulers hidden behind products (ECS, Fargate, Cloud Run, Lambda), plus Nomad and Swarm for teams that wanted something smaller. Those alternatives today belong to [Distributions & Alternatives](/books/hosting-and-cloud/kubernetes-distributions-and-alternatives).
 
 ### The scheduler becomes the product (2017 on)
 
@@ -103,7 +103,7 @@ Scoring picks among feasible machines, and the central trade is between packing 
 
 Nomad's scoring is "primarily based on bin packing" with affinities and anti-affinities layered on. ECS lets the customer chain strategies: services spread across Availability Zones by default, and `binpack` places tasks "so as to leave the least amount of unused CPU or memory." Scores also carry soft goals: Borg prefers machines that already hold the task's packages (startup took a median of about 25 seconds, 80% of it package installation), spreads a job's tasks across power and failure domains, and mixes high- and low-priority tasks on a machine so the high-priority ones can expand into a spike.
 
-Stranding is the number a provider should watch. Selling VM shapes in fixed CPU-to-memory ratios is partly a stranding defense: if every shape uses memory and CPU in the host's own proportion, a full host has nothing left over.
+Stranding is the number a provider should watch ([Autoscaling & Cost](/books/hosting-and-cloud/autoscaling-and-cost#bin-packing-and-the-request-gap) measures the same gap inside a cluster). Selling VM shapes in fixed CPU-to-memory ratios is partly a stranding defense: if every shape uses memory and CPU in the host's own proportion, a full host has nothing left over.
 
 ### Priority and preemption
 
@@ -142,7 +142,7 @@ Two consequences for a provider. First, dedicated hosts, single-tenant clusters 
 
 | Approach | Model | Strengths | Failure modes | Licensing and ownership | Cost | Who uses it |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Kubernetes** | Declarative API, controllers, filter-and-score scheduler with plugins | The industry API; every cloud sells it; huge ecosystem | Operational weight; misconfigured requests waste capacity; control plane to upgrade | Apache 2.0, CNCF | Control plane plus nodes; managed fees vary (Managed Kubernetes) | Most container platforms |
+| **Kubernetes** | Declarative API, controllers, filter-and-score scheduler with plugins | The industry API; every cloud sells it; huge ecosystem | Operational weight; misconfigured requests waste capacity; control plane to upgrade | Apache 2.0, CNCF | Control plane plus nodes; managed fees vary ([Managed Kubernetes](/books/hosting-and-cloud/managed-kubernetes)) | Most container platforms |
 | **Nomad** | Single binary, evaluations and plans, optimistic concurrency | Simple to run; schedules containers, VMs and binaries | Smaller ecosystem; license change limits hosted resale | Business Source License since August 10, 2023; owned by IBM since February 27, 2025 | Self-hosted, enterprise edition by contract | Teams wanting one scheduler for mixed workloads |
 | **Docker Swarm mode** | Built into Docker Engine | Minimal setup, Docker-native | Small feature set; little momentum | Apache 2.0 (SwarmKit); enterprise support from Mirantis | Free; support by contract | Small clusters, existing Docker shops |
 | **Amazon ECS** | AWS-managed control plane over EC2 or Fargate | No control plane to run; deep AWS integration | AWS only | Proprietary, AWS | No control-plane fee; pay for EC2 or Fargate | AWS-native teams |

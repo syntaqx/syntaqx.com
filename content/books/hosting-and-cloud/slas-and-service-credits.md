@@ -35,7 +35,7 @@ Four patterns run through the table:
 - **The basis is narrow.** Credits are a percentage of the affected service's fee, in the affected region or for the affected resource, never of the customer's losses. Twilio excludes carrier fees and surcharges from the basis, Cloudflare credits only monthly recurring fees, and Microsoft's basis for metered services is the 30 days up to and including the incident's first day.
 - **Developer clouds and hosts promise less, or more simply.** DigitalOcean credits the whole affected Droplet below four nines; GoDaddy pays 5% in store credit; Hetzner promises effort and no credit; Vercel and Netlify reserve their SLAs for enterprise contracts.
 
-## How We Got Here
+## How It Got Here
 
 - **October 1, 2007: the first S3 SLA.** Announced October 8, it committed "to 99.9% uptime, measured on a monthly basis," with a credit of 10% of the month's S3 charges below 99.9% and 25% below 99%, counting failed calls that returned `ServiceUnavailable` or `InternalError`. The structure (a monthly percentage, server errors as the measure, tiered credits on a request) is still the industry's.
 - **October 23, 2008: the EC2 SLA.** EC2 left beta with an SLA that "each Region will be available at least 99.95% of the time." The commitment was regional from the start: AWS promised a region, not a machine.
@@ -115,7 +115,7 @@ The playbook's [SLOs](/docs/operations/slos#terms) doc defines the terms: an SLO
 
 ## Status Pages as Evidence
 
-Status pages and post-incident reports are where a provider tells customers what happened, and they matter to claims in both directions: a published incident with times and affected regions is the customer's best evidence, and the provider's incident record is what its claim reviewers check. Google's Compute Engine SLA and AWS's both require the customer's own logs regardless; a status page entry doesn't file a claim. Outages, Post-Mortems & Status Pages covers the incident and status records; this chapter's model links a claim to the incidents it cites so a reviewer sees the provider's record next to the customer's evidence.
+Status pages and post-incident reports are where a provider tells customers what happened, and they matter to claims in both directions: a published incident with times and affected regions is the customer's best evidence, and the provider's incident record is what its claim reviewers check. Google's Compute Engine SLA and AWS's both require the customer's own logs regardless; a status page entry doesn't file a claim. [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages#status-pages) covers the incident and status records; this chapter's model links a claim to the incidents it cites so a reviewer sees the provider's record next to the customer's evidence.
 
 ## Computing a Credit: a Measured Month
 
@@ -155,7 +155,7 @@ What would change it: a provider whose customers mostly run a single machine (a 
 
 ## How to Build It
 
-The chapter adds versioned SLA definitions and claims to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Availability is measured from usage the system already has: request meters in `usage_events` carry an outcome dimension, so an error-rate SLA is a query over them; connectivity SLAs read health records from Outages, Post-Mortems & Status Pages.
+The chapter adds versioned SLA definitions and claims to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Availability is measured from usage the system already has: request meters in `usage_events` carry an outcome dimension, so an error-rate SLA is a query over them; connectivity SLAs read health records from [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages#how-to-build-it).
 
 ```sql
 CREATE TABLE sla_definitions (           -- one published SLA version per service level

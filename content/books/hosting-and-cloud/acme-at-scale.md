@@ -156,7 +156,7 @@ What a host does about it:
 
 ### Wildcards and dns-01
 
-A wildcard needs a DNS method, so a host can issue one only where it can write a TXT record: when it runs the customer's DNS (Vercel requires its nameservers for wildcards; Netlify issues a wildcard automatically with Netlify DNS), when the customer has delegated `_acme-challenge` to the host by CNAME or NS, or, as `dns-persist-01` rolls out, when the customer has published a persistent record naming the host's account with `policy=wildcard`.
+A wildcard needs a DNS method, so a host can issue one only where it can write a TXT record: when it runs the customer's [DNS](/books/hosting-and-cloud/dns-hosting-and-dnssec) (Vercel requires its nameservers for wildcards; Netlify issues a wildcard automatically with Netlify DNS), when the customer has delegated `_acme-challenge` to the host by CNAME or NS, or, as `dns-persist-01` rolls out, when the customer has published a persistent record naming the host's account with `policy=wildcard`.
 
 For `dns-01` at scale, the integration guide's advice: the TXT record must be present on every authoritative server before the client asks the CA to check (with multi-perspective validation, a lagging secondary is a failure), and old TXT records should be cleaned up so responses stay small. DNS API credentials on web servers are the risk Let's Encrypt names for this method, which argues for a central issuance service that holds them, not the fleet.
 
@@ -191,7 +191,7 @@ Where a host's certificates can come from:
 | **Own ACME pipeline, free CA primary, second CA fallback** | The host orders, validates and deploys for every hostname | Full control of preflight, scheduling, CA choice and notices | The host owns rate limits, DNS edge cases and the account key | The host; open CAs | Engineering and operations |
 | **Commercial CA over ACME with EAB** | Same pipeline, a contracted CA | Support, contractual limits, OV and EV through one protocol | Contract and price; the CA can still be distrusted | Commercial CA | Per certificate or volume contract |
 | **Panel-managed (AutoSSL)** | The control panel issues per server, nightly | Zero integration work for shared hosting | Batch timing, per-server visibility, the panel's provider choices | Panel vendor | Included in the panel license |
-| **Platform-managed (ACM, a CDN's edge certificates)** | The cloud or CDN issues and renews for its own endpoints | No certificate operations at all | Certificate tied to that platform; key often can't leave | Cloud or CDN | Free with the service |
+| **Platform-managed (ACM, a CDN's [edge certificates](/books/hosting-and-cloud/tls-and-protocols#termination-at-the-edge))** | The cloud or CDN issues and renews for its own endpoints | No certificate operations at all | Certificate tied to that platform; key often can't leave | Cloud or CDN | Free with the service |
 | **On-demand at the TLS terminator** (Caddy's model) | Certificate obtained at first handshake | No pre-provisioning; handles names added at any time | Abuse without an ask gate; slow first handshake | The host | Engineering |
 | **Customer uploads their own** | Customer buys from any CA and uploads | Any CA, OV and EV | Manual renewal; expiry becomes the host's support ticket | The customer | The customer's CA bill |
 

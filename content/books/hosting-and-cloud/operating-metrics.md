@@ -81,7 +81,7 @@ Hosting and domains are subscription businesses and report **renewal**:
 - **Customer retention.** GoDaddy reports retaining about 85% of customers in each of the last five years (84% in 2024, which it attributes to divestitures, migrations and product end of life), about 90% for customers who have been with it more than three years, and more than 89% of 2025 revenue from customers it had the year before.
 - **Name renewal.** Verisign reports the .com and .net renewal rate: 75.4% in the third quarter of 2025, against 72.2% a year earlier. A blended rate mixes names in their first renewal with names that have renewed for years, so a registrar needs the rate by renewal number, the same cohort view as hosting below.
 
-The hosting renewal rate has a twist the cloud metrics don't: the intro term. A plan bought at an introductory price renews at list, so first renewal is where most customers leave, and the renewal rate by term number (first, second, later) is the metric that matters. The core model's `subscription_periods.pricing_phase` makes it computable. The law of the renewal notice that sits at the same point is Subscriptions, Renewals & Cancellation Law.
+The hosting renewal rate has a twist the cloud metrics don't: the intro term. A plan bought at an introductory price renews at list, so first renewal is where most customers leave, and the renewal rate by term number (first, second, later) is the metric that matters. The core model's `subscription_periods.pricing_phase` makes it computable. The law of the renewal notice that sits at the same point is [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law#the-law-in-force).
 
 ## Revenue per Customer
 
@@ -112,7 +112,7 @@ Utilization is the share of capacity that is earning, and it is the number that 
 - **Sold versus installed.** vCPUs, memory, storage and GPUs allocated to customers over what is installed, by zone and instance type. It drives capacity orders and spot pricing.
 - **Used versus sold.** What allocated capacity actually does. Over-commitment (burstable instances, shared hosting packed by entry processes and memory limits) sells capacity customers don't use at once; the gap is the provider's margin and the noisy neighbor's risk.
 - **Earning hours for GPUs.** A GPU's utilization is the hours under contract or on-demand use over hours installed, and for a neocloud it is set by contracts rather than demand ([Where AI Runs](/books/hosting-and-cloud/where-ai-runs#renting-gpus-versus-paying-per-token) shows what utilization does to cost per token).
-- **Shared hosting density.** Accounts per server and the share of servers above their limit thresholds; cPanel's move to account-based pricing in 2019 made density a license cost as well as a capacity one (Control Panel Licensing & the Alternatives).
+- **Shared hosting density.** Accounts per server and the share of servers above their limit thresholds; cPanel's move to account-based pricing in 2019 made density a license cost as well as a capacity one ([Control Panel Licensing & the Alternatives](/books/hosting-and-cloud/control-panel-licensing#how-account-based-licensing-works)).
 
 ## Capital Intensity and Backlog
 

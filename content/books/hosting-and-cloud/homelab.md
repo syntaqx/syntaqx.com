@@ -2,7 +2,7 @@
 title = "The Homelab"
 description = "Why people run infrastructure at home, the community, enterprise servers vs mini PCs vs NAS boxes, power in watts and dollars, noise, racks and UPS."
 category = "Hosting & Cloud Industry"
-order = 2146
+order = 2105
 part = "Homelab"
 tags = ["homelab", "self-hosting", "mini-pc", "out-of-band-management", "power", "ups"]
 +++
@@ -39,7 +39,7 @@ Two Reddit communities are the public square: **r/homelab**, about hardware, rac
 
 The reference catalog is **awesome-selfhosted**, "a list of Free Software network services and web applications which can be hosted on your own server(s)". The scope is deliberate: non-free software is listed on a separate Non-Free page, the HTML site at awesome-selfhosted.net is the primary version, and the Markdown list on GitHub is labeled legacy. The list is generated from a separate machine-readable repository, awesome-selfhosted-data, which held 1,358 software entries as of October 27, 2026 (the count includes the entries rendered on the non-free page), organized under the 95 tags the site lists. That structure is the same move a provider makes with its catalog: the data is the source of truth, and every page is rendered from it.
 
-## How We Got Here
+## How It Got Here
 
 **The closet server.** The first homelab was whatever machine a household had left over: a retired desktop running Linux as a file server, a router, a game server. It cost nothing but its idle watts and taught the basics, but it had no remote management, no redundancy and consumer parts.
 
@@ -62,7 +62,7 @@ The Homelab part comes right after The Business, which sets out the industry and
 | [Home Routing, Firewalls & DNS](/books/hosting-and-cloud/home-routing-and-firewalls) | The edge router, VLANs, local DNS, IPv6 and CGNAT | [Virtual Networks and VPCs](/books/hosting-and-cloud/data-center-networking#virtual-networks-and-vpcs) |
 | [Self-Hosted Apps & Orchestration](/books/hosting-and-cloud/self-hosted-apps) | Compose, the apps, k3s and GitOps, backups | [From chroot to Containers](/books/hosting-and-cloud/containers#how-the-providers-do-it), [Schedulers](/books/hosting-and-cloud/schedulers#how-a-scheduler-works), [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture#the-control-loop), [Managed Databases](/books/hosting-and-cloud/managed-databases#how-a-managed-relational-database-works) |
 | [Exposing Home Services](/books/hosting-and-cloud/exposing-home-services) | Port forwards, proxies, tunnels, overlays | The hosting, certificate and edge parts later in the book |
-| [AI at Home](/books/hosting-and-cloud/ai-at-home) | Open-weight models on home hardware | Where AI Runs: Home, Colo, Cloud or Frontier |
+| [AI at Home](/books/hosting-and-cloud/ai-at-home) | Open-weight models on home hardware | [Where AI Runs: Home, Colo, Cloud or Frontier](/books/hosting-and-cloud/where-ai-runs#the-home-tier) |
 | [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation) | Deploying from home, upload, redundant lines, power, leaving the house | [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation#how-colocation-is-sold); [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers#provisioning-power-console-and-boot) |
 
 The last chapter, [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation), hands off to [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation), where The Stack picks the layers up at provider scale from the building upward, through [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#what-a-zone-promises), the failure domains a house has exactly one of. Kubernetes follows ([Distributions & Alternatives](/books/hosting-and-cloud/kubernetes-distributions-and-alternatives#lightweight-and-immutable) covers k3s and Talos as products), then managed services, deploys ([Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#gitops-the-deploy-as-a-pull)), CI/CD ([Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure#hosted-hybrid-and-self-hosted), where a home runner is one case) and infrastructure as code ([Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu#how-terraform-works-core-providers-and-the-graph)). The eras of that history are [From Bare Metal to Cloud: The Timeline](/books/hosting-and-cloud/bare-metal-to-cloud#the-map); the companies are [The Provider Landscape](/books/hosting-and-cloud/provider-landscape#how-the-providers-do-it).
@@ -256,7 +256,7 @@ GROUP BY r.external_ref
 ORDER BY kwh DESC;
 ```
 
-No `rated_usage`, `price_versions` or invoice rows follow, because nobody bills the household but the utility. The zero-price meters are still worth keeping: priced at a provider's rates instead of the tariff, the same rows show what the lab would cost to rent, which is the comparison that [Repatriation](/books/hosting-and-cloud/repatriation#a-cost-model-for-owning) makes at company scale and the book's Operating Metrics chapter makes for a provider's own fleet.
+No `rated_usage`, `price_versions` or invoice rows follow, because nobody bills the household but the utility. The zero-price meters are still worth keeping: priced at a provider's rates instead of the tariff, the same rows show what the lab would cost to rent, which is the comparison that [Repatriation](/books/hosting-and-cloud/repatriation#a-cost-model-for-owning) makes at company scale and the book's [Operating Metrics](/books/hosting-and-cloud/operating-metrics) chapter makes for a provider's own fleet.
 
 ## What This Means for the System You Build
 

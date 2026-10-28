@@ -3,7 +3,7 @@ title = "Push & Events: Ansible and Salt"
 nav_title = "Ansible and Salt"
 description = "Ansible's agentless push over SSH and Salt's master, minions and event bus: how each runs, AWX and event-driven Ansible, Red Hat, Broadcom, push versus pull."
 category = "Hosting & Cloud Industry"
-order = 2142
+order = 2150
 part = "Infrastructure as Code"
 tags = ["infrastructure-as-code", "configuration-management", "ansible", "salt", "event-driven", "convergence"]
 +++
@@ -145,7 +145,7 @@ HAVING MAX(cr.started_at) IS NULL OR MAX(cr.started_at) < NOW() - INTERVAL '7 da
 ```
 
 - **Events triggered by events are traceable.** A beacon event, the reactor that matched it, and the `state.apply` it caused share the triggering tag in `triggered_by`, so a reaction loop shows up as a burst of event-triggered rows on one machine with the same tag.
-- **Credentials stay in the platform.** SSH keys, WinRM credentials and vault passwords live in the controller's credential store or a secrets manager and are injected per job; the run row records which credential was used, never its value ([Environments: Secrets](/docs/operations/environments#secrets)).
+- **Credentials stay in the platform.** SSH keys, WinRM credentials and vault passwords live in the controller's credential store or a secrets manager and are injected per job; the run row records which credential was used, never its value ([Environments: Secrets](/docs/operations/environments#secrets); [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security#secrets-in-the-environment-codecov-and-circleci) covers how pipeline secrets leak).
 
 ## Auditing
 

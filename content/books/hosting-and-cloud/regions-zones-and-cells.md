@@ -2,14 +2,14 @@
 title = "Regions, Zones, Cells & Quotas"
 description = "Regions, zones and sovereign partitions across providers, control and data planes, cells and shuffle sharding, real outages, quotas and capacity limits."
 category = "Hosting & Cloud Industry"
-order = 2115
+order = 2124
 part = "The Stack, Bottom to Top"
 tags = ["regions", "availability-zones", "cell-based-architecture", "quotas", "reliability"]
 +++
 
 A provider's footprint is a set of promises about what fails together. A **region** is a metro area with its own control plane, its own prices and usually its own legal home. A **zone** inside it is a set of buildings with separate power, cooling and networking, close enough for synchronous replication and far enough apart that one fire, flood or utility fault shouldn't take two. A **cell** is a smaller wall the provider builds inside its own services: a complete copy of a service that serves only some customers, so a bad deploy or a poison request reaches a fraction of them. And a **quota** is a limit on what one account may hold or do, which protects the fleet, other tenants and the customer's own bill from one account's growth, mistake or compromise. Each of these is a blast-radius boundary, and the outages of the last fifteen years are, almost without exception, stories of a boundary that turned out to be thinner than stated.
 
-This chapter surveys footprints as of October 2026 across AWS, Azure, Google Cloud, Oracle, DigitalOcean, Hetzner, OVHcloud, Akamai, Vultr and Cloudflare; tells how zones, cells and shuffle sharding arrived; sets out what each provider promises a zone is; explains control planes, data planes and static stability; walks the public post-mortems where blast radius crossed a boundary; and covers quotas and capacity, which are different limits that customers routinely confuse. It adds a zone-to-facility mapping, per-account zone names, cells and cell assignments, quota requests, quota columns and capacity reservations to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The buildings are [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation); the network between zones is [Data Center Networking](/books/hosting-and-cloud/data-center-networking); placement inside a zone is [Schedulers: Borg to Kubernetes](/books/hosting-and-cloud/schedulers); regions run on a customer's site are Hybrid & On-Prem Cloud. Outage communication is the chapter Outages, Post-Mortems & Status Pages, availability credits are SLAs & Service Credits, data residency law is Shared Responsibility & Compliance Programs, and quotas used against fraud are Free-Tier Fraud & Stolen Keys.
+This chapter surveys footprints as of October 2026 across AWS, Azure, Google Cloud, Oracle, DigitalOcean, Hetzner, OVHcloud, Akamai, Vultr and Cloudflare; tells how zones, cells and shuffle sharding arrived; sets out what each provider promises a zone is; explains control planes, data planes and static stability; walks the public post-mortems where blast radius crossed a boundary; and covers quotas and capacity, which are different limits that customers routinely confuse. It adds a zone-to-facility mapping, per-account zone names, cells and cell assignments, quota requests, quota columns and capacity reservations to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The buildings are [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation); the network between zones is [Data Center Networking](/books/hosting-and-cloud/data-center-networking); placement inside a zone is [Schedulers: Borg to Kubernetes](/books/hosting-and-cloud/schedulers); regions run on a customer's site are [Hybrid & On-Prem Cloud](/books/hosting-and-cloud/hybrid-and-on-prem-cloud). Outage communication is the chapter [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages), availability credits are [SLAs & Service Credits](/books/hosting-and-cloud/slas-and-service-credits), data residency law is [Shared Responsibility & Compliance Programs](/books/hosting-and-cloud/compliance-programs), and quotas used against fraud are [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys).
 
 ## How the Providers Do It
 
@@ -25,7 +25,7 @@ Footprints as published, as of October 2026:
 | **Hetzner** | Six locations: Falkenstein, Nuremberg, Helsinki (owned parks), Ashburn, Hillsboro and Singapore (colocation) | The location; network zones (`eu-central`, `us-east`, `us-west`, `ap-southeast`) are networking and pricing scopes | Location codes (`fsn1`, `nbg1`, `hel1`) | None |
 | **OVHcloud** | 3-AZ regions (Paris `eu-west-par`, Milan `eu-south-mil`) and 1-AZ regions (Gravelines, Roubaix, Strasbourg and others) | Availability zone: one or more datacentres with their own power, cooling and network | Region codes with zone letters | Local Zones (`eu-west-lz-vie`); SecNumCloud regions |
 | **Akamai (Linode)** | Core compute regions plus 11 distributed regions | Not documented on the pages opened | Region identifiers | Distributed regions need a Dedicated CPU plan and an existing core-region footprint, with no Block Storage, Object Storage or Backups |
-| **Vultr** | Location count not verified for this chapter | Not documented on the pages opened | Not verified | Not verified |
+| **Vultr** | 34 cloud data center regions, in 34 cities, on its locations page | Not documented on the pages opened | Not verified | Not verified |
 | **Cloudflare** | 348 cities, 8 regions on its network page | None exposed to customers; code runs everywhere | None | The whole network is the product |
 
 Four patterns run through the table:
@@ -57,7 +57,7 @@ The outages that defined the period crossed zones and regions through shared con
 
 ### Sovereign partitions (2026)
 
-AWS opened the European Sovereign Cloud on January 14, 2026: a first Region, `eusc-de-east-1`, in Brandenburg, in a separate partition (`aws-eusc`) that is "physically and logically separate," with its own IAM and billing, operations run by EU residents located in the EU, and sovereign Local Zones planned in Belgium, the Netherlands and Portugal. "This Region operates independently from existing AWS Regions." A sovereign region is the cell idea applied to legal jurisdiction: a separate control plane, so neither an outage nor an order in one partition reaches the other. The legal side is Shared Responsibility & Compliance Programs.
+AWS opened the European Sovereign Cloud on January 14, 2026: a first Region, `eusc-de-east-1`, in Brandenburg, in a separate partition (`aws-eusc`) that is "physically and logically separate," with its own IAM and billing, operations run by EU residents located in the EU, and sovereign Local Zones planned in Belgium, the Netherlands and Portugal. "This Region operates independently from existing AWS Regions." A sovereign region is the cell idea applied to legal jurisdiction: a separate control plane, so neither an outage nor an order in one partition reaches the other. The legal side is [Shared Responsibility & Compliance Programs](/books/hosting-and-cloud/compliance-programs#sovereign-cloud).
 
 ## What a Zone Promises
 
@@ -126,7 +126,7 @@ The public post-mortems, in the order they happened:
 | **AWS, us-east-1, October 19 and 20, 2025** | Regional service to the region and beyond | A race between DynamoDB's DNS Enactors left `dynamodb.us-east-1.amazonaws.com` with no IP addresses for about 2 hours 52 minutes; EC2's DropletWorkflow Manager, whose host leases depend on DynamoDB, fell into congestive collapse; network propagation backlogged; NLB health checks flapped and triggered zone failover; console sign-in for some users outside us-east-1 and Redshift's IAM queries in all Regions failed through dependencies on us-east-1 | DNS automation disabled worldwide pending fixes; velocity control on NLB capacity removal; DWFM recovery tests; queue-based throttling |
 | **Azure Front Door, October 29 and 30, 2025** | Configuration to the global edge | Valid customer configuration changes "across two control plane build versions" generated "incompatible customer configuration metadata," which "exposed a latent bug in the data plane" and crashed edge sites from 15:41 UTC; the bad configuration had passed the protection safeguards; mitigated at 00:05 UTC on October 30 | Synchronous configuration processing before production stages; longer bake times; isolating configuration processing from traffic-serving instances; "micro cell" segmentation of customer traffic and configuration |
 
-The pattern across eight incidents run by four companies: buildings rarely caused the widest outages; shared planes did. A thread pool, an internal network, a single facility hosting the control plane, a globally replicated table, a DNS automation and a configuration compiler each crossed the zone and region boundaries that the data plane respected. The recoveries were slowed by the same thing every time: retries without backoff and work queued during the outage arriving all at once, which the playbook's [Exponential Backoff With Jitter](/docs/architecture/retries-and-timeouts#exponential-backoff-with-jitter) and [Ramping After an Outage](/docs/architecture/admission-control#ramping-after-an-outage) address. The remedies converge too: staged propagation of configuration as well as code, a kill switch, feature flags off by default, cells for configuration, and recovery paths that don't depend on the thing that failed. How these incidents were communicated is Outages, Post-Mortems & Status Pages; whether customers got credits is SLAs & Service Credits.
+The pattern across eight incidents run by four companies: buildings rarely caused the widest outages; shared planes did. A thread pool, an internal network, a single facility hosting the control plane, a globally replicated table, a DNS automation and a configuration compiler each crossed the zone and region boundaries that the data plane respected. The recoveries were slowed by the same thing every time: retries without backoff and work queued during the outage arriving all at once, which the playbook's [Exponential Backoff With Jitter](/docs/architecture/retries-and-timeouts#exponential-backoff-with-jitter) and [Ramping After an Outage](/docs/architecture/admission-control#ramping-after-an-outage) address. The remedies converge too: staged propagation of configuration as well as code, a kill switch, feature flags off by default, cells for configuration, and recovery paths that don't depend on the thing that failed. How these incidents were communicated is [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages); whether customers got credits is [SLAs & Service Credits](/books/hosting-and-cloud/slas-and-service-credits).
 
 ## Quotas as Protection
 
@@ -141,7 +141,7 @@ A quota is a limit set per account or project, per region, on how much a custome
 
 **Requests are a workflow with outcomes.** AWS's Service Quotas distinguishes the **default value**, the **applied quota** (an override after an increase), and whether a quota is adjustable, at the account or resource level; "Support might approve, deny, or partially approve your requests." Global quotas can be increased only from `us-east-1` (or the GovCloud and China equivalents), which is the control-plane dependency again. Automatic Management notifies customers before they run out.
 
-**Quotas are a product surface and a risk control at once.** A default of zero GPUs means every new GPU customer files a request, which is how a provider rations scarce hardware and screens for fraud before granting expensive capacity. A one-month wait for more servers is a fraud rule that a legitimate customer experiences as friction. The core `quotas` table already distinguishes `default`, `applied`, `risk` and `abuse` sources; what the provider adds is the request history and the reason for each decision, because a customer refused capacity during a launch asks why, and a regulator or court may too. How risk quotas are set from fraud signals is Free-Tier Fraud & Stolen Keys.
+**Quotas are a product surface and a risk control at once.** A default of zero GPUs means every new GPU customer files a request, which is how a provider rations scarce hardware and screens for fraud before granting expensive capacity. A one-month wait for more servers is a fraud rule that a legitimate customer experiences as friction. The core `quotas` table already distinguishes `default`, `applied`, `risk` and `abuse` sources; what the provider adds is the request history and the reason for each decision, because a customer refused capacity during a launch asks why, and a regulator or court may too. How risk quotas are set from fraud signals is [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys).
 
 ## Capacity Is Not Quota
 
@@ -160,7 +160,7 @@ The failure looks the same to a customer whose launch didn't happen, so the erro
 | Quota | Counts toward On-Demand quota | Requires quota like a VM |
 | Exclusions | Not with Dedicated Hosts, spread or partition placement groups | ND-series and NCads H100 v5 among unsupported GPU series; not for Spot VMs or Dedicated Hosts |
 
-A reservation is the provider selling idle capacity at full price as insurance, and it's the only product that turns a capacity risk into a contract. Time-boxed GPU reservations and commitment discounts are GPU & AI Clouds and Commitments, Discounts & Marketplaces.
+A reservation is the provider selling idle capacity at full price as insurance, and it's the only product that turns a capacity risk into a contract. Time-boxed GPU reservations and commitment discounts are [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#buying-capacity) and [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#gpu-capacity-reservations).
 
 ## The Alternatives
 
@@ -277,16 +277,13 @@ CREATE TABLE quota_requests (            -- every increase asked for, and what w
   CHECK (status <> 'partially_approved' OR granted_value < requested_value)
 );
 
-ALTER TABLE quotas
-  ADD COLUMN zone_id TEXT REFERENCES zones (id),          -- zonal quotas
+ALTER TABLE quotas                       -- zonal quotas: the core table's zone_id
   ADD COLUMN quota_type TEXT NOT NULL DEFAULT 'allocation'
     CHECK (quota_type IN ('allocation', 'rate', 'concurrent')),
   ADD COLUMN adjustable BOOLEAN NOT NULL DEFAULT TRUE,     -- false: a system limit
   ADD COLUMN quota_request_id UUID REFERENCES quota_requests (id);  -- the request it granted
--- The core exclusion constraint is replaced so a zonal row doesn't collide with its region's:
---   EXCLUDE USING GIST (quota_code WITH =, (COALESCE(account_id::text, '')) WITH =,
---     (COALESCE(project_id::text, '')) WITH =, (COALESCE(region_id, '')) WITH =,
---     (COALESCE(zone_id, '')) WITH =, source WITH =, valid_during WITH &&)
+-- The core exclusion constraint includes zone_id, so a zonal row doesn't collide with its
+-- region's.
 
 CREATE TABLE capacity_reservations (     -- side table: kind = 'capacity_reservation'
   resource_id       UUID PRIMARY KEY REFERENCES resources (id),   -- region and zone on resources
@@ -297,7 +294,8 @@ CREATE TABLE capacity_reservations (     -- side table: kind = 'capacity_reserva
   starts_at         TIMESTAMPTZ NOT NULL,
   committed_until   TIMESTAMPTZ,         -- future-dated reservations; null: cancel any time
   state             TEXT NOT NULL CHECK (state IN ('assessing', 'scheduled', 'pending',
-                      'active', 'expired', 'cancelled', 'failed'))
+                      'active', 'expired', 'cancelled', 'failed',
+                      'queued', 'undelivered'))  -- the last two: GPU pools, GPU & AI Clouds
 );
 
 -- usage_events.meter added by this chapter:
@@ -310,7 +308,7 @@ Notes on the sketch:
 - **A zone is a set of buildings, and the set changes.** `zone_facilities` is effective-dated so a new building joining a zone, or a hall moving between zones, is history rather than an edit, and the exclusion constraint makes it impossible for one building to be in two zones at once. "Do any two zones in this region share a facility, a power utility or a fiber path?" becomes a join from zones to facilities and their contracts, the shared-fate audit a provider should run before calling two zones independent.
 - **Physical IDs are the truth; names are per account.** `zones.id` is the physical identifier and `zone_aliases` holds what each account sees, so an incident affecting `use1-az4` resolves to every account's own name for it, and a customer's automation can be checked for aliases that point at a constrained zone.
 - **Cells are assignments with history.** `cell_assignments` answers "which customers were in cell 7 between 14:02 and 15:10," which is the list for incident notices and SLA credits. Shuffle shards are several active rows per key with `mode = 'shuffle_shard'`; cells are one, enforced by the partial exclusion constraint. `deploy_wave` makes the rollout order of code and configuration data, not convention.
-- **Quota decisions have reasons.** Each request records who or what decided, from what limit, to what, and why; an auto-adjuster's increase is a request with origin `auto_adjuster`. The granted limit is a new `quotas` row with source `applied` and the request's id, so the effective limit at any instant is still the most specific row in force, per the core model. Zonal quotas get their own column and the exclusion constraint is widened to include it.
+- **Quota decisions have reasons.** Each request records who or what decided, from what limit, to what, and why; an auto-adjuster's increase is a request with origin `auto_adjuster`. The granted limit is a new `quotas` row with source `applied` and the request's id, so the effective limit at any instant is still the most specific row in force, per the core model. Zonal quotas use the core table's `zone_id`, which its exclusion constraint includes.
 - **Quota and capacity stay separate.** Quota lives in `quotas`; capacity shortfalls are `placement_decisions` with outcome `rejected_infeasible`; reservations are resources that count against quota and bill at the on-demand rate while unused. The `platform` column exists because a reservation only matches instances whose image platform matches it exactly.
 - **Events:** `zone.status_changed` (to and from `constrained`), `zone.facility_added`, `cell.provisioned`, `cell.draining`, `cell.assignment_moved`, `quota.requested`, `quota.decided`, `quota.changed` (the core event), `capacity_reservation.activated`, `capacity_reservation.failed` and `capacity.insufficient` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the status page, notifications, capacity planning, sales and the fraud team.
 
@@ -370,6 +368,7 @@ Notes on the sketch:
 - [OVHcloud: Regions](https://www.ovhcloud.com/en/about-us/global-infrastructure/regions/), 1-AZ and 3-AZ regions, Local Zones and SecNumCloud
 - [Akamai: Distributed compute regions](https://techdocs.akamai.com/cloud-computing/docs/distributed-compute-regions), core versus distributed regions and their limits
 - [Cloudflare: Network](https://www.cloudflare.com/network/), 348 cities and 8 regions
+- [Vultr: Data center regions](https://www.vultr.com/features/datacenter-regions/), 34 cloud data center regions in 34 cities (viewed October 27, 2026)
 
 **Announcements and release notes**
 

@@ -2,14 +2,14 @@
 title = "Open Source & the Clouds"
 description = "The license wars: SSPL, Elastic and OpenSearch, Redis and Valkey, HashiCorp and OpenTofu, NATS, each side's case, and foundations as the settlement."
 category = "Hosting & Cloud Industry"
-order = 2130
+order = 2138
 part = "Managed Services"
 tags = ["open-source", "licensing", "valkey", "opensearch", "opentofu", "foundations"]
 +++
 
 Most managed services in this part are open-source software run by someone other than its authors. RDS runs PostgreSQL and MySQL, ElastiCache ran Redis, Amazon OpenSearch Service began as Elasticsearch, MSK runs Kafka, and every managed Kubernetes runs Kubernetes. That arrangement has a structural tension: the company that writes an engine has to earn money from it, usually by running it as a service, and the clouds can run the same engine as a service too, next to the customer's other infrastructure, on the same bill, often at a lower price. Between 2018 and 2025 a series of engine companies changed their licenses to stop the clouds from doing that without a deal, the clouds answered by forking the last open release into a neutral foundation, and several of the companies later added an open license back.
 
-This is the market's version of a long-running fight about what "open source" means, and it matters to every provider in this volume in two directions. A provider that resells an engine as a service has to know what license each version ships under, and what it allows. A provider that writes an engine has to choose a license knowing what the clouds did with each one. This chapter walks the license spectrum, the chronology case by case (MongoDB, Elastic, Redis, HashiCorp and the smaller ones), each side's stated arguments, the foundations that became the settlement, the choices a vendor has, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with license fields on `products`. The detail of Terraform, OpenTofu and Vault belongs to the Infrastructure as Code part (Provisioning: Terraform, OpenTofu & the Alternatives; Testing, Policy, Secrets & IaC Platforms); the provider-side contract disputes (Microsoft and CISPE, Broadcom and VMware) are the Licensing Disputes chapter.
+This is the market's version of a long-running fight about what "open source" means, and it matters to every provider in this volume in two directions. A provider that resells an engine as a service has to know what license each version ships under, and what it allows. A provider that writes an engine has to choose a license knowing what the clouds did with each one. This chapter walks the license spectrum, the chronology case by case (MongoDB, Elastic, Redis, HashiCorp and the smaller ones), each side's stated arguments, the foundations that became the settlement, the choices a vendor has, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with license fields on `products`. The detail of Terraform, OpenTofu and Vault belongs to the Infrastructure as Code part ([Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu); [Testing, Policy, Secrets & IaC Platforms](/books/hosting-and-cloud/iac-testing-policy-and-secrets)); the provider-side contract disputes (Microsoft and CISPE, Broadcom and VMware) are the [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes) chapter.
 
 The engineering side of licenses (checking dependency licenses in CI, vetting what you add) is the playbook's [Dependencies & Upgrades](/docs/engineering/dependencies#adding-a-dependency).
 
@@ -104,7 +104,7 @@ The messaging engines show the remaining levers ([Managed Queues & Streaming](/b
 - **Redpanda** never had an open license to change: its BSL's Additional Use Grant forbids a "Streaming or Queueing Service" in which third parties can create topics, naming cloud and hosting providers, and each release converts to Apache 2.0 after four years.
 - **RabbitMQ** under Broadcom kept its MPL 2.0 license and changed support instead: since 1 Jun 2024, core-team support and patches for older releases go to commercial customers, with features such as standby replication reserved for the commercial edition.
 
-The Kubernetes part has the same pattern in service meshes and GitOps: Buoyant stopped publishing open-source stable Linkerd releases from 2.15 in February 2024, covered in Cluster Networking.
+The Kubernetes part has the same pattern in service meshes and GitOps: Buoyant stopped publishing open-source stable Linkerd releases from 2.15 in February 2024, covered in [Cluster Networking](/books/hosting-and-cloud/cluster-networking).
 
 ## Each Side's Case
 

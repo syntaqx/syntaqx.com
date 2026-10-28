@@ -2,7 +2,7 @@
 title = "Observability Platforms"
 description = "Datadog, New Relic, Grafana, Honeycomb, Dynatrace and cloud monitoring: OpenTelemetry, pricing by host, gigabyte and cardinality, and bill shock."
 category = "Hosting & Cloud Industry"
-order = 2129
+order = 2137
 part = "Managed Services"
 tags = ["observability", "monitoring", "opentelemetry", "pricing", "cardinality"]
 +++
@@ -139,7 +139,7 @@ The public cases, each from the source that reported it:
 
 Vendor comparisons are marketing and read that way. ClickHouse's 2 Apr 2024 post estimated its own internal logging volume would cost "$26M" a month at Datadog list prices against about $150,000 on its own platform, a comparison at list price with no discounts, by a competitor. Honeycomb's Charity Majors wrote that she has "seen a single custom metric cost $30k per month." Neither is an audited bill.
 
-The pattern across the cases is the same three steps: usage grows silently because the unit grows with the business and with engineers' tags; the bill arrives at a level nobody approved; and the customer either rebuilds on open source or negotiates, and the vendor restructures the contract to keep it. A provider's defense is the same as for any surprise bill: show the cost driver before the invoice, per tag and per service, and let the customer cap it. The customer's side is the playbook's [Budgets and Anomaly Alerts](/docs/operations/cost-and-finops#budgets-and-anomaly-alerts) and the Cost Data, FinOps & Surprise Bills chapter.
+The pattern across the cases is the same three steps: usage grows silently because the unit grows with the business and with engineers' tags; the bill arrives at a level nobody approved; and the customer either rebuilds on open source or negotiates, and the vendor restructures the contract to keep it. A provider's defense is the same as for any surprise bill: show the cost driver before the invoice, per tag and per service, and let the customer cap it. The customer's side is the playbook's [Budgets and Anomaly Alerts](/docs/operations/cost-and-finops#budgets-and-anomaly-alerts) and the [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills) chapter.
 
 ## Sampling and Pipelines
 
@@ -262,7 +262,7 @@ Notes on the sketch:
 - **Ingest rules are effective-dated.** A bill is computed after the rules in force at the time, so the rules carry a range and a creator, and a disputed month can be rerated with the rules as they were.
 - **Ingest and index are separate meters.** Customers can keep sending data they don't query and pay the lower rate, which is the pricing model every platform has converged on.
 - **Billing never reads telemetry storage.** Meters come from the ingest path as `usage_events` with idempotency keys; the time-series database is sampled and approximate by design, as Prometheus says of itself.
-- **Warn before the invoice.** A daily job compares month-to-date series and bytes against the customer's budget from the Cost Data, FinOps & Surprise Bills chapter and raises `obs.cardinality_spike` and `obs.ingest_spike` events through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, with the top tags attached.
+- **Warn before the invoice.** A daily job compares month-to-date series and bytes against the customer's budget from the [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills#budgets-and-alerts) chapter and raises `obs.cardinality_spike` and `obs.ingest_spike` events through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, with the top tags attached.
 
 ## Auditing
 

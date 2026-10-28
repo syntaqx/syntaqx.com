@@ -24,7 +24,7 @@ The providers expose the same lifecycle with different names and error vocabular
 
 The vocabulary differs, the shape doesn't: a message is accepted, queued, sent to the carrier, and ends delivered, undelivered or failed, with a reason code that decides whether the customer should retry, fix its registration, or stop texting that person.
 
-## How We Got Here
+## How It Got Here
 
 SMS was designed as a signaling side channel for people's phones, and every property that makes business texting awkward today comes from that design:
 
@@ -124,7 +124,7 @@ A platform also filters for itself, because a carrier fine or a mass block of it
 
 ## When Delivery Breaks
 
-Delivery failures are often carrier-specific, and customers need to know which carrier. Twilio's status page shows the pattern: "SMS and MMS Delivery Delays from Twilio to Verizon United States," first posted May 27, 2026 at 10:13 PDT and resolved May 28 at 22:54 PDT, about 36.7 hours, affecting long code, short code, toll-free and Zipwhip traffic, with updates saying the cause was identified and no further detail. A status page for a CPaaS needs components per carrier and per number type, and the sender needs to keep accepting and queueing during a carrier delay rather than failing, within each message's time-to-live. Status page design is in Outages, Post-Mortems & Status Pages in the Running the Provider part.
+Delivery failures are often carrier-specific, and customers need to know which carrier. Twilio's status page shows the pattern: "SMS and MMS Delivery Delays from Twilio to Verizon United States," first posted May 27, 2026 at 10:13 PDT and resolved May 28 at 22:54 PDT, about 36.7 hours, affecting long code, short code, toll-free and Zipwhip traffic, with updates saying the cause was identified and no further detail. A status page for a CPaaS needs components per carrier and per number type, and the sender needs to keep accepting and queueing during a carrier delay rather than failing, within each message's time-to-live. Status page design is in [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages#status-pages) in the Running the Provider part.
 
 ## The Alternatives
 

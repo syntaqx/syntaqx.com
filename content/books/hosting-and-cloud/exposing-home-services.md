@@ -2,14 +2,14 @@
 title = "Exposing Home Services"
 description = "Port forwards, UPnP and DDNS; DNS-01 certificates; Caddy, Traefik and NPM; Cloudflare Tunnel and its video terms; Tailscale, Headscale, WireGuard; ISP terms."
 category = "Hosting & Cloud Industry"
-order = 2152
+order = 2111
 part = "Homelab"
 tags = ["homelab", "self-hosting", "reverse-proxy", "cloudflare-tunnel", "tailscale", "wireguard", "acme", "security"]
 +++
 
 Every self-hosted service eventually gets the same request: make it work from outside the house. That one decision turns a box in a closet into a small hosting provider, with a provider's problems and none of its staff. The service now has an attack surface, a certificate to renew, a DNS name that must follow a changing address, an ISP contract that may forbid it, and a patch cadence that matters, because the address space is scanned continuously. The ways to do it differ less in convenience than in who can reach the service: anyone on the internet, anyone a third party lets through, or only the household's own devices.
 
-This chapter covers the methods in the order homelabs tend to try them: port forwarding and why carrier-grade NAT breaks it, UPnP and the NAS ransomware it enabled, dynamic DNS, certificates at home (HTTP-01 against DNS-01, wildcards, delegation, Caddy's local CA), reverse proxies (Caddy, Traefik, Nginx Proxy Manager), Cloudflare Tunnel and the history of its terms on video, overlays (WireGuard, Tailscale, Headscale) and a VPS relay; then the ISP terms that apply to all of them, and patching. It adds no provider tables to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model); an exposed home service is a `site` whose origin happens to be a house. The router, VLANs and CGNAT detection underneath are [Home Routing, Firewalls & DNS](/books/hosting-and-cloud/home-routing-and-firewalls); the apps being exposed are [Self-Hosted Apps & Orchestration](/books/hosting-and-cloud/self-hosted-apps); moving the public part out of the house is [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation). Each piece returns at provider scale later in the book: certificates in Web PKI and ACME & Certificates at Hosting Scale, the tunnel's other end in The Edge Business, and what shields an origin in DDoS Mitigation and WAF, Bots & Rate Limits.
+This chapter covers the methods in the order homelabs tend to try them: port forwarding and why carrier-grade NAT breaks it, UPnP and the NAS ransomware it enabled, dynamic DNS, certificates at home (HTTP-01 against DNS-01, wildcards, delegation, Caddy's local CA), reverse proxies (Caddy, Traefik, Nginx Proxy Manager), Cloudflare Tunnel and the history of its terms on video, overlays (WireGuard, Tailscale, Headscale) and a VPS relay; then the ISP terms that apply to all of them, and patching. It adds no provider tables to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model); an exposed home service is a `site` whose origin happens to be a house. The router, VLANs and CGNAT detection underneath are [Home Routing, Firewalls & DNS](/books/hosting-and-cloud/home-routing-and-firewalls); the apps being exposed are [Self-Hosted Apps & Orchestration](/books/hosting-and-cloud/self-hosted-apps); moving the public part out of the house is [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation). Each piece returns at provider scale later in the book: certificates in [Web PKI](/books/hosting-and-cloud/web-pki) and [ACME & Certificates at Hosting Scale](/books/hosting-and-cloud/acme-at-scale), the tunnel's other end in [The Edge Business](/books/hosting-and-cloud/edge-business), and what shields an origin in [DDoS Mitigation](/books/hosting-and-cloud/ddos-mitigation) and [WAF, Bots & Rate Limits](/books/hosting-and-cloud/waf-bots-and-rate-limits).
 
 ## How the Providers Do It
 
@@ -24,7 +24,7 @@ This chapter covers the methods in the order homelabs tend to try them: port for
 
 Three patterns run through the table. **Inbound or outbound is the first split:** a port forward needs the home to be reachable, while a tunnel or overlay dials out and works behind any NAT, including a carrier's. **Public or private is the second:** most homelab services have an audience of a few people, and a method that admits only known devices removes the internet from the threat model. **Every free tier has an owner with terms:** Cloudflare's on content, Tailscale's on commercial use, and the ISP's on the line itself.
 
-## How We Got Here
+## How It Got Here
 
 - **January 2015 and September 2015:** the Caddy and Traefik projects start on GitHub; Caddy's selling point becomes HTTPS by default, Traefik's routing read from container labels.
 - **June 2016:** eCh0raix ("QNAPCrypt") first surfaces against QNAP NAS boxes; it returns in large waves in June 2019 and June 2020.
@@ -74,7 +74,7 @@ Every browser now expects HTTPS, and a password vault or photo app over plain HT
 
 **Caddy's automatic HTTPS** is why it is the common choice: it serves "all sites over HTTPS" by default, redirects HTTP, renews automatically, and tries ZeroSSL if Let's Encrypt fails. For DNS-01 it needs a build with the provider's `caddy-dns` plugin (an `xcaddy build --with` or the `caddy:<version>-builder` Docker stage), then `tls { dns cloudflare {env.CF_API_TOKEN} }`. For names no public CA will sign (`localhost`, `nas.home.arpa`), `tls internal` uses Caddy's own local CA, whose root Caddy tries to install into the system trust store; every other device must be told to trust that root by hand. On-demand TLS, which issues certificates at handshake time, must be gated by an `ask` endpoint or anyone can make the proxy request certificates for arbitrary names.
 
-My rule: a real domain with DNS-01 wildcards for anything a phone or a family member will open, the local CA only for machine-to-machine names. How CAs, Certificate Transparency and ACME work at provider scale is Web PKI and ACME & Certificates at Hosting Scale.
+My rule: a real domain with DNS-01 wildcards for anything a phone or a family member will open, the local CA only for machine-to-machine names. How CAs, Certificate Transparency and ACME work at provider scale is [Web PKI](/books/hosting-and-cloud/web-pki#certificate-transparency) and [ACME & Certificates at Hosting Scale](/books/hosting-and-cloud/acme-at-scale).
 
 ## Reverse Proxies
 
@@ -139,7 +139,7 @@ What follows for a homelab:
 - **Draw the system before opening it:** where traffic enters, what it can reach, and what a compromise of the proxy gives away ([Draw the System](/docs/security/threat-modeling#draw-the-system)).
 - **Keep the exposed hosts off the trusted segment:** a compromised media server should land in the lab VLAN, not next to the laptops ([VLANs and Segmentation](/books/hosting-and-cloud/home-routing-and-firewalls#vlans-and-segmentation)).
 
-What an attacker does with a compromised home server once it is turned against others (scanning, spam, proxying) is the subject of Abuse on Infrastructure.
+What an attacker does with a compromised home server once it is turned against others (scanning, spam, proxying) is the subject of [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure).
 
 ## The Alternatives
 

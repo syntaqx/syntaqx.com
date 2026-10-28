@@ -26,7 +26,7 @@ Every US CPaaS runs the same registrations through the same registries; they dif
 
 The common pattern: the platform is registered with The Campaign Registry as a Campaign Service Provider (CSP), every customer brand goes through it, and the platform's dashboard is a front end for external review queues it can't speed up.
 
-## How We Got Here
+## How It Got Here
 
 The regime grew in layers, each one the carriers' answer to spam on a different kind of number:
 
@@ -134,7 +134,7 @@ Review goes to the toll-free messaging aggregator, which the providers' public p
 
 ## Short Codes
 
-Short codes are five- and six-digit numbers leased from the Common Short Code Administration (CSCA, "The Short Code Registry is a service mark of CTIA"). They carry the highest throughput and the heaviest process. CSCA's own page says random codes are "less expensive" than select (vanity) codes and that leases are "typically three, six, nine, or 12 months," plus setup and per-message costs from the provider; it publishes no prices, and provider lease prices vary, so I treat them as provider list prices to check at the time of purchase. CSCA recommends the CTIA Short Code Monitoring Handbook (version 1.9) when preparing a use case.
+Short codes are five- and six-digit numbers leased from the Common Short Code Administration (CSCA, "The Short Code Registry is a service mark of CTIA"). They carry the highest throughput and the heaviest process. CSCA's leasing page says random codes are "less expensive" than Select codes (the registry's term for a code the lessee chooses) and that leases are "typically three, six, nine, or 12 months"; its FAQ gives the lease rates as $1,000 a month for a Select code and $500 a month for a Random one, for three, six or 12 months, paid in full before activation and non-refundable (as of October 2026). Setup and per-message costs come from the provider on top. CSCA recommends the CTIA Short Code Monitoring Handbook (version 1.9) when preparing a use case.
 
 Bandwidth publishes its process, which matches the shape across providers:
 
@@ -168,15 +168,9 @@ My default for a platform's customers is 10DLC for anything conversational or lo
 
 ## How to Build It
 
-The chapter adds brands, campaigns, campaign number assignments, toll-free verifications, short code programs and the external review trail to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Each registration is a `resources` row of kind `sender_identity` with a `sender_identities` side row whose `channel` says what it is (`sms_brand`, `sms_campaign`, `toll_free_verification`), so holds, abuse cases and audit attach to it like any other resource. Short code programs and RCS agents need two more channels:
+The chapter adds brands, campaigns, campaign number assignments, toll-free verifications, short code programs and the external review trail to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Each registration is a `resources` row of kind `sender_identity` with a `sender_identities` side row whose `channel` says what it is (`sms_brand`, `sms_campaign`, `toll_free_verification`, and for short code programs and RCS agents `short_code_program` and `rcs_agent`), so holds, abuse cases and audit attach to it like any other resource:
 
 ```sql
-ALTER TABLE sender_identities
-  DROP CONSTRAINT sender_identities_channel_check,
-  ADD CONSTRAINT sender_identities_channel_check CHECK (channel IN ('email_domain',
-    'email_address', 'sms_brand', 'sms_campaign', 'toll_free_verification',
-    'short_code_program', 'rcs_agent', 'voice_caller_id'));
-
 CREATE TABLE sms_brands (                -- side table: sender_identities.channel = 'sms_brand'
   resource_id       UUID PRIMARY KEY REFERENCES resources (id),
   registry_brand_id TEXT UNIQUE,         -- TCR's id, once registered
@@ -248,7 +242,7 @@ CREATE TABLE toll_free_verifications (   -- side table: channel = 'toll_free_ver
 CREATE TABLE short_code_programs (       -- side table: channel = 'short_code_program'
   resource_id          UUID PRIMARY KEY REFERENCES resources (id),
   number_resource_id   UUID NOT NULL REFERENCES resources (id),  -- the short code
-  code_type            TEXT NOT NULL CHECK (code_type IN ('random', 'vanity')),
+  code_type            TEXT NOT NULL CHECK (code_type IN ('random', 'select')),
   lease_subscription_id UUID REFERENCES subscriptions (id),       -- the CSCA lease term
   program_brief_ref    TEXT NOT NULL,    -- the brief carriers certified
   carriers_live        TEXT[] NOT NULL DEFAULT '{}',              -- carriers.id
@@ -312,6 +306,7 @@ Notes on the sketch:
 - [Kaleyra: Subsidiaries (Exhibit 21.1)](https://www.sec.gov/Archives/edgar/data/1719489/000095017023008497/klr-ex21_1.htm), Campaign Registry, Inc. as a subsidiary
 - [Tata Communications completes acquisition of Kaleyra (8-K exhibit)](https://www.sec.gov/Archives/edgar/data/1719489/000119312523253538/d915044dex991.htm), completion on October 5, 2023
 - [CSCA: Finding and leasing a short code](https://www.usshortcodes.com/finding-and-leasing-a-short-code/), random and select codes, lease terms, the monitoring handbook
+- [CSCA: FAQs](https://www.usshortcodes.com/learn-more/faqs/), $1,000 a month for a Select code and $500 for a Random code, three, six or 12 month terms paid upfront, non-refundable
 - [RCR Wireless: Carriers come together on common short code service (2003)](https://rcrwireless.com/20031017/archived-articles/carriers-come-together-on-common-short-code-service), the October 2003 launch with CTIA and NeuStar
 - [Somos: Launch of the TSS Registry](https://www.somos.com/insights/somos-launches-texting-and-smart-services-tss-registry), toll-free text enablement from July 22, 2015
 - [GSMA: RCS Universal Profile 1.0 (PDF)](https://www.gsma.com/futurenetworks/wp-content/uploads/2017/07/RCC.71_v1.0.pdf), version 1.0 of November 16, 2016

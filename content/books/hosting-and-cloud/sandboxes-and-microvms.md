@@ -2,7 +2,7 @@
 title = "Sandboxes & MicroVMs"
 description = "How providers wall off strangers' code: Lambda's first design, Nitro, gVisor, Kata, Firecracker and Cloud Hypervisor, and their density, boot and syscall costs."
 category = "Hosting & Cloud Industry"
-order = 2112
+order = 2121
 part = "The Stack, Bottom to Top"
 tags = ["isolation", "microvms", "firecracker", "gvisor", "multi-tenancy"]
 +++
@@ -143,7 +143,7 @@ A provider choosing a wall answers four questions, and the public choices map on
 
 1. **Can customers bring binaries?** If yes, the wall is a VM or a user-space kernel. Every product in the table that accepts arbitrary images (Fargate, Cloud Run, Container Instances, Fly.io, Cloudflare Containers, Vercel Sandbox, E2B) uses one.
 2. **Does the provider own the hardware?** A microVM needs KVM. A provider on bare metal (AWS for Lambda, Fly.io on its own servers) can run Firecracker directly; a provider renting VMs needs nested virtualization or gVisor's `systrap`, which gVisor recommends "inside a VM or on machines without virtualization support."
-3. **How fast must it start, and how often?** Request-scoped work (an edge function per HTTP request) can't wait 125 ms, so it gets an isolate or a Wasm instance. Session-scoped work (a function slot reused for hours, an agent sandbox) amortizes a microVM's boot and hides it with pools and snapshots.
+3. **How fast must it start, and how often?** Request-scoped work (an edge function per HTTP request) can't wait 125 ms, so it gets an isolate or a Wasm instance. Session-scoped work (a function slot reused for hours, an agent sandbox, a CI job on an ephemeral runner as in [Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure#containers-or-microvms)) amortizes a microVM's boot and hides it with pools and snapshots.
 4. **How much compatibility does the customer expect?** gVisor's 2018 launch implemented about 200 system calls and listed what ran; Cloud Run's second generation exists because some workloads need "full Linux compatibility." A provider should publish which wall a product uses and what it doesn't support, because the customer's bug reports will find out anyway.
 
 ## The Alternatives
@@ -152,7 +152,7 @@ A provider choosing a wall answers four questions, and the public choices map on
 | --- | --- | --- | --- | --- | --- | --- |
 | **Firecracker** | Minimal KVM VMM, one process per microVM, jailer | Small trusted code base, about 3 MB overhead, sub-125 ms boot, snapshots | Five devices, so no GPU passthrough; weaker I/O; needs KVM; orchestration is yours to build | Apache 2.0, AWS-led | Low per sandbox, high to build around | Lambda, Fargate, Fly.io, Cloudflare Containers, Vercel Sandbox, E2B |
 | **Cloud Hypervisor** | General-purpose Rust VMM | More devices (PCI passthrough) and guests (Windows), aarch64, Kata integration | Larger than Firecracker; younger than QEMU | Open source under the Linux Foundation | Low to medium | Kata deployments, general microVM hosts |
-| **Kata Containers** | A VM per pod behind an OCI and CRI runtime | Drop-in for Kubernetes; choice of VMM | Guest kernel per pod; device support depends on the VMM | Apache 2.0, Open Infrastructure Foundation | Medium | Multi-tenant Kubernetes clusters |
+| **Kata Containers** | A VM per pod behind an OCI and CRI runtime | Drop-in for Kubernetes; choice of VMM | Guest kernel per pod; device support depends on the VMM | Apache 2.0, Open Infrastructure Foundation | Medium | Multi-tenant Kubernetes clusters ([Multi-Tenancy, Policy & Security](/books/hosting-and-cloud/kubernetes-multi-tenancy-and-policy#sandboxed-runtimes-and-runtimeclass)) |
 | **gVisor** | User-space kernel per sandbox | No hardware virtualization needed; small host-kernel surface | System-call-heavy and file-heavy workloads slow; incomplete Linux API | Apache 2.0, Google-led | Low memory; CPU tax per syscall | Cloud Run first generation, GKE Sandbox |
 | **Nitro-style hardware VM** | Minimal hypervisor with I/O on cards | Near-bare-metal performance; bare metal from the same server | Custom silicon; hours-scale VM products, not per-request | Proprietary, AWS | Very high to build | EC2 |
 | **V8 isolates** | Many tenants per process | Start in milliseconds; tiny memory per tenant | Only JavaScript and Wasm; a V8 bug is a cross-tenant bug, so it needs extra layers | workerd (the Workers runtime) is Apache 2.0 | Very low | Cloudflare Workers |
@@ -164,7 +164,7 @@ My default for any product that runs customers' binaries is a Firecracker microV
 
 I'd pick gVisor instead when the provider runs on rented VMs without nested virtualization, or for container products where compatibility gaps are acceptable and memory is the binding cost. I'd pick isolates or Wasm only for request-scoped edge code in a restricted language, and I'd pick Cloud Hypervisor or Kata over Firecracker when customers need devices or guests Firecracker deliberately leaves out.
 
-What would change this: GPUs. Firecracker's five-device model has no PCI passthrough, so a GPU means a different VMM or bare metal. Fly.io's account of its GPU product (February 14, 2025) is the public example: GPU Machines ran on Cloud Hypervisor, "a very similar Rust codebase that supports PCI passthrough," on dedicated GPU servers kept apart from other workloads for security, and "those GPU servers were drastically less utilized and thus less cost-effective than our ordinary servers." A GPU product's tenancy decision is one tenant per device, and its economics belong to GPU & AI Clouds.
+What would change this: GPUs. Firecracker's five-device model has no PCI passthrough, so a GPU means a different VMM or bare metal. Fly.io's account of its GPU product (February 14, 2025) is the public example: GPU Machines ran on Cloud Hypervisor, "a very similar Rust codebase that supports PCI passthrough," on dedicated GPU servers kept apart from other workloads for security, and "those GPU servers were drastically less utilized and thus less cost-effective than our ordinary servers." A GPU product's tenancy decision is one tenant per device, and its economics belong to [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds).
 
 ## How to Build It
 

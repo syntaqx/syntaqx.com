@@ -3,7 +3,7 @@ title = "Convergence: CFEngine to Puppet"
 nav_title = "CFEngine to Puppet"
 description = "Desired state and convergence: CFEngine's promises and pull agents, Puppet's facts, catalogs, RAL and PuppetDB, and the Perforce and OpenVox split."
 category = "Hosting & Cloud Industry"
-order = 2140
+order = 2148
 part = "Infrastructure as Code"
 tags = ["infrastructure-as-code", "configuration-management", "cfengine", "puppet", "openvox", "convergence"]
 +++
@@ -133,7 +133,7 @@ The shape is the one [Chef](/books/hosting-and-cloud/chef#licensing-chef-360-and
 
 My default for a new fleet is not to start with a pull agent. Build the machine from a baked image, declare the infrastructure around it with a provisioning tool, and replace machines rather than repair them, so drift has nowhere to accumulate ([Rebuild, Don't Repair](/docs/delivery/containers#rebuild-don-t-repair)). Convergence earns its place for the machines that can't be replaced on every change: bare-metal hosts, hypervisors, stateful database servers, a shared hosting fleet with customer data on local disks, and customer-owned machines a provider manages but doesn't own.
 
-For those, I'd pick OpenVox for a fleet that already speaks Puppet and doesn't want a per-node license, Puppet Core where an auditor wants a vendor's vulnerability commitments in writing, and CFEngine where a five-minute correction window and a small agent matter more than the module ecosystem. Inside a single cloud, I'd use its agent (State Manager, Machine Configuration or OS policies) before running my own server, accepting that the cloud may retire it as it retired OpsWorks. Whatever runs, every run's report goes into one table, so drift and failures are visible across tools.
+For those, I'd pick OpenVox for a fleet that already speaks Puppet and doesn't want a per-node license, Puppet Core where an auditor wants a vendor's vulnerability commitments in writing, and CFEngine where a five-minute correction window and a small agent matter more than the module ecosystem. Inside a single cloud, I'd use its agent (State Manager, Machine Configuration or OS policies) before running my own server, accepting that the cloud may retire it as it [retired OpsWorks](/books/hosting-and-cloud/migrations-and-end-of-life#the-kinds-of-ending). Whatever runs, every run's report goes into one table, so drift and failures are visible across tools.
 
 What would change this: a fleet that can't tolerate any machine replacement (I'd lean harder on convergence and shorten the interval), or one that is fully stateless (I'd drop convergence entirely and spend the effort on the image pipeline).
 

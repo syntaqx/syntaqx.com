@@ -3,14 +3,14 @@ title = "Functions, Isolates & Edge Compute"
 nav_title = "Functions & Edge Compute"
 description = "Function platforms from Lambda's 2014 preview to isolates, Wasm and CDN functions: how they run, cold starts, WASI, and limits and pricing compared."
 category = "Hosting & Cloud Industry"
-order = 2113
+order = 2122
 part = "The Stack, Bottom to Top"
 tags = ["serverless", "functions", "edge-compute", "webassembly", "pricing"]
 +++
 
 A function platform sells compute by the event. The customer uploads code, names a trigger (an HTTP request, a queue message, a file landing in a bucket, a timer), and pays for each invocation and for how long or how hard it ran, with nothing billed while nothing happens. The provider owns everything a VM customer would: the runtime, the operating system, the placement, the scaling from zero to thousands of concurrent copies and back, and the wall between one customer's function and the next. In exchange, the provider gets to pack the code of millions of customers onto shared fleets and to charge per millisecond for capacity a VM customer would have rented by the hour and left idle.
 
-Three families now share the name. **Regional functions** (AWS Lambda, Cloud Run functions, Azure Functions) run in a cloud region in a microVM or container, take minutes of wall time and gigabytes of memory, and bill memory multiplied by duration. **Isolates and Wasm at the edge** (Cloudflare Workers, Fastly Compute) run in hundreds of locations inside a language runtime, start in milliseconds or microseconds, cap memory near 128 MB, and bill CPU time or requests. **CDN functions** (CloudFront Functions and Lambda@Edge) run on a CDN's request path with tight limits and a per-invocation price. Platforms like Vercel and Netlify sell functions on top of one of these underlays. This chapter tells how the model arrived, how a function actually runs and why cold starts happen, how isolates and Wasm work, what WASI and the component model add, and compares limits and prices across providers as of October 2026. The walls underneath are [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms); deploying functions is Platforms Take Over the Deploy; data stores built for functions are Serverless & Edge Databases; and free function tiers used for cryptomining are Free-Tier Fraud & Stolen Keys.
+Three families now share the name. **Regional functions** (AWS Lambda, Cloud Run functions, Azure Functions) run in a cloud region in a microVM or container, take minutes of wall time and gigabytes of memory, and bill memory multiplied by duration. **Isolates and Wasm at the edge** (Cloudflare Workers, Fastly Compute) run in hundreds of locations inside a language runtime, start in milliseconds or microseconds, cap memory near 128 MB, and bill CPU time or requests. **CDN functions** (CloudFront Functions and Lambda@Edge) run on a CDN's request path with tight limits and a per-invocation price. Platforms like Vercel and Netlify sell functions on top of one of these underlays ([PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds)). This chapter tells how the model arrived, how a function actually runs and why cold starts happen, how isolates and Wasm work, what WASI and the component model add, and compares limits and prices across providers as of October 2026. The walls underneath are [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms); deploying functions is [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys); data stores built for functions are [Serverless & Edge Databases](/books/hosting-and-cloud/serverless-and-edge-databases); and free function tiers used for cryptomining are [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#cryptomining).
 
 ## How the Providers Do It
 
@@ -111,7 +111,7 @@ AWS offers two function products on CloudFront, and the comparison is a clean st
 | Network, file system, request body | None | All three |
 | Price | $0.10 per million invocations | $0.60 per million requests plus $0.00005001 per GB-second |
 
-The first is for cache-key normalization, header changes, redirects and token checks on every request; the second is a Lambda function replicated near the CDN for work that needs a library, the network or the body. Caching itself and the CDN business are Caching & Invalidation and The Edge Business.
+The first is for cache-key normalization, header changes, redirects and token checks on every request; the second is a Lambda function replicated near the CDN for work that needs a library, the network or the body. Caching itself and the CDN business are [Caching & Invalidation](/books/hosting-and-cloud/caching-and-invalidation) and [The Edge Business](/books/hosting-and-cloud/edge-business).
 
 ### WASI and the component model
 

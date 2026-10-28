@@ -2,7 +2,7 @@
 title = "From Homelab to Colocation"
 description = "Deploying from home, the upload problem, static IPs and AUPs, dual WAN and BGP, power and uptime math, published colo prices and a hybrid home, colo and cloud."
 category = "Hosting & Cloud Industry"
-order = 2154
+order = 2113
 part = "Homelab"
 tags = ["homelab", "colocation", "self-hosted-runners", "multi-wan", "bgp", "ups", "broadband"]
 +++
@@ -99,7 +99,7 @@ A second line protects remote access and outbound work; it protects inbound serv
 
 The way to keep one address across two ISPs, or across home, colo and cloud, is to own the address and announce it. Residential ISPs don't take BGP from customers, so home BGP almost always means announcing from a VPS or colo box and tunneling the traffic home.
 
-**Getting an ASN and addresses from ARIN.** Under ARIN's policy manual any organization can be issued a single ASN on request; more than one needs a unique routing policy. An end user's initial IPv6 assignment is a /48 when one criterion is met, such as being multihomed with a global ASN. New IPv4 comes only through the waitlist, which caps a request at a /22 (a requester may accept down to a /24), and an organization holding more than a /20 is ineligible. ARIN's fee schedule effective January 1, 2026 puts an organization with IPv4 of a /24 or smaller, IPv6 of a /40 or smaller and one to three ASNs in the 3X-Small category at $275 a year; a waiver lets 3X-Small holders keep up to a /36 of IPv6 at that fee until December 31, 2026, and a new schedule takes effect January 1, 2027. IPv4 markets, transfers and leasing are Networks, Peering & IP Addresses.
+**Getting an ASN and addresses from ARIN.** Under ARIN's policy manual any organization can be issued a single ASN on request; more than one needs a unique routing policy. An end user's initial IPv6 assignment is a /48 when one criterion is met, such as being multihomed with a global ASN. New IPv4 comes only through the waitlist, which caps a request at a /22 (a requester may accept down to a /24), and an organization holding more than a /20 is ineligible. ARIN's fee schedule effective January 1, 2026 puts an organization with IPv4 of a /24 or smaller, IPv6 of a /40 or smaller and one to three ASNs in the 3X-Small category at $275 a year; a waiver lets 3X-Small holders keep up to a /36 of IPv6 at that fee until December 31, 2026, and a new schedule takes effect January 1, 2027. IPv4 markets, transfers and leasing are [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses#ip-addresses-and-ipv4-scarcity).
 
 **Minimum routable prefixes.** Vultr's BGP documentation states the global rule plainly: at minimum a /24 of IPv4 or a /48 of IPv6, because "smaller subnets are not routable on the internet." Vultr accepts a customer's own ASN or assigns a private one, asks for verification of ASN and prefix ownership, and peers with a fixed neighbor address on each VPS. A homelab that wants its own IPv4 therefore wants a whole /24.
 
@@ -168,7 +168,7 @@ The end state for most homelabs isn't a move; it is a split. Production that nee
 
 My default for each stage:
 
-- **Deploying from home:** ephemeral self-hosted runners (Actions Runner Controller pods, GitLab Runner or `act_runner`) on private repositories only, a Harbor registry on the LAN, Flux or Argo CD pulling from Git, staging as a separate namespace until cluster upgrades need a second cluster. Nothing in the delivery loop gets a port forward.
+- **Deploying from home:** workflows in the Actions format, run by GitHub self-hosted runners at home (Actions Runner Controller pods) or by a forge on the LAN (Gitea Actions with `act_runner`, Forgejo Actions with Forgejo Runner), so the same YAML moves between them with the gaps in [Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure#my-default); runners ephemeral and on private repositories only, a Harbor registry on the LAN, Flux or Argo CD pulling from Git, staging as a separate namespace until cluster upgrades need a second cluster. Nothing in the delivery loop gets a port forward.
 - **The line:** fiber if it reaches the house, because upload is the constraint everything else works around. On cable or fixed wireless I'd keep every public service off the home line from the start.
 - **Exposure:** private services over an overlay; public ones only on a plan whose AUP allows them, which on a residential plan means behind a VPS or not at home at all.
 - **Redundancy:** a second WAN of a different medium in a failover group (not load balancing) once remote access during an outage matters, accepting that inbound rides the overlay during failover.
@@ -365,6 +365,7 @@ When the home site's 95th percentile sits near the plan's upload, or an outage l
 - [GitLab Docs: GitLab Runner](https://docs.gitlab.com/runner/), MIT agent, registration and executors
 - [GitLab Docs: Compute minutes](https://docs.gitlab.com/ci/pipelines/compute_minutes/), private runners to reduce compute-minute use
 - [Gitea: Gitea 1.19.0 is released](https://blog.gitea.com/release-of-1.19.0/), Gitea Actions as a preview with `act_runner`, March 20, 2023
+- [Forgejo Docs: Forgejo Actions administrator guide](https://forgejo.org/docs/latest/admin/actions/), Forgejo Runner as the agent
 - [GitHub: distribution v3.0.0](https://github.com/distribution/distribution/releases/tag/v3.0.0), Distribution 3.0.0, April 3, 2025
 - [CNCF: Harbor graduation](https://www.cncf.io/announcements/2020/06/23/cloud-native-computing-foundation-announces-harbor-graduation/), June 23, 2020, Harbor's access control, scanning, signing and replication
 - [OpenGitOps](https://opengitops.dev/), the pull-based GitOps principles

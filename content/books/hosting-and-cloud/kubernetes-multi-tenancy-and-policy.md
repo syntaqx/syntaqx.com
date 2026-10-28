@@ -3,7 +3,7 @@ title = "Multi-Tenancy, Policy & Security"
 nav_title = "Tenancy, Policy & Security"
 description = "Kubernetes tenancy models, RBAC and quotas, PSP to Pod Security Admission, CEL admission, Kyverno and Gatekeeper, signed images, Falco, sandboxes."
 category = "Hosting & Cloud Industry"
-order = 2123
+order = 2131
 part = "Kubernetes"
 tags = ["kubernetes", "multi-tenancy", "admission-control", "policy", "security"]
 +++
@@ -12,7 +12,7 @@ Kubernetes was not built to be shared by parties who don't trust each other. AWS
 
 For a provider the question comes in two forms. The first is the customer's: a customer running many teams or many of its own customers on one cluster wants the provider's managed product to make that safe, and the providers now sell pieces of the answer (managed policy engines, sandboxed node pools, VM-isolated pods). The second is the provider's own: a provider that runs customer code on Kubernetes, a platform-as-a-service, a notebook or CI service, a developer environment, has the "multi-customer" case the Kubernetes docs describe, where the customer never sees the cluster and every isolation failure is the provider's incident. Gitpod ran developer environments that way for six years and then left Kubernetes, and its reasons are the clearest public list of what that case demands.
 
-This chapter covers the official tenancy models and what a namespace can't isolate, RBAC and quotas at the depth a shared cluster needs, the move from PodSecurityPolicy to Pod Security Admission, admission control from webhooks to in-process CEL policies, Kyverno and Gatekeeper, signed-image admission, runtime detection with Falco, virtual clusters, sandboxed runtimes through RuntimeClass, and what running customer workloads on Kubernetes requires. The operating rules are the playbook's: [Namespaces and RBAC](/docs/operations/kubernetes#namespaces-and-rbac), [Network Policies](/docs/operations/kubernetes#network-policies), [Image Policy](/docs/operations/kubernetes#image-policy) and [Secrets](/docs/operations/kubernetes#secrets) for clusters, and [Multi-Tenancy](/docs/architecture/multi-tenancy#isolation-models) for applications. The sandboxes themselves (gVisor, Kata Containers, Firecracker) are Sandboxes & MicroVMs; this chapter covers only how Kubernetes selects them. It adds `cluster_tenants`, which records which account holds which namespace or virtual cluster on a shared cluster, and the policy records an audit needs.
+This chapter covers the official tenancy models and what a namespace can't isolate, RBAC and quotas at the depth a shared cluster needs, the move from PodSecurityPolicy to Pod Security Admission, admission control from webhooks to in-process CEL policies, Kyverno and Gatekeeper, signed-image admission, runtime detection with Falco, virtual clusters, sandboxed runtimes through RuntimeClass, and what running customer workloads on Kubernetes requires. The operating rules are the playbook's: [Namespaces and RBAC](/docs/operations/kubernetes#namespaces-and-rbac), [Network Policies](/docs/operations/kubernetes#network-policies), [Image Policy](/docs/operations/kubernetes#image-policy) and [Secrets](/docs/operations/kubernetes#secrets) for clusters, and [Multi-Tenancy](/docs/architecture/multi-tenancy#isolation-models) for applications. The sandboxes themselves (gVisor, Kata Containers, Firecracker) are [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms); this chapter covers only how Kubernetes selects them. It adds `cluster_tenants`, which records which account holds which namespace or virtual cluster on a shared cluster, and the policy records an audit needs.
 
 ## How the Providers Do It
 
@@ -32,9 +32,9 @@ Four patterns run through the table:
 - **The defaults are the upstream defaults.** No provider in the table turns on a restricted Pod Security level for customer namespaces by default; Autopilot's restrictions are the exception that proves the point.
 - **Everyone's guidance ends at the cluster.** AWS says it, Google says multi-tenant clusters are "more exposed to security vulnerabilities than other clusters," and vCluster's own docs say its shared-node mode is not a boundary for untrusted tenants.
 
-## How We Got Here
+## How It Got Here
 
-Kubernetes' history of sharing is a history of moving controls from configurable but dangerous, to built in and narrow, to declarative and in-process. Earlier schedulers and their isolation models are Schedulers: Borg to Kubernetes.
+Kubernetes' history of sharing is a history of moving controls from configurable but dangerous, to built in and narrow, to declarative and in-process. Earlier schedulers and their isolation models are [Schedulers: Borg to Kubernetes](/books/hosting-and-cloud/schedulers).
 
 | When | Event | What it solved | What it cost |
 | --- | --- | --- | --- |
@@ -173,7 +173,7 @@ Verification at admission and verification at the GitOps source ([Flux's `OCIRep
 
 Admission decides what may start; nothing in it sees what a container does afterwards. Falco, created by Sysdig in 2016 and graduated from the CNCF on February 29, 2024, parses Linux syscalls through a modern eBPF probe (the default) or a kernel module, and plugins add other event sources such as Kubernetes audit logs and cloud audit trails. Rules in YAML define "the conditions under which an alert should be generated," with an output string; alerts go to stdout, files, syslog, programs or HTTP endpoints, and Falcosidekick fans them out to other systems. Falco detects and alerts; any response is a downstream action.
 
-For a provider running customer code, runtime detection is where abuse shows up first: a shell spawned in a container that never runs one, a miner's connection pattern, a write to a binary directory. The alert is the input to an abuse case ([UGP abuse desks](/books/user-generated-platforms/abuse-desks#how-to-build-it)) as much as to a security team, and Abuse on Infrastructure covers the response.
+For a provider running customer code, runtime detection is where abuse shows up first: a shell spawned in a container that never runs one, a miner's connection pattern, a write to a binary directory. The alert is the input to an abuse case ([UGP abuse desks](/books/user-generated-platforms/abuse-desks#how-to-build-it)) as much as to a security team, and [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure) covers the response.
 
 ## Virtual Clusters: vCluster and Capsule
 
@@ -195,7 +195,7 @@ The providers' sandboxes are RuntimeClasses over node pools:
 - **AKS Pod Sandboxing** runs Kata Containers on Azure Linux node pools created with `--workload-runtime KataVmIsolation`, selected with `runtimeClassName: kata-vm-isolation`; each pod VM gets memory from the pod's limit (512Mi if none), CPU limits round up to whole vCPUs, and host networking isn't supported.
 - **EKS on Fargate** needs no RuntimeClass: each pod is its own VM by construction, at the cost of the Fargate restrictions.
 
-Two interactions with the rest of the chapter matter. A RuntimeClass's `overhead` is accounted for on top of each pod's own requests, so the same capacity holds fewer pods on a sandboxed class, which belongs in the plan's description. And Pod Security Admission can exempt by RuntimeClass name: a provider may relax pod security for sandboxed pods, since the kernel boundary is elsewhere, but that exemption must only ever be grantable on nodes that actually run the sandbox, which is what the RuntimeClass `scheduling` block enforces. The hypervisors and kernels underneath are Sandboxes & MicroVMs.
+Two interactions with the rest of the chapter matter. A RuntimeClass's `overhead` is accounted for on top of each pod's own requests, so the same capacity holds fewer pods on a sandboxed class, which belongs in the plan's description. And Pod Security Admission can exempt by RuntimeClass name: a provider may relax pod security for sandboxed pods, since the kernel boundary is elsewhere, but that exemption must only ever be grantable on nodes that actually run the sandbox, which is what the RuntimeClass `scheduling` block enforces. The hypervisors and kernels underneath are [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms#the-isolation-ladder).
 
 ## Running Customer Workloads on Kubernetes
 
@@ -231,7 +231,7 @@ The list generalizes into what multi-customer tenancy on Kubernetes requires, wh
 
 For customers sharing a managed cluster across their own teams, my default is a namespace per workload with the restricted Pod Security level enforced, pinned by `enforce-version`, and `warn` and `audit` set beside it; default-deny network policies and quotas created by the platform, not the tenant; and ValidatingAdmissionPolicy with per-plan parameters for anything the built-in levels don't cover. I'd add a webhook-based engine only for what CEL can't do, which is mostly signature verification and generating defaults, and I'd pick Kyverno for its `generate` rules and image verification unless the customer already writes Rego, in which case the provider-managed Gatekeeper (Policy Controller, Azure Policy) is the cheaper path. Every webhook gets `matchConditions` that skip system namespaces, a timeout of a few seconds, and network policy allowing only the API server to reach it.
 
-For a provider running its own customers' code, my default is that the customer never touches the Kubernetes API, every workload runs in a sandboxed RuntimeClass on a node pool that only runs sandboxed pods, the provider's policies are enforced in-process and can't be bound or edited by anything in a tenant namespace, and Falco alerts feed the abuse desk. Customers who need the Kubernetes API get a vCluster on private nodes, never shared nodes; customers who need regulatory isolation get their own cluster. What would change this is the workload: if the product is developer environments with root access and multi-gigabyte images, Gitpod's six years are evidence that the right answer may be VMs scheduled by something other than Kubernetes, and Sandboxes & MicroVMs is where that design lives.
+For a provider running its own customers' code, my default is that the customer never touches the Kubernetes API, every workload runs in a sandboxed RuntimeClass on a node pool that only runs sandboxed pods, the provider's policies are enforced in-process and can't be bound or edited by anything in a tenant namespace, and Falco alerts feed the abuse desk. Customers who need the Kubernetes API get a vCluster on private nodes, never shared nodes; customers who need regulatory isolation get their own cluster. What would change this is the workload: if the product is developer environments with root access and multi-gigabyte images, Gitpod's six years are evidence that the right answer may be VMs scheduled by something other than Kubernetes, and [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms) is where that design lives.
 
 ## How to Build It
 

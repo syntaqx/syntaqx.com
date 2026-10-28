@@ -12,7 +12,7 @@ A provider's outage is its customers' outage, multiplied. When a cloud region fa
 
 This chapter reads them as a set. It covers how providers publish status and post-mortems, the dated history of the incidents that shaped the industry, the three 2025 cloud outages and the edge outages around them, the pattern they share (configuration pushed everywhere at once), control-plane dependencies, incidents at communications platforms, vendor risk, how status pages model components and incidents, how post-mortems are written and revised, and the tables that record status, incidents and their effect on customers on top of [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model).
 
-The incident process itself is the playbook's: [Incident Response](/docs/operations/incident-response) for declaring, roles, severity and the postmortem template, [On-Call](/docs/operations/on-call) for paging and runbooks, [SLOs & Error Budgets](/docs/operations/slos) for what counts as an outage, [Observability](/docs/operations/observability) for seeing it, and [Disaster Recovery](/docs/operations/disaster-recovery) for surviving a region. How the parts that fail fit together is [Provider Architecture](/books/hosting-and-cloud/provider-architecture); what customers are owed afterward is SLAs & Service Credits.
+The incident process itself is the playbook's: [Incident Response](/docs/operations/incident-response) for declaring, roles, severity and the postmortem template, [On-Call](/docs/operations/on-call) for paging and runbooks, [SLOs & Error Budgets](/docs/operations/slos) for what counts as an outage, [Observability](/docs/operations/observability) for seeing it, and [Disaster Recovery](/docs/operations/disaster-recovery) for surviving a region. How the parts that fail fit together is [Provider Architecture](/books/hosting-and-cloud/provider-architecture); what customers are owed afterward is [SLAs & Service Credits](/books/hosting-and-cloud/slas-and-service-credits).
 
 ## How the Providers Do It
 
@@ -61,13 +61,13 @@ Three patterns run through the table:
 
 ## The Edge Outages
 
-The edge networks fail the same way at a different layer. Cloudflare's series is the most fully documented:
+The [edge networks](/books/hosting-and-cloud/edge-business) fail the same way at a different layer. Cloudflare's series is the most fully documented:
 
 | Date | What broke | Scope and duration | Remediation named |
 | --- | --- | --- | --- |
-| Jul 2, 2019 | A WAF Managed Rules regex drove CPU to 100% | Traffic dropped by up to 82%; about 27 minutes | Progressive deployment for rules |
+| Jul 2, 2019 | A [WAF Managed Rules](/books/hosting-and-cloud/waf-bots-and-rate-limits#rule-rollout-is-a-deploy) regex drove CPU to 100% | Traffic dropped by up to 82%; about 27 minutes | Progressive deployment for rules |
 | Jun 12, 2025 | Workers KV's storage, backed partly by a third-party cloud that had its own outage | 90.22% of KV requests failed; Access logins failed entirely; 17:52 to 20:28 UTC | Remove the single-provider dependency |
-| Jul 14, 2025 | A dormant June 6 configuration error tied the 1.1.1.1 resolver prefixes to a pre-production topology; a July 14 change withdrew them globally | 62 minutes; DNS over HTTPS mostly unaffected; a coincident BGP hijack was not the cause | Retire legacy hard-coded lists; no change skips canaries |
+| Jul 14, 2025 | A dormant June 6 configuration error tied the 1.1.1.1 resolver prefixes to a pre-production topology ([Route Security](/books/hosting-and-cloud/networks-peering-and-ip-addresses#route-security)); a July 14 change withdrew them globally | 62 minutes; DNS over HTTPS mostly unaffected; a coincident BGP hijack was not the cause | Retire legacy hard-coded lists; no change skips canaries |
 | Nov 18, 2025 | A database permissions change made a query return duplicate rows; the Bot Management feature file doubled past a hard limit of 200 features (normally about 60); the proxy panicked and returned 5xx | Impact 11:28 to 14:30 UTC, all clear 17:06; the file regenerated every five minutes, so the failure flapped | Treat internally generated configuration like user input; more global kill switches |
 | Dec 5, 2025 | A change to protect against a React Server Components vulnerability, and disabling an internal test tool through global configuration, hit a bug in the older proxy's Lua code | About 28% of HTTP traffic returned 500s; 08:47 to 09:12 UTC | Staged rollout for threat-response data, fail open on bad configuration, break-glass access |
 
@@ -122,7 +122,7 @@ Every provider depends on vendors whose failures become its own: the cloud under
 
 - **A privileged agent's content push.** CrowdStrike's July 2024 update supplied 21 input fields to a sensor template that expected 20; the out-of-bounds read crashed Windows hosts worldwide. Microsoft estimated 8.5 million devices, "less than one percent of all Windows machines," and about 99% of sensors were back by July 29. The remediation list includes customer control over content rollout, which is the clause a provider should ask any agent vendor for.
 - **A provider's own provisioning tool.** In the UniSuper case Google said an internal tool left a parameter blank in early 2023, which defaulted to a fixed one-year term, so the customer's private cloud was deleted at the end of it with no notification because the deletion wasn't customer-initiated. Recovery took several days and depended on backups in Cloud Storage and third-party backup software; Google deprecated the tool and audited every such deployment.
-- **A building.** After the 2021 Strasbourg fire, a French commercial court awarded Bati Courtage about €101,000 in January 2023 because its backups, contractually described as isolated, were in the same building; another customer was awarded about €154,000 in March 2023 (the storage lessons are Storage: Block, File & Object's).
+- **A building.** After the 2021 Strasbourg fire, a French commercial court awarded Bati Courtage about €101,000 in January 2023 because its backups, contractually described as isolated, were in the same building; another customer was awarded about €154,000 in March 2023 (the storage lessons are [Storage: Block, File & Object](/books/hosting-and-cloud/storage#when-storage-failed-in-public)'s).
 - **A dependency of the dependency.** Cloudflare's KV outage came from the third-party cloud under it, which is the case for asking every vendor which providers it depends on and what happens when they fail.
 
 My rule for vendor risk: for each vendor in the data path, record what fails when it fails, whether the provider can switch away within the incident, and whether the vendor's status feeds the provider's own status page.
@@ -173,7 +173,7 @@ On the engineering side my default is to treat the configuration channel as the 
 
 ## How to Build It
 
-The chapter adds the status model and the incident record, joined to resources and accounts so impact and credits can be computed. SLA claims and the credits they produce are SLAs & Service Credits' `sla_claims` and the core `credit_grants`; operations the control plane ran during the incident are [Provider Architecture](/books/hosting-and-cloud/provider-architecture#how-to-build-it)'s `control_plane_operations`.
+The chapter adds the status model and the incident record, joined to resources and accounts so impact and credits can be computed. SLA claims and the credits they produce are [SLAs & Service Credits](/books/hosting-and-cloud/slas-and-service-credits#how-to-build-it)' `sla_claims` and the core `credit_grants`; operations the control plane ran during the incident are [Provider Architecture](/books/hosting-and-cloud/provider-architecture#how-to-build-it)'s `control_plane_operations`.
 
 ```sql
 CREATE TABLE status_components (         -- what the public page shows, and what it maps to

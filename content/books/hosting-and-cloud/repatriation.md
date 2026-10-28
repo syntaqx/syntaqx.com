@@ -2,10 +2,12 @@
 title = "Repatriation"
 description = "Leaving the cloud for owned hardware: Dropbox's Magic Pocket and S-1, 37signals' numbers, exit egress waivers, and a cost model for when owning wins."
 category = "Hosting & Cloud Industry"
-order = 2117
-part = "The Stack, Bottom to Top"
+order = 2213
+part = "Running the Provider"
 tags = ["repatriation", "cloud-exit", "cost-model", "colocation", "egress"]
 +++
+
+This volume started with one server in a closet and followed it outward: to a colocation cage, to rented bare metal, to a cloud billed by the second, and into every product a provider builds on top. [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life) ended with customers moved from one rented thing to another on someone else's clock. This last chapter is the move the other way, back down the path to owned metal.
 
 Repatriation is moving a workload from rented cloud capacity back to hardware the company owns or leases, usually in colocation. The word arrived with the trade press; one of the engineers who has done it at scale objects to it ("I'm not a nation state, therefore I don't understand why it's called repatriation"), and the objection is fair, because what's happening is a placement decision made again with better data. A company that started in the cloud for good reasons (no capital, no lead time, unknown demand) reaches a size and a load shape where the provider's margin on steady capacity is larger than the cost of owning that capacity and the people to run it. At that point the same arithmetic that justified renting says to own.
 
@@ -44,11 +46,11 @@ Sarah Wang and Martin Casado of Andreessen Horowitz published "The Cost of Cloud
 David Heinemeier Hansson announced on October 19, 2022 that 37signals was leaving the cloud: it was paying "over half a million dollars per year for database (RDS) and search (ES) services from Amazon," "the savings promised in reduced complexity never materialized," and renting was "(mostly) a bad deal for medium-sized companies like ours with stable growth." On February 21, 2023 he published the model: a 2022 cloud bill of $3.2 million, about $1 million of it for 8 PB of files in S3 and about $2.3 million for app, cache, database and search servers; a Dell order of about $600,000 amortized over five years; about $60,000 a month for eight racks in two data centers from Deft; about $840,000 a year in total for bandwidth, power and hardware; and so about $1.5 million a year saved, "without changing the size of our ops team," or about $7 million over five years after a $500,000 reserve. The company's podcast "Leaving the Cloud: The Finale" (July 12, 2023) reported compute and databases out, with Basecamp's search cluster and logging still on AWS for some weeks and the 8 PB still in S3. On October 17, 2024 the bill was down from $3.2 million to a $1.3 million run rate, all of it S3 (about 10 PB under a four-year contract from 2021), with about $700,000 of hardware paid back during 2023 and a plan for 18 PB of Pure Storage across two data centers costing about one year of S3. On March 26, 2025, with S3 "just shy of $1.5 million/year" and the contract ending June 30, Hansson put the Pure hardware at about $1.5 million plus a bit under $1 million over five years for support, and said AWS's "free 60-day egress window" made moving almost 6 PB cost nothing. The Register (May 9, 2025) put the waived egress at $250,000 and quoted him: "we'll be able to delete our entire AWS account this summer." The company's engineering podcast "Moving Mountains of Data off S3" (January 8, 2026) confirmed the transfer finished: about 10 PB in aggregate, about 5 PB of unique objects after deduplication, copied in less than 10 days, with "no downtime"; it describes the window as negotiated ("We negotiated 90 days"). **What it solved:** a published, line-item model at a scale most companies recognize. **What it cost:** two colocation contracts, hardware on the balance sheet, and storage the team now runs.
 
 > [!NOTE]
-> The two 37signals sources disagree on the waiver window (Hansson's "free 60-day egress window" and the January 2026 episode's "We negotiated 90 days"), and the $250,000 figure is The Register's. I state the window as negotiated and the amount as reported. I haven't found a primary source I could open confirming that the AWS account itself was closed; the transfer's completion is confirmed.
+> The two 37signals sources disagree on the waiver window (Hansson's "free 60-day egress window" and the January 2026 episode's "We negotiated 90 days"), and the $250,000 figure is The Register's. I state the window as negotiated and the amount as reported. Hansson confirmed the account closure himself on October 20, 2025: "we finally NUKED our entire AWS account," following compute and databases in 2023 and S3 that summer.
 
 ### The clouds lower the exit fee (2024)
 
-Two of the three largest clouds announced free data transfer out for customers who leave within eight weeks of each other: Google Cloud on January 11, 2024, for customers moving to another provider or on premises, globally, while arguing that licensing, not egress, is the bigger barrier; and AWS on March 5, 2024, through a support request and credits. Microsoft's pricing page offers the same, as of October 2026, for customers taking data out of Azure "via the internet" to "switch to another cloud provider or an on-premises data center," claimed as a credit. The terms are covered in [Leaving](#leaving-egress-commitments-and-licenses) below; the regulation that preceded them, the EU Data Act's switching chapter, belongs to the later chapter Egress & Switching. **What it solved:** the one-time cost of moving data out, which for a storage-heavy exit had been the largest single obstacle. **What it cost:** nothing to the providers' ongoing egress revenue, because the waivers apply only to leaving.
+Two of the three largest clouds announced free data transfer out for customers who leave within eight weeks of each other: Google Cloud on January 11, 2024, for customers moving to another provider or on premises, globally, while arguing that licensing, not egress, is the bigger barrier; and AWS on March 5, 2024, through a support request and credits. Microsoft's pricing page offers the same, as of October 2026, for customers taking data out of Azure "via the internet" to "switch to another cloud provider or an on-premises data center," claimed as a credit. The terms are covered in [Leaving](#leaving-egress-commitments-and-licenses) below; the regulation that preceded them, the EU Data Act's switching chapter, belongs to [Egress & Switching](/books/hosting-and-cloud/egress-and-switching#exit-waivers-2024). **What it solved:** the one-time cost of moving data out, which for a storage-heavy exit had been the largest single obstacle. **What it cost:** nothing to the providers' ongoing egress revenue, because the waivers apply only to leaving.
 
 ### Enterprises rebalance (2025)
 
@@ -58,7 +60,7 @@ GEICO's VP of platform and infrastructure engineering, Rebecca Weekly, described
 
 Every published comparison sets two annual costs against each other for the same delivered capacity. The terms that decide it:
 
-**Rented side.** The effective rate actually paid, after commitments and discounts, times the capacity used, plus data transfer out, support plans, and managed-service premiums (37signals' half million a year for RDS and Elasticsearch was a managed-service premium on top of compute). The trap is pricing the rented side at list: The Register noted that Ahrefs' comparison didn't say whether its AWS figures assumed on-demand prices or multi-year commitments, and that difference alone can move the answer. The other trap is idle rented capacity: GEICO's 12% average utilization means the rented side was paying for about seven idle cores per busy one, which an owned design shouldn't copy, but which also isn't the cloud's fault.
+**Rented side.** The effective rate actually paid, after commitments and discounts, times the capacity used, plus data transfer out, support plans, and managed-service premiums (37signals' half million a year for RDS and Elasticsearch was a managed-service premium on top of compute). The trap is pricing the rented side at list, a difference that alone can move the answer; Ahrefs' own post (March 8, 2023) says it "compared the lowest price of a three-year reserved" instance, so its comparison already assumed commitments. The other trap is idle rented capacity: GEICO's 12% average utilization means the rented side was paying for about seven idle cores per busy one, which an owned design shouldn't copy, but which also isn't the cloud's fault.
 
 **Owned side.**
 
@@ -90,7 +92,7 @@ Owning tends to win when:
 
 1. **The load is steady and large enough** that the median is close to the peak and the owned fleet runs busy; storage is the clearest case, because data grows predictably and doesn't spike.
 2. **The team exists** or the incremental headcount is small against the savings.
-3. **The rented side's discounts have been taken** and it's still dearer: committed-use and reserved pricing are what the owned side should beat, not list price (the later chapter Commitments, Discounts & Marketplaces covers them).
+3. **The rented side's discounts have been taken** and it's still dearer: committed-use and reserved pricing are what the owned side should beat, not list price ([Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#enterprise-commitments-and-shortfalls) covers them).
 4. **The hardware can be run for its useful life,** five years for general compute, and the colocation contract and power fit it.
 5. **Egress or a license is a large share of the rented bill,** because those are the lines owning removes outright.
 
@@ -110,7 +112,7 @@ These are waivers for leaving, not changes to egress pricing: a hybrid design th
 
 **Commitments.** A committed-spend contract or reserved capacity with time left is a cost of leaving early: the shortfall is billed whether or not the workload is there. 37signals timed its S3 exit to the end of a four-year contract, and missing the date would have cost about $5,000 a day. The core model's `commitments.term` and `shortfall_mode` say when a move can happen without paying for capacity twice.
 
-**Licenses.** Google's exit announcement argued that "restrictive and unfair licensing practices," not data transfer, are the larger barrier to switching; the cases and the complaints behind that argument belong to the later chapter Licensing Disputes. For a repatriation the practical question is the reverse: which software the cloud bundled into its price must now be bought, and on what metric (per core, per socket, per node).
+**Licenses.** Google's exit announcement argued that "restrictive and unfair licensing practices," not data transfer, are the larger barrier to switching; the cases and the complaints behind that argument belong to [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes#microsoft-and-the-listed-providers). For a repatriation the practical question is the reverse: which software the cloud bundled into its price must now be bought, and on what metric (per core, per socket, per node).
 
 ## The Alternatives
 
@@ -119,7 +121,7 @@ These are waivers for leaving, not changes to egress pricing: a hybrid design th
 | **Stay and optimize** (rightsizing, newer instance types, commitments) | No migration; keeps managed services and elasticity | Commitments lock in a forecast; utilization habits persist | Rented | Effective rate after discounts | Most companies, first ([cost levers](/docs/operations/cost-and-finops#the-levers-that-actually-matter)) |
 | **Own the baseline, rent the burst** | Owned capacity runs busy; peaks and unknowns stay elastic | Two platforms to run; transfer between them is billed at normal rates | Mixed | Owned baseline plus rented peak | Companies with a steady core and seasonal peaks |
 | **Owned hardware in colocation** | Lowest unit cost at steady load; full hardware choice | Capital, lead times, spares and a team; no elasticity | Owned hardware, leased space | Amortization plus colo, network, support, staff | Dropbox, 37signals, GEICO |
-| **Rented dedicated servers** | No capital; the provider handles parts | One provider's configurations and network; the provider can exit the product | Rented by the month | Per server per month | Hosts and steady workloads ([Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers#the-alternatives)) |
+| **Rented dedicated servers** | No capital; the provider handles parts | One provider's configurations and network; the provider can [exit the product](/books/hosting-and-cloud/migrations-and-end-of-life#the-kinds-of-ending) | Rented by the month | Per server per month | Hosts and steady workloads ([Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers#the-alternatives)) |
 | **Cloud hardware on site** (Outposts and peers) | The cloud's APIs, owned site | Term commitment; still the cloud's price for capacity | Provider-owned in the customer's building | Term subscription | Latency and residency, not cost ([Hybrid & On-Prem Cloud](/books/hosting-and-cloud/hybrid-and-on-prem-cloud#the-alternatives)) |
 | **Bought rack-scale computer or private cloud stack** (Oxide, OpenStack, Nutanix, VMware) | Cloud-style self-service on owned hardware | The customer operates the platform; license terms for the commercial stacks | Owned; open source or subscription | Capital plus support or subscription | Companies replacing a cloud or a VMware estate |
 | **Never move in** | No migration either way | Lead times and capacity planning from day one | Owned or leased | As owned | Ahrefs, by its own account |
@@ -132,7 +134,7 @@ What would change it: a company without an infrastructure team, where the staff 
 
 ## How to Build It
 
-Repatriation adds no tables. The comparison is a query over the core model, with one convention: **the provider's own underlay bill is rated usage of its internal account.** A provider that runs on a cloud loads that cloud's bill as `usage_events` from a source such as `underlay:aws`, rated at a price book named for its contract, under the internal account that already holds its own cabinets and hosts ([The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation#how-to-build-it), [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers#how-to-build-it)). The rented side is then a sum like every other cost, at the effective rate after commitments, and the demand profile comes from the same rows.
+Repatriation adds no tables. The comparison is a query over the core model, with one convention: **the provider's own underlay bill is rated usage of its internal account.** A provider that runs on a cloud loads that cloud's bill (its [cost export](/books/hosting-and-cloud/finops-and-surprise-bills#cost-exports-cur-and-focus)) as `usage_events` from a source such as `underlay:aws`, rated at a price book named for its contract, under the internal account that already holds its own cabinets and hosts ([The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation#how-to-build-it), [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers#how-to-build-it)). The rented side is then a sum like every other cost, at the effective rate after commitments, and the demand profile comes from the same rows.
 
 ```sql
 -- Rent versus own, per compute SKU on the underlay, over the last 12 months.
@@ -223,6 +225,8 @@ Notes on the sketch:
 - **Time the move** to commitment end dates and inside an exit waiver window, with the target built first.
 - **Be precise about cases:** a company that never moved in, or changed architecture inside one cloud, isn't evidence about leaving.
 
+The path this volume followed runs in both directions. Dropbox built Magic Pocket and moved its users' files home; 37signals moved compute, then about 10 PB out of S3, and deleted its AWS account; Ahrefs never moved in. Each placed the same workload again with better numbers, the decision a homelab operator makes when the closet runs out of power and a provider makes when it chooses what to build, buy or rent. The model in this volume serves every point on that path, because the same account, resource and usage records describe a server at home, a cabinet in colocation and a virtual machine in a region.
+
 ## References
 
 **Filings**
@@ -245,6 +249,7 @@ Notes on the sketch:
 - [37signals: We stand to save $7m over five years from our cloud exit](https://world.hey.com/dhh/we-stand-to-save-7m-over-five-years-from-our-cloud-exit-53996caa), February 21, 2023, the 2022 bill, hardware, colocation and the projected savings
 - [37signals: Leaving the Cloud: The Finale](https://37signals.com/podcast/leaving-the-cloud-the-finale/), July 12, 2023, compute out and 8 PB still in S3
 - [37signals: Our cloud-exit savings will now top ten million over five years](https://world.hey.com/dhh/our-cloud-exit-savings-will-now-top-ten-million-over-five-years-c7d9b5bd), October 17, 2024, the $1.3 million run rate, the S3 contract and the storage plan
+- [DHH on X: the 37signals AWS account deleted](https://x.com/dhh/status/1980406035543388259), October 20, 2025
 - [37signals: It's five grand a day to miss our S3 exit](https://world.hey.com/dhh/it-s-five-grand-a-day-to-miss-our-s3-exit-b8293563), March 26, 2025, S3 cost, the Pure Storage purchase, the June 30 contract end and the 60-day egress window
 - [37signals Dev: Moving Mountains of Data off S3](https://dev.37signals.com/moving-mountains-of-data-off-s3/), January 8, 2026, the completed transfer, volumes, duration and the negotiated window
 
@@ -253,6 +258,7 @@ Notes on the sketch:
 - [Andreessen Horowitz: The Cost of Cloud, a Trillion Dollar Paradox](https://a16z.com/the-cost-of-cloud-a-trillion-dollar-paradox/), May 27, 2021, the argument, its rule of thumb and its stated assumptions
 - [The Register: 37signals is completing its on-prem move](https://www.theregister.com/2025/05/09/37signals_cloud_repatriation_storage_savings), May 9, 2025, the reported $250,000 egress waiver and the account deletion plan
 - [InfoQ: Rebecca Weekly on GEICO's platform and cloud infrastructure (QCon San Francisco)](https://www.infoq.com/presentations/platform-cloud-infrastructure), 2025, cost growth, utilization, the data center consolidation and storage
+- [Ahrefs: How Ahrefs saved US$400M in 3 years by not going to the cloud](https://tech.ahrefs.com/how-ahrefs-saved-us-400m-in-3-years-by-not-going-to-the-cloud-8939dd930af8), Efim Mirochnik, March 8, 2023, the three-year reserved instance comparison
 - [The Register: Ahrefs claims $400 million saved by not using the cloud](https://www.theregister.com/2023/03/13/ahrefs_on_prem_savings/), March 13, 2023, the comparison, its figures and caveats
 - [DevClass: Reduce costs by 90% by moving from microservices to monolith](https://devclass.com/2023/05/05/reduce-costs-by-90-by-moving-from-microservices-to-monolith-amazon-internal-case-study-raises-eyebrows/), May 5, 2023, the Prime Video monitoring service on EC2 and ECS
 </content>

@@ -33,7 +33,7 @@ Four patterns run through the table:
 - **Intake is increasingly outsourced.** Porkbun's form runs on CleanDNS; NetBeacon, below, routes standardized reports to registrars that opt in. The registrar still owns the receipt and the decision.
 - **Outcomes are rarely reported back.** Porkbun, Newfold and IONOS say they may not answer the reporter. The amendments require a receipt, not an outcome.
 
-## How We Got Here
+## How It Got Here
 
 **The 2013 contracts: a contact, not a duty (2013).** The 2013 Registrar Accreditation Agreement put an abuse contact and a duty to "investigate and respond" in section 3.18, plus a 24/7 contact for law enforcement whose well-founded reports of illegal activity must be reviewed within 24 hours. The 2013 base registry agreement's Specification 11, section 3(b), had registries analyze their TLDs for "security threats" (pharming, phishing, malware, botnets) and keep statistics. It solved reachability; it cost nothing to comply with on paper, because "respond" could mean a form letter, and that gap is what the next decade argued about.
 
@@ -138,7 +138,7 @@ A report about a phishing domain can land on five different parties, each with a
 | **Registry** | Referral, `serverHold`, name-server redirect, creating names to pre-empt a DGA | Any name in the TLD | Specification 6, 4.2; its anti-abuse policy | No relationship with the registrant; collateral if it skips the registrar |
 | **Recursive resolver** | Refuse or rewrite answers | Every user of that resolver | Its own policy, or a court or agency order | A public resolver's block applies worldwide: Cloudflare treats any order to block through 1.1.1.1 as a global block, has "pursued legal remedies before complying", and as of its H2 2025 report had not blocked content through it |
 
-SAC115's allocation still describes the right default: the party that provisioned the abused resource to the abuser acts first (the registrar for a maliciously registered name, the host for a kit on a hacked site), and the registry and resolver come in when the closer party won't or can't. Court-ordered blocking at resolvers and CDNs is the subject of Conduits, Caches & Blocking Orders; abuse on hosted infrastructure generally is Abuse on Infrastructure.
+SAC115's allocation still describes the right default: the party that provisioned the abused resource to the abuser acts first (the registrar for a maliciously registered name, the host for a kit on a hacked site), and the registry and resolver come in when the closer party won't or can't. Court-ordered blocking at resolvers and CDNs is the subject of [Conduits, Caches & Blocking Orders](/books/hosting-and-cloud/conduits-caches-and-blocking-orders); abuse on hosted infrastructure generally is [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure).
 
 ## My Default
 

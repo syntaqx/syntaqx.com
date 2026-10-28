@@ -3,7 +3,7 @@ title = "Provisioning: Terraform, OpenTofu & the Alternatives"
 nav_title = "Terraform & OpenTofu"
 description = "CloudFormation to Terraform and OpenTofu: providers, state as data, import and refactoring, the BSL and IBM, CDK, Pulumi, Bicep, Crossplane, and provider APIs."
 category = "Hosting & Cloud Industry"
-order = 2144
+order = 2152
 part = "Infrastructure as Code"
 tags = ["infrastructure-as-code", "terraform", "opentofu", "provisioning", "licensing"]
 +++
@@ -33,7 +33,7 @@ Three patterns run through the table. **The clouds keep state themselves when th
 
 ## Before Plans: Scripts Against a Panel API
 
-A shared hosting server running cPanel & WHM is automated through its APIs: WHM API 1 for the server and its accounts, UAPI for what happens inside one cPanel account (domains, mail, databases, FTP). A call is a function name and its arguments over HTTPS, `https://host:2087/cpsess<token>/json-api/accountsummary?api.version=1&user=username`, or the same function from the shell as `whmapi1 accountsummary user=username`, with YAML output by default and `applist` listing every function. The older cPanel API 2 is deprecated, and cPanel recommends the newer UAPI function wherever one exists. The documentation is blunt about the alternative people reached for when a function was missing: don't use interface URLs in custom code, because they aren't guaranteed to keep working.
+A shared hosting server running [cPanel & WHM](/books/hosting-and-cloud/cpanel-and-whm#whm-api-1-uapi-and-hooks) is automated through its APIs: WHM API 1 for the server and its accounts, UAPI for what happens inside one cPanel account (domains, mail, databases, FTP). A call is a function name and its arguments over HTTPS, `https://host:2087/cpsess<token>/json-api/accountsummary?api.version=1&user=username`, or the same function from the shell as `whmapi1 accountsummary user=username`, with YAML output by default and `applist` listing every function. The older cPanel API 2 is deprecated, and cPanel recommends the newer UAPI function wherever one exists. The documentation is blunt about the alternative people reached for when a function was missing: don't use interface URLs in custom code, because they aren't guaranteed to keep working.
 
 That is an imperative contract, and it shows exactly what declarative provisioning added:
 
@@ -168,7 +168,7 @@ The forks now diverge feature by feature. OpenTofu follows Terraform's language 
 A second line of tools replaced the configuration language with a programming language and kept a declarative engine underneath:
 
 - **AWS CDK** reached general availability on July 11, 2019 for TypeScript and Python, with Java and C# in preview. A CDK program synthesizes CloudFormation templates, so CloudFormation's stack state and change sets still do the provisioning; the CDK itself costs nothing.
-- **CDKTF**, HashiCorp's equivalent synthesizing Terraform configuration, was sunset and archived on December 10, 2025 because it "did not find product-market fit at scale." HashiCorp's migration advice: `cdktf synth --hcl` to generate Terraform files, or move to the AWS CDK if already in that ecosystem. Customers who built on it were left owning generated HCL.
+- **CDKTF**, HashiCorp's equivalent synthesizing Terraform configuration, was sunset and archived on December 10, 2025 because it "did not find product-market fit at scale." HashiCorp's migration advice: `cdktf synth --hcl` to generate Terraform files, or move to the AWS CDK if already in that ecosystem. Customers who built on it were left owning generated HCL ([Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life#the-kinds-of-ending)).
 - **Pulumi** launched on June 18, 2018 for "cloud programs" in JavaScript, TypeScript, Python and Go against AWS, Azure, Google Cloud and Kubernetes; the engine is Apache-2.0. Each stack has its own state, saved as transactional checkpoints during an update. Pulumi Cloud is the default backend; the self-managed alternatives are S3, Azure Blob Storage, GCS, S3-compatible servers, PostgreSQL or the local filesystem, and Pulumi warns that blob storage isn't transactional, so those backends can't recover from some partial failures. Secrets in state are encrypted with the stack's encryption provider, an HSM key in Pulumi Cloud by default, and cloud credentials are never written to state.
 
 The program is not the plan. All three still produce a desired state and a diff, and the reviewable artifact is that diff, not the code that generated it; a loop in a program can plan a hundred deletions from a one-line change just as a module input can.
@@ -183,7 +183,7 @@ The preview is `what-if`, available for resource group, subscription, management
 
 The third model puts desired state in the Kubernetes API and lets controllers reconcile it continuously instead of on each apply. **Crossplane** (accepted into the CNCF June 25, 2020, incubating September 14, 2021, graduated October 28, 2025; v2.4 current as of October 2026) installs providers whose managed resources are custom resources for external objects, such as an RDS instance, and lets platform teams build their own APIs through compositions, pipelines of functions written in YAML, KCL, Python or Go. A provider finds the external object by the `crossplane.io/external-name` annotation, "the name of the managed resource inside the Provider," and management policies decide what Crossplane may do: `Observe` alone watches without changing anything, the first step in adopting an existing object, and without `Delete` removing the custom resource leaves the external object in place. **AWS Controllers for Kubernetes** ships one controller image per AWS service in ECR Public, with explicit version tags and no `:latest`, and runs on any cluster, not only EKS.
 
-The trade is continuous reconciliation against a second control plane. Drift is corrected within a reconcile interval instead of waiting for someone to run a plan, but there's no plan to review before a change in the cluster reaches the vendor, and the Kubernetes cluster itself becomes infrastructure whose loss stops all management. Kubernetes Architecture covers custom resources and controllers; the playbook's [GitOps](/docs/operations/kubernetes#gitops) covers driving them from a repository.
+The trade is continuous reconciliation against a second control plane. Drift is corrected within a reconcile interval instead of waiting for someone to run a plan, but there's no plan to review before a change in the cluster reaches the vendor, and the Kubernetes cluster itself becomes infrastructure whose loss stops all management. [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture) covers custom resources and controllers; the playbook's [GitOps](/docs/operations/kubernetes#gitops) covers driving them from a repository.
 
 ## The Alternatives
 
@@ -215,15 +215,10 @@ Two things land in [the core data model](/books/hosting-and-cloud/hosting-and-cl
 -- The identifier a provider and its customers' IaC tools hold on to ------------
 
 -- external_ref is generated by the provider, returned in the create response,
--- immutable for the resource's life and never reused, even after deletion.
-CREATE UNIQUE INDEX resources_external_ref_key
-  ON resources (kind, external_ref) WHERE external_ref IS NOT NULL;
-
-ALTER TABLE resources
-  ADD COLUMN create_idempotency_key TEXT,     -- the client's key; a retried create returns
-                                              -- the same resource, not a twin
-  ADD CONSTRAINT resources_create_idempotency_key
-    UNIQUE (account_id, create_idempotency_key);
+-- immutable for the resource's life and never reused, even after deletion. The core
+-- resources table carries both guarantees this chapter needs: the unique index
+-- resources_external_ref_key on (kind, external_ref), and create_idempotency_key,
+-- unique per account, so a retried create returns the same resource, not a twin.
 
 -- Hosted state ---------------------------------------------------------------
 

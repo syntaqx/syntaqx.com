@@ -9,7 +9,7 @@ tags = ["domains", "dns", "dnssec", "metering", "routing", "epp"]
 
 Every hosted site, mailbox and API sits behind an authoritative DNS answer, and that answer is usually served by someone other than the customer: the registrar's free DNS, the host's name servers, a cloud's managed DNS, or a CDN that wants to answer for the zone so it can proxy the traffic. As a product, authoritative DNS is cheap to the point of free at the bottom and billed by the zone and the million queries at the top, with routing policies and health checks sold as premium query types. As infrastructure, it is the dependency nobody notices until it fails, and DNSSEC adds a failure mode that spans two companies: the DNS host signs the zone, but the registrar publishes the key's fingerprint at the registry, and if the two drift apart the domain disappears for every validating resolver.
 
-This chapter covers how authoritative DNS got to its current shape, how a zone works for a host, how the providers meter and price it, the routing policies sold on top, and DNSSEC from signing through DS publication over EPP to the provider change that breaks it. Resolvers, caching and anycast networks in general belong to Networks, Peering & IP Addresses; attacks on DNS to DDoS Mitigation; certificate validation over DNS to The Web PKI & Certificate Transparency.
+This chapter covers how authoritative DNS got to its current shape, how a zone works for a host, how the providers meter and price it, the routing policies sold on top, and DNSSEC from signing through DS publication over EPP to the provider change that breaks it. Resolvers, caching and anycast networks in general belong to [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses); attacks on DNS to [DDoS Mitigation](/books/hosting-and-cloud/ddos-mitigation); certificate validation over DNS to [The Web PKI & Certificate Transparency](/books/hosting-and-cloud/web-pki#validation-proving-control-of-a-name).
 
 ## How the Providers Do It
 
@@ -27,7 +27,7 @@ Published models as of October 2026:
 
 Three models sit in that table. **Metered** (Route 53, Google, Azure): a small per-zone fee and a per-million query price, with premium query types for routing. **Bundled** (Cloudflare, DigitalOcean, most registrars and hosts): DNS free as a way to win the zone for another product. **Flat or tiered enterprise** (Akamai, NS1): priced by zones or included volume, sold on availability. A host offering DNS to its customers is almost always in the second group, and pays a provider in the first or third for anything it doesn't run itself.
 
-## How We Got Here
+## How It Got Here
 
 **The protocol (1983 to 1987).** RFC 882 and 883 described the DNS in 1983; Paul Mockapetris wrote the first working name server, Jeeves, in 1983 and 1984; graduate students at UC Berkeley wrote BIND under a DARPA grant soon after. RFC 1034 and RFC 1035 (November 1987) are still the definition: zones, delegation by NS records, a single SOA record and the name servers at the top of every zone, and the rule that every zone be available on at least two servers. It solved the hosts-file problem; it had no authentication of answers at all.
 
@@ -74,8 +74,8 @@ Things a provider's meter has to get right:
 
 - **Queries are counted by type of answer, not just by count.** A latency or geo answer costs more than a standard one at Route 53 and Google, so the meter records the policy that produced each answer. A CNAME to another record in Route 53 is charged as two queries, one for the CNAME and one for its target; an alias to an AWS resource is free.
 - **Zones bill by time held.** Google prorates zones by the hour; Route 53 and Azure bill a monthly zone fee. A zone created for a migration test and deleted the same day is still a charge, which is a support ticket waiting to happen if the customer can't see it.
-- **Tiers are per account per month.** The billion-query break and the 25-zone break apply to the account's monthly total, so rating has to sum before pricing, not price per event (the foundation's [rating rules](/books/hosting-and-cloud/hosting-and-cloud-business#tenancy-money-and-time); Metering & Rating owns the pipeline).
-- **Attack traffic is still traffic.** A query flood against a customer's zone, or random-subdomain queries that all return NXDOMAIN, show up in a per-query meter. Whether those are billed, capped or credited is a pricing policy the provider should write down before the first bill shock; Cloudflare's "never limits or caps DNS queries" and Akamai's zone-only pricing are the answers that remove the question. DDoS Mitigation covers the attacks; Cost Data, FinOps & Surprise Bills covers the forgiveness side.
+- **Tiers are per account per month.** The billion-query break and the 25-zone break apply to the account's monthly total, so rating has to sum before pricing, not price per event (the foundation's [rating rules](/books/hosting-and-cloud/hosting-and-cloud-business#tenancy-money-and-time); [Metering & Rating](/books/hosting-and-cloud/metering-and-rating) owns the pipeline).
+- **Attack traffic is still traffic.** A query flood against a customer's zone, or random-subdomain queries that all return NXDOMAIN, show up in a per-query meter. Whether those are billed, capped or credited is a pricing policy the provider should write down before the first bill shock; Cloudflare's "never limits or caps DNS queries" and Akamai's zone-only pricing are the answers that remove the question. [DDoS Mitigation](/books/hosting-and-cloud/ddos-mitigation) covers the attacks; [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills#surprise-bills-and-forgiveness) covers the forgiveness side.
 
 ## Routing Policies
 

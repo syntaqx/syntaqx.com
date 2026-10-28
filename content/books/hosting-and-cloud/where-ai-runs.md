@@ -12,7 +12,7 @@ The same model request can be served from five places. A frontier lab's API answ
 
 The decision is unusual because every input moves monthly. Frontier prices fall for equivalent capability and rise for new tiers; open-weight models trail the frontier by months, not years; GPU rental prices fell in 2025 and rose in 2026; colocation for high-density racks is scarce; and the data terms (training, retention, residency, health data) differ by vendor, endpoint and tier. A provider's customers are making this decision now, and providers at every tier are building products to win it: frontier labs add batch, caching, residency and fast tiers; clouds resell both frontier and open models; neoclouds sell GPUs and token APIs side by side; routers sit between all of them.
 
-This chapter is the decision across the tiers: what each tier costs and promises, the frontier APIs' prices and terms, hosted open-model inference, renting versus paying per token, GPUs in colocation, the home tier, the economics and breakeven, latency, the measured quality gap between open and frontier models, privacy and compliance, routing and fallbacks between tiers, and my default by workload. GPU hourly prices, reservations, neocloud finance, rack power and export controls are [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds); running models on home hardware (runtimes, quantization, memory math, model licenses) is AI at Home; the residence-to-colocation step is From Homelab to Colocation. Agent design is the playbook's [AI Agents](/docs/architecture/ai-agents), prompt injection and tool risk are [AI Security](/docs/security/ai-security), and batch versus online inference is [Data Science Platforms](/docs/data/data-science-platforms#batch-or-online-inference).
+This chapter is the decision across the tiers: what each tier costs and promises, the frontier APIs' prices and terms, hosted open-model inference, renting versus paying per token, GPUs in colocation, the home tier, the economics and breakeven, latency, the measured quality gap between open and frontier models, privacy and compliance, routing and fallbacks between tiers, and my default by workload. GPU hourly prices, reservations, neocloud finance, rack power and export controls are [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds); running models on home hardware (runtimes, quantization, memory math, model licenses) is [AI at Home](/books/hosting-and-cloud/ai-at-home); the residence-to-colocation step is [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation). Agent design is the playbook's [AI Agents](/docs/architecture/ai-agents), prompt injection and tool risk are [AI Security](/docs/security/ai-security), and batch versus online inference is [Data Science Platforms](/docs/data/data-science-platforms#batch-or-online-inference).
 
 ## How the Providers Do It
 
@@ -22,7 +22,7 @@ This chapter is the decision across the tiers: what each tier costs and promises
 | **Hosted open model** | The choice of open-weight model | The GPUs and serving stack | Tokens, sometimes per model-size tier | The inference provider | Together, Fireworks, Groq, Cerebras, SambaNova, DeepInfra, Bedrock, Vertex AI, Azure AI Foundry; OpenRouter routes among them |
 | **Rented GPU** | The model weights and serving stack | GPUs by the second, hour, block or contract | GPU-hours | The customer, inside its cloud account | Hyperscaler GPU instances, neoclouds, serverless GPU ([GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#buying-capacity)) |
 | **GPUs in colocation** | GPUs, servers, network | Space, power, cooling, cross-connects | Kilowatts and racks per month, plus capital | The customer | Equinix, Digital Realty and other colocation providers with liquid-cooled space |
-| **Home** | Everything | The residential power and internet line | Electricity | The customer | Consumer GPUs, unified-memory desktops, workstations (AI at Home) |
+| **Home** | Everything | The residential power and internet line | Electricity | The customer | Consumer GPUs, unified-memory desktops, workstations ([AI at Home](/books/hosting-and-cloud/ai-at-home#hardware-tiers)) |
 
 Three patterns run through the table:
 
@@ -47,7 +47,7 @@ Three patterns run through the table:
 | 8 Apr 2026 | Meta's Muse Spark ships without weights | (Meta's first frontier model kept closed) | Open-weight users lose a frontier source |
 | Sep to Oct 2026 | Claude Fable 5.1 (15 Sep), gpt-6-astra (3 Sep), Claude Opus 5.5 (22 Sep), Gemini 4 Argon generally available (13 Oct); Muse Spark Open weights (15 Oct) | The current frontier and open generations | |
 
-Release dates here are the labs' own (announcement pages, changelogs and model cards), not the date a router first listed the model. AI at Home tells the home side of this history in full.
+Release dates here are the labs' own (announcement pages, changelogs and model cards), not the date a router first listed the model. [AI at Home](/books/hosting-and-cloud/ai-at-home#how-it-got-here) tells the home side of this history in full.
 
 ## Frontier APIs
 
@@ -77,7 +77,7 @@ The constants worth remembering, all on the labs' own pages:
 
 ### Rate limits and spend caps
 
-Every lab starts a new organization on a low tier and raises limits with payment history, which is fraud control as much as capacity planning (Free-Tier Fraud & Stolen Keys covers why):
+Every lab starts a new organization on a low tier and raises limits with payment history, which is fraud control as much as capacity planning ([Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#stolen-keys) covers why):
 
 | Lab | Tiers and monthly caps | Example limits |
 | --- | --- | --- |
@@ -108,11 +108,11 @@ Open-weight models are served by many hosts at different prices, speeds and prec
 | Together | $0.15 / $0.60 | Not in the serverless table | Dedicated endpoints H100 $5.49/h, B200 $8.99/h |
 | Fireworks | $0.15 / $0.60 (cached $0.015); Priority $0.18 / $0.72 | Size tier above 16B: $0.90 flat | Batch 50% off; region-restricted 1.5x |
 | Groq | $0.15 / $0.60 at 500 tokens/s | "Contact Sales", 280 tokens/s | gpt-oss-20b $0.075 / $0.30 at 1,000 tokens/s |
-| Cerebras | $0.35 / $0.75 (via OpenRouter) at about 3,000 tokens/s | Not listed | Lists only gpt-oss-120b and Qwen 3.8 27B |
+| Cerebras | $0.35 / $0.75 (Developer tier) at about 3,000 tokens/s | Not listed | Lists only gpt-oss-120b and Qwen 3.8 27B |
 | SambaNova | $0.14 / $0.95 (via OpenRouter) | $0.45 / $0.90 | |
 | DeepInfra | $0.037 / $0.17, bf16 (via OpenRouter) | $0.10 / $0.32, fp8 | |
 | AWS Bedrock | $0.15 / $0.60 (via OpenRouter) | | Priority +75%; Flex and Batch 50% off; Provisioned Throughput per model unit-hour |
-| Google Vertex AI | $0.09 / $0.36 (via OpenRouter) | $0.72 / $0.72 | |
+| Google Vertex AI | $0.09 / $0.36 | $0.72 / $0.72 | |
 | Azure AI Foundry | $0.15 / $0.60 global; $0.165 / $0.66 Data Zone | | The Data Zone 10% again |
 | OpenRouter (router) | 24 endpoints from $0.03 / $0.15 to $0.35 / $0.75 | 10 endpoints from $0.10 / $0.32 to $0.72 / $0.72 | No markup on provider prices; 5.5% fee on credit purchases (8% Business) |
 
@@ -131,7 +131,7 @@ Running your own copy of an open model on rented GPUs beats per-token pricing on
 - At Lambda's B200 on-demand price of $6.69 per GPU-hour ([GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#gpu-prices-dated)), that is $0.165 per million tokens at 100% utilization, $0.33 at 50% and $0.82 at 20%.
 - Hosted gpt-oss-120b lists $0.15 input and $0.60 output.
 
-At full, steady load with MLPerf-class tuning, the rented GPU roughly matches the hosted price; at anything like a normal day's traffic curve it costs more, and MLPerf figures are tuned benchmark results that real deployments land below. Renting GPUs for inference earns its place for reasons other than price per token: a fine-tuned or private model, a model no host serves, latency or residency the hosts can't meet, or steady volume high enough to keep a reserved block full. The playbook's [Compute Isolation and Cost](/docs/data/data-science-platforms#compute-isolation-and-cost) has the general rule about idle accelerators.
+At full, steady load with MLPerf-class tuning, the rented GPU roughly matches the hosted price; at anything like a normal day's traffic curve it costs more, and MLPerf figures are tuned benchmark results that real deployments land below. Renting GPUs for inference earns its place for reasons other than price per token: a fine-tuned or private model, a model no host serves, latency or residency the hosts can't meet, or steady volume high enough to keep a [reserved block](/books/hosting-and-cloud/commitments-and-marketplaces#gpu-capacity-reservations) full. The playbook's [Compute Isolation and Cost](/docs/data/data-science-platforms#compute-isolation-and-cost) has the general rule about idle accelerators.
 
 ## GPUs in Colocation
 
@@ -142,13 +142,13 @@ Owning GPUs in someone else's building is the step that hits the physical limits
 - **Space is scarce.** CBRE's first-half 2026 report puts primary-market vacancy at a record 1.4%, with 80.4% of capacity under construction already pre-leased and asking rates up 4.3% to 8.3% depending on size; Northern Virginia vacancy was 0.2%.
 - **Financing replaces cash.** Lessors offer fair-market-value leases of 24 to 36 months that leave residual value risk with the lessor and match a two-to-three-year accelerator refresh, or $1 buyout leases that move obsolescence to the buyer (CHG-MERIDIAN); single GPU financings above $65 million have been publicly announced (Wingspire, June 2025). Renting GPUs as a service leaves the obsolescence with the provider, which is part of what the neocloud price buys.
 
-Colocation for GPUs is a decision for steady, large workloads with an operations team: it is the cheapest per token at high utilization and the slowest to start, and its constraint is a liquid-cooled cabinet with power available, not the GPUs. The facility side is The Data Center & Colocation; the path from a closet to a cage is From Homelab to Colocation.
+Colocation for GPUs is a decision for steady, large workloads with an operations team: it is the cheapest per token at high utilization and the slowest to start, and its constraint is a liquid-cooled cabinet with power available, not the GPUs. The facility side is [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation); the path from a closet to a cage is [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation#when-the-house-isn-t-enough).
 
 ## The Home Tier
 
 At home the economics are hardware plus electricity, and the constraint is memory. Launch prices give the scale: an RTX 5090 (32 GB, 575 W) launched at $1,999 in January 2025; NVIDIA raised the DGX Spark Founders Edition (128 GB unified memory at 273 GB/s, a 240 W supply) from $3,999 to $4,699 in February 2026 "due to memory supply constraints"; Apple's Mac Studio with M5 Ultra (up to 512 GB at 1.2 TB/s) starts at $5,499, with the 512 GB configuration arriving in late October 2026. Used cards are a market, not a price list: eBay asking prices for a 24 GB RTX 3090 averaged $1,554 on 27 October 2026, up 24% in 90 days, per the ResalePrices aggregator. Meta says its Muse Spark Open (816B total parameters, 42B active) is optimized to run on two M5 Ultra Mac Studios.
 
-The home tier wins on privacy, offline use and marginal cost for development and personal use, and loses on throughput per user and on the largest models. Everything about running it (runtimes, quantization, the memory arithmetic for weights and KV cache, multi-GPU without NVLink, model licenses) is AI at Home.
+The home tier wins on privacy, offline use and marginal cost for development and personal use, and loses on throughput per user and on the largest models. Everything about running it (runtimes, quantization, the memory arithmetic for weights and KV cache, multi-GPU without NVLink, model licenses) is [AI at Home](/books/hosting-and-cloud/ai-at-home#the-memory-math).
 
 ## The Economics
 
@@ -276,7 +276,7 @@ WHERE upper_inf(r.valid_during)
     OR ('pii' = ANY (r.allowed_data) AND e.retention = 'mandatory'));
 ```
 
-The placement comparison is a view over `rated_usage`. Per-token tiers are priced directly; self-hosted tiers bring their GPU-hours, rated by the GPU SKUs, and divide by the tokens they served (a self-hosted endpoint records its served tokens as zero-priced token usage, the same way AI at Home meters tokens at a cost of zero). It is per endpoint, so a GPU shared by two endpoints needs its cost split before it is joined:
+The placement comparison is a view over `rated_usage`. Per-token tiers are priced directly; self-hosted tiers bring their GPU-hours, rated by the GPU SKUs, and divide by the tokens they served (a self-hosted endpoint records its served tokens as zero-priced token usage, the same way [AI at Home](/books/hosting-and-cloud/ai-at-home#how-to-build-it) meters tokens at a cost of zero). It is per endpoint, so a GPU shared by two endpoints needs its cost split before it is joined:
 
 ```sql
 CREATE VIEW placement_costs AS           -- cost per million tokens each endpoint actually cost
@@ -345,6 +345,7 @@ Notes on the sketch:
 - [Google: Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing), prices and their dated changes, batch, free tier, product-improvement use
 - [Google: Gemini API changelog](https://ai.google.dev/gemini-api/docs/changelog), release dates for Argon and the Flash models
 - [Google: Build with Gemini 4 Argon](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-4-argon/), the general availability announcement
+- [Google: Introducing Gemini 4 Argon](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/), October 13, 2026, global availability and the introductory $2 and $10 prices with cached input at 95% off, through November 30, 2026
 - [Google: Gemini API additional terms](https://ai.google.dev/gemini-api/terms), paid and unpaid data use, abuse logs, the EEA, Swiss and UK paid-services rule
 - [Google: Gemini API rate limits](https://ai.google.dev/gemini-api/docs/rate-limits), tiers and their qualification
 
@@ -355,6 +356,8 @@ Notes on the sketch:
 - [Fireworks: Pricing](https://fireworks.ai/pricing), large open model prices and on-demand GPUs
 - [Groq: Models](https://console.groq.com/docs/models), token prices and speeds
 - [Cerebras: Models overview](https://inference-docs.cerebras.ai/models/overview), models served and speeds
+- [Cerebras: Pricing](https://www.cerebras.ai/pricing), Developer tier gpt-oss-120b at $0.35 input and $0.75 output, October 2026
+- [Google Cloud: Generative AI pricing](https://cloud.google.com/vertex-ai/generative-ai/pricing), model-as-a-service gpt-oss-120b at $0.09 and $0.36 and Llama 3.3 70B at $0.72, October 2026
 - [AWS: Bedrock pricing](https://aws.amazon.com/bedrock/pricing/), Priority, Flex and Batch, cross-region inference, Provisioned Throughput
 - [Azure Retail Prices API: gpt-oss models](https://prices.azure.com/api/retail/prices?$filter=contains(productName,'gpt-oss')), global and Data Zone prices
 - [OpenRouter: gpt-oss-120b endpoints](https://openrouter.ai/api/v1/models/openai/gpt-oss-120b/endpoints), endpoint count, prices and precision by host

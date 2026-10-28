@@ -57,7 +57,7 @@ The November action is the lesson for everyone else: a designated host rebrands 
 
 ## AI Chips and Hosted Capacity
 
-Export controls on advanced accelerators reach cloud providers when foreign customers rent the chips rather than buy them. GPU & AI Clouds owns the detail; the status as of October 2026, in brief:
+Export controls on advanced accelerators reach cloud providers when foreign customers rent the chips rather than buy them. [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#export-controls-on-chips-and-remote-access) owns the detail; the status as of October 2026, in brief:
 
 - **The AI Diffusion Rule** was rescinded before it took effect: BIS announced on May 13, 2025 that it wouldn't enforce the rule due to take effect on May 15 and would issue a replacement, and the Federal Register showed no replacement or formal rescission rule by October 27, 2026.
 - **H200-class chips to China** moved from a presumption of denial to case-by-case review under 91 FR 1684 (January 15, 2026), with conditions that include customer screening to prevent unauthorized remote access and a list of intended IaaS end users in countries of concern, and an aggregate cap of 50% of the compute shipped to US customers.

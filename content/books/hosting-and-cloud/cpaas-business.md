@@ -30,13 +30,13 @@ Every provider below sells numbers, messaging and voice by the unit; they differ
 
 Email senders (Amazon SES, Twilio SendGrid, Mailgun, Postmark, Resend) are the same business on a different network, with mailbox providers in the carriers' role; [Email Sending Platforms](/books/hosting-and-cloud/email-sending-platforms) covers them. The landscape view, with who resells whom, is [The Provider Landscape](/books/hosting-and-cloud/provider-landscape#communications-platforms).
 
-## How We Got Here
+## How It Got Here
 
 The industry is younger than most of the stack in this volume, and every era added a layer of fees and rules the platform now has to carry:
 
 | Date | Step | What it solved | What it cost |
 | --- | --- | --- | --- |
-| 1947 | AT&T develops the North American Numbering Plan; implementation begins in 1951 | Direct dialing of long distance with one numbering scheme | Numbers became a regulated, administered resource ([Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting#how-we-got-here)) |
+| 1947 | AT&T develops the North American Numbering Plan; implementation begins in 1951 | Direct dialing of long distance with one numbering scheme | Numbers became a regulated, administered resource ([Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting#how-it-got-here)) |
 | December 3, 1992 | The first text message, "Merry Christmas", sent from a computer over Vodafone's network | A data channel on every handset | 140 octets per message, the root of segment pricing |
 | July 2000 | Bandwidth is founded; it later becomes a CLEC | Owning the numbers and the switch | Carrier regulation and 911 duties come with the license |
 | 2001 | Vonage is founded as a consumer VoIP phone company | Phone service over the internet | VoIP gradually acquired telephone-company duties (911, USF) |
@@ -102,7 +102,7 @@ The fees themselves are a dated table, not a constant. The same carrier fee appe
 | AT&T, outbound | $0.003 | Not captured | $0.0035 | $0.0035 |
 | Verizon, outbound | $0.0045 | $0.0045 from May 1, 2026; $0.0050 from October 1, 2026 | $0.005 | $0.0050 |
 
-The table is a snapshot of what each provider published, as of October 2026; providers announced the T-Mobile change with different dates, and the platform's own price book has to record the effective date of each change it receives. Carriers also fine the platform for its customers' violations ([Sending a Text](/books/hosting-and-cloud/sending-a-text#filtering-and-carrier-fines)), and the FCC and USAC add regulatory fees on voice ([911, CPNI & Telecom Duties](/books/hosting-and-cloud/telecom-duties#universal-service-and-regulatory-fees)). Both are pass-through too.
+The table is a snapshot of what each provider published, as of October 2026; providers announced the T-Mobile change with different dates (Twilio says T-Mobile first planned January 15 and the change took effect January 19, 2026), and Vonage's pass-through table dates the other 2026 changes: AT&T to $0.0035 per SMS and $0.0090 per MMS from April 1, 2026, and Verizon to $0.0045 per SMS and $0.0070 per MMS from May 1, 2026. The platform's own price book has to record the effective date of each change it receives. Carriers also fine the platform for its customers' violations ([Sending a Text](/books/hosting-and-cloud/sending-a-text#filtering-and-carrier-fines)), and the FCC and USAC add regulatory fees on voice ([911, CPNI & Telecom Duties](/books/hosting-and-cloud/telecom-duties#universal-service-and-regulatory-fees)). Both are pass-through too.
 
 ### Margin Pressure
 
@@ -185,7 +185,7 @@ Notes on the sketch:
 - **Pass-through reconciles both ways.** Carrier and upstream invoices arrive later with their own counts. Keep the upstream's invoice lines, match them to the platform's rated carrier fees by carrier, month and SKU, and report the difference: a gap means either the lookup was wrong, the fee table was stale or the upstream billed something it shouldn't have.
 - **Revenue and pass-through stay separate in every report.** Gross margin on the platform's own SKUs and gross margin including pass-through are both reported, because the second falls whenever a carrier raises a fee.
 - **Prepaid balances are a ledger, not a cache.** Many CPaaS accounts are prepaid with auto-recharge. Twilio's July 18, 2013 billing incident is the public lesson: a network event made all billing Redis replicas resync at once, a restart loaded the wrong configuration and dropped balances, and auto-recharge charged cards repeatedly without recording the new balance, affecting 1.4% of customers. Twilio's fixes were a double-entry ledger of record, real-time validation against it, and fail-safes against charging when a balance can't be written. Balances in this model are sums of ledger entries ([Payments](/books/payments/card-payments#the-core-data-model)), and a recharge that can't record its result doesn't run.
-- **Events:** `carrier_fee.changed`, `carrier.degraded`, `upstream_invoice.reconciled` and `usage.rated` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to billing, the status page and the routing layer. Rating mechanics and price catalogs are owned by Metering & Rating and Pricing Catalogs in the Metering and Billing part.
+- **Events:** `carrier_fee.changed`, `carrier.degraded`, `upstream_invoice.reconciled` and `usage.rated` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to billing, the status page and the routing layer. Rating mechanics and price catalogs are owned by [Metering & Rating](/books/hosting-and-cloud/metering-and-rating) and [Pricing Catalogs](/books/hosting-and-cloud/pricing-catalogs) in the Metering and Billing part.
 
 ## Auditing
 
@@ -234,6 +234,8 @@ Notes on the sketch:
 - [Plivo: SMS pricing for the United States](https://www.plivo.com/sms/pricing/us/), per-segment, MMS and RCS prices, carrier surcharges, number prices
 - [Telnyx: 10DLC fees and charges](https://support.telnyx.com/en/articles/5634625-10dlc-fees-and-charges), carrier per-message fees as of July 22, 2025
 - [Bandwidth: Carrier surcharges](https://www.bandwidth.com/support/en/articles/12823178-carrier-surcharges), T-Mobile and Verizon fees with effective dates
+- [Twilio: T-Mobile messaging carrier fee changes, January 2026](https://support.twilio.com/hc/en-us/articles/44609260499995-T-Mobile-Messaging-Carrier-Fee-Changes-January-2026), effective January 19, 2026 after a planned January 15, and $0.0045 outbound SMS
+- [Vonage: SMS/MMS pass-through fee changes](https://api.support.vonage.com/hc/en-us/articles/5672262029084), updated April 7, 2026, the AT&T (April 1, 2026), Verizon (May 1, 2026) and T-Mobile (January 19, 2026) changes
 
 **In practice**
 

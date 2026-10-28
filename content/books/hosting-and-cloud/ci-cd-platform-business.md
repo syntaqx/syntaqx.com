@@ -2,14 +2,14 @@
 title = "The CI/CD Platform Business"
 description = "Who sells build minutes and how: per-minute SKUs, credits, parallel jobs and cost factors, OS multipliers, open-source free tiers, funding and shutdowns."
 category = "Hosting & Cloud Industry"
-order = 2135
+order = 2143
 part = "CI/CD Platforms"
 tags = ["ci", "pricing", "metering", "github-actions", "gitlab", "business-models"]
 +++
 
 A CI platform sells a minute of a clean machine that starts on a commit, runs someone else's script, and disappears. That minute is the product, but most of the cost is around it: the control plane that queues jobs, streams logs, stores artifacts and caches, holds secrets and reports status, whether the machine is the vendor's or the customer's. The industry prices that bundle four different ways (per-minute SKUs, credits, parallel jobs, and cost factors on an included allowance), gives much of it away to open source as an acquisition channel, and charges macOS at roughly ten times Linux because of how Apple licenses its operating system for hosting.
 
-This chapter covers the business: the pricing models and current rates, OS and size multipliers, free tiers, GitHub's 2026 price change and its postponed fee on self-hosted runners, the one audited set of numbers in the market (GitLab's), the private vendors' funding, the clouds' build services, and the consolidation and shutdowns. It adds the `ci_pipelines` side table and build-minute SKUs to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). How the market got here is [From Tinderbox to Jenkins: How CI Began](/books/hosting-and-cloud/ci-history); the machines and their isolation are [Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure); rating engines in general are Metering & Rating.
+This chapter covers the business: the pricing models and current rates, OS and size multipliers, free tiers, GitHub's 2026 price change and its postponed fee on self-hosted runners, the one audited set of numbers in the market (GitLab's), the private vendors' funding, the clouds' build services, and the consolidation and shutdowns. It adds the `ci_pipelines` side table and build-minute SKUs to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). How the market got here is [From Tinderbox to Jenkins: How CI Began](/books/hosting-and-cloud/ci-history); the machines and their isolation are [Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure); rating engines in general are [Metering & Rating](/books/hosting-and-cloud/metering-and-rating).
 
 ## How the Providers Do It
 
@@ -70,7 +70,7 @@ AWS and Google sell build minutes as one service among hundreds, priced close to
 
 ## Consolidation and Shutdowns
 
-The market's churn, in order: Bamboo Cloud discontinued January 31, 2017; Travis CI to Idera in January 2019 and travis-ci.org shut down May 31, 2021; Drone to Harness in August 2020; Vamp to CircleCI in May 2021; CodeCommit closed to new customers in July 2024 and reopened in November 2025; and Google's Container Registry, shut for writes on March 18, 2025 ([Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries#how-the-providers-do-it)). Each one forced customers to move pipelines on someone else's schedule, which is why a provider's sunset process (Migrations, Shutdowns & End of Life) is part of the product.
+The market's churn, in order: Bamboo Cloud discontinued January 31, 2017; Travis CI to Idera in January 2019 and travis-ci.org shut down May 31, 2021; Drone to Harness in August 2020; Vamp to CircleCI in May 2021; CodeCommit closed to new customers in July 2024 and reopened in November 2025; and Google's Container Registry, shut for writes on March 18, 2025 ([Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries#how-the-providers-do-it)). Each one forced customers to move pipelines on someone else's schedule, which is why a provider's sunset process ([Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life#the-lifecycle-of-a-sunset)) is part of the product.
 
 ## The Alternatives
 
@@ -85,9 +85,11 @@ The market's churn, in order: Bamboo Cloud discontinued January 31, 2017; Travis
 
 ## My Default
 
-My default as a buyer is the code host's per-minute hosted runners for Linux, budgeted with a spending limit, with macOS minutes treated as a scarce resource (only the jobs that need Apple tooling) and self-hosted or third-party runners added when Linux minutes become the largest line. As a provider building a CI product, I'd price per minute by machine SKU, round to the minute only above a small floor, publish the OS ratios, charge for the control plane explicitly rather than hiding it in hosted minutes, and give open source a bounded free tier with a stated end condition. GitHub's reversal is the evidence that adding a fee later costs more than charging it from the start.
+My default as a buyer moves in three stages, and cost triggers each one. First, GitHub Actions on GitHub's hosted runners, budgeted with a spending limit, with macOS minutes treated as a scarce resource (only the jobs that need Apple tooling). For public repositories that stage can last forever: GitHub's billing documentation says usage is free "for public repositories that use standard GitHub-hosted runners" (as of October 2026), which is part of why I favor open source. Second, when private-repository minutes become the largest line, self-hosted runners on GitHub's orchestrator: the workflows stay the same and only the `runs-on` labels change ([Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure#my-default)). A third-party runner vendor is the same move on someone else's machines. Third, workflows kept in the Actions format but run by an orchestrator I control, such as Forgejo Actions or Gitea Actions, which read GitHub-Actions-style workflow files with documented gaps. The postponed self-hosted fee is why the third stage exists: the second stage still sends every job through GitHub's control plane, and the [December 2025 announcement](#github-s-2026-change-and-the-self-hosted-fee) showed that GitHub can put a price on that control plane, for its own self-hosted runners and the third-party vendors' alike. Keeping the YAML portable keeps that exit cheap.
 
-What would change this: build volume steady enough that parallel-job pricing is cheaper than minutes, or a regulated boundary that requires self-hosted runners regardless of price.
+As a provider building a CI product, I'd price per minute by machine SKU, round to the minute only above a small floor, publish the OS ratios, charge for the control plane explicitly rather than hiding it in hosted minutes, and give open source a bounded free tier with a stated end condition. GitHub's reversal is the evidence that adding a fee later costs more than charging it from the start.
+
+What would change this: build volume steady enough that parallel-job pricing is cheaper than minutes, a regulated boundary that requires self-hosted runners regardless of price, or workflows that lean on GitHub-only features the compatible orchestrators lack, which makes the third stage a rewrite rather than a move.
 
 ## How to Build It
 
@@ -167,6 +169,9 @@ ORDER BY 3 DESC;
 - [GitHub Docs: GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions), included minutes and storage, free self-hosted and public-repository usage, cache billing
 - [GitHub Docs: About billing for GitHub Actions (December 2023, archived)](http://web.archive.org/web/20231202013242/https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions), the previous rates and multipliers
 - [GitHub Changelog: Cache size can now exceed 10 GB](https://github.blog/changelog/2025-11-20-github-actions-cache-size-can-now-exceed-10-gb-per-repository/), November 20, 2025, retention, eviction and budget behavior
+- [GitHub Docs: Using self-hosted runners in a workflow](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/use-in-a-workflow), selecting self-hosted runners with `runs-on` labels
+- [Gitea Docs: Compared to GitHub Actions](https://docs.gitea.com/usage/actions/comparison), GitHub-style workflows in Gitea Actions and the documented differences
+- [Forgejo Docs: GitHub Actions](https://forgejo.org/docs/latest/user/actions/github-actions/), Forgejo Actions' familiar but not compatible design and its known differences
 - [GitLab Docs: Compute minutes](https://docs.gitlab.com/ci/pipelines/compute_minutes/), cost factors, the free quota, open-source factors and rollover
 - [CircleCI: Pricing](https://circleci.com/pricing/), plans, credits, self-hosted runner concurrency and open-source credits
 - [Microsoft Azure: Azure DevOps Services pricing](https://azure.microsoft.com/en-us/pricing/details/devops/azure-devops-services/), free and paid parallel jobs

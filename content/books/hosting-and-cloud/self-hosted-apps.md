@@ -3,7 +3,7 @@ title = "Self-Hosted Apps & Orchestration"
 nav_title = "Self-Hosted Apps"
 description = "Compose, NAS app stores and LXC; Home Assistant, Plex vs Jellyfin, Immich, Nextcloud, Vaultwarden; k3s and GitOps; 3-2-1 backups; the offline internet."
 category = "Hosting & Cloud Industry"
-order = 2151
+order = 2110
 part = "Homelab"
 tags = ["homelab", "self-hosting", "docker-compose", "home-assistant", "media-servers", "backups", "kiwix", "offline"]
 +++
@@ -31,7 +31,7 @@ This chapter covers how apps are packaged and run at home (Docker Compose, Porta
 
 Three patterns run through the table. **The container image is the unit of distribution:** every project here ships one, and the NAS vendors' app stores are catalogs of images with a form in front. **Funding decides the paid tier's shape:** venture-style companies (Plex, Emby) charge for features and remote access, foundation or employer-backed projects (Home Assistant, Immich) sell a convenience service or a voluntary key and keep features free, and volunteer projects (Jellyfin, Vaultwarden) charge nothing and carry the bus-factor risk instead. **Licenses are mostly copyleft:** AGPL dominates the data-holding apps (Immich, Nextcloud, Vaultwarden) and Proxmox Backup Server, which is the same lever [Open Source and the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds#the-license-spectrum) describes on the provider side, pulled by projects that want hosted forks to share changes.
 
-## How We Got Here
+## How It Got Here
 
 - **2013:** Home Assistant starts; its fifth-anniversary post is dated September 17, 2018.
 - **July 23, 2014:** Docker acquires Orchard Labs, maker of Fig, "a tool that uses a YAML file to define and manage multi-container applications." Compose v1 (Python, `docker-compose`) is first released in 2014, and Compose 1.1.0 announces that "Fig has been renamed to Docker Compose" in February 2015.
@@ -48,7 +48,7 @@ Three patterns run through the table. **The container image is the unit of distr
 - **May 22, 2025:** Home Assistant deprecates the Core and Supervised installation methods, unsupported from 2025.12.
 - **October 1, 2025:** Immich v2.0.0, the first stable release, after 271 releases.
 - **April 29, 2026:** Plex extends the remote playback requirement to Fire TV, Samsung, LG, Vizio, PlayStation, Xbox and more.
-- **June 1 and July 1, 2026:** Plex's Remote Watch Pass leaves introductory pricing; the new Lifetime Plex Pass goes to $749.99.
+- **June 1, 2026:** Plex's Remote Watch Pass leaves introductory pricing. By October 2026 a new Lifetime Plex Pass costs $749.99.
 - **July 17 to 19, 2026:** Jellyfin's project leader and a longtime core member step down, and a co-founder resigns.
 
 The arc is the same one the providers walked: from hand-installed packages, to a declarative file per app, to a reconciler that applies the file. What changed at home is that the NAS vendors absorbed the middle step, and in 2024 TrueNAS, having tried Kubernetes as the app runtime, went back to Docker.
@@ -75,7 +75,7 @@ The funding model is the paid convenience service. Nabu Casa launched Home Assis
 
 The three servers do the same job (index a library, fetch metadata, transcode for the client, stream at home and away) and differ in who controls the client apps and what is behind a paywall.
 
-**Plex** is proprietary, with polished clients on almost every TV and console. From April 29, 2025, Plex Pass rose to $6.99 a month and $69.99 a year, the Lifetime pass went from $119.99 to $249.99, and remote playback of personal media stopped being free: watching a server from outside its network now needs Plex Pass or a Remote Watch Pass, introduced at $1.99 a month or $19.99 a year. On April 29, 2026 Plex extended the remote playback requirement to Fire TV, Samsung, LG, Vizio, PlayStation, Xbox and more; the Remote Watch Pass rose to $2.99 a month and $29.99 a year from June 1, 2026, with Plex Pass monthly and yearly prices unchanged; and the price of a new Lifetime Plex Pass went to $749.99 on July 1, 2026, three times the 2025 price and more than six times the pre-2025 one (as of October 2026).
+**Plex** is proprietary, with polished clients on almost every TV and console. From April 29, 2025, Plex Pass rose to $6.99 a month and $69.99 a year, the Lifetime pass went from $119.99 to $249.99, and remote playback of personal media stopped being free: watching a server from outside its network now needs Plex Pass or a Remote Watch Pass, introduced at $1.99 a month or $19.99 a year. On April 29, 2026 Plex extended the remote playback requirement to Fire TV, Samsung, LG, Vizio, PlayStation, Xbox and more; the Remote Watch Pass rose to $2.99 a month and $29.99 a year from June 1, 2026, with Plex Pass monthly and yearly prices unchanged; and a new Lifetime Plex Pass is $749.99 as of October 2026, three times the 2025 price and more than six times the pre-2025 one.
 
 > [!TIP] Lucky me
 > I bought a Lifetime Plex Pass in 2014. Every price increase since has made it a better deal, which makes it, by a wide margin, the best subscription decision I have ever made.
@@ -108,7 +108,7 @@ A workable split: OpenTofu creates the VMs and LXCs with their datasets, Ansible
 
 ## Backups
 
-The rule is older than the homelab. US-CERT's *Data Backup Options* (Ruggiero and Heckathorn, 2012, citing Peter Krogh's *The DAM Book*) states it: "Keep 3 copies of any important file: 1 primary and 2 backups," "Keep the files on 2 different media types," and "Store 1 copy offsite." The playbook's [Backups](/docs/operations/disaster-recovery#backups) and [Restores Are What Matter](/docs/operations/disaster-recovery#restores-are-what-matter) own the general practice; at home it maps onto four tools.
+The rule is older than the homelab. US-CERT's *Data Backup Options* (Ruggiero and Heckathorn, 2012, citing Peter Krogh's *The DAM Book*) states it: "Keep 3 copies of any important file: 1 primary and 2 backups," "Keep the files on 2 different media types," and "Store 1 copy offsite." The playbook's [Backups](/docs/operations/disaster-recovery#backups) and [Restores Are What Matter](/docs/operations/disaster-recovery#restores-are-what-matter) own the general practice, and [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#retention-and-placement) is the same rule sold by a host; at home it maps onto four tools.
 
 - **ZFS snapshots and `zfs send`.** Snapshots are instant and cheap, and `zfs send` turns one into a stream; `-i` sends only the changes since an earlier snapshot and `-I` includes the intermediates, so a second box receives nightly increments. Raw sends (`-w`) ship encrypted datasets "exactly as it exists on disk," so the receiver never holds the keys. Snapshots on the same pool are not a backup; replicated to another machine, they are one copy.
 - **Proxmox Backup Server** (AGPL-3.0) backs up VMs, containers and hosts incrementally with deduplication, client-side AES-256-GCM encryption, SHA-256 integrity checks and sync to a remote PBS.
@@ -328,7 +328,8 @@ Media and ZIM files are rebuildable by definition, but the "none" class is a dec
 - [Nabu Casa: Pricing](https://www.nabucasa.com/pricing/), Home Assistant Link price and features
 - [Plex: Important 2025 Plex Updates](https://www.plex.tv/blog/important-2025-plex-updates/), April 29, 2025 prices and remote playback, and the April 29, 2026 device extension
 - [Android Authority: Plex Remote Watch Pass price increase](https://www.androidauthority.com/plex-remote-watch-pass-price-increase-3663060/), May 4, 2026, $2.99 and $29.99 from June 1, 2026, Plex Pass unchanged
-- [Plex Forum: New Lifetime Plex Pass Pricing](https://forums.plex.tv/t/new-lifetime-plex-pass-pricing/938910), May 18, 2026, $749.99 from July 1, 2026
+- [Plex Forum: New Lifetime Plex Pass Pricing](https://forums.plex.tv/t/new-lifetime-plex-pass-pricing/938910), May 18, 2026, the Lifetime price change
+- [Plex: Plans](https://www.plex.tv/plans/), Lifetime Plex Pass at $749.99, viewed October 27, 2026
 - [Jellyfin: About](https://jellyfin.org/docs/general/about), the Emby fork and no premium features
 - [GitHub: jellyfin/jellyfin](https://github.com/jellyfin/jellyfin), GPL-2.0
 - [Linuxiac: Jellyfin loses project leader and core team member](https://linuxiac.com/jellyfin-loses-project-leader-and-core-team-member-in-major-shake-up/), July 21, 2026, the departures

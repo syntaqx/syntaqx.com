@@ -2,14 +2,14 @@
 title = "Pipeline Supply-Chain Security"
 description = "The CI breaches from SolarWinds to Shai-Hulud and the controls they produced: OIDC federation, pinning, SLSA, Sigstore, trusted publishing and SBOMs."
 category = "Hosting & Cloud Industry"
-order = 2139
+order = 2147
 part = "CI/CD Platforms"
 tags = ["supply-chain", "security", "ci", "oidc", "slsa", "sbom"]
 +++
 
 A build pipeline holds the keys to everything downstream of it: cloud credentials to deploy, registry tokens to publish, signing keys to vouch, and the source to change. Attackers worked that out before most defenders did. The incidents of 2020 to 2026 show the same few moves repeated: tamper with the build itself, steal the secrets in its environment, move a tag that thousands of pipelines trust, or write a workflow into a victim's repository so their own CI does the stealing. Each move produced a control, and the controls now ship as platform features: short-lived federated credentials, policies that require pinned actions, signed provenance from hosted builders, keyless signing with a public log, and registries that accept packages only from a known workflow.
 
-This chapter tells the incidents in order, then the controls and the laws that now ask for them. It adds `workload_identity_bindings` and `artifact_attestations` to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The pipeline rules (least-privilege tokens, SHA pinning, no secrets for fork pull requests) are the playbook's [Secure](/docs/delivery/ci-pipelines#secure) and [Supply Chain](/docs/engineering/dependencies#supply-chain) sections; image signing and admission are [Trusting What You Run](/docs/delivery/containers#trusting-what-you-run) and [Image Policy](/docs/operations/kubernetes#image-policy); leaked cloud keys and their quarantine are Free-Tier Fraud & Stolen Keys; account takeover response is the [UGP abuse desks](/books/user-generated-platforms/abuse-desks#how-to-build-it) chapter.
+This chapter tells the incidents in order, then the controls and the laws that now ask for them. It adds `workload_identity_bindings` and `artifact_attestations` to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The pipeline rules (least-privilege tokens, SHA pinning, no secrets for fork pull requests) are the playbook's [Secure](/docs/delivery/ci-pipelines#secure) and [Supply Chain](/docs/engineering/dependencies#supply-chain) sections; image signing and admission are [Trusting What You Run](/docs/delivery/containers#trusting-what-you-run) and [Image Policy](/docs/operations/kubernetes#image-policy); leaked cloud keys and their quarantine are [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#stolen-keys); account takeover response is the [UGP abuse desks](/books/user-generated-platforms/abuse-desks#how-to-build-it) chapter.
 
 ## How the Providers Do It
 
@@ -89,11 +89,13 @@ For a provider, the CRA makes SBOM generation and vulnerability reporting obliga
 
 My default is no long-lived cloud or registry credentials in CI at all: OIDC federation bound to repository and protected environment, trusted publishing for packages, actions pinned to SHAs under an organization policy with a bot keeping them current, workflow files under code-owner review, signed provenance from hosted runners for everything published, and an SBOM stored as an attestation beside every release. As a provider, I'd make the federated path the default in the console, show customers which of their pipelines still hold stored keys, and keep secrets out of reach of fork pull requests by construction ([Secure](/docs/delivery/ci-pipelines#secure)).
 
+My runners move from hosted to my own and, eventually, to a compatible orchestrator ([Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure#my-default)), and this default has to survive both moves. On GitHub's orchestrator, federation still works: the OIDC token comes from GitHub's issuer (`https://token.actions.githubusercontent.com`), not from the machine, and carries a `runner_environment` claim of `github-hosted` or `self-hosted`, so a relying party can tell which ran the job. Artifact attestations ask for the same `id-token: write` permission, but SLSA L3's isolated runs become a property of my runners rather than GitHub's, and npm trusted publishing doesn't yet accept self-hosted runners ([Registries as the Control Point](#registries-as-the-control-point)). Off GitHub, as of October 2026, Forgejo Actions issues OIDC ID tokens to jobs whose workflow sets `enable-openid-connect`, with the instance's `/api/actions` URL as issuer and `repo:<repository>:ref:<ref>` subjects, so cloud trust policies point at my forge instead; Gitea's comparison page still lists `id-token` as unsupported, though OIDC workload identity support was merged to its main branch on October 18, 2026. GitHub's attestations don't come along: private repositories sign through GitHub's own Sigstore instance, which "only federates with GitHub Actions," and Sigstore's public Fulcio documents source-repository identities only for GitHub Actions and GitLab CI, accepting other tokens only from issuers in its configuration. On a self-run forge I'd sign with cosign against a key in hardware or an issuer Fulcio is configured to trust, and record that the provenance no longer comes from a hosted build platform.
+
 What would change this: a target that can't accept federated identity (an old system with only static keys), where the fallback is a vault issuing short-lived credentials to the job, and air-gapped builds, where signing keys must be held locally in hardware.
 
 ## How to Build It
 
-Two tables. `workload_identity_bindings` is the trust policy that lets a CI job's identity become a role in the provider, extending the [service principals](/books/hosting-and-cloud/accounts-and-resellers#how-to-build-it) of the accounts chapter. `artifact_attestations` stores provenance, SBOMs and signatures for artifacts by digest (Voice Platforms owns an `attestations` table for STIR/SHAKEN, so this one is named for what it attests).
+Two tables. `workload_identity_bindings` is the trust policy that lets a CI job's identity become a role in the provider, extending the [service principals](/books/hosting-and-cloud/accounts-and-resellers#how-to-build-it) of the accounts chapter. `artifact_attestations` stores provenance, SBOMs and signatures for artifacts by digest ([Voice Platforms](/books/hosting-and-cloud/voice-platforms) owns an `attestations` table for STIR/SHAKEN, so this one is named for what it attests).
 
 ```sql
 CREATE TABLE workload_identity_bindings (  -- which external workload identities may act as whom
@@ -195,6 +197,13 @@ When a secret leaks, the exposure query runs the other way: every run that had t
 **Platform controls**
 
 - [GitHub Changelog: Secure cloud deployments with OIDC is now GA](https://github.blog/changelog/2021-11-23-secure-cloud-deployments-with-oidc-is-now-ga/), November 23, 2021
+- [GitHub Docs: OpenID Connect reference](https://docs.github.com/en/actions/reference/security/oidc), the issuer and the `runner_environment` claim
+- [GitHub Docs: Artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations), Build L2 alone and L3 with reusable workflows, the public-good and GitHub Sigstore instances
+- [GitHub Docs: Using artifact attestations](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations), the `id-token: write` and `attestations: write` permissions
+- [Forgejo Docs: Security OpenID Connect](https://forgejo.org/docs/latest/user/actions/security-openid-connect/), `enable-openid-connect`, the issuer, subjects and cloud trust relationships
+- [Gitea Docs: Compared to GitHub Actions](https://docs.gitea.com/usage/actions/comparison), `id-token` listed as an unsupported GitHub-only scope
+- [Gitea: Add OIDC workload identity support (#39052)](https://github.com/go-gitea/gitea/pull/39052), merged to main on October 18, 2026
+- [Sigstore Docs: OIDC usage in Fulcio](https://docs.sigstore.dev/certificate_authority/oidc-in-fulcio/), supported issuers and the configured-issuer requirement
 - [GitHub Changelog: Blocking and SHA pinning in actions policy](https://github.blog/changelog/2025-08-15-github-actions-policy-now-supports-blocking-and-sha-pinning-actions/), August 15, 2025
 - [GitHub: Introducing npm package provenance](https://github.blog/security/supply-chain-security/introducing-npm-package-provenance/), April 19, 2023
 - [PyPI: Introducing trusted publishers](https://blog.pypi.org/posts/2023-04-20-introducing-trusted-publishers/), April 2023

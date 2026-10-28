@@ -2,7 +2,7 @@
 title = "Storage & Stateful Workloads"
 description = "In-tree plugins to CSI, claims and classes, topology and attach limits, StatefulSets, database operators, Velero, and when state belongs outside."
 category = "Hosting & Cloud Industry"
-order = 2121
+order = 2129
 part = "Kubernetes"
 tags = ["kubernetes", "storage", "csi", "statefulsets", "operators", "backup"]
 +++
@@ -11,7 +11,7 @@ Kubernetes was designed around workloads that can die and be replaced anywhere, 
 
 For a provider the stakes are larger than for its customers. A claim in a customer's cluster creates a billable volume in the provider's block storage, through a driver the provider writes and ships as a managed add-on; the provider's per-instance attachment limits become the customer's scheduling limits; and a volume orphaned by a deleted cluster is the provider's to find, bill or credit. Providers that run customer workloads on Kubernetes themselves meet the hardest version of the problem: Gitpod, which ran developer environments on Kubernetes for six years, identified storage as "the crucial element" in why it left.
 
-This chapter covers the move from in-tree volume plugins to CSI, the claim, volume and class objects, binding and topology, provider CSI drivers and their per-node limits, StatefulSets, database and storage operators, backup and restore with Velero, and when state belongs outside the cluster. It links claims in [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters` to the `volumes` side table of Storage: Block, File & Object, which owns volume types, snapshots and their billing. Backup policies and restores are Backups, Restores & Migrations; managed databases as a product are [Managed Databases](/books/hosting-and-cloud/managed-databases); the playbook's [Disaster Recovery](/docs/operations/disaster-recovery) owns backup rules in general.
+This chapter covers the move from in-tree volume plugins to CSI, the claim, volume and class objects, binding and topology, provider CSI drivers and their per-node limits, StatefulSets, database and storage operators, backup and restore with Velero, and when state belongs outside the cluster. It links claims in [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters` to the `volumes` side table of [Storage: Block, File & Object](/books/hosting-and-cloud/storage#block-volumes), which owns volume types, snapshots and their billing. Backup policies and restores are [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations); managed databases as a product are [Managed Databases](/books/hosting-and-cloud/managed-databases); the playbook's [Disaster Recovery](/docs/operations/disaster-recovery) owns backup rules in general.
 
 ## How the Providers Do It
 
@@ -123,11 +123,11 @@ Velero does both at the Kubernetes API layer. It began at Heptio as Ark; the v0.
 - A `Restore` fetches the backup, preprocesses resources for the target cluster and restores them one at a time, skipping objects that already exist unless `--existing-resource-policy=update`. A backup storage location can be made read-only during a restore so nothing is created or deleted.
 - Backups "are not strictly atomic": objects changed during a backup can be missed.
 
-For a provider the second bullet is the one to explain to customers. A snapshot-based cluster backup sits in the same provider as the cluster, so it survives a deleted namespace but not a closed account or a lost region; the playbook's [3-2-1 and immutable copy](/docs/operations/disaster-recovery#backups) rules need the data moved elsewhere, and [restores are what matter](/docs/operations/disaster-recovery#restores-are-what-matter). Database operators bring their own backups (WAL archiving to object storage for Postgres), which are usually better than a volume snapshot of a running database, because the API's snapshots make no consistency promise. Backup records, policies and restore drills as a provider product are Backups, Restores & Migrations.
+For a provider the second bullet is the one to explain to customers. A snapshot-based cluster backup sits in the same provider as the cluster, so it survives a deleted namespace but not a closed account or a lost region; the playbook's [3-2-1 and immutable copy](/docs/operations/disaster-recovery#backups) rules need the data moved elsewhere, and [restores are what matter](/docs/operations/disaster-recovery#restores-are-what-matter). Database operators bring their own backups (WAL archiving to object storage for Postgres), which are usually better than a volume snapshot of a running database, because the API's snapshots make no consistency promise. Backup records, policies and restore drills as a provider product are [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#restores).
 
 ## When State Belongs Outside the Cluster
 
-Everything above works, and every part of it is something the customer or the provider has to operate: the driver and its sidecars, the zone a volume is stuck in, the attach slots, the operator's upgrades, the snapshot controller, the backups and their restores. A managed database moves all of it to a service whose provider runs replication, failover, backups and point-in-time recovery as a product, priced and supported (Managed Databases). The rule I'd apply is the playbook's [When Not to Run It](/docs/operations/kubernetes#when-not-to-run-it) with storage as the deciding factor: state goes in the cluster when the team needs something the managed service won't give (an extension, a version, a topology, local NVMe, a price at scale) and has the people to run it; otherwise the cluster holds the stateless tier and connects to managed state.
+Everything above works, and every part of it is something the customer or the provider has to operate: the driver and its sidecars, the zone a volume is stuck in, the attach slots, the operator's upgrades, the snapshot controller, the backups and their restores. A managed database moves all of it to a service whose provider runs replication, failover, backups and point-in-time recovery as a product, priced and supported ([Managed Databases](/books/hosting-and-cloud/managed-databases)). The rule I'd apply is the playbook's [When Not to Run It](/docs/operations/kubernetes#when-not-to-run-it) with storage as the deciding factor: state goes in the cluster when the team needs something the managed service won't give (an extension, a version, a topology, local NVMe, a price at scale) and has the people to run it; otherwise the cluster holds the stateless tier and connects to managed state.
 
 The signals that state has outgrown the cluster are the ones Gitpod listed: attach and detach timing showing up in startup latency, attachment limits deciding pods per node, zone locality fighting the scheduler, and shared IO bandwidth starving neighbors until a per-workload IO limiter was needed. Gitpod's answer was to leave Kubernetes for its own control plane; most customers' answer is a managed database and object storage for everything that isn't a database.
 
@@ -152,7 +152,7 @@ For customers, my default is stateless clusters with state in managed services: 
 
 ## How to Build It
 
-The chapter adds the link from a cluster to the volumes its claims use. Volumes are resources of kind `volume` with the `volumes` side table defined by Storage: Block, File & Object, referenced here as `volumes (resource_id)`; snapshots are that chapter's `snapshots`; nodes are resources of kind `virtual_machine` in [Managed Kubernetes](/books/hosting-and-cloud/managed-kubernetes)'s node pools; backups belong to Backups, Restores & Migrations.
+The chapter adds the link from a cluster to the volumes its claims use. Volumes are resources of kind `volume` with the `volumes` side table defined by [Storage: Block, File & Object](/books/hosting-and-cloud/storage#how-to-build-it), referenced here as `volumes (resource_id)`; attachments are that chapter's `volume_attachments`, extended here with the cluster and the detach reason; snapshots are that chapter's `snapshots`; nodes are resources of kind `virtual_machine` in [Managed Kubernetes](/books/hosting-and-cloud/managed-kubernetes)'s node pools; backups belong to [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations).
 
 ```sql
 CREATE TABLE persistent_volume_claims (  -- a claim in a cluster, and the volume behind it
@@ -185,20 +185,17 @@ CREATE TABLE persistent_volume_claims (  -- a claim in a cluster, and the volume
   EXCLUDE USING GIST (volume_id WITH =, bound_during WITH &&)  -- one claim per volume at a time
 );
 
-CREATE TABLE volume_attachments (        -- a volume attached to a node: CSI ControllerPublish
-  id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  account_id        UUID NOT NULL REFERENCES accounts (id),
-  volume_id         UUID NOT NULL REFERENCES volumes (resource_id),
-  node_id           UUID NOT NULL REFERENCES resources (id),  -- kind = 'virtual_machine'
-  cluster_id        UUID NOT NULL REFERENCES clusters (resource_id),
-  multi_attach      BOOLEAN NOT NULL DEFAULT FALSE,  -- a volume type that allows it
-  attached_during   TSTZRANGE NOT NULL,
-  requested_at      TIMESTAMPTZ NOT NULL,  -- when the VolumeAttachment was created
-  detach_reason     TEXT CHECK (detach_reason IN ('pod_moved', 'node_drained', 'node_deleted',
-                      'force_detach_timeout', 'cluster_deleted', 'manual')),
-  EXCLUDE USING GIST (volume_id WITH =, attached_during WITH &&) WHERE (NOT multi_attach)
-                                         -- one node at a time unless the volume allows more
-);
+-- volume_attachments is Storage's table (vm_id is the node; shared covers multi-attach,
+-- with its one-VM-at-a-time exclusion). A cluster attach, CSI ControllerPublish, adds:
+ALTER TABLE volume_attachments
+  ADD COLUMN cluster_id    UUID REFERENCES clusters (resource_id),  -- null: attached outside
+                                                                     -- Kubernetes
+  ADD COLUMN requested_at  TIMESTAMPTZ,  -- when the VolumeAttachment was created
+  ADD COLUMN detach_reason TEXT CHECK (detach_reason IN ('pod_moved', 'node_drained',
+                             'node_deleted', 'force_detach_timeout', 'cluster_deleted',
+                             'manual')),
+  ADD CONSTRAINT volume_attachments_cluster_requested
+    CHECK (cluster_id IS NULL OR requested_at IS NOT NULL);
 
 ALTER TABLE snapshots                    -- Storage: Block, File & Object's side table
   ADD COLUMN source_claim_id UUID REFERENCES persistent_volume_claims (id),

@@ -29,7 +29,7 @@ Few providers publish their internals. What is public comes from whitepapers, co
 
 Three patterns run through the table:
 
-- **The control plane fails more often, so the data plane must not depend on it.** AWS says so outright, and the post-mortems in the next part of this volume are mostly control-plane failures that reached the data plane through a dependency nobody had drawn.
+- **The control plane fails more often, so the data plane must not depend on it.** AWS says so outright, and the post-mortems in [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages) are mostly control-plane failures that reached the data plane through a dependency nobody had drawn.
 - **Blast radius is designed, not discovered.** Regions, zones, cells and shuffle shards are all ways to make sure one bad deploy, one bad customer or one bad host reaches a known fraction of the fleet.
 - **Configuration is the riskiest thing a control plane ships.** Code goes out through canaries; configuration, quota policy and threat rules often go everywhere at once. The 2025 outages at Google, Azure and Cloudflare were all configuration or metadata pushed globally ([The Global-Config Failure Pattern](/books/hosting-and-cloud/outages-and-status-pages#the-global-config-failure-pattern)).
 
@@ -57,11 +57,11 @@ A provider has the same components whatever it sells. The table maps each one to
 | --- | --- | --- | --- |
 | **Identity and accounts** | Who the customer is, who may act for it, and its standing | `accounts`, `projects`, `account_holds`, organizations, members, roles, `api_credentials` | [The Hosting & Cloud Business](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model), [Accounts, Organizations & Resellers](/books/hosting-and-cloud/accounts-and-resellers#how-to-build-it) |
 | **Front door** | Authenticates, authorizes, rate-limits and checks quota on every API call | `quotas`, the request log; `control_plane_operations` below | This chapter; [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#how-to-build-it) |
-| **Catalog** | What can be bought, at what price, under which plan | `products`, `skus`, `price_versions`, `plans`, `plan_versions` | Core; Pricing Catalogs |
+| **Catalog** | What can be bought, at what price, under which plan | `products`, `skus`, `price_versions`, `plans`, `plan_versions` | Core; [Pricing Catalogs](/books/hosting-and-cloud/pricing-catalogs) |
 | **Provisioning** | Turns an accepted request into a running thing: placement, workflows, state | `resources` and side tables, `resource_identifiers`, `deployments`, `iac_states` | The Stack, Bottom to Top; [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#how-to-build-it); [Provisioning: Terraform](/books/hosting-and-cloud/terraform-and-opentofu#how-to-build-it) |
 | **Capacity** | What can be promised in each zone, cell and fabric | Cells and cell assignments, `capacity_reservations`; `gpu_capacity_pools` | [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#how-to-build-it); [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#how-to-build-it) |
 | **Data plane** | The running thing: hosts, fabrics, storage, proxies, DNS, carriers | Side tables per kind; nothing in the hot path reads the control plane's database | Every layer chapter |
-| **Metering** | Emits what each resource did, idempotently, in event time | `usage_events` | Core; Metering & Rating |
+| **Metering** | Emits what each resource did, idempotently, in event time | `usage_events` | Core; [Metering & Rating](/books/hosting-and-cloud/metering-and-rating) |
 | **Rating and billing** | Prices usage, applies credits and commitments, issues invoices, collects | `rated_usage`, `credit_grants`, `commitments`, invoices and payments | Core; the Metering and Billing part; the [Payments](/books/payments/card-payments) volume |
 | **Managed services** | Databases, queues, observability run as products on the same planes | `databases`, `caches`, `edge_stores`, `message_brokers`, `queues`, `topics`, `ingest_rules` | The Managed Services part |
 | **Delivery for customers** | Pipelines, runners, registries, images and state the provider hosts | `ci_pipelines`, `runners`, `ci_runs`, `artifact_registries`, `image_builds`, `iac_runs` | The Deployment, CI/CD Platforms and Infrastructure as Code parts |
@@ -118,7 +118,7 @@ What a provider takes from these:
 
 ## The Metering Pipeline
 
-Metering is the seam between the data plane and money. Every data-plane component emits usage: hypervisors emit instance-seconds, storage nodes emit gigabyte-hours and requests, edges emit bytes by direction and region, gateways emit messages and segments, model servers emit tokens. Those records travel through collectors into `usage_events`, and rating prices them into `rated_usage` (the core model's [usage tables](/books/hosting-and-cloud/hosting-and-cloud-business#tenancy-money-and-time); Metering & Rating owns the depth).
+Metering is the seam between the data plane and money. Every data-plane component emits usage: hypervisors emit instance-seconds, storage nodes emit gigabyte-hours and requests, edges emit bytes by direction and region, gateways emit messages and segments, model servers emit tokens. Those records travel through collectors into `usage_events`, and rating prices them into `rated_usage` (the core model's [usage tables](/books/hosting-and-cloud/hosting-and-cloud-business#tenancy-money-and-time); [Metering & Rating](/books/hosting-and-cloud/metering-and-rating#the-bill-pipeline) owns the depth).
 
 The architecture rules come from where the pipeline sits:
 
@@ -159,7 +159,7 @@ The numbers are marketing as well as engineering, and they are useful for one th
 | **Own control plane, built in house** | Service-per-resource behind one API, regional, cell-partitioned | Fits the product exactly; cells and static stability designed in | Years of work; every outage is yours to find | Yours | Hyperscalers, developer clouds, large PaaS and edge networks |
 | **OpenStack** | Open-source services (compute, storage, network, identity) installed by the operator | A full IaaS control plane without writing one | Integration and upgrades across many projects; the operator owns every failure | Open source, foundation-governed; launched by Rackspace and NASA in 2010 | Private and regional public clouds |
 | **Kubernetes as the control plane** | Declarative API and controllers; Crossplane or operators for non-cluster resources | Reconciliation, a common API shape, a large ecosystem | One API server and etcd per cluster as a shared dependency; scale limits per cluster | Open source (CNCF) | PaaS built on clusters, internal platforms |
-| **Licensed panel and billing** | A control panel per server plus a billing system that drives it | Fast to launch; customers know the panel | Per-account license fees; scripted provisioning ([Before Plans](/books/hosting-and-cloud/terraform-and-opentofu#before-plans-scripts-against-a-panel-api)); the panel's roadmap is the vendor's (Control Panel Licensing & the Alternatives) | Commercial | Shared hosts and resellers |
+| **Licensed panel and billing** | A control panel per server plus a billing system that drives it | Fast to launch; customers know the panel | Per-account license fees; scripted provisioning ([Before Plans](/books/hosting-and-cloud/terraform-and-opentofu#before-plans-scripts-against-a-panel-api)); the panel's roadmap is the vendor's ([Control Panel Licensing & the Alternatives](/books/hosting-and-cloud/control-panel-licensing)) | Commercial | Shared hosts and resellers |
 | **Resell another provider's control plane** | White-label or wholesale on someone else's API | Nothing to build below the product | The underlay's outages, prices and terms are the customer's ([Who Resells Whom](/books/hosting-and-cloud/provider-landscape#who-resells-whom)) | Contract | PaaS on hyperscalers, registrar resellers, CPaaS resellers |
 
 ## My Default

@@ -2,7 +2,7 @@
 title = "Baking Images: Packer"
 description = "Golden images and immutable servers: Aminator, Packer's sources, provisioners and post-processors, HCL2, HCP Packer channels and revocation, baking vs frying."
 category = "Hosting & Cloud Industry"
-order = 2143
+order = 2151
 part = "Infrastructure as Code"
 tags = ["infrastructure-as-code", "packer", "machine-images", "immutable-infrastructure", "golden-images"]
 +++
@@ -41,7 +41,7 @@ The 2013 answer was to stop changing servers at all:
 | November 17, 2014 | Netflix's "Zero to the cloud with NetflixOSS" deck: the "unit of deployment = AMI" | The image as the deploy artifact at a large cloud customer |
 | March 31, 2016 | InfoQ reports Netflix's **Bakery** API driving Aminator in its build pipeline | Baking as a service inside the delivery pipeline |
 
-What the immutable server cost was time and volume. Every change, a one-line config fix included, became a build, a test and a rollout of new machines, so a team needed fast image builds and machines that could be replaced without ceremony: stateless, behind load balancers, with data elsewhere. Images multiplied (one per build per region per platform), and each needed a name, a record of what was in it, and an end of life. Configuration management didn't disappear; it moved into the image build, where it ran once instead of every half hour. Containers later applied the same idea one layer up, with the image as the unit of deployment and the registry as its store (From chroot to Containers and Artifacts & Registries tell that history), and the playbook's [Rebuild, Don't Repair](/docs/delivery/containers#rebuild-don-t-repair) is the rule both arrived at.
+What the immutable server cost was time and volume. Every change, a one-line config fix included, became a build, a test and a rollout of new machines, so a team needed fast image builds and machines that could be replaced without ceremony: stateless, behind load balancers, with data elsewhere. Images multiplied (one per build per region per platform), and each needed a name, a record of what was in it, and an end of life. Configuration management didn't disappear; it moved into the image build, where it ran once instead of every half hour. Containers later applied the same idea one layer up, with the image as the unit of deployment and the registry as its store ([From chroot to Containers](/books/hosting-and-cloud/containers) and [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries) tell that history), and the playbook's [Rebuild, Don't Repair](/docs/delivery/containers#rebuild-don-t-repair) is the rule both arrived at.
 
 ## How Packer Works
 
@@ -262,7 +262,7 @@ What would change this: machines that can't be replaced on every change (bare me
 
 ## How to Build It
 
-A provider meets images twice: the images its customers build and launch (resources of kind `image` in [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#one-resource-table)), and, if it sells an image pipeline or registry, the builds and pointers behind them. The `images` side table, with each image's format, architecture and source, belongs to From chroot to Containers; this chapter adds the build that produced an image, the logical version it belongs to, and the named pointers consumers follow. It owns `image_versions`, `image_builds`, `image_build_artifacts`, `image_channels` and `image_channel_assignments`.
+A provider meets images twice: the images its customers build and launch (resources of kind `image` in [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#one-resource-table)), and, if it sells an image pipeline or registry, the builds and pointers behind them. The `images` side table, with each image's format, architecture and source, belongs to [From chroot to Containers](/books/hosting-and-cloud/containers); this chapter adds the build that produced an image, the logical version it belongs to, and the named pointers consumers follow. It owns `image_versions`, `image_builds`, `image_build_artifacts`, `image_channels` and `image_channel_assignments`.
 
 ```sql
 CREATE TABLE image_versions (            -- one logical, immutable version of an image family
