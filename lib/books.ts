@@ -104,6 +104,18 @@ export const BOOKS: Book[] = [
       "It reads in eight parts, plus a reference. The Business: how the platforms make money, how big they are, the core data model, the platform and vendor landscape, and accounts, identity and standing. Communities and Conversation: communities, roles and permissions, posts and voting, feeds and recommendations, search, real-time chat, voice rooms, volunteer moderation, federation, and developer platforms and data access. Media: the upload path, images at scale, storage and delivery economics, video on demand, and live streaming from ingest to latency, VODs and the interactive layer. Creators and Money: monetization strategies, ads, brand safety and data licensing, creator monetization, and paying creators and sellers. Peer-to-Peer Marketplaces: supply onboarding, listings and ranking, availability and booking, pricing and all-in prices, deposits and protection, damage and claims, messaging and reviews, cancellations and disputes, and marketplace fraud. Trust and Safety: the law of hosting user content, moderation at scale, spam and bots, child safety, violent extremism and graphic content, intimate image abuse, copyright, and abuse desks for hosts and registrars. The Rules: regulators and enforcement, minors and age assurance, law enforcement requests, and transparency reporting. Running the Platform: architecture, AI, operating metrics, and migrations, purges and shutdowns. Reference: a glossary of every term, grouped by part.",
     ],
   },
+  {
+    slug: "hosting-and-cloud",
+    type: "industry",
+    name: "Hosting & Cloud",
+    cover: "cloud",
+    summary:
+      "How companies that rent out infrastructure work, from the rack and the hypervisor to domains, certificates, the edge, messaging, metered billing and the law.",
+    intro: [
+      "Web hosts, clouds, PaaS and frontend clouds, registrars, certificate authorities, edge networks and communications platforms look like different industries, and underneath they rent the same thing: capacity someone else owns, measured and billed by the month or the unit. Each one runs on a layer below it, a hyperscaler under a PaaS, a registry under a registrar, carriers under a texting platform, and passes that layer's fees, outages and rules through to its customers. This book tells the stack bottom to top and through its history, each layer with the problem it solved and what it cost, benchmarked across AWS, Azure, Google Cloud, Oracle, DigitalOcean, Akamai, Hetzner, OVHcloud, Vercel, Netlify, Heroku, Fly.io, Cloudflare, Fastly, GoDaddy, Newfold, Hostinger, IONOS, SiteGround, WP Engine, Verisign, Let's Encrypt, Twilio, Bandwidth and the others, with no single provider as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in seventeen parts, plus a reference. The Business: the parties, every way providers earn, how big they are, the core data model, the provider landscape, accounts and resellers, and a dated timeline from bare metal to cloud and back. The Stack, Bottom to Top: data centers, dedicated servers, data center networking, virtualization, shared hosting isolation, containers, schedulers, microVMs, functions and edge compute, storage, regions and cells, hybrid cloud and repatriation. Kubernetes: its architecture, managed offerings, networking, storage, packaging and GitOps, multi-tenancy and policy, autoscaling and cost, and the alternatives. Managed Services: databases, serverless and edge databases, queues and streaming, observability, and open source and the clouds. Deployment: how code got to servers, platforms taking over the deploy, and PaaS and frontend clouds. CI/CD Platforms: how CI began, the platform business, runners, continuous delivery, artifacts and registries, and pipeline supply-chain security. Infrastructure as Code: CFEngine and Puppet, Chef, Ansible and Salt, Packer, Terraform and OpenTofu, and testing, policy and secrets. Homelab: hardware, storage, hypervisors, networks, routing, self-hosted apps, exposing services, AI at home, and the move to colocation. Web Hosting: how it makes money, cPanel and WHM, panel licensing, managed WordPress, backups and migrations, and email hosting. Domains and DNS: ICANN and registries, EPP, the domain lifecycle, transfers and locks, registration data, DNS abuse, disputes, new gTLDs, and DNS hosting. Certificates: the Web PKI, ACME at scale, and shorter lifetimes and distrust. The Edge: the business, networks and IP addresses, caching, TLS, DDoS, and WAF and bots. Communications Platforms: the CPaaS business, numbers and porting, texting registration, sending a text, voice, telecom duties, fraud, email sending and inbox rules. Metering and Billing: metering and rating, pricing catalogs, free tiers and credits, commitments and marketplaces, renewal law, invoices and suspension, tax, SLAs, and FinOps. Abuse, Trust and the Law: abuse on infrastructure, stolen keys, conduits and blocking orders, sanctions, and law enforcement. Market Rules and Compliance: compliance programs, egress and switching, competition cases, and licensing disputes. Running the Provider: architecture, GPU and AI clouds, where AI runs, outages and status pages, operating metrics, and end of life. Reference: a glossary of every term, grouped by part.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
@@ -125,12 +137,6 @@ export const UPCOMING_BOOKS: UpcomingBook[] = [
     type: "industry",
     cover: "bank",
     summary: "Deposit and loan ledgers on a core or a sponsor bank, credit decisions under TILA and ECOA, and business spend management.",
-  },
-  {
-    name: "Hosting & Cloud",
-    type: "industry",
-    cover: "cloud",
-    summary: "Metered usage into invoices for compute, storage, domains and messaging, and the abuse, 10DLC and registrar rules around them.",
   },
   {
     name: "Workplace & Collaboration",
