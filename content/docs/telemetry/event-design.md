@@ -125,7 +125,53 @@ A tracking plan in a spreadsheet is accurate on the day it's written. Mine lives
 
 The useful part is generating code from it. Avo's Codegen "produces type safe analytics wrappers that are code generated based on your tracking plan," so a call site can't send a property the plan doesn't define or misspell an event name; Avo's recommended flow is to change the plan on a branch, get it reviewed, implement it on a git branch, merge the git branch and then merge the plan. You don't need a vendor for the core of it:
 
-```ts
+```go tab="Go"
+// Generated from tracking-plan/order_completed/1-0-2.json. Do not edit.
+type PaymentMethod string
+
+const (
+	PaymentMethodCard         PaymentMethod = "card"
+	PaymentMethodWallet       PaymentMethod = "wallet"
+	PaymentMethodBankTransfer PaymentMethod = "bank_transfer"
+	PaymentMethodGiftCard     PaymentMethod = "gift_card"
+)
+
+type OrderCompleted struct {
+	OrderID       string        `json:"order_id"`
+	ItemCount     int           `json:"item_count"`
+	TotalAmount   int64         `json:"total_amount"`
+	Currency      string        `json:"currency"`
+	PaymentMethod PaymentMethod `json:"payment_method"`
+	CouponCode    *string       `json:"coupon_code,omitempty"`
+}
+
+func TrackOrderCompleted(p OrderCompleted) {
+	track("order_completed", "1-0-2", p)
+}
+```
+
+```rust tab="Rust"
+// Generated from tracking-plan/order_completed/1-0-2.json. Do not edit.
+#[derive(Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum PaymentMethod { Card, Wallet, BankTransfer, GiftCard }
+
+#[derive(Serialize)]
+pub struct OrderCompleted {
+    pub order_id: String,
+    pub item_count: u32,
+    pub total_amount: u64,
+    pub currency: String,
+    pub payment_method: PaymentMethod,
+    pub coupon_code: Option<String>,
+}
+
+pub fn track_order_completed(p: &OrderCompleted) {
+    track("order_completed", "1-0-2", p);
+}
+```
+
+```ts tab="TypeScript"
 // Generated from tracking-plan/order_completed/1-0-2.json. Do not edit.
 export function trackOrderCompleted(p: {
   order_id: string;

@@ -56,7 +56,17 @@ PostgreSQL 18 generates v7 natively with `uuidv7()`. On older versions, generate
 
 A [v5](https://datatracker.ietf.org/doc/html/rfc9562#section-5.5) UUID is a hash of a namespace and a name. The same input always produces the same ID, and that's the point:
 
-```python
+```go tab="Go"
+uuid.NewSHA1(uuid.NameSpaceURL, []byte("https://example.com/users/42")) // github.com/google/uuid
+// always 38fcaf6d-63bc-5c9f-8a4f-de8cf4e651ed
+```
+
+```rust tab="Rust"
+Uuid::new_v5(&Uuid::NAMESPACE_URL, b"https://example.com/users/42") // uuid crate, "v5" feature
+// always 38fcaf6d-63bc-5c9f-8a4f-de8cf4e651ed
+```
+
+```python tab="Python"
 import uuid
 uuid.uuid5(uuid.NAMESPACE_URL, "https://example.com/users/42")
 # always 38fcaf6d-63bc-5c9f-8a4f-de8cf4e651ed

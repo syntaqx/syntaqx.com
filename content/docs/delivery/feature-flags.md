@@ -29,7 +29,26 @@ Release flags must die: they exist to get one change safely to 100%, and every w
 
 A codebase that calls a flag vendor's SDK in two hundred places can't leave without touching all two hundred. So evaluation goes through [OpenFeature](https://openfeature.dev/), the CNCF's vendor-neutral API, with the vendor plugged in behind it as a provider. The cost is a thin abstraction and occasionally waiting on a vendor-specific feature, cheap next to a migration.
 
-```ts
+```go tab="Go"
+client := openfeature.NewDefaultClient()
+
+useNewRouting, _ := client.BooleanValue(ctx, "processor-routing-v2", false,
+	openfeature.NewEvaluationContext(merchantID, map[string]any{"country": "DE"}))
+```
+
+```rust tab="Rust"
+let client = OpenFeature::singleton().await.create_client();
+
+let context = EvaluationContext::default()
+    .with_targeting_key(merchant_id)
+    .with_custom_field("country", "DE");
+let use_new_routing = client
+    .get_bool_value("processor-routing-v2", Some(&context), None)
+    .await
+    .unwrap_or(false);
+```
+
+```ts tab="Node.js"
 const client = OpenFeature.getClient();
 
 const useNewRouting = await client.getBooleanValue("processor-routing-v2", false, {

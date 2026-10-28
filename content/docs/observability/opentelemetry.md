@@ -33,7 +33,19 @@ There are two ways in, and OpenTelemetry says plainly that "you can use both sol
 
 ### Zero-Code Agents by Language
 
-Each language's agent is a different mechanism with the same result: the service starts with the SDK configured and the common libraries instrumented. These are the documented starts, configured through the standard environment variables below:
+Each language's agent is a different mechanism with the same result: the service starts with the SDK configured and the common libraries instrumented. These are the documented starts, configured through the standard environment variables below. Go and Rust have no agent to start, so their tabs show the packages to instrument in code:
+
+```bash tab="Go"
+# No agent: wrap servers and clients in code (see Go below)
+go get go.opentelemetry.io/otel go.opentelemetry.io/otel/sdk \
+  go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp \
+  go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+```
+
+```bash tab="Rust"
+# No agent: set up the SDK in main and instrument in code (see Rust below)
+cargo add opentelemetry opentelemetry_sdk opentelemetry-otlp
+```
 
 ```bash tab="Java"
 # Download opentelemetry-javaagent.jar from the opentelemetry-java-instrumentation releases
@@ -76,6 +88,7 @@ What each one needs to know:
 - **Node.js.** `--require` loads the instrumentation before the application's own modules, which is what lets it patch them; `NODE_OPTIONS="--require @opentelemetry/auto-instrumentations-node/register"` does the same without changing the start command. `OTEL_NODE_ENABLED_INSTRUMENTATIONS="http,express"` limits it to what you use, which matters for startup time.
 - **PHP.** Auto-instrumentation needs the `opentelemetry` PHP extension, which provides the hooks, plus a Composer package per framework or library.
 - **Go.** Go compiles to a static binary with no runtime to hook, so the [Go zero-code options](https://opentelemetry.io/docs/zero-code/go/) are different in kind: eBPF from outside the process (OBI, below), compile-time instrumentation, and an "Auto SDK" to "integrate manual spans with zero-code eBPF spans." The page describes the project as "currently work in progress." For Go, I instrument in code with the instrumentation libraries for `net/http`, gRPC and the database driver.
+- **Rust.** OpenTelemetry's [zero-code section](https://opentelemetry.io/docs/zero-code/) has no Rust entry, so Rust is instrumented in code like Go, with the `opentelemetry` crates. Check the maturity first: the [Rust page](https://opentelemetry.io/docs/languages/rust/) lists metrics and logs as Stable but traces as Beta.
 
 ### The Kubernetes Operator
 
@@ -126,6 +139,25 @@ An agent sees calls, not meaning. It knows a `POST` took 2 seconds and the datab
 ### Mixing Agents and Manual Spans
 
 The agent registers the global SDK, so manual code uses the API and its spans join the agent's trace with no extra setup. The two operations I use most are enriching the span the agent already created and wrapping a business step in a span of its own:
+
+```go tab="Go"
+// otelhttp's server span is in the request's context
+trace.SpanFromContext(ctx).SetAttributes(attribute.String("app.payment.id", paymentID))
+
+ctx, span := otel.Tracer("payments").Start(ctx, "choose_processor")
+defer span.End()
+span.SetAttributes(attribute.String("app.processor", processor))
+```
+
+```rust tab="Rust"
+let tracer = global::tracer("payments");
+
+get_active_span(|span| span.set_attribute(KeyValue::new("app.payment.id", payment_id)));
+
+tracer.in_span("choose_processor", |cx| {
+    cx.span().set_attribute(KeyValue::new("app.processor", processor));
+});
+```
 
 ```java tab="Java"
 // The agent's server span is current inside the handler

@@ -65,7 +65,35 @@ Channel preferences ("email for receipts, push for everything else") sit on top 
 
 Every message, from every service, goes through one function before it reaches a provider, and that function is the only code holding provider credentials. It returns one of three answers, each with a reason:
 
-```ts
+```go tab="Go"
+type Action int
+
+const (
+	Send Action = iota
+	Defer
+	Block
+)
+
+type GateDecision struct {
+	Action Action
+	Until  time.Time // Defer only
+	Reason string    // Defer and Block
+}
+
+func Evaluate(message OutboundMessage, now time.Time) GateDecision
+```
+
+```rust tab="Rust"
+enum GateDecision {
+    Send,
+    Defer { until: DateTime<Utc>, reason: String },
+    Block { reason: String },
+}
+
+fn evaluate(message: &OutboundMessage, now: DateTime<Utc>) -> GateDecision
+```
+
+```ts tab="TypeScript"
 type GateDecision =
   | { action: "send" }
   | { action: "defer"; until: string; reason: string }   // RFC 3339 instant

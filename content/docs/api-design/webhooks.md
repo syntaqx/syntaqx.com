@@ -58,7 +58,28 @@ The signed content is `{Webhook-Id}.{Webhook-Timestamp}.{raw body}`. Each retry 
 3. **Reject timestamps more than 5 minutes from now.** The timestamp is inside the signature, so it can't be altered. Without a window, a captured request can be replayed forever. Five minutes tolerates realistic clock skew and queueing while keeping the replay window short. Keep the clock synced with NTP.
 4. **Accept any of several signatures.** When a secret is rolled, the old one stays valid for **24 hours** and every delivery is signed with both, so the receiver can deploy the new secret without a gap. 24 hours is enough because the receiver is one system its owner can redeploy in a day.
 
-```ts
+```go tab="Go"
+signed := id + "." + timestamp + "." + string(rawBody)
+mac := hmac.New(sha256.New, secret)
+mac.Write([]byte(signed))
+expected := []byte("v1," + base64.StdEncoding.EncodeToString(mac.Sum(nil)))
+ok := slices.ContainsFunc(strings.Fields(header), func(sig string) bool {
+	return hmac.Equal([]byte(sig), expected) // constant time
+})
+```
+
+```rust tab="Rust"
+let mut mac = Hmac::<Sha256>::new_from_slice(secret)?;
+mac.update(format!("{id}.{timestamp}.").as_bytes());
+mac.update(raw_body);
+let ok = header.split(' ').any(|sig| {
+    sig.strip_prefix("v1,")
+        .and_then(|b64| STANDARD.decode(b64).ok())
+        .is_some_and(|bytes| mac.clone().verify_slice(&bytes).is_ok()) // constant time
+});
+```
+
+```ts tab="Node.js"
 const signed = `${id}.${timestamp}.${rawBody}`;
 const expected = Buffer.from(
   `v1,${createHmac("sha256", secret).update(signed).digest("base64")}`,
