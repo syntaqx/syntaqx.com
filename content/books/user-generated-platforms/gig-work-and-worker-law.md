@@ -427,9 +427,16 @@ Design decisions behind it:
 - [DC Attorney General: Instacart settlement](https://oag.dc.gov/release/ag-racine-announces-instacart-must-pay-254-million), August 19, 2022, a service fee presented as a tip
 - [California PUC: TNC insurance requirements](https://www.cpuc.ca.gov/regulatory-services/licensing/transportation-licensing-and-analysis-branch/transportation-network-companies/tnc-insurance-requirements), Periods 1, 2 and 3 and their minimums
 - [UK Supreme Court: Uber BV v Aslam [2021] UKSC 5 (PDF)](https://supremecourt.uk/uploads/uksc_2019_0029_judgment_19c9de2253.pdf), February 19, 2021, the five control factors and working time
-- [EUR-Lex: Directive (EU) 2024/2831](https://eur-lex.europa.eu/eli/dir/2024/2831/oj/eng), the official text
-- [LawPlayer: Directive (EU) 2024/2831 text](https://lawplayer.com/eu/act/32024L2831), a mirror of the official text used for Articles 4, 5, 7, 9, 10, 11, 12, 16 and 29 where EUR-Lex wouldn't load
-- [EU Fundamental Rights Agency: Directive 2024/2831, Article 7](https://fra.europa.eu/en/law-reference/directive-eu-20242831-european-parliament-and-council-23-october-2024-improving), the limits on processing personal data
+- [EUR-Lex: Directive (EU) 2024/2831](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831), the official text, OJ L, 11.11.2024
+- [Directive 2024/2831, Article 4 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_4), correct determination by the facts of actual performance
+- [Directive 2024/2831, Article 5 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_5), the legal presumption, the burden on the platform and the tax, criminal and social security carve-out
+- [Directive 2024/2831, Article 7 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_7), the limits on processing personal data, from recruitment on
+- [Directive 2024/2831, Article 9 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_9), transparency on automated systems and their main parameters
+- [Directive 2024/2831, Article 10 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_10), human oversight, the two-year evaluation and human decisions on restriction, suspension and termination
+- [Directive 2024/2831, Article 11 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_11), explanation, written statement of reasons and review
+- [Directive 2024/2831, Article 12 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_12), undue pressure and health and safety
+- [Directive 2024/2831, Article 16 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_16), declaration of platform work
+- [Directive 2024/2831, Article 29 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024L2831#art_29), transposition by December 2, 2026
 - [Ireland, Department of Enterprise: Public consultation on the Platform Work Directive](https://enterprise.gov.ie/en/consultations/consultations-files/public-consultation-on-platform-work-directive.docx), entry into force December 1, 2024 and the December 2, 2026 transposition deadline
 - [BOE: Real Decreto-ley 9/2021](https://www.boe.es/buscar/act.php?id=BOE-A-2021-7840), Spain's presumption for platform delivery and works council information on algorithms
 
