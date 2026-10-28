@@ -296,6 +296,8 @@ interface HastNode {
   value?: string;
   properties?: Record<string, unknown>;
   children?: HastNode[];
+  /** A fenced code block's info string after the language, on its `code`. */
+  data?: { meta?: string | null };
 }
 
 const textOf = (n: HastNode): string =>
@@ -407,6 +409,70 @@ function rehypeCallouts() {
   };
 }
 
+/**
+ * Code tabs. Consecutive fenced blocks that each name a tab in their info
+ * string (```` ```bash tab="Java" ````) become one block with a tab each, so
+ * a page can show the same step in several languages. The Markdown keeps
+ * plain consecutive blocks, which is what agents and other readers see. The
+ * first tab shows until CodeTabsScript applies the reader's last choice.
+ */
+function rehypeCodeTabs() {
+  const tabOf = (n: HastNode) => {
+    const code = n.tagName === "pre" ? n.children?.find((c) => c.tagName === "code") : undefined;
+    return /\btab="([^"]+)"/.exec(code?.data?.meta ?? "")?.[1];
+  };
+  const blank = (n: HastNode) => n.type === "text" && !n.value?.trim();
+  return (tree: HastNode) => {
+    const walk = (n: HastNode) => {
+      const out: HastNode[] = [];
+      const kids = n.children ?? [];
+      for (let i = 0; i < kids.length; i++) {
+        const group: HastNode[] = [];
+        let j = i;
+        while (j < kids.length && (tabOf(kids[j]) || (group.length && blank(kids[j])))) {
+          if (tabOf(kids[j])) group.push(kids[j]);
+          j++;
+        }
+        if (group.length < 2) {
+          walk(kids[i]);
+          out.push(kids[i]);
+          continue;
+        }
+        const labels = group.map((pre) => tabOf(pre)!);
+        out.push({
+          type: "element",
+          tagName: "div",
+          properties: { className: ["code-tabs"], dataCodeTabs: "" },
+          children: [
+            {
+              type: "element",
+              tagName: "div",
+              properties: { role: "tablist", ariaLabel: "Code examples" },
+              children: labels.map((label, k) => ({
+                type: "element",
+                tagName: "button",
+                properties: { type: "button", role: "tab", ariaSelected: String(k === 0), tabIndex: k === 0 ? 0 : -1, dataTab: label },
+                children: [{ type: "text", value: label }],
+              })),
+            },
+            ...group.map((pre, k) => ({
+              type: "element",
+              tagName: "div",
+              properties: { role: "tabpanel", ariaLabel: labels[k], dataTab: labels[k], hidden: k > 0 },
+              children: [pre],
+            })),
+          ],
+        });
+        // Back up over trailing blank text so it stays between blocks.
+        while (j > i && blank(kids[j - 1])) j--;
+        i = j - 1;
+      }
+      n.children = out;
+    };
+    walk(tree);
+  };
+}
+
 export async function markdownToHtml(
   markdown: string,
   toc?: Heading[],
@@ -417,6 +483,7 @@ export async function markdownToHtml(
     .use(rehypeSectionIds(toc))
     .use(rehypeDiagrams)
     .use(rehypeCallouts)
+    .use(rehypeCodeTabs)
     .use(rehypeShiki, {
       themes: {
         dark: "vitesse-dark",

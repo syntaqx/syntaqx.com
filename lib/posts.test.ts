@@ -105,6 +105,26 @@ describe("markdownToHtml diagrams", () => {
     expect(await markdownToHtml("> Just a quote.")).toContain("<blockquote>");
   });
 
+  it("groups consecutive tab-named code blocks into one tabbed block", async () => {
+    const html = await markdownToHtml(
+      '```java tab="Java"\nJava();\n```\n\n```python tab="Python"\npython()\n```\n\nAfter.',
+    );
+    expect(html).toMatch(/^<div class="code-tabs" data-code-tabs="">/);
+    expect(html).toContain(
+      '<button type="button" role="tab" aria-selected="true" tabindex="0" data-tab="Java">Java</button>' +
+        '<button type="button" role="tab" aria-selected="false" tabindex="-1" data-tab="Python">Python</button>',
+    );
+    expect(html).toContain('<div role="tabpanel" aria-label="Java" data-tab="Java"><pre class="shiki');
+    expect(html).toContain('<div role="tabpanel" aria-label="Python" data-tab="Python" hidden><pre class="shiki');
+    expect(html).toContain("<p>After.</p>");
+  });
+
+  it("leaves a lone tab-named block and untagged blocks as plain code", async () => {
+    const html = await markdownToHtml('```bash tab="Shell"\nls\n```\n\n```bash\npwd\n```');
+    expect(html).not.toContain("code-tabs");
+    expect(html.match(/<pre class="shiki/g)).toHaveLength(2);
+  });
+
   it("leaves other images alone", async () => {
     const html = await markdownToHtml("![A photo](/images/photo.png)");
     expect(html).toContain('<img src="/images/photo.png" alt="A photo">');

@@ -442,6 +442,30 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Code tabs: consecutive ```lang tab="Name" blocks (rehypeCodeTabs). */
+.prose .code-tabs { margin: 1.75em 0; }
+.prose .code-tabs [role="tablist"] {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: var(--surface);
+}
+.prose .code-tabs [role="tab"] {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.55em 1em;
+  color: var(--dim);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms;
+}
+.prose .code-tabs [role="tab"]:hover { color: var(--foreground); }
+.prose .code-tabs [role="tab"][aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.prose .code-tabs pre { margin: 0; }
 /* Feature posts: blockquotes become pull quotes in the voice face. */
 .prose-feature blockquote {
   padding: 0.4em 0 0.4em 0.9em;

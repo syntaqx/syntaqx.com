@@ -8,6 +8,7 @@ import {
 } from "@/lib/posts";
 import { PostMeta, PostTags } from "@/components/post-meta";
 import { CopyCodeScript } from "@/components/copy-code";
+import { CodeTabsScript } from "@/components/code-tabs";
 import { SceneArt } from "@/components/scene-art";
 import { PostToc } from "@/components/post-toc";
 import Link from "next/link";
@@ -218,6 +219,7 @@ export default async function PostPage({ params }: Props) {
         </aside>
       </div>
       <CopyCodeScript />
+      <CodeTabsScript />
     </article>
   );
 }
