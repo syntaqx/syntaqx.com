@@ -70,6 +70,7 @@ The longest fight, in steps:
 - **21 Jan 2021:** AWS said it would create and maintain an Apache 2.0 fork from 7.10, called Elastic's "free and open" claim misleading, cited more than 230 Lucene contributions in 2020, and pointed to Grafana (a fork of Kibana 3) as a healthy fork precedent.
 - **3 Jun 2021:** Elastic introduced Elastic License 2.0 and moved more components to it.
 - **8 Sep 2021:** Amazon Elasticsearch Service became Amazon OpenSearch Service, supporting the Apache-licensed Elasticsearch versions through 7.10 and OpenSearch 1.0.
+- **9 Feb 2022:** The parties filed a joint stipulation dismissing the trademark suit and all claims and defenses without prejudice, each bearing its own fees and costs, under Rule 41(a)(1)(A)(ii) (Dkt. 53; by then the case was in the San Jose Division as No. 5:19-cv-06158-EJD).
 - **16 Feb 2022:** Elastic and Amazon announced a "mutually-agreeable resolution" of the trademark suit, with Amazon removing "Elasticsearch" from its service and project names.
 - **29 Aug 2024:** Elastic added AGPL as a third option, under the headline "Elasticsearch is Open Source, Again." It said it had changed in 2021 because of "issues with AWS and the market confusion their offering was causing," that "we are simply adding another option, and not removing anything," and that its partnership with AWS was "stronger than ever."
 - **16 Sep 2024:** the Linux Foundation launched the OpenSearch Software Foundation, with AWS, SAP and Uber as premier members and Aiven, Canonical, DigitalOcean, Instaclustr and others as general members, citing "over 700 million downloads."
@@ -236,6 +237,7 @@ Notes on the sketch:
 
 - [AWS: Keeping open source open, Open Distro for Elasticsearch](https://aws.amazon.com/blogs/opensource/keeping-open-source-open-open-distro-for-elasticsearch/), the 2019 launch and reasoning
 - [Complaint, Elasticsearch, Inc. v. Amazon.com, Inc., N.D. Cal. No. 3:19-cv-06158, Dkt. 1](https://storage.courtlistener.com/recap/gov.uscourts.cand.348946/gov.uscourts.cand.348946.1.0_2.pdf), filed September 27, 2019 (RECAP copy): parties, trademark and false advertising claims
+- [Stipulation of dismissal, Elasticsearch, Inc. v. Amazon.com, Inc., N.D. Cal. No. 5:19-cv-06158-EJD, Dkt. 53](https://storage.courtlistener.com/recap/gov.uscourts.cand.348946/gov.uscourts.cand.348946.53.0.pdf), filed February 9, 2022 (RECAP copy): dismissal without prejudice, each party bearing its own fees and costs
 - [Elastic: Licensing change](https://www.elastic.co/blog/licensing-change), the 2021 move to SSPL and the Elastic License
 - [Elastic: Amazon: NOT OK](https://www.elastic.co/blog/why-license-change-AWS), the trademark and copying allegations
 - [AWS: Stepping up for a truly open source Elasticsearch](https://aws.amazon.com/blogs/opensource/stepping-up-for-a-truly-open-source-elasticsearch/), the fork and Lucene contributions
