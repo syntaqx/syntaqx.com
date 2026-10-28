@@ -57,7 +57,7 @@ The formats, as of October 2026, per MDN:
 | **JPEG** | Universal | The fallback for photographs, and the only format several pipelines can carry metadata in |
 | **WebP** | Every current major browser (Safari from 14 on macOS Big Sur) | The safe modern default, still and animated |
 | **AVIF** | Chrome 85, Edge 121, Firefox 93, Safari 16.1 | The smallest files for photographs; slow to encode |
-| **JPEG XL** | Chrome 155, Edge 155, Firefox 158, Safari 17 | Newly broad; MDN still advises an AVIF, WebP or JPEG alternative |
+| **JPEG XL** | Chrome 155, Firefox 158, Safari 17 (partial on caniuse); Edge 155 per MDN, not supported per caniuse | Newly broad; MDN still advises an AVIF, WebP or JPEG alternative |
 | **HEIC** | Safari only (caniuse puts global support at 16.93%) | Accept as input; never serve |
 | **GIF** | Universal | Accept as input; serve animation as video ([GIF to Video](#gif-to-video)) |
 
@@ -79,6 +79,8 @@ Fixed quality settings are a guess. A setting that's invisible on a busy photogr
 - **Cloudinary's `q_auto`** has `best`, `good` (the default), `eco` and `low` modes that pick a quality per image to hold a perceived level.
 - **Cloudflare** defaults to quality 85 on a 1 to 100 scale and also accepts perceptual levels (`high`, `medium-high`, `medium-low`, `low`), applied to JPEG, WebP and AVIF output.
 - **Wolt's tuning** matched visual quality at AVIF 58, WebP 82 and JPEG 85, a reminder that the same number means different things per encoder.
+
+How lossy coding discards information, which metrics to tune against and why every variant is encoded from the original are in [Media Compression](/docs/architecture/media-compression).
 
 A user-generated platform should tune by content class, not by page: screenshots, text and line art need a lossless or near-lossless path (PNG or lossless WebP), photographs take aggressive perceptual quality, and artwork uploaded by creators who will complain about compression may need a higher floor. The class can be detected (few colors and sharp edges suggest a screenshot) and recorded with the variant.
 
@@ -239,6 +241,7 @@ Notes on the sketch:
 **Browser and web platform**
 
 - [MDN: Image file type and format guide](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types), browser support and fallback advice for AVIF, WebP, JPEG XL, JPEG and GIF, the `<picture>` element
+- [Can I use: JPEG XL image format](https://caniuse.com/jpegxl), Chrome 155, Firefox 158, Safari partial from 17, Edge not supported (October 2026)
 - [MDN: List of default Accept values](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation/List_of_default_Accept_values), which browsers advertise `image/avif` and `image/webp`
 - [MDN: Save-Data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Save-Data), the header, its experimental status and `Vary: Save-Data`
 - [MDN: image-orientation](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/image-orientation), browsers apply EXIF orientation by default

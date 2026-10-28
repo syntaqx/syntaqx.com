@@ -37,7 +37,7 @@ Cache-Control: private, no-cache
 ```
 
 - **Strong ETags** (`"a3f1c9"`) when the bytes are identical. A hash of the response body, or the row's version number, both work.
-- **Weak ETags** (`W/"a3f1c9"`) when two representations are equivalent but not byte-identical (different compression, key order). Weak ETags are fine for revalidating a read, but `If-Match` compares strongly, so a resource that supports conditional writes needs a strong one.
+- **Weak ETags** (`W/"a3f1c9"`) when two representations are equivalent but not byte-identical (different compression, key order). Weak ETags are fine for revalidating a read, but `If-Match` compares strongly, so a resource that supports conditional writes needs a strong one. [HTTP Compression](/docs/requests/http-compression#vary-and-the-cache-key) covers how compression and validators interact.
 
 Prefer `ETag` to `Last-Modified` as the validator. `Last-Modified` has one-second resolution, so two writes in the same second look identical, and clocks across servers disagree. A version number or a hash has neither problem.
 
