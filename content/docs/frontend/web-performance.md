@@ -66,7 +66,7 @@ JavaScript is the most expensive byte on the page: downloaded, parsed, compiled 
 
 ## Caching
 
-Static assets get content-hashed filenames and `Cache-Control: public, max-age=31536000, immutable`, so repeat visits load them from the browser cache. HTML and API responses revalidate. See [Caching & Conditional Requests](/docs/requests/caching).
+Static assets get content-hashed filenames and `Cache-Control: public, max-age=31536000, immutable`, so repeat visits load them from the browser cache. HTML and API responses revalidate. See [Caching & Conditional Requests](/docs/requests/caching). Text assets are precompressed at build time at the maximum level, as in [HTTP Compression](/docs/requests/http-compression#static-and-dynamic-responses).
 
 ## Third-Party Scripts
 
