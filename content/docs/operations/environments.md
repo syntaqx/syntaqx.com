@@ -42,7 +42,38 @@ Config is anything that changes between deploys of the same code: connection str
 
 Read the environment once, at startup, into a typed object, and fail fast:
 
-```ts
+```go tab="Go"
+import "github.com/caarlos0/env/v11"
+
+type Config struct {
+	DatabaseURL        url.URL    `env:"DATABASE_URL,required"`
+	ProcessorTimeoutMS uint       `env:"PROCESSOR_TIMEOUT_MS" envDefault:"80000"`
+	LogLevel           slog.Level `env:"LOG_LEVEL" envDefault:"info"`
+}
+
+var config = env.Must(env.ParseAs[Config]())
+```
+
+```rust tab="Rust"
+#[derive(Deserialize)]
+struct Config {
+    database_url: url::Url,
+    #[serde(default = "default_timeout")]
+    processor_timeout_ms: u32,
+    #[serde(default)]
+    log_level: LogLevel,
+}
+
+fn default_timeout() -> u32 { 80_000 }
+
+#[derive(Deserialize, Default)]
+#[serde(rename_all = "lowercase")]
+enum LogLevel { Debug, #[default] Info, Warn, Error }
+
+let config: Config = envy::from_env()?;
+```
+
+```ts tab="Node.js"
 import { z } from "zod";
 
 const Config = z.object({

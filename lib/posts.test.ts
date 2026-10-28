@@ -119,6 +119,14 @@ describe("markdownToHtml diagrams", () => {
     expect(html).toContain("<p>After.</p>");
   });
 
+  it("shows the Go tab by default wherever it is", async () => {
+    const html = await markdownToHtml('```rust tab="Rust"\nrust();\n```\n\n```go tab="Go"\ngo()\n```');
+    expect(html).toContain('aria-selected="false" tabindex="-1" data-tab="Rust">Rust</button>');
+    expect(html).toContain('aria-selected="true" tabindex="0" data-tab="Go">Go</button>');
+    expect(html).toContain('<div role="tabpanel" aria-label="Rust" data-tab="Rust" hidden>');
+    expect(html).toContain('<div role="tabpanel" aria-label="Go" data-tab="Go"><pre class="shiki');
+  });
+
   it("leaves a lone tab-named block and untagged blocks as plain code", async () => {
     const html = await markdownToHtml('```bash tab="Shell"\nls\n```\n\n```bash\npwd\n```');
     expect(html).not.toContain("code-tabs");

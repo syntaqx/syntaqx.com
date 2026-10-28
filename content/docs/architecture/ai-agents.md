@@ -39,7 +39,47 @@ My rule: **every tool is reviewed like a new endpoint,** because it changes what
 
 Each tool returns a typed result the model must relay, not prose it can paraphrase into something else. Distinguish the outcomes the customer needs to hear differently:
 
-```ts
+```go tab="Go"
+// One of Booked, SlotTaken, Denied or Failed; the unexported method seals the set.
+type BookingResult interface{ bookingResult() }
+
+type Booked struct {
+	BookingID string    `json:"booking_id"`
+	StartsAt  time.Time `json:"starts_at"`
+	EndsAt    time.Time `json:"ends_at"`
+}
+type SlotTaken struct {
+	Alternatives []Slot `json:"alternatives"`
+}
+type Denied struct {
+	Rule string `json:"rule"` // outside_service_area, requires_staff or value_cap
+}
+type Failed struct {
+	Retryable bool `json:"retryable"`
+}
+
+func (Booked) bookingResult()    {}
+func (SlotTaken) bookingResult() {}
+func (Denied) bookingResult()    {}
+func (Failed) bookingResult()    {}
+```
+
+```rust tab="Rust"
+#[derive(Serialize)]
+#[serde(tag = "status", rename_all = "snake_case")]
+enum BookingResult {
+    Booked { booking_id: String, starts_at: String, ends_at: String },
+    SlotTaken { alternatives: Vec<Slot> },
+    Denied { rule: DenialRule },
+    Failed { retryable: bool },
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "snake_case")]
+enum DenialRule { OutsideServiceArea, RequiresStaff, ValueCap }
+```
+
+```ts tab="TypeScript"
 type BookingResult =
   | { status: "booked"; booking_id: string; starts_at: string; ends_at: string }
   | { status: "slot_taken"; alternatives: Slot[] }

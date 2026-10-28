@@ -33,6 +33,26 @@ Tag every event with the release (the build's version or commit) and the environ
 - **Regressions are automatic.** In Sentry, a resolved issue that comes back "in a newer release than the one you resolved it in" moves to `Regressed`. Resolving "in the next release" means the fix isn't judged until the fix ships; a plain resolve "treats any later event as a regression," which is noisy when old versions are still running.
 - **Mobile and desktop releases live for months,** so a crash rate per release (crash-free sessions or users) matters more than a global count. An old build's crash is fixed by an upgrade prompt, not a deploy.
 
+```go tab="Go"
+err := sentry.Init(sentry.ClientOptions{
+    Dsn:         os.Getenv("SENTRY_DSN"),
+    Release:     os.Getenv("GIT_SHA"),
+    Environment: os.Getenv("DEPLOY_ENV"),
+    BeforeSend:  scrub, // drop or redact before it leaves the process
+})
+```
+
+```rust tab="Rust"
+// Hold the guard for the life of the process: dropping it flushes and stops sending.
+let _guard = sentry::init(
+    sentry::ClientOptions::new()
+        .dsn(&env::var("SENTRY_DSN")?)
+        .release(env::var("GIT_SHA")?)
+        .environment(env::var("DEPLOY_ENV")?)
+        .before_send(scrub), // drop or redact before it leaves the process
+);
+```
+
 ```python tab="Python"
 import sentry_sdk
 
@@ -53,15 +73,6 @@ Sentry.init({
   environment: process.env.DEPLOY_ENV,
   beforeSend: scrub, // drop or redact before it leaves the process
 });
-```
-
-```go tab="Go"
-err := sentry.Init(sentry.ClientOptions{
-    Dsn:         os.Getenv("SENTRY_DSN"),
-    Release:     os.Getenv("GIT_SHA"),
-    Environment: os.Getenv("DEPLOY_ENV"),
-    BeforeSend:  scrub, // drop or redact before it leaves the process
-})
 ```
 
 ### Readable Stack Traces: Source Maps and Symbols
@@ -144,6 +155,14 @@ import _ "net/http/pprof" // registers /debug/pprof/ on the default mux
 
 // Serve it on an internal port only, never the public listener.
 go http.ListenAndServe("127.0.0.1:6060", nil)
+```
+
+```rust tab="Rust"
+// pprof crate (Unix only), "prost-codec" feature: sample stacks 100 times a second
+let guard = pprof::ProfilerGuardBuilder::default().frequency(100).build()?;
+std::thread::sleep(Duration::from_secs(30));
+let profile = guard.report().build()?.pprof()?;
+std::fs::write("cpu.pb", profile.encode_to_vec())?; // opens in go tool pprof
 ```
 
 ```bash tab="Shell"

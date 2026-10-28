@@ -38,6 +38,16 @@ duration, _ := meter.Float64Histogram("checkout.duration",
 duration.Record(ctx, elapsed.Seconds())
 ```
 
+```rust tab="Rust"
+let meter = global::meter("checkout");
+
+let orders = meter.u64_counter("checkout.orders").with_unit("{order}").build();
+orders.add(1, &[KeyValue::new("payment.method", "card")]);
+
+let duration = meter.f64_histogram("checkout.duration").with_unit("s").build();
+duration.record(elapsed.as_secs_f64(), &[]);
+```
+
 ```python tab="Python"
 from opentelemetry import metrics
 

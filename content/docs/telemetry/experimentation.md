@@ -26,7 +26,42 @@ The **randomization unit** is what gets assigned: a user, an account, a device, 
 
 Assignment must be **deterministic and sticky**: the same unit gets the same variant on every call, every device and every server, without a lookup. The standard way is to hash the unit's ID with an experiment-specific seed into a fixed number of buckets. GrowthBook's SDK specification shows a production version: it uses fnv32a, version 2 hashes "seed + value" and divides by 10,000, and it notes that version 1 "had a flaw that caused bias when running experiments in parallel." The choice of hash matters: in Kohavi, Henne and Sommerfield's 2007 tests of hash functions for assignment, "only the cryptographic hash function MD5 generated no correlations between experiments," while the .NET string hash "failed to pass even a two-way interaction test."
 
-```ts
+```go tab="Go"
+// Same experiment seed and unit id always give the same bucket, on any machine.
+func Bucket(experimentSeed, unitID string, buckets uint32) uint32 {
+	sum := md5.Sum([]byte(experimentSeed + ":" + unitID))
+	return binary.BigEndian.Uint32(sum[:4]) % buckets
+}
+
+func Variant(experimentSeed, unitID string) string {
+	switch b := Bucket(experimentSeed, unitID, 10_000); {
+	case b < 200:
+		return "" // holdout: sees neither arm
+	case b < 5_100:
+		return "control"
+	default:
+		return "treatment"
+	}
+}
+```
+
+```rust tab="Rust"
+// Same experiment seed and unit id always give the same bucket, on any machine.
+pub fn bucket(experiment_seed: &str, unit_id: &str, buckets: u32) -> u32 {
+    let digest = md5::compute(format!("{experiment_seed}:{unit_id}"));
+    u32::from_be_bytes([digest[0], digest[1], digest[2], digest[3]]) % buckets
+}
+
+pub fn variant(experiment_seed: &str, unit_id: &str) -> Option<&'static str> {
+    match bucket(experiment_seed, unit_id, 10_000) {
+        0..200 => None, // holdout: sees neither arm
+        200..5_100 => Some("control"),
+        _ => Some("treatment"),
+    }
+}
+```
+
+```ts tab="Node.js"
 import { createHash } from "node:crypto";
 
 // Same experiment seed and unit id always give the same bucket, on any machine.

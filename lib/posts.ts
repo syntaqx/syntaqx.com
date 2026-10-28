@@ -414,8 +414,11 @@ function rehypeCallouts() {
  * string (```` ```bash tab="Java" ````) become one block with a tab each, so
  * a page can show the same step in several languages. The Markdown keeps
  * plain consecutive blocks, which is what agents and other readers see. The
- * first tab shows until CodeTabsScript applies the reader's last choice.
+ * Go tab (or the first, when there's no Go) shows until CodeTabsScript applies
+ * the reader's last choice.
  */
+const DEFAULT_TAB = "Go";
+
 function rehypeCodeTabs() {
   const tabOf = (n: HastNode) => {
     const code = n.tagName === "pre" ? n.children?.find((c) => c.tagName === "code") : undefined;
@@ -439,6 +442,7 @@ function rehypeCodeTabs() {
           continue;
         }
         const labels = group.map((pre) => tabOf(pre)!);
+        const shown = Math.max(labels.indexOf(DEFAULT_TAB), 0);
         out.push({
           type: "element",
           tagName: "div",
@@ -451,14 +455,14 @@ function rehypeCodeTabs() {
               children: labels.map((label, k) => ({
                 type: "element",
                 tagName: "button",
-                properties: { type: "button", role: "tab", ariaSelected: String(k === 0), tabIndex: k === 0 ? 0 : -1, dataTab: label },
+                properties: { type: "button", role: "tab", ariaSelected: String(k === shown), tabIndex: k === shown ? 0 : -1, dataTab: label },
                 children: [{ type: "text", value: label }],
               })),
             },
             ...group.map((pre, k) => ({
               type: "element",
               tagName: "div",
-              properties: { role: "tabpanel", ariaLabel: labels[k], dataTab: labels[k], hidden: k > 0 },
+              properties: { role: "tabpanel", ariaLabel: labels[k], dataTab: labels[k], hidden: k !== shown },
               children: [pre],
             })),
           ],
