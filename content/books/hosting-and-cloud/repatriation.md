@@ -2,7 +2,7 @@
 title = "Repatriation"
 description = "Leaving the cloud for owned hardware: Dropbox's Magic Pocket and S-1, 37signals' numbers, exit egress waivers, and a cost model for when owning wins."
 category = "Hosting & Cloud Industry"
-order = 2214
+order = 2215
 part = "Running the Provider"
 tags = ["repatriation", "cloud-exit", "cost-model", "colocation", "egress"]
 +++
@@ -255,5 +255,3 @@ The path this volume followed runs in both directions. Dropbox built Magic Pocke
 - [Ahrefs: How Ahrefs saved US$400M in 3 years by not going to the cloud](https://tech.ahrefs.com/how-ahrefs-saved-us-400m-in-3-years-by-not-going-to-the-cloud-8939dd930af8), Efim Mirochnik, March 8, 2023, the three-year reserved instance comparison
 - [The Register: Ahrefs claims $400 million saved by not using the cloud](https://www.theregister.com/2023/03/13/ahrefs_on_prem_savings/), March 13, 2023, the comparison, its figures and caveats
 - [DevClass: Reduce costs by 90% by moving from microservices to monolith](https://devclass.com/2023/05/05/reduce-costs-by-90-by-moving-from-microservices-to-monolith-amazon-internal-case-study-raises-eyebrows/), May 5, 2023, the Prime Video monitoring service on EC2 and ECS
-</content>
-</invoke>
