@@ -92,7 +92,7 @@ A spend cap turns a budget into a stop. Providers implement it in three ways, an
 
 Every implementation overshoots, and providers say so. Google: "You remain responsible for any overage costs accrued due to reporting latency." Vercel: projects "can keep serving traffic and accruing usage for several minutes after you cross the spend amount," so set the amount "below the absolute maximum you are willing to spend." A provider building a cap has to decide, in its terms, who pays for the overshoot; my rule is that a cap sold as hard is hard, and the provider absorbs the overshoot as a credit, while a cap sold as best-effort says so in the same sentence that offers it.
 
-Pauses also need an exit. Vercel's paused projects "won't automatically unpause if you increase the spend amount" and must be resumed one by one; Google's lifted cap "won't trigger again in the same period unless you raise the target" and services can take up to an hour to recover; Netlify resumes at the next cycle, on upgrade or on a credit purchase. A pause is a hold with a reason and an effect, so in the model it is an `account_holds` row (or a project-level state) that the budget created and the customer's action lifts, with the same audit trail as a non-payment hold ([Account Standing](/books/hosting-and-cloud/accounts-and-resellers#account-standing)).
+Pauses also need an exit. Vercel's paused projects "won't automatically unpause if you increase the spend amount" and must be resumed one by one; Google's lifted cap "won't trigger again in the same period unless you raise the target" and services can take up to an hour to recover; Netlify resumes at the next cycle, on upgrade or on a credit purchase. Three tables divide the work, and none duplicates another: a credit-backed account cap is [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits#spending-limits-the-hard-cap)' `spending_limits`; a spend amount that pauses a project's deployments is [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds#spend-caps-and-pauses)' `project_spend_caps`, with every crossing and enforcement in `spend_cap_events`; and this chapter's budgets only measure and alert, on any scope, actual or forecast, gross or net. Whichever stops the spending, the stop is a hold with a reason and an effect that the customer's action lifts, with the same audit trail as a non-payment hold ([Account Standing](/books/hosting-and-cloud/accounts-and-resellers#account-standing)).
 
 ## Surprise Bills and Forgiveness
 
@@ -128,7 +128,7 @@ What would change it: for enterprise accounts on commitments and invoiced terms 
 
 ## How to Build It
 
-The chapter adds budgets, alerts, export definitions and deliveries, and anomalies to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Budgets alert or trigger an action; the credit-backed hard cap is [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits#how-to-build-it)' `spending_limits`; forgiveness is a `credit_grants` row of kind `goodwill`.
+The chapter adds budgets, alerts, export definitions and deliveries, and anomalies to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Budgets measure and alert; they never stop anything. Stopping belongs to two existing tables: the credit-backed account cap is [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits#how-to-build-it)' `spending_limits`, and the project pause is [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds#how-to-build-it)' `project_spend_caps`. Forgiveness is a `credit_grants` row of kind `goodwill`.
 
 ```sql
 CREATE TABLE budgets (
@@ -144,15 +144,9 @@ CREATE TABLE budgets (
                                                        -- and commitment benefits
   thresholds     JSONB NOT NULL,                       -- [{"pct": 50, "on": "actual"},
                                                        --  {"pct": 100, "on": "forecast"}]
-  action         TEXT NOT NULL DEFAULT 'none' CHECK (action IN ('none', 'pause_project',
-                   'pause_account', 'block_new_resources', 'webhook_only')),
-  action_at_pct  SMALLINT CHECK (action_at_pct > 0),
-  cap_is_hard    BOOLEAN NOT NULL DEFAULT FALSE,       -- told the customer the cap is hard:
-                                                       -- overshoot is credited
-  webhook_url    TEXT,
+  webhook_url    TEXT,                                 -- signed, like a spend cap's
   valid_during   TSTZRANGE NOT NULL,
-  created_by     TEXT NOT NULL,                        -- typed actor; 'system:default_budget'
-  CHECK ((action IN ('none', 'webhook_only')) = (action_at_pct IS NULL))
+  created_by     TEXT NOT NULL                         -- typed actor; 'system:default_budget'
 );
 
 CREATE TABLE budget_alerts (             -- each threshold fired once per period
@@ -164,7 +158,6 @@ CREATE TABLE budget_alerts (             -- each threshold fired once per period
   spend_amount    NUMERIC(24,6) NOT NULL, -- what was measured, unrounded
   data_as_of      TIMESTAMPTZ NOT NULL,   -- the rating run's cutoff: how old the number is
   rating_run_id   UUID NOT NULL REFERENCES rating_runs (id),
-  hold_id         UUID REFERENCES account_holds (id),  -- the pause, when an action fired
   delivered_at    TIMESTAMPTZ,
   UNIQUE (budget_id, period, threshold_pct, measured_on)
 );
@@ -256,11 +249,11 @@ LEFT JOIN LATERAL (
 -- invoice once the period is final.
 ```
 
-Budget evaluation after each rating run, firing each threshold once per period and creating a hold when an action is due. `$1` is the run:
+Budget evaluation after each rating run, firing each threshold once per period. `$1` is the run:
 
 ```sql
 WITH spend AS (
-  SELECT b.id AS budget_id, b.amount, b.thresholds, b.action, b.action_at_pct,
+  SELECT b.id AS budget_id, b.amount, b.thresholds,
          tstzrange(date_trunc(b.period, rr.received_cutoff),
                    date_trunc(b.period, rr.received_cutoff) + ('1 ' || b.period)::interval)
            AS period,
@@ -272,7 +265,7 @@ WITH spend AS (
    AND (b.filter ->> 'product' IS NULL OR f."ServiceName" = b.filter ->> 'product')
    AND f."ChargePeriodStart" >= date_trunc(b.period, rr.received_cutoff)
   WHERE b.valid_during @> rr.received_cutoff
-  GROUP BY b.id, b.amount, b.thresholds, b.action, b.action_at_pct, rr.received_cutoff, b.period
+  GROUP BY b.id, b.amount, b.thresholds, rr.received_cutoff, b.period
 ),
 crossed AS (
   SELECT s.*, (t ->> 'pct')::smallint AS pct
@@ -286,9 +279,8 @@ SELECT c.budget_id, c.period, c.pct, 'actual', c.actual,
        (SELECT received_cutoff FROM rating_runs WHERE id = $1), $1
 FROM crossed c
 ON CONFLICT (budget_id, period, threshold_pct, measured_on) DO NOTHING;
--- A trigger on budget_alerts inserts the account_holds row (reason 'customer_request',
--- effect 'stop_resources' scoped to the project) when threshold_pct >= action_at_pct and the
--- budget's action pauses, and emits budget.threshold_crossed for email and webhook delivery.
+-- Each new row emits budget.threshold_crossed for email and webhook delivery. Pausing on the
+-- same numbers is project_spend_caps' job (PaaS & Frontend Clouds), evaluated by the same run.
 ```
 
 A simple first anomaly detector: compare each project's hour of rated cost with the same hour's trailing 28-day baseline, and flag departures of more than four standard deviations and more than a floor amount, so small accounts don't page on cents:
@@ -333,16 +325,16 @@ Notes on the sketch:
 
 - **Every number carries its age.** Alerts store the rating run and its cutoff, and deliveries store `data_as_of`, so a customer can see that "you have spent $480" means "as of 14:00."
 - **Exports restate.** A delivery supersedes the previous one for its period, and the final delivery's billed total must equal the invoice; a mismatch blocks the final flag.
-- **Budgets don't enforce; holds do.** A budget's action creates an `account_holds` row with its own reason and validity, lifted by the customer's resume, so a paused project shows up in the same standing view as a payment hold and can't be confused with one.
-- **Hard caps are a promise with a cost.** `cap_is_hard` records what the customer was told; when it is set, usage rated after the hold took effect is credited by a `credit_grants` row of kind `goodwill` with the budget as its source, automatically.
+- **Budgets don't enforce.** A budget alerts on any scope and basis; a pause is a `project_spend_caps` row whose enforcement is a `spend_cap_events` row and a hold, and a credit-backed cap is a `spending_limits` row. Keeping them apart means a customer can have a forecast alert at 80% of a tag's spend without anything ever going offline.
+- **Hard caps are a promise with a cost.** Where a cap was sold as hard, usage rated between the crossing and the enforcement recorded in `spend_cap_events` (or the `spending_limits` hold) is credited automatically by a `credit_grants` row of kind `goodwill` whose source is the cap.
 - **The detector is versioned.** `anomalies.model` names the detector and version, so false-positive rates can be compared across versions and a customer's "why didn't you warn me" has an answer.
 - **The FOCUS view is the contract.** Dashboards, budgets, anomaly detection and exports all read the same view, so the console, the alert and the file can't disagree.
-- **Events:** `budget.threshold_crossed`, `budget.action_taken`, `anomaly.detected`, `anomaly.resolved`, `cost_export.delivered` and `cost_export.restated` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, webhooks and the support desk ([Notifications & Consent](/docs/architecture/notifications)).
+- **Events:** `budget.threshold_crossed`, `anomaly.detected`, `anomaly.resolved`, `cost_export.delivered` and `cost_export.restated` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, webhooks and the support desk ([Notifications & Consent](/docs/architecture/notifications)).
 
 ## Auditing
 
 - **What the customer could see, when.** For any disputed bill: each export delivery and its data age, each alert with the spend it reported and when it was delivered, each anomaly and its status, so the provider can show what warning existed and how late it was.
-- **Every pause and who lifted it.** Budget-created holds with their trigger, the usage that accrued between crossing and enforcement, and the resume.
+- **Every pause and who lifted it.** Spend-cap and spending-limit holds with their trigger, the usage that accrued between crossing and enforcement, and the resume.
 - **Every forgiveness.** Goodwill credits with their reason code, case, approver, amount and the controls the customer turned on afterward; totals by reason are the list of product defects.
 - **Exports reconcile.** Final deliveries against invoices, row by row in total and per SKU; any difference is a pipeline bug.
 - **Detector performance.** Anomalies raised, acknowledged as expected, confirmed as fraud, and missed (surprise bills with no anomaly before them), by model version.
@@ -355,7 +347,7 @@ Exports, alerts and anomaly records are billing evidence and are kept with the i
 - **Keep list, contracted, billed and effective cost recoverable** from rated usage, commitment drawdowns and credits, because exports, budgets and FOCUS all need them.
 - **Offer budgets with actual and forecast thresholds,** a stated cost basis, and signed machine-readable notifications.
 - **Detect anomalies on provisional rated usage within the hour,** explained by project, SKU and region, and version the detector.
-- **Make pauses holds,** created by the budget and lifted by the customer, and state plainly whether a cap is hard or best-effort.
+- **Keep alerting, pausing and capping in separate records,** each pause a hold lifted by the customer, and state plainly whether a cap is hard or best-effort.
 - **Absorb the overshoot of a cap sold as hard,** automatically, as a credit.
 - **Write down the forgiveness policy** and record every forgiveness as a goodwill credit with a reason, and fix provider-caused bills at the meter with a correction and rerate.
 - **Put the age of the data on every number** the customer sees.
