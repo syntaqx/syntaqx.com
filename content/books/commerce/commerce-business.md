@@ -2,7 +2,7 @@
 title = "The Commerce Business"
 description = "How selling things works in software: the parties, the channels an order arrives through, how the money splits, and the core data model every part extends."
 category = "Commerce Industry"
-order = 2230
+order = 2301
 part = "The Business"
 tags = ["commerce", "business-models", "data-model", "orders", "catalog"]
 +++

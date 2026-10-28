@@ -2,7 +2,7 @@
 title = "Orders, Dispatch & Batching"
 description = "The delivery order lifecycle, prep time and ETA estimation, courier assignment and batching, shop-and-deliver, scheduled versus ASAP, and the handoff."
 category = "Commerce Industry"
-order = 2242
+order = 2344
 part = "On-Demand Delivery"
 tags = ["commerce", "delivery", "dispatch", "batching", "eta", "orders"]
 +++

@@ -3,7 +3,7 @@ title = "The On-Demand Delivery Landscape"
 nav_title = "The Delivery Landscape"
 description = "Marketplaces, logistics-only networks, first-party ordering, owned inventory and shop-and-deliver, with take rates, market share and consolidation."
 category = "Commerce Industry"
-order = 2240
+order = 2342
 part = "On-Demand Delivery"
 tags = ["commerce", "delivery", "marketplaces", "business-models", "unit-economics"]
 +++
