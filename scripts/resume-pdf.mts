@@ -34,12 +34,16 @@ try {
 
 const { headlines, ...rest } = details;
 const contact = { ...PUBLIC_CONTACT, ...rest };
+// Each track's files are prefixed ("IC - ", "Management - ") so uploads
+// to the same site stay tellable apart.
+const label = (track: string) =>
+  track.length <= 3 ? track.toUpperCase() : track[0].toUpperCase() + track.slice(1);
 const copies = headlines
-  ? Object.entries(headlines).map(([track, t]) => [`.private/${track}`, t])
-  : [[".private", resume.title]];
-for (const [dir, title] of copies) {
+  ? Object.entries(headlines).map(([track, t]) => [`.private/${track}`, t, `${label(track)} - ${file}`])
+  : [[".private", resume.title, file]];
+for (const [dir, title, name] of copies) {
   mkdirSync(dir, { recursive: true });
-  writeFileSync(`${dir}/${file}.pdf`, await renderResumePdf(contact, title));
-  writeFileSync(`${dir}/${file}.txt`, renderResumeText(contact, title));
-  console.log(`Wrote ${dir}/${file}.pdf and .txt`);
+  writeFileSync(`${dir}/${name}.pdf`, await renderResumePdf(contact, title));
+  writeFileSync(`${dir}/${name}.txt`, renderResumeText(contact, title));
+  console.log(`Wrote ${dir}/${name}.pdf and .txt`);
 }
