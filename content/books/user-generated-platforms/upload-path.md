@@ -30,76 +30,41 @@ Four patterns run through the table. **Nobody proxies bytes through the applicat
 
 ## Direct-to-Storage Uploads
 
-The application server should never carry the bytes. Proxying uploads through it ties up a request worker per upload for minutes, multiplies egress (client to app, app to storage), and puts the platform's most exposed code (request parsing) on its biggest inputs. The pattern that replaced it has four steps:
+The application server never carries the bytes: the API grants a scoped, expiring credential for one storage key it names itself, the client sends straight to storage or the vendor, and the server confirms the size and checksum before anything moves on. The general pattern, and the rules for presigned URLs, keys, size bounds and private landing buckets, are in [Keep Bytes Off the Application](/docs/architecture/file-uploads#keep-bytes-off-the-application) and [The Upload Credential](/docs/architecture/file-uploads#the-upload-credential). What a platform adds:
 
-1. **Ask.** The client tells the API what it intends to upload: purpose (post media, avatar, message attachment, video), declared type, declared size, and an idempotency key. The API checks what only it can check: the account's standing, the community's rules (a community that bans video, a channel that allows no attachments), per-account rate limits and quotas ([Rate Limiting](/docs/requests/rate-limiting)), and whether the declared size and type fit the purpose.
-2. **Grant.** The API creates the media asset in `uploading` with an upload session, generates a storage key itself, and returns a scoped credential for exactly that key: a presigned URL, a one-time vendor URL or a resumable session.
-3. **Send.** The client sends the bytes straight to storage or the vendor.
-4. **Confirm.** The storage notification (or the client's "done", verified) moves the asset to `scanning`. The server checks the object really exists, its size is within the grant and its checksum matches, and never takes the client's word for any of it.
-
-The credential is the security boundary, so its shape matters:
-
-- **A presigned URL is a bearer token.** Amazon's documentation says so in those words, and a presigned URL "can be used multiple times, up to the expiration date and time," which the SDKs allow to be as long as 7 days (the console caps it at 12 hours). It is also bound to the credentials that signed it: a URL signed with temporary role credentials dies when the role session does, whatever expiry it claims. My default is minutes, not days: long enough to start the upload (S3 checks expiry when the request starts, so a long upload that began in time finishes), short enough that a leaked URL is useless by the time anyone finds it.
-- **The platform names the key.** An upload to an existing key replaces the object, so a key built from the user's filename lets one user overwrite another's file. Generate the key server-side from the asset's ID; keep the original filename, if at all, as a display field on the asset, because it often carries personal data (a name, a date, a device).
-- **Bound the size at the storage layer.** A declared size in the API means nothing if storage accepts whatever arrives. Google Cloud Storage accepts an `x-goog-content-length-range` header and rejects a body outside it with `400 Bad Request`; vendor upload URLs carry their own caps. Whatever the provider, the confirm step compares the stored size against the grant and rejects anything outside it.
-- **One-time and short-lived where the vendor allows it.** Cloudflare's Direct Creator Upload URL expires after 30 minutes if unused by default, configurable from two minutes to six hours, and creates a draft image record until the file arrives. Mux's direct upload URL is tied to a CORS origin, which its docs advise setting to the platform's own application.
-- **Uploads land somewhere nobody reads.** The original goes to a private bucket or prefix that no CDN serves and no public URL reaches. Only processed variants, produced after the scanning gate, are ever published. OWASP's guidance is the same in general terms: store uploads on a separate host, or at least outside the web root. A platform that serves originals from its main origin is one content-sniffing mistake away from serving an attacker's HTML as its own ([Security Headers](/docs/security/security-headers#the-baseline) covers `X-Content-Type-Options: nosniff`).
-
-Uploads by URL (paste a link, import from another service) invert the flow: the platform's server fetches the bytes, which makes it a server-side request forgery target. The fetcher runs outside the platform's network, refuses private and link-local addresses after DNS resolution, follows a bounded number of redirects and enforces the same size cap while streaming ([API7:2023 Server Side Request Forgery](/docs/security/api-security#api7-2023-server-side-request-forgery)).
-
-Every surface that accepts a file goes through the same path: post media, comment images, avatars and banners (`profiles.avatar_asset_id` in the core model), chat attachments, listing photos, verification documents. Avatars are the classic gap, because they're small, look harmless and show up on every page the user touches.
+- **The ask carries community rules.** Beyond quotas and the account's standing, the grant checks the destination: a community that bans video, a channel that allows no attachments, a listing type that takes only photos.
+- **Vendors hand out one-time URLs.** Cloudflare's Direct Creator Upload URL expires after 30 minutes if unused by default (configurable from two minutes to six hours) and creates a draft image record until the file arrives; Mux's direct upload URL is tied to a CORS origin set to the platform's own application.
+- **Every surface goes through the same path:** post media, comment images, avatars and banners (`profiles.avatar_asset_id` in the core model), chat attachments, listing photos, verification documents. Avatars are the classic gap, because they're small, look harmless and show up on every page the user touches.
+- **Imports by link** (paste a URL, import from another service) make the platform's fetcher an SSRF target, handled as in [Uploads by URL](/docs/architecture/file-uploads#uploads-by-url).
 
 ## Resumable and Chunked Uploads
 
-A single `PUT` works for a photo on a good connection. A 4 GB video from a phone on cellular needs a protocol that survives the connection dropping, the app being backgrounded, and the user coming back an hour later. Three families cover almost every platform:
+Media is big, so the platform's uploads are resumable by default. The three protocol families (tus, Google-style resumable sessions and S3 multipart), how to choose between them, and the rules every one needs (resume from the server's offset, expire and sweep sessions, checksum the whole file, make creation idempotent, reserve then reconcile quota) are in [Resumable Uploads](/docs/architecture/file-uploads#resumable-uploads) and [Rules for Every Resumable Upload](/docs/architecture/file-uploads#rules-for-every-resumable-upload). The media vendors pick for you:
 
-**tus**, the open protocol several vendors speak (Cloudflare Stream requires it above 200 MB). The client creates an upload with a `POST` carrying `Upload-Length` and `Upload-Metadata` and gets back a `Location`. To resume, it asks with `HEAD` and the server returns `Upload-Offset`; the client then `PATCH`es from exactly that offset with `Content-Type: application/offset+octet-stream`. A `PATCH` whose offset doesn't match the server's gets `409 Conflict` and changes nothing. Extensions add an `Upload-Expires` time after which an unfinished upload may be removed, an `Upload-Checksum` per request (a mismatch returns `460`), termination with `DELETE`, and concatenation, where several partial uploads sent in parallel are joined into a final one.
+- **Cloudflare Stream** takes a basic `POST` under 200 MB and requires tus above it, and makes the uploader declare `maxDurationSeconds`, reserved against the account's storage until the file arrives and then charged at the real duration. A platform with per-user quotas reserves the same way: by declared size or duration at grant time.
+- **YouTube's Data API** uses resumable sessions: chunked `PUT`s, `308 Resume Incomplete` with the confirmed range, chunks in 256 KB multiples.
+- **Mux** behaves the same way (`308` means keep going; chunks in multiples of 256 KB, sent in order).
 
-**Google-style resumable sessions,** used by the YouTube Data API and Google Cloud Storage. The first request describes the file (`X-Upload-Content-Length`, `X-Upload-Content-Type`) and returns a session URI. The client `PUT`s bytes to it; after a failure it sends an empty `PUT` with `Content-Range: bytes */TOTAL`, and a `308 Resume Incomplete` response carries a `Range` header with the bytes confirmed so far. The next chunk must start exactly one byte past that range, because "overlapping or skipping bytes" uploads nothing. Chunks are multiples of 256 KB (only the last may be smaller); `500`, `502`, `503` and `504` are resumable with exponential backoff; an expired session returns `404` and the upload starts over. Cloud Storage sessions last up to a week, and its docs warn that the session URI "acts as an authentication token": anyone holding it can finish the upload. Mux's direct uploads behave the same way (`308` means keep going; chunks in multiples of 256 KB, in order).
-
-**S3 multipart,** the object store's own answer. The client initiates an upload, sends parts numbered 1 to 10,000 in any order and in parallel, records each part's ETag, and completes with the list; a failed part is retried alone. Amazon recommends it for objects of 100 MB or more. Unlike the other two, a multipart upload has no expiry: parts are stored and billed until the upload is completed or aborted, and Amazon recommends a lifecycle rule with `AbortIncompleteMultipartUpload` to sweep the abandoned ones.
-
-Whichever family the platform uses, the same rules apply:
-
-- **The server's offset is the truth.** Resume from what the server says it has, never from the client's count; both tus and the Google protocol exist to make that question cheap.
-- **Every session expires, and expiry cleans up.** An abandoned upload is storage the platform pays for and nobody will ever see. The session row carries an expiry, a sweeper aborts or deletes what didn't finish, and the asset moves to a terminal state ([Background Jobs](/docs/architecture/background-jobs#scheduling)). [Storage, Dedup & Delivery Economics](/books/user-generated-platforms/storage-and-delivery#orphans-purges-and-link-rot) counts these among its orphans.
-- **Checksum the whole file, not just the parts.** Part checksums catch transmission errors; a whole-file hash is what dedup and hash matching need, and S3 can validate a full-object checksum at completion and fail with `BadDigest` on a mismatch.
-- **Make "create upload" idempotent.** A mobile client that retries the create call after a timeout must get the same session back, not a second asset ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
-- **Reserve, then reconcile.** Cloudflare Stream makes the uploader declare `maxDurationSeconds` and holds that much of the account's storage until the file arrives, then charges only the real duration. A platform with per-user quotas can do the same: reserve the declared size or duration against the quota at grant time, release the rest at confirm, and release everything when the session expires.
-
-In-app cameras push this onto the client: drafts encoded on the phone and uploaded in the background, before the user taps post, are in [Camera & Effects](/books/user-generated-platforms/camera-and-effects#drafts-and-the-offline-upload).
+Abandoned sessions are among the orphans [Storage, Dedup & Delivery Economics](/books/user-generated-platforms/storage-and-delivery#orphans-purges-and-link-rot) counts. In-app cameras push the upload onto the client: drafts encoded on the phone and uploaded in the background, before the user taps post, are in [Camera & Effects](/books/user-generated-platforms/camera-and-effects#drafts-and-the-offline-upload).
 
 ## Validation and Hostile Files
 
-Validation answers one question: is this a file of an allowed kind, within limits, that the platform's own decoders can safely read? Each layer of the answer is cheap to fool on its own.
+Validation asks whether a file is an allowed kind, within limits, that the platform's own decoders can safely read. The general rules (don't trust the name or declared type, allowlist formats per purpose, cap bytes, pixels and time separately, decode in a sandbox, re-encode rather than pass through, treat SVG as active content, serve plain files as attachments from another domain) are in [Checking What Arrived](/docs/architecture/file-uploads#checking-what-arrived). Media platforms meet them at their hardest.
 
-**Don't trust the name or the declared type.** OWASP's File Upload Cheat Sheet treats the client's `Content-Type` as a hint for catching honest mistakes, not a control, and file-signature (magic byte) checks as useful but "pretty common and easy" to bypass on their own. The asset keeps both the declared type and the type detected from the bytes, and a mismatch is a signal worth logging. The only real test is decoding the file with the platform's own decoder, under limits.
+**Limits are per medium, and published.**
 
-**Cap bytes, pixels and time separately.** A file's size says little about what it costs to process:
-
-- **Decompression bombs** are small files that decode into enormous images: a PNG of uniform color compresses absurdly well and can declare dimensions that need gigabytes of memory to hold. Image libraries carry guards, and their defaults are worth knowing: Pillow's `MAX_IMAGE_PIXELS` is 89,478,485 pixels ("approximately 0.25GB for a 24-bit (3 bpp) image"), above which it warns, and above twice which it raises `DecompressionBombError`. A platform sets its own pixel cap below the library's and checks the header's declared dimensions before allocating anything.
 - **Animations multiply.** Every frame is decoded, so the limit is on total pixels across frames, which is how Cloudflare Images states it ("GIF/WebP animations are limited to the total megapixels across all frames"), alongside its 10 MB, 100 megapixel and 12,000 pixel per side limits for hosted images.
 - **Video limits are duration, resolution and frame rate,** checked by probing the container before any transcoding is scheduled: YouTube caps uploads at 256 GB or 12 hours and holds unverified accounts to 15 minutes; Mastodon's API publishes a video pixel matrix and a 120 fps frame rate limit.
-- **Archives decompress.** OWASP recommends not accepting ZIP uploads at all, and measuring the decompressed size if you must.
-
-Publishing the limits helps honest clients. Mastodon returns its instance's media limits from its API, so apps can resize and re-encode on the device before sending; a client that knows the cap never uploads 30 MB to be rejected.
+- **Publishing the limits helps honest clients.** Mastodon returns its instance's media limits from its API, so apps can resize and re-encode on the device before sending; a client that knows the cap never uploads 30 MB to be rejected.
 
 **Decoders are attack surface.** Image and video libraries parse complex formats written by strangers, and they have a history:
 
 - **ImageTragick** (disclosed May 3, 2016) was a set of ImageMagick flaws, the worst (CVE-2016-3714) allowing remote code execution through insufficient shell-character filtering in the delegates ImageMagick hands files to; others let a crafted file make the server fetch URLs (CVE-2016-3718), delete, move or read local files. The published mitigations were to check magic bytes before handing a file to ImageMagick and to disable the dangerous coders (MVG, MSL, URL, EPHEMERAL and others) in its `policy.xml`.
 - **CVE-2023-4863** (September 2023) was a heap buffer overflow in libwebp's lossless decoder: a crafted file with an unbalanced Huffman tree made the library "write data beyond the buffer allocated for the lookup tables." Cloudflare's write-up notes the library is used by "virtually every application that handles WebP images," and Citizen Lab tied it to an exploit chain used against an iPhone. Cloudflare patched its own image pipeline from a fix in the libwebp repository before a release existed.
 
-The rules that follow are about containment, because the next decoder bug is already written:
-
-- **Allowlist formats per purpose.** An avatar needs JPEG, PNG, WebP and HEIC; it doesn't need SVG, TIFF, PSD or PDF. Every format accepted is a decoder kept patched.
-- **Decode in a sandbox.** No network, a read-only filesystem, and CPU, memory and wall-clock limits per file; a worker that crashes or times out marks the asset `rejected` (or retries once on a fresh worker) and never takes the queue down.
-- **Re-encode, don't pass through.** Publishing pixels the platform decoded and re-encoded (content disarm) removes most of what a crafted file carries, and strips metadata on the way, which [Images at Scale](/books/user-generated-platforms/images-at-scale#metadata-location-and-orientation) relies on. OWASP's caveat stands: rewriting "does not guarantee that all malicious content is removed," so the decoder that does the rewriting still needs the sandbox.
-- **Patch decoders on the vulnerability clock.** An image library is internet-facing code even when it runs in a queue worker ([Remediation Targets](/docs/security/vulnerability-management#remediation-targets)).
-- **Treat SVG as active content.** It's XML that can carry scripts and external references. Rasterize it, or serve it only from a separate cookieless origin with a strict content security policy.
+That history is why the sandbox and the re-encode are not optional on an image host: the next decoder bug is already written. Re-encoding also strips metadata on the way, which [Images at Scale](/books/user-generated-platforms/images-at-scale#metadata-location-and-orientation) relies on.
 
 **HEIC is a normal input now.** iPhones from the iPhone 7 on capture HEIF photos and HEVC video unless the user switches the camera to "Most Compatible," and whether a file is converted to JPEG on the way out depends on how it's shared, so a platform sees both. Refusing HEIC pushes conversion onto users who don't know what the format is. Accept HEIC at the upload path (Cloudflare Images lists it among its input formats), decode it in the same sandbox, and leave the conversion to web formats to [Format Negotiation](/books/user-generated-platforms/images-at-scale#format-negotiation). The same goes for orientation: the original's EXIF rotation must be applied before metadata is stripped, which [Metadata, Location and Orientation](/books/user-generated-platforms/images-at-scale#metadata-location-and-orientation) covers.
-
-**Files that are only files** (documents, archives and binaries in chat or developer communities) can't be re-encoded. OWASP's advice is to run them through antivirus or a sandbox where available; the platform also serves them with `Content-Disposition: attachment` from a separate domain so a browser never renders them in the platform's origin.
 
 ## Mezzanine Specs
 
@@ -270,15 +235,9 @@ Notes on the sketch:
 
 ## References
 
-**Standards and protocols**
-
-- [tus: Resumable upload protocol 1.0](https://tus.io/protocols/resumable-upload), `HEAD` and `Upload-Offset`, `PATCH`, `409 Conflict` on offset mismatch, the creation, expiration, checksum, termination and concatenation extensions
-- [OWASP: File Upload Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html), extension allowlists, untrusted content types, limits of signature checks, generated names, separate hosts, image rewriting and its limits, antivirus, ZIP files and decompressed size
-
 **Vendor documentation**
 
 - [Amazon S3: Download and upload objects with presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html), presigned URLs as bearer tokens, reuse until expiry, 7-day and 12-hour limits, expiry with temporary credentials, expiry checked at request start
-- [Amazon S3: Uploading objects with presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html), uploads replacing an existing object at the same key
 - [Amazon S3: Uploading and copying objects using multipart upload](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html), parts 1 to 10,000, the 100 MB recommendation, no expiry, parts billed until completed or aborted, `AbortIncompleteMultipartUpload`, full-object checksums and `BadDigest`
 - [Google Cloud Storage: Resumable uploads](https://docs.cloud.google.com/storage/docs/resumable-uploads), session URIs as authentication tokens, one-week sessions, 256 KiB buffer multiples
 - [Google Cloud Storage: HTTP headers and query string parameters](https://docs.cloud.google.com/storage/docs/xml-api/reference-headers), `x-goog-content-length-range` and the `400` it returns
@@ -287,7 +246,6 @@ Notes on the sketch:
 - [Cloudflare Images: Limits](https://developers.cloudflare.com/images/get-started/limits/), 10 MB, 100 megapixels, 12,000 pixels, animation limits across frames, HEIC as an input format
 - [Cloudflare Stream: Direct creator uploads](https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/), basic uploads under 200 MB, tus above, `maxDurationSeconds` reservations
 - [Mux: Upload files directly](https://www.mux.com/docs/guides/upload-files-directly), authenticated resumable URLs, CORS origin, `308` to continue, chunks in 256 KB multiples sent in order, upload and asset webhooks
-- [Pillow: Image module](https://pillow.readthedocs.io/en/stable/reference/Image.html), `MAX_IMAGE_PIXELS` of 89,478,485, `DecompressionBombWarning` and `DecompressionBombError` at twice the limit
 
 **Platform documentation**
 
