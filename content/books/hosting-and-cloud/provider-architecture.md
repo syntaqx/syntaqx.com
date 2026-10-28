@@ -1,4 +1,4 @@
-﻿+++
++++
 title = "Provider Architecture"
 description = "How a provider's parts fit: control and data planes, provisioning, cells and blast radius, metering, billing, support and abuse, and public scale figures."
 category = "Hosting & Cloud Industry"
