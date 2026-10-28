@@ -35,7 +35,7 @@ Kubernetes has three probes, and each failure does something different:
 The mistakes are almost always in liveness:
 
 - **Checking dependencies in a liveness probe.** The database has a slow minute, every pod fails liveness and restarts at once, and the restart storm reconnects to an already struggling database: a slow dependency became a full outage. Liveness checks only the process itself (is the event loop responding, is a worker deadlocked). The Kubernetes docs say liveness probes should indicate unrecoverable application failure, and that getting them wrong leads to cascading failures.
-- **One endpoint for liveness and readiness.** Readiness can reasonably include "my critical dependency is reachable" (stop sending me traffic); liveness shouldn't (don't kill me for it).
+- **One endpoint for liveness and readiness.** Readiness can reasonably include "my critical dependency is reachable" (stop sending me traffic); liveness shouldn't (don't kill me for it). [What Readiness Should Check](/docs/observability/frontend-and-synthetic#what-readiness-should-check) draws the line.
 - **Aggressive timing on a slow starter.** A 10-second liveness budget on an app that takes 40 seconds to boot restarts it forever. Use a startup probe, not a bigger `initialDelaySeconds`.
 - **No readiness probe.** The pod gets traffic before it has loaded config or opened connections, and every deploy produces a burst of errors.
 
@@ -117,7 +117,7 @@ Treat upgrades as routine work, the posture of [Dependencies & Upgrades](/docs/e
 
 ## Observability and Cost
 
-Beyond your application's own [telemetry](/docs/operations/observability), dashboard the platform signals that predict outages: OOM kills and restarts per container, CPU throttling, pods pending for capacity, readiness failures during deploys, node pressure. Alert on [SLO](/docs/operations/slos) symptoms, not these.
+Beyond your application's own [telemetry](/docs/observability/overview), dashboard the platform signals that predict outages: OOM kills and restarts per container, CPU throttling, pods pending for capacity, readiness failures during deploys, node pressure. Alert on [SLO](/docs/operations/slos) symptoms, not these.
 
 The [cost](/docs/operations/cost-and-finops) waste is almost always the gap between requests and usage: pods reserving twice what they use means half your nodes are paid for and idle. Compare requests to usage regularly, right-size, let the cluster autoscaler remove the freed nodes, and label every workload with its owning team.
 

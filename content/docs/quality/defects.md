@@ -16,7 +16,7 @@ A report exists so someone who wasn't there can see the bug for themselves. The 
 - **Steps to reproduce,** numbered, starting from a known state, precise enough to follow on another machine. This is the part that matters most.
 - **Expected and actual,** as separate lines. A lot of "bugs" turn out to be a disagreement about what should happen, and this is where it shows.
 - **Environment and version:** build or commit, environment, browser or app version, OS, account or tenant (an ID, never personal data), feature flags in effect.
-- **Evidence:** a screenshot or recording, the [request ID](/docs/operations/observability#request-ids) and timestamp, the log line or stack trace. One request ID beats a paragraph of description.
+- **Evidence:** a screenshot or recording, the [request ID](/docs/observability/overview#request-ids) and timestamp, the log line or stack trace. One request ID beats a paragraph of description.
 - **Frequency:** every time, sometimes (how often), or once. An intermittent bug with "3 of 10 attempts" is workable; "sometimes" isn't.
 
 Facts and guesses stay apart. "I think it's the cache" goes under a separate heading, or the next reader treats it as established. My default is a template in the tracker, so nobody has to remember the list:
@@ -99,7 +99,7 @@ My default: **a scheduled bug untouched for 90 days gets a stale warning, and cl
 Most bug reports shouldn't come from engineers noticing things. Two intake paths matter more.
 
 - **From customers, via support.** Support reproduces and escalates with the context engineering needs, and one engineering bug links to every customer ticket it affects, so all of them hear back when it ships. The tiers, criteria and response clock are in [Customer Support](/docs/operations/customer-support#escalation-to-engineering). Triage owes support the same first-look clock as any other reporter.
-- **From production errors.** Error tracking groups exceptions by signature and opens or updates a ticket per group, with a count, first and last seen, the release that introduced it, and sample request IDs ([Observability](/docs/operations/observability)). A new error group after a deploy is a bug report written by the system, with better evidence than most people provide. Triage treats it like any other report, including "won't fix" for noise, which then gets silenced at the source rather than ignored.
+- **From production errors.** Error tracking groups exceptions by signature and opens or updates a ticket per group, with a count, first and last seen, the release that introduced it, and sample request IDs ([Errors & Profiling](/docs/observability/errors-and-profiling)). A new error group after a deploy is a bug report written by the system, with better evidence than most people provide. Triage treats it like any other report, including "won't fix" for noise, which then gets silenced at the source rather than ignored.
 
 ### When a Bug Is an Incident
 

@@ -28,7 +28,7 @@ Past the good threshold, each metric has a poor one: LCP over 4 seconds, INP ove
 
 ## Measure Real Users
 
-- **Field data decides.** Real-user monitoring (RUM) and the [Chrome UX Report](https://developer.chrome.com/docs/crux) show what people actually experience, on their devices and networks.
+- **Field data decides.** Real-user monitoring (RUM) and the [Chrome UX Report](https://developer.chrome.com/docs/crux) show what people actually experience, on their devices and networks. Collecting it yourself is [Real-User Monitoring](/docs/observability/frontend-and-synthetic#real-user-monitoring).
 - **Lab data explains.** Lighthouse and DevTools traces find why a number is bad and check a fix; they don't declare victory. A fast laptop on office Wi-Fi is not your median user.
 - **Watch the 75th percentile, not the average.** An average blends a fast majority with a slow minority into a number that describes nobody.
 

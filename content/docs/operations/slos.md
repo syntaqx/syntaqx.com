@@ -24,7 +24,7 @@ The SLO is always stricter than any SLA, so you find out you're in trouble befor
 
 ## Choosing SLIs
 
-Measure what users feel, as close to them as you can (the load balancer or the client, not the database).
+Measure what users feel, as close to them as you can (the load balancer or the client, not the database). The telemetry SLIs are computed from, and the joins from an alert to the requests behind it, are in [Observability](/docs/observability/overview).
 
 | Kind of service | SLIs |
 | --------------- | ---- |
@@ -59,7 +59,7 @@ Without a policy, the budget is a dashboard: feature work continues while reliab
 
 ## Alerting on Burn Rate
 
-Alert on how fast the budget is being spent, not on raw error rates. Burn rate is the error rate divided by the rate the SLO allows: at 99.9%, a 0.1% error rate is a burn rate of 1, which spends the budget exactly by the end of the window.
+Alert on how fast the budget is being spent, not on raw error rates. Burn rate is the error rate divided by the rate the SLO allows: at 99.9%, a 0.1% error rate is a burn rate of 1, which spends the budget exactly by the end of the window. Writing the rules, with burn rates precomputed as [recording rules](/docs/observability/metrics#recording-rules-and-pre-aggregation), is in [Dashboards & Alerts](/docs/observability/dashboards-and-alerts#burn-rates).
 
 The [Workbook's recommended alerts](https://sre.google/workbook/alerting-on-slos/) for a 99.9% SLO over 30 days:
 

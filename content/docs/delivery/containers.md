@@ -41,7 +41,7 @@ Immutability isn't free:
 
 - **State has to live elsewhere.** A container you'll throw away can't hold the database, uploads or sessions, which forces managed databases, object storage and external caches: the right design anyway, but work.
 - **Every change is a build.** A config typo means a rebuild and a deploy, painless only with a fast [pipeline](/docs/delivery/ci-pipelines).
-- **Debugging changes.** You can't SSH into a box that will be replaced in an hour, so [logs, metrics and traces](/docs/operations/observability) have to carry what you used to learn by looking.
+- **Debugging changes.** You can't SSH into a box that will be replaced in an hour, so [logs, metrics and traces](/docs/observability/overview) have to carry what you used to learn by looking.
 
 Each cost pushes you toward a practice you want anyway, which is the strongest argument for the model: it's hard to do immutable infrastructure badly for long.
 

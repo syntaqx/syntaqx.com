@@ -7,7 +7,7 @@ tags = ["operations", "on-call", "incidents", "runbooks"]
 aliases = ["on-call"]
 +++
 
-Every alert from [Observability](/docs/operations/observability) and every fast [SLO](/docs/operations/slos) burn ends at a person. On-call exists so customers get help fast, and it only lasts if it's sustainable for the people carrying the pager: few pages, every page actionable, and time set aside to make next week quieter than this one.
+Every alert from [Observability](/docs/observability/overview) and every fast [SLO](/docs/operations/slos) burn ends at a person. On-call exists so customers get help fast, and it only lasts if it's sustainable for the people carrying the pager: few pages, every page actionable, and time set aside to make next week quieter than this one.
 
 ## Rotations
 
@@ -24,6 +24,7 @@ Severity levels, incident roles and how an incident is run live in [Incidents & 
 - **Primary acknowledges a page within 5 minutes.** No acknowledgement escalates automatically to secondary, then to the engineering manager.
 - **Escalating is never a failure.** Pulling in the database owner at 3am is cheaper than guessing for two hours.
 - **Every service's runbook says who to escalate to,** not someone's memory.
+- **Count the pages.** A rotation that pages more than it can act on stops reading pages; [Alert Fatigue](/docs/observability/dashboards-and-alerts#alert-fatigue) has the measures.
 
 ## Handoffs
 

@@ -32,7 +32,7 @@ Run smoke tests on every change. Run average-load before every launch and after 
 
 A test that hammers one endpoint with one payload measures your cache.
 
-- **Model real traffic:** the mix of endpoints, read/write ratio and payload sizes from production [metrics](/docs/operations/observability).
+- **Model real traffic:** the mix of endpoints, read/write ratio and payload sizes from production [metrics](/docs/observability/metrics).
 - **Realistic data volumes.** Queries instant on 1,000 rows fall over on 100 million. Seed synthetic data at production scale, never a copy ([Test Data & Environments](/docs/quality/test-data#synthetic-data-not-production-copies)).
 - **Open load models.** Real users don't wait for your slow response before the next arrives. Generate load at an arrival rate, not a fixed number of looping users, or you undercount exactly the slow periods you're looking for.
 - **Somewhere production-like:** same instance sizes, database tier and limits. Results from a smaller environment don't scale linearly.

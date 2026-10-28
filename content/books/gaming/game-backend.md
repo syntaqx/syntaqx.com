@@ -214,7 +214,7 @@ The match's own life cycle, in the core `matches.status`, is short: `forming` wh
 
 - **Degrade by feature.** If the store is down, players can still play; if chat is down, matches still start. Decide in advance which features each dependency failure turns off, and test it.
 - **Retries only where safe,** with timeouts, budgets and jittered backoff ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)). In a game backend, the retry storm after a blip is the usual way a small incident becomes a large one.
-- **Monitoring outside the blast radius.** Roblox's lesson: telemetry that depends on the failing system goes dark with it ([Observability](/docs/operations/observability)).
+- **Monitoring outside the blast radius.** Roblox's lesson: telemetry that depends on the failing system goes dark with it ([Observability](/docs/observability/overview)).
 
 ## What This Means for the System You Build
 

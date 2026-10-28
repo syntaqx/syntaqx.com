@@ -58,7 +58,7 @@ Every request is individually valid, but automated at scale it's abuse: buying o
 
 - Identify the flows that hurt when automated, and limit them by business key (per card, email or device), not just per IP. Attackers rotate IPs cheaply; they can't rotate the card they're testing.
 - Add friction where it's cheap for humans and expensive for bots.
-- Alert on the business metric, not just the error rate. See [Observability](/docs/operations/observability).
+- Alert on the business metric, not just the error rate. See [Observability](/docs/observability/overview).
 
 ## API7:2023 Server Side Request Forgery
 

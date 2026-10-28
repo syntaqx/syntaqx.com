@@ -88,7 +88,7 @@ Every test run starts from a known state and can't see another run's data.
 - **Exclude them at the source.** Product analytics, revenue reports, [experiments](/docs/telemetry/experimentation) and usage-based billing filter on the flag, and the dashboards say so. Excluding them in every query by hand is how one gets missed.
 - **Keep money out of it.** Synthetic checks stop before capture, or run on a dedicated internal payment method with an automatic refund and an accounting code that keeps it out of revenue.
 - **Least privilege.** Test accounts are ordinary users with ordinary permissions, never admins, and their credentials are secrets like any other.
-- **Make their traffic visible.** Tag requests from synthetic checks (a header or user agent) so [observability](/docs/operations/observability) can split them out, and so an alert on synthetic failure isn't diluted by real traffic.
+- **Make their traffic visible.** Tag requests from synthetic checks (a header or user agent) so [observability](/docs/observability/frontend-and-synthetic) can split them out, and so an alert on synthetic failure isn't diluted by real traffic.
 
 ## Secrets for Test Environments
 

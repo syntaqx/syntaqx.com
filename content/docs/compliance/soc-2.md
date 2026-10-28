@@ -54,7 +54,7 @@ A well-run team already produces most of the evidence. The work is making it aut
 | **Vulnerability management** | Vulnerabilities fixed within defined windows | Scanning with SLAs by severity; [Vulnerability Management](/docs/security/vulnerability-management) |
 | **Vendor management** | Vendors assessed before use and yearly | A vendor inventory with their SOC reports and a named reviewer |
 | **Backups and recovery** | Backups run and restores are tested | Recorded restore tests; [Disaster Recovery](/docs/operations/disaster-recovery) |
-| **Monitoring** | Security events logged and looked at | Centralized logs, alerts with owners; [Observability](/docs/operations/observability) |
+| **Monitoring** | Security events logged and looked at | Centralized logs, alerts with owners; [Observability](/docs/observability/overview) |
 | **Risk and policy** | Risks assessed, policies current and acknowledged | A yearly risk assessment and signed policies |
 
 Two things decide the cost. **Controls should describe what you already do:** write "all changes require two approvals" while branch protection requires one, and you've manufactured an exception. And **evidence should be a side effect:** a control that depends on someone screenshotting a dashboard each quarter fails the quarter they're on leave.

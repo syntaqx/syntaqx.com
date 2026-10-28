@@ -76,7 +76,7 @@ A ticket that says "it's not working" costs an agent ten minutes of questions. A
 
 - **Who:** the account, the signed-in identity, and any linked accounts, which matters when one person has several.
 - **Where:** product, platform, app version or build, region, device and OS.
-- **What just happened:** recent orders, payments and grants, recent errors with their request IDs ([Request IDs](/docs/operations/observability#request-ids)), active restrictions, and open incidents affecting this customer.
+- **What just happened:** recent orders, payments and grants, recent errors with their request IDs ([Request IDs](/docs/observability/overview#request-ids)), active restrictions, and open incidents affecting this customer.
 - **Locale and any age or vulnerability flags,** so the ticket reaches an agent who speaks the language and the handling that fits.
 
 Collect it on the server wherever possible: the entry point passes an authenticated token and the support backend looks up the rest, rather than trusting fields the client fills in. Show agents a masked view by default and unmask on purpose with a reason ([Read-Only by Default](/docs/security/support-access#read-only-by-default)). And never ask for a password, and say so on the form: "support" asking for credentials is the classic phishing script, and customers who know real support never asks are harder to phish.

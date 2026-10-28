@@ -66,7 +66,7 @@ Clients pin a dated version with the `Api-Version` header. Additive changes ship
 Request-Id: 01a1648f-c612-79f6-9e96-d0e9005fb00c
 ```
 
-A unique ID on every response, success or error, logged on every line the server writes for that request. When an integrator reports a problem, the ID turns "it failed around 3 p.m." into a single search, so clients should log it next to their own errors. See [Observability](/docs/operations/observability).
+A unique ID on every response, success or error, logged on every line the server writes for that request. When an integrator reports a problem, the ID turns "it failed around 3 p.m." into a single search, so clients should log it next to their own errors. See [Request IDs](/docs/observability/overview#request-ids).
 
 The header has no `X-` prefix: [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) deprecated the convention because "experimental" headers become permanent and then can never be renamed.
 
