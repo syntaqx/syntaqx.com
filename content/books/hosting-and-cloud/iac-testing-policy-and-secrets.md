@@ -3,14 +3,14 @@ title = "Testing, Policy, Secrets & IaC Platforms"
 nav_title = "Testing, Policy & Secrets"
 description = "Testing IaC with mocks and real deploys, policy at plan time, secrets kept out of state, state-leak incidents, and plan-and-apply platforms and prices."
 category = "Hosting & Cloud Industry"
-order = 2145
+order = 2153
 part = "Infrastructure as Code"
 tags = ["infrastructure-as-code", "testing", "policy-as-code", "secrets", "pricing"]
 +++
 
 A provisioning tool will do exactly what the configuration says, to production, with credentials that can delete everything. Everything in this chapter exists to put checks between a pull request and that apply: tests that prove a module does what it claims before anyone depends on it, policies that fail a plan before a public bucket exists, secrets that never land in the repository or the state file, and a platform that runs the plan, records who approved it, and applies exactly what was reviewed with credentials that live for one run. The playbook's [Infrastructure as Code](/docs/delivery/infrastructure-as-code) states the rules ([plan in CI, apply from CI](/docs/delivery/infrastructure-as-code#plan-in-ci-apply-from-ci), [policy as code](/docs/delivery/infrastructure-as-code#policy-as-code), [state treated as secret](/docs/delivery/infrastructure-as-code#state-remote-locked-never-edited-by-hand), [detect drift](/docs/delivery/infrastructure-as-code#detect-drift)); this chapter covers the tools that implement them, the incidents that showed why, and the market that sells the loop as a service.
 
-That market matters to a hosting or cloud company twice. As a customer, it runs its own estate through one of these platforms. As a vendor, the plan-and-apply platform is a product shape it may sell or partner with, and each vendor's pricing axis (resources under management, workers, successful applies, seats) is a choice about what to meter, with the same consequences as any other meter in this volume. How the tools work inside (state, providers, the plan document) is [Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu); attacks on the pipeline that runs them, and OIDC federation in general, are Pipeline Supply-Chain Security.
+That market matters to a hosting or cloud company twice. As a customer, it runs its own estate through one of these platforms. As a vendor, the plan-and-apply platform is a product shape it may sell or partner with, and each vendor's pricing axis (resources under management, workers, successful applies, seats) is a choice about what to meter, with the same consequences as any other meter in this volume. How the tools work inside (state, providers, the plan document) is [Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu); attacks on the pipeline that runs them, and OIDC federation in general, are [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security).
 
 ## How the Providers Do It
 
@@ -50,12 +50,12 @@ Gruntwork's Terratest is a Go library for the integration layer: write a `_test.
 The plan document (`terraform show -json`) is what policy engines read: every resource change with its address, actions and before-and-after values. A policy fails the run before the change exists, which is the point.
 
 - **Open Policy Agent** (accepted into the CNCF March 29, 2018, incubating April 2, 2019, graduated January 29, 2021) evaluates Rego policies against JSON input. **Conftest** wraps it for configuration files: policies in a `policy` directory and the `main` namespace by default, rules named `deny`, `violation` (structured results) or `warn`, parsers for HCL2, JSON, YAML, Dockerfiles, CycloneDX and SPDX among many others, and `conftest verify` for unit-testing the policies themselves.
-- **Sentinel** is HashiCorp's policy language in HCP Terraform and Terraform Enterprise, with three enforcement levels: **advisory** (the default; a failure is allowed and logged as a warning), **soft mandatory** (must pass unless an authorized operator overrides, which provides non-repudiation because someone explicitly overrode a failed policy), and **hard mandatory** (no override; the only bypass is removing the policy). HashiCorp says it has delivered more than 350 prewritten policies, including an AWS set for NIST SP 800-53 Rev. 5 (September 25, 2025).
+- **Sentinel** is HashiCorp's policy language in HCP Terraform and Terraform Enterprise, with three enforcement levels: **advisory** (the default; a failure is allowed and logged as a warning), **soft mandatory** (must pass unless an authorized operator overrides, which provides non-repudiation because someone explicitly overrode a failed policy), and **hard mandatory** (the language's own levels give it no override). HCP Terraform loosens the last one: as of October 2026 its docs say a hard-mandatory failure stops the run "unless the set containing the policy is configured to allow overrides," and that a Sentinel policy set's policy-level override setting "takes precedence over the individual policy's enforcement level." Its OPA policy sets have two levels, advisory and mandatory, and a mandatory failure can be overridden by "any user with Manage Policy Overrides permission." So hard mandatory means unoverridable only in a set that doesn't allow overrides. HashiCorp says it has delivered more than 350 prewritten policies, including an AWS set for NIST SP 800-53 Rev. 5 (September 25, 2025).
 - **Checkov** (Apache-2.0, maintained by Prisma Cloud) ships over 1,000 built-in policies for AWS, Azure and Google Cloud and scans Terraform, Terraform plans, OpenTofu, CloudFormation, SAM, Kubernetes, Helm, Kustomize, Dockerfiles, Ansible, Bicep, ARM and CI workflow files, with graph-based checks across resources. Suppressions are inline comments, `checkov:skip=<check_id>:<reason>`, inside the resource.
 - **tfsec** has been folded into **Trivy**: Aqua encourages the tfsec community "to transition over to Trivy," which carries the same Terraform scanning engine.
 - **Run tasks** are HCP Terraform's integration point for everything else: an external service called at pre-plan, post-plan, pre-apply or post-apply, returning pass or fail to a callback URL, with an **advisory** or **mandatory** enforcement level (the most restrictive wins when several apply). HCP Packer's run task, which fails a run that references revoked images, is the documented example; cost tools use the same hook.
 
-The levels are what make policy usable. My default: hard mandatory for the handful of rules that are never acceptable (public storage of anything not explicitly public, unencrypted databases, resources outside allowed regions), soft mandatory with a named approver and a recorded reason for rules that have legitimate exceptions, and advisory for new policies until their false-positive rate is known. Every override is a record ([How to Build It](#how-to-build-it)), and a policy whose overrides are routine gets rewritten, not overridden forever.
+The levels are what make policy usable. My default: hard mandatory, in a policy set that doesn't allow overrides, for the handful of rules that are never acceptable (public storage of anything not explicitly public, unencrypted databases, resources outside allowed regions), soft mandatory with a named approver and a recorded reason for rules that have legitimate exceptions, and advisory for new policies until their false-positive rate is known. Every override is a record ([How to Build It](#how-to-build-it)), and a policy whose overrides are routine gets rewritten, not overridden forever.
 
 ## Secrets: Out of Code, Out of State
 
@@ -69,7 +69,7 @@ Three separate problems hide under "secrets in IaC," and each has its own tool.
 - **OpenBao** is the community fork of the last MPL Vault: a secrets manager with encrypted key-value storage, dynamic secrets for databases and Kubernetes, encryption as a service, leases and revocation, now a sandbox project under the Linux Foundation's OpenSSF. Its 2.0.0 general-availability release (July 2024) was "fully API compatible with Vault 1.14.9" without Vault Enterprise features, and OpenTofu's `openbao` key provider works with it and with Vault 1.14.
 - **SOPS** encrypts values inside YAML, JSON, ENV, INI and binary files with AWS KMS, GCP KMS, Azure Key Vault, age or PGP, so an encrypted file can live in the repository and be decrypted only where the key is reachable; it was accepted into the CNCF Sandbox on May 17, 2023.
 
-**Credentials the pipeline uses to apply.** The most powerful secret in the whole system is the cloud credential CI uses to run `apply`. The answer is not to store one. GitHub Actions' OIDC tokens (generally available November 23, 2021) let a workflow "request short-lived access tokens that are automatically rotated for each deployment"; HCP Terraform's dynamic provider credentials do the same per run, issuing an OIDC workload identity token naming the organization, workspace or Stack, and run phase, which AWS, Azure, Google Cloud, Vault or Kubernetes verify against a trust relationship before returning temporary credentials that are discarded when the run's environment is torn down. Separate roles for plan and apply, so a pull request's plan can read but never write, follow directly. The playbook's [Secure](/docs/delivery/ci-pipelines#secure) covers the pipeline rules around them, and Pipeline Supply-Chain Security covers federation and its failure modes in depth.
+**Credentials the pipeline uses to apply.** The most powerful secret in the whole system is the cloud credential CI uses to run `apply`. The answer is not to store one. GitHub Actions' OIDC tokens (generally available November 23, 2021) let a workflow "request short-lived access tokens that are automatically rotated for each deployment"; HCP Terraform's dynamic provider credentials do the same per run, issuing an OIDC workload identity token naming the organization, workspace or Stack, and run phase, which AWS, Azure, Google Cloud, Vault or Kubernetes verify against a trust relationship before returning temporary credentials that are discarded when the run's environment is torn down. Separate roles for plan and apply, so a pull request's plan can read but never write, follow directly. The playbook's [Secure](/docs/delivery/ci-pipelines#secure) covers the pipeline rules around them, and [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security) covers federation and its failure modes in depth.
 
 ## When State and Signing Keys Leak
 
@@ -184,31 +184,37 @@ CREATE TABLE policy_evaluations (        -- one policy's result against one run
   policy           TEXT NOT NULL,        -- 'storage/no-public-buckets', 'CKV_AWS_20'
   policy_version   TEXT NOT NULL,        -- the policy set's commit or release
   enforcement      TEXT NOT NULL CHECK (enforcement IN ('advisory', 'soft_mandatory',
-                     'hard_mandatory')),  -- run tasks map 'mandatory' to hard_mandatory
+                     'hard_mandatory')),  -- OPA 'mandatory' (overridable with the
+                                          -- permission) maps to soft_mandatory; run
+                                          -- tasks map 'mandatory' to hard_mandatory
+  set_overridable  BOOLEAN NOT NULL DEFAULT false,  -- the policy set allowed overrides
+                                                     -- when this ran (copied, not joined)
   result           TEXT NOT NULL CHECK (result IN ('passed', 'failed', 'errored')),
   message          TEXT,
   resource_address TEXT,                 -- the plan address it failed on, if one
-  override_by      TEXT,                 -- typed actor
+  overridden_by    TEXT,                 -- typed actor
   override_reason  TEXT,
   overridden_at    TIMESTAMPTZ,
   evaluated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CHECK (num_nulls(override_by, override_reason, overridden_at) IN (0, 3)),
-  CHECK (override_by IS NULL OR (enforcement = 'soft_mandatory'
-                                 AND result IN ('failed', 'errored')))
+  CHECK (num_nulls(overridden_by, override_reason, overridden_at) IN (0, 3)),
+  CHECK (overridden_by IS NULL OR (result IN ('failed', 'errored')
+         AND (enforcement = 'soft_mandatory'
+              OR (enforcement = 'hard_mandatory' AND set_overridable))))
 );
 ```
 
 The gate is a query, not a status someone sets:
 
 ```sql
--- A planned run may be approved only if no hard-mandatory policy failed and every
--- soft-mandatory failure was overridden by someone with the right to do it.
+-- A planned run may be approved only if every mandatory failure was overridden by
+-- someone with the right to do it; the constraint above already refuses an
+-- override of a hard-mandatory failure in a set that doesn't allow overrides.
 SELECT NOT EXISTS (
   SELECT 1 FROM policy_evaluations
    WHERE run_id = $run_id
      AND result IN ('failed', 'errored')
-     AND (enforcement = 'hard_mandatory'
-          OR (enforcement = 'soft_mandatory' AND override_by IS NULL))
+     AND enforcement <> 'advisory'
+     AND overridden_by IS NULL
 ) AS may_apply;
 ```
 
@@ -216,7 +222,7 @@ Design decisions behind it:
 
 - **An apply points at its plan.** `plan_run_id` and `plan_sha256` make "CI applies exactly the reviewed plan" a constraint: the apply worker loads the stored plan file, checks its hash and the state's serial against what the plan was made from, and refuses if the state moved on. A stale plan is discarded, never re-planned silently.
 - **Plans are secrets too.** A plan file holds the same attribute values as state, so `plan_ref` is encrypted like a state body, readable only by the apply worker and the run's reviewers, and pruned on the same schedule as intermediate state versions.
-- **Overrides are rows on the result.** A soft-mandatory override carries its actor, reason and time, and a hard-mandatory one is impossible by constraint. "Which rules are overridden most" is a query, and the answer drives which policies get rewritten.
+- **Overrides are rows on the result.** An override carries its actor, reason and time. A soft-mandatory failure can be overridden; a hard-mandatory one only when its policy set allowed overrides at evaluation time (`set_overridable`, copied onto the row so a later settings change doesn't rewrite history), and otherwise the constraint refuses it. "Which rules are overridden most" is a query, and the answer drives which policies get rewritten.
 - **Credentials are recorded by kind.** `credential_kind = 'static'` on an apply is a finding by itself; the target is OIDC on every run.
 - **Drift checks don't write state.** A scheduled `drift_check` refreshes and plans; a detected drift opens a notification and, if the change was right, a pull request, never an automatic apply.
 - **Meters follow the axis the provider chooses.** A platform billed by managed resources rates the `iac.managed_resource_hours` meter from state versions ([Provisioning](/books/hosting-and-cloud/terraform-and-opentofu#how-to-build-it)); one billed by outcomes emits `usage_events` with meter `iac.successful_applies` (idempotency key: the run id) when an apply reaches `applied`; one billed by concurrency sells workers as a recurring SKU and meters `iac.run_minutes` for capacity planning. Pull-request plans and drift checks are free or not by the SKU's definition, written down, never by an exception in code.
@@ -233,7 +239,7 @@ Design decisions behind it:
 ## What This Means for the System You Build
 
 - **Test modules in layers:** mocked plans on every pull request, real deploys in an isolated account before a release, and a sweeper for anything a crashed test leaves behind.
-- **Run policy against the plan,** with hard-mandatory rules few and absolute, soft-mandatory overrides recorded with a reason, and new rules advisory until proven.
+- **Run policy against the plan,** with hard-mandatory rules few and absolute (in sets that don't allow overrides), soft-mandatory overrides recorded with a reason, and new rules advisory until proven.
 - **Keep secrets out of state:** ephemeral values and write-only arguments for providers, a secrets manager for runtime, SOPS for the rare repository secret, and client-side or customer-key encryption for what remains.
 - **Federate CI to the cloud with OIDC,** with read-only credentials for plans and write credentials only for the reviewed apply.
 - **Apply the reviewed plan, not a fresh one,** and refuse it if the state moved since.
@@ -249,6 +255,7 @@ Design decisions behind it:
 - [OpenTofu: test command](https://opentofu.org/docs/cli/commands/test/), `.tofutest.hcl` precedence, `mock_provider`, overrides and their 1.12 instance targeting, type-based defaults
 - [Terratest](https://terratest.gruntwork.io/), the Go library, supported tools, the deploy, validate and undeploy pattern
 - [Sentinel: Enforcement levels](https://developer.hashicorp.com/sentinel/docs/concepts/enforcement-levels), advisory as default, soft mandatory and non-repudiation, hard mandatory
+- [HCP Terraform: Manage policies and policy sets](https://developer.hashicorp.com/terraform/cloud-docs/policy-enforcement/manage-policy-sets), Sentinel and OPA enforcement levels in HCP Terraform, policy-level overrides on Sentinel policy sets taking precedence over hard mandatory, OPA mandatory overrides with Manage Policy Overrides permission
 - [Conftest](https://www.conftest.dev/), Rego policies, `deny`, `violation` and `warn`, the `main` namespace, supported formats, `conftest verify`
 - [HCP Terraform: Run tasks](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/settings/run-tasks), stages, advisory and mandatory enforcement, callbacks, the HCP Packer revoked-image example
 - [HCP Terraform: Dynamic provider credentials](https://developer.hashicorp.com/terraform/cloud-docs/dynamic-provider-credentials), per-run OIDC workload identity tokens, claims, supported platforms, trust setup

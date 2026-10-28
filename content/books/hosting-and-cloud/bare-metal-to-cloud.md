@@ -20,7 +20,7 @@ No provider lived through all the eras in one form, and the ones that survived c
 | --- | --- | --- |
 | Rackspace | Operations began in 1998 as a limited partnership; NYSE listing on August 8, 2008 | A managed services company across other providers' clouds |
 | Equinix | Incorporated June 22, 1998 to run neutral interconnection buildings | 280 data centers in 77 markets in 2025 |
-| Amazon Web Services | S3 on March 13, 2006 and EC2 in beta on August 25, 2006, running on Xen | The largest cloud, now on its own Nitro hypervisor and hardware (Sandboxes & MicroVMs) |
+| Amazon Web Services | S3 on March 13, 2006 and EC2 in beta on August 25, 2006, running on Xen | The largest cloud, now on its own Nitro hypervisor and hardware ([Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms)) |
 | Heroku | A git-push platform; the Cedar process model announced June 20, 2011 | Free plans ended November 28, 2022; a "sustaining engineering model" from February 6, 2026 |
 | ZEIT, renamed Vercel | Immutable deploy URLs; renamed April 21, 2020 | A frontend cloud on AWS regions |
 | VMware | Incorporated 1998, first product shipped 1999 | Acquired by Broadcom, completed November 22, 2023 |
@@ -71,9 +71,9 @@ Deployment became a pipeline with a preview. Netlify introduced Deploy Previews 
 
 AWS Lambda, previewed on November 13, 2014, ran a function on an event and billed compute "in units of 100 milliseconds," with a timeout of up to 60 seconds. Cloudflare Workers, announced September 29, 2017, ran JavaScript in V8 isolates at the edge instead of in containers. WASI, announced by Mozilla on March 27, 2019, gave WebAssembly a system interface outside the browser.
 
-Serverless needed stronger walls at lower cost than one VM per customer. Google open-sourced gVisor, a user-space kernel that intercepts system calls, on May 2, 2018. AWS announced Firecracker on November 26, 2018, launching microVMs "in as little as 125 ms" with about 5 MiB of memory each; the paper at NSDI in February 2020 described running Lambda and Fargate on it.
+Serverless needed stronger walls at lower cost than one VM per customer. Google open-sourced gVisor, a user-space kernel that intercepts system calls, on May 2, 2018. AWS announced Firecracker on November 26, 2018 (the NSDI paper dates the open-source release to December 2018), launching microVMs "in as little as 125 ms" with about 5 MiB of memory each; the paper at NSDI in February 2020 described running Lambda and Fargate on it.
 
-Hosted CI made the build server a service. GitHub announced CI/CD in GitHub Actions on August 8, 2019, free for public repositories. ZEIT, whose deploys each had a permanent URL with a domain aliased to one, renamed itself Vercel on April 21, 2020. GitOps, a reconciler in the cluster pulling desired state from Git, became a graduated CNCF practice when Argo graduated on December 6, 2022.
+Hosted CI made the build server a service. GitHub announced CI/CD in GitHub Actions on August 8, 2019, free for public repositories. ZEIT, whose deploys each had a permanent URL with a domain aliased to one, renamed itself Vercel on April 21, 2020. GitOps, a reconciler in the cluster pulling desired state from Git, became a graduated CNCF practice when Flux and Argo graduated, on November 30 and December 6, 2022.
 
 **What it solved:** paying only for work done, and isolating strangers' code per request. **What it cost:** cold starts, execution limits, a programming model per platform, and bills that scale with traffic nobody controls.
 
@@ -81,7 +81,7 @@ Hosted CI made the build server a service. GitHub announced CI/CD in GitHub Acti
 
 The clouds moved their control planes into customers' buildings. Google announced Anthos, renamed from Cloud Services Platform, at Next on April 9, 2019; Microsoft previewed Azure Arc on November 4, 2019 to manage servers and clusters anywhere from Azure; AWS Outposts became generally available on December 3, 2019 as AWS-run racks in the customer's data center; Azure Stack HCI is now part of Azure Local. Oxide announced general availability of its rack-scale "cloud computer" for sale, not rent, on October 26, 2023.
 
-Some companies left. Dropbox's S-1 (February 2018) attributed a $39.5 million net decrease in infrastructure costs in 2016 and a further $35.1 million in 2017 to moving user data off third-party infrastructure. 37signals announced it was leaving the cloud on October 19, 2022, projected about $1.5 million a year of savings on February 21, 2023 against a 2022 cloud bill of $3.2 million, and reported on October 17, 2024 that its cloud bill had fallen from $3.2 million to a $1.3 million run rate.
+Some companies left. Dropbox's S-1 (February 2018) attributed a $39.5 million net decrease in infrastructure costs in 2016 and a further $35.1 million in 2017 to moving user data off third-party infrastructure. 37signals announced it was leaving the cloud on October 19, 2022, projected about $1.5 million a year of savings on February 21, 2023 against a 2022 cloud bill of $3.2 million, and reported on October 17, 2024 that its cloud bill had fallen from $3.2 million to a $1.3 million run rate, all of it S3. Hansson posted on October 20, 2025 that the AWS account had been deleted, and the company's engineering podcast of January 8, 2026 put the completed S3 move at about 10 PB, copied in under 10 days.
 
 The tools' ownership changed under their users. HashiCorp moved future releases from MPL 2.0 to the Business Source License on August 10, 2023, and the OpenTofu fork reached its first stable release, 1.6.0, on January 10, 2024. Broadcom completed its acquisition of VMware on November 22, 2023. Heroku ended free plans on November 28, 2022 and moved to a sustaining engineering model on February 6, 2026.
 
@@ -93,13 +93,13 @@ Each era is told in full by the chapters below; the business and law that follow
 
 | Era | Chapters that tell it |
 | --- | --- |
-| 1. Files on someone else's server | The Data Center & Colocation; Dedicated Servers & Bare Metal; Data Center Networking; Shared Hosting Isolation; How Code Got to Servers; Convergence: CFEngine to Puppet |
-| 2. Many customers per machine | Virtualization & the VPS; Shared Hosting Isolation; From chroot to Containers; Convergence: CFEngine to Puppet |
-| 3. Machines by the hour | Regions, Zones, Cells & Quotas; Storage: Block, File & Object; Managed Databases; Chef; Push & Events: Ansible and Salt; Platforms Take Over the Deploy; PaaS & Frontend Clouds |
-| 4. The application is the unit | From chroot to Containers; Schedulers: Borg to Kubernetes; the Kubernetes part (Kubernetes Architecture through Distributions & Alternatives); Baking Images: Packer; Provisioning: Terraform, OpenTofu & the Alternatives; Artifacts & Registries |
-| 5. No server in sight | Sandboxes & MicroVMs; Functions, Isolates & Edge Compute; Serverless & Edge Databases; Managed Queues & Streaming; the CI/CD Platforms part (From Tinderbox to Jenkins: How CI Began through Pipeline Supply-Chain Security); Packaging & GitOps |
-| 6. Back toward owning | Hybrid & On-Prem Cloud; Repatriation; Open Source & the Clouds; Testing, Policy, Secrets & IaC Platforms; the Homelab part (The Homelab through From Homelab to Colocation); GPU & AI Clouds; Where AI Runs: Home, Colo, Cloud or Frontier |
-| All eras | Observability Platforms; Continuous Delivery Platforms; Multi-Tenancy, Policy & Security |
+| 1. Files on someone else's server | [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation); [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers); [Data Center Networking](/books/hosting-and-cloud/data-center-networking); [Shared Hosting Isolation](/books/hosting-and-cloud/shared-hosting-isolation); [How Code Got to Servers](/books/hosting-and-cloud/how-code-got-to-servers); [Convergence: CFEngine to Puppet](/books/hosting-and-cloud/cfengine-and-puppet) |
+| 2. Many customers per machine | [Virtualization & the VPS](/books/hosting-and-cloud/virtualization-and-vps); Shared Hosting Isolation; [From chroot to Containers](/books/hosting-and-cloud/containers); Convergence: CFEngine to Puppet |
+| 3. Machines by the hour | [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells); [Storage: Block, File & Object](/books/hosting-and-cloud/storage); [Managed Databases](/books/hosting-and-cloud/managed-databases); [Chef](/books/hosting-and-cloud/chef); [Push & Events: Ansible and Salt](/books/hosting-and-cloud/ansible-and-salt); [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys); [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds) |
+| 4. The application is the unit | From chroot to Containers; [Schedulers: Borg to Kubernetes](/books/hosting-and-cloud/schedulers); the Kubernetes part ([Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture) through [Distributions & Alternatives](/books/hosting-and-cloud/kubernetes-distributions-and-alternatives)); [Baking Images: Packer](/books/hosting-and-cloud/packer-and-images); [Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu); [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries) |
+| 5. No server in sight | [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms); [Functions, Isolates & Edge Compute](/books/hosting-and-cloud/functions-and-edge-compute); [Serverless & Edge Databases](/books/hosting-and-cloud/serverless-and-edge-databases); [Managed Queues & Streaming](/books/hosting-and-cloud/managed-queues-and-streaming); the CI/CD Platforms part ([From Tinderbox to Jenkins: How CI Began](/books/hosting-and-cloud/ci-history) through [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security)); [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops) |
+| 6. Back toward owning | [Hybrid & On-Prem Cloud](/books/hosting-and-cloud/hybrid-and-on-prem-cloud); [Repatriation](/books/hosting-and-cloud/repatriation); [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds); [Testing, Policy, Secrets & IaC Platforms](/books/hosting-and-cloud/iac-testing-policy-and-secrets); the Homelab part ([The Homelab](/books/hosting-and-cloud/homelab) through [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation)); [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds); [Where AI Runs: Home, Colo, Cloud or Frontier](/books/hosting-and-cloud/where-ai-runs) |
+| All eras | [Observability Platforms](/books/hosting-and-cloud/observability-platforms); [Continuous Delivery Platforms](/books/hosting-and-cloud/continuous-delivery-platforms); [Multi-Tenancy, Policy & Security](/books/hosting-and-cloud/kubernetes-multi-tenancy-and-policy) |
 
 The Homelab part runs the whole path at the scale of one operator: hardware at home, storage, hypervisors, networks and routing, self-hosted apps, exposing services, models on home GPUs, and the move from a residence to colocation, then to cloud and hybrid.
 
@@ -110,9 +110,9 @@ The eras don't replace each other; they stack, and a provider today sells all of
 - **Rent the building, own the decision.** Colocation until utilization is high and steady enough to justify owning, which most never reach.
 - **KVM for virtual machines,** with a microVM (Firecracker or Kata) or a user-space kernel (gVisor) wherever strangers' code shares a host.
 - **Containers as the unit of deployment,** with OCI images built in CI and pulled from a registry you control, and a scheduler only when there are enough services to need one.
-- **Declare infrastructure, bake images, and keep convergence for what's left,** with a license you can live with if its owner changes (Provisioning: Terraform, OpenTofu & the Alternatives).
+- **Declare infrastructure, bake images, and keep convergence for what's left,** with a license you can live with if its owner changes ([Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu)).
 - **Functions for spiky, short, stateless work,** priced against a container that runs all month.
-- **A written exit,** for each rented layer, with the cost model that says when to take it (Repatriation).
+- **A written exit,** for each rented layer, with the cost model that says when to take it ([Repatriation](/books/hosting-and-cloud/repatriation)).
 
 What would change these: a workload that only runs on one provider's managed service, a residency requirement the clouds can't meet, or scale large enough that the provider's margin pays for a hardware team.
 
@@ -122,12 +122,12 @@ The timeline adds no tables. It explains why [the core data model](/books/hostin
 
 | Era | Kinds it added to `resources` | Meters it added |
 | --- | --- | --- |
-| 1 | `server`, `hosting_account`, `site`, `mailbox`, `domain`, `dns_zone` | Monthly plans, bandwidth |
+| 1 | `cabinet`, `cross_connect`, `power_circuit`, `server`, `hosting_account`, `site`, `mailbox`, `domain`, `dns_zone` | Monthly plans, bandwidth |
 | 2 | `virtual_machine`, `ip_address` | Monthly VPS plans |
-| 3 | `volume`, `snapshot`, `image`, `bucket`, `network`, `subnet`, `load_balancer`, `database` | Instance-hours, then seconds; gigabyte-months; requests; egress |
+| 3 | `volume`, `snapshot`, `image`, `bucket`, `network`, `subnet`, `security_group`, `load_balancer`, `capacity_reservation`, `database` | Instance-hours, then seconds; gigabyte-months; requests; egress |
 | 4 | `container_service`, `cluster`, `node_pool`, `registry` | Cluster-hours, image storage and pulls |
-| 5 | `function`, `edge_store`, `queue`, `topic`, `ci_pipeline` | Invocations, CPU-milliseconds, rows, messages, build minutes |
-| 6 | `interconnect`, `placement_group`, regions whose `underlay` is a customer site | Per-core subscriptions, committed capacity |
+| 5 | `function`, `edge_store`, `queue`, `topic`, `message_broker`, `ci_pipeline` | Invocations, CPU-milliseconds, rows, messages, build minutes |
+| 6 | `interconnect`, `placement_group`, `outpost_site`, regions whose `underlay` is a customer site | Per-core subscriptions, committed capacity |
 
 ## What This Means for the System You Build
 
@@ -201,6 +201,7 @@ The timeline adds no tables. It explains why [the core data model](/books/hostin
 - [AWS: General availability of AWS Outposts](https://aws.amazon.com/about-aws/whats-new/2019/12/announcing-general-availability-of-aws-outposts/), December 3, 2019
 - [Microsoft Learn: Azure Stack HCI is now part of Azure Local](https://learn.microsoft.com/en-us/azure/azure-local/rename-to-azure-local), the rename
 - [Vercel: ZEIT is now Vercel](https://vercel.com/blog/zeit-is-now-vercel), April 21, 2020
+- [CNCF: Flux graduates](https://www.cncf.io/announcements/2022/11/30/flux-graduates-from-cncf-incubator/), November 30, 2022
 - [CNCF: Argo has graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/), December 6, 2022
 - [Heroku: Heroku's next chapter](https://www.heroku.com/blog/next-chapter/), free plans ending November 28, 2022
 - [HashiCorp: HashiCorp adopts the Business Source License](https://www.hashicorp.com/blog/hashicorp-adopts-business-source-license), August 10, 2023
@@ -213,3 +214,5 @@ The timeline adds no tables. It explains why [the core data model](/books/hostin
 - [37signals: Why we're leaving the cloud](https://world.hey.com/dhh/why-we-re-leaving-the-cloud-654b47e0), October 19, 2022
 - [37signals: We stand to save $7m over five years from our cloud exit](https://world.hey.com/dhh/we-stand-to-save-7m-over-five-years-from-our-cloud-exit-53996caa), February 21, 2023, the 2022 bill and projected savings
 - [37signals: Our cloud-exit savings will now top ten million over five years](https://world.hey.com/dhh/our-cloud-exit-savings-will-now-top-ten-million-over-five-years-c7d9b5bd), October 17, 2024, the bill after the exit
+- [37signals Dev: Moving Mountains of Data off S3](https://dev.37signals.com/moving-mountains-of-data-off-s3/), January 8, 2026, the completed S3 transfer
+- [DHH on X: the 37signals AWS account deleted](https://x.com/dhh/status/1980406035543388259), October 20, 2025

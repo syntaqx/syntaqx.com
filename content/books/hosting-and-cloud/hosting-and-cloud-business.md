@@ -16,22 +16,22 @@ The software is hard because provisioning, money and law hang off the same few r
 The chapters follow infrastructure from the building to the bill, in seventeen parts plus a reference. The stack is told bottom to top and through its history: each layer, the problem it solved, and what it cost.
 
 - **The Business.** This chapter, then [The Provider Landscape](/books/hosting-and-cloud/provider-landscape) (hyperscalers, developer clouds, European providers, PaaS and frontend clouds, web hosts, registrars, edge networks and communications platforms; who resells whom; build, buy or rent), [Accounts, Organizations & Resellers](/books/hosting-and-cloud/accounts-and-resellers) (account hierarchies, IAM and API keys, sub-accounts, reseller and white-label models, account standing) and [From Bare Metal to Cloud: The Timeline](/books/hosting-and-cloud/bare-metal-to-cloud) (dated eras from colocation to serverless and back to hybrid, with deployment and infrastructure as code milestones).
-- **The Stack, Bottom to Top.** The Data Center & Colocation (power, cooling, Uptime tiers, cross-connects, remote hands); Dedicated Servers & Bare Metal (provisioning, reimaging, spares); Data Center Networking (leaf-spine fabrics, virtual networks and VPCs, SmartNICs and DPUs, InfiniBand, RoCE and AI fabrics); Virtualization & the VPS (binary translation, Xen, hardware assist, KVM, Virtuozzo and OpenVZ, burstable credits); Shared Hosting Isolation (mod_php to suEXEC, PHP-FPM pools, CloudLinux LVE and CageFS); From chroot to Containers (jails, Zones, namespaces, cgroups, LXC, Docker, OCI); Schedulers: Borg to Kubernetes (Borg, Omega, Mesos, Swarm, ECS, Nomad); Sandboxes & MicroVMs (Nitro, gVisor, Kata, Firecracker); Functions, Isolates & Edge Compute (Lambda, Workers isolates, Wasm, WASI); Storage: Block, File & Object (volumes, snapshots, object semantics, durability claims); Regions, Zones, Cells & Quotas (footprint, cells, shuffle sharding, control and data planes); Hybrid & On-Prem Cloud (Outposts, Arc and Azure Local, Google Distributed Cloud, Oxide); and Repatriation (Dropbox's and 37signals' numbers; when owning wins).
-- **Kubernetes.** Kubernetes Architecture (API server, etcd, controllers, the scheduler, CRDs and operators, support windows); Managed Kubernetes (EKS, GKE, AKS and the developer clouds; control plane and extended support fees); Cluster Networking (CNI, eBPF, Gateway API, service meshes); Storage & Stateful Workloads (CSI, StatefulSets, operators, backup); Packaging & GitOps (Helm, Kustomize, Argo CD, Flux, progressive delivery); Multi-Tenancy, Policy & Security (RBAC, virtual clusters, admission and image policy); Autoscaling & Cost (HPA, KEDA, Karpenter, bin packing, spot); and Distributions & Alternatives (OpenShift, Rancher, k3s, Talos, and when not to run Kubernetes).
-- **Managed Services.** Managed Databases (RDS, Aurora, DynamoDB, Atlas, managed caches, extended support fees); Serverless & Edge Databases (serverless Postgres and branching, SQLite at the edge, key-value and durable objects, pricing per request and row); Managed Queues & Streaming (RabbitMQ, SQS and SNS, Pub/Sub, Kafka as a service, NATS; pricing by message); Observability Platforms (pricing by host, gigabyte and cardinality; OpenTelemetry; bill shock); and Open Source & the Clouds (the license wars and the forks that settled them).
-- **Deployment.** How Code Got to Servers (FTP, SFTP, File Manager, rsync, Capistrano); Platforms Take Over the Deploy (git push, twelve-factor, blue/green and canary, GitOps, preview deploys, immutable URLs); and PaaS & Frontend Clouds (what they resell, how they meter, where the underlay shows through).
-- **CI/CD Platforms.** From Tinderbox to Jenkins: How CI Began; The CI/CD Platform Business (per-minute pricing, OS multipliers, free tiers for open source); Runners & Build Infrastructure (hosted and self-hosted runners, ephemeral VMs, macOS fleets, caching); Continuous Delivery Platforms (Spinnaker, Argo, Harness, Octopus, approvals); Artifacts & Registries (pull limits, retention, egress); and Pipeline Supply-Chain Security (the CI breaches, OIDC federation, pinning, SLSA, Sigstore, SBOMs).
-- **Infrastructure as Code.** Convergence: CFEngine to Puppet; Chef; Push & Events: Ansible and Salt; Baking Images: Packer; Provisioning: Terraform, OpenTofu & the Alternatives; and Testing, Policy, Secrets & IaC Platforms.
-- **Homelab.** The Homelab (why people run infrastructure at home, the community, the hardware, power and noise); NAS & Home Storage (Unraid, TrueNAS, ZFS, Synology and QNAP); Hypervisors at Home (Proxmox VE, the end of free ESXi, XCP-ng, Incus); Home Networks: Ethernet, Wi-Fi & Cabling; Home Routing, Firewalls & DNS (pfSense and OPNsense, UniFi, VLANs, local DNS, IPv6 and CGNAT); Self-Hosted Apps & Orchestration (Compose, Home Assistant, media servers, k3s and GitOps at home, backups); Exposing Home Services (port forwarding, reverse proxies, tunnels, WireGuard and Tailscale, ISP terms); AI at Home (open-weight models on home hardware: memory, runtimes, quantization, model licenses); and From Homelab to Colocation (deploying from home, upload limits, redundant lines and BGP, power, and when a residence gives way to colocation).
-- **Web Hosting.** How Web Hosting Makes Money (intro terms and renewals, bundles, upsells, ratable revenue); cPanel & WHM (root, reseller, package, feature list, account; AutoSSL; the APIs); Control Panel Licensing & the Alternatives (account-based pricing since 2019, Plesk, DirectAdmin); Managed WordPress (visit limits, staging, caching, platform-dependency risk); Backups, Restores & Migrations; and Email Hosting.
-- **Domains and DNS.** ICANN, Registries & Registrars (roles, contracts, the fee stack); The Domain Data Model & EPP; The Domain Lifecycle (grace periods, expiry notices, redemption, drop catching); Transfers, Locks & Registrar Security; Registration Data & RDAP; DNS Abuse at the Registrar; Domain Disputes (UDRP, URS, court orders); New gTLDs & ccTLDs; and DNS Hosting & DNSSEC.
-- **Certificates.** The Web PKI & Certificate Transparency (CAs, root programs, the CA/Browser Forum, validation, CAA, CT logs); ACME & Certificates at Hosting Scale; and Shorter Lifetimes, Revocation & Distrust.
-- **The Edge.** The Edge Business; Networks, Peering & IP Addresses (anycast, PoPs, IXPs, IPv4 scarcity and markets); Caching & Invalidation; TLS & Protocols at the Edge; DDoS Mitigation; and WAF, Bots & Rate Limits.
-- **Communications Platforms.** The CPaaS Business (owned network versus aggregator, usage revenue, pass-through fees); Phone Numbers & Porting; Business Texting Registration (10DLC, toll-free verification, short codes, RCS); Sending a Text (segments, throughput, delivery receipts, STOP, carrier fines); Voice Platforms (SIP trunking, STIR/SHAKEN, the Robocall Mitigation Database); 911, CPNI & Telecom Duties; Telecom Fraud; Email Sending Platforms; and Inbox Rules.
-- **Metering and Billing.** Metering & Rating; Pricing Catalogs; Free Tiers, Credits & Startup Programs; Commitments, Discounts & Marketplaces; Subscriptions, Renewals & Cancellation Law; Invoices, Dunning & Suspension; Tax on Hosting & Cloud; SLAs & Service Credits; and Cost Data, FinOps & Surprise Bills.
-- **Abuse, Trust and the Law.** Abuse on Infrastructure (hosted versus pass-through services, AUPs, termination decisions); Free-Tier Fraud & Stolen Keys; Conduits, Caches & Blocking Orders; Sanctions, Exports & Bulletproof Hosts; and Law Enforcement at Infrastructure Providers.
-- **Market Rules and Compliance.** Shared Responsibility & Compliance Programs (SOC 2, ISO 27001, PCI for hosts, FedRAMP 20x, sovereign cloud); Egress & Switching (exit waivers, the EU Data Act); Competition Cases (CMA, EU DMA, FTC); and Licensing Disputes (Microsoft and CISPE, Broadcom VMware).
-- **Running the Provider.** Provider Architecture (control plane, provisioning, the metering pipeline, billing, support and abuse); GPU & AI Clouds; Where AI Runs: Home, Colo, Cloud or Frontier; Outages, Post-Mortems & Status Pages; Operating Metrics (ARR, NDR, churn, renewal rates, gross margin, utilization); and Migrations, Shutdowns & End of Life.
+- **Homelab.** [The Homelab](/books/hosting-and-cloud/homelab) (why people run infrastructure at home, the community, the hardware, power and noise); [NAS & Home Storage](/books/hosting-and-cloud/nas-and-home-storage) (Unraid, TrueNAS, ZFS, Synology and QNAP); [Hypervisors at Home](/books/hosting-and-cloud/hypervisors-at-home) (Proxmox VE, the end of free ESXi, XCP-ng, Incus); [Home Networks: Ethernet, Wi-Fi & Cabling](/books/hosting-and-cloud/home-networks-and-cabling); [Home Routing, Firewalls & DNS](/books/hosting-and-cloud/home-routing-and-firewalls) (pfSense and OPNsense, UniFi, VLANs, local DNS, IPv6 and CGNAT); [Self-Hosted Apps & Orchestration](/books/hosting-and-cloud/self-hosted-apps) (Compose, Home Assistant, media servers, k3s and GitOps at home, backups); [Exposing Home Services](/books/hosting-and-cloud/exposing-home-services) (port forwarding, reverse proxies, tunnels, WireGuard and Tailscale, ISP terms); [AI at Home](/books/hosting-and-cloud/ai-at-home) (open-weight models on home hardware: memory, runtimes, quantization, model licenses); and [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation) (deploying from home, upload limits, redundant lines and BGP, power, and when a residence gives way to colocation).
+- **The Stack, Bottom to Top.** [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation) (power, cooling, Uptime tiers, cross-connects, remote hands); [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers) (provisioning, reimaging, spares); [Data Center Networking](/books/hosting-and-cloud/data-center-networking) (leaf-spine fabrics, virtual networks and VPCs, SmartNICs and DPUs, InfiniBand, RoCE and AI fabrics); [Virtualization & the VPS](/books/hosting-and-cloud/virtualization-and-vps) (binary translation, Xen, hardware assist, KVM, Virtuozzo and OpenVZ, burstable credits); [Shared Hosting Isolation](/books/hosting-and-cloud/shared-hosting-isolation) (mod_php to suEXEC, PHP-FPM pools, CloudLinux LVE and CageFS); [From chroot to Containers](/books/hosting-and-cloud/containers) (jails, Zones, namespaces, cgroups, LXC, Docker, OCI); [Schedulers: Borg to Kubernetes](/books/hosting-and-cloud/schedulers) (Borg, Omega, Mesos, Swarm, ECS, Nomad); [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms) (Nitro, gVisor, Kata, Firecracker); [Functions, Isolates & Edge Compute](/books/hosting-and-cloud/functions-and-edge-compute) (Lambda, Workers isolates, Wasm, WASI); [Storage: Block, File & Object](/books/hosting-and-cloud/storage) (volumes, snapshots, object semantics, durability claims); [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells) (footprint, cells, shuffle sharding, control and data planes); and [Hybrid & On-Prem Cloud](/books/hosting-and-cloud/hybrid-and-on-prem-cloud) (Outposts, Arc and Azure Local, Google Distributed Cloud, Oxide).
+- **Kubernetes.** [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture) (API server, etcd, controllers, the scheduler, CRDs and operators, support windows); [Managed Kubernetes](/books/hosting-and-cloud/managed-kubernetes) (EKS, GKE, AKS and the developer clouds; control plane and extended support fees); [Cluster Networking](/books/hosting-and-cloud/cluster-networking) (CNI, eBPF, Gateway API, service meshes); [Storage & Stateful Workloads](/books/hosting-and-cloud/kubernetes-storage) (CSI, StatefulSets, operators, backup); [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops) (Helm, Kustomize, Argo CD, Flux, progressive delivery); [Multi-Tenancy, Policy & Security](/books/hosting-and-cloud/kubernetes-multi-tenancy-and-policy) (RBAC, virtual clusters, admission and image policy); [Autoscaling & Cost](/books/hosting-and-cloud/autoscaling-and-cost) (HPA, KEDA, Karpenter, bin packing, spot); and [Distributions & Alternatives](/books/hosting-and-cloud/kubernetes-distributions-and-alternatives) (OpenShift, Rancher, k3s, Talos, and when not to run Kubernetes).
+- **Managed Services.** [Managed Databases](/books/hosting-and-cloud/managed-databases) (RDS, Aurora, DynamoDB, Atlas, managed caches, extended support fees); [Serverless & Edge Databases](/books/hosting-and-cloud/serverless-and-edge-databases) (serverless Postgres and branching, SQLite at the edge, key-value and durable objects, pricing per request and row); [Managed Queues & Streaming](/books/hosting-and-cloud/managed-queues-and-streaming) (RabbitMQ, SQS and SNS, Pub/Sub, Kafka as a service, NATS; pricing by message); [Observability Platforms](/books/hosting-and-cloud/observability-platforms) (pricing by host, gigabyte and cardinality; OpenTelemetry; bill shock); and [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds) (the license wars and the forks that settled them).
+- **Deployment.** [How Code Got to Servers](/books/hosting-and-cloud/how-code-got-to-servers) (FTP, SFTP, File Manager, rsync, Capistrano); [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys) (git push, twelve-factor, blue/green and canary, GitOps, preview deploys, immutable URLs); and [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds) (what they resell, how they meter, where the underlay shows through).
+- **CI/CD Platforms.** [From Tinderbox to Jenkins: How CI Began](/books/hosting-and-cloud/ci-history); [The CI/CD Platform Business](/books/hosting-and-cloud/ci-cd-platform-business) (per-minute pricing, OS multipliers, free tiers for open source); [Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure) (hosted and self-hosted runners, ephemeral VMs, macOS fleets, caching); [Continuous Delivery Platforms](/books/hosting-and-cloud/continuous-delivery-platforms) (Spinnaker, Argo, Harness, Octopus, approvals); [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries) (pull limits, retention, egress); and [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security) (the CI breaches, OIDC federation, pinning, SLSA, Sigstore, SBOMs).
+- **Infrastructure as Code.** [Convergence: CFEngine to Puppet](/books/hosting-and-cloud/cfengine-and-puppet); [Chef](/books/hosting-and-cloud/chef); [Push & Events: Ansible and Salt](/books/hosting-and-cloud/ansible-and-salt); [Baking Images: Packer](/books/hosting-and-cloud/packer-and-images); [Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu); and [Testing, Policy, Secrets & IaC Platforms](/books/hosting-and-cloud/iac-testing-policy-and-secrets).
+- **Web Hosting.** [How Web Hosting Makes Money](/books/hosting-and-cloud/web-hosting-business) (intro terms and renewals, bundles, upsells, ratable revenue); [cPanel & WHM](/books/hosting-and-cloud/cpanel-and-whm) (root, reseller, package, feature list, account; AutoSSL; the APIs); [Control Panel Licensing & the Alternatives](/books/hosting-and-cloud/control-panel-licensing) (account-based pricing since 2019, Plesk, DirectAdmin); [Managed WordPress](/books/hosting-and-cloud/managed-wordpress) (visit limits, staging, caching, platform-dependency risk); [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations); and [Email Hosting](/books/hosting-and-cloud/email-hosting).
+- **Domains and DNS.** [ICANN, Registries & Registrars](/books/hosting-and-cloud/icann-registries-and-registrars) (roles, contracts, the fee stack); [The Domain Data Model & EPP](/books/hosting-and-cloud/epp-and-domain-data); [The Domain Lifecycle](/books/hosting-and-cloud/domain-lifecycle) (grace periods, expiry notices, redemption, drop catching); [Transfers, Locks & Registrar Security](/books/hosting-and-cloud/transfers-and-locks); [Registration Data & RDAP](/books/hosting-and-cloud/registration-data-and-rdap); [DNS Abuse at the Registrar](/books/hosting-and-cloud/dns-abuse); [Domain Disputes](/books/hosting-and-cloud/domain-disputes) (UDRP, URS, court orders); [New gTLDs & ccTLDs](/books/hosting-and-cloud/new-gtlds-and-cctlds); and [DNS Hosting & DNSSEC](/books/hosting-and-cloud/dns-hosting-and-dnssec).
+- **Certificates.** [The Web PKI & Certificate Transparency](/books/hosting-and-cloud/web-pki) (CAs, root programs, the CA/Browser Forum, validation, CAA, CT logs); [ACME & Certificates at Hosting Scale](/books/hosting-and-cloud/acme-at-scale); and [Shorter Lifetimes, Revocation & Distrust](/books/hosting-and-cloud/certificate-lifetimes-and-distrust).
+- **The Edge.** [The Edge Business](/books/hosting-and-cloud/edge-business); [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses) (anycast, PoPs, IXPs, IPv4 scarcity and markets); [Caching & Invalidation](/books/hosting-and-cloud/caching-and-invalidation); [TLS & Protocols at the Edge](/books/hosting-and-cloud/tls-and-protocols); [DDoS Mitigation](/books/hosting-and-cloud/ddos-mitigation); and [WAF, Bots & Rate Limits](/books/hosting-and-cloud/waf-bots-and-rate-limits).
+- **Communications Platforms.** [The CPaaS Business](/books/hosting-and-cloud/cpaas-business) (owned network versus aggregator, usage revenue, pass-through fees); [Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting); [Business Texting Registration](/books/hosting-and-cloud/texting-registration) (10DLC, toll-free verification, short codes, RCS); [Sending a Text](/books/hosting-and-cloud/sending-a-text) (segments, throughput, delivery receipts, STOP, carrier fines); [Voice Platforms](/books/hosting-and-cloud/voice-platforms) (SIP trunking, STIR/SHAKEN, the Robocall Mitigation Database); [911, CPNI & Telecom Duties](/books/hosting-and-cloud/telecom-duties); [Telecom Fraud](/books/hosting-and-cloud/telecom-fraud); [Email Sending Platforms](/books/hosting-and-cloud/email-sending-platforms); and [Inbox Rules](/books/hosting-and-cloud/inbox-rules).
+- **Metering and Billing.** [Metering & Rating](/books/hosting-and-cloud/metering-and-rating); [Pricing Catalogs](/books/hosting-and-cloud/pricing-catalogs); [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits); [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces); [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law); [Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension); [Tax on Hosting & Cloud](/books/hosting-and-cloud/tax); [SLAs & Service Credits](/books/hosting-and-cloud/slas-and-service-credits); and [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills).
+- **Abuse, Trust and the Law.** [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure) (hosted versus pass-through services, AUPs, termination decisions); [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys); [Conduits, Caches & Blocking Orders](/books/hosting-and-cloud/conduits-caches-and-blocking-orders); [Sanctions, Exports & Bulletproof Hosts](/books/hosting-and-cloud/sanctions-and-bulletproof-hosts); and [Law Enforcement at Infrastructure Providers](/books/hosting-and-cloud/law-enforcement-at-providers).
+- **Market Rules and Compliance.** [Shared Responsibility & Compliance Programs](/books/hosting-and-cloud/compliance-programs) (SOC 2, ISO 27001, PCI for hosts, FedRAMP 20x, sovereign cloud); [Egress & Switching](/books/hosting-and-cloud/egress-and-switching) (exit waivers, the EU Data Act); [Competition Cases](/books/hosting-and-cloud/competition-cases) (CMA, EU DMA, FTC); and [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes) (Microsoft and CISPE, Broadcom VMware).
+- **Running the Provider.** [Provider Architecture](/books/hosting-and-cloud/provider-architecture) (control plane, provisioning, the metering pipeline, billing, support and abuse); [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds); [Where AI Runs: Home, Colo, Cloud or Frontier](/books/hosting-and-cloud/where-ai-runs); [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages); [Operating Metrics](/books/hosting-and-cloud/operating-metrics) (ARR, NDR, churn, renewal rates, gross margin, utilization); [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life); and [Repatriation](/books/hosting-and-cloud/repatriation) (Dropbox's and 37signals' numbers; when owning wins), where the volume ends.
 - **Reference.** A glossary of every term the volume defines, grouped by part.
 
 The volume covers what renting out infrastructure adds. The general engineering lives in the playbook, and chapters here link to it rather than repeat it: [Infrastructure as Code](/docs/delivery/infrastructure-as-code), [Containers](/docs/delivery/containers), [CI Pipelines](/docs/delivery/ci-pipelines), [Deployment Strategies](/docs/delivery/deployment-strategies), [Environments](/docs/operations/environments), [Kubernetes](/docs/operations/kubernetes), [Cost & FinOps](/docs/operations/cost-and-finops), [Disaster Recovery](/docs/operations/disaster-recovery), [Multi-Tenancy](/docs/architecture/multi-tenancy), [Rules as Data](/docs/architecture/rules-as-data), [Audit Trails](/docs/architecture/audit-trails), [Data Retention & Deletion](/docs/architecture/data-retention), [Events & Async Messaging](/docs/architecture/events), [Notifications & Consent](/docs/architecture/notifications), [Calls, Texts & Email](/docs/compliance/consumer-contact), [GDPR](/docs/compliance/gdpr), [PCI DSS](/docs/compliance/pci-dss), [Money & Amounts](/docs/payments/money), [Idempotency](/docs/payments/idempotency), [Subscriptions & Recurring Billing](/docs/payments/subscriptions) and [Sales Tax](/docs/payments/sales-tax). Two other volumes own topics this one leans on: [Payments](/books/payments/card-payments) for the money once it moves ([Stored Cards & Recurring Billing](/books/payments/stored-credentials), [Checkout, Invoicing & Payment Links](/books/payments/checkout-and-invoicing), [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)); and [User-Generated Platforms](/books/user-generated-platforms/platform-business) for the law and operations of hosting other people's content ([Abuse Desks for Hosts & Registrars](/books/user-generated-platforms/abuse-desks), [The Law of Hosting User Content](/books/user-generated-platforms/hosting-liability), [Copyright at Scale](/books/user-generated-platforms/copyright), [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests)).
@@ -100,9 +100,9 @@ Every strategy below is a way of charging for capacity the provider has already 
 
 Three patterns run through the table:
 
-- **Hosting is a renewal business.** The intro price buys the customer; the renewal pays for them. GoDaddy reports retaining about 85% of customers in each of the last five years (about 84% in 2024), and its revenue lags bookings because a prepaid term is recognized month by month. That shape puts the renewal notice, the renewal price and the cancellation path at the center of the business and of the law that governs it (Subscriptions, Renewals & Cancellation Law).
+- **Hosting is a renewal business.** The intro price buys the customer; the renewal pays for them. GoDaddy reports retaining about 85% of customers in each of the last five years (about 84% in 2024), and its revenue lags bookings because a prepaid term is recognized month by month. That shape puts the renewal notice, the renewal price and the cancellation path at the center of the business and of the law that governs it ([Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law)).
 - **Cloud is a utilization business with a float of commitments.** Usage is billed in tiny units, the provider's margin is the gap between what a server earns at its utilization and what it cost, and commitments buy predictability in exchange for discount. Oracle's FY2026 10-K reports remaining performance obligations of $638 billion, against $138 billion a year earlier: contracted capacity, not usage, now headlines the largest deals.
-- **Pass-through money changes the margin, not the profit.** Twilio's 10-K says passing a carrier fee increase to customers typically raises revenue and cost of revenue so that gross profit dollars are unaffected, and Bandwidth says the same of its surcharges. Gross margin percentage falls as surcharges rise, so a provider must report pass-through lines separately or its own margin becomes unreadable (Metering & Rating).
+- **Pass-through money changes the margin, not the profit.** Twilio's 10-K says passing a carrier fee increase to customers typically raises revenue and cost of revenue so that gross profit dollars are unaffected, and Bandwidth says the same of its surcharges. Gross margin percentage falls as surcharges rise, so a provider must report pass-through lines separately or its own margin becomes unreadable ([Metering & Rating](/books/hosting-and-cloud/metering-and-rating)).
 
 My rule: every one of these flows is modeled as a priced SKU with an effective-dated price, a meter and an owner (the provider, or the registry, carrier or licensor it collects for), never as a constant in code. Prices change (Verisign's .com fee rose from $9.59 to $10.26 on September 1, 2024), terms migrate, and the old price still governs the usage and the prepaid terms already sold under it.
 
@@ -135,53 +135,53 @@ Two shapes matter for the system. **The bill is long-tailed and the revenue is n
 
 A site can live at any point on the path this volume follows, from a server at home to colocation to a cloud to a hybrid of them; the life below is the most common one, a site on a shared hosting plan.
 
-**Buy a plan.** A small business picks a shared hosting plan at an introductory monthly price that is only offered with a long prepaid term, often with a free domain for the first year. The checkout shows the renewal price and the term, captures consent to automatic renewal with the terms shown, and charges the whole term upfront (How Web Hosting Makes Money; Subscriptions, Renewals & Cancellation Law; and the playbook's [The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal)).
+**Buy a plan.** A small business picks a shared hosting plan at an introductory monthly price that is only offered with a long prepaid term, often with a free domain for the first year. The checkout shows the renewal price and the term, captures consent to automatic renewal with the terms shown, and charges the whole term upfront ([How Web Hosting Makes Money](/books/hosting-and-cloud/web-hosting-business); [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law); and the playbook's [The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal)).
 
-**Provision.** The order creates a hosting account on a shared server: a control panel account inside a package that sets disk, bandwidth, databases, mailboxes and the feature list, with per-account resource limits enforced at the kernel. When a busy site hits its entry-process limit under CloudLinux, its extra requests get HTTP 508 while the other sites on the server are unaffected (cPanel & WHM; Shared Hosting Isolation).
+**Provision.** The order creates a hosting account on a shared server: a control panel account inside a package that sets disk, bandwidth, databases, mailboxes and the feature list, with per-account resource limits enforced at the kernel. When a busy site hits its entry-process limit under CloudLinux, its extra requests get HTTP 508 while the other sites on the server are unaffected ([cPanel & WHM](/books/hosting-and-cloud/cpanel-and-whm); [Shared Hosting Isolation](/books/hosting-and-cloud/shared-hosting-isolation)).
 
-**Point the domain and get a certificate.** The domain's nameservers or records point at the server, and the panel requests a certificate for every hostname. cPanel's AutoSSL runs during the nightly update and from the task queue after an account is created, validating over HTTP or DNS. Lifetimes are shrinking: Let's Encrypt's default profile moves to 64-day certificates on February 10, 2027 and to 45 days on February 16, 2028, and it warns that renewing on a hardcoded 60-day interval will no longer be enough (ACME & Certificates at Hosting Scale; Shorter Lifetimes, Revocation & Distrust).
+**Point the domain and get a certificate.** The domain's nameservers or records point at the server, and the panel requests a certificate for every hostname. cPanel's AutoSSL runs during the nightly update and from the task queue after an account is created, validating over HTTP or DNS. Lifetimes are shrinking: Let's Encrypt's default profile moves to 64-day certificates on February 10, 2027 and to 45 days on February 16, 2028, and it warns that renewing on a hardcoded 60-day interval will no longer be enough ([ACME & Certificates at Hosting Scale](/books/hosting-and-cloud/acme-at-scale); [Shorter Lifetimes, Revocation & Distrust](/books/hosting-and-cloud/certificate-lifetimes-and-distrust)).
 
-**Deploy and run.** The customer uploads files over SFTP or the panel's file manager, or pushes from git; backups run on the host's schedule; plugins and PHP versions age (How Code Got to Servers; Backups, Restores & Migrations; Managed WordPress).
+**Deploy and run.** The customer uploads files over SFTP or the panel's file manager, or pushes from git; backups run on the host's schedule; plugins and PHP versions age ([How Code Got to Servers](/books/hosting-and-cloud/how-code-got-to-servers); [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations); [Managed WordPress](/books/hosting-and-cloud/managed-wordpress)).
 
-**Renew, or not.** At the end of the term the plan renews at list price unless the customer cancels, after the reminders the law requires. A failed renewal payment starts dunning and, if it fails for good, suspension and then deletion on stated clocks (Invoices, Dunning & Suspension; [Dunning](/books/payments/stored-credentials#dunning)).
+**Renew, or not.** At the end of the term the plan renews at list price unless the customer cancels, after the reminders the law requires. A failed renewal payment starts dunning and, if it fails for good, suspension and then deletion on stated clocks ([Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension); [Dunning](/books/payments/stored-credentials#dunning)).
 
-**Abuse and suspension.** A phishing kit lands on the site through an outdated plugin. A report arrives at the abuse desk, resolves to this hosting account, and the narrowest action that stops the harm is taken first: a blocked path or a quarantined file, then the site, then the account ([Suspension Versus Takedown](/books/user-generated-platforms/abuse-desks#suspension-versus-takedown); Abuse on Infrastructure).
+**Abuse and suspension.** A phishing kit lands on the site through an outdated plugin. A report arrives at the abuse desk, resolves to this hosting account, and the narrowest action that stops the harm is taken first: a blocked path or a quarantined file, then the site, then the account ([Suspension Versus Takedown](/books/user-generated-platforms/abuse-desks#suspension-versus-takedown); [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure)).
 
 ## The Life of a VM
 
-**Account, project and quota.** A developer's account holds a project; launching a machine first checks the project's quota in the chosen region. AWS's Service Quotas describes the shape most clouds share: a default value per account or per Region, applied quotas as overrides, adjustable and fixed quotas, and increase requests support may approve, deny or partially approve (Regions, Zones, Cells & Quotas).
+**Account, project and quota.** A developer's account holds a project; launching a machine first checks the project's quota in the chosen region. AWS's Service Quotas describes the shape most clouds share: a default value per account or per Region, applied quotas as overrides, adjustable and fixed quotas, and increase requests support may approve, deny or partially approve ([Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells)).
 
-**Place it.** The control plane picks a host in a zone with capacity for the instance type, attaches a boot volume cloned from the image, a network interface in the customer's virtual network, and, if asked, a public IPv4 address (Virtualization & the VPS; Data Center Networking; Storage: Block, File & Object).
+**Place it.** The control plane picks a host in a zone with capacity for the instance type, attaches a boot volume cloned from the image, a network interface in the customer's virtual network, and, if asked, a public IPv4 address ([Virtualization & the VPS](/books/hosting-and-cloud/virtualization-and-vps); [Data Center Networking](/books/hosting-and-cloud/data-center-networking); [Storage: Block, File & Object](/books/hosting-and-cloud/storage)).
 
-**Meter it.** From the moment it runs, the machine emits usage: instance-seconds, volume gigabyte-months, egress gigabytes, address-hours. EC2 bills Linux instances per second with a 60-second minimum; AWS has charged $0.005 per public IPv4 address per hour since February 1, 2024, in use or idle. The usage records are ingested idempotently and rated against the price in effect when the usage happened (Metering & Rating; Pricing Catalogs; Networks, Peering & IP Addresses).
+**Meter it.** From the moment it runs, the machine emits usage: instance-seconds, volume gigabyte-months, egress gigabytes, address-hours. EC2 bills Linux instances per second with a 60-second minimum; AWS has charged $0.005 per public IPv4 address per hour since February 1, 2024, in use or idle. The usage records are ingested idempotently and rated against the price in effect when the usage happened ([Metering & Rating](/books/hosting-and-cloud/metering-and-rating); [Pricing Catalogs](/books/hosting-and-cloud/pricing-catalogs); [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses)).
 
-**Discount and invoice.** At the end of the month the rated usage is netted against any commitment and credit, taxed by the seller entity's rules, and becomes invoice lines (Commitments, Discounts & Marketplaces; Free Tiers, Credits & Startup Programs; Tax on Hosting & Cloud).
+**Discount and invoice.** At the end of the month the rated usage is netted against any commitment and credit, taxed by the seller entity's rules, and becomes invoice lines ([Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces); [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits); [Tax on Hosting & Cloud](/books/hosting-and-cloud/tax)).
 
-**Stop, snapshot, terminate.** A stopped machine stops billing compute but keeps billing its storage and its address; a snapshot outlives the machine; termination releases the address back to the pool, where the next holder inherits its reputation. Who held that address and when is the record an abuse report or a subpoena will ask for months later (Abuse on Infrastructure; Law Enforcement at Infrastructure Providers).
+**Stop, snapshot, terminate.** A stopped machine stops billing compute but keeps billing its storage and its address; a snapshot outlives the machine; termination releases the address back to the pool, where the next holder inherits its reputation. Who held that address and when is the record an abuse report or a subpoena will ask for months later ([Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure); [Law Enforcement at Infrastructure Providers](/books/hosting-and-cloud/law-enforcement-at-providers)).
 
-**Or get stolen.** A leaked access key launches a hundred GPU instances in a region the customer never uses; the provider's anomaly detection, quota and fraud controls, and its bill-forgiveness policy decide who pays (Free-Tier Fraud & Stolen Keys; Cost Data, FinOps & Surprise Bills).
+**Or get stolen.** A leaked access key launches a hundred GPU instances in a region the customer never uses; the provider's anomaly detection, quota and fraud controls, and its bill-forgiveness policy decide who pays ([Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys); [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills)).
 
 ## The Life of a Domain
 
-**Search and price.** The customer searches for a name; the registrar checks availability at the registry and prices it from the registry's wholesale fee, ICANN's fee and its own margin, with premium names priced by the registry (ICANN, Registries & Registrars).
+**Search and price.** The customer searches for a name; the registrar checks availability at the registry and prices it from the registry's wholesale fee, ICANN's fee and its own margin, with premium names priced by the registry ([ICANN, Registries & Registrars](/books/hosting-and-cloud/icann-registries-and-registrars)).
 
-**Register.** The registrar creates the domain at the registry over EPP with contacts, nameservers and a period in years. For five calendar days after creation the name is in the Add Grace Period, during which a deletion is refunded, within ICANN's cap of the greater of 10% of the registrar's net new registrations or 50 names a month per TLD (The Domain Data Model & EPP).
+**Register.** The registrar creates the domain at the registry over EPP with contacts, nameservers and a period in years. For five calendar days after creation the name is in the Add Grace Period, during which a deletion is refunded, within ICANN's cap of the greater of 10% of the registrar's net new registrations or 50 names a month per TLD ([The Domain Data Model & EPP](/books/hosting-and-cloud/epp-and-domain-data)).
 
-**Lock, renew, transfer.** A registrar may deny a transfer requested within 60 days of creation or of a prior transfer, and must impose a 60-day transfer lock after a change of registrant unless the registrant opted out. Each year the name renews under the customer's auto-renew setting (Transfers, Locks & Registrar Security).
+**Lock, renew, transfer.** A registrar may deny a transfer requested within 60 days of creation or of a prior transfer, and must impose a 60-day transfer lock after a change of registrant unless the registrant opted out. Each year the name renews under the customer's auto-renew setting ([Transfers, Locks & Registrar Security](/books/hosting-and-cloud/transfers-and-locks)).
 
-**Expire.** ICANN's Expired Registration Recovery Policy requires at least two notices before expiry (about a month and about a week out) and one within five days after; DNS resolution must be interrupted for at least the last eight days the name can still be renewed. A deleted name then enters a 30-day Redemption Grace Period in which the registrant can still redeem it, then pending delete for several days, then the registry releases it to whoever catches the drop (The Domain Lifecycle).
+**Expire.** ICANN's Expired Registration Recovery Policy requires at least two notices before expiry (about a month and about a week out) and one within five days after; DNS resolution must be interrupted for at least the last eight days the name can still be renewed. A deleted name then enters a 30-day Redemption Grace Period in which the registrant can still redeem it, then pending delete for several days, then the registry releases it to whoever catches the drop ([The Domain Lifecycle](/books/hosting-and-cloud/domain-lifecycle)).
 
-**Disputes, abuse and orders.** At any point a trademark complaint can lock the name under the UDRP, an abuse report can put it on hold, or a court can order it transferred (Domain Disputes; DNS Abuse at the Registrar; Registration Data & RDAP).
+**Disputes, abuse and orders.** At any point a trademark complaint can lock the name under the UDRP, an abuse report can put it on hold, or a court can order it transferred ([Domain Disputes](/books/hosting-and-cloud/domain-disputes); [DNS Abuse at the Registrar](/books/hosting-and-cloud/dns-abuse); [Registration Data & RDAP](/books/hosting-and-cloud/registration-data-and-rdap)).
 
 ## The Life of a Text
 
-**Lease a number.** A software company leases a local number from a CPaaS and registers its brand (tax identity) and campaign (use case, opt-in, sample messages) with The Campaign Registry through the platform, paying pass-through fees: Telnyx lists $4.50 per brand registration, $15 per campaign vetting and $10 a month for most campaign types, as of its July 22, 2025 table (Phone Numbers & Porting; Business Texting Registration).
+**Lease a number.** A software company leases a local number from a CPaaS and registers its brand (tax identity) and campaign (use case, opt-in, sample messages) with The Campaign Registry through the platform, paying pass-through fees: Telnyx lists $4.50 per brand registration, $15 per campaign vetting and $10 a month for most campaign types, as of its July 22, 2025 table ([Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting); [Business Texting Registration](/books/hosting-and-cloud/texting-registration)).
 
-**Send.** Each message is split into segments: 160 GSM-7 characters fit in one, 153 per segment when concatenated, and a single emoji switches the whole message to UCS-2 at 70 and 67. The platform looks up the recipient's carrier, applies that carrier's throughput limit for the brand or campaign, and sends (Sending a Text).
+**Send.** Each message is split into segments: 160 GSM-7 characters fit in one, 153 per segment when concatenated, and a single emoji switches the whole message to UCS-2 at 70 and 67. The platform looks up the recipient's carrier, applies that carrier's throughput limit for the brand or campaign, and sends ([Sending a Text](/books/hosting-and-cloud/sending-a-text)).
 
-**Rate it.** The message is billed per segment plus the recipient carrier's fee: Twilio lists $0.0083 per outbound SMS segment on a US long code, plus $0.0035 for AT&T recipients, $0.0045 for T-Mobile and $0.005 for Verizon, and $0.001 for a message that ends in a failed state, as of October 2026. The carrier fee is a pass-through line, not Twilio's margin (Metering & Rating; The CPaaS Business).
+**Rate it.** The message is billed per segment plus the recipient carrier's fee: Twilio lists $0.0083 per outbound SMS segment on a US long code, plus $0.0035 for AT&T recipients, $0.0045 for T-Mobile and $0.005 for Verizon, and $0.001 for a message that ends in a failed state, as of October 2026. The carrier fee is a pass-through line, not Twilio's margin ([Metering & Rating](/books/hosting-and-cloud/metering-and-rating); [The CPaaS Business](/books/hosting-and-cloud/cpaas-business)).
 
-**Deliver, opt out, report.** A delivery receipt arrives from the carrier; a recipient replies STOP and the number is suppressed for that sender; a carrier fines the platform for a campaign that sent content it wasn't registered for, and the platform passes the fine to the customer under its terms (Sending a Text; [Calls, Texts & Email](/docs/compliance/consumer-contact#texting-the-carrier-layer); Telecom Fraud).
+**Deliver, opt out, report.** A delivery receipt arrives from the carrier; a recipient replies STOP and the number is suppressed for that sender; a carrier fines the platform for a campaign that sent content it wasn't registered for, and the platform passes the fine to the customer under its terms (Sending a Text; [Calls, Texts & Email](/docs/compliance/consumer-contact#texting-the-carrier-layer); [Telecom Fraud](/books/hosting-and-cloud/telecom-fraud)).
 
 ## The Core Data Model
 
@@ -270,7 +270,8 @@ CREATE TABLE account_holds (             -- standing is rows, not a status edit
   id             UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id     UUID NOT NULL REFERENCES accounts (id),
   reason         TEXT NOT NULL CHECK (reason IN ('non_payment', 'abuse', 'fraud',
-                   'verification', 'sanctions', 'legal_order', 'customer_request')),
+                   'verification', 'sanctions', 'legal_order', 'customer_request',
+                   'spending_limit')),
   effect         TEXT NOT NULL CHECK (effect IN ('no_new_resources', 'read_only',
                    'stop_resources', 'full_suspension')),
   case_id        UUID REFERENCES moderation_cases (id),  -- the abuse case, when there is one
@@ -328,10 +329,13 @@ CREATE TABLE price_versions (            -- a SKU's price in a book, over time
   currency       CHAR(3) NOT NULL,
   unit_price     NUMERIC(24,12) NOT NULL CHECK (unit_price >= 0),  -- minor units per unit
   tiers          JSONB,                  -- volume tiers; Pricing Catalogs owns the shape
+  applies_to     TEXT NOT NULL DEFAULT 'all' CHECK (applies_to IN ('all', 'new_orders',
+                   'legacy')),           -- the audience: Pricing Catalogs
   valid_during   TSTZRANGE NOT NULL,
   announced_at   TIMESTAMPTZ,            -- notice given; price-change rules are measured here
   EXCLUDE USING GIST (sku_id WITH =, price_book WITH =, currency WITH =,
-    valid_during WITH &&)                -- one price per SKU, book and currency at a time
+    applies_to WITH =, valid_during WITH &&)  -- one price per SKU, book, currency and
+                                              -- audience at a time
 );
 
 CREATE TABLE plans (
@@ -383,25 +387,35 @@ CREATE TABLE resources (                 -- anything running or held
   account_id       UUID NOT NULL REFERENCES accounts (id),
   project_id       UUID REFERENCES projects (id),    -- null for account-level holdings
   kind             TEXT NOT NULL CHECK (kind IN (
+                     'cabinet', 'cross_connect', 'power_circuit', 'outpost_site',
                      'server', 'virtual_machine', 'volume', 'snapshot', 'image',
-                     'network', 'subnet', 'interconnect', 'placement_group', 'ip_address',
-                     'load_balancer', 'cluster', 'node_pool', 'container_service', 'function',
-                     'database', 'cache', 'queue', 'topic', 'edge_store', 'bucket',
-                     'registry', 'ci_pipeline', 'gpu_reservation', 'model_endpoint',
+                     'network', 'subnet', 'security_group', 'interconnect', 'placement_group',
+                     'ip_address', 'load_balancer', 'capacity_reservation',
+                     'cluster', 'node_pool', 'container_service', 'function',
+                     'database', 'cache', 'queue', 'topic', 'message_broker', 'edge_store',
+                     'bucket', 'registry', 'ci_pipeline', 'model_endpoint',
                      'hosting_account', 'site', 'mailbox',
                      'domain', 'dns_zone', 'certificate', 'cdn_zone',
-                     'phone_number', 'sender_identity')),
+                     'phone_number', 'sender_identity', 'sip_trunk')),
+                                         -- every kind the volume defines; each chapter's side
+                                         -- table names the kind it holds
   parent_id        UUID REFERENCES resources (id),   -- site on a server, subnet in a network
   region_id        TEXT REFERENCES regions (id),     -- null: global (a domain, a zone)
   zone_id          TEXT REFERENCES zones (id),
   subscription_id  UUID REFERENCES subscriptions (id), -- what renews it, if anything
-  external_ref     TEXT,                 -- the identifier customers see: 'i-0abc', a droplet id
+  external_ref     TEXT,                 -- the identifier customers see: 'i-0abc', a droplet id;
+                                         -- provider-generated, immutable, never reused
+  create_idempotency_key TEXT,           -- the client's key; a retried create returns the
+                                         -- same resource, not a twin
   state            TEXT NOT NULL CHECK (state IN ('provisioning', 'active', 'stopped',
                      'suspended', 'deleting', 'deleted', 'failed')),
   exists_during    TSTZRANGE NOT NULL,   -- from provisioning to deletion
   created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CHECK (zone_id IS NULL OR region_id IS NOT NULL)
+  CHECK (zone_id IS NULL OR region_id IS NOT NULL),
+  UNIQUE (account_id, create_idempotency_key)
 );
+CREATE UNIQUE INDEX resources_external_ref_key
+  ON resources (kind, external_ref) WHERE external_ref IS NOT NULL;
 
 CREATE TABLE resource_identifiers (      -- names and addresses held over time
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -463,7 +477,8 @@ CREATE TABLE phone_numbers (             -- side table: kind = 'phone_number'
 CREATE TABLE sender_identities (         -- side table: kind = 'sender_identity'
   resource_id   UUID PRIMARY KEY REFERENCES resources (id),
   channel       TEXT NOT NULL CHECK (channel IN ('email_domain', 'email_address',
-                  'sms_brand', 'sms_campaign', 'toll_free_verification', 'voice_caller_id')),
+                  'sms_brand', 'sms_campaign', 'toll_free_verification', 'short_code_program',
+                  'rcs_agent', 'voice_caller_id')),
   identifier    TEXT NOT NULL,           -- the domain, the registry's brand or campaign id
   status        TEXT NOT NULL CHECK (status IN ('pending', 'verified', 'rejected',
                   'suspended', 'expired'))
@@ -504,11 +519,14 @@ CREATE TABLE quotas (                    -- limits, defaults and overrides, over
   account_id   UUID REFERENCES accounts (id),   -- null with project_id null: the default
   project_id   UUID REFERENCES projects (id),
   region_id    TEXT REFERENCES regions (id),    -- null: global quota
+  zone_id      TEXT REFERENCES zones (id),      -- null: regional or global quota
   limit_value  NUMERIC NOT NULL,
   source       TEXT NOT NULL CHECK (source IN ('default', 'applied', 'risk', 'abuse')),
   valid_during TSTZRANGE NOT NULL,
+  CHECK (zone_id IS NULL OR region_id IS NOT NULL),
   EXCLUDE USING GIST (quota_code WITH =, (COALESCE(account_id::text, '')) WITH =,
     (COALESCE(project_id::text, '')) WITH =, (COALESCE(region_id, '')) WITH =,
+    (COALESCE(zone_id, '')) WITH =,
     source WITH =, valid_during WITH &&)  -- one limit per scope and source at a time;
                                          -- the effective limit is the most specific row
 );
@@ -589,96 +607,111 @@ Each later chapter extends a defined part of this spine. Table names here are th
 
 | Chapter | What it adds |
 | --- | --- |
-| 2102 The Provider Landscape | `regions.underlay` as the place the underlay shows; no tables |
-| 2103 Accounts, Organizations & Resellers | `organizations`, `organization_units`, `users`, `account_members`, `roles`, `role_bindings`, `api_credentials`, `reseller_agreements`, `white_label_brands`, hold reasons by level |
+| 2102 [The Provider Landscape](/books/hosting-and-cloud/provider-landscape) | `regions.underlay` as the place the underlay shows; no tables |
+| 2103 Accounts, Organizations & Resellers | `organization_units`, `users`, `account_members`, `service_principals`, `roles`, `role_bindings`, `permission_ceilings`, `api_credentials`, `reseller_agreements`, `white_label_brands`; hold cascade to sub-accounts |
 | 2104 From Bare Metal to Cloud | No tables; maps each era to the kinds above |
-| 2105 The Data Center & Colocation | Colocation kinds (`cabinet`, `cross_connect`, `power_circuit`) and `remote_hands_tickets` |
-| 2106 Dedicated Servers & Bare Metal | `servers` side table, `hardware_assets`, `reimage_jobs` |
-| 2107 Data Center Networking | `networks`, `subnets`, `security_groups`, `interconnects`, `placement_groups` side tables |
-| 2108 Virtualization & the VPS | `virtual_machines` columns (hypervisor, CPU credits), `cpu_credit_balances` |
-| 2109 Shared Hosting Isolation | `hosting_accounts` limit columns, `resource_limit_events` |
-| 2110 From chroot to Containers | `container_services` side table, `images` side table |
-| 2111 Schedulers: Borg to Kubernetes | Placement and scheduling records on `resources` |
-| 2112 Sandboxes & MicroVMs | Isolation level on compute side tables |
-| 2113 Functions, Isolates & Edge Compute | `functions` side table, invocation and CPU-time meters |
-| 2114 Storage: Block, File & Object | `volumes`, `snapshots`, `buckets` side tables, storage-class meters |
-| 2115 Regions, Zones, Cells & Quotas | `cells`, `cell_assignments`, `quota_requests` |
-| 2116 Hybrid & On-Prem Cloud | Regions with `underlay` set to a customer site, `outpost_sites` |
-| 2117 Repatriation | No tables; cost comparison over `rated_usage` |
-| 2118 Kubernetes Architecture | `clusters` side table, version and support window columns |
-| 2119 Managed Kubernetes | `node_pools` side table, control-plane and extended-support SKUs |
-| 2120 Cluster Networking | Load balancer and gateway kinds on `resources` |
-| 2121 Storage & Stateful Workloads | Persistent volume links from clusters to `volumes` |
-| 2122 Packaging & GitOps | `deployments` records for cluster workloads |
-| 2123 Multi-Tenancy, Policy & Security | `cluster_tenants` for providers running customer workloads on shared clusters |
-| 2124 Autoscaling & Cost | Cost allocation dimensions on `usage_events` |
-| 2125 Distributions & Alternatives | No tables |
-| 2126 Managed Databases | `databases` and `caches` side tables, engine version and extended-support SKUs |
-| 2127 Serverless & Edge Databases | `edge_stores` side table, row-read, row-write and request meters |
-| 2128 Managed Queues & Streaming | `queues` and `topics` side tables, message and retention meters |
-| 2129 Observability Platforms | Ingest, host and cardinality meters |
-| 2130 Open Source & the Clouds | License fields on `products` |
-| 2131 How Code Got to Servers | `deploy_credentials` (FTP, SFTP, SSH) on hosting accounts |
-| 2132 Platforms Take Over the Deploy | `deployments`, `deployment_aliases` |
-| 2133 PaaS & Frontend Clouds | `sites` side table, spend caps on projects |
-| 2134 From Tinderbox to Jenkins | No tables |
-| 2135 The CI/CD Platform Business | `ci_pipelines` side table, build-minute meters with OS multipliers |
-| 2136 Runners & Build Infrastructure | `runners`, `ci_runs` |
-| 2137 Continuous Delivery Platforms | `release_approvals` |
-| 2138 Artifacts & Registries | `registries` side table, pull and storage meters |
-| 2139 Pipeline Supply-Chain Security | `workload_identity_bindings`, `attestations` |
-| 2140 to 2145 Infrastructure as Code | `iac_states` and `image_builds` where the provider hosts them; resource `external_ref` conventions |
-| 2146 The Homelab | No tables: the operator and the customer are the same person, and the model still applies |
-| 2147 to 2152 Homelab storage, hypervisors, networks, routing, apps and exposure | No provider tables; the self-hosted mirror of the kinds above |
-| 2153 AI at Home | No tables; token meters at home are the same `usage_events` with a cost of zero |
-| 2154 From Homelab to Colocation | No tables; the bridge to colocation kinds in 2105 |
-| 2155 How Web Hosting Makes Money | Bundle and upsell rows on `plan_versions` |
-| 2156 cPanel & WHM | Panel package and feature list mapping on `hosting_accounts` |
-| 2157 Control Panel Licensing | `license_seats`, license pass-through SKUs |
-| 2158 Managed WordPress | `sites` columns (visits, staging), visit meters |
-| 2159 Backups, Restores & Migrations | `backup_policies`, `backups`, `restores`, `migrations` |
-| 2160 Email Hosting | `mailboxes` side table |
-| 2161 ICANN, Registries & Registrars | `registries`, `tld_pricing`, registry and ICANN pass-through SKUs |
-| 2162 The Domain Data Model & EPP | `domain_contacts`, `domain_hosts`, `domain_statuses`, `epp_transactions` |
-| 2163 The Domain Lifecycle | `domain_lifecycle_events`, `expiry_notices` |
-| 2164 Transfers, Locks & Registrar Security | `domain_transfers`, `domain_locks` |
-| 2165 Registration Data & RDAP | `registrant_data`, `disclosure_requests` |
-| 2166 DNS Abuse at the Registrar | DNS abuse categories on `reports`; ICANN evidence on `abuse_mitigations` |
-| 2167 Domain Disputes | `domain_disputes` |
-| 2168 New gTLDs & ccTLDs | Registry policy rows on `registries` |
-| 2169 DNS Hosting & DNSSEC | `dns_zones` side table, `dns_records`, `dnssec_keys`, query meters |
-| 2170 to 2172 Certificates | `certificate_orders`, `dcv_challenges`, `ct_submissions`, revocation and distrust records |
-| 2173 to 2178 The Edge | `cdn_zones` side table, `cache_purges`, `waf_rules`, `rate_limit_rules`, `ddos_events`, IP block and lease records on `resource_identifiers` |
-| 2179 The CPaaS Business | Carrier fee SKUs, `carriers` |
-| 2180 Phone Numbers & Porting | `number_inventory`, `port_requests` |
-| 2181 Business Texting Registration | `sms_brands`, `sms_campaigns`, `campaign_numbers` on `sender_identities` |
-| 2182 Sending a Text | `messages`, `message_segments`, `delivery_receipts`, `opt_outs`, `carrier_fines` |
-| 2183 Voice Platforms | `calls`, `attestations`, `rmd_filings` |
-| 2184 911, CPNI & Telecom Duties | `emergency_addresses`, `cpni_breach_reports` |
-| 2185 Telecom Fraud | `geo_permissions`, `fraud_blocks` |
-| 2186 Email Sending Platforms | `ip_pools`, `email_streams`, `email_events` |
-| 2187 Inbox Rules | `sender_reputation_samples`, enforcement holds on `sender_identities` |
-| 2188 Metering & Rating | `meters`, `rating_runs`, `usage_corrections` |
-| 2189 Pricing Catalogs | Tier shapes on `price_versions`, `price_change_notices` |
-| 2190 Free Tiers, Credits & Startup Programs | `credit_programs`, `spending_limits` |
-| 2191 Commitments, Discounts & Marketplaces | `commitment_drawdowns`, `marketplace_listings`, `marketplace_orders`, `private_offers` |
-| 2192 Subscriptions, Renewals & Cancellation Law | `renewal_notices`, `cancellation_requests` (the playbook's), jurisdiction rules |
-| 2193 Invoices, Dunning & Suspension | `invoice_runs`, `dunning_schedules`, suspension and deletion clocks on `account_holds` |
-| 2194 Tax on Hosting & Cloud | Seller entities as `merchants`, tax lines (the playbook's `invoice_line_taxes`) |
-| 2195 SLAs & Service Credits | `sla_definitions`, `sla_claims` producing `credit_grants` |
-| 2196 Cost Data, FinOps & Surprise Bills | `budgets`, `budget_alerts`, `cost_exports`, `anomalies` |
-| 2197 Abuse on Infrastructure | AUP categories; hosted versus pass-through service on `resources` |
-| 2198 Free-Tier Fraud & Stolen Keys | `credential_exposures`, risk quotas |
-| 2199 Conduits, Caches & Blocking Orders | `blocking_orders` (extending UGP `legal_notices`) |
-| 2200 Sanctions, Exports & Bulletproof Hosts | `sanctions_screenings`, sanctions holds |
-| 2201 Law Enforcement at Infrastructure Providers | Identifier lookups over `resource_identifiers` (UGP `legal_requests`) |
-| 2202 to 2205 Market Rules and Compliance | `compliance_attestations`, `egress_waivers`, data residency on `regions` |
-| 2206 Provider Architecture | Partitioning of `usage_events` and `resources` by account |
-| 2207 GPU & AI Clouds | GPU capacity reservations as `commitments` of kind `resource` |
-| 2208 Where AI Runs: Home, Colo, Cloud or Frontier | Placement comparison over token and GPU-hour `rated_usage` across tiers |
-| 2209 Outages, Post-Mortems & Status Pages | `status_components`, `incidents` |
-| 2202 Operating Metrics | `metric_definitions`, `metric_values` |
-| 2203 Migrations, Shutdowns & End of Life | `product_sunsets`, `data_exports` |
+| 2105 [The Homelab](/books/hosting-and-cloud/homelab) | No tables: the operator and the customer are the same person, and the model still applies |
+| 2106 to 2111 Homelab storage, hypervisors, networks, routing, apps and exposure | No provider tables; the self-hosted mirror of the kinds above |
+| 2112 [AI at Home](/books/hosting-and-cloud/ai-at-home) | No tables; token meters at home are the same `usage_events` with a cost of zero |
+| 2113 [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation) | No tables; the bridge to the colocation kinds in 2114 |
+| 2114 [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation) | `facilities`, `facility_contracts`, `cabinets`, `power_circuits`, `cross_connects` (kinds `cabinet`, `power_circuit`, `cross_connect`), `remote_hands_tickets`, `facility_access_grants` |
+| 2115 [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers) | `servers` side table, `hardware_assets`, `hardware_asset_events`, `server_assignments`, `reimage_jobs` |
+| 2116 [Data Center Networking](/books/hosting-and-cloud/data-center-networking) | `networks`, `subnets`, `security_groups` (kind `security_group`), `security_group_rules`, `security_group_attachments`, `interconnects`, `placement_groups` |
+| 2117 [Virtualization & the VPS](/books/hosting-and-cloud/virtualization-and-vps) | `virtual_machines` hypervisor and host columns, `vm_host_history`, `cpu_credit_balances` |
+| 2118 [Shared Hosting Isolation](/books/hosting-and-cloud/shared-hosting-isolation) | `hosting_accounts` PHP columns, `resource_limit_events` |
+| 2119 [From chroot to Containers](/books/hosting-and-cloud/containers) | `container_services` and `images` side tables |
+| 2120 [Schedulers: Borg to Kubernetes](/books/hosting-and-cloud/schedulers) | `placement_decisions` |
+| 2121 [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms) | Isolation columns on `virtual_machines` and `container_services` |
+| 2122 [Functions, Isolates & Edge Compute](/books/hosting-and-cloud/functions-and-edge-compute) | `functions` side table, invocation and CPU-time meters |
+| 2123 [Storage: Block, File & Object](/books/hosting-and-cloud/storage) | `storage_classes`, `volumes`, `volume_attachments`, `snapshots`, `buckets`, `bucket_config_versions`, `storage_copy_locations` |
+| 2124 [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells) | `zone_facilities`, `zone_aliases`, `cells`, `cell_assignments`, `quota_requests`, `capacity_reservations` (kind `capacity_reservation`); quota type columns |
+| 2125 [Hybrid & On-Prem Cloud](/books/hosting-and-cloud/hybrid-and-on-prem-cloud) | `outpost_sites` (kind `outpost_site`), `outpost_capacity`, `outpost_link_events` |
+| 2126 [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture) | `kubernetes_versions`, `kubernetes_api_removals`, `clusters` side table, view `cluster_support` |
+| 2127 [Managed Kubernetes](/books/hosting-and-cloud/managed-kubernetes) | `node_pools`, `cluster_maintenance_policies`, `cluster_upgrades`, `cluster_upgrade_notices`, control-plane and extended-support SKUs |
+| 2128 [Cluster Networking](/books/hosting-and-cloud/cluster-networking) | `load_balancers`, `load_balancer_listeners`, network columns on `clusters` |
+| 2129 [Storage & Stateful Workloads](/books/hosting-and-cloud/kubernetes-storage) | `persistent_volume_claims`; cluster columns on 2123's `volume_attachments` and `snapshots` |
+| 2130 [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops) | `gitops_sources`; cluster workload columns on 2140's `deployments` |
+| 2131 [Multi-Tenancy, Policy & Security](/books/hosting-and-cloud/kubernetes-multi-tenancy-and-policy) | `cluster_tenants`, `cluster_policies`, `policy_findings`, `clusters.tenancy_mode` |
+| 2132 [Autoscaling & Cost](/books/hosting-and-cloud/autoscaling-and-cost) | `cost_allocation_label_keys`, `cluster_cost_allocations`, Kubernetes dimensions on `usage_events` |
+| 2133 [Distributions & Alternatives](/books/hosting-and-cloud/kubernetes-distributions-and-alternatives) | No tables |
+| 2134 [Managed Databases](/books/hosting-and-cloud/managed-databases) | `engine_versions`, `databases`, `database_replicas`, `caches`, `database_lifecycle_events`, extended-support SKUs |
+| 2135 [Serverless & Edge Databases](/books/hosting-and-cloud/serverless-and-edge-databases) | `edge_stores`, `database_branches`, scale-to-zero and branching columns on `databases` |
+| 2136 [Managed Queues & Streaming](/books/hosting-and-cloud/managed-queues-and-streaming) | `message_brokers` (kind `message_broker`), `queues`, `topics`, `topic_subscriptions`, message and retention meters |
+| 2137 [Observability Platforms](/books/hosting-and-cloud/observability-platforms) | `ingest_rules`, `series_counts`, `retention_policies`; ingest, host and cardinality meters |
+| 2138 [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds) | `product_licenses`, `products.upstream_project` |
+| 2139 [How Code Got to Servers](/books/hosting-and-cloud/how-code-got-to-servers) | `deploy_credentials`, `deploy_sessions` |
+| 2140 [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys) | `config_versions`, `deployments`, `deployment_aliases`, `auto_promotion_pauses` |
+| 2141 [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds) | `sites` side table, `project_spend_caps`, `spend_cap_events` |
+| 2142 From Tinderbox to Jenkins | No tables |
+| 2143 [The CI/CD Platform Business](/books/hosting-and-cloud/ci-cd-platform-business) | `ci_pipelines`, `ci_machine_types`, build-minute meters with OS multipliers |
+| 2144 [Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure) | `runners`, `ci_runs` |
+| 2145 [Continuous Delivery Platforms](/books/hosting-and-cloud/continuous-delivery-platforms) | `environment_protection_rules`, `release_approvals` |
+| 2146 [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries) | `artifact_registries`, `registry_retention_policies`, `registry_deletions`, pull and storage meters |
+| 2147 [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security) | `workload_identity_bindings`, `workload_token_exchanges`, `artifact_attestations` |
+| 2148 [Convergence: CFEngine to Puppet](/books/hosting-and-cloud/cfengine-and-puppet) | `convergence_runs` |
+| 2149 Chef | `policy_group_assignments`, `compliance_control_results` |
+| 2150 [Push & Events: Ansible and Salt](/books/hosting-and-cloud/ansible-and-salt) | No tables |
+| 2151 [Baking Images: Packer](/books/hosting-and-cloud/packer-and-images) | `image_versions`, `image_builds`, `image_build_artifacts`, `image_channels`, `image_channel_assignments` |
+| 2152 [Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu) | `iac_states`, `iac_state_versions`; the `external_ref` and `create_idempotency_key` rules on `resources` |
+| 2153 [Testing, Policy, Secrets & IaC Platforms](/books/hosting-and-cloud/iac-testing-policy-and-secrets) | `iac_runs`, `policy_evaluations` |
+| 2155 [How Web Hosting Makes Money](/books/hosting-and-cloud/web-hosting-business) | `plan_bundle_items`, `upsell_offers`, `upsell_attaches` |
+| 2156 [cPanel & WHM](/books/hosting-and-cloud/cpanel-and-whm) | `feature_lists`, `panel_packages`, `panel_package_deployments`, `reseller_panel_privileges`, `panel_operations`, `panel_drift`, panel columns on `hosting_accounts` |
+| 2157 Control Panel Licensing | `panel_licenses`, `license_seats`, license pass-through SKUs |
+| 2158 [Managed WordPress](/books/hosting-and-cloud/managed-wordpress) | WordPress columns on 2141's `sites`, visit meters |
+| 2159 [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations) | `backup_policies`, `backups`, `restores`, `migrations` |
+| 2160 [Email Hosting](/books/hosting-and-cloud/email-hosting) | `mail_domains`, `mailboxes`, `mail_forwarders`, `resold_mail_tenants`, `resold_seat_changes` |
+| 2161 [ICANN, Registries & Registrars](/books/hosting-and-cloud/icann-registries-and-registrars) | `registries`, `tld_pricing`, registrar columns on `domains`, view `renewal_margin`, registry and ICANN pass-through SKUs |
+| 2162 [The Domain Data Model & EPP](/books/hosting-and-cloud/epp-and-domain-data) | `epp_transactions`, `domain_statuses`, `domain_hosts`, `domain_contacts`, view `domain_status_drift` |
+| 2163 [The Domain Lifecycle](/books/hosting-and-cloud/domain-lifecycle) | `domain_lifecycle_events`, `expiry_notices`, grace columns on `registries` |
+| 2164 [Transfers, Locks & Registrar Security](/books/hosting-and-cloud/transfers-and-locks) | `domain_transfers`, `domain_locks` |
+| 2165 [Registration Data & RDAP](/books/hosting-and-cloud/registration-data-and-rdap) | `registrant_data`, `disclosure_requests` |
+| 2166 [DNS Abuse at the Registrar](/books/hosting-and-cloud/dns-abuse) | DNS abuse types on `reports`; ICANN evidence on `abuse_mitigations` |
+| 2167 [Domain Disputes](/books/hosting-and-cloud/domain-disputes) | `domain_disputes` |
+| 2168 [New gTLDs & ccTLDs](/books/hosting-and-cloud/new-gtlds-and-cctlds) | Registry policy columns on `registries` |
+| 2169 [DNS Hosting & DNSSEC](/books/hosting-and-cloud/dns-hosting-and-dnssec) | `dns_zones` side table, `dns_records`, `dnssec_keys`, `dns_health_checks`, query meters |
+| 2170 [The Web PKI & Certificate Transparency](/books/hosting-and-cloud/web-pki) | `certificate_authorities`, `ca_certificates`, `certificate_names`, `ct_logs`, `ct_submissions`, CA columns on `certificates` |
+| 2171 [ACME & Certificates at Hosting Scale](/books/hosting-and-cloud/acme-at-scale) | `acme_accounts`, `certificate_orders`, `dcv_challenges`, renewal-information columns on `certificates` |
+| 2172 [Shorter Lifetimes, Revocation & Distrust](/books/hosting-and-cloud/certificate-lifetimes-and-distrust) | `validity_schedule`, `certificate_revocations`, `ca_distrust_events`, `ca_migrations` |
+| 2173 [The Edge Business](/books/hosting-and-cloud/edge-business) | `cdn_zones` side table, `cdn_origins`, `cdn_zone_restrictions`, delivery meters |
+| 2174 [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses) | `edge_locations`, `edge_interconnects`, `ip_blocks`, `ip_quarantines`, `resource_identifiers.ip_block_id` |
+| 2175 [Caching & Invalidation](/books/hosting-and-cloud/caching-and-invalidation) | `cache_policies`, `cache_tierings`, `cache_tier_locations`, `cache_purges`, `cache_purge_progress` |
+| 2176 [TLS & Protocols at the Edge](/books/hosting-and-cloud/tls-and-protocols) | `zone_tls_settings`, `edge_hostnames`, origin TLS columns on `cdn_origins` |
+| 2177 [DDoS Mitigation](/books/hosting-and-cloud/ddos-mitigation) | `prefix_protections`, `ddos_policies`, `ddos_events`, `ddos_event_locations` |
+| 2178 [WAF, Bots & Rate Limits](/books/hosting-and-cloud/waf-bots-and-rate-limits) | `waf_rulesets`, `waf_ruleset_versions`, `waf_rules`, `zone_rulesets`, `rule_deployments`, `rule_deployment_stages`, `rate_limit_rules`, `verified_bots`, `crawler_policies` |
+| 2179 [The CPaaS Business](/books/hosting-and-cloud/cpaas-business) | `carriers`, `upstream_providers`, `carrier_fee_rules`, `skus.carrier_id` |
+| 2180 [Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting) | `number_inventory`, `port_requests`, `numbering_authorizations`, porting columns on `phone_numbers` |
+| 2181 [Business Texting Registration](/books/hosting-and-cloud/texting-registration) | `sms_brands`, `sms_campaigns`, `campaign_numbers`, `toll_free_verifications`, `short_code_programs`, `registration_reviews` |
+| 2182 [Sending a Text](/books/hosting-and-cloud/sending-a-text) | `messages`, `message_segments`, `delivery_receipts`, `opt_outs`, `throughput_limits`, `carrier_fines` |
+| 2183 [Voice Platforms](/books/hosting-and-cloud/voice-platforms) | `sip_trunks` (kind `sip_trunk`), `calls`, `attestations`, `rmd_filings` |
+| 2184 [911, CPNI & Telecom Duties](/books/hosting-and-cloud/telecom-duties) | `emergency_addresses`, `mlts_sites`, `cpni_breach_reports`, `regulatory_filings`, `regulatory_fee_rates`, contribution columns on `accounts` |
+| 2185 [Telecom Fraud](/books/hosting-and-cloud/telecom-fraud) | `geo_permissions`, `fraud_blocks`, `verification_outcomes`, `fraud_safe_list` |
+| 2186 [Email Sending Platforms](/books/hosting-and-cloud/email-sending-platforms) | `ip_pools`, `ip_pool_members`, `ip_warmups`, `email_streams`, `email_events`, `email_suppressions` |
+| 2187 [Inbox Rules](/books/hosting-and-cloud/inbox-rules) | `sender_reputation_samples`, `sender_holds`, `email_domain_checks`, `feedback_loop_enrollments` |
+| 2188 [Metering & Rating](/books/hosting-and-cloud/metering-and-rating) | `meters`, `rating_runs`, `usage_corrections`, `skus.dimension_match` and `match_priority`, `accounts.price_book` |
+| 2189 [Pricing Catalogs](/books/hosting-and-cloud/pricing-catalogs) | Tier modes and shapes on `price_versions`, `tier_amount()`, `price_list_publications`, `price_change_notices`, `price_change_recipients` |
+| 2190 [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits) | `credit_programs`, `spending_limits` (the credit-backed account cap), program columns on `credit_grants`, view `credit_grant_balances`, `credit_allocations()` |
+| 2191 [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces) | `commitment_drawdowns`, `marketplace_listings`, `private_offers`, `marketplace_orders` |
+| 2192 [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law) | `renewal_law_rules`, `renewal_notices`, `cancellation_requests`, `accounts.customer_type`, renewal columns on `plan_versions` |
+| 2193 [Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension) | `invoice_runs`, `dunning_schedules`, `dunning_steps`, `dunning_cases`, `dunning_events`, suspension and deletion clocks on `account_holds` |
+| 2194 [Tax on Hosting & Cloud](/books/hosting-and-cloud/tax) | Seller entities as `merchants`, `seller_entity_rules`, `tax_registrations`, `account_tax_ids`, `account_tax_addresses`, `exemption_certificates`, `withholding_certificates`, columns on the playbook's `invoice_line_taxes` |
+| 2195 [SLAs & Service Credits](/books/hosting-and-cloud/slas-and-service-credits) | `sla_definitions`, `sla_claims` producing `credit_grants` |
+| 2196 [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills) | `budgets` and `budget_alerts` (alerts only), `cost_exports`, `cost_export_deliveries`, `anomalies`, view `cost_rows_focus` |
+| 2197 [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure) | `aup_categories`, `termination_reviews`, `resources.service_tier`, AUP columns on `reports` and `abuse_mitigations` |
+| 2198 [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys) | `credential_exposures`, signals on the UGP `account_links`, `quotas.risk_reason` |
+| 2199 [Conduits, Caches & Blocking Orders](/books/hosting-and-cloud/conduits-caches-and-blocking-orders) | `blocking_orders`, `blocking_order_targets` |
+| 2200 [Sanctions, Exports & Bulletproof Hosts](/books/hosting-and-cloud/sanctions-and-bulletproof-hosts) | `sanctions_lists`, `sanctions_screenings`, `country_restrictions` |
+| 2201 [Law Enforcement at Infrastructure Providers](/books/hosting-and-cloud/law-enforcement-at-providers) | Resource columns on the UGP `legal_request_subjects` and `legal_requests`, `products.provider_visibility` |
+| 2202 [Shared Responsibility & Compliance Programs](/books/hosting-and-cloud/compliance-programs) | `compliance_attestations`, `attestation_scopes`, sovereignty columns on `regions` |
+| 2203 [Egress & Switching](/books/hosting-and-cloud/egress-and-switching) | `switching_requests`, `egress_waivers` |
+| 2204 [Competition Cases](/books/hosting-and-cloud/competition-cases) | `regulatory_commitments` |
+| 2205 [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes) | `byol_declarations` |
+| 2206 [Provider Architecture](/books/hosting-and-cloud/provider-architecture) | Partitioning of `usage_events` and `resources` by account, `control_plane_operations` |
+| 2207 [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds) | `gpu_capacity_pools`; GPU columns on 2124's `capacity_reservations`, `virtual_machines.capacity_reservation_id` |
+| 2208 [Where AI Runs: Home, Colo, Cloud or Frontier](/books/hosting-and-cloud/where-ai-runs) | `model_endpoints`, `model_routes`, `model_route_steps`, view `placement_costs` |
+| 2209 [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages) | `status_components`, `incidents`, `incident_components`, `incident_updates`, `incident_reviews`, `incident_scope` |
+| 2210 [Operating Metrics](/books/hosting-and-cloud/operating-metrics) | `metric_definitions`, `metric_values` |
+| 2211 [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life) | `product_sunsets`, `product_sunset_versions`, `sunset_notices`, `data_exports` |
+| 2213 [Repatriation](/books/hosting-and-cloud/repatriation) | No tables; cost comparison over `rated_usage` |
 
 What goes wrong most often is building for one product and bolting on the rest: a host whose billing knows only plans and can't rate a gigabyte, a cloud whose resources can't carry a renewal, a registrar whose domains live outside the resource model and so outside the abuse desk, a CPaaS whose carrier fees are folded into its own price. My rule: decide the shape of accounts, resources, subscriptions and usage together, even if you launch with one product.
 

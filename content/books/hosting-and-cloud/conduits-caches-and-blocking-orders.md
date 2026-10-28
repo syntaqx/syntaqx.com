@@ -172,9 +172,9 @@ Notes on the sketch:
 **Statutes and cases**
 
 - [17 U.S.C. 512 (Cornell LII)](https://www.law.cornell.edu/uscode/text/17/512), the 512(a) and (b) conditions, (b)(2)(E), (i) and (j)
-- [Digital Services Act, Article 4 (springlex mirror of the Official Journal)](https://www.springlex.eu/en/packages/dsa/dsa-regulation/article-4/), mere conduit
-- [Digital Services Act, Article 5 (springlex mirror)](https://www.springlex.eu/en/packages/dsa/dsa-regulation/article-5/), caching and the preserved power to order
-- [Digital Services Act, Recital 29 (springlex mirror)](https://www.springlex.eu/en/packages/dsa/dsa-regulation/recital-29/), conduit, caching and hosting examples
+- [Digital Services Act, Article 4 (EUR-Lex, OJ L 277, 27.10.2022)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065#art_4), mere conduit
+- [Digital Services Act, Article 5 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065#art_5), caching and the preserved power to order
+- [Digital Services Act, Recital 29 (EUR-Lex)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065#rct_29), conduit, caching and hosting examples
 - [Supreme Court: Cox Communications v. Sony Music Entertainment, No. 24-171](https://www.supremecourt.gov/opinions/25pdf/24-171_bq7d.pdf), March 25, 2026, the intent standard, the record and the concurrence
 - [Faegre Drinker: Supreme Court decides Cox v. Sony](https://www.faegredrinker.com/en/insights/publications/2026/3/supreme-court-decides-cox-communications-v-sony-music-entertainment), the 7-2 split on the rule
 - [OLG Dresden: Judgment in Sony v. Quad9, 14 U 503/23](https://quad9.net/uploads/2023_12_06_OLG_Dresden_Urteil_quad9_geschwarzt_490c67518d.pdf), 2023, reversal and no further appeal admitted

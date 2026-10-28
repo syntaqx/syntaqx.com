@@ -2,14 +2,14 @@
 title = "Platforms Take Over the Deploy"
 description = "Git push and buildpacks, twelve-factor, releases and rollback, previews, immutable URLs and aliases, GitOps and edge deploys: the deploy as a platform object."
 category = "Hosting & Cloud Industry"
-order = 2132
+order = 2140
 part = "Deployment"
 tags = ["deployment", "paas", "preview-deployments", "rollback", "history"]
 +++
 
 Between 2009 and 2020 the deploy moved from the customer's laptop into the provider's control plane. On a host, a deploy was whatever the customer copied onto the server ([How Code Got to Servers](/books/hosting-and-cloud/how-code-got-to-servers)); on a platform, it became an object the provider builds, stores, numbers, routes to and can roll back. That change is what made the platform business possible: once the provider builds the code, it knows the runtime, the dependencies, the commit and the configuration of every release, and it can sell previews, rollbacks and per-request scaling on top of that knowledge.
 
-This chapter tells that move and how the resulting objects work: Heroku's `git push` and process model, buildpacks, the twelve-factor contract, releases and rollback, blue/green and canary as platform features, the image as the artifact, GitOps as a pull-based deploy, preview deployments, immutable deployment URLs with aliases, and function and edge deploys. It adds `deployments` and `deployment_aliases` to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The strategies themselves are the playbook's [Deployment Strategies](/docs/delivery/deployment-strategies); environments, configuration and secrets are [Environments](/docs/operations/environments); the business of the platforms, how they meter and what they resell is [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds); the CI side is the [CI/CD Platforms](/books/hosting-and-cloud/ci-history) part; Argo CD and Flux as Kubernetes products are Packaging & GitOps.
+This chapter tells that move and how the resulting objects work: Heroku's `git push` and process model, buildpacks, the twelve-factor contract, releases and rollback, blue/green and canary as platform features, the image as the artifact, GitOps as a pull-based deploy, preview deployments, immutable deployment URLs with aliases, and function and edge deploys. It adds `deployments` and `deployment_aliases` to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The strategies themselves are the playbook's [Deployment Strategies](/docs/delivery/deployment-strategies); environments, configuration and secrets are [Environments](/docs/operations/environments); the business of the platforms, how they meter and what they resell is [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds); the CI side is the [CI/CD Platforms](/books/hosting-and-cloud/ci-history) part; Argo CD and Flux as Kubernetes products are [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops).
 
 ## How the Providers Do It
 
@@ -59,7 +59,7 @@ Docker's image (from March 2013) gave platforms a second input besides source: a
 
 ## GitOps: The Deploy as a Pull
 
-Weaveworks named the practice in "GitOps: Operations by Pull Request" on August 7, 2017: desired state lives in Git, and an agent in the cluster pulls and reconciles it, so a deploy is a merged commit rather than a push from CI. The OpenGitOps principles say it in four words (declarative, versioned and immutable, pulled automatically, continuously reconciled), and Argo, one of the two reconcilers, graduated in the CNCF on December 6, 2022. The playbook's [GitOps](/docs/operations/kubernetes#gitops) section owns the practice, and Packaging & GitOps owns Argo CD, Flux and the Weaveworks shutdown. For the platform model, GitOps changes who creates the deploy record: not the CI system or the customer's CLI, but a reconciler that observed a new commit, which the `deployments` table records as its own source.
+Weaveworks named the practice in "GitOps: Operations by Pull Request" on August 7, 2017: desired state lives in Git, and an agent in the cluster pulls and reconciles it, so a deploy is a merged commit rather than a push from CI. The OpenGitOps principles say it in four words (declarative, versioned and immutable, pulled automatically, continuously reconciled), and Argo, one of the two reconcilers, graduated in the CNCF on December 6, 2022. The playbook's [GitOps](/docs/operations/kubernetes#gitops) section owns the practice, and [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops) owns Argo CD, Flux and the Weaveworks shutdown. For the platform model, GitOps changes who creates the deploy record: not the CI system or the customer's CLI, but a reconciler that observed a new commit, which the `deployments` table records as its own source.
 
 ## Preview Deployments
 
@@ -77,7 +77,7 @@ The data model is two tables: deployments, immutable once built, and aliases, mu
 
 ## Functions and Edge Deploys
 
-Functions took the model one step further: the unit of deploy is a function, not a process. AWS Lambda, previewed on November 13, 2014, took a ZIP upload and ran it on events; Cloudflare Workers, announced September 29, 2017, deployed JavaScript to V8 isolates in every location at once. An edge deploy changes what "deployed" means: the new version propagates to hundreds of locations, so the deploy record needs a propagation state, and "rolled back" is true only when every location serves the old version. Functions, Isolates & Edge Compute covers the runtimes; the deploy record is the same `deployments` row with a different target kind.
+Functions took the model one step further: the unit of deploy is a function, not a process. AWS Lambda, previewed on November 13, 2014, took a ZIP upload and ran it on events; Cloudflare Workers, announced September 29, 2017, deployed JavaScript to V8 isolates in every location at once. An edge deploy changes what "deployed" means: the new version propagates to hundreds of locations, so the deploy record needs a propagation state, and "rolled back" is true only when every location serves the old version. [Functions, Isolates & Edge Compute](/books/hosting-and-cloud/functions-and-edge-compute) covers the runtimes; the deploy record is the same `deployments` row with a different target kind.
 
 ## The Alternatives
 
@@ -98,7 +98,7 @@ What would change this: a workload whose versions can't coexist (a schema change
 
 ## How to Build It
 
-The chapter adds the deployment record and the alias that routes to it. A deployment belongs to a resource (a `site`, `function` or `container_service`, or a `cluster` workload) in [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model); a GitOps reconciler applying a commit to a cluster writes the same row with `source = 'gitops'`, so Packaging & GitOps can use this table rather than define its own.
+The chapter adds the deployment record and the alias that routes to it. A deployment belongs to a resource (a `site`, `function` or `container_service`, or a `cluster` workload) in [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model); a GitOps reconciler applying a commit to a cluster writes the same row with `source = 'gitops'`, so [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops) can use this table rather than define its own.
 
 ```sql
 CREATE TABLE config_versions (           -- environment variables as a versioned set

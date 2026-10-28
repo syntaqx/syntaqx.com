@@ -25,7 +25,7 @@ Every US voice provider now publishes guidance on the same three obligations, an
 
 The common pattern: a provider signs what it originates, verifies what it terminates, files in the RMD, checks that every upstream it accepts traffic from is listed, and sells branded calling and analytics on top.
 
-## How We Got Here
+## How It Got Here
 
 Voice over IP made calls cheap to originate from anywhere and caller ID trivial to fake; each step since has tried to restore accountability without giving up the IP network:
 
@@ -118,22 +118,9 @@ My default for a platform that originates calls is its own SPC token and certifi
 
 ## How to Build It
 
-The chapter adds SIP trunks, calls, attestations and RMD filings to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). A SIP trunk is a new resource kind (the constraint below keeps every kind the core model and earlier chapters define); calls, like messages, are operational records that reference resources and emit usage events on minute meters (`voice.minutes`, with direction, destination and number type as dimensions).
+The chapter adds SIP trunks, calls, attestations and RMD filings to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). A SIP trunk is a resource of kind `sip_trunk`, in the core model's kind list; calls, like messages, are operational records that reference resources and emit usage events on minute meters (`voice.minutes`, with direction, destination and number type as dimensions).
 
 ```sql
-ALTER TABLE resources
-  DROP CONSTRAINT resources_kind_check,
-  ADD CONSTRAINT resources_kind_check CHECK (kind IN (
-    'server', 'virtual_machine', 'volume', 'snapshot', 'image',
-    'network', 'subnet', 'interconnect', 'placement_group', 'ip_address',
-    'load_balancer', 'cluster', 'node_pool', 'container_service', 'function',
-    'database', 'cache', 'queue', 'topic', 'edge_store', 'bucket',
-    'registry', 'ci_pipeline', 'gpu_reservation', 'model_endpoint',
-    'hosting_account', 'site', 'mailbox',
-    'domain', 'dns_zone', 'certificate', 'cdn_zone',
-    'phone_number', 'sender_identity', 'message_broker',  -- message_broker: Managed Queues
-    'sip_trunk'));                       -- added: a SIP trunk
-
 CREATE TABLE sip_trunks (                -- side table: kind = 'sip_trunk'
   resource_id      UUID PRIMARY KEY REFERENCES resources (id),
   auth_mode        TEXT NOT NULL CHECK (auth_mode IN ('ip_allowlist', 'credentials', 'both')),

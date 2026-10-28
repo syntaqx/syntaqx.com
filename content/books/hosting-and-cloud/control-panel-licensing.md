@@ -45,7 +45,7 @@ What the table shows:
 | --- | --- | --- | --- |
 | 1997 | cPanel established; headquartered in Houston with over 220 staff by 2018 (per Oakley Capital's 2018 announcement) | A web panel for hosting accounts | |
 | 28 Apr 2017 | Parallels carves out Plesk and sells it to Oakley Capital at an enterprise value of $105 million | A standalone owner for the second commercial panel | |
-| 21 Aug 2018 | Oakley Capital's regulatory announcement: WebPros BV, owner of Plesk and SolusVM, is acquiring a majority stake in cPanel from founder J. Nick Koston, subject to regulatory approval; Oakley's Fund III invests a further $50 million in WebPros | | cPanel and Plesk under one owner |
+| 21 Aug 2018 | Oakley Capital's regulatory announcement (cPanel signed the agreement on 20 Aug 2018, per Plesk's Oakley investment FAQ): WebPros BV, owner of Plesk and SolusVM, is acquiring a majority stake in cPanel from founder J. Nick Koston, subject to regulatory approval; Oakley's Fund III invests a further $50 million in WebPros | | cPanel and Plesk under one owner |
 | 27 Jun 2019 | cPanel announces account-based pricing; Tier.Net relays partner tiers the same day | Panel revenue that scales with accounts | Increases reported by hosts of 200% and more (INIZ) to over 800% (SonicFast) |
 | 1 Jul 2019 | DirectAdmin stops selling lifetime licenses to new accounts, citing demand from the cPanel change; existing customers may order them until 1 Sep | | A rival ends its cheapest model the week after |
 | 1 Sep 2019 | Existing monthly cPanel licenses convert at partner hosts | | |
@@ -54,8 +54,6 @@ What the table shows:
 | Dec 2021 to Dec 2025 | Annual notices of 1 January increases for 2022, 2023, 2024 (about 10%, per Hosterion), 2025 and 2026; ResellersPanel calls the 2024 round the "fifth consecutive year" of increases | | A supplier price rise every year |
 | 3 Dec 2025 | Tier.Net's 2026 notice: Admin $21.00, Pro $32.00, Plus $42.00, Premier $49.50, $0.37 per account over 100, and a higher surcharge for servers on end-of-life operating systems | | |
 | 1 Jan 2028 | End of cPanel's Extended Lifecycle Support for CentOS 7 and CloudLinux 7 servers on version 110 | Time to migrate off a dead OS | Servers that haven't moved lose security updates |
-
-Oakley Capital's own news page dates the cPanel announcement "21.10.18"; the regulatory announcement on Investegate is dated 21 August 2018. I use the regulatory announcement's date.
 
 The pre-2019 store prices, as The Register reported them: Solo $15 a month, VPS $20 a month or $200 a year, Dedicated $45 a month or $425 a year, each with unlimited accounts. cPanel's announcement said "Historically, cPanel has based its services and pricing around a VPS or Dedicated license with unlimited cPanel Accounts," and argued that hardware had changed what one server could hold. The new store tiers were Admin $20, Pro $30 and Premier $45 for 100 accounts, plus $0.20 a month for each account over 100; licenses bought or renewed after the announcement took the new prices immediately, monthly licenses kept the old structure until 1 September, and annual licenses moved to monthly at renewal.
 
@@ -281,9 +279,9 @@ Events: `panel_license.created`, `panel_license.tier_changed`, `panel_license.ip
 
 - **The vendor's invoice against the seats.** Each month, the license bill from the vendor or partner reconciled against the computed cost per license; a difference is either a counting rule the host has wrong or a license the host forgot to cancel.
 - **Licenses on servers that no longer exist.** Every `panel_licenses` row with `auto_renew` true whose server is deleted or stopped, which is money spent on nothing.
-- **Accounts that should have been removed.** Seats held by accounts suspended past their deletion clock (Invoices, Dunning & Suspension), each a paid seat for a customer who no longer pays.
+- **Accounts that should have been removed.** Seats held by accounts suspended past their deletion clock ([Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension#suspension-and-deletion-clocks)), each a paid seat for a customer who no longer pays.
 - **Pass-through lines.** That every resold license appears on the customer's invoice as a pass-through line at the current price version, and that each vendor increase reached customers only after the notice their terms require.
-- **Supplier price history.** Each vendor and partner notice, its date and its effective date, kept with the price versions it created, since licensing disputes and competition questions (Licensing Disputes; Competition Cases) start from that record.
+- **Supplier price history.** Each vendor and partner notice, its date and its effective date, kept with the price versions it created, since licensing disputes and competition questions ([Licensing Disputes](/books/hosting-and-cloud/licensing-disputes); [Competition Cases](/books/hosting-and-cloud/competition-cases)) start from that record.
 
 ## What This Means for the System You Build
 
@@ -301,7 +299,7 @@ Events: `panel_license.created`, `panel_license.tier_changed`, `panel_license.ip
 
 - [cPanel: pricing](https://www.cpanel.net/pricing/), October 2026 tiers, account limits, per-account price beyond 100, WP Squared, auto-renewal, main public IPv4 binding
 - [Oakley Capital: Oakley Capital to invest in cPanel (RNS, Investegate)](https://investegate.co.uk/announcement/rns/oakley-capital-investments-ltd-di---oci/oakley-capital-to-invest-in-cpanel/5603880), 21 Aug 2018, WebPros majority stake, founder, $50 million, established 1997, Houston
-- [Oakley Capital: Oakley Capital to invest in cPanel](https://oakleycapital.com/latest-news/oakley-capital-to-invest-in-cpanel/), the same announcement on Oakley's news page, dated "21.10.18"
+- [Plesk: Oakley investment FAQ](https://www.plesk.com/oakley-investment-faq/), cPanel signing the agreement on 20 August 2018
 - [CVC: Oakley Capital agrees sale of WebPros to CVC Fund VII](https://www.cvc.com/media/news/2019/2019-12-12-oakley-capital-agrees-sale-of-webpros-to-cvc-fund-vii/), 12 Dec 2019, Oakley Capital IV $200 million minority
 - [Willkie: Parallels sells Plesk to Oakley Capital](https://www.willkie.com/news/2017/05/parallels-sells-plesk-to-oakley-capital), 28 Apr 2017, enterprise value $105 million
 - [cPanel: system requirements](https://docs.cpanel.net/installation-guide/system-requirements/), supported operating systems

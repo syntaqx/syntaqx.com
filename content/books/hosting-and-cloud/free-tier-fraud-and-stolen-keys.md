@@ -9,7 +9,7 @@ tags = ["fraud", "free-tier", "cryptomining", "credentials", "secret-scanning"]
 
 Most abuse an infrastructure provider handles harms someone else: a phishing page, a spam run, a scan of another network. This chapter is about abuse whose first victim is the provider or its customer's bill. Free compute is worth stealing because it converts directly to money: a cryptocurrency miner turns CPU and GPU time into coins, a reverse proxy turns someone else's access to a language model into a resold service, and a stolen key turns a stranger's account into a botnet that the stranger pays for. The attacks come in two shapes. Free-tier fraud opens accounts the provider never gets paid for. Credential theft takes over accounts that do pay, until the owner sees the bill.
 
-The chapter adds `credential_exposures` and `account_links` to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) and uses its `quotas` with `source = 'risk'`. Credential design (prefixes, scopes, expiry, hashing) is [Identity, IAM and API Keys](/books/hosting-and-cloud/accounts-and-resellers#identity-iam-and-api-keys); the CI breaches that leak keys in bulk are [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security); free-tier and credit design itself is Free Tiers, Credits & Startup Programs; bill forgiveness after a compromise is Cost Data, FinOps & Surprise Bills.
+The chapter adds `credential_exposures`, and two signals on the UGP volume's `account_links`, to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) and uses its `quotas` with `source = 'risk'`. Credential design (prefixes, scopes, expiry, hashing) is [Identity, IAM and API Keys](/books/hosting-and-cloud/accounts-and-resellers#identity-iam-and-api-keys); the CI breaches that leak keys in bulk are [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security); free-tier and credit design itself is [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits#fraud-exposure); bill forgiveness after a compromise is [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills#surprise-bills-and-forgiveness).
 
 ## How the Providers Do It
 
@@ -81,7 +81,7 @@ What would change this: a provider whose free tier is its main acquisition chann
 
 ## How to Build It
 
-Two tables. `credential_exposures` records every report or detection of a leaked credential and what was done about it, keyed to [`api_credentials`](/books/hosting-and-cloud/accounts-and-resellers#how-to-build-it). `account_links` records the signals that connect accounts, so a ring can be acted on and a wrong link unwound. Risk limits are `quotas` rows with `source = 'risk'`, which already sit beside default and applied limits in the core model.
+One table and one extension. `credential_exposures` records every report or detection of a leaked credential and what was done about it, keyed to [`api_credentials`](/books/hosting-and-cloud/accounts-and-resellers#how-to-build-it). `account_links`, the [User-Generated Platforms volume's table](/books/user-generated-platforms/spam-and-bots#how-to-build-it), records the signals that connect accounts, so a ring can be acted on and a wrong link unwound; this chapter adds two signals to it. Risk limits are `quotas` rows with `source = 'risk'`, which already sit beside default and applied limits in the core model.
 
 ```sql
 CREATE TABLE credential_exposures (      -- a leaked credential, reported or found
@@ -105,20 +105,16 @@ CREATE TABLE credential_exposures (      -- a leaked credential, reported or fou
   CHECK (responded_at >= reported_at)
 );
 
-CREATE TABLE account_links (             -- why two accounts are treated as one actor
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  account_id       UUID NOT NULL REFERENCES accounts (id),
-  linked_account_id UUID NOT NULL REFERENCES accounts (id),
-  signal           TEXT NOT NULL CHECK (signal IN ('payment_fingerprint', 'device',
-                     'phone', 'email_pattern', 'ip_range', 'ssh_key', 'workload_hash',
-                     'support_admission')),
-  strength         TEXT NOT NULL CHECK (strength IN ('strong', 'medium', 'weak')),
-  observed_at      TIMESTAMPTZ NOT NULL,
-  valid_during     TSTZRANGE NOT NULL,   -- a link can be disproved and closed
-  created_by       TEXT NOT NULL,        -- 'system:linker' or a reviewer
-  CHECK (account_id <> linked_account_id)
-);
-CREATE INDEX ON account_links (linked_account_id);
+-- account_links is the UGP volume's table (Spam, Bots & Coordinated Behavior): one row per
+-- pair and signal, a 0 to 1 strength, and a suspected, confirmed or dismissed status. A
+-- provider adds the signals infrastructure abuse leaves behind (payment cards, device,
+-- phone, network and an admission map onto its existing values):
+ALTER TABLE account_links
+  DROP CONSTRAINT account_links_signal_check,
+  ADD CONSTRAINT account_links_signal_check CHECK (signal IN ('device',
+    'payment_instrument', 'phone', 'email_pattern', 'network', 'identity_document',
+    'behavior', 'admitted', 'ssh_key', 'workload_hash'));
+CREATE INDEX ON account_links (account_b_id);
 
 ALTER TABLE quotas
   ADD COLUMN risk_reason TEXT CHECK (risk_reason IN ('new_account', 'unverified_payment',
@@ -140,10 +136,13 @@ VALUES ('gpus.on_demand', $1, NULL, 0, 'risk', 'new_account',
 The fan-out a confirmed ring triggers, limited to strong links so a weak signal never suspends anyone by itself:
 
 ```sql
-SELECT l.linked_account_id, array_agg(DISTINCT l.signal) AS signals
+SELECT CASE WHEN l.account_a_id = $1 THEN l.account_b_id ELSE l.account_a_id END
+         AS linked_account_id,
+       array_agg(DISTINCT l.signal) AS signals
 FROM account_links l
-WHERE l.account_id = $1 AND l.strength = 'strong' AND upper_inf(l.valid_during)
-GROUP BY l.linked_account_id;
+WHERE $1 IN (l.account_a_id, l.account_b_id)
+  AND l.status = 'confirmed' AND l.strength >= 0.8   -- the provider's threshold for "strong"
+GROUP BY 1;
 ```
 
 Notes on the sketch:
@@ -151,7 +150,7 @@ Notes on the sketch:
 - **The secret is never stored here.** The prefix and the partner's reference identify it; the credential row is found by hash, as in the accounts chapter.
 - **Time to respond is a column pair.** `reported_at` and `responded_at` give the exposure window per report, the number a provider should publish to itself weekly.
 - **Quarantine is a ceiling.** It is a [`permission_ceilings`](/books/hosting-and-cloud/accounts-and-resellers#how-to-build-it) row on the affected principal with the deny list above, so it composes with the customer's own policies and lifts cleanly.
-- **Links are evidence, not verdicts.** Each has a signal, a strength and a range; a reviewer who disproves one closes it, and actions taken on it are reviewed.
+- **Links are evidence, not verdicts.** Each has a signal, a strength and a status; a reviewer who disproves one sets it to `dismissed`, and actions taken on it are reviewed.
 - **Holds follow.** A confirmed farm gets `account_holds` with reason `fraud` and effect `full_suspension`; a compromised paying account gets `no_new_resources` and a case, because the owner is a victim.
 - **Events:** `credential.leak_reported`, `credential.quarantined`, `account_link.created`, `account_link.closed` and `quota.changed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the policy engine, the owner notice service, the fraud queue and billing.
 

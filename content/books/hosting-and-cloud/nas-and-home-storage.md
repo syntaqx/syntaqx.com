@@ -2,7 +2,7 @@
 title = "NAS & Home Storage"
 description = "Unraid, TrueNAS, ZFS and OpenZFS, Synology and QNAP, SnapRAID and mergerfs: parity versus pools, drive lists, ECC, and a ZFS pool built for a homelab."
 category = "Hosting & Cloud Industry"
-order = 2147
+order = 2106
 part = "Homelab"
 tags = ["homelab", "nas", "zfs", "truenas", "unraid", "synology", "storage"]
 +++
@@ -25,7 +25,7 @@ This chapter covers the NAS operating systems and filesystems homelabs choose be
 
 Three patterns run through the table. **The split is parity array against pool:** Unraid and SnapRAID keep one ordinary filesystem per disk and add parity beside them, so disks of any size can join and a dead array loses only what was on the failed disks; ZFS and the appliances' RAID stripe data across a group, which is faster and checksummed but grows in fixed shapes. **ZFS won the free tier:** TrueNAS, QuTS hero, Proxmox VE and, since 2023, Unraid's pools all use it. **Appliance vendors sell the whole box,** which is what lets them write a drive list and, as Synology did in 2025, try to enforce it.
 
-## How We Got Here
+## How It Got Here
 
 - **August 26, 2005:** Tom Mortensen ("limetech") announces "a new network-attached media storage server product called Un-RAID" on AVS Forum: up to 12 drives of different sizes, one parity disk, no striping, the OS on a USB flash drive.
 - **2005 to May 2, 2011:** Olivier Cochard-Labbé starts FreeNAS on m0n0wall, an embedded FreeBSD firewall; in December 2009 he puts the 0.7 branch into maintenance-only mode; iXsystems continues a BSD-licensed FreeNAS, rewritten modularly, and releases FreeNAS 8.0 on May 2, 2011.
@@ -51,7 +51,7 @@ The **array** is Unraid's original design. Each data disk carries its own filesy
 
 **Pools** sit beside the array for cache, VMs and containers. Unraid 6.12.0 (June 14, 2023) added ZFS pools in raid0, mirrors up to four-way, and RAIDZ1, RAIDZ2 and RAIDZ3, with multiple vdevs; a single-device ZFS disk was allowed inside the array; native ZFS encryption was not supported (LUKS was used instead); and the ARC was capped at one eighth of RAM by default. Shares choose a primary and secondary location, and the **mover** migrates files from a fast pool to the array on a schedule. Unraid 7.0.0 (January 9, 2025) let the number of array slots be "none," made that the default for new installs, and recommended pools for all-flash servers because "Trim/Discard is not supported with unRAID array devices"; it also added hybrid ZFS pools (subpools), LUKS on ZFS, and recovery from multiple drive failures where the pool's protection allows. An Unraid server can now be a ZFS appliance with no array at all.
 
-**Licensing.** On February 19, 2024 Lime Technology announced new tiers for the end of the first quarter of 2024: **Starter** (up to 6 storage devices), **Unleashed** (unlimited) and **Lifetime**. Starter and Unleashed include a year of updates, then an optional paid extension; existing Basic, Plus and Pro keys were grandfathered with all updates. As of October 2026 the prices are Starter $49, Unleashed $109 and Lifetime $249, all perpetual, with the extension at $36 a year for Starter and Unleashed. A server whose extension lapses keeps running and receives patch releases within its minor version until that version's end of life. The license is tied to the GUID of the boot USB drive, with one self-service transfer and then one per 12 months. The 2024 change is the familiar move from perpetual-with-updates to perpetual-plus-maintenance; how vendors change terms under their users is [Open Source and the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds#the-license-spectrum) and Licensing Disputes.
+**Licensing.** On February 19, 2024 Lime Technology announced new tiers for the end of the first quarter of 2024: **Starter** (up to 6 storage devices), **Unleashed** (unlimited) and **Lifetime**. Starter and Unleashed include a year of updates, then an optional paid extension; existing Basic, Plus and Pro keys were grandfathered with all updates. As of October 2026 the prices are Starter $49, Unleashed $109 and Lifetime $249, all perpetual, with the extension at $36 a year for Starter and Unleashed. A server whose extension lapses keeps running and receives patch releases within its minor version until that version's end of life. The license is tied to the GUID of the boot USB drive, with one self-service transfer and then one per 12 months. The 2024 change is the familiar move from perpetual-with-updates to perpetual-plus-maintenance; how vendors change terms under their users is [Open Source and the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds#the-license-spectrum) and [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes).
 
 ## TrueNAS: From FreeNAS to Community Edition
 

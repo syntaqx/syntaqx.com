@@ -3,7 +3,7 @@ title = "Home Networks: Ethernet, Wi-Fi & Cabling"
 nav_title = "Home Networks & Cabling"
 description = "Ethernet, cabling, PoE, optics and Wi-Fi standards and limits, home versus data center, the path to a colo cage, and how to build an immaculate home internet."
 category = "Hosting & Cloud Industry"
-order = 2149
+order = 2108
 part = "Homelab"
 tags = ["homelab", "ethernet", "wi-fi", "cabling", "poe", "bufferbloat", "failover"]
 +++
@@ -25,7 +25,7 @@ Home networking is sold in four tiers, and most homes mix them without meaning t
 
 Three patterns run through the tiers. **The standards are the same everywhere:** a $30 unmanaged switch and a data center top-of-rack switch speak the same 802.3 PHYs, and a home access point and an office one speak the same 802.11. **What you pay for is control:** VLANs, queue management, failover and monitoring move from absent to vendor-limited to complete as you go down the table. **The ISP box is the variable you control least,** which is why bridge mode and IP Passthrough appear in every serious home setup.
 
-## How We Got Here
+## How It Got Here
 
 | Date | Milestone | What it solved, and what it cost |
 | --- | --- | --- |

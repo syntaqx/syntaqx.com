@@ -2,7 +2,7 @@
 title = "From chroot to Containers"
 description = "Forty years of OS-level isolation, from chroot and jails to namespaces, cgroups, Docker and OCI, and what a provider sells when it runs containers."
 category = "Hosting & Cloud Industry"
-order = 2110
+order = 2119
 part = "The Stack, Bottom to Top"
 tags = ["containers", "history", "isolation", "oci", "registries"]
 +++
@@ -69,7 +69,7 @@ What Docker added was the image. A Dockerfile is a recipe; each step produces a 
 
 ### 2015 to 2022: the format becomes a standard
 
-The Open Container Initiative launched under the Linux Foundation on June 22, 2015, and Docker donated "its container format and runtime, runC" to it. OCI published the Runtime Specification v1.0 and the Image Format Specification v1.0 on July 19, 2017, and the Distribution Specification v1.0.0 in May 2021. The runtime moved down the stack at the same time: containerd, which Docker created in 2014 as the lower-level manager under the Docker engine, joined the CNCF in March 2017 and graduated on February 28, 2019. CRI-O, an implementation of Kubernetes' Container Runtime Interface for the kubelet, joined the CNCF in April 2019 and graduated on July 19, 2023. Kubernetes removed dockershim from the kubelet in v1.24 (May 3, 2022): "After its deprecation in v1.20, the dockershim component has been removed from the kubelet."
+The Open Container Initiative launched under the Linux Foundation on June 22, 2015, and Docker donated "its container format and runtime, runC" to it. OCI published the Runtime Specification v1.0 and the Image Format Specification v1.0 on July 19, 2017, and the Distribution Specification v1.0.0 in May 2021. The runtime moved down the stack at the same time: containerd, which Docker created in 2014 as the lower-level manager under the Docker engine, joined the CNCF in March 2017 and graduated on February 28, 2019. CRI-O, an implementation of Kubernetes' [Container Runtime Interface for the kubelet](/books/hosting-and-cloud/kubernetes-architecture#the-node-kubelet-and-the-container-runtime), joined the CNCF in April 2019 and graduated on July 19, 2023. Kubernetes removed dockershim from the kubelet in v1.24 (May 3, 2022): "After its deprecation in v1.20, the dockershim component has been removed from the kubelet."
 
 **What it solved:** an image is a standard artifact, so the build tool, the registry and the runtime can each come from a different vendor, and a provider can run customers' images with a runtime of its choosing, including one that boots a VM ([Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms)). **What it cost:** a stack of components (a CLI, a builder, containerd or CRI-O, runc or a sandbox runtime) where there used to be one binary, and the support question of which layer failed.
 
@@ -107,7 +107,7 @@ A registry is a provider product with its own economics, and the registries pric
 - **Amazon ECR**, generally available December 21, 2015, charges for storage ($0.10 per GB-month in the pricing page's example) and egress, with transfer into ECR and to services in the same Region free; public repositories give anonymous users 500 GB a month to the internet.
 - **GitHub Container Registry** stores Docker and OCI images under `ghcr.io`, priced with GitHub Packages.
 
-The pattern is that a registry gives away pushes and same-region pulls (which keep customers' compute in its cloud) and charges for storage and cross-network pulls. Pull limits, retention and egress in depth belong to Artifacts & Registries.
+The pattern is that a registry gives away pushes and same-region pulls (which keep customers' compute in its cloud) and charges for storage and cross-network pulls. Pull limits, retention and egress in depth belong to [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries).
 
 ## The Shared Kernel as a Tenancy Decision
 
@@ -190,10 +190,10 @@ CREATE TABLE container_services (        -- side table: kind = 'container_servic
 
 Notes on the sketch:
 
-- **The digest is the identity.** `images.digest` is unique per registry and `container_services.image_digest` is copied at deploy time, so "what was running at 14:02" has one answer even if the tag `latest` has moved three times since. Tag history is registry state owned by Artifacts & Registries.
+- **The digest is the identity.** `images.digest` is unique per registry and `container_services.image_digest` is copied at deploy time, so "what was running at 14:02" has one answer even if the tag `latest` has moved three times since. Tag history is registry state owned by [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries).
 - **Capacity mode decides who carries utilization.** A `customer_nodes` service bills nothing itself (the customer's VMs bill), while a `provider_managed` one meters vCPU and memory seconds; the same table holds both so the abuse desk, quotas and suspension treat them alike.
 - **Privileged means dedicated.** The check forbids a privileged container on provider-managed capacity, because a privileged container holds every capability and is the host. A provider that sells privileged containers must sell them on hosts the customer owns or inside a VM.
-- **Machine images live here too.** A VM boots from `images` rows of kind `machine`, which is the `virtual_machines.image_id` reference in the core model; Baking Images: Packer covers how they're built.
+- **Machine images live here too.** A VM boots from `images` rows of kind `machine`, which is the `virtual_machines.image_id` reference in the core model; [Baking Images: Packer](/books/hosting-and-cloud/packer-and-images) covers how they're built.
 - **Events:** `image.pushed`, `image.deleted`, `container_service.deployed` (with the digest), `container_service.scaled` and `container_service.stopped` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the scheduler, billing and the abuse desk, which needs to map a reported URL or IP to the digest that served it.
 
 ## Auditing

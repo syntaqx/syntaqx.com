@@ -34,6 +34,8 @@ The pattern is that each program certifies a **scope** (named services in named 
 - **April 2025 to March 2026:** FedRAMP 20x piloted Low, then Moderate, certifications.
 - **June 2025 to February 2026:** Microsoft announced its European sovereign offerings (June 16, 2025), AWS's European Sovereign Cloud became generally available (January 15, 2026), and Google described its sovereign portfolio (February 6, 2026).
 - **November 2025:** the PCI Security Standards Council clarified in FAQ 1221 who counts as a multi-tenant service provider under Appendix A1.
+- **July to August 2026:** the Consolidated Rules for 2026 opened for optional early adoption (July 4), FedRAMP Ready went legacy (July 28), and the 20x pipelines opened for Class A (August 3) and Classes B and C (August 31).
+- **January 1, 2027:** the Consolidated Rules become mandatory.
 - **June 11, 2027:** FedRAMP stops accepting new Rev5 certifications.
 
 ## The Shared Responsibility Model
@@ -66,7 +68,7 @@ FedRAMP authorizes cloud services for US federal agencies. The traditional path 
 
 - **Phase 1** piloted Low (April to September 2025), and **Phase 2** piloted Moderate (November 2025 to March 2026).
 - As of October 2026 the 20x page says classes A (pilot), B (Low) and C (Moderate) are available, and that the Consolidated Rules for 2026 "are now finalized for Class A, Class B, and Class C." Class D (High) isn't available yet; a pilot is planned in Phase 4, estimated for the first half of fiscal 2027.
-- FedRAMP will stop accepting new Rev5 certifications on June 11, 2027.
+- FedRAMP's 2026 timeline makes July 4, 2026 an optional early adoption date for the Consolidated Rules, not the start of 20x: the 20x Class A pipeline opened August 3, 2026, Classes B and C on August 31, 2026, adoption becomes mandatory on January 1, 2027, and new Rev5 certifications end on June 11, 2027.
 
 For a provider, 20x changes the evidence from documents to machine-readable indicators produced continuously, which favors providers whose controls are already code. The Rev5 cutoff means a provider starting today should plan on 20x, and one holding a Rev5 authorization should plan its move.
 
@@ -191,6 +193,7 @@ Notes on the sketch:
 **Government programs**
 
 - [FedRAMP: 20x](https://www.fedramp.gov/20x/), phases, classes, the finalized Consolidated Rules and the June 11, 2027 Rev5 cutoff
+- [FedRAMP: 2026 timeline](https://www.fedramp.gov/2026/timeline/), optional early adoption July 4, 2026, Ready going legacy July 28, the Class A (August 3) and Class B and C (August 31) pipelines, mandatory adoption January 1, 2027 and the end of new Rev5 certifications June 11, 2027
 - [Nextgov: StateRAMP to rebrand later this year](https://www.nextgov.com/acquisition/2025/02/exclusive-stateramp-rebrand-later-year/403042/), February 14, 2025, GovRAMP, who uses it and the 27 states
 
 **Sovereign cloud**

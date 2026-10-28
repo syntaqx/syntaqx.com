@@ -30,7 +30,7 @@ Lifetimes and revocation across CAs and platforms, as of October 2026:
 
 The column that will converge first is lifetimes: every CA must be at 100 days or less from 15 Mar 2027 and 47 from 15 Mar 2029. The column that already converged is revocation: OCSP is optional under the Baseline Requirements and gone at the largest CA.
 
-## How We Got Here
+## How It Got Here
 
 | Date | Step | Problem it solved | What it cost |
 | --- | --- | --- | --- |

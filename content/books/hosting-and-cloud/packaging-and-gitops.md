@@ -2,7 +2,7 @@
 title = "Packaging & GitOps"
 description = "Helm from Tiller to Helm 4, Kustomize, OCI artifacts, Argo CD and Flux, the Weaveworks collapse, progressive delivery, and GitOps sold as an add-on."
 category = "Hosting & Cloud Industry"
-order = 2122
+order = 2130
 part = "Kubernetes"
 tags = ["kubernetes", "helm", "kustomize", "gitops", "argo-cd", "flux"]
 +++
@@ -11,7 +11,7 @@ A Kubernetes cluster accepts objects, not applications. A web service is a Deplo
 
 For a provider, both are product surfaces as much as tools. Providers publish their own add-ons as Helm charts, so a chart's upgrade behavior becomes the provider's support burden; the GitOps controller is now something AWS, Google and Microsoft each run or install for the customer, priced or bundled, with its own support window; and the controller is the component holding credentials that can change every workload in a cluster, which makes its tenancy model a security decision. The ecosystem has also shown what happens when the company behind a tool fails: Weaveworks, which built Flux, shut down in February 2024, and the project survived because its maintainers found new employers and the CNCF found new backers.
 
-This chapter covers Helm's four versions at operator depth (charts, values, releases and hooks), Kustomize, charts and manifests as OCI artifacts, Argo CD and Flux, Weaveworks and Flux's continuity, progressive delivery with Argo Rollouts and Flagger, and GitOps sold as a managed add-on. The principles of GitOps (declarative, versioned and immutable, pulled automatically, continuously reconciled) belong to the playbook's [GitOps](/docs/operations/kubernetes#gitops) section; canary and blue-green as strategies belong to [Deployment Strategies](/docs/delivery/deployment-strategies#the-strategies). It adds cluster-workload columns to the `deployments` table that Platforms Take Over the Deploy defines, and a `gitops_sources` table. The CD platforms outside the cluster (Spinnaker, Harness and their peers) are [Continuous Delivery Platforms](/books/hosting-and-cloud/continuous-delivery-platforms); the registries that store charts are [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries); signing the artifacts is [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security).
+This chapter covers Helm's four versions at operator depth (charts, values, releases and hooks), Kustomize, charts and manifests as OCI artifacts, Argo CD and Flux, Weaveworks and Flux's continuity, progressive delivery with Argo Rollouts and Flagger, and GitOps sold as a managed add-on. The principles of GitOps (declarative, versioned and immutable, pulled automatically, continuously reconciled) belong to the playbook's [GitOps](/docs/operations/kubernetes#gitops) section; canary and blue-green as strategies belong to [Deployment Strategies](/docs/delivery/deployment-strategies#the-strategies). It adds cluster-workload columns to the `deployments` table that [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys) defines, and a `gitops_sources` table. The CD platforms outside the cluster (Spinnaker, Harness and their peers) are [Continuous Delivery Platforms](/books/hosting-and-cloud/continuous-delivery-platforms); the registries that store charts are [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries); signing the artifacts is [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security).
 
 ## How the Providers Do It
 
@@ -31,7 +31,7 @@ Four patterns run through the table:
 - **The meter is the Application.** AWS bills each Argo CD Application per target cluster per hour, and Akuity sells Applications in packs; Azure and Google bundle the controller into the cluster price. A provider that sells GitOps has to decide whether a customer with 300 microservices on 4 clusters pays for 1,200 things.
 - **Defaults outlive their software.** OKE's add-on catalog still offers Tiller, the in-cluster Helm 2 server removed in 2019, and DigitalOcean's 1-Click lists Argo CD 2.4.0, older than features Argo CD's own docs now describe (`PostDelete` hooks arrived in v2.10). A packaged add-on needs a version policy, or it becomes the oldest software in the customer's cluster.
 
-## How We Got Here
+## How It Got Here
 
 Packaging and delivery tools arrived in the order the problems did: first a way to install other people's software (Helm), then a way to vary your own without templates (Kustomize), then controllers to keep clusters matching a repository (Argo CD, Flux), then artifact formats that let all of them read from a registry instead of Git.
 
@@ -91,7 +91,7 @@ Helm charts first lived in chart repositories: an `index.yaml` and tarballs on a
 
 The OCI 1.1 specifications (released February 15, 2024) turned the registry into a general artifact store. The image manifest gained `artifactType`, which "enables use cases without a dedicated `config.mediaType`," and `subject`, which links one manifest to another so tools can "associate signatures, attestations, and other metadata with images with a common specification." The distribution spec gained the referrers API: `GET /v2/<name>/referrers/<digest>` returns an index of every manifest whose `subject` is that digest. Registries without the API get a fallback tag named after the digest (`sha256-<hex>`) that clients maintain themselves. The effect is that a chart, its signature, its SBOM and its attestations can sit in one repository, discoverable from the chart's digest, without a naming convention.
 
-The GitOps controllers followed. Flux's `OCIRepository` pulls an artifact by `.spec.ref.tag`, `.semver` or `.digest` (digest overriding the others), verifies it with `.spec.verify.provider` set to `cosign` or `notation`, picks a layer with `layerSelector`, and records `.status.artifact.revision` as `<tag>@<digest>`. Config Sync's `sourceType` accepts `oci` and `helm` beside `git`. EKS's Argo CD capability reads "OCI images" and OCI Helm registries. A provider that runs a registry is now also the store its customers' delivery pipeline reads from at every reconcile interval, which is a load and availability commitment (Artifacts & Registries covers the registry side).
+The GitOps controllers followed. Flux's `OCIRepository` pulls an artifact by `.spec.ref.tag`, `.semver` or `.digest` (digest overriding the others), verifies it with `.spec.verify.provider` set to `cosign` or `notation`, picks a layer with `layerSelector`, and records `.status.artifact.revision` as `<tag>@<digest>`. Config Sync's `sourceType` accepts `oci` and `helm` beside `git`. EKS's Argo CD capability reads "OCI images" and OCI Helm registries. A provider that runs a registry is now also the store its customers' delivery pipeline reads from at every reconcile interval, which is a load and availability commitment ([Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries) covers the registry side).
 
 ## Argo CD
 
@@ -169,7 +169,7 @@ For a managed GitOps product, I'd offer Argo CD, because its UI, AppProjects and
 
 ## How to Build It
 
-The chapter adds cluster-workload columns to the `deployments` table owned by [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#how-to-build-it), whose `resource_id` already admits a cluster and whose `source` already includes `'gitops'`, so a Helm release or a GitOps sync in a cluster is a deployment like any other, and adds `gitops_sources` for the controllers' source objects. Clusters are [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters (resource_id)`; the artifacts referenced by digest are Artifacts & Registries' concern.
+The chapter adds cluster-workload columns to the `deployments` table owned by [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#how-to-build-it), whose `resource_id` already admits a cluster and whose `source` already includes `'gitops'`, so a Helm release or a GitOps sync in a cluster is a deployment like any other, and adds `gitops_sources` for the controllers' source objects. Clusters are [Kubernetes Architecture](/books/hosting-and-cloud/kubernetes-architecture)'s `clusters (resource_id)`; the artifacts referenced by digest are [Artifacts & Registries](/books/hosting-and-cloud/artifacts-and-registries)' concern.
 
 ```sql
 CREATE TABLE gitops_sources (            -- an Application, Kustomization, HelmRelease or RootSync

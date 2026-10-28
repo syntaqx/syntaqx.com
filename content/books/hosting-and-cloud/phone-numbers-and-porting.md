@@ -25,7 +25,7 @@ Every CPaaS sells the same verbs (search, buy, configure, release, port in), and
 
 The common practice: a number is searchable by country, area code, rate center or pattern; a purchase assigns it to the customer's account and project immediately; capabilities (voice, SMS, MMS, fax, emergency calling) are flags on the number that depend on the route behind it; a port-in is a separate, slower order that ends with the number appearing in the same inventory.
 
-## How We Got Here
+## How It Got Here
 
 US numbering is a shared national resource administered under contract to the FCC, and almost every rule a platform follows today was added to stop a specific abuse or remove a specific lock-in:
 

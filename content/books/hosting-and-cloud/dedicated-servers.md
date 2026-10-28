@@ -2,7 +2,7 @@
 title = "Dedicated Servers & Bare Metal"
 description = "Renting whole machines from Rackspace and SoftLayer to bare-metal clouds: PXE, IPMI and Redfish provisioning, reimaging and wiping, spares and inventory."
 category = "Hosting & Cloud Industry"
-order = 2106
+order = 2115
 part = "The Stack, Bottom to Top"
 tags = ["bare-metal", "dedicated-servers", "provisioning", "hardware", "lifecycle"]
 +++
@@ -92,7 +92,7 @@ The inventory itself is the system of record: every asset with its serial number
 | **Monthly dedicated rental** | No capital; provider handles parts and reimaging | Fixed configurations, setup fees, slower provisioning, the provider's network only | Rented; OS licenses per server | Per server per month | Hosts, game servers, databases, budget-sensitive steady load |
 | **Hourly bare-metal cloud** | API provisioning in minutes, hourly billing, infrastructure as code | Higher unit price than monthly; the provider can exit the product (Equinix Metal) | Rented by the hour | Hourly, with reservations | CI fleets, bursty HPC, Kubernetes on metal |
 | **Hyperscaler `.metal` instances** | The cloud's network, storage and IAM on a whole machine | Highest price; limited configurations; the provider's card still controls I/O | Usage terms | Instance-hours | Hypervisor and nested-virtualization workloads, per-socket licensing, macOS builds |
-| **Virtual machines** | Seconds to provision, live migration, many sizes | Hypervisor overhead, noisy neighbors, per-socket licensing problems | Usage terms | Per second | Most workloads (Virtualization & the VPS) |
+| **Virtual machines** | Seconds to provision, live migration, many sizes | Hypervisor overhead, noisy neighbors, per-socket licensing problems | Usage terms | Per second | Most workloads ([Virtualization & the VPS](/books/hosting-and-cloud/virtualization-and-vps)) |
 
 | Provisioning stack | Model | Strengths | Failure modes | License |
 | --- | --- | --- | --- | --- |
@@ -106,7 +106,7 @@ The inventory itself is the system of record: every asset with its serial number
 
 My default for a provider selling dedicated servers is Redfish where the hardware supports it and IPMI only where it doesn't, both on a management network no tenant interface can reach; iPXE over HTTP from a provisioning service with a state machine like Ironic's or MAAS's rather than scripts; and a release workflow that won't return a machine to the pool until a sanitization step for every drive and a firmware check have succeeded and been recorded. I'd sell monthly servers with a setup fee for configurations I hold in stock and hourly bare metal only for configurations I keep a pool of, because the hourly price has to pay for the idle machines. I'd give customers a console (serial over LAN or a browser KVM through a proxy) and a rescue system, and never direct BMC access on shared management networks.
 
-What would change it: a fleet small enough that a person with a crash cart is cheaper than a provisioning stack (a few dozen machines in one cabinet), or a customer base that needs only virtual machines, in which case the dedicated product becomes the hypervisor hosts behind Virtualization & the VPS.
+What would change it: a fleet small enough that a person with a crash cart is cheaper than a provisioning stack (a few dozen machines in one cabinet), or a customer base that needs only virtual machines, in which case the dedicated product becomes the hypervisor hosts behind [Virtualization & the VPS](/books/hosting-and-cloud/virtualization-and-vps).
 
 ## How to Build It
 

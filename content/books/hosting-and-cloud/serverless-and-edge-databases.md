@@ -2,14 +2,14 @@
 title = "Serverless & Edge Databases"
 description = "Neon, Supabase, PlanetScale, D1, Turso, Workers KV, Durable Objects, Hyperdrive and Upstash: consistency, branching, scale to zero and pricing per row."
 category = "Hosting & Cloud Industry"
-order = 2127
+order = 2135
 part = "Managed Services"
 tags = ["databases", "serverless", "edge", "postgres", "sqlite", "pricing"]
 +++
 
 A serverless database is one the customer never sizes. There is no instance class to pick: compute starts when a query arrives, stops when the queries stop, and the bill counts what was done (compute-seconds, rows read, rows written, commands, requests) instead of how long a machine sat waiting. An edge database is one that puts data, or a copy of it, in many locations near the code that reads it. The two arrived together because the compute that calls them changed: functions and isolates that start in milliseconds, run in hundreds of locations and open a fresh connection per request broke the assumptions of a database that expected a few long-lived connections from servers in one region.
 
-The products in this chapter come from two directions. One is serverless Postgres and MySQL: real relational engines with storage separated from compute so compute can scale to zero and databases can be branched like code (Neon, Supabase, PlanetScale, Xata, Nile). The other is data built for edge runtimes: SQLite as a service (Cloudflare D1, Turso and libSQL, Fly.io's LiteFS), global key-value stores (Workers KV, Deno KV, Upstash), and single-writer actors with storage attached (Durable Objects). Both change the meters, and both trade something for it: cold starts, consistency, size limits, or the risk that a young vendor changes its free tier or shuts a product. This chapter covers the history, how each family works, the consistency spectrum, pricing per request and row, free tiers and sunsets, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with `edge_stores`, branches and the row and request meters. Provisioned engines (RDS, Aurora, Spanner, managed caches) are [Managed Databases](/books/hosting-and-cloud/managed-databases); the compute these databases serve is the Functions, Isolates & Edge Compute chapter.
+The products in this chapter come from two directions. One is serverless Postgres and MySQL: real relational engines with storage separated from compute so compute can scale to zero and databases can be branched like code (Neon, Supabase, PlanetScale, Xata, Nile). The other is data built for edge runtimes: SQLite as a service (Cloudflare D1, Turso and libSQL, Fly.io's LiteFS), global key-value stores (Workers KV, Deno KV, Upstash), and single-writer actors with storage attached (Durable Objects). Both change the meters, and both trade something for it: cold starts, consistency, size limits, or the risk that a young vendor changes its free tier or shuts a product. This chapter covers the history, how each family works, the consistency spectrum, pricing per request and row, free tiers and sunsets, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with `edge_stores`, branches and the row and request meters. Provisioned engines (RDS, Aurora, Spanner, managed caches) are [Managed Databases](/books/hosting-and-cloud/managed-databases); the compute these databases serve is the [Functions, Isolates & Edge Compute](/books/hosting-and-cloud/functions-and-edge-compute) chapter.
 
 ## How the Providers Do It
 
@@ -41,7 +41,7 @@ Three patterns run through the table:
 | 28 Sep 2020 | Durable Objects closed beta | Coordination and strong consistency at the edge | One location per object |
 | 2021 | Neon founded | Postgres with separated storage, compute that scales to zero | A new storage layer to trust |
 | 11 May 2022 | D1 announced ("D1 is built on SQLite") | A SQL database for Workers | Size limits and a single writer |
-| 21 Sep 2022 | R2 generally available | Object storage with no egress fee | (Storage chapter) |
+| 21 Sep 2022 | R2 generally available | Object storage with no egress fee | ([Storage chapter](/books/hosting-and-cloud/storage#egress-and-the-s3-compatible-challengers)) |
 | 29 Sep 2022 | libSQL fork of SQLite | SQLite with replication and remote access | Diverging from upstream SQLite |
 | Sept 2023 | Hyperdrive open beta | Serverless code opening connections to a database in one region | Cached reads aren't invalidated on writes |
 | 8 Apr 2024 | PlanetScale retires Hobby | (A free plan with no path to profit) | Free users had to pay or leave |
@@ -97,7 +97,7 @@ Cloudflare sells the most complete data stack for edge code, and the products di
 
 - **Workers KV** is "eventually-consistent": writes go to a small number of central stores and are cached at the edge on read, and "changes may take up to 60 seconds or more to be visible in other global network locations" (the default `cacheTtl` is 60 seconds). Limits are one write per second per key, 25 MiB values and 512-byte keys. It is built for configuration, routing tables and content that is read far more than written.
 - **Durable Objects** are "single-threaded and cooperatively multi-tasked" objects with a "globally-unique name," created "close to where it is first requested," with storage that is "strongly consistent yet fast to access." Two mechanisms make a single-threaded object correct without locks: **input gates**, which deliver no new events to the object while storage operations run, and **output gates**, which hold outgoing messages "back until the write has completed," so no client sees a result that could still be lost. SQLite-backed storage went GA on 7 Apr 2025 with 10 GB per object on the Paid plan, and the Free plan got access the same day. A Durable Object is the edge answer to coordination: a chat room, a game session, a rate limiter, a document being edited, each one an object.
-- **R2** is S3-compatible object storage with no egress fee, GA on 21 Sep 2022; it belongs to the Storage: Block, File & Object chapter, and appears here because Workers read it as a data source.
+- **R2** is S3-compatible object storage with no egress fee, GA on 21 Sep 2022; it belongs to the [Storage: Block, File & Object](/books/hosting-and-cloud/storage#egress-and-the-s3-compatible-challengers) chapter, and appears here because Workers read it as a data source.
 - **Hyperdrive** puts a connection pool "in one or more regions closest to your origin database" and caches non-mutating query results, for "any Postgres or MySQL database." It solves the connection storm from serverless code; its cache is TTL-based and "does not invalidate cached read query results when your application writes," so read-after-write needs the cache off for that query. It reached GA on 1 Apr 2024; Free includes 100,000 queries a day and Paid is unlimited, with pooling and caching included.
 - **Queues** deliver at least once and bill per 64 KB operation; they are covered with the other queues in [Managed Queues & Streaming](/books/hosting-and-cloud/managed-queues-and-streaming#serverless-and-http-queues).
 
@@ -147,7 +147,7 @@ The free tiers in this category have a common shape and common failure modes:
 - **Free plans removed.** PlanetScale's Hobby plan ended on 8 Apr 2024 with about a month's notice.
 - **Products sunset.** LiteFS Cloud (2024), Upstash Kafka (2025) and Deno Deploy Classic (2026) each gave months of notice and a migration path of varying completeness.
 
-The engineering rule for free-tier cliffs is the playbook's ([Free Tiers and Their Cliffs](/docs/operations/cost-and-finops#free-tiers-and-their-cliffs)); the provider's side is the Free Tiers, Credits & Startup Programs and Migrations, Shutdowns & End of Life chapters.
+The engineering rule for free-tier cliffs is the playbook's ([Free Tiers and Their Cliffs](/docs/operations/cost-and-finops#free-tiers-and-their-cliffs)); the provider's side is the [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits) and [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life) chapters.
 
 ## The Alternatives
 
@@ -244,7 +244,7 @@ Notes on the sketch:
 - **Branches expire and say who made them.** Agents and CI create most branches; `created_by` and `expires_at` let the provider clean them up and bill the right project.
 - **Consistency is a column.** Support, documentation and the console can tell a customer what a reader may see, and a migration between stores can be checked against it.
 - **Caps are data, not code.** The 10 GB ceiling and the per-key write limit are columns, so an error message can quote them and a quota request can be refused with the real number.
-- **Suspension is a state.** A suspended serverless compute is `resources.state = 'stopped'` with a `resource.suspended` event; a free project paused for inactivity is the same state with a deletion clock from the Invoices, Dunning & Suspension chapter, and its notice goes through [notifications](/docs/architecture/notifications).
+- **Suspension is a state.** A suspended serverless compute is `resources.state = 'stopped'` with a `resource.suspended` event; a free project paused for inactivity is the same state with a deletion clock from the [Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension#suspension-and-deletion-clocks) chapter, and its notice goes through [notifications](/docs/architecture/notifications).
 - **Events:** `database.branch_created`, `database.branch_expired`, `database.suspended`, `database.resumed`, `edge_store.limit_reached` and `edge_store.cap_reached` go through the [outbox](/docs/architecture/events#the-transactional-outbox).
 
 ## Auditing

@@ -9,7 +9,7 @@ tags = ["911", "cpni", "usf", "telecom-regulation", "voip", "breach-notification
 
 A software company that lets its customers make phone calls becomes, in the eyes of the FCC, something close to a phone company. Interconnected VoIP has had to carry 911 calls since 2005, send them with a location dispatchers can use since 2021 and 2022, protect the call records it holds and certify that it does every March 1, report breaches of them to federal law enforcement, and contribute to the federal Universal Service Fund on its interstate revenue at a rate that reached 42% for the last quarter of 2026. States add their own 911 surcharges per line, collected through the provider's invoice. None of these duties care that the provider thinks of itself as an API company.
 
-This chapter covers the duties from the provider's side: how they came to apply to VoIP, 911 and dispatchable location, Kari's Law for the phone systems a platform hosts, CPNI protection and the breach rules (including a 2024 rule that is adopted but not in force), universal service and 911 fees as pass-through, the contact-law changes a platform tracks for its customers, and how to model all of it. Sales and telecom taxes as a whole are Tax on Hosting & Cloud in the Metering and Billing part; the numbering certifications VoIP providers now make are in [Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting#voip-direct-access-and-its-certifications); robocall duties are in [Voice Platforms](/books/hosting-and-cloud/voice-platforms). None of this is legal advice.
+This chapter covers the duties from the provider's side: how they came to apply to VoIP, 911 and dispatchable location, Kari's Law for the phone systems a platform hosts, CPNI protection and the breach rules (including a 2024 rule that is adopted but not in force), universal service and 911 fees as pass-through, the contact-law changes a platform tracks for its customers, and how to model all of it. Sales and telecom taxes as a whole are [Tax on Hosting & Cloud](/books/hosting-and-cloud/tax#telecom-taxes-and-regulatory-fees) in the Metering and Billing part; the numbering certifications VoIP providers now make are in [Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting#voip-direct-access-and-its-certifications); robocall duties are in [Voice Platforms](/books/hosting-and-cloud/voice-platforms). None of this is legal advice.
 
 ## How the Providers Do It
 
@@ -23,7 +23,7 @@ The public filings show the duties as lines of business and as risks. As of Octo
 
 The pattern: 911 is a product with its own API and coverage list, regulatory fees are pass-through lines, and the litigation is about whether the provider collected the right local fees on the right lines.
 
-## How We Got Here
+## How It Got Here
 
 Each duty arrived as a separate response to VoIP replacing landlines, and most were extended from the telephone network rather than written for software:
 
@@ -81,7 +81,7 @@ The fund's legal basis is settled for now. In *FCC v. Consumers' Research* (deci
 
 State and local charges sit on top. States may assess their own universal service fees on VoIP's intrastate share; 911 and 988 surcharges are set per line; some cities levy access line or utility users' taxes. California's 911 surcharge is $0.41 per access line per month for 2025 and 2026, and its 988 surcharge drops from $0.08 to $0.05 for 2026; it applies to VoIP lines (Cal OES counted 4,140,208 of them) and is set by Cal OES by October 1 for the following year. Bandwidth's two disputes, a San Francisco access line tax deficiency and an Illinois 911 suit, show what happens when a provider and a jurisdiction disagree about which lines owe what. The address that decides the jurisdiction is the service address, at the rooftop level, which is why tax engines for communications identify each charge with a transaction and service pair rather than a product code.
 
-In the core model, each of these is a SKU with `pass_through = 'regulatory'`. The federal USF line is a percentage of the interstate portion of other lines, not a unit price, so it gets its own effective-dated rate table (below) and the rating run computes it from the period's rated voice and messaging revenue after the safe-harbor split.
+In the core model, each of these is a SKU with `pass_through = 'regulatory'`. The federal USF line is a percentage of the interstate portion of other lines, not a unit price, so it gets its own effective-dated rate table (below) and the [rating run](/books/hosting-and-cloud/metering-and-rating#pass-through-fees) computes it from the period's rated voice and messaging revenue after the safe-harbor split.
 
 ## Contact Law the Platform Tracks
 

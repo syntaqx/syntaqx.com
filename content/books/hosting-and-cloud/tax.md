@@ -30,7 +30,7 @@ Three patterns:
 - **Location is computed, with evidence.** AWS publishes its precedence; Azure lets one account hold several service addresses through billing profiles or subscriptions; DigitalOcean starts from the payment address. All three keep the customer's typed address as one input, not the answer.
 - **Business status flips the treatment, and providers decide it differently.** A VAT number removes VAT at DigitalOcean, doesn't in AWS's branch countries, and Google decides it once, at account creation, by type.
 
-## How We Got Here
+## How It Got Here
 
 - **1998 to 2020: the Internet Tax Freedom Act.** ITFA, enacted in 1998, barred state and local taxes on Internet access and multiple or discriminatory taxes on electronic commerce; P.L. 114-125 made the moratorium permanent and kept a grandfather clause for states already taxing access until June 30, 2020. From July 1, 2020, the six states still taxing access (Hawaii, New Mexico, Ohio, South Dakota, Texas, Wisconsin) had to stop. ITFA protects the pipe; hosting, cloud and SaaS aren't Internet access, and VoIP was excluded.
 - **January 1, 2015: EU place of supply moves to the consumer.** The Mini One Stop Shop started on that date for telecommunications, broadcasting and electronic services sold to consumers, taxed where the consumer is.
@@ -126,19 +126,19 @@ Digital services taxes are a different instrument, aimed at platforms, advertisi
 
 ## Telecom Taxes and Regulatory Fees
 
-A CPaaS selling voice and messaging collects three kinds of money that look alike on an invoice and aren't:
+A [CPaaS](/books/hosting-and-cloud/cpaas-business#pass-through-fees-and-the-margin) selling voice and messaging collects three kinds of money that look alike on an invoice and aren't:
 
 | Kind | Examples | Who imposes it, on whom | How it's sourced | On the invoice |
 | --- | --- | --- | --- | --- |
 | **Regulatory contribution recovery** | Federal Universal Service Fund | The FCC assesses the provider on interstate and international end-user revenue; the provider may recover it from customers | Interstate share of telecom revenue | A pass-through line, revenue to the provider, capped by the factor |
 | **Taxes and surcharges on the user** | State and local 911 and 988 surcharges, utility users' taxes, access line taxes | The state or city imposes it on the customer; the provider collects | Service address, per line or per charge | A tax line, a liability |
-| **Carrier fees** | 10DLC and per-message carrier surcharges | The carrier charges the provider | Recipient carrier | A pass-through line ([Pass-Through Fees](/books/hosting-and-cloud/metering-and-rating#pass-through-fees)) |
+| **Carrier fees** | [10DLC](/books/hosting-and-cloud/texting-registration#what-registration-costs) and per-message carrier surcharges ([Sending a Text](/books/hosting-and-cloud/sending-a-text#segments-and-encoding)) | The carrier charges the provider | Recipient carrier | A pass-through line ([Pass-Through Fees](/books/hosting-and-cloud/metering-and-rating#pass-through-fees)) |
 
 **The USF factor.** The contribution factor is the ratio of projected program costs to contributors' projected interstate and international end-user revenues, net of contributions, recalculated every quarter. For the fourth quarter of 2026 (DA 26-946, released September 14, 2026, CC Docket 96-45): $2.02619 billion of program collection over an adjusted base of ($6.909925 billion − $2.026190 billion) × 0.99 = $4.834898 billion gives 0.419076, rounded up to 42.0%. The factor is deemed approved if the FCC doesn't act within 14 days, and "carriers may not ... recover through a federal universal service line item an amount that exceeds 42.0 percent of the interstate telecommunications charges on a customer's bill." Bandwidth's 10-K says its USF assessments "are generally passed on to our customers," and that states may assess state USF on VoIP providers' intrastate revenue. The Supreme Court upheld the scheme on June 27, 2025.
 
 **The interstate share.** Interconnected VoIP providers may report interstate revenue using a 64.9% safe harbor, per the 2026 FCC Form 499-A instructions as USAC presents them, instead of a traffic study or actual revenues. **Worked example:** $100.00 of interconnected VoIP service in the fourth quarter of 2026, under the safe harbor, has $64.90 of interstate charges, and the federal USF line can be at most 42.0% of that, $27.26. In the data, the USF recovery is a pass-through SKU whose quarterly price version is the factor, applied to the line's interstate amount.
 
-**State and local.** California's 911 surcharge is $0.41 per access line per month for 2026 and its 988 surcharge $0.05 (down from $0.08), set by Cal OES by October 1 for the next calendar year; Cal OES counted 4,140,208 VoIP lines among 47,533,701 access lines for 2025. These are per-line amounts, not percentages, so a tax line needs units and a per-unit amount. Local telecom taxes are litigated: Bandwidth reports litigation over billing, collecting and remitting non-income taxes on 911 services "in California and Illinois," and its own suit against San Francisco over 911-related taxes. Every telecom line therefore needs a service type and a verified service address, not just a billing address; the ownership of the 911 duties themselves is 911, CPNI & Telecom Duties.
+**State and local.** California's 911 surcharge is $0.41 per access line per month for 2026 and its 988 surcharge $0.05 (down from $0.08), set by Cal OES by October 1 for the next calendar year; Cal OES counted 4,140,208 VoIP lines among 47,533,701 access lines for 2025. These are per-line amounts, not percentages, so a tax line needs units and a per-unit amount. Local telecom taxes are litigated: Bandwidth reports litigation over billing, collecting and remitting non-income taxes on 911 services "in California and Illinois," and its own suit against San Francisco over 911-related taxes. Every telecom line therefore needs a service type and a verified service address, not just a billing address; the ownership of the 911 duties themselves is [911, CPNI & Telecom Duties](/books/hosting-and-cloud/telecom-duties#911-for-voip).
 
 ## Exemptions and Tax Codes per SKU
 

@@ -9,7 +9,7 @@ tags = ["licensing", "microsoft", "vmware", "broadcom", "cispe", "competition"]
 
 A cloud's price is partly someone else's software. Windows Server, SQL Server and Office run on most clouds under Microsoft's licensing terms, and a hosting provider's virtualization layer has very often been VMware, under VMware's. When a licensor that also sells a cloud changes the terms for running its software on rival clouds, or a new owner changes the terms for running a hypervisor at all, the providers' costs move overnight and they can't switch quickly. Those are the two great licensing disputes of the 2020s: Microsoft's 2019 restriction on bringing licenses to the largest rival clouds, which European providers took to the European Commission and settled in 2024, and Broadcom's 2023 to 2026 rebuild of VMware's licensing and partner program after its acquisition, which drew lawsuits from customers and a court challenge to the merger's clearance.
 
-This chapter tells both with dates and current status, as of October 2026. Open source license changes (MongoDB, Elastic, Redis, HashiCorp) are [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds); control panel licensing is Control Panel Licensing & the Alternatives; the regulators' wider cases are [Competition Cases](/books/hosting-and-cloud/competition-cases). It adds `byol_declarations` to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model).
+This chapter tells both with dates and current status, as of October 2026. Open source license changes (MongoDB, Elastic, Redis, HashiCorp) are [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds); control panel licensing is [Control Panel Licensing & the Alternatives](/books/hosting-and-cloud/control-panel-licensing); the regulators' wider cases are [Competition Cases](/books/hosting-and-cloud/competition-cases). It adds `byol_declarations` to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model).
 
 ## How the Providers Do It
 
@@ -75,7 +75,7 @@ What would change this: a provider whose customers specifically buy VMware-compa
 
 ## How to Build It
 
-License fees already have a home: a SKU with `pass_through = 'license'`, and for panels, `license_seats` in Control Panel Licensing & the Alternatives; upstream open source licenses are `product_licenses` from [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds#how-to-build-it). This chapter adds the customer's declaration when it brings its own license, so the provider can show what the customer claimed and what placement it got.
+License fees already have a home: a SKU with `pass_through = 'license'`, and for panels, `license_seats` in [Control Panel Licensing & the Alternatives](/books/hosting-and-cloud/control-panel-licensing#how-to-build-it); upstream open source licenses are `product_licenses` from [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds#how-to-build-it). This chapter adds the customer's declaration when it brings its own license, so the provider can show what the customer claimed and what placement it got.
 
 ```sql
 CREATE TABLE byol_declarations (         -- a license the customer says it brings

@@ -2,7 +2,7 @@
 title = "Virtualization & the VPS"
 description = "Binary translation, Xen, VT-x and KVM, Virtuozzo and OpenVZ, overcommit and burstable credits, the VPS as a product, and the Broadcom VMware shock."
 category = "Hosting & Cloud Industry"
-order = 2108
+order = 2117
 part = "The Stack, Bottom to Top"
 tags = ["virtualization", "hypervisors", "vps", "kvm", "burstable-instances"]
 +++
@@ -90,7 +90,7 @@ The provider's half is the host fleet: hypervisor hosts are dedicated servers he
 
 ## Epilogue: Broadcom and VMware
 
-Broadcom announced its acquisition of VMware on May 26, 2022, for about $61 billion in cash and stock plus about $8 billion of VMware net debt, the roughly $69 billion figure, and completed it on November 22, 2023. On December 11, 2023, Broadcom announced the end of sale of perpetual licenses and of Support and Subscription (SnS) renewals for perpetual offerings, "beginning today (effective dates will vary)," moving customers to subscriptions. For hosting providers that built VPS and private-cloud products on vSphere, the license became a cost they no longer controlled, and the alternatives they priced against it were KVM-based: open-source stacks on their own hardware, or the clouds. The European cloud trade body CISPE's court challenge to the clearance and the providers' complaints belong to the later chapter Licensing Disputes; at home scale, the end of the free ESXi is the subject of Hypervisors at Home. The lesson for this chapter is the same one the timeline drew for infrastructure-as-code tools: a hypervisor is a dependency with an owner, and the owner can change the price.
+Broadcom announced its acquisition of VMware on May 26, 2022, for about $61 billion in cash and stock plus about $8 billion of VMware net debt, the roughly $69 billion figure, and completed it on November 22, 2023. On December 11, 2023, Broadcom announced the end of sale of perpetual licenses and of Support and Subscription (SnS) renewals for perpetual offerings, "beginning today (effective dates will vary)," moving customers to subscriptions. For hosting providers that built VPS and private-cloud products on vSphere, the license became a cost they no longer controlled, and the alternatives they priced against it were KVM-based: open-source stacks on their own hardware, or the clouds. The European cloud trade body CISPE's court challenge to the clearance and the providers' complaints belong to the later chapter [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes#broadcom-and-vmware); at home scale, the end of the free ESXi is the subject of [Hypervisors at Home](/books/hosting-and-cloud/hypervisors-at-home#the-end-of-free-esxi-and-its-partial-return). The lesson for this chapter is the same one the timeline drew for infrastructure-as-code tools: a hypervisor is a dependency with an owner, and the owner can change the price.
 
 ## The Alternatives
 
@@ -101,7 +101,7 @@ Broadcom announced its acquisition of VMware on May 26, 2022, for about $61 bill
 | **VMware ESXi (vSphere)** | Proprietary type 1 hypervisor | Mature management, enterprise ecosystem | Subscription-only licensing since December 2023, price under one owner | Proprietary, Broadcom | Enterprises, private clouds, some hosts |
 | **Hyper-V** | Microsoft type 1 hypervisor | Windows guests | Windows-centric management | Proprietary, Microsoft | Windows-heavy hosts |
 | **Shared-kernel containers (OpenVZ, Virtuozzo, LXC)** | One kernel, many isolated user spaces | Highest density, near-zero overhead | Host kernel only; a kernel bug reaches every tenant; easy to oversell | OpenVZ and LXC open source; Virtuozzo commercial | Low-cost VPS, shared hosting |
-| **Dedicated server** | No hypervisor | No overhead, no neighbors | No live migration, hours to provision | Hardware rental | Steady, heavy workloads (Dedicated Servers & Bare Metal) |
+| **Dedicated server** | No hypervisor | No overhead, no neighbors | No live migration, hours to provision | Hardware rental | Steady, heavy workloads ([Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers)) |
 
 | CPU model | How it shares | Strength | Failure mode | Who sells it |
 | --- | --- | --- | --- | --- |
@@ -115,11 +115,11 @@ Broadcom announced its acquisition of VMware on May 26, 2022, for about $61 bill
 
 My default for a provider selling VPS today is KVM with hardware-assisted guests on every host, a shared-CPU SKU and a dedicated-CPU SKU on separate hosts, no memory overcommit beyond what ballooning recovers from idle guests, and live migration for planned maintenance. For the shared SKU I'd publish a usage rule the way Linode does and expose steal time in the customer's metrics rather than build a credit ledger, because a ledger is a second billing system and a support queue about throttling; I'd build the ledger only if I needed to sell sub-core instances to price-sensitive customers at hyperscaler scale, where the meter pays for itself. I'd keep shared-kernel containers out of the VPS product and use them where they belong, under managed services and shared hosting, and I'd keep any proprietary hypervisor to customers who ask for it by name.
 
-What would change it: a customer base that is all Windows (Hyper-V), a need for microVM-grade isolation of untrusted code at function-level density (Sandboxes & MicroVMs), or a private-cloud product whose buyers require vSphere, in which case the license is a pass-through SKU with its own price versions.
+What would change it: a customer base that is all Windows (Hyper-V), a need for microVM-grade isolation of untrusted code at function-level density ([Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms)), or a private-cloud product whose buyers require vSphere, in which case the license is a pass-through SKU with its own price versions.
 
 ## How to Build It
 
-The chapter adds hypervisor, CPU-model, credit and host columns to `virtual_machines` and a `cpu_credit_balances` ledger to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Hosts are `hardware_assets` from [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers#how-to-build-it); the placement decision that chose the host is Schedulers: Borg to Kubernetes's `placement_decisions`; the isolation level is added by Sandboxes & MicroVMs.
+The chapter adds hypervisor, CPU-model, credit and host columns to `virtual_machines` and a `cpu_credit_balances` ledger to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Hosts are `hardware_assets` from [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers#how-to-build-it); the placement decision that chose the host is [Schedulers: Borg to Kubernetes](/books/hosting-and-cloud/schedulers)'s `placement_decisions`; the isolation level is added by [Sandboxes & MicroVMs](/books/hosting-and-cloud/sandboxes-and-microvms).
 
 ```sql
 ALTER TABLE virtual_machines

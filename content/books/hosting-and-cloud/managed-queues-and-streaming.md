@@ -2,7 +2,7 @@
 title = "Managed Queues & Streaming"
 description = "SQS to Kafka as a service: managed brokers, buses, logs and realtime pub/sub, what delivery guarantees cover, and pricing by message, byte and broker-hour."
 category = "Hosting & Cloud Industry"
-order = 2128
+order = 2136
 part = "Managed Services"
 tags = ["queues", "streaming", "kafka", "rabbitmq", "sqs", "pricing"]
 +++
@@ -205,7 +205,7 @@ A worked example makes the shapes concrete. Take 1 million messages a day, each 
 | CloudAMQP | 30 million messages is above the shared plans; the smallest dedicated plan | From $50 |
 | Ably Standard | $29 plan plus 30 million messages at $2.50 per million, before connection and channel minutes | About $104 |
 
-The same traffic costs from about $2 to over $500 a month depending only on the product's shape. At low volume, per-request and per-byte services are cheapest and provisioned clusters have a floor that dominates; at high, steady volume the order reverses, because a shard, a throughput unit or a broker carries far more than this example uses. Pub/Sub's byte pricing rewards small messages that are batched; the request-priced services reward batching too, since a batch of ten is one request. The provider's lesson is the FinOps chapter's: publish the floor, the unit and a worked example, because customers can't compare these from the rate cards alone ([Measure Cost per Unit](/docs/operations/cost-and-finops#measure-cost-per-unit-not-just-in-total)).
+The same traffic costs from about $2 to over $500 a month depending only on the product's shape. At low volume, per-request and per-byte services are cheapest and provisioned clusters have a floor that dominates; at high, steady volume the order reverses, because a shard, a throughput unit or a broker carries far more than this example uses. Pub/Sub's byte pricing rewards small messages that are batched; the request-priced services reward batching too, since a batch of ten is one request. The provider's lesson is the [FinOps chapter's](/books/hosting-and-cloud/finops-and-surprise-bills#surprise-bills-and-forgiveness): publish the floor, the unit and a worked example, because customers can't compare these from the rate cards alone ([Measure Cost per Unit](/docs/operations/cost-and-finops#measure-cost-per-unit-not-just-in-total)).
 
 ## The Alternatives
 
@@ -233,19 +233,8 @@ I'd reach for a log only when I need replay, multiple independent consumers of t
 The chapter adds `queues` and `topics` side tables for resources of kind `'queue'` and `'topic'`, a `message_broker` kind and side table for brokers and Kafka-style clusters, `topic_subscriptions`, and the message, throughput and retention meters, on top of [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The core `subscriptions` table is the customer's commitment to a plan; a subscription to a topic is a different thing and gets its own name.
 
 ```sql
-ALTER TABLE resources DROP CONSTRAINT resources_kind_check;
-ALTER TABLE resources ADD CONSTRAINT resources_kind_check CHECK (kind IN (
-  'server', 'virtual_machine', 'volume', 'snapshot', 'image',
-  'network', 'subnet', 'interconnect', 'placement_group', 'ip_address',
-  'load_balancer', 'cluster', 'node_pool', 'container_service', 'function',
-  'database', 'cache', 'queue', 'topic', 'edge_store', 'bucket',
-  'registry', 'ci_pipeline', 'gpu_reservation', 'model_endpoint',
-  'hosting_account', 'site', 'mailbox',
-  'domain', 'dns_zone', 'certificate', 'cdn_zone',
-  'phone_number', 'sender_identity',
-  'message_broker'));                    -- added: a broker or log cluster that holds queues and topics
-
-CREATE TABLE message_brokers (           -- side table: kind = 'message_broker'
+CREATE TABLE message_brokers (           -- side table: kind = 'message_broker', a broker or
+                                         -- log cluster that holds queues and topics
   resource_id      UUID PRIMARY KEY REFERENCES resources (id),
   engine           TEXT NOT NULL CHECK (engine IN ('kafka', 'kafka_compatible', 'rabbitmq',
                      'lavinmq', 'activemq', 'pulsar', 'nats', 'provider_native')),

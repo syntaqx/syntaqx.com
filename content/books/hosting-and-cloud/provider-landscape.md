@@ -45,7 +45,7 @@ What they share: they own or lease the buildings, design much of their own hardw
 
 A tier of providers sells the same building blocks (VMs, block and object storage, managed Kubernetes and databases) with fewer services, simpler pricing and a self-serve customer base. DigitalOcean's 2025 10-K is the most detailed public view: $901.4 million revenue, ARR of $970 million (defined as the most recent quarter's revenue times four), net dollar retention averaged from monthly rates at 100% for 2025, pricing it calls "primarily consumption-based", and promotional, referral and grant credits that typically expire in two months or less. Akamai, whose 10-K describes its acquisition of Linode, reports a cloud computing line of $708.1 million in 2025, next to $2.24 billion of security and $1.26 billion of delivery revenue: a developer cloud inside an edge company. Vultr and Hetzner are private.
 
-The developer clouds' unit metrics are the ones a smaller provider can benchmark against, and their risk factors read like this volume's later parts: fraud, abuse, price pressure from hyperscalers, and dependence on leased data center space, and Operating Metrics collects their definitions.
+The developer clouds' unit metrics are the ones a smaller provider can benchmark against, and their risk factors read like this volume's later parts: fraud, abuse, price pressure from hyperscalers, and dependence on leased data center space, and [Operating Metrics](/books/hosting-and-cloud/operating-metrics) collects their definitions.
 
 ## European Providers
 
@@ -55,7 +55,7 @@ Europe's independent providers compete on price, dedicated hardware and jurisdic
 
 Platforms that take code from git and run it sell convenience on top of someone else's capacity, and their documentation shows it. Vercel lists 19 compute regions whose codes map to AWS region names (`iad1` is `us-east-1`, `fra1` is `eu-central-1`), and its functions default to `iad1`. Heroku's region API maps its Frankfurt region to AWS's `eu-central-1`. Railway is the counterexample: its "Railway Metal" platform runs on hardware it owns, and its FAQ says it is migrating completely off Google Cloud.
 
-Two lifecycle facts belong on the map. Heroku announced on February 6, 2026 that it is "transitioning to a sustaining engineering model focused on stability, security, reliability, and support," and no longer offers Enterprise Account contracts to new customers, though existing ones are honored and can renew. And these platforms meter differently from the clouds beneath them: CPU time rather than wall-clock time on Cloudflare Workers, credit allowances that pause projects when they run out on Netlify. PaaS & Frontend Clouds covers what they resell and how they meter.
+Two lifecycle facts belong on the map. Heroku announced on February 6, 2026 that it is "transitioning to a sustaining engineering model focused on stability, security, reliability, and support," and no longer offers Enterprise Account contracts to new customers, though existing ones are honored and can renew. And these platforms meter differently from the clouds beneath them: CPU time rather than wall-clock time on Cloudflare Workers, credit allowances that pause projects when they run out on Netlify. [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds) covers what they resell and how they meter.
 
 ## Web Hosts
 
@@ -73,7 +73,7 @@ Edge networks sell the path between the origin and the visitor. Their 2025 filin
 
 ## Colocation and Interconnection
 
-Under everyone who doesn't own buildings sits a data center operator. Equinix reports $9.22 billion revenue for 2025 from 280 data centers in 77 markets in 36 countries. Colocation operators sell space, power and cross-connects; their interconnection business (cables between customers in the same building, and on-ramps to the clouds) is what lets a host, a CDN and a cloud exchange traffic without the public internet. The Data Center & Colocation covers how colo is sold.
+Under everyone who doesn't own buildings sits a data center operator. Equinix reports $9.22 billion revenue for 2025 from 280 data centers in 77 markets in 36 countries. Colocation operators sell space, power and cross-connects; their interconnection business (cables between customers in the same building, and on-ramps to the clouds) is what lets a host, a CDN and a cloud exchange traffic without the public internet. [The Data Center & Colocation](/books/hosting-and-cloud/data-centers-and-colocation) covers how colo is sold.
 
 ## Communications Platforms
 
@@ -93,9 +93,9 @@ Almost every provider resells a layer, and the dependency is visible from outsid
 | Every registrar | The registry and ICANN | Wholesale price increases and policy changes |
 | Every CPaaS | Mobile and wireline carriers | Carrier fees, throughput limits, filtering and fines |
 | Azure VM Image Builder | HashiCorp Packer | Microsoft says the service "is built on HashiCorp Packer" |
-| Web hosts | Control panel and operating system licensors | Per-account license fees (Control Panel Licensing & the Alternatives) |
+| Web hosts | Control panel and operating system licensors | Per-account license fees ([Control Panel Licensing & the Alternatives](/books/hosting-and-cloud/control-panel-licensing)) |
 
-The October 2025 AWS event is the clearest public example of the underlay showing through. AWS's summary says DynamoDB DNS failures began at 11:48 PM PDT on October 19 when a latent race condition in DynamoDB's DNS management left the regional endpoint with an empty record, and the event ended at 2:20 PM PDT on October 20; a provider with no AWS account of its own could still have been down, because its PaaS was. Outages, Post-Mortems & Status Pages covers the pattern.
+The October 2025 AWS event is the clearest public example of the underlay showing through. AWS's summary says DynamoDB DNS failures began at 11:48 PM PDT on October 19 when a latent race condition in DynamoDB's DNS management left the regional endpoint with an empty record, and the event ended at 2:20 PM PDT on October 20; a provider with no AWS account of its own could still have been down, because its PaaS was. [Outages, Post-Mortems & Status Pages](/books/hosting-and-cloud/outages-and-status-pages) covers the pattern.
 
 Three rules follow for a provider that sits on someone else's layer. Pass the underlay's fees through as their own lines when the contract allows, so a price change upstream doesn't silently eat margin (the core model's `skus.pass_through`). Record the underlay on every region and product (`regions.underlay`), because a status page, an incident report and a data residency answer all need it. And read the underlay's terms as your own: its acceptable use policy, its suspension clauses and its egress prices bind your customers whether your terms repeat them or not.
 
@@ -106,7 +106,7 @@ Every provider decides, layer by layer, whether to build it, license it or rent 
 | Layer | Build | Buy or license | Rent | My default |
 | --- | --- | --- | --- | --- |
 | Buildings and power | Hyperscalers | | Colocation (Equinix and peers) | Rent colocation until utilization and scale justify owning; most providers never cross that line |
-| Servers and hypervisor | Hyperscalers design their own | Commodity servers, KVM (part of Linux), VMware (licensed from Broadcom) | Bare metal from a cloud or host | KVM on owned or leased servers; avoid a hypervisor license that can change price under you (Licensing Disputes) |
+| Servers and hypervisor | Hyperscalers design their own | Commodity servers, KVM (part of Linux), VMware (licensed from Broadcom) | Bare metal from a cloud or host | KVM on owned or leased servers; avoid a hypervisor license that can change price under you ([Licensing Disputes](/books/hosting-and-cloud/licensing-disputes)) |
 | Compute platform | Clouds and developer clouds | Kubernetes distributions, OpenStack | A hyperscaler, for a PaaS | Rent the hyperscaler while the product is unproven, with a cost model that shows when to leave (Repatriation) |
 | Control panel | Large hosts | cPanel, Plesk, DirectAdmin | | License a panel to launch, and build when per-account fees exceed a team's cost |
 | Billing and rating | Every provider eventually | Usage billing products | | Build the core model in this volume; buy tax calculation and payments |

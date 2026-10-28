@@ -2,14 +2,14 @@
 title = "Continuous Delivery Platforms"
 description = "CodeDeploy, Spinnaker, Argo, Harness and Octopus; progressive delivery and feature flags as products; and how approvals and protection gate a deploy."
 category = "Hosting & Cloud Industry"
-order = 2137
+order = 2145
 part = "CI/CD Platforms"
 tags = ["continuous-delivery", "deployment", "approvals", "feature-flags", "spinnaker"]
 +++
 
 Continuous integration ends with an artifact; continuous delivery is everything between that artifact and the users. A delivery platform knows the targets (servers, clusters, functions, regions), the order to reach them, the checks a release must pass at each step, who must approve it, and how to undo it. Most code hosts and PaaS products now include a thin version of this, and a separate market sells the thick version to organizations with many services, many targets and rules about who may change production.
 
-This chapter covers that market: AWS CodeDeploy and the internal tool behind it, Netflix's Spinnaker, Argo CD and Argo Rollouts as delivery products, Harness, Octopus Deploy, feature-flag services and OpenFeature, and the approval and environment-protection mechanisms of the code hosts and CI products. It adds `release_approvals` to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The strategies themselves (rolling, blue/green, canary, automated verdicts) are the playbook's [Deployment Strategies](/docs/delivery/deployment-strategies#comparing-them); when a human gate belongs in the path is [Deploy Is Not Release](/docs/delivery/ci-pipelines#deploy-is-not-release); flags as practice are [Feature Flags](/docs/delivery/feature-flags#progressive-rollout); GitOps reconcilers in depth, Flux, Flagger and Argo Rollouts' Kubernetes mechanics are Packaging & GitOps; the deploy record and aliases are [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#how-to-build-it).
+This chapter covers that market: AWS CodeDeploy and the internal tool behind it, Netflix's Spinnaker, Argo CD and Argo Rollouts as delivery products, Harness, Octopus Deploy, feature-flag services and OpenFeature, and the approval and environment-protection mechanisms of the code hosts and CI products. It adds `release_approvals` to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The strategies themselves (rolling, blue/green, canary, automated verdicts) are the playbook's [Deployment Strategies](/docs/delivery/deployment-strategies#comparing-them); when a human gate belongs in the path is [Deploy Is Not Release](/docs/delivery/ci-pipelines#deploy-is-not-release); flags as practice are [Feature Flags](/docs/delivery/feature-flags#progressive-rollout); GitOps reconcilers in depth, Flux, Flagger and Argo Rollouts' Kubernetes mechanics are [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops#progressive-delivery); the deploy record and aliases are [Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#how-to-build-it).
 
 ## How the Providers Do It
 
@@ -40,7 +40,7 @@ Spinnaker's contribution was making Netflix's multi-cloud delivery tooling avail
 
 ## Argo CD and Argo Rollouts
 
-On Kubernetes, the reconciler became the delivery platform. Argo CD applies desired state from Git ([Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#gitops-the-deploy-as-a-pull)); Argo Rollouts describes itself as "a Kubernetes controller and set of CRDs which provide advanced deployment capabilities": blue/green and canary, analysis against Prometheus, Datadog, New Relic and other providers with automatic promotion or rollback, and traffic shaping through NGINX, AWS load balancers, Istio, Linkerd and others. Argo graduated in the CNCF on December 6, 2022. As products they matter here because they removed the separate CD server for Kubernetes estates; how they work inside a cluster, and Flux and Flagger beside them, is Packaging & GitOps.
+On Kubernetes, the reconciler became the delivery platform. Argo CD applies desired state from Git ([Platforms Take Over the Deploy](/books/hosting-and-cloud/platform-deploys#gitops-the-deploy-as-a-pull)); Argo Rollouts describes itself as "a Kubernetes controller and set of CRDs which provide advanced deployment capabilities": blue/green and canary, analysis against Prometheus, Datadog, New Relic and other providers with automatic promotion or rollback, and traffic shaping through NGINX, AWS load balancers, Istio, Linkerd and others. Argo graduated in the CNCF on December 6, 2022. As products they matter here because they removed the separate CD server for Kubernetes estates; how they work inside a cluster, and Flux and Flagger beside them, is [Packaging & GitOps](/books/hosting-and-cloud/packaging-and-gitops#argo-cd).
 
 ## Harness and Octopus
 

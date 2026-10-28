@@ -2,7 +2,7 @@
 title = "Managed Databases"
 description = "RDS to Aurora's log-structured storage, DynamoDB, Spanner, Atlas and managed caches: how they work, how they meter, extended support fees and lock-in."
 category = "Hosting & Cloud Industry"
-order = 2126
+order = 2134
 part = "Managed Services"
 tags = ["databases", "rds", "aurora", "dynamodb", "valkey", "pricing"]
 +++
@@ -127,7 +127,7 @@ A managed database bill is several meters, each tied to a cost the provider carr
 | Data transfer | GB out of region or to the internet | The cloud's general egress rates | Customer |
 | Extended support | vCPU-hour or ACU-hour | $0.100 per vCPU-hour years 1 to 2, $0.200 year 3 (MySQL, US East Ohio) | Customer, by not upgrading |
 
-Two decisions recur in every catalog. The first is **provisioned versus used storage**: RDS bills what the customer allocated, Aurora what it consumes, and the difference decides whether a deleted table lowers the bill. The second is **whether I/O is a meter at all**: a per-I/O charge is honest about cost and impossible for a customer to forecast, which is why AWS ended up selling both and Google's AlloyDB announcement made "no opaque I/O charges" a selling point. The FinOps side of both (budgets, anomaly alerts, who owns a database's cost) is the playbook's [Cost & FinOps](/docs/operations/cost-and-finops#the-levers-that-actually-matter) and the Cost Data, FinOps & Surprise Bills chapter.
+Two decisions recur in every catalog. The first is **provisioned versus used storage**: RDS bills what the customer allocated, Aurora what it consumes, and the difference decides whether a deleted table lowers the bill. The second is **whether I/O is a meter at all**: a per-I/O charge is honest about cost and impossible for a customer to forecast, which is why AWS ended up selling both and Google's AlloyDB announcement made "no opaque I/O charges" a selling point. The FinOps side of both (budgets, anomaly alerts, who owns a database's cost) is the playbook's [Cost & FinOps](/docs/operations/cost-and-finops#the-levers-that-actually-matter) and the [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills) chapter.
 
 ## Extended Support and Forced Upgrades
 
@@ -135,9 +135,9 @@ Open-source engines have community end-of-life dates, and a managed database pro
 
 - **Paid extended support.** RDS Extended Support is "a paid option to keep running a major version past end of standard support, up to 3 years," after which the provider upgrades the database itself. It covers critical and high CVE patches and support cases. Enrollment is automatic: when MySQL 5.7 reached end of standard support on 29 Feb 2024, charges began on 1 Mar 2024 for every instance still on it, at $0.100 per vCPU-hour in US East (Ohio) "between March 1, 2024 to February 28, 2026," then "$0.200 per vCPU-hr" from 1 Mar 2026. Aurora Serverless v2 extended support is $0.085 per ACU-hour in years one and two and $0.170 in year three. Opting out is a creation-time setting (`EngineLifecycleSupport`), and opting out past the date triggers an automatic major-version upgrade.
 - **Forced upgrade on a date.** The provider announces a date and upgrades whatever is left in a maintenance window, which is what Extended Support's year-three end becomes.
-- **Product retirement.** Azure retired an entire deployment option: Azure Database for MySQL Single Server was "scheduled for retirement by September 16, 2024," with no new instances from the portal after 16 Jan 2024; PostgreSQL Single Server was "scheduled for retirement by March 28, 2025." Microsoft offered a service-initiated in-place migration only for "select Single Server database workloads," with a nomination form, not a blanket promise.
+- **Product retirement.** Azure retired an entire deployment option ([Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life#the-lifecycle-of-a-sunset)): Azure Database for MySQL Single Server was "scheduled for retirement by September 16, 2024," with no new instances from the portal after 16 Jan 2024; PostgreSQL Single Server was "scheduled for retirement by March 28, 2025." Microsoft offered a service-initiated in-place migration only for "select Single Server database workloads," with a nomination form, not a blanket promise.
 
-The managed Kubernetes chapter describes the same fee for clusters past their support window; the pattern is the provider pricing its own cost of maintaining a version it would rather drop, and turning an upgrade deadline into a revenue line. A provider that sells this has to make the date and the charge visible before it starts: the enrollment default, the rate, the date the rate doubles and the date of the forced upgrade are all facts the customer needs on the resource, not in a blog post. The general upgrade discipline (small, continuous, on supported versions) is the playbook's [Runtime Policy](/docs/engineering/dependencies#runtime-policy).
+The [managed Kubernetes chapter](/books/hosting-and-cloud/managed-kubernetes#extended-support) describes the same fee for clusters past their support window; the pattern is the provider pricing its own cost of maintaining a version it would rather drop, and turning an upgrade deadline into a revenue line. A provider that sells this has to make the date and the charge visible before it starts: the enrollment default, the rate, the date the rate doubles and the date of the forced upgrade are all facts the customer needs on the resource, not in a blog post. The general upgrade discipline (small, continuous, on supported versions) is the playbook's [Runtime Policy](/docs/engineering/dependencies#runtime-policy).
 
 ## Migration and Lock-In
 
@@ -157,7 +157,7 @@ The schema side of a migration (expand and contract, backfills, dual writes duri
 | Approach | Model | Strengths | Failure modes | Licensing and ownership | Cost shape |
 | --- | --- | --- | --- | --- | --- |
 | **Self-managed on VMs** | Engine on the customer's VMs and disks | Full control, any version, any extension, portable | The customer owns backups, failover, patching and pages | Engine's license (PostgreSQL, MySQL GPL, Valkey BSD) | VM plus disk; staff time |
-| **Kubernetes operator** | An operator runs the engine in a cluster (Storage & Stateful Workloads covers it) | Portable across clouds, declarative | Storage and failover depend on the cluster's own reliability | Operator's license plus engine's | Cluster cost plus staff time |
+| **Kubernetes operator** | An operator runs the engine in a cluster ([Storage & Stateful Workloads](/books/hosting-and-cloud/kubernetes-storage) covers it) | Portable across clouds, declarative | Storage and failover depend on the cluster's own reliability | Operator's license plus engine's | Cluster cost plus staff time |
 | **Managed open-source engine** (RDS, Cloud SQL, Flexible Server, Aiven, DigitalOcean) | Provider-run engine on attached storage | Portable engine, provider-run HA and PITR, many vendors | Failover is a reconnect; replicas lag; extended support fees on old versions | Engine's license; the provider's service terms | Instance-hours, storage, IOPS, standby doubled |
 | **Cloud-native relational** (Aurora, AlloyDB, Azure Hyperscale) | Familiar engine on the provider's own storage | Fast failover, storage that grows itself, fewer replicas needed | Proprietary storage; I/O meters; one provider | Proprietary service | Instance or capacity units, storage used, I/O or a premium |
 | **Distributed SQL** (Spanner, DSQL, Cosmos DB) | The provider's own engine across zones or regions | Strong consistency across regions, no failover to manage | New dialect or subset; conflict retries; deepest lock-in | Proprietary | Nodes, processing units, storage |

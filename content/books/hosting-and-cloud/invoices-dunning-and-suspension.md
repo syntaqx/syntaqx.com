@@ -37,13 +37,13 @@ Three patterns:
 - **The first rung stops new spending, not running things.** DigitalOcean's hold, Azure's Past Due, Vercel's overdue restrictions and Cloudflare's overdue balance all block purchases or new resources while leaving the customer's sites up. Stopping what runs comes later, and deleting later still.
 - **Clocks are published by some and withheld by others.** Namecheap, Vercel, Cloudflare and Azure give numbers; DigitalOcean and Hetzner say explicitly that they don't. The customers who need the numbers most are the ones about to lose data.
 
-## How We Got Here
+## How It Got Here
 
 Billing moved from the hosting invoice to the usage statement as the unit of sale shrank:
 
 - **Prepaid terms.** Shared hosting has sold months and years upfront from the start, so an unpaid renewal simply wasn't renewed and the account suspended; the intro-term model in [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law#terms-intro-prices-and-the-renewal) is that shape today.
 - **Arrears by the hour, then by the second.** Clouds billed instance-hours after the month. On October 2, 2017 AWS moved Linux EC2 instances and EBS volumes to per-second billing with a 60-second minimum, "effective immediately" for running instances too. The finer the unit, the larger the share of revenue that is unbilled at any moment, and the more the provider extends credit to every account it doesn't charge in advance.
-- **Thresholds as credit control.** Google Cloud's threshold billing charges new self-serve accounts whenever the balance reaches a threshold and raises it as payment history builds; DigitalOcean ties its mid-month auto-charge to a tier with a prepayment; Vercel added partial invoices for Pro teams on June 10, 2026, triggered by a threshold or by usage that "does not match your normal pattern." Each answers the same loss: usage run up on a card that will fail, or a key that was stolen (Free-Tier Fraud & Stolen Keys).
+- **Thresholds as credit control.** Google Cloud's threshold billing charges new self-serve accounts whenever the balance reaches a threshold and raises it as payment history builds; DigitalOcean ties its mid-month auto-charge to a tier with a prepayment; Vercel added partial invoices for Pro teams on June 10, 2026, triggered by a threshold or by usage that "does not match your normal pattern." Each answers the same loss: usage run up on a card that will fail, or a key that was stolen ([Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#stolen-keys)).
 - **Invoiced billing for the large accounts.** Above a size, card billing stops working: Twilio refuses cards once fees exceed $8,000 in a month and Google Cloud's invoiced billing expects at least $40,000 a year of spend. Those accounts pay on net terms with contractual late interest, and AWS, Google and Twilio all write 1.5% a month.
 - **Published deletion clocks.** Azure's 90-day deletion, Google's 30-day recovery plus at most 180 days under its data processing addendum, Netlify's 30-day retrieval and AWS's 30-day post-termination period are contract or documentation terms. Where they exist they let the customer plan an exit; where they don't, the customer learns them by losing data.
 
@@ -94,7 +94,7 @@ The general shape, retries, notices and grace, is the playbook's ([Dunning](/doc
 - **Each step names an effect and a clock.** A dunning step either retries, notifies, or adds an `account_holds` row with an effect from the foundation (`no_new_resources`, `read_only`, `stop_resources`, `full_suspension`), and every notice says what the next step is and when. Vercel's "within 14 days ... all deployments on your account will be paused" is the model sentence.
 - **Partial service beats total suspension.** Cloudflare's downgrade to Free keeps the website up and removes paid features; Azure's Past Due keeps everything running; DigitalOcean's hold blocks only new resources. Every notch between "fine" and "off" is time for the customer to pay without an outage.
 - **Payment restores at once.** AWS, DigitalOcean and Hetzner reactivate on payment; Hetzner's caveat that a termination notice can't be revoked once issued is the reason termination is a separate, later step. A payment event lifts every non-payment hold on the account and closes the case in one transaction.
-- **Involuntary churn is its own metric,** reported apart from cancellations (Operating Metrics), because its fix is billing, not product.
+- **Involuntary churn is its own metric,** reported apart from cancellations ([Operating Metrics](/books/hosting-and-cloud/operating-metrics#customers-churn-and-renewal)), because its fix is billing, not product.
 
 ### Worked examples
 
@@ -119,11 +119,11 @@ As of October 2026, from the providers' pages:
 Two rules make the clocks safe:
 
 - **Suspension clocks and deletion clocks are different clocks.** Stopping resources ends the outage risk to the provider's money; deleting data ends the customer's ability to recover. A provider that runs them on one timer deletes data a customer would have paid to retrieve. AWS keeps them separate: fees accrue during suspension, content survives 30 days past termination.
-- **Every clock is stored on the hold.** The hold that stops resources carries when termination will happen and when data will be deleted, so the notice, the console banner and the support agent read the same dates, and changing the policy doesn't silently change the date a customer was told. Billing state is not the only input: holds for abuse, fraud and legal orders carry their own clocks (Abuse on Infrastructure).
+- **Every clock is stored on the hold.** The hold that stops resources carries when termination will happen and when data will be deleted, so the notice, the console banner and the support agent read the same dates, and changing the policy doesn't silently change the date a customer was told. Billing state is not the only input: holds for abuse, fraud and legal orders carry their own clocks ([Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure#three-tiers-of-service)).
 
 ## Data After Termination
 
-What survives the end of a contract is a term, and the published ones, as of October 2026:
+What survives the end of a contract is a term (a product the provider shuts down has its own export window: [Data Export and Getting Out](/books/hosting-and-cloud/migrations-and-end-of-life#data-export-and-getting-out)), and the published ones, as of October 2026:
 
 - **AWS:** for 30 days after termination (unless AWS terminated for cause under 5.2(b)) AWS won't delete content as a result of termination, and retrieval requires all amounts paid; a closed account has a 90-day post-closure period before content is deleted ([Account Standing](/books/hosting-and-cloud/accounts-and-resellers#account-standing)).
 - **Azure:** a cancelled subscription's data is kept 30 to 90 days, without charge, and the subscription is deleted automatically 90 days after cancellation; an unpaid subscription's data is deleted 90 days after the service ends.
@@ -135,9 +135,9 @@ What survives the end of a contract is a term, and the published ones, as of Oct
 
 Design consequences:
 
-- **A retrieval window means read access, not service.** During it the account is `read_only`: the customer can download, snapshot or export, and nothing new runs. Egress during the window is the switching question (Egress & Switching); Azure, for instance, credits egress for customers who give notice and leave.
+- **A retrieval window means read access, not service.** During it the account is `read_only`: the customer can download, snapshot or export, and nothing new runs. Egress during the window is the switching question ([Egress & Switching](/books/hosting-and-cloud/egress-and-switching)); Azure, for instance, credits egress for customers who give notice and leave.
 - **Unpaid and retrievable can conflict.** AWS conditions retrieval on payment. A provider that does the same should say so in the termination notice, with the amount, because a customer who can't get their data won't pay to see whether they can.
-- **Deletion is a job with evidence.** The deletion run records what was deleted and when, against the hold's `delete_data_after`, and backups age out on their own schedule, stated separately ([Backups](/docs/architecture/data-retention#backups); Backups, Restores & Migrations).
+- **Deletion is a job with evidence.** The deletion run records what was deleted and when, against the hold's `delete_data_after`, and backups age out on their own schedule, stated separately ([Backups](/docs/architecture/data-retention#backups); [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#retention-and-placement)).
 - **Billing and tax records outlive the data.** Invoices, consent and identifier history are kept for their own retention periods after the customer's content is gone ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
 
 ## Resellers and the Cascade
@@ -272,7 +272,7 @@ ALTER TABLE account_holds
     OR retrieval_until IS NULL OR delete_data_after >= retrieval_until);
 ```
 
-A cycle run drafts one invoice per account with unbilled rated usage in the period, then builds usage lines from `rated_usage` at step 6 of the pipeline. Steps 3 to 5 (allowances, commitments, credits) have already run: `rated_usage.amount` is the unrounded charge for the quantity beyond `included_quantity`, commitment benefits are in Commitments, Discounts & Marketplaces' `commitment_drawdowns`, and credits are drawn from `credit_grants` here.
+A cycle run drafts one invoice per account with unbilled rated usage in the period, then builds usage lines from `rated_usage` at step 6 of the pipeline. Steps 3 to 5 (allowances, commitments, credits) have already run: `rated_usage.amount` is the unrounded charge for the quantity beyond `included_quantity`, commitment benefits are in [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#how-to-build-it)' `commitment_drawdowns`, and credits are drawn from `credit_grants` here.
 
 ```sql
 -- 1. Draft invoices for the run ($1 = run id) -----------------------------------

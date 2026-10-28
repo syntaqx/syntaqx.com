@@ -2,7 +2,7 @@
 title = "Hypervisors at Home"
 description = "Proxmox VE, free ESXi's end and partial return, XCP-ng, Hyper-V, Incus, Harvester and KVM: home clusters, quorum, PCIe and GPU passthrough, and a 3-node build."
 category = "Hosting & Cloud Industry"
-order = 2148
+order = 2107
 part = "Homelab"
 tags = ["homelab", "virtualization", "proxmox", "esxi", "xcp-ng", "incus", "passthrough"]
 +++
@@ -25,7 +25,7 @@ This chapter covers the hypervisors homelabs run (Proxmox VE and its backup and 
 
 Three patterns run through the table. **KVM won the home tier:** Proxmox VE, Incus, Harvester and plain libvirt all use it, and only XCP-ng (Xen) and the two commercial hypervisors don't. **The free product is the funnel:** every vendor gives away the hypervisor and sells updates, support or management, and when a vendor stopped (VMware in 2024, Microsoft's free Hyper-V Server after 2019) the home users who had learned on it had to go somewhere else. **Containers beside VMs is now expected:** LXC in Proxmox VE and Incus runs a Linux service at container cost with its own IP and backups.
 
-## How We Got Here
+## How It Got Here
 
 - **2005 and 2008:** Martin and Dietmar Maurer found Proxmox Server Solutions GmbH in 2005; in 2008 "the first stable version 0.9 of Proxmox Virtual Environment" launches.
 - **February 7, 2013:** the Xen Orchestra repository is created.
@@ -71,7 +71,7 @@ Microsoft's free standalone **Hyper-V Server** ended with the 2019 release: on M
 
 ## Incus and LXD
 
-**LXD** was the Linux Containers project's manager for system containers and VMs until July 4, 2023, when Canonical took it in house ("now found directly on Canonical's websites"). On August 7, 2023 **Incus** was announced as a "fully community led alternative to Canonical's LXD," created by Aleksa Sarai after LXD 5.16, and published v0.1 on October 7, 2023. Incus manages LXC system containers and QEMU VMs with images, profiles, projects, storage pools, networks and clustering, under Apache-2.0, through one CLI and API. It is driven mainly from that CLI rather than a Proxmox-style web console, which is the tradeoff: it is lighter and scriptable, and suits a container-first lab on any distribution. The fork is one more case of a project's owner and its community parting ways, told across the industry in Licensing Disputes.
+**LXD** was the Linux Containers project's manager for system containers and VMs until July 4, 2023, when Canonical took it in house ("now found directly on Canonical's websites"). On August 7, 2023 **Incus** was announced as a "fully community led alternative to Canonical's LXD," created by Aleksa Sarai after LXD 5.16, and published v0.1 on October 7, 2023. Incus manages LXC system containers and QEMU VMs with images, profiles, projects, storage pools, networks and clustering, under Apache-2.0, through one CLI and API. It is driven mainly from that CLI rather than a Proxmox-style web console, which is the tradeoff: it is lighter and scriptable, and suits a container-first lab on any distribution. The fork is one more case of a project's owner and its community parting ways, told across the industry in [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes#broadcom-and-vmware).
 
 ## Harvester
 

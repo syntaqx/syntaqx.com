@@ -28,7 +28,7 @@ The gift is also the provider's largest fraud surface. A free account with a fre
 | **Fly.io** | No free tier for new organizations: a trial of 2 hours of Machine runtime or 7 days, whichever comes first, without a card | A card is required to keep using billable resources; a few allowances stay free (shared IPv4, IPv6, inbound transfer, the first 10 GB of volume snapshots) |
 | **Railway** | A one-time $5 trial credit for up to 30 days, then a Free plan with $1 of credit a month | Unverified accounts stay on a Limited Trial with restricted outbound network; verification is automated from the GitHub account's age and activity. Trial volumes are deleted 30 days after credits expire |
 | **Twilio** | Trial accounts get product-specific free units (100 SMS, 3,000 emails, 75 voice minutes), not a dollar balance | Messages and calls only to up to 5 verified numbers in the sign-up country, Twilio templates only; the trial expires 30 days after sign-up and upgrading is required for 10DLC registration |
-| **GitHub Actions** | Free for public repositories on standard hosted runners; 2,000 minutes a month for private repositories on the Free plan | Open source as acquisition, the subject of The CI/CD Platform Business |
+| **GitHub Actions** | Free for public repositories on standard hosted runners; 2,000 minutes a month for private repositories on the Free plan | Open source as acquisition, the subject of [The CI/CD Platform Business](/books/hosting-and-cloud/ci-cd-platform-business#pricing-models) |
 
 Four patterns run through the table:
 
@@ -51,9 +51,9 @@ The hyperscalers combine them: AWS's free plan is a credit grant, a trial clock 
 
 Trials also carry restrictions, and the restrictions are where the fraud controls live. Google's trial forbids GPUs, Marketplace purchases, quota increases and Windows Server VMs; Azure's free account requires a pay-as-you-go upgrade before quota increases; AWS's free plan blocks "some services that large enterprises typically use"; Railway restricts outbound network until verification. Each is a quota or a permission ceiling that the conversion lifts, so in the model they are `quotas` rows with `source = 'risk'` that end when the plan changes, not code paths that check a flag.
 
-How a trial converts is a separate legal question. Google states that there are no automatic charges; Azure and AWS require an explicit upgrade; Railway and Fly.io require a card to continue. A trial that converts to a paid subscription without a new affirmative act is an automatic renewal under state law, and Subscriptions, Renewals & Cancellation Law owns the rules ([The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal)).
+How a trial converts is a separate legal question. Google states that there are no automatic charges; Azure and AWS require an explicit upgrade; Railway and Fly.io require a card to continue. A trial that converts to a paid subscription without a new affirmative act is an automatic renewal under state law, and [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law) owns the rules ([The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal)).
 
-## How We Got Here
+## How It Got Here
 
 - **2010: the free usage tier.** AWS announced on October 21, 2010 that from November 1, new customers could run a free EC2 instance for a year: 750 hours a month of a Linux micro instance, 10 GB of EBS, 5 GB of S3 and 30 GB of data transfer, with SimpleDB, SQS and SNS allowances free indefinitely. The twelve-month free tier for new accounts, plus a few perpetual allowances, became the template for a decade.
 - **2010s: trial credits with a clock.** Google's and Azure's credits (today $300 for 90 days and $200 for 30 days) and Oracle's $300 for 30 days put a dollar balance and an expiry on a new account, and pair it with a perpetual free tier. The trial solved a problem the free tier didn't: letting a new customer try expensive services without the provider giving them away forever.
@@ -86,7 +86,7 @@ Three design consequences follow:
 
 ### Investor credits and lock-in
 
-The FTC's November 16, 2023 summary of its cloud computing request for information (102 public comments) records commenters' argument that "cloud credits as a form of investment" could lock in startups, in arrangements where an investor provides money that can only be spent on its own cloud. The FTC made no finding on credits; the post says it is watching generative AI markets. The concern is the same as for committed spend discounts ([Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#the-cma-and-committed-spend)): credits that are only usable on one provider steer architecture toward that provider while they last, and the cost of leaving rises with every service adopted. Competition Cases follows the regulators' side. For the billing system, the duty is narrow and concrete: record the program, the sponsor and the expiry, show the customer the balance and the date, and never let a credit's exclusions surprise them.
+The FTC's November 16, 2023 summary of its cloud computing request for information (102 public comments) records commenters' argument that "cloud credits as a form of investment" could lock in startups, in arrangements where an investor provides money that can only be spent on its own cloud. The FTC made no finding on credits; the post says it is watching generative AI markets. The concern is the same as for committed spend discounts ([Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#the-cma-and-committed-spend)): credits that are only usable on one provider steer architecture toward that provider while they last, and the cost of leaving rises with every service adopted. [Competition Cases](/books/hosting-and-cloud/competition-cases) follows the regulators' side. For the billing system, the duty is narrow and concrete: record the program, the sponsor and the expiry, show the customer the balance and the date, and never let a credit's exclusions surprise them.
 
 ## Spending Limits: the Hard Cap
 
@@ -109,7 +109,7 @@ Hosting adds four twists:
 
 - **Expiry is part of the terms, and it is long.** AWS credits "can't be redeemed after the expiration date," apply to eligible charges "for the entire billing cycle in which they expire," and unused credits on an upgraded free-plan account remain usable for up to 12 months from sign-up; AWS's nonprofit and research credits expire one year after receipt. Startup credits run one to two years, so a provider's credit liability is a long tail, not a monthly float.
 - **Expiry order changes breakage.** When an account holds a short-lived promotional credit and a long-lived startup credit, which one draws first decides whether the short one expires unused. The worked example below shows the difference; the order is a stated rule, not an accident of query order.
-- **Credits don't pay tax.** AWS's terms exclude "sales, use, and similar transaction taxes," and DigitalOcean's the same. Whether a promotional credit reduces the taxable base or is a payment toward a taxed charge depends on the jurisdiction and the credit's nature, which Tax on Hosting & Cloud owns; the billing system must apply credits as lines the tax engine can classify.
+- **Credits don't pay tax.** AWS's terms exclude "sales, use, and similar transaction taxes," and DigitalOcean's the same. Whether a promotional credit reduces the taxable base or is a payment toward a taxed charge depends on the jurisdiction and the credit's nature, which [Tax on Hosting & Cloud](/books/hosting-and-cloud/tax) owns; the billing system must apply credits as lines the tax engine can classify.
 - **Credits can be clawed back.** Both AWS's and DigitalOcean's terms void credits for fraud, misuse, sale for cash, or accounts created solely to obtain them, and require reimbursement of credits used in violation. A void is a dated event on the grant, not a deletion, because the drawdowns already on invoices are the evidence.
 
 Microsoft's online services SLA adds a cross-chapter rule: its service levels don't apply "to purchases made using Microsoft subscription credits." A credit-funded workload has no SLA claim, which [SLAs & Service Credits](/books/hosting-and-cloud/slas-and-service-credits#claims-and-deadlines) has to check before granting one.
@@ -123,7 +123,7 @@ A free account is a bet that the person behind it will become a customer, and th
 - **Restrict what free capacity can reach.** No GPUs on Google's trial, verified recipients only on Twilio, restricted outbound network on Railway's Limited Trial, no quota increases until upgrade on Azure and Google.
 - **Make the gift smaller or remove it.** Heroku's 2022 shutdown, Fly.io's 2024 move to a trial, and the hyperscalers' shift to bounded credits all shrink the prize.
 
-Free-Tier Fraud & Stolen Keys covers the detection side: account farming, cryptomining signatures, stolen keys that run up a paying account's bill, and the quarantine policies providers attach to leaked credentials. The billing model's part is to make fraud cheap to act on: every grant knows its program and sponsor, every program knows its exclusions and stacking rule, a void is one row, and trial restrictions are quotas that risk scoring can tighten without a deploy.
+[Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#free-tier-farming) covers the detection side: account farming, cryptomining signatures, stolen keys that run up a paying account's bill, and the quarantine policies providers attach to leaked credentials. The billing model's part is to make fraud cheap to act on: every grant knows its program and sponsor, every program knows its exclusions and stacking rule, a void is one row, and trial restrictions are quotas that risk scoring can tighten without a deploy.
 
 ## Applying Credits: a Worked Month
 
@@ -233,12 +233,7 @@ CREATE TABLE spending_limits (           -- the hard cap; budgets only alert
   EXCLUDE USING GIST (account_id WITH =, (COALESCE(project_id::text, '')) WITH =,
     valid_during WITH &&)
 );
-
-ALTER TABLE account_holds
-  DROP CONSTRAINT account_holds_reason_check,
-  ADD CONSTRAINT account_holds_reason_check CHECK (reason IN ('non_payment', 'abuse',
-    'fraud', 'verification', 'sanctions', 'legal_order', 'customer_request',
-    'spending_limit'));
+-- A tripped limit is an account_holds row with the core reason 'spending_limit'.
 ```
 
 A grant's remaining balance is its amount less its drawdowns, never a column:

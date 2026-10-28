@@ -9,7 +9,7 @@ tags = ["fraud", "sms-pumping", "toll-fraud", "irsf", "geo-permissions"]
 
 Most fraud against a cloud steals compute; telecom fraud steals money directly, through the platform's own billing. A fraudster who can make a platform send texts or place calls to numbers that pay per message or per minute earns a share of every one, and the bill goes to the platform's customer, who then asks the platform to forgive it. The two classic forms are SMS pumping, where bots trigger one-time passcodes or app links to blocks of numbers on a small carrier that shares the termination revenue, and international revenue share fraud, where calls are pumped to premium or high-cost numbers abroad. Both look like ordinary usage until the invoice arrives. A third form treats the platform itself as the target: the accounts, staff and admin tools that control thousands of customers' numbers.
 
-This chapter covers telecom fraud from the platform's side: how the problem grew, how SMS pumping and toll fraud work and what stops them, the platform as a target, the controls the providers ship (geo permissions, prefix blocking, conversion monitoring), who pays, and how to model the controls. Stolen API keys and free-tier abuse across the whole provider are Free-Tier Fraud & Stolen Keys in the Abuse, Trust and the Law part; carrier fines for customers' content are in [Sending a Text](/books/hosting-and-cloud/sending-a-text#filtering-and-carrier-fines).
+This chapter covers telecom fraud from the platform's side: how the problem grew, how SMS pumping and toll fraud work and what stops them, the platform as a target, the controls the providers ship (geo permissions, prefix blocking, conversion monitoring), who pays, and how to model the controls. Stolen API keys and free-tier abuse across the whole provider are [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#stolen-keys) in the Abuse, Trust and the Law part; carrier fines for customers' content are in [Sending a Text](/books/hosting-and-cloud/sending-a-text#filtering-and-carrier-fines).
 
 ## How the Providers Do It
 
@@ -23,7 +23,7 @@ The public controls converge on three ideas: don't send where the customer doesn
 
 The shape most providers share: country permissions default narrow for new accounts, a verification product that adds fraud detection on top of raw SMS, and a shared list of risky destinations the platform maintains across all customers.
 
-## How We Got Here
+## How It Got Here
 
 Toll fraud is as old as long distance billing; each shift in who could originate traffic moved who it hit:
 
@@ -91,7 +91,7 @@ In practice, the cost lands in three places, and the platform's design decides t
 | **The platform** | Termination fees it can't collect, bill forgiveness, and support load | Prefix blocking across customers, default-narrow permissions, fast detection |
 | **The carrier chain** | Fees disputed upstream | Carrier-level fraud programs |
 
-My position is that the platform should make the safe configuration the default and the loss visible within minutes, because a customer who finds out from a five-figure invoice will dispute it, and a platform that could have stopped it often ends up absorbing it. Forgiveness policy belongs with the provider's broader bill-forgiveness rules (Cost Data, FinOps & Surprise Bills in the Metering and Billing part).
+My position is that the platform should make the safe configuration the default and the loss visible within minutes, because a customer who finds out from a five-figure invoice will dispute it, and a platform that could have stopped it often ends up absorbing it. Forgiveness policy belongs with the provider's broader bill-forgiveness rules ([Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills#surprise-bills-and-forgiveness) in the Metering and Billing part).
 
 ## The Alternatives
 
@@ -221,6 +221,7 @@ Notes on the sketch:
 - [Twilio: August 2022 social engineering attack](https://www.twilio.com/en-us/blog/august-2022-social-engineering-attack), the smishing breach, affected customers and Authy users, FIDO2
 - [Twilio: Authy security alert (July 2024)](https://www.twilio.com/en-us/changelog/Security_Alert_Authy_App_Android_iOS), the unauthenticated endpoint
 - [Commsrisk: Musk says Twitter lost $60mn a year to SMS pumping](https://commsrisk.com/elon-musk-says-twitter-lost-60mn-a-year-because-390-telcos-used-bot-accounts-to-pump-a2p-sms/), the December 20, 2022 statement
+- [Twitter: An update on two-factor authentication using SMS](https://blog.x.com/en/product/an-update-on-two-factor-authentication-using-sms-on-twitter), February 15, 2023, SMS 2FA limited to Twitter Blue after March 20, 2023
 - [Engadget: Twitter makes SMS two-factor authentication a paid feature](https://www.engadget.com/twitter-text-based-two-factor-authentication-paid-feature-075852904.html), the March 20, 2023 change
 - [FCC: Gerri Murphy Realty v. AT&T (2001)](https://transition.fcc.gov/eb/Orders/2001/fcc01310.html), customer liability for PBX toll fraud under the tariff, and the capped-liability plan
 - [TNS: The telecom fraud landscape in 2026](https://tnsi.com/resource/com/the-telecom-fraud-landscape-in-2026-how-the-industry-is-fighting-back-blog), CFCA's 2023 and 2025 loss estimates as reported

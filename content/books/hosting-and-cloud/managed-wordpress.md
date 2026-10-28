@@ -11,7 +11,7 @@ Managed WordPress is shared or containerized hosting narrowed to one application
 
 That knowledge changes how the plan is sold. Shared hosting prices by disk, sites and a fair-use clause; managed WordPress prices by **visits**, a unit the customer understands and the host can map to PHP work. It also changes what the host depends on. A WordPress platform's update path for core, themes and plugins runs through WordPress.org, a service the host doesn't run, and from September 2024 the industry watched what happens when access to it becomes a bargaining chip.
 
-This chapter covers how the providers shape the product, how WordPress hosting got here, how visits are counted and billed, staging and the database problem it never fully solves, the caching layers, updates and cron, security, WP Engine v. Automattic as a platform-dependency risk, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with a `wordpress_sites` side table and a visit meter. The business of web hosting around it is [How Web Hosting Makes Money](/books/hosting-and-cloud/web-hosting-business); the panel most non-managed WordPress sites run under is [cPanel & WHM](/books/hosting-and-cloud/cpanel-and-whm); backups and moving sites between hosts are [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations).
+This chapter covers how the providers shape the product, how WordPress hosting got here, how visits are counted and billed, staging and the database problem it never fully solves, the caching layers, updates and cron, security, WP Engine v. Automattic as a platform-dependency risk, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with WordPress columns on the `sites` side table and a visit meter. The business of web hosting around it is [How Web Hosting Makes Money](/books/hosting-and-cloud/web-hosting-business); the panel most non-managed WordPress sites run under is [cPanel & WHM](/books/hosting-and-cloud/cpanel-and-whm); backups and moving sites between hosts are [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations).
 
 ## How the Providers Do It
 
@@ -65,7 +65,7 @@ What a managed WordPress plan includes, across the providers above:
 - **Environments.** At least a production and a staging copy of each site, often a development one too (WP Engine's "dev. environments", Pressable's sandbox, Pantheon's Dev, Test and Live).
 - **Backups as a feature.** Daily at minimum, taken automatically before risky operations, restorable from the dashboard ([Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#how-the-providers-do-it)).
 - **Managed updates.** Core updates by default; plugin updates as a feature or an add-on (Flywheel sells "Managed Plugin Updates" for $8 a month per site).
-- **Isolation tiers.** WP Engine's Essential plan is "Shared" and its Business and Enterprise plans are "Isolated"; the 99.99% SLA comes with isolation. The general case of what sharing a server costs a site is the playbook's [Noisy Neighbors](/docs/architecture/multi-tenancy#noisy-neighbors) and, at the kernel, Shared Hosting Isolation.
+- **Isolation tiers.** WP Engine's Essential plan is "Shared" and its Business and Enterprise plans are "Isolated"; the 99.99% SLA comes with isolation. The general case of what sharing a server costs a site is the playbook's [Noisy Neighbors](/docs/architecture/multi-tenancy#noisy-neighbors) and, at the kernel, [Shared Hosting Isolation](/books/hosting-and-cloud/shared-hosting-isolation#noisy-neighbors-at-the-kernel).
 - **Migration in.** Free migration is the acquisition channel; every specialist offers a plugin or a team for it ([Migrations](/books/hosting-and-cloud/backups-and-migrations#migrations)).
 
 The trade the customer makes is control for operations. A managed host can refuse plugins that fight its cache, set constants in `wp-config.php` it won't let the customer change, and run cron and updates on its own schedule. Those restrictions are where the platform's reliability comes from, and they are also what a customer runs into first.
@@ -132,7 +132,7 @@ Caching is also where managed hosting most often surprises a customer. A page ca
 
 Patchstack's report on 2024 counted 7,966 new WordPress ecosystem vulnerabilities, 96% in plugins and 4% in themes, with seven in core; 33% were not fixed in time for public disclosure, and 1,614 plugins and themes were removed from the WordPress repository for unpatched security issues. For a host, that means the site's risk is its plugin list, and core updates alone don't address it.
 
-What managed hosts do with that: keep an inventory of each site's plugins and versions, match it against vulnerability feeds, update or virtually patch (a WAF rule) the affected ones, and tell the customer which plugin is abandoned. When a site is compromised anyway, the host is also the party that receives the phishing or malware report, and the narrowest action comes first: a quarantined file or a blocked path before a suspended site ([Phishing and Malware](/books/user-generated-platforms/abuse-desks#phishing-and-malware); [Suspension Versus Takedown](/books/user-generated-platforms/abuse-desks#suspension-versus-takedown); Abuse on Infrastructure). Restoring from a backup taken before the compromise is the usual clean-up, which is one more reason backups and restore points are a managed host's core feature.
+What managed hosts do with that: keep an inventory of each site's plugins and versions, match it against vulnerability feeds, update or virtually patch (a WAF rule) the affected ones, and tell the customer which plugin is abandoned. When a site is compromised anyway, the host is also the party that receives the phishing or malware report, and the narrowest action comes first: a quarantined file or a blocked path before a suspended site ([Phishing and Malware](/books/user-generated-platforms/abuse-desks#phishing-and-malware); [Suspension Versus Takedown](/books/user-generated-platforms/abuse-desks#suspension-versus-takedown); [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure)). Restoring from a backup taken before the compromise is the usual clean-up, which is one more reason backups and restore points are a managed host's core feature.
 
 ## Platform Dependency: WP Engine v. Automattic
 
@@ -171,30 +171,37 @@ If I were building the platform, my default would be: visits counted as unique I
 
 ## How to Build It
 
-The chapter adds a `wordpress_sites` side table on `resources` rows of kind `'site'` and a `site.visits` meter on the core `usage_events`. PaaS & Frontend Clouds defines the general `sites` side table; `wordpress_sites` holds what only a WordPress site has and may fold into `sites` when the two are integrated. Backups taken before a push or an update are [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#how-to-build-it)'s `backups` rows with the trigger set.
+The chapter adds WordPress columns to the `sites` side table on `resources` rows of kind `'site'`, and a `site.visits` meter on the core `usage_events`. [PaaS & Frontend Clouds](/books/hosting-and-cloud/paas-and-frontend-clouds#how-to-build-it) defines `sites`, one side table for every site whatever runs it; the columns below are null on a site that isn't WordPress. Backups taken before a push or an update are [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#how-to-build-it)'s `backups` rows with the trigger set.
 
 ```sql
-CREATE TABLE wordpress_sites (           -- side table: resources.kind = 'site'
-  resource_id         UUID PRIMARY KEY REFERENCES resources (id),
-  environment         TEXT NOT NULL CHECK (environment IN ('production', 'staging',
-                        'development')),
-  staging_parent_id   UUID REFERENCES wordpress_sites (resource_id),  -- the production site
-  isolation           TEXT NOT NULL CHECK (isolation IN ('shared', 'isolated')),
-  visit_meter         TEXT NOT NULL CHECK (visit_meter IN ('unique_ip_utc_day', 'bandwidth',
-                        'pages_served', 'none')),     -- the plan's unit, published
-  cache_layer         TEXT NOT NULL CHECK (cache_layer IN ('none', 'page', 'edge_full_page')),
-  page_cache_ttl      INTERVAL,                       -- e.g. 10 minutes
-  object_cache        TEXT NOT NULL CHECK (object_cache IN ('none', 'redis', 'memcached')),
-  auto_update_policy  TEXT NOT NULL CHECK (auto_update_policy IN ('core_minor', 'core_all',
-                        'core_and_plugins', 'managed_with_rollback', 'off')),
-  plugin_source       TEXT NOT NULL CHECK (plugin_source IN ('wordpress_org', 'host_mirror',
-                        'composer', 'vendor')),       -- where updates come from
-  system_cron         BOOLEAN NOT NULL DEFAULT true,  -- DISABLE_WP_CRON plus a scheduler
-  wp_version          TEXT,                           -- observed, from the last scan
-  php_version         TEXT NOT NULL,
-  CHECK ((environment = 'production') = (staging_parent_id IS NULL)),
-  CHECK ((cache_layer = 'none') = (page_cache_ttl IS NULL))
-);
+ALTER TABLE sites                        -- side table: resources.kind = 'site'
+  ADD COLUMN application        TEXT CHECK (application IN ('wordpress')),  -- null: not a
+                                                      -- managed application
+  ADD COLUMN environment        TEXT CHECK (environment IN ('production', 'staging',
+                                  'development')),
+  ADD COLUMN staging_parent_id  UUID REFERENCES sites (resource_id),  -- the production site
+  ADD COLUMN isolation          TEXT CHECK (isolation IN ('shared', 'isolated')),
+  ADD COLUMN visit_meter        TEXT CHECK (visit_meter IN ('unique_ip_utc_day', 'bandwidth',
+                                  'pages_served', 'none')),     -- the plan's unit, published
+  ADD COLUMN cache_layer        TEXT CHECK (cache_layer IN ('none', 'page', 'edge_full_page')),
+  ADD COLUMN page_cache_ttl     INTERVAL,                       -- e.g. 10 minutes
+  ADD COLUMN object_cache       TEXT CHECK (object_cache IN ('none', 'redis', 'memcached')),
+  ADD COLUMN auto_update_policy TEXT CHECK (auto_update_policy IN ('core_minor', 'core_all',
+                                  'core_and_plugins', 'managed_with_rollback', 'off')),
+  ADD COLUMN plugin_source      TEXT CHECK (plugin_source IN ('wordpress_org', 'host_mirror',
+                                  'composer', 'vendor')),       -- where updates come from
+  ADD COLUMN system_cron        BOOLEAN,              -- DISABLE_WP_CRON plus a scheduler
+  ADD COLUMN wp_version         TEXT,                 -- observed, from the last scan
+  ADD COLUMN php_version        TEXT,
+  ADD CONSTRAINT sites_wordpress_fields CHECK (application IS DISTINCT FROM 'wordpress' OR (
+    environment IS NOT NULL AND isolation IS NOT NULL AND visit_meter IS NOT NULL
+    AND cache_layer IS NOT NULL AND object_cache IS NOT NULL
+    AND auto_update_policy IS NOT NULL AND plugin_source IS NOT NULL
+    AND system_cron IS NOT NULL AND php_version IS NOT NULL)),
+  ADD CONSTRAINT sites_staging_parent CHECK (environment IS NULL
+    OR (environment = 'production') = (staging_parent_id IS NULL)),
+  ADD CONSTRAINT sites_page_cache_ttl CHECK (cache_layer IS NULL
+    OR (cache_layer = 'none') = (page_cache_ttl IS NULL));
 ```
 
 Visits are ordinary usage events: one per site per UTC day, produced by the log pipeline after bot classification, keyed so a replay is a no-op, and corrected by a new event that references the old one when the classifier is rerun:

@@ -12,7 +12,7 @@ Every hosting plan says "backups," and the word covers very different promises. 
 
 Migrations are the same machinery pointed the other way. Moving an account between servers, or a customer between hosts, is a backup taken in one place and restored in another, followed by the step that actually moves the customer: changing DNS so the world's resolvers send web and mail traffic to the new server. Free migration is how hosts win customers from each other, and a botched cutover is how they lose them in the first week.
 
-This chapter covers how the providers do it, how host backups got here (rsync, hard-link snapshots, object storage, the cPanel backup system), how panel backups work, retention and placement, restores, the court cases that made backup location a contractual promise, migrations between servers and hosts, and the DNS and MX cutover, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with `backup_policies`, `backups`, `restores` and `migrations`. The generic engineering is the playbook's: [Disaster Recovery](/docs/operations/disaster-recovery) for targets, backup rules and restore drills, and [Replacing Systems](/docs/architecture/replacing-systems) for cutovers. Storage pricing for backup targets is Storage: Block, File & Object; ending a product and exporting customers' data is Migrations, Shutdowns & End of Life.
+This chapter covers how the providers do it, how host backups got here (rsync, hard-link snapshots, object storage, the cPanel backup system), how panel backups work, retention and placement, restores, the court cases that made backup location a contractual promise, migrations between servers and hosts, and the DNS and MX cutover, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with `backup_policies`, `backups`, `restores` and `migrations`. The generic engineering is the playbook's: [Disaster Recovery](/docs/operations/disaster-recovery) for targets, backup rules and restore drills, and [Replacing Systems](/docs/architecture/replacing-systems) for cutovers. Storage pricing for backup targets is [Storage: Block, File & Object](/books/hosting-and-cloud/storage#storage-classes-and-their-minimums); ending a product and exporting customers' data is [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life#data-export-and-getting-out).
 
 ## How the Providers Do It
 
@@ -23,7 +23,7 @@ Backups as each host's public pages describe them, as of October 2026:
 | **SiteGround** | Daily on all plans; on-demand from GrowBig | Up to 30 daily copies on shared, 7 on Cloud; 5 manual slots | Self-serve: everything, files, databases or email | Stored "across geodistributed locations" |
 | **Hostinger** | Weekly by default; daily on Business, Unlimited and up (add-on for others) | Daily backups kept for the last 7 days | Self-serve in hPanel: files, database or full | |
 | **DreamHost** | Not stated | "An average of 2 weeks of website backups and 5 days of database backups" | | "Long-term backups are not included in any hosting plan" |
-| **Bluehost** | Weekly on the basic shared plans | Not stated | | CodeGuard offered as an add-on |
+| **Bluehost** | Weekly on the basic shared plans | Not stated | | Not stated |
 | **Namecheap** | "Once every 3-7 days depending on the account type" | | On request; "made for server restoration purposes only" | Shared accounts over 25 GB or 200,000 inodes are excluded |
 | **IONOS** | Daily, files and databases | 14 days | Self-serve, files restored into a separate folder | |
 | **GoDaddy** | Daily, in its Website Backup product | | "Entire website or just a single file" | Sold as a product, with malware scanning |
@@ -136,7 +136,7 @@ The sequence the providers document:
 4. **Watch, and be ready to revert.** Route 53's guide is to monitor traffic and switch the NS records back if it drops.
 5. **Raise TTLs again** once the cutover holds.
 
-Mail is the hard part, because a message delivered to the old server after the MX change is in a mailbox nobody reads. Google's own MX setup guidance says new MX records can take "up to 72 hours" to be recognized and that "Your email might not work correctly if you keep old or incorrect MX records." So a mail migration copies mailboxes, changes MX, then copies again (or proxies, as Live Transfer does) until the old server stops receiving, and only then suspends the source. Zones, DNSSEC and the DNS host's side are DNS Hosting & DNSSEC; mailbox moves between providers are [Email Hosting](/books/hosting-and-cloud/email-hosting#migrating-mail).
+Mail is the hard part, because a message delivered to the old server after the MX change is in a mailbox nobody reads. Google's own MX setup guidance says new MX records can take "up to 72 hours" to be recognized and that "Your email might not work correctly if you keep old or incorrect MX records." So a mail migration copies mailboxes, changes MX, then copies again (or proxies, as Live Transfer does) until the old server stops receiving, and only then suspends the source. Zones, DNSSEC and the DNS host's side are [DNS Hosting & DNSSEC](/books/hosting-and-cloud/dns-hosting-and-dnssec); mailbox moves between providers are [Email Hosting](/books/hosting-and-cloud/email-hosting#migrating-mail).
 
 ## The Alternatives
 
@@ -156,7 +156,7 @@ For migrations my default is the archive route the host controls (Transfer Tool 
 
 ## How to Build It
 
-The chapter owns `backup_policies`, `backups`, `restores` and `migrations`. Backups are rows, not resources: they have no lifecycle of their own beyond expiry, no identifiers, and aren't billed per copy, so they stay out of `resources`. A volume snapshot a customer creates and pays for is a `resources` row of kind `'snapshot'`, which Storage: Block, File & Object owns.
+The chapter owns `backup_policies`, `backups`, `restores` and `migrations`. Backups are rows, not resources: they have no lifecycle of their own beyond expiry, no identifiers, and aren't billed per copy, so they stay out of `resources`. A volume snapshot a customer creates and pays for is a `resources` row of kind `'snapshot'`, which [Storage: Block, File & Object](/books/hosting-and-cloud/storage#how-to-build-it) owns.
 
 ```sql
 CREATE TABLE backup_policies (           -- what is promised for a resource
@@ -338,7 +338,7 @@ Notes on the sketch:
 - [Hostinger: backups](https://docs.hostinger.com/websites/backups), weekly default, self-serve restore
 - [Hostinger: migrate a website](https://docs.hostinger.com/websites/migrate-website), process, email excluded
 - [DreamHost: hosting plan FAQs](https://help.dreamhost.com/hc/en-us/articles/214878798-Hosting-plan-FAQs), retention, no long-term backups
-- [Bluehost: shared hosting](https://www.bluehost.com/hosting/shared), weekly backups, CodeGuard add-on, free migration tool
+- [Bluehost: shared hosting](https://www.bluehost.com/hosting/shared), weekly backups, free migration tool
 - [Namecheap: server backups](https://www.namecheap.com/support/knowledgebase/article.aspx/156/22/do-you-have-server-backups/), frequency, eligibility, purpose, recovery fee
 - [Namecheap: inode limits](https://namecheap.com/support/knowledgebase/article.aspx/9331/29/how-to-check-the-number-of-inodes-in-your-hosting-account), limits by plan, backup exclusion over 200,000
 - [HostGator: inode limits](https://www.hostgator.com/help/article/inode-limits), 100k/250k, AUP

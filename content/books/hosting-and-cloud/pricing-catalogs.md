@@ -29,11 +29,11 @@ As of October 2026:
 
 The pattern is consistent: a three-level structure (service or product, SKU, attributes or meter), a machine-readable list that is explicitly informational, a pricing page or contract that is binding, and change terms that range from a stated notice period to "at any time." The catalog a provider builds has to represent all of it, and its rater must only ever read the binding version.
 
-## How We Got Here
+## How It Got Here
 
 - **The price sheet (to the 2000s).** Hosting and colocation were priced in a sheet and a contract: a plan, a monthly fee, a bandwidth overage. The catalog lived in the billing system's product table and the marketing site, kept in step by hand. That worked while the catalog was dozens of rows.
 - **The per-region, per-OS explosion (2006 onward).** Utility pricing multiplied the rows: every instance type times every region times every operating system times every purchase option. EC2's single 10-cent instance of 2006 became a catalog no human could read, and customers started scraping pricing pages to estimate bills.
-- **Price lists as APIs (2015 to 2021).** AWS launched its Price List API on December 9, 2015, offering prices "in JSON and CSV form" and Amazon SNS notifications when they change. Microsoft built the Retail Prices API to replace the calculator and portal as "the only way that you could retrieve prices for Azure services," unauthenticated; Google exposes services, SKUs and tiered list prices through its Pricing API, including a billing account's own contract prices. Machine-readable catalogs made cost tools, calculators and the FinOps industry possible (Cost Data, FinOps & Surprise Bills).
+- **Price lists as APIs (2015 to 2021).** AWS launched its Price List API on December 9, 2015, offering prices "in JSON and CSV form" and Amazon SNS notifications when they change. Microsoft built the Retail Prices API to replace the calculator and portal as "the only way that you could retrieve prices for Azure services," unauthenticated; Google exposes services, SKUs and tiered list prices through its Pricing API, including a billing account's own contract prices. Machine-readable catalogs made cost tools, calculators and the FinOps industry possible ([Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills#cost-exports-cur-and-focus)).
 - **Prices that rise (2022 onward).** For fifteen years cloud price changes were mostly cuts. DigitalOcean's July 1, 2022 increase, announced as "a price change on some of our products" for Droplets, Snapshots, Load Balancers, Reserved IPs and Custom Images; Verisign's wholesale .com fee rose from $9.59 to $10.26 on September 1, 2024; Hetzner's 2026 adjustments cited "drastically increased operating expenses" and RAM and NVMe SSD procurement costs. Increases turned notice, grandfathering and the difference between new orders and existing products into catalog features.
 - **Unit changes as price changes (2020s).** Changing the unit is a price change too: per-second billing in 2017, Lambda's millisecond rounding in 2020, Cloudflare's CPU-time pricing in 2023, DigitalOcean's per-second Droplets in 2026. Each needed a migration plan for existing customers, which is catalog data, not a deploy.
 
@@ -79,15 +79,15 @@ That rule has consequences for how a provider builds its catalog:
 
 - **One source, many renderings.** The pricing page, the API, the calculator, the checkout and the rater must all render the same `price_versions` rows. A pricing page maintained by marketing in a CMS and a rater fed by an engineering table will drift, and the page wins every dispute.
 - **Publish snapshots.** Every published price list is a versioned, timestamped snapshot with a hash, so the provider can show what a page or file said on a given day. AWS's SNS notifications and its per-service, per-region files are this idea at scale.
-- **The checkout records what was shown.** For a subscription, the plan version, intro price, renewal price and term shown at checkout are stored with the consent ([Consent and Reminders as Data](/docs/payments/subscriptions#consent-and-reminders-as-data)); Hostinger's page states the intro price, the total for the term ("$119.52 for 48 months") and the renewal price in one place, which is what the disclosure record must reproduce. Subscriptions, Renewals & Cancellation Law covers what must be shown.
+- **The checkout records what was shown.** For a subscription, the plan version, intro price, renewal price and term shown at checkout are stored with the consent ([Consent and Reminders as Data](/docs/payments/subscriptions#consent-and-reminders-as-data)); Hostinger's page states the intro price, the total for the term ("$119.52 for 48 months") and the renewal price in one place, which is what the disclosure record must reproduce. [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law) covers what must be shown.
 - **Exclusions are part of the truth.** AWS's catalog excludes Spot prices and time-limited free tier offers; Azure's savings plan rates appear only in one API version. A provider's own published catalog should say what it leaves out, so a customer's tool doesn't treat a missing price as zero.
 
 ## Price Changes and Notice
 
 A price change is a new price version with an announcement date, a boundary, an audience and a notice obligation. The obligation comes from three places, in increasing strictness:
 
-- **The provider's own terms.** AWS commits to at least 30 days' notice of increases for "existing Services you are using" (Customer Agreement 3.1) and may modify the agreement itself by posting a revised version, effective on posting or as stated in an email. Google Cloud may change fees "at any time" for Cloud services unless an addendum or order form says otherwise, and a customer who objects to a fee change may terminate for convenience. DigitalOcean announced its 2022 change on May 16 for July 1, 46 days. An order form or private pricing agreement overrides list changes for its term (Commitments, Discounts & Marketplaces).
-- **Suppliers' contracts.** Registry fees change under registry agreements with notice to registrars, and carrier fees under carrier schedules; a provider passing them through inherits the timing and must carry its own notice to customers on top (ICANN, Registries & Registrars; Sending a Text).
+- **The provider's own terms.** AWS commits to at least 30 days' notice of increases for "existing Services you are using" (Customer Agreement 3.1) and may modify the agreement itself by posting a revised version, effective on posting or as stated in an email. Google Cloud may change fees "at any time" for Cloud services unless an addendum or order form says otherwise, and a customer who objects to a fee change may terminate for convenience. DigitalOcean announced its 2022 change on May 16 for July 1, 46 days. An order form or private pricing agreement overrides list changes for its term ([Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#enterprise-commitments-and-shortfalls)).
+- **Suppliers' contracts.** Registry fees change under registry agreements with notice to registrars, and carrier fees under carrier schedules; a provider passing them through inherits the timing and must carry its own notice to customers on top ([ICANN, Registries & Registrars](/books/hosting-and-cloud/icann-registries-and-registrars#the-fee-stack); [Sending a Text](/books/hosting-and-cloud/sending-a-text)).
 - **Consumer and subscription law.** For consumers on automatic renewal, a price change during the term is regulated in its own right: California requires notice 7 to 30 days before it takes effect and New York 5 business days to 30 days before, both with cancellation instructions, and the renewal price disclosed at sign-up is a material term ([Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law)).
 
 The audience is the decision providers get wrong most often. Hetzner's two 2026 changes show the two choices side by side: the 1 April 2026 increase applied to new orders and existing products with no exception for long-term contracts, while the 15 June 2026 standardization applied to new orders and cloud rescales only, with "certain changes to servers with legacy pricing" able to "trigger a switch to the current pricing," and with orders placed before 15 June but delivered after kept at the previous prices. In the model those are three different scopes: all subscribers from a date, new orders from a date, and existing resources until an event moves them. Each is a property of the price change, not a code path.
@@ -100,7 +100,7 @@ The audience is the decision providers get wrong most often. Hetzner's two 2026 
 
 Web hosting and domains run on a two-price model: an introductory price for a first term, usually only with a long prepay, and a higher renewal price. Hostinger's Premium plan, as of October 2026, is $2.49 a month on a 48-month prepay, $119.52 upfront, renewing at $10.99 a month for the same term. GoDaddy recognizes prepaid subscription revenue ratably over terms of up to ten years, so a single catalog row may govern a customer for a decade.
 
-The catalog represents this with plan versions, not discounts: `plan_versions.intro_amount` and `renewal_amount` are both disclosed at sign-up, and `subscription_periods.pricing_phase` records whether each period was the intro term or a renewal. Changing the renewal price for future sign-ups is a new plan version; changing it for existing subscribers is a price change with notice under the rules above. A promotion is the same: a plan version with a sale window, never a coupon field that the renewal job might forget to drop. How Web Hosting Makes Money covers the economics; [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law) covers what must be disclosed.
+The catalog represents this with plan versions, not discounts: `plan_versions.intro_amount` and `renewal_amount` are both disclosed at sign-up, and `subscription_periods.pricing_phase` records whether each period was the intro term or a renewal. Changing the renewal price for future sign-ups is a new plan version; changing it for existing subscribers is a price change with notice under the rules above. A promotion is the same: a plan version with a sale window, never a coupon field that the renewal job might forget to drop. [How Web Hosting Makes Money](/books/hosting-and-cloud/web-hosting-business#the-intro-term-and-the-renewal) covers the economics; [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law) covers what must be disclosed.
 
 ## The Alternatives
 
@@ -131,8 +131,6 @@ ALTER TABLE price_versions
   ADD COLUMN package_size  NUMERIC CHECK (package_size > 0), -- 'package': e.g. 100 MB blocks
   ADD COLUMN cap_amount    NUMERIC(24,6),                    -- per resource per cap_period
   ADD COLUMN cap_period    TEXT CHECK (cap_period IN ('month')),
-  ADD COLUMN applies_to    TEXT NOT NULL DEFAULT 'all' CHECK (applies_to IN ('all',
-                             'new_orders', 'legacy')),       -- the audience of this version
   ADD COLUMN price_change_notice_id UUID,                    -- the notice that introduced it
   ADD CONSTRAINT price_versions_tiers_shape CHECK (
     (tier_mode IN ('flat', 'package')) = (tiers IS NULL)
@@ -143,13 +141,9 @@ ALTER TABLE price_versions
 --   [{"up_to": 13000000, "unit_price": "0"}, {"up_to": 100000000, "unit_price": "0.00008"},
 --    {"up_to": 2500000000, "unit_price": "0.00005"}, {"up_to": null, "unit_price": "0.00002"}]
 -- unit_price is minor units per unit as a decimal string; unit_price on the row is the
--- first band's, for display.
-
--- The price book is part of the exclusion: one price per SKU, book, currency and audience.
-ALTER TABLE price_versions
-  DROP CONSTRAINT price_versions_sku_id_price_book_currency_valid_during_excl,
-  ADD CONSTRAINT price_versions_one_at_a_time EXCLUDE USING GIST (sku_id WITH =,
-    price_book WITH =, currency WITH =, applies_to WITH =, valid_during WITH &&);
+-- first band's, for display. The audience, applies_to ('all', 'new_orders', 'legacy'),
+-- is a core column, part of the core exclusion: one price per SKU, book, currency and
+-- audience at a time.
 
 CREATE FUNCTION tier_amount(p_version UUID, p_before NUMERIC, p_quantity NUMERIC)
 RETURNS NUMERIC LANGUAGE sql STABLE AS $$
@@ -252,8 +246,7 @@ Notes on the sketch:
 - **Audience is part of the price.** `applies_to` distinguishes a version for new orders from a legacy version kept for existing resources, and the exclusion constraint allows one of each at a time; the order or resource records which book and audience it was sold under.
 - **Notice is enforced, not remembered.** A change whose effective date comes before announcement plus required notice can't be inserted, and the recipients table is the proof each affected account was told.
 - **Snapshots prove the page.** Every rendering of prices is a publication with a hash and an immutable copy, so "what did the pricing page say on March 3" has an answer.
-- **The price book defaults to list.** [Metering & Rating](/books/hosting-and-cloud/metering-and-rating#how-to-build-it) adds `accounts.price_book`; contract books are price versions under a contract id, and commitment rates are books Commitments, Discounts & Marketplaces applies at its own stage.
-- **The exclusion constraint's name** in the core sketch is generated by PostgreSQL; the `DROP CONSTRAINT` uses the default name and should match whatever the deployed schema has.
+- **The price book defaults to list.** [Metering & Rating](/books/hosting-and-cloud/metering-and-rating#how-to-build-it) adds `accounts.price_book`; contract books are price versions under a contract id, and commitment rates are books [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#how-to-build-it) applies at its own stage.
 - **Events:** `price_change.announced`, `price_change.effective`, `price_list.published` and `sku.retired` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the pricing site, the price list API, the rater's cache, cost exports and the notification service ([Notifications & Consent](/docs/architecture/notifications)).
 
 ## Auditing

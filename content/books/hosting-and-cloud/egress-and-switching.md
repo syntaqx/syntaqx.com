@@ -9,7 +9,7 @@ tags = ["egress", "data-transfer", "switching", "eu-data-act", "pricing"]
 
 Data leaving a hyperscaler for the internet is metered by the gigabyte beyond a small allowance, with discounts by volume. Competition regulators in the UK and the EU have treated the charge as a barrier to leaving, or to using two clouds at once. Between January 2024 and September 2025 the three largest clouds introduced free transfer for customers leaving, then free or at-cost transfer for customers using another cloud in parallel, and the EU Data Act turned the direction into law: switching charges in the EU must fall to cost and then, from January 12, 2027, to zero.
 
-This chapter covers egress pricing across providers, the exit waivers and their conditions, the multicloud transfer programs, and the Data Act's switching chapter. It adds `egress_waivers` and `switching_requests` to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model), where egress is already the `egress.bytes` meter on `usage_events`. The competition cases that pushed the changes are [Competition Cases](/books/hosting-and-cloud/competition-cases); licensing, the other switching cost regulators named, is [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes). Prices and terms are as of October 2026.
+This chapter covers egress pricing across providers, the exit waivers and their conditions, the multicloud transfer programs, and the Data Act's switching chapter. It adds `egress_waivers` and `switching_requests` to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model), where egress is already the `egress.bytes` meter on `usage_events`. The competition cases that pushed the changes are [Competition Cases](/books/hosting-and-cloud/competition-cases); licensing, the other switching cost regulators named, is [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes); leaving because the provider ended the product is [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life#data-export-and-getting-out). Prices and terms are as of October 2026.
 
 ## How the Providers Do It
 
@@ -43,7 +43,7 @@ Three models sit in the table. **Metered from the first gigabyte past a small al
 | --- | --- | --- |
 | **Google Cloud** | January 11, 2024 | Free network data transfer for customers leaving Google Cloud for another provider or on premises, worldwide; the post argues licensing is the bigger barrier |
 | **AWS** | March 5, 2024 (updated September 30, 2025 and October 8, 2026) | Request through Support; approved requests receive credits; the account needn't close, but all data must move off AWS from all eligible accounts (or all data of a particular service); 180 days to complete outside the EU; repeat requests get scrutiny; EU and UK customers are governed by an EU Data Act Addendum and a UK Customer Switching and Portability Addendum |
-| **Azure** | March 13, 2024 | A support request with the subscription or enrollment ID, planned start date and estimated volume; 60 days from the stated start date (more can be asked for in the request); all Azure subscriptions on the account must be cancelled before the credit is claimed; the credit covers at most 60 calendar days of egress charges; ExpressRoute, VPN, Front Door and CDN are excluded. From May 1, 2026, UK billing addresses moving data from UK datacenters get 180 days, may cover single services, and include Microsoft Global Network routing |
+| **Azure** | March 13, 2024 | The announcement: contact Azure Support, and the credit is applied once the transfer is complete and all Azure subscriptions on the account are cancelled; it states no time window. The current Microsoft Learn page adds the details: a support request with the subscription or enrollment ID, planned start date and estimated volume; 60 days from the stated start date (more can be asked for in the request); the credit covers at most 60 calendar days of egress charges; ExpressRoute, VPN, Front Door and CDN are excluded. From May 1, 2026, UK billing addresses moving data from UK datacenters get 180 days, may cover single services, and include Microsoft Global Network routing |
 
 The three waivers differ in the one condition that matters: whether the customer has to leave entirely. Azure's requires cancelling every subscription (except the UK variant, which allows single services); AWS's requires moving all data, or all of one service's data, without closing the account; Google's covers any departure. None of them covers using two clouds at once, which is what regulators were most concerned about, and all of them are credits after the fact, so the customer still has to ask and wait.
 
@@ -189,20 +189,20 @@ Notes on the sketch:
 
 - [Google Cloud: Eliminating data transfer fees when migrating off Google Cloud](https://cloud.google.com/blog/products/networking/eliminating-data-transfer-fees-when-migrating-off-google-cloud), January 11, 2024
 - [AWS News Blog: Free data transfer out to internet when moving out of AWS](https://aws.amazon.com/blogs/aws/free-data-transfer-out-to-internet-when-moving-out-of-aws/), March 5, 2024 and its updates, conditions, the EU and UK addenda and the "over 90%" figure
-- [Microsoft Learn: Cancel your Azure subscription](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/cancel-azure-subscription), free egress when leaving, its conditions, exclusions and the UK variant
-- [M365 message center mirror: Free data transfer out when leaving Azure](https://mc.merill.net/message/AZ-now-available-free-data-transfer-out-to-internet-when-leaving-azure), the March 13, 2024 announcement
+- [Microsoft Learn: Cancel your Azure subscription](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/cancel-azure-subscription), free egress when leaving, the 60-day transfer window and credit cap, exclusions and the UK variant (page dated June 7, 2026)
+- [Azure Updates: Free data transfer out to internet when leaving Azure](http://web.archive.org/web/20240402023357/https://azure.microsoft.com/en-us/updates/now-available-free-data-transfer-out-to-internet-when-leaving-azure/), Wayback snapshot of the March 13, 2024 announcement: credit after the transfer completes and all subscriptions are cancelled, no window stated
 - [Google Cloud: Data Transfer Essentials](https://cloud.google.com/blog/products/networking/new-for-the-uk-and-eu-no-cost-multicloud-data-transfer-essentials), September 10, 2025
 - [Microsoft Learn: Data transfer fees for in-parallel use](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/data-transfer-fees), eligibility, routing, the UK carve-out and the request process
 - [Datacenter Dynamics: Google axes some data transfer costs](https://www.datacenterdynamics.com/en/news/google-axes-some-data-transfer-costs-in-preparation-for-eu-data-act/), the press report of AWS reduced EU rates
 
-**The EU Data Act (Official Journal text, springlex mirror)**
+**The EU Data Act (Regulation (EU) 2023/2854, EUR-Lex Official Journal text)**
 
-- [Article 25](https://www.springlex.eu/en/packages/data-act/data-act-regulation/article-25/), notice, transitional and retrieval periods and the alternative period
-- [Article 29](https://www.springlex.eu/en/packages/data-act/data-act-regulation/article-29/), reduced switching charges to January 12, 2027 and none after
-- [Article 31](https://www.springlex.eu/en/packages/data-act/data-act-regulation/article-31/), custom-built and testing exemptions
-- [Article 34](https://www.springlex.eu/en/packages/data-act/data-act-regulation/article-34/), interoperability for in-parallel use
-- [Article 35](https://www.springlex.eu/en/packages/data-act/data-act-regulation/article-35/), interoperability of data processing services
-- [Article 50](https://www.springlex.eu/en/packages/data-act/data-act-regulation/article-50/), application from September 12, 2025
+- [Article 25](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R2854#art_25), notice, transitional and retrieval periods and the alternative period
+- [Article 29](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R2854#art_29), reduced switching charges to January 12, 2027 and none after
+- [Article 31](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R2854#art_31), custom-built and testing exemptions
+- [Article 34](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R2854#art_34), interoperability for in-parallel use
+- [Article 35](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R2854#art_35), interoperability of data processing services
+- [Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R2854#art_50), application from September 12, 2025
 
 **In practice**
 

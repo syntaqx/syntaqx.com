@@ -73,9 +73,9 @@ The metrics are worth defining once, because every edge provider's investor mate
 | **Net retention** | Revenue from last year's customers now, over then | 120% dollar-based | 110.1% trailing twelve months | Window and exclusions differ; usage spikes inflate it |
 | **Concentration** | Share from the largest customers | No customer over 10% | Top 10 at 32% | A usage business can lose a top customer to a second CDN without losing the account |
 
-Counting is itself a control. Cloudflare's 10-K discloses that a system error in Q1 2022 overstated its paying customers by 5,925, which is the reason a metric like this is a query over billing records with a written definition, not a counter in a dashboard (the Operating Metrics chapter covers the definitions).
+Counting is itself a control. Cloudflare's 10-K discloses that a system error in Q1 2022 overstated its paying customers by 5,925, which is the reason a metric like this is a query over billing records with a written definition, not a counter in a dashboard (the [Operating Metrics](/books/hosting-and-cloud/operating-metrics) chapter covers the definitions).
 
-**Edge compute** is the revenue line every provider is growing into, priced on requests and CPU time rather than bytes: Fastly's "other" line, which includes Compute, grew 64% to $21.2M, and Cloudflare's Workers Paid plan starts at a $5 monthly minimum. The runtimes and their meters are the Functions, Isolates & Edge Compute chapter's topic.
+**Edge compute** is the revenue line every provider is growing into, priced on requests and CPU time rather than bytes: Fastly's "other" line, which includes Compute, grew 64% to $21.2M, and Cloudflare's Workers Paid plan starts at a $5 monthly minimum. The runtimes and their meters are the [Functions, Isolates & Edge Compute](/books/hosting-and-cloud/functions-and-edge-compute#the-meters-compared) chapter's topic.
 
 ## Free Tiers as Acquisition
 
@@ -87,7 +87,7 @@ The other providers' free entries are narrower:
 - **Fastly** gives monthly allowances under usage pricing: 100 GB of bandwidth per region and 1 million requests for delivery, and 10 million requests for Compute.
 - **Bunny** has a 14-day trial and a $1 monthly minimum, so its entry point is cheap rather than free.
 
-A free tier is also an abuse surface: free accounts host phishing pages behind the proxy, and free bandwidth attracts uses the plan wasn't priced for. The playbook's [Free Tiers and Their Cliffs](/docs/operations/cost-and-finops#free-tiers-and-their-cliffs) covers the customer's side; the provider's side (fraud, credits, cliffs) is the Free Tiers, Credits & Startup Programs chapter's and the Abuse on Infrastructure chapter's.
+A free tier is also an abuse surface: free accounts host phishing pages behind the proxy, and free bandwidth attracts uses the plan wasn't priced for. The playbook's [Free Tiers and Their Cliffs](/docs/operations/cost-and-finops#free-tiers-and-their-cliffs) covers the customer's side; the provider's side (fraud, credits, cliffs) is the [Free Tiers, Credits & Startup Programs](/books/hosting-and-cloud/free-tiers-and-credits) chapter's and the [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure) chapter's.
 
 ## Plan Gating
 
@@ -148,7 +148,7 @@ The request meter is what makes small objects expensive: a site that serves 50 K
 
 The traffic behind the edge is billed differently at each provider, and it is where comparisons go wrong:
 
-- **Origin fill.** Google bills cache fill at $0.01 per GiB in North America. CloudFront doesn't charge for origin fetches from AWS origins such as S3, EC2 and load balancers, and Azure says transfer from an origin in an Azure data center to Front Door is free, while Front Door's edge-to-origin transfer is listed at $0.02 per GB in North America. For an origin outside the cloud, the origin's own egress is a second bill, which is the Egress & Switching chapter's topic.
+- **Origin fill.** Google bills cache fill at $0.01 per GiB in North America. CloudFront doesn't charge for origin fetches from AWS origins such as S3, EC2 and load balancers, and Azure says transfer from an origin in an Azure data center to Front Door is free, while Front Door's edge-to-origin transfer is listed at $0.02 per GB in North America. For an origin outside the cloud, the origin's own egress is a second bill, which is the [Egress & Switching](/books/hosting-and-cloud/egress-and-switching) chapter's topic.
 - **Shields.** CloudFront charges Origin Shield per 10,000 requests ($0.0075 in the US, $0.0090 in Europe) when it is an incremental layer; Fastly counts shield-to-edge traffic toward requests and bandwidth. Both are in [Tiered Caches and Shields](/books/hosting-and-cloud/caching-and-invalidation#tiered-caches-and-shields).
 - **Purges, logs and functions** have their own meters ([Purge Limits and Purge Billing](/books/hosting-and-cloud/caching-and-invalidation#purge-limits-and-purge-billing)), and so does attack traffic, which providers exclude or credit ([Attack Traffic and the Bill](/books/hosting-and-cloud/ddos-mitigation#attack-traffic-and-the-bill)).
 
@@ -170,7 +170,7 @@ Large buyers trade a commitment for a price:
 - **Fastly:** minimum usage commitments that are "relatively low" compared with expected usage, on contracts that are mostly one year.
 - **Akamai:** contracts with SLA commitments, repriced at renewal; its delivery revenue fell on "downward pricing of contract renewals."
 
-A commitment is the provider's hedge against traffic leaving for a second CDN, and a low one is a sign the customer has that option. How commitments draw down, and what happens at a shortfall, is the Commitments, Discounts & Marketplaces chapter's subject.
+A commitment is the provider's hedge against traffic leaving for a second CDN, and a low one is a sign the customer has that option. How commitments draw down, and what happens at a shortfall, is the [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#resource-and-spend-commitments) chapter's subject.
 
 ### A Worked Comparison
 
@@ -200,7 +200,7 @@ The spread is more than twentyfold, and none of the numbers is the decision on i
 | **Low-cost per-GB network** (Bunny standard and volume) | Very low per-GB price, no request fees, fewer locations in the cheapest tier | Cost; simplicity | Fewer locations and less security depth than the largest networks | The provider's network | Linear, low | Media-heavy small businesses, game and software downloads |
 | **Cloud-attached CDN** (CloudFront, Cloud CDN, Front Door) | The CDN in front of the same cloud's origin | Free or cheap origin fill; one bill; IAM and logging integrated | Ties the CDN choice to the origin's cloud | The cloud's terms | Usage, with origin egress waived | Workloads already on that cloud |
 | **Multi-CDN** | Traffic split across two or more providers by a steering layer | Price leverage, resilience against one provider's outage | Purges, logs and hit ratios per provider; origin load multiplied without a shared shield | Contracts with each | The sum, with lower commitments | Large media and commerce sites |
-| **Own delivery network** | Caches in rented colocation and inside access networks | Lowest cost at the very top of traffic; control | Capital, operations and peering work; only pays at huge volume | Owned | Fixed | The largest content companies (Networks, Peering & IP Addresses) |
+| **Own delivery network** | Caches in rented colocation and inside access networks | Lowest cost at the very top of traffic; control | Capital, operations and peering work; only pays at huge volume | Owned | Fixed | The largest content companies ([Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses#transit-peering-and-interconnection)) |
 
 ## My Default
 
@@ -210,7 +210,7 @@ The tradeoff that changes this is volume and mix. Once delivery is tens of terab
 
 ## How to Build It
 
-The chapter adds the `cdn_zones` side table (resources of kind `'cdn_zone'`, already in the core list), `cdn_origins`, `cdn_zone_restrictions` and a dimension match on `skus`, plus the two delivery meters every other Edge chapter rates or annotates. Caching adds policies and purges ([How to Build It](/books/hosting-and-cloud/caching-and-invalidation#how-to-build-it)), TLS adds hostnames, settings and two origin columns ([How to Build It](/books/hosting-and-cloud/tls-and-protocols#how-to-build-it)), DDoS adds attack events and the billing exclusion ([How to Build It](/books/hosting-and-cloud/ddos-mitigation#how-to-build-it)), WAF adds rules and rate limits ([How to Build It](/books/hosting-and-cloud/waf-bots-and-rate-limits#how-to-build-it)), and locations and addresses are [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses#how-to-build-it). A zone is a resource with `region_id` null, because it serves from everywhere; `resources.zone_id` is the failure zone of the core model, which is why every edge foreign key is named `cdn_zone_id`.
+The chapter adds the `cdn_zones` side table (resources of kind `'cdn_zone'`, already in the core list), `cdn_origins` and `cdn_zone_restrictions`, CDN SKUs on [Metering & Rating](/books/hosting-and-cloud/metering-and-rating#how-to-build-it)'s `skus.dimension_match`, plus the two delivery meters every other Edge chapter rates or annotates. Caching adds policies and purges ([How to Build It](/books/hosting-and-cloud/caching-and-invalidation#how-to-build-it)), TLS adds hostnames, settings and two origin columns ([How to Build It](/books/hosting-and-cloud/tls-and-protocols#how-to-build-it)), DDoS adds attack events and the billing exclusion ([How to Build It](/books/hosting-and-cloud/ddos-mitigation#how-to-build-it)), WAF adds rules and rate limits ([How to Build It](/books/hosting-and-cloud/waf-bots-and-rate-limits#how-to-build-it)), and locations and addresses are [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses#how-to-build-it). A zone is a resource with `region_id` null, because it serves from everywhere; `resources.zone_id` is the failure zone of the core model, which is why every edge foreign key is named `cdn_zone_id`.
 
 ```sql
 CREATE TABLE cdn_zones (                 -- side table: kind = 'cdn_zone'
@@ -265,9 +265,8 @@ CREATE TABLE cdn_zone_restrictions (     -- a limit the provider applied to a zo
   CHECK (kind <> 'abuse' OR moderation_case_id IS NOT NULL),
   CHECK (kind = 'abuse' OR effect = 'notice_only' OR notified_at IS NOT NULL)
 );
-
-ALTER TABLE skus                         -- which usage a SKU rates, by dimension
-  ADD COLUMN dimension_match JSONB NOT NULL DEFAULT '{}';  -- {"region_class": "europe"}
+-- skus.dimension_match, which usage a SKU rates by dimension, is Metering & Rating's column:
+-- a CDN SKU sets {"region_class": "europe"}.
 ```
 
 The delivery meters, `usage_events.meter` values with `resource_id` the `cdn_zone` resource. Each visitor-facing request produces one row per window and dimension combination, and the dimensions are shared with the chapters that annotate them:
@@ -284,11 +283,11 @@ The delivery meters, `usage_events.meter` values with `resource_id` the `cdn_zon
 | `http_version` | `1.1`, `2`, `3` | The visitor connection | [TLS & Protocols](/books/hosting-and-cloud/tls-and-protocols#how-to-build-it): adoption |
 | `tls_version` | `1.2`, `1.3`, or absent for HTTP | The handshake | TLS & Protocols |
 | `cache_status` | `hit`, `miss`, `expired`, `stale`, `revalidated`, `bypass`, `dynamic` | The visitor-facing location's lookup | [Caching & Invalidation](/books/hosting-and-cloud/caching-and-invalidation#how-to-build-it): hit ratios |
-| `answered_by` | `edge`, `upper`, `shield`, `origin` | The layer that produced the response | Caching & Invalidation: offload and shield billing |
+| `answered_by` | `edge`, `upper`, `shield`, `origin` | The layer that produced the response | [Caching & Invalidation](/books/hosting-and-cloud/caching-and-invalidation#tiered-caches-and-shields): offload and shield billing |
 
 The meters are prefixed `cdn.` rather than `edge.` because `edge.requests` is already the request meter of edge stores in [Serverless & Edge Databases](/books/hosting-and-cloud/serverless-and-edge-databases#how-to-build-it), and one meter name must mean one thing to rating. Mitigated attack traffic never reaches these meters, and served traffic inside an attack window is capped at a baseline before rating, the rule in [Attack Traffic and the Bill](/books/hosting-and-cloud/ddos-mitigation#attack-traffic-and-the-bill).
 
-SKUs are one per meter and pricing region, with the region in `dimension_match` (the core `skus.region_id` is a cloud region, not a CDN pricing region), and the volume tiers ride on the price version. The tier shape is the Pricing Catalogs chapter's to own; this sketch uses an ordered array of upper bounds in GB with a unit price in minor units per GB:
+SKUs are one per meter and pricing region, with the region in `dimension_match` (the core `skus.region_id` is a cloud region, not a CDN pricing region), and the volume tiers ride on the price version. The tier shape is the [Pricing Catalogs](/books/hosting-and-cloud/pricing-catalogs#how-to-build-it) chapter's: graduated tiers counted per account, an ordered array of upper bounds (here in GB) with a unit price in minor units per unit as a decimal string, evaluated by its `tier_amount`:
 
 | SKU code | Meter | `dimension_match` | Unit | Example list price version (CloudFront-like) |
 | --- | --- | --- | --- | --- |
@@ -301,18 +300,19 @@ SKUs are one per meter and pricing region, with the region in `dimension_match` 
 A price version carrying those tiers:
 
 ```sql
-INSERT INTO price_versions (sku_id, price_book, currency, unit_price, tiers, valid_during,
-                            announced_at)
+INSERT INTO price_versions (sku_id, price_book, currency, unit_price, tier_mode, tier_scope,
+                            tiers, valid_during, announced_at)
 VALUES ((SELECT id FROM skus WHERE code = 'cdn.egress.north_america'), 'list', 'USD',
-        8.5,                             -- the first paid tier, for display
-        '[{"up_to": 1000, "unit_price": 0},
-          {"up_to": 10000, "unit_price": 8.5},
-          {"up_to": 50000, "unit_price": 8.0},
-          {"up_to": 150000, "unit_price": 6.0},
-          {"up_to": 500000, "unit_price": 4.0},
-          {"up_to": 1024000, "unit_price": 3.0},
-          {"up_to": 5024000, "unit_price": 2.5},
-          {"up_to": null, "unit_price": 2.0}]',
+        0,                               -- the first band's, for display
+        'graduated', 'account',
+        '[{"up_to": 1000, "unit_price": "0"},
+          {"up_to": 10000, "unit_price": "8.5"},
+          {"up_to": 50000, "unit_price": "8.0"},
+          {"up_to": 150000, "unit_price": "6.0"},
+          {"up_to": 500000, "unit_price": "4.0"},
+          {"up_to": 1024000, "unit_price": "3.0"},
+          {"up_to": 5024000, "unit_price": "2.5"},
+          {"up_to": null, "unit_price": "2.0"}]',
         tstzrange('2026-01-01', NULL), '2025-12-01');
 ```
 

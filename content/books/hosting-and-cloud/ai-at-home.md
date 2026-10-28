@@ -2,14 +2,14 @@
 title = "AI at Home"
 description = "Open-weight models on home hardware: VRAM and bandwidth math, GPUs and unified memory, runtimes, quantization, model licenses, power and privacy."
 category = "Hosting & Cloud Industry"
-order = 2153
+order = 2112
 part = "Homelab"
 tags = ["homelab", "local-ai", "llm-inference", "gpu", "quantization", "open-weights", "model-licenses"]
 +++
 
 Running a language model at home is the homelab's version of an inference provider: the same weights the hosted open-model APIs serve, the same OpenAI-shaped endpoint, the same token meters, on one machine whose owner is also its only customer. What makes it hard is not software. The runtimes install in minutes. It is that a model is a few tens or hundreds of gigabytes that must sit in fast memory, and every generated token reads most of it again, so the questions are how much memory, how fast, at what precision, under which license, and at what cost in watts.
 
-This chapter covers the open-weight model families and their licenses, dated; the memory math (weights at each precision plus the KV cache) and why memory bandwidth sets decode speed; consumer GPUs, used datacenter cards, Apple Silicon, AMD Strix Halo and NVIDIA DGX Spark; the runtimes (llama.cpp, Ollama, LM Studio, vLLM, SGLang, ExLlama, MLX); quantization formats; front ends and the OpenAI-compatible API as the seam; local RAG and agents; image and speech models; power, heat and privacy. It adds no tables to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model): a home model is a `model_endpoint` resource, and its token meters are the same `usage_events` with a cost of zero. The wider homelab is [The Homelab](/books/hosting-and-cloud/homelab); giving a VM the GPU is [Hypervisors at Home](/books/hosting-and-cloud/hypervisors-at-home#pcie-and-gpu-passthrough); reaching the box from outside is [Exposing Home Services](/books/hosting-and-cloud/exposing-home-services). The comparison of home, colocation, rented GPUs, hosted open models and frontier APIs on cost and breakeven belongs to Where AI Runs: Home, Colo, Cloud or Frontier, and GPU rental prices to GPU & AI Clouds.
+This chapter covers the open-weight model families and their licenses, dated; the memory math (weights at each precision plus the KV cache) and why memory bandwidth sets decode speed; consumer GPUs, used datacenter cards, Apple Silicon, AMD Strix Halo and NVIDIA DGX Spark; the runtimes (llama.cpp, Ollama, LM Studio, vLLM, SGLang, ExLlama, MLX); quantization formats; front ends and the OpenAI-compatible API as the seam; local RAG and agents; image and speech models; power, heat and privacy. It adds no tables to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model): a home model is a `model_endpoint` resource, and its token meters are the same `usage_events` with a cost of zero. The wider homelab is [The Homelab](/books/hosting-and-cloud/homelab); giving a VM the GPU is [Hypervisors at Home](/books/hosting-and-cloud/hypervisors-at-home#pcie-and-gpu-passthrough); reaching the box from outside is [Exposing Home Services](/books/hosting-and-cloud/exposing-home-services). The comparison of home, colocation, rented GPUs, hosted open models and frontier APIs on cost and breakeven belongs to [Where AI Runs: Home, Colo, Cloud or Frontier](/books/hosting-and-cloud/where-ai-runs#the-economics), and GPU rental prices to [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#gpu-prices-dated).
 
 ## How the Vendors Do It
 
@@ -32,7 +32,7 @@ No provider sells "AI at home"; hardware vendors sell memory and bandwidth, labs
 
 Three patterns run through the table. **Discrete GPUs have the bandwidth and little capacity:** the fastest consumer card holds 32 GB, and no current GeForce card supports NVLink (the RTX 5090 lists it as "not supported"), so two cards share a model over PCIe. **Unified-memory machines have the capacity and less bandwidth:** DGX Spark and Strix Halo give 128 GB or more at roughly a sixth of an RTX 5090's bandwidth, and Apple sits between them. **Clustering is the vendors' answer to both:** DGX Spark links up to four units over its ConnectX-7 ports (two or three by direct cable, four through a 200 GbE switch), Apple pools M5 Mac Studios over Thunderbolt 5 with RDMA, and Intel's Project Battlematrix puts up to eight Arc Pro B60s, 192 GB in all, in one workstation.
 
-## How We Got Here
+## How It Got Here
 
 Local inference started as an accident and became an industry in about two years:
 

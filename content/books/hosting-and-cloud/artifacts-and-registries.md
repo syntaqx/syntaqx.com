@@ -2,14 +2,14 @@
 title = "Artifacts & Registries"
 description = "Docker Hub's pull limits and reversals, GHCR, ECR, the Container Registry shutdown, Artifactory, Nexus, npm and PyPI, and what storing artifacts costs."
 category = "Hosting & Cloud Industry"
-order = 2138
+order = 2146
 part = "CI/CD Platforms"
 tags = ["registries", "containers", "artifacts", "rate-limits", "egress"]
 +++
 
 Once the image became the unit of deployment, the registry became part of production. Every deploy, every autoscaling event and every CI job pulls from one, so a registry's rate limit, outage or price change reaches systems that never signed a contract with it. And a registry is an unusual product to run: storage grows forever because nobody deletes old tags, reads are dominated by machines rather than people, most traffic is anonymous, and the operator pays egress on every pull while the puller pays nothing.
 
-This chapter covers the registry business and how it works: Docker Hub's limits from 2020 to 2025 and the two retreats, the code hosts' and clouds' registries, Google's Container Registry shutdown, universal artifact repositories (Artifactory and Nexus), npm and PyPI as donated infrastructure, and the mechanics a provider needs (pull accounting, retention, pull-through caches, egress). It adds the `artifact_registries` side table and pull and storage meters to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Building and trusting images is the playbook's [Containers](/docs/delivery/containers#building-images); admission policy is [Image Policy](/docs/operations/kubernetes#image-policy); signing and provenance are [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security); Docker and OCI origins are From chroot to Containers; egress pricing in general is Egress & Switching.
+This chapter covers the registry business and how it works: Docker Hub's limits from 2020 to 2025 and the two retreats, the code hosts' and clouds' registries, Google's Container Registry shutdown, universal artifact repositories (Artifactory and Nexus), npm and PyPI as donated infrastructure, and the mechanics a provider needs (pull accounting, retention, pull-through caches, egress). It adds the `artifact_registries` side table and pull and storage meters to the [core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Building and trusting images is the playbook's [Containers](/docs/delivery/containers#building-images); admission policy is [Image Policy](/docs/operations/kubernetes#image-policy); signing and provenance are [Pipeline Supply-Chain Security](/books/hosting-and-cloud/pipeline-supply-chain-security); Docker and OCI origins are [From chroot to Containers](/books/hosting-and-cloud/containers); egress pricing in general is [Egress & Switching](/books/hosting-and-cloud/egress-and-switching).
 
 ## How the Providers Do It
 
@@ -41,7 +41,7 @@ The registries attached to something else priced themselves out of that fight. G
 
 ## The Container Registry Shutdown
 
-Google deprecated Container Registry effective May 15, 2023. From May 15, 2024, Artifact Registry hosted `gcr.io` for projects that hadn't used Container Registry before; from March 18, 2025, Container Registry was shut down and writing images to it was unavailable; in the schedule published in March 2025, existing images became inaccessible after April 22, 2025, and `gcr.io` domains already hosted on Artifact Registry were unaffected. The reads ended in spring 2025. Every deployment, Helm chart and CI job that referenced a `gcr.io` image in an unmigrated project had to be updated on Google's timeline, which is the risk a registry name embedded in thousands of manifests carries. Migrations, Shutdowns & End of Life covers the provider side of such a sunset.
+Google deprecated Container Registry effective May 15, 2023. From May 15, 2024, Artifact Registry hosted `gcr.io` for projects that hadn't used Container Registry before; from March 18, 2025, Container Registry was shut down and writing images to it was unavailable; in the schedule published in March 2025, existing images became inaccessible after April 22, 2025, and `gcr.io` domains already hosted on Artifact Registry were unaffected. The reads ended in spring 2025. Every deployment, Helm chart and CI job that referenced a `gcr.io` image in an unmigrated project had to be updated on Google's timeline, which is the risk a registry name embedded in thousands of manifests carries. [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life#the-lifecycle-of-a-sunset) covers the provider side of such a sunset.
 
 ## Universal Artifact Repositories
 
@@ -82,7 +82,7 @@ What would change this: an air-gapped or regulated environment that needs a self
 
 ## How to Build It
 
-A registry is a resource of kind `registry` in [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Its side table is `artifact_registries`, because the Domains part's ICANN, Registries & Registrars owns a `registries` table for domain registries. Pulls and storage are usage events; retention is a versioned policy.
+A registry is a resource of kind `registry` in [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). Its side table is `artifact_registries`, because the Domains part's [ICANN, Registries & Registrars](/books/hosting-and-cloud/icann-registries-and-registrars) owns a `registries` table for domain registries. Pulls and storage are usage events; retention is a versioned policy.
 
 ```sql
 CREATE TABLE artifact_registries (       -- side table: kind = 'registry'

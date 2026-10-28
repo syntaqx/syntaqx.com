@@ -117,7 +117,7 @@ A single tier of edge caches multiplies origin load by the number of locations: 
 
 CloudFront's design shows what each tier is for. Regional edge caches have "a larger cache than an individual POP," so long-tail objects survive after POPs evict them; proxy methods and dynamic requests skip them; Origin Shield adds one more layer so that requests are "consolidated with other requests for the same object, resulting in as few as one request going to your origin." Requests from the REC in the shield's own Region skip the shield and aren't charged for it. Its costing formula is the one to copy: cacheable requests times the miss rate, times the share arriving from other Regions, times the per-request price.
 
-Fastly's note on shielding is the one every implementer rediscovers: edge code "typically executes twice," once at the visitor's POP and once at the shield, so origin-bound changes belong at the shield (`req.backend.is_origin` in VCL, `shield.runningOn()` in Compute), client-facing ones at the edge, and everything must be idempotent. Where a provider runs edge functions on origin-facing events, the shield also decides where they run: CloudFront runs Lambda@Edge origin request and origin response triggers in the Origin Shield Region. Edge functions are the Functions, Isolates & Edge Compute chapter's topic.
+Fastly's note on shielding is the one every implementer rediscovers: edge code "typically executes twice," once at the visitor's POP and once at the shield, so origin-bound changes belong at the shield (`req.backend.is_origin` in VCL, `shield.runningOn()` in Compute), client-facing ones at the edge, and everything must be idempotent. Where a provider runs edge functions on origin-facing events, the shield also decides where they run: CloudFront runs Lambda@Edge origin request and origin response triggers in the Origin Shield Region. Edge functions are the [Functions, Isolates & Edge Compute](/books/hosting-and-cloud/functions-and-edge-compute#cdn-functions) chapter's topic.
 
 ## Purge and Invalidation
 
@@ -154,7 +154,7 @@ Two design lessons follow. A token bucket per account (Cloudflare and Bunny desc
 
 ## Takedowns and Cached Copies
 
-A cache is also a legal category. The DMCA's caching safe harbor, 17 U.S.C. 512(b)(2)(E), obliges a provider to remove or disable cached material expeditiously only if the material "has previously been removed from the originating site or access to it has been disabled," or a court has ordered that, and the notice says so. The DSA's caching exemption (Article 5(1)(e)) has the same trigger: the provider "acts expeditiously to remove or to disable access to the information it has stored" once it learns the source removed it or an authority ordered removal, and Recital 29 places "the sole provision of content delivery networks, reverse proxies or content adaptation proxies" in the caching tier. The law, and the blocking orders that go beyond it, are the Conduits, Caches & Blocking Orders chapter's subject.
+A cache is also a legal category. The DMCA's caching safe harbor, 17 U.S.C. 512(b)(2)(E), obliges a provider to remove or disable cached material expeditiously only if the material "has previously been removed from the originating site or access to it has been disabled," or a court has ordered that, and the notice says so. The DSA's caching exemption (Article 5(1)(e)) has the same trigger: the provider "acts expeditiously to remove or to disable access to the information it has stored" once it learns the source removed it or an authority ordered removal, and Recital 29 places "the sole provision of content delivery networks, reverse proxies or content adaptation proxies" in the caching tier. The law, and the blocking orders that go beyond it, are the [Conduits, Caches & Blocking Orders](/books/hosting-and-cloud/conduits-caches-and-blocking-orders) chapter's subject.
 
 The engineering consequence is that a takedown purge is a different object from a deploy purge: it is hard, not soft; it is tied to the notice or case that caused it; it has a deadline; and it isn't done until a re-fetch from more than one location shows no hit. When the customer is a platform, its side of the same purge is UGP's `cdn_purges`; when the provider acts on its own notice for a pass-through site, the provider's record must carry the notice. Purging only what's cached doesn't stop the origin from refilling it, so a provider acting on an order also blocks the URL at the edge, and a platform answers with a tombstone or a 451 ([Takedowns and Cache Purges](/books/user-generated-platforms/storage-and-delivery#takedowns-and-cache-purges)).
 
@@ -303,7 +303,7 @@ CREATE TABLE cache_purge_progress (      -- per location, so "completed" is a fa
 );
 ```
 
-The meters, all `usage_events.meter` values. The delivery meters `cdn.egress_bytes` and `cdn.requests` are The Edge Business's; this chapter needs two dimensions on them, `cache_status` at the visitor-facing location (`hit`, `miss`, `expired`, `stale`, `revalidated`, `bypass`, `dynamic`) and `answered_by`, the layer that produced the response (`edge`, `upper`, `shield`, `origin`), so that hit ratios and shield billing come from the same rows:
+The meters, all `usage_events.meter` values. The delivery meters `cdn.egress_bytes` and `cdn.requests` are [The Edge Business](/books/hosting-and-cloud/edge-business#how-to-build-it)'s; this chapter needs two dimensions on them, `cache_status` at the visitor-facing location (`hit`, `miss`, `expired`, `stale`, `revalidated`, `bypass`, `dynamic`) and `answered_by`, the layer that produced the response (`edge`, `upper`, `shield`, `origin`), so that hit ratios and shield billing come from the same rows:
 
 | Meter | Unit | Counted when | Example price it rates |
 | --- | --- | --- | --- |
@@ -312,7 +312,7 @@ The meters, all `usage_events.meter` values. The delivery meters `cdn.egress_byt
 | `cache.fill_bytes` | byte | Bytes fetched from the origin into the cache | Google Cloud CDN: $0.01 per GiB in North America |
 | `logs.realtime_lines` | line | Each log line delivered to a real-time log destination | CloudFront: $0.01 per million lines |
 
-The included 1,000 paths are an allowance on the plan version (`included` on `plan_versions`), applied across every zone of the account, so rating sums `cache.purge_paths` per account and month before pricing the excess. Purge rate limits are `quotas` rows (`purge.bulk_per_second`, `purge.bulk_bucket`, `purge.urls_per_second`) per plan, enforced by a token bucket in the purge API and refused with a `cache_purges` row of status `'rejected'`, so a customer asking why a purge failed gets the row, not a guess.
+The included 1,000 paths are [an allowance](/books/hosting-and-cloud/metering-and-rating#allowances-tiers-and-monthly-caps) on the plan version (`included` on `plan_versions`), applied across every zone of the account, so rating sums `cache.purge_paths` per account and month before pricing the excess. Purge rate limits are `quotas` rows (`purge.bulk_per_second`, `purge.bulk_bucket`, `purge.urls_per_second`) per plan, enforced by a token bucket in the purge API and refused with a `cache_purges` row of status `'rejected'`, so a customer asking why a purge failed gets the row, not a guess.
 
 Hit ratios come straight from the delivery meters:
 
@@ -463,5 +463,5 @@ Notes on the sketch:
 **Law**
 
 - [17 U.S.C. 512](https://www.law.cornell.edu/uscode/text/17/512), the 512(b)(2)(E) condition for removing cached material
-- [DSA Article 5: Caching](https://www.springlex.eu/en/packages/dsa/dsa-regulation/article-5/), conditions and the expeditious-removal trigger
-- [DSA Recital 29](https://www.springlex.eu/en/packages/dsa/dsa-regulation/recital-29/), CDNs and reverse proxies in the caching tier
+- [DSA Article 5: Caching](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065#art_5), conditions and the expeditious-removal trigger
+- [DSA Recital 29](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2065#rct_29), CDNs and reverse proxies in the caching tier

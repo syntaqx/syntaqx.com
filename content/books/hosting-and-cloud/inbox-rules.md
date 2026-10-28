@@ -19,11 +19,11 @@ The three largest consumer mailbox providers now publish requirements of the sam
 | --- | --- | --- | --- | --- |
 | **Gmail** | More than 5,000 messages to Gmail addresses in one day | SPF and DKIM and DMARC (at least `p=none`), From aligned with SPF or DKIM, one-click unsubscribe (RFC 8058 headers plus a visible link), unsubscribes processed within two days, spam rate below 0.3% (target under 0.1%) | From November 2025, "temporary and permanent rejections" of non-compliant traffic; senders above 0.3% are ineligible for mitigation since June 2024 | Postmaster Tools v2 with a compliance status dashboard and an API; Feedback-ID feedback loop |
 | **Yahoo** | Bulk senders | SPF and DKIM, DMARC at least `p=none` that passes, relaxed alignment, one-click unsubscribe "highly recommended" (mailto accepted), unsubscribes honored within 2 days, spam rate below 0.3% | Enforcement from February 2024 | Complaint Feedback Loop for DKIM domains |
-| **Outlook.com** | Domains sending more than 5,000 messages a day | SPF pass, DKIM pass, DMARC at least `p=none` aligned with SPF or DKIM | From May 5, 2025, rejection with "550; 5.7.515 Access denied, sending domain [SenderDomain] does meet the required authentication level" | SNDS with the Junk Email Reporting Program, on a new portal |
+| **Outlook.com** | Domains sending more than 5,000 messages a day | SPF pass, DKIM pass, DMARC at least `p=none` aligned with SPF or DKIM | From May 5, 2025, rejection with "550; 5.7.515 Access denied, sending domain [SendingDomain] does not meet the required authentication level," per Microsoft's April 29, 2025 update | SNDS with the Junk Email Reporting Program, on a new portal |
 
 Every sender, bulk or not, must at least pass SPF or DKIM at Gmail, have valid forward and reverse DNS for its sending IPs, use TLS, keep its spam rate under 0.3%, format messages to RFC 5322 and not impersonate Gmail in the From header.
 
-## How We Got Here
+## How It Got Here
 
 Authentication standards existed for nearly two decades before mailbox providers made them mandatory:
 
@@ -264,6 +264,7 @@ Notes on the sketch:
 - [Yahoo: BIMI in Yahoo Mail](https://help.yahoo.com/kb/SLN36219.html), eligibility for logo display
 - [Microsoft: Outlook.com Postmaster](https://substrate.office.com/ip-domain-management-snds/Postmaster), enforcement for domains over 5,000 a day from May 5, 2025
 - [Microsoft: SNDS](https://substrate.office.com/ip-domain-management-snds/snds), the new portal, JMRP and access expiry
+- [Microsoft Defender for Office 365 blog: Outlook's new requirements for high-volume senders](https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/strengthening-email-ecosystem-outlook%E2%80%99s-new-requirements-for-high%E2%80%90volume-senders/4399730), April 2, 2025, updated April 30, 2025: Outlook.com consumer domains, over 5,000 a day, and the April 29 decision to reject with 550 5.7.515 from May 5, 2025
 - [Twilio: Outlook's new email sender requirements](https://www.twilio.com/en-us/blog/insights/outlook-new-email-sender-requirements), the 550 5.7.515 rejection text
 - [Apple: BIMI in Apple Mail](https://support.apple.com/en-us/108340), supported platforms
 - [Apple Developer: BIMI](https://developer.apple.com/support/bimi/), requirements for mail providers and evidence documents

@@ -3,7 +3,7 @@ title = "From Tinderbox to Jenkins: How CI Began"
 nav_title = "Tinderbox to Jenkins"
 description = "Tinderbox, CruiseControl, TeamCity, Hudson and the Jenkins rename, Bamboo, Travis CI and hosted CI, then the code hosts absorbing it: dated to primary sources."
 category = "Hosting & Cloud Industry"
-order = 2134
+order = 2142
 part = "CI/CD Platforms"
 tags = ["ci", "history", "jenkins", "travis-ci", "github-actions"]
 +++
@@ -68,9 +68,9 @@ The lesson providers took from it is that an open-source tool's name is property
 
 Hosted CI started with open source. Travis CI began in February 2011 as "a little side project" in Berlin and offered free builds for public repositories on travis-ci.org, with private repositories on travis-ci.com. CircleCI was founded in San Francisco the same year.
 
-Travis's arc is the hosted model's economics in public. Idera acquired it on January 23, 2019, promising to keep the free open-source service and the MIT license; the acquisition post counted more than 700,000 users. On November 2, 2020 Travis moved to credits charged per started build minute (Linux 10 credits, Windows 20, macOS 50), with open-source minutes "allotted case by case" on request. travis-ci.org, scheduled in late 2020 to go read-only, was shut down on May 31, 2021 by Travis's own announcement, with its build history kept read-only. Open-source maintainers moved: one moved about 120 repositories to GitHub Actions; curl, ineligible as a sponsored project once its credits ran out, moved its jobs to Zuul CI and CircleCI.
+Travis's arc is the hosted model's economics in public. Idera acquired it on January 23, 2019, promising to keep the free open-source service and the MIT license; the acquisition post counted more than 700,000 users. On November 2, 2020 Travis moved to credits charged per started build minute (Linux 10 credits, Windows 20, macOS 50), with open-source minutes "allotted case by case" on request. travis-ci.org, scheduled in late 2020 to go read-only, was [shut down](/books/hosting-and-cloud/migrations-and-end-of-life#the-kinds-of-ending) on May 31, 2021 by Travis's own announcement, with its build history kept read-only. Open-source maintainers moved: one moved about 120 repositories to GitHub Actions; curl, ineligible as a sponsored project once its credits ran out, moved its jobs to Zuul CI and CircleCI.
 
-GitLab took the other path, building CI into the code host. GitLab's first commit is dated October 8, 2011, and its co-founder Dmitriy Zaporozhets made the first version of GitLab CI in November 2012. Kamil Trzciński's GitLab Runner, written in Go, was tagged v0.1.0 as its "Initial public release" on January 27, 2015, and GitLab 8.0 on September 22, 2015 shipped "with new looks and integrated CI." Drone, created by Brad Rydzewski, ran every step in a container from the start; Harness acquired it on August 5, 2020 (The CI/CD Platform Business).
+GitLab took the other path, building CI into the code host. GitLab's first commit is dated October 8, 2011, and its co-founder Dmitriy Zaporozhets made the first version of GitLab CI in November 2012. Kamil Trzciński's GitLab Runner, written in Go, was tagged v0.1.0 as its "Initial public release" on January 27, 2015, and GitLab 8.0 on September 22, 2015 shipped "with new looks and integrated CI." Drone, created by Brad Rydzewski, ran every step in a container from the start; Harness acquired it on August 5, 2020 ([The CI/CD Platform Business](/books/hosting-and-cloud/ci-cd-platform-business)).
 
 ## The Clouds and the Code Hosts Absorb It
 
@@ -92,7 +92,7 @@ What the code hosts solved was integration: the build configuration, the runner,
 
 ## My Default
 
-My default is the CI built into the code host, because the history shows integration with the repository is what users value and what lasted; I'd add self-hosted or third-party runners only where minutes, hardware or network access require them ([Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure#my-default)). I'd run Jenkins only to keep an existing estate working, and I'd plan its migration rather than its growth. What would change this: a codebase or regulatory boundary that rules out a hosted control plane, which is the case for a self-run server, or a build so large that remote execution, not a CI product, is the real need.
+My default is the Actions workflow format, not necessarily GitHub's CI service. The history shows that integration with the repository is what users value and what lasted, and also that hosted CI products end or reprice on someone else's schedule (Bamboo Cloud, travis-ci.org); a workflow format that more than one orchestrator reads is the part of that integration I can take with me, since Gitea Actions and Forgejo Actions both run GitHub-Actions-style workflow files, with documented gaps. In practice I start on GitHub Actions with its hosted runners, move to my own runners on GitHub's orchestrator when minutes cost too much, and keep a compatible orchestrator as the exit ([The CI/CD Platform Business](/books/hosting-and-cloud/ci-cd-platform-business#my-default) has the triggers; [Runners & Build Infrastructure](/books/hosting-and-cloud/runners-and-build-infrastructure#my-default) has the gaps). I'd run Jenkins only to keep an existing estate working, and I'd plan its migration rather than its growth. What would change this: a codebase or regulatory boundary that rules out a hosted control plane, which is the case for a self-run server, or a build so large that remote execution, not a CI product, is the real need.
 
 ## How to Build It
 
@@ -153,4 +153,6 @@ This chapter adds no tables. Its history is why [the core data model](/books/hos
 - [GitHub: Action demos](https://github.blog/news-insights/product-news/action-demos/), the Universe announcement of October 16, 2018
 - [GitHub: GitHub Actions now supports CI/CD](https://github.blog/news-insights/product-news/github-actions-now-supports-ci-cd/), August 8, 2019, and general availability on November 13, 2019
 - [GitHub: Let's talk about GitHub Actions](https://github.blog/news-insights/product-news/lets-talk-about-github-actions/), December 11, 2025, 71 million jobs a day
+- [Gitea Docs: Compared to GitHub Actions](https://docs.gitea.com/usage/actions/comparison), Gitea Actions running GitHub-style workflows, with its differences
+- [Forgejo Docs: GitHub Actions](https://forgejo.org/docs/latest/user/actions/github-actions/), Forgejo Actions' relationship to GitHub Actions and its known differences
 - [Harness: Harness acquires Drone.io](https://harness.io/press-and-news/harness-acquires-drone-io-for-open-source-containerized-continuous-integration), August 5, 2020
