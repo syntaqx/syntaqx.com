@@ -126,7 +126,7 @@ A host's identity says nothing about the vehicle. Rental marketplaces publish as
 | **Recalls** | Washington's peer-to-peer car sharing law bars an owner with actual notice of a safety recall from making the vehicle available until the recall repair is done |
 | **Anti-theft** | Turo withholds up to 20% of a reimbursement on vehicles worth $125,000 or more without an activated manufacturer tracker |
 
-For stays the asset gate is the property's legal status: city registration, primary-residence rules and caps, which the Property Tech volume covers in [Registration, Permits and Caps](/books/property-tech/short-term-rentals#registration-permits-and-caps). For goods it's the category: prohibited and restricted items, and for some categories an authenticity check before the item reaches the buyer (eBay's Authenticity Guarantee for luxury goods and collectibles).
+For stays the asset gate is the property's legal status: city registration, primary-residence rules and caps, which the Property Tech volume covers in [Registration, Permits and Caps](/books/property-tech/short-term-rentals#registration-permits-and-caps). For goods it's the category: prohibited and restricted items, and for some categories an authenticity check before the item reaches the buyer (eBay's Authenticity Guarantee for luxury goods and collectibles). For services the asset is the person and, for boarding, the place: [Services Marketplaces](/books/user-generated-platforms/services-marketplaces#licensing-boarding-in-someone-s-home) covers background checks and boarding licenses.
 
 What the system does with asset rules:
 

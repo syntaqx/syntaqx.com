@@ -3,7 +3,7 @@ title = "Terrorism, Violent Extremism & Graphic Content"
 nav_title = "Extremism & Graphic Content"
 description = "GIFCT hash sharing and incident response, the Christchurch Call, EU one-hour removal orders, livestreamed attacks, and gore, warning screens and newsworthiness."
 category = "User-Generated Platforms Industry"
-order = 1842
+order = 1843
 part = "Trust and Safety"
 tags = ["trust-and-safety", "violent-extremism", "terrorist-content", "livestreaming", "graphic-content", "hash-matching"]
 +++
