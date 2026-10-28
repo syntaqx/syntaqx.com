@@ -2,7 +2,7 @@
 title = "Operating Metrics"
 description = "The numbers providers run on: ARR, net dollar retention, churn and renewal rates, ARPU, gross margin with pass-through, utilization, capex and cost per unit."
 category = "Hosting & Cloud Industry"
-order = 2211
+order = 2212
 part = "Running the Provider"
 tags = ["metrics", "arr", "net-retention", "gross-margin", "unit-economics"]
 +++

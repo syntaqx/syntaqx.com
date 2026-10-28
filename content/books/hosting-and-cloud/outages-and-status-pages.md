@@ -3,7 +3,7 @@ title = "Outages, Post-Mortems & Status Pages"
 nav_title = "Outages & Status Pages"
 description = "The 2025 cloud and edge outages, the global-config failure pattern, control-plane dependencies, CPaaS incidents, vendor risk, and honest status pages."
 category = "Hosting & Cloud Industry"
-order = 2210
+order = 2211
 part = "Running the Provider"
 tags = ["outages", "post-mortems", "status-pages", "incidents", "reliability"]
 +++

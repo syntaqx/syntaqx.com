@@ -9,7 +9,7 @@ tags = ["data-centers", "colocation", "power", "cooling", "interconnection"]
 
 Every server in this volume sits in a building that somebody has to power, cool, guard and wire to the rest of the internet, and the building is the slowest-moving part of the stack. A virtual machine appears in a minute and a dedicated server in an hour, but a data hall takes years to permit, connect to the grid and build, and the electricity it was designed for decides what can go in it for decades. Colocation is the business of renting that building out in pieces: a cabinet, a cage, a private suite or a whole powered shell, priced mostly by the kilowatt, with the cables to other tenants and networks (cross-connects) and the on-site technicians who rack and reboot for absent customers (remote hands) sold on top.
 
-The customer of a colocation operator is usually a provider itself. A web host, a developer cloud, a CDN or a GPU cloud that doesn't own buildings leases space and power from one, and the colocation contract becomes the underlay of its regions. This chapter covers what a facility sells and how it's rated (power, cooling, Uptime Institute tiers and TIA-942 ratings), the connective products that make a building valuable (cross-connects and interconnection fabrics), remote hands, how the market prices all of it, and what changed when AI racks went from 10 kW to more than 100. It adds facilities, cabinets, cross-connects, power circuits and remote hands tickets to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The servers that go into the cabinets are [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers); the switches that connect them are [Data Center Networking](/books/hosting-and-cloud/data-center-networking); how a provider lays out buildings into regions and failure domains is [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#what-a-zone-promises); peering, IXPs and IP addressing belong to [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses#transit-peering-and-interconnection); and the move from a home rack into a first quarter-rack is [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation#when-the-house-isn-t-enough).
+The customer of a colocation operator is usually a provider itself. A web host, a developer cloud, a CDN or a GPU cloud that doesn't own buildings leases space and power from one, and the colocation contract becomes the underlay of its regions. This chapter covers what a facility sells and how it's rated (power, cooling, Uptime Institute tiers and TIA-942 ratings), the connective products that make a building valuable (cross-connects and interconnection fabrics), remote hands, how the market prices all of it, what changed when AI racks went from 10 kW to more than 100, and how bitcoin miners became power hosts whose curtailment is now every large load's obligation. It adds facilities, cabinets, cross-connects, power circuits, remote hands tickets and curtailment events to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model). The servers that go into the cabinets are [Dedicated Servers & Bare Metal](/books/hosting-and-cloud/dedicated-servers); the switches that connect them are [Data Center Networking](/books/hosting-and-cloud/data-center-networking); how a provider lays out buildings into regions and failure domains is [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#what-a-zone-promises); peering, IXPs and IP addressing belong to [Networks, Peering & IP Addresses](/books/hosting-and-cloud/networks-peering-and-ip-addresses#transit-peering-and-interconnection); and the move from a home rack into a first quarter-rack is [From Homelab to Colocation](/books/hosting-and-cloud/homelab-to-colocation#when-the-house-isn-t-enough).
 
 ## How the Providers Do It
 
@@ -98,6 +98,28 @@ A colocation contract is a master services agreement with order forms. The comme
 - **Assignment and change of control:** whether the contract survives a sale of the operator or the building, and what the tenant may do if the operator fails.
 
 For the provider reselling colocation capacity downstream, the same contract terms become its costs: a host that buys a cage at an all-in per-kW price and sells dedicated servers by the month carries the risk that its servers draw more than it planned.
+
+## Miners as Power Hosts
+
+Bitcoin miners built a different kind of data center: hundreds of megawatts at sites chosen for cheap power and a grid connection, with little redundancy, little interconnection and no tenant who minds being switched off. That last property made them a grid resource, and the grid connections made them landlords. The AI leases they signed are [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#miners-turned-ai-landlords)' story; the power and hosting side is this one. Mining itself as an abuse of rented compute is [Free-Tier Fraud & Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#cryptomining)'.
+
+**Power bought fixed, sold back when it's dear.** The large Texas miners buy power on long fixed-price contracts and treat the contract as a position. Riot's 2024 10-K says its "fixed-price power purchase contracts enable us to strategically curtail our mining operations," benefiting from "the difference between our contractual cost of power" and the market price, and that it "voluntarily participate[s] in load response programs operated by ERCOT and MISO." The credits are disclosed line by line:
+
+| Riot power curtailment credits ($ thousands) | 2023 | 2024 | 2025 |
+| --- | --- | --- | --- |
+| Manual curtailment (power not used, credited against power invoices) | 52,644 | 26,001 | 54,302 |
+| Demand response (paid by ERCOT and MISO whether or not called) | 18,571 | 7,684 | 2,427 |
+| Total | 71,215 | 33,685 | 56,729 |
+
+In August 2023 alone, Riot reported $31.7 million of power and demand response credits, equivalent to about 1,136 bitcoin, against 333 bitcoin mined, after "curtailing its power usage by more than 95% during periods of peak demand." Cipher sells the surplus outright: power available under its Luminant agreement at Odessa but not needed for mining goes back to the ERCOT market through Luminant, for proceeds of $7.9 million in 2025 and $5.4 million in 2024, on power bought at about 2.7 to 2.8 cents per kWh. Riot's all-in power cost at Rockdale was 3.2 cents per kWh in 2024 and 3.7 cents in 2025.
+
+**The ERCOT programs.** ERCOT pays loads to be flexible through a few mechanisms. A Controllable Load Resource is "A Load Resource capable of controllably reducing or increasing consumption under Dispatch control by ERCOT," dispatched through real-time security-constrained economic dispatch and able to offer ancillary services, with telemetry to ERCOT for every resource. Emergency Response Service pays qualified loads to "provide an agreed-upon amount of megawatts (MW) within ten to thirty minutes" to prevent or relieve an energy emergency, in four contract periods a year. Large loads (75 MW or more at a site, under NPRR1234, approved by the PUCT on May 15, 2025) interconnect through a study process; the PUCT approved ERCOT's Batch Zero process on June 18, 2026, which studies large loads together and offers "a pathway to connect for large customers who agree to let ERCOT curtail their power use in response to local transmission constraints." ERCOT said it was tracking "more than 438,000 MW of large load requests, nearly 89 percent from data centers alone."
+
+**The law caught up.** Texas SB 6, signed and effective June 20, 2025, writes curtailment into statute. A large load standard applies above a demand threshold the PUCT "shall establish ... of 75 megawatts" unless a lower one is needed; large loads must disclose on-site backup generation, and during an emergency, after market services are exhausted, ERCOT may have the utility "require the large load customer to either deploy the customer's on-site backup generating facilities or curtail load." Utilities serving transmission-voltage customers interconnected after December 31, 2025 must be able "to allow the load to be curtailed during firm load shed," with the equipment installed before interconnection. And ERCOT must procure a demand reduction service from large loads of at least 75 MW, with at least 24 hours' notice, that excludes loads already curtailing on price. What was a miner's revenue strategy is now, for every large data center in ERCOT, an obligation. Core Scientific's 2025 10-K draws the tenant consequence: "mandatory curtailment events directed by a grid operator are force majeure events under our customer agreements."
+
+**Hosting for other miners.** Miners also rented their sites to other miners, priced on electricity. Core Scientific's hosted mining contracts were "electricity-based consumption contracts," billed "on a fixed and recurring basis each month," of one to three years; from 2023 it added proceeds-sharing contracts in which the customer covers hosting and infrastructure costs. The segment earned $77.6 million in 2024 against $112.1 million in 2023 (including related parties), and the company said it does not expect to expand it further. Hut 8 hosts third-party ASICs "through fixed-fee or profit-sharing arrangements, often with reimbursement for pass-through costs such as electricity." The shape is wholesale colocation with the power passed through, which is why the same sites could be re-let to AI tenants once the buildings were rebuilt for them.
+
+What a colocation operator takes from this: a site's grid connection is the asset; curtailment is now a contract term every large tenant has to accept, price and be told about; and an operator that sells interruptible power to one tenant class and firm power to another needs to record which loads were curtailed, on whose instruction, and what it paid.
 
 ## The Alternatives
 
@@ -220,6 +242,24 @@ CREATE TABLE facility_access_grants (    -- who may enter or request work
   may_request_work BOOLEAN NOT NULL,
   valid_during     TSTZRANGE NOT NULL
 );
+
+CREATE TABLE curtailment_events (        -- load given back to the grid, and what it earned
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  facility_id       UUID NOT NULL REFERENCES facilities (id),
+  grid_operator     TEXT NOT NULL,       -- 'ERCOT', 'MISO', 'NYISO'
+  program           TEXT NOT NULL CHECK (program IN ('economic', 'demand_response',
+                      'ancillary_service', 'emergency_service', 'firm_load_shed',
+                      'transmission_constraint')),
+  instructed_by     TEXT NOT NULL,       -- typed actor: the grid operator's dispatch, the
+                                         -- utility, or the operator's own power desk
+  mandatory         BOOLEAN NOT NULL,    -- a directive: force majeure under tenant contracts
+  curtailed_mw      NUMERIC(8,2) NOT NULL,
+  curtailed_during  TSTZRANGE NOT NULL,
+  tenant_cabinets   UUID[],              -- tenants' cabinets curtailed; empty: own load only
+  credit_currency   CHAR(3),
+  credit_amount     BIGINT,              -- credits or proceeds, minor units, once settled
+  settlement_ref    TEXT
+);
 ```
 
 Notes on the sketch:
@@ -230,13 +270,15 @@ Notes on the sketch:
 - **Metered power is usage.** For `billing_mode = 'metered'`, PDU readings arrive as `usage_events` with meter `power.kwh` and the circuit as `resource_id`; an all-in circuit is a recurring SKU and needs no meter for billing, only for capacity alerts.
 - **Cross-connects carry their paperwork.** The LOA reference, the circuit ID and the test date are what the operator and the other party ask for when a circuit is disputed or disconnected; a cross-connect with no billed owner is found by joining it to an ended subscription.
 - **Remote hands are billable work orders.** Increments and the SKU make the ticket an invoice line; the access list makes "who asked for this" provable.
-- **Events:** `facility.status_changed`, `cabinet.provisioned`, `power_circuit.over_draw` (metered load above `derated_kw`), `cross_connect.ordered`, `cross_connect.installed`, `cross_connect.disconnected`, `remote_hands.requested` and `remote_hands.completed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to billing, capacity planning and the customer's notifications.
+- **Curtailment is a recorded event, mandatory or not.** An economic curtailment is the operator's choice and earns a credit; a directive under SB 6 or a firm load shed is not, and tenant contracts treat it as force majeure. Recording which, on whose instruction and which tenants' cabinets went dark is what answers an SLA claim and reconciles the credits on the power bill ([Miners as Power Hosts](#miners-as-power-hosts)).
+- **Events:** `facility.status_changed`, `curtailment.started`, `curtailment.ended`, `cabinet.provisioned`, `power_circuit.over_draw` (metered load above `derated_kw`), `cross_connect.ordered`, `cross_connect.installed`, `cross_connect.disconnected`, `remote_hands.requested` and `remote_hands.completed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to billing, capacity planning and the customer's notifications.
 
 ## Auditing
 
 - **Who entered and who asked.** Every access grant with its range, every visit the operator logs, and every remote hands request with its requester, because a physical change to a server is as consequential as an API call ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
 - **What the building was rated, and when.** The design, constructed-facility and operational attestations with their dates, and the operator's SOC 2 or ISO 27001 reports for each period, because a customer's auditor inherits those controls.
 - **Power drawn against power sold.** Metered readings per circuit, over-draw events, and single-feed cabinets, which are where SLA claims and capacity disputes start.
+- **Every curtailment.** Program, instruction, megawatts, duration, affected tenants and the credit settled, because grid operators, tenants and auditors each ask about the same hours.
 - **Every cross-connect's life.** Order, LOA, installation, test, and disconnection, so a monthly charge can be traced to a cable that exists.
 
 ## What This Means for the System You Build
@@ -248,6 +290,7 @@ Notes on the sketch:
 - **Run remote hands as work orders** with an access list, billed increments and the technician's report attached.
 - **Read the change-of-control clause,** because operators are bought, sold and occasionally reorganized in bankruptcy, and the contract is what survives.
 - **Expect AI racks to need a different building,** and plan GPU capacity around liquid cooling and power, not floor space.
+- **Treat curtailment as a contract term,** priced, disclosed to tenants and recorded, because large loads on grids like ERCOT's now have to accept it.
 
 ## References
 
@@ -271,6 +314,22 @@ Notes on the sketch:
 - [QTS: Form 8-K exhibit 99.1 (August 31, 2021)](https://www.sec.gov/Archives/edgar/data/1577368/000110465921111681/tm2126608d1_ex99-1.htm), Blackstone's completed acquisition for about $10 billion including debt
 - [American Tower: completion of the CoreSite acquisition (SEC exhibit)](https://www.sec.gov/Archives/edgar/data/1053507/000119312521367969/d256586dex992.htm), December 28, 2021
 - [Verita (claims agent): Cyxtera Technologies Chapter 11](https://veritaglobal.net/cyxtera), petition date June 4, 2023, case 23-14853 (D.N.J.), confirmation and effective dates
+- [Riot Platforms: August 2023 production update (8-K exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1167419/000155837023015517/riot-20230906xex99d1.htm), $31.7 million of credits, about 1,136 bitcoin equivalent, 333 bitcoin mined, curtailment above 95% at peak
+- [Riot Platforms: Form 10-K for 2024](https://www.sec.gov/Archives/edgar/data/1167419/000155837025001888/riot-20241231x10k.htm), fixed-price power strategy, ERCOT and MISO load response, 2023 and 2024 curtailment credits, Rockdale power cost
+- [Riot Platforms: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1167419/000110465926022322/riot-20251231x10k.htm), 2025 curtailment credits and Rockdale power cost
+- [Cipher Mining: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1819989/000181998926000009/cifr-20251231.htm), fixed-price power at Odessa, power sold back to ERCOT through Luminant and the proceeds
+- [Core Scientific: Form 10-K for 2024](https://www.sec.gov/Archives/edgar/data/1839341/000162828025008302/core-20241231.htm), hosted mining contracts, terms, proceeds sharing, revenue and no further expansion
+- [Core Scientific: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1839341/000162828026013305/core-20251231.htm), SB 6 and curtailment directives as force majeure under customer agreements
+- [Hut 8: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1964789/000110465926019392/hut-20251231x10k.htm), fixed-fee and profit-sharing hosting with electricity pass-through
+
+**Grid rules and law**
+
+- [ERCOT: Load Resource participation](https://www.ercot.com/services/programs/load/laar), Controllable Load Resources, ancillary services and telemetry
+- [ERCOT: Emergency Response Service](https://www.ercot.com/services/programs/load/eils), the ten-to-thirty-minute response and contract periods
+- [ERCOT: NPRR1234](https://www.ercot.com/mktrules/issues/NPRR1234), large loads of 75 MW or more and the PUCT approval date
+- [ERCOT: PUCT approves Batch Zero](https://www.ercot.com/news/release/06182026-puct-approves-ercots), June 18, 2026, the curtailment pathway and 438,000 MW of large load requests
+- [Texas Legislature: SB 6 bill history (89R)](https://capitol.texas.gov/BillLookup/History.aspx?LegSess=89R&Bill=SB6), signed and effective June 20, 2025
+- [Texas Legislature: SB 6 enrolled text](https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm), the 75 MW threshold, backup generation, curtailment during firm load shed and the demand reduction service
 
 **Provider documentation**
 
@@ -302,5 +361,3 @@ Notes on the sketch:
 
 - [Inflect: Colocation pricing in 2026](https://inflect.com/blog/colocation-pricing-what-to-expect-for-racks-cabinets-and-cages-in-2026), cross-connect, remote hands, rack density, rack sizes, circuits, contract terms and power billing ranges
 - [SemiAnalysis: GB200 hardware architecture](https://newsletter.semianalysis.com/p/gb200-hardware-architecture-and-component), about 120 kW per NVL72 against about 40 kW for air-cooled H100 racks
-</content>
-</invoke>
