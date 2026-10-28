@@ -3,7 +3,7 @@ title = "Commerce Glossary"
 nav_title = "Glossary"
 description = "Every term the commerce volume uses, defined in a line and linked to its chapter: the core model, delivery models, menus, dispatch, fees, memberships and fraud."
 category = "Commerce Industry"
-order = 2299
+order = 2399
 part = "Reference"
 tags = ["commerce", "glossary", "reference"]
 +++

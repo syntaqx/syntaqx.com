@@ -2,7 +2,7 @@
 title = "Fees, Commissions & the Law"
 description = "Consumer delivery fees and all-in pricing, merchant commission tiers, city commission caps, listing consent, the NYC data-sharing case, and tips."
 category = "Commerce Industry"
-order = 2243
+order = 2345
 part = "On-Demand Delivery"
 tags = ["commerce", "delivery", "fees", "all-in-pricing", "regulation", "commissions"]
 +++

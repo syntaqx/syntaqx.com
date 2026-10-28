@@ -2,7 +2,7 @@
 title = "Subscriptions & Loyalty"
 description = "DashPass, Uber One, Instacart+ and Grubhub+ compared: benefit rules, who funds them, savings claims, trials, and cancellation law including FTC v. Uber."
 category = "Commerce Industry"
-order = 2244
+order = 2346
 part = "On-Demand Delivery"
 tags = ["commerce", "delivery", "subscriptions", "memberships", "cancellation", "consumer-protection"]
 +++

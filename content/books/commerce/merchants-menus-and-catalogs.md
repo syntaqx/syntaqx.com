@@ -2,7 +2,7 @@
 title = "Merchants, Menus & Catalogs"
 description = "Onboarding restaurants and stores, menus and modifiers synced from the POS, item availability, grocery catalogs, substitutions, and in-app price markups."
 category = "Commerce Industry"
-order = 2241
+order = 2343
 part = "On-Demand Delivery"
 tags = ["commerce", "delivery", "catalog", "menus", "point-of-sale", "pricing"]
 +++
