@@ -1350,13 +1350,17 @@ const board: SceneFn = (s) => {
  * with their spines out, one lifted off the top shelf to read.
  */
 const library: SceneFn = (s) => {
-  const [x0, y0, len, dep, t] = [1.2, 3.4, 7.6, 2.4, 0.3];
-  const top = 3.9 + s.spread * 2;
   // [thickness, depth, height] per volume, left to right
   const rows: [number, number, number][][] = [
     [[0.8, 2, 2.4], [0.6, 1.8, 2.1], [0.9, 2.1, 2.6], [0.5, 1.7, 1.9], [0.7, 2, 2.3], [0.8, 1.9, 2.5], [0.6, 1.8, 2]],
-    [[0.7, 1.9, 2.2], [0.9, 2.1, 2.6], [0.6, 1.8, 2], [0.8, 2, 2.4], [0.5, 1.7, 1.8], [0.9, 2.1, 2.5]],
+    [[0.7, 1.9, 2.2], [0.9, 2.1, 2.6], [0.6, 1.8, 2], [0.8, 2, 2.4], [0.5, 1.7, 1.8], [0.9, 2.1, 2.5], [0.6, 1.8, 2.1]],
   ];
+  // the case is as long as its fuller shelf, centered on the floor
+  const [dep, t] = [2.4, 0.3];
+  const len = Math.max(...rows.map((r) => r.reduce((w, [a]) => w + a + 0.06, 0))) + 0.5;
+  const [x0, y0] = [(10 - len) / 2, (10 - dep) / 2];
+  const top = 3.9 + s.spread * 2;
+  const side = top + t + 2.9;
   const pick = 3;
   const lift = 0.8 + s.spread * 1 + bob(s, 0.12);
   const shelf = (z: number, books: [number, number, number][], upper: boolean): Part[] => {
@@ -1375,13 +1379,15 @@ const library: SceneFn = (s) => {
     });
     return parts;
   };
+  // the far end, the shelves and their books, then the near end in front of them
   const parts: Part[] = [
     { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "box", box: box(x0 - t, y0, 0, t, dep, side) },
     ...shelf(0, rows[0], false),
-    ...[[x0, y0 + dep], [x0 + len, y0 + dep], [x0 + len, y0]].map(([x, y]): Part => ({ kind: "line", a: [x, y, t], b: [x, y, top], dashed: true, alpha: 0.35 })),
     ...shelf(top, rows[1], true),
+    { kind: "box", box: box(x0 + len, y0, 0, t, dep, side) },
   ];
-  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len, y0, top + t + 2.6]], axes: ground(10) };
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len + t, y0, side]], axes: ground(10) };
 };
 
 export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
