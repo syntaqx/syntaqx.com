@@ -149,7 +149,7 @@ export function rasterize(
     if (p.kind === "plane" && !p.dashed) fill(p.pts, p.v, 0, 0.82);
     if (p.kind === "box" && !p.ghost) {
       const b = p.box;
-      const lit = p.accent || p.warn;
+      const lit = (p.accent && !p.soft) || p.warn;
       const mark = p.warn ? 2 : p.accent ? 1 : 0;
       const k = lit ? 1 : 0.85;
       fill(b.left, (0.42 - light * 0.2) * k + (lit ? 0.2 : 0), mark);
@@ -157,8 +157,9 @@ export function rasterize(
       fill(b.top, lit ? 1 : 0.6, mark);
     }
     if (p.kind === "cyl") {
-      fill(cylSide(p), p.accent ? 0.6 : 0.34 + light * 0.08, p.accent ? 1 : 0);
-      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), p.accent ? 1 : 0.58, p.accent ? 1 : 0);
+      const lit = p.accent && !p.soft;
+      fill(cylSide(p), lit ? 0.6 : 0.34 + light * 0.08, lit ? 1 : 0);
+      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), lit ? 1 : 0.58, lit ? 1 : 0);
     }
   }
   return { field: { cols, rows, lum, acc }, P };
