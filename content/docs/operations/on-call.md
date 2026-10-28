@@ -24,6 +24,7 @@ Severity levels, incident roles and how an incident is run live in [Incidents & 
 - **Primary acknowledges a page within 5 minutes.** No acknowledgement escalates automatically to secondary, then to the engineering manager.
 - **Escalating is never a failure.** Pulling in the database owner at 3am is cheaper than guessing for two hours.
 - **Every service's runbook says who to escalate to,** not someone's memory.
+- **Count the pages.** A rotation that pages more than it can act on stops reading pages; [Alert Fatigue](/docs/observability/dashboards-and-alerts#alert-fatigue) has the measures.
 
 ## Handoffs
 

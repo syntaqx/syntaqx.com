@@ -8,7 +8,7 @@ tags = ["observability", "tracing", "opentelemetry", "sampling", "messaging"]
 
 A trace is the story of one request: every service it touched, every query and outbound call it made, and how long each took, as a tree of spans that share one trace ID. It turns "the API was slow" into "the API waited 2.1 seconds on the processor call, after three retries." Getting there takes three decisions this page covers: what each span records, how the context survives work that isn't a direct call (queues, batches, webhooks), and which traces you keep once there are too many to keep them all.
 
-The vocabulary is OpenTelemetry's. Its trace API is "Stable, except where otherwise specified," and the agents, SDKs and Collector that produce and move spans are in [Instrumenting with OpenTelemetry](/docs/observability/opentelemetry) and [Running the OpenTelemetry Collector](/docs/observability/collector).
+The vocabulary is OpenTelemetry's. Its trace API is "Stable, except where otherwise specified," and the agents, SDKs and Collector that produce and move spans are in [Instrumenting with OpenTelemetry](/docs/observability/opentelemetry) and [Running the OpenTelemetry Collector](/docs/observability/collector). A trace can start in the browser or the app ([Traces That Start on the Client](/docs/observability/frontend-and-synthetic#traces-that-start-on-the-client)), and a metric spike can point at one through an [exemplar](/docs/observability/metrics#exemplars).
 
 ## Anatomy of a Span
 
