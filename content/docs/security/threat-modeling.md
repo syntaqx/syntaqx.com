@@ -55,7 +55,7 @@ Brainstorming finds the threats people already worry about and misses the rest. 
 | ------ | -------- | --- | ------------------ |
 | **S**poofing | Authentication | Can someone pretend to be a user, a service or a webhook sender? | [Authentication](/docs/api-design/authentication), signed [webhooks](/docs/api-design/webhooks) |
 | **T**ampering | Integrity | Can data be changed in transit or at rest? | TLS, signatures, append-only records |
-| **R**epudiation | Non-repudiation | Can someone deny an action we can't prove they took? | Audit logs with [request IDs](/docs/operations/observability) |
+| **R**epudiation | Non-repudiation | Can someone deny an action we can't prove they took? | Audit logs with [request IDs](/docs/observability/overview#request-ids) |
 | **I**nformation disclosure | Confidentiality | Can data reach someone who shouldn't see it? | Authorization, [redaction](/docs/payments/sensitive-data), encryption |
 | **D**enial of service | Availability | Can someone exhaust a resource? | [Rate limits](/docs/requests/rate-limiting), size limits, timeouts |
 | **E**levation of privilege | Authorization | Can someone do more than they're allowed? | Object-level checks, least privilege, [tenant isolation](/docs/architecture/multi-tenancy) |

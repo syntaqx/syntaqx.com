@@ -39,7 +39,7 @@ Two rules that prevent common bugs: don't show "No results" while the request is
 
 ### Give Support Something to Search For
 
-The API returns a `Request-Id` header on every response, including errors ([Error Responses](/docs/requests/error-responses)). When an error is worth contacting support about, show it in small text with a copy button. One line of UI turns "it didn't work yesterday" into a log search that takes seconds ([Observability](/docs/operations/observability)).
+The API returns a `Request-Id` header on every response, including errors ([Error Responses](/docs/requests/error-responses)). When an error is worth contacting support about, show it in small text with a copy button. One line of UI turns "it didn't work yesterday" into a log search that takes seconds ([Request IDs](/docs/observability/overview#request-ids)).
 
 ## Retry and Offline
 

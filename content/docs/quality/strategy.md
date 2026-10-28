@@ -53,7 +53,7 @@ Both terms describe moving quality work away from the single gate before release
 
 **Shift right** accepts that production is the only environment that's really production, and tests there safely:
 
-- **Observability.** Errors, latency and business events watched per release. See [Observability](/docs/operations/observability).
+- **Observability.** Errors, latency and business events watched per release. See [Observability](/docs/observability/overview).
 - **Canaries.** A small slice of traffic on the new version, [judged automatically](/docs/delivery/deployment-strategies#let-the-canary-be-judged-automatically).
 - **Feature flags.** Code deployed dark, released gradually, and turned off in seconds. See [Feature Flags](/docs/delivery/feature-flags).
 - **Experiments.** Measuring whether a change made things better, with [guardrail metrics](/docs/telemetry/experimentation#guardrail-metrics) that catch the ones that made things worse.
@@ -103,7 +103,7 @@ The left column is mostly automated and runs on every change. The right column n
 | Severity, priority, triage, bug lifecycle | [Defects & Triage](/docs/quality/defects) |
 | Ship criteria, go/no-go, rollback readiness | [Release Readiness](/docs/quality/release-readiness) |
 | What to measure and what not to | [Quality Metrics](/docs/quality/metrics) |
-| Production signals and error budgets | [SLOs](/docs/operations/slos), [Observability](/docs/operations/observability) |
+| Production signals and error budgets | [SLOs](/docs/operations/slos), [Observability](/docs/observability/overview) |
 | Safe rollout | [Deployment Strategies](/docs/delivery/deployment-strategies), [Feature Flags](/docs/delivery/feature-flags) |
 
 ## References

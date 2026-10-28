@@ -7,7 +7,7 @@ tags = ["operations", "on-call", "incidents", "runbooks"]
 aliases = ["on-call"]
 +++
 
-Every alert from [Observability](/docs/operations/observability) and every fast [SLO](/docs/operations/slos) burn ends at a person. On-call exists so customers get help fast, and it only lasts if it's sustainable for the people carrying the pager: few pages, every page actionable, and time set aside to make next week quieter than this one.
+Every alert from [Observability](/docs/observability/overview) and every fast [SLO](/docs/operations/slos) burn ends at a person. On-call exists so customers get help fast, and it only lasts if it's sustainable for the people carrying the pager: few pages, every page actionable, and time set aside to make next week quieter than this one.
 
 ## Rotations
 

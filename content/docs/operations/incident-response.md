@@ -103,7 +103,7 @@ Detection, tooling, people. Keep doing these.
 | Action | Type | Owner | Due |
 ```
 
-The timeline comes from the incident channel, logs and alerts ([Observability](/docs/operations/observability)), not memory.
+The timeline comes from the incident channel, logs and alerts ([Observability](/docs/observability/overview)), not memory.
 
 ### Blameless, Not Accountability-Free
 

@@ -84,13 +84,13 @@ Crash reporting itself (symbol servers, minidumps, grouping by stack and build) 
 - **Server frame time per match,** keyed by server build, map and player count, because a regression can live only at full lobbies: Riot found VALORANT's worst server slowdown by splitting live telemetry by client count ([The Frame Budget at 128 Ticks](/books/gaming/game-servers#the-frame-budget-at-128-ticks) tells it). Averaged over all matches, such a regression is small; at full lobbies, it's the whole problem.
 - **Network quality per match and region:** round trip, loss and jitter, measured by both client and server. Valve's networking library reports exactly that pair of views per connection: current ping, and the fraction of packets delivered end-to-end in order, measured locally and as observed by the remote host. Riot's network team named latency, loss and jitter as "more impactful values" than router-centric counters (Riot Direct, July 2016). For a game backend the actionable unit is coarser: per match, per region and per ISP, so a routing problem shows up as one ISP's players losing packets in one city ([Netcode Fundamentals](/books/gaming/netcode#bandwidth-loss-and-jitter)).
 
-Server processes also emit the ordinary service telemetry (logs, metrics, traces) that every backend has; that is [Observability](/docs/operations/observability), on its own pipeline. The game-specific part is the match-level record above, joinable to players and builds.
+Server processes also emit the ordinary service telemetry (logs, metrics, traces) that every backend has; that is [Observability](/docs/observability/overview), on its own pipeline. The game-specific part is the match-level record above, joinable to players and builds.
 
 ## Sampling at Game Scale
 
 Sampling rules are general ([Sampling](/docs/telemetry/collection#sampling)): sample by unit, deterministically, record the rate on every sampled event, and serve rates as remote configuration. Games make some of them sharper.
 
-**Never sample:** match results, purchases and currency movements, penalties and the evidence behind them, crash first occurrences per build, and anything a player can dispute. **Sample freely:** position streams, per-frame and per-tick performance data, verbose client debug events, and server traces for healthy matches, with head or tail sampling chosen as in [Sampling Traces: Head or Tail](/docs/operations/observability#sampling-traces-head-or-tail).
+**Never sample:** match results, purchases and currency movements, penalties and the evidence behind them, crash first occurrences per build, and anything a player can dispute. **Sample freely:** position streams, per-frame and per-tick performance data, verbose client debug events, and server traces for healthy matches, with head or tail sampling chosen as in [Head or Tail Sampling](/docs/observability/tracing#head-or-tail-sampling).
 
 The game-specific rules:
 

@@ -113,7 +113,7 @@ A session that's hours old shouldn't be enough to change the account's email, ad
 
 ## Audit Every Auth Event
 
-Sign-ins, failures, factor changes, recoveries, new devices, session revocations and step-ups each become a structured event with the user, method, device, IP, outcome and request ID ([Observability](/docs/operations/observability)). They answer "was this account taken over, and when?", feed detection for impossible travel and stuffing waves, and give users a security page that shows what happened on their account.
+Sign-ins, failures, factor changes, recoveries, new devices, session revocations and step-ups each become a structured event with the user, method, device, IP, outcome and request ID ([Logs](/docs/observability/logs)). They answer "was this account taken over, and when?", feed detection for impossible travel and stuffing waves, and give users a security page that shows what happened on their account.
 
 ## References
 

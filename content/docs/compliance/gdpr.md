@@ -77,7 +77,7 @@ A **data protection officer** is mandatory for public authorities and for organi
 | Know what you hold | A data inventory: each store's personal fields, purpose, lawful basis and retention, kept in code or schema annotations |
 | Minimize | No field without a purpose; drop it when the purpose ends |
 | Protect | Encryption, access control, pseudonymous IDs in analytics; [Sensitive Data](/docs/payments/sensitive-data) |
-| Keep it out of logs | Redact at the logger, opaque IDs in traces and metrics; [Observability](/docs/operations/observability) |
+| Keep it out of logs | Redact at the logger, opaque IDs in traces and metrics; [Logs](/docs/observability/logs#what-not-to-log) |
 | Honor rights | Export and delete as built features that walk every store, with an audit record per request |
 | Control vendors | DPAs with every processor, a public subprocessor list, region pinning where possible |
 

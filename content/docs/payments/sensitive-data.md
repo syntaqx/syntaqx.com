@@ -46,7 +46,7 @@ Rules like "don't log PII" fail because nobody agrees what counts, so every fiel
 Logs are copied, shipped to vendors, kept for months and searched by many people. They're where sensitive data escapes most often, usually because someone logged a whole request object while debugging.
 
 - **Redact by default, with allow-lists.** Logging goes through a serializer that drops classified fields. A deny-list ("never log `card_number`") fails the first time someone adds `cardNumber` or `pan`. An allow-list means a new field isn't logged until it's marked safe, so the mistake is a missing log line, not a leak.
-- **No request bodies in logs** for endpoints that accept sensitive data. Log the [request ID](/docs/operations/observability), the route and the outcome. The request ID is enough to find everything else.
+- **No request bodies in logs** for endpoints that accept sensitive data. Log the [request ID](/docs/observability/overview#request-ids), the route and the outcome. The request ID is enough to find everything else.
 - **Errors never echo input.** `"The card number is invalid."`, not `"4242 4242 4242 4241 is invalid."` Error messages end up in client logs, support tickets and screenshots. The [error format](/docs/requests/error-responses) keys `errors` by field name partly for this reason: it can say which field is wrong without repeating it.
 - **Scan for leaks.** CI and the log pipeline run a card-number detector ([Luhn](https://en.wikipedia.org/wiki/Luhn_algorithm)-valid runs of 13 to 19 digits, allowing spaces and dashes between groups, not a list of brand prefixes that misses newer ranges like Mastercard's 2-series) and alert on a match. Redaction is the control; scanning is how you find out it failed.
 

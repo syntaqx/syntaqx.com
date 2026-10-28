@@ -135,7 +135,7 @@ The method is standardized. Support isn't. Each of these has a workaround, and t
 | CDNs, WAFs, load balancers | Some reject unknown methods outright, and most don't cache `QUERY` with a body-aware key yet | Allow `QUERY` explicitly in edge rules, and cache through stored-query `GET` URLs |
 | Runtimes | Older HTTP parsers reject the method. Node.js parses it in current releases (`http.METHODS` includes `QUERY` in Node 24). | Check the runtime before relying on native support |
 | API descriptions | [OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html) has a `query` operation. 3.1 and older tooling doesn't. | Describe `QUERY` in 3.2 where tooling supports it, and document the `POST` override alongside it |
-| Logging and observability | Tools that log method + URL see the same URL for every query | Log a hash of the normalized body with the [request ID](/docs/operations/observability), never the body itself |
+| Logging and observability | Tools that log method + URL see the same URL for every query | Log a hash of the normalized body with the [request ID](/docs/observability/overview#request-ids), never the body itself |
 
 ## Live Example
 

@@ -24,7 +24,7 @@ The SLO is always stricter than any SLA, so you find out you're in trouble befor
 
 ## Choosing SLIs
 
-Measure what users feel, as close to them as you can (the load balancer or the client, not the database).
+Measure what users feel, as close to them as you can (the load balancer or the client, not the database). The telemetry SLIs are computed from, and the joins from an alert to the requests behind it, are in [Observability](/docs/observability/overview).
 
 | Kind of service | SLIs |
 | --------------- | ---- |

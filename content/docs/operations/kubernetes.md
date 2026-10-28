@@ -117,7 +117,7 @@ Treat upgrades as routine work, the posture of [Dependencies & Upgrades](/docs/e
 
 ## Observability and Cost
 
-Beyond your application's own [telemetry](/docs/operations/observability), dashboard the platform signals that predict outages: OOM kills and restarts per container, CPU throttling, pods pending for capacity, readiness failures during deploys, node pressure. Alert on [SLO](/docs/operations/slos) symptoms, not these.
+Beyond your application's own [telemetry](/docs/observability/overview), dashboard the platform signals that predict outages: OOM kills and restarts per container, CPU throttling, pods pending for capacity, readiness failures during deploys, node pressure. Alert on [SLO](/docs/operations/slos) symptoms, not these.
 
 The [cost](/docs/operations/cost-and-finops) waste is almost always the gap between requests and usage: pods reserving twice what they use means half your nodes are paid for and idle. Compare requests to usage regularly, right-size, let the cluster autoscaler remove the freed nodes, and label every workload with its owning team.
 

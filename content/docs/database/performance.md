@@ -21,7 +21,7 @@ ORDER BY total_exec_time DESC
 LIMIT 10;
 ```
 
-Pair it with `log_min_duration_statement` ([logging settings](https://www.postgresql.org/docs/current/runtime-config-logging.html)) so slow statements land in the logs with their parameters, and with traces that show which request issued them ([Observability](/docs/operations/observability)). Fix the top of the list, then measure again.
+Pair it with `log_min_duration_statement` ([logging settings](https://www.postgresql.org/docs/current/runtime-config-logging.html)) so slow statements land in the logs with their parameters, and with traces that show which request issued them ([Tracing & Sampling](/docs/observability/tracing)). Fix the top of the list, then measure again.
 
 ## Reading a Plan
 

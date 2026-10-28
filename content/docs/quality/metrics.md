@@ -26,7 +26,7 @@ DORA also tracks **deployment rework rate**, the share of deployments that are u
 - **Reopen rate.** The share of fixed defects that come back. High means fixes are going out without a test that reproduces the bug.
 - **Flake rate.** The share of test runs (or tests) that fail and then pass with no code change. It measures how much the team can trust a red build. My threshold: any flake gets the [quarantine treatment](/docs/quality/testing#flaky-tests); the rate is for spotting a suite drifting, not for deciding what's acceptable.
 - **Suite duration.** Wall-clock time from push to a merge-blocking result, at the median and the slow tail. It's a quality metric because a slow suite gets skipped, batched and resented. My threshold is the one in [CI & Continuous Deployment](/docs/delivery/ci-pipelines#fast).
-- **Mean time to detect.** From a defect reaching production to someone knowing about it. Short detection is what makes shift-right safe; if users report bugs before your [alerts](/docs/operations/observability#alerts) do, this is the number to work on. Pull it from [postmortem](/docs/operations/incident-response#the-postmortem) timelines.
+- **Mean time to detect.** From a defect reaching production to someone knowing about it. Short detection is what makes shift-right safe; if users report bugs before your [alerts](/docs/observability/dashboards-and-alerts) do, this is the number to work on. Pull it from [postmortem](/docs/operations/incident-response#the-postmortem) timelines.
 
 ## What Not to Measure
 

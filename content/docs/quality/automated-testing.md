@@ -103,7 +103,7 @@ A failed test should carry everything needed to diagnose it without rerunning it
 
 - **Traces first.** A Playwright trace records every action, DOM snapshot, network request and console message on a timeline; the [best practices](https://playwright.dev/docs/best-practices) recommend it over videos for CI failures. Use `trace: "retain-on-failure"` so passing tests cost nothing to store.
 - **Screenshot and video** on failure, for the reviewer who wants the picture without opening a trace viewer.
-- **Logs from the system under test,** not just the test runner: application logs and request IDs for the test's time window, linked from the report, ideally via the same [observability](/docs/operations/observability) tooling as production.
+- **Logs from the system under test,** not just the test runner: application logs and request IDs for the test's time window, linked from the report, ideally via the same [observability](/docs/observability/overview) tooling as production.
 - **Seeds and IDs.** The random seed, the records the test created, and the build under test, printed in the failure output.
 
 Upload artifacts from CI with a short retention (a couple of weeks), and link them from the check's summary so the first click from a red pull request lands on the trace.

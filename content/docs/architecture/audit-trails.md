@@ -23,7 +23,7 @@ Three things get called "the log", and they have different jobs.
 | Kept | Days or weeks | Until delivered, then pruned | Years, by record type |
 | Changeable | Rotated and deleted freely | Relayed and pruned | Never, short of a governed purge |
 
-[Structured logs](/docs/operations/observability#structured-logs) are for diagnosis: they're sampled, rotated and deliberately free of sensitive data, which is exactly what an auditor can't accept. [Events](/docs/architecture/events) tell other systems what happened. The same transaction that changes a subscription may write `subscription.updated` to the [transactional outbox](/docs/architecture/events#the-transactional-outbox), but the outbox is a delivery queue: its rows are relayed and pruned, the relay can publish twice, and the event is shaped for consumers, often without before values or personal data. An audit trail built from the outbox has gaps exactly when delivery fails, and misses everything that isn't worth an event: a denied attempt, a read, an edit no other service cares about.
+[Structured logs](/docs/observability/logs) are for diagnosis: they're sampled, rotated and deliberately free of sensitive data, which is exactly what an auditor can't accept. [Events](/docs/architecture/events) tell other systems what happened. The same transaction that changes a subscription may write `subscription.updated` to the [transactional outbox](/docs/architecture/events#the-transactional-outbox), but the outbox is a delivery queue: its rows are relayed and pruned, the relay can publish twice, and the event is shaped for consumers, often without before values or personal data. An audit trail built from the outbox has gaps exactly when delivery fails, and misses everything that isn't worth an event: a denied attempt, a read, an edit no other service cares about.
 
 My rule: **events tell other systems what happened; the audit store proves it.** They can be written in the same transaction, and usually are, but they're separate tables with separate owners.
 
@@ -35,7 +35,7 @@ The [OWASP Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/L
 - **What:** the action, the entity and its ID, and the **before and after** value of each changed field.
 - **When:** when it happened and when the server recorded it. They differ for offline clients and queued work, and both matter.
 - **Where:** the app and its version, the IP address, and for physical work the device and its location.
-- **Why:** a reason code where the action needs one (a manual credit, a ban, a time edit, a price override), the ticket or case it came from, and the [request ID](/docs/operations/observability#request-ids) that ties it to every other record from the same action.
+- **Why:** a reason code where the action needs one (a manual credit, a ban, a time edit, a price override), the ticket or case it came from, and the [request ID](/docs/observability/overview#request-ids) that ties it to every other record from the same action.
 - **Under which rules:** the version of the policy, price list, terms or model that applied, because a decision is only explainable against the rules that made it.
 
 A support agent compensating a player for a purchase that never arrived:

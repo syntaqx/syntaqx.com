@@ -7,7 +7,7 @@ part = "Running a Provider"
 tags = ["payments", "operations", "monitoring", "compliance", "incident-response", "retention"]
 +++
 
-A payments platform that's been built is not yet a platform that runs. Every day someone has to answer a merchant who can't find a payout, catch a file that didn't arrive, notice an issuer quietly declining more, file the reports the law requires, and know exactly what to do if card data ever leaks. This chapter is the operating layer: the tools and routines the rest of the volume assumes someone has. The general practice is in [Observability](/docs/operations/observability), [SLOs](/docs/operations/slos), [On-Call](/docs/operations/on-call), [Incident Response](/docs/operations/incident-response) and [Disaster Recovery](/docs/operations/disaster-recovery); what follows is what payments adds.
+A payments platform that's been built is not yet a platform that runs. Every day someone has to answer a merchant who can't find a payout, catch a file that didn't arrive, notice an issuer quietly declining more, file the reports the law requires, and know exactly what to do if card data ever leaks. This chapter is the operating layer: the tools and routines the rest of the volume assumes someone has. The general practice is in [Observability](/docs/observability/overview), [SLOs](/docs/operations/slos), [On-Call](/docs/operations/on-call), [Incident Response](/docs/operations/incident-response) and [Disaster Recovery](/docs/operations/disaster-recovery); what follows is what payments adds.
 
 ## The Internal Console
 
@@ -33,7 +33,7 @@ Money movement fails quietly. A job that didn't run throws no errors; it just le
 - **Things that expire.** TLS and network certificates, HSM and working keys, processor credentials, and the dates of network releases and account-range file loads are all quiet outages with a known date ([HSMs & Key Management](/books/payments/key-management#cryptoperiods-and-rotation), [Network Certification](/books/payments/network-certification)); alarm weeks ahead, not on the day.
 - **The monitor itself.** If the alarms go quiet, is everything fine or did the monitor die? It sends a heartbeat on every run, and something outside it pages when the heartbeat stops.
 
-Run the checks on the [banking calendar](/books/payments/treasury#the-banking-calendar), so a quiet weekend doesn't page anyone and a quiet Tuesday does. [Observability](/docs/operations/observability) covers the alerting machinery; these are the questions it should be asking.
+Run the checks on the [banking calendar](/books/payments/treasury#the-banking-calendar), so a quiet weekend doesn't page anyone and a quiet Tuesday does. [Observability](/docs/observability/overview) covers the alerting machinery; these are the questions it should be asking.
 
 ## Watching Approval Rates and Latency
 
