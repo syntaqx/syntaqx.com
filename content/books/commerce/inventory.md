@@ -121,7 +121,7 @@ A merchant selling on its own site, Amazon, Walmart, eBay and a retailer's drop-
 - **Prioritize the edge.** An item with 500 units can sync every hour; an item with 2 left should sync on every change. Rate limits on marketplace and platform APIs make that a priority queue, not a timer ([Limits](/docs/requests/rate-limiting#limits)).
 - **Expect lag and measure it.** commercetools documents up to 10 seconds before its own quantities reflect a change; a marketplace feed can take minutes. The time from a movement to every channel's acknowledgment is a metric, and the selling buffer is sized from it.
 
-The later Multichannel Listing & Feeds chapter covers the feed formats; here the point is that availability is a published number per channel, computed from the same parts, with a record of what was sent and when.
+[Multichannel Listing & Feeds](/books/commerce/multichannel-listing) covers the feed formats; here the point is that availability is a published number per channel, computed from the same parts, with a record of what was sent and when.
 
 ## Movements, Not Overwrites
 
@@ -301,7 +301,7 @@ Design notes:
 - **Reservations expire on read.** The available query ignores expired rows whether or not a job has marked them; a sweeper moves them to `expired` for tidiness, not correctness.
 - **Buffers are rules, not quantities.** A buffer stored as units on the level would have to be rewritten whenever the rule changed; a rule with priority and validity is looked up at computation time, the [Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule) shape.
 - **The version column is the compare-and-set.** Every integration that writes counts sends the version it read and fails on a mismatch, the same guarantee Shopify's `changeFromQuantity` gives.
-- **Publish what was sent.** Each availability publication to a channel (the item, the number, the time, the channel's acknowledgment) is worth keeping, either in the multichannel feed tables of the later Multichannel Listing & Feeds chapter or as events, so a marketplace oversell can be traced to a stale publish.
+- **Publish what was sent.** Each availability publication to a channel (the item, the number, the time, the channel's acknowledgment) is worth keeping, either in the feed tables of [Multichannel Listing & Feeds](/books/commerce/multichannel-listing#how-to-build-it) or as events, so a marketplace oversell can be traced to a stale publish.
 
 ## Auditing
 
