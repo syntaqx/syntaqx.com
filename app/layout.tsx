@@ -158,11 +158,17 @@ export default function RootLayout({
         <footer data-pagefind-ignore className="mt-auto border-t border-border">
           <div className="mx-auto grid max-w-7xl gap-10 px-6 py-10 md:grid-cols-[1fr_auto] md:gap-16">
             <div className="grid content-start gap-4">
-              <Link
-                href="/"
-                className="font-inst text-base lowercase tracking-wide text-foreground hover:text-accent"
-              >
-                syntaqx
+              <Link href="/" className="group flex w-fit items-center gap-2.5">
+                <Image
+                  src="/brand.svg"
+                  alt=""
+                  width={22}
+                  height={22}
+                  className="size-5.5"
+                />
+                <span className="font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
+                  syntaqx
+                </span>
               </Link>
               <div className="-ml-2.5 flex items-center">
                 {socials.map((s) => (
