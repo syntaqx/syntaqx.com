@@ -209,7 +209,8 @@ function Section({
                   href={item.href}
                   onClick={onNavigate}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className={rowClass(active)}
+                  // Unnumbered, the title lines up with the section's name.
+                  className={`${rowClass(active)} ${item.number === undefined ? "pl-7.5" : ""}`}
                 >
                   {item.number !== undefined && (
                     <span className={`w-5 shrink-0 font-mono text-[0.65rem] tabular-nums ${active ? "text-accent" : "text-dim"}`}>
