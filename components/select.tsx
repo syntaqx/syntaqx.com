@@ -19,6 +19,8 @@ interface SelectProps {
   onChange: (value: string) => void;
   options: (SelectOption | SelectGroup)[];
   label?: string;
+  // For selects without a visible label.
+  ariaLabel?: string;
   id?: string;
   // sm sits in option bars; md matches the height of text inputs.
   size?: "sm" | "md";
@@ -41,6 +43,7 @@ export function Select({
   onChange,
   options,
   label,
+  ariaLabel,
   id,
   size = "sm",
   className = "",
@@ -55,6 +58,7 @@ export function Select({
     >
       <RadixSelect.Trigger
         id={triggerId}
+        aria-label={ariaLabel}
         className={`inline-flex items-center justify-between gap-2 border border-border bg-background text-foreground transition-colors cursor-pointer outline-none hover:border-border-hover focus-visible:border-accent/50 data-[state=open]:border-accent/50 ${sizes[size]} ${className}`}
       >
         <RadixSelect.Value />

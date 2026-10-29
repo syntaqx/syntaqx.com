@@ -698,6 +698,7 @@ export default function JwtPage() {
 
         {mode === "encode" && (
           <Select
+            ariaLabel="Algorithm"
             size="md"
             className="font-mono"
             value={(() => {
