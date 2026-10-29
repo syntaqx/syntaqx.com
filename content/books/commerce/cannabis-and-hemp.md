@@ -37,11 +37,11 @@ Three patterns:
 - **April 28, 2026:** DEA withdrew the 2024 hearing notice and noticed a new hearing beginning June 29, 2026. The same day, a final rule moved FDA-approved drug products containing marijuana to Schedule III and created an expedited DEA registration process for holders of state medical marijuana licenses.
 - **May 4, 2026:** DEA separately listed hexahydrocannabinol (HHC) in Schedule I, noting it "was already controlled as a tetrahydrocannabinol."
 
-As of October 28, 2026, no final rule moving marijuana generally to Schedule III has been published in the Federal Register. <!-- source-gap: rescheduling-hearing-outcome | status | the outcome of DEA's marijuana rescheduling hearing that began June 29, 2026, and any final rule | closes with: a Federal Register final rule or the administrative law judge's recommendation | checked: 2026-10-28 -->
+As of October 28, 2026, no final rule moving marijuana generally to Schedule III has been published in the Federal Register. <!-- source-gap: rescheduling-hearing-outcome | status | the outcome of DEA's marijuana rescheduling hearing that began June 29, 2026, and any final rule (a Federal Register search of DEA documents on October 28, 2026 showed none) | closes with: a Federal Register final rule moving marijuana to Schedule III, or the administrative law judge's recommended decision on DEA's hearing docket | checked: 2026-10-28 -->
 
 **Taxes follow the schedule.** Section 280E of the tax code allows "No deduction or credit" for amounts paid in a business trafficking in Schedule I or II controlled substances, so a state-licensed dispensary pays federal income tax on gross profit without deducting rent or wages. Moving marijuana to Schedule III would take it outside 280E; that's the largest financial consequence of rescheduling for a dispensary, and it won't apply until a final rule does.
 
-**Banking runs on 2014 guidance.** FinCEN's guidance FIN-2014-G001 (February 14, 2014) lets banks serve marijuana-related businesses if they file suspicious activity reports labeled "Marijuana Limited," "Marijuana Priority" or "Marijuana Termination"; as of October 2026 it hasn't been rescinded. Federal legislation to protect banks serving state-legal cannabis businesses (the SAFER Banking Act) hadn't been enacted as of the sources here. <!-- source-gap: safer-banking-status | status | the SAFER Banking Act's status in the 119th Congress | closes with: the congress.gov bill page | checked: 2026-10-28 -->
+**Banking runs on 2014 guidance.** FinCEN's guidance FIN-2014-G001 (February 14, 2014) lets banks serve marijuana-related businesses if they file suspicious activity reports labeled "Marijuana Limited," "Marijuana Priority" or "Marijuana Termination"; as of October 2026 it hasn't been rescinded. Federal legislation to protect banks serving state-legal cannabis businesses hasn't been enacted: in the 119th Congress it's the SAFE Banking Act of 2026 (S. 4942), introduced June 24, 2026 and referred to the Senate Banking Committee, with no further action as of October 2026.
 
 ## State Markets
 
@@ -53,7 +53,7 @@ States run cannabis as licensed markets with their own regulator, license types 
 - **Manifests for every transfer.** The shipping licensee prepares a manifest in the tracking system before the product moves, with estimated departure and arrival; the receiver records acceptance and must reject on a mismatch (4 CCR 15049.2).
 - **Tags on everything.** Each harvest and manufactured batch gets a package tag recorded in the tracking system and affixed to the container, and other containers carry the unique ID (4 CCR 15048.5).
 
-Other states' numbers differ (purchase limits, reporting windows, whether sales report in real time), and some count a limit per transaction, per day or per rolling period. The point for a system is that every one of those is a rule with a jurisdiction and an effective date, never a constant. <!-- source-gap: other-state-cannabis-limits | missing | adult-use purchase limits and reporting windows in other states (e.g., Illinois 410 ILCS 705/10-10, Colorado MED rules) | closes with: the state statutes and regulator rules | checked: 2026-10-28 -->
+Other states' numbers differ, and the unit and the person matter. Illinois sets possession limits rather than a per-day purchase limit, different for residents (60 grams of flower, 10 grams of concentrate, 1,000 mg of THC in infused products) and nonresidents (30 grams, 5 grams, 500 mg), counts them cumulatively, and bars anyone from obtaining from a dispensary an amount that would put them over the limit (410 ILCS 705/10-10); so an Illinois point of sale needs the buyer's residency, not just their age. Reporting windows to state tracking systems differ too. The point for a system is that every one of those is a rule with a jurisdiction and an effective date, never a constant.
 
 ## Seed-to-Sale Tracking
 
@@ -104,9 +104,9 @@ Without card networks, a dispensary's payments stack is cash plus whatever its b
 - **No intermediates to consumers.** Intermediate products "marketed or sold as a final product or directly to an end consumer" aren't hemp.
 - **Industrial hemp** (stalk and fiber, grain and seed oil, microgreens, research) is a new category outside the limits.
 
-The law directed FDA to publish lists of naturally occurring cannabinoids, THC-class cannabinoids and similar-effect cannabinoids, and more detail on "container," within 90 days; whether it did wasn't confirmed in the sources here. Executive Order 14370 acknowledged that "some full-spectrum CBD products will once again be controlled as marijuana under the CSA when section 781 of Public Law 119-37 goes into effect," and asked for work with Congress on per-serving and per-container THC limits for full-spectrum CBD. <!-- source-gap: hemp-section-781-followups | status | whether FDA published the cannabinoid and container lists due under section 781, and whether any bill delayed or amended the November 12, 2026 effective date | closes with: the FDA publications and congress.gov | checked: 2026-10-28 -->
+The law directed FDA to publish, within 90 days, lists of naturally occurring cannabinoids, THC-class cannabinoids and similar-effect cannabinoids, and more detail on "container"; the Congressional Research Service reported that "as of September 28, 2026, such a list has not been published," and that bills to delay the new definition two more years (H.R. 7010, H.R. 7024, S. 3686) or repeal it (H.R. 6209) had been introduced, none enacted. Executive Order 14370 acknowledged that "some full-spectrum CBD products will once again be controlled as marijuana under the CSA when section 781 of Public Law 119-37 goes into effect," and asked for work with Congress on per-serving and per-container THC limits for full-spectrum CBD. <!-- source-gap: hemp-section-781-followups | status | whether FDA published the section 781 cannabinoid and container lists, or Congress delayed the November 12, 2026 effective date, after CRS's September 28, 2026 update | closes with: an FDA publication of the lists, or an enacted delay on congress.gov (H.R. 7010, H.R. 7024, S. 3686) | checked: 2026-10-28 -->
 
-For a seller of hemp-derived products, November 12, 2026 is a catalog event: every product's total THC per container (from its certificate of analysis) is checked against 0.4 mg, products with synthesized cannabinoids are pulled, and listings, inventory and subscriptions for products that no longer qualify are ended before the date. States have their own hemp rules on top, and some are stricter. <!-- source-gap: state-hemp-thc-laws | missing | state hemp-derived THC laws (e.g., Texas 2025 legislation, California's 2024 emergency regulations) | closes with: the state statutes and regulations | checked: 2026-10-28 -->
+For a seller of hemp-derived products, November 12, 2026 is a catalog event: every product's total THC per container (from its certificate of analysis) is checked against 0.4 mg, products with synthesized cannabinoids are pulled, and listings, inventory and subscriptions for products that no longer qualify are ended before the date. States have their own hemp rules on top, and some are stricter. California's AB 8 (Chapter 248, Statutes of 2025) bars, from January 1, 2026, industrial hemp raw extract in food, beverages and dietary supplements unless it's more than 99% pure and contains no THC or synthetic cannabinoids, and from January 1, 2028 counts online sales to customers in the state as retail of industrial hemp under its rules; a seller shipping into California needs that state's rule in the same catalog check.
 
 ## How to Build It
 
@@ -246,6 +246,8 @@ Design notes:
 - [FinCEN: BSA expectations regarding marijuana-related businesses (FIN-2014-G001)](https://www.fincen.gov/resources/statutes-regulations/guidance/bsa-expectations-regarding-marijuana-related-businesses), the three marijuana SAR types
 - [Public Law 119-37 (govinfo)](https://www.govinfo.gov/content/pkg/PLAW-119publ37/html/PLAW-119publ37.htm), section 781's hemp redefinition, the 365-day effective date, the 0.4 mg per container limit and the container definition
 - [FDA: Regulation of cannabis and cannabis-derived products, including CBD](https://www.fda.gov/news-events/public-health-focus/fda-regulation-cannabis-and-cannabis-derived-products-including-cannabidiol-cbd), THC and CBD excluded from food and supplements
+- [S. 4942, SAFE Banking Act of 2026 (congress.gov)](https://www.congress.gov/bill/119th-congress/senate-bill/4942/all-actions), introduced and referred June 24, 2026
+- [Congressional Research Service: Changes to the Statutory Definition of Hemp and Implications for Agricultural Policy (IF13136, updated September 28, 2026)](https://www.congress.gov/crs-product/IF13136), FDA's unpublished lists and the delay and repeal bills
 
 **California**
 
@@ -254,6 +256,11 @@ Design notes:
 - [4 CCR 15049.2 (Cornell LII)](https://www.law.cornell.edu/regulations/california/4-CCR-15049.2), shipping manifests through track and trace
 - [4 CCR 15048.5 (Cornell LII)](https://www.law.cornell.edu/regulations/california/4-CCR-15048.5), package tags and unique IDs
 - [California Department of Cannabis Control: What's legal](https://cannabis.ca.gov/consumers/whats-legal/), adult-use and medicinal ages
+- [California AB 8 (2025), Chapter 248](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260AB8), hemp raw extract in food, beverages and supplements, and online hemp retail
+
+**Other states**
+
+- [410 ILCS 705/10-10](https://www.ilga.gov/Documents/legislation/ilcs/documents/041007050K10-10.htm), Illinois possession limits for residents and nonresidents
 
 **Tracking systems and payments**
 
