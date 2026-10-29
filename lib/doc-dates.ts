@@ -82,6 +82,9 @@ function parseHistory(log: string, shallowBoundaries: ReadonlySet<string>) {
   return { modified: dates, added };
 }
 
+// The resume's data: /resume's structured data dates from its last change.
+const RESUME = "lib/resume.ts";
+
 let cache: { modified: Map<string, string>; added: Map<string, string> } | undefined;
 
 function git(args: string[]): string {
@@ -98,7 +101,7 @@ export function docDates(): { modified: Map<string, string>; added: Map<string, 
         ? readFileSync(shallowFile, "utf8").split("\n").map((s) => s.trim()).filter(Boolean)
         : [],
     );
-    const log = git(["log", `--format=${SEP}%H${SEP}%cI`, "--name-status", "-M", "--", "content/docs", "content/books"]);
+    const log = git(["log", `--format=${SEP}%H${SEP}%cI`, "--name-status", "-M", "--", "content/docs", "content/books", RESUME]);
     cache = parseHistory(log, boundaries);
   } catch {
     // No git (or no repository) where this runs: show no dates.
@@ -115,4 +118,9 @@ export function docLastModified(slug: string, root: "docs" | "books" = "docs"): 
 /** When `content/<root>/<slug>.md` was first added, or undefined if that isn't known. */
 export function docFirstPublished(slug: string, root: "docs" | "books" = "docs"): string | undefined {
   return docDates().added.get(`content/${root}/${slug}.md`);
+}
+
+/** When the resume's data last changed, or undefined if that isn't known. */
+export function resumeLastModified(): string | undefined {
+  return docDates().modified.get(RESUME);
 }

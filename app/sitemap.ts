@@ -5,6 +5,7 @@ import { getAllPosts } from "@/lib/posts";
 import { getAllBookChapters, getAllDocs } from "@/lib/docs";
 import { docLastModified } from "@/lib/doc-dates";
 import { BOOKS } from "@/lib/books";
+import { glossaryParts, isGlossary } from "@/lib/glossary";
 import { SITE_URL } from "@/lib/constants";
 
 /** Recursively find all static page routes under app/. */
@@ -71,5 +72,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  return [...staticPages, ...docs, ...covers, ...chapters, ...posts];
+  // A glossary's parts are pages of their own, dated by the glossary's file.
+  const glossaryPages = getAllBookChapters()
+    .filter(isGlossary)
+    .flatMap((glossary) => {
+      const modified = docLastModified(glossary.slug, "books");
+      return glossaryParts(glossary).parts.map((part) => ({
+        url: `${baseUrl}/books/${glossary.slug}/${part.slug}`,
+        ...(modified && { lastModified: new Date(modified) }),
+      }));
+    });
+
+  return [...staticPages, ...docs, ...covers, ...chapters, ...glossaryPages, ...posts];
 }

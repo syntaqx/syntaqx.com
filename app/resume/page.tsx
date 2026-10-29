@@ -4,6 +4,7 @@ import { pageMetadata } from "@/lib/metadata";
 import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
 import { profilePage } from "@/lib/schema";
+import { resumeLastModified } from "@/lib/doc-dates";
 import { PUBLIC_CONTACT, resume } from "@/lib/resume";
 
 export const metadata = pageMetadata(
@@ -21,7 +22,9 @@ export default function ResumePage() {
       <JsonLd
         data={profilePage({
           path: "/resume",
+          headline: `Resume of ${resume.name}`,
           description: resume.summary[0],
+          dateModified: resumeLastModified(),
           crumbs: [{ name: "Resume", path: "/resume" }],
         })}
       />

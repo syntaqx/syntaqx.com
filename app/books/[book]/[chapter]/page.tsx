@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
 import { getAllBookChapters, getBookChapters } from "@/lib/docs";
 import { getBook } from "@/lib/books";
+import { glossaryIndex, isGlossary } from "@/lib/glossary";
 import { titleIn } from "@/lib/metadata";
 import { bookRef } from "@/lib/schema";
 import { ChapterCount, DocArticle } from "@/components/doc-article";
@@ -60,7 +61,8 @@ export default async function ChapterPage({ params }: Props) {
 
   return (
     <DocArticle
-      doc={chapter}
+      // A glossary's parts are pages of their own (lib/glossary.ts): its page lists them.
+      doc={isGlossary(chapter) ? { ...chapter, content: glossaryIndex(chapter) } : chapter}
       path={`/books/${chapter.slug}`}
       source={`content/books/${chapter.slug}.md`}
       published={docFirstPublished(chapter.slug, "books")}
