@@ -126,7 +126,7 @@ Rules for the integration:
 
 ## SLAs and What They Measure
 
-A 3PL contract is mostly its SLA and its liability clauses. The measures recur across providers and in WERC's DC Measures benchmarking study, whose 2026 report ranks on-time shipments first and dock-to-stock time second among warehouse metrics, with order picking accuracy also in its top ten (the ranking here comes from a summary of the report, not WERC's own page). <!-- source-gap: werc-dc-measures-2026 | secondary | WERC 2026 DC Measures ranking (on-time shipments first, dock-to-stock second, picking accuracy seventh) and best-in-class values (on-time at least 99.5%, dock-to-stock under 3.1 hours, picking accuracy at least 99.7%) | closes with: WERC's own DC Measures report or page, which returned 403 | checked: 2026-10-28 -->
+A 3PL contract is mostly its SLA and its liability clauses. The measures recur across providers and in WERC's DC Measures benchmarking study, whose 2026 report ranks on-time shipments first and dock-to-stock time second among warehouse metrics, with order picking accuracy also in its top ten (the ranking here comes from a summary of the report, not WERC's own page). <!-- source-gap: werc-dc-measures-2026 | secondary | WERC 2026 DC Measures ranking (on-time shipments first, dock-to-stock second, picking accuracy seventh) and best-in-class values (on-time at least 99.5%, dock-to-stock under 3.1 hours, picking accuracy at least 99.7%) | closes with: WERC's own DC Measures report or page; werc.org returned 403 | checked: 2026-10-29 -->
 
 | Measure | What it means | Published examples |
 | --- | --- | --- |

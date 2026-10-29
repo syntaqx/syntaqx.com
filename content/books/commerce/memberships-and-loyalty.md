@@ -21,7 +21,7 @@ As of October 2026, from the companies' filings and pages:
 | **Amazon Prime** | Not stated in the filings; Amazon's price pages weren't retrievable | Subscription services net sales of $13.1 billion in the fourth quarter of 2025, up 14%; Prime has no reported member count | Prime is "a single stand-ready obligation" recognized over the subscription period |
 | **Walmart+ and Sam's Club** | Sam's Club $50 (Club), $110 (Plus); Walmart+ price pages weren't retrievable | "Membership and other income" of $6.75 billion in fiscal 2026, Walmart U.S. growth "primarily driven by double-digit growth in membership fee revenue from Walmart+" | Over the membership term; the line also holds rental income, recycling and gift card breakage |
 
-<!-- source-gap: prime-and-walmart-plus-prices | missing | Amazon Prime ($14.99 a month, $139 a year) and Walmart+ ($12.95 a month, $98 a year) list prices | closes with: amazon.com Prime and walmart.com Walmart+ pages readable without bot checks, or a company release stating current prices | checked: 2026-10-28 -->
+<!-- source-gap: prime-and-walmart-plus-prices | missing | Amazon Prime ($14.99 a month, $139 a year) and Walmart+ ($12.95 a month, $98 a year) list prices | closes with: an Amazon or Walmart release or filing stating current prices; amazon.com returned 503 and walmart.com a bot check, and only press reports carry the figures | checked: 2026-10-29 -->
 
 Three patterns:
 

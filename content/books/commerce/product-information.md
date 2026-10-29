@@ -93,7 +93,7 @@ My rule: one attribute value per fact, with channel overrides only where the cha
 
 ## Images and Media
 
-Images are the content that converts and the content channels police hardest. As of October 2026 Google requires product images to be the product itself, without overlays, watermarks or borders, no larger than 64 megapixels or 16 MB, recommends 1,500 by 1,500 pixels, and has announced "new image size requirements of at least 500 x 500 pixels for all products beginning January 31, 2027." Marketplaces have their own main-image rules (Amazon's white-background main image is the best known), published behind seller logins. <!-- source-gap: amazon-image-requirements | missing | Amazon's main image requirements (background, fill, minimum size) | closes with: a public Amazon page stating product image requirements | checked: 2026-10-28 -->
+Images are the content that converts and the content channels police hardest. As of October 2026 Google requires product images to be the product itself, without overlays, watermarks or borders, no larger than 64 megapixels or 16 MB, recommends 1,500 by 1,500 pixels, and has announced "new image size requirements of at least 500 x 500 pixels for all products beginning January 31, 2027." Marketplaces have their own main-image rules (Amazon's white-background main image is the best known), published behind seller logins. <!-- source-gap: amazon-image-requirements | missing | Amazon's main image requirements (background, fill, minimum size) | closes with: a public Amazon page stating product image requirements; Seller Central help page G1881 returns only a sign-in shell to fetchers | checked: 2026-10-29 -->
 
 The media model that serves every channel:
 
@@ -125,7 +125,7 @@ Some content on a product page is required by law, and the law increasingly reac
 | **California Proposition 65** | A warning "on the product display page," a "clearly marked hyperlink using the word 'WARNING'," or a warning before the purchase completes; not compliant "if the purchaser must search for it" | 27 CCR 25602(b) |
 | **Fair Packaging and Labeling Act** | Identity, the name and place of business of the manufacturer, packer or distributor, and net quantity on the package; the listing's net quantity has to match | 15 U.S.C. 1453 |
 
-The EU's General Product Safety Regulation (Regulation (EU) 2023/988) requires online offers to show the manufacturer's name and contact address, the responsible person in the EU where the manufacturer is outside it, information identifying the product (including a picture and type), and any warning or safety information in the consumer's language. The regulation's text couldn't be retrieved from EUR-Lex when this was checked, so the list is the general shape, without article-level detail. <!-- source-gap: eu-gpsr-article-19 | missing | the exact information GPSR Article 19 requires in distance sales offers | closes with: EUR-Lex text of Regulation (EU) 2023/988 Article 19 | checked: 2026-10-28 -->
+The EU's General Product Safety Regulation (Regulation (EU) 2023/988, applying from December 13, 2024) sets the minimum for any product offered online or through other distance sales in Article 19: the offer must "clearly and visibly indicate" (a) the manufacturer's name, registered trade name or trade mark and its postal and electronic address; (b) where the manufacturer is outside the Union, the name, postal and electronic address of the responsible person in the EU; (c) "information allowing the identification of the product, including a picture of it, its type and any other product identifier"; and (d) any warning or safety information that goes on the product, its packaging or accompanying documents, in a language consumers in the member state can easily understand. Each is a field on the listing, and (b) and (d) vary by market.
 
 What this means for the content model:
 
@@ -322,6 +322,7 @@ Design notes:
 
 **Law**
 
+- [EUR-Lex: Regulation (EU) 2023/988 (GPSR)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R0988), Article 19's information for distance sales and the December 13, 2024 application date
 - [16 CFR 303.34: Country of origin in mail order advertising](https://www.law.cornell.edu/cfr/text/16/303.34), the textile origin statement
 - [FTC: Threading Your Way Through the Labeling Requirements Under the Textile and Wool Acts](https://www.ftc.gov/business-guidance/resources/threading-your-way-through-labeling-requirements-under-textile-wool-acts), origin and fiber disclosure in internet advertising
 - [15 U.S.C. 1278: Cautionary labeling for small parts](https://www.law.cornell.edu/uscode/text/15/1278), statements in internet advertising
