@@ -670,20 +670,20 @@ Each later chapter extends a defined part of this spine. Chapters already publis
 | EDI (`edi`) | `documents` | `edi_interchanges`, `edi_partner_maps`, `functional_acks` |
 | B2B Commerce (`b2b-commerce`) | `companies`, `company_contacts`, `price_lists` | `company_locations`, `payment_terms`, `credit_limits`, `quotes`, `quote_lines`, `approval_rules`, `punchout_sessions` |
 | Drop Ship & Print on Demand (`drop-ship-and-print-on-demand`) | `suppliers`, `fulfillments`, `locations` | `supplier_routes`, `print_files` |
-| Point of Sale (`point-of-sale`) | `orders`, `order_payments`, `locations` | `pos_devices`, `tenders`, `receipts` |
-| Store Operations (`store-operations`) | `locations`, `inventory_levels` | `staff`, `staff_roles`, `cash_drawers`, `drawer_counts`, `shrink_events` |
-| Restaurants & Food Service (`restaurants`) | `orders`, `items`, modifiers | `dining_tables`, `kitchen_tickets`, `kitchen_stations`, `tip_pools` |
+| [Point of Sale](/books/commerce/point-of-sale#how-to-build-it) | `orders`, `order_payments`, `locations` | `pos_devices`, `tenders`, `order_voids`, `sales_receipts` |
+| [Store Operations](/books/commerce/store-operations#how-to-build-it) | `locations`, `inventory_levels`, `inventory_movements` | `staff`, `staff_roles`, `staff_role_assignments`, `cash_drawers`, `register_sessions`, `cash_movements`, `drawer_counts`, `manager_approvals`, `shrink_events` |
+| [Restaurants & Food Service](/books/commerce/restaurants#how-to-build-it) | `orders`, `order_lines`, `order_charges`, `items`, modifiers | `dining_tables`, `table_sessions`, `checks`, `check_lines`, `kitchen_stations`, `item_stations`, `kitchen_tickets`, `kitchen_ticket_lines`, `tip_pools`, `tip_distributions` |
 | [The Delivery Landscape](/books/commerce/delivery-landscape#how-to-build-it) | `merchants`, `locations` | `sales_channels`, `merchant_channel_enrollments`, `delivery_providers` |
 | [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#how-to-build-it) | `merchants`, `locations`, `items`, `location_items`, modifiers, `order_lines` | `listing_agreements`, `location_hours`, `location_pauses`, `menus`, `menu_hours`, `menu_categories`, `menu_category_items`, `channel_prices`, `menu_publications`, `availability_changes`, `catalog_imports`, `substitution_preferences`, `line_substitutions` |
 | [Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#how-to-build-it) | `orders`, `fulfillments` | `order_status_changes`, `prep_estimates`, `fulfillment_events`, `delivery_offers`, `batches`, `batch_stops` |
 | [Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law#how-to-build-it) | `order_charges`, `locations` | `commission_plans`, `fee_rules`, `price_displays`, `merchant_statements` |
 | [Subscriptions & Loyalty](/books/commerce/delivery-subscriptions#how-to-build-it) | `customers`, `order_charges` | `membership_plans`, `memberships`, `membership_periods`, `membership_cancellations`, `benefit_applications` |
 | [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#how-to-build-it) | `orders`, `order_lines`, `customers` | `order_issues`, `issue_lines`, `issue_resolutions`, `error_charges`, `error_charge_disputes`, `identity_links`, `promotion_redemptions` |
-| Alcohol, Tobacco & Age-Restricted Goods (`age-restricted-goods`) | `items`, `orders`, `fulfillments` | `restricted_categories`, `age_verifications`, `shipping_eligibility_rules` |
-| Cannabis & Hemp (`cannabis-and-hemp`) | `inventory_levels`, `orders` | `compliance_tags`, `state_reporting_events`, `purchase_limits` |
-| Pesticides, Chemicals & Hazmat (`pesticides-chemicals-and-hazmat`) | `items`, `shipments`, `documents` | `product_registrations`, `hazmat_classifications`, `prop65_warnings` |
-| Product Safety, Compliance & Recalls (`product-safety-and-recalls`) | `items`, `documents` | `certificates`, `recalls`, `recall_notifications`, `safety_incidents` |
-| Automotive Retail (`automotive-retail`) | `items`, `orders` | `vehicles`, `deals`, `fi_products`, `title_registrations` |
+| [Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#how-to-build-it) | `items`, `orders`, `fulfillments` | `restricted_categories`, `item_restricted_categories`, `seller_licenses`, `shipping_eligibility_rules`, `age_verifications`, `pact_shipment_reports` |
+| [Cannabis & Hemp](/books/commerce/cannabis-and-hemp#how-to-build-it) | `inventory_movements`, `order_lines` | `compliance_tags`, `state_reporting_events`, `purchase_limits`, `item_limit_equivalents`, `lab_certificates` |
+| [Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#how-to-build-it) | `items`, `shipments`, `documents` | `product_registrations`, `hazmat_classifications`, `prop65_warnings`, `safety_data_sheets`, `sds_deliveries` |
+| [Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls#how-to-build-it) | `items`, `documents` | `safety_rules`, `item_safety_rules`, `certificates`, `regulatory_listings`, `safety_incidents`, `recalls`, `recall_items`, `recall_notifications` |
+| [Automotive Retail](/books/commerce/automotive-retail#how-to-build-it) | `items`, `orders` | `vehicles`, `deals`, `trade_ins`, `fi_products`, `deal_fi_products`, `vehicle_documents`, `title_registrations` |
 | Email, SMS & Lifecycle Marketing (`email-sms-and-lifecycle`) | `customers`, `marketing_consents` | `campaigns`, `flows`, `message_sends`, `suppressions` |
 | Acquisition & Attribution (`acquisition-and-attribution`) | `acquisition_spend`, `orders` | `touchpoints`, `attributions`, `affiliates` |
 | Customer Service (`customer-service`) | `orders`, `order_issues` | `tickets`, `ticket_messages` |

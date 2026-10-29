@@ -65,7 +65,7 @@ A pickup order's lifecycle adds steps a shipped order doesn't have. Shopify's do
 3. **Staged** in a pickup area, locker or cold storage, with a location code so an associate can find it.
 4. **Ready,** with the notice to the customer and a pickup code or QR code.
 5. **Checked in,** when the customer says they've arrived (in the app, by text or at the counter); for curbside, with a parking spot or vehicle description.
-6. **Handed over** after checking the code or an ID, which is the moment of delivery for the order and, for age-restricted goods, the moment the age check happens (Alcohol, Tobacco & Age-Restricted Goods covers the rules).
+6. **Handed over** after checking the code or an ID, which is the moment of delivery for the order and, for age-restricted goods, the moment the age check happens ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#age-verification-at-checkout-and-at-delivery) covers the rules).
 7. **Picked up,** or **abandoned** after a hold period, when the order is cancelled, refunded and its stock returned to the shelf.
 
 **Abandonment is a policy with a clock.** A store holds a pickup order for a set number of days, reminds the customer, then cancels and restocks. The hold period is a rule per merchant or per category (shorter for groceries), and the reminder and cancellation are scheduled jobs off a stored deadline ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). Until it's restocked, the staged unit is committed stock nobody can sell.
