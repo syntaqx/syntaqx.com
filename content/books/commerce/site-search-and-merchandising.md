@@ -10,7 +10,7 @@ tags = ["commerce", "search", "merchandising", "facets", "recommendations", "per
 
 Shoppers who search tell the store exactly what they want, in two or three words: "iphone 17 case," "clear," "mag safe," "a1234." Commerce search has to turn those words into a ranked page of items that are in stock, sellable in the shopper's market at a price they can see, filtered by the facets they click, and ordered partly by relevance and partly by what the merchant wants sold. It is a different problem from web search: the corpus is small and structured, the queries are short, model numbers and SKUs matter as much as words, an empty result page is a lost sale, and the ranking is a business decision that a merchandiser changes every week.
 
-This chapter covers the search engines commerce runs on, indexing a catalog, relevance and ranking, synonyms and query understanding, facets and filters, collections and category pages, merchandising rules, recommendations, personalization and its limits, and measuring search. Search on marketplaces of people and services, with its availability and geo ranking, is User-Generated Platforms' [Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking); the storefront's faceted URLs, canonical tags and caching are the later Storefronts chapter's; paid placement in a retailer's search is [Retail Media & Marketplace Ads](/books/commerce/retail-media)'s. The chapter extends `products` and `items` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and adds `collections`, `collection_items`, `search_synonyms` and `merchandising_rules`.
+This chapter covers the search engines commerce runs on, indexing a catalog, relevance and ranking, synonyms and query understanding, facets and filters, collections and category pages, merchandising rules, recommendations, personalization and its limits, and measuring search. Search on marketplaces of people and services, with its availability and geo ranking, is User-Generated Platforms' [Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking); the storefront's faceted URLs, canonical tags and caching are [Storefronts](/books/commerce/storefronts#commerce-seo)'s; paid placement in a retailer's search is [Retail Media & Marketplace Ads](/books/commerce/retail-media)'s. The chapter extends `products` and `items` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and adds `collections`, `collection_items`, `search_synonyms` and `merchandising_rules`.
 
 ## How the Platforms Do It
 
@@ -87,7 +87,7 @@ Facets are the filters beside the results (brand, price, color, size, compatibil
 - **Facets by category.** Screen size is a facet for monitors and noise for cables. Facets should come from the category's attribute requirements, not one global list ([Taxonomies](/books/commerce/product-information#taxonomies)).
 - **Variant-aware filtering.** "Size M, in stock" must mean that one variant is both size M and in stock, not that the product has some M variant and some in-stock variant. Nested variant documents, or one document per variant, give the right answer; flattened arrays don't.
 
-Faceted navigation also generates URLs, and a crawler that follows every combination of filters can index millions of near-duplicate pages; canonical URLs and crawl rules for facets are the later Storefronts chapter's.
+Faceted navigation also generates URLs, and a crawler that follows every combination of filters can index millions of near-duplicate pages; canonical URLs and crawl rules for facets are in [Commerce SEO](/books/commerce/storefronts#commerce-seo).
 
 ## Collections and Category Pages
 
@@ -136,7 +136,7 @@ Personalizing **order** is different from personalizing **price**. Reordering re
 Personalization still has rules of its own:
 
 - **Recommender transparency.** The EU Digital Services Act requires online platforms that use recommender systems to explain their main parameters, and very large platforms to offer an option not based on profiling ([Feed Rules from Regulation](/books/user-generated-platforms/feeds-and-recommendations#feed-rules-from-regulation)). A marketplace's product recommendations are recommender systems in that sense; for any store, a non-profiled default is cheap to build in.
-- **Consent and privacy.** Behavioral data for personalization is personal data under state privacy laws and GDPR; the consent model is the later Customers, Accounts & Privacy chapter's.
+- **Consent and privacy.** Behavioral data for personalization is personal data under state privacy laws and GDPR; the consent model is in [Customers, Accounts & Privacy](/books/commerce/customers-and-accounts#privacy-law).
 - **Query logs are personal data.** A search history says what someone was looking for, so raw queries tied to a shopper are kept briefly and aggregated ([Query Logs Are Personal Data](/books/user-generated-platforms/search-and-discovery#query-logs-are-personal-data)).
 
 ## Measuring Search

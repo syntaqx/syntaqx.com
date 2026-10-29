@@ -70,7 +70,7 @@ The schedule that works in practice is short and spaced: retry soft declines ove
 
 ## Dunning
 
-Retries recover some soft declines on their own. The rest need the customer, which is what dunning is: telling them, making it easy to fix, and deciding what happens to the service meanwhile. The states, notices and grace periods are the same in every industry and live in [Subscriptions & Recurring Billing](/docs/payments/subscriptions#dunning). The card-specific part: bring the customer back on-session, with a link to update the card where they can complete any authentication the issuer wants. A new card saved there is a new initial CIT, with a new network transaction ID.
+Retries recover some soft declines on their own. The rest need the customer, which is what dunning is: telling them, making it easy to fix, and deciding what happens to the service meanwhile. The states, notices and grace periods are the same in every industry and live in [Subscriptions & Recurring Billing](/docs/payments/subscriptions#dunning). The card-specific part: bring the customer back on-session, with a link to update the card where they can complete any authentication the issuer wants. A new card saved there is a new initial CIT, with a new network transaction ID. Product subscriptions add a renewal amount that changes with every swap and add-on ([Dunning and Account Updaters](/books/commerce/subscription-commerce#dunning-and-account-updaters)).
 
 ## Trials and Cancellation
 

@@ -221,7 +221,8 @@ CREATE TABLE deferred_revenue_schedules (  -- value received now, earned later
   source_kind      TEXT NOT NULL CHECK (source_kind IN ('order_line', 'gift_card',
                      'store_credit', 'loyalty_grant', 'membership_fee', 'prepaid_period',
                      'customer_deposit')),
-  source_id        UUID NOT NULL,          -- the order line, card, ledger entry or period
+  source_id        UUID NOT NULL,          -- the order line, card, ledger entry,
+                                           -- deferred_fee_schedules or prepaid_periods row
   obligation       TEXT NOT NULL CHECK (obligation IN ('point_in_time', 'over_term',
                      'per_shipment', 'stored_value')),
   allocated_amount BIGINT NOT NULL,        -- after allocation by standalone selling price
@@ -240,12 +241,12 @@ CREATE TABLE payout_reconciliations (    -- one deposit, proven against its tran
   connected_system_id UUID NOT NULL REFERENCES connected_systems (id),
   payout_ref       TEXT NOT NULL,          -- the processor's payout ID or the settlement ID
   settlement_id    UUID REFERENCES marketplace_settlements (id),
-  expected_net     BIGINT NOT NULL,        -- from our captures, refunds and expected fees
+  expected_net     BIGINT NOT NULL,        -- from the store's captures, refunds and expected fees
   reported_net     BIGINT NOT NULL,        -- from the processor's or marketplace's report
   deposited        BIGINT,                 -- from the bank statement
   currency         CHAR(3) NOT NULL,
-  unmatched_ours   INT NOT NULL DEFAULT 0, -- our rows with no reported transaction
-  unmatched_theirs INT NOT NULL DEFAULT 0, -- reported transactions with no row of ours
+  unmatched_ours   INT NOT NULL DEFAULT 0, -- the store's rows with no reported transaction
+  unmatched_theirs INT NOT NULL DEFAULT 0, -- reported transactions with no row here
   fee_variance     BIGINT NOT NULL DEFAULT 0,
   status           TEXT NOT NULL CHECK (status IN ('open', 'matched', 'variance',
                      'resolved')),
@@ -297,7 +298,7 @@ Design notes:
 - **Lines carry the commerce dimensions.** Order, line, charge, location, channel and jurisdiction on every line are what let a summary posted to the ERP be drilled back to orders, and margin by channel be computed from the books instead of beside them ([Business Models & Unit Economics](/books/commerce/business-models#how-to-build-it)).
 - **Layers are per book.** A merchant on LIFO for tax and FIFO for its lenders, or reporting under both GAAP and IFRS, has two sets of layers from the same movements; the movements never fork.
 - **Revaluations are draws.** A late freight invoice allocated to a receipt line becomes a `revaluation` draw: the units still on hand get a higher cost, the units already shipped post their share to COGS now.
-- **Schedules are the commerce form of the playbook's revenue lines.** A deferred schedule names its source, its obligation and the event that releases it; recognition is a journal entry whose lines point back at the schedule, so the deferred balance is a sum, never a column ([Recognition Schedules](/docs/payments/accounting#recognition-schedules)).
+- **Schedules are the commerce form of the playbook's revenue lines.** A deferred schedule names its source, its obligation and the event that releases it; recognition is a journal entry whose lines point back at the schedule, so the deferred balance is a sum, never a column ([Recognition Schedules](/docs/payments/accounting#recognition-schedules)). Memberships and prepaid plans keep their operational rows in their own chapters (`deferred_fee_schedules` in [Memberships & Loyalty](/books/commerce/memberships-and-loyalty#how-to-build-it), `prepaid_periods` in [Subscription Commerce](/books/commerce/subscription-commerce#how-to-build-it)); the schedule here points at those rows through `source_id` and adds the allocation and the policy version, so neither chapter copies the other.
 - **Reconcile per payout, explain per transaction.** A reconciliation row is matched only when expected, reported and deposited agree and nothing is unmatched on either side; anything else opens a break for the Payments volume's matching engine and a person.
 - **Policy lives in versions.** When control passes, the shipping election, the returns rate, the breakage rate and the cost method are each a versioned rule recorded on the entries they produced, so finance can change a policy and see exactly which entries it affects.
 

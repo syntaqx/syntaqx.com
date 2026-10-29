@@ -127,7 +127,7 @@ Gyms and clubs (7997, membership clubs) live on recurring dues and churn, and th
 
 ## Restaurants and Hospitality
 
-Restaurants and hotels charge amounts that change after the card is authorized, and the networks write tolerances for exactly that.
+Restaurants and hotels charge amounts that change after the card is authorized, and the networks write tolerances for exactly that. The restaurant's own side, tip pools and service charges under wage law, is the Commerce volume's [Tips, Service Charges and the Law](/books/commerce/restaurants#tips-service-charges-and-the-law).
 
 - **Tips and tolerances.** At a restaurant the card is authorized for the bill and captured later for the bill plus tip. Visa's rules allow the clearing amount to exceed the authorization by a set margin by merchant type: from February 21, 2026, up to 30% in the US for caterers (5811), restaurants (5812) and fast food (5814); up to 20% for bars (5813), beauty and barber shops (7230), spas (7298) and taxis (4121); up to 15% for lodging and cruise lines. Mastercard sets its own tolerances, and has changed its card-not-present restaurant tolerance more than once, so tolerances are per network and per code, as data. A tip above the tolerance needs a new authorization, or it's a chargeback waiting to happen.
 - **Tip adjustment is a state.** A payment is `authorized`, then `tip_adjusted`, then captured in the batch; the adjustment records who entered it and when, and the batch close is the deadline. Visa's rules say an estimated authorization must not include tips, so the tip never goes into the hold.

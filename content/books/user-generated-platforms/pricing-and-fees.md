@@ -59,6 +59,8 @@ A marketplace fee model answers four questions, and the answers are data, versio
 3. **At what rate:** flat, tiered by the host's revenue or the item's price, with floors per night or per order, caps per order, and surcharges for performance.
 4. **Under which program:** standard, referral (the host brought the guest), promotional, or a negotiated rate for professional hosts and hotels.
 
+Product marketplaces answer the same four questions with referral fees by category, per-order fees and fulfillment fees, compared in the Commerce volume's [Walmart, eBay, Etsy, TikTok Shop & Others](/books/commerce/other-marketplaces).
+
 The Payments volume's [Pricing Per Merchant](/books/payments/software-platforms#pricing-per-merchant) covers fee schedules and overrides for payment fees; marketplace fees use the same discipline: a fee program is versioned with an effective range, a host's applicable program is resolved at booking time, and the booking keeps the program version it was priced under, so a later fee change never reprices an existing booking ([Changing Prices Without Losing the Record](/books/payments/software-platforms#changing-prices-without-losing-the-record)).
 
 ### Merchant of Record and the Money Path
@@ -94,7 +96,7 @@ A split schedule is a set of installments with due dates, each a payment against
 
 ## All-In Prices
 
-Two regimes now govern how marketplaces show prices in the US, and they reach different marketplaces:
+Two regimes now govern how marketplaces show prices in the US, and they reach different marketplaces (drip pricing at stores selling goods is the Commerce volume's [Fees and Drip Pricing](/books/commerce/online-consumer-protection#fees-and-drip-pricing)):
 
 **The FTC Rule on Unfair or Deceptive Fees** (16 CFR Part 464), effective May 12, 2025, covers live-event tickets and short-term lodging, which includes vacation rentals and platform home shares. The FTC's guidance:
 

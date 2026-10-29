@@ -6,7 +6,7 @@ order = 415
 tags = ["architecture", "migration", "cutover", "legacy", "data-portability", "reconciliation"]
 +++
 
-Every system is eventually replaced: an in-house monolith by services, one billing platform by another, a hosted identity provider by a different one, a spreadsheet by software. The replacement is rarely the hard part. The hard part is that the old system is running the business while you build the new one, holding state that is in flight (renewals that bill tonight, sessions that are signed in, work that is half done), and every customer will notice a mistake before you do.
+Every system is eventually replaced: an in-house monolith by services, one billing platform by another, a hosted identity provider by a different one, a spreadsheet by software. The replacement is rarely the hard part. The hard part is that the old system is running the business while you build the new one, holding state that is in flight (renewals that bill tonight, sessions that are signed in, work that is half done), and every customer will notice a mistake before you do. A store's version, platform to platform, is the Commerce volume's [Replatforming & Migration](/books/commerce/replatforming).
 
 My rule: **replace a live system in slices, prove each slice against the old system before it takes over, and never let both systems act on the same customer at once.** This chapter is how: choosing a cutover, mapping identities, loading without side effects, running the new system dark, reconciling, keeping a way back, and making sure the next replacement, away from whatever you pick now, is possible too.
 

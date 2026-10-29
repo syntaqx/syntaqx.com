@@ -38,7 +38,7 @@ The core model's `carts` and `cart_lines` already hold the essentials: a cart at
 - **Carts merge on sign-in.** A shopper with an account cart from last week who builds a guest cart today and then signs in has two carts. The usual rule is to merge the guest cart's lines into the account's open cart, summing quantities for the same item, and mark the guest cart `merged`; commercetools assigns "all Orders and Carts belonging to the anonymousId" to the customer when an anonymous shopper signs up. Whatever the rule, record which cart absorbed which.
 - **The cart doesn't hold stock.** On Shopify, units become committed "when an order is placed," and carts aren't an inventory state; Saleor reserves stock, if at all, at checkout completion. Holding inventory for every open cart would let abandoned carts empty the shelf; when and how long to reserve is [Reservations](/books/commerce/inventory#reservations) in the Inventory chapter. The exception is a limited release, where a short, explicit hold at checkout is the product ([Limited Drops and Inventory Fairness](/books/commerce/peak-season#limited-drops-and-inventory-fairness), and [Releasing on Abandonment](/docs/architecture/reservations-and-holds#releasing-on-abandonment)).
 - **Prices are rechecked, not trusted.** `cart_lines.unit_price` is what the page showed. The cart reprices from the price list when a line is added and when checkout starts, and shows the shopper any change; a stale cached page can mislead, never undercharge ([Caching Catalog Pages](/books/commerce/storefronts#caching-catalog-pages)).
-- **Promotions are evaluated on the cart, applied at checkout.** Automatic discounts and codes are computed against the whole cart and its customer, and recomputed whenever a line, the address or the customer changes; the later Promotions, Discounts & Gift Cards chapter owns the engine.
+- **Promotions are evaluated on the cart, applied at checkout.** Automatic discounts and codes are computed against the whole cart and its customer, and recomputed whenever a line, the address or the customer changes; [Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards#discount-engines) owns the engine.
 
 ## Checkout Steps
 
@@ -72,7 +72,7 @@ My rules for the steps:
 
 Requiring an account loses the 18% in Baymard's table, and Baymard's 2025 checkout benchmark found that "62% of sites fail to make 'Guest Checkout' the most prominent option." The default for consumer stores is guest checkout first, with an account offered after the order (a password or a passkey set on the confirmation page, or a passwordless account the platform creates from the email). Shopify's newer customer accounts take this route: a one-time code sent to the email, no password ([Accounts and Guests](/books/commerce/customers-and-accounts#accounts-and-guests)).
 
-A guest is still a customer record. The order carries the email, and the next order from the same email should find the same customer, which is the identity problem [Customers, Accounts & Privacy](/books/commerce/customers-and-accounts#identity-and-merge) covers. B2B checkouts are the exception: a company buyer signs in because the price list, payment terms and approval rules hang off the company account (the later B2B Commerce chapter).
+A guest is still a customer record. The order carries the email, and the next order from the same email should find the same customer, which is the identity problem [Customers, Accounts & Privacy](/books/commerce/customers-and-accounts#identity-and-merge) covers. B2B checkouts are the exception: a company buyer signs in because the price list, payment terms and approval rules hang off the company account ([B2B Commerce](/books/commerce/b2b-commerce#company-accounts-and-buyer-roles)).
 
 ## Address Validation
 
@@ -86,7 +86,7 @@ A wrong address costs a reshipment, a carrier correction fee and a customer. Val
 
 ## Shipping Options
 
-The shipping step turns the cart, the address and the merchant's rules into a short menu: a few options with a price and a promise each, plus pickup where the merchant has stores. Behind each option is a rate (a carrier's rate for the parcel's weight, size and zone, a flat rate, or free above a threshold), a promise (an arrival date or range computed from the shipping location's cutoff, handling time and the carrier's transit time), and a method (ship, local delivery, pickup in store). Carrier rates, rate shopping and how a promised date is computed are [Shipping & Carriers](/books/commerce/shipping-and-carriers#delivery-promises); pickup and ship-from-store are the later Omnichannel Fulfillment chapter; free-shipping thresholds are promotions.
+The shipping step turns the cart, the address and the merchant's rules into a short menu: a few options with a price and a promise each, plus pickup where the merchant has stores. Behind each option is a rate (a carrier's rate for the parcel's weight, size and zone, a flat rate, or free above a threshold), a promise (an arrival date or range computed from the shipping location's cutoff, handling time and the carrier's transit time), and a method (ship, local delivery, pickup in store). Carrier rates, rate shopping and how a promised date is computed are [Shipping & Carriers](/books/commerce/shipping-and-carriers#delivery-promises); pickup and ship-from-store are [Omnichannel Fulfillment](/books/commerce/omnichannel-fulfillment#the-options); free-shipping thresholds are promotions.
 
 What the checkout must do with them:
 
@@ -145,7 +145,7 @@ A checkout that stops is abandoned, and platforms define the moment precisely: S
 
 Two rules keep recovery lawful and useful:
 
-- **Consent decides the channel.** A cart reminder is commercial email or a marketing text in most readings, so it goes only where the customer's consent and the law allow ([Marketing Consent](/books/commerce/customers-and-accounts#marketing-consent); the later Email, SMS & Lifecycle Marketing chapter owns flows; [TCPA Consent](/docs/compliance/consumer-contact#tcpa-consent) for texts).
+- **Consent decides the channel.** A cart reminder is commercial email or a marketing text in most readings, so it goes only where the customer's consent and the law allow ([Marketing Consent](/books/commerce/customers-and-accounts#marketing-consent); [Email, SMS & Lifecycle Marketing](/books/commerce/email-sms-and-lifecycle#the-core-commerce-flows) owns flows; [TCPA Consent](/docs/compliance/consumer-contact#tcpa-consent) for texts).
 - **Fix the cause before discounting it.** Baymard's top reasons are late costs, slow delivery, trust and forced accounts; a recovery coupon trains shoppers to abandon, while showing the total earlier removes the reason.
 
 ## How to Build It

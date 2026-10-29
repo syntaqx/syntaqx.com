@@ -203,13 +203,14 @@ CREATE TABLE loyalty_tier_status (       -- derived, with the activity that earn
 );
 
 CREATE TABLE deferred_fee_schedules (    -- a membership fee recognized over its term
+  id             UUID PRIMARY KEY DEFAULT uuidv7(),  -- what accounting's schedule points at
   membership_id  UUID NOT NULL REFERENCES memberships (id),
   period         TSTZRANGE NOT NULL,     -- the paid membership period
   amount         BIGINT NOT NULL,
   currency       CHAR(3) NOT NULL,
   recognized     BIGINT NOT NULL DEFAULT 0,
   refunded       BIGINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (membership_id, period),
+  UNIQUE (membership_id, period),
   CHECK (recognized + refunded <= amount)
 );
 ```

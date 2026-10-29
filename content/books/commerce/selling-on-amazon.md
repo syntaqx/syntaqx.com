@@ -9,7 +9,7 @@ tags = ["commerce", "marketplaces", "amazon", "sp-api", "fba", "data-model"]
 
 Amazon is two businesses on one detail page. It is a retailer that buys goods from brands and resells them, and it is a marketplace on which millions of other sellers offer the same goods beside it, often on the same product page under the same identifier. A brand can sell to Amazon as a **vendor** (first party, 1P), receiving purchase orders and losing control of the retail price, or sell on Amazon as a **seller** (third party, 3P), keeping the price and the inventory and paying Amazon a referral fee, often a fulfillment fee and usually an advertising bill. Many brands do both, for different products or at different times, and the software differs completely between them: 1P is wholesale with Amazon's own purchasing APIs, 3P is a storefront inside someone else's store with rules, metrics and a settlement report.
 
-The size explains why every commerce system ends up with an Amazon integration. Amazon's 10-K for 2025 reports $172.2 billion of third-party seller services revenue (the commissions and fulfillment and shipping fees, not the sales themselves) and $68.6 billion of advertising, and third-party sellers were 61% of its paid units in the fourth quarter of 2025 ([How the Money Splits](/books/commerce/commerce-business#a-marketplace-3p-sale)). This chapter covers the two models, the 3P fees as published for 2026, Fulfillment by Amazon as a selling program, the Featured Offer, account health and its metrics, category and brand gating, Seller Fulfilled Prime, returns, the Selling Partner API and its rules for customer data, and the antitrust case that challenges several of these rules. It extends `listings`, `orders` and `documents` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). FBA and Multi-Channel Fulfillment as a warehouse network are [Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#amazon-multi-channel-fulfillment-and-fba); Amazon's advertising is [Retail Media & Marketplace Ads](/books/commerce/retail-media); listing data and feeds across every channel are [Multichannel Listing & Feeds](/books/commerce/multichannel-listing); Brand Registry, counterfeits and unauthorized resellers are the later Brand Protection chapter.
+The size explains why every commerce system ends up with an Amazon integration. Amazon's 10-K for 2025 reports $172.2 billion of third-party seller services revenue (the commissions and fulfillment and shipping fees, not the sales themselves) and $68.6 billion of advertising, and third-party sellers were 61% of its paid units in the fourth quarter of 2025 ([How the Money Splits](/books/commerce/commerce-business#a-marketplace-3p-sale)). This chapter covers the two models, the 3P fees as published for 2026, Fulfillment by Amazon as a selling program, the Featured Offer, account health and its metrics, category and brand gating, Seller Fulfilled Prime, returns, the Selling Partner API and its rules for customer data, and the antitrust case that challenges several of these rules. It extends `listings`, `orders` and `documents` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). FBA and Multi-Channel Fulfillment as a warehouse network are [Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#amazon-multi-channel-fulfillment-and-fba); Amazon's advertising is [Retail Media & Marketplace Ads](/books/commerce/retail-media); listing data and feeds across every channel are [Multichannel Listing & Feeds](/books/commerce/multichannel-listing); Brand Registry, counterfeits and unauthorized resellers are [Brand Protection](/books/commerce/brand-protection).
 
 ## How the Platforms Do It
 
@@ -32,7 +32,7 @@ Three things in that table shape everything below:
 
 ## 1P: Vendor Central
 
-Amazon describes the vendor model in one sentence: "Instead of selling directly to customers, vendors sell in bulk (wholesale) to Amazon," which "then provides distribution of a brand or manufacturer's product." The brand doesn't apply; Amazon invites it. Everything after the invitation is the general shape of wholesale to a big retailer, which the later Wholesale & Retail Distribution and EDI chapters cover in depth: a purchase order, an acknowledgment, a shipment to the retailer's warehouses with a ship notice, an invoice, a payment net of deductions.
+Amazon describes the vendor model in one sentence: "Instead of selling directly to customers, vendors sell in bulk (wholesale) to Amazon," which "then provides distribution of a brand or manufacturer's product." The brand doesn't apply; Amazon invites it. Everything after the invitation is the general shape of wholesale to a big retailer, which [Wholesale & Retail Distribution](/books/commerce/wholesale-and-retail-distribution#the-order-to-cash-loop) and [EDI](/books/commerce/edi) cover in depth: a purchase order, an acknowledgment, a shipment to the retailer's warehouses with a ship notice, an invoice, a payment net of deductions.
 
 Amazon's purchasing loop is public in one place, its API models. The Selling Partner API for "Retail Procurement Orders" gives "programmatic access to vendor orders data":
 
@@ -132,7 +132,7 @@ The windows are not interchangeable. The ODR counts negative feedback by order d
 
 Not everything can be listed by everyone. Amazon sorts categories into three groups: "some require a Professional selling plan, some require approval from Amazon, and some can't be sold by third-party sellers." Collectible Coins, Entertainment Collectibles, Fine Art and Sports Collectibles are examples of categories that "require approval before you can list products." Approval typically asks for proof of a legitimate supply chain; Amazon's own guidance for wholesale sellers is to "Gather your supplier invoices from the last 180 days, showing at least 10 units purchased." Separately, some products "may not be listed as a matter of compliance with legal or regulatory restrictions" (hazmat, pesticides, recalled or regulated goods), which the Regulated Goods part of this volume covers by category.
 
-Brands gate themselves too: "Amazon Brand Registry is a free program that helps eligible brands protect their intellectual property," and a brand enrolled in it controls its detail-page content and can restrict who lists it; the later Brand Protection chapter covers Registry, counterfeits and unauthorized resellers. For the system, gating is a per-account, per-category or per-brand approval with a date and evidence, checked before a listing is created, not discovered from the rejection afterwards.
+Brands gate themselves too: "Amazon Brand Registry is a free program that helps eligible brands protect their intellectual property," and a brand enrolled in it controls its detail-page content and can restrict who lists it; [Brand Protection](/books/commerce/brand-protection) covers Registry, counterfeits and unauthorized resellers. For the system, gating is a per-account, per-category or per-brand approval with a date and evidence, checked before a listing is created, not discovered from the rejection afterwards.
 
 ## Seller Fulfilled Prime
 
@@ -199,13 +199,13 @@ On September 26, 2023 the FTC and 17 states (now 18 and Puerto Rico) sued Amazon
 
 As of October 2026 there has been no ruling on the merits and no settlement. Trade press reports the bench trial set for March 29, 2027, and that on October 9, 2026 the court denied Amazon's request to move it to June 2027; I couldn't open the docket to confirm either. <!-- source-gap: ftc-amazon-trial-date | secondary | FTC v. Amazon (W.D. Wash. 2:23-cv-01495) bench trial date of March 29, 2027 and the October 9, 2026 order denying a continuance | closes with: the docket entries or an FTC case-page update | checked: 2026-10-28 -->
 
-A separate FTC case, about Prime enrollment and cancellation rather than sellers, ended on September 25, 2025 with a $2.5 billion settlement: a $1 billion civil penalty and $1.5 billion in refunds (the later Auto-Renewal & Cancellation Law chapter covers the rules it enforced; [Cancellation Law](/books/commerce/delivery-subscriptions#cancellation-law) covers the delivery memberships).
+A separate FTC case, about Prime enrollment and cancellation rather than sellers, ended on September 25, 2025 with a $2.5 billion settlement: a $1 billion civil penalty and $1.5 billion in refunds ([FTC v. Amazon (Prime)](/books/commerce/auto-renewal-law#ftc-v-amazon-prime) covers the rules it enforced; [Cancellation Law](/books/commerce/delivery-subscriptions#cancellation-law) covers the delivery memberships).
 
 For a seller's system, the case is a reason to keep pricing and fulfillment decisions explainable. If the rules on Featured Offer eligibility or Prime fulfillment change after a judgment, the merchant who stored why each price was set, which offers won, and which program each order shipped through can adapt in configuration; the one who didn't will be reverse-engineering its own history.
 
 ## How to Build It
 
-The core model already has the pieces an Amazon integration fills: `listings` for ASIN offers, `orders` with `channel_partner = 'amazon'` and the Amazon order ID as `external_ref`, `fulfillments` with `provider = 'marketplace_network'` for FBA, `documents` for vendor POs and invoices, and `connected_systems` (from [The Commerce Landscape](/books/commerce/commerce-landscape#how-to-build-it)) for the SP-API authorization. Selling on Amazon adds the settlement, its lines, the account's health, the marketplace PII kept apart, and offer observations:
+The core model already has the pieces an Amazon integration fills: `listings` for ASIN offers, `orders` with `channel_partner = 'amazon'` and the Amazon order ID as `external_ref`, `fulfillments` with `provider = 'marketplace_network'` for FBA, `documents` for vendor POs and invoices, and `connected_systems` (from [The Commerce Landscape](/books/commerce/commerce-landscape#how-to-build-it)) for the SP-API authorization. This chapter adds the settlement, its lines, the account's health, the marketplace PII kept apart, and offer observations:
 
 ```sql
 ALTER TABLE listings
@@ -225,7 +225,7 @@ CREATE TABLE offer_observations (        -- what the channel showed, when
   observed_at       TIMESTAMPTZ NOT NULL,
   source            TEXT NOT NULL CHECK (source IN ('notification', 'pricing_api', 'report')),
   our_price         BIGINT,             -- minor units, landed (item plus shipping)
-  featured          BOOLEAN NOT NULL,   -- we held the Featured Offer at this moment
+  featured          BOOLEAN NOT NULL,   -- the seller held the Featured Offer at this moment
   featured_price    BIGINT,             -- the winning offer's landed price
   offer_count       INT,
   currency          CHAR(3) NOT NULL,
@@ -308,7 +308,7 @@ CREATE TABLE referral_fee_tiers (        -- a marketplace's fee schedule, versio
   PRIMARY KEY (channel_id, category, from_amount, valid_during)
 );
 
--- Variances: charges the marketplace took that differ from what we expected.
+-- Variances: charges the marketplace took that differ from what was expected.
 SELECT s.settlement_ref, l.order_id, l.amount_description,
        -l.amount AS charged, c.amount AS expected, -l.amount - c.amount AS variance
 FROM settlement_lines l

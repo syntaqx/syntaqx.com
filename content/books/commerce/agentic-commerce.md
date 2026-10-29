@@ -122,7 +122,7 @@ ALTER TABLE orders
   ADD CONSTRAINT orders_channel_check CHECK (channel IN ('marketplace', 'first_party', 'pos',
     'phone', 'kiosk', 'wholesale', 'agent'));
 
-CREATE TABLE agent_clients (               -- an agent operator we recognize, and how
+CREATE TABLE agent_clients (               -- an agent operator the store recognizes, and how
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
   channel_id        TEXT NOT NULL REFERENCES sales_channels (id),
   operator          TEXT NOT NULL,         -- 'openai', 'google', 'perplexity', 'microsoft'
@@ -141,10 +141,10 @@ CREATE TABLE agent_clients (               -- an agent operator we recognize, an
 ALTER TABLE carts
   ADD COLUMN agent_client_id UUID REFERENCES agent_clients (id);  -- set when an agent built it
 
-CREATE TABLE agent_checkout_sessions (     -- the protocol's session, mapped to ours
+CREATE TABLE agent_checkout_sessions (     -- the protocol's session, mapped to the store's
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
   agent_client_id   UUID NOT NULL REFERENCES agent_clients (id),
-  external_session_ref TEXT NOT NULL,      -- the ID we returned, or the agent's
+  external_session_ref TEXT NOT NULL,      -- the ID the store returned, or the agent's
   checkout_id       UUID NOT NULL REFERENCES checkouts (id),
   protocol_status   TEXT NOT NULL,         -- as the protocol names it: 'ready_for_payment',
                                            -- 'requires_escalation', ...

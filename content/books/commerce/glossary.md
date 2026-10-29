@@ -1,7 +1,7 @@
 +++
 title = "Commerce Glossary"
 nav_title = "Glossary"
-description = "Every term the commerce volume uses, defined in a line and linked to its chapter: the core model, catalog and pricing, delivery, fees, memberships and fraud."
+description = "Every commerce term by part: business, catalog, checkout, fulfillment, subscriptions, marketplaces, B2B, stores, delivery, regulated goods, marketing, platform."
 category = "Commerce Industry"
 order = 2399
 part = "Reference"
@@ -182,10 +182,9 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - **Restocking fee:** a percentage of the price kept from a refund, recorded as its own line with its rule ([Returns & Exchanges](/books/commerce/returns-and-exchanges#return-fees-and-restocking)).
 - **Return to vendor (RTV):** sending goods back to a supplier under its authorization for a credit memo ([Purchasing & Replenishment](/books/commerce/purchasing-and-replenishment#returns-to-vendor)).
 - **Returnless refund (keep it):** refunding without asking for the item back, by rule up to a value, when return costs exceed the item's recovery value ([Returns & Exchanges](/books/commerce/returns-and-exchanges#returnless-refunds)).
-- **Right of withdrawal:** the EU and UK consumer's right to withdraw from a distance contract within 14 days without a reason, refunded within 14 days ([Returns & Exchanges](/books/commerce/returns-and-exchanges#return-policies-and-the-law)).
 - **RMA (return merchandise authorization):** an approved return request with a number the warehouse scans to match the package to the order lines ([Returns & Exchanges](/books/commerce/returns-and-exchanges#the-return-lifecycle)).
-- **Safety stock (selling buffer):** units withheld from a channel so lag and count errors don't oversell; distinct from replenishment safety stock, which covers demand during supplier lead time ([Inventory](/books/commerce/inventory#safety-stock-and-channel-buffers)).
 - **Safety stock:** stock held beyond expected lead-time demand to cover variation in demand and lead time at a target service level ([Purchasing & Replenishment](/books/commerce/purchasing-and-replenishment#reorder-points-and-safety-stock)).
+- **Safety stock (selling buffer):** units withheld from a channel so lag and count errors don't oversell; distinct from replenishment safety stock, which covers demand during supplier lead time ([Inventory](/books/commerce/inventory#safety-stock-and-channel-buffers)).
 - **Ship-from-store:** a store picking, packing and shipping an online order with a carrier label, as a shipping fulfillment from the store location ([Omnichannel Fulfillment](/books/commerce/omnichannel-fulfillment#ship-from-store)).
 - **Short pick:** a picker finding fewer units than the record says; treated as a count that corrects the store's inventory ([Omnichannel Fulfillment](/books/commerce/omnichannel-fulfillment#store-inventory-accuracy)).
 - **Shrink:** the difference between recorded and actual stock that no movement explains; 1.6% of US retail sales in fiscal 2022 by NRF's survey ([Inventory](/books/commerce/inventory#cycle-counts-and-shrink)).
@@ -234,13 +233,13 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 
 ## Marketplaces
 
-- **A-to-z Guarantee claim:** an Amazon buyer's claim against a third-party seller; one Amazon doesn't deny counts toward the Order Defect Rate and may be refunded from the seller's account ([Selling on Amazon](/books/commerce/selling-on-amazon#returns)).
 - **Account Health Rating (AHR):** Amazon's 0 to 1,000 score of a seller's policy compliance, Healthy from 200, with deactivation possible below 100 ([Selling on Amazon](/books/commerce/selling-on-amazon#account-health)).
 - **ACoS and ROAS:** advertising cost of sales (ad spend over attributed sales) and its inverse, return on ad spend; both inherit the network's attribution model ([Retail Media & Marketplace Ads](/books/commerce/retail-media#measurement)).
 - **Agent trust tier:** the permissions an agent gets by how it proved who it is: anonymous agents may search, signed agents may do more, token-holding agents may complete checkout without handing off ([Agentic & AI Shopping](/books/commerce/agentic-commerce#agent-identity-and-access)).
 - **Agentic checkout:** an AI agent completing a merchant's checkout through the merchant's API, with the merchant still merchant of record and charging a token the shopper approved ([Agentic & AI Shopping](/books/commerce/agentic-commerce#three-ways-an-agent-buys)).
 - **Amazon Vine:** Amazon's sampling program: free units of products with fewer than 30 reviews go to reviewers Amazon selects, whose reviews are labeled; the seller chooses neither the reviewers nor what they write ([Reviews & Ratings](/books/commerce/reviews-and-ratings#incentives-and-sampling)).
 - **ASIN (Amazon Standard Identification Number):** Amazon's identifier for a product's detail page, shared by every seller who offers it ([Selling on Amazon](/books/commerce/selling-on-amazon#how-the-platforms-do-it)).
+- **A-to-z Guarantee claim:** an Amazon buyer's claim against a third-party seller; one Amazon doesn't deny counts toward the Order Defect Rate and may be refunded from the seller's account ([Selling on Amazon](/books/commerce/selling-on-amazon#returns)).
 - **Authorized reseller:** a reseller under the brand's agreement, with its channels, terms and dates; the record diversion and MAP steps resolve to ([Brand Protection](/books/commerce/brand-protection#authorized-reseller-programs)).
 - **Brand Registry:** Amazon's free program for trademark owners that unlocks infringement reporting, brand content and the Project Zero and Transparency programs ([Brand Protection](/books/commerce/brand-protection#how-the-platforms-do-it)).
 - **Clean room:** a network-hosted environment where an advertiser joins its pseudonymized data with the network's and gets only aggregated results back, such as Amazon Marketing Cloud ([Retail Media & Marketplace Ads](/books/commerce/retail-media#measurement)).
@@ -345,9 +344,9 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - **Service charge:** a mandatory charge on a restaurant bill; the employer's revenue, and wages if distributed, never a tip ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
 - **Shrink event:** a known loss (theft, damage, expiry, vendor shortage) recorded when it happens, with retail and cost value ([Store Operations](/books/commerce/store-operations#shrink-and-loss-prevention)).
 - **Tender:** one way a sale was paid (card, cash, gift card, store credit, EBT, house account); a sale can have several ([Point of Sale](/books/commerce/point-of-sale#tenders)).
-- **Tip (restaurant):** a voluntary payment from the guest that belongs to the employee; the employer may not keep any of it ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
 - **Tip credit:** counting tips toward a tipped employee's federal minimum wage, at most $5.12 an hour over a $2.13 cash wage ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
 - **Tip pool:** tips gathered and divided among eligible staff by a formula; never shared with managers ([Restaurants & Food Service](/books/commerce/restaurants#tip-pools)).
+- **Tip (restaurant):** a voluntary payment from the guest that belongs to the employee; the employer may not keep any of it ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
 - **Void:** cancelling a line or sale before it closes; nothing was sold, unlike a return ([Point of Sale](/books/commerce/point-of-sale#the-sale-at-the-register)).
 - **X report / Z report:** a mid-shift snapshot of a register session, and the end-of-day close that locks the day ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
 
@@ -407,12 +406,12 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - **Dealer reserve:** a dealer's share of the difference between a lender's buy rate and the contract rate on a loan it arranged ([Automotive Retail](/books/commerce/automotive-retail#f-i-financing-leases-and-add-ons)).
 - **eFiling (CPSC):** filing certificate data electronically with CBP at import, required from July 8, 2026 for most products ([Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls#certificates-and-efiling)).
 - **EPA registration number:** the number on a registered pesticide's label identifying the product, distinct from the establishment number of the factory ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#fifra-for-sellers)).
-- **F&I (finance and insurance):** the dealership office that arranges financing or a lease and sells add-on products ([Automotive Retail](/books/commerce/automotive-retail#f-i-financing-leases-and-add-ons)).
 - **FFL transfer:** shipping a firearm bought online to a federal firearms licensee in the buyer's state, who runs the background check and hands it over ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#firearms-and-ammunition)).
+- **F&I (finance and insurance):** the dealership office that arranges financing or a lease and sells add-on products ([Automotive Retail](/books/commerce/automotive-retail#f-i-financing-leases-and-add-ons)).
 - **Limited quantity:** small inner containers of certain hazardous materials shipped under relaxed DOT rules with a dedicated mark ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#hazmat-shipping)).
 - **Monroney label:** the federally required window sticker on a new vehicle with its price, equipment and safety ratings ([Automotive Retail](/books/commerce/automotive-retail#disclosures-on-the-vehicle)).
-- **PACT Act:** the federal law requiring online sellers of cigarettes and vapes to register, report every shipment monthly to each state, verify age and use adult-signature delivery ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#tobacco-and-vapes)).
 - **Package tag (cannabis):** the state-issued, often RFID, identifier on each cannabis package that every movement and sale is reported against ([Cannabis & Hemp](/books/commerce/cannabis-and-hemp#seed-to-sale-tracking)).
+- **PACT Act:** the federal law requiring online sellers of cigarettes and vapes to register, report every shipment monthly to each state, verify age and use adult-signature delivery ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#tobacco-and-vapes)).
 - **Proposition 65 warning:** California's required warning before significant exposure to a listed chemical, shown online before purchase ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#california-proposition-65)).
 - **Purchase limit (cannabis):** the most a customer may buy per day or transaction by category, computed from each product's equivalent weight ([Cannabis & Hemp](/books/commerce/cannabis-and-hemp#the-dispensary-point-of-sale)).
 - **Recall:** a corrective action to stop sale, notify buyers and remedy a hazardous product, accounted for unit by unit ([Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls#recalls)).

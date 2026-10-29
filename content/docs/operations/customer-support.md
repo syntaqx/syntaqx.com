@@ -6,7 +6,7 @@ order = 1210
 tags = ["operations", "support", "customer-service", "automation", "tickets"]
 +++
 
-Support is where every other system shows up when it fails. A charge that went through but didn't unlock anything, an account taken over, a decision the customer thinks was wrong, an outage that hit at dinner time: each one becomes a contact from someone who is usually frustrated and sometimes not who they say they are. Support has the volume of a consumer product, the spikes of every launch and incident, and staff who can change accounts and move money.
+Support is where every other system shows up when it fails. A charge that went through but didn't unlock anything, an account taken over, a decision the customer thinks was wrong, an outage that hit at dinner time: each one becomes a contact from someone who is usually frustrated and sometimes not who they say they are. Support has the volume of a consumer product, the spikes of every launch and incident, and staff who can change accounts and move money. A store's version, where most contacts ask where an order is, is the Commerce volume's [Customer Service](/books/commerce/customer-service).
 
 This chapter is support as an engineered system: the channels, the ticket and what it carries, how contacts are classified and routed, the automation that answers what can be answered and hands off the rest, how support escalates to engineering, and the numbers that say whether it works. The staff side of data access is [Support Access & Internal Tools](/docs/security/support-access); the rules for automated agents are in [AI Agents in the Product](/docs/architecture/ai-agents).
 
