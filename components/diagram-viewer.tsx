@@ -102,7 +102,7 @@ export function DiagramViewer() {
       vx,
       vy,
     };
-    setWidth(Math.min(Math.max(next, fit / 2), open.w * 4));
+    setWidth(Math.min(Math.max(next, fit / 2), Math.max(fit, open.w) * 4));
   };
 
   // Ctrl and the wheel (a trackpad pinch arrives this way) zooms at the pointer.
