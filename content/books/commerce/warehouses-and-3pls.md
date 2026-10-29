@@ -88,7 +88,7 @@ Its states are `New`, `Received` ("received and validated," still cancellable), 
 
 **Inbound and capacity for FBA.** Amazon limits how much each seller can send, measured "in cubic feet (vs. number of units)" as a single monthly limit, with a Capacity Manager in which a seller can request more by bidding a reservation fee, offset by performance credits. Since April 2024 it also charges a low-inventory-level fee on items with too little stock relative to sales. The two together push in opposite directions (not too much, not too little) and make FBA replenishment a planning problem the later Purchasing & Replenishment chapter treats.
 
-The later Selling on Amazon chapter covers FBA as a selling program; here it is a location with an API, a rate card, capacity limits and reports to reconcile.
+[Selling on Amazon](/books/commerce/selling-on-amazon#fulfillment-by-amazon-as-a-selling-program) covers FBA as a selling program; here it is a location with an API, a rate card, capacity limits and reports to reconcile.
 
 ## Walmart Fulfillment Services
 
