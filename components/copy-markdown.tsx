@@ -4,16 +4,25 @@ import { useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ArrowUpRight, Check, ChevronDown, Copy, FileText } from "lucide-react";
 
+const labels = {
+  idle: "Copy as Markdown",
+  copying: "Copying…",
+  copied: "Copied",
+  failed: "Copy failed",
+};
+
 /**
  * A split button: copy the page's Markdown (its .md URL), or open the menu
  * to copy it or view it in a new tab.
  */
 export function MarkdownMenu({ href }: { href: string }) {
-  const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
+  const [state, setState] = useState<keyof typeof labels>("idle");
 
   // The fetch goes inside the ClipboardItem so Safari still counts the click
-  // as the gesture.
+  // as the gesture. Feedback starts on the press, before the fetch returns.
   const copy = () => {
+    setState("copying");
+    navigator.vibrate?.(10);
     const text = fetch(href)
       .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
       .then((t) => new Blob([t], { type: "text/plain" }));
@@ -31,17 +40,24 @@ export function MarkdownMenu({ href }: { href: string }) {
       <button
         type="button"
         onClick={copy}
-        className="flex cursor-pointer items-center gap-2 px-2.5 py-1.5 uppercase transition-colors hover:text-foreground"
+        className={`flex cursor-pointer items-center gap-2 px-2.5 py-1.5 uppercase transition-colors hover:text-foreground active:bg-background ${
+          state === "copied" ? "text-accent" : ""
+        }`}
       >
-        {state === "copied" ? <Check size={12} className="text-accent" /> : <Copy size={12} />}
-        <span aria-live="polite">
-          {state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : "Copy as Markdown"}
+        {state === "copied" ? <Check size={12} /> : <Copy size={12} />}
+        {/* Every label in one cell, so the button keeps its width as it changes. */}
+        <span aria-live="polite" className="grid">
+          {Object.entries(labels).map(([key, label]) => (
+            <span key={key} className={`col-start-1 row-start-1 ${key === state ? "" : "invisible"}`}>
+              {label}
+            </span>
+          ))}
         </span>
       </button>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger
           aria-label="More Markdown options"
-          className="flex cursor-pointer items-center border-l border-border px-1.5 transition-colors hover:text-foreground data-[state=open]:text-foreground"
+          className="flex cursor-pointer items-center border-l border-border px-1.5 transition-colors hover:text-foreground active:bg-background data-[state=open]:bg-background data-[state=open]:text-foreground"
         >
           <ChevronDown size={13} />
         </DropdownMenu.Trigger>
