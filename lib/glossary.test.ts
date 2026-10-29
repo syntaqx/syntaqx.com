@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { getAllBookChapters } from "./docs";
 import { BOOKS } from "./books";
 import { MAX_DESCRIPTION } from "./metadata";
-import { glossaryIndex, glossaryPartDescription, glossaryParts, isGlossary } from "./glossary";
+import { MAX_TITLE, glossaryIndex, glossaryPartDescription, glossaryPartTitle, glossaryParts, isGlossary } from "./glossary";
 
 const glossaries = getAllBookChapters().filter(isGlossary);
 
@@ -37,6 +37,19 @@ describe("glossaries", () => {
       for (const part of glossaryParts(glossary).parts) {
         const d = glossaryPartDescription(book.name, part);
         expect(d.length, `${glossary.slug}/${part.slug}: ${d}`).toBeLessThanOrEqual(MAX_DESCRIPTION);
+      }
+    }
+  });
+
+  it("gives every part a unique title that names its book and fits", () => {
+    const titles = new Set<string>();
+    for (const glossary of glossaries) {
+      const book = BOOKS.find((b) => b.slug === glossary.section)!;
+      for (const part of glossaryParts(glossary).parts) {
+        const title = `${glossaryPartTitle(book, part)} - syntaqx`;
+        expect(title.length, title).toBeLessThanOrEqual(MAX_TITLE);
+        expect(titles.has(title), title).toBe(false);
+        titles.add(title);
       }
     }
   });

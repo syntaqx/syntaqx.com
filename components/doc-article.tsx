@@ -27,6 +27,7 @@ export interface Neighbor {
  */
 export async function DocArticle({
   doc,
+  headline = doc.title,
   path,
   source,
   published,
@@ -38,6 +39,8 @@ export async function DocArticle({
   next,
 }: {
   doc: DocData;
+  /** The structured data's headline, where it names more than the page's title does. */
+  headline?: string;
   /** The page's URL path, e.g. /docs/payments/money. */
   path: string;
   /** The Markdown file, repo-relative, for Edit on GitHub and History. */
@@ -60,7 +63,7 @@ export async function DocArticle({
     <article className={rail ? "xl:grid xl:grid-cols-[minmax(0,1fr)_11rem] xl:gap-10" : undefined}>
       <JsonLd
         data={article({
-          headline: doc.title,
+          headline,
           description: doc.description,
           path,
           datePublished: published,

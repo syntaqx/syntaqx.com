@@ -1,5 +1,9 @@
 import { estimateReadingTime, slugifyTag } from "@/lib/posts";
 import type { DocData } from "@/lib/docs";
+import type { Book } from "@/lib/books";
+
+/** Results pages cut titles off past about this many characters. */
+export const MAX_TITLE = 65;
 
 /**
  * A book's glossary is one Markdown file, grouped by part under `##`
@@ -55,4 +59,15 @@ export function glossaryIndex(doc: DocData): string {
 /** A part's meta description. */
 export function glossaryPartDescription(bookName: string, part: { title: string; terms: number }): string {
   return `${part.terms} terms from the ${bookName} book's ${part.title} part, each defined in a line and linked to the chapter that explains it.`;
+}
+
+/**
+ * A part's page title: parts share names across books ("The Business",
+ * "Running the Platform"), so it always names the book, by its short name if
+ * the full one would run past MAX_TITLE with the site's " - syntaqx".
+ */
+export function glossaryPartTitle(book: Pick<Book, "name" | "shortName">, part: { title: string }): string {
+  const title = (name: string) => `${part.title} Glossary · ${name}`;
+  const full = title(book.name);
+  return `${full} - syntaqx`.length > MAX_TITLE && book.shortName ? title(book.shortName) : full;
 }

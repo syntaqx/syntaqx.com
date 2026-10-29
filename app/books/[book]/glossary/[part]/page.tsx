@@ -4,8 +4,7 @@ import type { Metadata } from "next";
 import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
 import { getBookChapters } from "@/lib/docs";
 import { BOOKS, getBook } from "@/lib/books";
-import { glossaryPartDescription as description, glossaryParts, isGlossary } from "@/lib/glossary";
-import { titleIn } from "@/lib/metadata";
+import { glossaryPartDescription as description, glossaryPartTitle, glossaryParts, isGlossary } from "@/lib/glossary";
 import { bookRef } from "@/lib/schema";
 import { DocArticle } from "@/components/doc-article";
 
@@ -37,10 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!found) return {};
   const { book, glossary, part } = found;
 
-  const title = `${part.title} Glossary`;
+  const title = glossaryPartTitle(book, part);
   const image = { url: `/og/books/${glossary.slug}`, width: 1200, height: 630, alt: glossary.title };
   return {
-    title: titleIn(title, book.name),
+    title,
     description: description(book.name, part),
     openGraph: {
       title,
@@ -74,6 +73,7 @@ export default async function GlossaryPartPage({ params }: Props) {
         content: part.content,
         readingMinutes: part.readingMinutes,
       }}
+      headline={glossaryPartTitle(book, part)}
       path={path}
       source={`content/books/${glossary.slug}.md`}
       published={docFirstPublished(glossary.slug, "books")}

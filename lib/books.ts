@@ -21,6 +21,8 @@ export interface Book {
   slug: string;
   type: BookType;
   name: string;
+  /** A shorter name, where titles that add the book's name would run long. */
+  shortName?: string;
   /** One line, for cards and the cover's metadata. */
   summary: string;
   /** The cover's opening paragraphs. */
@@ -84,6 +86,7 @@ export const BOOKS: Book[] = [
     slug: "property-tech",
     type: "industry",
     name: "Property Tech",
+    shortName: "PropTech",
     cover: "tenancy",
     summary:
       "How the software that runs rental housing, associations, commercial space, storage and short-term rentals works, from the lease and the ledger to the law.",
@@ -96,6 +99,7 @@ export const BOOKS: Book[] = [
     slug: "user-generated-platforms",
     type: "industry",
     name: "User-Generated Platforms",
+    shortName: "UGC Platforms",
     cover: "feed",
     summary:
       "How platforms built on users' content or inventory work, from communities, media and live streams to P2P marketplaces, trust and safety, and the law.",
