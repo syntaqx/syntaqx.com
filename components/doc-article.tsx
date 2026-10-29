@@ -3,7 +3,9 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
+import { Pencil } from "lucide-react";
 import { MarkdownMenu } from "@/components/copy-markdown";
+import { Tip } from "@/components/tip";
 import { CodeTabsScript } from "@/components/code-tabs";
 import { ChapterKeys } from "@/components/chapter-keys";
 import { JsonLd } from "@/components/json-ld";
@@ -85,13 +87,16 @@ export async function DocArticle({
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-4">
-              <a
-                href={`${REPO}/blob/main/${source}`}
-                className="inst text-dim transition-colors hover:text-accent"
-              >
-                Edit on GitHub
-              </a>
+            <div className="flex items-stretch gap-2">
+              <Tip label="Edit on GitHub">
+                <a
+                  href={`${REPO}/blob/main/${source}`}
+                  aria-label="Edit on GitHub"
+                  className="flex items-center border border-border bg-surface px-2 text-dim transition-colors hover:text-foreground active:bg-background"
+                >
+                  <Pencil size={12} aria-hidden />
+                </a>
+              </Tip>
               <MarkdownMenu href={`${path}.md`} />
             </div>
           </div>
