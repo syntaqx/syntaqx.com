@@ -57,7 +57,7 @@ When the sale happens on a marketplace (Amazon, Walmart, eBay, Etsy, TikTok Shop
 - **The seller may still file.** Some states expect a seller registered for its own sales to report marketplace sales on its return as exempt or deductible; the tax lines carry the remitter so the return can separate them.
 - **The marketplace's settlement shows the tax it held.** Reconciling the settlement ([Settlements and the Money](/books/commerce/selling-on-amazon#settlements-and-the-money)) checks that the marketplace collected what the order says.
 
-Running a marketplace that has these duties is the later Running Your Own Marketplace chapter.
+Running a marketplace that has these duties is [Running Your Own Marketplace](/books/commerce/running-a-marketplace#tax-and-information-reporting).
 
 ## What Is Taxable
 
