@@ -80,13 +80,13 @@ Behind the store, four kinds of system move and account for goods:
 - **Shipping.** Multi-carrier platforms (ShipStation, EasyPost, Shippo) buy labels across USPS, UPS, FedEx and regional carriers and return tracking.
 - **ERP.** NetSuite, Microsoft Dynamics, SAP, Acumatica and, for small brands, QuickBooks keep the general ledger, inventory valuation, purchasing and the accounts receivable that wholesale customers pay into. In most mid-size brands the ERP is the system of record for items and costs and the commerce platform is the system of record for online orders, with an integration platform (Celigo and others) carrying records between them.
 
-The pattern that matters for software: every object has one system of record, and the others hold copies with an external ID pointing back. Which system owns the item, the price, the stock count and the order is the first design decision in any commerce stack, and the later ERP & Integrations chapter makes it explicit.
+The pattern that matters for software: every object has one system of record, and the others hold copies with an external ID pointing back. Which system owns the item, the price, the stock count and the order is the first design decision in any commerce stack, and [ERP & Integrations](/books/commerce/erp-and-integrations) makes it explicit.
 
 ## App Ecosystems
 
 Hosted platforms are extended by apps more than by code. A Shopify brand's stack typically adds a subscription app (Recharge, Skio), an email and SMS platform (Klaviyo, Attentive), a reviews app, a returns app (Loop), a shipping app, a tax engine where the platform's own isn't enough (Avalara), a fraud tool (Signifyd, Riskified) and a cross-border app (Global-e). Each app holds its own copy of orders and customers, reads and writes through the platform's API under rate limits, and listens to its webhooks.
 
-Two consequences shape the whole volume. Data is spread across apps whose exports differ, which is the lock-in [Choosing & Hosting a Store](/books/commerce/choosing-a-platform#lock-in-and-the-way-out) weighs. And each app is code on the checkout or with access to customer data, which is the security and PCI surface the later Store Security & PCI chapter covers.
+Two consequences shape the whole volume. Data is spread across apps whose exports differ, which is the lock-in [Choosing & Hosting a Store](/books/commerce/choosing-a-platform#lock-in-and-the-way-out) weighs. And each app is code on the checkout or with access to customer data, which is the security and PCI surface [Store Security & PCI](/books/commerce/store-security-and-pci) covers.
 
 ## How Big It Is
 
@@ -123,7 +123,7 @@ Almost every merchant should buy the platform; the question is how much else.
 
 **Extend** a platform when it fits most of the business: apps, functions and APIs on a hosted platform, or modules on an open-source one. The test is the edges: B2B pricing, subscriptions, bundles, multi-location stock and multiple currencies are where platforms differ most.
 
-**Build** where the commerce is the product: a marketplace operator, a platform selling to merchants, a business whose order model no platform has (rentals, configured-to-order goods, regulated goods with per-state rules), or a scale where platform fees exceed a team's cost. [Choosing & Hosting a Store](/books/commerce/choosing-a-platform#when-building-your-own-is-justified) sets the test in detail, and the later Commerce Architecture chapter covers building it.
+**Build** where the commerce is the product: a marketplace operator, a platform selling to merchants, a business whose order model no platform has (rentals, configured-to-order goods, regulated goods with per-state rules), or a scale where platform fees exceed a team's cost. [Choosing & Hosting a Store](/books/commerce/choosing-a-platform#when-building-your-own-is-justified) sets the test in detail, and [Commerce Architecture](/books/commerce/commerce-architecture) covers building it.
 
 ## How to Build It
 

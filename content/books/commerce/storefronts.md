@@ -67,7 +67,7 @@ Core Web Vitals are the playbook's targets ([Targets: Core Web Vitals](/docs/fro
 The commerce causes of slow pages are specific:
 
 - **The product image.** The largest element on a product page is usually its first image; Shopify's theme guidance is to never lazy-load the above-the-fold image and to mark it `fetchpriority="high"`.
-- **App scripts.** Every installed app that adds a widget adds JavaScript, often on every page; the playbook's [Third-Party Scripts](/docs/frontend/web-performance#third-party-scripts) budget applies, and on the payment page the same scripts are a security question for the later Store Security & PCI chapter.
+- **App scripts.** Every installed app that adds a widget adds JavaScript, often on every page; the playbook's [Third-Party Scripts](/docs/frontend/web-performance#third-party-scripts) budget applies, and on the payment page the same scripts are a security question for [Store Security & PCI](/books/commerce/store-security-and-pci).
 - **Catalog-sized loops.** Shopify names nested Liquid loops that grow with the catalog as a common cause of slow server response; a collection page that iterates every variant of every product slows as the catalog grows.
 - **Client-rendered essentials.** Price, title and the add-to-cart button rendered by JavaScript after load delay the first useful paint and hide content from crawlers; Shopify's guidance is to render essential content in Liquid and HTML.
 

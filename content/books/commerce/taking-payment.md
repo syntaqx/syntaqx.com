@@ -100,7 +100,7 @@ Card-not-present fraud is screened between authorization and capture, which is o
 
 - **Signifyd** says approved orders "are backed by a 100% financial guarantee," with reimbursement within 48 hours; it "charges a percentage of the order total when an order is approved," with no fee on orders it declines for fraud and custom rates.
 - **Forter** "will contractually guarantee the performance of your approval and chargeback rates," with covered and uncovered agreements.
-- **Riskified** sells the same category of guarantee (the later Commerce Fraud & Abuse chapter compares vendors).
+- **Riskified** sells the same category of guarantee ([Commerce Fraud & Abuse](/books/commerce/commerce-fraud) compares vendors).
 - **Shopify Protect** is the platform's own version, free, covering "fraudulent and unrecognized chargebacks" on eligible orders: Shop Pay orders (including Shop Pay on Facebook, Instagram and Google, but not Shop Pay Installments), physical goods shipped by a US business with a US Shopify Payments account, fulfilled within 7 days and in transit with tracking within 10; digital goods, pickup, changed shipping addresses and subscription renewals are excluded.
 
 What the guarantee changes in the system:

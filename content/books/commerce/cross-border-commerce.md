@@ -56,7 +56,7 @@ A merchant-of-record service takes that over by buying the goods from the brand 
 - **Cost.** A percentage of each order (3.25% to 3.5% for Shopify Managed Markets, plus currency conversion) against the cost of registrations, filings and local payment contracts.
 - **Control.** The provider sets which markets, payment methods and products it supports, and can decline a product it won't import.
 - **Data.** The order and the customer exist in the provider's system first; the brand's order is a copy, and its customer record has the provider's terms attached.
-- **Accounting.** The brand's sale is to the provider, not the shopper, which changes revenue presentation and where tax liability sits (Commerce Accounting covers the treatment).
+- **Accounting.** The brand's sale is to the provider, not the shopper, which changes revenue presentation and where tax liability sits ([Commerce Accounting](/books/commerce/commerce-accounting) covers the treatment).
 
 The model needs to know which applies: an order's `merchant_of_record` in the core model gains a value for a merchant-of-record service, and the order's charges show the provider's fee.
 

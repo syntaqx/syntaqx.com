@@ -125,7 +125,7 @@ What replaced them is the general shape of checkout extensibility on any platfor
 - **Functions** run the merchant's logic inside the platform's checkout at defined points: Shopify Functions cover discounts, cart transforms (bundles), delivery customization (rename, hide or reorder options), payment customization, fulfillment constraints, order routing and cart and checkout validation. Functions from public App Store apps run on any plan; custom apps with functions are Plus-only.
 - **Pixels** observe checkout events for analytics without touching the page: Shopify's app pixels run in a `strict` sandbox (a web worker with no DOM) and merchants' custom pixels in a `lax` iframe sandbox.
 
-The design principle is worth copying when you build your own checkout: third-party code reads events and returns decisions; it never gets the payment page's DOM. That is what keeps a checkout off the attack surface the PCI DSS script requirements were written for ([PCI DSS Scope](/books/commerce/choosing-a-platform#pci-dss-scope); the later Store Security & PCI chapter).
+The design principle is worth copying when you build your own checkout: third-party code reads events and returns decisions; it never gets the payment page's DOM. That is what keeps a checkout off the attack surface the PCI DSS script requirements were written for ([PCI DSS Scope](/books/commerce/choosing-a-platform#pci-dss-scope); [Store Security & PCI](/books/commerce/store-security-and-pci)).
 
 ## Placing the Order Exactly Once
 

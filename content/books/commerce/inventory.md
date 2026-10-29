@@ -127,7 +127,7 @@ A merchant selling on its own site, Amazon, Walmart, eBay and a retailer's drop-
 
 Every change to a count is a movement with a reason: received, shipped, transferred out and in, returned and restocked, damaged, moved to or from quality control, counted (a cycle count variance), found, lost, written off. Shopify's adjustment reasons (`received`, `correction`, `cycle_count_available`, `damaged`, `shrinkage`, `promotion`, `restock`, reservation and movement reasons) are a usable starting vocabulary.
 
-My rule: `inventory_levels` is a cache of the sum of movements, updated in the same transaction as each movement, and the movements are append-only ([Append-Only Records](/docs/payments/payment-states#append-only-records)). Then every count can be explained ("why does it say 4?"), every variance has a date, shrink is a sum over reasons, inventory valuation can be rebuilt from movements and costs (the later Commerce Accounting chapter), and a sync bug is found by replaying movements against what was published.
+My rule: `inventory_levels` is a cache of the sum of movements, updated in the same transaction as each movement, and the movements are append-only ([Append-Only Records](/docs/payments/payment-states#append-only-records)). Then every count can be explained ("why does it say 4?"), every variance has a date, shrink is a sum over reasons, inventory valuation can be rebuilt from movements and costs ([Commerce Accounting](/books/commerce/commerce-accounting)), and a sync bug is found by replaying movements against what was published.
 
 ## Cycle Counts and Shrink
 

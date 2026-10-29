@@ -270,7 +270,7 @@ Design notes:
 
 - **Ordered, acknowledged, received, cancelled are four numbers.** A line's ordered quantity never changes after sending; the supplier's acknowledgment, the receipts and any cancellation are separate, so fill rate and the open quantity are both computable.
 - **Receipts post movements.** Accepted units add on-hand at the location through Inventory's movements, rejected units go to a non-sellable location, and the PO line's `quantity_received` is the sum of its receipt lines.
-- **Landed cost changes value, not the receipt.** Allocations are rows tied to receipt lines and to the invoice that justified them; Commerce Accounting turns them into cost layers.
+- **Landed cost changes value, not the receipt.** Allocations are rows tied to receipt lines and to the invoice that justified them; [Commerce Accounting](/books/commerce/commerce-accounting) turns them into cost layers.
 - **Rules record their inputs.** `computed_from` keeps the forecast version, service level and lead time that produced a reorder point, so a stockout can be traced to a bad input rather than argued about.
 - **Lead times are measured.** Each receipt's arrival against the PO's `promised_at` updates the supplier item's lead time and its standard deviation, which feed the safety stock formula.
 - **Purchase orders are documents.** The PO as sent, the acknowledgment, the ASN and the invoice are `documents` rows with their bytes, linked by `purchase_order_id`.

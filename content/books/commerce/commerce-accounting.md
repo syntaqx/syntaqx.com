@@ -1,6 +1,6 @@
 +++
 title = "Commerce Accounting"
-description = "ASC 606 for goods, shipping elections, returns reserves, gift card and loyalty liabilities, COGS and landed cost, payout reconciliation, sales tax and the close."
+description = "ASC 606 for goods, the shipping election, returns reserves, gift card and loyalty liabilities, COGS and landed cost, payout reconciliation, sales tax and close."
 category = "Commerce Industry"
 order = 2358
 part = "Running the Platform"

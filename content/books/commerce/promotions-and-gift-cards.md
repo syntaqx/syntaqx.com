@@ -101,7 +101,7 @@ The default allocation is proportional to each eligible line's amount after item
 
 ## Promotion Abuse
 
-Discounts are money handed out by rule, and the rule is the attack surface. The delivery part's [Promotion Abuse](/books/commerce/refunds-and-delivery-fraud#promotion-abuse) covers the main pattern (new-customer offers farmed with new accounts, defeated by identity linking at redemption); the later Commerce Fraud & Abuse chapter covers bots. The commerce-wide patterns:
+Discounts are money handed out by rule, and the rule is the attack surface. The delivery part's [Promotion Abuse](/books/commerce/refunds-and-delivery-fraud#promotion-abuse) covers the main pattern (new-customer offers farmed with new accounts, defeated by identity linking at redemption); [Commerce Fraud & Abuse](/books/commerce/commerce-fraud) covers bots. The commerce-wide patterns:
 
 - **Code leakage.** A code sent to one list ends up on coupon aggregators and browser extensions that try every known code at checkout. Unique single-use codes, codes bound to a customer or email, and short validity windows contain it; a public code should be treated as public.
 - **Stacking exploits.** A combination nobody intended (a 30% sitewide offer stacking with a 50% clearance price and a free gift) found and shared. The defenses are class exclusivity by default, explicit combinations only, and a margin floor.
@@ -143,7 +143,7 @@ Which state gets the money follows the Supreme Court's priority rules from *Texa
 
 ### Breakage
 
-**Breakage** is the part of gift card balances that will never be redeemed. Under ASC 606-10-55-48, if a merchant "expects to be entitled to a breakage amount," it recognizes expected breakage as revenue "in proportion to the pattern of rights exercised by the customer"; if not, only "when the likelihood of the customer exercising its remaining rights becomes remote." Under 55-49, amounts the merchant must remit to a state under unclaimed property law are a liability "and not revenue." Deloitte's illustration: with $1,000 of cards issued and $200 of expected breakage, each $40 of redemptions releases $10 of breakage. The playbook's [Breakage](/docs/payments/accounting#breakage) covers the accounting; the later Commerce Accounting chapter the journal entries.
+**Breakage** is the part of gift card balances that will never be redeemed. Under ASC 606-10-55-48, if a merchant "expects to be entitled to a breakage amount," it recognizes expected breakage as revenue "in proportion to the pattern of rights exercised by the customer"; if not, only "when the likelihood of the customer exercising its remaining rights becomes remote." Under 55-49, amounts the merchant must remit to a state under unclaimed property law are a liability "and not revenue." Deloitte's illustration: with $1,000 of cards issued and $200 of expected breakage, each $40 of redemptions releases $10 of breakage. The playbook's [Breakage](/docs/payments/accounting#breakage) covers the accounting; [Commerce Accounting](/books/commerce/commerce-accounting) the journal entries.
 
 What the system owes finance is the history that makes the estimate: every card's issue date, amount, channel and jurisdiction, and every redemption, load, adjustment and escheatment with its date. With that, finance computes a redemption curve by issue cohort. My rule: breakage is a number in the books, never a state of the card. Recognizing breakage doesn't remove a customer's balance, and an escheated card is still a card the support team can see.
 
@@ -153,7 +153,7 @@ Store credit is a balance owed to a known customer, usually from a return or a g
 
 ### Gift card fraud
 
-Gift cards are the payment method scammers prefer, because they're fast and hard to reverse. The FTC reported in December 2021 that gift cards were the most common payment method scammers asked for, with "$148 million stolen from consumers" in the first nine months of 2021 and a median loss that rose from $700 to $1,000, and urged retailers to use "point-of-purchase signs, check-out counter alerts" and staff training. For an issuer the controls are velocity limits on purchases and redemptions, holds on high-value digital cards bought with new payment methods, balance checks that are rate-limited (card number enumeration is the classic attack), and full card numbers and PINs treated as secrets. The later Commerce Fraud & Abuse chapter covers detection.
+Gift cards are the payment method scammers prefer, because they're fast and hard to reverse. The FTC reported in December 2021 that gift cards were the most common payment method scammers asked for, with "$148 million stolen from consumers" in the first nine months of 2021 and a median loss that rose from $700 to $1,000, and urged retailers to use "point-of-purchase signs, check-out counter alerts" and staff training. For an issuer the controls are velocity limits on purchases and redemptions, holds on high-value digital cards bought with new payment methods, balance checks that are rate-limited (card number enumeration is the classic attack), and full card numbers and PINs treated as secrets. [Commerce Fraud & Abuse](/books/commerce/commerce-fraud) covers detection.
 
 ## How to Build It
 
