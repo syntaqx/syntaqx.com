@@ -1,14 +1,24 @@
 name: IndexNow
 
 # After each production deploy, tell IndexNow (Bing, Yandex and the engines
-# that share it) which pages changed since the previous one. Vercel reports
-# its deploys to GitHub as deployments. A manual run submits every URL in the
-# sitemap. The key is the INDEXNOW_KEY repository variable, served from
-# public/<key>.txt.
+# that share it) which pages changed: scripts/indexnow.mjs hashes what every
+# page renders and compares it with the previous run's manifest, kept as this
+# workflow's artifact. Vercel reports its deploys to GitHub as deployments.
+# A manual run can submit every URL, or dry-run to list what would go. The key
+# is the INDEXNOW_KEY repository variable, served from public/<key>.txt.
 
 on:
   deployment_status:
   workflow_dispatch:
+    inputs:
+      all:
+        description: Submit every URL in the sitemap
+        type: boolean
+        default: false
+      dry_run:
+        description: List what would be submitted, send nothing
+        type: boolean
+        default: false
 
 concurrency:
   group: indexnow
@@ -16,7 +26,10 @@ concurrency:
 
 permissions:
   contents: read
-  deployments: read
+  actions: read
+
+env:
+  MANIFEST: indexnow-manifest
 
 jobs:
   submit:
@@ -28,27 +41,33 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # The commit of the newest earlier production deploy that succeeded:
-      # lastmod is a commit date, and a deploy starts minutes after its
-      # commit, so the deploy's own time would miss commits in between.
-      # Superseded deploys turn inactive, so any success in its statuses counts.
-      - name: Find the previous production deploy
-        id: previous
-        if: github.event_name == 'deployment_status'
+      # The newest manifest any run kept; none on the first run or once it expires.
+      - name: Fetch the previous manifest
         env:
           GH_TOKEN: ${{ github.token }}
-          CURRENT_AT: ${{ github.event.deployment.created_at }}
         run: |
-          for row in $(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=Production&per_page=20" \
-            --jq ".[] | select(.created_at < \"$CURRENT_AT\") | \"\(.id),\(.sha)\""); do
-            if [ "$(gh api "repos/$GITHUB_REPOSITORY/deployments/${row%,*}/statuses" --jq 'any(.[]; .state == "success")')" = "true" ]; then
-              echo "at=$(gh api "repos/$GITHUB_REPOSITORY/commits/${row#*,}" --jq .commit.committer.date)" >> "$GITHUB_OUTPUT"
-              break
-            fi
-          done
+          run=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$MANIFEST&per_page=1" \
+            --jq '.artifacts[] | select(.expired | not) | .workflow_run.id')
+          if [ -n "$run" ]; then
+            gh run download "$run" --name "$MANIFEST" --dir previous
+          else
+            echo "No previous manifest"
+          fi
 
       - name: Submit
         env:
           INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
-          SINCE: ${{ steps.previous.outputs.at }}
-        run: node scripts/indexnow.mjs ${SINCE:+--since "$SINCE"}
+          COMMIT: ${{ github.event.deployment.sha }}
+          ALL: ${{ inputs.all && '1' || '' }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
+        run: |
+          node scripts/indexnow.mjs --manifest previous/manifest.json --out manifest.json \
+            ${COMMIT:+--commit "$COMMIT"} ${ALL:+--all} ${DRY_RUN:+--dry-run}
+
+      # A dry run leaves the previous manifest as the one to compare against.
+      - if: ${{ !inputs.dry_run }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.MANIFEST }}
+          path: manifest.json
+          retention-days: 90
