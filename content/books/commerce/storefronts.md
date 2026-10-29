@@ -75,7 +75,7 @@ Shopify's Theme Store requires an average Lighthouse performance score of at lea
 
 ## Commerce SEO
 
-Search engines and shopping surfaces read a store differently from shoppers: they need each product at one stable URL, its price and availability in markup that matches the page, and a crawlable path to every product that doesn't run through millions of filter combinations. The general rules (crawling and indexing, robots directives, canonicals, sitemaps, titles, rendering, redirects in a migration, hreflang) are the playbook's SEO doc; this section covers what a catalog adds to them.
+Search engines and shopping surfaces read a store differently from shoppers: they need each product at one stable URL, its price and availability in markup that matches the page, and a crawlable path to every product that doesn't run through millions of filter combinations. The general rules (crawling and indexing, robots directives, canonicals, sitemaps, titles, rendering, redirects in a migration, hreflang) are the playbook's [SEO](/docs/frontend/seo) doc; this section covers what a catalog adds to them.
 
 ### Structured Data
 
@@ -91,7 +91,7 @@ Two rules make it work in a real store:
 Google's ecommerce URL guidance, as of October 2026:
 
 - **Variants.** "Make sure that each variant can be identified by a separate URL," as a path (`/t-shirt/green`) or a query parameter (`/t-shirt?color=green`); where variants are optional parameters, the canonical is the URL without them. Fragments (`#black`) are ignored for indexing, so a variant behind a fragment doesn't exist to search.
-- **Session and tracking parameters.** One line, the general rule: don't link internally to "temporary parameters, such as session-IDs, tracking codes" (the playbook's SEO doc covers parameters in general).
+- **Session and tracking parameters.** One line, the general rule: don't link internally to "temporary parameters, such as session-IDs, tracking codes" ([Canonical URLs and Duplicates](/docs/frontend/seo#canonical-urls-and-duplicates) covers parameters in general).
 - **Faceted navigation.** Filters create near-endless URL combinations. If the filtered pages don't need to rank, Google recommends you "use robots.txt to disallow crawling of faceted navigation URLs" and keep one unfiltered listing page crawlable; filters in a URL fragment have "no impact on crawling (positive or negative)." `rel="canonical"` from filtered pages "may, over time, decrease the crawl volume," and `nofollow` works only if every link to the URL carries it. If filtered pages should be indexed, use the standard `&` separator, keep filters in one consistent order with no duplicates, and "return an HTTP 404 status code when a filter combination doesn't return results."
 - **Pagination.** "Give each page a unique URL" (`?page=2`), don't canonicalize later pages to the first, and link pages with plain `<a href>` links: Google no longer uses `rel="next"` and `rel="prev"`, and its crawlers "generally don't trigger JavaScript functions that require user actions," so infinite scroll needs crawlable page links behind it. Sort orders such as `?order=price` are kept out of the index with `noindex` or robots.txt.
 
@@ -99,7 +99,7 @@ The commerce decision is which filter pages are worth indexing. "Black running s
 
 ### Out of Stock, Discontinued and Seasonal Pages
 
-A product's URL is its handle (`products.handle` in the core model), and handles change: a product is renamed, a collection is restructured, a store moves platforms. Every change needs a permanent redirect from the old path to the new one, kept for as long as old links might arrive, which in practice is forever (the redirect mechanics are the playbook's SEO doc). A headless storefront has to do this itself, so the redirect table belongs to the merchant's model, not the theme.
+A product's URL is its handle (`products.handle` in the core model), and handles change: a product is renamed, a collection is restructured, a store moves platforms. Every change needs a permanent redirect from the old path to the new one, kept for as long as old links might arrive, which in practice is forever (the redirect mechanics are [Status Codes and Redirects](/docs/frontend/seo#status-codes-and-redirects) and [Site Migrations](/docs/frontend/seo#site-migrations)). A headless storefront has to do this itself, so the redirect table belongs to the merchant's model, not the theme.
 
 What a product page does when the product can't be bought is a merchandising decision expressed in HTTP:
 
