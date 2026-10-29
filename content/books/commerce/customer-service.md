@@ -42,7 +42,7 @@ Commerce contacts fall into a short list, each with an owner elsewhere in the vo
 | **Damaged, wrong or missing** | A replacement or refund | Photos, the shipment, the carrier claim | [Carrier Liability and Claims](/books/commerce/shipping-and-carriers#carrier-liability-and-claims), [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#refunds-and-credits) |
 | **Delivered but not received** | The parcel or the money | The carrier's scan, proof of delivery, the customer's history | [Customer Refund Abuse](/books/commerce/refunds-and-delivery-fraud#customer-refund-abuse) |
 | **Return or exchange** | A label, a refund, the right size | The return policy and portal | [The Return Lifecycle](/books/commerce/returns-and-exchanges#the-return-lifecycle) |
-| **Subscription** | Skip, swap, pause, cancel | The subscription's schedule and the cancellation law | Subscription Commerce; Auto-Renewal & Cancellation Law |
+| **Subscription** | Skip, swap, pause, cancel | The subscription's schedule and the cancellation law | [Skip, Pause, Swap and Upgrade](/books/commerce/subscription-commerce#skip-pause-swap-and-upgrade); [Cancellation Flows in Subscription Apps](/books/commerce/auto-renewal-law#cancellation-flows-in-subscription-apps) |
 | **Promotion and price** | A code that failed, a price that dropped | Discount rules, price-adjustment policy | [Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards) |
 | **Product questions** | Fit, compatibility, use | Product content | [Product Information & Content](/books/commerce/product-information) |
 | **Account and privacy** | Sign-in, email change, deletion | Account recovery, the privacy request process | [Customers, Accounts & Privacy](/books/commerce/customers-and-accounts) |
@@ -81,7 +81,7 @@ Support agents act on orders: cancel, edit an address or a line, refund all or p
 | **Replacement or reship** | Order management | A new zero-priced order linked to the original, so inventory, cost and fraud history see it |
 | **Store credit or goodwill** | Promotions and gift cards | A liability booked as credit, under a cap ([Store credit](/books/commerce/promotions-and-gift-cards#store-credit)) |
 | **Return label** | Returns | The policy's window and exclusions ([The Return Lifecycle](/books/commerce/returns-and-exchanges#the-return-lifecycle)) |
-| **Subscription change** | Subscriptions | The schedule and the cancellation law's requirements |
+| **Subscription change** | Subscriptions | The schedule, and the cancellation law ([Auto-Renewal & Cancellation Law](/books/commerce/auto-renewal-law#cancellation-flows-in-subscription-apps)) |
 
 Gorgias's order management lets agents "issue refunds" choosing whether to restock, "cancel orders" with a reason, and create or duplicate orders, and its macros can trigger Shopify refunds and cancellations. The commerce rules on top:
 
