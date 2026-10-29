@@ -33,7 +33,7 @@ export function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Main" className="inst hidden items-stretch lg:flex">
+    <nav aria-label="Main" className="inst hidden items-stretch pl-2 lg:flex">
       {nav.map((item) => {
         if ("links" in item) {
           return (
