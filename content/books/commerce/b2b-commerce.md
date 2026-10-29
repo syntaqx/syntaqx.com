@@ -32,7 +32,7 @@ Three patterns:
 
 A B2B customer has three layers:
 
-- **The company,** the legal buyer: its name, tax status (resale or exempt, with certificates), its credit, its terms, its account number in the seller's ERP.
+- **The company,** the legal buyer: its name, tax status (resale or exempt, with certificates per [Exemption Certificates](/books/commerce/sales-tax-vat-and-duties#exemption-certificates)), its credit, its terms, its account number in the seller's ERP.
 - **Its locations,** where goods ship and, often, who is billed: a contractor's three branches, a hospital system's clinics, each with its own ship-to, sometimes its own catalog, terms or tax treatment. Shopify attaches payment terms and catalogs at the company location.
 - **Its contacts,** the people who log in, each with a role at one or more locations: a buyer who can build carts and place orders up to a limit, an approver who approves others' orders, an administrator who manages users and addresses, a viewer who sees order history and invoices.
 
@@ -76,7 +76,7 @@ A company's price is usually one of: a list price less a percentage for its cust
 - **Quantity rules.** Minimums, maximums and increments (sold in cases of 12), which Shopify calls quantity rules. A cart line that breaks them is fixed in the cart, not rejected at the warehouse.
 - **Contract terms end.** A contract price list has a validity range; when it ends, prices revert or a renewal applies, and orders placed after the end are priced from the next list, not the expired one.
 
-The later Pricing & Price Lists chapter owns price list assignment and price history across channels; this chapter uses them for companies.
+[Pricing & Price Lists](/books/commerce/pricing#price-lists-price-books-and-b2b-prices) owns price list assignment, precedence, derived lists and confidential B2B prices across channels; this chapter uses its `price_list_assignments` with `scope` set to `company` or `company_location`. Contract prices that differ between competing resellers also need a reason on file under the Robinson-Patman Act ([Business buyers: Robinson-Patman](/books/commerce/pricing#business-buyers-robinson-patman)).
 
 ## Approval Flows
 
@@ -114,7 +114,7 @@ The system rules:
 
 ## How to Build It
 
-`companies`, `company_contacts` and `price_lists` from the core model hold the buyer and its contract prices. This chapter adds locations, roles per location, terms, credit, catalogs, quotes, approvals and punchout:
+`companies`, `company_contacts` and `price_lists` from the core model hold the buyer and its contract prices. Pricing's `price_list_assignments` assigns contract catalogs to companies and locations. This chapter adds locations, roles per location, terms, credit, catalog visibility, quotes, approvals and punchout:
 
 ```sql
 CREATE TABLE company_locations (         -- a branch, clinic or site that orders and receives
@@ -123,9 +123,8 @@ CREATE TABLE company_locations (         -- a branch, clinic or site that orders
   name            TEXT NOT NULL,
   ship_to         JSONB NOT NULL,
   bill_to         JSONB,                 -- null: the company's
-  tax_exemption_ref TEXT,                -- certificate, for the later Sales Tax chapter
-  price_list_id   UUID REFERENCES price_lists (id),  -- overrides the company's
-  payment_terms_id UUID,                 -- payment_terms, below
+  exemption_certificate_id UUID REFERENCES exemption_certificates (id),  -- resale or exempt
+  payment_terms_id UUID,                 -- payment_terms, below; null: the company's
   external_ref    TEXT,                  -- the ERP's ship-to number
   status          TEXT NOT NULL CHECK (status IN ('active', 'on_hold', 'closed'))
 );
@@ -161,14 +160,8 @@ CREATE TABLE credit_limits (             -- versioned: a new row per change
   PRIMARY KEY (company_id, valid_during)
 );
 
-CREATE TABLE company_catalogs (          -- which catalog applies to which company or location
-  catalog_id      UUID NOT NULL REFERENCES price_lists (id),
-  company_id      UUID NOT NULL REFERENCES companies (id),
-  location_id     UUID REFERENCES company_locations (id),
-  restrict_visibility BOOLEAN NOT NULL DEFAULT FALSE,  -- only listed items are visible
-  priority        SMALLINT NOT NULL,     -- resolution order when several apply
-  valid_during    TSTZRANGE NOT NULL
-);
+ALTER TABLE price_list_assignments      -- Pricing's table; a contract catalog can also restrict what is seen
+  ADD COLUMN restrict_visibility BOOLEAN NOT NULL DEFAULT FALSE;  -- only listed items are visible
 
 CREATE TABLE quotes (
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
