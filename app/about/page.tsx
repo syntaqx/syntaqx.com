@@ -23,9 +23,9 @@ export default function AboutPage() {
             <p className="eyebrow mb-6">about</p>
             <h1 className="mb-10 text-[clamp(2.5rem,4.5vw,3.75rem)] leading-[0.92]">
               Hacker, <span className="text-accent">open sorcerer</span>,
-              engineering leader.
+              leader.
             </h1>
-            <div className="max-w-2xl space-y-5 text-[1.0625rem] leading-relaxed text-muted">
+            <div className="space-y-5 text-[1.0625rem] leading-relaxed text-muted">
               <p>
                 My world is the screen. I&apos;m obsessed with technology: the
                 systems, the architecture, the problem-solving. That&apos;s the
