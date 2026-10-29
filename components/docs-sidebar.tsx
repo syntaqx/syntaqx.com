@@ -4,10 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
-import type { DocCategory } from "@/lib/docs";
 
 interface DocsSidebarProps {
-  categories: DocCategory[];
+  categories: { name: string; docs: { slug: string; navTitle: string }[] }[];
 }
 
 export const linkClass = (active: boolean) =>

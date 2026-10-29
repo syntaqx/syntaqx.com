@@ -6,6 +6,8 @@ import { getBookChapters } from "@/lib/docs";
 import { Button } from "@/components/button";
 import { DocsHeader } from "@/components/docs-header";
 import { SceneArt } from "@/components/scene-art";
+import { JsonLd } from "@/components/json-ld";
+import { collectionPage } from "@/lib/schema";
 import { BOOKS, bookParts, formatMinutes, getBook } from "@/lib/books";
 
 interface Props {
@@ -37,9 +39,23 @@ export default async function BookCover({ params }: Props) {
   if (!book || chapters.length === 0) notFound();
 
   const minutes = chapters.reduce((sum, d) => sum + d.readingMinutes, 0);
+  const cover = `/books/${book.slug}`;
 
   return (
     <article>
+      <JsonLd
+        data={collectionPage({
+          name: book.name,
+          description: book.summary,
+          path: cover,
+          crumbs: [
+            { name: "Books", path: "/books" },
+            { name: book.name, path: cover },
+          ],
+          items: chapters.map((c) => ({ name: c.title, path: `/books/${c.slug}` })),
+          book: true,
+        })}
+      />
       <DocsHeader
         title={book.name}
         eyebrow={

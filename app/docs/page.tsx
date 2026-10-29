@@ -2,14 +2,13 @@ import Link from "next/link";
 import { DocsIndex } from "@/components/docs-index";
 import { getDocsByCategory } from "@/lib/docs";
 import { JsonLd } from "@/components/json-ld";
-import { itemList } from "@/lib/schema";
+import { collectionPage } from "@/lib/schema";
 import { pageMetadata } from "@/lib/metadata";
 
-export const metadata = pageMetadata(
-  "/docs",
-  "Documentation",
-  "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.",
-);
+const description =
+  "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.";
+
+export const metadata = pageMetadata("/docs", "Documentation", description);
 
 export default function DocsPage() {
   const categories = getDocsByCategory();
@@ -17,12 +16,18 @@ export default function DocsPage() {
   return (
     <div>
       <JsonLd
-        data={itemList("Documentation", "/docs", [
-          ...categories.flatMap((c) =>
-            c.docs.map((d) => ({ name: d.title, path: `/docs/${d.slug}` })),
-          ),
-          { name: "API Reference", path: "/docs/api" },
-        ])}
+        data={collectionPage({
+          name: "Documentation",
+          description,
+          path: "/docs",
+          crumbs: [{ name: "Docs", path: "/docs" }],
+          items: [
+            ...categories.flatMap((c) =>
+              c.docs.map((d) => ({ name: d.title, path: `/docs/${d.slug}` })),
+            ),
+            { name: "API Reference", path: "/docs/api" },
+          ],
+        })}
       />
 
       <DocsIndex

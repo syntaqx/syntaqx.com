@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { docLastModified } from "@/lib/doc-dates";
+import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
 import { getAllBookChapters, getBookChapters } from "@/lib/docs";
 import { getBook } from "@/lib/books";
+import { titleIn } from "@/lib/metadata";
+import { bookRef } from "@/lib/schema";
 import { ChapterCount, DocArticle } from "@/components/doc-article";
 
 interface Props {
@@ -27,12 +29,12 @@ async function find(params: Props["params"]) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const found = await find(params);
   if (!found) return {};
-  const { chapter } = found;
+  const { book, chapter } = found;
 
   const image = { url: `/og/books/${chapter.slug}`, width: 1200, height: 630, alt: chapter.title };
   const modified = docLastModified(chapter.slug, "books");
   return {
-    title: chapter.title,
+    title: titleIn(chapter.title, book.name),
     description: chapter.description,
     openGraph: {
       title: chapter.title,
@@ -61,7 +63,9 @@ export default async function ChapterPage({ params }: Props) {
       doc={chapter}
       path={`/books/${chapter.slug}`}
       source={`content/books/${chapter.slug}.md`}
+      published={docFirstPublished(chapter.slug, "books")}
       modified={docLastModified(chapter.slug, "books")}
+      isPartOf={bookRef(book.name, cover)}
       crumbs={[
         { name: "Books", path: "/books" },
         { name: book.name, path: cover },

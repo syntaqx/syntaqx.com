@@ -6,7 +6,11 @@ export default function DocsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const categories = getDocsByCategory();
+  // Only what the sidebar shows crosses to the client, not each doc's text.
+  const categories = getDocsByCategory().map((category) => ({
+    name: category.name,
+    docs: category.docs.map(({ slug, navTitle }) => ({ slug, navTitle })),
+  }));
 
   return (
     <div className="lg:grid lg:grid-cols-[248px_1fr] lg:gap-10">

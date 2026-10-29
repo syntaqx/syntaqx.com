@@ -29,7 +29,9 @@ export async function DocArticle({
   doc,
   path,
   source,
+  published,
   modified,
+  isPartOf,
   eyebrow,
   crumbs,
   prev,
@@ -40,7 +42,11 @@ export async function DocArticle({
   path: string;
   /** The Markdown file, repo-relative, for Edit on GitHub and History. */
   source: string;
+  /** When the Markdown file was first added, for structured data. */
+  published?: string;
   modified?: string;
+  /** The book or collection it belongs to, for structured data. */
+  isPartOf?: object;
   eyebrow: ReactNode;
   crumbs: Crumb[];
   prev?: Neighbor;
@@ -57,7 +63,9 @@ export async function DocArticle({
           headline: doc.title,
           description: doc.description,
           path,
+          datePublished: published,
           dateModified: modified,
+          isPartOf,
           crumbs,
         })}
       />

@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/metadata";
 export const metadata = pageMetadata(
   "/tools",
   "Developer Tools",
-  "Free browser-based developer tools: a JWT debugger, UUID and ULID generator, format converters, JavaScript and Markdown tools, and more. What you paste stays in your browser.",
+  "Free browser-based developer tools: a JWT debugger, UUID and ULID generator, format converters, JavaScript and Markdown tools. What you paste stays local.",
 );
 
 function ToolGrid({ items }: { items: Tool[] }) {
