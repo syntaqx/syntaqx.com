@@ -115,18 +115,48 @@ A simple one-time link that would provide the secret value workflow.
 
 To initially test my theory, I added a simple handler to my personal API that would behave like most secret sharing services, but without me having to bother picking (or paying for) one until I knew this could work:
 
-- `POST https://api.syntaqx.com/v1/secrets` - Create a new secret
-- `GET https://api.syntaqx.com/v1/secrets/{id}` - Retrieve a secret
+- `POST https://api.syntaqx.com/secrets` - Create a new secret, get back a one-time link
+- `GET https://api.syntaqx.com/secrets/{id}` - Retrieve the secret, which deletes it
 
-> __⚠️ Warning:__ This API is no longer live and was only used as a proof of concept. It did not provide any real security or reliability: values were stored in memory, encryption was weak, and it should not have been relied on for real world use.
+> __ℹ️ Update (October 2026):__ The original proof of concept kept values in memory and is long gone. These endpoints are live again, rebuilt so you can follow this post for real: secrets are stored in Redis, encrypted under a key derived from the link (so the stored data alone can't be read), deleted on the first read, and expire unread after an hour by default (`ttl`, from 60 seconds up to a day). The [API reference](/docs/api) has the full schema.
 >
-> We ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
+> It's still a demo with no SLA, so don't send it production credentials. We ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
 >
 > Choose your own adventure.
 
+Here's the round trip with `curl`:
+
+```sh
+$ curl -s https://api.syntaqx.com/secrets     -H 'Content-Type: application/json'     -d '{"secret": "SHHH IM SECRET", "ttl": 600}'
+{"id":"pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M","url":"https://api.syntaqx.com/secrets/pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M","expires_at":"2026-10-29T15:33:45.000Z"}
+
+$ curl -s https://api.syntaqx.com/secrets/pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M
+{"secret":"SHHH IM SECRET"}
+
+$ curl -s https://api.syntaqx.com/secrets/pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M
+{"message":"No secret with that id. It was already read, expired, or never existed."}
+```
+
 ### Creating a secret
 
-To make things easy, I created a simple `create-secret.sh` script that would give me back a one-time link to retrieve the secret value:
+To make things easy, I created a simple `create-secret.sh` script that would give me back a one-time link to retrieve the secret value. It prompts for the value rather than taking it as an argument, so it stays out of your shell history:
+
+```sh
+#!/usr/bin/env bash
+# Usage: ./create-secret.sh [ttl-seconds]
+set -euo pipefail
+
+read -rsp 'Secret: ' secret
+echo >&2
+
+printf '%s' "$secret"   | jq -Rs --argjson ttl "${1:-3600}" '{secret: ., ttl: $ttl}'   | curl -sSf https://api.syntaqx.com/secrets       -H 'Content-Type: application/json'       --data-binary @-   | jq -r '.url'
+```
+
+```sh
+$ ./create-secret.sh 600
+Secret:
+https://api.syntaqx.com/secrets/pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M
+```
 
 Then, I could simply run the workflow, and provide the `key` and `url` as inputs:
 
@@ -141,7 +171,7 @@ on:
         required: true
         type: string
       url:
-        description: 'One-click Link (https://api.syntaqx.com/v1/secrets/{id})'
+        description: 'One-time Link (https://api.syntaqx.com/secrets/{id})'
         required: true
         type: string
 
@@ -154,14 +184,31 @@ jobs:
       -
         name: Retrieve the secret value
         id: secret
+        env:
+          SECRET_URL: ${{ inputs.url }}
         run: |
-          RESPONSE=$(curl -sL "${{ github.event.inputs.url }}" | jq -r '.secret')
-          echo "::add-mask::$RESPONSE"
-          echo "value=$RESPONSE" >> "$GITHUB_OUTPUT"
+          set -o pipefail
+          if [[ "$SECRET_URL" != https://api.syntaqx.com/secrets/* ]]; then
+            echo "::error::url must be a https://api.syntaqx.com/secrets/ link"
+            exit 1
+          fi
+          VALUE=$(curl -sSf "$SECRET_URL" | jq -r '.secret') || {
+            echo "::error::That link was already used, has expired, or never existed"
+            exit 1
+          }
+          echo "::add-mask::$VALUE"
+          echo "value=$VALUE" >> "$GITHUB_OUTPUT"
       -
+        env:
+          KEY: ${{ inputs.key }}
+          VALUE: ${{ steps.secret.outputs.value }}
         run: |
-          echo "${{ github.event.inputs.key }}=${{ steps.secret.outputs.value }}"
+          echo "$KEY=$VALUE"
 ```
+
+The inputs go through `env` rather than straight into the script with `${{ }}`, so a crafted input can't [inject commands][script injection] into the step. The link itself does show up in the log, but by the time anyone can read it, the workflow has already used it.
+
+[script injection]: https://docs.github.com/actions/reference/security/secure-use#good-practices-for-mitigating-script-injection-attacks
 
 Which surprisingly worked! The value was masked and never exposed in the logs.
 
@@ -169,7 +216,7 @@ Which surprisingly worked! The value was masked and never exposed in the logs.
 SECRET_KEY=***
 ```
 
-Now it would just be a matter of cleaning up my bash to ensure that unexpected errors (or incorrectly entered URLs) would be handled gracefully. We have a path forward.
+Run it a second time with the same link and the retrieve step fails with "That link was already used", which is exactly what you want from a one-time link. We have a path forward.
 
 ## Conclusion
 
