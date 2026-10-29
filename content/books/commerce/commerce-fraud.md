@@ -18,14 +18,14 @@ As of October 2026, from the vendors' and platforms' own pages:
 | Vendor | Model | What it covers beyond card fraud |
 | --- | --- | --- |
 | **Signifyd** | Approve or decline with a financial guarantee on approved orders, against "fraud and non-fraud chargebacks" (item not received, not as described, credit not processed, duplicate, subscription cancellation) | Return abuse insights and instant refunds |
-| **Riskified** | Approve or decline with a chargeback guarantee, as [Taking Payment in Commerce](/books/commerce/taking-payment#fraud-screening-and-chargeback-guarantees) describes the category | Not verified for this edition |
+| **Riskified** | Approve or decline with a Chargeback Guarantee ("guaranteed performance and instant decisions"), as [Taking Payment in Commerce](/books/commerce/taking-payment#fraud-screening-and-chargeback-guarantees) describes the category | Account Secure (account takeover), Policy Protect ("refund, promo, and reseller abuse"), Dispute Resolve (chargeback management) and Adaptive Checkout |
 | **Forter** | Identity-based decisions ("identifying the real person behind every interaction"); it announced "a 100% fraud chargeback guarantee for all transactions we've approved at checkout" in 2018 | Account protection (takeover, fake accounts), abuse prevention ("policy abuse"), dispute management, payment optimization |
 | **Sift** | A risk score per event (the Sift Score API) the merchant acts on, with payment protection and account defense products; no guarantee | Account defense (takeover) on the same platform |
 | **Kount** | Equifax's "AI-driven fraud prevention and digital identity" business since February 2021; markets itself against guarantee models as stopping chargebacks at lower cost | Digital identity, with Equifax's data behind it |
 | **Shopify** | Fraud analysis and Fraud Control for merchants, "integrated card testing protection" on Shopify Payments, Shopify Protect on eligible Shop Pay orders, checkout bot protection on Plus | Bot and card testing checkouts excluded from abandoned checkout recovery |
 | **Stripe** | Radar's models and rules, plus card testing controls (rate limiters, models, automatic CAPTCHA) on its newer payment surfaces | Card testing controls separate from Radar's dispute protection |
 
-Riskified's row rests on the category description; its own site refused to load for this edition, so its current terms are not cited. <!-- source-gap: riskified-products | missing | Riskified's current guarantee terms and its account takeover and policy abuse products | closes with: riskified.com product pages opened (blocked to fetching on 2026-10-28) | checked: 2026-10-28 -->
+Riskified's guarantee terms (which chargeback reasons it covers) aren't on its public product pages, so its row names the products, not the coverage. <!-- source-gap: riskified-products | missing | which chargeback reason codes Riskified's Chargeback Guarantee covers (fraud only, or also non-fraud disputes) | closes with: Riskified's Chargeback Guarantee page or its documentation (riskified.com refuses automated fetches; the home page lists the products only) | checked: 2026-10-28 -->
 
 Three things the table shows:
 
@@ -85,7 +85,7 @@ Enforcement has grown from a first case to a priority:
 - **March 31, 2025.** Executive Order 14254 directed the FTC to "rigorously enforce the Better Online Tickets Sales Act" with state attorneys general.
 - **August 18, 2025.** The FTC sued Key Investment Group and related resellers, alleging they bought at least 379,776 Ticketmaster tickets in just over a year, including 273 tickets for one Eras Tour show through 49 accounts against a 6-ticket limit.
 
-For sneakers, consoles, graphics cards and collectibles there is no federal equivalent as of October 2026: bills to extend the BOTS Act's approach to retail goods (the Stopping Grinch Bots Act) have been introduced in several Congresses without becoming law. <!-- source-gap: grinch-bots-act-status | status | Stopping Grinch Bots Act of 2025 (H.R.6822, S.3516) introduced and referred, not enacted | closes with: the congress.gov bill pages opened (blocked to fetching on 2026-10-28) | checked: 2026-10-28 --> A retailer's purchase limit is therefore a term of sale it enforces itself, which shapes the system:
+For sneakers, consoles, graphics cards and collectibles there is no federal equivalent as of October 2026: the bill to extend the BOTS Act's approach to retail goods, the Stopping Grinch Bots Act of 2025 (H.R. 6822 and S. 3516, both introduced December 17, 2025), was referred to committee in each chamber with no further action as of October 2026. A retailer's purchase limit is therefore a term of sale it enforces itself, which shapes the system:
 
 - **Publish the limit and the consequence.** "Two per customer; orders over the limit or placed by automated means may be cancelled" in the product's terms is what makes a cancellation a policy decision rather than an unexplained refusal ([Online Consumer Protection](/books/commerce/online-consumer-protection)).
 - **Count against people, not accounts.** A limit per account is a limit per email address; the check reads `identity_links` (shared cards, addresses, devices, phones) so 49 accounts at one address are one buyer ([Record Linkage](/docs/architecture/record-linkage)).
@@ -260,6 +260,8 @@ Design notes:
 **Law and regulators**
 
 - [15 U.S.C. 45c (Cornell LII)](https://www.law.cornell.edu/uscode/text/15/45c), the BOTS Act's prohibitions, the definition of an event and enforcement
+- [H.R. 6822, Stopping Grinch Bots Act of 2025 (congress.gov)](https://www.congress.gov/bill/119th-congress/house-bill/6822/all-actions), introduced and referred to Energy and Commerce
+- [S. 3516, Stopping Grinch Bots Act of 2025 (congress.gov)](https://www.congress.gov/bill/119th-congress/senate-bill/3516/all-actions), introduced and referred to Commerce, Science, and Transportation
 - [FTC: FTC Brings First-Ever Cases Under the BOTS Act (January 22, 2021)](https://www.ftc.gov/news-events/news/press-releases/2021/01/ftc-brings-first-ever-cases-under-bots-act), the three brokers, tickets bought and judgments
 - [FTC: Action against ticket resellers using illegal tactics (August 18, 2025)](https://www.ftc.gov/news-events/news/press-releases/2025/08/ftc-takes-action-against-ticket-resellers-using-illegal-tactics-bypass-ticket-limit-protections), the Key Investment Group complaint
 - [Executive Order 14254: Combating Unfair Practices in the Live Entertainment Market (Federal Register, April 3, 2025)](https://www.govinfo.gov/content/pkg/FR-2025-04-03/html/2025-05906.htm), the direction to enforce the BOTS Act
@@ -283,6 +285,7 @@ Design notes:
 - [Stripe: Protect yourself from card testing](https://docs.stripe.com/disputes/prevention/card-testing), Stripe's controls and the mitigations it recommends
 - [Nike: Inside SNKRS, bot protection](https://www.nike.com/launch/t/inside-snkrs-bot-protection), the share of bot entries and bot calls stopped
 - [Signifyd: Chargeback protection](https://www.signifyd.com/solutions/chargeback-protection/), the guarantee against fraud and non-fraud chargebacks
+- [Riskified](https://www.riskified.com/), its products: Chargeback Guarantee, Account Secure, Policy Protect, Dispute Resolve and Adaptive Checkout
 - [Forter](https://www.forter.com/), its products and identity approach
 - [Forter: New year, new fraud solution (January 9, 2018)](https://www.forter.com/blog/new-year-new-fraud-solution/), the fraud chargeback guarantee
 - [Sift](https://sift.com/), payment protection, account defense and the score API

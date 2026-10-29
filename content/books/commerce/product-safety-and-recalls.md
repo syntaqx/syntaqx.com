@@ -88,7 +88,7 @@ The customer data needed for step 3 is one of the few cases where a merchant nee
 
 ## Marketplaces and Recalls
 
-Who must run a recall when a marketplace's third-party seller sold the product is a live question. In 2024 CPSC decided that Amazon is a "distributor" under federal safety law for products sold by third parties through Fulfilled by Amazon and must take recall responsibilities for them; the decision's text and the status of Amazon's challenge weren't retrievable for this chapter. <!-- source-gap: cpsc-v-amazon | missing | the CPSC's 2024 final decision and order that Amazon is a distributor of FBA products, its required remedies, and the status of Amazon's court challenge as of 2026 | closes with: the decision and order on CPSC's docket and the court docket for Amazon's suit | checked: 2026-10-28 -->
+Who must run a recall when a marketplace's third-party seller sold the product is a live question. On July 30, 2024 CPSC unanimously decided that Amazon was a "distributor" under the Consumer Product Safety Act of more than 400,000 hazardous products (carbon monoxide detectors that failed, hair dryers without electrocution protection, children's sleepwear that failed flammability standards) listed by third-party sellers and sold through Fulfilled by Amazon, and so bears legal responsibility for their recall. Amazon hadn't contested the hazard; it argued it was a logistics provider, not a distributor. The Commission also found Amazon's own remedy, messages about "potential" safety issues and Amazon.com credits, inadequate, and ordered it to submit plans to notify purchasers and the public and to provide refunds or replacements. Amazon has challenged the orders in federal court; the challenge's status as of October 2026 wasn't confirmed from the court record. <!-- source-gap: cpsc-v-amazon | missing | the status of Amazon's federal suit (reported as filed in D. Md. in March 2025) challenging CPSC's July 2024 distributor decision and its later remedy order | closes with: the D. Md. docket (PACER) or a CPSC release on the outcome | checked: 2026-10-28 -->
 
 In the EU, the obligation is written into the GPSR: online marketplaces must register with the Safety Gate portal with a single point of contact, designate a consumer contact point, and cooperate so that "consumers affected by a product recall are notified."
 
@@ -100,13 +100,11 @@ For a marketplace operator, that means the recall tooling has to work across sel
 
 The Modernization of Cosmetics Regulation Act of 2022 gave FDA its first broad cosmetics powers:
 
-- **Facility registration and product listing.** Due within a year of December 29, 2022 (FDA set a later enforcement date), with registration renewed every two years and listings updated annually, through FDA's Cosmetics Direct portal (21 U.S.C. 364c).
+- **Facility registration and product listing.** Due within a year of December 29, 2022, though FDA said it would not enforce the requirements until July 1, 2024, with registration renewed every two years and listings updated annually, through FDA's Cosmetics Direct portal (21 U.S.C. 364c).
 - **Adverse event reports.** A serious adverse event report to FDA "no later than 15 business days after the report is received," with records kept six years (three for certain small businesses); reports reach the company through "the domestic address, domestic telephone number, or electronic contact information included on the label" (21 U.S.C. 364a), so the label must carry a US contact.
 - **Safety substantiation.** The responsible person must keep records substantiating safety; MoCRA doesn't require specific tests or animal testing.
 - **Mandatory recall.** Where there's a "reasonable probability" that a cosmetic is adulterated or misbranded and use "will cause serious adverse health consequences or death," FDA can order a recall after giving the company a chance to "voluntarily cease distribution and recall" (21 U.S.C. 364g).
 - **Still pending as of October 2026:** good manufacturing practice rules (draft guidance only), fragrance allergen labeling, and talc testing, per FDA's MoCRA page. Small businesses are exempt from GMP and registration and listing, except for products like eye-area, injected, internal-use or long-wear products.
-
-<!-- source-gap: mocra-listing-enforcement-date | missing | FDA's enforcement date for MoCRA registration and listing (reported as July 1, 2024) | closes with: FDA's June 2024 announcement text | checked: 2026-10-28 -->
 
 ### Dietary Supplements
 
@@ -281,6 +279,7 @@ Design notes:
 - [Federal Register: Certificates of compliance correction (September 24, 2025)](https://www.federalregister.gov/api/v1/documents/2025-18521.json), the effective and applicability dates
 - [16 CFR 1115.14 (Cornell LII)](https://www.law.cornell.edu/cfr/text/16/1115.14), reporting within 24 hours and the 10-day investigation
 - [CPSC: Duty to report](https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance/Duty-to-Report-to-the-CPSC-Your-Rights-and-Responsibilities), who must report, penalties and Fast Track
+- [CPSC: Finds Amazon Responsible Under Federal Safety Law for Hazardous Products Sold by Third-Party Sellers (July 30, 2024)](https://www.cpsc.gov/Newsroom/News-Releases/2024/CPSC-Finds-Amazon-Responsible-Under-Federal-Safety-Law-for-Hazardous-Products-Sold-by-Third-Party-Sellers-on-Amazon-com), the distributor decision and order (Docket 21-2)
 - [Federal Register: CPSC civil penalties, adjusted maximum amounts (December 1, 2021)](https://www.federalregister.gov/documents/2021/12/01/2021-26082/civil-penalties-notice-of-adjusted-maximum-amounts), $120,000 and $17,150,000
 - [16 CFR 1263.3 (Cornell LII)](https://www.law.cornell.edu/cfr/text/16/1263.3), button and coin batteries and ANSI/UL 4200A
 - [Federal Register API: CPSC rules listing](https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=consumer-product-safety-commission&conditions[term]=%22Certificates%20of%20Compliance%22&conditions[type][]=RULE&order=newest&per_page=10), the 2023 clothing storage unit rule and the 2022 magnets rule
@@ -293,6 +292,7 @@ Design notes:
 
 - [21 U.S.C. 364c (Cornell LII)](https://www.law.cornell.edu/uscode/text/21/364c), cosmetics facility registration and product listing
 - [FDA: Registration and listing of cosmetic product facilities and products](https://www.fda.gov/cosmetics/registration-listing-cosmetic-product-facilities-and-products), Cosmetics Direct and biennial renewal
+- [FDA: Compliance policy for cosmetic product facility registration and product listing (November 8, 2023)](https://www.fda.gov/cosmetics/cosmetics-news-events/fda-issues-compliance-policy-cosmetic-product-facility-registration-and-cosmetic-product-listing), no enforcement until July 1, 2024
 - [21 U.S.C. 364a (Cornell LII)](https://www.law.cornell.edu/uscode/text/21/364a), cosmetics serious adverse event reports
 - [21 U.S.C. 364g (Cornell LII)](https://www.law.cornell.edu/uscode/text/21/364g), FDA's mandatory cosmetics recall authority
 - [FDA: Modernization of Cosmetics Regulation Act of 2022](https://www.fda.gov/cosmetics/cosmetics-laws-regulations/modernization-cosmetics-regulation-act-2022-mocra), safety substantiation, pending rules and small business exemptions
