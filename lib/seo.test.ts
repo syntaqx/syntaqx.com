@@ -1,21 +1,34 @@
 import { describe, it, expect } from "vitest";
 import { getAllPosts, getAllTags, slugifyTag, tagDescription } from "./posts";
-import { getAllDocs } from "./docs";
-import { article, breadcrumbList, itemList, siteGraph, webApplication } from "./schema";
+import { getAllBookChapters, getAllDocs } from "./docs";
+import { BOOKS } from "./books";
+import { MAX_DESCRIPTION, titleIn } from "./metadata";
+import {
+  article,
+  bookRef,
+  breadcrumbList,
+  collectionPage,
+  itemList,
+  profilePage,
+  siteGraph,
+  webApplication,
+} from "./schema";
 import sitemap from "@/app/sitemap";
 import { allTools, moreToolsFor } from "./tools";
 import { patterns } from "./ui";
 
-const MAX_DESCRIPTION = 160;
-
 describe("meta descriptions", () => {
   it("keeps every post and doc description within 160 characters", () => {
-    for (const item of [...getAllPosts(), ...getAllDocs()]) {
+    for (const item of [...getAllPosts(), ...getAllDocs(), ...getAllBookChapters()]) {
       expect(item.description, item.slug).toBeTruthy();
       expect(item.description!.length, item.slug).toBeLessThanOrEqual(
         MAX_DESCRIPTION,
       );
     }
+  });
+
+  it("keeps every book's summary, its cover's description, within 160 characters", () => {
+    for (const book of BOOKS) expect(book.summary.length, book.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);
   });
 
   it("gives every tag archive a description that fits", () => {
@@ -30,6 +43,13 @@ describe("meta descriptions", () => {
       expect(d.length, `${tag.slug}: ${d}`).toBeGreaterThanOrEqual(110);
       expect(d.length, tag.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);
     }
+  });
+});
+
+describe("titleIn()", () => {
+  it("adds where a short title sits, and leaves a long one alone", () => {
+    expect(titleIn("Logs", "Observability")).toBe("Logs · Observability");
+    expect(titleIn("Idempotency Keys and Retries", "Payments")).toBe("Idempotency Keys and Retries");
   });
 });
 
@@ -192,6 +212,45 @@ describe("schema builders", () => {
       operatingSystem: "Any",
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    });
+  });
+
+  it("makes a book's cover a CollectionPage whose Book holds the chapter list", () => {
+    const graph = collectionPage({
+      name: "Payments",
+      description: "D",
+      path: "/books/payments",
+      crumbs: [{ name: "Books", path: "/books" }],
+      items: [{ name: "Money", path: "/books/payments/money" }],
+      book: true,
+    })["@graph"] as Record<string, unknown>[];
+    expect(graph.map((n) => n["@type"])).toEqual(["CollectionPage", "Book", "ItemList", "BreadcrumbList"]);
+    expect(graph[0].mainEntity).toEqual({ "@id": "https://www.syntaqx.com/books/payments#book" });
+    expect(graph[1]).toMatchObject({ ...bookRef("Payments", "/books/payments"), hasPart: { "@id": graph[2]["@id"] } });
+    expect(graph[2]).toMatchObject({ numberOfItems: 1 });
+  });
+
+  it("puts the person at the center of the profile page", () => {
+    const graph = profilePage({ path: "/resume", description: "p", crumbs: [] })["@graph"] as Record<string, unknown>[];
+    expect(graph[0]).toMatchObject({
+      "@type": "ProfilePage",
+      mainEntity: { "@type": "Person", "@id": "https://www.syntaqx.com/#person", name: "Chase Pierce" },
+    });
+    expect((graph[0].mainEntity as { sameAs: string[] }).sameAs).toContain("https://github.com/syntaqx");
+  });
+
+  it("links an article to the book it's part of", () => {
+    const node = article({
+      headline: "H",
+      description: "D",
+      path: "/books/payments/money",
+      crumbs: [],
+      datePublished: "2026-05-10T08:00:00-06:00",
+      isPartOf: bookRef("Payments", "/books/payments"),
+    })["@graph"][0] as Record<string, unknown>;
+    expect(node).toMatchObject({
+      datePublished: "2026-05-10T08:00:00-06:00",
+      isPartOf: { "@type": "Book", "@id": "https://www.syntaqx.com/books/payments#book" },
     });
   });
 });

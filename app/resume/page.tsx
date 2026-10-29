@@ -2,6 +2,8 @@ import { ArrowUpRight, Download } from "lucide-react";
 import { Button } from "@/components/button";
 import { pageMetadata } from "@/lib/metadata";
 import { PageHeader } from "@/components/page-header";
+import { JsonLd } from "@/components/json-ld";
+import { profilePage } from "@/lib/schema";
 import { PUBLIC_CONTACT, resume } from "@/lib/resume";
 
 export const metadata = pageMetadata(
@@ -16,6 +18,13 @@ const link =
 export default function ResumePage() {
   return (
     <div>
+      <JsonLd
+        data={profilePage({
+          path: "/resume",
+          description: resume.summary[0],
+          crumbs: [{ name: "Resume", path: "/resume" }],
+        })}
+      />
       <PageHeader
         label="resume"
         title={resume.name}

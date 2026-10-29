@@ -1,0 +1,54 @@
+name: IndexNow
+
+# After each production deploy, tell IndexNow (Bing, Yandex and the engines
+# that share it) which pages changed since the previous one. Vercel reports
+# its deploys to GitHub as deployments. A manual run submits every URL in the
+# sitemap. The key is the INDEXNOW_KEY repository variable, served from
+# public/<key>.txt.
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  deployments: read
+
+jobs:
+  submit:
+    name: Submit changed URLs
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The commit of the newest earlier production deploy that succeeded:
+      # lastmod is a commit date, and a deploy starts minutes after its
+      # commit, so the deploy's own time would miss commits in between.
+      # Superseded deploys turn inactive, so any success in its statuses counts.
+      - name: Find the previous production deploy
+        id: previous
+        if: github.event_name == 'deployment_status'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_AT: ${{ github.event.deployment.created_at }}
+        run: |
+          for row in $(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=Production&per_page=20" \
+            --jq ".[] | select(.created_at < \"$CURRENT_AT\") | \"\(.id),\(.sha)\""); do
+            if [ "$(gh api "repos/$GITHUB_REPOSITORY/deployments/${row%,*}/statuses" --jq 'any(.[]; .state == "success")')" = "true" ]; then
+              echo "at=$(gh api "repos/$GITHUB_REPOSITORY/commits/${row#*,}" --jq .commit.committer.date)" >> "$GITHUB_OUTPUT"
+              break
+            fi
+          done
+
+      - name: Submit
+        env:
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          SINCE: ${{ steps.previous.outputs.at }}
+        run: node scripts/indexnow.mjs ${SINCE:+--since "$SINCE"}

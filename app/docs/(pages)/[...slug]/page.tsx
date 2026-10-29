@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
-import { docLastModified } from "@/lib/doc-dates";
+import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
+import { titleIn } from "@/lib/metadata";
+import { pageRef } from "@/lib/schema";
 import { getAllDocs, getDocBySlug, getDocsByCategory } from "@/lib/docs";
 import { ChapterCount, DocArticle } from "@/components/doc-article";
 import type { Metadata } from "next";
@@ -21,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const image = { url: `/og/docs/${doc.slug}`, width: 1200, height: 630, alt: doc.title };
   const modified = docLastModified(doc.slug);
   return {
-    title: doc.title,
+    title: titleIn(doc.title, doc.category),
     description: doc.description,
     openGraph: {
       title: doc.title,
@@ -53,7 +55,9 @@ export default async function DocPage({ params }: Props) {
       doc={doc}
       path={`/docs/${doc.slug}`}
       source={`content/docs/${doc.slug}.md`}
+      published={docFirstPublished(doc.slug)}
       modified={docLastModified(doc.slug)}
+      isPartOf={pageRef("Documentation", "/docs")}
       crumbs={[
         { name: "Docs", path: "/docs" },
         ...(category && doc.section ? [{ name: category.name, path: `/docs#${category.section}` }] : []),

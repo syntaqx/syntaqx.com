@@ -3,25 +3,26 @@ import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/card";
 import { PageHeader } from "@/components/page-header";
 import { JsonLd } from "@/components/json-ld";
-import { itemList } from "@/lib/schema";
+import { collectionPage } from "@/lib/schema";
 import { patterns } from "@/lib/ui";
 import { pageMetadata } from "@/lib/metadata";
 
-export const metadata = pageMetadata(
-  "/ui",
-  "UI Patterns",
-  "How I build interfaces: the interaction patterns I reach for, when, and why, each with live demos. Hover cards, feedback, empty states, inline validation, and keyboard focus.",
-);
+const description =
+  "Interaction patterns I reach for, when and why, each with live demos: hover cards, feedback, empty states, inline validation, and keyboard and focus.";
+
+export const metadata = pageMetadata("/ui", "UI Patterns", description);
 
 export default function UiPage() {
   return (
     <div>
       <JsonLd
-        data={itemList(
-          "UI Patterns",
-          "/ui",
-          patterns.map((p) => ({ name: p.title, path: p.href })),
-        )}
+        data={collectionPage({
+          name: "UI Patterns",
+          description,
+          path: "/ui",
+          crumbs: [{ name: "UI", path: "/ui" }],
+          items: patterns.map((p) => ({ name: p.title, path: p.href })),
+        })}
       />
       <PageHeader
         label="ui"

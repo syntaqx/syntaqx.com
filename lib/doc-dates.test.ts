@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseLastModified } from "./doc-dates";
+import { parseFirstAdded, parseLastModified } from "./doc-dates";
 
 const S = "\u0001";
 const log = [
@@ -51,5 +51,40 @@ describe("parseLastModified()", () => {
     expect(dates.get("content/books/payments/money.md")).toBe("2026-10-26T12:00:00-06:00");
     expect(dates.has("content/docs/industries/payments/ach.md")).toBe(false);
     expect(dates.has("content/docs/old.md")).toBe(false);
+  });
+});
+
+describe("parseFirstAdded()", () => {
+  it("keeps each file's oldest commit date", () => {
+    const dates = parseFirstAdded(log);
+    expect(dates.get("content/docs/payments/idempotency.md")).toBe("2026-10-22T12:00:00-06:00");
+    expect(dates.get("content/docs/payments/money.md")).toBe("2026-09-01T09:00:00-06:00");
+    expect(dates.get("content/docs/api-design/webhooks.md")).toBe("2026-05-10T08:00:00-06:00");
+  });
+
+  it("drops files first seen at a shallow boundary", () => {
+    const dates = parseFirstAdded(log, new Set(["c1"]));
+    expect(dates.has("content/docs/api-design/webhooks.md")).toBe(false);
+    expect(dates.get("content/docs/payments/money.md")).toBe("2026-09-01T09:00:00-06:00");
+  });
+
+  it("follows moves back to the original path, and dates a re-added file from its newer add", () => {
+    const history = [
+      `${S}c3${S}2026-10-26T12:00:00-06:00`,
+      "",
+      "R100\tcontent/docs/industries/payments/ach.md\tcontent/books/payments/ach.md",
+      "A\tcontent/docs/old.md",
+      `${S}c2${S}2026-09-01T09:00:00-06:00`,
+      "",
+      "M\tcontent/docs/industries/payments/ach.md",
+      "D\tcontent/docs/old.md",
+      `${S}c1${S}2026-05-10T08:00:00-06:00`,
+      "",
+      "A\tcontent/docs/industries/payments/ach.md",
+      "A\tcontent/docs/old.md",
+    ].join("\n");
+    const dates = parseFirstAdded(history);
+    expect(dates.get("content/books/payments/ach.md")).toBe("2026-05-10T08:00:00-06:00");
+    expect(dates.get("content/docs/old.md")).toBe("2026-10-26T12:00:00-06:00");
   });
 });
