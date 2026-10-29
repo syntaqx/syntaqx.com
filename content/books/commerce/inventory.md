@@ -121,7 +121,7 @@ A merchant selling on its own site, Amazon, Walmart, eBay and a retailer's drop-
 - **Prioritize the edge.** An item with 500 units can sync every hour; an item with 2 left should sync on every change. Rate limits on marketplace and platform APIs make that a priority queue, not a timer ([Limits](/docs/requests/rate-limiting#limits)).
 - **Expect lag and measure it.** commercetools documents up to 10 seconds before its own quantities reflect a change; a marketplace feed can take minutes. The time from a movement to every channel's acknowledgment is a metric, and the selling buffer is sized from it.
 
-The later Multichannel Listing & Feeds chapter covers the feed formats; here the point is that availability is a published number per channel, computed from the same parts, with a record of what was sent and when.
+[Multichannel Listing & Feeds](/books/commerce/multichannel-listing) covers the feed formats; here the point is that availability is a published number per channel, computed from the same parts, with a record of what was sent and when.
 
 ## Movements, Not Overwrites
 
