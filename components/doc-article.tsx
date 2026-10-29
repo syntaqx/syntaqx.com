@@ -3,7 +3,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
-import { CopyMarkdown } from "@/components/copy-markdown";
+import { MarkdownMenu } from "@/components/copy-markdown";
 import { CodeTabsScript } from "@/components/code-tabs";
 import { ChapterKeys } from "@/components/chapter-keys";
 import { JsonLd } from "@/components/json-ld";
@@ -44,7 +44,7 @@ export async function DocArticle({
   headline?: string;
   /** The page's URL path, e.g. /docs/payments/money. */
   path: string;
-  /** The Markdown file, repo-relative, for Edit on GitHub and History. */
+  /** The Markdown file, repo-relative, for Edit on GitHub. */
   source: string;
   /** When the Markdown file was first added, for structured data. */
   published?: string;
@@ -76,23 +76,24 @@ export async function DocArticle({
       <div className="min-w-0">
         <DocsHeader title={doc.title} eyebrow={eyebrow}>
           {doc.description && <p className="max-w-3xl text-dim">{doc.description}</p>}
-          <div className="inst mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
-            <span>{doc.readingMinutes} min read</span>
-            {modified && (
-              <span>
-                Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
-              </span>
-            )}
-            <CopyMarkdown href={`${path}.md`} className="cursor-pointer uppercase transition-colors hover:text-accent" />
-            <a href={`${path}.md`} type="text/markdown" className="transition-colors hover:text-accent">
-              View as Markdown
-            </a>
-            <a href={`${REPO}/blob/main/${source}`} className="transition-colors hover:text-accent">
-              Edit on GitHub
-            </a>
-            <a href={`${REPO}/commits/main/${source}`} className="transition-colors hover:text-accent">
-              History
-            </a>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3">
+            <div className="inst flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
+              <span>{doc.readingMinutes} min read</span>
+              {modified && (
+                <span>
+                  Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-4">
+              <a
+                href={`${REPO}/blob/main/${source}`}
+                className="inst text-dim transition-colors hover:text-accent"
+              >
+                Edit on GitHub
+              </a>
+              <MarkdownMenu href={`${path}.md`} />
+            </div>
           </div>
         </DocsHeader>
         <div className="prose prose-docs" dangerouslySetInnerHTML={{ __html: content }} />
