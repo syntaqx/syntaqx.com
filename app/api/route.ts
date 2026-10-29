@@ -16,6 +16,7 @@ export function GET() {
       useragent_url: `${baseUrl}/useragent`,
       docs_url: `${baseUrl}/docs`,
       echo_url: `${baseUrl}/echo`,
+      secrets_url: `${baseUrl}/secrets`,
       openapi_url: `${baseUrl}/openapi`,
     },
     {

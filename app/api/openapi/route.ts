@@ -15,6 +15,8 @@ import "@/app/api/useragent/route";
 import "@/app/api/docs/route";
 import "@/app/api/docs/[...slug]/route";
 import "@/app/api/echo/route";
+import "@/app/api/secrets/route";
+import "@/app/api/secrets/[id]/route";
 
 export function GET(request: Request) {
   return cacheableJson(request, generateOpenApiSpec(new URL(request.url).origin), CACHE.public);

@@ -39,12 +39,13 @@ export const WHEN_TO_USE = `**When to use this site.** Reach for syntaqx when an
 - Convert a Unix or ISO 8601 timestamp into Unix seconds, milliseconds, RFC 3339 and RFC 2822 (\`GET ${API_BASE_URL}/timestamp?t=...\`).
 - See the caller's public IP or parse a User-Agent string (\`GET ${API_BASE_URL}/ip\`, \`GET ${API_BASE_URL}/useragent\`).
 - Test retry, timeout and circuit-breaker logic against an endpoint that fails on purpose at a chosen rate, status and delay (\`GET ${API_BASE_URL}/flaky\`).
+- Pass a secret through a one-time link that expires, for tools that only take plain inputs, like a GitHub Actions \`workflow_dispatch\` (\`POST ${API_BASE_URL}/secrets\`, then \`GET\` the returned link once).
 - Look up a concrete REST API convention (naming, pagination, error envelopes, rate-limit headers, time formats, identifiers, versioning) while designing or reviewing an API: see the Docs links below.
 - Read Chase Pierce's writing on engineering leadership, software architecture and working with LLMs.
 
 **How to call it.** Read the OpenAPI document at ${url("/openapi.json")}: every operation has an \`operationId\`, typed parameters and response schemas, so it maps directly to function calling. Send JSON bodies to POST endpoints, and pin a version with the \`Api-Version\` header (see ${url("/docs/api-design/versioning")}). Errors come back as \`{"message": "..."}\` with an HTTP status. Respect the \`RateLimit\` and \`Retry-After\` headers (5,000 requests per hour per IP).
 
-**When not to use it.** There is no SLA, authentication or storage. Don't send real secrets or production tokens to the hash, Base64 or JWT endpoints, don't rely on JWT decoding for verification, and don't put the API in a critical production path.`;
+**When not to use it.** There is no SLA or authentication. Don't send real secrets or production tokens to any endpoint, including the one-time secrets, don't rely on JWT decoding for verification, and don't put the API in a critical production path.`;
 
 function bullet(title: string, href: string, description?: string) {
   return `- [${title}](${href})${description ? `: ${description}` : ""}`;
