@@ -8,7 +8,7 @@ tags = ["architecture", "admission-control", "waiting-room", "capacity", "reliab
 aliases = ["admission-control", "waiting-rooms"]
 +++
 
-Some demand arrives all at once and on purpose: a game launch, a ticket on-sale, a sneaker drop, a vaccine appointment window, open enrollment, a flash sale, the first morning after a long outage. Capacity planning can't fix it, because the peak is many times anything worth provisioning for and lasts an hour. The choice is between admitting everyone and failing for everyone, or admitting people at the rate the system can serve them and telling the rest, honestly, how long they'll wait.
+Some demand arrives all at once and on purpose: a game launch, a ticket on-sale, a sneaker drop, a vaccine appointment window, open enrollment, a flash sale, the first morning after a long outage. Capacity planning can't fix it, because the peak is many times anything worth provisioning for and lasts an hour. The choice is between admitting everyone and failing for everyone, or admitting people at the rate the system can serve them and telling the rest, honestly, how long they'll wait. A store's peak sales and limited drops are the Commerce volume's [Waiting Rooms and Queues](/books/commerce/peak-season#waiting-rooms-and-queues).
 
 That second choice is admission control. A waiting room or a login queue is admission control with a user interface. This chapter covers how to decide what to admit, where the queue lives, what it tells people, how admission is proven to the systems behind it, and how to keep it fair.
 

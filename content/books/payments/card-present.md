@@ -92,7 +92,7 @@ A platform that ships terminals runs a hardware fleet, and the work doesn't end 
 
 ## Offline: Approved Isn't Paid
 
-A terminal that can't reach the network can still take a card, store the transaction and forward it later (**store and forward**). Sometimes the chip approves it offline with a TC; often the terminal simply stores it and attempts authorization when connectivity returns. Either way, the issuer hasn't said yes.
+A terminal that can't reach the network can still take a card, store the transaction and forward it later (**store and forward**). Sometimes the chip approves it offline with a TC; often the terminal simply stores it and attempts authorization when connectivity returns. Either way, the issuer hasn't said yes. The register's side, what a store sells offline and how it catches up, is the Commerce volume's [Offline Mode and Its Limits](/books/commerce/point-of-sale#offline-mode-and-its-limits).
 
 Stripe's documentation states the consequence without softening it: when you operate offline, you assume all decline and tamper-related risks, and if the issuer later declines, there's no way to recover the funds. It also caps a single offline payment at $10,000 and won't accept magnetic stripe offline at all, because stripe data is too easy to spoof. Adyen draws the same line: the merchant is fully liable for failed captures, chargebacks and disputes on payments approved offline, stripe reads are excluded, and each terminal gets a per-transaction ceiling and a maximum count of stored payments, while its mobile SDK stores and forwards for at most 24 consecutive hours.
 

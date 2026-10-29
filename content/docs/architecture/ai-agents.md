@@ -193,7 +193,7 @@ A transcript holds names, addresses, account details and whatever else customers
 
 ## The Law, at a Pointer Level
 
-This is not legal advice, and the rules change quickly. [Consumer Contact](/docs/compliance/consumer-contact) covers them properly; the engineering consequences are:
+This is not legal advice, and the rules change quickly. [Consumer Contact](/docs/compliance/consumer-contact) covers them properly, and the state chatbot disclosure laws as they reach a store's support agent are in [Disclosure Laws](/books/commerce/customer-service#disclosure-laws); the engineering consequences are:
 
 - **AI voice on outbound calls is an artificial voice.** In February 2024 the FCC ruled that AI-generated voices are "artificial" under the Telephone Consumer Protection Act, so AI outbound calls need the called party's prior express consent, which for telemarketing means prior express written consent, plus identification and, for telemarketing, an opt-out. Check consent in code before the call is placed.
 - **Recording consent is state law.** Federal law permits recording with the consent of one party, but states including California, Florida and Washington require every party's consent. Announce recording on every call, everywhere, and you don't need a state table to get it right.

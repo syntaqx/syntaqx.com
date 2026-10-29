@@ -10,7 +10,7 @@ tags = ["commerce", "replatforming", "migration", "seo", "data-model", "cutover"
 
 Every store eventually moves. A brand outgrows WooCommerce and moves to Shopify; a retailer leaves Magento 1 or Salesforce Commerce Cloud for something cheaper to run; a Shopify Plus merchant goes headless or to commercetools; a business builds its own after years on someone else's. The catalog is the easy part. The hard parts are the records that carry obligations: customers who expect to sign in, gift cards and store credit that are money owed, subscriptions that renew next Tuesday on a card the new platform has never seen, reviews with dates and verified badges, order history that support and returns still need, and a decade of URLs that search engines and old emails still point at. A migration that moves the products and loses any of those is a migration the customers notice.
 
-This chapter covers moving a store between Shopify, BigCommerce, Adobe Commerce, Salesforce Commerce Cloud, WooCommerce, commercetools and custom builds, as of October 2026: what each platform imports and exports, what migrates object by object, the cutover plan, SEO preservation, rewiring apps and integrations, and validating the result. The general method (crosswalks, loading with side effects off, dark launches, reconciliation, cutover and rollback windows, archives) is the playbook's [Replacing Systems](/docs/architecture/replacing-systems), and site moves for search are [Site Migrations](/docs/frontend/seo#site-migrations). Moving stored card numbers between processors is the Payments volume's [Switching Processors](/books/payments/switching-processors), and choosing the destination is [Choosing & Hosting a Store](/books/commerce/choosing-a-platform). The chapter extends `export_runs`, `url_redirects` and ERP & Integrations' `record_mappings` and adds `migration_batches`, `migration_checks` and `token_migrations`.
+This chapter covers moving a store between Shopify, BigCommerce, Adobe Commerce, Salesforce Commerce Cloud, WooCommerce, commercetools and custom builds, as of October 2026: what each platform imports and exports, what migrates object by object, the cutover plan, SEO preservation, rewiring apps and integrations, and validating the result. The general method (crosswalks, loading with side effects off, dark launches, reconciliation, cutover and rollback windows, archives) is the playbook's [Replacing Systems](/docs/architecture/replacing-systems), and site moves for search are [Site Migrations](/docs/frontend/seo#site-migrations). Moving stored card numbers between processors is the Payments volume's [Switching Processors](/books/payments/switching-processors), and choosing the destination is [Choosing & Hosting a Store](/books/commerce/choosing-a-platform). The chapter extends `export_runs`, `url_redirects` and [ERP & Integrations](/books/commerce/erp-and-integrations#mapping-ids)' `record_mappings` and adds `migration_batches`, `migration_checks` and `token_migrations`.
 
 ## How the Platforms Do It
 
@@ -179,7 +179,7 @@ CREATE TABLE migration_batches (         -- one load from one source, as the pla
 );
 
 -- ERP & Integrations' record_mappings is the crosswalk: the old platform is a connected
--- system, local_id is our record, external_id the old platform's ID, as it wrote it.
+-- system, local_id is the new platform's record, external_id the old platform's ID, as it wrote it.
 ALTER TABLE record_mappings
   ADD COLUMN migration_batch_id UUID REFERENCES migration_batches (id);  -- null for live syncs
 
@@ -207,7 +207,7 @@ CREATE TABLE migration_checks (          -- the reconciliation gate, check by ch
                                          -- 'next_renewal_dates', 'redirect_coverage'
   batch_ids     UUID[] NOT NULL,
   expected      NUMERIC NOT NULL,        -- from the old platform or the ledger
-  actual        NUMERIC NOT NULL,        -- from our tables, read independently of the loader
+  actual        NUMERIC NOT NULL,        -- from the new tables, read independently of the loader
   passed        BOOLEAN NOT NULL,
   explanation   TEXT,                    -- required when passed is false and accepted
   run_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),

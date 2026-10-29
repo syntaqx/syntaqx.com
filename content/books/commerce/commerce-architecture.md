@@ -235,7 +235,7 @@ CREATE TABLE webhook_deliveries (        -- one event to one subscription, every
 CREATE INDEX webhook_deliveries_due ON webhook_deliveries (next_attempt_at)
   WHERE delivered_at IS NULL AND gave_up_at IS NULL;
 
-CREATE TABLE inbound_events (            -- what platforms, carriers and partners send us
+CREATE TABLE inbound_events (            -- what platforms, carriers and partners send in
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   connected_system_id UUID NOT NULL REFERENCES connected_systems (id),
   sender_event_id  TEXT NOT NULL,          -- X-Shopify-Webhook-Id, a payload hash, a message ID

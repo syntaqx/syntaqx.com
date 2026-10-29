@@ -9,7 +9,7 @@ tags = ["field-operations", "pesticides", "compliance", "recordkeeping", "regula
 
 A lawn technician who sprays a weed control, or a pest technician who treats a perimeter, has just done something federal and state law care about in detail: which product, under which registration, mixed at what rate, how much, against what pest, where, by whom, under which license, in what weather. If the record is wrong or missing, the company can't defend the application to an inspector, a customer who claims harm, or a neighbor who says the spray drifted into their garden. Lawn, tree, pool and HVAC work carry versions of the same burden. It's hard because the record is written by someone in a yard with a phone, often offline, the rules differ by state and by product, and the record has to stay right for years after the label and the license have both changed.
 
-This chapter covers what the law asks for, how the platforms capture it, and how to build an application record that survives an inspection. Who is allowed to apply is its own topic, in [Licenses & Permits](/books/field-operations/licensing-and-permits).
+This chapter covers what the law asks for, how the platforms capture it, and how to build an application record that survives an inspection. Who is allowed to apply is its own topic, in [Licenses & Permits](/books/field-operations/licensing-and-permits). Selling and shipping the same products to homeowners who apply them themselves (seller registration, state product registration, marketplace rules, hazmat shipping) is the Commerce volume's [Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#selling-versus-applying).
 
 ## The Label Is the Law
 

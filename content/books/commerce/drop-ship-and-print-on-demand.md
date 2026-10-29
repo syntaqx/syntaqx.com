@@ -90,7 +90,7 @@ The seller of record answers to the customer, and contracts with the supplier de
 
 Whether the POD platform itself is liable for an infringing design depends on how much it does, and the courts have split on the facts. In *Ohio State University v. Redbubble* (6th Cir. 2021) the court held that the district court "applied the Lanham Act too narrowly" in finding Redbubble not liable for trademark infringement on products made and shipped through its platform, and sent the case back. In *Atari v. Redbubble* a jury found for Redbubble in 2021, affirmed by the Ninth Circuit in 2023. In *Atari v. Sunfrog* (N.D. Cal. 2019) a platform that "makes, ships, and processes the payment" couldn't use Section 230 as a defense; in *Atari v. Printify* (S.D.N.Y. 2024) a preliminary injunction was denied, the court describing Printify as "a passive facilitator" that doesn't "ship or affix its logo to any products." The seller's position is clearer than the platform's: it chose and listed the design, and the provider's terms send the claim back to it.
 
-For the system, liability becomes records: the supplier's or provider's terms version on each order, the ship-time promise the supplier made and the one shown to the customer, the design file version and the rights evidence behind it, and every takedown notice received and acted on (the later Brand Protection chapter covers the other direction, a brand taking down infringers).
+For the system, liability becomes records: the supplier's or provider's terms version on each order, the ship-time promise the supplier made and the one shown to the customer, the design file version and the rights evidence behind it, and every takedown notice received and acted on ([Brand Protection](/books/commerce/brand-protection) covers the other direction, a brand taking down infringers).
 
 ## How to Build It
 
@@ -128,7 +128,7 @@ CREATE TABLE supplier_stock_feeds (      -- each stock snapshot as received
 ALTER TABLE fulfillments
   ADD COLUMN supplier_route_id UUID REFERENCES supplier_routes (id),
   ADD COLUMN supplier_ref      TEXT,     -- the supplier's order number
-  ADD COLUMN accepted_at       TIMESTAMPTZ,
+  -- accepted_at, the supplier's acceptance, is Warehouses, 3PLs & Fulfillment Networks' column
   ADD COLUMN ship_by           TIMESTAMPTZ,  -- from the route's days, checked against the promise
   ADD COLUMN packing_slip      TEXT CHECK (packing_slip IN ('seller', 'retailer', 'none')),
   ADD COLUMN carrier_account   TEXT,     -- a retailer's account for DSV orders

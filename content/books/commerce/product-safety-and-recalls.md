@@ -92,7 +92,7 @@ Who must run a recall when a marketplace's third-party seller sold the product i
 
 In the EU, the obligation is written into the GPSR: online marketplaces must register with the Safety Gate portal with a single point of contact, designate a consumer contact point, and cooperate so that "consumers affected by a product recall are notified."
 
-For a marketplace operator, that means the recall tooling has to work across sellers: matching recalled products to listings by identifiers and attributes, suspending them, and notifying the buyers it has on record, whether or not the seller cooperates. The later Running Your Own Marketplace chapter covers the operator's broader duties.
+For a marketplace operator, that means the recall tooling has to work across sellers: matching recalled products to listings by identifiers and attributes, suspending them, and notifying the buyers it has on record, whether or not the seller cooperates. [Running Your Own Marketplace](/books/commerce/running-a-marketplace) covers the operator's broader duties.
 
 ## FDA-Regulated Goods
 

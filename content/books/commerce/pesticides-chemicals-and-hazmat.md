@@ -92,7 +92,7 @@ The definitions reach online sellers squarely: listing a pesticide is offering i
 What a seller or marketplace does about it is the same either way:
 
 - **Screen claims, not just categories.** Listings that say "kills," "repels," "disinfects," "antimicrobial" or "antibacterial" are pesticide claims; a listing pipeline that flags them and requires a registration number (or a documented exemption) before the listing goes live catches the most common violation, the unregistered product with a pesticidal claim.
-- **Verify the registration number.** Check it against PPLS and against the label image; a number that belongs to a different product is a red flag for counterfeit or relabeled goods (counterfeits are the later Brand Protection chapter's subject).
+- **Verify the registration number.** Check it against PPLS and against the label image; a number that belongs to a different product is a red flag for counterfeit or relabeled goods (counterfeits are [Brand Protection](/books/commerce/brand-protection#counterfeits)'s subject).
 - **Respect state registrations at checkout,** as above.
 - **Keep the label with the listing.** The label image and its version date are the evidence that the page's claims match the registration ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 

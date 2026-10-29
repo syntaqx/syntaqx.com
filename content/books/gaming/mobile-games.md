@@ -131,7 +131,7 @@ Most mobile games are free, so growth is bought: the studio pays ad networks for
 
 ### iOS: ATT and AdAttributionKit
 
-Since iOS 14.5, "your app must request tracking authorization before it can get the advertising identifier" (IDFA), through App Tracking Transparency. If the app hasn't asked, or the user declined, the identifier is all zeros. Device-level attribution on iOS therefore works only for users who opt in on both the advertising app and the publishing app.
+Since iOS 14.5, "your app must request tracking authorization before it can get the advertising identifier" (IDFA), through App Tracking Transparency. If the app hasn't asked, or the user declined, the identifier is all zeros. Device-level attribution on iOS therefore works only for users who opt in on both the advertising app and the publishing app. What ATT did to a store's ad measurement is the Commerce volume's [Signals After ATT](/books/commerce/acquisition-and-attribution#signals-after-att).
 
 For everyone else, Apple provides aggregated, privacy-preserving attribution: SKAdNetwork, and its successor **AdAttributionKit** (iOS 17.4 and later), which also covers alternative app marketplaces; Apple's SKAdNetwork documentation now directs app ad campaigns to AdAttributionKit. Apps "don't need to use" App Tracking Transparency before calling these APIs. How it works, from Apple's documentation:
 

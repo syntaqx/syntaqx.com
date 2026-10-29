@@ -75,7 +75,7 @@ Vinted's model shows the commercial consequence: its buyer protection fee funds 
 
 ### The INFORM Consumers Act
 
-The INFORM Consumers Act (15 U.S.C. 45f), effective June 27, 2023, applies to online marketplaces with high-volume third-party sellers of new or unused consumer products. The rules, from the statute:
+The INFORM Consumers Act (15 U.S.C. 45f), effective June 27, 2023, applies to online marketplaces with high-volume third-party sellers of new or unused consumer products. What the disclosures give a brand chasing unauthorized sellers is the Commerce volume's [INFORM Disclosures](/books/commerce/brand-protection#inform-disclosures), and a retailer's own marketplace collects them in [Seller Onboarding and Verification](/books/commerce/running-a-marketplace#seller-onboarding-and-verification). The rules, from the statute:
 
 - **Who is high-volume.** A seller who, in any continuous 12-month period during the previous 24 months, made 200 or more discrete sales of new or unused consumer products and $5,000 or more in gross revenues. Only sales processed through the marketplace (directly or by its payment processor) count.
 - **Collect within 10 days.** Bank account information (or the payee name), contact information, and a business tax ID or taxpayer ID, plus a working email and phone number. The marketplace verifies the information within 10 days of collecting it, and verifies any change within 10 days of being told.

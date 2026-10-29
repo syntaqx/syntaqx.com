@@ -65,7 +65,7 @@ Merchants have their own evidence: the order's ticket, a photo of the packed bag
 
 ## Customer Refund Abuse
 
-Most false reports are individuals claiming a missing item that wasn't missing; some are organized. Incognia's 2025 report on gig-economy fraud, a vendor's analysis of risk assessments at just over half of the largest food delivery and ride-hailing companies, found refund abuse and promotion abuse tied as the top consumer-side fraud types at 48% each. Press coverage in 2024 described refund services advertised on Telegram and TikTok, some offering food-delivery orders so buyers could "eat for free," charging 15% to 30% of the refund.
+Most false reports are individuals claiming a missing item that wasn't missing; some are organized. Incognia's 2025 report on gig-economy fraud, a vendor's analysis of risk assessments at just over half of the largest food delivery and ride-hailing companies, found refund abuse and promotion abuse tied as the top consumer-side fraud types at 48% each. Press coverage in 2024 described refund services advertised on Telegram and TikTok, some offering food-delivery orders so buyers could "eat for free," charging 15% to 30% of the refund. The same abuse against returned goods (wardrobing, empty boxes, refund services) is [Return Fraud and Abuse](/books/commerce/returns-and-exchanges#return-fraud-and-abuse).
 
 The defenses are the same machinery as payments fraud, applied to issue reports:
 
