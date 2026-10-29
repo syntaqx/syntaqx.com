@@ -74,7 +74,7 @@ Automated tools are necessary and nowhere near sufficient. They can tell that an
 
 ## It's the Law, Too
 
-In the US, the Department of Justice's position is that the ADA applies to the websites of businesses open to the public ([ADA.gov guidance](https://www.ada.gov/resources/web-guidance/)). In the EU, the [European Accessibility Act](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en) has applied since 28 June 2025 and covers e-commerce and other consumer services. Building to WCAG 2.2 AA puts you on the right side of both.
+In the US, the Department of Justice's position is that the ADA applies to the websites of businesses open to the public ([ADA.gov guidance](https://www.ada.gov/resources/web-guidance/)). In the EU, the [European Accessibility Act](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en) has applied since 28 June 2025 and covers e-commerce and other consumer services. Building to WCAG 2.2 AA puts you on the right side of both. The litigation against online stores, and what it asks for, is in [Accessibility and ADA Litigation](/books/commerce/storefronts#accessibility-and-ada-litigation).
 
 ## References
 

@@ -8,7 +8,7 @@ tags = ["payments", "tax", "vat", "invoicing"]
 
 Sales tax, VAT and GST look like a percentage applied at checkout, and the first version of every system treats them that way: a `tax_rate` column and a multiplication. Then the business sells into a second state or country, or adds a product one state taxes and its neighbor doesn't, and the column turns out to have been answering four questions at once, each with its own data.
 
-This is the engineering of indirect tax, not tax advice: which taxes apply to your products is a question for an adviser, and the answers change. The system's job is to make the answers configurable and the history permanent. Amounts follow [Money & Amounts](/docs/payments/money), and multi-currency invoices follow [Multi-Currency & FX](/docs/payments/multi-currency).
+This is the engineering of indirect tax, not tax advice: which taxes apply to your products is a question for an adviser, and the answers change. The system's job is to make the answers configurable and the history permanent. Nexus, marketplace facilitator laws, exemption certificates, VAT and duties for a store are the Commerce volume's [Sales Tax, VAT & Duties](/books/commerce/sales-tax-vat-and-duties). Amounts follow [Money & Amounts](/docs/payments/money), and multi-currency invoices follow [Multi-Currency & FX](/docs/payments/multi-currency).
 
 ## Four Questions, Four Kinds of Data
 

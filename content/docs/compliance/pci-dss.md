@@ -6,7 +6,7 @@ order = 902
 tags = ["compliance", "pci", "payments", "security"]
 +++
 
-A card number is a bearer credential: whoever holds it can try to spend it, and the bank that issued it eats the fraud. PCI DSS is how the card networks make thousands of companies they don't control protect it the same way. Visa, Mastercard, American Express, Discover and JCB founded the PCI Security Standards Council to write one standard instead of five, then made compliance a condition of accepting their cards. So it's a contract, not a law: the brands enforce it through the banks they license, acquirers push it onto merchants, and merchants push it onto their vendors. [The Payments Rulebook](/books/payments/payments-rulebook) shows where it sits among the other rules.
+A card number is a bearer credential: whoever holds it can try to spend it, and the bank that issued it eats the fraud. PCI DSS is how the card networks make thousands of companies they don't control protect it the same way. Visa, Mastercard, American Express, Discover and JCB founded the PCI Security Standards Council to write one standard instead of five, then made compliance a condition of accepting their cards. So it's a contract, not a law: the brands enforce it through the banks they license, acquirers push it onto merchants, and merchants push it onto their vendors. [The Payments Rulebook](/books/payments/payments-rulebook) shows where it sits among the other rules. For a store, the platform it picks decides most of its scope ([PCI DSS Scope](/books/commerce/choosing-a-platform#pci-dss-scope)).
 
 For engineering it asks two questions. Which systems can see card data, or affect the security of the ones that do? And can you prove to an outsider that those systems meet the standard? The first is a design decision you control. The second is the bill for getting the first one wrong. This describes how the regime works, not assessment advice: your acquirer, the brands and at higher levels your assessor decide what applies to you.
 
@@ -86,7 +86,7 @@ In January 2025 the Council revised SAQ A, effective March 31, 2025: it removed 
 
 ### Payment Page Scripts
 
-The Council's FAQs settle what SAQ A eligibility means in practice:
+The Council's FAQs settle what SAQ A eligibility means in practice (how commerce platforms split this work with their merchants, and the skimming attacks behind it, are the Commerce volume's [Store Security & PCI](/books/commerce/store-security-and-pci)):
 
 - **Every part of every payment page comes from a validated provider.** FAQ 1292 requires that "the entirety of all payment pages delivered to the consumer's browser" originate "directly from a third-party PCI DSS validated service provider(s)," by redirect or iframe. If any part of the payment page comes from your own site, you're not on SAQ A; if any part comes from a non-compliant provider, you're on neither A nor A-EP. The FAQ's reasoning is the useful part: a redirect or iframe can only be attacked by sending the shopper somewhere else, which tends to be noticed, while script injected into a form your page builds can copy card numbers as they're typed for months.
 - **The script criterion applies to embedded forms only.** FAQ 1588 (February 2025) says it "only applies to e-commerce merchants with a webpage that includes a TPSP's/payment processor's embedded payment page/form." A merchant that redirects the shopper to the provider's page, or fully outsources payments, doesn't have to meet it.

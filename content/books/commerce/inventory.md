@@ -9,7 +9,7 @@ tags = ["commerce", "inventory", "available-to-promise", "reservations", "cycle-
 
 Inventory is the number every channel asks for and no system knows exactly. The warehouse's count is right as of the last scan; the storefront's is right as of the last sync; Amazon's is right as of the last feed it accepted; the store's is right until a shopper pockets a charger. Somewhere between them a customer is buying the last unit, and two other customers on two other channels are buying it too. The work of inventory software is less about counting than about deciding, at every moment and for every channel, how many units it is safe to promise, and keeping a record of every movement good enough to find out later why the number was wrong.
 
-This chapter covers the quantities (on hand, committed, reserved, unsellable, safety stock, incoming and available), available to promise, reservations and overselling, stock across locations, safety stock and channel buffers, sync across channels, movements as a ledger, cycle counts and shrink, and lots, serials and kits. It extends `inventory_items` and `inventory_levels` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). Which location ships an order is [Order Management](/books/commerce/order-management#sourcing-and-distributed-order-management)'s decision; counting inside a building is the warehouse's ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls)); reorder points, purchase orders and receiving are the later Purchasing & Replenishment chapter's, and store inventory accuracy for pickup the later Omnichannel Fulfillment chapter's.
+This chapter covers the quantities (on hand, committed, reserved, unsellable, safety stock, incoming and available), available to promise, reservations and overselling, stock across locations, safety stock and channel buffers, sync across channels, movements as a ledger, cycle counts and shrink, and lots, serials and kits. It extends `inventory_items` and `inventory_levels` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). Which location ships an order is [Order Management](/books/commerce/order-management#sourcing-and-distributed-order-management)'s decision; counting inside a building is the warehouse's ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls)); reorder points, purchase orders and receiving are [Purchasing & Replenishment](/books/commerce/purchasing-and-replenishment)'s, and store inventory accuracy for pickup is [Omnichannel Fulfillment](/books/commerce/omnichannel-fulfillment#store-inventory-accuracy)'s.
 
 ## How the Platforms Do It
 
@@ -96,7 +96,7 @@ The first is a bug and the database fixes it: a conditional decrement (`UPDATE .
 
 Inventory is counted per item per location, and the core model makes every place that holds stock a location: a warehouse, a 3PL's building, a store, an Amazon or Walmart fulfillment center holding the seller's units, a drop-ship supplier ([Stock Lives Where It Is](/books/commerce/commerce-business#the-core-data-model)). Three movements cross locations:
 
-- **Transfers.** Stock leaves one location (on hand falls), is in transit (counted nowhere for selling, but owned and on the books), and arrives (on hand rises at the other). The in-transit quantity is real money and the place most units go missing; the later Purchasing & Replenishment chapter covers transfer orders, and inbound shipments to 3PLs and marketplace networks are in [Receiving and Inbound](/books/commerce/warehouses-and-3pls#receiving-and-inbound).
+- **Transfers.** Stock leaves one location (on hand falls), is in transit (counted nowhere for selling, but owned and on the books), and arrives (on hand rises at the other). The in-transit quantity is real money and the place most units go missing; inbound shipments to 3PLs and marketplace networks, the transfers most merchants make, are in [Receiving and Inbound](/books/commerce/warehouses-and-3pls#receiving-and-inbound).
 - **Marketplace networks.** Units sent to Amazon or Walmart's network sell only through that network's orders (and through its multichannel service, if the seller uses it). They're the seller's inventory, counted at a location the seller doesn't run, and reconciled against the network's reports.
 - **Store stock.** A store's count is the least accurate in the network (shoppers move and take things), which is why ship-from-store and pickup programs publish store stock behind a larger buffer, or not at all, until the store's accuracy is measured.
 
@@ -106,7 +106,7 @@ Inventory is counted per item per location, and the core model makes every place
 
 "Safety stock" means two different things, and systems that conflate them get both wrong:
 
-- **Replenishment safety stock** is extra stock carried to cover variable demand and supplier lead time, so the shelf doesn't run dry before the next delivery. It drives reorder points: NetSuite's Advanced Inventory Management tracks lead time, safety stock and seasonal demand on the item record and computes reorder points from past sales. It is the later Purchasing & Replenishment chapter's subject.
+- **Replenishment safety stock** is extra stock carried to cover variable demand and supplier lead time, so the shelf doesn't run dry before the next delivery. It drives reorder points: NetSuite's Advanced Inventory Management tracks lead time, safety stock and seasonal demand on the item record and computes reorder points from past sales. It is the subject of [Reorder Points and Safety Stock](/books/commerce/purchasing-and-replenishment#reorder-points-and-safety-stock).
 - **A selling buffer** is stock withheld from a channel so that lag and count errors don't oversell. Shopify's `safety_stock` state and BigCommerce's safety stock are this kind: units on the shelf that the storefront won't sell.
 
 A selling buffer is set per item, per location or location group, and per channel, and the useful rules are simple: a fixed number of units, a percentage of on hand, or "publish zero below N." A channel that syncs slowly (a marketplace feed processed every few minutes) or that punishes cancellations hard gets a bigger buffer; the brand's own store, where an oversell becomes a backorder email, gets a smaller one. A buffer on a slow-moving item costs almost nothing; on a fast seller near the end of its stock it is real lost sales, so buffers are worth reviewing against the oversell rate they prevent.
@@ -145,7 +145,7 @@ Three practices make a count trustworthy. **Blind counts:** the counter isn't sh
 
 Some items aren't fungible:
 
-- **Lot-tracked items** (food, cosmetics, supplements, chemicals, pesticides) are counted per lot, with a manufacture or expiry date. Picking follows first-expired, first-out: NetSuite's warehouse app sorts bins by the lot's rotation type before quantity. A recall needs the lot on every shipment that carried it (the later Product Safety, Compliance & Recalls chapter).
+- **Lot-tracked items** (food, cosmetics, supplements, chemicals, pesticides) are counted per lot, with a manufacture or expiry date. Picking follows first-expired, first-out: NetSuite's warehouse app sorts bins by the lot's rotation type before quantity. A recall needs the lot on every shipment that carried it ([Recalls](/books/commerce/product-safety-and-recalls#recalls)).
 - **Serialized items** (electronics, high-value goods) are counted by serial number, one unit per row, and the serial goes on the shipment so a return can be matched to the unit that left.
 - **Kits and bundles** have no stock of their own when they're assembled at pick time: a bundle's availability is the minimum over its components of component available divided by quantity per bundle ([The Core Data Model](/books/commerce/commerce-business#the-core-data-model), `bundle_components`). A kit pre-assembled in the warehouse is an item with its own count, and assembling it is a pair of movements (components out, kit in).
 
@@ -183,7 +183,7 @@ CREATE TABLE inventory_movements (       -- append-only; levels are their runnin
                                          -- 'cycle_count', 'return', 'provider_report'
   source_id      UUID,
   actor          TEXT NOT NULL,          -- a user, a job, a provider's sync
-  idempotency_key TEXT NOT NULL,         -- the provider's event ID or our own
+  idempotency_key TEXT NOT NULL,         -- the provider's event ID or the store's own
   occurred_at    TIMESTAMPTZ NOT NULL,   -- when it happened in the building
   recorded_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (idempotency_key)

@@ -63,7 +63,7 @@ Taking someone's money and passing it to someone else is money transmission, whi
 
 ## Where Cash Is Required
 
-Some places require businesses to take cash. Philadelphia (from July 1, 2019), New Jersey (2019), New York City (Local Law 34 of 2020, with rules effective October 8, 2020), Colorado (2021) and, since March 21, 2026, New York State require in-person retail businesses to accept it, with exceptions that vary. None targets bill payment, but a platform serving retail can't go cashless there.
+Some places require businesses to take cash. Philadelphia (from July 1, 2019), New Jersey (2019), New York City (Local Law 34 of 2020, with rules effective October 8, 2020), Colorado (2021) and, since March 21, 2026, New York State require in-person retail businesses to accept it, with exceptions that vary. None targets bill payment, but a platform serving retail can't go cashless there. A store's drawers, counts and end of day are the Commerce volume's [Cash Management and End of Day](/books/commerce/store-operations#cash-management-and-end-of-day).
 
 Some kinds of payment have their own rules, like California's for rent ([Accepting Checks](/books/payments/checks#who-still-pays-by-paper)). Rules like these are why a payer's allowed payment methods belong in data, per account and with an expiry, not in code.
 

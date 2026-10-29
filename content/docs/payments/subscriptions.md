@@ -125,7 +125,7 @@ Cancelling isn't deleting: a cancelled subscription keeps its history ([Data Ret
 
 ## The Law of Automatic Renewal
 
-This isn't legal advice: counsel decides which rules apply to which customers. The system's job is to make their decisions enforceable and provable.
+This isn't legal advice: counsel decides which rules apply to which customers. The system's job is to make their decisions enforceable and provable. The state laws in depth, the FTC's enforcement against retailers and the EU and UK rules for goods are the Commerce volume's [Auto-Renewal & Cancellation Law](/books/commerce/auto-renewal-law).
 
 **Federal, United States.** The Restore Online Shoppers' Confidence Act, [15 U.S.C. 8403](https://www.law.cornell.edu/uscode/text/15/8403), applies to negative option sales online. It requires clear and conspicuous disclosure of the material terms before billing information is collected, the consumer's express informed consent before the charge, and simple mechanisms to stop recurring charges.
 

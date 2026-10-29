@@ -8,7 +8,7 @@ tags = ["seo", "search", "crawling", "structured-data", "frontend"]
 
 Search engine optimization, for an engineer, is mostly not about keywords. It's about making sure a crawler can fetch every page you want found, understand which URL is the real one, render what a person would see, and get an honest answer from the server about what exists. The expensive failures are mechanical: a `Disallow` that shipped from staging, a canonical pointing at the wrong host, a client-rendered page that's empty until JavaScript runs, a migration without redirects. Those are bugs, and they're preventable with the same discipline as any other correctness problem.
 
-This page is the industry-independent part. Industry volumes cover their own twists (product catalogs and their filters, for example, in [Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs)) and link back here for the rules.
+This page is the industry-independent part. Industry volumes cover their own twists (product pages, faceted URLs and structured data for stores, for example, in [Commerce SEO](/books/commerce/storefronts#commerce-seo)) and link back here for the rules.
 
 ## How Search Works
 
@@ -205,7 +205,7 @@ A migration (new domain, new URL scheme, new platform) is where most search traf
 5. **Use Change of Address** in Search Console for a domain or subdomain change (not for HTTP to HTTPS or path-only changes).
 6. **Keep the redirects** "for as long as possible," at least a year by Google's guidance. I keep them indefinitely; they cost almost nothing, and old links keep arriving.
 
-Expect fluctuation: for a medium-sized site, "a few weeks or more" before new URLs replace old ones. Make sure the new servers can take the heavier crawl that follows a move.
+Expect fluctuation: for a medium-sized site, "a few weeks or more" before new URLs replace old ones. Make sure the new servers can take the heavier crawl that follows a move. A store's move, with product, collection and variant URLs, is the Commerce volume's [URLs, Redirects and SEO](/books/commerce/replatforming#urls-redirects-and-seo).
 
 ## International Sites
 
@@ -260,7 +260,7 @@ Google's crawlers follow `href` links but don't "click" buttons or trigger scrol
 
 ## AI Search Features
 
-AI answers now sit in and beside search results, and each vendor documents its own controls. There's no single opt-out, so it pays to know which token controls what, as of October 2026.
+AI answers now sit in and beside search results, and each vendor documents its own controls. There's no single opt-out, so it pays to know which token controls what, as of October 2026. Agents that shop rather than answer, and how a store identifies and admits them, are the Commerce volume's [Agent Identity and Access](/books/commerce/agentic-commerce#agent-identity-and-access).
 
 **Google's AI Overviews and AI Mode** draw from the Search index. There are "no additional requirements to appear": a page that's indexed and eligible for a snippet qualifies, and no special markup or AI-specific text file is needed ([AI features and your website](https://developers.google.com/search/docs/appearance/ai-features)). The controls are the existing snippet rules ([Robots meta tag](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag)):
 

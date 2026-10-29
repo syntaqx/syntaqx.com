@@ -186,7 +186,7 @@ CREATE TABLE drop_entries (              -- one entrant's request, with its outc
 
 CREATE TABLE waiting_room_tokens (       -- an admission, verified again at checkout
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
-  room          TEXT NOT NULL,           -- the vendor's room or our own gate
+  room          TEXT NOT NULL,           -- the vendor's room or the store's own gate
   drop_id       UUID REFERENCES drops (id),
   session_ref   TEXT NOT NULL,           -- the session the token was issued to
   customer_id   UUID REFERENCES customers (id),
