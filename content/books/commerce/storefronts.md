@@ -28,7 +28,7 @@ Three patterns run through the table:
 
 - **Every platform now offers both,** and the theme route is still where most stores start. A theme is hosted, cached and upgraded by the platform; a headless storefront is an application the merchant runs ([Choosing & Hosting a Store](/books/commerce/choosing-a-platform#four-ways-to-run-a-store)).
 - **Headless rarely includes checkout.** Shopify's toolkit leaves checkout on Shopify, Vercel's templates hand the cart to Shopify's checkout URL, and Salesforce's hybrid pattern keeps checkout on SFRA. The storefront is decoupled; the payment page usually isn't, which keeps it inside the platform's PCI scope ([PCI DSS Scope](/books/commerce/choosing-a-platform#pci-dss-scope)).
-- **The storefront is now also read by machines.** Vercel Shop ships Markdown representations of pages, an `/llms.txt`, Schema.org data and a sitemap for "answer engines," alongside the HTML; the later Agentic & AI Shopping chapter covers what agents do with it.
+- **The storefront is now also read by machines.** Vercel Shop ships Markdown representations of pages, an `/llms.txt`, Schema.org data and a sitemap for "answer engines," alongside the HTML; [Agentic & AI Shopping](/books/commerce/agentic-commerce#product-data-for-agents) covers what agents do with it.
 
 ## Themes and Headless
 
