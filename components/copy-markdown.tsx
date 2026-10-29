@@ -31,7 +31,7 @@ export function MarkdownMenu({ href }: { href: string }) {
       <button
         type="button"
         onClick={copy}
-        className="flex cursor-pointer items-center gap-2 px-2.5 py-1.5 transition-colors hover:text-foreground"
+        className="flex cursor-pointer items-center gap-2 px-2.5 py-1.5 uppercase transition-colors hover:text-foreground"
       >
         {state === "copied" ? <Check size={12} className="text-accent" /> : <Copy size={12} />}
         <span aria-live="polite">
