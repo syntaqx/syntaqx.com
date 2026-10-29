@@ -61,6 +61,38 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - **Virtual brand:** a delivery-only menu cooked in another restaurant's kitchen, modeled as a location of its own merchant at the kitchen's address ([The Commerce Business](/books/commerce/commerce-business#the-core-data-model)).
 - **Wholesale:** selling cases or pallets to retailers, distributors or carriers at a wholesale price on payment terms, net of deductions ([Business Models & Unit Economics](/books/commerce/business-models#wholesale)).
 
+## Orders, Inventory and Fulfillment
+
+- **3PL (third-party logistics provider):** a company that runs warehouses for brands, receiving, storing, picking, packing and shipping their stock for fees per receipt, unit stored and order, as ShipBob and ShipMonk do ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#3pls)).
+- **940 and 945:** the X12 Warehouse Shipping Order a brand sends a warehouse and the Warehouse Shipping Advice the warehouse sends back when it ships ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#integrating-with-a-3pl)).
+- **Advance ship notice (ASN):** a notice of what an inbound truck, pallet or carton contains, sent ahead so the receiver can check it; ShipBob's version is a warehouse receiving order ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#receiving-and-inbound)).
+- **Available to promise (ATP):** availability projected by date from on-hand stock, expected receipts and known demand, as NetSuite computes it; the number a backorder or delivery date depends on ([Inventory](/books/commerce/inventory#available-to-promise)).
+- **Billable weight:** the greater of a package's actual weight and its dimensional weight, each rounded up, which carriers price on ([Shipping & Carriers](/books/commerce/shipping-and-carriers#rate-shopping)).
+- **Blind count:** a cycle count in which the counter isn't shown the expected quantity ([Inventory](/books/commerce/inventory#cycle-counts-and-shrink)).
+- **Cartonization:** choosing the smallest box that fits an order's items, because carriers bill dimensional weight ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#inside-a-warehouse)).
+- **Cycle count:** counting a slice of bins or items every day (by ABC class, trigger or sweep) instead of closing the building for a full physical inventory ([Inventory](/books/commerce/inventory#cycle-counts-and-shrink)).
+- **Dimensional weight:** length times width times height, divided by a carrier's divisor (139 for USPS, UPS and FedEx as of October 2026, USPS only above one cubic foot) ([Shipping & Carriers](/books/commerce/shipping-and-carriers#dimensional-weight)).
+- **Distributed order management (DOM):** sourcing each order's lines across many locations (warehouses, stores, 3PLs, marketplace networks, suppliers) by rules and costs ([Order Management](/books/commerce/order-management#sourcing-and-distributed-order-management)).
+- **Dock-to-stock time:** the time from stock arriving at a warehouse to being available to sell ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#slas-and-what-they-measure)).
+- **Fulfillment order:** Shopify's unit of fulfillment work: some of an order's lines assigned to one location, with its own state (open, scheduled, on hold, in progress, closed, cancelled) ([Order Management](/books/commerce/order-management#how-the-platforms-do-it)).
+- **Fulfillment request:** asking a warehouse or 3PL to ship a fulfillment, which it accepts or rejects; after acceptance, cancellation is a request it may refuse ([Order Management](/books/commerce/order-management#how-to-build-it)).
+- **Hold (order):** a stop on an order or fulfillment without cancelling it, for payment, fraud, address, stock, an upsell window, an exchange, a schedule or a compliance check ([Order Management](/books/commerce/order-management#holds)).
+- **IMpb (Intelligent Mail package barcode):** the GS1-128-based barcode USPS requires on commercial packages, with piece-level data sent electronically ([Shipping & Carriers](/books/commerce/shipping-and-carriers#labels)).
+- **License plate number (LPN):** an ID on a pallet, carton or tote so a warehouse can move its contents as one thing ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#inside-a-warehouse)).
+- **Multi-Channel Fulfillment (MCF):** Amazon shipping a seller's orders from other channels out of the seller's FBA inventory, optionally in unbranded boxes ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#amazon-multi-channel-fulfillment-and-fba)).
+- **Order edit:** a staged change to an order (lines, quantities, shipping, discounts) committed with its inventory, tax and payment consequences; Shopify allows edits to unfulfilled lines only ([Order Management](/books/commerce/order-management#edits-and-cancellations)).
+- **Oversell:** an order for stock that doesn't exist, from concurrency, sync lag or a deliberate policy to keep selling ([Inventory](/books/commerce/inventory#overselling)).
+- **Rate shopping:** choosing, per package, the cheapest carrier, service and account whose expected delivery meets the promise ([Shipping & Carriers](/books/commerce/shipping-and-carriers#rate-shopping)).
+- **Reservation (inventory):** stock set aside with an owner and an expiry before it's sold, for a checkout, a quote, a drop or a store hold ([Inventory](/books/commerce/inventory#reservations)).
+- **Safety stock (selling buffer):** units withheld from a channel so lag and count errors don't oversell; distinct from replenishment safety stock, which covers demand during supplier lead time ([Inventory](/books/commerce/inventory#safety-stock-and-channel-buffers)).
+- **Shrink:** the difference between recorded and actual stock that no movement explains; 1.6% of US retail sales in fiscal 2022 by NRF's survey ([Inventory](/books/commerce/inventory#cycle-counts-and-shrink)).
+- **Sourcing (order routing):** choosing which location and provider ship each line: filter to feasible locations, then rank by splits, distance, cost and the promise ([Order Management](/books/commerce/order-management#sourcing-and-distributed-order-management)).
+- **Split shipment:** an order sent as several fulfillments or packages, each with its own label, cost and capture ([Order Management](/books/commerce/order-management#splits-and-merges)).
+- **SSCC (Serial Shipping Container Code):** GS1's 18-digit ID for a carton or pallet, printed as a GS1-128 barcode and linked to the ASN ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#receiving-and-inbound)).
+- **Tracking event:** a carrier scan, stored raw and mapped to a small normalized set (pre-transit, in transit, out for delivery, delivered, exception, return to sender, failure) ([Shipping & Carriers](/books/commerce/shipping-and-carriers#tracking-events)).
+- **WMS (warehouse management system):** software that directs receiving, putaway, picking, packing and shipping inside a building ([Warehouses, 3PLs & Fulfillment Networks](/books/commerce/warehouses-and-3pls#inside-a-warehouse)).
+- **Zone (carrier):** a distance band from origin to destination that carriers price by; USPS uses zones 1 to 9 ([Shipping & Carriers](/books/commerce/shipping-and-carriers#rate-shopping)).
+
 ## On-Demand Delivery
 
 - **86 (to 86 an item):** restaurant slang for marking an item unavailable because it ran out; every platform has a separate, fast endpoint or webhook for it ([Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#availability)).
