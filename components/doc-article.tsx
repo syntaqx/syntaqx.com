@@ -3,6 +3,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
+import { DiagramViewer } from "@/components/diagram-viewer";
 import { Pencil } from "lucide-react";
 import { MarkdownMenu } from "@/components/copy-markdown";
 import { Tip } from "@/components/tip";
@@ -137,6 +138,7 @@ export async function DocArticle({
         </aside>
       )}
       <CopyCodeScript />
+      <DiagramViewer />
       <CodeTabsScript />
       <ChapterKeys prev={prev?.href} next={next?.href} />
     </article>
