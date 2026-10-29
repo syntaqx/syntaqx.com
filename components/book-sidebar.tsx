@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
-import { DocLinks, Group, MobileSidebar, linkClass, useCurrentLinkInView } from "@/components/docs-sidebar";
+import { MobileSidebar, SidebarNav, type SidebarGroup } from "@/components/sidebar-nav";
 
 export interface BookSidebarProps {
   book: { slug: string; name: string };
@@ -11,48 +9,31 @@ export interface BookSidebarProps {
   parts: { title: string; docs: { slug: string; navTitle: string }[] }[];
 }
 
-/** A book's own table of contents: its cover, then each part's chapters. */
+/** A book's own table of contents: its cover, then each part's chapters, numbered through the book. */
 function BookTree({ book, parts, onNavigate }: BookSidebarProps & { onNavigate?: () => void }) {
-  const pathname = usePathname();
-  const navRef = useCurrentLinkInView();
-  const cover = `/books/${book.slug}`;
-  const hrefOf = (slug: string) => `/books/${slug}`;
-
+  let number = 0;
+  const groups: SidebarGroup[] = [
+    {
+      name: null,
+      sections: parts.map((part) => ({
+        name: part.title || "Chapters",
+        items: part.docs.map((d) => ({
+          href: `/books/${d.slug}`,
+          title: d.navTitle,
+          number: ++number,
+          nested: true,
+        })),
+      })),
+    },
+  ];
   return (
-    <nav ref={navRef} aria-label={book.name} className="space-y-4">
-      <Link
-        href="/books"
-        onClick={onNavigate}
-        className="group flex items-center gap-2 text-sm font-semibold text-foreground"
-      >
-        <ChevronLeft size={15} aria-hidden className="text-dim transition-colors group-hover:text-accent" />
-        {book.name}
-        <span className="sr-only">: all books</span>
-      </Link>
-      <ul className="border-l border-border">
-        <li>
-          <Link
-            href={cover}
-            onClick={onNavigate}
-            aria-current={pathname === cover ? "page" : undefined}
-            className={linkClass(pathname === cover)}
-          >
-            Overview
-          </Link>
-        </li>
-      </ul>
-      {parts.map((part) =>
-        part.title ? (
-          <Group key={part.title} title={part.title}>
-            <DocLinks docs={part.docs} hrefOf={hrefOf} onNavigate={onNavigate} nested />
-          </Group>
-        ) : (
-          <ul key="chapters" className="border-l border-border">
-            <DocLinks docs={part.docs} hrefOf={hrefOf} onNavigate={onNavigate} nested />
-          </ul>
-        ),
-      )}
-    </nav>
+    <SidebarNav
+      title={book.name}
+      back={{ href: "/books", label: "All books" }}
+      home={{ href: `/books/${book.slug}`, label: "Overview" }}
+      groups={groups}
+      onNavigate={onNavigate}
+    />
   );
 }
 
@@ -63,7 +44,9 @@ export function BookSidebar(props: BookSidebarProps) {
 export function MobileBookSidebar(props: BookSidebarProps) {
   const pathname = usePathname();
   const current =
-    props.parts.flatMap((p) => p.docs).find((d) => pathname === `/books/${d.slug}` || pathname.startsWith(`/books/${d.slug}/`))?.navTitle ??
+    props.parts
+      .flatMap((p) => p.docs)
+      .find((d) => pathname === `/books/${d.slug}` || pathname.startsWith(`/books/${d.slug}/`))?.navTitle ??
     `${props.book.name} overview`;
 
   return (

@@ -276,6 +276,21 @@ body {
 .rail-scroll { scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .rail-scroll:hover { scrollbar-color: var(--border-hover) transparent; }
 
+/* Sidebar sections (Radix Accordion) open and close by height. */
+@keyframes acc-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes acc-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+.acc-content[data-state="open"] { animation: acc-down 180ms ease-out; }
+.acc-content[data-state="closed"] { animation: acc-up 150ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .acc-content { animation: none !important; }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
