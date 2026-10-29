@@ -72,7 +72,8 @@ function sectionFromUrl(url: string): string {
 function toHit(d: PagefindResultData): Hit {
   const url = clean(d.url);
   const headings = (d.sub_results ?? [])
-    .filter((s) => s.url.includes("#"))
+    // A References list repeats the term in its citations; it's never the answer.
+    .filter((s) => s.url.includes("#") && s.title !== "References")
     .sort((a, b) => (b.locations?.length ?? 0) - (a.locations?.length ?? 0))
     .slice(0, HEADINGS)
     .map((s) => ({ url: clean(s.url), title: s.title, excerpt: s.excerpt }));
@@ -347,7 +348,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
 
   return (
     <>
-      <div className="flex items-center gap-3 border-b border-border px-4 sm:px-5">
+      <div className="flex shrink-0 items-center gap-3 border-b border-border px-4 sm:px-5">
         {loading ? (
           <Loader2 size={17} className="shrink-0 animate-spin text-accent" />
         ) : (
@@ -398,7 +399,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
       </div>
 
       {term && searched && hits.length > 0 && (
-        <div role="tablist" aria-label="Filter results" className="flex gap-1 overflow-x-auto border-b border-border px-3 sm:px-4">
+        <div role="tablist" aria-label="Filter results" className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3 sm:px-4">
           {SCOPES.filter((s) => s.value === "all" || counts[s.value] > 0).map((s) => (
             <button
               key={s.value}
@@ -504,7 +505,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
         )}
       </div>
 
-      <div className="hidden items-center gap-4 border-t border-border px-4 py-2.5 text-[10px] text-dim sm:flex">
+      <div className="hidden shrink-0 items-center gap-4 border-t border-border px-4 py-2.5 text-[10px] text-dim sm:flex">
         <Key keys={["↑", "↓"]} label="navigate" />
         <Key keys={["↵"]} label="open" />
         <Key keys={[mod, "↵"]} label="new tab" />
