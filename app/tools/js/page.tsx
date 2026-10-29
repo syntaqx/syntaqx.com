@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
+import { Select } from "@/components/select";
 import { CopyButton } from "@/components/copy-button";
 
 // --- Types ------------------------------------------------------------------
@@ -324,31 +325,25 @@ export default function JsToolPage() {
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
                 {mode === "beautify" && (
                   <>
-                    <div className="flex items-center gap-1.5">
-                      <label className="text-xs text-dim">Parser</label>
-                      <select
-                        value={parser}
-                        onChange={(e) =>
-                          setParser(e.target.value as "babel" | "json")
-                        }
-                        className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-                      >
-                        <option value="babel">JavaScript</option>
-                        <option value="json">JSON</option>
-                      </select>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <label className="text-xs text-dim">Indent</label>
-                      <select
-                        value={tabWidth}
-                        onChange={(e) => setTabWidth(Number(e.target.value))}
-                        className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-                      >
-                        <option value={2}>2 spaces</option>
-                        <option value={4}>4 spaces</option>
-                        <option value={8}>8 spaces</option>
-                      </select>
-                    </div>
+                    <Select
+                      label="Parser"
+                      value={parser}
+                      onChange={(v) => setParser(v as "babel" | "json")}
+                      options={[
+                        { value: "babel", label: "JavaScript" },
+                        { value: "json", label: "JSON" },
+                      ]}
+                    />
+                    <Select
+                      label="Indent"
+                      value={String(tabWidth)}
+                      onChange={(v) => setTabWidth(Number(v))}
+                      options={[
+                        { value: "2", label: "2 spaces" },
+                        { value: "4", label: "4 spaces" },
+                        { value: "8", label: "8 spaces" },
+                      ]}
+                    />
                     <Checkbox
                       checked={singleQuote}
                       onChange={() => setSingleQuote((v) => !v)}
@@ -385,22 +380,18 @@ export default function JsToolPage() {
                 )}
                 {mode === "obfuscate" && (
                   <>
-                    <div className="flex items-center gap-1.5">
-                      <label className="text-xs text-dim">Preset</label>
-                      <select
-                        value={obfPreset}
-                        onChange={(e) =>
-                          setObfPreset(
-                            e.target.value as "low" | "medium" | "high",
-                          )
-                        }
-                        className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-                      >
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                      </select>
-                    </div>
+                    <Select
+                      label="Preset"
+                      value={obfPreset}
+                      onChange={(v) =>
+                        setObfPreset(v as "low" | "medium" | "high")
+                      }
+                      options={[
+                        { value: "low", label: "Low" },
+                        { value: "medium", label: "Medium" },
+                        { value: "high", label: "High" },
+                      ]}
+                    />
                     <Checkbox
                       checked={obfStringArray}
                       onChange={() => setObfStringArray((v) => !v)}

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { CopyButton } from "@/components/copy-button";
+import { Select } from "@/components/select";
 
 // A static sample JWT (HS256, secret: "secret") with readable claims.
 const SAMPLE_TOKEN =
@@ -696,7 +697,9 @@ export default function JwtPage() {
         </div>
 
         {mode === "encode" && (
-          <select
+          <Select
+            size="md"
+            className="font-mono"
             value={(() => {
               try {
                 return (JSON.parse(encodeHeader).alg as string) || "HS256";
@@ -704,8 +707,7 @@ export default function JwtPage() {
                 return "HS256";
               }
             })()}
-            onChange={(e) => {
-              const alg = e.target.value;
+            onChange={(alg) => {
               try {
                 const h = JSON.parse(encodeHeader);
                 h.alg = alg;
@@ -722,35 +724,49 @@ export default function JwtPage() {
                 setEncodePublicKey("");
               }
             }}
-            className="border border-border bg-surface px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-          >
-            <optgroup label="HMAC">
-              <option value="HS256">HS256</option>
-              <option value="HS384">HS384</option>
-              <option value="HS512">HS512</option>
-            </optgroup>
-            <optgroup label="RSA">
-              <option value="RS256">RS256</option>
-              <option value="RS384">RS384</option>
-              <option value="RS512">RS512</option>
-            </optgroup>
-            <optgroup label="ECDSA">
-              <option value="ES256">ES256</option>
-              <option value="ES384">ES384</option>
-              <option value="ES512">ES512</option>
-            </optgroup>
-            <optgroup label="RSA-PSS">
-              <option value="PS256">PS256</option>
-              <option value="PS384">PS384</option>
-              <option value="PS512">PS512</option>
-            </optgroup>
-            <optgroup label="EdDSA">
-              <option value="EdDSA">EdDSA</option>
-            </optgroup>
-            <optgroup label="Unsecured">
-              <option value="none">none</option>
-            </optgroup>
-          </select>
+            options={[
+              {
+                label: "HMAC",
+                options: [
+                  { value: "HS256", label: "HS256" },
+                  { value: "HS384", label: "HS384" },
+                  { value: "HS512", label: "HS512" },
+                ],
+              },
+              {
+                label: "RSA",
+                options: [
+                  { value: "RS256", label: "RS256" },
+                  { value: "RS384", label: "RS384" },
+                  { value: "RS512", label: "RS512" },
+                ],
+              },
+              {
+                label: "ECDSA",
+                options: [
+                  { value: "ES256", label: "ES256" },
+                  { value: "ES384", label: "ES384" },
+                  { value: "ES512", label: "ES512" },
+                ],
+              },
+              {
+                label: "RSA-PSS",
+                options: [
+                  { value: "PS256", label: "PS256" },
+                  { value: "PS384", label: "PS384" },
+                  { value: "PS512", label: "PS512" },
+                ],
+              },
+              {
+                label: "EdDSA",
+                options: [{ value: "EdDSA", label: "EdDSA" }],
+              },
+              {
+                label: "Unsecured",
+                options: [{ value: "none", label: "none" }],
+              },
+            ]}
+          />
         )}
       </div>
 

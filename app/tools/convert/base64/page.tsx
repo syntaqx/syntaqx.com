@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, type DragEvent } from "react";
 import { Trash2, Upload, FileText, Info, ExternalLink } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
+import { Select } from "@/components/select";
 import { CopyButton } from "@/components/copy-button";
 
 // --- Helpers ----------------------------------------------------------------
@@ -283,17 +284,15 @@ export default function Base64Page() {
               />
               {/* Card footer: options */}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
-                <div className="flex items-center gap-1.5">
-                  <label className="text-xs text-dim">Charset</label>
-                  <select
-                    value={charset}
-                    onChange={(e) => changeCharset(e.target.value)}
-                    className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-                  >
-                    <option value="utf-8">UTF-8</option>
-                    <option value="ascii">ASCII / Latin1</option>
-                  </select>
-                </div>
+                <Select
+                  label="Charset"
+                  value={charset}
+                  onChange={changeCharset}
+                  options={[
+                    { value: "utf-8", label: "UTF-8" },
+                    { value: "ascii", label: "ASCII / Latin1" },
+                  ]}
+                />
                 <Checkbox
                   checked={perLine}
                   onChange={togglePerLine}

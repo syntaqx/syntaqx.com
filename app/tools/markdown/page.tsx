@@ -20,6 +20,7 @@ import {
 import { PasteButton } from "@/components/paste-button";
 import { CopyButton } from "@/components/copy-button";
 import { Checkbox } from "@/components/checkbox";
+import { Select } from "@/components/select";
 
 // --- Types ------------------------------------------------------------------
 
@@ -464,48 +465,36 @@ export default function MarkdownToolPage() {
               {/* Options (html-to-md only) */}
               {mode === "html-to-md" && (
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
-                  <div className="flex items-center gap-1.5">
-                    <label className="text-xs text-dim">Headings</label>
-                    <select
-                      value={headingStyle}
-                      onChange={(e) =>
-                        setHeadingStyle(e.target.value as "atx" | "setext")
-                      }
-                      className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-                    >
-                      <option value="atx"># Heading</option>
-                      <option value="setext">Setext (===)</option>
-                    </select>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <label className="text-xs text-dim">Bullets</label>
-                    <select
-                      value={bulletMarker}
-                      onChange={(e) =>
-                        setBulletMarker(e.target.value as "-" | "*" | "+")
-                      }
-                      className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-                    >
-                      <option value="-">-</option>
-                      <option value="*">*</option>
-                      <option value="+">+</option>
-                    </select>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <label className="text-xs text-dim">Code blocks</label>
-                    <select
-                      value={codeBlockStyle}
-                      onChange={(e) =>
-                        setCodeBlockStyle(
-                          e.target.value as "fenced" | "indented",
-                        )
-                      }
-                      className="border border-border bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-accent/50 cursor-pointer"
-                    >
-                      <option value="fenced">Fenced ```</option>
-                      <option value="indented">Indented</option>
-                    </select>
-                  </div>
+                  <Select
+                    label="Headings"
+                    value={headingStyle}
+                    onChange={(v) => setHeadingStyle(v as "atx" | "setext")}
+                    options={[
+                      { value: "atx", label: "# Heading" },
+                      { value: "setext", label: "Setext (===)" },
+                    ]}
+                  />
+                  <Select
+                    label="Bullets"
+                    value={bulletMarker}
+                    onChange={(v) => setBulletMarker(v as "-" | "*" | "+")}
+                    options={[
+                      { value: "-", label: "-" },
+                      { value: "*", label: "*" },
+                      { value: "+", label: "+" },
+                    ]}
+                  />
+                  <Select
+                    label="Code blocks"
+                    value={codeBlockStyle}
+                    onChange={(v) =>
+                      setCodeBlockStyle(v as "fenced" | "indented")
+                    }
+                    options={[
+                      { value: "fenced", label: "Fenced ```" },
+                      { value: "indented", label: "Indented" },
+                    ]}
+                  />
                   <Checkbox
                     checked={useGfm}
                     onChange={() => setUseGfm((v) => !v)}

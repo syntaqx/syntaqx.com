@@ -1,15 +1,10 @@
 "use client";
 
 import { useState, useCallback, type KeyboardEvent } from "react";
-import {
-  Info,
-  ExternalLink,
-  Trash2,
-  Settings2,
-  ChevronDown,
-} from "lucide-react";
+import { Info, ExternalLink, Trash2, Settings2 } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import { PasteButton } from "@/components/paste-button";
+import { Select } from "@/components/select";
 import * as yaml from "js-yaml";
 import * as toml from "smol-toml";
 import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon";
@@ -513,25 +508,18 @@ export default function ConvertPage() {
         {/* Left: editors */}
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-xs text-dim">Primary</label>
-            <div className="relative">
-              <select
-                value={primary ?? ""}
-                onChange={(e) => setPrimary((e.target.value as Format) || null)}
-                className="appearance-none border border-border bg-surface pl-3 pr-7 py-1.5 text-xs text-foreground focus:outline-none focus:border-accent/40 cursor-pointer"
-              >
-                <option value="">Auto</option>
-                {FORMATS.filter((f) => enabled.includes(f.id)).map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {f.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                size={12}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-dim pointer-events-none"
-              />
-            </div>
+            <Select
+              label="Primary"
+              value={primary ?? ""}
+              onChange={(v) => setPrimary((v as Format) || null)}
+              options={[
+                { value: "", label: "Auto" },
+                ...FORMATS.filter((f) => enabled.includes(f.id)).map((f) => ({
+                  value: f.id,
+                  label: f.label,
+                })),
+              ]}
+            />
             <button
               onClick={clear}
               disabled={!hasContent}

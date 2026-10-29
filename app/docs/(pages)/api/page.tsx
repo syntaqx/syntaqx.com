@@ -15,6 +15,7 @@ import {
   paramKey,
   SHOWN_RESPONSE_HEADERS,
 } from "@/lib/api-console";
+import { Select } from "@/components/select";
 
 // ---------------------------------------------------------------------------
 // Types for OpenAPI 3.1
@@ -421,7 +422,11 @@ function Endpoint({
                 const schema = jsonContent?.schema;
                 const resolvedSchema = schema ? resolveRef(spec, schema) : null;
                 const example = resolvedSchema
-                  ? JSON.stringify(schemaToExample(spec, resolvedSchema), null, 2)
+                  ? JSON.stringify(
+                      schemaToExample(spec, resolvedSchema),
+                      null,
+                      2,
+                    )
                   : null;
 
                 return (
@@ -478,22 +483,19 @@ function Endpoint({
                           </span>
                         </span>
                         {options ? (
-                          <select
+                          <Select
                             id={id}
+                            size="md"
+                            className="w-full font-mono"
                             value={values[key]}
-                            onChange={(e) =>
-                              setValues({ ...values, [key]: e.target.value })
-                            }
-                            onKeyDown={onKeyDown}
-                            className={inputClass}
-                          >
-                            {!p.required && <option value="">(default)</option>}
-                            {options.map((o) => (
-                              <option key={o} value={o}>
-                                {o}
-                              </option>
-                            ))}
-                          </select>
+                            onChange={(v) => setValues({ ...values, [key]: v })}
+                            options={[
+                              ...(p.required
+                                ? []
+                                : [{ value: "", label: "(default)" }]),
+                              ...options.map((o) => ({ value: o, label: o })),
+                            ]}
+                          />
                         ) : (
                           <input
                             id={id}
