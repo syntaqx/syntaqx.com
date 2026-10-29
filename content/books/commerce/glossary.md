@@ -1,7 +1,7 @@
 +++
 title = "Commerce Glossary"
 nav_title = "Glossary"
-description = "Every term the commerce volume uses, defined in a line and linked to its chapter: the core model, delivery models, menus, dispatch, fees, memberships and fraud."
+description = "Every term the commerce volume uses, defined in a line and linked to its chapter: the core model, catalog and pricing, delivery, fees, memberships and fraud."
 category = "Commerce Industry"
 order = 2399
 part = "Reference"
@@ -60,6 +60,41 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - **System of record:** the one system whose copy of an object (items, costs, orders) wins when systems disagree, recorded per connected system ([The Commerce Landscape](/books/commerce/commerce-landscape#oms-wms-and-erp)).
 - **Virtual brand:** a delivery-only menu cooked in another restaurant's kitchen, modeled as a location of its own merchant at the kitchen's address ([The Commerce Business](/books/commerce/commerce-business#the-core-data-model)).
 - **Wholesale:** selling cases or pallets to retailers, distributors or carriers at a wholesale price on payment terms, net of deductions ([Business Models & Unit Economics](/books/commerce/business-models#wholesale)).
+
+## Catalog and Pricing
+
+- **Attribute:** a typed product fact (text, number with a unit, select, boolean, media) defined once and valued per product or item, optionally per locale and channel ([Product Information & Content](/books/commerce/product-information#attribute-models)).
+- **Breakage:** the part of gift card balances that will never be redeemed, recognized as revenue under ASC 606 in proportion to redemptions or when remote, never by changing a customer's balance ([Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards#breakage)).
+- **Bundle (kit):** several items sold as one line, with availability from its components and its price allocated to them; a prebuilt kit is stocked as its own unit ([Products, Variants & Bundles](/books/commerce/products-and-variants#bundles-and-kits)).
+- **Collection:** a merchandised set of products with its own page, manual or rule-based, with stored membership ([Site Search & Merchandising](/books/commerce/site-search-and-merchandising#collections-and-category-pages)).
+- **Compare-at price:** the struck-through "was" price beside a sale price; a legal claim about past prices, computed from price history or not shown ([Pricing & Price Lists](/books/commerce/pricing#list-sale-and-compare-at-prices)).
+- **Completeness:** the share of a category's required attributes an item has for a channel and locale, used to gate publishing ([Product Information & Content](/books/commerce/product-information#what-a-pim-is-for)).
+- **Discount allocation:** an order-level discount split across the lines it applied to, so tax, refunds and margin work line by line ([Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards#allocating-discounts-to-lines)).
+- **Facet:** a filter beside search or collection results with counts per value, built from typed attributes per category ([Site Search & Merchandising](/books/commerce/site-search-and-merchandising#facets-and-filters)).
+- **GDSN (Global Data Synchronisation Network):** GS1's network of certified data pools through which brands publish item data once and retailers subscribe ([Product Information & Content](/books/commerce/product-information#channel-content-and-syndication)).
+- **Gift card:** a closed-loop stored-value balance the merchant owes the holder: a liability until redeemed, covered by Regulation E 1005.20 and state law ([Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards#gift-cards-and-store-credit)).
+- **GS1 Company Prefix:** the number licensed by a GS1 member organization that begins a brand's GTINs and identifies it as the brand owner ([Products, Variants & Bundles](/books/commerce/products-and-variants#identifiers-gtin-upc-and-gs1)).
+- **GTIN (Global Trade Item Number):** GS1's 8, 12, 13 or 14 digit identifier for a trade item, assigned by the brand owner and stored as 14 digits; the U.P.C. is a GTIN-12 ([Products, Variants & Bundles](/books/commerce/products-and-variants#identifiers-gtin-upc-and-gs1)).
+- **MAP (minimum advertised price):** a brand's limit on the price resellers advertise, not the price they sell at, judged under the rule of reason and best run as a unilateral published policy ([Pricing & Price Lists](/books/commerce/pricing#map-and-resale-price-maintenance)).
+- **Merchandising rule:** a time-bound, owned override of ranking for a query or collection: pin, hide, boost, bury, filter, redirect or banner ([Site Search & Merchandising](/books/commerce/site-search-and-merchandising#merchandising-rules)).
+- **Modifier option (catalog):** a choice that changes price or personalization but not which unit is picked, so it carries no SKU or stock of its own ([Products, Variants & Bundles](/books/commerce/products-and-variants#how-the-platforms-do-it)).
+- **MSRP:** manufacturer's suggested retail price; a suggestion, which a reseller is free not to follow ([Pricing & Price Lists](/books/commerce/pricing#list-sale-and-compare-at-prices)).
+- **Option:** an axis a product varies on (size, color, fit), with a controlled vocabulary of values that its items each take one of ([Products, Variants & Bundles](/books/commerce/products-and-variants#options-and-the-variant-explosion)).
+- **Pack size:** an inner pack, case or pallet of an item's eaches, with its own GTIN and dimensions; stock is counted in eaches ([Products, Variants & Bundles](/books/commerce/products-and-variants#units-and-pack-sizes)).
+- **PIM (product information management):** the system of record for descriptive product data (attributes, copy, media and translations), with completeness per channel and publishing ([Product Information & Content](/books/commerce/product-information#what-a-pim-is-for)).
+- **Price history:** the append-only record of every price that took effect, by list, item, quantity and currency, from which reference price, MAP and pricing law questions are answered ([Pricing & Price Lists](/books/commerce/pricing#price-history)).
+- **Price list assignment:** which buyers a price list applies to (market, channel, group, company, membership) and whether the most specific or the lowest price wins ([Pricing & Price Lists](/books/commerce/pricing#price-lists-price-books-and-b2b-prices)).
+- **Promotion:** a rule that changes a price after the shopper has chosen: who, what, when and how much, with a class, rank and stacking rules ([Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards#discount-engines)).
+- **Reference price:** a past or comparison price shown beside the current one, lawful only on the basis each market requires, such as the EU's lowest price in the prior 30 days ([Pricing & Price Lists](/books/commerce/pricing#reference-prices-and-price-comparisons)).
+- **Resale price maintenance:** an agreement fixing a reseller's price or minimum price, judged under the rule of reason federally since Leegin and treated as an unreasonable restraint in some states ([Pricing & Price Lists](/books/commerce/pricing#map-and-resale-price-maintenance)).
+- **SKU (stock-keeping unit):** the merchant's own code for one thing it counts, unique within its catalog, distinct from the global GTIN ([Products, Variants & Bundles](/books/commerce/products-and-variants#products-and-skus)).
+- **Stacking:** the rules for which discounts combine on one order: global or class exclusivity, explicit combinations, best deal or full stacking ([Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards#stacking-and-exclusivity)).
+- **Store credit:** a balance owed to a known customer, usually from a return, kept on the same ledger as gift cards with its own rules ([Promotions, Discounts & Gift Cards](/books/commerce/promotions-and-gift-cards#store-credit)).
+- **Surveillance pricing:** setting an individual's price from personal data, studied by the FTC and restricted or required to be disclosed by state laws from 2025 ([Pricing & Price Lists](/books/commerce/pricing#dynamic-and-personalized-pricing)).
+- **Synonym (search):** an equivalent or one-way mapping between query terms, applied at search time and kept as owned, versioned data ([Site Search & Merchandising](/books/commerce/site-search-and-merchandising#synonyms-spelling-and-query-understanding)).
+- **Taxonomy:** a category tree with attributes attached; the merchant's own is kept separate from Google's, Shopify's, GS1 GPC and each marketplace's, and mapped to them ([Product Information & Content](/books/commerce/product-information#taxonomies)).
+- **Unit price:** the price per unit of measure (per ounce, per 100 grams, per count), computed from price and declared net quantity, required by EU law and by states adopting NIST Handbook 130 ([Pricing & Price Lists](/books/commerce/pricing#unit-pricing-and-price-display-law)).
+- **Variant:** the volume's item when it belongs to a product: one combination of option values, with its own SKU, barcode, stock and cost ([Products, Variants & Bundles](/books/commerce/products-and-variants#options-and-the-variant-explosion)).
 
 ## Orders, Inventory and Fulfillment
 
