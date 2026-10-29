@@ -97,7 +97,7 @@ export function SidebarNav({
 
   return (
     <nav ref={navRef} aria-label={title}>
-      <div className="sticky top-0 z-10 flex items-center gap-1.5 border-b border-border bg-background px-4 py-3 text-sm font-semibold text-foreground">
+      <div className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-sm font-semibold text-foreground">
         {back && (
           <Link
             href={back.href}
@@ -185,7 +185,8 @@ function Section({
     <Accordion.Item value={section.name} className="border-b border-border">
       <Accordion.Header>
         <Accordion.Trigger
-          className={`${sectionRowClass} cursor-pointer data-[state=open]:border-b data-[state=open]:border-border ${
+          // Transparent while closed, so opening doesn't fade the border in from white.
+          className={`${sectionRowClass} cursor-pointer border-b border-transparent data-[state=open]:border-border ${
             current ? "text-accent" : "text-dim data-[state=open]:text-foreground"
           }`}
         >
