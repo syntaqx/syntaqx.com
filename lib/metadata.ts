@@ -12,6 +12,20 @@ export function pageMetadata(path: string, title: string, description: string): 
 }
 
 /**
+ * Points agents at a docs or books page's Markdown (its path plus .md). A
+ * page-level `alternates` replaces the layout's wholesale, so the RSS feed is
+ * restated.
+ */
+export function markdownAlternates(path: string): Metadata["alternates"] {
+  return {
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: "syntaqx RSS feed" }],
+      "text/markdown": `${path}.md`,
+    },
+  };
+}
+
+/**
  * A short title says little in a results page ("Logs - syntaqx"), and crawlers
  * flag it: below 30 characters with the site suffix, add where the page sits,
  * as in "Logs · Observability".

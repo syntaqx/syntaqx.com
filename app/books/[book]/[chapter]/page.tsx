@@ -5,7 +5,7 @@ import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
 import { getAllBookChapters, getBookChapters } from "@/lib/docs";
 import { getBook } from "@/lib/books";
 import { glossaryIndex, isGlossary } from "@/lib/glossary";
-import { titleIn } from "@/lib/metadata";
+import { markdownAlternates, titleIn } from "@/lib/metadata";
 import { bookRef } from "@/lib/schema";
 import { ChapterCount, DocArticle } from "@/components/doc-article";
 
@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: titleIn(chapter.title, book.name),
     description: chapter.description,
+    alternates: markdownAlternates(`/books/${chapter.slug}`),
     openGraph: {
       title: chapter.title,
       description: chapter.description,

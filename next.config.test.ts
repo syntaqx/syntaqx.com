@@ -1,7 +1,23 @@
 import { describe, it, expect } from "vitest";
 import { markdownRewrites, sectionRedirects } from "./next.config";
 
-const all = [...markdownRewrites.beforeFiles, ...markdownRewrites.fallback];
+// The .md suffix rules answer whatever the Accept header says.
+const suffix = markdownRewrites.beforeFiles.filter((r) => !("has" in r));
+const all = [...markdownRewrites.beforeFiles, ...markdownRewrites.fallback].filter((r) => "has" in r);
+
+describe("Markdown .md URLs", () => {
+  it("serve docs and books at their path plus .md, never on the API host", () => {
+    expect(suffix.map(({ source, destination }) => ({ source, destination }))).toEqual([
+      { source: "/docs/:path*.md", destination: "/md/docs/:path*" },
+      { source: "/books/:path*.md", destination: "/md/books/:path*" },
+    ]);
+    for (const r of suffix) {
+      expect(r.missing).toEqual([{ type: "host", value: "api.syntaqx.com" }]);
+    }
+    // Ahead of the Accept rewrites, which would send /docs/x.md to /md/docs/x.md.
+    expect(markdownRewrites.beforeFiles.slice(0, 2)).toEqual(suffix);
+  });
+});
 
 describe("Markdown content negotiation rewrites", () => {
   it("only apply when Accept asks for text/markdown, and never on the API host", () => {
@@ -12,7 +28,7 @@ describe("Markdown content negotiation rewrites", () => {
       expect(r.missing).toEqual([{ type: "host", value: "api.syntaqx.com" }]);
       expect(r.destination.startsWith("/md")).toBe(true);
     }
-    const accept = new RegExp(`^${all[0].has[0].value}$`);
+    const accept = new RegExp(`^${markdownRewrites.fallback[0].has[0].value}$`);
     expect(accept.test("text/markdown")).toBe(true);
     expect(accept.test("text/markdown, text/html;q=0.9")).toBe(true);
     expect(accept.test("text/html,application/xhtml+xml,*/*;q=0.8")).toBe(false);

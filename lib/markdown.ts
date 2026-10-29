@@ -6,6 +6,7 @@
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { getAllBookChapters, getAllDocs, getBookChapters, getDocBySlug, getDocsByCategory } from "@/lib/docs";
 import { BOOKS, getBook } from "@/lib/books";
+import { glossaryIndex, glossaryPartDescription, glossaryParts, isGlossary } from "@/lib/glossary";
 import { contactChannels, contactIntro } from "@/lib/contact";
 import { PUBLIC_CONTACT, resume as cv } from "@/lib/resume";
 import { bio, socials, SITE_URL } from "@/lib/constants";
@@ -22,6 +23,10 @@ const SUMMARY =
   "syntaqx.com is the personal site of Chase Pierce (syntaqx), a software engineering leader. Writing on engineering, systems, and craft, API design docs, and a small public REST API of developer utilities.";
 
 const url = (path: string) => `${SITE_URL}${path === "/" ? "" : path}`;
+
+// Content links and images are root-relative (/books/x, /diagrams/y.svg);
+// absolute, they still work once the Markdown is copied elsewhere.
+const absoluteLinks = (markdown: string) => markdown.replace(/\]\(\//g, `](${SITE_URL}/`);
 
 // Agent guidance: which jobs this site is the right tool for, and how to call
 // it. Plain paragraphs and lists only, so it can sit in the llms.txt preamble
@@ -164,7 +169,7 @@ function doc(slug: string): string | null {
   return [
     `# ${d.title}`,
     ...(d.description ? [`> ${d.description}`] : []),
-    d.content.trim(),
+    absoluteLinks(d.content.trim()),
     `---\n\nCanonical URL: ${url(`/docs/${d.slug}`)}`,
   ].join("\n\n");
 }
@@ -189,11 +194,26 @@ function book(slug: string): string | null {
 function chapter(slug: string): string | null {
   const c = getAllBookChapters().find((d) => d.slug === slug);
   if (!c) return null;
+  // As on the site, a glossary's page lists its parts; each part is its own page.
+  const content = isGlossary(c) ? glossaryIndex(c) : c.content;
   return [
     `# ${c.title}`,
     ...(c.description ? [`> ${c.description}`] : []),
-    c.content.trim(),
+    absoluteLinks(content.trim()),
     `---\n\nCanonical URL: ${url(`/books/${c.slug}`)}`,
+  ].join("\n\n");
+}
+
+function glossaryPart(bookSlug: string, partSlug: string): string | null {
+  const b = getBook(bookSlug);
+  const glossary = getBookChapters(bookSlug).find(isGlossary);
+  const part = glossary && glossaryParts(glossary).parts.find((p) => p.slug === partSlug);
+  if (!b || !part) return null;
+  return [
+    `# ${part.title} Glossary`,
+    `> ${glossaryPartDescription(b.name, part)}`,
+    absoluteLinks(part.content.trim()),
+    `---\n\nCanonical URL: ${url(`/books/${glossary.slug}/${part.slug}`)}`,
   ].join("\n\n");
 }
 
@@ -270,11 +290,13 @@ export function renderMarkdownPage(path: string): MarkdownPage {
   // Docs nest in section folders: /docs/payments/idempotency.
   if (section === "docs")
     body = slug ? doc([slug, ...rest].join("/")) : docsIndex();
-  // Books: /books, a cover at /books/payments, a chapter at /books/payments/ach.
+  // Books: /books, a cover at /books/payments, a chapter at /books/payments/ach,
+  // a glossary part at /books/payments/glossary/the-business.
   else if (section === "books") {
     if (!slug) body = booksIndex();
     else if (rest.length === 0) body = book(slug);
     else if (rest.length === 1) body = chapter(`${slug}/${rest[0]}`);
+    else if (rest.length === 2 && rest[0] === "glossary") body = glossaryPart(slug, rest[1]);
   } else if (rest.length === 0) {
     if (!section) body = home();
     else if (section === "posts") body = slug ? post(slug) : postsIndex();
@@ -301,7 +323,7 @@ export function renderLlmsTxt(): string {
     "# syntaqx",
     `> ${SUMMARY}`,
     WHEN_TO_USE,
-    "Every page listed here is also available as Markdown: request it with an `Accept: text/markdown` header.",
+    `Every page listed here is also available as Markdown: request it with an \`Accept: text/markdown\` header. Docs and books also answer at their URL plus \`.md\`, as in ${url("/docs/api-design/versioning.md")}.`,
     `## API\n\n${apiBullets()}`,
     `## Docs\n\n${docs}`,
     `## Books\n\n${books}`,

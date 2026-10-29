@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { notFoundMarkdown, renderLlmsTxt, renderMarkdownPage } from "./markdown";
-import { getAllDocs } from "./docs";
+import { getAllBookChapters, getAllDocs, getBookChapters } from "./docs";
+import { glossaryParts, isGlossary } from "./glossary";
 import { getAllPosts } from "./posts";
 import { GET as markdownRoute } from "@/app/md/[[...path]]/route";
 import { GET as llmsRoute } from "@/app/llms.txt/route";
@@ -51,6 +52,38 @@ describe("renderMarkdownPage()", () => {
       "mailto:syntaqx@gmail.com",
     );
     expect(renderMarkdownPage("/posts").status).toBe(200);
+  });
+
+  it("renders books: the index, a cover, a chapter, a glossary and its parts", () => {
+    const book = BOOKS[0];
+    const chapters = getBookChapters(book.slug);
+    expect(renderMarkdownPage("/books").body).toContain(`https://www.syntaqx.com/books/${book.slug}`);
+    expect(renderMarkdownPage(`/books/${book.slug}`).body).toContain(`# ${book.name}`);
+    const chapter = chapters.find((c) => !isGlossary(c))!;
+    expect(renderMarkdownPage(`/books/${chapter.slug}`).body).toContain(`# ${chapter.title}`);
+
+    // As on the site, the glossary's page lists its parts; each part has its own.
+    const glossary = getAllBookChapters().find(isGlossary)!;
+    const index = renderMarkdownPage(`/books/${glossary.slug}`);
+    expect(index.status).toBe(200);
+    expect(index.body).toContain("## Parts");
+    for (const part of glossaryParts(glossary).parts) {
+      expect(index.body).toContain(`https://www.syntaqx.com/books/${glossary.slug}/${part.slug}`);
+      const page = renderMarkdownPage(`/books/${glossary.slug}/${part.slug}`);
+      expect(page.status).toBe(200);
+      expect(page.body.startsWith(`# ${part.title} Glossary\n`)).toBe(true);
+    }
+    expect(renderMarkdownPage(`/books/${glossary.slug}/nope`).status).toBe(404);
+  });
+
+  it("makes content links and images absolute", () => {
+    const doc = getAllDocs().find((d) => d.content.includes("](/"))!;
+    const chapter = getAllBookChapters().find((c) => c.content.includes("](/diagrams/"))!;
+    for (const path of [`/docs/${doc.slug}`, `/books/${chapter.slug}`]) {
+      const { body } = renderMarkdownPage(path);
+      expect(body, path).not.toContain("](/");
+      expect(body, path).toContain("](https://www.syntaqx.com/");
+    }
   });
 
   it("returns a Markdown 404 for unknown paths", () => {
