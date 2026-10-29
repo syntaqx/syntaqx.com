@@ -11,7 +11,7 @@ A brand defines a product once and sells it in a dozen places, and each place wa
 
 It is a mapping and a feedback loop. The mapping is mostly data: categories and attributes from the brand's catalog to each channel's taxonomy and fields. The feedback loop is the hard part, because channels accept a submission, process it later, and report issues by notification, report or not at all. The same problem syndicates apartments to listing networks in the Property Tech volume ([Listings and Syndication](/books/property-tech/listings-and-marketing#listings-and-syndication)) and is solved the same way: an outbox of changes per listing, an adapter per channel, and a record of what each channel said back.
 
-This chapter covers the channels' listing interfaces (Amazon's Listings Items API and product type schemas, Walmart's item spec, Google's product data specification and Merchant API, eBay and Etsy), category mapping, inventory and price sync, error handling, and the tools and partners that do this for brands (Rithum, Feedonomics, Pattern). It extends `listings` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). The catalog's own attributes, taxonomy and content are the later Product Information & Content chapter; how available quantities are computed is [Inventory](/books/commerce/inventory#sync-across-channels); Shopping ads bought on top of a Merchant Center feed are the later Acquisition & Attribution chapter; the agentic shopping feeds now being built on the same data are the later Agentic & AI Shopping chapter.
+This chapter covers the channels' listing interfaces (Amazon's Listings Items API and product type schemas, Walmart's item spec, Google's product data specification and Merchant API, eBay and Etsy), category mapping, inventory and price sync, error handling, and the tools and partners that do this for brands (Rithum, Feedonomics, Pattern). It extends `listings` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). The catalog's own attributes, taxonomies and channel content (including Google's attribute list) are [Product Information & Content](/books/commerce/product-information#channel-content-and-syndication), and identifiers are [Products, Variants & Bundles](/books/commerce/products-and-variants#identifiers-gtin-upc-and-gs1); this chapter is the delivery: getting that content onto each channel and keeping it there; how available quantities are computed is [Inventory](/books/commerce/inventory#sync-across-channels); Shopping ads bought on top of a Merchant Center feed are the later Acquisition & Attribution chapter; the agentic shopping feeds now being built on the same data are the later Agentic & AI Shopping chapter.
 
 ## How the Platforms Do It
 
@@ -49,7 +49,7 @@ A listing is the item on someone else's shelf, under their identifier and their 
 
 Two decisions come before the first submission:
 
-- **Match or create.** If the product already exists on the channel (an ASIN, a Walmart item, a Google product with the same GTIN), the seller offers against it: Amazon's "offer-only" listing lets sellers "list only the necessary details to match the existing item" plus the sales terms, and Walmart's `MP_ITEM_MATCH` feed does the same. If it doesn't exist, the seller creates it with full product facts. Matching depends on identifiers, which is why GTINs and brand names have to be right before anything else (`items.gtin` in [The Core Data Model](/books/commerce/commerce-business#the-core-data-model); the later Products, Variants & Bundles chapter covers identifiers).
+- **Match or create.** If the product already exists on the channel (an ASIN, a Walmart item, a Google product with the same GTIN), the seller offers against it: Amazon's "offer-only" listing lets sellers "list only the necessary details to match the existing item" plus the sales terms, and Walmart's `MP_ITEM_MATCH` feed does the same. If it doesn't exist, the seller creates it with full product facts. Matching depends on identifiers, which is why GTINs and brand names have to be right before anything else ([The marketplaces check](/books/commerce/products-and-variants#the-marketplaces-check)).
 - **Product facts versus sales terms.** Amazon's `requirements` parameter names the split: `LISTING` ("product facts and sales terms"), `LISTING_PRODUCT_ONLY` ("product facts only") and `LISTING_OFFER_ONLY` ("sales terms only"). Facts (title, brand, attributes, images) change rarely and are shared with other sellers on a matched product; terms (price, quantity, condition, fulfillment) change constantly and are the seller's alone. The system sends them on different schedules and tracks them separately.
 
 ## Amazon: Listings Items and Product Type Schemas
@@ -101,11 +101,9 @@ The spec is per product type, like Amazon's, and versions change; the version a 
 
 Google's product data feeds Shopping ads, free listings and other Google surfaces, and it is the strictest about consistency between the feed and the store:
 
-- **Required for every product:** `id`, `title` (or `structured_title`), `description` (or `structured_description`), `link`, `image_link`, `availability` and `price`. `brand` is required for new products except movies, books and music; `gtin` "depends" and is strongly recommended; `mpn` is required only without a GTIN; `condition` for used or refurbished goods; apparel and variant products need `age_group`, `gender`, `color`, `size` and `item_group_id` in listed countries.
-- **Lengths:** `id` up to 50 characters, `title` 150, `description` 5,000, `brand` and `mpn` 70.
+- **Attributes:** the required and conditional attributes and their lengths are in [Channel Content and Syndication](/books/commerce/product-information#channel-content-and-syndication); what matters for delivery is that `id` (up to 50 characters) is the key every later update and issue refers to, so it never changes for a product.
 - **Availability** is `in_stock`, `out_of_stock`, `preorder` or `backorder`, with an `availability_date` for preorders "up to one year in the future."
 - **Price** must "match with the price from your landing page, structured data, and at checkout," in the target country's currency. In the US and Canada, "Don't include any taxes, such as sales tax"; elsewhere VAT or GST is included.
-- **Category:** "Include only one category" from Google's product taxonomy, preferably by ID; some products have required categories.
 - **Images:** a new 500 by 500 pixel minimum, with "Enforcement of the new requirements will begin January 31, 2027."
 
 The interface changed in 2026. "The Merchant API is a redesign of the Content API for Shopping," the Content API "was sunset on August 18, 2026," and from September 1, 2026 its requests "will experience progressive errors." The Merchant API separates what the merchant submits (`productInputs`) from the processed product Google shows, and supports several data sources per account, so a feed file, an API integration and a local inventory source can coexist.
@@ -114,7 +112,7 @@ The price rule is the pricing-page principle in another form: the store page is 
 
 ## Category and Attribute Mapping
 
-The brand's catalog has its own categories and attributes; each channel has its own taxonomy and its own attribute names and allowed values. The mapping has three layers:
+The brand's catalog has its own categories and attributes; each channel has its own taxonomy and its own attribute names and allowed values. The taxonomies themselves, and the rule to keep the merchant's apart from the channels', are in [Taxonomies](/books/commerce/product-information#taxonomies), where channel taxonomies are rows in `categories` and each channel's required attributes are `attribute_requirements`. The mapping between them has three layers:
 
 - **Category to product type.** The brand's "Screen protectors" maps to an Amazon product type, a Walmart spec category, a Google product category ID, an eBay category and an Etsy taxonomy node. One brand category can map to different channel categories by item (a tempered-glass protector and a privacy film may land in different places), so the mapping is a default per category with overrides per item.
 - **Attribute to field.** "Compatible device" maps to a different field name on each channel, sometimes split (model and generation), sometimes required, sometimes with an enumerated list of values. Each mapping is a function from the brand's attribute values to the channel's, with a lookup table for enumerations.
@@ -183,15 +181,15 @@ ALTER TABLE listings
   ADD COLUMN published_price     BIGINT,  -- minor units, as the channel shows it
   ADD COLUMN last_synced_at      TIMESTAMPTZ;
 
-CREATE TABLE channel_category_mappings (  -- brand category to channel category and type
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  channel_id       TEXT NOT NULL REFERENCES sales_channels (id),
-  category_id      UUID,                  -- the catalog's category (Product Information)
-  item_id          UUID REFERENCES items (id),  -- an override for one item
-  channel_category TEXT NOT NULL,         -- e.g. Google product category ID, eBay category
-  product_type     TEXT,                  -- e.g. Amazon product type
-  attribute_map    JSONB NOT NULL DEFAULT '{}',  -- channel field -> catalog attribute and transform
-  valid_during     TSTZRANGE NOT NULL,
+CREATE TABLE channel_category_mappings (  -- merchant category to channel category and type
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  channel_id          TEXT NOT NULL REFERENCES sales_channels (id),
+  category_id         UUID REFERENCES categories (id),  -- taxonomy 'merchant'
+  item_id             UUID REFERENCES items (id),       -- an override for one item
+  channel_category_id UUID NOT NULL REFERENCES categories (id),  -- e.g. taxonomy 'google:...'
+  product_type        TEXT,               -- e.g. Amazon product type, Walmart spec category
+  attribute_map       JSONB NOT NULL DEFAULT '{}',  -- channel field -> attribute code and transform
+  valid_during        TSTZRANGE NOT NULL,
   CHECK (category_id IS NOT NULL OR item_id IS NOT NULL)
 );
 

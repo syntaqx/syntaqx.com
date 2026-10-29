@@ -51,7 +51,7 @@ The invoice schema is also the only public view of the money terms. Its allowanc
 
 ## 3P: Seller Central
 
-A third-party seller registers in Seller Central, chooses a plan, lists products (matching an existing ASIN or creating a new one), sets prices and stock, and either ships orders itself or sends inventory to FBA. Amazon is the marketplace: it takes the payment, collects sales tax as the marketplace facilitator, sets the return policy the buyer sees, and pays the seller later, net of fees. The 10-K is explicit about the role: for third-party sales "we are not the seller of record," and the seller fees are "fixed fees, a percentage of sales, per-unit activity fees, interest, or some combination thereof."
+A third-party seller registers in Seller Central, chooses a plan, lists products (matching an existing ASIN or creating a new one), sets prices and stock, and either ships orders itself or sends inventory to FBA. Amazon is the marketplace: it takes the payment, collects sales tax as the marketplace facilitator ([Marketplace Facilitator Laws](/books/commerce/sales-tax-vat-and-duties#marketplace-facilitator-laws)), sets the return policy the buyer sees, and pays the seller later, net of fees. The 10-K is explicit about the role: for third-party sales "we are not the seller of record," and the seller fees are "fixed fees, a percentage of sales, per-unit activity fees, interest, or some combination thereof."
 
 ### Fees
 
@@ -104,7 +104,7 @@ Eligibility used to be a gate: a seller needed a Professional plan and had to me
 What this means for the software:
 
 - **Featured Offer status is an observation, not a setting.** The seller learns it from the `ANY_OFFER_CHANGED` notification, sent on a "change to any of the top 20 offers," and from pricing API calls. Each observation is a timestamped row per listing, not a flag overwritten on the listing, because the questions asked of it are about time: how many hours a day did we hold it, and what changed when we lost it.
-- **Repricers act on it.** Third-party repricing tools adjust price in response to offer changes within the seller's floor and ceiling. The floor is a business rule (never below landed cost plus fees, never below a minimum advertised price the brand enforces), and it is the part the merchant must own, and the later Pricing & Price Lists chapter covers MAP and price rules.
+- **Repricers act on it.** Third-party repricing tools adjust price in response to offer changes within the seller's floor and ceiling. The floor is a business rule (never below landed cost plus fees, never below a minimum advertised price the brand enforces), and it is the part the merchant must own ([MAP and Resale Price Maintenance](/books/commerce/pricing#map-and-resale-price-maintenance)).
 - **Advertising depends on it.** Sponsored Products ads require the product to "be eligible for the Featured Offer" ([Retail Media & Marketplace Ads](/books/commerce/retail-media#amazon-ads)), so losing it stops the ads too.
 
 How Amazon treats sellers who offer lower prices elsewhere is also at the center of the antitrust case ([FTC v. Amazon](#ftc-v-amazon)).

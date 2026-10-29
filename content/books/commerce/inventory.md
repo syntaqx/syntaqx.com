@@ -301,7 +301,7 @@ Design notes:
 - **Reservations expire on read.** The available query ignores expired rows whether or not a job has marked them; a sweeper moves them to `expired` for tidiness, not correctness.
 - **Buffers are rules, not quantities.** A buffer stored as units on the level would have to be rewritten whenever the rule changed; a rule with priority and validity is looked up at computation time, the [Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule) shape.
 - **The version column is the compare-and-set.** Every integration that writes counts sends the version it read and fails on a mismatch, the same guarantee Shopify's `changeFromQuantity` gives.
-- **Publish what was sent.** Each availability publication to a channel (the item, the number, the time, the channel's acknowledgment) is worth keeping, either in the multichannel feed tables of the later Multichannel Listing & Feeds chapter or as events, so a marketplace oversell can be traced to a stale publish.
+- **Publish what was sent.** Each availability publication to a channel (the item, the number, the time, the channel's acknowledgment) is worth keeping, either in the feed tables of [Multichannel Listing & Feeds](/books/commerce/multichannel-listing#how-to-build-it) or as events, so a marketplace oversell can be traced to a stale publish.
 
 ## Auditing
 
