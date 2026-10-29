@@ -111,7 +111,7 @@ For a store that only sells over its counter, an inaccurate count is a replenish
 - **A store buffer.** Show an item as available online only when the count exceeds a buffer (a fixed number, or a share of the count), so the last units are kept for walk-ins and for count error. The buffer is per item and store, set by how often that item's counts are found wrong.
 - **Count where it's sold online.** Cycle counts weighted toward items with high online demand and recent short picks ([Cycle Counts and Shrink](/books/commerce/inventory#cycle-counts-and-shrink) covers counting programs).
 - **Treat a short pick as a count.** A picker who finds the shelf empty has just counted it; the system should set that location's count to what was found, not wait for the next cycle count.
-- **Item-level tags.** RFID tags on items let a store count a whole section by walking it with a reader instead of scanning each barcode, and several large apparel and general retailers use them for exactly this; I couldn't open their primary statements, so no figures are given here. <!-- source-gap: retail-rfid-programs | missing | which large US retailers tag items with RFID for store counts, and the accuracy gains they report | closes with: a retailer filing, supplier mandate or retailer press release opened and quoted | checked: 2026-10-28 -->
+- **Item-level tags.** RFID tags on items let a store count a whole section by walking it with a reader instead of scanning each barcode. Walmart, announcing an extension with Avery Dennison into "fresh categories like meat, bakery and deli" on October 22, 2025, said the tags let associates "track inventory faster and more accurately"; it gave no accuracy figures, and I couldn't open other large retailers' primary statements, so none are given here. <!-- source-gap: retail-rfid-programs | missing | which other large US retailers tag items with RFID for store counts, and the inventory-accuracy gains any retailer reports | closes with: a retailer filing, supplier mandate or retailer press release (Target, Macy's, Walmart's apparel and general merchandise mandate) stating scope or measured accuracy | checked: 2026-10-29 -->
 
 Online availability for a store is therefore a computation: on hand less committed, less the store buffer, less what's staged for pickup, and only if the store has fulfillment capacity left today. The core rule from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) ("available is a computation") carries one more term at a store.
 
@@ -248,6 +248,10 @@ Design notes:
 - [Shopify Help: Setting up pickup in store for online orders](https://help.shopify.com/en/manual/fulfillment/setup/delivery-methods/pickup-in-store), pickup per location, processing time, the ready notice and marking orders picked up
 - [Shopify Help: Ship from Store on Shopify POS](https://help.shopify.com/en/manual/sell-in-person/shopify-pos/order-management/ship-from-store), fulfilling shipped orders in POS, POS Pro and order routing rules
 - [Shopify: Unified commerce](https://www.shopify.com/blog/unified-commerce), the definition and the contrast with omnichannel back ends
+
+**Retailer announcements**
+
+- [Walmart: Walmart and Avery Dennison use RFID for fresh food (October 22, 2025)](https://corporate.walmart.com/news/2025/10/22/walmart-and-avery-dennison-collaborate-to-enhance-freshness-and-increase-operational-efficiency-using-rfid), the extension to meat, bakery and deli
 
 **Research and law**
 

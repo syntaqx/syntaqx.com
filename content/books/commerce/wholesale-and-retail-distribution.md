@@ -118,7 +118,7 @@ On-time in-full programs measure whether the vendor delivered the whole order in
 - **The window.** On time means arriving inside a window around the must-arrive-by date (MABD), not merely before it; early deliveries can fail too.
 - **Who is fined.** Walmart fines the supplier, not its carrier or 3PL; recovering from them is the supplier's contract problem.
 
-<!-- source-gap: walmart-otif-policy | secondary | Walmart's OTIF targets, fine, measurement window and any change after February 2024 | closes with: a Walmart-published OTIF policy readable without a Retail Link login, or a filing or court record quoting it | checked: 2026-10-28 -->
+<!-- source-gap: walmart-otif-policy | secondary | Walmart's OTIF targets, fine, measurement window and any change after February 2024 | closes with: a Walmart-published OTIF policy readable without a Retail Link login, or a filing or court record quoting it; corporate.walmart.com's supplier compliance-areas page doesn't cover OTIF | checked: 2026-10-29 -->
 
 Target's program, per a third-party guide to its compliance policy (updated October 2022, with changes effective August 4, 2024), measures fill rate, on-time ship, on-time arrival and the 856's availability and accuracy, and charges 5% of cost of goods on units measured late or not received; collect shipments must be booked "by 11:00 AM Central Time two business days before the pickup date," and each charge is disputed separately in POL.
 
