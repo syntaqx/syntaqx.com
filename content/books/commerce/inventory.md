@@ -76,7 +76,7 @@ The usual pattern for a consumer store:
 - **A short reservation at checkout,** for the minutes it takes to pay, released on abandonment.
 - **Commitment at order,** when payment is authorized.
 
-The exceptions prove the rule: a limited drop reserves at entry to a queue because demand is a hundred times supply (the later Peak Season & Drops chapter), a B2B quote reserves for days, and a store holds a unit for a customer who called. Each is a reservation with an owner, a quantity, an expiry and a reason.
+The exceptions prove the rule: a limited drop reserves at entry to a queue because demand is a hundred times supply ([Limited Drops and Inventory Fairness](/books/commerce/peak-season#limited-drops-and-inventory-fairness)), a B2B quote reserves for days, and a store holds a unit for a customer who called. Each is a reservation with an owner, a quantity, an expiry and a reason.
 
 The mechanics are the playbook's: a hold row with an expiry enforced on read, so an expired reservation stops counting even before a cleanup job deletes it ([Expiry Is Enforced on Read](/docs/architecture/reservations-and-holds#expiry-is-enforced-on-read)), a conditional decrement against a counter for pooled stock ([Counters for Pooled Inventory](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory)), and an idempotent confirm that turns a reservation into a commitment exactly once ([Confirming a Hold, Idempotently](/docs/architecture/reservations-and-holds#confirming-a-hold-idempotently)).
 

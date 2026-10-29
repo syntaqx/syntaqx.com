@@ -130,7 +130,7 @@ Helpdesks measure the clock in several ways. Zendesk's SLA metrics are represent
 - **Contacts per order,** by category, channel, warehouse, carrier and SKU: the number that says whether support is fixing problems or absorbing them. A rise in WISMO for one carrier or "damaged" for one SKU is a supply chain finding.
 - **Self-service rate** for tracking, returns and subscription changes: the share handled without a ticket.
 - **Cost of resolutions:** refunds, credits, replacements and reship postage by reason, joined to contribution ([The Unit Economics](/books/commerce/business-models#the-unit-economics)).
-- **Peak readiness:** contacts trail orders by the days it takes to ship and deliver, and return contacts trail them by weeks, so support's peak comes after the sales peak; staffing and SLAs plan for it (the later Peak Season & Drops chapter).
+- **Peak readiness:** contacts trail orders by the days it takes to ship and deliver, and return contacts trail them by weeks, so support's peak comes after the sales peak; staffing and SLAs plan for it ([Incident Readiness](/books/commerce/peak-season#incident-readiness)).
 - **AI and human outcomes on the same definitions,** including reopen and repeat contact within a week, since a per-resolution bill rewards the vendor for closing.
 
 ## Fraud and Social Engineering at the Help Desk

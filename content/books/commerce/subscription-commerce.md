@@ -26,7 +26,7 @@ As of October 2026, from each vendor's own documentation and pricing pages:
 
 Three patterns:
 
-- **The renewal is an order created by software the customer never sees.** On Shopify the app, not the platform, decides when to bill: it calls `subscriptionBillingAttemptCreate`, and the order exists only once the attempt succeeds. On Recharge "Orders are created once the corresponding Charge is successful." Whoever owns the scheduler owns the renewal, which is why moving between subscription apps is a migration of schedules and payment tokens, not of products (the later Replatforming & Migration chapter).
+- **The renewal is an order created by software the customer never sees.** On Shopify the app, not the platform, decides when to bill: it calls `subscriptionBillingAttemptCreate`, and the order exists only once the attempt succeeds. On Recharge "Orders are created once the corresponding Charge is successful." Whoever owns the scheduler owns the renewal, which is why moving between subscription apps is a migration of schedules and payment tokens, not of products ([Replatforming & Migration](/books/commerce/replatforming#subscriptions-and-stored-payment-tokens)).
 - **Charges are not subscriptions.** Recharge merges every subscription on an address with the same next charge date into one charge with a line per subscription; a prepaid charge creates several orders. The subscription is the promise, the charge is the money, the order is the goods, and each has its own record.
 - **Recovery is a product feature.** Every vendor in the table sells failed-payment recovery and cancellation flows as features, because involuntary churn (a declined card) and voluntary churn (a cancel click) are the two numbers the business lives on.
 

@@ -71,7 +71,7 @@ Bots that do buy are a traffic problem first. Nike says bot attacks "can make up
 The layers that work together for a launch:
 
 - **At the edge,** bot scores, verified-bot allowlists and rate limits keep scripted traffic away from the storefront ([Bot Scores, Fingerprints and Verified Bots](/books/hosting-and-cloud/waf-bots-and-rate-limits#bot-scores-fingerprints-and-verified-bots)).
-- **At admission,** a queue or a draw decides who may check out, with tokens bound to a session; a randomized draw removes the speed advantage bots buy, which a first-come queue rewards ([Fairness and Bots](/docs/architecture/admission-control#fairness-and-bots)). The later Peak Season & Drops chapter covers queues and drops.
+- **At admission,** a queue or a draw decides who may check out, with tokens bound to a session; a randomized draw removes the speed advantage bots buy, which a first-come queue rewards ([Fairness and Bots](/docs/architecture/admission-control#fairness-and-bots)). [Peak Season & Drops](/books/commerce/peak-season#limited-drops-and-inventory-fairness) covers queues and drops.
 - **At checkout,** a challenge for uncertain sessions, a purchase limit per item checked against linked identities rather than accounts, and no reservation before payment.
 - **After the order,** a review of orders that share addresses, cards or devices beyond the limit, cancelled under the published terms before they ship.
 
