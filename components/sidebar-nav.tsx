@@ -70,6 +70,7 @@ export function SidebarNav({
   title,
   back,
   home,
+  pages = [],
   groups,
   onNavigate,
 }: {
@@ -77,6 +78,8 @@ export function SidebarNav({
   /** A link back up a level, as a chevron before the title. */
   back?: { href: string; label: string };
   home: { href: string; label: string };
+  /** Pages that stand alone, listed under the overview (the playbook's intro). */
+  pages?: { href: string; label: string }[];
   groups: SidebarGroup[];
   /** Called when a link is followed (closes the mobile panel). */
   onNavigate?: () => void;
@@ -110,16 +113,20 @@ export function SidebarNav({
         )}
         <span className="truncate">{title}</span>
       </div>
-      <div className="border-b border-border p-2">
-        <Link
-          href={home.href}
-          onClick={onNavigate}
-          aria-current={pathname === home.href ? "page" : undefined}
-          className={rowClass(pathname === home.href)}
-        >
-          {home.label}
-        </Link>
-      </div>
+      <ul className="flex flex-col gap-px border-b border-border p-2">
+        {[home, ...pages].map((page) => (
+          <li key={page.href}>
+            <Link
+              href={page.href}
+              onClick={onNavigate}
+              aria-current={pathname === page.href ? "page" : undefined}
+              className={rowClass(pathname === page.href)}
+            >
+              {page.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       <Accordion.Root type="multiple" value={open} onValueChange={setOpen}>
         {groups.map((group) => (

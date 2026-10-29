@@ -9,10 +9,14 @@ interface DocsSidebarProps {
 
 /** The playbook's sections, then the API reference. */
 function DocsTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: () => void }) {
+  // A one-page category (Start Here) is a page of its own, beside the overview.
+  const pages = categories
+    .filter((c) => c.docs.length === 1)
+    .map((c) => ({ href: `/docs/${c.docs[0].slug}`, label: c.docs[0].navTitle }));
   const groups: SidebarGroup[] = [
     {
       name: null,
-      sections: categories.map((c) => ({
+      sections: categories.filter((c) => c.docs.length > 1).map((c) => ({
         name: c.name,
         items: c.docs.map((d) => ({ href: `/docs/${d.slug}`, title: d.navTitle })),
       })),
@@ -26,6 +30,7 @@ function DocsTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: 
     <SidebarNav
       title="Documentation"
       home={{ href: "/docs", label: "Overview" }}
+      pages={pages}
       groups={groups}
       onNavigate={onNavigate}
     />
