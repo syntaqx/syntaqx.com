@@ -52,7 +52,7 @@ Formatting happens at the edge, for display only. Data stays canonical, the way 
 
 The browser sends its preferences in [`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept-Language), a weighted list of [BCP 47](https://datatracker.ietf.org/doc/html/rfc5646) language tags. It's a good default for a first visit, and better than guessing from IP location, which says where someone is, not what they read: a German speaker traveling in Japan doesn't want Japanese.
 
-An explicit choice always wins. Show a language switcher, persist the choice (in the account, or a cookie for anonymous visitors), and never override it with the header again; browser defaults are often whatever the device shipped with. Put the locale in the URL (`/de/pricing`) for public pages, so each language version is shareable and indexable.
+An explicit choice always wins. Show a language switcher, persist the choice (in the account, or a cookie for anonymous visitors), and never override it with the header again; browser defaults are often whatever the device shipped with. Put the locale in the URL (`/de/pricing`) for public pages, so each language version is shareable and indexable, and tie the versions together for search engines with [hreflang](/docs/frontend/seo#international-sites).
 
 ## Right-to-Left Layouts
 

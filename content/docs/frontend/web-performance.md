@@ -26,6 +26,8 @@ Past the good threshold, each metric has a poor one: LCP over 4 seconds, INP ove
 
 [INP replaced First Input Delay](https://web.dev/blog/inp-cwv-launch) as a Core Web Vital in March 2024. It measures every interaction, not just the first, which makes heavy JavaScript much harder to hide.
 
+Core Web Vitals also feed search ranking, though behind relevance; how much they count is in [SEO](/docs/frontend/seo#page-experience).
+
 ## Measure Real Users
 
 - **Field data decides.** Real-user monitoring (RUM) and the [Chrome UX Report](https://developer.chrome.com/docs/crux) show what people actually experience, on their devices and networks. Collecting it yourself is [Real-User Monitoring](/docs/observability/frontend-and-synthetic#real-user-monitoring).
