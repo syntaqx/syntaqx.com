@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import { markdownAlternates } from "@/lib/metadata";
 import { getBookChapters } from "@/lib/docs";
 import { Button } from "@/components/button";
 import { DocsHeader } from "@/components/docs-header";
@@ -28,6 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description: book.summary,
+    alternates: markdownAlternates(`/books/${book.slug}`),
     openGraph: { title, description: book.summary, url: `/books/${book.slug}`, siteName: "syntaqx", type: "website" },
   };
 }

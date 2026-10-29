@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
-import { titleIn } from "@/lib/metadata";
+import { markdownAlternates, titleIn } from "@/lib/metadata";
 import { pageRef } from "@/lib/schema";
 import { getAllDocs, getDocBySlug, getDocsByCategory } from "@/lib/docs";
 import { ChapterCount, DocArticle } from "@/components/doc-article";
@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: titleIn(doc.title, doc.category),
     description: doc.description,
+    alternates: markdownAlternates(`/docs/${doc.slug}`),
     openGraph: {
       title: doc.title,
       description: doc.description,

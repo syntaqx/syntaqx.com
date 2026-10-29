@@ -62,6 +62,9 @@ const securityHeaders = [
 // representation are rewritten up front; anything that would otherwise 404
 // falls back to the same route, which answers with a Markdown 404. Other
 // pages keep serving HTML. Never applies on the API subdomain.
+//
+// Docs and books also answer at their path plus .md (/docs/x.md,
+// /books/payments/ach.md, /docs.md), whatever the Accept header.
 const wantsMarkdown = {
   has: [{ type: "header" as const, key: "accept", value: ".*text/markdown.*" }],
   missing: [{ type: "host" as const, value: "api.syntaqx.com" }],
@@ -69,20 +72,27 @@ const wantsMarkdown = {
 
 export const markdownRewrites = {
   beforeFiles: [
-    "/",
-    "/posts",
-    "/posts/:slug",
-    "/docs",
-    "/docs/:path*",
-    "/books",
-    "/books/:path*",
-    "/contact",
-    "/resume",
-  ].map((source) => ({
-    source,
-    destination: source === "/" ? "/md" : `/md${source}`,
-    ...wantsMarkdown,
-  })),
+    ...["docs", "books"].map((section) => ({
+      source: `/${section}/:path*.md`,
+      destination: `/md/${section}/:path*`,
+      missing: wantsMarkdown.missing,
+    })),
+    ...[
+      "/",
+      "/posts",
+      "/posts/:slug",
+      "/docs",
+      "/docs/:path*",
+      "/books",
+      "/books/:path*",
+      "/contact",
+      "/resume",
+    ].map((source) => ({
+      source,
+      destination: source === "/" ? "/md" : `/md${source}`,
+      ...wantsMarkdown,
+    })),
+  ],
   afterFiles: [],
   fallback: [
     { source: "/:path*", destination: "/md/:path*", ...wantsMarkdown },

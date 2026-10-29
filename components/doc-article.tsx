@@ -3,6 +3,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
+import { CopyMarkdown } from "@/components/copy-markdown";
 import { CodeTabsScript } from "@/components/code-tabs";
 import { ChapterKeys } from "@/components/chapter-keys";
 import { JsonLd } from "@/components/json-ld";
@@ -82,6 +83,10 @@ export async function DocArticle({
                 Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
               </span>
             )}
+            <CopyMarkdown href={`${path}.md`} className="cursor-pointer transition-colors hover:text-accent" />
+            <a href={`${path}.md`} type="text/markdown" className="transition-colors hover:text-accent">
+              View as Markdown
+            </a>
             <a href={`${REPO}/blob/main/${source}`} className="transition-colors hover:text-accent">
               Edit on GitHub
             </a>

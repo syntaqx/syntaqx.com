@@ -3,12 +3,12 @@ import { DocsIndex } from "@/components/docs-index";
 import { getDocsByCategory } from "@/lib/docs";
 import { JsonLd } from "@/components/json-ld";
 import { collectionPage } from "@/lib/schema";
-import { pageMetadata } from "@/lib/metadata";
+import { markdownAlternates, pageMetadata } from "@/lib/metadata";
 
 const description =
   "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.";
 
-export const metadata = pageMetadata("/docs", "Documentation", description);
+export const metadata = { ...pageMetadata("/docs", "Documentation", description), alternates: markdownAlternates("/docs") };
 
 export default function DocsPage() {
   const categories = getDocsByCategory();

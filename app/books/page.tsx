@@ -5,13 +5,16 @@ import { BookCards, type BookCard } from "@/components/book-cards";
 import { DocsHeader } from "@/components/docs-header";
 import { JsonLd } from "@/components/json-ld";
 import { itemList } from "@/lib/schema";
-import { pageMetadata } from "@/lib/metadata";
+import { markdownAlternates, pageMetadata } from "@/lib/metadata";
 
-export const metadata = pageMetadata(
-  "/books",
-  "Books",
-  "Long reads that apply the playbook to one subject at a time: how an industry's rules, money and regulators shape the systems you build.",
-);
+export const metadata = {
+  ...pageMetadata(
+    "/books",
+    "Books",
+    "Long reads that apply the playbook to one subject at a time: how an industry's rules, money and regulators shape the systems you build.",
+  ),
+  alternates: markdownAlternates("/books"),
+};
 
 function SectionHead({ title, count }: { title: string; count: number }) {
   return (
