@@ -231,7 +231,7 @@ Design notes:
 - **Earn and burn point at order lines.** An earn entry references the line that earned it, so a return of that line writes a `reverse` entry against it; a redemption references the discount line it funded, so a refund of the order can restore the points.
 - **Redemptions consume earns.** `consumes_id` ties each redeem and expire entry to the earn entries it drew from, first in, first out, which gives expiry dates and the cohort data breakage needs.
 - **Face value is stamped at entry time.** A devaluation (fewer dollars per point) is a new program version; old entries keep the value they were issued at, so the liability before and after is reconstructible.
-- **The ledger feeds finance, finance sets the rate.** Allocation of transaction price to points and the breakage estimate are finance's; the product provides earn, redemption and expiry facts by cohort, and the later Commerce Accounting chapter books them.
+- **The ledger feeds finance, finance sets the rate.** Allocation of transaction price to points and the breakage estimate are finance's; the product provides earn, redemption and expiry facts by cohort, and [Commerce Accounting](/books/commerce/commerce-accounting) books them.
 - **Events:** `loyalty.earned`, `loyalty.vested`, `loyalty.redeemed`, `loyalty.reversed`, `loyalty.expired`, `loyalty.tier_changed`, `membership.renewed` and `membership.upgraded` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to email flows, the storefront and accounting.
 
 ## Auditing

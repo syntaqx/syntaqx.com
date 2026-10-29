@@ -86,7 +86,7 @@ How the payment page is served decides how much of the PCI DSS standard a mercha
 | The merchant's page builds the form with the provider's JavaScript, or posts card data directly to the provider | **A-EP** | The web servers serving the page are in scope: hardening, patching, logging, script inventory and tamper detection (requirements 6.4.3 and 11.6.1) |
 | Card numbers reach the merchant's servers, or are stored there | **D** | The whole standard, on every system in the card data environment |
 
-The Council's FAQ puts the line plainly: "If any element of a payment page originates from the merchant's website, the implementation is not eligible for SAQ A." For a self-hosted or headless store the practical rule is to use the provider's hosted fields or redirect and keep the merchant's own scripts off the payment page; Magecart-style skimming, which injects code into checkout pages, is why the script requirements exist, and the later Store Security & PCI chapter covers it. The Payments volume covers the vault and card storage behind SAQ D ([Card Vault](/books/payments/card-vault)).
+The Council's FAQ puts the line plainly: "If any element of a payment page originates from the merchant's website, the implementation is not eligible for SAQ A." For a self-hosted or headless store the practical rule is to use the provider's hosted fields or redirect and keep the merchant's own scripts off the payment page; Magecart-style skimming, which injects code into checkout pages, is why the script requirements exist, and [Store Security & PCI](/books/commerce/store-security-and-pci) covers it. The Payments volume covers the vault and card storage behind SAQ D ([Card Vault](/books/payments/card-vault)).
 
 ## Total Cost of Ownership
 
