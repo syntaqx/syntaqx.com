@@ -32,12 +32,19 @@ export function DiagramViewer() {
   const [width, setWidth] = useState(0);
   const [fit, setFit] = useState(0);
   const bodyRef = useRef<HTMLDivElement | null>(null);
-  // The dialog mounts its content after opening, so sizing waits for this.
-  const [body, setBody] = useState<HTMLDivElement | null>(null);
-  const attachBody = useCallback((node: HTMLDivElement | null) => {
-    bodyRef.current = node;
-    setBody(node);
-  }, []);
+  // The dialog mounts its content after opening, so the drawing is sized
+  // here, once its area exists: the fit, and the opening width (the fit, or
+  // a readable width on a narrow screen).
+  const attachBody = useCallback(
+    (node: HTMLDivElement | null) => {
+      bodyRef.current = node;
+      if (!node || !open) return;
+      const f = Math.min(node.clientWidth - 32, ((node.clientHeight - 32) * open.w) / open.h);
+      setFit(f);
+      setWidth(Math.max(f, Math.min(open.w, READABLE, f * 2.5)));
+    },
+    [open],
+  );
   // The point to hold still while zooming, as fractions of the drawing and
   // of the visible area.
   const anchor = useRef<{ fx: number; fy: number; vx: number; vy: number } | null>(null);
@@ -72,15 +79,6 @@ export function DiagramViewer() {
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, []);
-
-  // Size the drawing once the dialog has laid out: the fit, and the opening
-  // width (the fit, or a readable width on a narrow screen).
-  useLayoutEffect(() => {
-    if (!open || !body || width) return;
-    const f = Math.min(body.clientWidth - 32, ((body.clientHeight - 32) * open.w) / open.h);
-    setFit(f);
-    setWidth(Math.max(f, Math.min(open.w, READABLE, f * 2.5)));
-  }, [open, body, width]);
 
   // After a zoom, scroll so the anchored point stays where it was.
   useLayoutEffect(() => {
