@@ -45,26 +45,32 @@ export function useCurrentLinkInView() {
   return navRef;
 }
 
-/** A sidebar's links as rows: the current page is marked and highlighted. */
+/**
+ * A sidebar's links as rows: the current page is marked and highlighted.
+ * With `nested`, a page below a link (a glossary's part) highlights it too.
+ */
 export function DocLinks({
   docs,
   hrefOf,
   onNavigate,
+  nested = false,
 }: {
   docs: { slug: string; navTitle: string }[];
   hrefOf: (slug: string) => string;
   onNavigate?: () => void;
+  nested?: boolean;
 }) {
   const pathname = usePathname();
   return docs.map((doc) => {
     const href = hrefOf(doc.slug);
+    const active = pathname === href || (nested && pathname.startsWith(`${href}/`));
     return (
       <li key={doc.slug}>
         <Link
           href={href}
           onClick={onNavigate}
           aria-current={pathname === href ? "page" : undefined}
-          className={linkClass(pathname === href)}
+          className={linkClass(active)}
         >
           {doc.navTitle}
         </Link>

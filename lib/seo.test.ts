@@ -215,7 +215,7 @@ describe("schema builders", () => {
     });
   });
 
-  it("makes a book's cover a CollectionPage whose Book holds the chapter list", () => {
+  it("makes a book's cover a CollectionPage listing the chapters, about a Book made of their articles", () => {
     const graph = collectionPage({
       name: "Payments",
       description: "D",
@@ -224,19 +224,34 @@ describe("schema builders", () => {
       items: [{ name: "Money", path: "/books/payments/money" }],
       book: true,
     })["@graph"] as Record<string, unknown>[];
-    expect(graph.map((n) => n["@type"])).toEqual(["CollectionPage", "Book", "ItemList", "BreadcrumbList"]);
-    expect(graph[0].mainEntity).toEqual({ "@id": "https://www.syntaqx.com/books/payments#book" });
-    expect(graph[1]).toMatchObject({ ...bookRef("Payments", "/books/payments"), hasPart: { "@id": graph[2]["@id"] } });
-    expect(graph[2]).toMatchObject({ numberOfItems: 1 });
+    const [page, intro, book, list] = graph;
+    expect(graph.map((n) => n["@type"])).toEqual([
+      "CollectionPage",
+      ["TechArticle", "Article"],
+      "Book",
+      "ItemList",
+      "BreadcrumbList",
+    ]);
+    expect(page).toMatchObject({ mainEntity: { "@id": list["@id"] }, about: { "@id": book["@id"] } });
+    expect(intro).toMatchObject({ "@id": "https://www.syntaqx.com/books/payments#article", isPartOf: { "@id": book["@id"] } });
+    // schema.org: hasPart takes CreativeWorks, so the chapters' articles, never the ItemList.
+    expect(book).toMatchObject({
+      ...bookRef("Payments", "/books/payments"),
+      hasPart: [{ "@id": "https://www.syntaqx.com/books/payments/money#article", name: "Money" }],
+    });
+    expect(list).toMatchObject({ numberOfItems: 1 });
   });
 
   it("puts the person at the center of the profile page", () => {
-    const graph = profilePage({ path: "/resume", description: "p", crumbs: [] })["@graph"] as Record<string, unknown>[];
+    const graph = profilePage({ path: "/resume", headline: "Resume", description: "p", crumbs: [] })[
+      "@graph"
+    ] as Record<string, unknown>[];
     expect(graph[0]).toMatchObject({
       "@type": "ProfilePage",
       mainEntity: { "@type": "Person", "@id": "https://www.syntaqx.com/#person", name: "Chase Pierce" },
     });
     expect((graph[0].mainEntity as { sameAs: string[] }).sameAs).toContain("https://github.com/syntaqx");
+    expect(graph[1]).toMatchObject({ "@type": "Article", about: { "@id": "https://www.syntaqx.com/#person" } });
   });
 
   it("links an article to the book it's part of", () => {

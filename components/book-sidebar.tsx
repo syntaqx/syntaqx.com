@@ -44,11 +44,11 @@ function BookTree({ book, parts, onNavigate }: BookSidebarProps & { onNavigate?:
       {parts.map((part) =>
         part.title ? (
           <Group key={part.title} title={part.title}>
-            <DocLinks docs={part.docs} hrefOf={hrefOf} onNavigate={onNavigate} />
+            <DocLinks docs={part.docs} hrefOf={hrefOf} onNavigate={onNavigate} nested />
           </Group>
         ) : (
           <ul key="chapters" className="border-l border-border">
-            <DocLinks docs={part.docs} hrefOf={hrefOf} onNavigate={onNavigate} />
+            <DocLinks docs={part.docs} hrefOf={hrefOf} onNavigate={onNavigate} nested />
           </ul>
         ),
       )}
@@ -63,7 +63,7 @@ export function BookSidebar(props: BookSidebarProps) {
 export function MobileBookSidebar(props: BookSidebarProps) {
   const pathname = usePathname();
   const current =
-    props.parts.flatMap((p) => p.docs).find((d) => pathname === `/books/${d.slug}`)?.navTitle ??
+    props.parts.flatMap((p) => p.docs).find((d) => pathname === `/books/${d.slug}` || pathname.startsWith(`/books/${d.slug}/`))?.navTitle ??
     `${props.book.name} overview`;
 
   return (

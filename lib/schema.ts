@@ -8,6 +8,9 @@ import { CONTACT_EMAIL, SITE_URL, socials } from "@/lib/constants";
 const CONTEXT = "https://schema.org";
 
 export const PERSON_ID = `${SITE_URL}/#person`;
+// TechArticle is also typed Article: some crawlers (Ahrefs) only recognize
+// the parent type.
+const ARTICLE_TYPES = ["TechArticle", "Article"];
 export const ORG_ID = `${SITE_URL}/#organization`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
@@ -86,15 +89,22 @@ function personNode(description: string) {
   };
 }
 
-/** /resume: a page about the person. */
+/**
+ * /resume: a page about the person, whose text is also an Article about them
+ * (crawlers that type the page as an article look for one).
+ */
 export function profilePage({
   path,
+  headline,
   description,
   crumbs,
+  dateModified,
 }: {
   path: string;
+  headline: string;
   description: string;
   crumbs: Crumb[];
+  dateModified?: string;
 }) {
   const url = abs(path);
   return {
@@ -108,14 +118,28 @@ export function profilePage({
         isPartOf: { "@id": WEBSITE_ID },
         mainEntity: personNode(description),
       },
+      {
+        "@type": "Article",
+        "@id": `${url}#article`,
+        headline,
+        url,
+        mainEntityOfPage: url,
+        inLanguage: "en",
+        author: { "@id": PERSON_ID },
+        about: { "@id": PERSON_ID },
+        publisher: orgRef,
+        ...(dateModified && { dateModified }),
+      },
       breadcrumbList(crumbs),
     ],
   };
 }
 
 /**
- * A page that lists other pages: the /ui index, or a book's cover. A book's
- * cover is also the Book its chapters are part of (see `bookRef`).
+ * A page that lists other pages: /docs, /ui, or a book's cover. Its intro is
+ * an Article (crawlers that type the page as one look for it), and its list
+ * is the page's main entity. A book's cover is also the Book its chapters are
+ * part of (see `bookRef`), whose parts are the chapters' articles.
  */
 export function collectionPage({
   name,
@@ -124,6 +148,8 @@ export function collectionPage({
   crumbs,
   items,
   book = false,
+  datePublished,
+  dateModified,
 }: {
   name: string;
   description: string;
@@ -131,9 +157,12 @@ export function collectionPage({
   crumbs: Crumb[];
   items: { name: string; path: string }[];
   book?: boolean;
+  datePublished?: string;
+  dateModified?: string;
 }) {
   const url = abs(path);
   const list = { ...itemListNode(name, path, items), "@id": `${url}#items` };
+  const bookId = `${url}#book`;
   return {
     "@context": CONTEXT,
     "@graph": [
@@ -147,7 +176,22 @@ export function collectionPage({
         isPartOf: { "@id": WEBSITE_ID },
         author: personRef,
         publisher: orgRef,
-        mainEntity: book ? { "@id": `${url}#book` } : { "@id": list["@id"] },
+        mainEntity: { "@id": list["@id"] },
+        ...(book && { about: { "@id": bookId } }),
+      },
+      {
+        "@type": ARTICLE_TYPES,
+        "@id": `${url}#article`,
+        headline: name,
+        description,
+        url,
+        mainEntityOfPage: url,
+        inLanguage: "en",
+        author: personRef,
+        publisher: orgRef,
+        isPartOf: { "@id": book ? bookId : WEBSITE_ID },
+        ...(datePublished && { datePublished }),
+        ...(dateModified && { dateModified }),
       },
       ...(book
         ? [
@@ -158,7 +202,12 @@ export function collectionPage({
               inLanguage: "en",
               author: personRef,
               publisher: orgRef,
-              hasPart: { "@id": list["@id"] },
+              hasPart: items.map((item) => ({
+                "@type": ARTICLE_TYPES,
+                "@id": `${abs(item.path)}#article`,
+                name: item.name,
+                url: abs(item.path),
+              })),
             },
           ]
         : []),
@@ -248,9 +297,9 @@ export function article({
     "@context": CONTEXT,
     "@graph": [
       {
-        // TechArticle is also typed Article: some crawlers (Ahrefs) only
-        // recognize the parent type.
-        "@type": type === "TechArticle" ? ["TechArticle", "Article"] : type,
+        "@type": type === "TechArticle" ? ARTICLE_TYPES : type,
+        // The id a book's `hasPart` points at.
+        "@id": `${url}#article`,
         headline,
         description,
         url,

@@ -8,6 +8,7 @@ import { DocsHeader } from "@/components/docs-header";
 import { SceneArt } from "@/components/scene-art";
 import { JsonLd } from "@/components/json-ld";
 import { collectionPage } from "@/lib/schema";
+import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
 import { BOOKS, bookParts, formatMinutes, getBook } from "@/lib/books";
 
 interface Props {
@@ -40,6 +41,11 @@ export default async function BookCover({ params }: Props) {
 
   const minutes = chapters.reduce((sum, d) => sum + d.readingMinutes, 0);
   const cover = `/books/${book.slug}`;
+  // The book dates from its chapters' earliest first commit to their latest change.
+  const dates = (of: (slug: string) => string | undefined) =>
+    chapters.map((c) => of(c.slug)).filter((d) => d !== undefined).sort((a, b) => Date.parse(a) - Date.parse(b));
+  const published = dates((s) => docFirstPublished(s, "books"));
+  const modified = dates((s) => docLastModified(s, "books"));
 
   return (
     <article>
@@ -54,6 +60,8 @@ export default async function BookCover({ params }: Props) {
           ],
           items: chapters.map((c) => ({ name: c.title, path: `/books/${c.slug}` })),
           book: true,
+          datePublished: published[0],
+          dateModified: modified.at(-1),
         })}
       />
       <DocsHeader
