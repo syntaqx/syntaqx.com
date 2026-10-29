@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Maximize, Minus, Plus, X } from "lucide-react";
 
@@ -31,7 +31,13 @@ export function DiagramViewer() {
   const [open, setOpen] = useState<Open | null>(null);
   const [width, setWidth] = useState(0);
   const [fit, setFit] = useState(0);
-  const bodyRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+  // The dialog mounts its content after opening, so sizing waits for this.
+  const [body, setBody] = useState<HTMLDivElement | null>(null);
+  const attachBody = useCallback((node: HTMLDivElement | null) => {
+    bodyRef.current = node;
+    setBody(node);
+  }, []);
   // The point to hold still while zooming, as fractions of the drawing and
   // of the visible area.
   const anchor = useRef<{ fx: number; fy: number; vx: number; vy: number } | null>(null);
@@ -70,12 +76,11 @@ export function DiagramViewer() {
   // Size the drawing once the dialog has laid out: the fit, and the opening
   // width (the fit, or a readable width on a narrow screen).
   useLayoutEffect(() => {
-    const body = bodyRef.current;
     if (!open || !body || width) return;
     const f = Math.min(body.clientWidth - 32, ((body.clientHeight - 32) * open.w) / open.h);
     setFit(f);
     setWidth(Math.max(f, Math.min(open.w, READABLE, f * 2.5)));
-  }, [open, width]);
+  }, [open, body, width]);
 
   // After a zoom, scroll so the anchored point stays where it was.
   useLayoutEffect(() => {
@@ -157,6 +162,11 @@ export function DiagramViewer() {
       <Dialog.Portal>
         <Dialog.Content
           onKeyDown={onKeyDown}
+          // Focus the dialog, not its first button, so + - 0 work at once.
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            (e.currentTarget as HTMLElement).focus();
+          }}
           className="fixed inset-0 z-100 flex flex-col bg-background outline-none"
         >
           <div className="flex items-center gap-3 border-b border-border px-4 py-2.5">
@@ -181,7 +191,7 @@ export function DiagramViewer() {
             </div>
           </div>
           <div
-            ref={bodyRef}
+            ref={attachBody}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
