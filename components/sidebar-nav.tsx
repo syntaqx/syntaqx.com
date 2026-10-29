@@ -247,7 +247,7 @@ export function MobileSidebar({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mb-6 lg:hidden">
+    <div data-pagefind-ignore className="mb-6 lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

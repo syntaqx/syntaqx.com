@@ -16,7 +16,7 @@ export function DocsHeader({
 }) {
   return (
     <header className="mb-8 border-b border-border pb-6">
-      {eyebrow && <p className="inst mb-3 text-dim">{eyebrow}</p>}
+      {eyebrow && <p data-pagefind-ignore className="inst mb-3 text-dim">{eyebrow}</p>}
       <h1 className="mb-2 text-2xl leading-snug wrap-break-word sm:text-[1.75rem]">{title}</h1>
       {children}
     </header>

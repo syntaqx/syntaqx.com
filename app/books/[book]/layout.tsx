@@ -24,7 +24,7 @@ export default async function BookLayout({
 
   return (
     <div className="lg:grid lg:grid-cols-[248px_1fr] lg:gap-10">
-      <aside className="hidden lg:-my-12 lg:block">
+      <aside data-pagefind-ignore className="hidden lg:-my-12 lg:block">
         <div className="rail-scroll sticky top-12 h-[calc(100vh-3rem)] overflow-y-auto border-x border-border">
           <BookSidebar {...sidebar} />
         </div>

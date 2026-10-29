@@ -62,9 +62,14 @@ export async function DocArticle({
   const toc: Heading[] = [];
   const content = await markdownToHtml(doc.content, toc);
   const rail = toc.length > 1;
+  // Where search results say this page lives: "Docs · API Design", "Books · Payments".
+  const section = crumbs.length > 2 ? `${crumbs[0].name} · ${crumbs[1].name}` : crumbs[0].name;
 
   return (
-    <article className={rail ? "xl:grid xl:grid-cols-[minmax(0,1fr)_11rem] xl:gap-10" : undefined}>
+    <article
+      data-pagefind-meta={`section:${section}`}
+      className={rail ? "xl:grid xl:grid-cols-[minmax(0,1fr)_11rem] xl:gap-10" : undefined}
+    >
       <JsonLd
         data={article({
           headline,
@@ -79,7 +84,7 @@ export async function DocArticle({
       <div className="min-w-0">
         <DocsHeader title={doc.title} eyebrow={eyebrow}>
           {doc.description && <p className="max-w-3xl text-dim">{doc.description}</p>}
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3">
+          <div data-pagefind-ignore className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3">
             <div className="inst flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
               <span>{doc.readingMinutes} min read</span>
               {modified && (
@@ -104,7 +109,7 @@ export async function DocArticle({
         </DocsHeader>
         <div className="prose prose-docs" dangerouslySetInnerHTML={{ __html: content }} />
         {(prev || next) && (
-          <nav
+          <nav data-pagefind-ignore
             aria-label="Previous and next (or use the arrow keys)"
             className="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2"
           >
@@ -130,7 +135,7 @@ export async function DocArticle({
         )}
       </div>
       {rail && (
-        <aside className="hidden xl:block">
+        <aside data-pagefind-ignore className="hidden xl:block">
           <DocsToc
             headings={toc}
             className="rail-scroll sticky top-16 max-h-[calc(100vh-5rem)] overflow-y-auto"

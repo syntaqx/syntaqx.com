@@ -250,6 +250,10 @@ body {
 :focus:not(:focus-visible) {
   outline: none;
 }
+/* The search field fills its row, so the row is the field: no ring inside it. */
+.search-input:focus-visible {
+  outline: none;
+}
 
 /* Selection */
 ::selection {

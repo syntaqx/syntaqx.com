@@ -152,7 +152,7 @@ export default async function PostPage({ params }: Props) {
             className={feature ? "prose prose-feature" : "prose"}
             dangerouslySetInnerHTML={{ __html: content }}
           />
-          <nav
+          <nav data-pagefind-ignore
             aria-label="More posts"
             className="mt-16 grid gap-px border-y border-border bg-border sm:grid-cols-2"
           >
@@ -177,7 +177,7 @@ export default async function PostPage({ params }: Props) {
             )}
           </nav>
         </div>
-        <aside className="hidden self-start xl:sticky xl:top-24 xl:grid xl:gap-8">
+        <aside data-pagefind-ignore className="hidden self-start xl:sticky xl:top-24 xl:grid xl:gap-8">
           <dl className="border-t border-border">
             {[
               [

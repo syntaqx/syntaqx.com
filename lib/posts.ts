@@ -326,7 +326,7 @@ function rehypeSectionIds(toc?: Heading[]) {
           {
             type: "element",
             tagName: "a",
-            properties: { href: `#${id}`, className: ["heading-anchor"], ariaLabel: `Link to ${text}` },
+            properties: { href: `#${id}`, className: ["heading-anchor"], ariaLabel: `Link to ${text}`, dataPagefindIgnore: "" },
             children: [{ type: "text", value: "#" }],
           },
         ];
