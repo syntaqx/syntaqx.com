@@ -69,7 +69,7 @@ Stores and restaurants run on point-of-sale systems that are, increasingly, paym
 | **Shopify POS** | Retailers selling online and in store on one catalog | Part of Shopify's GMV |
 | **Clover (Fiserv)** | Small merchants through bank and processor channels | Reported inside Fiserv |
 
-A POS is where a store's inventory, cash and staff are counted; the later Point of Sale and Store Operations chapters cover them, and the delivery part covers how restaurant POS systems feed delivery apps ([Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#the-source-of-truth)).
+A POS is where a store's inventory, cash and staff are counted; [Point of Sale](/books/commerce/point-of-sale) and [Store Operations](/books/commerce/store-operations) cover them, and the delivery part covers how restaurant POS systems feed delivery apps ([Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#the-source-of-truth)).
 
 ## OMS, WMS and ERP
 

@@ -115,7 +115,7 @@ Selling into another language or market means translating content, and also chan
 
 ## Required Disclosures
 
-Some content on a product page is required by law, and the law increasingly reaches the online listing as well as the package. The main US rules for online listings, with the safety and chemical substance behind them owned by later chapters (Product Safety, Compliance & Recalls; Pesticides, Chemicals & Hazmat):
+Some content on a product page is required by law, and the law increasingly reaches the online listing as well as the package. The main US rules for online listings, with the safety and chemical substance behind them owned by [Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls) and [Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat):
 
 | Rule | What the online listing must show | Source |
 | --- | --- | --- |

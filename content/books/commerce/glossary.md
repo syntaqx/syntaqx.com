@@ -324,6 +324,33 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - **VAN (value-added network):** a mailbox network that routes EDI interchanges between partners, traditionally billed per kilocharacter ([EDI](/books/commerce/edi#transport-vans-as2-sftp-and-apis)).
 - **Vendor agreement:** the contract a retailer signs with a vendor, incorporating its supplier manual and routing guide, which every deduction cites ([Wholesale & Retail Distribution](/books/commerce/wholesale-and-retail-distribution#becoming-a-vendor)).
 
+## Point of Sale and Stores
+
+- **Blind close:** counting a cash drawer without being shown the expected amount, then revealing the over or short ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **Check (restaurant):** what one guest or group pays for an order; an order can have several, split by item, seat or evenly ([Restaurants & Food Service](/books/commerce/restaurants#tables-seats-and-checks)).
+- **Coursing:** grouping a table's items into courses that the kitchen receives as separate tickets and fires in turn ([Restaurants & Food Service](/books/commerce/restaurants#coursing-and-firing)).
+- **Drop:** excess cash moved from a drawer to the safe during a shift, counted and recorded on both sides ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **Expediter (expo):** the kitchen station between front and back of house that sees every item on an order and releases it when all stations are done ([Restaurants & Food Service](/books/commerce/restaurants#the-kitchen-tickets-stations-and-the-kds)).
+- **Fire by prep time:** staggering when each item starts cooking by its prep time so a table's items finish together ([Restaurants & Food Service](/books/commerce/restaurants#coursing-and-firing)).
+- **Float:** the counted cash a drawer opens with ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **KDS (kitchen display system):** screens that replace printed kitchen tickets; cooks bump items when done and the times are recorded ([Restaurants & Food Service](/books/commerce/restaurants#the-kitchen-tickets-stations-and-the-kds)).
+- **Manager approval:** a second staff member's PIN on someone else's void, refund or override, recorded with both names ([Store Operations](/books/commerce/store-operations#staff-roles-and-permissions)).
+- **No-sale:** opening the cash drawer without a sale; sometimes needed and watched in aggregate ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **Offline mode (POS):** taking sales and stored card payments without a connection, within vendor limits and at the merchant's risk ([Point of Sale](/books/commerce/point-of-sale#offline-mode-and-its-limits)).
+- **Organized retail crime (ORC):** theft by groups who steal goods to resell them, often online ([Store Operations](/books/commerce/store-operations#organized-retail-crime-and-the-law)).
+- **Over/short:** counted cash minus expected cash at a drawer's close ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **Paid in / paid out:** cash added to or removed from a drawer for something other than a sale, each with a reason ([Point of Sale](/books/commerce/point-of-sale#registers-and-cash)).
+- **Register session:** one drawer from its opening float to its closing count ([Store Operations](/books/commerce/store-operations#how-to-build-it)).
+- **Sales receipt:** the customer's record of a sale, printed or digital, rendered from the order; distinct from a goods receipt ([Point of Sale](/books/commerce/point-of-sale#receipts-and-privacy)).
+- **Service charge:** a mandatory charge on a restaurant bill; the employer's revenue, and wages if distributed, never a tip ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
+- **Shrink event:** a known loss (theft, damage, expiry, vendor shortage) recorded when it happens, with retail and cost value ([Store Operations](/books/commerce/store-operations#shrink-and-loss-prevention)).
+- **Tender:** one way a sale was paid (card, cash, gift card, store credit, EBT, house account); a sale can have several ([Point of Sale](/books/commerce/point-of-sale#tenders)).
+- **Tip (restaurant):** a voluntary payment from the guest that belongs to the employee; the employer may not keep any of it ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
+- **Tip credit:** counting tips toward a tipped employee's federal minimum wage, at most $5.12 an hour over a $2.13 cash wage ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
+- **Tip pool:** tips gathered and divided among eligible staff by a formula; never shared with managers ([Restaurants & Food Service](/books/commerce/restaurants#tip-pools)).
+- **Void:** cancelling a line or sale before it closes; nothing was sold, unlike a return ([Point of Sale](/books/commerce/point-of-sale#the-sale-at-the-register)).
+- **X report / Z report:** a mid-shift snapshot of a register session, and the end-of-day close that locks the day ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+
 ## On-Demand Delivery
 
 - **86 (to 86 an item):** restaurant slang for marking an item unavailable because it ran out; every platform has a separate, fast endpoint or webhook for it ([Merchants, Menus & Catalogs](/books/commerce/merchants-menus-and-catalogs#availability)).
@@ -369,6 +396,33 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - **Trial conversion:** a free membership period that becomes paid unless cancelled, the point state notice rules target ([Subscriptions & Loyalty](/books/commerce/delivery-subscriptions#cancellation-law)).
 - **Unassignment:** a courier dropping a delivery before pickup, which returns it to waiting; DoorDash's `created` state can recur ([Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#the-order-lifecycle)).
 
+## Regulated Goods
+
+- **25(b) (minimum-risk pesticide):** a product with only EPA-listed low-risk ingredients and a conforming label, exempt from federal registration but not necessarily from state registration ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#minimum-risk-products-and-treated-articles)).
+- **Adult signature:** a carrier delivery service that requires a recipient 21 or older with ID; required for alcohol and tobacco shipments ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#age-verification-at-checkout-and-at-delivery)).
+- **Buyers Guide:** the FTC-required window sticker on a used vehicle stating its warranty terms, part of the sale contract ([Automotive Retail](/books/commerce/automotive-retail#disclosures-on-the-vehicle)).
+- **CARS Rule:** the FTC's 2023 auto dealer rule on offering prices and add-on consent, vacated by the Fifth Circuit in January 2025 ([Automotive Retail](/books/commerce/automotive-retail#the-cars-rule-and-what-replaced-it)).
+- **Children's Product Certificate (CPC):** the importer's or manufacturer's certificate that a children's product passed third-party testing to every applicable rule ([Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls#certificates-and-efiling)).
+- **Dealer management system (DMS):** a car dealer's system of record for vehicles, deals, F&I, accounting, service and parts ([Automotive Retail](/books/commerce/automotive-retail#dealer-management-systems)).
+- **Dealer reserve:** a dealer's share of the difference between a lender's buy rate and the contract rate on a loan it arranged ([Automotive Retail](/books/commerce/automotive-retail#f-i-financing-leases-and-add-ons)).
+- **eFiling (CPSC):** filing certificate data electronically with CBP at import, required from July 8, 2026 for most products ([Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls#certificates-and-efiling)).
+- **EPA registration number:** the number on a registered pesticide's label identifying the product, distinct from the establishment number of the factory ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#fifra-for-sellers)).
+- **F&I (finance and insurance):** the dealership office that arranges financing or a lease and sells add-on products ([Automotive Retail](/books/commerce/automotive-retail#f-i-financing-leases-and-add-ons)).
+- **FFL transfer:** shipping a firearm bought online to a federal firearms licensee in the buyer's state, who runs the background check and hands it over ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#firearms-and-ammunition)).
+- **Limited quantity:** small inner containers of certain hazardous materials shipped under relaxed DOT rules with a dedicated mark ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#hazmat-shipping)).
+- **Monroney label:** the federally required window sticker on a new vehicle with its price, equipment and safety ratings ([Automotive Retail](/books/commerce/automotive-retail#disclosures-on-the-vehicle)).
+- **PACT Act:** the federal law requiring online sellers of cigarettes and vapes to register, report every shipment monthly to each state, verify age and use adult-signature delivery ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#tobacco-and-vapes)).
+- **Package tag (cannabis):** the state-issued, often RFID, identifier on each cannabis package that every movement and sale is reported against ([Cannabis & Hemp](/books/commerce/cannabis-and-hemp#seed-to-sale-tracking)).
+- **Proposition 65 warning:** California's required warning before significant exposure to a listed chemical, shown online before purchase ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#california-proposition-65)).
+- **Purchase limit (cannabis):** the most a customer may buy per day or transaction by category, computed from each product's equivalent weight ([Cannabis & Hemp](/books/commerce/cannabis-and-hemp#the-dispensary-point-of-sale)).
+- **Recall:** a corrective action to stop sale, notify buyers and remedy a hazardous product, accounted for unit by unit ([Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls#recalls)).
+- **Restricted use pesticide (RUP):** a pesticide that may be sold only to or for use by certified applicators ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#fifra-for-sellers)).
+- **Safety data sheet (SDS):** the 16-section hazard document for a chemical, which distributors pass to business customers ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#safety-data-sheets)).
+- **Section 15(b) report:** the duty of anyone in a product's chain to tell CPSC within 24 hours of information suggesting a substantial hazard ([Product Safety, Compliance & Recalls](/books/commerce/product-safety-and-recalls#reporting-section-15-b)).
+- **Seed-to-sale tracking:** a state system that follows every cannabis plant and package from planting to sale, such as Metrc ([Cannabis & Hemp](/books/commerce/cannabis-and-hemp#seed-to-sale-tracking)).
+- **Three-tier system:** the post-Prohibition structure separating alcohol producers, wholesalers and retailers ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#alcohol-the-three-tier-system)).
+- **UN3480 / UN3481:** the UN numbers for lithium-ion batteries shipped alone (including power banks) and packed with or contained in equipment ([Pesticides, Chemicals & Hazmat](/books/commerce/pesticides-chemicals-and-hazmat#lithium-batteries)).
+
 ## References
 
 **Reference**
@@ -377,3 +431,5 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 - [Uber Eats Developer: Upsert menu](https://developer.uber.com/docs/eats/references/api/v2/put-eats-stores-storeid-menu), the menu, category, item, modifier group and override terms
 - [Instacart Docs: Minimum catalog requirements](https://docs.instacart.com/catalog/catalog_inventory_file/specifications/minimum-catalog-requirements), inventory file types and availability
 - [NYC Department of Consumer and Worker Protection: Restaurants using delivery apps](https://www.nyc.gov/site/dca/businesses/Restaurants-Using-Delivery-Apps.page), the fee categories and caps
+- [DOL Fact Sheet #15: Tipped employees under the FLSA](https://www.dol.gov/agencies/whd/fact-sheets/15-tipped-employees-flsa), the $2.13 cash wage and $5.12 maximum tip credit
+- [Federal Register: CPSC certificates of compliance final rule (January 8, 2025)](https://www.federalregister.gov/api/v1/documents/2024-30826.json), eFiling from July 8, 2026
