@@ -128,7 +128,7 @@ export default function RootLayout({
                 height={22}
                 className="size-5.5"
               />
-              <span className="font-inst text-[0.9rem] lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
+              <span className="-translate-y-[0.17em] font-inst text-[0.9rem] lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
                 syntaqx
               </span>
             </Link>
@@ -166,7 +166,7 @@ export default function RootLayout({
                   height={22}
                   className="size-5.5"
                 />
-                <span className="font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
+                <span className="-translate-y-[0.17em] font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
                   syntaqx
                 </span>
               </Link>
