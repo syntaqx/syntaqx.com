@@ -83,7 +83,7 @@ export async function DocArticle({
                 Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
               </span>
             )}
-            <CopyMarkdown href={`${path}.md`} className="cursor-pointer transition-colors hover:text-accent" />
+            <CopyMarkdown href={`${path}.md`} className="cursor-pointer uppercase transition-colors hover:text-accent" />
             <a href={`${path}.md`} type="text/markdown" className="transition-colors hover:text-accent">
               View as Markdown
             </a>
