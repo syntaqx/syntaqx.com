@@ -692,10 +692,10 @@ Each later chapter extends a defined part of this spine. Chapters already publis
 | [Commerce Accounting](/books/commerce/commerce-accounting#how-to-build-it) | `order_charges`, `order_payments`, `inventory_items`, `inventory_movements` | `journal_entries`, `journal_lines`, `inventory_cost_layers`, `cost_layer_draws`, `deferred_revenue_schedules`, `payout_reconciliations` |
 | [Commerce Fraud & Abuse](/books/commerce/commerce-fraud#how-to-build-it) | `orders`, `identity_links`, the playbook's `risk_decisions` | `bot_signals`, `risk_labels` |
 | [Store Security & PCI](/books/commerce/store-security-and-pci#how-to-build-it) | `locations` (online), `staff` | `payment_page_scripts`, `script_change_events`, `admin_access_grants` |
-| Peak Season & Drops (`peak-season`) | `items`, `inventory_levels` | `drops`, `drop_allocations`, `waiting_room_tokens` |
-| AI in Commerce (`ai-in-commerce`) | `products`, `localized_content` | `ai_generations` |
-| Commerce Metrics (`commerce-metrics`) | `orders`, `order_charges`, `returns` | `metric_definitions`, `metric_snapshots` |
-| Replatforming & Migration (`replatforming`) | `export_runs`, `url_redirects` | `migration_batches`, `id_crosswalks`, `token_migrations` |
+| [Peak Season & Drops](/books/commerce/peak-season#how-to-build-it) | `items`, `inventory_levels`, `inventory_reservations` | `drops`, `drop_allocations`, `drop_entries`, `waiting_room_tokens` |
+| [AI in Commerce](/books/commerce/ai-in-commerce#how-to-build-it) | `attribute_values`, `localized_content`, `media_assets` | `ai_generations`, `ai_evaluations` |
+| [Commerce Metrics](/books/commerce/commerce-metrics#how-to-build-it) | `orders`, `order_lines`, `returns`, `inventory_movements`, `order_margin` | `storefront_sessions`, `metric_definitions`, `metric_values` |
+| [Replatforming & Migration](/books/commerce/replatforming#how-to-build-it) | `export_runs`, `url_redirects`, `record_mappings` | `migration_batches`, `migration_checks`, `token_migrations` |
 
 ## Auditing
 

@@ -108,7 +108,7 @@ What a product page does when the product can't be bought is a merchandising dec
 - **Gone for good.** With no successor, redirect to the closest category or return a 404; never send every dead product to the home page, which tells search engines and shoppers nothing.
 - **Seasonal.** A holiday collection or an annual sale lives at one evergreen URL (`/collections/black-friday`) reused every year, updated rather than recreated with a year in the path, so it keeps whatever it earned last season.
 
-Moving a whole store carries every product, collection and content URL across with a redirect map; the later Replatforming & Migration chapter covers it, and `url_redirects` below is the table it fills.
+Moving a whole store carries every product, collection and content URL across with a redirect map; [Replatforming & Migration](/books/commerce/replatforming#urls-redirects-and-seo) covers it, and `url_redirects` below is the table it fills.
 
 ## Accessibility and ADA Litigation
 

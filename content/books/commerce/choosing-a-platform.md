@@ -43,7 +43,7 @@ Three patterns run through the table:
 
 A self-hosted store is a web application with a database, a cache, a search index, a queue, scheduled jobs and a payment integration, all of which the merchant runs. The parts:
 
-- **Servers and scaling.** Web and application servers sized for peak, not average; a sale or a launch can bring many times normal traffic in minutes (the later Peak Season & Drops chapter). Containers or VMs, a load balancer and autoscaling where the platform allows it ([Autoscaling and Cost](/books/hosting-and-cloud/autoscaling-and-cost)).
+- **Servers and scaling.** Web and application servers sized for peak, not average; a sale or a launch can bring many times normal traffic in minutes ([Peak Season & Drops](/books/commerce/peak-season#capacity-planning-for-a-sale)). Containers or VMs, a load balancer and autoscaling where the platform allows it ([Autoscaling and Cost](/books/hosting-and-cloud/autoscaling-and-cost)).
 - **Caching.** Catalog and content pages cache well; carts, checkout, account pages and anything with a session cookie must never be shared between shoppers. A page cache that ignores a commerce cookie serves one shopper's cart to the next ([What Must Never Be Shared](/books/hosting-and-cloud/caching-and-invalidation#what-must-never-be-shared)). Price and stock changes need purges, which is where most caching bugs in commerce live.
 - **Search.** Catalog search and faceting run on a search engine (OpenSearch or Elasticsearch for Magento, a hosted service such as Algolia for many others), with its own cluster, index rebuilds and capacity.
 - **Queues and jobs.** Order exports, emails, inventory syncs, index updates and marketplace feeds run as background work on a queue and workers ([Background Jobs](/docs/architecture/background-jobs)); a stopped worker means orders that never reached the warehouse.
@@ -122,7 +122,7 @@ Every platform locks in something; the question is what and how hard it is to ge
 - **URLs and SEO.** Product and collection URLs follow each platform's patterns; a move needs a redirect for every old URL.
 - **Customizations.** Theme code, checkout extensions and platform-specific functions don't move; a headless storefront moves more easily because it talks to the backend only through APIs.
 
-My rule: before choosing, run the export once and check that the result could rebuild the store somewhere else; then schedule it, so the merchant always holds a recent copy of its own business ([How to Build It](#how-to-build-it)). The later Replatforming & Migration chapter covers the move itself.
+My rule: before choosing, run the export once and check that the result could rebuild the store somewhere else; then schedule it, so the merchant always holds a recent copy of its own business ([How to Build It](#how-to-build-it)). [Replatforming & Migration](/books/commerce/replatforming) covers the move itself.
 
 ## When Building Your Own Is Justified
 

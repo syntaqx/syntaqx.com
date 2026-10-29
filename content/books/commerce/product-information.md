@@ -111,7 +111,7 @@ Selling into another language or market means translating content, and also chan
 - **Locale and market are different keys.** Akeneo's locale is "a combination of a language ... and a country"; a channel carries its own locales, currencies and category tree. French for Canada and French for France are different locales; a market (Canada) can have two languages.
 - **Some facts are local.** Units (metric labels for the EU), sizes (US and EU shoe sizes are different values, not translations), required warnings in the local language, and the legal names of materials (textile fiber names are regulated in both the US and the EU) change by market. Store them as values scoped to the market, not as translated strings.
 - **Translations go stale.** When the source text changes, every translation of it is out of date; record the source version each translation was made from, and treat a stale translation as incomplete for that locale ([How to Build It](#how-to-build-it)).
-- **Machine translation is a draft.** Generated copy for regulated attributes (ingredients, warnings, care instructions) needs a human approval before publish, recorded with who approved it; the later AI in Commerce chapter covers generation more broadly.
+- **Machine translation is a draft.** Generated copy for regulated attributes (ingredients, warnings, care instructions) needs a human approval before publish, recorded with who approved it; [AI in Commerce](/books/commerce/ai-in-commerce#product-content-generation) covers generation more broadly.
 
 ## Required Disclosures
 
