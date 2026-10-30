@@ -178,11 +178,10 @@ CREATE TABLE availability_decisions (         -- one per item: the schedule and 
 
 ALTER TABLE holds
   ADD COLUMN deposit_item_id  UUID REFERENCES deposit_items (id),
-  ADD COLUMN releases_at      TIMESTAMPTZ,      -- start of the business day the funds are due
   ADD COLUMN cash_only        BOOLEAN NOT NULL DEFAULT FALSE;  -- the one-day cash withdrawal extension
 ```
 
-A $9,000 check under the large deposit exception produces three holds on the deposit: $8,725 releasing Thursday, $2,275 releasing a week later, and the cash-only tranche if the bank uses it. The fee engine checks `availability_decisions` before assessing an overdraft or returned-item fee during a hold, and suppresses it where the notice wasn't given at deposit. Release times are stored, so a regulator's question about a specific deposit is answered from rows, and the rules are data so the 2030 adjustment is a new `availability_rules` row, not a deployment ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+Each hold is `reason = 'deposit_availability'` with `expires_at` set to the start of the business day the funds are due. A $9,000 check under the large deposit exception produces three holds: $275 expiring Tuesday morning, $6,450 Thursday morning and $2,275 a week later, plus a cash-only hold if the bank uses the cash withdrawal extension. The fee engine checks `availability_decisions` before assessing an overdraft or returned-item fee during a hold, and suppresses it where the notice wasn't given at deposit. Release times are stored, so a regulator's question about a specific deposit is answered from rows, and the rules are data so the 2030 adjustment is a new `availability_rules` row, not a deployment ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 
 ## Auditing
 

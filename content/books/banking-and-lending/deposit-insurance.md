@@ -129,9 +129,8 @@ ALTER TABLE institutions
 ALTER TABLE account_parties
   ADD COLUMN withdrawal_rights_equal BOOLEAN,       -- joint test, 330.9
   ADD COLUMN signature_evidence      TEXT CHECK (signature_evidence IN ('signed', 'esigned', 'access_or_use', 'exempt')),
-  ADD COLUMN interest_share_bps      INTEGER,        -- stated unequal joint shares; null = equal
-  ADD COLUMN beneficiary_eligible    BOOLEAN,        -- natural person or IRC charity; not contingent
-  ADD COLUMN is_custodial_principal  BOOLEAN NOT NULL DEFAULT FALSE;  -- owner behind a pass-through account
+  ADD COLUMN beneficiary_eligible    BOOLEAN,        -- natural person or IRC charity or nonprofit
+  ADD COLUMN beneficiary_contingent  BOOLEAN NOT NULL DEFAULT FALSE;  -- takes only if another dies: not counted
 
 CREATE TABLE insurance_determinations (     -- one run: daily estimate or failure-date determination
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -146,7 +145,7 @@ CREATE TABLE insurance_lines (              -- one per depositor, category and a
   determination_id UUID NOT NULL REFERENCES insurance_determinations (id),
   party_id         UUID NOT NULL REFERENCES parties (id),      -- the resolved owner
   category         TEXT NOT NULL CHECK (category IN ('single', 'joint', 'retirement', 'trust',
-                                        'benefit_plan', 'business', 'government')),
+                                        'employee_benefit', 'business', 'government')),
   account_id       UUID NOT NULL REFERENCES accounts (id),
   interest_amount  BIGINT NOT NULL,           -- this owner's share, incl. accrued interest, minor units
   insured_amount   BIGINT NOT NULL,           -- after the category limit, allocated back to the account
@@ -157,7 +156,7 @@ CREATE TABLE insurance_lines (              -- one per depositor, category and a
 );
 ```
 
-The determination is a pure function of the accounts, parties, balances and rule version as of a date, so it's recomputable: an estimate run every night and a determination run on a failure date use the same code and differ only in `kind`. For pass-through accounts, `interest_amount` comes from the program's per-owner balance file for that date, and a file that doesn't reconcile to the FBO account balance stops the run with an error rather than producing coverage for money nobody can place. Holds and debits for the uninsured portion, if it comes to that, are `holds` rows with reason `insurance_determination` and journal entries against each account, never balance edits.
+The determination is a pure function of the accounts, parties, balances and rule version as of a date, so it's recomputable: an estimate run every night and a determination run on a failure date use the same code and differ only in `kind`. For pass-through accounts, `interest_amount` comes from the program's per-owner balance file for that date, and a file that doesn't reconcile to the FBO account balance stops the run with an error rather than producing coverage for money nobody can place. Holds and debits for the uninsured portion, if it comes to that, are `holds` rows (which needs an `insurance_determination` value added to `holds.reason`) and journal entries against each account, never balance edits. Joint shares use `account_parties.share` where the records state one, equal shares otherwise; the owners behind a custodial account are its `beneficial_owner` parties, with their balances from the program file.
 
 ## Auditing
 
