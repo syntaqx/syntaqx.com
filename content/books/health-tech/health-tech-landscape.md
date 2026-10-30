@@ -40,7 +40,7 @@ Most ambulatory EHRs are combined PM/EHR systems: the same product schedules, bi
 
 The specialties that the patient engagement market grew up in run on a small number of practice management systems, many of them still installed on a server in the practice:
 
-- **Dental.** Henry Schein's Global Technology segment ("dental practice management, patient engagement and demand creation software solutions") served approximately 95,000 practices in 2025 and was 5.1% of Henry Schein's sales; its products are Dentrix (on-premises) and Dentrix Ascend (cloud) under the Henry Schein One name. <!-- source-gap: henry-schein-one-jv | secondary | Henry Schein One formed as a joint venture with Internet Brands in 2018 | closes with: the Henry Schein 10-Q or 10-K note describing the joint venture's closing and ownership | checked: 2026-10-29 --> Patterson's Eaglesoft is the other long-installed on-premises system; Patterson was taken private by Patient Square Capital in April 2025. Open Dental is open source with a public API, and cloud systems (Curve, Denticon from Planet DDS, tab32) are taking new offices and groups.
+- **Dental.** Henry Schein's Global Technology segment ("dental practice management, patient engagement and demand creation software solutions") served approximately 95,000 practices in 2025 and was 5.1% of Henry Schein's sales; its products are Dentrix (on-premises) and Dentrix Ascend (cloud) under the Henry Schein One name. Henry Schein One is a joint venture Henry Schein closed with Internet Brands on July 1, 2018, combining Henry Schein's practice management businesses with Internet Brands' dental businesses; Henry Schein owned 74% at closing. Patterson's Eaglesoft is the other long-installed on-premises system; Patterson was taken private by Patient Square Capital in April 2025. Open Dental is open source with a public API, and cloud systems (Curve, Denticon from Planet DDS, tab32) are taking new offices and groups.
 - **Veterinary.** IDEXX sells the on-premises Cornerstone and the cloud ezyVet, Animana and IDEXX Neo alongside its diagnostics; its veterinary software, services and diagnostic imaging revenue was $345.9 million in 2025, inside a Companion Animal Group of $3,953.3 million. Covetrus, formed when Henry Schein spun off its animal health business and merged it with Vets First Choice on February 7, 2019, sells AVImark, ImproMed and the cloud Pulse, and runs prescription management for clinics; it was taken private by CD&R and TPG in October 2022. Shepherd and Digitail are newer cloud systems.
 - **Optometry and physical therapy.** Compulink, Crystal PM, RevolutionEHR and Eyefinity in optometry, WebPT, Raintree and Prompt in PT. None publishes market share.
 
@@ -71,15 +71,13 @@ The ownership history explains much of the integration landscape: who has a part
 | February 7, 2019 | Henry Schein spins off its animal health business and merges it with Vets First Choice as Covetrus |
 | February 11, 2019 | athenahealth taken private by funds controlled by Veritas Capital and Elliott's Evergreen Coast Capital at $135.00 a share |
 | July 17, 2019 | Phreesia prices its IPO at $18.00 a share on the NYSE |
-| 2021 | Kareo and PatientPop merge, later renamed Tebra |
-| 2022 | Oracle acquires Cerner, now Oracle Health |
+| November 2, 2021 | Kareo and PatientPop announce the closing of their merger as Tebra, with $65 million in growth financing from Golub Capital |
+| June 8, 2022 | Oracle completes its acquisition of Cerner at $95.00 a share, now Oracle Health |
 | October 3, 2022 | Optum completes its combination with Change Healthcare |
 | October 13, 2022 | CD&R and TPG complete their take-private of Covetrus |
 | November 10, 2023 | Thoma Bravo completes its $1.8 billion take-private of NextGen Healthcare at $23.95 a share |
 | February 21, 2024 | Cyberattack on Change Healthcare |
 | April 17, 2025 | Patient Square Capital completes its acquisition of Patterson Companies |
-
-The two rows with only a year are dated from secondary reporting; the companies' own announcements weren't reachable. <!-- source-gap: tebra-merger | secondary | Kareo and PatientPop merger date (announced November 2021) and Golub investment | closes with: a Tebra or Golub press release on a site that allows fetching | checked: 2026-10-29 --> <!-- source-gap: oracle-cerner-close | secondary | Oracle's acquisition of Cerner closed June 8, 2022 at $95 a share | closes with: Oracle's 10-K or press release on a fetchable page | checked: 2026-10-29 -->
 
 The pattern across vet and dental is a distributor (Henry Schein, Patterson, Covetrus) or a diagnostics company (IDEXX) owning the practice software, because software is how a supplier stays in the practice's daily workflow; the pattern in medicine is private equity buying EHR and RCM vendors and merging them. Both matter to an integrator, since a vendor that also sells patient engagement has reason to make a competitor's integration slow or expensive ([Integrating with Practice Management Systems](/books/health-tech/pms-integration#gatekeeping-fees-and-the-law) covers the antitrust history).
 
@@ -150,6 +148,8 @@ ORDER BY o.display_name;
 
 - [Henry Schein: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/0001000228/000100022826000013/hsic-20251227.htm), the Global Technology segment, its share of sales and about 95,000 practices
 - [Henry Schein: Form 10-K for 2018](https://www.sec.gov/Archives/edgar/data/1000228/000100022819000015/the10k_2018.htm), the February 7, 2019 separation and merger forming Covetrus
+- [Henry Schein: Form 10-Q for the third quarter of 2018](https://www.sec.gov/Archives/edgar/data/1000228/000100022818000060/the10q_3q18.htm), the July 1, 2018 Henry Schein One joint venture with Internet Brands and the 74% / 26% ownership
+- [Oracle: Form 8-K on completing the Cerner acquisition](https://www.sec.gov/Archives/edgar/data/1341439/000119312522169835/d290344d8k.htm), June 8, 2022 at $95.00 a share
 - [IDEXX Laboratories: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/874716/000087471626000038/idxx-20251231.htm), Companion Animal Group and veterinary software revenue, Cornerstone, ezyVet, Animana and Neo
 - [Covetrus: Form 10-K for 2021](https://www.sec.gov/Archives/edgar/data/1752836/000175283622000018/cvet-20211231.htm), Pulse and prescription management
 - [Covetrus: completion of acquisition by CD&R and TPG (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1752836/000119312522261932/d335086dex991.htm), October 13, 2022
@@ -179,3 +179,4 @@ ORDER BY o.display_name;
 **In practice**
 
 - [Thoma Bravo: Completes acquisition of NextGen Healthcare](https://www.thomabravo.com/press-releases/thoma-bravo-completes-acquisition-of-nextgen-healthcare), November 10, 2023, $1.8 billion
+- [Kareo and PatientPop: Merge to form Tebra](https://www.businesswire.com/news/home/20211102005810/en/Kareo-and-PatientPop-Merge-to-Form-Tebra-A-Digital-Healthcare-Technology-Company-Dedicated-to-Modernizing-Healthcare-Practices), November 2, 2021, the closing and $65 million from Golub Capital

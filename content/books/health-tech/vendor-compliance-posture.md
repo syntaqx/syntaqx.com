@@ -33,8 +33,8 @@ HIPAA defines a business associate, "with respect to a covered entity," as a per
 
 Three points decide most vendor arguments:
 
-- **Not seeing the data doesn't exempt you.** HHS's 2016 cloud computing guidance said a cloud service provider storing encrypted PHI is a business associate even without the key, and that a BAA is required even for "no-view services"; a cloud provider is not a mere conduit. <!-- source-gap: hhs-cloud-guidance | secondary | HHS OCR guidance on HIPAA and cloud computing (October 2016) | closes with: the HHS page, which refused automated fetching; cite it directly when it can be opened | checked: 2026-10-29 -->
-- **Business associates are directly liable.** Since the 2013 omnibus rule, a business associate is liable on its own for Security Rule compliance, for notifying the covered entity of breaches, for impermissible uses and disclosures and for its subcontractor BAAs; HHS summarized the list in a 2019 fact sheet. <!-- source-gap: ba-direct-liability | secondary | HHS fact sheet on direct liability of business associates (May 2019) | closes with: the HHS fact sheet, which refused automated fetching | checked: 2026-10-29 -->
+- **Not seeing the data doesn't exempt you.** HHS's cloud computing guidance says a cloud service provider storing encrypted PHI is a business associate even without the key, and that a BAA is required even for "no-view services"; a cloud provider that stores PHI is not a mere conduit, since the conduit exception covers transmission only.
+- **Business associates are directly liable.** Since the 2013 omnibus rule, a business associate is liable on its own for Security Rule compliance, for notifying the covered entity of breaches, for impermissible uses and disclosures and for its subcontractor BAAs; HHS's fact sheet on direct liability of business associates lists each of these, and OCR may enforce only those listed provisions against a business associate.
 - **Payment processing is carved out.** Section 1179 exempts a financial institution's payment processing, so a processor authorizing and settling a card payment for a visit needs no BAA, but a product that shows procedure codes on a statement does ([HIPAA: When a Payments Provider Signs a BAA](/books/payments/payments-by-vertical#hipaa-when-a-payments-provider-signs-a-baa)).
 
 A vendor whose customers include practices that aren't covered entities (a cash-only vet clinic, a wellness business) isn't a business associate to them, but the same software serves both. My rule, as for senior living operators ([Clinical Records and the HIPAA Boundary](/books/property-tech/senior-living#clinical-records-and-the-hipaa-boundary)): run every tenant as if a BAA applied, because the controls are the same and a customer can become covered by billing one claim electronically.
@@ -64,7 +64,7 @@ Customers increasingly ask for the list. A subprocessor page (the services, thei
 
 ## Enforcement Against Business Associates
 
-HHS OCR resolves HIPAA cases against business associates as well as covered entities, with settlements and corrective action plans: a hospital management company after a 2014 hack exposing six million people's data, a wellness vendor under OCR's risk analysis initiative in 2025, an accounting firm after a ransomware attack. The recurring finding is the same as for providers: no accurate, thorough risk analysis of where the vendor held electronic PHI. <!-- source-gap: ocr-ba-settlements | missing | OCR resolution agreements with business associates (CHSPSC 2020, Health Fitness Corporation 2025, BST & Co. CPAs 2025) with amounts | closes with: the HHS resolution agreements pages, which refused automated fetching | checked: 2026-10-29 --> [HIPAA in Practice](/books/health-tech/hipaa-in-practice#ocr-enforcement) covers OCR's enforcement in depth.
+HHS OCR resolves HIPAA cases against business associates as well as covered entities, with settlements and corrective action plans: CHSPSC, which provides IT and health information management services to hospitals and clinics, paid $2.3 million in 2020 over a breach affecting more than six million people; Health Fitness Corporation, a wellness plan vendor whose server misconfiguration exposed electronic PHI to web crawlers, agreed to pay $227,816 in March 2025; and BST & Co. CPAs, an accounting firm hit by ransomware through a phishing email, agreed to pay $175,000 in August 2025. In the 2025 agreements the covered conduct OCR names is the same as for providers: no accurate, thorough risk analysis of the electronic PHI the vendor held. [HIPAA in Practice](/books/health-tech/hipaa-in-practice#ocr-enforcement) covers OCR's enforcement in depth.
 
 ## Reports and Certifications
 
@@ -80,7 +80,7 @@ What shortens reviews: a trust page with the reports behind a nondisclosure clic
 
 ## Cyber Insurance
 
-Health care customers ask vendors for cyber liability coverage with a stated minimum, and insurers in turn ask vendors (and practices) for controls before they'll write it: multi-factor authentication, endpoint detection, tested backups and patching are the common conditions in insurers' applications. HHS's 405(d) program publishes guides on cyber insurance for small and for medium and large health care organizations alongside its Health Industry Cybersecurity Practices (HICP), and HHS's voluntary Healthcare and Public Health Cybersecurity Performance Goals are aligned with HICP and CISA's goals. <!-- source-gap: cyber-insurance-requirements | missing | a public insurer or regulator source listing the controls cyber insurers require of health care organizations | closes with: an insurer's published underwriting requirements or the 405(d) cyber insurance guide's text | checked: 2026-10-29 --> After the Change Healthcare attack, health systems also ask vendors how they would keep a customer working during the vendor's own outage ([Operations, Support & Downtime](/books/health-tech/health-tech-operations)).
+Health care customers ask vendors for cyber liability coverage with a stated minimum, and insurers in turn ask vendors (and practices) for controls before they'll write it. HHS's 405(d) program publishes guides on cyber insurance for small and for medium and large health care organizations; the small-organization guide warns that many policies require a minimum level of security controls, says a policy is no substitute for cybersecurity practices, and points to its Health Industry Cybersecurity Practices (HICP) as the outline for meeting that requirement. HHS's voluntary Healthcare and Public Health Cybersecurity Performance Goals are aligned with HICP and CISA's goals. After the Change Healthcare attack, health systems also ask vendors how they would keep a customer working during the vendor's own outage ([Operations, Support & Downtime](/books/health-tech/health-tech-operations)).
 
 ## State Health Privacy Laws as Sales Blockers
 
@@ -199,6 +199,15 @@ WHERE baa_id IS NULL AND cardinality(phi_fields) > 0;
 - [45 CFR 164.314: Organizational requirements](https://www.law.cornell.edu/cfr/text/45/164.314), reporting security incidents and subcontractor terms
 - [16 CFR 318.2: Definitions (Health Breach Notification Rule)](https://www.law.cornell.edu/cfr/text/16/318.2), vendor of personal health records and related entities
 
+**HHS OCR**
+
+- [HHS: Guidance on HIPAA and cloud computing](https://www.hhs.gov/hipaa/for-professionals/special-topics/health-information-technology/cloud-computing/index.html), encrypted storage without the key, no-view services and the conduit exception
+- [HHS: Direct liability of business associates](https://www.hhs.gov/hipaa/for-professionals/privacy/guidance/business-associates/factsheet/index.html), the provisions OCR may enforce directly against a business associate
+- [HHS: HIPAA business associate pays $2.3 million to settle breach affecting over 6 million individuals](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/chspsc/index.html), CHSPSC
+- [HHS: Resolution agreement with Health Fitness Corporation](https://www.hhs.gov/sites/default/files/ocr-health-fitness-ra-cap.pdf), a business associate, $227,816 and the risk analysis finding
+- [HHS: Resolution agreement with BST & Co. CPAs](https://www.hhs.gov/sites/default/files/hhs-ocr-bst-hipaa-settlement.pdf), a business associate, ransomware via phishing, $175,000 and the risk analysis finding
+- [HHS: Resolution agreements](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/index.html), the March 21, 2025 and August 18, 2025 announcement dates
+
 **FTC**
 
 - [FTC: Finalizes changes to the Health Breach Notification Rule](https://www.ftc.gov/news-events/news/press-releases/2024/04/ftc-finalizes-changes-health-breach-notification-rule), April 26, 2024 amendments and notice deadlines
@@ -225,8 +234,4 @@ WHERE baa_id IS NULL AND cardinality(phi_fields) > 0;
 - [Health Sector Coordinating Council: HIC-SCRiM v2](https://healthsectorcouncil.org/?p=4524), supply chain risk management for health care organizations
 - [Health Sector Coordinating Council: Model contract language for medtech cybersecurity (MC2)](https://healthsectorcouncil.org/model-contract-language-for-medtech-cybersecurity-mc2/), provider and manufacturer contract terms
 - [HHS 405(d): Cybersecurity resources](https://hhscyber.hhs.gov/), HICP, the cyber insurance guides and the HPH Cybersecurity Performance Goals
-
-**Secondary**
-
-- [Mintz: HHS publishes guidance on HIPAA and cloud computing](https://www.mintz.com/insights-center/viewpoints/2146/2016-10-19-hhs-publishes-guidance-hipaa-and-cloud-computing), encrypted storage without the key and no-view services
-- [Bricker Graydon: HHS fact sheet on direct liability of business associates](https://www.bricker.com/insights/publications/HHS-publishes-fact-sheet-on-direct-liability-of-business-associates-under-HIPAA), the May 2019 fact sheet
+- [HHS 405(d): How to implement cyber insurance (small health care organizations)](https://hhscyber.hhs.gov/Documents/How-to_Guides/HHS-howto-cyber-insurance-small.pdf), minimum security controls many policies require and HICP as the outline

@@ -61,7 +61,7 @@ The workforce is small and specialized. By the Bureau of Labor Statistics' 2025 
 
 ## Who Owns the Practice
 
-Private practice is shrinking in medicine. The AMA's Physician Practice Benchmark Survey found 42.2% of physicians in private practice in 2024, against 60.1% in 2012; 34.5% worked in hospital-owned practices (23.4% in 2012), and 6.5% in practices owned by private equity firms (4.5% in 2022). Dentistry runs a similar trend through dental service organizations: the ADA's Health Policy Institute reports that affiliation with DSOs and large groups keeps growing, especially among early-career dentists. <!-- source-gap: dso-share | secondary | the share of US dentists affiliated with a DSO (about 13% in 2022 per ADA News) | closes with: the ADA HPI practice modalities data file, which is published as a spreadsheet the fetcher couldn't read | checked: 2026-10-29 -->
+Private practice is shrinking in medicine. The AMA's Physician Practice Benchmark Survey found 42.2% of physicians in private practice in 2024, against 60.1% in 2012; 34.5% worked in hospital-owned practices (23.4% in 2012), and 6.5% in practices owned by private equity firms (4.5% in 2022). Dentistry runs a similar trend through dental service organizations: the ADA's Health Policy Institute reports that affiliation with DSOs (which it calls dental support organizations) and large groups keeps growing, especially among early-career dentists. In its 2024 data, 16.1% of US dentists were affiliated with a DSO, and 26.5% of those up to ten years out of dental school; the HPI notes its method slightly undercounts DSO affiliation.
 
 ### DSOs and MSOs
 
@@ -167,6 +167,7 @@ WHERE organization_id = $1
 - [AMA: Smaller share of doctors in private practice than ever](https://www.ama-assn.org/practice-management/private-practices/smaller-share-doctors-private-practice-ever), 2024 private practice, hospital-owned and private equity shares
 - [AMA: A decade of change in physician practice ownership](https://www.ama-assn.org/press-center/ama-press-releases/ama-examines-decade-change-physician-practice-ownership-and), the 2012 baseline and 4.5% private equity share in 2022
 - [ADA Health Policy Institute: Practice modalities among US dentists](https://www.ada.org/resources/research/health-policy-institute/dental-practice-research/practice-modalities-among-us-dentists), growing DSO and large-group affiliation
+- [ADA Health Policy Institute: 2024 distribution of dentists by practice size and DSO affiliation (XLSX)](https://www.ada.org/-/media/project/ada-organization/ada/ada-org/files/resources/research/hpi/hpidata_dentist_practice_modalities_2024.xlsx), 16.1% of dentists DSO-affiliated, 26.5% of early-career dentists, the undercount note
 
 **Law and enforcement**
 

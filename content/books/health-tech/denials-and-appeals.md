@@ -105,7 +105,7 @@ An appeal is a package: a letter stating the claim, the denial, the argument and
 
 Payers review paid claims after the fact, and the outcome of a finding is a demand or an offset against future payments:
 
-- **Medicare Recovery Audit Contractors** (RACs) review claims after payment in five regions: Performant in regions 1 and 2, Cotiviti in regions 3, 4 and 5, with region 5 covering durable medical equipment, home health and hospice nationwide. CMS's older program materials describe a lookback of three years from the date the claim was paid; the current program page doesn't restate it. <!-- source-gap: rac-lookback | secondary | Medicare RACs review claims up to three years from the date paid | closes with: a current CMS Recovery Audit Program page or statement of work stating the lookback | checked: 2026-10-29 -->
+- **Medicare Recovery Audit Contractors** (RACs) review claims after payment in five regions: Performant in regions 1 and 2, Cotiviti in regions 3, 4 and 5, with region 5 covering durable medical equipment, home health and hospice nationwide. CMS's April 28, 2025 statement of work for regions 3 to 5 bars a RAC from reviewing a claim more than three years past the initial claim paid date, counted to the date of the additional documentation request (complex review) or the review results letter (automated review).
 - **Medicare Advantage risk adjustment audits** (RADV) audit diagnoses that raised plan payments, which reach practices as records requests ([Value-Based Care & Quality](/books/health-tech/value-based-care#medicare-advantage-and-risk-adjustment)).
 - **Commercial payment integrity** programs request records, apply edits after payment and recoup by offset in a later 835, appearing as a provider-level adjustment that names the original claim ([Provider-Level Adjustments and Recoupments](/books/health-tech/remittance-and-payment-posting#provider-level-adjustments-and-recoupments)).
 
@@ -282,7 +282,7 @@ Design notes:
 - [Federal Register: Medicare appeals amount in controversy for 2026](https://www.federalregister.gov/api/v1/documents/2025-21879.json), $200 and $1,960, published December 4, 2025
 - [45 CFR 147.136: Internal claims and appeals and external review](https://www.law.cornell.edu/cfr/text/45/147.136), the four-month request window and decision timeframes
 - [CMS: Medicare Fee for Service Recovery Audit Program](https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/medicare-fee-service-recovery-audit-program), regions and contractors
-- [CMS: The Recovery Audit Program and Medicare (2013 slides)](https://www.cms.gov/research-statistics-data-and-systems/monitoring-programs/medicare-ffs-compliance-programs/recovery-audit-program/downloads/the-recovery-audit-program-and-medicare-slides-051313.pdf), the three-year lookback as described then
+- [CMS: RAC statement of work, regions 3 to 5 (April 28, 2025)](https://www.cms.gov/files/document/rac-sow-regions-3-5-april-28-2025.pdf), the three-year lookback from the initial claim paid date
 - [42 CFR 401.305: Requirements for reporting and returning overpayments](https://www.law.cornell.edu/cfr/text/42/401.305), 60 days, the six-year lookback and the 180-day suspension
 - [Federal Register: CY 2025 physician fee schedule final rule](https://www.federalregister.gov/api/v1/documents/2024-25382.json), the overpayment rule changes
 

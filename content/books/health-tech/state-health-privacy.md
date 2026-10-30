@@ -37,7 +37,7 @@ Washington set the template, and its definitions are broad enough to catch most 
 - **A geofence ban:** no virtual boundary within 2,000 feet of an in-person health care facility to identify or track consumers, collect their data or send them messages or ads.
 - **Rights** to access, deletion and withdrawal of consent, answered within 45 days with one 45-day extension, free twice a year, with an appeal process.
 - **A consumer health data privacy policy** linked prominently from the homepage.
-- **Enforcement through the Consumer Protection Act,** which makes a violation an unfair or deceptive act and opens it to private suits as well as the attorney general. <!-- source-gap: mhmda-private-litigation | missing | the first private lawsuits filed under the My Health My Data Act (2025) and their status as of October 2026 | closes with: a court docket for a filed MHMDA complaint and its current status | checked: 2026-10-29 -->
+- **Enforcement through the Consumer Protection Act,** which makes a violation an unfair or deceptive act and opens it to private suits as well as the attorney general. The first private suit came in February 2025: a proposed class action in federal court in Washington, *Maxwell v. Amazon*, alleging that Amazon's advertising SDK in third-party apps collected location and other data that counts as consumer health data without consent, alongside federal wiretap and computer fraud claims; Amazon denied the allegations. Its status as of October 2026 couldn't be confirmed from the docket. <!-- source-gap: mhmda-private-litigation | secondary | Maxwell v. Amazon (W.D. Wash., filed February 2025), the first private My Health My Data Act suit, and its status as of October 2026 | closes with: the W.D. Wash. docket on CourtListener or another public court records site (CourtListener returned errors on 2026-10-29) | checked: 2026-10-29 -->
 - **Exemptions** for information governed by HIPAA, Washington's own health care information act and other listed regimes.
 
 **Nevada** (NRS 603A.400 to 603A.550, from 2023 legislation) follows the same shape: affirmative voluntary consent to collect, separate consent to share, a written authorization to sell that expires after a year, and a geofence ban within 1,750 feet of medical facilities; violations are deceptive trade practices, and the statute says it does "not create a private right of action."
@@ -201,6 +201,10 @@ Design decisions:
 - [California Health and Safety Code 120980](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=HSC&sectionNum=120980), penalties for disclosing HIV test results
 - [Texas SB 1188 (89th Legislature), enrolled text](https://capitol.texas.gov/tlodocs/89R/billtext/html/SB01188F.htm), US storage of EHRs from January 1, 2026, parental access to minors' records, AI disclosure
 - [Texas SB 1188 bill history](https://capitol.texas.gov/BillLookup/History.aspx?LegSess=89R&Bill=SB1188), signed June 20, 2025, effective September 1, 2025
+
+**Secondary**
+
+- [GovInfoSecurity: Lawsuit says Amazon violates Washington state health data law (February 25, 2025)](https://www.govinfosecurity.com/lawsuit-amazon-violates-washington-state-health-data-law-a-27595), the first suit under the My Health My Data Act, its claims and Amazon's denial
 
 **In practice**
 
