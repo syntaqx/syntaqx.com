@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Sun, Moon, Monitor, Check } from "lucide-react";
+import { Menu, MenuContent, MenuRadioGroup, MenuRadioItem, MenuTrigger } from "@/components/menu";
 
 type Theme = "light" | "dark" | "system";
 
@@ -56,45 +56,39 @@ export function ThemeToggle() {
   const ActiveIcon = themes.find((t) => t.value === theme)!.icon;
 
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger
+    <Menu>
+      <MenuTrigger
         aria-label="Toggle theme"
         className="flex w-12 items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer"
       >
         <ActiveIcon size={14} />
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          align="end"
-          sideOffset={4}
-          className="w-32 border border-border bg-surface py-1 shadow-lg z-100"
+      </MenuTrigger>
+      <MenuContent className="w-32">
+        <MenuRadioGroup
+          value={theme}
+          onValueChange={(v) => selectTheme(v as Theme)}
         >
-          <DropdownMenu.RadioGroup
-            value={theme}
-            onValueChange={(v) => selectTheme(v as Theme)}
-          >
-            {themes.map((t) => {
-              const Icon = t.icon;
-              const active = theme === t.value;
-              return (
-                <DropdownMenu.RadioItem
-                  key={t.value}
-                  value={t.value}
-                  className={`flex w-full items-center gap-2 px-3 py-1.5 text-xs transition-colors cursor-pointer outline-none data-highlighted:bg-background ${
-                    active
-                      ? "text-accent"
-                      : "text-dim data-highlighted:text-foreground"
-                  }`}
-                >
-                  <Icon size={12} />
-                  {t.label}
-                  {active && <Check size={12} className="ml-auto" />}
-                </DropdownMenu.RadioItem>
-              );
-            })}
-          </DropdownMenu.RadioGroup>
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
+          {themes.map((t) => {
+            const Icon = t.icon;
+            const active = theme === t.value;
+            return (
+              <MenuRadioItem
+                key={t.value}
+                value={t.value}
+                className={`w-full items-center gap-2 py-1.5 text-xs ${
+                  active
+                    ? "text-accent"
+                    : "text-dim data-highlighted:text-foreground"
+                }`}
+              >
+                <Icon size={12} />
+                {t.label}
+                {active && <Check size={12} className="ml-auto" />}
+              </MenuRadioItem>
+            );
+          })}
+        </MenuRadioGroup>
+      </MenuContent>
+    </Menu>
   );
 }
