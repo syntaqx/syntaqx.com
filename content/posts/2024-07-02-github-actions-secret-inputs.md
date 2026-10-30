@@ -131,7 +131,9 @@ To initially test my theory, I added a simple handler to my personal API that wo
 Here's the round trip with `curl`:
 
 ```sh
-$ curl -s https://api.syntaqx.com/secrets     -H 'Content-Type: application/json'     -d '{"secret": "SHHH IM SECRET", "ttl": 600}'
+$ curl -s https://api.syntaqx.com/secrets \
+    -H 'Content-Type: application/json' \
+    -d '{"secret": "SHHH IM SECRET", "ttl": 600}'
 {"id":"pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M","url":"https://api.syntaqx.com/secrets/pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M","expires_at":"2026-10-29T15:33:45.000Z"}
 
 $ curl -s https://api.syntaqx.com/secrets/pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M
@@ -153,7 +155,12 @@ set -euo pipefail
 read -rsp 'Secret: ' secret
 echo >&2
 
-printf '%s' "$secret"   | jq -Rs --argjson ttl "${1:-3600}" '{secret: ., ttl: $ttl}'   | curl -sSf https://api.syntaqx.com/secrets       -H 'Content-Type: application/json'       --data-binary @-   | jq -r '.url'
+printf '%s' "$secret" \
+  | jq -Rs --argjson ttl "${1:-3600}" '{secret: ., ttl: $ttl}' \
+  | curl -sSf https://api.syntaqx.com/secrets \
+      -H 'Content-Type: application/json' \
+      --data-binary @- \
+  | jq -r '.url'
 ```
 
 ```sh
