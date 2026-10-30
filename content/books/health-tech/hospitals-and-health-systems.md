@@ -10,7 +10,7 @@ tags = ["health-tech", "hospitals", "adt", "emtala", "340b", "price-transparency
 
 A hospital is a building full of systems that agree on one thing: where every patient is right now. The emergency department registers a walk-in, a bed board shows which rooms are clean, the lab, pharmacy, radiology and dietary systems each need to know the patient was admitted to 4 West bed 12, and billing needs to know whether the stay is inpatient or outpatient, because Medicare pays them under different systems. A health system is several hospitals plus clinics, urgent care, imaging centers, labs and home health, usually on one enterprise EHR and a long tail of departmental systems connected to it. The AHA counts 6,100 US hospitals, 5,121 of them community hospitals, with 907,216 staffed beds and about 35.7 million admissions in its 2024 survey data.
 
-For a vendor, a health system is the largest and slowest customer in the book: it buys through security review, integrates through the EHR vendor's programs, and runs under federal Conditions of Participation that reach into its software. This chapter covers inpatient versus ambulatory care and hospital at home, the ADT event stream, bed management, the Epic-centered enterprise and its peers, the Conditions of Participation, EMTALA, the 340B drug pricing program, hospital price transparency, and what a vendor must clear to sell in. It extends `encounters`, `locations` and `organizations` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). The HL7 v2 messages themselves belong to HL7 v2 & Interfaces; patient estimates and the No Surprises Act to Patient Statements, Estimates & Collections; security programs to Selling Software into Health Care.
+For a vendor, a health system is the largest and slowest customer in the book: it buys through security review, integrates through the EHR vendor's programs, and runs under federal Conditions of Participation that reach into its software. This chapter covers inpatient versus ambulatory care and hospital at home, the ADT event stream, bed management, the Epic-centered enterprise and its peers, the Conditions of Participation, EMTALA, the 340B drug pricing program, hospital price transparency, and what a vendor must clear to sell in. It extends `encounters`, `locations` and `organizations` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). The HL7 v2 messages themselves belong to HL7 v2 & Interfaces; patient estimates and the No Surprises Act to Patient Statements, Estimates & Collections; security programs to [Selling Software into Health Care](/books/health-tech/vendor-compliance-posture).
 
 ## How the Platforms Do It
 
@@ -29,11 +29,11 @@ Three patterns. **The enterprise EHR is the platform.** Epic and Oracle each pub
 
 The encounter's **class** decides how it is paid and which rules apply:
 
-- **Inpatient.** A formal admission by a physician's order. For Medicare, 42 CFR 412.3(d)(1) is the two-midnight rule: an admission is "generally appropriate for payment under Medicare Part A when the admitting physician expects the patient to require hospital care that crosses two midnights." Inpatient stays are paid per stay by diagnosis group, not per service.
+- **Inpatient.** A formal admission by a physician's order. For Medicare, 42 CFR 412.3(d)(1) is the two-midnight rule: an admission is "generally appropriate for payment under Medicare Part A when the admitting physician expects the patient to require hospital care that crosses two midnights."
 - **Outpatient and observation.** A patient in a hospital bed under observation is an outpatient, paid under the outpatient system, even if they stay overnight. Whether a stay is inpatient or observation is a recorded decision with a time, because it changes the patient's cost sharing and the hospital's payment, and it can change during the stay.
 - **Emergency.** An ED visit is an outpatient encounter that may become an admission; EMTALA governs the start of it (below).
-- **Ambulatory.** Clinic visits in hospital-owned practices, often billed as hospital outpatient departments with a facility fee alongside the professional fee, which is why the same visit can produce two claims from one health system.
-- **Hospital at home.** Medicare's Acute Hospital Care at Home waiver lets approved hospitals provide inpatient-level care in the patient's home. As of October 2026, section 6210 of the Consolidated Appropriations Act, 2026 extends it to September 30, 2030 and requires an HHS study and report by September 30, 2029. The encounter is inpatient with a location that is a home, which breaks every bed board that assumes a bed is a room in a building.
+- **Ambulatory.** Clinic visits, including in hospital-owned practices, under the health system's outpatient and professional billing.
+- **Hospital at home.** Medicare's Acute Hospital Care at Home waiver lets approved hospitals provide inpatient-level care in the patient's home. As of October 2026, section 6210 of the Consolidated Appropriations Act, 2026 extends it to September 30, 2030 and requires an HHS study and report by September 30, 2029. The encounter is an inpatient-level stay whose location is a home (the core's `home` class), which breaks every bed board that assumes a bed is a room in a building.
 - **Rural emergency hospital.** A Medicare provider type that offers emergency, observation and outpatient care where "the annual per patient average length of stay does not exceed 24 hours," with no inpatient services except a distinct-part skilled nursing facility (42 CFR 485.502). Its encounters are outpatient by definition.
 
 My rule: **class and status are effective-dated on the encounter**, never a single column overwritten when the order changes. An ED visit that became observation and then inpatient has three intervals, each with the order that started it, and billing reads the history.
@@ -106,13 +106,13 @@ That makes 340B a data problem. A prescription filled at a contract pharmacy or 
 
 Penalties scale with beds: up to $300 a day for 30 or fewer beds, $10 per bed per day for 31 to 550 beds, and up to $5,500 a day above 550, as 2022 base amounts adjusted yearly for inflation (180.90). As of June 2026, CMS's enforcement page listed 28 hospitals with civil money penalty notices. The CY2026 outpatient rule (effective January 1, 2026) updated the requirements, and the CY2027 proposed rule (July 7, 2026) asks for input on standardizing them further.
 
-For software: the machine-readable file is generated from the contract management and chargemaster systems, so **every negotiated rate in it needs a source row** (payer, plan, contract version, code, setting, rate methodology), and the attestation means someone signs for the generation. Percentile allowed amounts come from paid claims, which ties the file to remittance data ([Patient Statements, Estimates & Collections](/books/health-tech/health-tech-business#the-core-data-model) owns the patient estimate side).
+For software: the machine-readable file is generated from the contract management and chargemaster systems, so **every negotiated rate in it needs a source row** (payer, plan, contract version, code, setting, rate methodology), and the attestation means someone signs for the generation. Percentile allowed amounts come from paid claims, which ties the file to remittance data (Patient Statements, Estimates & Collections owns the patient estimate side).
 
 ## Selling into a Health System
 
 What a vendor has to clear before a health system signs, in roughly the order it happens:
 
-1. **Security review.** A questionnaire, often hundreds of questions, evidence of a security program (SOC 2 or HITRUST reports), penetration test results, and answers on encryption, access control, logging, incident response and subprocessors ([Compliance Programs](/books/hosting-and-cloud/compliance-programs)).
+1. **Security review.** A questionnaire, often hundreds of questions, evidence of a security program (SOC 2 or HITRUST reports), penetration test results, and answers on encryption, access control, logging, incident response and subprocessors ([Security Reviews and Questionnaires](/books/health-tech/vendor-compliance-posture#security-reviews-and-questionnaires), [Compliance Programs](/books/hosting-and-cloud/compliance-programs)).
 2. **The BAA.** If the product touches PHI, a business associate agreement on the health system's paper, with breach notification timelines often shorter than HIPAA's ([The Business Associate Agreement](/docs/compliance/hipaa#the-business-associate-agreement)).
 3. **Integration approval.** The EHR integration through the vendor's program and the health system's interface team, including which APIs, scopes and data elements.
 4. **Identity.** Single sign-on through the health system's identity provider, and user provisioning tied to their workforce directory ([SSO and Federation](/docs/security/sso-and-federation)).
@@ -123,27 +123,28 @@ The engineering consequence: **design for one health system to be many tenants.*
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model):
+The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). A health system is an `organizations` tree (`health_system` over `hospital` and `practice` children), and `encounters.class` holds the current class; this chapter keeps its history, the beds, the ADT stream and the EMTALA clock. Raw HL7 v2 messages are `hl7_messages`, owned by HL7 v2 & Interfaces; `adt_events` is the movement each message means once parsed.
 
 ```sql
-CREATE TABLE encounter_classes (         -- class and status over time, never overwritten
+CREATE TABLE encounter_class_history (   -- class over time, never overwritten
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   encounter_id    UUID NOT NULL REFERENCES encounters (id),
   class           TEXT NOT NULL CHECK (class IN ('emergency', 'observation', 'inpatient',
-                    'outpatient', 'ambulatory', 'hospital_at_home')),
-  ordered_by      UUID REFERENCES practitioners (id),
+                    'ambulatory', 'home')),  -- 'home' with a hospital location: hospital at home
   order_id        UUID REFERENCES orders (id),   -- the admission or observation order
+  ordered_by      UUID REFERENCES practitioner_roles (id),
   valid_during    TSTZRANGE NOT NULL,
   EXCLUDE USING GIST (encounter_id WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE beds (                      -- the leaf of the location hierarchy
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  location_id     UUID NOT NULL REFERENCES locations (id),  -- the room
-  code            TEXT NOT NULL,         -- the bed identifier in ADT
-  unit_code       TEXT NOT NULL,
+  location_id     UUID NOT NULL REFERENCES locations (id),  -- the hospital
+  unit_code       TEXT NOT NULL,         -- as ADT names it
+  room_code       TEXT NOT NULL,
+  bed_code        TEXT NOT NULL,
   kind            TEXT NOT NULL,         -- med-surg, ICU, telemetry, virtual (hospital at home)
-  UNIQUE (location_id, code)
+  UNIQUE (location_id, unit_code, room_code, bed_code)
 );
 
 CREATE TABLE bed_states (                -- the bed's own state machine, as intervals
@@ -164,32 +165,34 @@ CREATE TABLE bed_assignments (
   EXCLUDE USING GIST (encounter_id WITH =, valid_during WITH &&)   -- one bed per patient
 );
 
-CREATE TABLE adt_events (                -- every movement message as received, applied in order
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
-  integration_id     UUID NOT NULL REFERENCES integrations (id),
-  message_control_id TEXT NOT NULL,       -- idempotency key from the sender
-  event_kind         TEXT NOT NULL CHECK (event_kind IN ('preadmit', 'register', 'admit',
-                       'transfer', 'leave', 'return', 'discharge', 'cancel_admit',
-                       'cancel_transfer', 'cancel_discharge', 'update', 'merge', 'unmerge')),
-  patient_identifier TEXT NOT NULL,       -- the sender's MRN
+CREATE TABLE adt_events (                -- every movement, applied in order per patient
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id      UUID NOT NULL REFERENCES organizations (id),
+  integration_id       UUID NOT NULL REFERENCES integrations (id),
+  message_control_id   TEXT NOT NULL,     -- idempotency key from the sender
+  event_kind           TEXT NOT NULL CHECK (event_kind IN ('preadmit', 'register', 'admit',
+                         'transfer', 'leave', 'return', 'discharge', 'cancel_admit',
+                         'cancel_transfer', 'cancel_discharge', 'update', 'merge', 'unmerge')),
+  patient_identifier   TEXT NOT NULL,     -- the sender's MRN
   encounter_identifier TEXT,              -- the sender's visit number
-  event_time         TIMESTAMPTZ NOT NULL, -- when it happened, which may be backdated
-  received_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  payload_ref        TEXT NOT NULL,       -- the raw message in the PHI store
-  applied_at         TIMESTAMPTZ,
-  apply_error        TEXT,
+  patient_id           UUID REFERENCES patients (id),     -- once matched
+  encounter_id         UUID REFERENCES encounters (id),
+  event_time           TIMESTAMPTZ NOT NULL, -- when it happened, which may be backdated
+  received_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  source_message_ref   TEXT NOT NULL,     -- the hl7_messages row or raw payload in the PHI store
+  applied_at           TIMESTAMPTZ,
+  apply_error          TEXT,
   UNIQUE (integration_id, message_control_id)
 );
 
 CREATE TABLE ed_arrivals (               -- the EMTALA clock
-  encounter_id         UUID PRIMARY KEY REFERENCES encounters (id),
-  arrived_at           TIMESTAMPTZ NOT NULL,
-  screening_started_at TIMESTAMPTZ,
+  encounter_id           UUID PRIMARY KEY REFERENCES encounters (id),
+  arrived_at             TIMESTAMPTZ NOT NULL,
+  screening_started_at   TIMESTAMPTZ,
   stabilizing_started_at TIMESTAMPTZ,
-  first_financial_at   TIMESTAMPTZ,       -- first eligibility check, estimate or collection
-  disposition          TEXT CHECK (disposition IN ('discharged', 'admitted', 'observation',
-                         'transferred', 'left_without_being_seen', 'left_against_advice')),
+  first_financial_at     TIMESTAMPTZ,     -- first eligibility check, estimate or collection
+  disposition            TEXT CHECK (disposition IN ('discharged', 'admitted', 'observation',
+                           'transferred', 'left_without_being_seen', 'left_against_advice')),
   CHECK (first_financial_at IS NULL OR screening_started_at IS NOT NULL)
 );
 
@@ -201,7 +204,7 @@ CREATE TABLE price_transparency_files (  -- each published machine-readable file
   source_snapshot  TEXT NOT NULL,          -- the contract and chargemaster versions read
   attested_by      TEXT NOT NULL,          -- the senior official named in the file
   published_url    TEXT NOT NULL,
-  file_hash        TEXT NOT NULL
+  content_sha256   TEXT NOT NULL
 );
 ```
 
@@ -209,7 +212,7 @@ The check on `ed_arrivals` makes EMTALA's ordering a constraint: the application
 
 Design decisions:
 
-- **Class is an interval history.** Observation-to-inpatient conversions keep each interval with its order, so billing and the two-midnight determination read the record rather than a guess.
+- **Class is an interval history.** Observation-to-inpatient conversions keep each interval with its order, so billing and the two-midnight determination read the record rather than a guess; `encounters.class` is the current value.
 - **Beds have their own states,** and assignment is exclusive in both directions by constraint; the board is a query over intervals, and flow metrics are intervals between events.
 - **ADT is stored as received and applied idempotently,** keyed by message control ID, with cancels and merges as first-class events and errors visible.
 - **EMTALA's order is enforced** by putting the screening time before any financial interaction.
@@ -242,6 +245,7 @@ Design decisions:
 - [42 CFR part 482 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-42?part=482), the Conditions of Participation and their subparts
 - [42 CFR 482.24 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-42?part=482&section=482.24), medical record services and electronic event notifications under the HL7 v2.5.1 ADT standard
 - [42 CFR 412.3 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-42?part=412&section=412.3), the two-midnight benchmark for inpatient admission
+- [Medicare.gov: Outpatient hospital services](https://www.medicare.gov/coverage/outpatient-hospital-services), observation services as outpatient services that may include an overnight stay
 - [42 CFR 485.502 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-42?part=485&section=485.502), rural emergency hospital services and the 24-hour average length of stay
 - [42 USC 1395dd (govinfo)](https://www.govinfo.gov/link/uscode/42/1395dd?link-type=html), EMTALA's screening and stabilization duties and statutory penalties
 - [42 CFR 489.24 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-42?part=489&section=489.24), application regardless of ability to pay, no delay for payment inquiries or authorization, reasonable registration

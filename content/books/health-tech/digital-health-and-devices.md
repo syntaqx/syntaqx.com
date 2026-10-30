@@ -1,7 +1,7 @@
 +++
 title = "Digital Health Apps & Devices"
 nav_title = "Digital Health & Devices"
-description = "Wellness versus medical device, FDA software rules, the 2026 CDS and wellness guidance, wearables and phone health data, the FTC breach rule and digital therapeutics."
+description = "Wellness or device, FDA software rules and the 2026 CDS and wellness guidance, wearable and phone health data, the FTC breach rule and digital therapeutics."
 category = "Health Tech Industry"
 order = 1948
 part = "Care Delivery"
@@ -78,12 +78,12 @@ Consumer health data reaches a practice or a platform three ways: the patient's 
 
 - **Permission is per data type and revocable.** Both platforms ask the user per type (heart rate, steps, clinical records), and a sync has to handle revoked types without deleting what was already shared lawfully.
 - **Clinical records from the phone are copies.** Apple's Health Records are read-only to apps; Health Connect's medical records are FHIR resources the user brought from providers. A platform reading them gets the patient's copy, useful for intake and medication lists, never authoritative over the source chart.
-- **Readings are observations with provenance.** A blood pressure from a validated cuff for remote monitoring, a watch estimate under the wellness guidance, and a number the patient typed are different evidence. The `observations` row records the device, its regulatory status for that measurement, how it arrived and when it was measured, and clinical rules (remote monitoring billing, alert thresholds) only accept the sources they're allowed to ([Remote Patient and Therapeutic Monitoring](/books/health-tech/telehealth#remote-patient-and-therapeutic-monitoring)).
+- **Readings are observations with provenance.** A blood pressure from a validated cuff for remote monitoring, a watch estimate under the wellness guidance, and a number the patient typed are different evidence. The raw reading records the device, its regulatory status for that measurement, how it arrived and when it was measured, and clinical rules (remote monitoring billing, alert thresholds) only accept the sources they're allowed to ([Remote Patient and Therapeutic Monitoring](/books/health-tech/telehealth#remote-patient-and-therapeutic-monitoring)).
 - **Inside a covered entity's record it is PHI.** Once readings land in a practice's system for treatment, HIPAA applies to that copy; the consumer app's copy stays under the FTC and state law. A vendor that runs both the consumer app and the practice integration holds the same reading under two regimes and has to know which copy is which.
 
 ## The FTC Health Breach Notification Rule
 
-The FTC's Health Breach Notification Rule (16 CFR part 318) covers "vendors of personal health records, PHR related entities, and third party service providers," and excludes HIPAA covered entities and anyone acting as a business associate of one. The FTC finalized amendments on April 26, 2024, effective July 29, 2024, that make its reach explicit:
+The FTC's Health Breach Notification Rule (16 CFR part 318) covers "vendors of personal health records, PHR related entities, and third party service providers," and excludes HIPAA covered entities and anyone acting as a business associate of one. [Selling Software into Health Care](/books/health-tech/vendor-compliance-posture#the-ftc-health-breach-notification-rule) covers the rule as a sales question; this section covers the product. The FTC finalized amendments on April 26, 2024, effective July 29, 2024, that make its reach explicit:
 
 - **Health apps are covered.** The amendments clarify that apps and similar technologies holding health information not covered by HIPAA are within the rule.
 - **A breach includes an unauthorized disclosure,** not only a security intrusion. Sharing health data with an advertising platform without the consumer's authorization is a breach of security under the rule.
@@ -102,98 +102,112 @@ The build consequence is that a digital therapeutic sits in both worlds: it is a
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model):
+The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model): the devices and their regulatory status, the claims made about them, the decision support inventory, the consumer's app connections, and the raw readings that become `observations`. Decision support source attributes for AI belong to AI in Health Tech (`dsi_source_attributes`); HIPAA breach assessments to HIPAA in Practice.
 
 ```sql
-CREATE TABLE device_products (           -- a product or software function and its claims
+CREATE TABLE devices (                   -- a product or software function, by model
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  vendor_org_id    UUID NOT NULL REFERENCES organizations (id),
+  maker_org_id     UUID NOT NULL REFERENCES organizations (id),  -- kind 'vendor'
   name             TEXT NOT NULL,
+  model            TEXT,
   kind             TEXT NOT NULL CHECK (kind IN ('hardware', 'software_function', 'app')),
-  UNIQUE (vendor_org_id, name)
+  UNIQUE (maker_org_id, name, model)
 );
 
-CREATE TABLE device_regulatory_records ( -- regulatory status per intended use and version
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  product_id       UUID NOT NULL REFERENCES device_products (id),
-  intended_use     TEXT NOT NULL,        -- the claim as labeled, verbatim
-  status           TEXT NOT NULL CHECK (status IN ('not_device_520o', 'general_wellness',
-                     'enforcement_discretion', '510k', 'de_novo', 'pma')),
-  exclusion        TEXT CHECK (exclusion IN ('a_admin', 'b_lifestyle', 'c_records',
-                     'd_lab_data', 'e_cds')),
-  submission_number TEXT,                -- K, DEN or P number when authorized
-  measures         TEXT[] NOT NULL DEFAULT '{}',  -- what it may report: 'blood_pressure', ...
+CREATE TABLE device_regulatory_records ( -- regulatory status per intended use and period
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  device_id          UUID NOT NULL REFERENCES devices (id),
+  intended_use       TEXT NOT NULL,      -- the claim as labeled, verbatim
+  status             TEXT NOT NULL CHECK (status IN ('not_device_520o', 'general_wellness',
+                       'enforcement_discretion', '510k', 'de_novo', 'pma')),
+  exclusion          TEXT CHECK (exclusion IN ('a_admin', 'b_lifestyle', 'c_records',
+                       'd_lab_data', 'e_cds')),
+  submission_number  TEXT,               -- K, DEN or P number when authorized
+  measures           TEXT[] NOT NULL DEFAULT '{}',  -- what it may report: 'blood_pressure', ...
   validated_measures TEXT[] NOT NULL DEFAULT '{}',
-  pccp_ref         TEXT,                 -- authorized change control plan, if any
-  rationale_ref    TEXT NOT NULL,        -- the analysis or authorization behind the status
-  valid_during     DATERANGE NOT NULL
+  pccp_ref           TEXT,               -- authorized change control plan, if any
+  rationale_ref      TEXT NOT NULL,      -- the analysis or authorization behind the status
+  valid_during       DATERANGE NOT NULL
 );
 
-CREATE TABLE claims_register (           -- every public statement of what the product does
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  product_id       UUID NOT NULL REFERENCES device_products (id),
-  surface          TEXT NOT NULL,        -- 'website', 'app_store', 'onboarding', 'notification'
-  text             TEXT NOT NULL,
+CREATE TABLE device_claims (             -- every public statement of what the product does
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  device_id            UUID NOT NULL REFERENCES devices (id),
+  surface              TEXT NOT NULL,    -- 'website', 'app_store', 'onboarding', 'notification'
+  text                 TEXT NOT NULL,
   regulatory_record_id UUID NOT NULL REFERENCES device_regulatory_records (id),
-  approved_by      UUID NOT NULL,
-  approved_at      TIMESTAMPTZ NOT NULL,
-  retired_at       TIMESTAMPTZ
+  approved_by          UUID NOT NULL,
+  approved_at          TIMESTAMPTZ NOT NULL,
+  retired_at           TIMESTAMPTZ
 );
 
 CREATE TABLE decision_support_interventions (  -- every alert, score or recommendation
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id        UUID,                 -- null for vendor-supplied
-  name             TEXT NOT NULL,
-  kind             TEXT NOT NULL CHECK (kind IN ('rule', 'predictive', 'evidence_based')),
-  version          TEXT NOT NULL,
-  intended_users   TEXT NOT NULL,        -- clinicians, staff, patients
-  inputs           JSONB NOT NULL,       -- what data it reads
-  source           TEXT NOT NULL,        -- the guideline, model card or developer
-  known_limits     TEXT,
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id      UUID REFERENCES organizations (id),  -- null for vendor-supplied
+  name                 TEXT NOT NULL,
+  kind                 TEXT NOT NULL CHECK (kind IN ('rule', 'predictive', 'evidence_based')),
+  version              TEXT NOT NULL,
+  intended_users       TEXT NOT NULL,    -- clinicians, staff, patients
+  inputs               JSONB NOT NULL,   -- what data it reads
+  source               TEXT NOT NULL,    -- the guideline, model card or developer
+  known_limits         TEXT,
   regulatory_record_id UUID REFERENCES device_regulatory_records (id),
-  active_during    TSTZRANGE NOT NULL,
-  UNIQUE (tenant_id, name, version)
+  active_during        TSTZRANGE NOT NULL,
+  UNIQUE (organization_id, name, version)
 );
 
-CREATE TABLE health_data_connections (   -- a consumer's grant from HealthKit, Health Connect
+CREATE TABLE app_connections (           -- a consumer's grant from HealthKit, Health Connect
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id        UUID NOT NULL,
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
   patient_id       UUID NOT NULL REFERENCES patients (id),
   platform         TEXT NOT NULL CHECK (platform IN ('healthkit', 'health_connect',
                      'device_cloud', 'manual')),
+  device_id        UUID REFERENCES devices (id),  -- for a device maker's cloud
   data_types       TEXT[] NOT NULL,      -- as granted; revocations update this
   consent_id       UUID NOT NULL REFERENCES consents (id),
   last_synced_at   TIMESTAMPTZ,
   revoked_at       TIMESTAMPTZ
 );
 
-ALTER TABLE observations
-  ADD COLUMN source_kind        TEXT CHECK (source_kind IN ('clinician', 'lab', 'device_medical',
-                                  'device_wellness', 'patient_reported', 'phone_platform')),
-  ADD COLUMN regulatory_record_id UUID REFERENCES device_regulatory_records (id),
-  ADD COLUMN connection_id      UUID REFERENCES health_data_connections (id);
-
-CREATE TABLE hbnr_assessments (          -- non-HIPAA products: was this a breach under 16 CFR 318?
+CREATE TABLE device_readings (           -- raw readings as received, before they are clinical
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  product_id       UUID NOT NULL REFERENCES device_products (id),
-  discovered_at    TIMESTAMPTZ NOT NULL,
-  kind             TEXT NOT NULL CHECK (kind IN ('intrusion', 'unauthorized_disclosure')),
-  recipients       TEXT[] NOT NULL,      -- the SDKs, partners or attackers involved
-  people_affected  INT,
-  notice_due_by    TIMESTAMPTZ NOT NULL, -- 60 calendar days from discovery
-  ftc_notice_required BOOLEAN NOT NULL,  -- 500 or more
-  decided_by       UUID NOT NULL,
-  decision         TEXT NOT NULL CHECK (decision IN ('breach', 'not_breach')),
-  notified_at      TIMESTAMPTZ
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  patient_id       UUID NOT NULL REFERENCES patients (id),
+  connection_id    UUID NOT NULL REFERENCES app_connections (id),
+  device_id        UUID REFERENCES devices (id),
+  serial_ref       TEXT,                 -- which unit, when known
+  measure          TEXT NOT NULL,        -- 'blood_pressure', 'glucose', 'steps'
+  value            JSONB NOT NULL,       -- {"systolic": 128, "diastolic": 82, "unit": "mm[Hg]"}
+  source_kind      TEXT NOT NULL CHECK (source_kind IN ('device_medical', 'device_wellness',
+                     'patient_reported', 'phone_platform')),
+  regulatory_record_id UUID REFERENCES device_regulatory_records (id),  -- status when measured
+  measured_at      TIMESTAMPTZ NOT NULL, -- device time
+  received_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  observation_id   UUID REFERENCES observations (id),  -- set once filed to the chart
+  UNIQUE (connection_id, measure, measured_at)        -- resends are idempotent
+);
+
+CREATE TABLE hbnr_assessments (          -- non-HIPAA products: a breach under 16 CFR 318?
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  device_id           UUID NOT NULL REFERENCES devices (id),  -- the app or product
+  discovered_at       TIMESTAMPTZ NOT NULL,
+  kind                TEXT NOT NULL CHECK (kind IN ('intrusion', 'unauthorized_disclosure')),
+  recipients          TEXT[] NOT NULL,   -- the SDKs, partners or attackers involved
+  people_affected     INT,
+  notice_due_by       TIMESTAMPTZ NOT NULL,  -- 60 calendar days from discovery
+  ftc_notice_required BOOLEAN NOT NULL,      -- 500 or more
+  decided_by          UUID NOT NULL,
+  decision            TEXT NOT NULL CHECK (decision IN ('breach', 'not_breach')),
+  notified_at         TIMESTAMPTZ
 );
 ```
 
 Design decisions:
 
-- **Regulatory status is per intended use, version and date.** A product can be wellness for one claim and a cleared device for another; the record holds the exact claim, the status, the authorization or exclusion analysis, and what it may report, validated or not.
+- **Regulatory status is per intended use and date.** A product can be wellness for one claim and a cleared device for another; the record holds the exact claim, the status, the authorization or exclusion analysis, and what it may report, validated or not.
 - **Claims are data tied to status.** Every public statement links to the regulatory record that permits it, so a new notification template that implies diagnosis fails review against the register.
 - **Decision support is inventoried** with source, inputs, version, users and limits, whether or not certification still requires it, and links to its FDA analysis.
-- **Observations carry their source class,** and billing or alert rules accept only permitted sources: no RPM claim from a wellness reading, no clinical alert from an unvalidated estimate.
+- **Readings arrive raw and become clinical deliberately.** `device_readings` keeps what came in with its source class and regulatory status at the time; only readings a rule permits are filed as `observations`, and remote monitoring counts them through `rpm_readings` ([Telehealth](/books/health-tech/telehealth#how-to-build-it)). No RPM claim from a wellness reading, no clinical alert from an unvalidated estimate.
 - **Phone-platform grants are revocable connections,** synced per granted type; the patient's copy of their clinical records is a source for intake, not a replacement for the chart.
 - **Non-HIPAA products run an HBNR clock** from discovery, with the disclosure-as-breach definition built in.
 

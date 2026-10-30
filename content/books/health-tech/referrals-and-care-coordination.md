@@ -29,7 +29,7 @@ The patterns: **every vendor sells every channel.** Kno2 and Consensus both put 
 
 The closed loop, from the sender's side:
 
-1. **Order.** A clinician orders a referral with a specialty or a named receiver, a reason, urgency, and the clinical question. It is an `orders` row with category `referral`.
+1. **Order.** A clinician orders a referral with a specialty or a named receiver, a reason, urgency, and the clinical question. It is an `orders` row with `kind = 'referral'`.
 2. **Authorization.** If the patient's plan requires a referral or prior authorization, staff obtain it and record the number and visit limits; Prior Authorization covers the payer side.
 3. **Send.** The referral packet goes to the receiver: the order, a summary of care (problems, medications, allergies, recent results), the relevant notes and images, and the insurance. Channel: Direct, an EHR-to-EHR network, a referral platform, the receiver's portal, or fax.
 4. **Receive and triage.** The receiving office reviews the packet, asks for missing information, accepts or declines, and schedules.
@@ -97,12 +97,12 @@ The record model is the referral loop with a fan-out: one discharge, several out
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model), with the `orders.category` column that [Labs, Imaging & Diagnostics](/books/health-tech/labs-and-diagnostics#how-to-build-it) adds:
+The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). A referral starts as an `orders` row with `kind = 'referral'`; Direct transport itself is `direct_messages`, owned by C-CDA, Documents & Images, and outbound disclosures outside treatment, payment and operations land in `disclosures`.
 
 ```sql
-CREATE TABLE referrals (                 -- the loop around an orders row with category 'referral'
+CREATE TABLE referrals (                 -- the loop around an order, across organizations
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id            UUID NOT NULL,
+  organization_id      UUID NOT NULL REFERENCES organizations (id),
   order_id             UUID REFERENCES orders (id),     -- null for an inbound referral
   direction            TEXT NOT NULL CHECK (direction IN ('outbound', 'inbound')),
   patient_id           UUID REFERENCES patients (id),   -- inbound: null until matched
@@ -112,7 +112,7 @@ CREATE TABLE referrals (                 -- the loop around an orders row with c
   specialty            TEXT,
   reason               TEXT NOT NULL,
   urgency              TEXT NOT NULL CHECK (urgency IN ('routine', 'urgent', 'emergent')),
-  authorization_ref    TEXT,               -- payer referral or prior auth number
+  authorization_ref    TEXT,               -- payer referral or prior authorization number
   authorized_visits    INT,
   parent_referral_id   UUID REFERENCES referrals (id),  -- post-acute fan-out from one discharge
   status               TEXT NOT NULL CHECK (status IN ('draft', 'sent', 'acknowledged',
@@ -121,69 +121,79 @@ CREATE TABLE referrals (                 -- the loop around an orders row with c
   status_changed_at    TIMESTAMPTZ NOT NULL,
   appointment_id       UUID REFERENCES appointments (id),
   closing_document_id  UUID REFERENCES documents (id),  -- the consult note that closed it
-  closed_by            UUID REFERENCES practitioners (id)
+  closed_by            UUID REFERENCES practitioner_roles (id)
 );
 
 CREATE TABLE referral_events (           -- every step, append-only
-  id            UUID PRIMARY KEY DEFAULT uuidv7(),
-  referral_id   UUID NOT NULL REFERENCES referrals (id),
-  kind          TEXT NOT NULL,           -- 'sent', 'delivered', 'declined', 'patient_chose', ...
-  channel       TEXT CHECK (channel IN ('direct', 'network', 'referral_platform', 'portal',
-                  'fax', 'phone', 'in_person')),
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  referral_id      UUID NOT NULL REFERENCES referrals (id),
+  kind             TEXT NOT NULL,        -- 'sent', 'delivered', 'declined', 'patient_chose', ...
+  channel          TEXT CHECK (channel IN ('direct', 'network', 'referral_platform', 'portal',
+                     'fax', 'phone', 'in_person')),
   communication_id UUID REFERENCES communications (id),
-  reason        TEXT,                    -- decline reason, info requested
-  actor         TEXT NOT NULL,
-  occurred_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  document_id      UUID REFERENCES documents (id),  -- the packet sent or the reply received
+  reason           TEXT,                 -- decline reason, information requested
+  actor            TEXT NOT NULL,
+  occurred_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE documents
-  ADD COLUMN source_channel     TEXT CHECK (source_channel IN ('fax', 'direct', 'network',
-                                  'portal_upload', 'scan', 'internal')),
-  ADD COLUMN source_address     TEXT,     -- the fax number or Direct address it came from
-  ADD COLUMN intake_status      TEXT CHECK (intake_status IN ('new', 'classified', 'attached',
-                                  'rejected')),
-  ADD COLUMN classified_as      TEXT,     -- 'referral', 'consult_note', 'lab_result', ...
-  ADD COLUMN extracted          JSONB,    -- suggested fields from extraction, never authoritative
-  ADD COLUMN confirmed_by       UUID,     -- the person who confirmed classification and patient
-  ADD COLUMN attached_to        JSONB;    -- {"referral_id": ...} or {"order_id": ...}
-
-CREATE TABLE exchange_endpoints (        -- where to send for a given organization or role
+CREATE TABLE fax_documents (             -- every fax in or out, and its intake
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   organization_id  UUID NOT NULL REFERENCES organizations (id),
+  document_id      UUID NOT NULL REFERENCES documents (id),  -- the image, kept as received or sent
+  direction        TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+  remote_number    TEXT NOT NULL,        -- sender or recipient fax number
+  endpoint_id      UUID,                 -- exchange_endpoints, below; verified before sending
+  pages            INT NOT NULL,
+  provider_ref     TEXT,                 -- the fax service's job ID
+  intake_status    TEXT CHECK (intake_status IN ('new', 'classified', 'attached', 'rejected')),
+  classified_as    TEXT,                 -- 'referral', 'consult_note', 'lab_result', ...
+  extracted        JSONB,                -- suggested fields from extraction, never authoritative
+  confirmed_by     UUID,                 -- who confirmed classification and patient
+  attached_to      JSONB,                -- {"referral_id": ...} or {"order_id": ...}
+  occurred_at      TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE exchange_endpoints (        -- where to send for a given organization or role
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id      UUID NOT NULL REFERENCES organizations (id),  -- the receiver
   practitioner_role_id UUID REFERENCES practitioner_roles (id),
-  kind             TEXT NOT NULL CHECK (kind IN ('direct', 'fax', 'network', 'portal')),
-  address          TEXT NOT NULL,
-  verified_at      TIMESTAMPTZ,
-  verified_how     TEXT,                 -- directory, phone confirmation, prior receipt
-  preferred        BOOLEAN NOT NULL DEFAULT false,
+  kind                 TEXT NOT NULL CHECK (kind IN ('direct', 'fax', 'network', 'portal')),
+  address              TEXT NOT NULL,
+  verified_at          TIMESTAMPTZ,
+  verified_how         TEXT,             -- directory, phone confirmation, prior receipt
+  preferred            BOOLEAN NOT NULL DEFAULT false,
   UNIQUE (organization_id, kind, address)
 );
 
+ALTER TABLE fax_documents
+  ADD FOREIGN KEY (endpoint_id) REFERENCES exchange_endpoints (id);
+
 CREATE TABLE care_programs (             -- TCM, CCM, PCM, APCM enrollment for one billing practice
-  id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id         UUID NOT NULL,
-  patient_id        UUID NOT NULL REFERENCES patients (id),
-  program           TEXT NOT NULL CHECK (program IN ('tcm', 'ccm', 'pcm', 'apcm')),
-  billing_practitioner_id UUID NOT NULL REFERENCES practitioners (id),
-  consent_id        UUID REFERENCES consents (id),
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id      UUID NOT NULL REFERENCES organizations (id),
+  patient_id           UUID NOT NULL REFERENCES patients (id),
+  program              TEXT NOT NULL CHECK (program IN ('tcm', 'ccm', 'pcm', 'apcm')),
+  billing_role_id      UUID NOT NULL REFERENCES practitioner_roles (id),
+  consent_id           UUID REFERENCES consents (id),
   care_plan_document_id UUID REFERENCES documents (id),
   trigger_encounter_id UUID REFERENCES encounters (id),  -- TCM: the inpatient stay
-  discharged_at     TIMESTAMPTZ,                         -- TCM: from the ADT notification
-  contact_due_by    TIMESTAMPTZ,                         -- 2 business days, computed
-  visit_due_by      DATE,                                -- 7 or 14 calendar days, computed
-  valid_during      DATERANGE NOT NULL
+  discharged_at        TIMESTAMPTZ,                     -- TCM: from the ADT notification
+  contact_due_by       TIMESTAMPTZ,                     -- 2 business days, computed
+  visit_due_by         DATE,                            -- 7 or 14 calendar days, computed
+  valid_during         DATERANGE NOT NULL
 );
 
 CREATE TABLE care_program_time (
-  id            UUID PRIMARY KEY DEFAULT uuidv7(),
-  program_id    UUID NOT NULL REFERENCES care_programs (id),
-  staff_id      UUID NOT NULL,
-  staff_kind    TEXT NOT NULL CHECK (staff_kind IN ('practitioner', 'clinical_staff')),
-  minutes       INT NOT NULL CHECK (minutes > 0),
-  activity      TEXT NOT NULL,
-  service_month DATE NOT NULL,          -- first of the month the time counts toward
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
+  program_id        UUID NOT NULL REFERENCES care_programs (id),
+  staff_role_id     UUID NOT NULL REFERENCES practitioner_roles (id),
+  staff_kind        TEXT NOT NULL CHECK (staff_kind IN ('practitioner', 'clinical_staff')),
+  minutes           INT NOT NULL CHECK (minutes > 0),
+  activity          TEXT NOT NULL,
+  service_month     DATE NOT NULL,       -- first of the month the time counts toward
   counted_elsewhere BOOLEAN NOT NULL DEFAULT false,  -- never count the same time twice
-  occurred_at   TIMESTAMPTZ NOT NULL
+  occurred_at       TIMESTAMPTZ NOT NULL
 );
 ```
 
@@ -191,10 +201,10 @@ Design decisions:
 
 - **The referral is a loop object over an order.** The order is what the clinician asked for; the referral holds the cross-organization status, the receiver, the authorization and the closing document. Inbound referrals have no order on our side and start unmatched.
 - **Channel is a property of each step, not of the referral.** Sent by Direct, more information requested by phone, report back by fax: the events record each channel, and the status machine is channel-blind.
-- **Every inbound document goes through intake,** with extraction as suggestions and a person's confirmation recorded before it attaches to a patient.
+- **Every fax goes through intake,** with extraction as suggestions and a person's confirmation recorded before it attaches to a patient; the image itself is a `documents` row kept as received.
 - **Endpoints are verified data** per organization and role, with how and when they were verified, because a wrong fax number is a breach.
 - **Care programs compute their deadlines** from the triggering discharge and store them, and time entries say which month and which person, so the monthly claim is a query.
-- **Events:** `referral.sent`, `referral.accepted`, `referral.declined`, `referral.scheduled`, `referral.no_show`, `referral.closed`, `document.received`, `adt.notification_received`, through the [outbox](/docs/architecture/events#the-transactional-outbox) to coordinator worklists.
+- **Events:** `referral.sent`, `referral.accepted`, `referral.declined`, `referral.scheduled`, `referral.no_show`, `referral.closed`, `fax.received`, `adt.notification_received`, through the [outbox](/docs/architecture/events#the-transactional-outbox) to coordinator worklists.
 
 ## Auditing
 

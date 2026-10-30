@@ -23,7 +23,7 @@ As of October 2026, from each company's own pages and filings:
 | **Teladoc Health** | Employer and payer telehealth plus a cash-pay therapy brand | 17.1 million telehealth visits in 2025; about 102 million US members with access to one or more services at December 31, 2025; 83% of consolidated revenue from access fees, the rest mainly visit fees and hospital hardware and services; BetterHelp users paying out of pocket weekly or monthly, with insurance coverage rolling out |
 | **Hims & Hers** | Direct-to-consumer subscription telehealth | Care by Affiliated Medical Groups owned by licensed physicians, with the company as "the exclusive administrative services provider"; two licensed 503A pharmacies plus a 503B outsourcing facility; offerings sold on subscription; notes that "some states specifically require synchronous (or 'live') communications" |
 
-Three patterns run through the table. **The video is the cheap part.** A HIPAA-eligible video room with a waiting room is a commodity sold free or per seat; Zoom's pitch is the EHR integration and the AI note, not the call. **Telehealth companies sell access, not visits.** Teladoc's revenue is mostly per-member-per-month access fees paid by employers and plans whether or not anyone calls; Amwell sells its platform to the plans and health systems that offer the benefit. **Direct-to-consumer telehealth is a pharmacy business with a clinic in front.** Hims & Hers fills most prescriptions from its own pharmacies and sells treatment as a subscription, and its corporate structure (a company that may not employ physicians, contracting with physician-owned medical groups) is the corporate practice of medicine doctrine described in The Practice Business.
+Three patterns run through the table. **The video is the cheap part.** A HIPAA-eligible video room with a waiting room is a commodity sold free or per seat; Zoom's pitch is the EHR integration and the AI note, not the call. **Telehealth companies sell access, not visits.** Teladoc's revenue is mostly per-member-per-month access fees paid by employers and plans whether or not anyone calls; Amwell sells its platform to the plans and health systems that offer the benefit. **Direct-to-consumer telehealth is a pharmacy business with a clinic in front.** Hims & Hers fills most prescriptions from its own pharmacies and sells treatment as a subscription, and its corporate structure (a company that may not employ physicians, contracting with physician-owned medical groups) is the corporate practice of medicine doctrine described in [Corporate practice doctrines](/books/health-tech/practice-business#corporate-practice-doctrines).
 
 ## Modalities and What Each Records
 
@@ -88,7 +88,7 @@ The descriptors are the AMA's licensed text and aren't reproduced here. CMS's bo
 
 The CY2027 proposed rule would tighten the program: RTM only for established patients, a separately reportable initiating visit, payment only when the services are performed by clinical staff employed by the practice rather than contractors, revalued codes because devices may cost less than first estimated, and possibly four new bundled HCPCS codes. A vendor that sells RPM as an outsourced nursing service to practices is the business the contractor proposal targets, and its status belongs on the same source-gap as the final rule above.
 
-The engineering consequences are concrete. **Days with data are counted per 30-day period, per patient,** from readings that arrive with device timestamps, often late and in batches; the count is computed from `observations`, never incremented. **Minutes are logged per staff member per management period** with any interactive communication the code requires, because an auditor will ask for both. **The device period and the management period are separate clocks in the code descriptors**, so both are stored as periods rather than derived from each other. **Exclusivity is enforced at enrollment:** a second practice enrolling the same patient is a conflict the system can't see across organizations, so the enrollment records the patient's attestation that no one else is billing.
+The engineering consequences are concrete. **Days with data are counted per 30-day period, per patient,** from readings that arrive with device timestamps, often late and in batches; the count is computed from the readings, never incremented. **Minutes are logged per staff member per management period** with any interactive communication the code requires, because an auditor will ask for both. **The device period and the management period are separate clocks in the code descriptors**, so both are stored as periods rather than derived from each other. **Exclusivity is enforced at enrollment:** a second practice enrolling the same patient is a conflict the system can't see across organizations, so the enrollment records the patient's attestation that no one else is billing.
 
 ## Licensure and the Compacts
 
@@ -102,7 +102,7 @@ A clinician needs authority to practice in the state where the patient is, and e
 
 <!-- source-gap: psypact-member-count | missing | the number of PSYPACT participating jurisdictions as of October 2026 | closes with: the PSYPACT map page or 2025 annual report, readable without a script-heavy viewer | checked: 2026-10-29 -->
 
-The data model consequence: a practitioner holds **authorizations per jurisdiction**, each a full license, a compact multistate privilege or a compact-issued authority, each with a number, a type, an expiry and a source of verification. Scheduling and visit start both check that the clinician holds a valid authorization for the patient's location at that moment, and the check result is stored on the encounter. Credentialing and primary-source verification of licenses belong to Credentialing, Enrollment & Provider Data; telehealth adds the per-visit check.
+The data model consequence: a practitioner holds **licenses per jurisdiction** (`practitioner_licenses`, owned by Credentialing, Enrollment & Provider Data), each a full license, a compact multistate privilege or a compact-issued authority, each with a number, a type, an expiry and a source of verification. Scheduling and visit start both check that the clinician holds a valid authorization for the patient's location at that moment, and the check result is stored on the encounter. Primary-source verification is that chapter's job; telehealth adds the per-visit check.
 
 Medicare's rule on where the practitioner is also changed: through CY2025 CMS let practitioners furnishing telehealth from home report their enrolled practice location instead of their home address, so the practitioner's location at the visit is a second fact to record.
 
@@ -132,116 +132,100 @@ The lesson for an engineer: **a tracking pixel on a telehealth intake page is a 
 
 ## How to Build It
 
-Telehealth extends `encounters`, `observations` and `communications` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model) and adds sessions, practitioner authorizations and monitoring periods:
+Telehealth extends `encounters` and `observations` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model), whose `encounters.class` already distinguishes `virtual` and `home` visits, and adds the connection, the monitoring enrollment and the readings that count toward it. Licenses and compact privileges per state are `practitioner_licenses`, owned by Credentialing, Enrollment & Provider Data; telehealth only checks them.
 
 ```sql
 ALTER TABLE encounters
-  ADD COLUMN modality            TEXT NOT NULL DEFAULT 'in_person' CHECK (modality IN
-                                   ('in_person', 'video', 'audio_only', 'asynchronous')),
+  ADD COLUMN modality            TEXT CHECK (modality IN ('video', 'audio_only',
+                                   'asynchronous')),  -- null: in person
   ADD COLUMN patient_subdivision TEXT,          -- ISO 3166-2 where the patient was, asked at check-in
   ADD COLUMN patient_site        TEXT CHECK (patient_site IN ('home', 'facility', 'other')),
   ADD COLUMN practitioner_subdivision TEXT,     -- where the clinician was
-  ADD COLUMN authorization_id    UUID,          -- practice_authorizations row that allowed it
-  ADD COLUMN telehealth_rule_evaluation_id UUID; -- which payer and date rule decided billability
+  ADD COLUMN practitioner_license_id UUID,      -- the practitioner_licenses row checked at start
+  ADD COLUMN telehealth_rule_evaluation_id UUID; -- the payer and date rule that decided billability
 
-CREATE TABLE telehealth_sessions (       -- the connection, separate from the clinical encounter
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
-  encounter_id    UUID NOT NULL REFERENCES encounters (id),
-  platform        TEXT NOT NULL,          -- the video vendor, under a BAA
-  external_room   TEXT,                   -- the vendor's room or meeting id
-  started_at      TIMESTAMPTZ,
-  ended_at        TIMESTAMPTZ,
-  fell_back_to    TEXT CHECK (fell_back_to IN ('audio_only', 'rescheduled', 'in_person')),
-  participants    JSONB NOT NULL DEFAULT '[]', -- [{"role": "interpreter"}, {"role": "caregiver"}]
-  recording_ref   TEXT                     -- null unless consented; see AI scribes
+CREATE TABLE virtual_visits (            -- each connection, separate from the clinical encounter
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  encounter_id     UUID NOT NULL REFERENCES encounters (id),
+  platform         TEXT NOT NULL,         -- the video vendor, under a BAA
+  external_room    TEXT,                  -- the vendor's room or meeting ID
+  started_at       TIMESTAMPTZ,
+  ended_at         TIMESTAMPTZ,
+  fell_back_to     TEXT CHECK (fell_back_to IN ('audio_only', 'rescheduled', 'in_person')),
+  participants     JSONB NOT NULL DEFAULT '[]', -- [{"role": "interpreter"}, {"role": "caregiver"}]
+  consent_id       UUID REFERENCES consents (id),  -- telehealth consent, where required
+  recording_ref    TEXT                     -- null unless recording was consented
 );
 
-CREATE TABLE practice_authorizations (   -- authority to practice in a jurisdiction
+CREATE TABLE rpm_enrollments (           -- a patient on RPM or RTM with one billing practice
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id        UUID NOT NULL,
-  practitioner_id  UUID NOT NULL REFERENCES practitioners (id),
-  subdivision      TEXT NOT NULL,        -- the state or territory
-  kind             TEXT NOT NULL CHECK (kind IN ('license', 'imlc_license', 'nlc_privilege',
-                     'psypact_apit', 'psypact_tap', 'telehealth_registration')),
-  profession       TEXT NOT NULL,        -- 'md', 'do', 'rn', 'np', 'psychologist'
-  number           TEXT,
-  verified_at      TIMESTAMPTZ,
-  verified_source  TEXT,                 -- the board lookup or compact verification used
-  valid_during     DATERANGE NOT NULL,
-  EXCLUDE USING GIST (practitioner_id WITH =, subdivision WITH =, kind WITH =,
-    valid_during WITH &&)
-);
-
-CREATE TABLE monitoring_enrollments (    -- a patient on RPM or RTM with one billing practice
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id        UUID NOT NULL,
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
   patient_id       UUID NOT NULL REFERENCES patients (id),
   program          TEXT NOT NULL CHECK (program IN ('rpm', 'rtm')),
-  ordering_practitioner_id UUID NOT NULL REFERENCES practitioners (id),
-  device_ref       TEXT NOT NULL,        -- device model and serial; the model's FDA status lives
-                                         -- with Digital Health's device records
+  ordering_role_id UUID NOT NULL REFERENCES practitioner_roles (id),
+  device_id        UUID NOT NULL,         -- devices (Digital Health Apps & Devices)
   consent_id       UUID NOT NULL REFERENCES consents (id),
-  sole_biller_attested BOOLEAN NOT NULL, -- patient says no one else bills monitoring
+  sole_biller_attested BOOLEAN NOT NULL,  -- the patient says no one else bills monitoring
   valid_during     DATERANGE NOT NULL,
   EXCLUDE USING GIST (patient_id WITH =, valid_during WITH &&)  -- one program at a time here
 );
 
-CREATE TABLE monitoring_periods (        -- the two clocks: the device period and the management period
+CREATE TABLE rpm_periods (               -- the two clocks: device periods and management periods
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  enrollment_id     UUID NOT NULL REFERENCES monitoring_enrollments (id),
-  kind              TEXT NOT NULL CHECK (kind IN ('device_30_day', 'management')),
+  enrollment_id     UUID NOT NULL REFERENCES rpm_enrollments (id),
+  kind              TEXT NOT NULL CHECK (kind IN ('device', 'management')),
   period            DATERANGE NOT NULL,
-  days_with_data    INT,                 -- computed from observations at close
-  management_minutes INT,                -- summed from monitoring_time_entries at close
-  interactive_contact BOOLEAN,           -- the qualifying communication happened
-  billed_code       TEXT,                -- '99454', '99445', '99457', '99470', ...
+  days_with_data    INT,                  -- computed from rpm_readings at close
+  management_minutes INT,                 -- summed from rpm_time_entries at close
+  interactive_contact BOOLEAN,            -- the qualifying communication happened
+  billed_code       TEXT,                 -- '99454', '99445', '99457', '99470', ...
   charge_id         UUID REFERENCES charges (id),
   closed_at         TIMESTAMPTZ,
   UNIQUE (enrollment_id, kind, period)
 );
 
-CREATE TABLE monitoring_time_entries (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  period_id       UUID NOT NULL REFERENCES monitoring_periods (id),
-  staff_id        UUID NOT NULL,          -- clinical staff or practitioner
-  employed_by_practice BOOLEAN NOT NULL,  -- the CY2027 proposal turns on this
-  minutes         INT NOT NULL CHECK (minutes > 0),
-  activity        TEXT NOT NULL,
-  communication_id UUID REFERENCES communications (id),  -- the interactive contact, if this was it
-  occurred_at     TIMESTAMPTZ NOT NULL
+CREATE TABLE rpm_readings (              -- which device readings an enrollment counted
+  enrollment_id     UUID NOT NULL REFERENCES rpm_enrollments (id),
+  device_reading_id UUID NOT NULL,        -- device_readings (Digital Health Apps & Devices)
+  observation_id    UUID REFERENCES observations (id),  -- the chart entry, once filed
+  measured_on       DATE NOT NULL,        -- in the patient's zone; drives days with data
+  PRIMARY KEY (enrollment_id, device_reading_id)
 );
 
-ALTER TABLE observations
-  ADD COLUMN device_ref     TEXT,         -- which device produced the reading
-  ADD COLUMN device_time    TIMESTAMPTZ,  -- when measured, not when received
-  ADD COLUMN received_at    TIMESTAMPTZ;
+CREATE TABLE rpm_time_entries (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  period_id        UUID NOT NULL REFERENCES rpm_periods (id),
+  staff_role_id    UUID NOT NULL REFERENCES practitioner_roles (id),
+  employed_by_practice BOOLEAN NOT NULL,  -- the CY2027 proposal turns on this
+  minutes          INT NOT NULL CHECK (minutes > 0),
+  activity         TEXT NOT NULL,
+  communication_id UUID REFERENCES communications (id),  -- the interactive contact, if this was it
+  occurred_at      TIMESTAMPTZ NOT NULL
+);
 ```
 
 Days with data for a device period is a query, not a counter:
 
 ```sql
-SELECT COUNT(DISTINCT (o.device_time AT TIME ZONE p.tz)::date) AS days_with_data
-FROM observations o
-JOIN monitoring_enrollments e ON e.patient_id = o.patient_id
-JOIN patients p ON p.id = e.patient_id      -- tz: the patient's zone for day boundaries
-WHERE e.id = $1
-  AND o.device_ref = e.device_ref
-  AND (o.device_time AT TIME ZONE p.tz)::date <@ $2::daterange;
+SELECT COUNT(DISTINCT r.measured_on) AS days_with_data
+FROM rpm_readings r
+WHERE r.enrollment_id = $1
+  AND r.measured_on <@ $2::daterange;   -- the period being closed
 ```
 
 Design decisions:
 
-- **The session is not the encounter.** A dropped call reconnected twice is three sessions and one visit; a visit that fell back to audio-only is billed differently from one that didn't, and the fallback is a fact of the session.
-- **Locations are encounter facts.** The patient's state and site and the clinician's state are captured at the visit and drive the authorization check, the billing rule and the prescribing rules; the address on the patient record never substitutes.
-- **Authorizations are effective-dated per jurisdiction,** with the verification source, so "was she licensed in Ohio on March 3" is a lookup.
-- **Monitoring is periods, not visits.** Readings land as `observations` with device time; periods close by computing days and summing minutes; one enrollment per patient per program, and the period that billed points at its charge.
+- **The visit is not the connection.** A dropped call reconnected twice is three `virtual_visits` rows and one encounter; a visit that fell back to audio-only is billed differently from one that didn't, and the fallback is a fact of the connection.
+- **Locations are encounter facts.** The patient's state and site and the clinician's state are captured at the visit and drive the license check, the billing rule and the prescribing rules; the address on the patient record never substitutes.
+- **The license check is stored.** The encounter records which `practitioner_licenses` row (a full license, an IMLC-issued license, an NLC multistate privilege or a PSYPACT authority) allowed it, so "was she licensed in Ohio on March 3" is a lookup.
+- **Monitoring is periods, not visits.** Raw readings land as `device_readings` with device time; the enrollment links the ones it counts, files clinically relevant ones as `observations`, and closes periods by counting days and summing minutes. One enrollment per patient per program, and the period that billed points at its charge.
 - **Payer telehealth policy is rules.** Medicare's statutory dates, the CY2026 permanent changes, each commercial payer's and Medicaid program's policy, and state synchronous-visit requirements are rule rows with effective ranges, and the encounter stores the evaluation that decided ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
-- **Events:** `encounter.started`, `telehealth.session_connected`, `telehealth.session_dropped`, `encounter.completed`, `monitoring.period_closed`, sent through the [outbox](/docs/architecture/events#the-transactional-outbox) to billing and to the clinician's worklist.
+- **Events:** `encounter.started`, `virtual_visit.connected`, `virtual_visit.dropped`, `encounter.finished`, `rpm_period.closed`, sent through the [outbox](/docs/architecture/events#the-transactional-outbox) to billing and to the clinician's worklist.
 
 ## Auditing
 
-- **Where everyone was.** For every telehealth encounter, the patient's and the clinician's location, how each was captured, and the authorization checked, because licensure complaints and payer audits both start there.
+- **Where everyone was.** For every telehealth encounter, the patient's and the clinician's location, how each was captured, and the license checked, because licensure complaints and payer audits both start there.
 - **How they connected.** Sessions with platform, start, end and fallback, matched to the modality billed; an audio-only claim with no record that video was offered or declined is the finding.
 - **Which rule allowed the bill.** The telehealth rule evaluation stored on the encounter, including the statutory period in force on the date of service.
 - **Monitoring periods.** Readings by device time, days with data, minutes by staff member with employment status, the qualifying interactive communication and the code billed, reproducible from rows ([Audit Trails](/docs/architecture/audit-trails#what-a-record-holds)).
@@ -250,9 +234,9 @@ Design decisions:
 ## What This Means for the System You Build
 
 - **Record three facts on every visit:** the patient's location, the clinician's location and the modality, captured at the visit, never inferred from the chart.
-- **Check authority to practice at scheduling and at visit start** against per-jurisdiction, effective-dated authorizations that include compact privileges.
+- **Check authority to practice at scheduling and at visit start** against per-jurisdiction, effective-dated licenses that include compact privileges.
 - **Treat Medicare telehealth as a dated rule set** that expires at the end of 2027 unless extended, with the CY2026 permanent changes, the October 2026 clinic coding change and the January 2027 modifiers as rows, and every claim evaluated against its date of service.
-- **Separate sessions from encounters** so drops, reconnections and audio fallbacks are visible and billed correctly.
+- **Separate connections from encounters** so drops, reconnections and audio fallbacks are visible and billed correctly.
 - **Build remote monitoring as two clocks:** 30-day device periods counted from device-timestamped observations, and management time logged per staff member per period with the qualifying contact.
 - **Decide synchronous versus asynchronous per state and service** before an asynchronous protocol prescribes.
 - **Keep advertising tags off anything that reveals health information,** whether or not HIPAA applies, because the FTC's cases are about exactly that.

@@ -91,7 +91,7 @@ The record consequences: the imaging order's status runs through scheduling and 
 
 ## Results Release Under Cures
 
-The 21st Century Cures Act's information blocking rules made immediate release the default. ONC's FAQs, as updated in September 2025, are blunt: delaying release of results "in order to allow an ordering clinician to review the results" would likely be an interference, and electronic health information that "is not available—for any period of time—through the portal" is likely interference too. A blanket delay doesn't qualify for the Preventing Harm exception: "Blanket delays that affect a broad array of routine results do not qualify." The exception requires a risk "determined on an individualized basis in the exercise of professional judgment by a licensed health care professional who has a current or prior clinician-patient relationship with the patient," or one arising from misidentified or erroneous data (45 CFR 171.201). And ONC's FAQ on patient choice says following "an individual patient's" request to delay is likely not interference, as long as the delay is "for no longer than necessary to fulfill each patient's request."
+The 21st Century Cures Act's information blocking rules made immediate release the default. ONC's FAQs, as updated in September 2025, are blunt: delaying release of results "in order to allow an ordering clinician to review the results" would likely be an interference, and so is electronic health information that is not available "for any period of time" through the portal. A blanket delay doesn't qualify for the Preventing Harm exception: "Blanket delays that affect a broad array of routine results do not qualify." The exception requires a risk "determined on an individualized basis in the exercise of professional judgment by a licensed health care professional who has a current or prior clinician-patient relationship with the patient," or one arising from misidentified or erroneous data (45 CFR 171.201). And ONC's FAQ on patient choice says following "an individual patient's" request to delay is likely not interference, as long as the delay is "for no longer than necessary to fulfill each patient's request."
 
 HIPAA sets a different, slower clock for a patient's request for records: a covered entity must act "no later than 30 days after receipt of the request," with one extension (45 CFR 164.524). CLIA has its own patient-access rule since the 2014 rule effective April 7, 2014: a laboratory may give completed test reports directly to a patient or their personal representative on request, once its authentication process identifies the report as the patient's (493.1291(l)). In practice the portal's release rule is information blocking's, because it is the strictest.
 
@@ -108,107 +108,98 @@ Holds are rare by design and visible in reports. An engine whose most common pat
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model):
+The core `orders` row already carries `kind` (lab, imaging, referral), the performer organization, priority and status, and `observations` carries the code, value, unit and status ([The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model)). This chapter adds the identifiers, specimens, reports, critical values and release decisions:
 
 ```sql
 ALTER TABLE orders
-  ADD COLUMN category          TEXT NOT NULL CHECK (category IN ('lab', 'imaging', 'referral',
-                                 'procedure', 'other')),
-  ADD COLUMN placer_number     TEXT,          -- our order number
-  ADD COLUMN filler_number     TEXT,          -- the performer's accession or order number
-  ADD COLUMN performer_org_id  UUID REFERENCES organizations (id),  -- lab, imaging center
-  ADD COLUMN priority          TEXT NOT NULL DEFAULT 'routine' CHECK (priority IN
-                                 ('routine', 'urgent', 'stat')),
-  ADD COLUMN compendium_version TEXT,         -- the lab catalog version the order was built from
-  ADD COLUMN bill_to           TEXT CHECK (bill_to IN ('payer', 'practice', 'patient')),
-  ADD COLUMN ordered_via       TEXT NOT NULL CHECK (ordered_via IN ('interface', 'network',
-                                 'lab_portal', 'paper', 'consumer')),
-  ADD COLUMN status_detail     TEXT;          -- imaging: scheduled, arrived, performed, read
+  ADD COLUMN placer_number      TEXT,          -- our order number
+  ADD COLUMN filler_number      TEXT,          -- the performer's accession or order number
+  ADD COLUMN compendium_version TEXT,          -- the lab catalog version the order was built from
+  ADD COLUMN bill_to            TEXT CHECK (bill_to IN ('payer', 'practice', 'patient')),
+  ADD COLUMN ordered_via        TEXT CHECK (ordered_via IN ('interface', 'network',
+                                  'lab_portal', 'paper', 'consumer')),
+  ADD COLUMN status_detail      TEXT;          -- imaging: scheduled, arrived, performed, read
 
 CREATE TABLE clia_certificates (         -- what a location may test in-house
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
   location_id   UUID NOT NULL REFERENCES locations (id),
   clia_number   TEXT NOT NULL,
-  kind          TEXT NOT NULL CHECK (kind IN ('waiver', 'ppm', 'registration', 'compliance',
+  kind          TEXT NOT NULL CHECK (kind IN ('registration', 'waiver', 'ppm', 'compliance',
                   'accreditation')),
-  valid_during  DATERANGE NOT NULL,
+  valid_during  DATERANGE NOT NULL,          -- certificates run two years
   EXCLUDE USING GIST (location_id WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE specimens (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
-  order_id        UUID NOT NULL REFERENCES orders (id),
-  specimen_type   TEXT NOT NULL,        -- coded
-  source_site     TEXT,
-  collected_at    TIMESTAMPTZ,
-  collected_by    TEXT CHECK (collected_by IN ('practice', 'lab_psc', 'patient_at_home', 'other')),
-  container_label TEXT,                 -- the barcode on the tube or kit
-  received_at     TIMESTAMPTZ,          -- at the lab
-  condition       TEXT                  -- hemolyzed, insufficient: an unacceptable specimen
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  order_id         UUID NOT NULL REFERENCES orders (id),
+  specimen_type    TEXT NOT NULL,        -- coded
+  source_site      TEXT,
+  collected_at     TIMESTAMPTZ,
+  collected_by     TEXT CHECK (collected_by IN ('practice', 'lab_psc', 'patient_at_home',
+                     'other')),
+  container_label  TEXT,                 -- the barcode on the tube or kit
+  received_at      TIMESTAMPTZ,          -- at the lab
+  condition        TEXT                  -- hemolyzed, insufficient: an unacceptable specimen
 );
 
 CREATE TABLE diagnostic_reports (        -- FHIR DiagnosticReport: the lab's or radiologist's report
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
-  order_id           UUID REFERENCES orders (id),   -- null until matched
-  patient_id         UUID REFERENCES patients (id), -- null until matched
-  performer_org_id   UUID NOT NULL REFERENCES organizations (id),
-  performing_lab_clia TEXT,             -- the performing location, required on the report
-  filler_number      TEXT NOT NULL,
-  version            INT NOT NULL DEFAULT 1,
-  status             TEXT NOT NULL CHECK (status IN ('preliminary', 'final', 'corrected',
-                       'amended', 'cancelled')),
-  issued_at          TIMESTAMPTZ NOT NULL,
-  document_id        UUID REFERENCES documents (id), -- the rendered report as received
-  match_status       TEXT NOT NULL DEFAULT 'matched' CHECK (match_status IN ('matched',
-                       'pending_review', 'unmatched')),
-  reviewed_by        UUID REFERENCES practitioners (id),
-  reviewed_at        TIMESTAMPTZ,
-  UNIQUE (tenant_id, performer_org_id, filler_number, version)
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id     UUID NOT NULL REFERENCES organizations (id),
+  order_id            UUID REFERENCES orders (id),   -- null until matched
+  patient_id          UUID REFERENCES patients (id), -- null until matched
+  performer_org_id    UUID NOT NULL REFERENCES organizations (id),
+  performing_lab_clia TEXT,               -- the performing location, required on the report
+  filler_number       TEXT NOT NULL,
+  version             INT NOT NULL DEFAULT 1,
+  status              TEXT NOT NULL CHECK (status IN ('preliminary', 'final', 'corrected',
+                        'amended', 'cancelled')),
+  issued_at           TIMESTAMPTZ NOT NULL,
+  document_id         UUID REFERENCES documents (id), -- the report as received, kind 'lab_report'
+  match_status        TEXT NOT NULL DEFAULT 'matched' CHECK (match_status IN ('matched',
+                        'pending_review', 'unmatched')),
+  reviewed_by         UUID REFERENCES practitioner_roles (id),
+  reviewed_at         TIMESTAMPTZ,
+  UNIQUE (organization_id, performer_org_id, filler_number, version)
 );
 
 ALTER TABLE observations
   ADD COLUMN diagnostic_report_id UUID REFERENCES diagnostic_reports (id),
-  ADD COLUMN loinc_code       TEXT,
-  ADD COLUMN local_code       TEXT,       -- the lab's own code, always kept
-  ADD COLUMN value_quantity   NUMERIC,
-  ADD COLUMN value_unit       TEXT,       -- from the performing lab
-  ADD COLUMN value_text       TEXT,
-  ADD COLUMN reference_range  TEXT,
+  ADD COLUMN local_code       TEXT,       -- the lab's own code, always kept beside LOINC
+  ADD COLUMN reference_range  TEXT,       -- from the performing lab
   ADD COLUMN interpretation   TEXT CHECK (interpretation IN ('normal', 'low', 'high',
                                 'critical_low', 'critical_high', 'abnormal')),
-  ADD COLUMN result_status    TEXT CHECK (result_status IN ('preliminary', 'final',
-                                'corrected', 'cancelled')),
   ADD COLUMN supersedes_id    UUID REFERENCES observations (id);  -- a correction points back
 
 CREATE TABLE critical_value_events (
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id         UUID NOT NULL,
+  organization_id   UUID NOT NULL REFERENCES organizations (id),
   observation_id    UUID NOT NULL REFERENCES observations (id),
   received_via      TEXT NOT NULL CHECK (received_via IN ('phone', 'interface', 'portal')),
   communication_id  UUID REFERENCES communications (id),   -- the lab's call, with read-back
-  assigned_to       UUID NOT NULL REFERENCES practitioners (id),
+  assigned_to       UUID NOT NULL REFERENCES practitioner_roles (id),
   acknowledge_by    TIMESTAMPTZ NOT NULL,                   -- from the practice's policy
   acknowledged_at   TIMESTAMPTZ,
-  escalated_to      UUID REFERENCES practitioners (id),
+  escalated_to      UUID REFERENCES practitioner_roles (id),
   action_taken      TEXT,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE result_release_holds (      -- the exception, never the rule
+CREATE TABLE result_releases (           -- every release decision, immediate or held
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id            UUID NOT NULL,
+  organization_id      UUID NOT NULL REFERENCES organizations (id),
   patient_id           UUID NOT NULL REFERENCES patients (id),
-  diagnostic_report_id UUID REFERENCES diagnostic_reports (id),  -- null: a patient preference
+  diagnostic_report_id UUID REFERENCES diagnostic_reports (id),  -- null: a standing preference
   scope                TEXT,              -- a patient preference's category, e.g. 'pathology'
-  kind                 TEXT NOT NULL CHECK (kind IN ('patient_request', 'individualized_harm',
-                         'data_quality')),
-  requested_by         UUID NOT NULL,     -- the patient, representative or clinician
-  reason               TEXT NOT NULL,
+  decision             TEXT NOT NULL CHECK (decision IN ('released', 'patient_request',
+                         'individualized_harm', 'data_quality')),
+  decided_by           UUID,              -- null for the automatic release; else the person
+  reason               TEXT,
   review_on            DATE,
-  released_at          TIMESTAMPTZ,
-  CHECK (kind = 'patient_request' OR diagnostic_report_id IS NOT NULL)  -- clinicians hold one result
+  released_at          TIMESTAMPTZ,       -- when the patient could see it
+  CHECK (decision = 'released' OR reason IS NOT NULL),
+  CHECK (decision IN ('released', 'patient_request') OR diagnostic_report_id IS NOT NULL)
 );
 ```
 
@@ -218,7 +209,7 @@ Design decisions:
 - **Reports and observations are separate.** The report is what the lab issued, kept as received with its required elements; observations are the coded values for graphs, rules and decision support, each pointing back to its report and, for corrections, to what it superseded.
 - **Unmatched is a status.** A result that can't be matched to an order and patient waits in review rather than filing to a guess.
 - **Critical values are owned events** with a deadline and escalation, linked to the communication that delivered them.
-- **Release is a default with recorded exceptions.** A clinician's hold is per patient and per result by constraint; a patient preference can cover a category; each has a reason and an end. Hold rates are reportable.
+- **Release is a default with recorded exceptions.** Every report gets a `result_releases` row; a clinician's hold is per patient and per result by constraint; a patient preference can cover a category; each hold has a reason and an end. Hold rates are reportable.
 - **CLIA certificates gate in-house tests** per location and date.
 - **Events:** `order.sent`, `specimen.received`, `report.received`, `report.corrected`, `result.critical`, `result.released`, `report.reviewed`, through the [outbox](/docs/architecture/events#the-transactional-outbox) to inboxes, the portal and notifications.
 

@@ -62,7 +62,7 @@ A PDMP is a state database of controlled-substance dispensing, reported by pharm
 
 - **The query is a record.** Who queried, for which patient, which states responded, when, and what was shown. State mandates are checked against these rows, and the record proves the check happened before the signature.
 - **Gate the signature, not the order.** The check belongs between "prescription ready" and "signed," so a mandatory query can block signing for a controlled substance in a state that requires it, with a recorded override reason where the state allows exceptions.
-- **The result is sensitive data.** PDMP data is controlled by state law and integration agreements that often restrict storage and redisclosure; store the fact and time of the check and a reference, and let the integration's terms decide whether the report itself is kept.
+- **The result is sensitive data.** PDMP data is controlled by state law and integration agreements that can restrict storage and redisclosure; store the fact and time of the check and a reference, and let the integration's terms decide whether the report itself is kept.
 
 ## DEA Telemedicine Prescribing Status
 
@@ -112,108 +112,108 @@ For a platform, three things follow. **Product claims are regulated copy:** the 
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model):
+The core `medication_requests` row already holds the prescriber's role, RxNorm and NDC codes, the sig as `dosage_text`, quantity, refills and status ([The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model)). This chapter adds what e-prescribing needs around it:
 
 ```sql
 ALTER TABLE medication_requests
-  ADD COLUMN rxnorm_code       TEXT,
-  ADD COLUMN ndc               TEXT,          -- when a specific product is ordered
-  ADD COLUMN compounded        BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN dea_schedule      TEXT CHECK (dea_schedule IN ('II', 'III', 'IV', 'V')),
-  ADD COLUMN quantity          NUMERIC NOT NULL,
-  ADD COLUMN quantity_unit     TEXT NOT NULL,
-  ADD COLUMN days_supply       INT,
-  ADD COLUMN refills           INT NOT NULL DEFAULT 0,
+  ADD COLUMN compounded           BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN dea_schedule         TEXT CHECK (dea_schedule IN ('II', 'III', 'IV', 'V')),
+  ADD COLUMN quantity_unit        TEXT,
+  ADD COLUMN days_supply          INT,
   ADD COLUMN substitution_allowed BOOLEAN NOT NULL DEFAULT true,
-  ADD COLUMN sig               TEXT NOT NULL,
-  ADD COLUMN pharmacy_id       UUID,          -- pharmacies, below
-  ADD COLUMN encounter_id      UUID REFERENCES encounters (id),
-  ADD COLUMN transmission      TEXT NOT NULL DEFAULT 'electronic' CHECK (transmission IN
-                                 ('electronic', 'print', 'fax', 'phone')),
-  ADD COLUMN status_reason     TEXT,          -- why cancelled, changed or not sent
+  ADD COLUMN pharmacy_id          UUID,          -- pharmacies, below
+  ADD COLUMN transmission         TEXT NOT NULL DEFAULT 'electronic' CHECK (transmission IN
+                                    ('electronic', 'print', 'fax', 'phone')),
+  ADD COLUMN status_reason        TEXT,          -- why cancelled, changed or not sent
+  ADD COLUMN external_ref         TEXT,          -- the embedded vendor's prescription ID
   ADD COLUMN prescribing_rule_evaluation_id UUID;  -- DEA telemedicine and state rules applied
 
 CREATE TABLE pharmacies (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  ncpdp_id        TEXT UNIQUE,              -- the pharmacy's NCPDP provider id
-  npi             TEXT,
-  name            TEXT NOT NULL,
-  kind            TEXT NOT NULL CHECK (kind IN ('retail', 'mail_order', 'specialty',
-                    'long_term_care', 'compounding_503a', 'outsourcing_503b')),
-  address         JSONB NOT NULL,
-  services        TEXT[] NOT NULL DEFAULT '{}',  -- 'epcs', 'cancel', 'change', 'fill_status'
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id     UUID REFERENCES organizations (id),  -- kind 'pharmacy', when known as one
+  ncpdp_id            TEXT UNIQUE,              -- the pharmacy's NCPDP provider ID
+  npi                 CHAR(10),
+  name                TEXT NOT NULL,
+  kind                TEXT NOT NULL CHECK (kind IN ('retail', 'mail_order', 'specialty',
+                        'long_term_care', 'compounding_503a', 'outsourcing_503b')),
+  address_id          UUID,
+  services            TEXT[] NOT NULL DEFAULT '{}',  -- 'epcs', 'cancel', 'change', 'fill_status'
   directory_synced_at TIMESTAMPTZ
 );
 
-CREATE TABLE prescription_messages (     -- every SCRIPT message in or out, as sent
-  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id            UUID NOT NULL,
+ALTER TABLE medication_requests
+  ADD FOREIGN KEY (pharmacy_id) REFERENCES pharmacies (id);
+
+CREATE TABLE erx_messages (              -- every SCRIPT message in or out, as sent
+  id                    UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id       UUID NOT NULL REFERENCES organizations (id),
   medication_request_id UUID REFERENCES medication_requests (id),
-  direction            TEXT NOT NULL CHECK (direction IN ('outbound', 'inbound')),
-  message_type         TEXT NOT NULL CHECK (message_type IN ('new', 'renewal_request',
-                         'renewal_response', 'change_request', 'change_response', 'cancel',
-                         'cancel_response', 'fill_status', 'status', 'error', 'verify')),
-  script_version       TEXT NOT NULL,       -- '2017071', '2023011'
-  network_message_id   TEXT NOT NULL,
-  relates_to_id        TEXT,                -- the message this answers
-  pharmacy_id          UUID REFERENCES pharmacies (id),
-  payload_ref          TEXT NOT NULL,       -- the message bytes in the PHI store
-  status               TEXT NOT NULL CHECK (status IN ('queued', 'sent', 'verified',
-                         'error', 'received', 'processed')),
-  occurred_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE (tenant_id, direction, network_message_id)
+  integration_id        UUID NOT NULL REFERENCES integrations (id),  -- the network or vendor
+  direction             TEXT NOT NULL CHECK (direction IN ('outbound', 'inbound')),
+  message_type          TEXT NOT NULL CHECK (message_type IN ('new', 'renewal_request',
+                          'renewal_response', 'change_request', 'change_response', 'cancel',
+                          'cancel_response', 'fill_status', 'status', 'error', 'verify')),
+  script_version        TEXT NOT NULL,       -- '2017071', '2023011'
+  network_message_id    TEXT NOT NULL,
+  relates_to_id         TEXT,                -- the message this answers
+  pharmacy_id           UUID REFERENCES pharmacies (id),
+  payload_ref           TEXT NOT NULL,       -- the message bytes in the PHI store
+  status                TEXT NOT NULL CHECK (status IN ('queued', 'sent', 'verified',
+                          'error', 'received', 'processed')),
+  occurred_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (integration_id, direction, network_message_id)
 );
 
 CREATE TABLE epcs_enrollments (          -- a prescriber enabled for controlled substances
-  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id            UUID NOT NULL,
-  practitioner_id      UUID NOT NULL REFERENCES practitioners (id),
-  dea_number           TEXT NOT NULL,
-  dea_subdivision      TEXT NOT NULL,       -- DEA registrations are per state
-  schedules            TEXT[] NOT NULL,     -- '{II,III,IV,V}'
-  identity_proofed_by  TEXT NOT NULL,       -- the credential service provider
-  identity_proofed_at  TIMESTAMPTZ NOT NULL,
-  token_kind           TEXT NOT NULL CHECK (token_kind IN ('hard_token', 'soft_token',
-                         'biometric')),
-  access_granted_by    UUID NOT NULL,       -- first access-control administrator
-  access_approved_by   UUID NOT NULL,       -- the second; never the same person
-  valid_during         DATERANGE NOT NULL,
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id     UUID NOT NULL REFERENCES organizations (id),
+  practitioner_id     UUID NOT NULL REFERENCES practitioners (id),
+  dea_number_ref      TEXT NOT NULL,       -- held in the secrets vault
+  dea_subdivision     TEXT NOT NULL,       -- DEA registrations are per state
+  schedules           TEXT[] NOT NULL,     -- '{II,III,IV,V}'
+  identity_proofed_by TEXT NOT NULL,       -- the credential service provider
+  identity_proofed_at TIMESTAMPTZ NOT NULL,
+  token_kind          TEXT NOT NULL CHECK (token_kind IN ('hard_token', 'soft_token',
+                        'biometric')),
+  access_granted_by   UUID NOT NULL,       -- first access-control administrator
+  access_approved_by  UUID NOT NULL,       -- the second; never the same person
+  valid_during        DATERANGE NOT NULL,
   CHECK (access_granted_by <> access_approved_by)
 );
 
-CREATE TABLE epcs_signatures (           -- each two-factor signing event
-  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+CREATE TABLE epcs_signings (             -- each two-factor signing event
+  id                    UUID PRIMARY KEY DEFAULT uuidv7(),
   medication_request_id UUID NOT NULL REFERENCES medication_requests (id),
-  enrollment_id        UUID NOT NULL REFERENCES epcs_enrollments (id),
-  factors              TEXT[] NOT NULL,     -- two of 'knowledge', 'possession', 'biometric'
-  signed_at            TIMESTAMPTZ NOT NULL,
-  signed_payload_hash  TEXT NOT NULL,       -- what was signed, for the audit
+  enrollment_id         UUID NOT NULL REFERENCES epcs_enrollments (id),
+  factors               TEXT[] NOT NULL,   -- two of 'knowledge', 'possession', 'biometric'
+  signed_at             TIMESTAMPTZ NOT NULL,
+  signed_payload_sha256 TEXT NOT NULL,     -- what was signed, for the audit
   CHECK (cardinality(factors) >= 2)
 );
 
 CREATE TABLE pdmp_checks (
-  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id            UUID NOT NULL,
-  patient_id           UUID NOT NULL REFERENCES patients (id),
-  practitioner_id      UUID NOT NULL REFERENCES practitioners (id),
+  id                    UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id       UUID NOT NULL REFERENCES organizations (id),
+  patient_id            UUID NOT NULL REFERENCES patients (id),
+  practitioner_role_id  UUID NOT NULL REFERENCES practitioner_roles (id),
   medication_request_id UUID REFERENCES medication_requests (id),
-  states_queried       TEXT[] NOT NULL,
-  states_responded     TEXT[] NOT NULL,
-  report_ref           TEXT,                -- kept only where the integration terms allow
-  override_reason      TEXT,                -- where the state allows signing without a check
-  checked_at           TIMESTAMPTZ NOT NULL
+  states_queried        TEXT[] NOT NULL,
+  states_responded      TEXT[] NOT NULL,
+  report_ref            TEXT,              -- kept only where the integration terms allow
+  override_reason       TEXT,              -- where the state allows signing without a check
+  checked_at            TIMESTAMPTZ NOT NULL
 );
 ```
 
-The signing gate for a controlled substance, in order: an active `epcs_enrollments` row for the prescriber's DEA registration in the right state and schedule; a `pdmp_checks` row inside the state's window, or an allowed override; a prescribing rule evaluation that passes the DEA telemedicine rule in force today if the encounter was virtual; then the two-factor signature, recorded, then transmission.
+The signing gate for a controlled substance, in order: an active `epcs_enrollments` row for the prescriber's DEA registration in the right state and schedule; a `pdmp_checks` row inside the state's window, or an allowed override; a prescribing rule evaluation that passes the DEA telemedicine rule in force today if the encounter was virtual; then the two-factor signing, recorded, then transmission.
 
 Design decisions:
 
 - **The medication request is the order; messages are its history.** Every SCRIPT message is stored as sent, with its version and network ID, so a change request answers the right prescription and "did the pharmacy get it?" has a verified answer.
 - **Two SCRIPT versions coexist** until the 2017071 adoption expires on January 1, 2028; the version is a property of each message and each trading partner, not a global setting.
-- **EPCS is enrollment plus signature.** Identity proofing, token, two administrators and the signing event are rows; separation of duties is a check constraint, and the audit cycle (every two years or on change) is tracked against the application release that changed controlled-substance code.
+- **EPCS is enrollment plus signing.** Identity proofing, token, two administrators and the signing event are rows; separation of duties is a check constraint, and the audit cycle (every two years or on change) is tracked against the application release that changed controlled-substance code.
 - **Rules decide controlled-substance prescribing,** with the DEA rule, state EPCS and PDMP mandates, and payer requirements as effective-dated rows, and the evaluation stored on the request.
-- **Embedded vendors are crosswalked,** never trusted as the only record.
+- **Embedded vendors are crosswalked** through `external_ref` and the integration, never trusted as the only record.
 - **Events:** `prescription.signed`, `prescription.transmitted`, `prescription.error`, `prescription.change_requested`, `prescription.cancelled`, `prescription.filled`, through the [outbox](/docs/architecture/events#the-transactional-outbox) to clinician worklists and patient notifications.
 
 ## Auditing
