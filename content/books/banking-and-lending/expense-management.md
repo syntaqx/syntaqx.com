@@ -153,7 +153,7 @@ CREATE TABLE expense_receipts (              -- each document as received, never
   business_id         UUID NOT NULL REFERENCES parties (id),
   channel             TEXT NOT NULL CHECK (channel IN ('inbox', 'forward', 'mobile', 'photo_library',
                         'browser', 'merchant_connector', 'sms', 'chat', 'api', 'web')),
-  submitted_by_ref    TEXT NOT NULL,
+  submitted_by_id     UUID NOT NULL REFERENCES parties (id),
   object_key          TEXT NOT NULL,         -- the stored file
   content_sha256      TEXT NOT NULL,         -- identical files, across the whole company
   extracted           JSONB,                 -- merchant, total, date, tax, tip, currency, lines, guests
@@ -195,9 +195,9 @@ CREATE TABLE expense_approvals (             -- one row per step; delegation nam
   subject_id          UUID NOT NULL,
   step                SMALLINT NOT NULL,
   routing_rule_version TEXT NOT NULL,
-  approver_ref        TEXT NOT NULL,
-  on_behalf_of_ref    TEXT,                  -- the delegator, when a delegate decides
-  submitter_ref       TEXT NOT NULL,
+  approver_id         UUID NOT NULL REFERENCES parties (id),
+  on_behalf_of_id     UUID REFERENCES parties (id),  -- the delegator, when a delegate decides
+  submitter_id        UUID NOT NULL REFERENCES parties (id),
   decision            TEXT CHECK (decision IN ('approved', 'rejected', 'returned')),
   automated           BOOLEAN NOT NULL DEFAULT false,  -- auto-approval, only where a workflow allows it
   evaluation_id       UUID REFERENCES expense_policy_evaluations (id),
@@ -205,7 +205,7 @@ CREATE TABLE expense_approvals (             -- one row per step; delegation nam
   decided_at          TIMESTAMPTZ,
   comment             TEXT,
   UNIQUE (subject_kind, subject_id, step),
-  CHECK (approver_ref <> submitter_ref),
+  CHECK (approver_id <> submitter_id),
   CHECK (NOT automated OR evaluation_id IS NOT NULL)
 );
 ```

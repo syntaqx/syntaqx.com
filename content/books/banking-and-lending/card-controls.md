@@ -110,7 +110,7 @@ CREATE TABLE spend_budgets (                 -- an amount over a period that sev
   account_id          UUID NOT NULL REFERENCES credit_lines (account_id),
   parent_id           UUID REFERENCES spend_budgets (id),   -- department > team > project
   name                TEXT NOT NULL,
-  owner_ref           TEXT NOT NULL,         -- the budget owner who approves against it
+  owner_id            UUID NOT NULL REFERENCES parties (id),  -- the budget owner who approves against it
   department_ref      TEXT,                  -- the accounting dimension spend is attributed to
   amount              BIGINT NOT NULL CHECK (amount > 0),
   period              TEXT NOT NULL CHECK (period IN ('weekly', 'monthly', 'quarterly',
@@ -148,13 +148,13 @@ CREATE TABLE card_scopes (                   -- why each card exists and what go
   spend_program_id    UUID REFERENCES spend_programs (id),  -- the exact version it was issued under
   budget_id           UUID REFERENCES spend_budgets (id),
   scope               TEXT NOT NULL CHECK (scope IN ('employee', 'vendor', 'purpose', 'single_use')),
-  holder_ref          TEXT,                  -- the employee, from the directory
+  holder_id           UUID REFERENCES parties (id),  -- the employee, as a party
   vendor_ref          TEXT,                  -- the supplier a vendor card is for
   purpose             TEXT,
   lock_after          TIMESTAMPTZ,
   spend_request_id    UUID,                  -- spend_requests, below
   CHECK (scope <> 'vendor' OR vendor_ref IS NOT NULL),
-  CHECK (scope <> 'employee' OR holder_ref IS NOT NULL)
+  CHECK (scope <> 'employee' OR holder_id IS NOT NULL)
 );
 
 CREATE TABLE spend_program_rules (           -- which compiled rules each program version produced
@@ -167,7 +167,7 @@ CREATE TABLE spend_requests (                -- request, approve, mint
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id          UUID NOT NULL REFERENCES credit_lines (account_id),
   kind                TEXT NOT NULL CHECK (kind IN ('new_card', 'limit_increase', 'budget_increase')),
-  requester_ref       TEXT NOT NULL,
+  requester_id        UUID NOT NULL REFERENCES parties (id),
   spend_program_id    UUID REFERENCES spend_programs (id),
   budget_id           UUID REFERENCES spend_budgets (id),
   amount              BIGINT NOT NULL CHECK (amount > 0),
@@ -175,11 +175,11 @@ CREATE TABLE spend_requests (                -- request, approve, mint
   vendor_ref          TEXT,
   status              TEXT NOT NULL CHECK (status IN ('submitted', 'approved', 'rejected',
                         'fulfilled', 'withdrawn')),
-  decided_by          TEXT,
+  decided_by_id       UUID REFERENCES parties (id),
   decided_at          TIMESTAMPTZ,
   fulfilled_card_id   UUID REFERENCES cards (id),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CHECK (decided_by IS NULL OR decided_by <> requester_ref)   -- nobody approves their own request
+  CHECK (decided_by_id IS NULL OR decided_by_id <> requester_id)   -- nobody approves their own request
 );
 ```
 

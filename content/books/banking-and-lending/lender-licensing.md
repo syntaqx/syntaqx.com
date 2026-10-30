@@ -19,7 +19,7 @@ As of October 2026, from filings and agency decisions:
 | Lender | Route | What the record shows |
 | --- | --- | --- |
 | **Affirm** | Partner banks for most US loans; its own licenses for the rest; a bank planned | Celtic Bank and Lead Bank "generally allow" rates up to 36% and Cross River up to 30%; Affirm also originates "under our lending, servicing, and brokering licenses across various jurisdictions in the U.S., Canada, U.K., and Australia"; its 10-K lists "the plan for the establishment of Affirm Bank" |
-| **Enova** | Its own state licenses plus five bank partner programs; buying a bank | Bank partner programs were 31.6% of 2025 originations and purchases; the Grasshopper Bank acquisition agreed in December 2025 was still described as planned on October 22, 2026 |
+| **Enova** | Its own state licenses plus five bank partner programs; buying a bank | Bank partner programs were 31.6% of 2025 originations and purchases; the Grasshopper Bank acquisition agreed in December 2025 was mutually terminated on October 16, 2026 |
 | **Happen** (formerly LendingClub) | Its own national bank | Completed the acquisition of Radius Bancorp on February 1, 2021, becoming the parent of LendingClub Bank, National Association |
 | **OppFi** | Bank partners only | "Exclusively utilized a bank partner model" in 2025 with FinWise Bank, First Electronic Bank and Capital Community Bank, reaching 40 states; won a California true lender case at trial in 2026, now on appeal |
 | **SoFi** | Its own national bank | Bought Golden Pacific Bancorp with OCC and Federal Reserve approval in January 2022 ([Fintechs That Chartered](/books/banking-and-lending/starting-a-bank#fintechs-that-chartered)) |
@@ -86,7 +86,7 @@ The lenders that became banks did it by buying one or applying for one, and each
 
 - **Happen** completed its acquisition of Radius Bancorp on February 1, 2021, and became the parent of LendingClub Bank, National Association; the bank now funds the loans Happen keeps with deposits and sells the rest ([The Lending Business](/books/banking-and-lending/lending-business#banks-nonbanks-and-partners)).
 - **SoFi** bought Golden Pacific Bancorp in January 2022 and committed $750 million of capital to what became SoFi Bank, N.A. ([Fintechs That Chartered](/books/banking-and-lending/starting-a-bank#fintechs-that-chartered)).
-- **Enova** agreed in December 2025 to buy Grasshopper Bank, giving lower-cost funding and regulatory simplicity as reasons; Enova's October 22, 2026 results still described the acquisition as planned, with transaction costs recorded each quarter of 2026.
+- **Enova** agreed in December 2025 to buy Grasshopper Bank, giving lower-cost funding and regulatory simplicity as reasons; the two mutually terminated the merger agreement on October 16, 2026, with Enova paying Grasshopper $4 million and neither side owing any other fees.
 - **Upstart** received the OCC's conditional approval for a national bank on July 23, 2026, with its FDIC and Federal Reserve applications pending in August ([Fintechs That Chartered](/books/banking-and-lending/starting-a-bank#fintechs-that-chartered)).
 - **Affirm** says in its fiscal 2026 10-K that "in January 2026, we submitted applications to the Nevada Financial Institutions Division and the FDIC" to establish Affirm Bank, a proposed Nevada-chartered industrial loan company; the application "has attracted opposition from industry and advocacy groups," and as of that filing it hadn't been approved.
 
@@ -240,7 +240,8 @@ Record mechanics are in [Audit Trails](/docs/architecture/audit-trails#producing
 
 - [Affirm Holdings: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/0001820953/000162828026059279/afrm-20260630.htm), partner bank rate limits under the FDIC rule, its own lending, servicing and brokering licenses, Affirm Payments' money transmitter licenses, the partnership challenge risk, and the January 2026 Affirm Bank applications and the opposition to them
 - [Enova International: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1529864/000119312526060461/enva-20251231.htm), five bank partner programs at 31.6% of originations and the Grasshopper acquisition and its reasons
-- [Enova International: Third quarter 2026 results (October 22, 2026)](https://www.sec.gov/Archives/edgar/data/1529864/000119312526428941/enva-ex99_1.htm), the planned Grasshopper acquisition and its 2026 transaction costs
+- [Enova International: Third quarter 2026 results (October 22, 2026)](https://www.sec.gov/Archives/edgar/data/1529864/000119312526428941/enva-ex99_1.htm), 2026 transaction costs for the Grasshopper acquisition
+- [Enova International: Form 8-K (October 16, 2026)](https://www.sec.gov/Archives/edgar/data/1529864/000119312526424282/enva-20261016.htm), the mutual termination of the Grasshopper merger agreement and the $4 million payment
 - [LendingClub: Completion of the Radius Bancorp acquisition (Form 8-K exhibit 99.1, February 1, 2021)](https://www.sec.gov/Archives/edgar/data/1409970/000140997021000005/exhibit991asfiledon2121.htm), the completion and LendingClub Bank, National Association
 - [OppFi: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1818502/000181850226000019/opfi-20251231.htm), the exclusive bank partner model, the three banks, 40 states, the two-to-three-day hold and participation rights, and state examinations
 - [Upstart: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1647639/000164763926000027/upst-20251231.htm), more than 100 lending partners and their credit criteria
