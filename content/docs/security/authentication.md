@@ -109,7 +109,7 @@ Most password attacks aren't guesses; they're username and password pairs leaked
 
 ## Step-Up for Sensitive Actions
 
-A session that's hours old shouldn't be enough to change the account's email, add a payout bank account, create an API key or delete data. Require a fresh, strong authentication for those, and record which method was used and when. In OAuth terms, [RFC 9470](https://datatracker.ietf.org/doc/html/rfc9470) standardizes it: the resource answers `insufficient_user_authentication` with the required `acr_values` and `max_age`, and the client sends the user back through sign-in to meet them. Payments has a regulated version of the same idea in [Strong Customer Authentication](/books/payments/strong-customer-authentication).
+A session that's hours old shouldn't be enough to change the account's email, add a payout bank account, create an API key or delete data. Require a fresh, strong authentication for those, and record which method was used and when. In OAuth terms, [RFC 9470](https://datatracker.ietf.org/doc/html/rfc9470) standardizes it: the resource answers `insufficient_user_authentication` with the required `acr_values` and `max_age`, and the client sends the user back through sign-in to meet them. Payments has a regulated version of the same idea in [Strong Customer Authentication](/books/payments/strong-customer-authentication), and online banking has the FFIEC's in [Authentication and the FFIEC Guidance](/books/banking-and-lending/digital-banking#authentication-and-the-ffiec-guidance).
 
 ## Audit Every Auth Event
 

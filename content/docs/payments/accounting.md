@@ -118,7 +118,7 @@ Most businesses buy this instead of building it: billing platforms and dedicated
 
 ## Syncing to the Accounting System
 
-The product is the operational ledger; the general ledger lives in an accounting system (QuickBooks, Xero, Sage, NetSuite and others). The sync between them is where most "the books don't match" tickets start.
+The product is the operational ledger; the general ledger lives in an accounting system (QuickBooks, Xero, Sage, NetSuite and others). The sync between them is where most "the books don't match" tickets start. A spend management platform posting cards, bills and reimbursements into a customer's own chart of accounts is the harder version, in [Accounting Sync & the Close](/books/banking-and-lending/accounting-sync).
 
 ### Summary Journals or Detail
 

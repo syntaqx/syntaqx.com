@@ -34,7 +34,7 @@ There are three ways to move the work, and the patterns literature names each on
 
 Parallel needs a distinction that saves a lot of pain. **Parallel comparison** in the back office, where the new system computes and nothing leaves it, is cheap and catches mapping errors early. **Parallel operation**, where people enter the same work twice or both systems send messages and charges, is expensive, error-prone, and the source of double billing.
 
-My default: phase by cohort, run each cohort through a comparison cycle before it goes live, and let exactly one system act on any customer at any moment. A big bang with a full rehearsal is the right call when the whole business is one cohort anyway, or when the old system disappears on a date you don't control. Pick the calendar too: never cut over a billing system the week of a month-end close, or a scheduling system at the start of a busy season.
+My default: phase by cohort, run each cohort through a comparison cycle before it goes live, and let exactly one system act on any customer at any moment. A big bang with a full rehearsal is the right call when the whole business is one cohort anyway, or when the old system disappears on a date you don't control. The hardest public examples are bank core conversions, in [Core Modernization & Conversions](/books/banking-and-lending/core-modernization#big-bang-or-progressive). Pick the calendar too: never cut over a billing system the week of a month-end close, or a scheduling system at the start of a busy season.
 
 ## Crosswalks and ID Mapping
 

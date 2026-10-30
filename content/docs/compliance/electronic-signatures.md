@@ -19,6 +19,8 @@ ESIGN doesn't force anyone to use electronic records: it doesn't "require any pe
 
 The state-level counterpart is the **Uniform Electronic Transactions Act (UETA)**, a uniform act the [Uniform Law Commission](https://www.uniformlaws.org/committees/community-home?CommunityKey=2c04b76c-2b7d-4399-977e-d5876ba7e034) adopted in 1999. It has been adopted by nearly every state, the District of Columbia and the U.S. Virgin Islands; New York has its own electronic signature law, the Electronic Signatures and Records Act, instead ([DLA Piper: UETA near full adoption](https://www.dlapiper.com/en/insights/publications/2021/07/with-illinoiss-adoption-of-ueta-united-states-near-full-adoption)). UETA contributes the rule every dispute turns on, **attribution**: a signature is attributable to a person "if it was the act of the person," which "may be shown in any manner, including a showing of the efficacy of any security procedure" (California's enactment: [Cal. Civ. Code 1633.9](https://california.public.law/codes/civil_code_section_1633.9)). Its effect is then judged from "the context and surrounding circumstances" at the time.
 
+Mortgage notes add a layer on top, control of a transferable record, which the Banking & Lending volume covers in [Control, E-SIGN and UETA](/books/banking-and-lending/closing-and-enotes#control-e-sign-and-ueta).
+
 That's the engineering brief in one sentence. The law accepts electronic signatures readily; what it can't do is prove who signed and what they saw. Your records do that.
 
 ## Consumer Consent Comes First
