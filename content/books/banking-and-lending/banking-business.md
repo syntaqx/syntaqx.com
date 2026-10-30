@@ -574,9 +574,9 @@ Each later chapter extends a defined part of this spine. The chapters and the ta
 | Mortgages & Home Equity | `loans`, `collateral`, `applications` |
 | Student Loans | `loans`, `payment_schedules` |
 | Buy Now, Pay Later | `loans`, `payment_schedules`, `disclosures` |
-| Small Business Lending | `loans`, `collateral`, `account_parties` |
-| Embedded Lending | `loans`, `loan_payments`, `programs` |
-| Commercial Lending | `loans`, `collateral`, `account_parties` |
+| [Small Business Lending](/books/banking-and-lending/small-business-lending#how-to-build-it) | `accounts` (adds the `purchase` kind), `account_parties`, `collateral`; adds `receivable_purchases`, `reconciliation_requests`, `guarantees`, `ucc_filings`, `sba_guarantees`, `equipment_finance_terms`, `factored_invoices` |
+| [Embedded Lending](/books/banking-and-lending/embedded-lending#how-to-build-it) | `loans`, `loan_payments`, `programs`, `disclosures`; adds `distribution_partners`, `financing_offers`, `withholding_instructions`, `withholdings`, `repayment_floors`, `commercial_disclosure_rules`, `commercial_disclosures`, `provider_registrations` |
+| [Commercial Lending](/books/banking-and-lending/commercial-lending#how-to-build-it) | `loans`, `accounts`, `loan_payments`; adds `credit_facilities`, `facility_tranches`, `facility_lenders`, `lender_distributions`, `financial_spreads`, `covenants`, `covenant_tests`, `borrowing_base_certificates`, `risk_ratings`, `credit_reviews`, `lending_limit_checks` |
 | Loan Origination | `applications`, `parties`, `disclosures` |
 | Credit Data & Scores | `applications`, `credit_decisions`, `party_identities` |
 | Underwriting & Decision Engines | `credit_decisions`, `applications` |
