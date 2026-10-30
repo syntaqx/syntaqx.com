@@ -61,7 +61,7 @@ export function PostTags({
           <Link
             key={tag}
             href={`/tags/${slugifyTag(tag)}`}
-            className={`${chip} hover:border-accent hover:text-accent transition-colors`}
+            className={cn(chip, "hover:border-accent hover:text-accent transition-colors")}
           >
             {tag}
           </Link>

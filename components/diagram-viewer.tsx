@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Maximize, Minus, Plus, X } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 /** lucide's maximize-2, for the button added to each figure. */
 const EXPAND_ICON =
@@ -183,7 +184,7 @@ export function DiagramViewer() {
               <button type="button" onClick={() => zoomTo(fit)} aria-label="Fit to screen" className={control}>
                 <Maximize size={14} />
               </button>
-              <Dialog.Close aria-label="Close" className={`${control} ml-2`}>
+              <Dialog.Close aria-label="Close" className={cn(control, "ml-2")}>
                 <X size={14} />
               </Dialog.Close>
             </div>

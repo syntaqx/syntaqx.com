@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowUpRight, Check, ChevronDown, Copy, FileText, X } from "lucide-react";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/menu";
 import { Tip } from "@/components/tip";
+import { cn } from "@/lib/cn";
 
 const labels = {
   idle: "Copy as Markdown",
@@ -40,9 +41,10 @@ export function MarkdownMenu({ href }: { href: string }) {
           type="button"
           onClick={copy}
           aria-label="Copy as Markdown"
-          className={`flex cursor-pointer items-center px-2 transition-colors hover:text-foreground active:bg-background ${
-            state === "copied" ? "text-accent" : ""
-          }`}
+          className={cn(
+            "flex cursor-pointer items-center px-2 transition-colors hover:text-foreground active:bg-background",
+            state === "copied" && "text-accent",
+          )}
         >
           {state === "copied" ? <Check size={12} aria-hidden /> : state === "failed" ? <X size={12} aria-hidden /> : <Copy size={12} aria-hidden />}
           <span aria-live="polite" className="sr-only">

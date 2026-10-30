@@ -2,6 +2,7 @@ import { useId } from "react";
 import Link from "next/link";
 import { SceneArt } from "@/components/scene-art";
 import type { BookSceneName } from "@/lib/scene/scenes";
+import { cn } from "@/lib/cn";
 
 /**
  * One card shape for every book: a cover, an instrument line, the name and
@@ -25,7 +26,7 @@ export function BookCards({ books }: { books: BookCard[] }) {
               href={book.href}
               className="group flex h-full flex-col border border-border transition-colors hover:border-accent"
             >
-              <SceneArt scene={book.cover} grain={4} label={`${book.name} cover art`} className={`${COVER} border-border`} />
+              <SceneArt scene={book.cover} grain={4} label={`${book.name} cover art`} className={cn(COVER, "border-border")} />
               <CardText book={book} />
             </Link>
           ) : (
@@ -36,7 +37,7 @@ export function BookCards({ books }: { books: BookCard[] }) {
                   grain={4}
                   still
                   label={`${book.name} cover art`}
-                  className={`${COVER} border-dashed border-border opacity-60`}
+                  className={cn(COVER, "border-dashed border-border opacity-60")}
                 />
               ) : (
                 <PlaceholderCover />
@@ -54,15 +55,16 @@ function CardText({ book }: { book: BookCard }) {
   const live = !!book.href;
   return (
     <span className="block p-5">
-      <span className={`inst block ${live ? "text-dim" : "text-dim/70"}`}>{book.eyebrow}</span>
+      <span className={cn("inst block", live ? "text-dim" : "text-dim/70")}>{book.eyebrow}</span>
       <span
-        className={`font-voice mt-2 block text-2xl leading-none font-semibold uppercase transition-colors ${
-          live ? "text-foreground group-hover:text-accent" : "text-dim"
-        }`}
+        className={cn(
+          "font-voice mt-2 block text-2xl leading-none font-semibold uppercase transition-colors",
+          live ? "text-foreground group-hover:text-accent" : "text-dim",
+        )}
       >
         {book.name}
       </span>
-      <span className={`mt-2 min-h-[3lh] text-sm leading-relaxed line-clamp-3 ${live ? "text-dim" : "text-dim/70"}`}>
+      <span className={cn("mt-2 min-h-[3lh] text-sm leading-relaxed line-clamp-3", live ? "text-dim" : "text-dim/70")}>
         {book.summary}
       </span>
     </span>
@@ -83,7 +85,7 @@ function PlaceholderCover() {
     <svg
       viewBox="0 0 160 100"
       aria-hidden
-      className={`${COVER} border-dashed border-border text-accent mask-[radial-gradient(closest-side,black_70%,transparent)]`}
+      className={cn(COVER, "border-dashed border-border text-accent mask-[radial-gradient(closest-side,black_70%,transparent)]")}
     >
       <defs>
         <pattern id={`${id}d`} width="3.2" height="3.2" patternUnits="userSpaceOnUse">

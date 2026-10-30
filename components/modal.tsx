@@ -3,6 +3,7 @@
 import { type ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 /**
  * Generic modal dialog, built on Radix Dialog.
@@ -57,16 +58,15 @@ export function Modal({
             onInteractOutside={(e) => {
               if (!dismissable) e.preventDefault();
             }}
-            className={`pointer-events-auto relative w-full sm:max-w-lg sm:border-b sm:border ${
-              isDanger ? "border-pink/50" : "border-border"
-            } bg-surface shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-full`}
+            className={cn(
+              "pointer-events-auto relative w-full sm:max-w-lg sm:border bg-surface shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-full",
+              isDanger ? "border-pink/50" : "border-border",
+            )}
           >
             <header className="flex items-start justify-between gap-4 border-b border-border/60 px-5 py-4">
               <div className="flex-1 min-w-0">
                 <Dialog.Title
-                  className={`text-base font-semibold ${
-                    isDanger ? "text-pink" : "text-foreground"
-                  }`}
+                  className={cn("text-base font-semibold", isDanger ? "text-pink" : "text-foreground")}
                 >
                   {title}
                 </Dialog.Title>

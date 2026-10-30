@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Heading } from "@/lib/posts";
+import { cn } from "@/lib/cn";
 
 /**
  * The "On this page" rail beside a doc: its h2s, with the one being read
@@ -45,9 +46,10 @@ export function DocsToc({ headings, className = "" }: { headings: Heading[]; cla
               <a
                 href={`#${h.id}`}
                 aria-current={on ? "location" : undefined}
-                className={`-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
-                  on ? "border-accent text-accent" : "border-transparent text-dim hover:text-foreground"
-                }`}
+                className={cn(
+                  "-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors",
+                  on ? "border-accent text-accent" : "border-transparent text-dim hover:text-foreground",
+                )}
               >
                 {h.text}
               </a>

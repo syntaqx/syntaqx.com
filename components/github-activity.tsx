@@ -4,6 +4,7 @@ import {
   type ActivityDayInfo,
 } from "@/components/activity-cell";
 import { OWNER_TZ, vacations } from "@/lib/constants";
+import { cn } from "@/lib/cn";
 
 export interface ContributionDay {
   date: string;
@@ -297,7 +298,7 @@ export function GitHubActivity({
                 {monthGroups.map((group, gi) => (
                   <div
                     key={gi}
-                    className={`flex flex-col shrink-0 ${gi > 0 ? "border-l border-border/50 pl-0.75" : ""}`}
+                    className={cn("flex flex-col shrink-0", gi > 0 && "border-l border-border/50 pl-0.75")}
                   >
                     {/* Month label. A month only one week wide (usually the
                         partial month at the start) can't fit three letters,
@@ -347,20 +348,20 @@ export function GitHubActivity({
           </div>
           <div className="flex items-center gap-1.5">
             <div
-              className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${VACATION_RING}`}
+              className={cn("w-2.5 h-2.5 rounded-xs bg-border/50", VACATION_RING)}
             />
             <span className="inst text-[0.5rem] text-dim">Vacation</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div
-              className={`w-2.5 h-2.5 rounded-xs bg-border/50 ${HOLIDAY_DOT}`}
+              className={cn("w-2.5 h-2.5 rounded-xs bg-border/50", HOLIDAY_DOT)}
             />
             <span className="inst text-[0.5rem] text-dim">US Holiday</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="inst text-[0.5rem] text-dim">Less</span>
             {LEVEL_COLORS.map((color, i) => (
-              <div key={i} className={`w-2.5 h-2.5 rounded-xs ${color}`} />
+              <div key={i} className={cn("w-2.5 h-2.5 rounded-xs", color)} />
             ))}
             <span className="inst text-[0.5rem] text-dim">More</span>
           </div>

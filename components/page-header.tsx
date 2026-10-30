@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { SceneArt } from "@/components/scene-art";
 import type { SceneName } from "@/lib/scene/scenes";
+import { cn } from "@/lib/cn";
 
 interface PageHeaderProps {
   label: string;
@@ -39,7 +40,7 @@ export function PageHeader({
       {scene && (
         <SceneArt
           scene={scene}
-          className={`aspect-square max-w-88 justify-self-center md:justify-self-end ${hideSceneOnMobile ? "max-md:hidden" : ""}`}
+          className={cn("aspect-square max-w-88 justify-self-center md:justify-self-end", hideSceneOnMobile && "max-md:hidden")}
           label={sceneLabel ?? ""}
         />
       )}
