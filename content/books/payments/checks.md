@@ -54,7 +54,7 @@ The bank side is set out in the Federal Financial Institutions Examination Counc
 
 ## When the Money Is Available
 
-**Regulation CC** governs how long a bank may hold deposited checks, and its dollar amounts were adjusted for inflation on July 1, 2025. Your bank applies it to your deposits; you should apply the same thinking to the merchants you credit.
+**Regulation CC** governs how long a bank may hold deposited checks, and its dollar amounts were adjusted for inflation on July 1, 2025. Your bank applies it to your deposits; you should apply the same thinking to the merchants you credit. The bank's side, with the full exception rules, notices and a worked timeline, is in [Funds Availability](/books/banking-and-lending/funds-availability).
 
 - **Next business day:** cash deposited in person, electronic payments, US Treasury checks, on-us checks (drawn on the same bank they're deposited at; the MICR line's "on-us field" is a different use of the word), and in-person deposits of cashier's, certified and government checks and USPS money orders. Deposited remotely, those official checks wait until the second business day.
 - **The first $275** of other check deposits on a day, by the next business day.

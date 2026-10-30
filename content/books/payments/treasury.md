@@ -33,7 +33,7 @@ That second condition is your ledger. If it can't produce, on demand, who owns h
 
 Synapse showed what that looks like. When the banking-as-a-service middleware company went bankrupt in 2024, its partner banks had, as the FDIC put it, "significant difficulties in obtaining, reviewing, and reconciling Synapse's records", and consumers lost access to their money for months. The FDIC responded on October 2, 2024 with a proposed rule for custodial accounts with transactional features: banks would keep records of each beneficial owner, the balance attributable to each, and their ownership category, and reconcile against those records "no less frequently than at the close of business daily". The comment period ran to January 16, 2025. As of October 2026 the Federal Register shows the proposal and its extension, and neither a final rule nor a withdrawal.
 
-Build as if it were final anyway. A ledger that can hand your bank a per-owner balance file every day, summing to the account balance to the cent, is what makes the insurance real, and it's what every sponsor bank will ask for after Synapse whether or not the rule ever lands.
+Build as if it were final anyway. A ledger that can hand your bank a per-owner balance file every day, summing to the account balance to the cent, is what makes the insurance real, and it's what every sponsor bank will ask for after Synapse whether or not the rule ever lands. The ownership categories, the trust rule and how a bank computes each owner's insured amount are in [Deposit Insurance](/books/banking-and-lending/deposit-insurance).
 
 ## Funding the Day
 
