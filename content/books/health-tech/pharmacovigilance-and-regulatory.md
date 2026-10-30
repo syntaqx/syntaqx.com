@@ -58,7 +58,7 @@ The case life cycle every vendor implements:
 
 1. **Intake.** From EDC (trial SAEs), call centers, email, literature searches, partners under safety data exchange agreements, social listening and regulator downloads. Duplicate detection runs first.
 2. **Triage.** Valid case (the four minimum elements)? Serious? Expected against the reference safety information (the investigator's brochure in trials, the label after approval)? This sets the clock.
-3. **Data entry and coding.** Reactions and history coded in MedDRA, products in a drug dictionary; MedDRA is licensed through its maintenance organization. <!-- source-gap: meddra-licensing | missing | MedDRA licensing terms and release cadence from the MSSO | closes with: meddra.org subscription page readable without JavaScript (returned an empty page) | checked: 2026-10-29 -->
+3. **Data entry and coding.** Reactions and history coded in MedDRA, products in a drug dictionary; MedDRA is licensed through its maintenance organization (the MSSO, or the Japanese Maintenance Organization for organizations headquartered in Japan) under a model the ICH MedDRA Steering Committee chose: free to regulatory authorities, non-profits, direct patient care providers and educational institutes, and an annual subscription fee for commercial users, who state their total revenue or turnover to set the rate. A safety system stores the MedDRA version with every coded case, as the schema below does.
 4. **Medical review.** Causality, narrative, follow-up questions to the reporter.
 5. **Reporting rules.** Which regulators, partners, ethics committees and investigators get the case, in which format, by when.
 6. **Submission and acknowledgment.** E2B over the gateway, with the regulator's acknowledgment recorded; follow-up information creates a new version of the same case.
@@ -214,6 +214,7 @@ Design notes:
 **EU and vendors**
 
 - [EMA: EudraVigilance](https://www.ema.europa.eu/en/human-regulatory-overview/research-development/pharmacovigilance-research-development/eudravigilance), the EEA system, E2B(R3) ICSRs, public data at adrreports.eu
+- [MedDRA: Subscription process](https://www.meddra.org/subscription/process), the ICH MedDRA Steering Committee's licensing model, free and commercial subscriptions, revenue-based rates, the Japanese Maintenance Organization
 - [Oracle: Argus Safety documentation](https://docs.oracle.com/en/industries/life-sciences/argus-safety/index.html), case intake, coding, assessment, expedited and periodic reports
 - [ArisGlobal](https://www.arisglobal.com/), LifeSphere safety platform and customer count
 - [Veeva: Vault Safety](https://www.veeva.com/products/vault-safety/), ICSR management, gateway connections and reporting rules
