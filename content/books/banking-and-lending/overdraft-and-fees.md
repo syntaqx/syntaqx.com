@@ -13,20 +13,18 @@ Overdraft is credit that the lending rules mostly don't treat as credit. Regulat
 
 ## How the Platforms Do It
 
-How institutions handle overdrafts, from the CFPB's April 2024 survey of bank policy changes and the institutions' own pages as of October 2026:
+How institutions handle overdrafts, from the policy changes the CFPB's April 2024 Data Spotlight lists for each bank and the institutions' own pages as of October 2026:
 
 | Institution | Overdraft fee | NSF fee | Other features |
 | --- | --- | --- | --- |
 | **Capital One** | None. No-Fee Overdraft may pay checks, electronic payments and recurring card charges; ATM and one-time card transactions only on opt-in | None | Choice of auto-decline, an automatic transfer, or No-Fee Overdraft; eligibility needs deposits of at least $250 in two of the last three calendar months, so new accounts don't qualify |
-| **Citibank** | Eliminated (CFPB survey) | Eliminated | |
-| **Bank of America** | Cut to $10, and no overdraft fees on ATM withdrawals (CFPB survey) | Not listed among the survey's NSF changes | |
-| **JPMorgan Chase** | Grace period to the end of the next day, and a $50 negative-balance cushion (CFPB survey) | Eliminated | |
-| **Chime** (program on The Bancorp Bank and Stride Bank) | None. SpotMe covers card purchases, cash back and ATM withdrawals up to a limit that "starts at $20 and may go up to $200" | No fee for declined transactions | Needs $200 or more in qualifying direct deposits a month; the next deposit repays the negative balance automatically. Doesn't cover bill payments, transfers to other apps, or checks |
+| **Citibank** | Eliminated (CFPB Data Spotlight) | Eliminated | |
+| **Bank of America** | Cut to $10, and no overdraft fees on ATM withdrawals (CFPB Data Spotlight) | Eliminated | |
+| **JPMorgan Chase** | Grace period to the end of the next day, and a $50 negative-balance cushion (CFPB Data Spotlight) | Eliminated | |
+| **Chime** (program on The Bancorp Bank and Stride Bank) | None. SpotMe covers card purchases, cash back and ATM withdrawals up to a limit that "starts at $20 and may go up to $200" | No fee for declined transactions | Needs $200 or more in qualifying direct deposits a month and Chime Plus or Chime Prime status; the next deposit repays the negative balance automatically. Doesn't cover bill payments, transfers to other apps, or checks |
 | **Dave** (ExtraCash on Evolve Bank & Trust) | "5% of each overdraft amount ($5 minimum)" for electronic transfers, per the April 2025 fee schedule | | ExtraCash is its own account, offered by the bank, with the fee charged per overdraft amount |
 
-<!-- source-gap: bofa-nsf-status | missing | whether Bank of America charges NSF fees as of October 2026 (the CFPB's 2024 survey lists its overdraft changes but not an NSF change) | closes with: Bank of America's current deposit fee schedule or overdraft services page opened directly | checked: 2026-10-29 -->
-
-The survey's other names show the range of what banks did in 2022 and 2023: TD Bank, Truist, U.S. Bank, PNC, Wells Fargo, Regions, USAA, M&T and others stopped charging NSF fees; several added next-day grace periods or $50 cushions; PNC and M&T limited overdraft fees to one a day; M&T, BMO Harris and Huntington cut fees to $15 and KeyBank to $20; USAA stopped charging overdraft fees on card and ATM transactions while keeping them on checks and ACH.
+The spotlight's other names show the range of what banks did in 2022 and 2023: TD Bank, Truist, U.S. Bank, PNC, Wells Fargo, Regions, USAA, M&T and others stopped charging NSF fees; several added next-day grace periods or $50 cushions; PNC and M&T limited overdraft fees to one a day; M&T, BMO Harris and Huntington cut fees to $15 and KeyBank to $20; USAA stopped charging overdraft fees on card and ATM transactions while keeping them on checks and ACH.
 
 Three things stand out. **The NSF fee is nearly gone at large banks,** because charging a fee for refusing to pay is the hardest fee to defend. **The surviving overdraft fee is narrower:** cushions, grace periods and daily caps all reduce how often an overdraft becomes a fee, which is a configuration problem as much as a pricing one. **Fintechs replaced the fee with eligibility:** Chime's SpotMe and Capital One's No-Fee Overdraft both pay overdrafts only for customers with steady deposits, so the program's risk model is the deposit history, and Dave prices its version as a percentage rather than a flat fee.
 
@@ -82,7 +80,7 @@ The supervisory record on APSN, as of October 2026:
 
 - **CFPB Circular 2022-06** (October 2022) said such fees can be unfair and explained the double-counting mechanics. It was withdrawn with the other guidance documents on May 12, 2025.
 - **OCC Bulletin 2023-12** (April 26, 2023) on overdraft protection programs flags APSN fees, multiple re-presentment fees, high or no daily fee limits and recurring fees for an uncured negative balance as heightened-risk practices. The OCC page still carries it, with only its references to reputation risk removed as of March 20, 2025.
-- **FDIC FIL-19-2023** (April 26, 2023) is supervisory guidance on charging overdraft fees for APSN transactions. I couldn't confirm whether it is still in force: the FDIC's 2026 rescission of re-presentment guidance doesn't mention it. <!-- source-gap: fdic-fil-19-2023-status | status | whether FDIC FIL-19-2023 (APSN overdraft fee guidance, April 26, 2023) remains in effect as of October 2026 | closes with: the FDIC financial institution letters page for FIL-19-2023, or a 2025-26 FIL rescinding it | checked: 2026-10-29 -->
+- **FDIC FIL-19-2023** (April 26, 2023) is supervisory guidance on charging overdraft fees for APSN transactions. As of October 30, 2026 the FDIC still posts it with no rescission notice, and the FDIC's 2026 rescission of re-presentment guidance (FIL-14-2026, below) names only FIL-32-2023.
 
 The guidance moved; the litigation risk and the arithmetic didn't. My rule: decide a card transaction's overdraft status once, at authorization, against the available balance at that moment, record the decision on the hold, and never assess a fee at settlement for a transaction authorized against a positive balance. Posting order matters for the same reason. Processing the largest debits first maximizes the number of overdrafts, which made it the subject of a generation of class actions, covered in [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances); the posting order a product uses is a disclosed, fixed rule, and a fee decision never depends on an ordering chosen to produce it.
 
@@ -119,7 +117,7 @@ The customer was short $40 once. Under the APSN practice they pay two fees, the 
 
 Change one parameter at a time and the fee changes again:
 
-- **A $50 cushion** (the JPMorgan Chase practice in the CFPB's survey): the account is only $40 negative, so neither item produces a fee.
+- **A $50 cushion** (the JPMorgan Chase practice in the CFPB's Data Spotlight): the account is only $40 negative, so neither item produces a fee.
 - **A next-day grace period:** a deposit of $40 or more before the end of Wednesday cures the shortfall and the Tuesday fee is waived.
 - **The bank decides on the ledger balance** at posting: Tuesday's ledger balance before the ACH is $100, so the $80 debit doesn't overdraw it, and the settlement on Wednesday does, for one $35 fee on the card purchase; that fee needs the card opt-in, which this customer gave.
 - **The 2024 rule's $5 option,** had it survived, for a bank over $10 billion: $5 per item.
@@ -203,16 +201,16 @@ Overdraft programs are examined for unfair and deceptive practices and for Regul
 - [Federal Register: Fees for Instantaneously Declined Transactions; Withdrawal of Proposed Rule (January 14, 2025)](https://www.federalregister.gov/documents/2025/01/14/2024-31385/fees-for-instantaneously-declined-transactions-withdrawal-of-proposed-rule), the 2024 NSF proposal withdrawn
 - [OCC: Bulletin 2023-12, Overdraft Protection Programs: Risk Management Practices](https://occ.gov/news-issuances/bulletins/2023/bulletin-2023-12.html), APSN and re-presentment fees as heightened-risk practices, reputation risk references removed March 20, 2025
 - [FDIC: FIL-14-2026, rescinding supervisory guidance on multiple re-presentment NSF fees](https://www.fdic.gov/news/financial-institution-letters/2026/fdic-rescinds-supervisory-guidance-multiple-re-presentment), April 10, 2026, rescinding FIL-32-2023
-- [CFPB: Data Spotlight, overdraft/NSF revenue in 2023](https://www.consumerfinance.gov/data-research/research-reports/data-spotlight-overdraft-nsf-revenue-in-2023-down-more-than-50-versus-pre-pandemic-levels-saving-consumers-over-6-billion-annually/), $5.83 billion in 2023 against $11.96 billion in 2019, the reporting threshold, and the banks' policy changes
+- [CFPB: Data Spotlight, overdraft/NSF revenue in 2023 (April 24, 2024)](https://www.consumerfinance.gov/data-research/research-reports/data-spotlight-overdraft-nsf-revenue-in-2023-down-more-than-50-versus-pre-pandemic-levels-saving-consumers-over-6-billion-annually/), $5.83 billion in 2023 against $11.96 billion in 2019, the reporting threshold, and the banks' policy changes, including Bank of America's NSF elimination
+- [FDIC: FIL-19-2023, Supervisory Guidance on Charging Overdraft Fees for Authorize Positive, Settle Negative Transactions](https://www.fdic.gov/news/financial-institution-letters/2023/fil23019.html), April 26, 2023, still posted without a rescission notice as of October 30, 2026
 
 **Vendor documentation**
 
 - [Capital One: 360 Checking overdraft options](https://www.capitalone.com/bank/overdraft-options/), auto-decline, automatic transfer and No-Fee Overdraft, opt-in for ATM and one-time card, and the deposit eligibility rule
-- [Chime: SpotMe](https://www.chime.com/spotme/), the $20 to $200 limit, the $200 direct deposit requirement, covered and excluded transactions, and repayment from the next deposit
+- [Chime: SpotMe](https://www.chime.com/spotme/), the $20 to $200 limit, the $200 direct deposit and Chime Plus or Prime requirements, covered and excluded transactions, and repayment from the next deposit
 - [Dave: ExtraCash account fee schedule](https://dave.com/extra-cash/fees/12), the 5% overdraft fee with a $5 minimum, Evolve Bank & Trust, effective April 22, 2025
 
 **In practice**
 
 - [ICBA: FDIC rescinds guidance update on re-presentment fees](https://independentbanker.org/w/fdic-rescinds-guidance-update-on-re-presentment-fees), the April 2026 rescission and its reasoning
-- [Jones Walker: Compliance update, May 2023](https://joneswalker.com/en/insights/compliance-update-insights-and-highlights-may-2023.html), FDIC FIL-19-2023 on APSN overdraft fees, issued April 26, 2023
 - [Consumer Finance Monitor: Trump signs resolution nullifying CFPB overdraft rule](https://www.consumerfinancemonitor.com/2025/05/12/trump-signs-resolution-nullifying-cfpb-overdraft-rule/), the signing
