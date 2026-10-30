@@ -1,6 +1,6 @@
 +++
 title = "The EU"
-description = "Health software in the EU: GDPR Article 9, the European Health Data Space timeline, MDR software rules and EUDAMED, the AI Act for medical AI, and national rules."
+description = "Health software in the EU: GDPR Article 9, the European Health Data Space timeline, MDR software rules and EUDAMED, the AI Act and national rules."
 category = "Health Tech Industry"
 order = 1959
 part = "Beyond the US"
@@ -80,7 +80,7 @@ Wellness and administrative software (scheduling, billing, general fitness track
 
 The AI Act (Regulation (EU) 2024/1689) entered into force on August 1, 2024; prohibitions and AI literacy obligations applied from February 2, 2025, general-purpose AI obligations from August 2, 2025, and general application from August 2, 2026. AI that is a medical device requiring third-party conformity assessment under MDR or IVDR is a high-risk system through the Act's product-safety annex.
 
-The dates for high-risk systems moved. The AI omnibus, adopted by the Commission on November 19, 2025 and politically agreed on May 7, 2026, entered into force on July 27, 2026: high-risk rules for the Annex III use cases now apply from December 2, 2027, and for AI embedded in regulated products under Annex I (which includes medical devices) from August 2, 2028. A medical AI manufacturer therefore plans for one conformity assessment covering both MDR and the AI Act's high-risk requirements (risk management, data governance, logging, transparency, human oversight, accuracy and robustness) by August 2028, using MDCG 2025-6 for how they interact. Patient-facing chatbots that are not devices still owe transparency to users that they are talking to an AI; the playbook's [The Law, at a Pointer Level](/docs/architecture/ai-agents#the-law-at-a-pointer-level) summarizes. AI in Health Tech owns the cross-jurisdiction comparison.
+The dates for high-risk systems moved. The AI omnibus, adopted by the Commission on November 19, 2025 and politically agreed on May 7, 2026, entered into force on July 27, 2026: high-risk rules for the Annex III use cases now apply from December 2, 2027, and for AI embedded in regulated products under Annex I (which includes medical devices) from August 2, 2028. A medical AI manufacturer therefore plans for one conformity assessment covering both MDR and the AI Act's high-risk requirements (risk management, data governance, logging, transparency, human oversight, accuracy and robustness) by August 2028, using MDCG 2025-6 for how they interact. Patient-facing chatbots that are not devices still owe transparency to users that they are talking to an AI; the playbook's [The Law, at a Pointer Level](/docs/architecture/ai-agents#the-law-at-a-pointer-level) summarizes. [AI in Health Tech](/books/health-tech/ai-in-health-tech) owns the cross-jurisdiction comparison.
 
 ## Adjacent EU Laws
 

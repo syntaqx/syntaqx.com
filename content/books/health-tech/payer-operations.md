@@ -9,7 +9,7 @@ tags = ["health-tech", "payers", "adjudication", "utilization-management", "inte
 
 Every claim a practice sends ends up in a payer's core administrative processing system, a claims engine that has to answer, for one line on one date of service, five questions in order: is this person covered, is this provider in the network, is this service covered under this plan, what is it worth under the contract, and how much of it does the member owe given everything else they've had this year. Most claims are answered with no person looking; the rest pend for an examiner, a nurse or a fraud analyst. Around the engine sit the other payer operations: enrollment files from employers and governments, utilization management that decides on requests before care, member services, grievances and appeals, provider services, payment integrity, and since 2021 a growing list of federally required APIs and public price files.
 
-This chapter is the payer's view of operations the Revenue Cycle part sees from the practice: the practice's claim is the payer's input, the payer's adjudication is the practice's remittance, and the payer's utilization review is the practice's prior authorization. Claims, Remittance & Posting, Denials, Appeals & Claim Status and Prior Authorization cover the provider workflow; this chapter covers what the payer must do and record. The kinds of payer and plan design are [Payers & Plans](/books/health-tech/payers-and-plans); the network data feeding adjudication is [Credentialing, Enrollment & Provider Data](/books/health-tech/credentialing-and-enrollment); pharmacy claims run through a PBM in [Pharmacy Benefits & PBMs](/books/health-tech/pharmacy-benefits).
+This chapter is the payer's view of operations the [Revenue Cycle](/books/health-tech/revenue-cycle) part sees from the practice: the practice's claim is the payer's input, the payer's adjudication is the practice's remittance, and the payer's utilization review is the practice's prior authorization. [Claims](/books/health-tech/claims), [Remittance & Posting](/books/health-tech/remittance-and-payment-posting), [Denials, Appeals & Claim Status](/books/health-tech/denials-and-appeals) and [Prior Authorization](/books/health-tech/prior-authorization) cover the provider workflow; this chapter covers what the payer must do and record. The kinds of payer and plan design are [Payers & Plans](/books/health-tech/payers-and-plans); the network data feeding adjudication is [Credentialing, Enrollment & Provider Data](/books/health-tech/credentialing-and-enrollment); pharmacy claims run through a PBM in [Pharmacy Benefits & PBMs](/books/health-tech/pharmacy-benefits).
 
 ## How the Platforms Do It
 
@@ -40,7 +40,7 @@ A payer learns who it covers from enrollment, not from claims:
 
 Membership is retroactive by nature. An employer reports a termination dated two months ago; a Medicaid member's eligibility is redetermined backward; a newborn is added from the birth date. Every retroactive change can make paid claims unpayable (and recouped from the provider) or denied claims payable (and reprocessed), so enrollment is append-only history with effective ranges, never a current-state flag.
 
-Member ID cards come from enrollment, and the member ID on the card is the key the practice's eligibility check and claim carry back. Eligibility & Benefits covers the 270/271 from the practice's side; the payer answers it from the same membership and `plan_benefits` data the claims engine uses.
+Member ID cards come from enrollment, and the member ID on the card is the key the practice's eligibility check and claim carry back. [Eligibility & Benefits](/books/health-tech/eligibility-and-benefits) covers the 270/271 from the practice's side; the payer answers it from the same membership and `plan_benefits` data the claims engine uses.
 
 ## Claims Adjudication
 
@@ -71,7 +71,7 @@ My rule: accumulators are a ledger of entries per claim line, and the running to
 
 ## Utilization Management
 
-Utilization management is the payer deciding whether care is medically necessary and covered before or after it happens: prior authorization (pre-service), concurrent review (during an inpatient stay) and retrospective review. The provider's half of prior authorization (the 278, Da Vinci, ePA in pharmacy, gold carding) is Prior Authorization; the payer's half is a clinical review operation with its own rules.
+Utilization management is the payer deciding whether care is medically necessary and covered before or after it happens: prior authorization (pre-service), concurrent review (during an inpatient stay) and retrospective review. The provider's half of prior authorization (the 278, Da Vinci, ePA in pharmacy, gold carding) is [Prior Authorization](/books/health-tech/prior-authorization); the payer's half is a clinical review operation with its own rules.
 
 **The review.** A request arrives by portal, fax, phone, 278 or FHIR API; intake checks eligibility and whether the service needs authorization at all; a nurse reviewer applies medical necessity criteria (commercial criteria sets such as InterQual or MCG, or the payer's own); approvals can be made by nurses, but a denial for medical necessity generally goes to a physician or appropriate clinical reviewer; the decision goes back with a reason and appeal rights.
 
@@ -81,14 +81,14 @@ Utilization management is the payer deciding whether care is medically necessary
 
 **Drugs next.** On April 14, 2026, CMS proposed extending the electronic prior authorization requirements to drugs for the same payers, with FHIR implementation guides and API reporting; as of October 2026 it is a proposed rule.
 
-**State laws.** Many states regulate prior authorization for fully insured plans (decision deadlines, gold carding, reviewer qualifications, limits on AI-only denials); Prior Authorization covers them. They don't reach self-funded ERISA plans, which is why a rules engine needs `plans.funding` ([Payers & Plans](/books/health-tech/payers-and-plans#how-to-build-it)).
+**State laws.** Many states regulate prior authorization for fully insured plans (decision deadlines, gold carding, reviewer qualifications, limits on AI-only denials); [Industry Commitments and Gold Carding](/books/health-tech/prior-authorization#industry-commitments-and-gold-carding) covers them. They don't reach self-funded ERISA plans, which is why a rules engine needs `plans.funding` ([Payers & Plans](/books/health-tech/payers-and-plans#how-to-build-it)).
 
 ## Member Services, Grievances and Appeals
 
 Member services answers calls and messages about coverage, claims, ID cards and network status; under the No Surprises Act a network status question must be answered in writing within 1 business day ([Provider Directories](/books/health-tech/credentialing-and-enrollment#provider-directories)). Two kinds of complaint have separate legal tracks:
 
 - **A grievance** is a complaint about service or quality (a rude call, a long wait).
-- **An appeal** asks the plan to reverse an adverse benefit determination (a denied claim or authorization). ERISA plans decide appeals on the clocks above, with full and fair review; ACA rules add external review by an independent reviewer for non-grandfathered plans; Medicare Advantage has its own levels, from plan reconsideration to an independent review entity and beyond, which Denials, Appeals & Claim Status covers from the provider's side.
+- **An appeal** asks the plan to reverse an adverse benefit determination (a denied claim or authorization). ERISA plans decide appeals on the clocks above, with full and fair review; ACA rules add external review by an independent reviewer for non-grandfathered plans; Medicare Advantage has its own levels, from plan reconsideration to an independent review entity and beyond, which [Denials, Appeals & Claim Status](/books/health-tech/denials-and-appeals) covers from the provider's side.
 
 Every appeal file has to be reproducible: the claim as adjudicated, the benefits and criteria used, the clinical records reviewed, who decided and when, and every notice sent.
 
@@ -104,7 +104,7 @@ CMS rules have made the payer a FHIR API publisher. As of October 2026:
 | **Payer-to-Payer** | CMS-0057-F | The same impacted payers | Claims, encounter, USCDI and prior authorization data within five years, when a member opts in, from previous to new payer | January 1, 2027 (the 2020 rule's earlier payer-to-payer exchange began January 1, 2022) |
 | **Prior Authorization** | CMS-0057-F | The same impacted payers | Covered items and services, documentation requirements, requests and responses with approval, denial reason or request for information | January 1, 2027 |
 
-Two implementation consequences. First, **attribution** becomes a data product: the Provider Access API needs a list of which providers have a treatment relationship with which members, kept current and honoring opt-outs. Second, **HIPAA and FHIR coexist**: HHS said it will use enforcement discretion so a payer with an all-FHIR Prior Authorization API that doesn't use the X12 278 is not penalized under HIPAA administrative simplification, while X12-only transactions remain allowed. The FHIR profiles and app authorization are the subject of FHIR and SMART on FHIR & App Platforms.
+Two implementation consequences. First, **attribution** becomes a data product: the Provider Access API needs a list of which providers have a treatment relationship with which members, kept current and honoring opt-outs. Second, **HIPAA and FHIR coexist**: HHS said it will use enforcement discretion so a payer with an all-FHIR Prior Authorization API that doesn't use the X12 278 is not penalized under HIPAA administrative simplification, while X12-only transactions remain allowed. The FHIR profiles and app authorization are the subject of [FHIR](/books/health-tech/fhir) and [SMART on FHIR & App Platforms](/books/health-tech/smart-on-fhir).
 
 ## Transparency in Coverage Files
 
@@ -112,7 +112,7 @@ Since July 1, 2022, most group health plans and issuers must post "machine-reada
 
 A new Transparency in Coverage final rule was published October 6, 2026 and takes effect December 7, 2026. It adds data elements (product type, provider network name and identifier) and contextual files, changes the aggregation level and reduces the reporting cadence for the in-network and out-of-network files, lengthens the out-of-network reporting period and lowers its claims threshold, improves findability of every file "including the prescription drug file" with a text file and footer links, and requires pricing information to be available by phone. CMS's page says the "Price Transparency" or "Transparency in Coverage" footer link becomes required starting October 1, 2027.
 
-For a payer, the TiC pipeline is a monthly batch over contracts and claims that produces terabytes of JSON; for everyone else, the files are a data source (rate benchmarking, network analysis, the hospital-side files compared in Patient Statements, Estimates & Collections). For a practice, the published rates are its own contracts made public.
+For a payer, the TiC pipeline is a monthly batch over contracts and claims that produces terabytes of JSON; for everyone else, the files are a data source (rate benchmarking, network analysis, the hospital-side files compared in [Patient Statements, Estimates & Collections](/books/health-tech/patient-financial-experience)). For a practice, the published rates are its own contracts made public.
 
 ## Fraud, Waste and Abuse
 
@@ -123,7 +123,7 @@ Payers run special investigation units and payment integrity programs because a 
 - **Exclusion screening**: payments for items or services furnished, ordered or prescribed by a party on the OIG's List of Excluded Individuals/Entities are not payable by federal health care programs, and contracting with an excluded party exposes the plan to penalties, so payers screen providers against the LEIE and state lists continuously.
 - **Program integrity duties** for Medicare Advantage and Medicaid plans, written into CMS rules and state contracts, including reporting and compliance programs.
 
-The provider's half (upcoding enforcement, the False Claims Act, compliance programs) is Coding, Documentation & Compliance.
+The provider's half (upcoding enforcement, the False Claims Act, compliance programs) is [Coding, Documentation & Compliance](/books/health-tech/coding-and-documentation).
 
 ## How to Build It
 

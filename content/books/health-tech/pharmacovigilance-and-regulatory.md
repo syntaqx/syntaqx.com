@@ -1,6 +1,6 @@
 +++
 title = "Pharmacovigilance & Regulatory Submissions"
-nav_title = "Pharmacovigilance & Submissions"
+nav_title = "Safety & Submissions"
 description = "Drug safety and filings: adverse event clocks, MedWatch and FDA AEMS, E2B(R3), safety databases, eCTD v4.0 and ESG NextGen, REMS and real-world evidence."
 category = "Health Tech Industry"
 order = 1956
@@ -84,13 +84,13 @@ The study data inside the clinical module is CDISC ([Data Standards](/books/heal
 
 **Structured product labeling.** SPL is "a document markup standard approved by Health Level Seven (HL7)" used for labeling, establishment registration and drug listing, and for REMS documents.
 
-**NDC.** The National Drug Code is a three-segment number identifying labeler, product and package; FDA's NDC Directory is built from SPL listing files and updated daily. A final rule "adopts a uniform, 12-digit format for the national drug code (NDC)" that "takes effect March 7, 2033," so every system storing NDCs (pharmacy claims, formularies, eRx, inventory) has a format migration ahead; Terminologies & Code Sets covers NDC normalization.
+**NDC.** The National Drug Code is a three-segment number identifying labeler, product and package; FDA's NDC Directory is built from SPL listing files and updated daily. A final rule "adopts a uniform, 12-digit format for the national drug code (NDC)" that "takes effect March 7, 2033," so every system storing NDCs (pharmacy claims, formularies, eRx, inventory) has a format migration ahead; [Terminologies & Code Sets](/books/health-tech/terminology-and-coding) covers NDC normalization.
 
 ## Real-World Evidence
 
 FDA defines real-world data as "data relating to patient health status and/or the delivery of health care" and real-world evidence as "the clinical evidence about the usage and potential benefits or risks of a medical product" derived from it; the 21st Century Cures Act "was designed to accelerate medical product development," and FDA "created a Framework in 2018" for using RWE in regulatory decisions. FDA's Sentinel Initiative, launched in May 2008 in response to FDAAA, with the full system launched in February 2016, is "the largest multisite distributed database in the world dedicated to medical product safety," querying data that stays at partner organizations.
 
-For health tech, RWE is where the care platforms of this volume meet pharma: EHR and claims data, de-identified or under data use agreements, linked by tokens, become the evidence. The privacy machinery is De-identification, Research & Data Use; the data provenance machinery (where each value came from, under what terms) has to be built in from the start, because a regulator assessing RWE asks the same attributability questions as for trial data.
+For health tech, RWE is where the care platforms of this volume meet pharma: EHR and claims data, de-identified or under data use agreements, linked by tokens, become the evidence. The privacy machinery is [De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use); the data provenance machinery (where each value came from, under what terms) has to be built in from the start, because a regulator assessing RWE asks the same attributability questions as for trial data.
 
 ## How to Build It
 

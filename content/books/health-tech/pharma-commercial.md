@@ -1,7 +1,7 @@
 +++
 title = "Pharma Commercial & Patient Support"
 nav_title = "Pharma Commercial"
-description = "How drugs are sold: HCP CRM and reference data, PDMA sample rules, Open Payments, hub services and copay cards under the Anti-Kickback Statute, and DTC ad rules."
+description = "How drugs are sold: HCP CRM and reference data, PDMA sample rules, Open Payments, hub services, copay cards under the Anti-Kickback Statute, DTC ad rules."
 category = "Health Tech Industry"
 order = 1957
 part = "Pharma and Clinical Trials"
@@ -10,7 +10,7 @@ tags = ["health-tech", "pharma", "crm", "open-payments", "anti-kickback", "patie
 
 A pharmaceutical company sells to people who don't pay and doesn't sell to the people who take the drug. Its sales representatives call on physicians, nurse practitioners and pharmacists, who prescribe; payers and PBMs decide coverage; the patient, often paying through a copay card the manufacturer funds, receives the drug from a pharmacy the manufacturer may never deal with directly. Every interaction in that chain is regulated because money and influence flow through it: what a representative may say is the approved label, what they may give is limited and reported publicly, free samples are tracked unit by unit, and help given to patients (copay support, nurse educators, help with prior authorization) can be a kickback when a federal program pays for the drug. The software that runs commercial pharma is CRM with an unusually strict compliance layer, a reference database of every prescriber in the country, a transparency reporting pipeline, and patient support "hubs" that look like a payer's call center pointed the other way.
 
-This chapter covers HCP CRM and reference data, samples under the Prescription Drug Marketing Act, Open Payments, hub services, copay cards and patient assistance under the Anti-Kickback Statute, speaker programs, and direct-to-consumer advertising rules. Pharmacy benefits and the payer side of copay accumulators are [Pharmacy Benefits & PBMs](/books/health-tech/pharmacy-benefits#copay-assistance-and-accumulators); adverse events that support programs must forward are [Pharmacovigilance & Regulatory Submissions](/books/health-tech/pharmacovigilance-and-regulatory); the provider side of the Anti-Kickback Statute and Stark is Coding, Documentation & Compliance. It extends `practitioners` and `organizations` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model).
+This chapter covers HCP CRM and reference data, samples under the Prescription Drug Marketing Act, Open Payments, hub services, copay cards and patient assistance under the Anti-Kickback Statute, speaker programs, and direct-to-consumer advertising rules. Pharmacy benefits and the payer side of copay accumulators are [Pharmacy Benefits & PBMs](/books/health-tech/pharmacy-benefits#copay-assistance-and-accumulators); adverse events that support programs must forward are [Pharmacovigilance & Regulatory Submissions](/books/health-tech/pharmacovigilance-and-regulatory); the provider side of the Anti-Kickback Statute and Stark is [Coding, Documentation & Compliance](/books/health-tech/coding-and-documentation). It extends `practitioners` and `organizations` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model).
 
 ## How the Platforms Do It
 
@@ -24,7 +24,7 @@ As of October 2026, from filings and vendor pages:
 | **AssistRx** | Hub and access services | "Streamline prescription fulfillment. Speed access to therapy," with electronic prior authorization |
 | **ConnectiveRx** | Affordability and hub services | "End-to-end patient affordability programs" and "Hub services and patient support" from a "single-partner solution" |
 
-The CRM market changed hands in 2025. Veeva's 10-K: "Our agreement with Salesforce expired on September 1, 2025"; during "the wind-down period from September 1, 2025 to September 1, 2030" Veeva "may not sell applications that utilize the Salesforce platform to new customers," existing customers are capped at "150% of the seats in use by each such customer as of September 1, 2025," and Veeva CRM "will be supported until December 31, 2029" while customers migrate to Vault CRM. Salesforce, meanwhile, sells its own Life Sciences Cloud. Every large pharma company is running or planning a CRM migration through the end of the decade, which makes data portability and audit history across CRMs a live problem.
+The CRM market changed hands in 2025. Veeva's 10-K: "Our agreement with Salesforce expired on September 1, 2025"; during "the wind-down period from September 1, 2025 to September 1, 2030" Veeva "may not sell applications that utilize the Salesforce platform to new customers," existing customers are capped at "150% of the seats in use by each such customer as of September 1, 2025," and Veeva CRM "will be supported until December 31, 2029" while customers migrate to Vault CRM. Salesforce, meanwhile, sells its own Life Sciences Cloud. Every Veeva CRM customer faces a migration before support ends, which makes data portability and audit history across CRMs a live problem through the end of the decade.
 
 ## CRM and HCP Reference Data
 
@@ -69,7 +69,7 @@ A hub is a manufacturer-funded service that takes a new prescription for a speci
 
 Three rules shape them:
 
-- **They handle PHI with authorization.** The patient signs an authorization allowing the hub (and often the manufacturer) to receive their information for the program; scope and revocation are tracked like any HIPAA authorization (Consent, Authorization & Proxies).
+- **They handle PHI with authorization.** The patient signs an authorization allowing the hub (and often the manufacturer) to receive their information for the program; scope and revocation are tracked like any HIPAA authorization ([Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization)).
 - **They are adverse event intake.** Any report of harm a hub hears starts the manufacturer's safety clock ([Day Zero](/books/health-tech/pharmacovigilance-and-regulatory#safety-reporting-clocks)).
 - **They must not become inducements.** Free services to prescribers that save the practice money (doing the practice's prior authorization paperwork as a favor tied to prescribing) and free benefits to patients can implicate the Anti-Kickback Statute; hub designs follow OIG advisory opinions and keep sales and hub data separated.
 
