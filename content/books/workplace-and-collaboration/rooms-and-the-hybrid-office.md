@@ -19,7 +19,8 @@ As of October 2026:
 | Product | What it does | Key rules from public documentation |
 | --- | --- | --- |
 | **Microsoft Teams Rooms** | Room systems on Windows, Android or Surface Hub, with Teams Panels outside the door | Basic license free for up to 25 rooms; Pro adds management, Intune, Entra ID P1, Defender, speaker identification, people counting, dual screens; joins Zoom, Webex and Meet as a guest |
-| **Zoom Rooms** | "A software-based conference room system" for meetings, wireless sharing, whiteboarding and room controls | Part of Zoom Workplace |
+| **Zoom Rooms** | "A software-based conference room system" for meetings, wireless sharing, whiteboarding and room controls | $49 per room per month ($41.58 billed annually): up to 3 displays and 10 room controllers, 1,000-participant meetings, one-tap join to third-party meetings, Microsoft 365, Google and Exchange calendars, appliance or open hardware |
+| **Zoom Workspace Reservation** | Desk and space booking in the Zoom Workplace app | $1.50 per space per month ($1.25 billed annually): booking from Google Calendar or Outlook, check-in alerts, QR-code check-in, release when done |
 | **Exchange Online room mailboxes** | The calendar behind Microsoft rooms | Auto-accept by default, 180-day booking window, 24-hour maximum duration, delegates, room lists |
 | **Google Calendar resources** | The calendar behind Google rooms | Up to 10,000 buildings and 10,000 resources per company; rooms released when all but one invitee declines |
 | **Microsoft Places** | Buildings, floors, room and desk booking, check-in and auto-release, work location, building analytics | Auto-release after 10 minutes by default; workplace check-in off by default; badge data kept 28 days, aggregates 90; counts under 10 hidden |
@@ -61,7 +62,7 @@ A room bought for one platform will be invited to meetings on another. Teams Roo
 | Send content over HDMI or content camera | Yes | No |
 | Requires | A paid SIP dialing plan and Teams Rooms Pro | Direct internet access; Basic or Pro |
 
-Getting the join button to appear exposes how fragile cross-vendor join is. For Teams meetings the room reads hidden properties in the invite, but for third-party meetings it has to read the invite body, so the room mailbox must keep it and accept externally created invites (`Set-CalendarProcessing -ProcessExternalMeetingMessages $True -DeleteComments $False`). Security products that rewrite URLs in email break the link the room needs to recognize, so the customer's admin adds the other vendors' meeting domains to a don't-rewrite list. And because Direct Guest Join connects straight to the other platform's website, firewalls and web filters must let the room reach it without authentication.
+Getting the join button to appear exposes how fragile cross-vendor join is. For Teams meetings the room reads hidden properties in the invite, but for third-party meetings it has to read the invite body, so the room mailbox must keep it and accept externally created invites (`Set-CalendarProcessing -ProcessExternalMeetingMessages $True -DeleteComments $False`). Microsoft's own Safe Links needs no change, but third-party security products that rewrite URLs in email break the link the room needs to recognize, so the customer's admin adds the other vendors' meeting domains (Microsoft lists `*.webex.com`, `*.zoom.us`, `*.zoom.com`, `*.zoomgov.com` and `*.meet.google.com` as examples) to the product's rewrite exception list. And because Direct Guest Join connects straight to the other platform's website, firewalls and web filters must let the room reach it without authentication. A room with SIP dialing enabled uses SIP when it can and falls back to Direct Guest Join from the calendar button when an invite has no SIP dial string; join by ID has no such fallback and fails.
 
 The opposite direction (other vendors' rooms into Teams) is Cloud Video Interop and SIP Guest Join, covered in [Interop With Rooms and Other Platforms](/books/workplace-and-collaboration/meetings-and-video#interop-with-rooms-and-other-platforms). Every one of these paths is a negotiated degradation: the guest room gets fewer features than a native participant, and the customer's admin configures mail flow, URL rewriting and firewalls so that it works at all.
 
@@ -258,6 +259,8 @@ Notes on the sketch:
 - [Google Workspace Admin Help: Create buildings, features, and Calendar resources](https://knowledge.workspace.google.com/admin/calendar/create-buildings-features-and-calendar-resources), building, resource and feature limits and capacity
 - [Google Workspace Admin Help: Release unused Calendar meeting rooms](https://knowledge.workspace.google.com/admin/calendar/release-unused-calendar-meeting-rooms), release when all but one decline, the fences, exemptions, organizer email, editions
 - [Envoy: Visitor management](https://envoy.com/visitor-management), the multilingual kiosk, NDAs before arrival, blocklists
+- [Zoom: Zoom Rooms pricing](https://zoom.us/pricing/zoom-rooms), the Rooms plan price, displays and controllers, meeting capacity, third-party join, calendar integrations
+- [Zoom: Workspace Reservation pricing](https://zoom.us/pricing/workspace-reservation), the per-space price, booking from Google Calendar and Outlook, QR-code check-in and release
 
 **Law and regulation**
 
