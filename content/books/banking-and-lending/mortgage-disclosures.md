@@ -9,7 +9,7 @@ tags = ["banking", "lending", "mortgages", "trid", "disclosures", "regulation-z"
 
 A mortgage lender has to tell the borrower what the loan will cost twice, on two federal forms, within clocks that run in two kinds of business days, and then live with the first estimate: most of what the Loan Estimate says about the lender's own fees can't go up at closing, some third-party charges can rise only 10% in total, and anything more comes out of the lender's pocket as a refund. The TILA-RESPA Integrated Disclosure rule (TRID) is Regulation Z's 1026.19(e) and (f) and the forms in 1026.37 and 1026.38. For the people who build loan origination systems, it is the most consequential scheduling problem in consumer lending: an application is defined by six data fields, its arrival starts a three-day clock, the estimate's delivery starts a seven-day waiting period, every changed circumstance starts its own three-day clock, the Closing Disclosure must be received three days before consummation, three kinds of change restart that wait, and the tolerance bucket of every fee decides who pays when the estimate was wrong.
 
-This chapter covers what makes an application, the two business-day definitions, the Loan Estimate and its timing, tolerances, changed circumstances and revised estimates, the Closing Disclosure and its re-disclosure triggers, cures, a worked calendar with real 2026 dates and holidays, and how to build it. The mortgage products are in Mortgages & Home Equity; the APR and finance charge math the forms carry is in [APR, Finance Charges & Rate Caps](/books/banking-and-lending/apr-and-rate-caps); signing, the note and post-closing are in [Closing, eNotes & MERS](/books/banking-and-lending/closing-and-enotes); the origination workflow that hosts these clocks is in Loan Origination.
+This chapter covers what makes an application, the two business-day definitions, the Loan Estimate and its timing, tolerances, changed circumstances and revised estimates, the Closing Disclosure and its re-disclosure triggers, cures, a worked calendar with real 2026 dates and holidays, and how to build it. The mortgage products are in Mortgages & Home Equity; the APR and finance charge math the forms carry is in [APR, Finance Charges & Rate Caps](/books/banking-and-lending/apr-and-rate-caps); signing, the note and post-closing are in [Closing, eNotes & MERS](/books/banking-and-lending/closing-and-enotes); the origination workflow that hosts these clocks is in [Loan Origination](/books/banking-and-lending/loan-origination).
 
 ## How the Platforms Do It
 
@@ -106,11 +106,10 @@ Three things can go wrong in the last week:
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). Every Loan Estimate and Closing Disclosure is a `disclosures` row; the application is an `applications` row. TRID adds when each form was received, the fee lines with their tolerance buckets, changed circumstances, the computed deadlines and the cures, and reads two calendars.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). Every Loan Estimate and Closing Disclosure is a `disclosures` row; the application is an `applications` row, which [Loan Origination](/books/banking-and-lending/loan-origination#how-to-build-it) gave `trid_application_at`, the moment the sixth item arrived. TRID adds when each form was received, the fee lines with their tolerance buckets, changed circumstances, the computed deadlines and the cures, and reads two calendars.
 
 ```sql
-ALTER TABLE applications
-  ADD COLUMN trid_application_at  TIMESTAMPTZ,   -- when the sixth 1026.2(a)(3)(ii) field arrived
+ALTER TABLE applications                     -- trid_application_at comes from Loan Origination
   ADD COLUMN intent_to_proceed_at TIMESTAMPTZ,
   ADD COLUMN intent_evidence_ref  TEXT,
   ADD COLUMN rate_locked_at       TIMESTAMPTZ,

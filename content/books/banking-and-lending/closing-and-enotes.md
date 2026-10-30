@@ -1,6 +1,6 @@
 +++
 title = "Closing, eNotes & MERS"
-description = "Mortgage closing as records: wet, hybrid and eNote closings, RON, SMART Doc eNotes, control under E-SIGN and UETA, MERS and the eRegistry, and the post-closing file."
+description = "Mortgage closing as records: wet, hybrid and eNote closings, RON, SMART Doc eNotes, control under E-SIGN and UETA, MERS, the eRegistry and post-closing."
 category = "Banking & Lending Industry"
 order = 2450
 part = "Origination and Underwriting"

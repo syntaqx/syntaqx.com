@@ -9,7 +9,7 @@ tags = ["banking", "lending", "model-risk", "sr-26-2", "machine-learning", "gove
 
 A lender's models decide who gets credit, at what price, with what limit, and which accounts get a collections call; others estimate losses for the allowance, project deposits for liquidity, and flag transactions for AML. When a model is wrong, or right for the population it was built on and wrong for the one it now sees, the lender loses money or breaks a law at scale, silently, until someone measures. Model risk management is the discipline that makes someone measure: an inventory of every model, documentation of how each was built, validation by someone who didn't build it, monitoring in production, and governance that can stop one.
 
-For fifteen years US banks built that discipline on one document, the Federal Reserve's SR 11-7 and the OCC's matching Bulletin 2011-12. On April 17, 2026 the Federal Reserve, OCC and FDIC replaced both with revised guidance (SR 26-2, OCC Bulletin 2026-13) that narrows what a model is, scales expectations to size, says it sets no enforceable standards, and leaves generative and agentic AI outside its scope. This chapter covers the guidance and its status as of October 2026, what counts as a model in a lending stack, development, validation, monitoring and drift with worked numbers, vendor models, and machine learning and LLMs in credit decisions. The decision engine that runs the models is in Underwriting & Decision Engines; the notice explaining a model's decline is in Adverse Action & Explaining Decisions; the fairness testing of a model is in [Fair Lending, HMDA & 1071](/books/banking-and-lending/fair-lending#fair-lending-testing); the payments side of the same guidance is in [AI in Payments](/books/payments/ai-in-payments#model-risk-fair-lending-and-udaap).
+For fifteen years US banks built that discipline on one document, the Federal Reserve's SR 11-7 and the OCC's matching Bulletin 2011-12. On April 17, 2026 the Federal Reserve, OCC and FDIC replaced both with revised guidance (SR 26-2, OCC Bulletin 2026-13) that narrows what a model is, scales expectations to size, says it sets no enforceable standards, and leaves generative and agentic AI outside its scope. This chapter covers the guidance and its status as of October 2026, what counts as a model in a lending stack, development, validation, monitoring and drift with worked numbers, vendor models, and machine learning and LLMs in credit decisions. The decision engine that runs the models is in [Underwriting & Decision Engines](/books/banking-and-lending/decision-engines); the notice explaining a model's decline is in [Adverse Action & Explaining Decisions](/books/banking-and-lending/adverse-action); the fairness testing of a model is in [Fair Lending, HMDA & 1071](/books/banking-and-lending/fair-lending#fair-lending-testing); the payments side of the same guidance is in [AI in Payments](/books/payments/ai-in-payments#model-risk-fair-lending-and-udaap).
 
 ## How the Platforms Do It
 
@@ -18,7 +18,7 @@ Lenders build some models and buy others, and a governance market sits around bo
 | Who | Role | Public detail |
 | --- | --- | --- |
 | **Upstart** | In-house ML underwriting for bank and credit union partners | Its personal loan model grew "from 23 variables at the end of 2014 to over 2,500"; it is "one of approximately 30 proprietary machine learning models"; trained on nearly 104 million repayment events; 91% of 2025 loans fully automated |
-| **Credit bureaus and score developers** | Vendor models in nearly every decision | Bureau scores arrive as a number and reason codes; Credit Data & Scores covers which scores investors accept |
+| **Credit bureaus and score developers** | Vendor models in nearly every decision | Bureau scores arrive as a number and reason codes; [The FHFA Score Change](/books/banking-and-lending/credit-data-and-scores#the-fhfa-score-change) covers which scores investors accept |
 | **ValidMind** | Model and AI governance software | Inventories, risk tiers, approvals, automated testing and documentation; names SR 26-2 among the regimes it supports |
 | **FairPlay** | Validation and bias testing | Model validation, "agentic validation" and automated bias testing |
 | **SolasAI** | Fairness and drift monitoring | Monitors deployed models "for drift and emerging fairness risks" |
@@ -100,7 +100,7 @@ In a bank partnership, the bank owns the model risk of the platform's models as 
 
 ## Machine Learning and LLMs in Credit
 
-**Machine learning underwriting** is a model under the 2026 definition and its governance is the same, with three pressures heavier than for a scorecard. Explanations: a decline must state specific principal reasons (12 CFR 1002.9), so the lender needs a reason-code method validated alongside the model, and the withdrawal of the CFPB's 2022 circular on complex algorithms didn't change the regulation it interpreted (Adverse Action & Explaining Decisions covers the method). Proxies: with thousands of variables, some can stand in for a prohibited basis, and the 2026 Reg B comment still treats a criterion that functions as a proxy as discrimination ([Disparate Impact and the 2026 Reg B Rule](/books/banking-and-lending/fair-lending#disparate-impact-and-the-2026-reg-b-rule)). Retraining: a model retrained monthly is a new version each month, and each needs its validation evidence before it scores an applicant, which is only practical as an automated pipeline with a human approval gate.
+**Machine learning underwriting** is a model under the 2026 definition and its governance is the same, with three pressures heavier than for a scorecard. Explanations: a decline must state specific principal reasons (12 CFR 1002.9), so the lender needs a reason-code method validated alongside the model, and the withdrawal of the CFPB's 2022 circular on complex algorithms didn't change the regulation it interpreted ([Reasons From Machine-Learning Models](/books/banking-and-lending/adverse-action#reasons-from-machine-learning-models) covers the method). Proxies: with thousands of variables, some can stand in for a prohibited basis, and the 2026 Reg B comment still treats a criterion that functions as a proxy as discrimination ([Disparate Impact and the 2026 Reg B Rule](/books/banking-and-lending/fair-lending#disparate-impact-and-the-2026-reg-b-rule)). Retraining: a model retrained monthly is a new version each month, and each needs its validation evidence before it scores an applicant, which is only practical as an automated pipeline with a human approval gate.
 
 **Large language models** sit outside the 2026 guidance, which doesn't make them ungoverned: the bank's own policy, UDAAP and the fair lending laws still apply to what they do. In lending they show up in document extraction (pay stubs, bank statements, tax returns), underwriter assistance, servicing and collections agents, and complaint triage. My rule is the one the playbook gives for agents: the model proposes, deterministic code decides ([Decide in Code](/docs/architecture/ai-agents#decide-in-code)). An LLM can extract the income from a pay stub, with the extraction checked and recorded; it doesn't approve the loan, set the price or choose the reason codes. Every extraction it makes that feeds a credit decision is an input with a source, a confidence and a reviewer, so the decision record shows where each number came from ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
 
@@ -108,7 +108,7 @@ Outside the US, creditworthiness assessment is a high-risk use under the EU AI A
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). `credit_decisions` already carries `model_version` as text; this chapter adds the inventory it points into, validations and their findings, and monitoring runs, and links each decision to the exact version that scored it.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). `credit_decisions` carries `model_version` as text, and [Underwriting & Decision Engines](/books/banking-and-lending/decision-engines#how-to-build-it) added `model_outputs`, one row for every model called on a decision, deciding or shadow. This chapter adds the inventory those point into, validations and their findings, and monitoring runs, and ties every model output to the exact approved version.
 
 ```sql
 CREATE TABLE model_inventory (               -- every model, owned and tiered
@@ -178,15 +178,14 @@ CREATE TABLE model_monitoring_runs (
   run_at                TIMESTAMPTZ NOT NULL
 );
 
-ALTER TABLE credit_decisions
-  ADD COLUMN model_version_id UUID REFERENCES model_versions (id),
-  ADD COLUMN vendor_scores    JSONB;           -- each vendor score with its model version, as received
+ALTER TABLE model_outputs                    -- from Underwriting & Decision Engines
+  ADD COLUMN model_version_id UUID REFERENCES model_versions (id);  -- vendor scores included
 ```
 
 How it runs:
 
 1. **Nothing scores without an approved version.** The decision engine loads a model by `model_versions.id` and refuses one without `approved_at`, or outside its `approval_conditions`. Deploying a new artifact is a new row, and the digest in the row is checked against what is loaded ([Changing Rules and Models Safely](/docs/architecture/risk-scoring#changing-rules-and-models-safely)).
-2. **Every decision names its versions.** `credit_decisions.model_version_id` and `vendor_scores` freeze what scored the applicant, beside `policy_version` and `inputs_ref`, so any decision can be replayed against the exact models that made it.
+2. **Every decision names its versions.** Each `model_outputs` row, including a vendor score called as a model and every shadow or challenger, carries `model_version_id`, beside the decision's `policy_version` and `inputs_ref`, so any decision can be replayed against the exact models that made it. Bureau scores keep the model name [Credit Data & Scores](/books/banking-and-lending/credit-data-and-scores#how-to-build-it) records on `credit_scores`.
 3. **Implementation is tested on every release:** the validation team's reference outputs for a fixed input set must match production scoring before the version goes live.
 4. **Monitoring is a scheduled job per model and tier,** writing a run with its metrics and thresholds; a breach opens a `model_findings` row, and a high-severity finding can move the model to `restricted`, which the engine reads.
 5. **LLM components are inventoried too,** with `in_guidance_scope = false`, and every extraction that feeds a decision is stored as an input with its source document and reviewer.

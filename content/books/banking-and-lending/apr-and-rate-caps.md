@@ -1,7 +1,7 @@
 +++
 title = "APR, Finance Charges & Rate Caps"
 nav_title = "APR & Rate Caps"
-description = "The APR under Reg Z Appendix J with worked numbers, the finance charge boundary, APR-based tests, MLA and SCRA, state usury, exportation, Madden and true lender."
+description = "The APR under Appendix J with worked numbers, the finance charge, APR-based tests, MLA and SCRA, state usury, rate exportation, Madden and true lender."
 category = "Banking & Lending Industry"
 order = 2448
 part = "Origination and Underwriting"
@@ -85,8 +85,8 @@ Interpolating between 6.60% and 6.70% gives 6.6624%, and one more step settles a
 The disclosed APR is an input to rules that change what the lender may do:
 
 - **Higher-priced covered transactions** under the ability-to-repay rule: an APR that exceeds the average prime offer rate (APOR) for a comparable transaction, as of the rate-set date, by **1.5 points** or more for a first lien (3.5 for certain small-creditor and balloon QMs) or **3.5 points** for a subordinate lien (1026.43(b)(4)). A qualified mortgage that isn't higher-priced gets a safe harbor; a higher-priced one gets a rebuttable presumption.
-- **General QM price thresholds** for 2026: a first-lien loan qualifies only if its APR exceeds APOR by less than **2.25 points** for loans of $137,958 or more, 3.5 points from $82,775 to under $137,958, and 6.5 points under $82,775 (and for manufactured home loans under $137,958); subordinate liens 3.5 points from $82,775 and 6.5 below (1026.43(e)(2)(vi), adjusted effective January 1, 2026).
-- **QM points and fees** for 2026: no more than 3% of the total loan amount for loans of $137,958 or more, $4,139 from $82,775 to under $137,958, 5% from $27,592 to under $82,775, $1,380 from $17,245 to under $27,592, and 8% below that; plus no negative amortization, interest-only or balloon features and a term of 30 years or less (1026.43(e)(2), (e)(3)).
+- **General QM price thresholds:** the APR must exceed APOR by less than 2.25 points for a first-lien loan of $137,958 or more in 2026, with wider spreads for smaller loans and subordinate liens; subordinate liens get 3.5 points from $82,775 and 6.5 below (1026.43(e)(2)(vi)). [Ability to Repay and the Qualified Mortgage](/books/banking-and-lending/decision-engines#ability-to-repay-and-the-qualified-mortgage) covers the full test in the decision engine.
+- **QM points and fees** for 2026, the schedule in full: no more than 3% of the total loan amount for loans of $137,958 or more, $4,139 from $82,775 to under $137,958, 5% from $27,592 to under $82,775, $1,380 from $17,245 to under $27,592, and 8% below that (1026.43(e)(3), adjusted effective January 1, 2026). Which charges count is the `in_points_and_fees` flag below, which differs from the finance charge.
 - **HOEPA high-cost mortgages** for 2026: among other triggers, points and fees above 5% of the total loan amount for loans of $27,592 or more, or above the lesser of $1,380 or 8% for smaller loans.
 - **State caps** measured as an APR, and the MLA's MAPR (below).
 

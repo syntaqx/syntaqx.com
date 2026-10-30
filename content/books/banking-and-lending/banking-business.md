@@ -581,11 +581,11 @@ Each later chapter extends a defined part of this spine. The chapters and the ta
 | [Credit Data & Scores](/books/banking-and-lending/credit-data-and-scores#how-to-build-it) | `applications`, `credit_decisions`, `party_identities`; adds `credit_report_pulls`, `credit_scores`, `representative_scores`, `prescreen_campaigns` |
 | [Underwriting & Decision Engines](/books/banking-and-lending/decision-engines#how-to-build-it) | `credit_decisions`, `applications`; adds `decision_policies`, `decision_rule_results`, `model_outputs`, `repayment_assessments`, `decision_experiments`, `decision_overrides` |
 | [Adverse Action & Explaining Decisions](/books/banking-and-lending/adverse-action#how-to-build-it) | `credit_decisions`, `disclosures`; adds `reason_codes`, `feature_reason_map`, `decision_notices`, `notice_reasons`, `notice_report_disclosures`, `reason_requests` |
-| Fair Lending, HMDA & 1071 | `applications`, `credit_decisions` |
-| Model Risk Management | `credit_decisions` |
-| APR, Finance Charges & Rate Caps | `loans`, `products`, `disclosures` |
-| TRID & Mortgage Disclosures | `applications`, `disclosures` |
-| Closing, eNotes & MERS | `loans`, `collateral`, `disclosures` |
+| [Fair Lending, HMDA & 1071](/books/banking-and-lending/fair-lending#how-to-build-it) | `applications`, `credit_decisions`; adds `demographic_responses`, `hmda_lar_records`, `sblar_records`, `fair_lending_tests` |
+| [Model Risk Management](/books/banking-and-lending/model-risk#how-to-build-it) | `credit_decisions`; adds `model_inventory`, `model_versions`, `model_validations`, `model_findings`, `model_monitoring_runs` |
+| [APR, Finance Charges & Rate Caps](/books/banking-and-lending/apr-and-rate-caps#how-to-build-it) | `loans`, `disclosures`, `rate_cap_rules`; adds `finance_charge_rules`, `apr_computations`, `covered_borrower_checks`, `scra_benefits` |
+| [TRID & Mortgage Disclosures](/books/banking-and-lending/mortgage-disclosures#how-to-build-it) | `applications`, `disclosures`; adds `legal_public_holidays`, `closing_cost_items`, `changed_circumstances`, `disclosure_deadlines`, `tolerance_cures` |
+| [Closing, eNotes & MERS](/books/banking-and-lending/closing-and-enotes#how-to-build-it) | `loans`, `collateral`, `disclosures`; adds `closings`, `closing_documents`, `notarizations`, `enotes`, `enote_control_transfers`, `rescission_periods`, `post_closing_items` |
 | Loan Servicing | `loans`, `loan_payments`, `payment_allocations`, `payment_schedules` |
 | Mortgage Servicing, Escrow & Loss Mitigation | `loans`, `schedule_installments`, `cases` |
 | Furnishing Credit Data | `accounts`, `loans`, `cases` |
