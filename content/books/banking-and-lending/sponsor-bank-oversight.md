@@ -77,7 +77,7 @@ A sponsor bank's compliance management system is the bank's own (board oversight
 - **Limits and intervention.** The bank can cap a program's growth, stop new account opening, restrict a product or require more reserves, and it needs the technical means to do so the same day, not by asking.
 - **Exit planning.** For each program, the plan to move or close its accounts if the program fails, the bank exits, or a regulator requires it: the data the bank needs, who services the accounts in between, and how customers are paid ([Moving Between Sponsor Banks](/books/banking-and-lending/banking-as-a-service#moving-between-sponsor-banks)).
 
-The consumer law each program brings is the bank's: Reg E error resolution, Reg DD disclosures, Reg CC availability, ECOA and fair lending for credit programs, UDAP and UDAAP in marketing and fees, and the FDIC's deposit insurance misrepresentation rule. The BSA program is the bank's too, and SARs are the bank's to decide and file, with their confidentiality kept from the program's customer-facing systems (BSA/AML Programs covers the program).
+The consumer law each program brings is the bank's: Reg E error resolution, Reg DD disclosures, Reg CC availability, ECOA and fair lending for credit programs, UDAP and UDAAP in marketing and fees, and the FDIC's deposit insurance misrepresentation rule. The BSA program is the bank's too, and SARs are the bank's to decide and file, with their confidentiality kept from the program's customer-facing systems ([BSA/AML Programs](/books/banking-and-lending/bsa-aml) covers the program).
 
 ## What an Order Does to a Program
 

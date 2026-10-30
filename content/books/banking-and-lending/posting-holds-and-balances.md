@@ -70,7 +70,7 @@ A **hold** reduces available balance for a reason and, usually, a time. A **bloc
 | --- | --- | --- | --- |
 | Card authorization | Card processor, on approval | Clearing, reversal, or expiry on the issuer's schedule | [The Ledger for an Issuer](/books/payments/issuer-processing#the-ledger-for-an-issuer) |
 | Deposit availability | Core, from the bank's Reg CC policy | The availability date, or the item's return | Funds Availability |
-| Risk or fraud | Fraud system or analyst | Review outcome | Account Takeover & Scams |
+| Risk or fraud | Fraud system or analyst | Review outcome | [Account Takeover & Scams](/books/banking-and-lending/account-takeover-and-scams) |
 | Legal process | Operations, on a levy, garnishment or court order | Release, or seizure of the funds | [Levies, Garnishments & Legal Process](/books/banking-and-lending/legal-process) |
 | Pledge | Lending, for a share-secured or CD-secured loan | Loan payoff | Credit Builders & Secured Products |
 | Dispute or error claim | Case system, reversing provisional credit | Claim outcome | [Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes) |

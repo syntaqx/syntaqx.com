@@ -95,7 +95,7 @@ The FDIC's standard conditions add fidelity bond coverage and financial statemen
 The period between conditional approval and opening is when the bank is built, and the regulators examine the build before it opens. What has to exist by the preopening examination:
 
 - **A core and its satellites.** CEOs of successful de novo banks told the FDIC that the core processing choice is "one of the most important decisions to be made" and the initial contract negotiation "critical," and the handbook asks for a technology plan naming each outsourced function and vendor with diligence, costs and dependency risk, plus "back-up and disaster recovery, incident response, cyber threat intelligence" and independent review of controls. Vendor contracts should be contingent on the charter and insurance approvals (Core Banking Systems covers vendor choice).
-- **BSA, OFAC and CIP running end to end**, from account opening to monitoring to filing (KYC & Account Opening, BSA/AML Programs).
+- **BSA, OFAC and CIP running end to end**, from account opening to monitoring to filing ([KYC & Account Opening](/books/banking-and-lending/kyc-and-account-opening), [BSA/AML Programs](/books/banking-and-lending/bsa-aml)).
 - **Policies for every regulation the bank's products touch**, adopted by the board at its first meeting.
 - **Reporting.** The first call report is due 30 days after the first quarter end the bank is open ([Exams, Ratings & Call Reports](/books/banking-and-lending/exams-and-supervision#call-reports)).
 - **Condition monitoring:** the capital, liquidity and business plan metrics the approval set.
