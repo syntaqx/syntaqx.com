@@ -1,12 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { contentSecurityPolicy } from "../next.config";
 
-const directives = Object.fromEntries(
-  contentSecurityPolicy.split("; ").map((d) => {
-    const [name, ...values] = d.split(" ");
-    return [name, values];
-  }),
-);
+const parse = (policy: string): Record<string, string[]> =>
+  Object.fromEntries(
+    policy.split("; ").map((d) => {
+      const [name, ...values] = d.split(" ");
+      return [name, values];
+    }),
+  );
+
+const directives = parse(contentSecurityPolicy);
 
 describe("Content-Security-Policy", () => {
   it("locks down the directives that don't depend on the site's scripts", () => {
@@ -42,8 +45,18 @@ describe("Content-Security-Policy", () => {
     expect(directives["script-src"]).not.toContain("'unsafe-eval'");
   });
 
-  it("reports violations to Sentry", () => {
-    expect(directives["report-uri"]?.[0]).toMatch(/^https:\/\/.+\.ingest\.us\.sentry\.io\/api\/\d+\/security\/\?sentry_key=/);
-    expect(directives["report-to"]).toEqual(["csp"]);
+  it("doesn't report outside production", () => {
+    expect(directives["report-uri"]).toBeUndefined();
+    expect(directives["report-to"]).toBeUndefined();
+  });
+
+  it("reports violations to Sentry in production", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
+    vi.resetModules();
+    const { contentSecurityPolicy: policy } = await import("../next.config");
+    vi.unstubAllEnvs();
+    const prod = parse(policy);
+    expect(prod["report-uri"]?.[0]).toMatch(/^https:\/\/.+\.ingest\.us\.sentry\.io\/api\/\d+\/security\/\?sentry_key=/);
+    expect(prod["report-to"]).toEqual(["csp"]);
   });
 });

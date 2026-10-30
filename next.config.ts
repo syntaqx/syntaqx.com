@@ -9,6 +9,10 @@ import { SITE_URL } from "./lib/constants";
 // See /docs/security/security-headers and docs/adr/0003.
 const SENTRY_CSP_REPORT_URI =
   "https://o463483.ingest.us.sentry.io/api/4511368166572032/security/?sentry_key=83053c7854f5d2501223a9d596b331ff";
+// Like the Sentry SDK, reports come from real production only. Previews still
+// enforce the policy, they just don't report (tools that frame a preview
+// trip frame-ancestors and filed noise).
+const reportsCsp = process.env.VERCEL_ENV === "production";
 
 export const contentSecurityPolicy = [
   "default-src 'self'",
@@ -33,13 +37,12 @@ export const contentSecurityPolicy = [
   "base-uri 'none'",
   "form-action 'self'",
   "upgrade-insecure-requests",
-  `report-uri ${SENTRY_CSP_REPORT_URI}`,
-  "report-to csp",
+  ...(reportsCsp ? [`report-uri ${SENTRY_CSP_REPORT_URI}`, "report-to csp"] : []),
 ].join("; ");
 
 const securityHeaders = [
   { key: "Content-Security-Policy", value: contentSecurityPolicy },
-  { key: "Reporting-Endpoints", value: `csp="${SENTRY_CSP_REPORT_URI}"` },
+  ...(reportsCsp ? [{ key: "Reporting-Endpoints", value: `csp="${SENTRY_CSP_REPORT_URI}"` }] : []),
   { key: "X-DNS-Prefetch-Control", value: "on" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
