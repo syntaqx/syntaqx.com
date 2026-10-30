@@ -18,13 +18,12 @@ What card agreements, help centers and filings say about each program's credit t
 | Program | Issuer | Limit basis | Payment cycle | Liability and collateral | Receivable |
 | --- | --- | --- | --- | --- | --- |
 | **Mercury IO** | Patriot Bank, N.A.; serviced by Mercury Servicing LLC | Spending limits "dynamic and may be modified at any time with or without notice," including to $0 | Daily, weekly, monthly, semi-monthly or another period at the issuer's discretion; all charges due at cycle end; autopay from the designated account, then a secondary account, then a linked account | The company is responsible for all card activity; security interest in all funding accounts, extending to Mercury Advisory investment accounts; setoff against any deposit account; no late fee, but collection costs and interest up to the legal maximum | Not stated in the agreement |
-| **Ramp** | Not named on the help pages I opened | On 1-day terms, "generally equal to 100% of the available balance in your Ramp Checking Account" | Full statement balance due each period; 1-day terms pull daily from Ramp Checking at 4 p.m. ET; one payment configuration per business; multi-entity companies can't use 1-day terms | Not stated on the pages I opened | Not stated |
+| **Ramp** | Celtic Bank (Ramp Visa Corporate Card; Column N.A. for US corporations operating globally), Sutton Bank (Commercial Card), Lead Bank (Business Card) | On 1-day terms, "generally equal to 100% of the available balance in your Ramp Checking Account" | Full statement balance due each period; 1-day terms pull daily from Ramp Checking at 4 p.m. ET; one payment configuration per business; multi-entity companies can't use 1-day terms | The company, not the employee, is liable; no personal guarantee and no personal credit check | Not stated |
 | **BILL Divvy** | Cross River Bank, WEX Bank, WebBank | BILL underwrites for the banks under its own credit policies | Charge card; cycle terms not stated in the 10-K | BILL doesn't file UCC liens or take other security interests on card balances | Banks sell BILL a 100% participation in each receivable, which BILL must buy; funded from cash and $600.0 million of revolving facilities |
 | **Expensify Card** | The Bancorp Bank, N.A. | "Smart Limits": the company sets each employee's maximum exposure | Daily settlement ("employees never overspend what a company is able to pay") or monthly | Not stated in the 10-K | Not stated |
 | **American Express Corporate** | American Express | Spending limits at the company's request "or at the discretion of American Express" | Statements about monthly; payment "due immediately upon receipt of the billing statement" | Full Corporate Liability or Combined Liability (company and employee jointly and severally liable, except personal charges) | American Express |
 | **GSA SmartPay** (US government) | Not named on the pages cited | Dollar limits the account holder must observe | Purchase and fleet centrally billed; travel individually or centrally billed | Agency rules and procedures | Not stated |
 
-<!-- source-gap: ramp-issuing-bank | secondary | the bank that issues the Ramp card and Ramp's guarantee and underwriting terms | closes with: a Ramp page or agreement naming the issuing bank and the card terms (ramp.com/legal renders without text to the fetcher) | checked: 2026-10-29 -->
 
 Three things stand out. **The limit is a live number:** Mercury's agreement says so outright, and Ramp's 1-day terms make the limit the balance. **The cycle is a risk control, not a billing preference:** Mercury reserves the right to set it by applicant, and Ramp allows one configuration per business, because the cycle decides how much unpaid spend can pile up before money moves. **Collateral without a filing:** Mercury takes a security interest in the funding accounts it debits, while BILL says it files no UCC liens and takes no security interests on card balances, so two programs with the same product carry their losses very differently. Brex's terms couldn't be retrieved for this chapter ([How the Platforms Do It](/books/banking-and-lending/spend-management#how-the-platforms-do-it)).
 
@@ -39,7 +38,7 @@ What does apply is the Equal Credit Opportunity Act. Regulation B covers busines
 A startup has a legal entity, a few owners, a bank account and a burn rate. The underwriting inputs follow:
 
 - **Who the business is.** KYB first: the entity, its beneficial owners and control person, its industry, as in [KYB: Business Accounts](/books/banking-and-lending/kyc-and-account-opening#kyb-business-accounts). A card program inherits the bank's CIP and BSA program, and a business that can't be verified can't be underwritten.
-- **Cash.** Balances in the business's accounts, read through linked account connections ([Open Banking in the US](/books/banking-and-lending/open-banking#how-to-build-it)) or directly when the platform also holds the deposit account. Mercury's agreement lists "linked account information" among what it uses; Ramp's 1-day limit is the balance of the account it holds.
+- **Cash.** Balances in the business's accounts, read through linked account connections ([Open Banking in the US](/books/banking-and-lending/open-banking#how-to-build-it)) or directly when the platform also holds the deposit account. Mercury's agreement covers "Linked Account Data" from accounts the customer connects; Ramp's 1-day limit is the balance of the account it holds.
 - **Burn and runway.** Net outflow per month from the same transaction data, and the months of cash it implies. A company with $2 million and six months of runway is a different risk from one with $2 million and three years.
 - **Revenue,** for businesses that have it, from connected accounting, payment processors or bank inflows, and the same data an embedded lender reads ([Offers From Processing Data](/books/banking-and-lending/embedded-lending#offers-from-processing-data)).
 - **Funding.** Equity raised and from whom; some programs ask for it at application.
@@ -52,7 +51,7 @@ A startup has a legal entity, a few owners, a bank account and a burn rate. The 
 Three bases, often combined:
 
 - **Cash-based.** The limit is a share of observed balances: 100% of the balance in the issuer's own account on daily terms (Ramp), or a smaller share of linked balances on monthly terms, because a month of spend can run before any money moves.
-- **Revenue-based.** For businesses with steady receipts, a multiple of monthly revenue or card spend, closer to how a bank sizes a line.
+- **Revenue-based.** For businesses with steady receipts, a multiple of monthly revenue or card spend, closer to how a bank sizes a line. Ramp's corporate card page says its limits rest on "financial factors such as revenue or dollars raised."
 - **History-based.** As the business pays on time, the program raises the limit or lengthens the cycle.
 
 **Dynamic limits are recalculated, not reviewed.** A cash-based limit is recomputed as balances change, daily or on every data refresh, and applied without a request. That's the product's advantage and its legal edge. Under Regulation B, an "unfavorable change in the terms of an account" that "does not affect all or substantially all of a class of the creditor's accounts" is adverse action, excluding actions taken "in connection with inactivity, default, or delinquency" and point-of-sale declines; a declined purchase because it would exceed the limit isn't adverse action, but cutting one company's limit because its cash fell is an unfavorable change to that account (12 CFR 1002.2(c)). A program that lowers limits automatically therefore needs a notice path for each decrease it makes on credit grounds, sized to the revenue band above, and the reason the engine used.
@@ -143,6 +142,7 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 ALTER TABLE credit_limit_changes DROP CONSTRAINT credit_limit_changes_reason_check,
   ADD CONSTRAINT credit_limit_changes_reason_check CHECK (reason IN ('origination',
     'consumer_request', 'proactive', 'risk_decrease', 'delinquency', 'restore',
+    'property_value_decline', 'financial_circumstances',   -- from Mortgages (HELOCs)
     'cash_recalculation'));
 
 CREATE TABLE corporate_card_terms (          -- the business terms on a charge line
@@ -254,7 +254,7 @@ The issuing bank, its examiners, the facility lenders and fair lending reviewers
 
 **Agreements and program documents**
 
-- [Mercury: IO Charge Card Agreement (last updated August 10, 2026)](https://mercury.com/legal/io-charge-card-agreement), Patriot Bank as issuer, billing cycles from daily to monthly, the autopay order, dynamic limits, the security interest in funding and investment accounts, setoff, no late fee, collection costs, and the business-purpose representation
+- [Mercury: IO Charge Card Agreement (last updated August 10, 2026)](https://mercury.com/legal/io-charge-card-agreement), Patriot Bank as issuer, billing cycles from daily to monthly, the autopay order, Linked Account Data, dynamic limits, the security interest in funding and investment accounts, setoff, no late fee, collection costs, and the business-purpose representation
 - [American Express: Corporate Card Member Agreement (US)](https://secure.cmax.americanexpress.com/Internet/US/Corporate/AtWork/Files/Forms/CorpCard_Cardmember_Agreement.pdf), Full Corporate and Combined Liability, the billing statement deciding which applies, spending limits, monthly statements and payment due on receipt
 - [American Express: Guaranty of Payment Agreement for Basic Control Accounts with Limits (version July 2026)](https://www.americanexpress.com/content/dam/amex/en-us/business/resource-center/card-management/forms/Basic-Control-Account-with-Limits.pdf), the company as primary obligor with per-employee and total limits
 - [American Express: Global Corporate Payments Agreement (Australia)](https://www.americanexpress.com/content/dam/amex/au/staticassets/corporate/Corporate-Account-Agreement.pdf), definitions of the Business Travel Account, Corporate Purchasing Card and vPayment, and company liability for them
@@ -266,6 +266,8 @@ The issuing bank, its examiners, the facility lenders and fair lending reviewers
 - [Ramp: 1-day payment terms](https://support.ramp.com/1-day-payment-terms), daily pulls at 4 p.m. ET, a limit of about 100% of the Ramp Checking balance, one configuration per business, and no multi-entity companies
 - [Ramp: Card statements and payments overview](https://support.ramp.com/hc/en-us/articles/6169690785043-Ramp-card-statements-and-payments-overview), full statement payment each period and cadence by card terms
 - [Ramp: Ramp corporate cards](https://support.ramp.com/ramp-corporate-cards), a corporate charge card on Visa, not reported to personal credit bureaus
+- [Ramp: Corporate cards](https://ramp.com/corporate-cards), no personal guarantee or personal credit check, limits from revenue or dollars raised, and company liability
+- [Ramp: Pricing](https://ramp.com/pricing), the card disclosures naming Celtic Bank and Column N.A. (Corporate Card), Sutton Bank (Commercial Card) and Lead Bank (Business Card)
 
 **Filings**
 
