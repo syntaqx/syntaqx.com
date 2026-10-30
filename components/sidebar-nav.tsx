@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -67,6 +67,52 @@ function useCurrentLinkInView() {
   return navRef;
 }
 
+/**
+ * Middle-button autoscroll over the rail's links. Browsers don't start
+ * autoscroll on a link (a middle click there opens it in a new tab), and the
+ * rail is almost all links. Held and moved, the middle button scrolls the
+ * rail faster the further it travels, like the browser's own; released
+ * without moving, it still opens the link in a new tab.
+ */
+function useMiddleDragScroll(navRef: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const rail = navRef.current?.closest<HTMLElement>(".rail-scroll");
+    if (!rail) return;
+    const DEADZONE = 6;
+
+    const onDown = (down: MouseEvent) => {
+      if (down.button !== 1 || !(down.target as HTMLElement).closest("a")) return;
+      let dy = 0;
+      let dragged = false;
+      let frame = requestAnimationFrame(function step() {
+        const travel = Math.abs(dy) - DEADZONE;
+        if (travel > 0) rail.scrollTop += Math.sign(dy) * travel * 0.12;
+        frame = requestAnimationFrame(step);
+      });
+      const onMove = (e: MouseEvent) => {
+        dy = e.clientY - down.clientY;
+        if (!dragged && Math.abs(dy) > DEADZONE) {
+          dragged = true;
+          document.documentElement.style.cursor = "ns-resize";
+        }
+      };
+      const onUp = (e: MouseEvent) => {
+        if (e.button !== 1) return;
+        cancelAnimationFrame(frame);
+        document.documentElement.style.cursor = "";
+        window.removeEventListener("mousemove", onMove);
+        window.removeEventListener("mouseup", onUp, true);
+        // A drag isn't a click: keep the link from opening in a new tab.
+        if (dragged) window.addEventListener("auxclick", (a) => a.preventDefault(), { capture: true, once: true });
+      };
+      window.addEventListener("mousemove", onMove);
+      window.addEventListener("mouseup", onUp, true);
+    };
+    rail.addEventListener("mousedown", onDown);
+    return () => rail.removeEventListener("mousedown", onDown);
+  }, [navRef]);
+}
+
 export function SidebarNav({
   title,
   back,
@@ -87,6 +133,7 @@ export function SidebarNav({
 }) {
   const pathname = usePathname();
   const navRef = useCurrentLinkInView();
+  useMiddleDragScroll(navRef);
   const sections = groups.flatMap((g) => g.sections);
   const activeSection = sections.find((s) => s.items.some((i) => isActive(i, pathname)))?.name;
 
@@ -101,19 +148,22 @@ export function SidebarNav({
 
   return (
     <nav ref={navRef} aria-label={title}>
-      <div className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-sm font-semibold text-foreground">
-        {back && (
-          <Link
-            href={back.href}
-            onClick={onNavigate}
-            aria-label={back.label}
-            className="-ml-1.5 text-dim transition-colors hover:text-accent"
-          >
-            <ChevronLeft size={15} aria-hidden />
-          </Link>
-        )}
-        <span className="truncate">{title}</span>
-      </div>
+      {back ? (
+        // The whole title band is the way back, not just its chevron.
+        <Link
+          href={back.href}
+          onClick={onNavigate}
+          aria-label={`${title}, ${back.label.toLowerCase()}`}
+          className="group flex items-center gap-1.5 border-b border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface"
+        >
+          <ChevronLeft size={15} aria-hidden className="-ml-1.5 text-dim transition-colors group-hover:text-accent" />
+          <span className="truncate">{title}</span>
+        </Link>
+      ) : (
+        <div className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-sm font-semibold text-foreground">
+          <span className="truncate">{title}</span>
+        </div>
+      )}
       <ul className="flex flex-col gap-px border-b border-border p-2">
         {[home, ...pages].map((page) => (
           <li key={page.href}>
