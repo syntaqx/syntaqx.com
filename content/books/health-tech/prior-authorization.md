@@ -107,7 +107,7 @@ In traditional Medicare, CMS's WISeR model (Wasteful and Inappropriate Service R
 The core `orders` (a service request) and `appointments` are what an authorization covers. This chapter adds requirement rules, the authorizations themselves and their events:
 
 ```sql
-CREATE TABLE auth_requirement_rules (    -- "does this need authorization?", as dated data
+CREATE TABLE authorization_requirements ( -- "does this need authorization?", as dated data
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   payer_id         UUID NOT NULL REFERENCES payers (id),
   plan_id          UUID REFERENCES plans (id),       -- null: all the payer's plans
@@ -123,6 +123,7 @@ CREATE TABLE auth_requirement_rules (    -- "does this need authorization?", as 
 
 CREATE TABLE gold_card_exemptions (
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
   practitioner_id  UUID NOT NULL REFERENCES practitioners (id),
   payer_id         UUID NOT NULL REFERENCES payers (id),
   procedure_codes  TEXT[] NOT NULL,
@@ -140,7 +141,7 @@ CREATE TABLE prior_authorizations (
                       'pharmacy_epa', 'referral')),
   requirement       TEXT NOT NULL CHECK (requirement IN ('required', 'not_required', 'exempt',
                       'unknown')),
-  requirement_rule_id UUID REFERENCES auth_requirement_rules (id),
+  requirement_rule_id UUID REFERENCES authorization_requirements (id),
   requesting_practitioner_id UUID REFERENCES practitioners (id),
   procedure_codes   TEXT[] NOT NULL,
   diagnosis_codes   TEXT[] NOT NULL,
@@ -180,14 +181,15 @@ When an appointment is booked or an order signed, the system resolves the requir
 
 ```sql
 SELECT r.id, r.after_visits
-FROM auth_requirement_rules r
+FROM authorization_requirements r
 JOIN coverages c ON c.id = $1 AND (r.plan_id IS NULL OR r.plan_id = c.plan_id)
-WHERE r.payer_id = c.payer_id
+JOIN plans p     ON p.id = c.plan_id
+WHERE r.payer_id = p.payer_id
   AND r.procedure_codes && $2::text[]
   AND r.valid_during @> $3::date            -- date of service
   AND NOT EXISTS (
         SELECT 1 FROM gold_card_exemptions g
-        WHERE g.practitioner_id = $4 AND g.payer_id = c.payer_id
+        WHERE g.practitioner_id = $4 AND g.payer_id = p.payer_id
           AND g.procedure_codes && $2::text[] AND g.valid_during @> $3::date)
 ORDER BY r.plan_id NULLS LAST
 LIMIT 1;

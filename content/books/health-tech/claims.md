@@ -164,9 +164,9 @@ A claim's statuses before adjudication, and what moves it:
 | --- | --- | --- | --- |
 | `ready` | Scrubber passed | Built and clean | Batch for submission |
 | `submitted` | Sent to the clearinghouse | In flight | Wait for the 999 |
-| `rejected_syntax` | 999 or TA1 rejection | The file or transaction set was invalid; nothing reached the payer | Fix the builder, resend |
-| `clearinghouse_rejected` | Clearinghouse 277CA | Failed the clearinghouse's edits | Fix and resend |
-| `payer_rejected` | Payer 277CA with a rejection status | Failed the payer's front-end edits; not adjudicated | Fix and resend as an original, not a correction |
+| `rejected` (by syntax) | 999 or TA1 rejection | The file or transaction set was invalid; nothing reached the payer | Fix the builder, resend |
+| `rejected` (by the clearinghouse) | Clearinghouse 277CA | Failed the clearinghouse's edits | Fix and resend |
+| `rejected` (by the payer) | Payer 277CA with a rejection status | Failed the payer's front-end edits; not adjudicated | Fix and resend as an original, not a correction |
 | `accepted` | Payer 277CA acceptance | In adjudication, with a payer claim number | Wait for the 835; check status if it doesn't come ([Claim Status](/books/health-tech/denials-and-appeals#claim-status-276-and-277)) |
 | `adjudicated` | 835 | Paid, partly paid or denied | Post ([Remittance & Posting](/books/health-tech/remittance-and-payment-posting)) |
 
@@ -195,43 +195,33 @@ Medicare also requires electronic claims. Under 42 CFR 424.32(d), "An initial Me
 
 ## How to Build It
 
-The core `charges`, `claims` and `claim_lines` hold the billable services and the bill. This chapter adds the claim's routing and status fields, each submission and its acknowledgments, scrubber findings and attachments:
+The core `charges`, `claims` and `claim_lines` hold the billable services and the bill, with the claim's kind, frequency, control numbers and status. This chapter adds dental and diagnosis detail, routing and deadline fields, each submission and its acknowledgments, scrubber findings and attachments:
 
 ```sql
-ALTER TABLE charges
-  ADD COLUMN modifiers        TEXT[] NOT NULL DEFAULT '{}',   -- up to four
-  ADD COLUMN diagnosis_ptrs   SMALLINT[] NOT NULL DEFAULT '{}',
-  ADD COLUMN units            NUMERIC(7,2) NOT NULL DEFAULT 1,
+ALTER TABLE charges                      -- code, modifiers, units, fee and service_on are core
+  ADD COLUMN diagnosis_codes  TEXT[] NOT NULL DEFAULT '{}',   -- ICD-10-CM, in pointer order
   ADD COLUMN tooth            TEXT,                           -- dental: universal numbering
   ADD COLUMN surfaces         TEXT[],                         -- 'M', 'O', 'D', 'B', 'L', 'I'
   ADD COLUMN oral_area        TEXT,                           -- quadrant or arch
   ADD COLUMN review_status    TEXT NOT NULL DEFAULT 'pending' CHECK (review_status IN
                                 ('pending', 'reviewed', 'held'));
 
-ALTER TABLE claims
-  ADD COLUMN claim_type        TEXT NOT NULL CHECK (claim_type IN ('837P', '837I', '837D')),
+ALTER TABLE claims                       -- kind, frequency, replaces_claim_id, the control and payer
+                                         -- claim numbers, coverage_id and status are core
   ADD COLUMN purpose           TEXT NOT NULL DEFAULT 'claim' CHECK (purpose IN ('claim',
                                  'predetermination')),
-  ADD COLUMN frequency         CHAR(1) NOT NULL DEFAULT '1' CHECK (frequency IN ('1', '7', '8')),
-  ADD COLUMN replaces_claim_id UUID REFERENCES claims (id),
-  ADD COLUMN patient_control_number TEXT NOT NULL UNIQUE,     -- 17 characters or fewer
-  ADD COLUMN payer_claim_number TEXT,                         -- from the 277CA or 835
-  ADD COLUMN coverage_id       UUID NOT NULL REFERENCES coverages (id),
-  ADD COLUMN cob_order         SMALLINT NOT NULL DEFAULT 1,
-  ADD COLUMN billing_provider_id   UUID NOT NULL REFERENCES organizations (id),
-  ADD COLUMN rendering_provider_id UUID REFERENCES practitioners (id),
+  ADD COLUMN cob_order         SMALLINT NOT NULL DEFAULT 1,   -- the coverage's priority when billed
+  ADD COLUMN rendering_role_id UUID REFERENCES practitioner_roles (id),
   ADD COLUMN place_of_service  TEXT NOT NULL,
   ADD COLUMN prior_auth_number TEXT,
-  ADD COLUMN status            TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'held',
-                                 'ready', 'submitted', 'rejected_syntax', 'clearinghouse_rejected',
-                                 'payer_rejected', 'accepted', 'adjudicated', 'voided')),
-  ADD COLUMN timely_filing_due DATE NOT NULL,                 -- computed from the payer's rule
-  ADD COLUMN submitted_at      TIMESTAMPTZ;
+  ADD COLUMN rejected_by       TEXT CHECK (rejected_by IN ('syntax', 'clearinghouse', 'payer')),
+  ADD COLUMN timely_filing_due DATE NOT NULL;                 -- computed from the payer's rule
 
-ALTER TABLE claim_lines
+ALTER TABLE claim_lines                  -- charge_id, code, modifiers, units, charge and diagnoses are core
   ADD COLUMN line_control_number TEXT NOT NULL,               -- echoed on 277CA and 835 lines
-  ADD COLUMN charge_id        UUID NOT NULL REFERENCES charges (id),
   ADD COLUMN revenue_code     TEXT,                           -- 837I
+  ADD COLUMN tooth            TEXT,
+  ADD COLUMN surfaces         TEXT[],
   ADD COLUMN prosthesis       TEXT CHECK (prosthesis IN ('initial', 'replacement')),
   ADD COLUMN prior_placement  DATE;
 
@@ -285,7 +275,7 @@ Design notes:
 - **Claims are built from charges and never edited after submission.** A change after acceptance is a replacement claim that references the original; the original row stays as sent.
 - **Overrides need a reason.** A scrubber error a person overrides records who and why; overrides of NCCI edits are reviewed in compliance audits.
 - **Rule sets are versioned by date.** A claim is scrubbed against the NCCI quarter in effect on its date of service, and the version is recorded.
-- **Status is derived from the latest acknowledgment,** with the history kept in `claim_submissions`; a claim's display status never goes backward without a new submission.
+- **Status is derived from the latest acknowledgment,** with `rejected_by` saying which layer rejected, with the history kept in `claim_submissions`; a claim's display status never goes backward without a new submission.
 - **Events:** `claim.ready`, `claim.submitted`, `claim.rejected`, `claim.accepted` and `claim.adjudicated` feed the work queues of [The Revenue Cycle](/books/health-tech/revenue-cycle#how-to-build-it).
 
 ## Auditing

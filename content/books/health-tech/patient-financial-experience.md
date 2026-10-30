@@ -1,7 +1,7 @@
 +++
 title = "Patient Statements, Estimates & Collections"
 nav_title = "Patient Financial Experience"
-description = "The patient's bill: responsibility after insurance, good faith estimates, price transparency, statements, payment plans, medical debt and credit reporting, collections."
+description = "The patient's bill: responsibility after insurance, good faith estimates, price transparency, statements, payment plans, medical debt, collections."
 category = "Health Tech Industry"
 order = 1926
 part = "Revenue Cycle"
@@ -47,7 +47,7 @@ Timing matters as much as amount. Collecting the copay at check-in is routine; c
 
 A practice estimates for two audiences:
 
-- **Insured patients,** from the plan's benefits: the contracted rate (or the practice's fee where there's no contract), the remaining deductible from the 271, coinsurance by category, frequency limits and downgrades for dental, and out-of-pocket maximum. Dental offices estimate almost every treatment plan this way, and the estimate is the case acceptance conversation ([Dental Benefits](/books/health-tech/eligibility-and-benefits#dental-benefits)).
+- **Insured patients,** from the plan's benefits: the contracted rate (or the practice's fee where there's no contract), the remaining deductible from the 271, coinsurance by category, frequency limits and downgrades for dental, and out-of-pocket maximum. Dental offices estimate almost every treatment plan this way, and the estimate is the case acceptance conversation ([Dental Benefits](/books/health-tech/eligibility-and-benefits#dental-benefits)); the insurance estimate records belong to Part 5's Dental Practice chapter, and this chapter builds the good faith estimate.
 - **Uninsured and self-pay patients,** where the estimate is a legal document under the No Surprises Act.
 
 An estimate stores its inputs (the eligibility check, plan rules, contract rates and versions used) so that, when the final bill differs, the practice can show why: a deductible met by another provider in between, a procedure that changed during treatment, a downgrade the payer applied.
@@ -118,15 +118,14 @@ A balance that statements and reminders don't collect goes one of three ways: wr
 
 ## How to Build It
 
-The core `patient_statements`, `payments`, `ledger_entries` and `guarantors` hold the patient's money. This chapter adds estimates, statement delivery, payment plans, collection placements and the state rules that gate them:
+The core `patient_statements`, `payments`, `ledger_entries` and `guarantors` hold the patient's money. This chapter adds good faith estimates, statement detail, payment plans, collection placements and the state rules that gate them:
 
 ```sql
-CREATE TABLE estimates (
+CREATE TABLE good_faith_estimates (      -- No Surprises Act estimates for uninsured and self-pay patients
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  organization_id    UUID NOT NULL REFERENCES organizations (id),
+  organization_id    UUID NOT NULL REFERENCES organizations (id),   -- the convening provider
   patient_id         UUID NOT NULL REFERENCES patients (id),
-  kind               TEXT NOT NULL CHECK (kind IN ('insured', 'gfe_uninsured', 'gfe_self_pay',
-                       'dental_treatment_plan')),
+  kind               TEXT NOT NULL CHECK (kind IN ('uninsured', 'self_pay')),
   appointment_id     UUID REFERENCES appointments (id),
   scheduled_on       DATE,                  -- when the care was scheduled or the estimate requested
   service_date       DATE,
@@ -134,34 +133,28 @@ CREATE TABLE estimates (
   delivered_at       TIMESTAMPTZ,
   delivered_via      TEXT,
   total_expected     BIGINT NOT NULL,
-  inputs             JSONB NOT NULL,        -- eligibility check, plan rule and rate versions used
+  inputs             JSONB NOT NULL,        -- fee schedule and service versions used
   document_id        UUID REFERENCES documents (id),  -- the estimate as given, kept 6 years
-  supersedes_id      UUID REFERENCES estimates (id)
+  supersedes_id      UUID REFERENCES good_faith_estimates (id)
 );
 
 CREATE TABLE estimate_lines (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  estimate_id        UUID NOT NULL REFERENCES estimates (id),
+  estimate_id        UUID NOT NULL REFERENCES good_faith_estimates (id),
   provider_org_id    UUID NOT NULL REFERENCES organizations (id),  -- co-providers too
   provider_npi       TEXT NOT NULL,
   provider_tin       TEXT,
   procedure_code     TEXT NOT NULL,
   diagnosis_codes    TEXT[] NOT NULL DEFAULT '{}',
   quantity           NUMERIC NOT NULL DEFAULT 1,
-  expected_charge    BIGINT NOT NULL,
-  expected_insurance BIGINT,                -- insured estimates
-  expected_patient   BIGINT NOT NULL
+  expected_charge    BIGINT NOT NULL
 );
 
-ALTER TABLE patient_statements
-  ADD COLUMN guarantor_id     UUID NOT NULL REFERENCES guarantors (id),
-  ADD COLUMN sequence         SMALLINT NOT NULL,   -- first, second, final notice
-  ADD COLUMN channel          TEXT NOT NULL CHECK (channel IN ('mail', 'email', 'sms', 'portal')),
-  ADD COLUMN balance_due      BIGINT NOT NULL,
+ALTER TABLE patient_statements           -- guarantor, balance_due, delivery, document and status are core
+  ADD COLUMN sequence          SMALLINT NOT NULL,          -- first, second, final notice
   ADD COLUMN pending_insurance BIGINT NOT NULL DEFAULT 0,  -- shown, not billed
-  ADD COLUMN document_id      UUID REFERENCES documents (id),
-  ADD COLUMN sent_at          TIMESTAMPTZ,
-  ADD COLUMN returned         BOOLEAN NOT NULL DEFAULT FALSE;   -- undeliverable mail
+  ADD COLUMN entry_ids         UUID[] NOT NULL,            -- the ledger entries that make the balance
+  ADD COLUMN sent_at           TIMESTAMPTZ;
 
 CREATE TABLE payment_plans (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -209,17 +202,18 @@ A self-pay bill is checked against its estimate before it goes out:
 ```sql
 SELECT e.id, el.provider_org_id, SUM(el.expected_charge) AS expected, b.billed,
        b.billed - SUM(el.expected_charge) AS over
-FROM estimates e
+FROM good_faith_estimates e
 JOIN estimate_lines el ON el.estimate_id = e.id
 JOIN LATERAL (
   SELECT SUM(le.amount) AS billed
   FROM ledger_entries le
+  JOIN charges ch ON ch.id = le.charge_id
   WHERE le.patient_id = e.patient_id
     AND le.kind = 'charge'
-    AND le.service_date = e.service_date
+    AND ch.service_on = e.service_date
     AND le.organization_id = el.provider_org_id
 ) b ON TRUE
-WHERE e.kind IN ('gfe_uninsured', 'gfe_self_pay') AND e.id = $1
+WHERE e.id = $1
 GROUP BY e.id, el.provider_org_id, b.billed
 HAVING b.billed - SUM(el.expected_charge) >= 40000;   -- $400: dispute-eligible
 ```

@@ -133,7 +133,7 @@ What the choice changes for software:
 
 ## How to Build It
 
-The core model has the money records (`charges`, `claims`, `claim_lines`, `remittances`, `remittance_lines`, `payments`, `ledger_entries`, `patient_statements`). This chapter adds the two things every later chapter in the part uses: a log of every electronic transaction exchanged with a clearinghouse or payer, and work items that make the back end a set of queues.
+The core model has the money records (`charges`, `claims`, `claim_lines`, `remittances`, `remittance_lines`, `payments`, `ledger_entries`, `patient_statements`). This chapter adds what every later chapter in the part uses: a log of every electronic transaction exchanged with a clearinghouse or payer, work items that make the back end a set of queues, and month-end A/R snapshots.
 
 ```sql
 CREATE TABLE edi_transactions (          -- every X12 file or API call, inbound and outbound
@@ -176,7 +176,20 @@ CREATE TABLE rcm_work_items (            -- one owned, aged task on the back end
   closed_at        TIMESTAMPTZ
 );
 CREATE INDEX rcm_work_items_queue_idx ON rcm_work_items (organization_id, kind, status, due_at);
+
+CREATE TABLE ar_snapshots (              -- A/R by payer and age bucket, frozen at each month end
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  as_of            DATE NOT NULL,
+  responsibility   TEXT NOT NULL CHECK (responsibility IN ('insurance', 'patient')),
+  payer_id         UUID REFERENCES payers (id),          -- null for patient balances
+  bucket           TEXT NOT NULL CHECK (bucket IN ('0_30', '31_60', '61_90', '91_120', '120_plus')),
+  balance          BIGINT NOT NULL,
+  claim_count      INT,
+  UNIQUE NULLS NOT DISTINCT (organization_id, as_of, responsibility, payer_id, bucket)
+);
 ```
+
+A/R snapshots exist because aging is a point-in-time fact: a balance that was 45 days old at September's close stays reported that way after it's paid, and trend lines ("over-90 insurance A/R fell from 18% to 11%") need the frozen numbers, not a recomputation from today's ledger.
 
 The KPIs are queries over the core tables, computed with the formulas shown on screen:
 

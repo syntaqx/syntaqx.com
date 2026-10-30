@@ -122,7 +122,7 @@ Medicare has its own secondary payer rules. For example, Medicare is secondary f
 
 Dental adds a wrinkle: secondary dental plans differ in how they compute what's left (some pay up to their own allowance, some only the balance the primary left, some never more than they'd have paid as primary), so the secondary payment is a function of the secondary plan's coordination method, which belongs on the plan record.
 
-What the software stores: each coverage's order (1, 2, 3) per patient, the subscriber and the patient's relationship to them, and the date the order was last confirmed. A 271 may report other coverage it knows about; that hint is a reason to ask the patient, not a reason to reorder automatically. Secondary claims are built from the primary's remittance ([Secondary Claims](/books/health-tech/remittance-and-payment-posting#secondary-claims)).
+What the software stores: each coverage's order (the core `priority`, 1 to 3) per patient, the subscriber and the patient's relationship to them, and the date the order was last confirmed. A 271 may report other coverage it knows about; that hint is a reason to ask the patient, not a reason to reorder automatically. Secondary claims are built from the primary's remittance ([Secondary Claims](/books/health-tech/remittance-and-payment-posting#secondary-claims)).
 
 ## Capturing the Card
 
@@ -146,27 +146,20 @@ My default for a new product: parse the 271 thoroughly, keep shared plan benefit
 
 ## How to Build It
 
-The core `coverages` row is a patient's policy with a payer and plan; `plans` holds plan-level terms. This chapter adds coordination fields, every eligibility check with its raw response, parsed benefits, dental plan rules and procedure usage:
+The core `coverages` row is a patient's policy under a plan, with its `priority` (primary, secondary), the subscriber relationship, the card image and when it was last verified; `plans` holds the payer's product. This chapter adds confirmation of the order, every eligibility check with its raw response, parsed benefits, dental plan rules and procedure usage:
 
 ```sql
-ALTER TABLE coverages
-  ADD COLUMN cob_order          SMALLINT NOT NULL DEFAULT 1 CHECK (cob_order BETWEEN 1 AND 3),
-  ADD COLUMN cob_confirmed_at   TIMESTAMPTZ,       -- when the order was last confirmed with the patient
-  ADD COLUMN subscriber_relation TEXT NOT NULL CHECK (subscriber_relation IN ('self', 'spouse',
-                                  'child', 'other')),
-  ADD COLUMN card_front_doc_id  UUID REFERENCES documents (id),
-  ADD COLUMN card_back_doc_id   UUID REFERENCES documents (id),
-  ADD COLUMN last_check_id      UUID,              -- eligibility_checks, below
-  ADD COLUMN last_status        TEXT CHECK (last_status IN ('active', 'inactive', 'unknown',
-                                  'rejected'));
+ALTER TABLE coverages                    -- priority, relationship, card_document_id and verified_at are core
+  ADD COLUMN priority_confirmed_at TIMESTAMPTZ,      -- when the order was last confirmed with the patient
+  ADD COLUMN card_back_document_id UUID REFERENCES documents (id),
+  ADD COLUMN last_check_id         UUID,             -- eligibility_checks, below
+  ADD COLUMN last_status           TEXT CHECK (last_status IN ('active', 'inactive', 'unknown',
+                                     'rejected'));
 
 ALTER TABLE plans
   ADD COLUMN benefit_year_start  DATE,              -- calendar year or a plan year
   ADD COLUMN cob_method          TEXT CHECK (cob_method IN ('standard', 'non_duplication',
-                                  'carve_out')),    -- how a secondary computes what's left
-  ADD COLUMN verified_at         TIMESTAMPTZ,       -- the shared benefit record's last check
-  ADD COLUMN verified_source     TEXT CHECK (verified_source IN ('271', 'portal', 'phone',
-                                  'payer_document'));
+                                  'carve_out'));    -- how a secondary computes what's left
 
 CREATE TABLE eligibility_checks (
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -190,7 +183,7 @@ CREATE TABLE eligibility_checks (
 );
 CREATE INDEX eligibility_checks_coverage_idx ON eligibility_checks (coverage_id, requested_at DESC);
 
-CREATE TABLE coverage_benefits (         -- one parsed EB answer, scoped as the payer scoped it
+CREATE TABLE benefit_details (         -- one parsed EB answer, scoped as the payer scoped it
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   check_id         UUID NOT NULL REFERENCES eligibility_checks (id),
   benefit_code     TEXT NOT NULL,          -- '1', 'A', 'B', 'C', 'F', 'G', ...
@@ -210,6 +203,7 @@ CREATE TABLE coverage_benefits (         -- one parsed EB answer, scoped as the 
 
 CREATE TABLE plan_procedure_rules (      -- dental benefit breakdown, shared by every patient on the plan
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),  -- the practice that verified it
   plan_id          UUID NOT NULL REFERENCES plans (id),
   procedure_codes  TEXT[] NOT NULL,        -- a shared frequency covers several codes
   category         TEXT CHECK (category IN ('preventive', 'basic', 'major', 'ortho')),
@@ -235,13 +229,13 @@ Usage against a frequency is computed, not stored, from the practice's own `proc
 -- How many of a shared frequency has this patient used in the current benefit year?
 SELECT r.id, r.frequency_count, COUNT(p.id) AS used
 FROM plan_procedure_rules r
-JOIN coverages c ON c.plan_id = r.plan_id AND c.id = $1
+JOIN coverages c ON c.plan_id = r.plan_id AND c.id = $1 AND r.organization_id = $4
 LEFT JOIN procedures p
   ON p.patient_id = c.patient_id
  AND p.code = ANY (r.procedure_codes)
  AND p.status = 'completed'
  AND p.performed_on >= $2              -- start of the benefit year, from plans.benefit_year_start
- AND (NOT r.per_tooth OR p.tooth = $3)
+ AND (NOT r.per_tooth OR p.body_site = $3)   -- the tooth, for per-tooth limits
 WHERE r.frequency_period = 'benefit_year'
 GROUP BY r.id, r.frequency_count;
 ```

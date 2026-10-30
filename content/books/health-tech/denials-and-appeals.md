@@ -1,7 +1,7 @@
 +++
 title = "Denials, Appeals & Claim Status"
 nav_title = "Denials & Appeals"
-description = "When payers say no or say nothing: 276/277 claim status, denial categories, Medicare's five appeal levels, commercial appeals, audits, recoupments, underpayments."
+description = "When payers say no or nothing: 276/277 claim status, denial categories, Medicare's five appeal levels, commercial appeals, audits, recoupments, underpayments."
 category = "Health Tech Industry"
 order = 1924
 part = "Revenue Cycle"
@@ -106,7 +106,7 @@ An appeal is a package: a letter stating the claim, the denial, the argument and
 Payers review paid claims after the fact, and the outcome of a finding is a demand or an offset against future payments:
 
 - **Medicare Recovery Audit Contractors** (RACs) review claims after payment in five regions: Performant in regions 1 and 2, Cotiviti in regions 3, 4 and 5, with region 5 covering durable medical equipment, home health and hospice nationwide. CMS's older program materials describe a lookback of three years from the date the claim was paid; the current program page doesn't restate it. <!-- source-gap: rac-lookback | secondary | Medicare RACs review claims up to three years from the date paid | closes with: a current CMS Recovery Audit Program page or statement of work stating the lookback | checked: 2026-10-29 -->
-- **Medicare Advantage risk adjustment audits** (RADV) audit diagnoses that raised plan payments, which reach practices as records requests ([Value-Based Care & Quality](/books/health-tech/value-based-care#risk-adjustment)).
+- **Medicare Advantage risk adjustment audits** (RADV) audit diagnoses that raised plan payments, which reach practices as records requests ([Value-Based Care & Quality](/books/health-tech/value-based-care#medicare-advantage-and-risk-adjustment)).
 - **Commercial payment integrity** programs request records, apply edits after payment and recoup by offset in a later 835, appearing as a provider-level adjustment that names the original claim ([Provider-Level Adjustments and Recoupments](/books/health-tech/remittance-and-payment-posting#provider-level-adjustments-and-recoupments)).
 
 What the system must do: track every records request with its deadline (missing one usually means the payer recoups by default); link each recoupment to the claim it reverses; keep the appeal path open, because a recoupment is appealable like a denial; and keep the documentation that supported the claim retrievable for as long as the payer can audit it.
@@ -121,7 +121,7 @@ For software this is a workflow with a clock: a credit balance or audit finding 
 
 A payment can be on time, error-free and wrong: the payer paid less than its contract with the practice says. Finding it requires the contract as data:
 
-- **Fee schedules per payer,** by code, modifier, place of service and effective date, from the contract or the payer's published schedule.
+- **Fee schedules per payer,** by code and effective date (the payer fee schedules of [The Practice Business](/books/health-tech/practice-business#how-to-build-it)), from the contract or the payer's published schedule.
 - **Payment methodology,** where it isn't a simple fee schedule: a percentage of the Medicare rate for the year, multiple procedure reductions, a case rate.
 - **Expected allowed amount** computed for every claim line when the claim is built, compared with the allowed amount in the 835.
 
@@ -129,7 +129,7 @@ A line paid below expected by more than a tolerance opens an underpayment work i
 
 ## How to Build It
 
-This chapter adds claim status checks, denials, appeals with their levels and deadlines, records requests, overpayment investigations and contracted rates:
+This chapter adds claim status checks, denials, appeals with their levels and deadlines, records requests, overpayment investigations, and payment methods on the payer fee schedules The Practice Business defines:
 
 ```sql
 CREATE TABLE claim_status_checks (
@@ -215,39 +215,34 @@ CREATE TABLE overpayment_investigations (
   analysis_doc_id   UUID REFERENCES documents (id)
 );
 
-CREATE TABLE contract_rates (            -- what the payer agreed to pay
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  organization_id  UUID NOT NULL REFERENCES organizations (id),
-  payer_id         UUID NOT NULL REFERENCES payers (id),
-  plan_id          UUID REFERENCES plans (id),       -- null: all the payer's plans
-  procedure_code   TEXT NOT NULL,
-  modifier         TEXT,
-  place_of_service TEXT,
-  method           TEXT NOT NULL CHECK (method IN ('fixed', 'percent_of_medicare', 'case_rate')),
-  amount           BIGINT,
-  percent          NUMERIC(6,4),
-  valid_during     DATERANGE NOT NULL,
-  source_doc_id    UUID REFERENCES documents (id)    -- the contract or schedule
-);
+ALTER TABLE fee_schedules                -- The Practice Business's payer fee schedules (kind 'ppo', 'medicare'...)
+  ADD COLUMN method       TEXT NOT NULL DEFAULT 'fixed' CHECK (method IN ('fixed',
+                            'percent_of_medicare', 'case_rate')),
+  ADD COLUMN percent      NUMERIC(6,4),            -- for percent_of_medicare
+  ADD COLUMN source_doc_id UUID REFERENCES documents (id);  -- the contract or published schedule
 ```
 
-Underpayments are a query over posted lines and the rates in effect on the date of service:
+Underpayments are a query over posted lines and the payer fee schedule in effect on the date of service:
 
 ```sql
-SELECT rl.id, cl.claim_id, rl.procedure_code, rl.allowed, cr.amount AS expected,
-       cr.amount - rl.allowed AS variance
+SELECT rl.id, cl.claim_id, cl.code, rl.allowed_amount, fsi.amount AS expected,
+       fsi.amount * cl.units - rl.allowed_amount AS variance
 FROM remittance_lines rl
 JOIN claim_lines cl ON cl.id = rl.claim_line_id
+JOIN charges ch     ON ch.id = cl.charge_id
 JOIN claims c       ON c.id = cl.claim_id
-JOIN contract_rates cr
-  ON cr.organization_id = c.organization_id
- AND cr.payer_id = c.payer_id
- AND cr.procedure_code = rl.procedure_code
- AND cr.method = 'fixed'
- AND cr.valid_during @> cl.service_date
+JOIN coverages cv   ON cv.id = c.coverage_id
+JOIN fee_schedules fs
+  ON fs.organization_id = c.organization_id
+ AND fs.plan_id = cv.plan_id
+ AND fs.method = 'fixed'
+ AND fs.valid_during @> ch.service_on
+JOIN fee_schedule_items fsi
+  ON fsi.fee_schedule_id = fs.id
+ AND fsi.code = cl.code
 WHERE c.organization_id = $1
-  AND rl.allowed IS NOT NULL
-  AND cr.amount - rl.allowed > $2;        -- tolerance in cents
+  AND rl.allowed_amount IS NOT NULL
+  AND fsi.amount * cl.units - rl.allowed_amount > $2;   -- tolerance in cents
 ```
 
 Design notes:
@@ -272,7 +267,7 @@ Design notes:
 - **Encode Medicare's five levels** with their windows and amount-in-controversy thresholds by year, and per-payer windows for everyone else.
 - **Track records requests and recoupments** with deadlines and links to the claims involved.
 - **Run the 60-day overpayment clock,** with the 180-day investigation suspension, from credit balances and audit findings.
-- **Load contract rates and compare every allowed amount,** because underpayments are invisible without them.
+- **Load payer fee schedules and compare every allowed amount,** because underpayments are invisible without them.
 
 ## References
 

@@ -1,6 +1,6 @@
 +++
 title = "Clearinghouses"
-description = "The switch between practices and payers: what clearinghouses do, payer IDs, EDI, ERA and EFT enrollment, pricing, APIs, dental networks, Change Healthcare, switching."
+description = "The switch between practices and payers: what clearinghouses do, payer IDs, EDI, ERA and EFT enrollment, pricing, APIs, dental, Change Healthcare, switching."
 category = "Health Tech Industry"
 order = 1922
 part = "Revenue Cycle"
@@ -130,11 +130,11 @@ A planned switch, in order:
 The core `integrations` table holds a practice's connection to an external system. This chapter adds the clearinghouse-specific records: payer routes per clearinghouse and transaction, and enrollments:
 
 ```sql
-ALTER TABLE integrations
+ALTER TABLE integrations                 -- system_kind = 'clearinghouse'
   ADD COLUMN clearinghouse_role TEXT CHECK (clearinghouse_role IN ('primary', 'secondary',
                                   'dental', 'standby'));
 
-CREATE TABLE payer_routes (              -- how a transaction reaches a payer through one clearinghouse
+CREATE TABLE payer_connections (              -- how a transaction reaches a payer through one clearinghouse
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   payer_id         UUID NOT NULL REFERENCES payers (id),
   integration_id   UUID NOT NULL REFERENCES integrations (id),
@@ -147,7 +147,7 @@ CREATE TABLE payer_routes (              -- how a transaction reaches a payer th
   UNIQUE (payer_id, integration_id, transaction_set)
 );
 
-CREATE TABLE payer_enrollments (         -- EDI, ERA and EFT enrollment, per provider and payer
+CREATE TABLE edi_enrollments (         -- EDI, ERA and EFT enrollment, per provider and payer
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   organization_id  UUID NOT NULL REFERENCES organizations (id),
   practitioner_id  UUID REFERENCES practitioners (id),  -- null for a group-level enrollment
@@ -164,8 +164,8 @@ CREATE TABLE payer_enrollments (         -- EDI, ERA and EFT enrollment, per pro
   live_at          TIMESTAMPTZ,
   ended_at         TIMESTAMPTZ            -- ERA moved to another clearinghouse
 );
-CREATE UNIQUE INDEX payer_enrollments_live_era_idx
-  ON payer_enrollments (organization_id, payer_id, npi)
+CREATE UNIQUE INDEX edi_enrollments_live_era_idx
+  ON edi_enrollments (organization_id, payer_id, npi)
   WHERE kind = 'era' AND status = 'live';  -- ERA is exclusive to one clearinghouse
 ```
 
@@ -173,13 +173,13 @@ Routing a claim is then a lookup with a fallback:
 
 ```sql
 SELECT r.integration_id, r.clearinghouse_payer_id
-FROM payer_routes r
+FROM payer_connections r
 JOIN integrations i ON i.id = r.integration_id AND i.organization_id = $1
 WHERE r.payer_id = $2
   AND r.transaction_set = $3
   AND r.support IN ('supported', 'enrollment_required')
   AND (r.support = 'supported' OR EXISTS (
-        SELECT 1 FROM payer_enrollments e
+        SELECT 1 FROM edi_enrollments e
         WHERE e.organization_id = $1 AND e.payer_id = $2 AND e.status = 'live'
           AND e.integration_id = r.integration_id
           AND e.kind = CASE WHEN $3 LIKE '837%' THEN 'edi_claims' ELSE 'edi_eligibility' END))

@@ -1,7 +1,7 @@
 +++
 title = "Coding, Documentation & Compliance"
 nav_title = "Coding & Compliance"
-description = "What a claim may say: E/M guidelines, documentation integrity, medical necessity and coverage policy, compliance programs, False Claims Act, Anti-Kickback and Stark."
+description = "What a claim may say: E/M guidelines, documentation integrity, coverage policy, compliance programs, the False Claims Act, Anti-Kickback and Stark."
 category = "Health Tech Industry"
 order = 1927
 part = "Revenue Cycle"
@@ -52,9 +52,9 @@ Clinical documentation integrity (CDI, also clinical documentation improvement) 
 
 The rule for queries is that they must not lead. A query presents the clinical indicators in the record and asks the clinician to document a conclusion, with options including "other" and "unable to determine," never a suggestion of the code that pays more. For software:
 
-- **Queries are records,** with the indicators shown, the options offered, the clinician's answer and the resulting documentation amendment, linked to the note ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-dont-overwrite)).
+- **Queries are records,** with the indicators shown, the options offered, the clinician's answer and the resulting documentation amendment, linked to the note ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
 - **AI suggestions are queries, not edits.** A model that finds an undocumented condition in the chart produces a question for the clinician with its evidence, never a diagnosis added to the claim. The rules for AI-generated documentation are Part 10's AI in Health Tech chapter.
-- **Diagnoses drive risk payments.** In Medicare Advantage and value-based contracts, diagnoses raise payments directly, so CDI in those settings is a compliance focus of its own ([Risk Adjustment](/books/health-tech/value-based-care#risk-adjustment)).
+- **Diagnoses drive risk payments.** In Medicare Advantage and value-based contracts, diagnoses raise payments directly, so CDI in those settings is a compliance focus of its own ([Risk Adjustment](/books/health-tech/value-based-care#medicare-advantage-and-risk-adjustment)).
 
 ## Medical Necessity, NCDs and LCDs
 
@@ -137,6 +137,7 @@ CREATE TABLE documentation_queries (     -- CDI questions to the clinician
 
 CREATE TABLE coverage_waivers (          -- ABNs and commercial equivalents
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
   patient_id       UUID NOT NULL REFERENCES patients (id),
   coverage_id      UUID NOT NULL REFERENCES coverages (id),
   kind             TEXT NOT NULL CHECK (kind IN ('abn_cms_r_131', 'payer_waiver')),
@@ -152,12 +153,12 @@ CREATE TABLE coverage_waivers (          -- ABNs and commercial equivalents
 ALTER TABLE claim_lines
   ADD COLUMN waiver_id UUID REFERENCES coverage_waivers (id);   -- drives the ABN modifier
 
-CREATE TABLE coding_audits (             -- compliance program sampling
+CREATE TABLE coding_reviews (             -- compliance program sampling
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   organization_id  UUID NOT NULL REFERENCES organizations (id),
   claim_line_id    UUID NOT NULL REFERENCES claim_lines (id),
   practitioner_id  UUID NOT NULL REFERENCES practitioners (id),
-  audit_period     DATERANGE NOT NULL,
+  review_period     DATERANGE NOT NULL,
   billed_code      TEXT NOT NULL,
   supported_code   TEXT,                   -- the auditor's finding
   finding          TEXT NOT NULL CHECK (finding IN ('supported', 'overcoded', 'undercoded',
@@ -171,18 +172,17 @@ CREATE TABLE coding_audits (             -- compliance program sampling
 A monitoring query for the compliance program, E/M level distribution by provider against the practice:
 
 ```sql
-SELECT c.rendering_provider_id, cl_code,
+SELECT ch.rendering_role_id, l.code,
        COUNT(*) AS n,
-       ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY c.rendering_provider_id), 1) AS pct
+       ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY ch.rendering_role_id), 1) AS pct
 FROM claims c
-JOIN LATERAL (
-  SELECT ch.procedure_code AS cl_code
-  FROM claim_lines l JOIN charges ch ON ch.id = l.charge_id
-  WHERE l.claim_id = c.id AND ch.procedure_code BETWEEN '99202' AND '99215'
-) x ON TRUE
-WHERE c.organization_id = $1 AND c.submitted_at >= NOW() - INTERVAL '90 days'
-GROUP BY c.rendering_provider_id, cl_code
-ORDER BY c.rendering_provider_id, cl_code;
+JOIN claim_lines l ON l.claim_id = c.id
+JOIN charges ch    ON ch.id = l.charge_id
+WHERE c.organization_id = $1
+  AND c.submitted_at >= NOW() - INTERVAL '90 days'
+  AND l.code IN ('99202', '99203', '99204', '99205', '99211', '99212', '99213', '99214', '99215')
+GROUP BY ch.rendering_role_id, l.code
+ORDER BY ch.rendering_role_id, l.code;
 ```
 
 Design notes:

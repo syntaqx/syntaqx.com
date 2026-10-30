@@ -141,57 +141,23 @@ For dental, the secondary claim also needs the primary's handling of frequencies
 
 ## How to Build It
 
-The core `remittances` row is one payer payment's explanation and `remittance_lines` its service lines. This chapter adds the claim level between them, breaks adjustments into their own rows, adds deposits and reassociation, and records each posting run:
+The core `remittances` row is one payer payment (trace number, method, amount, the 835 as a document), and each `remittance_lines` row is what the payer did with one claim line, with its adjustments as a JSON list of group, CARC and amount, its remark codes and the claim status code. This chapter adds the parse state and the 835's identifiers, provider-level adjustments, bank deposits and their reassociation, posting rules, and posting runs:
 
 ```sql
-ALTER TABLE remittances
-  ADD COLUMN edi_txn_id      UUID NOT NULL REFERENCES edi_transactions (id),  -- the raw 835
-  ADD COLUMN payer_id        UUID NOT NULL REFERENCES payers (id),
-  ADD COLUMN trace_number    TEXT NOT NULL,          -- TRN02
-  ADD COLUMN payment_method  TEXT NOT NULL CHECK (payment_method IN ('ach', 'check', 'virtual_card',
-                               'non_payment')),
-  ADD COLUMN payment_amount  BIGINT NOT NULL,        -- BPR02, cents
-  ADD COLUMN effective_date  DATE,                   -- BPR16
+ALTER TABLE remittances                  -- trace_number, payment_method, payment_amount, paid_on core
+  ADD COLUMN edi_txn_id      UUID REFERENCES edi_transactions (id),  -- the raw 835 as exchanged
   ADD COLUMN status          TEXT NOT NULL DEFAULT 'received' CHECK (status IN ('received',
-                               'unbalanced', 'duplicate', 'posting', 'posted', 'exceptions')),
-  ADD CONSTRAINT remittances_unique_trace UNIQUE (payer_id, trace_number, payment_amount);
+                               'unbalanced', 'duplicate', 'posting', 'posted', 'exceptions'));
 
-CREATE TABLE remittance_claims (         -- one CLP: a claim's adjudication in this payment
-  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  remittance_id       UUID NOT NULL REFERENCES remittances (id),
-  claim_id            UUID REFERENCES claims (id),   -- null until matched
-  patient_control_number TEXT NOT NULL,              -- CLP01
-  status_code         TEXT NOT NULL,                 -- 1 primary, 2 secondary, 4 denied, 22 reversal
-  charge              BIGINT NOT NULL,
-  paid                BIGINT NOT NULL,
-  patient_responsibility BIGINT NOT NULL,
-  payer_claim_number  TEXT,
-  crossed_over_to     TEXT                           -- the payer Medicare forwarded to, if any
-);
-
-ALTER TABLE remittance_lines
-  ADD COLUMN remittance_claim_id UUID NOT NULL REFERENCES remittance_claims (id),
-  ADD COLUMN claim_line_id   UUID REFERENCES claim_lines (id),   -- matched by control number
+ALTER TABLE remittance_lines             -- amounts, adjustments, remarks and claim status are core
+  ADD COLUMN patient_control_number TEXT NOT NULL,   -- CLP01, how the claim was matched
+  ADD COLUMN line_control_number    TEXT,            -- Loop 2110 REF, how the line was matched
   ADD COLUMN procedure_code  TEXT NOT NULL,
   ADD COLUMN modifiers       TEXT[] NOT NULL DEFAULT '{}',
-  ADD COLUMN charge          BIGINT NOT NULL,
-  ADD COLUMN paid            BIGINT NOT NULL,
-  ADD COLUMN allowed         BIGINT,                 -- reported, or charge less CO adjustments
-  ADD COLUMN units           NUMERIC(7,2),
-  ADD COLUMN remark_codes    TEXT[] NOT NULL DEFAULT '{}';       -- RARCs
-
-CREATE TABLE remittance_adjustments (    -- one CAS group, reason and amount
-  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  remittance_line_id  UUID REFERENCES remittance_lines (id),
-  remittance_claim_id UUID REFERENCES remittance_claims (id),   -- claim-level CAS
-  group_code          TEXT NOT NULL CHECK (group_code IN ('CO', 'PR', 'OA', 'PI')),
-  reason_code         TEXT NOT NULL,          -- CARC
-  amount              BIGINT NOT NULL,
-  quantity            NUMERIC(7,2),
-  posting_action      TEXT,                   -- from the rule that matched: contractual, to_patient, denial, review
-  posting_rule_id     UUID,
-  CHECK (remittance_line_id IS NOT NULL OR remittance_claim_id IS NOT NULL)
-);
+  ADD COLUMN units           NUMERIC(8,2),
+  ADD COLUMN crossed_over_to TEXT,                   -- the payer Medicare forwarded the claim to
+  ADD COLUMN posting_status  TEXT NOT NULL DEFAULT 'pending' CHECK (posting_status IN ('pending',
+                               'auto_posted', 'manual_posted', 'exception'));
 
 CREATE TABLE provider_adjustments (      -- PLB: not tied to a claim in this ERA
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -202,7 +168,7 @@ CREATE TABLE provider_adjustments (      -- PLB: not tied to a claim in this ERA
   amount           BIGINT NOT NULL         -- positive reduces the payment
 );
 
-CREATE TABLE deposits (                  -- money that reached the bank
+CREATE TABLE bank_deposits (             -- money that reached the bank, from the bank's file or API
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   organization_id  UUID NOT NULL REFERENCES organizations (id),
   bank_account_ref TEXT NOT NULL,
@@ -211,42 +177,84 @@ CREATE TABLE deposits (                  -- money that reached the bank
   trace_number     TEXT,                   -- CCD+ addenda field 3
   payer_name       TEXT,
   effective_date   DATE NOT NULL,
-  remittance_id    UUID REFERENCES remittances (id),  -- set by reassociation
-  matched_at       TIMESTAMPTZ
+  source_ref       TEXT NOT NULL           -- the bank file and line it came from
+);
+
+CREATE TABLE eft_reassociations (        -- a deposit matched to its 835
+  deposit_id       UUID PRIMARY KEY REFERENCES bank_deposits (id),
+  remittance_id    UUID NOT NULL UNIQUE REFERENCES remittances (id),  -- one ERA, one EFT
+  matched_by       TEXT NOT NULL,          -- typed actor: automation or the user who matched it
+  matched_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE posting_rules (             -- which codes post how, per organization, dated
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   organization_id  UUID REFERENCES organizations (id),  -- null for the platform default
   payer_id         UUID REFERENCES payers (id),
-  group_code       TEXT NOT NULL,
-  reason_code      TEXT NOT NULL,
+  group_code       TEXT NOT NULL CHECK (group_code IN ('CO', 'PR', 'OA', 'PI')),
+  reason_code      TEXT NOT NULL,          -- CARC
   remark_code      TEXT,
   action           TEXT NOT NULL CHECK (action IN ('contractual', 'to_patient', 'denial',
                      'review', 'informational')),
   valid_during     DATERANGE NOT NULL
 );
+
+CREATE TABLE posting_runs (              -- one auto-posting pass over one remittance
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  remittance_id    UUID NOT NULL REFERENCES remittances (id),
+  started_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  finished_at      TIMESTAMPTZ,
+  lines_posted     INT NOT NULL DEFAULT 0,
+  lines_excepted   INT NOT NULL DEFAULT 0,
+  rule_versions    JSONB NOT NULL,         -- the posting rules in effect, for replay
+  outcome          TEXT CHECK (outcome IN ('posted', 'partial', 'failed'))
+);
 ```
 
-Reassociation is a join on the trace number with an amount check, run whenever either side arrives:
+Each adjustment in a line's JSON list is classified by the first posting rule that matches it, most specific first (organization and payer, then organization, then the platform default):
 
 ```sql
-UPDATE deposits d
-SET remittance_id = r.id, matched_at = NOW()
-FROM remittances r
+SELECT a.adj, r.action
+FROM remittance_lines rl
+CROSS JOIN LATERAL jsonb_array_elements(rl.adjustments) AS a(adj)
+LEFT JOIN LATERAL (
+  SELECT pr.action
+  FROM posting_rules pr
+  WHERE pr.group_code = a.adj->>'group'
+    AND pr.reason_code = a.adj->>'carc'
+    AND (pr.organization_id = $1 OR pr.organization_id IS NULL)
+    AND (pr.payer_id = $2 OR pr.payer_id IS NULL)
+    AND pr.valid_during @> CURRENT_DATE
+  ORDER BY pr.organization_id NULLS LAST, pr.payer_id NULLS LAST
+  LIMIT 1
+) r ON TRUE
+WHERE rl.remittance_id = $3;               -- a null action routes the line to a person
+```
+
+Reassociation is a match on the trace number with an amount check, run whenever either side arrives:
+
+```sql
+INSERT INTO eft_reassociations (deposit_id, remittance_id, matched_by)
+SELECT d.id, r.id, 'automation'
+FROM bank_deposits d
+JOIN remittances r
+  ON r.organization_id = d.organization_id
+ AND r.trace_number = d.trace_number
+ AND r.payment_amount = d.amount
 WHERE d.organization_id = $1
-  AND d.remittance_id IS NULL
-  AND d.trace_number = r.trace_number
-  AND d.amount = r.payment_amount
   AND r.status <> 'duplicate'
-RETURNING d.id, r.id;
+  AND NOT EXISTS (SELECT 1 FROM eft_reassociations e WHERE e.deposit_id = d.id)
+  AND NOT EXISTS (SELECT 1 FROM eft_reassociations e WHERE e.remittance_id = r.id)
+ON CONFLICT DO NOTHING
+RETURNING deposit_id, remittance_id;
 ```
 
 Design notes:
 
 - **Balance before posting.** Lines, claims and the payment must each add up; an unbalanced ERA is stored and flagged, never partly posted.
 - **Post in one transaction per claim:** every ledger entry for a remittance claim commits together, keyed by the remittance claim so a retry can't post twice ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
-- **Posting rules decide, and the decision is recorded** on each adjustment row, so a misposting can be traced to the rule that caused it and fixed everywhere.
+- **Posting rules decide, and the decision is recorded** with the posting run's rule versions, so a misposting can be traced to the rule that caused it and fixed everywhere.
 - **Payer payments are `payments` rows** with a payer source, applied to claim lines through ledger entries, the same as patient payments ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)).
 - **Events:** `remittance.received`, `remittance.posted`, `remittance.exception`, `deposit.unmatched` and `denial.opened`.
 
