@@ -64,7 +64,7 @@ The Clinical Laboratory Improvement Amendments of 1988 set the conditions "that 
 
 For software, CLIA matters in three places. **The practice's own certificate limits what it can result in-house:** a point-of-care test is only orderable as in-office if the location's certificate covers it, so the certificate (number, type, valid dates) belongs on the location and gates the test catalog. **The test report has required contents.** 42 CFR 493.1291(c) requires patient identification, "The name and address of the laboratory location where the test was performed," the report date, the test performed, the specimen source when appropriate, the result with units or interpretation, and the condition of unacceptable specimens. A system that reformats lab results for the chart or the patient has to keep every one of those, because the displayed result is still the lab's report. **Critical values must reach someone** (below).
 
-**Laboratory developed tests.** FDA's final rule treating laboratory developed tests as devices (published May 6, 2024) was vacated by a federal district court on March 31, 2025, and FDA published a rule on September 19, 2025 implementing the vacatur by restoring the prior definition of in vitro diagnostic products. As of October 2026, LDTs are regulated under CLIA, not FDA premarket review, which is why a lab's test catalog carries tests with no FDA clearance.
+**Laboratory developed tests.** FDA's final rule treating laboratory developed tests as devices (published May 6, 2024) was vacated and set aside on March 31, 2025 by the US District Court for the Eastern District of Texas in American Clinical Laboratory Association v. FDA (No. 4:24-cv-479), and FDA published a rule on September 19, 2025 implementing the vacatur by restoring the prior definition of in vitro diagnostic products. As of October 2026, LDTs are regulated under CLIA, not FDA premarket review, which is why a lab's test catalog carries tests with no FDA clearance.
 
 ## At-Home and Consumer-Initiated Testing
 
@@ -244,7 +244,7 @@ Design decisions:
 - [45 CFR 164.524 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-45?part=164&section=164.524), 30 days to act on an access request, one extension
 - [45 CFR 171.201 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-45?part=171&section=171.201), the Preventing Harm exception's individualized determination and data-quality grounds
 - [Federal Register: Medical Devices, Laboratory Developed Tests (May 6, 2024)](https://www.federalregister.gov/documents/2024/05/06/2024-08935/medical-devices-laboratory-developed-tests), the LDT final rule
-- [Federal Register: Laboratory Developed Tests, Implementation of Vacatur (September 19, 2025)](https://www.federalregister.gov/documents/2025/09/19/2025-18239/regulation-identification-number-0910-aj05-medical-devices-laboratory-developed-tests-implementation), the March 31, 2025 vacatur and the restored definition
+- [Federal Register: Laboratory Developed Tests, Implementation of Vacatur (September 19, 2025)](https://www.federalregister.gov/documents/2025/09/19/2025-18239/regulation-identification-number-0910-aj05-medical-devices-laboratory-developed-tests-implementation), the March 31, 2025 vacatur in American Clinical Laboratory Association v. FDA (E.D. Tex.) and the restored definition
 
 **Agencies**
 

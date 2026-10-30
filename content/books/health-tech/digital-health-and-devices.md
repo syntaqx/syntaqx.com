@@ -19,7 +19,7 @@ As of October 2026, from each organization's own pages:
 | Platform or product | What it is | What its public pages describe |
 | --- | --- | --- |
 | **Apple HealthKit (Health Records)** | The iPhone's health data store, including clinical records from providers | Clinical record types use `HKClinicalTypeIdentifier`, which "specifies the types of FHIR data supported by HealthKit"; "clinical records are read-only," so apps can't request to share them or create records; clinical types appear in "a separate permission sheet"; apps must enable the Clinical Health Records capability, give a usage string, and have "a valid Privacy Policy URL" |
-| **Android Health Connect (medical records)** | Android's on-device health data store, adding clinical records | FHIR R4 and R4B; resources including AllergyIntolerance, Condition, Encounter, Immunization, Medication, MedicationRequest, MedicationStatement, Observation (laboratory, vital signs, social history, pregnancy), Patient, Practitioner and Procedure; APIs in Jetpack Health Connect 1.1.0-beta02 requiring the Android 16 SDK, marked experimental, with the Play policy "still being developed" |
+| **Android Health Connect (medical records)** | Android's on-device health data store, adding clinical records | FHIR R4 and R4B; resources including AllergyIntolerance, Condition, Encounter, Immunization, Medication, MedicationRequest, MedicationStatement, Observation (laboratory, vital signs, social history, pregnancy), Patient, Practitioner and Procedure (plus Location, Organization and PractitionerRole); APIs in Jetpack Health Connect 1.1.0-beta02 requiring the Android 16 SDK, marked experimental, with the Play policy "still being developed" |
 | **Dexcom Stelo** | An over-the-counter continuous glucose monitor | FDA cleared it March 5, 2024 as the first OTC CGM, for adults 18 and older who don't use insulin; not designed to alert to hypoglycemia; "Users should not make medical decisions based on the device's output without talking to their healthcare provider" |
 | **FDA's AI-enabled device list** | The public list of authorized devices that use AI | Updated periodically; the newest decision date visible in October 2026 was June 29, 2026; FDA "will explore methods to identify and tag medical devices that incorporate foundation models" |
 
@@ -49,13 +49,13 @@ Most of this book's software sits in (A) and (C): a practice management system, 
 
 ## FDA's Rules for Software That Is a Device
 
-Software that is a device (software as a medical device, or a software function in a device) is reviewed through FDA's premarket pathways, by risk class: 510(k) clearance against a predicate, De Novo classification for novel low and moderate risk devices, or premarket approval for the highest risk. Then the device lives under quality system requirements, adverse event reporting and change control. The 2025 and 2026 guidance that changes how software teams work, as listed on FDA's digital health guidance page as of October 2026:
+Software that is a device (software as a medical device, or a software function in a device) is reviewed through FDA's premarket pathways, by risk class: 510(k) clearance against a predicate, De Novo classification for novel low and moderate risk devices, or premarket approval for the highest risk. Then the device lives under quality system requirements, adverse event reporting and change control. The 2025 and 2026 guidance that changes how software teams work, as listed on FDA's digital health guidance page and each guidance's own page as of October 2026:
 
 | Guidance | Status | What it does for software |
 | --- | --- | --- |
 | **Predetermined Change Control Plans for AI-enabled device software functions** | Final, dated August 18, 2025 | Lets a manufacturer get planned future model changes authorized up front, so retraining inside the plan doesn't need a new submission |
 | **AI-Enabled Device Software Functions: Lifecycle Management and Marketing Submission Recommendations** | Draft, January 7, 2025 | What an AI device submission should contain across the lifecycle; the only draft on FDA's digital health list |
-| **Cybersecurity in Medical Devices: Quality Management System Considerations and Content of Premarket Submissions** | Final, February 2026 | Supersedes the June 27, 2025 version; addresses "cyber devices" under FD&C section 524B |
+| **Cybersecurity in Medical Devices: Quality Management System Considerations and Content of Premarket Submissions** | Final, February 2026 (the digital health list still shows the June 27, 2025 version) | Supersedes the June 27, 2025 version; addresses "cyber devices" under FD&C section 524B |
 | **Clinical Decision Support Software** | Final, January 29, 2026 | Below |
 | **General Wellness: Policy for Low Risk Devices** | Final, January 6, 2026 | Above |
 
@@ -65,7 +65,7 @@ What changes in engineering practice: **releases are regulated events** for the 
 
 CDS is where most health software teams meet FDA. A drug interaction alert, a sepsis risk score, a recommendation for a screening test, a dosing calculator: each can fall inside the (E) exclusion or outside it. FDA's final CDS guidance (issued January 29, 2026, superseding a version issued January 6, 2026) applies the statute's criteria and adds two notable positions:
 
-- **One recommendation can still be non-device CDS.** "If only one option is clinically appropriate and the software function otherwise meets all criteria under section 520(o)(1)(E), FDA intends to exercise enforcement discretion."
+- **One recommendation can still be non-device CDS.** "if only one option is clinically appropriate and the software function otherwise meets all criteria under section 520(o)(1)(E), FDA intends to exercise enforcement discretion."
 - **The fourth criterion (independent review of the basis) weighs automation and time pressure.** The guidance considers the "level of software automation" and the "time-critical nature" of the decision, because a clinician can't independently review the basis of an alert that demands action in seconds.
 
 In practice: CDS that shows its inputs, its logic or source, and its reasoning to a clinician with time to check it is likely outside the device definition; CDS that analyzes images or device signals, targets patients rather than clinicians, or drives time-critical action without a reviewable basis is likely a device.
@@ -87,7 +87,7 @@ The FTC's Health Breach Notification Rule (16 CFR part 318) covers "vendors of p
 
 - **Health apps are covered.** The amendments clarify that apps and similar technologies holding health information not covered by HIPAA are within the rule.
 - **A breach includes an unauthorized disclosure,** not only a security intrusion. Sharing health data with an advertising platform without the consumer's authorization is a breach of security under the rule.
-- **Notice is due "no later than 60 calendar days after the discovery"** to affected individuals, and for breaches of 500 or more people, to the FTC at the same time.
+- **Notice is due "without unreasonable delay and in no case later than 60 calendar days after the discovery"** to affected individuals, and for breaches of 500 or more people, to the FTC at the same time.
 
 The FTC's first action under the rule was GoodRx in 2023 ([Advertising and Privacy Enforcement](/books/health-tech/telehealth#advertising-and-privacy-enforcement)). For an engineer the operative fact is the disclosure definition: an SDK or pixel that sends health events to a third party without authorization is a breach, so the data inventory (what each SDK receives) and the consent record (what the consumer authorized) are the controls, and a change to either is reviewed like a security change ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)). HIPAA's own breach rules, for covered entities and business associates, are the playbook's ([The Three Rules](/docs/compliance/hipaa#the-three-rules)).
 

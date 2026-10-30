@@ -40,7 +40,7 @@ Each step is a status with a timestamp and a responsible party, and the gaps are
 
 **Inbound referrals are the receiver's intake.** For a specialist, a referral is a new patient arriving with documents attached: demographics, insurance, the referring clinician (who gets the report later) and the reason. The intake becomes a patient, a coverage and an appointment, matched against existing records rather than duplicated ([Match Before Create](/docs/architecture/record-linkage#match-before-create)).
 
-**Closed-loop standards exist and are uneven.** Kno2 lists 360X, a closed-loop referral pattern, as one of its channels; HL7's Bidirectional Services eReferrals (BSeR) implementation guide defines FHIR referral and feedback for services such as community programs. Most loops still close by a document coming back, matched to the referral by people.
+**Closed-loop standards exist and are uneven.** Kno2 lists 360X, a closed-loop referral pattern, as one of its channels. 360X began in July 2012 as an initiative of ONC's State Health Information Exchange Cooperative Agreement Program, standardized the referral and its returned outcome on C-CDA documents over Direct, and is now an IHE profile ("360X for Referral Management") in the Patient Care Coordination domain; HL7's Bidirectional Services eReferrals (BSeR) implementation guide defines FHIR referral and feedback for services such as community programs. Most loops still close by a document coming back, matched to the referral by people.
 
 ## The Fax Reality
 
@@ -49,8 +49,8 @@ Fax persists because it works between any two offices with no onboarding and the
 | Method | Often send, 2018 | Often send, 2023 | Often send, 2025 | Often receive, 2023 | Often receive, 2025 |
 | --- | --- | --- | --- | --- | --- |
 | Mail or fax | 40% | 30% | 40% | 35% | 35% |
-| Direct (via a HISP) | | | 53% | | 38% |
-| State, regional or local HIE | | | 60% | | 53% |
+| Direct (via a HISP) | 42% | 58% | 53% | 44% | 38% |
+| State, regional or local HIE | 36% | 53% | 60% | 41% | 53% |
 
 In 2025, another 46% of hospitals "sometimes" received records by mail or fax. Those are hospitals, the best-connected providers; small practices, home health agencies and many specialists rely on fax more.
 
@@ -239,6 +239,8 @@ Design decisions:
 **Standards and networks**
 
 - [DirectTrust: Record exchange activity in 2025 (February 10, 2026)](https://directtrust.org/blog/news/directtrust-reports-record-high-exchange-activity-in-2025-with-nearly-1-9-billion-direct-exchange-transactions), message volume, addresses, organizations and electronic case reporting
+- [ONC Tech Lab: 360X closed loop transitions of care project](https://oncprojectracking.healthit.gov/wiki/x/H4PcEw), launched July 2012 under the State HIE Cooperative Agreement Program, C-CDA over Direct, the IHE 360X for Referral Management profile
+- [IHE: 360 Exchange Closed Loop Referral](https://wiki.ihe.net/index.php/360_Exchange_Closed_Loop_Referral), the profile in the Patient Care Coordination domain
 - [HL7: Bidirectional Services eReferrals (BSeR)](https://www.hl7.org/fhir/us/bser/), the FHIR referral and feedback implementation guide
 
 **Companies**

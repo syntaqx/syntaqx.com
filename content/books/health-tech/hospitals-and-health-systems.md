@@ -18,7 +18,7 @@ As of October 2026, from each vendor's own pages:
 
 | Vendor | What it is | What its public pages describe |
 | --- | --- | --- |
-| **Epic** | The enterprise EHR most associated with large health systems | open.epic lists "over 750 no-cost APIs and interfaces," "322 billion annual web service transactions," "over 50 playbooks," and USCDI v3 support available to developers for free; Vendor Services gives developers integration technology, extra documentation, a larger sandbox and support; Showroom "helps you discover services and products for use with Epic" |
+| **Epic** | The enterprise EHR most associated with large health systems | open.epic lists "over 750 no-cost APIs and interfaces," "322 billion annual web service transactions," "over 50 playbooks," and US Core 8 and USCDI v5 support (its August 2026 release); Vendor Services gives developers integration technology, extra documentation, a larger sandbox and support; Showroom "helps you discover services and products for use with Epic" |
 | **Oracle Health** | The Millennium EHR (formerly Cerner) | Millennium Platform APIs "allow you to use the HL7 FHIR standard in your SMART application"; "Oracle no longer supports DSTU 2 FHIR APIs" in favor of R4; app registration with a published access and fees page |
 | **MEDITECH** | Expanse, an EHR across acute and other settings | Described as "cloud-native, highly scalable"; settings from acute and emergency to home care, behavioral health, oncology and post-acute; MEDITECH-as-a-Service cloud hosting; customers from HCA Healthcare (182 hospitals) to a rural critical access hospital and international systems |
 | **TeleTracking** | Capacity and patient flow | The Operations IQ platform for inpatient access and throughput, transfer and command centers; says it covers "30% of hospital beds in the United States" and "34% of discharges processed," with 150+ health systems |
@@ -265,7 +265,7 @@ Design decisions:
 
 **Vendors**
 
-- [open.epic](https://open.epic.com/), 750+ no-cost APIs, annual web service transactions, playbooks, USCDI v3
+- [open.epic](https://open.epic.com/), 750+ no-cost APIs, annual web service transactions, playbooks, US Core 8 and USCDI v5
 - [Epic Vendor Services and Showroom](https://vendorservices.epic.com/), integration technology, documentation, sandbox and support, product discovery
 - [Oracle Health: Millennium Platform APIs](https://docs.oracle.com/en/industries/health/millennium-platform-apis/), FHIR R4 for SMART apps, DSTU 2 retired, app registration and fees
 - [MEDITECH Expanse](https://ehr.meditech.com/ehr-solutions/meditech-expanse), settings, MEDITECH-as-a-Service, customers

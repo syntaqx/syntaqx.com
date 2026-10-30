@@ -20,7 +20,7 @@ As of October 2026, from public pages:
 | --- | --- | --- | --- |
 | **NPPES** | CMS | The NPI and its data elements: name, type (individual or organization), addresses, taxonomy codes | Public NPI Registry with a free JSON API (version 2.1) and downloadable files |
 | **PECOS** | CMS | Medicare enrollment: the practitioner or supplier, practice locations, reassignments to groups, ownership | Online enrollment, revalidation; paper forms as a fallback |
-| **CAQH ProView** (DataSpring) | CAQH, rebranded DataSpring in 2026 | A practitioner's self-reported credentialing profile, shared with the plans the practitioner designates | Says 86% of US physicians share data with it; 7.4M+ provider records; about 1,000 health plans and other entities; sanctions flagged daily |
+| **CAQH ProView** (DataSpring) | CAQH, rebranded DataSpring in 2026 | A practitioner's self-reported credentialing profile, shared with the plans the practitioner designates | Says 86% of US physicians share data with it; 7.4M+ provider records; 1,000 health plans and other entities; sanctions flagged daily |
 | **OIG LEIE** | HHS Office of Inspector General | Individuals and entities excluded from federal health care programs | CSV download plus monthly supplements; online search |
 | **Payer credentialing** | Each payer, often delegated | Verified credentials, the committee decision, recredentialing dates | Medicare Advantage: recredentialing at least every 3 years (42 CFR 422.204) |
 | **Credentialing services** | CVOs, RCM firms, practice software | Applications, follow-up, status tracking per payer | Many practices outsource; the work is forms, portals and phone calls |
@@ -75,7 +75,7 @@ My rule: look up every NPI a user types against the registry before saving it, s
 
 Medicare enrollment is its own process, separate from credentialing. CMS directs providers to "Enroll using PECOS, the online Medicare enrollment system," with paper applications as a fallback, and the Medicare Administrative Contractor for the practice's jurisdiction processes the application and "may have additional requests for information." Rules that shape software:
 
-- **Effective dates.** A physician may bill retrospectively for services "Thirty days prior to their effective date if circumstances precluded enrollment in advance," or 90 days in a federally declared disaster, provided all program requirements were met and services were at the enrolled location (42 CFR 424.521). A practice that starts a new physician before enrollment carries that window as a hard deadline: submit within 30 days of starting, or lose the earliest services.
+- **Effective dates.** A physician may bill retrospectively for services "Thirty days prior to their effective date if circumstances precluded enrollment in advance," or 90 days when a Presidentially declared disaster precluded it, provided all program requirements were met and services were at the enrolled location (42 CFR 424.521). A practice that starts a new physician before enrollment carries that window as a hard deadline: submit within 30 days of starting, or lose the earliest services.
 - **Reporting changes.** CMS requires a change of ownership, an adverse legal action or a change of practice location to be reported within 30 days, and "all other changes within 90 days."
 - **Revalidation.** Providers must "resubmit and recertify the accuracy of its enrollment information every 5 years," DMEPOS suppliers every 3 years, and CMS may revalidate off cycle (42 CFR 424.515).
 - **Reassignment.** A practitioner who works for a group reassigns benefits to it; leaving the group ends the reassignment, and the new group needs its own.
@@ -259,7 +259,7 @@ Design notes:
 
 **In practice**
 
-- [DataSpring (CAQH)](https://www.dataspring.com/), the 2026 rebrand, 86% of physicians, 7.4M+ provider records, about 1,000 health plans and entities
+- [DataSpring (CAQH)](https://www.dataspring.com/), the 2026 rebrand, 86% of physicians, 7.4M+ provider records, 1,000 health plans and other entities
 - [DataSpring: Credentialing](https://www.dataspring.com/solutions/provider-data/credentialing), enter once and share with designated plans, primary source verification, sanctions flagged daily
 - [NCQA: Credentialing](https://www.ncqa.org/programs/health-plans/credentialing/), Credentialing Accreditation versus Certification
 - [Colorado Access: CR-301 Provider Credentialing and Recredentialing (May 7, 2026)](https://www.coaccess.com/wp-content/uploads/CR301-Provider-Credentialing-and-Recredentialing-05.07.26.pdf), a payer policy written to NCQA standards: 36-month cycle, verification time limits per element
