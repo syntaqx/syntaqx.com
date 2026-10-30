@@ -36,6 +36,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Properties, Owners and Investors": "Properties",
   "Records and Interoperability": "Records",
   "Rent and Resident Money": "Rent and Money",
+  "Rules of the Record": "Record Rules",
   "Running a Provider": "The Provider",
   "Running the Platform": "The Platform",
   "Running the Provider": "The Provider",
