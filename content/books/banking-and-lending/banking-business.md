@@ -58,7 +58,7 @@ An institution earns money five ways, and most chapters in this volume regulate 
 
 ### The spread
 
-Net interest income is interest earned on loans and securities less interest paid on deposits and borrowings; net interest margin (NIM) is that amount over average earning assets. For all FDIC-insured institutions the second-quarter 2026 NIM was 3.32%, and 3.81% for community banks, on $26.5 trillion of assets and $20.7 trillion of deposits. Credit unions report the same idea against average assets rather than earning assets, so NCUA's figures don't compare directly (Bank Economics & Balance Sheet Risk covers the ratios).
+Net interest income is interest earned on loans and securities less interest paid on deposits and borrowings; net interest margin (NIM) is that amount over average earning assets. For all FDIC-insured institutions the second-quarter 2026 NIM was 3.32%, and 3.81% for community banks, on $26.5 trillion of assets and $20.7 trillion of deposits. Credit unions report the same idea against average assets rather than earning assets, so NCUA's figures don't compare directly ([Bank Economics & Balance Sheet Risk](/books/banking-and-lending/bank-economics#net-interest-margin) covers the ratios).
 
 A worked example of my own: a bank funds $1 billion of loans yielding 7.00% with $1 billion of deposits costing 2.00%. It earns $70 million of interest, pays $20 million, and keeps $50 million of net interest income before credit losses, salaries, technology and taxes. When the Federal Reserve cuts rates, loan yields and deposit costs both fall, but not at the same speed; how much of a rate change a bank passes to depositors is its deposit beta, and the spread lives or dies on it.
 
