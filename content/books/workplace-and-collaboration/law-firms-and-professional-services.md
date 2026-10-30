@@ -21,14 +21,14 @@ As of October 2026, from vendor sites, help centers and filings:
 | Vendor | Segment | What the public material shows |
 | --- | --- | --- |
 | **Clio** | Solo to mid-size, and an enterprise division | Clio Manage (matters, time, billing, trust), Clio Grow (intake and leads), Clio Accounting, Clio Payments; conflict checks shared between Manage and Grow; acquired vLex for $1 billion (announced June 30, 2025, when Clio reported $300 million ARR), closed November 10, 2025 with a $500 million Series G at a $5 billion valuation |
-| **8am** (formerly AffiniPay) | Solo and small | 8am MyCase for cases, clients, documents and billing; 8am LawPay for payments; MyCase Payments customers migrated to LawPay |
+| **8am** (formerly AffiniPay) | Solo and small | 8am MyCase for cases, clients, documents and billing; 8am LawPay for payments; MyCase Payments customers migrated to LawPay; AffiniPay announced its acquisition of MyCase from funds advised by Apax on June 9, 2022 |
 | **Filevine** | Litigation and plaintiff firms | Matter management, leads and client intake, billing and timekeeping; markets itself as an AI "Legal Operating Intelligence System" |
 | **PracticePanther** | Small firms | Trust accounting, general ledger and three-way trust reconciliation; timers and calendar events that become time entries |
 | **Smokeball** | Small firms | Automatic time capture (AutoTime) and trust accounting in one platform |
 | **CosmoLex** (ProfitSolv) | Small firms | Practice management with built-in trust and business accounting and three-way reconciliation |
 | **Aderant** | Large firms | Expert (time and billing) and Expert Sierra (cloud practice and financial management) |
-| **Elite** | Large firms | Elite 3E financial and practice management |
-| **Intapp** | Large firms and other professional services | Intake, Conflicts, Walls, Terms, Time, Billstream, Workspaces and DealCloud; FY2026 revenue of $577.8 million; 97 of the Am Law 100 as clients |
+| **Elite** | Large firms | Elite 3E financial and practice management, plus Elite Validate and eBillingHub; founded in 1947, about 2,000 law firms including 75% of the Am Law 100; partnered with TPG since 2023, and on August 5, 2025 TPG Capital and Thomson Reuters agreed to sell it to Francisco Partners |
+| **Intapp** | Large firms and other professional services | Intake, Conflicts, Walls for AI, Terms, Time, Billstream, Workspaces, DealCloud and Celeste; FY2026 revenue of $577.8 million (up from $504.1 million); 97 of the Am Law 100 as clients |
 | **Kantata** | Agencies and consultancies | Professional services automation: resource management, forecasting, financial management |
 | **Harvest**, **Toggl** | Any team that bills time | Time tracking, invoicing, team time reporting |
 
@@ -73,7 +73,7 @@ The ABA Model Rules of Professional Conduct aren't binding by themselves; each s
 
 **Competence includes technology.** Model Rule 1.1's Comment [8] says a lawyer "should keep abreast of changes in the law and its practice, including the benefits and risks associated with relevant technology." Formal Opinion 512 (July 29, 2024) applies it to generative AI: lawyers should "either acquire a reasonable understanding of the benefits and risks" of the tools they use or draw on the expertise of others who have it.
 
-**Confidentiality is a reasonable-efforts duty.** Model Rule 1.6(c): "A lawyer shall make reasonable efforts to prevent the inadvertent or unauthorized disclosure of, or unauthorized access to, information relating to the representation of a client." Comment [18] lists the factors for what's reasonable: the sensitivity of the information, the likelihood of disclosure without more safeguards, the cost of more safeguards, the difficulty of implementing them, and how much they make "a device or important piece of software excessively difficult to use." It adds that a client may require special security measures or give informed consent to forgo ones that would otherwise be required. Formal Opinion 477 (May 11, 2017, "Securing Communication of Protected Client Information") reads this as a fact-specific standard rather than a list of mandated controls, and Formal Opinion 483 (October 17, 2018) covers obligations after a data breach. The consequence for a vendor: there is no single certification a firm can point to, so firms ask detailed security questions and corporate clients write their own requirements into outside counsel guidelines.
+**Confidentiality is a reasonable-efforts duty.** Model Rule 1.6(c): "A lawyer shall make reasonable efforts to prevent the inadvertent or unauthorized disclosure of, or unauthorized access to, information relating to the representation of a client." Comment [18] lists the factors for what's reasonable: the sensitivity of the information, the likelihood of disclosure without more safeguards, the cost of more safeguards, the difficulty of implementing them, and how much they make "a device or important piece of software excessively difficult to use." It adds that a client may require special security measures or give informed consent to forgo ones that would otherwise be required. Formal Opinion 477R ("Securing Communication of Protected Client Information," May 11, 2017, revised May 22, 2017) reads this as a fact-specific standard rather than a list of mandated controls: what constitutes reasonable efforts "is not susceptible to a hard and fast rule, but rather is contingent upon a set of factors." Its headnote lets a lawyer transmit client information over the internet after reasonable efforts, but says special precautions may be required "when required by an agreement with the client or by law, or when the nature of the information requires a higher degree of security." It then lists seven considerations, the last of which is to "Conduct Due Diligence on Vendors Providing Communication Technology." Formal Opinion 483 (October 17, 2018) covers obligations after a data breach. The consequence for a vendor: there is no single certification a firm can point to, so firms ask detailed security questions and corporate clients write their own requirements into outside counsel guidelines.
 
 **The vendor is supervised like an assistant.** Model Rule 5.3, "Responsibilities Regarding Nonlawyer Assistance," requires partners and lawyers with comparable managerial authority to make "reasonable efforts to ensure that the firm has in effect measures giving reasonable assurance" that a nonlawyer's conduct "is compatible with the professional obligations of the lawyer," and makes a lawyer responsible for a nonlawyer's conduct that the lawyer orders, ratifies, or fails to remedy in time. Formal Opinion 08-451 (August 5, 2008) allows outsourcing legal and nonlegal support "provided the lawyer remains ultimately responsible." A practice management vendor, a DMS host and an AI provider all fall here. Managerial lawyers must also set firm-wide measures (Model Rule 5.1), which Opinion 512 turns into a duty to "establish clear policies regarding the law firm's permissible use of GAI."
 
@@ -229,6 +229,7 @@ How it runs:
 - [ABA Model Rule 5.3: Responsibilities Regarding Nonlawyer Assistance](https://www.americanbar.org/groups/professional_responsibility/publications/model_rules_of_professional_conduct/rule_5_3_responsibilities_regarding_nonlawyer_assistant/), managerial and supervisory duties over nonlawyers
 - [ABA Model Rule 5.4: Professional Independence of a Lawyer](https://www.americanbar.org/groups/professional_responsibility/publications/model_rules_of_professional_conduct/rule_5_4_professional_independence_of_a_lawyer/), fee sharing, partnerships and nonlawyer ownership
 - [ABA Formal Ethics Opinions: Index by Issue Dates](https://www.americanbar.org/groups/professional_responsibility/publications/ethics_opinions/index_by_issue_dates/), titles and dates of Opinions 477, 483, 495, 498 and 08-451
+- [ABA Formal Opinion 477R (May 11, 2017, revised May 22, 2017), Wayback Machine copy of the ABA PDF](https://web.archive.org/web/20200425023907/https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/aba_formal_opinion_477.authcheckdam.pdf), the headnote, the no-hard-and-fast-rule standard and the seven considerations including vendor due diligence
 - [ABA Formal Opinion 512 (July 29, 2024), copy of the ABA PDF](https://www.lawnext.com/wp-content/uploads/2024/07/aba-formal-opinion-512.pdf), competence with GAI, managerial policies, 08-451's outsourcing holding and 477's fact-specific standard
 - [ABA: ABA issues first ethics guidance on a lawyer's use of AI tools (July 29, 2024)](https://www.americanbar.org/news/abanews/aba-news-archives/2024/07/aba-issues-first-ethics-guidance-ai-tools/), the opinion's date and the rules it applies
 
@@ -239,7 +240,7 @@ How it runs:
 
 **Vendor documentation and filings**
 
-- [Intapp Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1565687/000156568726000073/inta-20260630.htm), revenue, products, industries and Am Law 100 clients
+- [Intapp Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1565687/000156568726000073/inta-20260630.htm), revenue for fiscal 2026 and 2025, products, industries and Am Law 100 clients
 - [Intapp Conflicts](https://www.intapp.com/conflicts/), conflicts as a product
 - [Intapp Walls](https://www.intapp.com/walls/), walls as a product
 - [Clio Help: Run Conflict Checks in Clio Manage and Clio Grow](https://help.clio.com/hc/en-us/articles/41182681954331-Run-Conflict-Checks-in-Clio-Manage-and-Clio-Grow), conflict checks shared between Manage and Grow
@@ -247,6 +248,7 @@ How it runs:
 - [TechCrunch: Clio drops $1B on vLex (June 30, 2025)](https://techcrunch.com/2025/06/30/legal-software-company-clio-drops-1b-on-law-data-giant-vlex), the deal and Clio's reported ARR
 - [vLex: vLex joins Clio; Series G at $5B valuation (November 10, 2025)](https://vlex.com.mx/news/vLex-Joins-Clio-in-Landmark-1B-Acquisition-And-Clio-Announces-Series-G-5B-Valuation), the close, the round and the valuation
 - [8am](https://www.8am.com/), the brands formerly under AffiniPay
+- [MyCase: AffiniPay, parent company of LawPay, announces MyCase acquisition (June 9, 2022)](https://www.mycase.com/news/affinipay-parent-company-of-lawpay-announces-mycase-acquisition/), the acquisition date and seller
 - [8am MyCase](https://www.mycase.com/), cases, clients, documents and billing
 - [MyCase: MyCase Payments migration](https://supportcenter.mycase.com/en/articles/10371719-mycase-payments-migration-2025), the move of payments customers to LawPay
 - [Filevine](https://www.filevine.com/), matter management, intake and billing
@@ -254,7 +256,8 @@ How it runs:
 - [Smokeball](https://www.smokeball.com/), AutoTime and trust accounting
 - [CosmoLex](https://www.cosmolex.com/), integrated trust and business accounting and its owner
 - [Aderant](https://www.aderant.com/), Expert and Expert Sierra
-- [Elite: About](https://www.elite.com/about/), Elite 3E
+- [Elite: About](https://www.elite.com/about/), Elite 3E, Elite Validate and eBillingHub
+- [Francisco Partners: Francisco Partners to acquire legal tech solutions provider Elite from TPG (August 5, 2025)](https://www.franciscopartners.com/media/francisco-partners-to-acquire-legal-tech-solutions-provider-elite-from-tpg), the sellers, the TPG partnership since 2023, Elite's founding year and law firm counts
 - [Kantata](https://www.kantata.com/), PSA capabilities
 - [Harvest](https://www.getharvest.com/), time tracking and invoicing
 - [Toggl](https://toggl.com/), time tracking
