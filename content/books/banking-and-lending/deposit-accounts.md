@@ -149,7 +149,7 @@ The Regulation D floor sits under all of them: had the withdrawal come within si
 
 ## How to Build It
 
-These are deltas against the core data model in The Banking & Lending Business, using its table names. A deposit product is a row in `products`, versioned; an account points at the version it was opened under; terms changes are new versions with an effective date. The deposit-specific attributes, and the time deposit's own terms, are:
+These are deltas against [the core data model](/books/banking-and-lending/banking-business#the-core-data-model), using its table names. A deposit product is a row in `products`, versioned; an account points at the version it was opened under; terms changes are new versions with an effective date. The deposit-specific attributes, and the time deposit's own terms, are:
 
 ```sql
 -- Deposit attributes on a product version. Values are product decisions;

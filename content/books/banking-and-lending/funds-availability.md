@@ -136,7 +136,7 @@ In a batch core this runs partly as memo posting during the day, with the deposi
 
 ## How to Build It
 
-These are deltas against the core data model in The Banking & Lending Business. A deposit is a `transactions` row with its journal entry; `holds` already carries amount, reason and expiry. Availability adds the items in the deposit, the decision for each, and the regulation's numbers as versioned data:
+These are deltas against [the core data model](/books/banking-and-lending/banking-business#the-core-data-model). A deposit is a `transactions` row with its journal entry; `holds` already carries amount, reason and expiry. Availability adds the items in the deposit, the decision for each, and the regulation's numbers as versioned data:
 
 ```sql
 CREATE TABLE availability_rules (            -- the regulation's amounts and the bank's policy, effective-dated

@@ -128,7 +128,7 @@ The point isn't the right fee. It's that the fee is a function of the balance ch
 
 ## How to Build It
 
-These are deltas against the core data model in The Banking & Lending Business. `fee_assessments` already records each fee; overdraft adds the consent, the decision behind each item, and the product's fee policy as data:
+These are deltas against [the core data model](/books/banking-and-lending/banking-business#the-core-data-model). `fee_assessments` already records each fee; overdraft adds the consent, the decision behind each item, and the product's fee policy as data:
 
 ```sql
 CREATE TABLE overdraft_consents (            -- Reg E 1005.17: ATM and one-time debit card only

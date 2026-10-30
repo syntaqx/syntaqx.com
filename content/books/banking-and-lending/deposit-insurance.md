@@ -120,7 +120,7 @@ Two restructurings would have insured almost all of it, both legitimate: moving 
 
 ## How to Build It
 
-These are deltas against the core data model in The Banking & Lending Business. `accounts.ownership_category` and the roles in `account_parties` already exist; insurance needs the facts that decide the category, and a stored determination.
+These are deltas against [the core data model](/books/banking-and-lending/banking-business#the-core-data-model). `accounts.ownership_category` and the roles in `account_parties` already exist; insurance needs the facts that decide the category, and a stored determination.
 
 ```sql
 ALTER TABLE institutions
