@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { sidebarLabel } from "@/lib/sidebar-labels";
 
 /**
  * The docs' and books' sidebar. A title band, an overview link, then each
@@ -203,7 +204,9 @@ function Section({
             aria-hidden
             className="shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90"
           />
-          <span className="flex-1">{section.name}</span>
+          <span className="flex-1" title={sidebarLabel(section.name) === section.name ? undefined : section.name}>
+            {sidebarLabel(section.name)}
+          </span>
           <span className="text-dim tabular-nums">{section.items.length}</span>
         </Accordion.Trigger>
       </Accordion.Header>
