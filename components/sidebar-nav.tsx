@@ -70,6 +70,52 @@ function useCurrentLinkInView() {
 }
 
 /**
+ * Brings a section the reader opens into view: near the bottom of the rail it
+ * would otherwise unfold below the fold. Waits for the open animation, scrolls
+ * the rail only as far as the section's end, and never past its header.
+ * Returns a function to call with the section's name as it opens.
+ */
+function useRevealOpenedSection(navRef: RefObject<HTMLElement | null>) {
+  const pending = useRef<string | null>(null);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const onEnd = (e: AnimationEvent) => {
+      const item = (e.target as HTMLElement).closest<HTMLElement>("[data-section]");
+      if (!item || item.dataset.section !== pending.current) return;
+      pending.current = null;
+      revealInRail(item);
+    };
+    nav.addEventListener("animationend", onEnd);
+    return () => nav.removeEventListener("animationend", onEnd);
+  }, [navRef]);
+
+  return (name: string) => {
+    pending.current = name;
+    // Without motion there's no animation to wait for.
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      requestAnimationFrame(() => {
+        const item = navRef.current?.querySelector<HTMLElement>(`[data-section="${CSS.escape(name)}"]`);
+        pending.current = null;
+        if (item) revealInRail(item);
+      });
+    }
+  };
+}
+
+function revealInRail(item: HTMLElement) {
+  const rail = item.closest<HTMLElement>(".rail-scroll");
+  if (!rail) return;
+  const railTop = rail.getBoundingClientRect().top;
+  const { top, bottom } = item.getBoundingClientRect();
+  const overflow = bottom - railTop - rail.clientHeight;
+  if (overflow <= 0) return;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  rail.scrollBy({ top: Math.min(overflow, top - railTop), behavior: reduce ? "auto" : "smooth" });
+}
+
+/**
  * Middle-button autoscroll over the rail's links. Browsers don't start
  * autoscroll on a link (a middle click there opens it in a new tab), and the
  * rail is almost all links. Held and moved, the middle button scrolls the
@@ -136,6 +182,7 @@ export function SidebarNav({
   const pathname = usePathname();
   const navRef = useCurrentLinkInView();
   useMiddleDragScroll(navRef);
+  const revealOpened = useRevealOpenedSection(navRef);
   const sections = groups.flatMap((g) => g.sections);
   const activeSection = sections.find((s) => s.items.some((i) => isActive(i, pathname)))?.name;
 
@@ -181,7 +228,15 @@ export function SidebarNav({
         ))}
       </ul>
 
-      <Accordion.Root type="multiple" value={open} onValueChange={setOpen}>
+      <Accordion.Root
+        type="multiple"
+        value={open}
+        onValueChange={(next) => {
+          const opened = next.find((name) => !open.includes(name));
+          if (opened) revealOpened(opened);
+          setOpen(next);
+        }}
+      >
         {groups.map((group) => (
           <div key={group.name ?? "_top"}>
             {group.name && <p className={bandClass}>{group.name}</p>}
@@ -242,7 +297,7 @@ function Section({
   onNavigate?: () => void;
 }) {
   return (
-    <Accordion.Item value={section.name} className="border-b border-border">
+    <Accordion.Item value={section.name} data-section={section.name} className="border-b border-border">
       <Accordion.Header>
         <Accordion.Trigger
           // Transparent while closed, so opening doesn't fade the border in from white.
