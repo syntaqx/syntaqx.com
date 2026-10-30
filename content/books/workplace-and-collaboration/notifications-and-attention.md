@@ -35,6 +35,12 @@ The baseline every product shares: a DM notifies; a mention of you notifies; a m
 
 Threads complicate the baseline. Slack notifies thread replies only to people who started the thread, replied to it or were mentioned in it, except in one-to-one DMs where all thread replies notify; anyone can follow or mute a single thread, and a channel can be set to notify about all replies. Google Chat's per-space choice is "All," "Main conversations," "For you" (mentions and threads you follow) or "None," where None still shows an indicator for mentions. The rule both encode: **participation is consent to follow.** Replying or being mentioned subscribes you; reading doesn't.
 
+### Rules as Data: Matrix Push Rules
+
+Matrix is the one product here that publishes its notification decision as a specification, and it's a useful model of the whole problem. Each user has a **push ruleset** stored on their homeserver, checked in a fixed order of kinds: `override` (highest priority), `content` (case-insensitive glob patterns on the message body, matched at word boundaries: keywords), `room`, `sender`, then `underride`. A matching rule's actions are `notify` plus **tweaks** such as `sound` and `highlight`; highlight is what feeds `highlight_count`. Server-default rules have ids starting with a dot and rank below user rules, except `.m.rule.master`, which matches everything and, when enabled, turns off all push. The defaults read like a product spec: `.m.rule.suppress_notices` silences bot notices, `.m.rule.is_user_mention` notifies with sound and highlight when the user's id is in the event's `m.mentions.user_ids`, and `.m.rule.is_room_mention` honors `m.mentions.room` only when the sender has the room's notification power level, which is a broadcast mention gated by permission.
+
+Delivery is separate from the decision: a **pusher** is a per-device worker on the homeserver that sends matching events to a push gateway, which relays them to APNs or FCM, and a pusher can ask for `event_id_only` payloads so content never transits the gateway. Encryption shows the limit of server-side rules: `.m.rule.encrypted` can't look inside an end-to-end encrypted event, so it matches all encrypted events in group rooms or none, and mention and keyword rules for encrypted rooms have to run on the client after decryption. The lesson for any product: store preferences as ordered, inspectable rules with a master switch, keep "should this notify" separate from "how does it reach the device," and decide early where rules run if content may be encrypted.
+
 ### Channel-Wide Mentions
 
 `@channel`, `@here`, `@everyone`, `@team` are the most abused feature in workplace chat, so every product puts policy around them:
@@ -244,7 +250,7 @@ Notes on the sketch:
 
 **Standards**
 
-- [Matrix Client-Server API v1.19](https://spec.matrix.org/v1.19/client-server-api/), `notification_count` and `highlight_count`, per-thread counts, presence values
+- [Matrix Client-Server API v1.19](https://spec.matrix.org/v1.19/client-server-api/), `notification_count` and `highlight_count`, per-thread counts, presence values, push rule kinds and their order, actions and tweaks, the server-default rules (`.m.rule.master`, `.m.rule.is_user_mention`, `.m.rule.is_room_mention`, `.m.rule.encrypted`), pushers, push gateways and `event_id_only`
 
 **Law and regulation**
 
