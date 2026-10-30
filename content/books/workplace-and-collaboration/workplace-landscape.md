@@ -86,6 +86,7 @@ The deals and shutdowns that shaped the current market, with what each changed:
 
 | Date | Event | What it changed |
 | --- | --- | --- |
+| July 26, 2018 | Atlassian makes an equity investment in Slack, Slack acquires the IP for Stride and Hipchat Cloud, and Atlassian discontinues both along with Hipchat Server and Hipchat Data Center ([Atlassian, archived](https://web.archive.org/web/20180802073414/https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership)) | A suite-adjacent vendor left chat to the independent and became its partner |
 | July 22, 2020 | Slack files a competition complaint against Microsoft with the European Commission ([Slack](https://slack.com/blog/news/slack-files-eu-competition-complaint-against-microsoft)) | Started the Teams case ([Suites, Bundling & Antitrust](/books/workplace-and-collaboration/suites-bundling-and-antitrust#the-teams-case)) |
 | July 21, 2021 | Salesforce completes its acquisition of Slack Technologies ([Salesforce](https://investor.salesforce.com/news/news-details/2021/Salesforce-Completes-Acquisition-of-Slack/default.aspx)) | The leading independent chat product joined a CRM suite; Slack's revenue now reports inside a Salesforce line |
 | October 12, 2023 | Atlassian announces it will acquire Loom, with about 200,000 customers and almost 5 million videos a month ([Atlassian](https://www.atlassian.com/blog/announcements/atlassian-acquires-loom)); the deal closed on November 30, 2023 for about $885.6 million in cash ([Atlassian 10-K FY2024](https://www.sec.gov/Archives/edgar/data/1650372/000165037224000036/team-20240630.htm)) | Async video became part of Atlassian's cloud |
@@ -195,6 +196,7 @@ Design notes:
 
 **Company announcements**
 
+- [Atlassian: Announcing our new partnership with Slack (July 26, 2018, archived)](https://web.archive.org/web/20180802073414/https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership), the equity investment, Slack's acquisition of the Stride and Hipchat Cloud IP, and the discontinued Hipchat products
 - [Slack: Slack files EU competition complaint against Microsoft](https://slack.com/blog/news/slack-files-eu-competition-complaint-against-microsoft), the July 22, 2020 complaint
 - [Salesforce: Salesforce completes acquisition of Slack](https://investor.salesforce.com/news/news-details/2021/Salesforce-Completes-Acquisition-of-Slack/default.aspx), the July 21, 2021 completion
 - [Atlassian: Atlassian acquires Loom](https://www.atlassian.com/blog/announcements/atlassian-acquires-loom), the announcement date and Loom's customers and videos
