@@ -157,17 +157,23 @@ export const BOOKS: Book[] = [
       "It reads in eleven parts, plus a reference. The Business: the parties, the inverted duties, how the money works, the core data model, the landscape, business models and unit economics, plans, pricing and seats, and suites, bundling and antitrust. Tenancy and Identity: tenants and workspaces, SSO and managed accounts, provisioning and SCIM, guests and cross-org collaboration, permissions and sharing, admin consoles and policies, and data residency. Chat and Messaging: channels and threads, chat at scale, notifications and presence, email and calendar, and frontline workers. Meetings and Voice: meetings and video, recordings, transcripts and AI notes, async video, business phone and contact center, and rooms and the hybrid office. Docs, Wikis and Files: docs and wikis, real-time co-editing, files and sync, intranets, no-code databases, and e-signatures. Work Management: work items and fields, workflows, queries and dashboards, boards and sprints, portfolios and goals, automation rules, service management, and development collaboration. Design and Visual Collaboration: design tools, whiteboards, and design systems and handoff. Search, Integrations and AI: enterprise search, apps and marketplaces, APIs and rate limits, integration platforms, AI assistants over company data, and agents and MCP. Security and Compliance: audit logs, retention and legal hold, eDiscovery, DLP, customer-managed keys, certifications, regulated communications, employee monitoring, and threats and incidents. Law Firms and Professional Services: the matter-centric firm, intake and conflicts, trust accounting, time and e-billing, and legal documents and AI. Running the Platform: architecture, clients, reliability, billing and resellers, selling to enterprises, migrations and switching, accessibility, and metrics. Reference: a glossary of every term, grouped by part.",
     ],
   },
+  {
+    slug: "banking-and-lending",
+    type: "industry",
+    name: "Banking & Lending",
+    shortName: "Banking",
+    cover: "bank",
+    summary:
+      "How banks, credit unions, fintechs and lenders work, from the core and its ledgers to deposits, credit decisions, servicing and business spend.",
+    intro: [
+      "Banking is two promises and a balance sheet: a depositor is promised their money back on demand, up to a limit the government insures, and a borrower promises money back on a schedule, under rules that say what the lender had to disclose, how it decided, and what it may do when payments stop. The same dollar is recorded in several places that must agree to the cent (a fintech's ledger, a middleware subledger, a sponsor bank's core, the general ledger, the card processor and, if the bank fails, the FDIC's insurance determination), and a loan lives in the system that decided it, the servicer that bills it, the bureaus it is reported to and the investor who bought it. This book surveys how the industry does each piece, benchmarked across banks from JPMorgan Chase to community banks and credit unions, core vendors like Fiserv, FIS, Jack Henry, Temenos, Thought Machine, Mambu and 10x, sponsor banks and BaaS platforms, neobanks like Chime, SoFi and Cash App, lenders like Affirm, Upstart, Rocket and UWM, and spend platforms like Ramp, Brex and BILL, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in thirteen parts, plus a reference. The Business: the parties, how the money is made, the life of a deposit and of a loan, the core data model, the landscape, bank economics, charters and regulators, starting a bank, exams and call reports, and bank failures. The Core: core banking systems, posting, holds and balances, interest, APY and statements, product configuration, and core conversions. Deposits: deposit accounts and Truth in Savings, deposit insurance, funds availability, overdraft and fees, errors and disputes, dormancy and escheat, and legal process. Financial Crime: KYC and account opening, BSA/AML programs, sanctions screening, and account takeover and scams. Fintech and BaaS: neobanks, banking as a service, program ledgers and the Synapse lesson, sponsor bank oversight, earned wage access, credit builders, and open banking in the US, the UK and the EU. Lending Products: the lending business, credit cards, installment loans, auto lending, mortgages and home equity, student loans, and buy now, pay later. Business Lending: small business lending and the SBA, embedded lending, and commercial lending. Origination and Underwriting: origination, credit data and scores, decision engines, adverse action, fair lending, HMDA and 1071, model risk, APR and rate caps, mortgage disclosures, and closing and eNotes. Servicing and Collections: loan servicing, mortgage servicing and escrow, furnishing credit data, collections, and credit losses and CECL. Funding and Licensing: funding the book, the secondary mortgage market, and lender licensing and bank partnerships. Business Banking: startup and business accounts, sweeps and yield, and treasury management. Spend Management: the spend business, corporate cards, spend controls, expense policy, reimbursements, AP and procurement, business travel, and accounting sync. Running the Platform: architecture, digital banking, regulatory reporting, security and incident notice, AI, and metrics. Reference: a glossary of every term, grouped by part.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
-export const UPCOMING_BOOKS: UpcomingBook[] = [
-  {
-    name: "Banking & Lending",
-    type: "industry",
-    cover: "bank",
-    summary: "Deposit and loan ledgers on a core or a sponsor bank, credit decisions under TILA and ECOA, and business spend management.",
-  },
-];
+export const UPCOMING_BOOKS: UpcomingBook[] = [];
 
 /** Books I'm weighing but haven't committed to, shown as "Considering". */
 export const CONSIDERING_BOOKS: FutureBook[] = [
