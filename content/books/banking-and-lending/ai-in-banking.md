@@ -172,7 +172,7 @@ CREATE TABLE rights_signals (              -- a turn that may invoke a legal rig
   said_at             TIMESTAMPTZ NOT NULL,  -- the notice time, if it is one
   kind                TEXT NOT NULL CHECK (kind IN ('reg_e_error', 'billing_error', 'complaint',
                         'hardship', 'scra', 'bankruptcy', 'cease_communication',
-                        'debt_dispute', 'fraud_report')),
+                        'debt_validation_dispute', 'fraud_report')),
   detected_by         TEXT NOT NULL,         -- 'rule:...', 'model:version'
   confidence          NUMERIC(4, 3),
   outcome             TEXT NOT NULL CHECK (outcome IN ('case_opened', 'sent_to_person',

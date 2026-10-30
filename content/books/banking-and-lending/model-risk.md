@@ -72,6 +72,7 @@ A credit model degrades because the population changes (a new marketing channel,
 - **Input stability:** the distribution of each input and of the score, compared with the development sample.
 - **Performance:** rank ordering and calibration on loans old enough to have outcomes. For a 12-month target, the newest measurable vintage is a year old, so monitoring always looks backward ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)).
 - **Overrides and exceptions:** how often people overrule the model, in which direction, and how those loans perform.
+- **Challengers:** a candidate model scored in shadow beside the champion, compared on the same applications before it is promoted ([Champion-Challenger and Shadow Testing](/books/banking-and-lending/decision-engines#champion-challenger-and-shadow-testing)).
 - **Fairness:** outcome rates by group over time ([Fair Lending Testing](/books/banking-and-lending/fair-lending#fair-lending-testing)).
 
 **Worked numbers: a population stability index.** The PSI compares the share of applicants in each score band now with the share at development: PSI = Σ (actual − expected) × ln(actual / expected).

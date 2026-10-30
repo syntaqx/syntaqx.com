@@ -33,7 +33,7 @@ Three patterns stand out. **Anyone who assembles data on consumers for lenders t
 The CFPB's study of the system put each nationwide agency at more than 200 million files and more than 1.3 billion active tradelines, updated by more than 1.3 billion records a month from about 10,000 furnishers, with the ten largest furnishing about 57% of tradelines and bank cards about 40% of them. A file holds:
 
 - **Identifying information:** names, addresses, SSN, date of birth, employers as reported. There's no single unique key; the agency matches each furnished record to a file, and mismatches are the root of many disputes ([Record Linkage](/docs/architecture/record-linkage)).
-- **Tradelines:** one per account a furnisher reports, with the creditor, account type, open date, credit limit or original amount, balance, scheduled payment, payment status by month (current, 30, 60, 90 and more days late), and closure reason (paid, charged off, repossessed). Furnishers send them monthly in the Metro 2 format (Furnishing Credit Data covers the format).
+- **Tradelines:** one per account a furnisher reports, with the creditor, account type, open date, credit limit or original amount, balance, scheduled payment, payment status by month (current, 30, 60, 90 and more days late), and closure reason (paid, charged off, repossessed). Furnishers send them monthly in the Metro 2 format ([Furnishing Credit Data](/books/banking-and-lending/credit-reporting) covers the format).
 - **Inquiries:** who pulled the file and when.
 - **Collections and public records** that the agency's policies still carry.
 
@@ -78,7 +78,7 @@ Both score a bureau file (FICO gives 300 to 850 for its base scores and 250 to 9
 - **Industry versions** (auto and bankcard scores) tuned on those products' outcomes.
 - **The score's reason codes**, up to four key factors (five where inquiries are one), which the FCRA requires a lender to pass on in an adverse action notice that relies on the score.
 
-Changing score versions is a credit policy change, not a vendor setting. Cutoffs, pricing grids and partner criteria are written against a specific model; a new version shifts the distribution, so every cutoff must be remapped and the change validated before it goes live (Model Risk Management covers validation).
+Changing score versions is a credit policy change, not a vendor setting. Cutoffs, pricing grids and partner criteria are written against a specific model; a new version shifts the distribution, so every cutoff must be remapped and the change validated before it goes live ([Model Risk Management](/books/banking-and-lending/model-risk) covers validation).
 
 ## The FHFA Score Change
 
@@ -107,7 +107,7 @@ If the engine declines for lack of a score, the notice must say so specifically 
 
 - **The 2019 study.** With six nonbank lenders (Accion, Brigit, Kabbage, LendUp, Oportun, Petal), an independent analysis by Charles River Associates found the cash-flow data "predictive of credit risk and loan performance," with results "robust across both consumer and small business populations," including people with no or low traditional scores, and that it "frequently improved the sorting of risk among borrowers posing similar credit risks."
 - **The 2025 study** ("Advancing the Credit Ecosystem"), on accounts opened in 2018 and 2019 with one nationwide bureau's data and one aggregator's, found the model combining bureau and cash-flow data "most predictive overall and across all subgroups," with the highest approval rates at most risk thresholds; a machine-learning model on bureau data alone generally came second.
-- **Small business.** FinRegLab's 2025 and 2026 reports extend the work to financially constrained businesses, where processing and bank data are already the norm (Embedded Lending covers processor-data offers).
+- **Small business.** FinRegLab's 2025 and 2026 reports extend the work to financially constrained businesses, where processing and bank data are already the norm ([Embedded Lending](/books/banking-and-lending/embedded-lending) covers processor-data offers).
 
 How the data reaches the lender, as of October 2026:
 

@@ -11,7 +11,7 @@ Deposit insurance is a calculation the government promises to run the day a bank
 
 Two limits frame everything below. Insurance covers deposits (checking, NOW, savings, money market deposit accounts, CDs, cashier's checks and money orders the bank issued) and nothing else: not securities, mutual funds, annuities, Treasuries, safe deposit box contents or crypto assets, even when an insured bank sells them. And it pays only when an insured bank fails. It doesn't protect anyone from the failure of a fintech, a broker or a middleware company standing between them and the bank, which is the whole problem of pass-through coverage.
 
-This chapter is the bank's and the depositor's view. A payment provider's FBO account, and why its ledger decides whether pass-through coverage is real, is in [Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance); the per-owner subledger and its daily reconciliation are in [Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers); what happens on the failure weekend is in When Banks Fail.
+This chapter is the bank's and the depositor's view. A payment provider's FBO account, and why its ledger decides whether pass-through coverage is real, is in [Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance); the per-owner subledger and its daily reconciliation are in [Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers); what happens on the failure weekend is in [When Banks Fail](/books/banking-and-lending/bank-failures).
 
 ## How the Platforms Do It
 
@@ -81,7 +81,7 @@ That list is a specification for any system that wants to know its own exposure,
 5. **Apply the category's formula,** including the trust formula's distinct-beneficiary count across all of an owner's trust accounts.
 6. **Allocate the uninsured amount back to accounts,** because the debit and the hold land on accounts, not on people. Part 370 leaves the allocation method to the rules in Part 330; a bank needs a documented, deterministic order.
 
-Run daily, the same calculation is the bank's estimate of uninsured deposits, which is the number a run is made of. When Banks Fail has SVB's, which was about 94% of its deposits at the end of 2022.
+Run daily, the same calculation is the bank's estimate of uninsured deposits, which is the number a run is made of. [When Banks Fail](/books/banking-and-lending/bank-failures) has SVB's, which was about 94% of its deposits at the end of 2022.
 
 ## Worked Numbers: One Family at One Bank
 

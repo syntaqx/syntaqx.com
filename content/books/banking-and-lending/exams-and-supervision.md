@@ -137,7 +137,7 @@ The rule that implements it has been in limbo since 2023. As of October 2026:
 - **A new proposal instead.** On August 12, 2026 the OCC and FDIC said they "have decided not to finalize the rescission proposal but to issue this new proposal instead" (91 FR 52114), with comments due October 13, 2026. The Federal Reserve did not join; its next steps on the rescission proposal "rest exclusively with its Governors."
 - **In force meanwhile:** the legacy regulations. For 2026 a small bank is one under $1.649 billion in assets and an intermediate small bank one from $412 million to under $1.649 billion.
 
-The systems side of CRA is data: loans geocoded to census tracts with income levels, deposits and branches by assessment area, community development activity with documentation, and the public file. HMDA and small business data feed it (Fair Lending, HMDA & 1071).
+The systems side of CRA is data: loans geocoded to census tracts with income levels, deposits and branches by assessment area, community development activity with documentation, and the public file. HMDA and small business data feed it ([Fair Lending, HMDA & 1071](/books/banking-and-lending/fair-lending)).
 
 ## How to Build It
 

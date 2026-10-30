@@ -63,7 +63,7 @@ The obligations in [The Payments Rulebook](/books/payments/payments-rulebook) an
 - **Transaction laundering** monitoring runs here as casework, comparing what each merchant actually sells with what was underwritten; the pattern and the network rules behind it are in [Merchant Fraud](/books/payments/fraud-and-risk#merchant-fraud).
 - **Suspicious activity reports on the clock.** A bank files within 30 days of first detecting suspicious activity, extendable by 30 more only to identify a suspect and never beyond 60; a money services business files within 30 days, at a $2,000 threshold. Reports and their supporting records are kept five years.
 - **Sanctions screening that never stops,** on merchants, their owners, and payouts, against lists that change daily.
-- **Case management.** Every alert becomes a case with an owner, a decision and a record of why, because an examiner will ask about the alerts you closed, not only the reports you filed.
+- **Case management.** Every alert becomes a case with an owner, a decision and a record of why, because an examiner will ask about the alerts you closed, not only the reports you filed. The program behind this casework, as a bank runs it, is in the Banking & Lending volume's [BSA/AML Programs](/books/banking-and-lending/bsa-aml).
 
 ## When Card Data Is Exposed
 
@@ -97,7 +97,7 @@ Where rules collide, the longest wins and deletion is a scheduled job, not a jud
 
 Sponsor banks and regulators expect a complaint process, and consumer law sets clocks on some of it. The general mechanics (complaints tagged as complaints, a deadline computed and stored on the ticket, your own published deadline where the law sets none) are in [Complaints With Legal Clocks](/docs/operations/customer-support#complaints-with-legal-clocks). What payments adds is which clock applies to which rail:
 
-- **Consumer bank debits** fall under Regulation E's error resolution: 60 days after the statement to report, and an investigation within 10 business days, or 45 with provisional credit. The duty sits with the institution holding the consumer's account, usually the consumer's own bank, and that bank will want your authorization records fast ([ACH & Bank Transfers](/books/payments/ach#consumer-law-regulation-e)).
+- **Consumer bank debits** fall under Regulation E's error resolution: 60 days after the statement to report, and an investigation within 10 business days, or 45 with provisional credit. The duty sits with the institution holding the consumer's account, usually the consumer's own bank, and that bank will want your authorization records fast ([ACH & Bank Transfers](/books/payments/ach#consumer-law-regulation-e)). What that bank runs is in the Banking & Lending volume's [Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes).
 - **Card billing errors** fall under Regulation Z for credit cards, and the clock belongs to the issuer: 60 days from the statement for the cardholder to notify, acknowledgment within 30 days, and resolution within two billing cycles and never more than 90 days. That clock is why a card complaint arrives at a provider as a dispute with an evidence deadline, not as a ticket ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)).
 - **Merchant complaints** (a fee a merchant doesn't recognize, a payout they think is missing) have no regulatory clock, and get yours.
 

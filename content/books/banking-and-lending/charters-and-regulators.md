@@ -38,7 +38,7 @@ The Office of the Comptroller of the Currency, a bureau of the Treasury, charter
 What the national charter buys:
 
 - **One regulator for the bank itself, nationwide.** The OCC examines the bank wherever it operates.
-- **Preemption of state laws** that prevent or significantly interfere with national bank powers ([Preemption](#preemption)), and the power to charge interest at the rate allowed in its home state to borrowers anywhere (12 USC 85; APR, Finance Charges & Rate Caps covers rate exportation).
+- **Preemption of state laws** that prevent or significantly interfere with national bank powers ([Preemption](#preemption)), and the power to charge interest at the rate allowed in its home state to borrowers anywhere (12 USC 85; [APR, Finance Charges & Rate Caps](/books/banking-and-lending/apr-and-rate-caps) covers rate exportation).
 - **A charter that fintechs, crypto firms and large banks share.** JPMorgan Chase Bank, N.A. is a national bank, and so are fintech-chartered banks such as SoFi Bank, N.A. and Varo Bank, N.A. ([Starting a Bank](/books/banking-and-lending/starting-a-bank#fintechs-that-chartered)).
 
 ## State Banks: Member and Nonmember
@@ -48,7 +48,7 @@ A state bank is chartered and examined by its state banking department and has a
 - **State member banks** are supervised by the Federal Reserve together with the state.
 - **State nonmember banks**, the largest group, are supervised by the FDIC together with the state.
 
-State and federal examiners usually alternate or join examinations. The Conference of State Bank Supervisors describes itself as "the only national organization dedicated to protecting and advancing the nation's dual-banking system," and the states also license most nonbank lenders and money transmitters (Lender Licensing & Bank Partnerships, and the Payments volume's [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#pick-a-model-pick-a-risk)).
+State and federal examiners usually alternate or join examinations. The Conference of State Bank Supervisors describes itself as "the only national organization dedicated to protecting and advancing the nation's dual-banking system," and the states also license most nonbank lenders and money transmitters ([Lender Licensing & Bank Partnerships](/books/banking-and-lending/lender-licensing), and the Payments volume's [Becoming a Payment Provider](/books/payments/becoming-a-payment-provider#pick-a-model-pick-a-risk)).
 
 Most sponsor banks in fintech are state-chartered, and their enforcement history shows the split: Evolve Bank & Trust's 2024 order came from the Federal Reserve and the Arkansas State Bank Department because it is a state member bank, while Sutton Bank's came from the FDIC and Ohio's Division of Financial Institutions ([Sponsor Banks Under Scrutiny](/books/payments/card-issuing#sponsor-banks-under-scrutiny)). State banks get the same interest exportation as national banks through 12 USC 1831d, enacted "to prevent discrimination against State-chartered insured depository institutions," with a statutory right for a state to opt its loans out.
 
@@ -127,7 +127,7 @@ Preemption decides when federal banking law displaces a state law, and it is the
 
 Two limits shape program design:
 
-- **Preemption stops at the bank.** It does not extend to a national bank's subsidiaries, affiliates or agents unless they are themselves national banks; a state consumer law applies to them "to the same extent" as to anyone else. A fintech marketing a national bank's product is not a national bank (Lender Licensing & Bank Partnerships covers the true lender question).
+- **Preemption stops at the bank.** It does not extend to a national bank's subsidiaries, affiliates or agents unless they are themselves national banks; a state consumer law applies to them "to the same extent" as to anyone else. A fintech marketing a national bank's product is not a national bank ([Lender Licensing & Bank Partnerships](/books/banking-and-lending/lender-licensing) covers the true lender question).
 - **It is a comparison, not a category.** In Cantero v. Bank of America (May 30, 2024) the Supreme Court unanimously vacated a Second Circuit decision that had preempted New York's law requiring 2% interest on mortgage escrow balances, holding that courts must make "a practical assessment of the nature and degree of the interference" by comparing the law to the precedents.
 
 The escrow question then became the test case. As of October 2026:

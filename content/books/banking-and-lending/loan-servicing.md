@@ -89,7 +89,7 @@ The engine needs only three inputs per payment (effective date, amount, the rule
 
 ## Payoff Quotes
 
-A payoff is a computed record with an expiry, not a balance read. For a daily simple interest loan it is principal plus interest accrued through the good-through date plus unpaid fees, with a per diem for each day after; for a precomputed loan it is the total of payments less the unearned interest rebate ([Prepayment](/books/banking-and-lending/installment-loans#prepayment)). For a loan secured by a dwelling, including a HELOC, the creditor, assignee or servicer must send an accurate payoff statement within a reasonable time and no more than seven business days after a written request (1026.36(c)(3)), and a Regulation X servicer must correct an inaccurate payoff balance within seven business days of a notice of error (Mortgage Servicing, Escrow & Loss Mitigation covers the error clock).
+A payoff is a computed record with an expiry, not a balance read. For a daily simple interest loan it is principal plus interest accrued through the good-through date plus unpaid fees, with a per diem for each day after; for a precomputed loan it is the total of payments less the unearned interest rebate ([Prepayment](/books/banking-and-lending/installment-loans#prepayment)). For a loan secured by a dwelling, including a HELOC, the creditor, assignee or servicer must send an accurate payoff statement within a reasonable time and no more than seven business days after a written request (1026.36(c)(3)), and a Regulation X servicer must correct an inaccurate payoff balance within seven business days of a notice of error ([Mortgage Servicing, Escrow & Loss Mitigation](/books/banking-and-lending/mortgage-servicing#errors-and-information-requests) covers the error clock).
 
 What goes wrong is predictable: a quote issued before a pending payment clears, a quote that omits a recoverable fee and then can't be honored, a payoff received a day after the good-through date and short by a per diem. My rule: the quote records the inputs it used (balances, pending items, fees, per diem), and the payoff posting compares what arrived with the quote it cites; a shortfall within a tolerance the policy sets is waived and recorded, never silently left as a balance that reports as open.
 
@@ -118,7 +118,7 @@ For other loans the federal rule is thinner, but the engineering is the same: a 
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). A serviced loan is an `accounts` row with a `loans` row (`amortization` of `level_payment` or `daily_simple_interest`, `owner`, `servicer`), versioned `payment_schedules` with `schedule_installments`, and `loan_payments` with `payment_allocations`. [Personal & Installment Loans](/books/banking-and-lending/installment-loans#how-to-build-it) added `loan_disbursements`, `payoff_quotes` and `payment_transfer_attempts`; [The Lending Business](/books/banking-and-lending/lending-business#how-to-build-it) added `measurement_basis` and `vintage`. This chapter adds boarding, versioned allocation rules, ownership and servicing history, autopay enrollments for loans, and transfers.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). A serviced loan is an `accounts` row with a `loans` row (`amortization` of `level_payment` or `daily_simple_interest`, `owner`, `servicer`), versioned `payment_schedules` with `schedule_installments`, and `loan_payments` with `payment_allocations`. [Personal & Installment Loans](/books/banking-and-lending/installment-loans#how-to-build-it) added `loan_disbursements`, `payoff_quotes` and `payment_transfer_attempts`; [The Lending Business](/books/banking-and-lending/lending-business#how-to-build-it) added `measurement_basis` and `vintage`. This chapter adds boarding, versioned allocation rules, ownership and servicing history, autopay enrollments for loans, and servicing transfers. The priced sale or participation that changes a loan's owner is a `loan_transfers` row in [Funding the Book](/books/banking-and-lending/funding-the-book#how-to-build-it); `loan_roles_history` records the result as roles over time, and `servicing_transfers` moves the servicing, which can change without any change of owner.
 
 ```sql
 CREATE TABLE loan_boardings (                -- the handoff from origination or a prior servicer
@@ -158,7 +158,7 @@ CREATE TABLE loan_roles_history (            -- owner, servicer and subservicer 
   role                 TEXT NOT NULL CHECK (role IN ('owner', 'servicer', 'subservicer')),
   party_ref            TEXT NOT NULL,          -- an investor, trust, institution or vendor ID
   valid_during         DATERANGE NOT NULL,
-  source_ref           TEXT NOT NULL,          -- sale, transfer or agreement
+  source_ref           TEXT NOT NULL,          -- owner: a loan_transfers row; servicer: a servicing_transfers row or agreement
   PRIMARY KEY (account_id, role, valid_during)
 );
 

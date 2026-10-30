@@ -113,7 +113,7 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 ```sql
 CREATE TABLE expense_policies (              -- versioned: thresholds, category rules, model-facing text
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  company_ref         TEXT NOT NULL,         -- the business party whose policy this is
+  business_id         UUID NOT NULL REFERENCES parties (id),  -- the business whose policy this is
   version             INT NOT NULL,
   receipt_threshold   BIGINT NOT NULL,       -- the company's; never above the IRS $75 (7500)
   lodging_always      BOOLEAN NOT NULL DEFAULT true,
@@ -121,14 +121,14 @@ CREATE TABLE expense_policies (              -- versioned: thresholds, category 
   rules               JSONB NOT NULL,        -- category limits, attendee rules, banned categories
   structured_text_ref TEXT,                  -- the agent-facing policy document, if a model reviews
   valid_during        TSTZRANGE NOT NULL,
-  UNIQUE (company_ref, version),
+  UNIQUE (business_id, version),
   CHECK (receipt_threshold <= 7500)
 );
 
 CREATE TABLE expenses (                      -- the business's claim about one outlay
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  company_ref         TEXT NOT NULL,
-  employee_ref        TEXT NOT NULL,
+  business_id         UUID NOT NULL REFERENCES parties (id),
+  employee_id         UUID NOT NULL REFERENCES parties (id),
   source              TEXT NOT NULL CHECK (source IN ('card', 'out_of_pocket', 'mileage', 'per_diem')),
   clearing_record_id  UUID UNIQUE REFERENCES clearing_records (id),  -- card expenses; one expense per purchase
   amount              BIGINT NOT NULL,
@@ -149,7 +149,7 @@ CREATE TABLE expenses (                      -- the business's claim about one o
 
 CREATE TABLE expense_receipts (              -- each document as received, never edited
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  company_ref         TEXT NOT NULL,
+  business_id         UUID NOT NULL REFERENCES parties (id),
   channel             TEXT NOT NULL CHECK (channel IN ('inbox', 'forward', 'mobile', 'photo_library',
                         'browser', 'merchant_connector', 'sms', 'chat', 'api', 'web')),
   submitted_by_ref    TEXT NOT NULL,

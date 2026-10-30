@@ -99,7 +99,7 @@ The conversion makes the payment an electronic fund transfer, which brings [Regu
 
 ## Lockbox
 
-A **lockbox** is a bank (or a vendor) opening your mail: payments go to a post office box the bank empties, the bank deposits the checks, and you receive a file. A **retail lockbox** handles high volumes of consumer payments with a standard coupon whose scan line holds the account number and amount; a **wholesale lockbox** handles business payments without a standard coupon, with more keying of invoice numbers. Eligible consumer checks are often converted to ARC entries on the way.
+A **lockbox** is a bank (or a vendor) opening your mail: payments go to a post office box the bank empties, the bank deposits the checks, and you receive a file. A **retail lockbox** handles high volumes of consumer payments with a standard coupon whose scan line holds the account number and amount; a **wholesale lockbox** handles business payments without a standard coupon, with more keying of invoice numbers. Eligible consumer checks are often converted to ARC entries on the way. The bank's side of the product is in the Banking & Lending volume's [Receivables: Lockbox](/books/banking-and-lending/treasury-management#receivables-lockbox).
 
 The integration is a file per deposit, as BAI2 (the common bank reporting format, see [Treasury & Bank Operations](/books/payments/treasury)) or an X12 823 remittance, plus images of each check and its remittance slip. Match each item to an open invoice or account by the coupon's scan line first, then by amount and payer, and send everything else to an exceptions queue a person works, with the images attached. The deposit totals reconcile to the bank statement the same way [Treasury](/books/payments/treasury) reconciles everything else.
 

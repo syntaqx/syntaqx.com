@@ -46,7 +46,7 @@ The four largest hold about 40% of the QBP's industry assets (my arithmetic, acr
 
 NCUA's quarterly data counts 4,214 federally insured credit unions at June 30, 2026 (2,649 federal and 1,565 state-chartered), down from 4,370 a year earlier, serving 146.1 million members with $2.50 trillion of assets, $1.76 trillion of loans and $2.13 trillion of shares and deposits, of which $1.91 trillion insured. Credit unions run on their own core product lines (Jack Henry's Symitar and Fiserv's Portico among them, below). The largest by far is Navy Federal, which reports $197.1 billion of assets at December 31, 2025 and 15.3 million members.
 
-Two differences matter to a builder. Credit unions call their deposits shares and their customers members, and each has a field of membership that limits who may join, so eligibility is an account opening rule. NCUA reports net interest income as a share of average assets rather than earning assets, so a credit union's "margin" and a bank's NIM don't compare directly (Bank Economics & Balance Sheet Risk).
+Two differences matter to a builder. Credit unions call their deposits shares and their customers members, and each has a field of membership that limits who may join, so eligibility is an account opening rule. NCUA reports net interest income as a share of average assets rather than earning assets, so a credit union's "margin" and a bank's NIM don't compare directly ([Bank Economics & Balance Sheet Risk](/books/banking-and-lending/bank-economics)).
 
 ## How the Platforms Do It
 
@@ -67,8 +67,8 @@ As of October 2026, from filings and vendor pages, the core and the systems arou
 
 Four patterns run through the table:
 
-- **Three vendors run most US cores.** Fiserv, FIS and Jack Henry sell several cores each, most of them acquired over decades, and an institution's core is typically hosted in the vendor's data center on a long contract. Jack Henry's own 10-K puts SilverLake at nearly 12% of domestic banks under $55 billion. Core Banking Systems covers what each kind of core does.
-- **Cloud-native cores win greenfield and big banks first.** Thought Machine, 10x and Mambu publish their customer lists, and the names are new digital banks, large banks building a second core beside the first, and banks outside the US. A US community bank conversion to one is rare, and Core Modernization & Conversions covers why.
+- **Three vendors run most US cores.** Fiserv, FIS and Jack Henry sell several cores each, most of them acquired over decades, and an institution's core is typically hosted in the vendor's data center on a long contract. Jack Henry's own 10-K puts SilverLake at nearly 12% of domestic banks under $55 billion. [Core Banking Systems](/books/banking-and-lending/core-banking-systems) covers what each kind of core does.
+- **Cloud-native cores win greenfield and big banks first.** Thought Machine, 10x and Mambu publish their customer lists, and the names are new digital banks, large banks building a second core beside the first, and banks outside the US. A US community bank conversion to one is rare, and [Core Modernization & Conversions](/books/banking-and-lending/core-modernization) covers why.
 - **The layer above the core is a separate market.** Digital banking (Q2, Alkami, Jack Henry's Banno, the core vendors' own), account opening (Alkami's MANTL) and origination (nCino, ICE Encompass for mortgages, Blend, MeridianLink) are sold to institutions that keep their core, and each integrates with every core it supports. [Digital & Mobile Banking](/books/banking-and-lending/digital-banking) and [Loan Origination](/books/banking-and-lending/loan-origination) cover them.
 - **Cores are becoming BaaS platforms.** Q2 calls Helix "cloud-native core processing and BaaS"; Fiserv's Finxact also runs its embedded finance ledger. The same software that runs a bank's own accounts now runs programs on that bank's charter.
 
@@ -104,7 +104,7 @@ Much of US consumer credit is made outside banks or through them only on paper:
 - **Consumer installment and BNPL.** Affirm facilitated $50.2 billion of GMV in fiscal 2026 for about 27.8 million active consumers, originating through its bank partners. Upstart's marketplace originated $4.23 billion across 558,014 loans in the second quarter of 2026 for more than 100 bank and credit union partners.
 - **Lenders that became banks.** LendingClub, which described itself in its 2025 10-K as "a leading nationally chartered digital bank" (LendingClub Bank, N.A.), renamed itself Happen, Inc. in June 2026, as its EDGAR record now shows; Upstart received conditional approval for Upstart Bank, N.A. in July 2026 (below).
 
-[The Lending Business](/books/banking-and-lending/lending-business) covers how each model makes money, and Lender Licensing & Bank Partnerships covers the licenses and the true lender question that push lenders toward charters.
+[The Lending Business](/books/banking-and-lending/lending-business) covers how each model makes money, and [Lender Licensing & Bank Partnerships](/books/banking-and-lending/lender-licensing) covers the licenses and the true lender question that push lenders toward charters.
 
 ## Who Owns Whom: Recent Moves
 
