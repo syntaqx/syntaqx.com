@@ -69,7 +69,7 @@ Phone numbers are reassigned, so consent from a customer three years ago may now
 
 ## Artificial and AI Voices
 
-In a February 2024 declaratory ruling (FCC 24-17), the FCC confirmed that the TCPA's restrictions on "artificial or prerecorded voice" encompass current AI technologies that generate human voices, including voice cloning. An AI voice that places calls is making artificial-voice calls: it needs the called party's prior express consent (written, for telemarketing) and must meet the identification and opt-out rules above. The ruling is about initiating calls. An AI that answers inbound calls is governed by disclosure and recording law instead, and the engineering is in [AI Agents in the Product](/docs/architecture/ai-agents).
+In a February 2024 declaratory ruling (FCC 24-17), the FCC confirmed that the TCPA's restrictions on "artificial or prerecorded voice" encompass current AI technologies that generate human voices, including voice cloning. An AI voice that places calls is making artificial-voice calls: it needs the called party's prior express consent (written, for telemarketing) and must meet the identification and opt-out rules above. The ruling is about initiating calls. An AI that answers inbound calls is governed by disclosure and recording law instead, and the engineering is in [AI Agents in the Product](/docs/architecture/ai-agents). Debt collection adds Regulation F's call limits on top, covered for AI agents in [Collections](/books/banking-and-lending/ai-in-banking#collections).
 
 ## Telling People They're Talking to an AI
 
