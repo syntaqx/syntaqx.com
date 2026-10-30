@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ArrowUpRight, Check, ChevronDown, Copy, FileText, X } from "lucide-react";
 import { Tip } from "@/components/tip";
@@ -18,6 +18,9 @@ const labels = {
  */
 export function MarkdownMenu({ href }: { href: string }) {
   const [state, setState] = useState<keyof typeof labels>("idle");
+  // Radix hands focus back to the trigger on close, and Chrome draws the
+  // keyboard ring for it even after a click. Return it only for the keyboard.
+  const byPointer = useRef(false);
 
   // The fetch goes inside the ClipboardItem so Safari still counts the click
   // as the gesture. Feedback starts on the press, before the fetch returns.
@@ -55,6 +58,8 @@ export function MarkdownMenu({ href }: { href: string }) {
       </Tip>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger
+          onPointerDown={() => (byPointer.current = true)}
+          onKeyDown={() => (byPointer.current = false)}
           aria-label="More Markdown options"
           className="flex cursor-pointer items-center border-l border-border px-1.5 transition-colors hover:text-foreground active:bg-background data-[state=open]:bg-background data-[state=open]:text-foreground"
         >
@@ -62,6 +67,7 @@ export function MarkdownMenu({ href }: { href: string }) {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
+            onCloseAutoFocus={(e) => byPointer.current && e.preventDefault()}
             align="end"
             sideOffset={4}
             className="z-100 w-60 border border-border bg-surface py-1 text-sm shadow-lg"
