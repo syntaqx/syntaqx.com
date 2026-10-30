@@ -19,12 +19,12 @@ As of October 2026:
 | Product | What it does | Key rules from public documentation |
 | --- | --- | --- |
 | **Microsoft Teams Rooms** | Room systems on Windows, Android or Surface Hub, with Teams Panels outside the door | Basic license free for up to 25 rooms; Pro adds management, Intune, Entra ID P1, Defender, speaker identification, people counting, dual screens; joins Zoom, Webex and Meet as a guest |
-| **Zoom Rooms** | "A software-based conference room system" for meetings, wireless sharing, whiteboarding and room controls | $49 per room per month ($41.58 billed annually): up to 3 displays and 10 room controllers, 1,000-participant meetings, one-tap join to third-party meetings, Microsoft 365, Google and Exchange calendars, appliance or open hardware |
+| **Zoom Rooms** | "A software-based conference room system" for meetings, wireless sharing, whiteboarding and room controls | $49 per room per month ($41.58 billed annually): up to 3 displays and 10 room controllers, 1,000-participant meetings, one-tap join to Teams, Meet and Webex meetings (some need an interop bridge), Microsoft 365, Google and Exchange calendars, appliance or open hardware |
 | **Zoom Workspace Reservation** | Desk and space booking in the Zoom Workplace app | $1.50 per space per month ($1.25 billed annually): booking from Google Calendar or Outlook, check-in alerts, QR-code check-in, release when done |
 | **Exchange Online room mailboxes** | The calendar behind Microsoft rooms | Auto-accept by default, 180-day booking window, 24-hour maximum duration, delegates, room lists |
 | **Google Calendar resources** | The calendar behind Google rooms | Up to 10,000 buildings and 10,000 resources per company; rooms released when all but one invitee declines |
 | **Microsoft Places** | Buildings, floors, room and desk booking, check-in and auto-release, work location, building analytics | Auto-release after 10 minutes by default; workplace check-in off by default; badge data kept 28 days, aggregates 90; counts under 10 hidden |
-| **Envoy** | Visitor management | Visitors sign NDAs before arrival, blocklists, a kiosk in 17 languages |
+| **Envoy** | Visitor management | Visitors sign NDAs before arrival, pre-registration, blocklists, a multilingual kiosk |
 
 The pattern: **the room is a calendar resource first and a device second.** Every product hangs off a resource calendar (an Exchange room mailbox, a Google resource) that accepts or declines bookings, and the device in the room reads that calendar to show the day's meetings and offer one-touch join. The rest of the hybrid office (desks, check-in, occupancy) is built by extending the same resource model to more things.
 
@@ -78,7 +78,7 @@ Booking is a reservation problem: one room, one time slot, no double booking, an
 
 **Release on absence (check-in).** Microsoft Places releases a room automatically "if no one checks in within a configurable time window," 10 minutes by default (`Set-CalendarProcessing -EnableAutoRelease $true -PostReservationMaxClaimTimeInMinutes 20` makes it 20). Attendees check in on the Teams panel outside the room, by joining from the Teams Rooms console, through the meeting chat, or by email when chat isn't available. Microsoft recommends enabling auto-release only where rooms have panels or room systems "to ensure that all users have a way to check in," notes that setting changes take up to 48 hours, and as of October 2026 ties eligibility to Teams Premium licenses bought before April 1, 2026 or to rooms with a Teams Rooms or Shared Space license.
 
-**Release on intent (declines).** Google Calendar can "release booked meeting rooms when all but one person declines the meeting," and fences it carefully: no release for declines less than 10 minutes before start, for meetings starting within 30 minutes, for meetings longer than four hours, for rooms holding 20 or more people, for meetings with external guests or no guests besides the organizer, or for rooms booked directly on the room's calendar. Admins can exempt rooms and user groups (Google suggests executives and business-critical rooms), and the organizer gets an email when a room is released.
+**Release on intent (declines).** Google Calendar can "release booked meeting rooms when all but one person declines the meeting," and fences it carefully: no release for declines less than 10 minutes before start, for meetings starting within 30 minutes, for meetings longer than four hours, for rooms holding 20 or more people, for meetings with external guests or no guests besides the organizer, or for rooms booked directly on the room's calendar or from a secondary calendar; Google adds that the list isn't complete and the logic may change. The feature is limited to the Enterprise Standard and Plus, Education Fundamentals, Standard and Plus, and legacy G Suite Business editions. Admins can exempt rooms and user groups (Google suggests executives and business-critical rooms), and the organizer gets an email when a room is released.
 
 Each design fails differently. Check-in releases a room when the meeting is real but people are late or forget to tap the panel; declines miss the meeting where nobody declined and nobody came. The general rule from the playbook applies: hold lifetimes are policy, and releases must be visible to the person who lost the hold ([Releasing on Abandonment](/docs/architecture/reservations-and-holds#releasing-on-abandonment)).
 
@@ -92,13 +92,14 @@ Hybrid scheduling needs to know who will be in the office, so presence gained a 
 - For Wi-Fi, the admin picks **Inform mode** (users see a banner and are shared unless they opt out), **Ask mode** (nothing is shared unless they opt in) or **Off**; users can change their choice at any time in Inform and Ask modes, and must also grant the Teams desktop app operating-system location permission.
 - The actual location is "cleared at the end of a user's working hours," isn't updated outside working hours, and "the history of actual location isn't available."
 - Users can set, override or clear their location at any time, and work location is shared only inside the organization, by the user's choice.
+- It runs only in the Teams desktop app on Windows and macOS, reacts to network-change events rather than polling, and ignores Ethernet connections and other organizations' networks.
 - Microsoft states that workplace check-in "is not a tracking tool and can't be used to monitor employee attendance," and that it gives admins no monitoring or reporting views or historical location data.
 
 That last list is what a collaboration feature looks like when its designer knows the monitoring rules: no history, no admin report, user override and a default of off.
 
 ## Visitors
 
-Visitor management covers everyone who isn't an employee: guests, candidates, contractors, deliveries. Envoy's public product material lists a kiosk that supports 17 languages, NDAs that "visitors can now sign... before they arrive," pre-registration and blocklists. The design questions are the same across vendors:
+Visitor management covers everyone who isn't an employee: guests, candidates, contractors, deliveries. Envoy's public product material lists a kiosk with multi-language support, NDAs that "visitors can now sign... before they arrive," pre-registration and blocklists. The design questions are the same across vendors:
 
 - **The visitor log is personal data about non-employees,** who never signed the employer's handbook, so it needs a stated purpose, a notice at sign-in and a retention period.
 - **Signed documents are records:** an NDA signed on a kiosk is an electronic signature with an audit trail ([Electronic Signatures](/docs/compliance/electronic-signatures)).
@@ -252,14 +253,14 @@ Notes on the sketch:
 - [Microsoft Learn: Microsoft Places documentation](https://learn.microsoft.com/en-us/microsoft-365/places/), the Places feature set
 - [Microsoft Learn: Enable check in and autorelease (Rooms)](https://learn.microsoft.com/en-us/microsoft-365/places/room-desk-booking/enable-checkin-auto-rooms), check-in methods, the 10-minute default, configuration, propagation and eligibility
 - [Microsoft Learn: Configure automatic check in with desk peripherals](https://learn.microsoft.com/en-us/microsoft-365/places/room-desk-booking/configure-auto-checkin-desk-peripherals), mapping peripherals to desks and the reservation flow
-- [Microsoft Learn: Configure workplace check-in](https://learn.microsoft.com/en-us/microsoft-365/places/configure-auto-detect-work-location), planned and actual work location, Wi-Fi and peripheral signals, inform, ask and off modes, clearing and no history, the not-a-tracking-tool statement
+- [Microsoft Learn: Configure workplace check-in](https://learn.microsoft.com/en-us/microsoft-365/places/configure-auto-detect-work-location), planned and actual work location, Wi-Fi and peripheral signals, inform, ask and off modes, clearing and no history, desktop-only support and network-change triggers, the not-a-tracking-tool statement
 - [Microsoft Learn: Building analytics](https://learn.microsoft.com/en-us/microsoft-365/places/enable-places-analytics/building-analytics), work plans versus badge data, the badge schema, 28-day and 90-day retention, the minimum group of 10
 - [Microsoft Learn: Privacy, security, and compliance in Microsoft Places](https://learn.microsoft.com/en-us/microsoft-365/places/compliance-privacy-security-in-places), data residency and no model training on Places data
 - [Microsoft Learn: Overview and configuration of voice and face enrollment](https://learn.microsoft.com/en-us/microsoftteams/rooms/voice-and-face-recognition), recognition profiles used in Teams Rooms
 - [Google Workspace Admin Help: Create buildings, features, and Calendar resources](https://knowledge.workspace.google.com/admin/calendar/create-buildings-features-and-calendar-resources), building, resource and feature limits and capacity
 - [Google Workspace Admin Help: Release unused Calendar meeting rooms](https://knowledge.workspace.google.com/admin/calendar/release-unused-calendar-meeting-rooms), release when all but one decline, the fences, exemptions, organizer email, editions
-- [Envoy: Visitor management](https://envoy.com/visitor-management), the multilingual kiosk, NDAs before arrival, blocklists
-- [Zoom: Zoom Rooms pricing](https://zoom.us/pricing/zoom-rooms), the Rooms plan price, displays and controllers, meeting capacity, third-party join, calendar integrations
+- [Envoy: Visitor management](https://envoy.com/visitor-management), the multilingual kiosk, NDAs before arrival, pre-registration, blocklists
+- [Zoom: Zoom Rooms pricing](https://zoom.us/pricing/zoom-rooms), the Rooms plan price, displays and controllers, meeting capacity, third-party join and the interop bridge some platforms need, calendar integrations
 - [Zoom: Workspace Reservation pricing](https://zoom.us/pricing/workspace-reservation), the per-space price, booking from Google Calendar and Outlook, QR-code check-in and release
 
 **Law and regulation**
