@@ -13,16 +13,22 @@
 import { Redis } from "@upstash/redis";
 import { redisCredentials } from "@/lib/ratelimit";
 
-export const MAX_SECRET_BYTES = 4 * 1024;
+// Room for a 4 KB secret encrypted in the browser, as /tools/secrets does.
+export const MAX_SECRET_BYTES = 8 * 1024;
 export const DEFAULT_TTL_SECONDS = 60 * 60;
 export const MIN_TTL_SECONDS = 60;
 export const MAX_TTL_SECONDS = 24 * 60 * 60;
 const PREFIX = "syntaqx:secret:";
 
+/** On HEAD /secrets/{id}: when an unread secret expires. */
+export const EXPIRES_AT_HEADER = "Secret-Expires-At";
+
 export interface SecretStore {
   put(lookup: string, value: string, ttlSeconds: number): Promise<void>;
   /** Read and delete in one step, so a value is returned at most once. */
   take(lookup: string): Promise<string | null>;
+  /** Milliseconds until an unread value expires, or null if it's gone. */
+  ttl(lookup: string): Promise<number | null>;
 }
 
 export function memorySecretStore(): SecretStore {
@@ -36,6 +42,10 @@ export function memorySecretStore(): SecretStore {
       values.delete(lookup);
       return entry && entry.expires > Date.now() ? entry.value : null;
     },
+    async ttl(lookup) {
+      const left = (values.get(lookup)?.expires ?? 0) - Date.now();
+      return left > 0 ? left : null;
+    },
   };
 }
 
@@ -46,6 +56,10 @@ export function redisSecretStore(redis: Redis): SecretStore {
     },
     async take(lookup) {
       return redis.getdel<string>(PREFIX + lookup);
+    },
+    async ttl(lookup) {
+      const left = await redis.pttl(PREFIX + lookup);
+      return left > 0 ? left : null;
     },
   };
 }

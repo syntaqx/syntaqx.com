@@ -122,6 +122,8 @@ To initially test my theory, I added a simple handler to my personal API that wo
 >
 > It's still a demo with no SLA, so don't send it production credentials. We ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
 >
+> That UI exists here now too: [One-Time Secrets](/tools/secrets) encrypts in your browser and keeps the key in the link's `#fragment`, so the server only ever holds ciphertext. Tick __For scripts__ and it makes the kind of link this workflow reads instead.
+>
 > Choose your own adventure.
 
 Here's the round trip with `curl`:
@@ -157,6 +159,8 @@ $ ./create-secret.sh 600
 Secret:
 https://api.syntaqx.com/secrets/pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M
 ```
+
+Not a terminal person? The [One-Time Secrets](/tools/secrets) page makes the same link: paste the value, tick __For scripts__, and copy what it gives you.
 
 Then, I could simply run the workflow, and provide the `key` and `url` as inputs:
 
@@ -209,6 +213,36 @@ jobs:
 The inputs go through `env` rather than straight into the script with `${{ }}`, so a crafted input can't [inject commands][script injection] into the step. The link itself does show up in the log, but by the time anyone can read it, the workflow has already used it.
 
 [script injection]: https://docs.github.com/actions/reference/security/secure-use#good-practices-for-mitigating-script-injection-attacks
+
+### Keeping the server out of it
+
+A __For scripts__ link means the server encrypts the secret, so for a moment it sees the value. A regular link from [One-Time Secrets](/tools/secrets) doesn't have that problem: the browser encrypted it, and the key is in the link after the `#`. The runners already have Node, so the workflow can decrypt it the same way the page does. Swap the retrieve step for this one, and pass the page link as `url`:
+
+```yaml
+      -
+        name: Retrieve the secret value
+        id: secret
+        env:
+          SECRET_URL: ${{ inputs.url }}
+        run: |
+          if [[ "$SECRET_URL" != https://www.syntaqx.com/tools/secrets#* ]]; then
+            echo "::error::url must be a https://www.syntaqx.com/tools/secrets# link"
+            exit 1
+          fi
+          VALUE=$(node --input-type=module -e '
+            const [id, key] = new URL(process.argv[1]).hash.slice(1).split("/");
+            const res = await fetch(`https://api.syntaqx.com/secrets/${id}`);
+            if (!res.ok) throw new Error("That link was already used, has expired, or never existed");
+            const bytes = Buffer.from((await res.json()).secret, "base64url");
+            const aes = await crypto.subtle.importKey("raw", Buffer.from(key, "base64url"), "AES-GCM", false, ["decrypt"]);
+            const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes.subarray(0, 12) }, aes, bytes.subarray(12));
+            process.stdout.write(Buffer.from(plain));
+          ' "$SECRET_URL")
+          echo "::add-mask::$VALUE"
+          echo "value=$VALUE" >> "$GITHUB_OUTPUT"
+```
+
+The format is small on purpose: the key is 32 random bytes, and the stored value is the 12-byte IV followed by the AES-256-GCM ciphertext, both base64url. Leave __Send the key separately__ off for links you hand to a workflow, since the step expects the key in the link.
 
 Which surprisingly worked! The value was masked and never exposed in the logs.
 

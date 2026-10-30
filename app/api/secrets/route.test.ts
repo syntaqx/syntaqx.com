@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { POST } from "./route";
-import { GET } from "./[id]/route";
+import { GET, HEAD } from "./[id]/route";
 import { lookupKey, memorySecretStore, setSecretStore, type SecretStore } from "@/lib/secrets";
 
 const create = (body: unknown) =>
@@ -12,6 +12,7 @@ const create = (body: unknown) =>
     }),
   );
 
+const check = (id: string) => HEAD(new Request(`http://localhost/api/secrets/${id}`, { method: "HEAD" }), { params: Promise.resolve({ id }) });
 const read = (id: string) => GET(new Request(`http://localhost/api/secrets/${id}`), { params: Promise.resolve({ id }) });
 
 let store: SecretStore;
@@ -35,6 +36,18 @@ describe("POST /secrets and GET /secrets/{id}", () => {
     expect((await read(id)).status).toBe(404);
   });
 
+  it("checks a secret with HEAD without consuming it", async () => {
+    const { id, expires_at } = await (await create({ secret: "hunter2", ttl: 600 })).json();
+    const head = await check(id);
+    expect(head.status).toBe(200);
+    const left = Date.parse(head.headers.get("Secret-Expires-At")!) - Date.parse(expires_at);
+    expect(Math.abs(left)).toBeLessThan(1000);
+    expect(await check(id).then((r) => r.status)).toBe(200);
+    expect((await read(id)).status).toBe(200);
+    expect((await check(id)).status).toBe(404);
+    expect((await check("nope")).status).toBe(404);
+  });
+
   it("builds links on the api subdomain without /api", async () => {
     const res = await POST(
       new Request("https://api.syntaqx.com/api/secrets", {
@@ -52,6 +65,7 @@ describe("POST /secrets and GET /secrets/{id}", () => {
     setSecretStore({
       put: async (lookup, value) => void stored.set(lookup, value),
       take: async () => null,
+      ttl: async () => null,
     });
     const { id } = await (await create({ secret: "hunter2" })).json();
     const [[lookup, value]] = stored;
@@ -77,7 +91,7 @@ describe("POST /secrets and GET /secrets/{id}", () => {
     expect((await create({ secret: "" })).status).toBe(422);
     expect((await create({ secret: "x", ttl: 30 })).status).toBe(422);
     expect((await create({ secret: "x", ttl: 86401 })).status).toBe(422);
-    expect((await create({ secret: "x".repeat(4097) })).status).toBe(413);
+    expect((await create({ secret: "x".repeat(8193) })).status).toBe(413);
   });
 
   it("404s a malformed or unknown id", async () => {
@@ -89,8 +103,9 @@ describe("POST /secrets and GET /secrets/{id}", () => {
     const down = async () => {
       throw new Error("down");
     };
-    setSecretStore({ put: down, take: down });
+    setSecretStore({ put: down, take: down, ttl: down });
     expect((await create({ secret: "x" })).status).toBe(503);
     expect((await read("A".repeat(32))).status).toBe(503);
+    expect((await check("A".repeat(32))).status).toBe(503);
   });
 });
