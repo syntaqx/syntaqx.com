@@ -17,9 +17,9 @@ As of October 2026, from vendor documentation:
 
 | Tool | Components | Tokens | Library publishing | Handoff to code |
 | --- | --- | --- | --- | --- |
-| **Figma** | Components and variants with five property types (boolean, instance swap, text, variant, slot) | Variables: color, number, string, boolean, timing, easing; modes per collection by plan; import in the W3C format | Explicit publish with a description; consumers accept updates; analytics on Organization and Enterprise | Dev Mode, annotations, Code Connect, MCP server, Variables REST API on Enterprise |
+| **Figma** | Components and variants with five property types (boolean, instance swap, text, variant, slot) | Variables: color, number, string, boolean, timing, easing; modes per collection by plan; import and export as W3C-format JSON | Explicit publish with a description; consumers accept updates; analytics on Organization and Enterprise | Dev Mode, annotations, Code Connect, MCP server, Variables REST API on Enterprise |
 | **Sketch** | Symbols | Color variables, text and layer styles | Libraries with update notifications | Web app inspect; color tokens as CSS or JSON in Style Dictionary format |
-| **Penpot** | Components | Native tokens (since 2.7) with sets and themes, exported in the W3C draft format | Not covered here | Inspect tab with SVG, CSS and HTML |
+| **Penpot** | Components | Native tokens (since 2.7) with sets and themes, exported in the W3C draft format | Shared libraries, which can also be the tokens source | Inspect tab with SVG, CSS and HTML |
 | **Tokens Studio** | (Figma plugin) | Tokens in JSON synced with Git providers; W3C format option | Through the Git provider | Tokens in the repository |
 | **Style Dictionary** | (Build tool) | W3C format since v4; 2025.10 support in progress in v5 | Not applicable | Generates platform files (CSS, iOS, Android) |
 | **Storybook and Chromatic** | Code components documented from their stories | Not applicable | Not applicable | Autodocs, visual tests and UI review on pull requests |
@@ -29,7 +29,7 @@ The pattern across the table: **the design tool owns intent, the repository owns
 
 ## Components, Variants and Properties
 
-A component is a reusable master; instances are its uses. What makes a component library usable at scale is how much an instance can vary without detaching from its master, because a detached instance no longer receives updates. Figma's answer is **component properties**, in five types: boolean (show or hide a layer), instance swap (replace a nested component, with a list of preferred swaps), text, variant (choose among a component set's variants, such as size or state) and slot (as of Figma's Schema 2025 event in October 2025, slots were in early access). Variant properties apply only to component sets.
+A component is a reusable master; instances are its uses. What makes a component library usable at scale is how much an instance can vary without detaching from its master, because a detached instance no longer receives updates. Figma's answer is **component properties**, in five types: boolean (show or hide a layer), instance swap (replace a nested component, with a list of preferred swaps), text, variant (choose among a component set's variants, such as size or state) and slot (offered in early access at Figma's Schema 2025 event in October 2025, in open beta from March 2026 and generally available by June 10, 2026, when the Plugin API added a `SLOT` property type for the GA launch). Variant properties apply only to component sets.
 
 Figma's 2025 post on its "two parameter architectures" explains why this matters internally: component properties (2022, scoped to a component) and variables (2023, global) were built separately, then unified into one type space and one binding model in which "each layer property should be bound to at most one parameter", with shared usage tracking, property-level invalidation and resolution. The lesson for anyone building a design tool is that **parameters are one system**: a fill bound to a variable, a text layer bound to a property and a visibility toggle are all bindings from a layer property to a named value, and the engine should treat them uniformly.
 
@@ -52,10 +52,10 @@ A companion **Resolver Module** 2025.10 handles theming: one set of token files 
 
 Support is real but uneven, and the details matter:
 
-- **Figma** announced native variable import and export following the format at Schema 2025, available from November 2025; its help center says imported tokens "must be in a JSON file and follow the Design Tokens Community Group (DTCG) format", with each imported file becoming a mode and Figma-specific data (booleans, cross-collection aliases) carried in `$extensions`. Its import accepts only some units (dimensions in px, durations in seconds).
+- **Figma** announced native variable import and export following the format at Schema 2025, available from November 2025, replacing its earlier open-source plugin. Its help center says imported tokens "must be in a JSON file and follow the Design Tokens Community Group (DTCG) format", with each imported file becoming a mode (variables are created only for tokens present in every file), nested groups normalized to slash names, and Figma-specific data (booleans, cross-collection aliases) carried in `$extensions` under `com.figma` keys. Its import accepts only some units (dimensions in px, durations in seconds) and accepts `string`, which the format doesn't define. Export runs the other way per mode: export one mode, or all of a collection's modes, as JSON. A round trip is lossless only within those limits, which is one more reason the repository, not the design file, should hold the canonical tokens.
 - **Style Dictionary** has had "first-class support for the DTCG format" since version 4, and its documentation says full 2025.10 support is a work in progress in version 5, which fixes the reference syntax to the format's braces.
 - **Tokens Studio** syncs tokens between Figma and GitHub, GitLab, Bitbucket, Azure DevOps and other storage, can push to and pull from Figma variables, and offers a W3C format setting that writes `$value`, `$type` and `$description`.
-- **Penpot** shipped native tokens in 2.7 (May 12, 2025) with sets and themes, and its documentation says tokens export "without conversion" per the W3C draft format.
+- **Penpot** shipped initial native token support in 2.7 (May 12, 2025) and now has sets and multidimensional themes, and its documentation says tokens export "without conversion" per the W3C draft format.
 - **Sketch** exports color tokens as CSS or JSON and layer and text styles as JSON, in "the Amazon Style Dictionary format", from its web app.
 
 My default for a new system: tokens in the W3C format in the repository, three tiers deep (raw palette, semantic names, component tokens), generated into each platform by Style Dictionary or similar, with the design tool importing the same files. The design tool can be the editing surface; it should not be the only copy.
@@ -85,9 +85,9 @@ Handoff used to mean exported red-line specs. Now it means the engineer opens th
 
 **Annotations** carry what the canvas can't show. In Figma, adding annotations and measurements takes a Full seat and edit access, and anyone with view access sees them; annotations come in preset categories (development, interaction, accessibility, content) and annotated properties stay current as the design changes.
 
-**Code Connect** links a design component to the real code component so Dev Mode shows the import and usage from the codebase instead of generated CSS. It supports React and React Native, HTML (Web Components, Angular, Vue), SwiftUI and Jetpack Compose, with a Storybook integration; mappings are authored either in a CLI with template files kept in the repository, or in an in-app UI connected to GitHub, and CLI-created mappings can only be edited in the CLI. It is available on Dev or Full seats on Professional, Organization and Enterprise, with Professional limited to one library and one framework.
+**Code Connect** links a design component to the real code component so Dev Mode shows the import and usage from the codebase instead of generated CSS. Its recommended template files are framework-agnostic, alongside older framework-specific integrations for React and React Native, HTML (Web Components, Angular, Vue), SwiftUI and Jetpack Compose; mappings are authored either in a CLI with template files kept in the repository, or in an in-app UI connected to GitHub, and CLI-created mappings can only be edited in the CLI. It is available on Dev or Full seats on Professional, Organization and Enterprise, with Professional limited to one active library and one active framework (connections for a replaced framework are kept but deactivated, and the MCP server stops returning them).
 
-**The MCP server** brings the same context to AI coding tools. Figma announced it in beta on June 4, 2025 with tools for code, images and variable definitions, added remote access and in-app Code Connect mapping in beta on September 23, 2025, and called it generally available at Schema 2025 on October 28, 2025. As of October 2026 its help center recommends the remote server, requires a Dev or Full seat, and says writing to the canvas is free during the beta and will become a usage-based paid feature. When a coding agent asks the design file what a button is, the right answer is the Code Connect mapping and the token names, not pixels; Code Connect is what makes the MCP answer useful. Agent access to workplace content in general is the [AI Agents, Connectors & MCP](/books/workplace-and-collaboration/ai-agents-and-mcp) chapter.
+**The MCP server** brings the same context to AI coding tools. Figma announced it in beta on June 4, 2025 with tools for code, images and variable definitions, added remote access and in-app Code Connect mapping in beta on September 23, 2025, and called it generally available at Schema 2025 on October 28, 2025. As of October 2026 its help center lists the server on every plan from Starter up, recommends the remote server (the desktop server is for specific organization needs and needs a Dev or Full seat on a paid plan), requires a Full seat to write outside one's drafts, and says writing to the canvas is free during its beta and will become a usage-based paid feature. When a coding agent asks the design file what a button is, the right answer is the Code Connect mapping and the token names, not pixels; Code Connect is what makes the MCP answer useful. Agent access to workplace content in general is the [AI Agents, Connectors & MCP](/books/workplace-and-collaboration/ai-agents-and-mcp) chapter.
 
 **The Variables REST API** reads and writes variables programmatically for token pipelines, and it is Enterprise-only: reading requires the `file_variables:read` scope, writing requires `file_variables:write` and "a Full seat in an Enterprise org", and guests can't use it. A team on a lower plan syncs tokens through import and export files or a plugin such as Tokens Studio instead. The pattern recurs across the industry: automation of the design system is sold to the customers large enough to need it.
 
@@ -281,8 +281,9 @@ The rules:
 - [Figma Help: Compare plans and features](https://help.figma.com/hc/en-us/articles/360040328273-Compare-Figma-plans-and-features), modes per collection by plan, branching, analytics, Dev Mode and Variables API availability
 - [Figma Help: Guide to variables](https://help.figma.com/hc/en-us/articles/14506821864087), variable types, 5,000 per collection, aliasing, modes
 - [Figma Help: Variable scoping and code syntax](https://help.figma.com/hc/en-us/articles/15145852043927), scopes, per-platform code syntax, hiding from publishing, same-type aliases
-- [Figma Help: Modes for variables](https://help.figma.com/hc/en-us/articles/15343816063383-Modes-for-variables), DTCG import, per-mode files, supported units and Figma extensions
+- [Figma Help: Modes for variables](https://help.figma.com/hc/en-us/articles/15343816063383-Modes-for-variables), DTCG import, per-mode files, name normalization, supported units and types, `com.figma` extensions, per-mode JSON export
 - [Figma Help: Component properties](https://help.figma.com/hc/en-us/articles/5579474826519), the five property types and variant scope
+- [Figma Plugin API: Updates for 2026-06-10](https://developers.figma.com/docs/plugins/updates/2026/06/10/update/), slots GA and the `SLOT` property type
 - [Figma Help: Publish a library](https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library), who can publish, publish descriptions, hiding assets
 - [Figma Help: Review and accept library updates](https://help.figma.com/hc/en-us/articles/360039234193), update badge, accept all, per asset or per instance
 - [Figma Help: Guide to libraries](https://help.figma.com/hc/en-us/articles/360041051154-Guide-to-files-in-Figma), default libraries and access control by plan
@@ -290,14 +291,14 @@ The rules:
 - [Figma Help: Guide to branching](https://help.figma.com/hc/en-us/articles/360063144053), publishing only from main
 - [Figma Help: Guide to Dev Mode](https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode), ready for dev, completed status, compare changes, links, playground, VS Code
 - [Figma Help: Annotations and measurements](https://help.figma.com/hc/en-us/articles/20774752502935), seat and access requirements, categories, live properties
-- [Figma Help: Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559), remote server, seat requirements, canvas writing pricing
+- [Figma Help: Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559), plans, remote versus desktop server, seat requirements, canvas writing pricing
 - [Figma: Pricing](https://www.figma.com/pricing/), Dev and Collab seat access to Dev Mode
-- [Figma Developers: Code Connect](https://developers.figma.com/docs/code-connect/), frameworks, CLI and UI, seats and plan limits
+- [Figma Developers: Code Connect](https://developers.figma.com/docs/code-connect/), template files and framework integrations, CLI and UI, seats, Professional's one library and framework
 - [Figma Developers: Variables REST API](https://developers.figma.com/docs/rest-api/variables/), Enterprise-only, scopes, Full seat for writes, no guests
 - [Sketch: Libraries](https://www.sketch.com/docs/libraries/), library contents and update notifications
 - [Sketch: Export design tokens](https://www.sketch.com/docs/developer-handoff/export/), CSS and JSON exports in Style Dictionary format
-- [Penpot: Design tokens](https://help.penpot.app/user-guide/design-tokens/), sets, themes, types, export per the W3C draft
-- [Penpot 2.7 release notes](https://penpot.app/release-notes/2-7-all-the-small-things), native design tokens, May 12, 2025
+- [Penpot: Design tokens](https://help.penpot.app/user-guide/design-tokens/), sets, themes, types, import formats, export per the W3C draft, shared libraries as a tokens source
+- [Penpot 2.7 release notes](https://penpot.app/release-notes/2-7-all-the-small-things), initial design token support, May 12, 2025
 - [Style Dictionary: DTCG support](https://styledictionary.com/info/dtcg/), first-class support since v4, 2025.10 in progress
 - [Style Dictionary: v5 migration](https://styledictionary.com/versions/v5/migration/), reference syntax and requirements
 - [Tokens Studio documentation](https://docs.tokens.studio/), Git sync providers and Figma variables
@@ -311,7 +312,7 @@ The rules:
 
 **Engineering write-ups**
 - [Figma: A tale of two parameter architectures (2025)](https://www.figma.com/blog/a-tale-of-two-parameter-architectures/), unifying component properties and variables into one binding model
-- [Figma: Schema 2025 design systems recap](https://www.figma.com/blog/schema-2025-design-systems-recap/), native DTCG import and export, extended collections, slots in early access, MCP server general availability
+- [Figma: Schema 2025 design systems recap](https://www.figma.com/blog/schema-2025-design-systems-recap/), native DTCG import and export in November 2025 replacing a plugin, extended collections, slots in early access, MCP server general availability
 - [Figma: Introducing the Figma MCP server (2025)](https://www.figma.com/blog/introducing-figma-mcp-server/), June 4, 2025 beta and its tools
 - [Figma: Design context everywhere you build (2025)](https://www.figma.com/blog/design-context-everywhere-you-build/), remote MCP access and in-app Code Connect, September 23, 2025
 - [GitHub: Level up design-to-code collaboration with the open-source Annotation Toolkit (2025)](https://github.blog/enterprise-software/collaboration/level-up-design-to-code-collaboration-with-githubs-open-source-annotation-toolkit/), November 18, 2025, the 48% figure
