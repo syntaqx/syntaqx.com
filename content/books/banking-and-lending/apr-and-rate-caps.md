@@ -116,7 +116,7 @@ That's why a fintech's program sits at a bank whose home-state law allows the pr
 
 ## Opt-Outs and the Colorado Case
 
-Section 525 of DIDMCA lets a state opt out of section 521 "with respect to loans made in such State." Opting out doesn't touch national banks, which export under section 85. The states exercising it are Colorado (since 2023), Iowa, and Oregon (from April 2026, for consumer finance loans); Rhode Island has considered it. The fight is over where a loan is "made":
+Section 525 of DIDMCA lets a state opt out of section 521 "with respect to loans made in such State." Opting out doesn't touch national banks, which export under section 85. The states exercising it are Colorado (since 2023), Iowa, and Oregon (enacted April 2026, for consumer finance loans); Rhode Island has considered it. The fight is over where a loan is "made":
 
 - **District court (2024):** in *National Association of Industrial Bankers v. Weiser*, a preliminary injunction barred Colorado from applying its caps to loans by the plaintiff associations' members when the bank is outside Colorado (737 F. Supp. 3d 1113).
 - **Panel (November 2025):** the Tenth Circuit reversed 2-1, holding that a loan is made where it's completed or executed, so a loan is made in an opt-out state if either the lender or the borrower is there.
@@ -127,7 +127,7 @@ For a program, the outcome decides whether a Colorado or Oregon borrower can get
 
 ## Madden and Valid When Made
 
-Banks sell loans, and buyers (debt purchasers, marketplace investors, securitization trusts) aren't banks. *Madden v. Midland Funding* (2d Cir. 2015) held that "the National Bank Act ceased to preempt state law once the national bank had assigned the loan to a non-bank entity": a debt buyer that bought a charged-off national bank card account could face New York usury claims. The Supreme Court denied review on June 27, 2016, leaving the decision binding in the Second Circuit (Connecticut, New York, Vermont).
+Banks sell loans, and buyers (debt purchasers, marketplace investors, securitization trusts) aren't banks. *Madden v. Midland Funding* (2d Cir. 2015) held that the National Bank Act didn't preempt New York usury claims against a non-bank debt buyer that had bought a charged-off national bank card account: once the bank assigned the loan, the buyer couldn't shelter under the bank's preemption. The Supreme Court denied review on June 27, 2016, leaving the decision binding in the Second Circuit (Connecticut, New York, Vermont).
 
 The regulators answered with rules:
 
@@ -273,8 +273,10 @@ APR and cap errors are found by recomputation, so the record must allow it:
 **Courts and analysis**
 
 - [Loper Bright Enterprises v. Raimondo (June 28, 2024)](https://www.law.cornell.edu/supremecourt/text/22-451), Chevron overruled
+- [Supreme Court: Midland Funding, LLC v. Madden, No. 15-610, docket](https://www.supremecourt.gov/search.aspx?filename=/docketfiles/15-610.htm), the petition denied June 27, 2016
 - [Nutter: Supreme Court declines review of Madden (July 13, 2016)](https://www.nutter.com/trending-newsroom-publications-Supreme-Court-Declines-Review-of-Controversial-Second-Circuit-Loan-Purchase-Decision-07-13-2016), the holding, the cert denial and its circuit reach
 - [Orrick: OCC and FDIC successfully defend valid-when-made rules (February 2022)](https://www.orrick.com/en/Insights/2022/02/OCC-and-FDIC-Successfully-Defend-Valid-When-Made-Rules), California v. OCC and v. FDIC, the dates, case numbers and Chevron
+- [GovInfo: Public Law 117-24, S.J.Res. 15 (June 30, 2021)](https://www.govinfo.gov/app/details/PLAW-117publ24), the joint resolution disapproving the OCC's true lender rule
 - [Davis Polk: OCC's true lender rule has been repealed](https://www.davispolk.com/insights/client-update/occ-s-true-lender-rule-has-been-repealed), the CRA votes, signing and effect
 - [CRS Legal Sidebar LSB11433: En banc Tenth Circuit to consider scope of DIDMCA opt-out (May 22, 2026)](https://www.everycrsreport.com/files/2026-05-22_LSB11433_01c9274923b644f900a11cc38dacf4ba656333e5.html), Weiser's history, the opt-out states and the federal bills
 - [Consumer Finance Monitor: Plaintiffs' en banc brief in the Colorado opt-out case (June 8, 2026)](https://www.consumerfinancemonitor.com/2026/06/08/plaintiffs-tell-tenth-circuit-en-banc-court-that-colorados-opt-out-law-cannot-reach-loans-made-by-out-of-state-state-chartered-banks/), the injunction, the amici and the August 18, 2026 argument

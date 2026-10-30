@@ -86,7 +86,7 @@ A credit model degrades because the population changes (a new marketing channel,
 | Highest | 15% | 12% | (−0.03) × ln(0.80) = 0.0067 |
 | **Total** | 100% | 100% | **0.0348** |
 
-Every band's contribution is positive whichever way it moved, so the PSI measures how much the mix shifted, not which way. Here the applicants moved toward the riskier bands, which the PSI alone doesn't say and the band table does; the monitoring report shows both. The thresholds that trigger review are the lender's to set in the monitoring plan, per model and tier, and a breach opens a finding with an owner, the same as a validation finding. A shift like this one, after a new acquisition channel launched, is the classic signal that the model is now scoring a population it wasn't built on.
+Every band's contribution is positive whichever way it moved, so the PSI measures how much the mix shifted, not which way. Here the applicants moved toward the riskier bands, which the PSI alone doesn't say and the band table does; the monitoring report shows both. The industry's rules of thumb read a PSI under 0.10 as little shift and 0.25 or more as a significant shift that requires action, and a 2018 study of the index's statistical properties points out that those benchmarks are used without reference to Type I or Type II error rates. By the rule of thumb, 0.035 is little shift, which is why the band table matters: a steady drift toward the riskier bands, after a new acquisition channel launched, is the classic early signal that the model is now scoring a population it wasn't built on. The thresholds that trigger review are the lender's to set in the monitoring plan, per model and tier (and per input, since one input can move a lot while the score barely does), and a breach opens a finding with an owner, the same as a validation finding.
 
 ## Vendor Models
 
@@ -223,6 +223,10 @@ Examiners, partner banks and auditors ask:
 - [Federal Reserve: SR 26-2, Revised Guidance on Model Risk Management (April 17, 2026)](https://www.federalreserve.gov/supervisionreg/srletters/SR2602.htm), supersedes SR 11-7 and SR 21-8; the risk-based approach and the $30 billion relevance statement
 - [OCC: Bulletin 2026-13, Model Risk Management: Revised Guidance (April 17, 2026)](https://www.occ.gov/news-issuances/bulletins/2026/bulletin-2026-13.html), the rescinded OCC issuances, the model definition, the covered areas, non-enforceability and the generative and agentic AI exclusion
 - [OCC: Bulletin 2025-26, Model Risk Management: Clarification for Community Banks (October 6, 2025)](https://www.occ.gov/news-issuances/bulletins/2025/bulletin-2025-26.html), no annual validation requirement for community banks
+
+**Research**
+
+- [Yurdakul: Statistical properties of population stability index (Western Michigan University, 2018)](https://scholarworks.wmich.edu/dissertations/3208/), the 0.10 and 0.25 rules of thumb and their lack of stated error rates
 
 **Filings and vendors**
 

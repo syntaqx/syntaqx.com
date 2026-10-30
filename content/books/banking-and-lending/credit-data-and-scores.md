@@ -30,7 +30,7 @@ Three patterns stand out. **Anyone who assembles data on consumers for lenders t
 
 ## The Bureaus and What a File Holds
 
-The CFPB's study of the system put each nationwide agency at more than 200 million files and more than 1.3 billion active tradelines, updated by more than 1.3 billion records a month from about 10,000 furnishers, with the ten largest furnishing about 57% of tradelines and bank cards about 40% of them. A file holds:
+The CFPB's 2012 study of the system put each nationwide agency at more than 200 million files and more than 1.3 billion active tradelines, updated by more than 1.3 billion records a month from about 10,000 furnishers, with the ten largest furnishing about 57% of tradelines and bank cards about 40% of them. A file holds:
 
 - **Identifying information:** names, addresses, SSN, date of birth, employers as reported. There's no single unique key; the agency matches each furnished record to a file, and mismatches are the root of many disputes ([Record Linkage](/docs/architecture/record-linkage)).
 - **Tradelines:** one per account a furnisher reports, with the creditor, account type, open date, credit limit or original amount, balance, scheduled payment, payment status by month (current, 30, 60, 90 and more days late), and closure reason (paid, charged off, repossessed). Furnishers send them monthly in the Metro 2 format ([Furnishing Credit Data](/books/banking-and-lending/credit-reporting) covers the format).
@@ -78,6 +78,8 @@ Both score a bureau file (FICO gives 300 to 850 for its base scores and 250 to 9
 - **Industry versions** (auto and bankcard scores) tuned on those products' outcomes.
 - **The score's reason codes**, up to four key factors (five where inquiries are one), which the FCRA requires a lender to pass on in an adverse action notice that relies on the score.
 
+Distribution is changing too: on October 1, 2025, FICO launched its Mortgage Direct License Program, "giving tri-merge resellers the option to calculate and distribute FICO Scores directly to their customers" instead of buying them only through the three bureaus. A mortgage lender's score may now come from its reseller, which is one more reason to store the provider with every score.
+
 Changing score versions is a credit policy change, not a vendor setting. Cutoffs, pricing grids and partner criteria are written against a specific model; a new version shifts the distribution, so every cutoff must be remapped and the change validated before it goes live ([Model Risk Management](/books/banking-and-lending/model-risk) covers validation).
 
 ## The FHFA Score Change
@@ -97,7 +99,7 @@ For the system: the score model is a per-loan attribute chosen at pull time and 
 
 ## No File, Thin File, No Score
 
-Some people have no bureau file ("credit invisible"); others have a file too thin or too stale to score. The CFPB's June 2025 technical correction cut its 2015 estimate of credit invisibles roughly in half, after a data change revealed records the earlier method missed, with an almost matching increase in the count of unscored records. The practical point holds either way: some applicants come back "no hit" or "no score," and the engine needs a path for them, a different bureau, a specialty agency, a cash-flow report, or a manual review, rather than an automatic decline. VantageScore says version 4.0 drops the requirements for recent activity and a file older than six months, which is how it claims to score more people. [Credit Builders & Secured Products](/books/banking-and-lending/credit-builders) covers products designed to create a file.
+Some people have no bureau file ("credit invisible"); others have a file too thin or too stale to score. The CFPB's June 2025 technical correction cut its 2015 estimate of credit invisibles roughly in half, after a data change revealed records the earlier method missed: for December 2010, 5.8% of adults (13.5 million) instead of 11.0% (25.9 million), with the share holding an unscored record rising from 7.4% to 12.7% (17.2 million to 29.7 million). Its updated estimate for December 2020 is 2.7% of adults, about 7.0 million people. The practical point holds either way: some applicants come back "no hit" or "no score," and the engine needs a path for them, a different bureau, a specialty agency, a cash-flow report, or a manual review, rather than an automatic decline. VantageScore says version 4.0 drops the requirements for recent activity and a file older than six months, which is how it claims to score more people. [Credit Builders & Secured Products](/books/banking-and-lending/credit-builders) covers products designed to create a file.
 
 If the engine declines for lack of a score, the notice must say so specifically ("no credit file" or "limited credit experience" are among Reg B's sample reasons), and the FCRA's risk-based pricing rules have a notice for the case where no score is available ([What the FCRA Adds](/books/banking-and-lending/adverse-action#what-the-fcra-adds)).
 
@@ -111,7 +113,7 @@ If the engine declines for lack of a score, the notice must say so specifically 
 
 How the data reaches the lender, as of October 2026:
 
-- **Through a consumer reporting agency.** Plaid Check, Nova Credit and Experian sell permissioned bank-data reports, attributes and scores as consumer reports, with reason codes. The consumer connects their accounts and authorizes the report; the lender orders it under a permissible purpose; the agency handles disputes. FICO and Plaid announced a cash-flow UltraFICO in November 2025 to be distributed through Plaid Check (reported in trade press; FICO's own page says only that it "is coming").
+- **Through a consumer reporting agency.** Plaid Check, Nova Credit and Experian sell permissioned bank-data reports, attributes and scores as consumer reports, with reason codes. The consumer connects their accounts and authorizes the report; the lender orders it under a permissible purpose; the agency handles disputes. FICO and Plaid announced a next-generation cash-flow UltraFICO in November 2025, which Plaid describes as "offered through Plaid's Consumer Reporting Agency."
 - **Directly from an aggregator** to a lender that analyzes the data itself. The lender then holds raw transactions and computes its own attributes, which makes the lender's model, not an agency, the source of every reason it gives.
 - **Under the open banking rule.** Section 1033 would give consumers a right to share their data with a lender through the bank's interface; its status as of October 2026 is in [The Injunction and the Rewrite](/books/banking-and-lending/open-banking#the-injunction-and-the-rewrite).
 
@@ -217,6 +219,7 @@ Credit data is the most sensitive data a lender holds, and the FCRA and Reg B bo
 - [CFPB: List of consumer reporting companies](https://www.consumerfinance.gov/consumer-tools/credit-reports-and-scores/consumer-reporting-companies/companies-list/), the nationwide agencies and the specialty categories, current as of January 2025
 - [CFPB: Key dimensions and processes in the U.S. credit reporting system (December 2012)](https://files.consumerfinance.gov/f/201212_cfpb_credit-reporting-white-paper.pdf), files, tradelines, monthly updates, furnisher counts and concentration
 - [CFPB: Technical correction and update to the CFPB's credit invisibles estimate (June 23, 2025)](https://www.consumerfinance.gov/data-research/research-reports/technical-correction-and-update-to-the-cfpbs-credit-invisibles-estimate/), the estimate roughly cut in half and the matching rise in unscored records
+- [CFPB: Technical correction and update to the credit invisibles estimate, report (June 2025)](https://files.consumerfinance.gov/f/documents/cfpb_update-credit-invisibles-estimate_2025-06.pdf), the corrected 2010 shares and counts and the 2020 estimate
 - [FHFA: Credit scores](https://www.fhfa.gov/policy/credit-scores), the validation, delay, interim policy and 2026 steps, FICO 10T not yet eligible for delivery, tri-merge unchanged and one model per loan
 - [Fannie Mae Selling Guide B3-5.1-02: Determining the credit score for a mortgage loan](https://selling-guide.fanniemae.com/sel/b3-5.1-02/determining-credit-score-mortgage-loan), middle of three, lower of two, lowest borrower, and the average median score for manual underwriting
 
@@ -227,6 +230,10 @@ Credit data is the most sensitive data a lender holds, and the FCRA and Reg B bo
 - [FinRegLab: Advancing the credit ecosystem, machine learning and cash flow data in consumer underwriting (2025)](https://finreglab.org/research/advancing-the-credit-ecosystem-machine-learning-cash-flow-data-in-consumer-underwriting/), combined bureau and cash-flow models most predictive across subgroups
 - [FinRegLab: Research](https://finreglab.org/research/), the 2025 and 2026 small business cash-flow reports
 
+**Filings**
+
+- [Fair Isaac: 2025 annual report to shareholders (filed January 27, 2026)](https://www.sec.gov/Archives/edgar/data/814547/000119312526024429/d35169dars.pdf), the FICO Mortgage Direct License Program announced October 1, 2025
+
 **Vendor documentation**
 
 - [myFICO: FICO Score versions](https://www.myfico.com/credit-education/credit-scores/fico-score-versions), mortgage versions by bureau, FICO 10T's trended data and score ranges
@@ -236,12 +243,9 @@ Credit data is the most sensitive data a lender holds, and the FCRA and Reg B bo
 - [VantageScore: Mortgage](https://vantagescore.com/what-we-do/mortgage), the claim that FHFA "required" VantageScore 4.0
 - [Plaid: Plaid Check for underwriting](https://plaid.com/check/underwriting/), Plaid Check as a consumer reporting agency
 - [Plaid: Plaid Check documentation](https://plaid.com/docs/check/), Consumer Report, 24 months of data, income insights and LendScore's five reasons for adverse action
+- [Plaid: FICO partner Q&A](https://plaid.com/customer-stories/fico/), the next-generation UltraFICO offered through Plaid's consumer reporting agency
 - [Experian: Cashflow Score](https://www.experian.com/business/products/cashflow-score), the bank-data score, its range and what it predicts
 - [Nova Credit](https://www.novacredit.com/), Nova Credit as a consumer reporting agency and lenders sending adverse action notices
 - [Nova Credit: Cash Atlas](https://www.novacredit.com/cash-atlas), attributes, the cash-flow score and adverse action codes
 - [NCTUE: Consumers](https://www.nctue.com/consumers), a not-for-profit consumer reporting agency with data managed by Equifax
 - [TransUnion: Acquisition of FactorTrust (November 14, 2017)](https://newsroom.transunion.com/transunion-expands-credit-access-to-more-americans--with-acquisition-of-factortrust/), alternative data on short-term and small-dollar loans
-
-**In practice**
-
-- [Open Banking Expo: FICO teams up with Plaid to launch next-generation cash flow score (November 21, 2025)](https://www.openbankingexpo.com/news/fico-teams-up-with-plaid-to-launch-next-generation-cash-flow-score/), the UltraFICO cash-flow score distributed through Plaid Check
