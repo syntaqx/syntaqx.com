@@ -55,16 +55,16 @@ The double-entry rules themselves (balanced entries, append-only rows, correctio
 | Vendor | Cores named publicly | Delivery | What the public record shows |
 | --- | --- | --- | --- |
 | **Fiserv** | DNA, Finxact, Premier, CoreAdvance, Portico (credit unions), Signature | "Primarily as an outsourced service", also client-installed or hosted by third parties | DNA, Finxact and Signature are sold globally; Finxact also powers the ledger in Fiserv's embedded finance offering (FY2025 10-K) |
-| **FIS** | Not named in the FY2025 10-K | Hosted and licensed | Banking Solutions revenue of $7,285 million in 2025 against $6,892 million in 2024; the filing describes a "next-generation core banking platform" and continuing "core modernization efforts" |
+| **FIS** | Modern Banking Platform (the FY2025 10-K names no cores) | Hosted and licensed | Banking Solutions revenue of $7,285 million in 2025 against $6,892 million in 2024; the filing ties its development spending to "modernization of our proprietary core systems," and the product page sells Modern Banking Platform as "cloud-native" and "modular," named by a US neobank startup |
 | **Jack Henry** | SilverLake (520 banks), CIF 20/20 (260 banks), Core Director (170+ banks), Symitar (about 715 credit unions) | On-premise or Jack Henry's private cloud; a separate public-cloud-native Jack Henry Platform | About 1,670 bank and credit union core clients; names FIS, Fiserv, Corelation and Finastra as core competitors (FY2025 10-K) |
 | **Temenos** | Temenos Core | SaaS on Azure and AWS | Claims to have been first to put core banking in the cloud, in 2011, and to support banks in 150+ countries |
-| **Thought Machine** | Vault Core | Multi-cloud | One ledger for every product, with products written as "programmable smart contracts"; JPMorgan Chase's consumer bank is migrating to it |
+| **Thought Machine** | Vault Core | Multi-cloud | One ledger for every product, with products written as "programmable smart contracts"; JPMorgan Chase announced in 2022 a multi-year program to move its US consumer bank onto it ([JPMorgan Chase and Chase UK](/books/banking-and-lending/core-modernization#jpmorgan-chase-and-chase-uk)) |
 | **10x Banking** | 10x platform | SaaS, cloud-native | Customers named include Chase UK, Westpac, The Co-operative Bank and WestBrom; claims 100M+ accounts and 10,000+ transactions per second |
 | **Mambu** | Mambu | SaaS | Public developer documentation for products, holds, accrual and end-of-day jobs; "65+ countries" |
+| **Finastra** | Essence | "Cloud-first, not cloud only": cloud or on-premises from the same code base | Product page names Tonik, BKN301, Belize Bank and Melton Building Society; Jack Henry lists Finastra among its US core competitors |
 | **Apache Fineract** | Fineract | Open source, self-hosted | Separate read, write and batch instance modes, with close-of-business jobs on batch instances |
 
-<!-- source-gap: fis-finastra-core-names | missing | FIS and Finastra core product names and client counts | closes with: an FIS or Finastra filing, product page or annual report naming the cores and their counts | checked: 2026-10-29 -->
-The FIS and Finastra rows are thinner than the others because neither vendor's product pages could be opened for this chapter and FIS's 10-K doesn't name its cores; treat those rows as incomplete rather than as a statement that the vendors lack the products.
+Neither FIS nor Finastra publishes client counts for its cores, so those rows carry no counts; the gap is in the public record, not in the products.
 
 A few patterns run through the table.
 
@@ -238,6 +238,8 @@ The core is the bank's book of original entry, so its records are what examiners
 
 **Vendor documentation**
 
+- [FIS: Modern Banking Platform](https://www.fisglobal.com/products/fis-modern-banking-platform), the cloud-native, modular core and a named client
+- [Finastra: Core Banking](https://www.finastra.com/universal-banking/core-banking), Essence, its deployment options and named customers
 - [Jack Henry: State of Jack Henry Platform](https://knowledge.banno.com/platform/state-of-the-platform/), Ledger, Deposit Servicing, SilverLake and Symitar in the Platform, Wires and Data Hub status as of October 2026
 - [Jack Henry: Remote deposit posting options](https://api.payments.jackhenry.com/docs/smart-alerts/APIReference/Posting/), memo posting with a posting file against real-time hard posting
 - [Mambu: Cash vs accruals accounting](https://docs.mambu.com/docs/cash-vs-accruals-accounting/), accrual booking per product and branch, per-account breakdown for loans only

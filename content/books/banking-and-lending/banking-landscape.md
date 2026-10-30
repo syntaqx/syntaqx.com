@@ -61,7 +61,7 @@ As of October 2026, from filings and vendor pages, the core and the systems arou
 | **Thought Machine** | Cloud-native core (Vault Core) | One ledger for every product, products defined as code; names Lloyds, SEB, Standard Chartered, Intesa, Arvest and others |
 | **10x Banking** | Cloud-native core | Names Chase UK, Westpac, The Co-operative Bank, West Brom and Old Mutual; claims 99.99% uptime |
 | **Mambu** | SaaS core | A composable cloud core with public API documentation; claims customers in 65+ countries |
-| **Q2** | Digital banking, and Helix as a cloud core and BaaS platform | 457 installed digital banking customers, over 1,200 financial institution customers, about 27.3 million registered users |
+| **Q2** | Digital banking, and Helix as a cloud core and BaaS platform | 457 installed digital banking customers, over 1,200 financial institution customers, about 27.3 million registered users; $794.8 million of 2025 revenue |
 | **Alkami** | Digital banking, account opening (MANTL) | 301 institutions on its digital banking platform, 22.4 million registered users, $443.6 million of 2025 revenue; bought MANTL in March 2025 |
 | **nCino** | Origination and onboarding on Salesforce | Over 2,700 customers, about 1,500 of them depository institutions; $594.8 million of fiscal 2026 revenue |
 
@@ -90,9 +90,9 @@ The banks on the other side are mostly small. Coastal Financial, whose CCBX segm
 
 Consumer fintechs split by whether they hold a charter:
 
-- **Program managers on sponsor banks.** Chime reported 9.5 million active members and $2,186.8 million of 2025 revenue, 49% of it debit interchange, earned on cards its two partner banks issue. Block's Cash App had 59 million monthly transacting actives in December 2025; Block also owns Square Financial Services, a Utah industrial bank.
+- **Program managers on sponsor banks.** Chime reported 9.5 million active members and $2,186.8 million of 2025 revenue, 49% of it debit interchange, earned on cards its two partner banks issue. Block's Cash App had 59 million monthly transacting actives in December 2025, and its Cash App Card is issued by Sutton Bank; Block also owns Square Financial Services, a Utah industrial bank.
 - **Fintechs that became banks.** SoFi announced on January 18, 2022 that the OCC and the Federal Reserve had approved it becoming a bank holding company by acquiring Golden Pacific Bancorp, which became SoFi Bank, N.A.; at the end of 2025 SoFi had 13.7 million members, $37.5 billion of deposits and $3,613.4 million of 2025 net revenue. Above $10 billion, SoFi's debit interchange is capped, and its model leans on deposit funding for its loans instead.
-- **Applicants.** Revolut won the OCC's conditional approval for Revolut Bank US in September 2026, about six months after applying, with at least $95 million of paid-in capital and a 10% tier 1 leverage ratio for three years among the conditions, and Federal Reserve and FDIC approvals still to come.
+- **Applicants.** Revolut won the OCC's preliminary conditional approval for Revolut Bank US on September 2, 2026, about six months after applying on March 10, with at least $95 million of paid-in capital and a 10% tier 1 leverage ratio for three years among the conditions, and Federal Reserve and FDIC approvals still to come.
 
 [Neobanks & Consumer Fintech](/books/banking-and-lending/neobanks) covers the revenue models from the filings and the UK banks that hold full licenses from the start.
 
@@ -100,9 +100,9 @@ Consumer fintechs split by whether they hold a charter:
 
 Much of US consumer credit is made outside banks or through them only on paper:
 
-- **Mortgages.** Independent mortgage companies made 63.1% of home-purchase loans and 67.1% of refinances in 2023 HMDA data, the latest year the CFPB has summarized. UWM, which originates only through brokers, made $163.4 billion of loans in 2025; Rocket completed its acquisition of Mr. Cooper on October 1, 2025, combining origination with a servicing portfolio of nearly 10 million homeowners. A 2024 share figure appears only in industry press so far. <!-- source-gap: hmda-imc-share-2024 | secondary | independent mortgage companies' share of 2024 originations | closes with: the CFPB's or FFIEC's summary of 2024 HMDA data | checked: 2026-10-29 -->
+- **Mortgages.** Independent mortgage companies made 63.1% of home-purchase loans and 67.1% of refinances in 2023 HMDA data, the latest year the CFPB has summarized. UWM, which originates only through brokers, made $163.4 billion of loans in 2025; Rocket completed its acquisition of Mr. Cooper on October 1, 2025, combining origination with a servicing portfolio of nearly 10 million homeowners. A 2024 share figure appears only in industry press so far. <!-- source-gap: hmda-imc-share-2024 | secondary | independent mortgage companies' share of 2024 originations | closes with: the CFPB's or FFIEC's summary of 2024 HMDA data | checked: 2026-10-30 -->
 - **Consumer installment and BNPL.** Affirm facilitated $50.2 billion of GMV in fiscal 2026 for about 27.8 million active consumers, originating through its bank partners. Upstart's marketplace originated $4.23 billion across 558,014 loans in the second quarter of 2026 for more than 100 bank and credit union partners.
-- **Lenders that became banks.** LendingClub, which described itself in its 2025 10-K as "a leading nationally chartered digital bank" (LendingClub Bank, N.A.), renamed itself Happen, Inc. in June 2026, as its EDGAR record now shows; Upstart received conditional approval for Upstart Bank, N.A. in July 2026 (below).
+- **Lenders that became banks.** LendingClub, which described itself in its 2025 10-K as "a leading nationally chartered digital bank" (LendingClub Bank, N.A.), renamed itself Happen, Inc. in June 2026, as its EDGAR record now shows; Upstart received conditional approval for Upstart Bank, N.A. on July 23, 2026 (below).
 
 [The Lending Business](/books/banking-and-lending/lending-business) covers how each model makes money, and [Lender Licensing & Bank Partnerships](/books/banking-and-lending/lender-licensing) covers the licenses and the true lender question that push lenders toward charters.
 
@@ -114,21 +114,24 @@ Dated facts age fast; this is the landscape as of October 2026, from each compan
 | --- | --- | --- |
 | March 10, 2023 | Silicon Valley Bank closed; on March 26 First-Citizens Bank & Trust agreed to assume its deposits and loans from the FDIC | Uninsured deposit runs become a design input ([When Banks Fail](/books/banking-and-lending/bank-failures#anatomy-of-a-run)) |
 | March 2025 | Alkami acquires MANTL | Digital banking and account opening consolidate |
-| May 18, 2025 | Capital One completes its acquisition of Discover, adding the Discover, PULSE and Diners Club networks | A bank owns a card network |
+| April 17, 2025 | Gen Digital completes its acquisition of MoneyLion for $82.00 a share in cash plus a contingent value right | A consumer software company buys a fintech's banking and lending products |
+| May 18, 2025 | Capital One completes its acquisition of Discover, agreed in February 2024 at 1.0192 Capital One shares per Discover share, adding the Discover, PULSE and Diners Club networks | A bank owns a card network |
 | October 1, 2025 | Rocket completes its acquisition of Mr. Cooper | Origination and servicing combine at scale |
+| December 10, 2025 | Enova agrees to acquire Grasshopper Bancorp and merge Grasshopper Bank into a national bank subsidiary | An online lender tries to buy its charter |
 | December 12, 2025 | The OCC conditionally approves new national trust banks for Circle and Ripple and conversions for BitGo, Fidelity Digital Assets and Paxos | Digital asset firms take bank charters without insured deposits |
 | January 9, 2026 | FIS closes its purchase of Global Payments' Issuer Solutions business | A core vendor adds card issuer processing |
-| January 2026 | The OCC conditionally approves a national bank for Nubank | A foreign neobank charters in the US |
+| January 29, 2026 | The OCC conditionally approves a national bank for Nubank | A foreign neobank charters in the US |
 | April 7, 2026 | Capital One completes its acquisition of Brex, announced at $5.15 billion | A bank buys a corporate card and spend platform |
-| April 2026 | The OCC conditionally approves Mercury's national bank | A business banking program manager moves toward its own charter |
+| April 24, 2026 | The OCC conditionally approves Mercury's national bank | A business banking program manager moves toward its own charter |
 | June 2026 | LendingClub renames itself Happen, Inc. | A marketplace lender rebrands as a bank |
 | July 10, 2026 | Circle's national trust bank receives final approval | The first of the December 2025 trust approvals completes |
-| July 2026 | The OCC conditionally approves Upstart Bank, N.A. | A lending marketplace applies to hold loans on its own charter |
-| September 2026 | The OCC conditionally approves Revolut Bank US | A program on US sponsor banks moves toward a charter |
+| July 23, 2026 | The OCC conditionally approves Upstart Bank, N.A. | A lending marketplace applies to hold loans on its own charter |
+| September 2, 2026 | The OCC conditionally approves Revolut Bank US | A program on US sponsor banks moves toward a charter |
+| October 16, 2026 | Enova and Grasshopper Bancorp terminate their merger agreement, Enova paying a $4 million termination payment | The bought charter doesn't arrive; no reason was filed |
 
 Failures continue at a small-bank pace: the FDIC's list shows two in 2025 (Pulaski Savings Bank in January, The Santa Anna National Bank in June) and six in 2026 through September, the latest Nano Banc on September 25, 2026, each sold to another bank.
 
-Three patterns run through the list. **Charters are the exit from sponsorship:** Mercury, Revolut, Nubank and Upstart applied for what SoFi bought in 2022, trading a partner's compliance program for their own and Regulation II's exemption for capital requirements ([Starting a Bank](/books/banking-and-lending/starting-a-bank#capital-liquidity-and-the-three-year-plan)). **Banks buy fintechs:** Capital One bought a network and a spend platform within a year. **Vendors bundle:** FIS added issuer processing, Alkami added account opening, Rocket added servicing; a buyer of one product increasingly buys a roadmap tied to a larger suite.
+Three patterns run through the list. **Charters are the exit from sponsorship:** Mercury, Revolut, Nubank and Upstart applied for what SoFi bought in 2022 (Enova's attempt to buy one the same way was terminated in October 2026), trading a partner's compliance program for their own and Regulation II's exemption for capital requirements ([Starting a Bank](/books/banking-and-lending/starting-a-bank#capital-liquidity-and-the-three-year-plan)). **Banks buy fintechs:** Capital One bought a network and a spend platform within a year. **Vendors bundle:** FIS added issuer processing, Alkami added account opening, Rocket added servicing; a buyer of one product increasingly buys a roadmap tied to a larger suite.
 
 ## Build, Buy or Partner
 
@@ -211,6 +214,10 @@ Design notes:
 - [Navy Federal Credit Union: Corporate fact sheet](https://www.navyfederal.org/about/corporate-fact-sheet.html), assets and members
 - [FDIC: Silicon Valley Bank](https://www.fdic.gov/resources/resolutions/bank-failures/failed-bank-list/silicon-valley.html), the closing and First-Citizens' assumption
 - [FDIC: Failed Bank List](https://www.fdic.gov/bank-failures/failed-bank-list), failures in 2025 and 2026
+- [OCC: Conditional Approval #1362, Nubank, N.A. (January 29, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/ca1362.pdf), the preliminary conditional approval
+- [OCC: Corporate Decision #1372, Mercury Bank, N.A. (April 24, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1372.pdf), the preliminary conditional approval
+- [OCC: Corporate Decision #1382, Upstart Bank, N.A. (July 23, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1382.pdf), the preliminary conditional approval
+- [OCC: Corporate Decision #1390, Revolut Bank US, N.A. (September 2, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1390.pdf), the March 10, 2026 application, the $95 million capital and 10% leverage conditions, and the Federal Reserve and FDIC applications
 - [OCC: Conditional approvals of national trust bank charters, December 12, 2025](https://www.occ.gov/news-issuances/news-releases/2025/nr-occ-2025-125.html), Circle, Ripple, BitGo, Fidelity Digital Assets and Paxos
 - [CFPB: Summary of 2023 data on mortgage lending](https://www.consumerfinance.gov/data-research/hmda/summary-of-2023-data-on-mortgage-lending/), independent mortgage companies' shares of purchase and refinance loans
 - [CFPB: Synapse Financial Technologies, Inc. enforcement action](https://www.consumerfinance.gov/enforcement/actions/synapse-financial-technologies-inc/), the failure to keep records of where consumers' funds were
@@ -221,7 +228,7 @@ Design notes:
 - [Fiserv: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/798354/000079835426000009/fi-20251231.htm), account processing platforms and revenue by segment
 - [FIS: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1136893/000113689326000013/fis-20251231.htm), Banking Solutions revenue and the Issuer Solutions closing
 - [Jack Henry: Form 10-K for fiscal 2025](https://www.sec.gov/Archives/edgar/data/779152/000077915225000055/jkhy-20250630.htm), core platforms, client counts and revenue
-- [Q2 Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1410384/000141038426000006/qtwo-20251231.htm), digital banking customers, registered users and Helix
+- [Q2 Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1410384/000141038426000006/qtwo-20251231.htm), digital banking customers, registered users, revenue and Helix
 - [Alkami Technology: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1529274/000152927426000009/alk-20251231.htm), clients, registered users, revenue and the MANTL acquisition
 - [nCino: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1902733/000190273326000022/ncno-20260131.htm), customers and revenue
 - [Chime Financial: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1795586/000179558626000013/chym-20251231.htm), active members, revenue, debit interchange and partner banks
@@ -232,6 +239,9 @@ Design notes:
 - [LendingClub: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1409970/000140997026000018/lc-20251231.htm), its self-description and its bank subsidiary
 - [Coastal Financial: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1437958/000143795826000013/ck1437958-20251231.htm), CCBX partners, CCBX loans and total assets
 - [Capital One: Completion of the Discover acquisition (Form 8-K, Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/927628/000119312525122059/d934475dex991.htm), the May 18, 2025 closing and the networks
+- [Capital One: Form 8-K for the Discover merger agreement (February 22, 2024)](https://www.sec.gov/Archives/edgar/data/927628/000119312524042826/d780383d8k.htm), the February 19, 2024 agreement and the 1.0192 exchange ratio
+- [Gen Digital: Form 8-K completing the MoneyLion merger (April 17, 2025)](https://www.sec.gov/Archives/edgar/data/849399/000114036125014313/ef20047501_8k.htm), the closing and the $82.00 cash consideration plus a contingent value right
+- [Enova International: Form 8-K terminating the Grasshopper merger agreement (October 16, 2026)](https://www.sec.gov/Archives/edgar/data/1529864/000119312526424282/enva-20261016.htm), the December 10, 2025 agreement, the mutual termination and the $4 million payment
 - [Rocket Companies: Completion of the Mr. Cooper acquisition (Form 8-K, Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1805284/000095014225002622/eh250684731_ex9901.htm), the October 1, 2025 closing and the combined servicing portfolio
 - [UWM Holdings: Fourth quarter and full year 2025 results](https://investors.uwm.com/news/financial-news/news-details/2026/UWM-Holdings-Corporation-Announces-Fourth-Quarter--Full-Year-2025-Results/default.aspx), 2025 originations
 
@@ -247,9 +257,9 @@ Design notes:
 - [Mercury: Pricing](https://mercury.com/pricing), partner banks, the not-a-bank disclosure and the insurance claim
 - [Column](https://column.com/), the national bank with its own core and ledger and direct access
 - [Stripe: How Stripe Capital works](https://docs.stripe.com/capital), Celtic Bank and Lead Bank loans and YouLend merchant cash advances
+- [Cash App: Cash App Card Agreement](https://cash.app/legal/us/en-us/card-agreement), Sutton Bank as issuer
 - [Shopify: Shopify Capital in the United States](https://help.shopify.com/en/manual/finance/shopify-capital/united-states), WebBank as issuer
 
 **In practice**
 
-- [Banking Dive: Revolut nabs conditional OCC charter](https://www.bankingdive.com/news/revolut-nabs-conditional-occ-charter/829703/), the approval, its conditions and the remaining approvals
-- [Davis Wright Tremaine: OCC signals digital asset charter momentum (August 2026)](https://www.dwt.com/blogs/financial-services-law-advisor/2026/08/occ-signals-digital-asset-charter-momentum), the 2026 conditional approvals for Nubank, Mercury and Upstart, and Circle's final approval
+- [Davis Wright Tremaine: OCC signals digital asset charter momentum (August 2026)](https://www.dwt.com/blogs/financial-services-law-advisor/2026/08/occ-signals-digital-asset-charter-momentum), Circle's final approval
