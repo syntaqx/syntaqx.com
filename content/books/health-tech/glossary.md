@@ -62,6 +62,39 @@ Health care borrows its words from medicine, insurance, law and a dozen standard
 - **PMS (practice management system):** the system a practice's front desk runs on: schedule, patients, ledger, insurance and claims, and in dental and veterinary practice the clinical chart too ([The Health Tech Landscape](/books/health-tech/health-tech-landscape#specialty-practice-management)).
 - **X12:** the standards body and format for HIPAA's administrative transactions: 837 claims, 835 remittances, 270/271 eligibility, 276/277 claim status, 278 authorizations ([The Health Tech Business](/books/health-tech/health-tech-business#fee-for-service-through-insurance)).
 
+## Running the Platform
+
+- **A/R tie-out:** the conversion check that the new system's converted balances, credits included, equal the old system's accounts receivable report at the final conversion ([Data Migration & Conversions](/books/health-tech/data-migration-and-conversions#balances-and-claims-in-flight)).
+- **AB 3030:** the 2024 California law requiring a disclaimer and a path to a human on generative AI patient communications about clinical information, unless a licensed provider reviewed them ([AI in Health Tech](/books/health-tech/ai-in-health-tech#patient-facing-ai)).
+- **Ambient scribe:** software that records a visit, transcribes it and drafts a note for the clinician to edit and sign ([AI in Health Tech](/books/health-tech/ai-in-health-tech#ambient-scribes)).
+- **BCA (Business Continuity Access):** Epic's downtime toolset, a read-only copy of the chart and printed downtime reports from designated PCs ([Operations, Support & Downtime](/books/health-tech/health-tech-operations#how-the-platforms-do-it)).
+- **Clean claim rate (CL-1):** HFMA's key: claims that pass edits without manual intervention over claims accepted for billing ([Health Tech Metrics](/books/health-tech/health-tech-metrics#revenue-cycle-metrics)).
+- **Conversion:** moving a practice's data from one practice management system or EHR to another, by test conversion, mapping and a final conversion ([Data Migration & Conversions](/books/health-tech/data-migration-and-conversions#the-conversion-process)).
+- **Data use agreement (DUA):** the contract a limited data set requires, binding the recipient to permitted uses and to not identify or contact anyone ([De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use#limited-data-sets-and-data-use-agreements)).
+- **Days in A/R, net (FM-1):** HFMA's key: net patient receivables over average daily net patient service revenue for the last three months ([Health Tech Metrics](/books/health-tech/health-tech-metrics#revenue-cycle-metrics)).
+- **Decision support intervention (DSI):** ONC's term for EHR features that support clinical decisions, evidence-based or predictive; HTI-5 removed the source attribute requirements for them ([AI in Health Tech](/books/health-tech/ai-in-health-tech#decision-support-transparency-and-nondiscrimination)).
+- **Designated record set:** the medical and billing records a provider maintains about individuals, which access and amendment rights reach, including after a system switch ([Data Migration & Conversions](/books/health-tech/data-migration-and-conversions#exports-the-law-requires)).
+- **Downtime kit:** what a practice works from when its systems are down: printed schedules and reports, contact lists and paper forms ([Operations, Support & Downtime](/books/health-tech/health-tech-operations#downtime-from-the-practice-s-side)).
+- **EHI export:** ONC's certification criterion § 170.315(b)(10), single-patient and population export of all electronic health information a product stores ([Data Migration & Conversions](/books/health-tech/data-migration-and-conversions#exports-the-law-requires)).
+- **Expert Determination:** HIPAA de-identification by a qualified expert who finds a very small risk of identification by the anticipated recipient and documents why ([De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use#the-two-methods-as-ocr-reads-them)).
+- **FHIR facade:** a FHIR API published over a product's own relational model, with stable IDs, real versions and writes through the domain ([Health Tech Architecture](/books/health-tech/health-tech-architecture#a-fhir-facade-over-your-model)).
+- **GRR (gross revenue retention):** a cohort's recurring revenue a year later capped at its starting value, over its starting revenue; excludes expansion ([Health Tech Metrics](/books/health-tech/health-tech-metrics#vendor-metrics)).
+- **Inbound message:** an HL7, FHIR, X12 or vendor message stored as received, unique on the sender's ID, before it's parsed and applied ([Health Tech Architecture](/books/health-tech/health-tech-architecture#the-sync-and-integration-layer)).
+- **Limited data set:** PHI with 16 kinds of direct identifiers removed but dates, town, state and ZIP kept, usable for research, public health or operations under a DUA ([De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use#limited-data-sets-and-data-use-agreements)).
+- **Location (vendor metric):** a physical office under active subscription; a multi-office customer counts once per location ([Health Tech Metrics](/books/health-tech/health-tech-metrics#how-the-companies-report)).
+- **MAP Keys:** HFMA's 29 standard revenue cycle KPIs in five groups ([Health Tech Metrics](/books/health-tech/health-tech-metrics#revenue-cycle-metrics)).
+- **NRR (net revenue retention):** a cohort's recurring revenue a year later, expansion included, over its starting revenue; new customers excluded ([Health Tech Metrics](/books/health-tech/health-tech-metrics#vendor-metrics)).
+- **PCCP (predetermined change control plan):** a plan, authorized with a device, describing changes that can later be made without a new submission ([AI in Health Tech](/books/health-tech/ai-in-health-tech#clinical-decision-support-and-the-fda)).
+- **Practice notice:** a recorded notice to a practice about maintenance, an outage or a security incident, with its deadline and recipients ([Operations, Support & Downtime](/books/health-tech/health-tech-operations#how-to-build-it)).
+- **Privacy-preserving record linkage:** joining records about the same person across sources by keyed tokens made where the data is held ([De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use#tokenization-and-linkage)).
+- **Safe Harbor:** HIPAA de-identification by removing 18 kinds of identifiers and having no actual knowledge the rest identifies anyone ([De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use#the-two-methods-as-ocr-reads-them)).
+- **Sale of PHI:** a disclosure for remuneration from or for the recipient, prohibited without authorization except in listed cases ([De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use#selling-data-and-secondary-use)).
+- **Sensitivity label:** a record-level marking (Part 2, reproductive, mental health) checked on every read and outbound path ([Health Tech Architecture](/books/health-tech/health-tech-architecture#segmenting-phi)).
+- **Source attributes:** model-card information about predictive decision support that HTI-1 required certified EHRs to expose and HTI-5 removed ([AI in Health Tech](/books/health-tech/ai-in-health-tech#decision-support-transparency-and-nondiscrimination)).
+- **Support session:** a time-boxed, reasoned, logged delegation of a staff member into a practice's data, scoped to a ticket and a patient ([Operations, Support & Downtime](/books/health-tech/health-tech-operations#support-access-to-phi)).
+- **Sync agent:** software on a practice's server that reads from and writes to its practice management system for a cloud platform ([Health Tech Architecture](/books/health-tech/health-tech-architecture#the-sync-and-integration-layer)).
+- **Test conversion:** a full trial conversion into a test database that the practice reviews before the final ([Data Migration & Conversions](/books/health-tech/data-migration-and-conversions#the-conversion-process)).
+
 ## References
 
 **Reference**
@@ -69,3 +102,6 @@ Health care borrows its words from medicine, insurance, law and a dozen standard
 - [HL7 FHIR R4: Resource index](https://hl7.org/fhir/R4/resourcelist.html), the FHIR resources the core data model maps to
 - [CMS: Adopted standards and operating rules](https://www.cms.gov/priorities/key-initiatives/burden-reduction/administrative-simplification/hipaa/adopted-standards-operating-rules), the HIPAA transaction standards
 - [45 CFR 160.103: Definitions](https://www.law.cornell.edu/cfr/text/45/160.103), covered entity, business associate and protected health information
+- [HHS OCR: Guidance regarding methods for de-identification](https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html), Safe Harbor and Expert Determination
+- [HFMA: MAP Keys](https://www.hfma.org/industry-initiatives/map-keys/), the revenue cycle KPIs
+- [Federal Register: HTI-5 final rule (October 28, 2026)](https://www.federalregister.gov/d/2026-21943), decision support source attributes
