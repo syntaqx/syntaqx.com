@@ -94,7 +94,7 @@ The steps, on the payer's side:
 4. **Ongoing monitoring.** Sanctions, license actions and exclusions between cycles; ProView describes sanctions "flagged daily."
 5. **Recredentialing.** On the cycle, with performance data.
 
-For the practice, the visible symptom is time: weeks to months per payer, multiplied by every payer the practice takes. The workflow is a tracker of per-payer cases with follow-up dates and the documents each asked for.
+For the practice, the visible symptom is time: weeks to months per payer, multiplied by every payer the practice takes. The workflow is a tracker of per-payer applications with follow-up dates and the documents each asked for.
 
 ## Payer Enrollment
 
@@ -117,12 +117,12 @@ The directory is where members find in-network providers, and it is regulated be
 
 ## How to Build It
 
-The core `practitioners` (with NPI), `practitioner_roles` (practitioner at an organization and location with specialty and taxonomy) and `organizations` hold who works where. Credentialing and enrollment add the credentials with their verifications, a case per payer, the enrollment that results, and directory attestations:
+The core `practitioners` (with NPI), `practitioner_roles` (practitioner at an organization and location with specialty, taxonomy code and `accepts_new_patients`) and `organizations` hold who works where. Credentialing and enrollment add the licenses and credentials with their verifications, an application per payer, the enrollment that results, and directory attestations. Every row carries the `organization_id` of the tenant keeping it (a practice, a credentialing service or a payer):
 
 ```sql
-CREATE TABLE practitioner_credentials (  -- licenses, DEA, board certs, malpractice, each with expiry
+CREATE TABLE practitioner_licenses (     -- licenses, DEA, board certs, malpractice, each with expiry
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
+  organization_id UUID NOT NULL REFERENCES organizations (id),
   practitioner_id UUID NOT NULL REFERENCES practitioners (id),
   kind            TEXT NOT NULL CHECK (kind IN ('state_license', 'dea', 'state_cds',
                     'board_certification', 'malpractice_policy', 'hospital_privileges',
@@ -136,8 +136,8 @@ CREATE TABLE practitioner_credentials (  -- licenses, DEA, board certs, malpract
 
 CREATE TABLE credential_verifications (  -- primary source checks, append-only
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
-  credential_id   UUID REFERENCES practitioner_credentials (id),
+  organization_id UUID NOT NULL REFERENCES organizations (id),
+  credential_id   UUID REFERENCES practitioner_licenses (id),
   practitioner_id UUID NOT NULL REFERENCES practitioners (id),
   source          TEXT NOT NULL CHECK (source IN ('state_board', 'dea', 'npdb', 'oig_leie',
                     'sam', 'state_medicaid_exclusions', 'medicare_preclusion', 'nppes',
@@ -148,9 +148,9 @@ CREATE TABLE credential_verifications (  -- primary source checks, append-only
   verified_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE credentialing_cases (       -- one application to one payer, start to decision
+CREATE TABLE credentialing_applications ( -- one application to one payer, start to decision
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
+  organization_id UUID NOT NULL REFERENCES organizations (id),
   practitioner_id UUID NOT NULL REFERENCES practitioners (id),
   payer_id        UUID NOT NULL REFERENCES payers (id),
   kind            TEXT NOT NULL CHECK (kind IN ('initial', 'recredential', 'add_location',
@@ -160,13 +160,13 @@ CREATE TABLE credentialing_cases (       -- one application to one payer, start 
   submitted_on    DATE,
   decided_on      DATE,
   next_follow_up  DATE,                   -- the tracker's reason to exist
-  payer_reference TEXT,                   -- the payer's case or application number
+  payer_reference TEXT,                   -- the payer's application number
   delegated_org_id UUID REFERENCES organizations (id)  -- a delegated credentialing entity
 );
 
-CREATE TABLE network_enrollments (       -- this NPI, under this TIN, at these locations, in this network
+CREATE TABLE payer_enrollments (         -- this NPI, under this TIN, at this location, in this network
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
+  organization_id UUID NOT NULL REFERENCES organizations (id),
   practitioner_role_id UUID NOT NULL REFERENCES practitioner_roles (id),
   payer_id        UUID NOT NULL REFERENCES payers (id),
   network_id      UUID REFERENCES networks (id),
@@ -179,14 +179,14 @@ CREATE TABLE network_enrollments (       -- this NPI, under this TIN, at these l
   effective_during DATERANGE NOT NULL,
   retro_billing_until DATE,               -- Medicare: services from 30 days before effective
   recredential_due DATE,
-  case_id         UUID REFERENCES credentialing_cases (id),
+  application_id  UUID REFERENCES credentialing_applications (id),
   EXCLUDE USING GIST (practitioner_role_id WITH =, payer_id WITH =,
     network_id WITH =, effective_during WITH &&) WHERE (status = 'active')
 );
 
 CREATE TABLE directory_attestations (    -- what the practice told each payer about its directory data
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id       UUID NOT NULL,
+  organization_id UUID NOT NULL REFERENCES organizations (id),
   practitioner_role_id UUID NOT NULL REFERENCES practitioner_roles (id),
   payer_id        UUID NOT NULL REFERENCES payers (id),
   channel         TEXT NOT NULL CHECK (channel IN ('caqh', 'payer_portal', 'roster_file',
@@ -197,14 +197,14 @@ CREATE TABLE directory_attestations (    -- what the practice told each payer ab
 );
 ```
 
-On the payer side, the directory itself is a view over `network_enrollments` joined with the latest attestation and verification per role, and the 90-day clock is a computed deadline per directory entry:
+On the payer side, the directory itself is a view over `payer_enrollments` joined with the latest attestation and verification per role, and the 90-day clock is a computed deadline per directory entry:
 
 ```sql
 -- Directory entries whose verification is due within 10 days, or overdue.
 SELECT pr.id, p.npi, e.payer_id,
        MAX(a.attested_at) AS last_verified,
        MAX(a.attested_at) + INTERVAL '90 days' AS due_at
-FROM network_enrollments e
+FROM payer_enrollments e
 JOIN practitioner_roles pr ON pr.id = e.practitioner_role_id
 JOIN practitioners p ON p.id = pr.practitioner_id
 LEFT JOIN directory_attestations a
@@ -233,7 +233,7 @@ Design notes:
 
 - **Validate NPIs against NPPES** and store taxonomy, type and the fetch time as an observation.
 - **Model enrollment as NPI, TIN, location, taxonomy, payer and network with an effective range,** and check claims against it before submission.
-- **Track credentialing as cases per payer** with follow-up dates, because the work is mostly waiting and chasing.
+- **Track credentialing as applications per payer** with follow-up dates, because the work is mostly waiting and chasing.
 - **Compute every credential expiry and revalidation date,** and the Medicare 30-day retro-billing window for new starts.
 - **Send directory changes the day they happen** and keep the payer's acknowledgment; on the payer side, run the 90-day verification and 2-business-day update clocks as tracked deadlines.
 - **Check exclusions and sanctions continuously,** not only at credentialing.

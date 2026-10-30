@@ -92,106 +92,90 @@ A person can have more than one coverage: two employer plans through two spouses
 
 ## How to Build It
 
-The core model already has `payers`, `plans` and `coverages` from [The Health Tech Business](/books/health-tech/health-tech-business#the-core-data-model). On the provider side they are reference data a practice keeps about other companies. A payer platform turns them into its own operating records: the plan has years, benefits and networks; the coverage is a member's enrollment. Both sides share the same shape if the columns are explicit about funding, program and product:
+The core model already has `payers` (with `kind`), `plans` (with `product_type` and `funding`) and `coverages` (with `relationship` and `priority`) from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). On the provider side they are reference data a practice keeps about other companies. A payer platform turns them into its own operating records, with the payer organization as the tenant: the plan has benefit periods, benefits and a network, and the coverage is a member's enrollment ([Inside a Payer](/books/health-tech/payer-operations#how-to-build-it) adds `member_enrollments`). Both sides need the same few facts made explicit:
 
 ```sql
 ALTER TABLE payers
-  ADD COLUMN kind              TEXT NOT NULL DEFAULT 'commercial' CHECK (kind IN
-                                 ('commercial', 'medicare_ffs', 'medicare_advantage',
-                                  'medicare_part_d', 'medicaid_ffs', 'medicaid_managed_care',
-                                  'tpa', 'dental', 'vision', 'workers_comp', 'auto',
-                                  'tricare', 'va', 'self_pay', 'other')),
-  ADD COLUMN parent_org_id     UUID REFERENCES organizations (id),  -- UnitedHealth, a Blue plan
-  ADD COLUMN edi_payer_id      TEXT,    -- the clearinghouse payer ID claims route to
-  ADD COLUMN jurisdiction      TEXT;    -- MAC jurisdiction or state, for government payers
+  ADD COLUMN jurisdiction      TEXT;     -- MAC jurisdiction ('JF') or ISO 3166-2 state for Medicaid
 
 ALTER TABLE plans
-  ADD COLUMN product_type      TEXT CHECK (product_type IN ('hmo', 'ppo', 'epo', 'pos',
-                                 'hdhp', 'indemnity', 'dhmo', 'dppo', 'vision', 'medigap',
-                                 'snp', 'pdp')),
-  ADD COLUMN funding           TEXT NOT NULL CHECK (funding IN ('fully_insured',
-                                 'self_funded', 'government', 'level_funded')),
-  ADD COLUMN erisa             BOOLEAN,  -- private employer plan; governs which law applies
+  ADD COLUMN erisa             BOOLEAN,  -- private employer plan; decides whether state insurance law reaches it
   ADD COLUMN sponsor_org_id    UUID REFERENCES organizations (id),  -- the employer, for group plans
   ADD COLUMN administrator_id  UUID REFERENCES payers (id),  -- TPA or ASO insurer, if not the payer
   ADD COLUMN situs_state       TEXT,     -- ISO 3166-2: the state whose insurance law applies
   ADD COLUMN market            TEXT CHECK (market IN ('individual', 'small_group',
-                                 'large_group', 'medicare', 'medicaid', 'other'));
+                                 'large_group', 'medicare', 'medicaid', 'other')),
+  ADD COLUMN network_id        UUID;     -- networks, below: what prices the in-network tier
 
-CREATE TABLE plan_years (                -- one benefit period of a plan
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
-  plan_id            UUID NOT NULL REFERENCES plans (id),
-  period             DATERANGE NOT NULL, -- calendar or plan year; accumulators reset at its start
-  deductible_ind     BIGINT,             -- minor units; in-network
-  deductible_fam     BIGINT,
-  deductible_mode    TEXT CHECK (deductible_mode IN ('embedded', 'aggregate')),
-  oop_max_ind        BIGINT,
-  oop_max_fam        BIGINT,
-  oon_deductible_ind BIGINT,             -- separate out-of-network amounts, if any
-  oon_oop_max_ind    BIGINT,
-  annual_max         BIGINT,             -- dental: the most the plan pays per year
-  currency           CHAR(3) NOT NULL DEFAULT 'USD',
-  document_ref       TEXT NOT NULL,      -- the plan document or SBC this was built from
-  EXCLUDE USING GIST (plan_id WITH =, period WITH &&)
-);
+ALTER TABLE coverages
+  ADD COLUMN source            TEXT CHECK (source IN ('card', 'eligibility_271',
+                                 'enrollment_834', 'manual', 'payer_api')),
+  ADD COLUMN cob_basis         TEXT;      -- why this priority: 'birthday_rule', 'msp_working_aged'
 
-CREATE TABLE plan_benefit_rules (        -- cost-sharing by service category, versioned with the year
+CREATE TABLE plan_benefits (             -- one plan's cost-sharing for one benefit period
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id        UUID NOT NULL,
-  plan_year_id     UUID NOT NULL REFERENCES plan_years (id),
-  service_category TEXT NOT NULL,        -- 'primary_care', 'specialist', 'er', 'preventive',
-                                         -- 'dental_basic', 'dental_major', 'vision_materials'
+  organization_id  UUID NOT NULL REFERENCES organizations (id),  -- the tenant keeping this record
+  plan_id          UUID NOT NULL REFERENCES plans (id),
+  period           DATERANGE NOT NULL,   -- calendar or plan year; accumulators reset at its start
+  service_category TEXT NOT NULL,        -- '*' for plan-level amounts, else 'primary_care',
+                                         -- 'specialist', 'er', 'preventive', 'dental_basic',
+                                         -- 'dental_major', 'vision_materials'
   network_tier     TEXT NOT NULL CHECK (network_tier IN ('preferred', 'in_network',
                      'out_of_network')),
-  copay            BIGINT,
+  deductible_ind   BIGINT,               -- plan-level rows, in cents
+  deductible_fam   BIGINT,
+  deductible_mode  TEXT CHECK (deductible_mode IN ('embedded', 'aggregate')),
+  oop_max_ind      BIGINT,
+  oop_max_fam      BIGINT,
+  annual_max       BIGINT,               -- dental: the most the plan pays per year
+  copay            BIGINT,               -- service rows
   coinsurance_bps  INT CHECK (coinsurance_bps BETWEEN 0 AND 10000),  -- member share
-  deductible_applies BOOLEAN NOT NULL,
+  deductible_applies BOOLEAN,
   limit_kind       TEXT CHECK (limit_kind IN ('visits', 'days', 'units', 'frequency',
                      'dollars')),
   limit_value      INT,
   limit_period     TEXT,                 -- 'plan_year', 'rolling_12m', '6_months', 'lifetime'
   prior_auth       BOOLEAN NOT NULL DEFAULT FALSE,
   covered          BOOLEAN NOT NULL DEFAULT TRUE,
-  UNIQUE (plan_year_id, service_category, network_tier)
+  document_ref     TEXT NOT NULL,        -- the plan document or SBC this row was built from
+  EXCLUDE USING GIST (plan_id WITH =, service_category WITH =, network_tier WITH =,
+    period WITH &&)
 );
 
 CREATE TABLE networks (                  -- a payer's network product
-  id         UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id  UUID NOT NULL,
-  payer_id   UUID NOT NULL REFERENCES payers (id),
-  name       TEXT NOT NULL,              -- 'Choice Plus', 'Exchange Narrow', 'MA HMO'
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
+  payer_id           UUID NOT NULL REFERENCES payers (id),
+  name               TEXT NOT NULL,      -- 'Choice Plus', 'Exchange Narrow', 'MA HMO'
   rented_from_org_id UUID REFERENCES organizations (id)  -- a rental PPO
 );
 
-CREATE TABLE plan_networks (             -- which networks price a plan's in-network tier
-  plan_id    UUID NOT NULL REFERENCES plans (id),
-  network_id UUID NOT NULL REFERENCES networks (id),
-  tier       TEXT NOT NULL CHECK (tier IN ('preferred', 'in_network')),
-  valid_during DATERANGE NOT NULL,
-  PRIMARY KEY (plan_id, network_id, tier)
+CREATE TABLE network_contracts (         -- a provider organization's contract into a network
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),  -- the tenant: payer or practice
+  network_id       UUID NOT NULL REFERENCES networks (id),
+  provider_org_id  UUID NOT NULL REFERENCES organizations (id),  -- the practice, group or IPA
+  rate_basis       TEXT NOT NULL CHECK (rate_basis IN ('fee_schedule', 'pct_of_medicare',
+                     'pct_of_charges', 'per_diem', 'case_rate', 'capitation')),
+  rate_terms       JSONB NOT NULL,       -- {"pct_of_medicare": 115, "year": 2026}
+  fee_schedule_id  UUID,                 -- fee_schedules (The Practice Business), for fee schedule rates
+  document_id      UUID REFERENCES documents (id),  -- the signed contract
+  valid_during     DATERANGE NOT NULL
 );
-
-ALTER TABLE coverages
-  ADD COLUMN relationship      TEXT CHECK (relationship IN ('self', 'spouse', 'child',
-                                 'other')),     -- patient to subscriber, as the 271 reports it
-  ADD COLUMN group_number      TEXT,
-  ADD COLUMN source            TEXT CHECK (source IN ('card', 'eligibility_271',
-                                 'enrollment_834', 'manual', 'payer_api')),
-  ADD COLUMN cob_basis         TEXT;      -- why this order: 'birthday_rule', 'msp_working_aged'
 ```
 
 Design notes:
 
-- **Funding beside the state.** `funding`, `erisa` and `situs_state` decide which laws apply to a coverage: a state prior authorization or mandate rule is a rule row keyed on state and filtered on funding, never a hard-coded state check ([Rules as Data](/docs/architecture/rules-as-data#what-belongs-in-data)).
-- **The administrator is not the payer.** A self-funded plan has a sponsor (the employer), an administrator (the TPA or insurer) and a network (possibly rented); a claim's payer ID routes to the administrator. Collapsing them breaks contract lookups and appeals.
-- **Plan years are versions.** A plan changes every January; cost-sharing is keyed to the year, never edited in place, so last year's claims reprocess under last year's rules.
-- **Benefits are rows, not prose.** `plan_benefit_rules` is the structured form of a summary of benefits and coverage; the payer's adjudication engine reads it, and a practice platform holds the same shape when it caches a 271 response or a payer API result. Where only prose exists (a scanned plan document), the row carries `document_ref` and a human verifies it.
-- **Coverage order is a fact with a reason.** `coverages` already orders primary and secondary; `cob_basis` records why, so a coverage change (a spouse retires onto Medicare) can re-evaluate the order instead of guessing.
+- **Funding beside the state.** `plans.funding`, `erisa` and `situs_state` decide which laws apply to a coverage: a state prior authorization or mandate rule is a rule row keyed on state and filtered on funding, never a hard-coded state check ([What Belongs in Data](/docs/architecture/rules-as-data#what-belongs-in-data)).
+- **The administrator is not the payer.** A self-funded plan has a sponsor (the employer), an administrator (the TPA or insurer) and a network (possibly rented); the claim routes to the administrator and the contract that priced it hangs off the network. Collapsing them breaks contract lookups and appeals.
+- **Benefit periods are versions.** A plan changes every January; cost-sharing is keyed to its period, never edited in place, so last year's claims reprocess under last year's rules.
+- **Benefits are rows, not prose.** `plan_benefits` is the structured form of a summary of benefits and coverage. The payer's adjudication engine reads it; a practice platform holds the same shape when it caches what Eligibility & Benefits returned from a 271. Where only prose exists (a scanned plan document), the row carries `document_ref` and a person verifies it.
+- **The contract is a record on both sides.** The payer loads `network_contracts` to price claims; the practice loads the same contract to check remittances against it in Denials, Appeals & Claim Status.
+- **Coverage order is a fact with a reason.** `coverages.priority` orders primary and secondary; `cob_basis` records why, so a coverage change (a spouse retires onto Medicare) re-evaluates the order instead of guessing.
 
 ## Auditing
 
-- **Which plan year priced a claim.** Every adjudicated claim points at the plan year and the benefit rule version that applied, so a member appeal or an external review can see the cost-sharing as it was.
+- **Which benefits priced a claim.** Every adjudicated claim points at the `plan_benefits` rows and contract that applied, so a member appeal or an external review can see the cost-sharing as it was.
 - **Coverage history.** Effective dates, terminations, retroactive changes and their source (an 834 enrollment file, a 271, a manual change), because retroactive terminations recoup paid claims months later.
 - **Network status at the date of service.** A provider's participation as of the date of service, not today, decides in- or out-of-network; the record keeps the history ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 
@@ -199,7 +183,7 @@ Design notes:
 
 - **Model payer kind, plan funding and situs explicitly,** because ERISA preemption and state insurance law turn on them.
 - **Separate sponsor, administrator, network and payer:** the card's logo, the claim's destination and the contract that priced it can be three different companies.
-- **Version plans by year** and store cost-sharing as structured rules with their source document.
+- **Version benefits by period** and store cost-sharing as structured rows with their source document.
 - **Treat Medicare and Medicaid as many payers:** MAC jurisdictions, MA plans, each state's program and its MCOs each get their own row and payer ID.
 - **Keep dental and vision benefit shapes** (annual maximums, frequencies, allowances) as first-class rule types, not medical rules with odd values.
 - **Record network status by date** and the directory's claims about it, because members are protected when the directory is wrong.
