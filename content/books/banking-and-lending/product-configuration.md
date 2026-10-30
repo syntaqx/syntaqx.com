@@ -35,7 +35,7 @@ A product definition has the same parts across cores, whatever they're called.
 | **Fees** | Fee schedule: each fee's trigger, amount method, waivers, caps | [Fee Schedules](#fee-schedules) below |
 | **Balances and limits** | Opening deposit, minimum balance to avoid a fee or earn interest, maximum balance, withdrawal limits | Transaction limits on savings are now a bank choice, not Regulation D's (Deposit Accounts & Truth in Savings) |
 | **Term features** | Maturity range, early withdrawal penalty, renewal behavior and grace period | CDs and other time accounts |
-| **Lifecycle** | Dormancy period, auto-close rules, statement cycle | Dormancy, Escheat & Closing Accounts |
+| **Lifecycle** | Dormancy period, auto-close rules, statement cycle | [Dormancy, Escheat & Closing Accounts](/books/banking-and-lending/dormancy-and-escheat) |
 | **Posting** | Overdraft eligibility, posting order class | [Posting Order](/books/banking-and-lending/posting-holds-and-balances#posting-order) |
 | **Accounting** | GL mappings per transaction type | [The General Ledger and Its Subledgers](/books/banking-and-lending/core-banking-systems#the-general-ledger-and-its-subledgers) |
 | **Disclosures** | The account-opening disclosure, fee schedule and agreement versions it was sold with | 12 CFR 1030.4 |

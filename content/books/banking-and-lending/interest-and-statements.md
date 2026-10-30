@@ -76,7 +76,7 @@ Regulation DD fixes both ends.
 - **Stop:** interest accrues until the funds are withdrawn. The regulation's example: a check debited on a Tuesday means interest accrues through Monday.
 - **Closing before crediting:** a bank may withhold accrued-but-uncredited interest on an account closed before the crediting date, but only if it disclosed that it would. A closure flow that silently zeroes accrued interest is a violation on a product that didn't disclose it.
 - **Withdrawals before crediting:** the bank can't avoid paying interest on funds withdrawn before the crediting date, though it may delay paying it until that date.
-- **Dormancy:** some cores stop accruing on dormant accounts (Mambu's dormancy setting does); whether a US product may is a disclosure question, and Dormancy, Escheat & Closing Accounts has the state law side.
+- **Dormancy:** some cores stop accruing on dormant accounts (Mambu's dormancy setting does); whether a US product may is a disclosure question, and [Dormancy, Escheat & Closing Accounts](/books/banking-and-lending/dormancy-and-escheat) has the state law side.
 
 ## Compounding
 

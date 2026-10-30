@@ -71,9 +71,9 @@ A **hold** reduces available balance for a reason and, usually, a time. A **bloc
 | Card authorization | Card processor, on approval | Clearing, reversal, or expiry on the issuer's schedule | [The Ledger for an Issuer](/books/payments/issuer-processing#the-ledger-for-an-issuer) |
 | Deposit availability | Core, from the bank's Reg CC policy | The availability date, or the item's return | Funds Availability |
 | Risk or fraud | Fraud system or analyst | Review outcome | Account Takeover & Scams |
-| Legal process | Operations, on a levy, garnishment or court order | Release, or seizure of the funds | Levies, Garnishments & Legal Process |
+| Legal process | Operations, on a levy, garnishment or court order | Release, or seizure of the funds | [Levies, Garnishments & Legal Process](/books/banking-and-lending/legal-process) |
 | Pledge | Lending, for a share-secured or CD-secured loan | Loan payoff | Credit Builders & Secured Products |
-| Dispute or error claim | Case system, reversing provisional credit | Claim outcome | Errors & Disputes on Deposit Accounts |
+| Dispute or error claim | Case system, reversing provisional credit | Claim outcome | [Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes) |
 
 Mambu's documentation shows both mechanisms in one core. Card authorization holds start `PENDING`, move to `SETTLED`, `EXPIRED` or `REVERSED`, can be incremented or partially reversed, and "have no impact on the ledger or the total balance"; holds placed "directly on deposit accounts via account ID do not expire." Blocks make "the available balance ... the total balance minus the blocked amount", can be larger than the available balance, and leave interest accruing "based on the total balance, not on the available balance"; a seizure then moves blocked funds out as a transaction, optionally leaving some in a protected account for subsistence, which is the shape a garnishment with protected federal benefits takes.
 
@@ -140,7 +140,7 @@ The dates diverge whenever the bank corrects the past:
 
 - **A deposit posted late.** A $5,000.00 branch deposit is keyed three days late. Regulation DD requires interest to begin accruing no later than the business day Regulation CC sets for that deposit, so the deposit is booked today with a value date three days ago, and the core recomputes interest for those three days: at 4.00% on an Actual/365 basis, $5,000.00 × 0.04 × 3 ÷ 365 = $1.64.
 - **A bank error.** A debit posted to the wrong account is reversed on the wrong account and posted to the right one, both with the original value date, so neither customer's interest or fees reflect the error.
-- **Reg E corrections.** An error resolved in the customer's favor is credited with interest as if it never happened (Errors & Disputes on Deposit Accounts owns the clocks).
+- **Reg E corrections.** An error resolved in the customer's favor is credited with interest as if it never happened ([Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes) owns the clocks).
 
 A backdated entry changes every balance after its value date, which means every interest accrual, every fee that read a balance, and possibly every overdraft decision since. Cores handle it in one of two ways. Mambu's is to **repost the chain**: adjusting a past transaction makes Mambu "automatically adjust all the transactions until the adjusted one and then ... repost them", with interest "recalculated according to the adjusted transaction", and it warns that backdated adjustments "will affect the overall performance"; a reposted withdrawal that would now take the balance below zero can't be reposted. The other is to **post a single adjustment**: compute the interest and fee differences from the value date forward and post them as their own transactions today, leaving history untouched. My default is the second for anything beyond a short window. It keeps closed statements closed, makes the correction visible as a line the customer can read, and bounds the work.
 
