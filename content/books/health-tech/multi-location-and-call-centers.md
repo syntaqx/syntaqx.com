@@ -19,10 +19,10 @@ As of October 2026, from vendor pages:
 | System | Multi-location model | Notable |
 | --- | --- | --- |
 | **Open Dental** | Clinics: "multiple locations to be run from one database while keeping locations separate for reporting" | Operatories carry a clinic, so appointments in them do; users are restricted to clinics; claims take their clinic from their procedures and can't change it afterward |
-| **Denticon** (Planet DDS) | Cloud PMS with "a single patient record" and centralized data | "Enterprise-level platform" reporting with production and collections analysis; implementation "8 weeks per location for DSOs" |
+| **Denticon** (Planet DDS) | Cloud PMS with "a single patient record" and centralized data | An "enterprise-level platform" with Production Analysis and Collections Analysis reports; implementation "8 weeks per location for DSOs" |
 | **Dentrix Enterprise** (Henry Schein One) | An enterprise edition of Dentrix for groups | Named by engagement vendors as its own integration target (Weave's Bulk Collections lists "Dentrix Enterprise" separately from Eaglesoft and Fuse) |
 | **ezyVet** (IDEXX) | Cloud PIMS with a Corporate Groups offering | "100+ certified integrations" shared across sites |
-| **Dental Intelligence** | Analytics and engagement across practices | Integrates with Open Dental and "Open Dental Clinics," Eaglesoft, Dentrix, Dentrix Ascend and Denticon; sells by location count |
+| **Dental Intelligence** | Analytics and engagement across practices | Integrates with Open Dental and "Open Dental Clinics," Eaglesoft, Dentrix, Dentrix Enterprise, Dentrix Ascend, Denticon and Fuse; its demo form asks how many locations a group has |
 | **Field Operations' contact center suites** | For comparison: consolidators running shared centers for many brands | "The dialed number, not the caller, decides the brand" ([Who Answers](/books/field-operations/contact-center#who-answers)) |
 
 Two patterns:
@@ -284,7 +284,7 @@ Design notes:
 - [Open Dental: Clinics](https://www.opendental.com/manual/clinics.html), one database for multiple locations, clinic per operatory, user restrictions, claims' clinic from procedures
 - [Planet DDS: Denticon](https://www.planetdds.com/denticon/), centralized patient record, enterprise reporting, DSO implementation per location
 - [ezyVet](https://www.ezyvet.com/), corporate groups and certified integrations
-- [Dental Intelligence](https://www.dentalintel.com/), PMS integrations including Open Dental Clinics, location-count sales
+- [Dental Intelligence](https://www.dentalintel.com/), PMS integrations including Open Dental Clinics and Fuse, the location count on its demo form
 - [Weave: Payments](https://www.getweave.com/weave-payments/), Bulk Collections for Dentrix Enterprise, Fuse and Eaglesoft
 
 **Playbook and other volumes**

@@ -17,7 +17,7 @@ As of October 2026, from each vendor's own pages:
 
 | Vendor | What it is | Collection methods | Posting to the PMS | Published price |
 | --- | --- | --- | --- | --- |
-| **Weave** | Patient engagement suite with payments | Text to pay, card on file, payment plans, wireless terminal, tap to pay on a phone, scan to pay; Sunbit, Affirm and CareCredit offered | Bulk Collections named for Dentrix Enterprise, Fuse and Eaglesoft | "No upfront fees, recurring fees or hidden fees"; rates not published |
+| **Weave** | Patient engagement suite with payments | Text to pay, manual card entry, online bill pay, payment plans, wireless terminal, tap to pay on a phone, scan to pay; Sunbit, Affirm and CareCredit offered | Bulk Collections named for Dentrix Enterprise, Fuse and Eaglesoft | "No upfront fees, recurring fees or hidden fees"; rates not published |
 | **Rectangle Health** | Healthcare payments platform (Practice Management Bridge) | Text to pay, payment vault (card on file), automated payment plans, terminals | "Automatic posting" to the patient's EMR or PMS account; integrations with Eaglesoft, Open Dental, athenahealth, NextGen and Greenway named | Demo only |
 | **NexHealth** | Patient engagement and booking platform | Text to pay in batches, card on file, installment plans signed in the payment request, in-office terminal | "Every payment automatically syncs" for Eaglesoft, Open Dental and Dentrix; other systems "won't sync to your ledger just yet" | Terminal 2.6% + 7¢; text to pay 2.9% + 30¢ |
 | **Podium** | Messaging platform for local businesses, health included | Text to pay invoice links, recurring payments and autopay, card readers and tap to pay, buy now pay later | Not described | Not published |
@@ -29,7 +29,7 @@ Three patterns run through the table:
 
 - **Every vendor sells the same four methods.** Text to pay, card on file, payment plans and a terminal at the desk are table stakes; vendors differ on financing partners, which PMSs they post to, and whether pricing is published at all. NexHealth is unusual in publishing card rates.
 - **Posting is the product.** A payment that lands in the processor but not the PMS ledger is a payment someone retypes, and the vendors list which PMSs they post to because the answer differs by system. NexHealth says plainly that some systems don't sync; Rectangle Health counts its integrations ("30+ solutions and works with 500+ systems").
-- **The PMS may already be a payments product.** Open Dental integrates its own card processors, and Dentrix's publisher sells payments that post to Dentrix's ledger. An engagement vendor's payments compete with the PMS's own, which is one reason PMS vendors control write access ([Integrating with Practice Management Systems](/books/health-tech/pms-integration#gatekeeping-fees-and-the-law) covers the gatekeeping).
+- **The PMS may already be a payments product.** Open Dental integrates its own card processors (EdgeExpress and PayConnect), posting card payments straight to its ledger. An engagement vendor's payments compete with the PMS's own, which is one reason PMS vendors control write access ([Integrating with Practice Management Systems](/books/health-tech/pms-integration#gatekeeping-fees-and-the-law) covers the gatekeeping).
 
 ## Money Before the Bill Is Final
 
@@ -73,7 +73,7 @@ A practice's own payment plan is an installment agreement on the practice's rece
 
 The rules that keep a plan honest:
 
-- **The plan is on the PMS ledger, or it is two plans.** Dental PMSs model payment plans natively (Open Dental's dynamic plans, applied by its Payments API to "an eligible payment plan"), so a plan the engagement platform runs has to be the PMS's plan, or the PMS shows the full balance as overdue while the patient pays installments the PMS doesn't know about.
+- **The plan is on the PMS ledger, or it is two plans.** Dental PMSs model payment plans natively (Open Dental's dynamic plans, to which its Payments API applies a payment "if one is eligible"), so a plan the engagement platform runs has to be the PMS's plan, or the PMS shows the full balance as overdue while the patient pays installments the PMS doesn't know about.
 - **Compute each installment from the balance at run time.** Insurance can pay late, the patient can pay a lump sum by phone, a procedure can be adjusted off; each installment charges the lesser of the scheduled amount and what's still owed, and the plan ends at zero. This is autopay against a balance, with its cap and its one-payment-per-period key ([Autopay Against a Balance](/books/payments/stored-credentials#autopay-against-a-balance)).
 - **Interest makes it credit.** Regulation Z treats a person who regularly extends consumer credit "subject to a finance charge or is payable by written agreement in more than four installments" as a creditor under the Truth in Lending Act, so a practice that runs many long plans can become one; a practice that wants to charge interest should use a lender rather than become one. My default is that a practice plan carries no interest and no fee, and anything else goes to a financing partner.
 - **Missed installments are dunning.** Retry on the network's rules, tell the guarantor with a one-step fix, and after a stated number of misses, end the plan and return the balance to the normal statement cycle. Collections law, credit reporting and when a balance may go to an agency are [Patient Statements, Estimates & Collections](/books/health-tech/patient-financial-experience)'.
@@ -84,9 +84,9 @@ Financing moves the balance to a lender: the patient applies, the lender approve
 
 | Lender | How it's offered, as of October 2026 | Terms published |
 | --- | --- | --- |
-| **CareCredit** (Synchrony) | A health credit card accepted at enrolled providers; the provider chooses which promotions to offer in its Provider Center | "No Interest if Paid in Full" on purchases of $200 or more over 6, 12, 18 or 24 months; reduced-APR fixed-payment plans from 17.90% (24 months, $1,000 or more) to 20.90% (60 months, $2,500 or more); providers paid "within two business days" |
-| **Sunbit** | Point-of-sale installment financing, applied for at the practice | "90% of people are approved"; APR "from 0% to 35.99%"; 3, 6 or 12-month plans, with 6 to 72 months for dental; no hard credit check, with account openings and payment activity reported to a credit bureau |
-| **Cherry** | Point-of-sale payment plans through a technology platform that isn't the lender | APR "of 0% to 35.99%, terms between 1 and 60 months"; a zero-interest pay-in-four offer for everyone approved; no hard credit check |
+| **CareCredit** (Synchrony) | A health credit card accepted at enrolled providers; the provider chooses which promotions to offer in its Provider Center | "No Interest if Paid in Full" on purchases of $200 or more over 6, 12, 18 or 24 months; reduced-APR fixed-payment plans from 17.90% (24 months, $1,000 or more) to 20.90% (60 months, $2,500 or more); a standard purchase APR of 32.99% for new accounts (as of May 30, 2024, per its application page); providers paid "within two business days"; merchant fees not published |
+| **Sunbit** | Point-of-sale installment financing, applied for at the practice | "90% of people are approved"; APR "from 0% to 35.99%"; 3, 6 or 12-month plans, with 6 to 72 months for dental; no hard credit check, with account openings and payment activity reported to a credit bureau; provider fees not published |
+| **Cherry** | Point-of-sale payment plans through a technology platform that isn't the lender | APR "of 0% to 35.99%, terms between 1 and 60 months"; a zero-interest pay-in-four offer for everyone approved; no hard credit check; provider fees not published |
 
 The distinction that matters is **deferred interest**. CareCredit's "No Interest if Paid in Full" promotion charges interest from the purchase date on the whole amount if any balance remains when the promotional period ends; a 0% APR installment plan charges no interest at all. The CFPB's 2023 report on medical credit cards found patients used deferred-interest products to pay for almost $23 billion of health care from 2018 to 2020 and paid $1 billion in deferred interest; that people incurred interest on 20 percent of health care purchases made with deferred-interest products between 2015 and 2020, and about 34 percent for those with credit scores below 619; and that the typical medical credit card's APR was 26.99 percent against about 16 percent for general-purpose cards.
 
@@ -140,7 +140,7 @@ For the practice's software this means:
 
 ## Posting to the PMS Ledger
 
-The payment isn't finished until it's on the PMS ledger. Open Dental's public Payments API shows what posting involves: `POST /payments` creates a patient payment with a required amount and patient, a payment type from the practice's own definitions, an optional set of procedures or a payment plan to apply it to, and a source; it applies the payment "FIFO" to outstanding charges, and "Overpayments are inserted as unearned income." A `MerchantFee` field (added in version 25.4.15) is "For display purposes only." Refunds and partial updates arrived in later versions. In the PMS's own card flow, a declined payment's amount and splits are zeroed rather than deleted, so the record stays.
+The payment isn't finished until it's on the PMS ledger. Open Dental's public Payments API shows what posting involves: `POST /payments` creates a patient payment with a required amount and patient, a payment type from the practice's own definitions, and an optional set of procedures or a payment plan to apply it to (responses report a payment source such as `API`); it applies the payment "FIFO" to outstanding charges, and "Overpayments are inserted as unearned income." A `MerchantFee` field (added in version 25.4.15) is "For display purposes only." Refunds and partial updates arrived in later versions. In the PMS's own card flow, a declined payment's amount and splits are zeroed rather than deleted, so the record stays.
 
 From that and the other vendors, the rules:
 
@@ -346,5 +346,6 @@ Design notes:
 **Financing**
 
 - [CareCredit: For providers](https://www.carecredit.com/providers/), promotional and reduced-APR plans, thresholds, provider funding time, promotion management
+- [CareCredit: Apply](https://www.carecredit.com/patients/apply.htm), the 32.99% purchase APR and 39.99% penalty APR for new accounts as of May 30, 2024
 - [Sunbit: How it works](https://sunbit.com/how-it-works/), approval rate, APR range, plan lengths, credit bureau reporting
 - [Cherry](https://withcherry.com/), APR range and terms, pay-in-four, the platform as not the lender
