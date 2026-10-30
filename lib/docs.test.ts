@@ -5,6 +5,7 @@ import { getAllBookChapters, getAllDocs, type DocData } from "./docs";
 import { docRedirects } from "./doc-redirects";
 import { slugifyTag } from "./posts";
 import { BOOKS, bookParts } from "./books";
+import { SIDEBAR_LABELS, SIDEBAR_LABEL_MAX, sidebarLabel } from "./sidebar-labels";
 
 // The playbook's own guardrails (see /docs/delivery/ci-pipelines). A doc or
 // book chapter that breaks one of these fails CI with its slug in the message.
@@ -171,6 +172,22 @@ describe("books", () => {
       const titles = bookParts(own).map((p) => p.title);
       expect(new Set(titles).size, `${book.slug} parts out of order: ${titles.join(", ")}`).toBe(titles.length);
     }
+  });
+});
+
+describe("sidebar", () => {
+  const names = new Set([...docs.map((d) => d.category), ...chapters.map((c) => c.part ?? "")]);
+
+  it("fits every section name on one line, shortened where it runs long", () => {
+    for (const name of names) {
+      expect(sidebarLabel(name).length, `"${name}" needs a short label in lib/sidebar-labels.ts`).toBeLessThanOrEqual(
+        SIDEBAR_LABEL_MAX,
+      );
+    }
+  });
+
+  it("keeps no short label for a name that no longer exists", () => {
+    for (const name of Object.keys(SIDEBAR_LABELS)) expect(names.has(name), name).toBe(true);
   });
 });
 
