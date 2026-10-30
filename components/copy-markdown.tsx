@@ -5,7 +5,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ArrowUpRight, Check, ChevronDown, Copy, FileText } from "lucide-react";
 
 const labels = {
-  idle: "Copy as Markdown",
+  idle: "Copy",
   copying: "Copying…",
   copied: "Copied",
   failed: "Copy failed",
@@ -40,6 +40,7 @@ export function MarkdownMenu({ href }: { href: string }) {
       <button
         type="button"
         onClick={copy}
+        title="Copy as Markdown"
         className={`flex cursor-pointer items-center gap-2 px-2.5 py-1.5 uppercase transition-colors hover:text-foreground active:bg-background ${
           state === "copied" ? "text-accent" : ""
         }`}
