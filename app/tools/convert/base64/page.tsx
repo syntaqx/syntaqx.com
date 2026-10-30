@@ -6,6 +6,8 @@ import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
 import { CopyButton } from "@/components/copy-button";
+import { Segmented } from "@/components/segmented";
+import { cn } from "@/lib/cn";
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -187,28 +189,13 @@ export default function Base64Page() {
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
           {/* Segmented control — decode first */}
-          <div className="mb-5 inline-flex border border-border p-0.5 bg-surface">
-            <button
-              onClick={() => switchMode("decode")}
-              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                mode === "decode"
-                  ? "bg-accent text-background"
-                  : "text-dim hover:text-foreground"
-              }`}
-            >
-              Decode
-            </button>
-            <button
-              onClick={() => switchMode("encode")}
-              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                mode === "encode"
-                  ? "bg-accent text-background"
-                  : "text-dim hover:text-foreground"
-              }`}
-            >
-              Encode
-            </button>
-          </div>
+          <Segmented
+            value={mode}
+            onChange={switchMode}
+            ariaLabel="Mode"
+            options={[{ value: "decode", label: "Decode" }, { value: "encode", label: "Encode" }]}
+            className="mb-5"
+          />
 
           <div className="flex flex-col gap-4">
             {/* Input card */}
@@ -216,9 +203,10 @@ export default function Base64Page() {
               onDrop={onDrop}
               onDragOver={onDragOver}
               onDragLeave={() => setDragging(false)}
-              className={`border bg-surface transition-colors ${
-                dragging ? "border-accent border-dashed" : "border-border"
-              }`}
+              className={cn(
+                "border bg-surface transition-colors",
+                dragging ? "border-accent border-dashed" : "border-border",
+              )}
             >
               <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                 <label className="text-xs text-dim flex items-center gap-1.5">

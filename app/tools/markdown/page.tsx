@@ -21,6 +21,8 @@ import { PasteButton } from "@/components/paste-button";
 import { CopyButton } from "@/components/copy-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
+import { Segmented } from "@/components/segmented";
+import { cn } from "@/lib/cn";
 
 // --- Types ------------------------------------------------------------------
 
@@ -341,38 +343,13 @@ export default function MarkdownToolPage() {
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
           {/* Segmented control */}
-          <div className="mb-5 inline-flex border border-border p-0.5 bg-surface">
-            <button
-              onClick={() => switchMode("html-to-md")}
-              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                mode === "html-to-md"
-                  ? "bg-accent text-background"
-                  : "text-dim hover:text-foreground"
-              }`}
-            >
-              HTML to Markdown
-            </button>
-            <button
-              onClick={() => switchMode("md-to-html")}
-              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                mode === "md-to-html"
-                  ? "bg-accent text-background"
-                  : "text-dim hover:text-foreground"
-              }`}
-            >
-              Markdown to HTML
-            </button>
-            <button
-              onClick={() => switchMode("preview")}
-              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                mode === "preview"
-                  ? "bg-accent text-background"
-                  : "text-dim hover:text-foreground"
-              }`}
-            >
-              Preview
-            </button>
-          </div>
+          <Segmented
+            value={mode}
+            onChange={switchMode}
+            ariaLabel="Mode"
+            options={[{ value: "html-to-md", label: "HTML to Markdown" }, { value: "md-to-html", label: "Markdown to HTML" }, { value: "preview", label: "Preview" }]}
+            className="mb-5"
+          />
 
           <div className="flex flex-col gap-4">
             {/* Input card */}
@@ -383,9 +360,10 @@ export default function MarkdownToolPage() {
                 setDragging(true);
               }}
               onDragLeave={() => setDragging(false)}
-              className={`border bg-surface transition-colors ${
-                dragging ? "border-accent border-dashed" : "border-border"
-              }`}
+              className={cn(
+                "border bg-surface transition-colors",
+                dragging ? "border-accent border-dashed" : "border-border",
+              )}
             >
               <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                 <label className="text-xs text-dim flex items-center gap-1.5">

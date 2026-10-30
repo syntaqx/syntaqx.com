@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Check, Copy, Heart, Star, Trash2, X } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 // ---------------------------------------------------------------------------
 // Copy with confirmation
@@ -40,11 +41,10 @@ function CopyDemo() {
           type="button"
           onClick={onCopy}
           aria-live="polite"
-          className={`shrink-0 inline-flex items-center gap-1.5 rounded border px-2 py-1 text-xs transition-colors cursor-pointer ${
-            copied
-              ? "border-accent/40 text-accent"
-              : "border-border text-dim hover:text-foreground hover:border-border-hover"
-          }`}
+          className={cn(
+            "shrink-0 inline-flex items-center gap-1.5 rounded border px-2 py-1 text-xs transition-colors cursor-pointer",
+            copied ? "border-accent/40 text-accent" : "border-border text-dim hover:text-foreground hover:border-border-hover",
+          )}
         >
           {copied ? <Check size={12} /> : <Copy size={12} />}
           {copied ? "Copied" : "Copy"}
@@ -133,11 +133,11 @@ function OptimisticToggle({
     <button
       type="button"
       onClick={toggle}
-      className={`inline-flex items-center gap-1.5 rounded border px-2.5 py-1.5 text-xs transition-colors cursor-pointer ${
-        on
-          ? "border-accent/40 bg-accent/10 text-accent"
-          : "border-border text-dim hover:text-foreground hover:border-border-hover"
-      } ${error ? "border-red-500/50 text-red-400" : ""}`}
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded border px-2.5 py-1.5 text-xs transition-colors cursor-pointer",
+        on ? "border-accent/40 bg-accent/10 text-accent" : "border-border text-dim hover:text-foreground hover:border-border-hover",
+        error && "border-red-500/50 text-red-400",
+      )}
     >
       <Icon size={12} className={on ? "fill-current" : ""} aria-hidden />
       <span>{label}</span>

@@ -8,6 +8,7 @@ import { Select } from "@/components/select";
 import * as yaml from "js-yaml";
 import * as toml from "smol-toml";
 import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon";
+import { cn } from "@/lib/cn";
 
 // --- Types ------------------------------------------------------------------
 
@@ -532,13 +533,10 @@ export default function ConvertPage() {
           {activeFormats.map((f) => (
             <div key={f.id}>
               <div
-                className={`border bg-surface transition-colors ${
-                  errors[f.id]
-                    ? "border-pink/40"
-                    : source === f.id
-                      ? "border-accent/40"
-                      : "border-border"
-                }`}
+                className={cn(
+                  "border bg-surface transition-colors",
+                  errors[f.id] ? "border-pink/40" : source === f.id ? "border-accent/40" : "border-border",
+                )}
               >
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <span className="text-xs font-medium text-foreground">
@@ -551,7 +549,10 @@ export default function ConvertPage() {
                   </span>
                   <div className="flex items-center gap-1.5">
                     <span
-                      className={`text-[10px] text-dim tabular-nums transition-opacity ${values[f.id] ? "opacity-100" : "opacity-0"}`}
+                      className={cn(
+                        "text-[10px] text-dim tabular-nums transition-opacity",
+                        values[f.id] ? "opacity-100" : "opacity-0",
+                      )}
                     >
                       {(values[f.id]?.length ?? 0).toLocaleString()} chars
                     </span>
@@ -619,11 +620,10 @@ export default function ConvertPage() {
                         <button
                           key={f.id}
                           onClick={() => toggleFormat(f.id)}
-                          className={`border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer ${
-                            enabled.includes(f.id)
-                              ? "border-accent/40 bg-accent/10 text-accent"
-                              : "border-border text-dim hover:text-foreground hover:border-border"
-                          }`}
+                          className={cn(
+                            "border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer",
+                            enabled.includes(f.id) ? "border-accent/40 bg-accent/10 text-accent" : "border-border text-dim hover:text-foreground hover:border-border",
+                          )}
                         >
                           {f.label}
                         </button>

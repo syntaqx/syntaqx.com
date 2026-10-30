@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Bold, Code, Italic, Link2, Underline, X } from "lucide-react";
 import { Modal } from "@/components/modal";
+import { cn } from "@/lib/cn";
 
 const btn =
   "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
@@ -102,9 +103,10 @@ function RovingDemo() {
                 onClick={() =>
                   setPressed((p) => (on ? p.filter((x) => x !== label) : [...p, label]))
                 }
-                className={`flex size-8 items-center justify-center border-r border-border last:border-r-0 outline-none transition-colors focus-visible:bg-accent/10 focus-visible:text-accent cursor-pointer ${
-                  on ? "text-accent" : "text-dim hover:text-foreground"
-                }`}
+                className={cn(
+                  "flex size-8 items-center justify-center border-r border-border last:border-r-0 outline-none transition-colors focus-visible:bg-accent/10 focus-visible:text-accent cursor-pointer",
+                  on ? "text-accent" : "text-dim hover:text-foreground",
+                )}
               >
                 <Icon size={13} />
               </button>
@@ -275,14 +277,16 @@ function ShortcutsDemo() {
             <li
               key={row}
               onClick={() => setCursor(i)}
-              className={`flex items-center gap-3 border-l-2 px-4 py-2 text-xs cursor-pointer ${
-                i === cursor ? "border-accent bg-accent/5 text-foreground" : "border-transparent text-dim"
-              }`}
+              className={cn(
+                "flex items-center gap-3 border-l-2 px-4 py-2 text-xs cursor-pointer",
+                i === cursor ? "border-accent bg-accent/5 text-foreground" : "border-transparent text-dim",
+              )}
             >
               <span
-                className={`size-3 shrink-0 rounded-sm border ${
-                  selected.includes(i) ? "border-accent bg-accent" : "border-border"
-                }`}
+                className={cn(
+                  "size-3 shrink-0 rounded-sm border",
+                  selected.includes(i) ? "border-accent bg-accent" : "border-border",
+                )}
               />
               {row}
             </li>

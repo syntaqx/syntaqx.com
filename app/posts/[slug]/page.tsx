@@ -16,6 +16,7 @@ import { SITE_URL } from "@/lib/constants";
 import { personRef } from "@/lib/schema";
 import { JsonLd } from "@/components/json-ld";
 import type { Metadata } from "next";
+import { cn } from "@/lib/cn";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -139,11 +140,11 @@ export default async function PostPage({ params }: Props) {
         <div className="min-w-0" data-toc-body>
           {post.description && (
             <p
-              className={`mb-8 max-w-[40rem] leading-snug ${
-                feature
-                  ? "text-[1.2rem] font-semibold text-foreground"
-                  : "text-lg text-muted"
-              }`}
+              className={cn(
+                "mb-8 max-w-[40rem]",
+                feature ? "text-[1.2rem] font-semibold text-foreground" : "text-lg text-muted",
+                "leading-snug",
+              )}
             >
               {post.description}
             </p>
@@ -164,7 +165,10 @@ export default async function PostPage({ params }: Props) {
                 <Link
                   key={label}
                   href={`/posts/${p.slug}`}
-                  className={`group grid gap-2 bg-background py-5 ${label === "newer" ? "sm:pl-6 sm:text-right" : "sm:pr-6"}`}
+                  className={cn(
+                    "group grid gap-2 bg-background py-5",
+                    label === "newer" ? "sm:pl-6 sm:text-right" : "sm:pr-6",
+                  )}
                 >
                   <span className="inst text-dim">{label}</span>
                   <span className="font-voice text-lg leading-none font-semibold uppercase text-foreground transition-colors group-hover:text-accent">
