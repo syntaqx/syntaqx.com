@@ -10,7 +10,7 @@ tags = ["health-tech", "referrals", "care-coordination", "direct-messaging", "fa
 
 A referral is one clinician asking another to take part in a patient's care: a primary care physician sending a patient to a cardiologist, a dentist to an oral surgeon, a hospital to a skilled nursing facility, an optometrist to a retina specialist. It is an order, like a lab test, but the performer is a person with a schedule, the result is a consult note, and the loop only closes if somebody on each side does their part: the sender sends enough information, the receiver schedules the patient, the patient shows up, and the specialist's findings come back. Each gap is a patient who didn't get care someone thought they needed.
 
-The surprising part for an engineer is the transport. Much of this still moves by fax, alongside Direct secure messaging, HIE networks, payer portals and phone calls. A referral system's real job is to run a loop across organizations that don't share a system, from documents that arrive in whatever form the other side could send. This chapter covers referral management and the closed loop, the fax reality and how software works with it, Direct messaging, hospital discharge and event notifications, care management programs and their billing, and post-acute handoffs. It extends `orders`, `documents` and `communications` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). Query-based exchange networks and TEFCA belong to Networks & Exchange; C-CDA documents to C-CDA, Documents & Images; payer referral and authorization requirements to Prior Authorization.
+The surprising part for an engineer is the transport. Much of this still moves by fax, alongside Direct secure messaging, HIE networks, payer portals and phone calls. A referral system's real job is to run a loop across organizations that don't share a system, from documents that arrive in whatever form the other side could send. This chapter covers referral management and the closed loop, the fax reality and how software works with it, Direct messaging, hospital discharge and event notifications, care management programs and their billing, and post-acute handoffs. It extends `orders`, `documents` and `communications` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). Query-based exchange networks and TEFCA belong to [Networks & Exchange](/books/health-tech/health-information-exchange); C-CDA documents to [C-CDA, Documents & Images](/books/health-tech/documents-and-ccda); payer referral and authorization requirements to [Prior Authorization](/books/health-tech/prior-authorization).
 
 ## How the Platforms Do It
 
@@ -30,7 +30,7 @@ The patterns: **every vendor sells every channel.** Kno2 and Consensus both put 
 The closed loop, from the sender's side:
 
 1. **Order.** A clinician orders a referral with a specialty or a named receiver, a reason, urgency, and the clinical question. It is an `orders` row with `kind = 'referral'`.
-2. **Authorization.** If the patient's plan requires a referral or prior authorization, staff obtain it and record the number and visit limits; Prior Authorization covers the payer side.
+2. **Authorization.** If the patient's plan requires a referral or prior authorization, staff obtain it and record the number and visit limits; [Prior Authorization](/books/health-tech/prior-authorization) covers the payer side.
 3. **Send.** The referral packet goes to the receiver: the order, a summary of care (problems, medications, allergies, recent results), the relevant notes and images, and the insurance. Channel: Direct, an EHR-to-EHR network, a referral platform, the receiver's portal, or fax.
 4. **Receive and triage.** The receiving office reviews the packet, asks for missing information, accepts or declines, and schedules.
 5. **Schedule and visit.** The patient is booked and seen; a no-show is a loop that needs a call, not a closed referral.
@@ -97,7 +97,7 @@ The record model is the referral loop with a fan-out: one discharge, several out
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). A referral starts as an `orders` row with `kind = 'referral'`; Direct transport itself is `direct_messages`, owned by C-CDA, Documents & Images, and outbound disclosures outside treatment, payment and operations land in `disclosures`.
+The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). A referral starts as an `orders` row with `kind = 'referral'`; Direct transport itself is `direct_messages`, owned by [C-CDA, Documents & Images](/books/health-tech/documents-and-ccda), and outbound disclosures outside treatment, payment and operations land in `disclosures`.
 
 ```sql
 CREATE TABLE referrals (                 -- the loop around an order, across organizations

@@ -162,7 +162,7 @@ Every subscription app sells a cancellation flow: Skio's "Multi-Step Cancel Flow
 
 The flow's configuration is per jurisdiction: the same merchant shows a California subscriber a flow with an always-visible cancel button, a Minnesota subscriber a permission question first, and a German subscriber the statutory cancellation button. That is data keyed by the customer's location, not branches in the front end.
 
-A cancellation received after a renewal was charged but before it shipped needs a written rule: ship it and end after, or cancel and refund the order. Either is defensible; the rule is a plan term shown at sign-up, and the support agent doesn't decide it case by case.
+A cancellation received after a renewal was charged but before it shipped needs a written rule: ship it and end after, or cancel and refund the order. Either is defensible; the rule is a plan term shown at sign-up, and the support agent doesn't decide it case by case. In direct-to-consumer telehealth a renewal is also a refill, so the cancellation has to stop the pharmacy as well ([Direct-to-Consumer Telehealth](/books/health-tech/telehealth#direct-to-consumer-telehealth)).
 
 ## EU and UK
 

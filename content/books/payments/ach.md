@@ -42,7 +42,7 @@ ACH is batch and store-and-forward, and the file format shows it: fixed-width te
 
 Pick the code from how the payer actually authorized you, not from what the bank accepts. A debit sent as PPD when the payer clicked a button in your app is a misrepresented entry, and the authorization you can produce on request is what decides a dispute. Nacha's guide says Originators must be able to produce proof of authorization within ten banking days of a request, and recurring consumer debits need terms that tell the payer how to revoke.
 
-Two more families of codes live in other chapters: the check conversion codes (ARC, BOC, POP and RCK) in [Accepting Checks](/books/payments/checks), and the oral authorization rules behind TEL in [Phone Payments](/books/payments/phone-payments). Canada's equivalent of all of this, pre-authorized debits under Payments Canada's Rule H1, is in [Payments in Canada](/books/payments/canada).
+Two more families of codes live in other chapters: the check conversion codes (ARC, BOC, POP and RCK) in [Accepting Checks](/books/payments/checks), and the oral authorization rules behind TEL in [Phone Payments](/books/payments/phone-payments). Canada's equivalent of all of this, pre-authorized debits under Payments Canada's Rule H1, is in [Payments in Canada](/books/payments/canada). Health insurers pay providers with CCD+ entries whose addenda carry the trace number that ties each deposit to its 835 remittance ([EFT and Reassociation](/books/health-tech/remittance-and-payment-posting#eft-and-reassociation)).
 
 ## Timing
 

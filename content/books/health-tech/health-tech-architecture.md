@@ -10,7 +10,7 @@ tags = ["health-tech", "architecture", "multi-tenancy", "fhir", "integration", "
 
 Every chapter of this volume ended with a How to Build It: a few tables extending the core model, the queries that matter and the events they emit. This chapter is where those pieces become one system. A health tech platform is unusual in three ways that shape everything else. Most of its data isn't born in it: the patient, the appointment and the ledger usually live first in someone else's system (a practice management system on a Windows server in the back office, a hospital's EHR, a payer's adjudication engine), and the platform holds a synchronized copy that must not drift. Almost all of its data is protected health information, so every store, log, queue, cache and vendor is inside a regulated boundary or must be kept out of it. And the outside world talks to it in four or five standards at once (HL7 v2, FHIR, X12, NCPDP, C-CDA), none of which is the shape of its own tables.
 
-The chapter covers how the platforms draw those lines, tenancy for practices, groups and DSOs, segmenting PHI by sensitivity and by who may see it, the sync and integration layer, events, a FHIR facade over the volume's own model rather than a FHIR server as the model, audit as a first-class store, and a reference build. The general engineering is the playbook's ([Multi-Tenancy](/docs/architecture/multi-tenancy), [Events & Async Messaging](/docs/architecture/events), [Audit Trails](/docs/architecture/audit-trails), [HIPAA](/docs/compliance/hipaa#what-it-means-for-a-system)); the same exercise for other industries is [Commerce Architecture](/books/commerce/commerce-architecture) and [Platform Architecture](/books/property-tech/platform-architecture) for property management. It adds `inbound_messages`, `fhir_resource_versions` and `sensitivity_labels` to the core data model in The Health Tech Business, and extends `audit_events`, `integrations` and `sync_cursors`.
+The chapter covers how the platforms draw those lines, tenancy for practices, groups and DSOs, segmenting PHI by sensitivity and by who may see it, the sync and integration layer, events, a FHIR facade over the volume's own model rather than a FHIR server as the model, audit as a first-class store, and a reference build. The general engineering is the playbook's ([Multi-Tenancy](/docs/architecture/multi-tenancy), [Events & Async Messaging](/docs/architecture/events), [Audit Trails](/docs/architecture/audit-trails), [HIPAA](/docs/compliance/hipaa#what-it-means-for-a-system)); the same exercise for other industries is [Commerce Architecture](/books/commerce/commerce-architecture) and [Platform Architecture](/books/property-tech/platform-architecture) for property management. It adds `inbound_messages` and `sensitivity_labels` to the core data model in [The Health Tech Business](/books/health-tech/health-tech-business#the-core-data-model), extends `audit_events`, `integrations` and `sync_cursors`, and extends `fhir_resource_versions` from [FHIR](/books/health-tech/fhir#how-to-build-it) for what the facade publishes.
 
 ## How the Platforms Do It
 
@@ -36,7 +36,7 @@ Four patterns run through the table:
 
 ## Tenancy: Practices, Groups and DSOs
 
-The customer that signs the contract and the business associate agreement is the tenant: a single dental office, a multi-specialty group, a dental service organization with hundreds of offices, a veterinary consolidator, a health system. Inside it sits a tree of `organizations` and `locations` (the practice's legal entities, the offices, the departments), and three things move through that tree the way [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies) describes: settings inherit down (appointment types, reminder cadences, fee schedules), grants scope down (a regional manager sees the region's offices, a hygienist sees one office's schedule), and reports roll up from the same leaf rows. Multi-Location Groups & Call Centers covers the business side.
+The customer that signs the contract and the business associate agreement is the tenant: a single dental office, a multi-specialty group, a dental service organization with hundreds of offices, a veterinary consolidator, a health system. Inside it sits a tree of `organizations` and `locations` (the practice's legal entities, the offices, the departments), and three things move through that tree the way [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies) describes: settings inherit down (appointment types, reminder cadences, fee schedules), grants scope down (a regional manager sees the region's offices, a hygienist sees one office's schedule), and reports roll up from the same leaf rows. [Multi-Location Groups & Call Centers](/books/health-tech/multi-location-and-call-centers) covers the business side.
 
 The health twists:
 
@@ -45,7 +45,7 @@ The health twists:
 - **Enforce it in the database.** Every PHI table carries `tenant_id`, and row-level security or a scoped connection turns a missing filter into an error instead of a breach ([Enforce It in the Database](/docs/architecture/multi-tenancy#enforce-it-in-the-database)). A cross-tenant leak of PHI is a breach for every affected covered entity, with the 60-day clocks in [HIPAA](/docs/compliance/hipaa#the-three-rules).
 - **Isolation models by size.** Pooled tables with `tenant_id` suit thousands of small practices; a schema or database per tenant suits a DSO or health system whose contract asks for it, whose data volume is large, or whose region differs ([Isolation Models](/docs/architecture/multi-tenancy#isolation-models)). Epic's instance-per-customer is the far end; the managed FHIR services let you choose per tenant.
 - **Where the data sits is now law in places.** Texas SB 1188 (effective September 1, 2025) requires a covered entity to keep electronic health records "physically maintained in the United States or a territory," including records at a cloud provider, for storage from January 1, 2026; a platform with offshore replicas, support or backups has to know which tenants that binds and keep their data, backups included, in US regions.
-- **Vet clinics are tenants too, with different rules.** A veterinary practice isn't a HIPAA covered entity; its records are confidential under state veterinary law, and its patient is an animal whose client is the owner. The same platform carries both by making the regime a property of the tenant, not a fork of the code (Veterinary Practice).
+- **Vet clinics are tenants too, with different rules.** A veterinary practice isn't a HIPAA covered entity; its records are confidential under state veterinary law, and its patient is an animal whose client is the owner. The same platform carries both by making the regime a property of the tenant, not a fork of the code ([Veterinary Practice](/books/health-tech/veterinary-practice#not-hipaa-state-law-instead)).
 
 ## Segmenting PHI
 
@@ -55,7 +55,7 @@ HIPAA treats PHI as one category, but a platform holds data at several levels of
 | --- | --- | --- | --- |
 | **Operational PHI** | Name and phone beside an appointment, a reminder, a balance | Front desk, billing, the patient engagement features | The default tenant-scoped tables, minimum necessary by role |
 | **Clinical PHI** | Notes, problem lists, medications, images | Clinicians and the patient; not the marketing or review features | Separate tables and storage paths, role checks, field-level masking in support tools |
-| **Specially protected** | Substance use disorder records under 42 CFR Part 2, reproductive, mental health, HIV and genetic data under state law | Narrower roles and consent-dependent disclosure | A sensitivity label on the record, checked on every read and every outbound message (the law is State Health Privacy & Sensitive Data) |
+| **Specially protected** | Substance use disorder records under 42 CFR Part 2, reproductive, mental health, HIV and genetic data under state law | Narrower roles and consent-dependent disclosure | A sensitivity label on the record, checked on every read and every outbound message (the law is [State Health Privacy & Sensitive Data](/books/health-tech/state-health-privacy)) |
 | **Identifiers only** | Internal IDs, hashed tokens | Analytics, error tracking, vendors without a BAA | Scrubbed at the boundary; the playbook's rule that "no BAA" means "PHI must never get here" ([The Business Associate Agreement](/docs/compliance/hipaa#the-business-associate-agreement)) |
 | **De-identified** | Safe Harbor or expert-determined data sets | Analytics, product research, model training | Produced by a governed release, outside the PHI boundary ([De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use)) |
 
@@ -71,7 +71,7 @@ Encryption is the floor under all of it: HIPAA's technical safeguards make encry
 
 Most health platforms are integration platforms with a product on top. The layer that talks to practice management systems, EHRs, clearinghouses, labs and pharmacies is where reliability is won or lost, and it has the same shape for every connection:
 
-- **One `integrations` row per connection.** The external system, the tenant and location it serves, the method (an on-premises agent, a vendor API, an HL7 v2 feed over MLLP, a FHIR endpoint, an SFTP drop, a network like Redox), the credentials by reference, the API version and the rate-limit state. Integrating with Practice Management Systems owns the PMS specifics; this is the shape every connector shares.
+- **One `integrations` row per connection.** The external system, the tenant and location it serves, the method (an on-premises agent, a vendor API, an HL7 v2 feed over MLLP, a FHIR endpoint, an SFTP drop, a network like Redox), the credentials by reference, the API version and the rate-limit state. [Integrating with Practice Management Systems](/books/health-tech/pms-integration) owns the PMS specifics; this is the shape every connector shares.
 - **A cursor per object per connection.** `sync_cursors` holds how far each stream has read (a last-modified timestamp, a change sequence, a FHIR `_since`, an HL7 message control ID), so a restart resumes and a backfill is a cursor reset, not a code change.
 - **Store what arrived before acting on it.** Every inbound HL7 message, FHIR notification, X12 file and webhook lands in `inbound_messages` as received, unique on the sender's ID, then is parsed and applied ([Consumer Expectations](/docs/api-design/webhooks#consumer-expectations)). An argument with an interface about what it sent is settled by the stored bytes, and a parser bug is fixed by reprocessing.
 - **Agents in the closet are a fleet.** A sync agent on a practice's Windows server is software you operate on hardware you don't: it needs versioned releases, signed updates, a heartbeat, a last-successful-sync time per object the practice can see, and an alert when it stops. The commonest support ticket in this industry is that reminders stopped because the sync stopped, and the platform should know before the practice does.
@@ -98,11 +98,11 @@ Two architectures sell, and they differ in where the business rules live:
 
 My default for anything practice-facing is the second. The facade is a module with its own rules:
 
-- **One mapping per resource, versioned.** `patients` to Patient, `practitioners` and `practitioner_roles` to Practitioner and PractitionerRole, `appointments` to Appointment, `appointment_slots` to Slot, `coverages` to Coverage, `claims` to Claim, `remittances` to ExplanationOfBenefit, `consents` to Consent, `audit_events` to AuditEvent, following the mapping column in The Health Tech Business. The mapping is code in version control, tested against the US Core profiles the API claims.
-- **Stable logical IDs and real versions.** A FHIR client expects `Patient/123` to mean the same patient forever and `meta.versionId` to change when the content does. `fhir_resource_versions` records each published version's ID and hash, so `_history`, `_since` and ETags work from the facade's own record instead of from whichever row changed underneath.
+- **One mapping per resource, versioned.** `patients` to Patient, `practitioners` and `practitioner_roles` to Practitioner and PractitionerRole, `appointments` to Appointment, `appointment_slots` to Slot, `coverages` to Coverage, `claims` to Claim, `remittances` to ExplanationOfBenefit, `consents` to Consent, `audit_events` to AuditEvent, following the mapping column in [The Health Tech Business](/books/health-tech/health-tech-business#the-core-data-model). The mapping is code in version control, tested against the US Core profiles the API claims.
+- **Stable logical IDs and real versions.** A FHIR client expects `Patient/123` to mean the same patient forever and `meta.versionId` to change when the content does. `fhir_resource_versions` (the link table [FHIR](/books/health-tech/fhir#how-to-build-it) creates, extended here) records each published version's ID and hash, so `_history`, `_since` and ETags work from the facade's own record instead of from whichever row changed underneath.
 - **Search is a product decision.** Each supported search parameter is an index and a query plan; publish a capability statement that lists only what is supported and fast, as every EHR's FHIR documentation does.
 - **Bulk export reads a snapshot.** Bulk Data (`$export`, now at STU3 of its implementation guide) produces NDJSON files per resource type for a group or a whole system; build it from a consistent read replica or the analytics copy's PHI-zone extract, never by paging the primary database for hours ([Bulk Operations](/docs/requests/bulk-operations)).
-- **Authorization is SMART, scoped to the tenant.** Every token is issued by the tenant's authorization server or carries the tenant, and patient-level scopes narrow it to one patient's compartment (SMART on FHIR & App Platforms covers scopes and launch).
+- **Authorization is SMART, scoped to the tenant.** Every token is issued by the tenant's authorization server or carries the tenant, and patient-level scopes narrow it to one patient's compartment ([SMART on FHIR & App Platforms](/books/health-tech/smart-on-fhir) covers scopes and launch).
 - **Writes go through the domain.** A FHIR `POST Appointment` is translated into the same booking command the product's UI uses, with the same slot check and the same events; the facade never writes tables directly.
 
 ## Audit Everywhere
@@ -121,7 +121,7 @@ Built yourself, the system this volume describes is a short list of parts, each 
 
 - **A transactional core.** One relational database per pool of tenants, holding patients, scheduling, communications, forms, ledgers, claims and consents as modules, with the outbox in the same database so state and event commit together ([Start With a Modular Monolith](/docs/architecture/service-boundaries#start-with-a-modular-monolith)).
 - **An integration tier.** Connectors per external system, the on-premises agent fleet, an interface engine for HL7 v2, a clearinghouse connection for X12, and `inbound_messages` as the landing zone.
-- **A communications tier.** Texting, voice, email and fax through providers under BAAs, with consent and quiet-hours checks in front ([Notifications](/docs/architecture/notifications)); Two-Way Texting & Messaging and Phones for Practices own the practice versions.
+- **A communications tier.** Texting, voice, email and fax through providers under BAAs, with consent and quiet-hours checks in front ([Notifications](/docs/architecture/notifications)); [Two-Way Texting & Messaging](/books/health-tech/patient-texting) and [Phones for Practices](/books/health-tech/practice-phones) own the practice versions.
 - **A FHIR facade and an API.** The standards face for EHRs, apps and partners, with SMART authorization.
 - **An audit store.** Append-only, tamper-evident, queryable by patient and by actor ([Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident)).
 - **A document and image store.** Object storage for forms, attachments and images, encrypted, with access through the core's checks and signed, short-lived URLs ([File Uploads](/docs/architecture/file-uploads)).
@@ -163,21 +163,20 @@ CREATE TABLE inbound_messages (              -- everything external systems send
   UNIQUE (integration_id, sender_message_id)
 );
 
-CREATE TABLE fhir_resource_versions (        -- what the facade has published, per resource
-  tenant_id        UUID NOT NULL REFERENCES organizations (id),
-  resource_type    TEXT NOT NULL,             -- 'Patient', 'Appointment', 'Coverage'
-  logical_id       TEXT NOT NULL,             -- stable FHIR id, never reused
-  version_id       BIGINT NOT NULL,           -- meta.versionId
-  source_table     TEXT NOT NULL,
-  source_id        UUID NOT NULL,
-  content_sha256   BYTEA NOT NULL,            -- a new version only when the rendering changes
-  mapping_version  TEXT NOT NULL,             -- the facade code that rendered it
-  last_updated     TIMESTAMPTZ NOT NULL,      -- meta.lastUpdated, drives _since
-  deleted          BOOLEAN NOT NULL DEFAULT FALSE,
-  PRIMARY KEY (tenant_id, resource_type, logical_id, version_id)
-);
+-- FHIR's link table, reused for what the facade publishes: the facade is the tenant's own
+-- integrations row, remote_id is the stable logical id (never reused), remote_version is
+-- meta.versionId, remote_updated_at is meta.lastUpdated (drives _since), local_table and
+-- local_id are the source row. Each version is a row; publishing a new one sets unlinked_at
+-- on the previous, so the open-row index still holds one current version per resource.
+ALTER TABLE fhir_resource_versions
+  ADD COLUMN direction        TEXT NOT NULL DEFAULT 'mirrored'
+    CHECK (direction IN ('mirrored', 'published')),
+  ADD COLUMN content_sha256   BYTEA,          -- published: a new version only when the rendering changes
+  ADD COLUMN mapping_version  TEXT,           -- published: the facade code that rendered it
+  ADD COLUMN deleted          BOOLEAN NOT NULL DEFAULT FALSE;
 CREATE INDEX fhir_resource_versions_since
-  ON fhir_resource_versions (tenant_id, resource_type, last_updated);
+  ON fhir_resource_versions (organization_id, resource_type, remote_updated_at)
+  WHERE direction = 'published';
 
 CREATE TABLE sensitivity_labels (            -- record-level labels beyond ordinary PHI
   tenant_id        UUID NOT NULL REFERENCES organizations (id),
@@ -220,7 +219,7 @@ Design notes:
 
 - **PHI never sits in a queue row.** `inbound_messages.body_ref` and the outbox's payloads point at encrypted objects or carry IDs only; the tables operators query during an incident hold metadata.
 - **`tenant_id` references the contracting organization.** It is the top of the `organizations` tree for that customer, and row-level security keys on it; location and department scoping is a second check inside it.
-- **`consents.covers_labels` and `consents.recipient_ref`** are columns this check assumes on the core model's `consents`; Consent, Authorization & Proxies owns their meaning.
+- **`consents.covers_labels` and `consents.recipient_ref`** are columns this check assumes on the core model's `consents`; [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization#the-consent-record) owns their meaning.
 - **A FHIR version is minted only when the rendering changes.** The hash comparison keeps `_since` queries and subscriptions from firing on internal column changes a client can't see.
 - **Labels propagate, and the propagation is recorded.** A claim built from a labeled encounter inherits the label with `inherited_from`, so removing the source label is a reviewable event, not a silent cascade.
 - **Emit `integration.degraded`, `integration.disconnected`, `sync.drift_detected` and `sensitivity_label.set`,** which operations and the practice's own dashboard consume.

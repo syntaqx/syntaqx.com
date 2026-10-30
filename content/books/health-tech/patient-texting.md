@@ -89,7 +89,7 @@ A text can be read on a lock screen, by a spouse, on a work phone. The practice-
 
 - **Notifications say who, when and where, not why.** "Reminder: appointment with Dr. Lee at Elm Street Dental, Tue 9:00 a.m. Reply C to confirm" is fine. "Reminder: your root canal" or "your HIV follow-up" isn't, unless the patient has chosen that level of detail.
 - **Detail lives behind a login.** Results, treatment details and forms go through a link to an authenticated page, not in the body; the link carries a token that opens nothing without the patient verifying (birth date at least), and never puts PHI in the URL ([What It Means for a System](/docs/compliance/hipaa#what-it-means-for-a-system)).
-- **Specialty matters.** A practice name can itself disclose: a psychiatric practice, an addiction treatment program, a fertility clinic. Such practices can use a neutral sender name in templates; substance use disorder records add 42 CFR Part 2's stricter rules, covered in this volume's State Health Privacy & Sensitive Data chapter.
+- **Specialty matters.** A practice name can itself disclose: a psychiatric practice, an addiction treatment program, a fertility clinic. Such practices can use a neutral sender name in templates; substance use disorder records add 42 CFR Part 2's stricter rules, covered in this volume's [State Health Privacy & Sensitive Data](/books/health-tech/state-health-privacy#part-2-substance-use-disorder-records) chapter.
 - **Patients can choose more.** A patient who texts a photo of their stitches has chosen the channel for that conversation; staff can reply in kind, still without volunteering more than the question needs.
 
 ### Marketing Versus Treatment
@@ -107,7 +107,7 @@ Patient portals and practice apps offer secure messaging: authenticated, encrypt
 | Clinical questions, results, images, anything a clinician answers | Secure messaging or a call; SMS replies point there |
 | Records requests and anything with documents | Portal |
 
-When a patient texts a clinical question, the practice's reply can move it ("I've sent you a secure message link so the doctor can answer") and the inbox should make that one click. Portal messages a clinician answers may be billable as e-visits in medicine (this volume's Patient Portals & Patient Access Apps chapter), which is one more reason they belong in a system that records who answered.
+When a patient texts a clinical question, the practice's reply can move it ("I've sent you a secure message link so the doctor can answer") and the inbox should make that one click. Portal messages a clinician answers may be billable as e-visits in medicine (this volume's [Patient Portals & Patient Access Apps](/books/health-tech/patient-portals-and-access#portal-messaging-and-e-visits) chapter), which is one more reason they belong in a system that records who answered.
 
 ## Email
 
@@ -122,9 +122,9 @@ The inbox is where the front desk spends its day, and its design decides whether
 - **Keywords first.** STOP, HELP and opt-in keywords are processed before routing, and the revocation is written before anything acknowledges it.
 - **Clinical triage.** Messages that look clinical ("swelling," "bleeding," "can't breathe," "emergency") are flagged to a clinician, and the practice's after-hours auto-reply says what to do in an emergency. An unanswered text about a post-surgical complication at 9 p.m. is a patient safety problem, not an inbox metric.
 - **Attachments are records.** A photo of an insurance card belongs on the coverage; a photo of a wound belongs in the chart as a document; neither should live only in a text thread ([documents](/books/health-tech/health-tech-business#the-core-data-model) in the core model).
-- **Minors and proxies.** A teenager's texts and a parent's texts about the teenager are different conversations with different rights, which this volume's Consent, Authorization & Proxies chapter covers; the inbox has to show who the sender is to the patient.
+- **Minors and proxies.** A teenager's texts and a parent's texts about the teenager are different conversations with different rights, which this volume's [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization#minors-proxies-and-personal-representatives) chapter covers; the inbox has to show who the sender is to the patient.
 - **No personal phones.** Clinicians texting patients from personal phones bypasses the log, the consent ledger and the BAA. Give them the practice number in an app.
-- **AI replies** drafted or sent by a model go through the same consent, purpose and audit gates as a person's; this part's Practice Analytics & AI Front Desk chapter covers the AI front desk.
+- **AI replies** drafted or sent by a model go through the same consent, purpose and audit gates as a person's; this part's [Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai#the-ai-receptionist) chapter covers the AI front desk.
 
 ## How to Build It
 

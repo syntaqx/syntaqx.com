@@ -9,7 +9,7 @@ tags = ["health-tech", "dental", "cdt", "treatment-plans", "insurance-estimates"
 
 Dentistry is the largest market for practice software outside medicine, and the one patient engagement vendors grew up in. A general dental office runs two businesses on one schedule: hygiene, a recurring preventive visit every few months that fills half the chairs, and restorative and specialty treatment, diagnosed at those visits and sold as a treatment plan the patient has to accept and pay for. Dental insurance pays a share of both under rules that look nothing like medical insurance: annual maximums, frequency limits, waiting periods, downgrades to a cheaper alternative, and coinsurance by category of service. So the work the software does is mostly money: estimate what the plan will pay for each procedure on each tooth, present the plan with the patient's share, track what's accepted and unscheduled, and keep the hygiene recall loop full.
 
-This chapter covers what's specific to dentistry: CDT codes and tooth-level charting, periodontal charting, treatment plans and case acceptance, insurance estimation, predeterminations, imaging and bridges, dental lab cases, DSOs, and dental AI. Recall and reactivation are Reminders, Confirmations & Recall's; booking chairs and operatories is Scheduling & Online Booking's; the dental claim (837D, the ADA claim form) is Claims'; dental eligibility and benefit breakdowns are Eligibility & Benefits'; and the charting model in general (the odontogram and tooth and surface coding as clinical records) is [EHRs, PMSs & the Clinical Record](/books/health-tech/ehr-and-pms-data#dental-teeth-surfaces-and-status)'s. This chapter extends `procedures`, `coverages`, `plans`, `practitioner_roles` and `documents` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model).
+This chapter covers what's specific to dentistry: CDT codes and tooth-level charting, periodontal charting, treatment plans and case acceptance, insurance estimation, predeterminations, imaging and bridges, dental lab cases, DSOs, and dental AI. Recall and reactivation are [Reminders, Confirmations & Recall](/books/health-tech/reminders-and-recall)'s; booking chairs and operatories is [Scheduling & Online Booking](/books/health-tech/scheduling-and-online-booking)'s; the dental claim (837D, the ADA claim form) is [Claims](/books/health-tech/claims#dental-claims)'; dental eligibility and benefit breakdowns are [Eligibility & Benefits](/books/health-tech/eligibility-and-benefits#dental-benefits)'; and the charting model in general (the odontogram and tooth and surface coding as clinical records) is [EHRs, PMSs & the Clinical Record](/books/health-tech/ehr-and-pms-data#dental-teeth-surfaces-and-status)'s. This chapter extends `procedures`, `coverages`, `plans`, `practitioner_roles` and `documents` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model).
 
 ## How the Platforms Do It
 
@@ -17,7 +17,7 @@ As of October 2026, from vendor pages:
 
 | System | What it is | Notable for this chapter |
 | --- | --- | --- |
-| **Dentrix, Dentrix Ascend, Dentrix Enterprise** (Henry Schein One) | Henry Schein One's dental PMS family: desktop, cloud (Ascend) and enterprise editions | Integrated by Pearl, Dental Intelligence and most engagement vendors; Dentrix's own payments post to its ledger (Payments in the Practice) |
+| **Dentrix, Dentrix Ascend, Dentrix Enterprise** (Henry Schein One) | Henry Schein One's dental PMS family: desktop, cloud (Ascend) and enterprise editions | Integrated by Pearl, Dental Intelligence and most engagement vendors; Dentrix's own payments post to its ledger ([Payments in the Practice](/books/health-tech/patient-payments)) |
 | **Eaglesoft** (Patterson) | Patterson's dental PMS | A common sync target for engagement and payments vendors |
 | **Open Dental** | Dental PMS with a public API | A Clinics feature that runs "multiple locations ... from one database while keeping locations separate for reporting"; a claim takes its clinic from its procedures |
 | **Denticon** (Planet DDS) | Cloud dental PMS | "Tried and tested by more than 13,000+ dental practices"; built for DSOs and groups |
@@ -26,7 +26,7 @@ As of October 2026, from vendor pages:
 | **Overjet** | Dental imaging AI, payer and DSO analytics | "FDA-cleared vision AI x-ray analysis"; an insurance coordinator (Ivy), ambient visit documentation (Voice), and payer utilization review products |
 | **Dental Intelligence** | Analytics and engagement | Integrates with Open Dental, Eaglesoft, Dentrix, Dentrix Ascend and Denticon; an AI receptionist and data Q&A |
 
-The pattern is that every vendor's product is a view over the PMS's procedures, treatment plans and insurance data. A dental engagement or analytics product that can't read tooth-level procedures and treatment plan status can't do case acceptance, can't estimate, and can't count unscheduled treatment, which is why PMS integration (Integrating with Practice Management Systems) is the whole game.
+The pattern is that every vendor's product is a view over the PMS's procedures, treatment plans and insurance data. A dental engagement or analytics product that can't read tooth-level procedures and treatment plan status can't do case acceptance, can't estimate, and can't count unscheduled treatment, which is why PMS integration ([Integrating with Practice Management Systems](/books/health-tech/pms-integration)) is the whole game.
 
 ## CDT and the Tooth
 
@@ -41,7 +41,7 @@ A single tooth's history is a sequence: a two-surface filling in 2019, a crack n
 A perio exam records, for each tooth, probing depths at several sites around the tooth, bleeding on probing, recession, mobility, furcation involvement and attachment loss. It's done at intervals and compared over time, because the change is the diagnosis. For the system:
 
 - **It's a dated measurement set, not a field.** One exam is many observations per tooth and site; a perio chart is the table of them, and the comparison between exams is the clinical value.
-- **Voice entry is the norm.** The hygienist calls out numbers while probing; PMSs and add-ons support voice perio charting, and ambient AI is moving into the same workflow (Practice Analytics & AI Front Desk).
+- **Voice entry is the norm.** The hygienist calls out numbers while probing; PMSs and add-ons support voice perio charting, and ambient AI is moving into the same workflow ([Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai#ambient-scribes)).
 - **It drives billing and recall.** Periodontal maintenance and scaling and root planing are justified by the chart, and payers ask for it as an attachment; a patient on periodontal maintenance moves to a shorter recall interval.
 
 ## Treatment Plans and Case Acceptance
@@ -63,7 +63,7 @@ Rules:
 
 - **Present versions, not live data.** The estimate a patient accepted on March 3 is a document; when the plan's benefits or fees change, a new version is presented, not the old one silently recomputed. That's the record that answers "you told me my share would be $412."
 - **Phases and alternatives are first-class.** A plan with "phase 1: urgent, phase 2: elective" and "option A: implant, option B: bridge" is how dentists present; the acceptance is per phase or option.
-- **Unscheduled treatment is the revenue list.** Accepted or presented procedures with no appointment are what engagement campaigns chase ("You have treatment your dentist recommended..."), and the count and value of it is a core KPI (Practice Analytics & AI Front Desk). Messages that name the procedure are PHI going to a phone; minimum necessary applies (Two-Way Texting & Messaging).
+- **Unscheduled treatment is the revenue list.** Accepted or presented procedures with no appointment are what engagement campaigns chase ("You have treatment your dentist recommended..."), and the count and value of it is a core KPI ([Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai#metrics-defined-once)). Messages that name the procedure are PHI going to a phone; minimum necessary applies ([Two-Way Texting & Messaging](/books/health-tech/patient-texting#minimum-necessary-in-a-text)).
 - **Benefits renew, so timing is money.** Plans with calendar-year maximums make "use your benefits before December 31" campaigns a fixture of the fall, and a phased plan may deliberately split treatment across two benefit years. The estimate per phase has to use the right year's remaining maximum.
 
 ## Insurance Estimation
@@ -78,7 +78,7 @@ Dental insurance is mostly a defined-benefit product with a small annual maximum
 - **Age limits.** Sealants and fluoride to a stated age; orthodontics to an age, with a separate lifetime maximum.
 - **Downgrades (alternate benefit).** The plan pays for a cheaper procedure than the one performed: a tooth-colored filling on a back tooth paid as if it were amalgam, a crown paid as a filling. The patient owes the difference, so the estimate shows the downgrade explicitly.
 - **Waiting periods and missing tooth clauses.** No major services for a stated period after enrollment; no payment for replacing a tooth lost before coverage began.
-- **Coordination of benefits.** With two dental plans, the secondary pays under its own rules (some never pay more than they would as primary, some pay up to the primary's remainder), which Eligibility & Benefits covers.
+- **Coordination of benefits.** With two dental plans, the secondary pays under its own rules (some never pay more than they would as primary, some pay up to the primary's remainder), which [Eligibility & Benefits](/books/health-tech/eligibility-and-benefits#coordination-of-benefits) covers.
 
 The engine's inputs are a coverage, a plan's benefit rules (from the eligibility response's breakdown, the payer's documents, or staff entry), the patient's history, and the procedure; its output is an estimate with every rule that applied, so staff can see why the number is what it is. My rule: an estimate is never a single number; it's a line with the fee, the allowed amount, each reduction and its reason, the insurance estimate and the patient portion, so the front desk can explain it and the practice can correct the rule that was wrong.
 
@@ -88,7 +88,7 @@ Rule data is the hard part. Eligibility responses carry some of it (maximums, de
 
 A predetermination (pre-treatment estimate) is a claim submitted before treatment, asking the plan what it would pay. It's not a guarantee (the patient's eligibility, maximum and the procedure's details can change before the work is done), and it adds weeks, but for crowns, implants, periodontal surgery and orthodontics it's the best evidence the practice can get. The system:
 
-- **Submits it as a claim with predetermination status** on the same 837D and ADA form machinery (Claims has the mechanics), with the X-rays and perio chart attached.
+- **Submits it as a claim with predetermination status** on the same 837D and ADA form machinery ([Claims](/books/health-tech/claims#dental-claims) has the mechanics), with the X-rays and perio chart attached.
 - **Stores the response against the treatment plan items,** with its date and the plan's caveats, and uses it in place of the computed estimate while it's current.
 - **Flags drift.** If the procedure performed differs from the one predetermined (a different tooth, more surfaces), the predetermined amount no longer applies.
 
@@ -112,7 +112,7 @@ Crowns, bridges, dentures, night guards and aligners are made by dental labs fro
 
 ## DSOs and Groups
 
-Dental service organizations provide the business side to dentist-owned practices under management services agreements ([DSOs and MSOs](/books/health-tech/practice-business#dsos-and-msos)), because many states restrict who may own a dental practice or control clinical decisions ([Corporate practice doctrines](/books/health-tech/practice-business#corporate-practice-doctrines)). For the software, a DSO is a hierarchy of separately owned practices with central operations: one PMS instance or several from acquisitions, a central call center and billing office, and group reporting across all of it. Open Dental's Clinics feature and Denticon's DSO focus ("8 weeks per location for DSOs" to implement) are two answers to the same need. The structure, the permissions and the reporting are Multi-Location Groups & Call Centers'.
+Dental service organizations provide the business side to dentist-owned practices under management services agreements ([DSOs and MSOs](/books/health-tech/practice-business#dsos-and-msos)), because many states restrict who may own a dental practice or control clinical decisions ([Corporate practice doctrines](/books/health-tech/practice-business#corporate-practice-doctrines)). For the software, a DSO is a hierarchy of separately owned practices with central operations: one PMS instance or several from acquisitions, a central call center and billing office, and group reporting across all of it. Open Dental's Clinics feature and Denticon's DSO focus ("8 weeks per location for DSOs" to implement) are two answers to the same need. The structure, the permissions and the reporting are [Multi-Location Groups & Call Centers](/books/health-tech/multi-location-and-call-centers)'.
 
 ## Dental AI
 
@@ -121,7 +121,7 @@ Dental imaging is one of the most active areas of FDA-cleared AI. FDA's list of 
 What the products do and what that means for the system:
 
 - **Detection on images.** Caries, calculus, bone level, periapical radiolucencies and existing restorations outlined on X-rays, as a second reader for the dentist and a visual for the patient. The clearance covers specific indications on specific image types; a product used outside its indications is outside its clearance.
-- **Case acceptance.** An annotated X-ray is a persuasive picture, and vendors sell AI as a case acceptance tool. The finding is decision support for the dentist, not a diagnosis, and the treatment plan stays the dentist's (Practice Analytics & AI Front Desk covers liability).
+- **Case acceptance.** An annotated X-ray is a persuasive picture, and vendors sell AI as a case acceptance tool. The finding is decision support for the dentist, not a diagnosis, and the treatment plan stays the dentist's ([Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai#accuracy-and-liability) covers liability).
 - **Payers use it too.** Overjet sells utilization review and provider analytics to insurers, and a claim's X-ray may be read by a payer's AI as well as the dentist; consistent findings and good images matter on both ends.
 - **Findings are records.** An AI finding on an image, its model version, whether the dentist confirmed, rejected or ignored it, and what was charted as a result, is clinical decision support output that belongs in the record with its provenance ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
 

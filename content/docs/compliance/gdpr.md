@@ -68,7 +68,7 @@ A controller must notify its supervisory authority **without undue delay and, wh
 
 72 hours is short. It's achievable only if detection, triage and the notification decision are already part of [Incident Response](/docs/operations/incident-response), and if logs say *whose* data was affected. "We can't tell which users were exposed" means notifying all of them.
 
-A **data protection officer** is mandatory for public authorities and for organizations whose core activities are large-scale monitoring of people or large-scale processing of special categories (health, biometrics) or criminal records. Where required, the DPO is independent, reports to the highest level of management, and is involved from the start.
+A **data protection officer** is mandatory for public authorities and for organizations whose core activities are large-scale monitoring of people or large-scale processing of special categories (health, biometrics) or criminal records. Where required, the DPO is independent, reports to the highest level of management, and is involved from the start. Health data carries further EU rules on top, the European Health Data Space among them ([The EU](/books/health-tech/eu-health-data)).
 
 ## Mapping It onto a System
 

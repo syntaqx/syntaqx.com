@@ -20,7 +20,7 @@ As of October 2026, from vendor pages:
 | --- | --- | --- | --- |
 | **Weave** | Not described on the AI page | AI Receptionist: answers calls, texts and website chats "24/7" with "a friendly, human-like AI voice"; captures appointment requests for staff, and for "qualified dental practice management systems" books and reschedules "right to your calendar"; hands off with a conversation summary | Not described on the page |
 | **Dental Intelligence** | Analytics and Morning Huddle; integrates with Open Dental, Eaglesoft, Dentrix, Dentrix Ascend and Denticon | AI Receptionist: "Answer every patient call, even when your team can't" | Data Q&A: "Ask your practice's data any question" |
-| **Overjet** | DSO analytics | Ivy, "an AI insurance coordinator" that verifies benefits and estimates patient costs | Voice: ambient AI that documents, monitors and analyzes patient visits; imaging AI (Dental Practice) |
+| **Overjet** | DSO analytics | Ivy, "an AI insurance coordinator" that verifies benefits and estimates patient costs | Voice: ambient AI that documents, monitors and analyzes patient visits; imaging AI ([Dental Practice](/books/health-tech/dental-practice#dental-ai)) |
 | **Shepherd** (vet) | Integrated reports | Not described | SummarizeAI, TranscribeAI and DiagnoseAI, "trained on real clinical cases" |
 | **Abridge** | Not applicable | Not applicable | Ambient documentation for health systems: "trusted by 300+ health systems," "100M+ Conversations" a year, pre-visit, in-visit and post-visit workflows |
 | **WebPT** (rehab) | Compliance insights | Not described | "AI-assisted note creation" in its documentation |
@@ -28,7 +28,7 @@ As of October 2026, from vendor pages:
 Three patterns:
 
 - **AI is sold as recovered revenue.** Every front-desk AI is pitched on missed calls and unbooked patients, which is a claim the practice can measure only if the analytics define a missed call and a booking the same way before and after.
-- **Booking authority depends on the integration.** Weave's receptionist books directly only for qualified dental PMSs and captures requests elsewhere; the AI can do no more than the PMS integration lets it write (Integrating with Practice Management Systems).
+- **Booking authority depends on the integration.** Weave's receptionist books directly only for qualified dental PMSs and captures requests elsewhere; the AI can do no more than the PMS integration lets it write ([Integrating with Practice Management Systems](/books/health-tech/pms-integration)).
 - **The scribe is moving down market.** Ambient documentation started in health systems (Abridge's figures are health-system scale) and is now in dental (Overjet Voice), vet (Shepherd) and rehab (WebPT) products.
 
 ## Metrics Defined Once
@@ -76,7 +76,7 @@ An AI receptionist answers the practice's phone (overflow, after hours, or first
 The rules, at the level a practice's system needs them:
 
 - **Say it's an AI.** State laws differ in trigger and scope (California's bot law, Utah's AI law with its "high-risk" interactions, others); one behavior satisfies them: the agent says it's an AI at the start of every interaction, answers honestly when asked, and the system records which greeting played ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)). Utah's high-risk category includes collecting sensitive data, which a health call always does. California also requires health care providers that use generative AI to write patient communications about clinical information to carry a disclaimer and tell the patient how to reach a human, unless a licensed provider reviewed the message. <!-- source-gap: ca-ab-3030 | missing | California AB 3030 (Health and Safety Code 1339.75): disclaimer and human-contact instructions on generative AI patient communications about clinical information, exemption when a licensed provider reviews, effective January 1, 2025 | closes with: the code section on leginfo.legislature.ca.gov (blocked to fetchers) or a California agency page quoting it | checked: 2026-10-29 -->
-- **Outbound AI calls are artificial-voice calls.** The FCC's February 2024 ruling (FCC 24-17) brought AI-generated voices within the TCPA's "artificial or prerecorded voice," so an AI agent calling patients (recall, unscheduled treatment, balances) needs the consent those calls need, and the TCPA's healthcare exemption covers only the message types and limits it names; marketing calls need prior express written consent ([Artificial and AI Voices](/docs/compliance/consumer-contact#artificial-and-ai-voices)). Two-Way Texting & Messaging covers the exemption.
+- **Outbound AI calls are artificial-voice calls.** The FCC's February 2024 ruling (FCC 24-17) brought AI-generated voices within the TCPA's "artificial or prerecorded voice," so an AI agent calling patients (recall, unscheduled treatment, balances) needs the consent those calls need, and the TCPA's healthcare exemption covers only the message types and limits it names; marketing calls need prior express written consent ([Artificial and AI Voices](/docs/compliance/consumer-contact#artificial-and-ai-voices)). [Two-Way Texting & Messaging](/books/health-tech/patient-texting#the-tcpa-healthcare-exemption) covers the exemption.
 - **Announce recording on every call.** Several states require every party's consent to record, and an AI receptionist records by nature (it needs the audio to work); the greeting announces recording and the announcement is in the recording ([Recording Calls](/docs/compliance/consumer-contact#recording-calls)).
 
 ### Transcripts Are PHI
@@ -94,7 +94,7 @@ An ambient scribe records the clinical conversation, transcribes it, and drafts 
 - **Consent to record.** Patients are told the visit is recorded for documentation and may decline; the consent (or refusal) is recorded per encounter, and in all-party consent states it's a legal requirement, not a courtesy. A recording made of a minor, a patient with a proxy, or a visit with a family member present needs every party's consent.
 - **The draft is not the note,** in a dental operatory or a vet exam room as much as a hospital; a practice without a coder or a compliance officer relies on the signature step more, not less.
 - **Accuracy is measured, not assumed.** Omissions (a symptom mentioned but not documented), hallucinations (an exam finding never performed) and misattributions (who said what) are the failure modes; a practice evaluating a scribe samples drafts against recordings and tracks edit rates by clinician and note section ([Evals](/docs/architecture/ai-agents#evals)).
-- **Coding suggestions are the riskiest part.** A scribe that suggests billing codes from the conversation moves toward documentation that supports a higher code than the work did; codes are the clinician's and the coder's decision, and a suggestion accepted without review is the kind of pattern False Claims Act cases are made from (Coding, Documentation & Compliance).
+- **Coding suggestions are the riskiest part.** A scribe that suggests billing codes from the conversation moves toward documentation that supports a higher code than the work did; codes are the clinician's and the coder's decision, and a suggestion accepted without review is the kind of pattern False Claims Act cases are made from ([Coding, Documentation & Compliance](/books/health-tech/coding-and-documentation#the-false-claims-act)).
 - **Retention of audio is a choice.** Many products delete audio after the note is signed; keeping it gives an evidence trail and creates a PHI store. Decide, state it in the consent, and apply it ([Data Retention](/docs/architecture/data-retention)).
 
 ## Accuracy and Liability
@@ -169,7 +169,7 @@ WHERE a.location_id = ANY($3)
 
 Design notes:
 
-- **Metrics are definitions with versions,** and each value names the version, so a number in last quarter's board deck can be recomputed exactly; the KPI table above is the content, Health Tech Metrics is the store.
+- **Metrics are definitions with versions,** and each value names the version, so a number in last quarter's board deck can be recomputed exactly; the KPI table above is the content, [Health Tech Metrics](/books/health-tech/health-tech-metrics) is the store.
 - **Agents act through tools whose rules are in code;** `ai_actions` records each call and the rule that allowed it, which is what a practice, a vendor or a regulator reconstructs from ([Auditing AI Actions](/docs/architecture/ai-agents#auditing-ai-actions)), and each action also writes an `audit_events` row with `actor_kind = 'ai_agent'`.
 - **The draft and the signature are separate records:** the `ai_outputs` draft, the signed `documents` note pointing at it, and the `consents` row the recording relied on.
 - **AI-created records are marked at creation** (`appointments.source = 'ai_agent'` and the session ID), so measurement, review and rollback can find them.

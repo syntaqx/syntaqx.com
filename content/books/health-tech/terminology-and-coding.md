@@ -10,7 +10,7 @@ tags = ["health-tech", "terminology", "icd-10", "cpt", "snomed-ct", "rxnorm"]
 
 Health records are coded. A diagnosis on a claim is an ICD-10-CM code, the visit it paid for is a CPT code, a filling is a CDT code, a wheelchair is a HCPCS code, a lab test is a LOINC code, the drug is an RxNorm concept and the package dispensed is an NDC, the vaccine is a CVX code, and the clinician's specialty is a taxonomy code. Each code system has an owner, a license, a release schedule and a reason to exist, and two of the most important (CPT and CDT) are copyrighted works that software must license to display. HIPAA fixes which code sets the standard transactions use, ASTP/ONC fixes which ones certified EHRs exchange, and every interface, claim and FHIR resource in this volume carries codes from them.
 
-The engineering consequences are the same across all of them: store a code with its system and version, never as a bare string; keep the human-readable display you showed; load releases on their schedules and keep old versions, because a claim from last year was coded under last year's codes; and treat maps between systems as approximations with provenance. This chapter covers the code sets, who owns and licenses each, how often they change, value sets, mapping, and a schema for terminology; the codes' billing rules (modifiers, edits, documentation) are Coding, Documentation & Compliance in Part 4.
+The engineering consequences are the same across all of them: store a code with its system and version, never as a bare string; keep the human-readable display you showed; load releases on their schedules and keep old versions, because a claim from last year was coded under last year's codes; and treat maps between systems as approximations with provenance. This chapter covers the code sets, who owns and licenses each, how often they change, value sets, mapping, and a schema for terminology; the codes' billing rules (modifiers, edits, documentation) are [Coding, Documentation & Compliance](/books/health-tech/coding-and-documentation) in Part 4.
 
 ## How the Platforms Do It
 
@@ -106,7 +106,7 @@ Maps are approximations. A SNOMED concept may map to several ICD-10-CM codes dep
 
 - **Keep the source code.** A mapped code is stored next to the original, never instead of it.
 - **Record the map and its version,** so a claim's ICD-10-CM code can be traced to the SNOMED concept and the map release that produced it.
-- **Let a person confirm maps that touch money or care.** An automatic map proposes; a coder or clinician accepts. Billing codes chosen from clinical codes are a compliance question (Coding, Documentation & Compliance in Part 4).
+- **Let a person confirm maps that touch money or care.** An automatic map proposes; a coder or clinician accepts. Billing codes chosen from clinical codes are a compliance question ([Coding, Documentation & Compliance](/books/health-tech/coding-and-documentation) in Part 4).
 - **Map local codes once, centrally.** Every lab and every legacy system arrives with local codes; mapping them in a shared, reviewed table beats mapping them in every interface ([HL7 v2 & Interfaces](/books/health-tech/hl7-v2#interface-engines)).
 
 FHIR's terminology operations (`$expand`, `$validate-code`, `$lookup`, `$translate`) are the standard interface to all of this, served by a terminology server ([FHIR](/books/health-tech/fhir#terminology-services)).

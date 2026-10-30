@@ -96,7 +96,7 @@ CMS's guidance letter of May 24, 2022, from its National Standards Group, sets t
 - A plan "may not require a provider to agree to receive payment or reassociation services from its business associate," and must keep a one-to-one match between an ERA and its EFT.
 - Complaints go to CMS through its enforcement tool (ASETT).
 
-What software does with that: record each payer's payment method per practice; detect virtual card payments (a `BPR` payment method for a card, or an ERA arriving with no matching deposit and a card notice instead); post the card payment as a payer payment with the processing fee recorded as a separate expense, never netted from the claim; and give the practice the opt-out path, since the remedy is a request to the payer for EFT. The card mechanics and fees are the Payments volume's [Interchange & Pricing](/books/payments/interchange-and-pricing); the practice side is Part 5's Payments in the Practice chapter.
+What software does with that: record each payer's payment method per practice; detect virtual card payments (a `BPR` payment method for a card, or an ERA arriving with no matching deposit and a card notice instead); post the card payment as a payer payment with the processing fee recorded as a separate expense, never netted from the claim; and give the practice the opt-out path, since the remedy is a request to the payer for EFT. The card mechanics and fees are the Payments volume's [Interchange & Pricing](/books/payments/interchange-and-pricing); the practice side is Part 5's [Payments in the Practice](/books/health-tech/patient-payments) chapter.
 
 ## Posting
 

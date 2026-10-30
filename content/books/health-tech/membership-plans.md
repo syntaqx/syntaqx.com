@@ -64,7 +64,7 @@ A concierge practice that keeps billing Medicare charges its patients an annual 
 For the system:
 
 - **The fee's contents are a list of non-covered items,** each named, versioned with the plan and shown to the patient, so the practice can show what the fee bought.
-- **Covered visits bill normally,** through the practice's claims, with no discount or waiver tied to membership (a routine waiver of cost sharing raises its own fraud and abuse questions, covered in Coding, Documentation & Compliance).
+- **Covered visits bill normally,** through the practice's claims, with no discount or waiver tied to membership (a routine waiver of cost sharing raises its own fraud and abuse questions, covered in [Coding, Documentation & Compliance](/books/health-tech/coding-and-documentation#anti-kickback-and-stark-for-software)).
 - **A DPC practice that wants Medicare patients** generally has to opt out of Medicare and use private contracts, which is a provider enrollment decision with its own rules; the membership platform records the practice's Medicare status as a plan-level fact and refuses to enroll Medicare beneficiaries into a plan whose practice hasn't decided.
 
 ## Direct Primary Care, HSAs and the 2026 Change
@@ -91,7 +91,7 @@ The law around it comes from pet insurance. The NAIC's Pet Insurance Model Act (
 Two vet-specific mechanics:
 
 - **Early cancellation settles the services used.** A 12-month package priced below the services' retail total is a discount for the commitment; when a client cancels in month four after the vaccines and dental cleaning were done, the plan's terms decide whether they owe the difference between what they paid and what they used. The system computes it from benefits used at retail versus payments made, and the terms are shown at enrollment.
-- **The plan belongs to the animal, the bill to the client.** The membership is on the patient (the animal), the payments on the guarantor (the owner); an animal that dies or is rehomed ends the plan, and the cancellation rules for a deceased pet are a kindness the terms should state. Veterinary Practice covers the owner-animal model.
+- **The plan belongs to the animal, the bill to the client.** The membership is on the patient (the animal), the payments on the guarantor (the owner); an animal that dies or is rehomed ends the plan, and the cancellation rules for a deceased pet are a kindness the terms should state. [Veterinary Practice](/books/health-tech/veterinary-practice#the-client-and-the-animal) covers the owner-animal model.
 
 ## Tracking Benefits Against the PMS
 
@@ -216,7 +216,7 @@ GROUP BY b.code, b.per_term;
 
 Design notes:
 
-- **Uses come from completed procedures.** The PMS sync (Integrating with Practice Management Systems) emits completed procedures; a job inserts `membership_benefit_uses`, and the unique `procedure_id` makes a re-sync idempotent. A procedure deleted or changed in the PMS reverses its use.
+- **Uses come from completed procedures.** The PMS sync ([Integrating with Practice Management Systems](/books/health-tech/pms-integration)) emits completed procedures; a job inserts `membership_benefit_uses`, and the unique `procedure_id` makes a re-sync idempotent. A procedure deleted or changed in the PMS reverses its use.
 - **Plans are versioned; members stay on theirs.** A price increase is a new version and a renewal-time migration with notice, as Commerce's [Price Changes on a Running Subscription](/books/commerce/subscription-commerce#price-changes-on-a-running-subscription) describes.
 - **The DPC check is a validation, not a flag.** When `hsa_dpc_designed` is true, saving the plan checks the monthly-equivalent fee against the year's cap for its audience, that no benefit is in the excluded categories, and that the plan has no per-service billing.
 - **Events:** `membership.enrolled`, `membership.renewed`, `membership.payment_failed`, `membership.lapsed`, `membership.benefit_used` and `membership.cancelled` go to the PMS (fee schedule assignment), messaging and reporting.

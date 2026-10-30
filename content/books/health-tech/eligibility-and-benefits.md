@@ -49,7 +49,7 @@ Read top to bottom: active coverage (`1`) for an individual (`IND`) under plan "
 
 Three things in that fragment cause most of the parsing work:
 
-- **Amounts are scoped.** Every `EB` has a coverage level (individual or family), a service type, a network indicator (in or out of network, in later elements) and a time period. "The deductible" is really several numbers: individual and family, in and out of network, total and remaining. A screen that shows one deductible is showing a guess.
+- **Amounts are scoped.** Every `EB` has a coverage level (individual or family), a service type, a network indicator (in or out of network, in later elements) and a time period. "The deductible" is really several numbers: individual and family, in and out of network, total and remaining. A screen that shows one deductible is showing a guess. How plans set these numbers in the first place (deductibles, coinsurance, out-of-pocket maximums, network tiers) is [Plan Design](/books/health-tech/payers-and-plans#plan-design) in Payers & Plans.
 - **Free text carries rules.** The authorization rule above arrived as a `MSG`, not a coded segment. Payers put frequency limits, waiting periods and carve-outs in messages because the codes can't say them, so a system that only parses codes misses them, and one that shows messages verbatim at least lets the front desk see them.
 - **Errors are data.** A 271 can reject the inquiry with a reason (subscriber not found, invalid date of birth, provider not on file) in an `AAA` segment. A rejection isn't "inactive"; it means the question was malformed, and the fix is correcting the inquiry, usually the member ID or the birth date.
 
@@ -108,7 +108,7 @@ So a dental eligibility product has three layers:
 2. **A plan benefit record** (sometimes called a "benefit breakdown") that the office completes once per employer group plan, by portal or phone, and reuses for every patient on that plan: frequencies, downgrades, waiting periods, missing tooth clause. Dental PMSs keep these as insurance plan records shared by every patient on the plan, which is why one wrong entry misquotes a whole employer's staff.
 3. **The patient's history**, from the practice's own procedure records and, where the payer returns it, the 271's procedure history, to apply frequencies: a patient who had a cleaning in March and another in September has used two of two.
 
-The estimate that results (what the plan pays for each line of a treatment plan, and what the patient owes) is computed from all three, and it is still an estimate: the dental payer's own pre-treatment estimate (a predetermination, sent as an 837D) is the only firm answer short of the claim ([Dental Claims](/books/health-tech/claims#dental-claims)). Treatment plans and case acceptance are Part 5's Dental Practice chapter.
+The estimate that results (what the plan pays for each line of a treatment plan, and what the patient owes) is computed from all three, and it is still an estimate: the dental payer's own pre-treatment estimate (a predetermination, sent as an 837D) is the only firm answer short of the claim ([Dental Claims](/books/health-tech/claims#dental-claims)). Treatment plans and case acceptance are Part 5's [Dental Practice](/books/health-tech/dental-practice#treatment-plans-and-case-acceptance) chapter.
 
 ## Coordination of Benefits
 
@@ -128,7 +128,7 @@ What the software stores: each coverage's order (the core `priority`, 1 to 3) pe
 
 An eligibility check is only as good as the member ID and birth date it sends. Most inquiry rejections are typos in one of them, or a patient's own data sent where the subscriber's should be. Practices capture insurance at three moments, each with its own failure:
 
-- **Online booking or intake,** where the patient types or photographs the card. Patients mistake the group number for the member ID and leave off prefixes, and a card photo is the evidence that settles it. Digital intake is the Part 5 chapter Digital Intake, Forms & Consent.
+- **Online booking or intake,** where the patient types or photographs the card. Patients mistake the group number for the member ID and leave off prefixes, and a card photo is the evidence that settles it. Digital intake is the Part 5 chapter [Digital Intake, Forms & Consent](/books/health-tech/digital-intake-and-forms).
 - **At the desk,** a scan of the card front and back.
 - **From the payer,** when a 271 corrects the name or birth date on file, or a search by name and birth date without a member ID finds the member (payers support some search options under the operating rules, but not uniformly).
 

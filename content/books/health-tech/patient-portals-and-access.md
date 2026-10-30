@@ -10,7 +10,7 @@ tags = ["health-tech", "patient-portals", "patient-access", "fhir", "proxy-acces
 
 A patient portal is the practice's or hospital's website and app for patients: see results and notes, message the care team, book and pay, fill forms, renew prescriptions, download records. Behind it sit three obligations that grew up separately and now meet in the same screens: HIPAA's right of access, the Cures Act's information blocking rules (which made immediate, electronic access the default), and CMS's API rules for payers, which give members their claims and clinical data through apps of their choice. A patient in 2026 reaches their record through a provider's portal, a payer's app, an app on their phone that pulls from both through FHIR APIs, or several of these at once.
 
-The scale is now ordinary. ASTP's analysis of the 2024 Health Information National Trends Survey found that more than three in four individuals were offered online access to their records by a provider or insurer and 65% accessed them at least once in the past year; proxy and caregiver access more than doubled, "from 24% in 2020 to 51% in 2024"; app-based access rose from 38% in 2020 to 57% in 2024; and 59% had multiple portals, while fewer than 1 in 10 used a third-party app to combine them. This chapter covers what portals do and who builds them, proxy access, the payer Patient Access API, certified patient APIs and phone-based records, open notes and results release, portal messaging and its billing as e-visits, and CMS's 2025 to 2026 health tech ecosystem push. It extends `patients`, `communications` and `consents` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). Identity proofing at enrollment belongs to Patient Matching & Identity; the proxy and personal representative model to Consent, Authorization & Proxies; app authorization to SMART on FHIR & App Platforms.
+The scale is now ordinary. ASTP's analysis of the 2024 Health Information National Trends Survey found that more than three in four individuals were offered online access to their records by a provider or insurer and 65% accessed them at least once in the past year; proxy and caregiver access more than doubled, "from 24% in 2020 to 51% in 2024"; app-based access rose from 38% in 2020 to 57% in 2024; and 59% had multiple portals, while fewer than 1 in 10 used a third-party app to combine them. This chapter covers what portals do and who builds them, proxy access, the payer Patient Access API, certified patient APIs and phone-based records, open notes and results release, portal messaging and its billing as e-visits, and CMS's 2025 to 2026 health tech ecosystem push. It extends `patients`, `communications` and `consents` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). Identity proofing at enrollment belongs to [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity); the proxy and personal representative model to [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization); app authorization to [SMART on FHIR & App Platforms](/books/health-tech/smart-on-fhir).
 
 ## How the Platforms Do It
 
@@ -36,9 +36,9 @@ A practice portal's functions, and the record each touches:
 | --- | --- | --- |
 | View results, notes, problems, medications, allergies, immunizations | The clinical record, read-only | Information blocking: available without delay unless an exception applies |
 | Message the care team | `communications` with channel `portal` | Response expectations and billing (below) |
-| Book, confirm, cancel | `appointments` | Scheduling & Online Booking |
-| Pay a balance, set up a plan | `payments`, `ledger_entries` | Payments in the Practice |
-| Fill intake forms, sign consents | `documents`, `consents` | Digital Intake, Forms & Consent |
+| Book, confirm, cancel | `appointments` | [Scheduling & Online Booking](/books/health-tech/scheduling-and-online-booking) |
+| Pay a balance, set up a plan | `payments`, `ledger_entries` | [Payments in the Practice](/books/health-tech/patient-payments) |
+| Fill intake forms, sign consents | `documents`, `consents` | [Digital Intake, Forms & Consent](/books/health-tech/digital-intake-and-forms) |
 | Request a refill | `medication_requests` | [E-Prescribing & Pharmacy](/books/health-tech/e-prescribing#the-script-transactions) |
 | Download or send records | `documents`, `disclosures` | HIPAA's right of access, 30 days at most (45 CFR 164.524) |
 | Connect an app | OAuth grants | The certified API and SMART |
@@ -47,7 +47,7 @@ Two design consequences. **The portal is a view, not a store.** It reads from th
 
 ## Proxy Access
 
-Proxy access is one person using a portal for another: a parent for a child, an adult child for a parent, a spouse, a caregiver. HINTS counts it as accessing the portal of "a person for whom they are providing care or making health care decisions," and its doubling since 2020 makes it a core feature, not an edge case. What a proxy may see depends on the legal relationship and on state law, and the data model for it (personal representatives, scoped grants, minors' confidential services) belongs to Consent, Authorization & Proxies. What the portal must do with that model:
+Proxy access is one person using a portal for another: a parent for a child, an adult child for a parent, a spouse, a caregiver. HINTS counts it as accessing the portal of "a person for whom they are providing care or making health care decisions," and its doubling since 2020 makes it a core feature, not an edge case. What a proxy may see depends on the legal relationship and on state law, and the data model for it (personal representatives, scoped grants, minors' confidential services) belongs to [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization). What the portal must do with that model:
 
 - **Separate logins, never shared credentials.** The proxy has their own account and a grant to the patient's record; a parent logging in with a child's password is the failure the grant exists to prevent, because it leaves no record of who acted.
 - **Scope by function.** Billing and scheduling without clinical notes, or results without messaging, are common grants; each portal function checks the grant's scopes.
@@ -63,18 +63,18 @@ CMS's Interoperability and Patient Access final rule (CMS-9115-F, published May 
 - **Standards:** the API must conform to the certification program's API standards in 45 CFR 170.215 (US Core, SMART App Launch, Bulk Data and related specifications).
 - **Faster decisions behind the data:** from January 1, 2026, standard prior authorization decisions for Medicare Advantage are due within 7 calendar days of the request (42 CFR 422.568).
 
-A follow-on proposal (CMS-0062-P, April 14, 2026) would add drug prior authorization, API endpoint and usage reporting, and FHIR for HIPAA transactions; as of October 2026 it is a proposed rule. Payer APIs from the payer's side (provider access, payer-to-payer) belong to Inside a Payer; the patient-facing consequence is that an app can now show a member's claims, prior authorizations and clinical data from the plan beside what the provider's portal shows.
+A follow-on proposal (CMS-0062-P, April 14, 2026) would add drug prior authorization, API endpoint and usage reporting, and FHIR for HIPAA transactions; as of October 2026 it is a proposed rule. Payer APIs from the payer's side (provider access, payer-to-payer) belong to [Inside a Payer](/books/health-tech/payer-operations#payer-apis); the patient-facing consequence is that an app can now show a member's claims, prior authorizations and clinical data from the plan beside what the provider's portal shows.
 
 ## Certified Patient APIs and Phone-Based Records
 
-Every certified EHR must support the standardized API criterion, 45 CFR 170.315(g)(10): respond to requests for a single patient's data and for groups of patients, using US Core, SMART App Launch and Bulk Data, with refresh tokens valid for at least three months. That criterion is what lets a patient connect an app to their provider's EHR without the provider building anything. As of October 2026, ASTP's HTI-5 final rule (published October 28, 2026, effective December 28, 2026) removes 14 certification criteria and revises 7; I didn't confirm from the rule text whether it revises (g)(10). <!-- source-gap: hti5-g10 | status | whether HTI-5 revises 45 CFR 170.315(g)(10) or its refresh token requirement | closes with: the HTI-5 regulation text for 170.315(g)(10) in the Federal Register or the updated eCFR after December 28, 2026 | checked: 2026-10-29 -->
+Every certified EHR must support the standardized API criterion, 45 CFR 170.315(g)(10): respond to requests for a single patient's data and for groups of patients, using US Core, SMART App Launch and Bulk Data, with refresh tokens valid for at least three months. That criterion is what lets a patient connect an app to their provider's EHR without the provider building anything. As of October 2026, ASTP's HTI-5 final rule (published October 28, 2026, effective December 28, 2026) removes 14 certification criteria and revises 7, and (g)(10) is neither, so its requirements, refresh tokens included, stand.
 
 The phone platforms are the most visible clients:
 
 - **Apple Health Records** pulls records from connected providers into HealthKit, where third-party apps can read them only with a separate, per-type permission and "clinical records are read-only."
 - **Android Health Connect** stores FHIR R4 and R4B medical records on device (allergies, conditions, encounters, immunizations, medications, observations, procedures and the people and places behind them), with the APIs in beta and Google's Play policy still being written.
 
-For a provider or vendor, the consequences are concrete. **Your API is part of your portal.** A result available in the portal but not through the API, or available later, is the kind of difference information blocking rules care about. **Third-party apps are authorized by the patient.** What a provider may do about an app it distrusts (warn the patient, refuse, or neither) is an information blocking question that Cures Act, Information Blocking & Certification owns; the portal's job is to show the patient what each app can reach. **Every grant is a record:** which app, which scopes, when granted, when refreshed, when revoked, so a patient can see and revoke their connections from the portal.
+For a provider or vendor, the consequences are concrete. **Your API is part of your portal.** A result available in the portal but not through the API, or available later, is the kind of difference information blocking rules care about. **Third-party apps are authorized by the patient.** What a provider may do about an app it distrusts (warn the patient, refuse, or neither) is an information blocking question that [Cures Act, Information Blocking & Certification](/books/health-tech/information-blocking-and-certification) owns; the portal's job is to show the patient what each app can reach. **Every grant is a record:** which app, which scopes, when granted, when refreshed, when revoked, so a patient can see and revoke their connections from the portal.
 
 ## Results Release and Open Notes
 
@@ -85,7 +85,7 @@ What the portal adds:
 - **Release is visible.** The portal shows when each result and note became available and whether the clinician has reviewed it, so a patient who sees an abnormal value before a call knows the call is coming.
 - **Patient preferences are set in the portal.** A patient who wants to hear about pathology from their doctor first can say so in advance, per category, and change it; that preference is what ONC's FAQ says can justify a delay "for no longer than necessary to fulfill each patient's request."
 - **Notes are the legal record, shown as written.** Amendments the patient requests go through HIPAA's amendment process and are shown as amendments, never silent edits.
-- **Sensitive data follows its own rules.** Substance use disorder records under Part 2, notes a clinician has segmented, and adolescent confidential services change what is released and to whom; State Health Privacy & Sensitive Data owns those rules.
+- **Sensitive data follows its own rules.** Substance use disorder records under Part 2, notes a clinician has segmented, and adolescent confidential services change what is released and to whom; [State Health Privacy & Sensitive Data](/books/health-tech/state-health-privacy#minors-and-their-records) owns those rules.
 
 ## Portal Messaging and E-Visits
 
@@ -110,11 +110,11 @@ Building it in:
 
 In July 2025 CMS launched a voluntary health technology ecosystem: on July 30, 2025 it announced that more than 60 companies had pledged to deliver results by the first quarter of 2026, that "21 networks pledged to meet the CMS Interoperability Framework criteria and become CMS Aligned Networks," and that seven EHRs committed to help "kill the clipboard." On April 9, 2026 CMS launched the first wave of tools, saying more than 700 organizations had pledged, with a Medicare App Library and a phone-based "Kill the Clipboard" check-in. Its Interoperability Framework (last modified August 6, 2026) asks networks to "provide or facilitate access to data using FHIR APIs" and to use identity credentials at "IAL2 or equivalent," with criteria 13 to 16 "In effect as of July 4th, 2026." Participation is voluntary, and CMS's pages don't publish a count of live aligned networks.
 
-For a portal or app builder the framework points the same direction as the rules: FHIR APIs, strong identity at enrollment, and patient-directed sharing at check-in. An intake flow that can pull a patient's medications and insurance from their phone instead of a clipboard is the use case the pledges name (Digital Intake, Forms & Consent owns intake).
+For a portal or app builder the framework points the same direction as the rules: FHIR APIs, strong identity at enrollment, and patient-directed sharing at check-in. An intake flow that can pull a patient's medications and insurance from their phone instead of a clipboard is the use case the pledges name ([Digital Intake, Forms & Consent](/books/health-tech/digital-intake-and-forms) owns intake).
 
 ## How to Build It
 
-The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). Proxy grants and personal representatives are `proxy_grants` and `personal_representatives`, owned by Consent, Authorization & Proxies; app authorizations are `oauth_grants`, owned by SMART on FHIR & App Platforms; identity verification is `identity_verifications`, owned by Patient Matching & Identity. The portal reads them all.
+The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). Proxy grants and personal representatives are both `personal_representatives` rows (a patient-granted proxy is one authority among several), owned by [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization); app authorizations are `oauth_grants`, owned by [SMART on FHIR & App Platforms](/books/health-tech/smart-on-fhir); identity verification is `identity_verifications`, owned by [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity). The portal reads them all.
 
 ```sql
 CREATE TABLE portal_accounts (           -- a person's login, which may reach several patients
@@ -212,6 +212,7 @@ Design decisions:
 - [42 CFR 422.568 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-42?part=422&section=422.568), 7-day standard prior authorization decisions from January 1, 2026
 - [45 CFR 164.524 (eCFR)](https://www.ecfr.gov/api/renderer/v1/content/enhanced/current/title-45?part=164&section=164.524), the 30-day right of access
 - [Federal Register: HTI-5 final rule (October 28, 2026)](https://www.govinfo.gov/content/pkg/FR-2026-10-28/html/2026-21943.htm), 14 criteria removed and 7 revised, effective December 28, 2026
+- [ASTP/ONC: HTI-5 final rule removals or revisions of certification criteria (October 26, 2026)](https://healthit.gov/resources/hti-5-final-rule-removals-or-revisions-of-certification-criteria/), the 14 removed and 7 revised criteria, which leave (g)(10) unchanged
 - [Federal Register: CMS-0062-P (April 14, 2026)](https://www.federalregister.gov/api/v1/documents/2026-07205.json), proposed drug prior authorization, API reporting and FHIR for HIPAA transactions
 
 **Agencies and data**

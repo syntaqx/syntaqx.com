@@ -96,7 +96,7 @@ A software platform that texts on its customers' behalf is an ISV in the carrier
 - **Many brands per account.** One ISV account can hold thousands of brands, each with its own tax identity, vetting score and campaigns, each billed its own registration and monthly fees.
 - **The ISV attests for its customers.** It collects their legal details and opt-in practices and submits them truthfully; a false registration is the ISV's violation as well as the customer's.
 - **Shared numbers are a registration problem.** A number belongs to one campaign of one brand. An ISV can't put two customers on one number, which is why platforms that give each customer "a texting number" provision one per customer.
-- **One bad tenant stays one bad tenant.** Because limits, filtering and fines attach to brands and campaigns, registering each customer separately is also the isolation boundary.
+- **One bad tenant stays one bad tenant.** Because limits, filtering and fines attach to brands and campaigns, registering each customer separately is also the isolation boundary. Health care senders add a layer on top, from the TCPA's healthcare exemption to what a practice may put in a text under HIPAA ([Two-Way Texting & Messaging](/books/health-tech/patient-texting)).
 
 ## What Registration Costs
 

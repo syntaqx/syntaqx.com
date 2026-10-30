@@ -24,7 +24,7 @@ What certified EHR developers publish to meet the API condition, which requires 
 | **Oracle Health (Millennium)** | FHIR R4 and R4 Bulk Data APIs "in your SMART application," a page of R4 public endpoints for patients, a linked page on API access and fees for registering an app, and DSTU 2 retired: "Oracle no longer supports DSTU 2 FHIR APIs" |
 | **Any certified developer** | The Certified Health IT Product List (CHPL) holds each certified product, its criteria, its real world testing plans and results, and its attestations; ONC's Conditions of Certification require a service base URL list published by December 31, 2024 |
 
-The shape is the same for every certified EHR: a public FHIR endpoint per customer that a patient's app can reach without a business deal, a registration process for apps, and published fees for anything beyond patient access. FHIR and SMART on FHIR & App Platforms cover the APIs themselves. The dental, optometry, therapy and veterinary practice systems in Part 5 mostly sit outside certification, which matters below: the certification conditions don't bind them, but information blocking still binds the practices that use them.
+The shape is the same for every certified EHR: a public FHIR endpoint per customer that a patient's app can reach without a business deal, a registration process for apps, and published fees for anything beyond patient access. FHIR and [SMART on FHIR & App Platforms](/books/health-tech/smart-on-fhir) cover the APIs themselves. The dental, optometry, therapy and veterinary practice systems in Part 5 mostly sit outside certification, which matters below: the certification conditions don't bind them, but information blocking still binds the practices that use them.
 
 ## The Actors
 
@@ -42,7 +42,7 @@ What a patient engagement or PMS vendor needs to notice: **you may not be an act
 
 **Electronic health information** is electronic PHI that would be in a designated record set, excluding psychotherapy notes and information compiled for litigation (45 CFR 171.102). It isn't limited to a data standard: HTI-1 (January 9, 2024) removed the paragraph that had limited EHI to the USCDI data elements for the rule's first period, so today the scope is the whole designated record set, in whatever system holds it, including billing records and images.
 
-A **practice** is anything an actor does or doesn't do that is likely to interfere with access, exchange or use: delays, fees, contract terms, technical choices, a policy of not enabling a feature the system has. Delayed release of results to the patient portal is the case providers met first; Labs, Imaging & Diagnostics covers immediate release.
+A **practice** is anything an actor does or doesn't do that is likely to interfere with access, exchange or use: delays, fees, contract terms, technical choices, a policy of not enabling a feature the system has. Delayed release of results to the patient portal is the case providers met first; [Labs, Imaging & Diagnostics](/books/health-tech/labs-and-diagnostics#results-release-under-cures) covers immediate release.
 
 ## The Ten Exceptions
 
@@ -102,7 +102,7 @@ The "Health Data, Technology, and Interoperability" rules, in order:
 | **HTI-1** | January 9, 2024 (effective February 8, 2024) | USCDI v3 as the baseline, with v1 expiring January 1, 2026; edition-less certification; the decision support interventions criterion with source attributes for predictive DSIs; the Insights Condition; SMART App Launch 2.0 and US Core 6.1.0; EHI's USCDI limit removed; new infeasibility conditions and the TEFCA manner exception |
 | **HTI-2 (TEFCA)** | December 16, 2024 | TEFCA provisions in Part 172 and TEFCA definitions in Part 171 |
 | **HTI-3 (Protecting Care Access)** | December 17, 2024 | The protecting care access exception |
-| **HTI-4** | August 4, 2025, inside the FY 2026 hospital inpatient payment rule (effective October 1, 2025) | Updated electronic prescribing, a real-time prescription benefit criterion, and electronic prior authorization criteria (Prior Authorization covers the workflow) |
+| **HTI-4** | August 4, 2025, inside the FY 2026 hospital inpatient payment rule (effective October 1, 2025) | Updated electronic prescribing, a real-time prescription benefit criterion, and electronic prior authorization criteria ([Prior Authorization](/books/health-tech/prior-authorization) covers the workflow) |
 | **HTI-5** | Proposed December 29, 2025; final October 28, 2026 (effective December 28, 2026, some changes January 1, 2027) | Removed 14 of the 60 criteria in effect and revised seven (39 unchanged), against a proposal to remove 34; among them the security tags criteria (b)(7) and (b)(8) and the care plan criterion (b)(9); narrowed decision support interventions (b)(11) by removing its source attribute ("model card") and intervention risk management requirements; descoped real world testing; reduced Insights to the bulk FHIR measure; retained the privacy and security criteria in 170.315(d) and the implantable device list criterion it had proposed to remove; information blocking proposals still pending |
 
 HTI-2's other proposals were partly withdrawn when HTI-5 was proposed. The agency itself changed names along the way: the HTI-5 proposal was issued by "ASTP/ONC" and the final rule by "ONC."
@@ -111,7 +111,7 @@ HTI-2's other proposals were partly withdrawn when HTI-5 was proposed. The agenc
 
 ### USCDI
 
-The **United States Core Data for Interoperability** is the floor of data elements certified APIs and exports must support: patient demographics, problems, medications, allergies, labs, vital signs, notes, procedures, care team, insurance and more, versioned yearly. As of October 2026 ONC has published v1 through v6 (v5 on July 16, 2024 and v6 on July 24, 2025) and a v7 draft. HTI-1 made v3 the certification baseline from January 1, 2026; later versions reach products through the Standards Version Advancement Process, under which a developer may voluntarily certify to a newer approved version. A system that maps its records to US Core FHIR profiles is mapping to a USCDI version (the FHIR chapter owns the profiles).
+The **United States Core Data for Interoperability** is the floor of data elements certified APIs and exports must support: patient demographics, problems, medications, allergies, labs, vital signs, notes, procedures, care team, insurance and more, versioned yearly. As of October 2026 ONC has published v1 through v6 (v5 on July 16, 2024 and v6 on July 24, 2025) and a v7 draft. HTI-1 made v3 the certification baseline from January 1, 2026; later versions reach products through the Standards Version Advancement Process, under which a developer may voluntarily certify to a newer approved version. A system that maps its records to US Core FHIR profiles is mapping to a USCDI version (the [FHIR](/books/health-tech/fhir#profiles-us-core-and-implementation-guides) chapter owns the profiles).
 
 ## How to Build It
 

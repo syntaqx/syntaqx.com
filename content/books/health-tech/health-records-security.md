@@ -87,7 +87,7 @@ Software that is a medical device, or runs inside one, has its own federal cyber
 - provide a software bill of materials, including commercial, open-source and off-the-shelf components;
 - meet any other requirements FDA sets by regulation.
 
-FDA's premarket guidance, *Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions*, was finalized September 27, 2023 and replaced by an updated final version on June 27, 2025 that adds a section on 524B. For a practice software vendor this matters at the edges: imaging sensors, intraoral cameras and diagnostic AI that are devices bring SBOMs and patch obligations into the practice's network, and HICP's ninth practice is about segmenting and inventorying them. Digital Health Apps & Devices covers when software becomes a device.
+FDA's premarket guidance, *Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions*, was finalized September 27, 2023 and replaced by an updated final version on June 27, 2025 that adds a section on 524B. For a practice software vendor this matters at the edges: imaging sensors, intraoral cameras and diagnostic AI that are devices bring SBOMs and patch obligations into the practice's network, and HICP's ninth practice is about segmenting and inventorying them. [Digital Health Apps & Devices](/books/health-tech/digital-health-and-devices#wellness-or-medical-device) covers when software becomes a device.
 
 ## Backups, Downtime and Recovery
 
@@ -164,7 +164,7 @@ CREATE TABLE restore_tests (              -- evidence the backups restore
 Design decisions:
 
 - **Break-the-glass is a grant with a window and a review.** The grant is the authorization the access layer checks; the audit event is the evidence; the review is a required follow-up with an outcome, so an unreviewed break is a visible backlog, not a forgotten log line.
-- **Sensitive records can stay sealed.** `excluded_categories` uses the same labels as the privacy chapter, so an emergency grant doesn't silently open Part 2 or psychotherapy notes unless a rule allows it.
+- **Sensitive records can stay sealed.** `excluded_categories` uses the same labels as the [privacy chapter](/books/health-tech/state-health-privacy), so an emergency grant doesn't silently open Part 2 or psychotherapy notes unless a rule allows it.
 - **Review cases point at evidence, not copies.** A case holds the IDs of the `audit_events` that triggered it, so investigation reads the tamper-evident log itself ([Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident)); a confirmed case can become a breach case without re-collecting anything.
 - **Downtime is data.** Each outage, whose systems it hit, when customers were told and when paper was back-entered are the facts a contingency plan, a customer's review and an OCR investigation all ask for.
 - **Restores are tested and recorded.** A backup without a recorded restore is an assumption; the restore record, with its duration, is the evidence for the contingency plan's testing specification and for the recovery time a customer was promised.

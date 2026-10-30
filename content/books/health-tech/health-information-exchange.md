@@ -167,8 +167,8 @@ Design decisions:
 - **Send exactly what you record.** `demographics_sent` holds the discovery payload, so a wrong-patient response can be traced to the inputs ([Patient Matching & Identity](/books/health-tech/patient-matching-and-identity)).
 - **Every responder's answer is kept,** including no-match and declined, because a clinician asking "did we check?" needs the list, and a pattern of declines is how a vendor learns its purpose is being questioned.
 - **Retrieved documents are deduplicated.** The same encounter's CCD arrives from several networks; `exchange_retrievals` maps each remote document to the one stored copy.
-- **Inbound requests are disclosures.** Answering another participant's query releases PHI; the decision, purpose and released documents are logged and linked to `disclosures`, the playbook's accounting shape (HIPAA in Practice in Part 3).
-- **Consent applies on the way out.** A patient's opt-out of network exchange, or sensitive records under Part 2 or state law, is checked before answering (State Health Privacy & Sensitive Data and Consent, Authorization & Proxies in Part 3).
+- **Inbound requests are disclosures.** Answering another participant's query releases PHI; the decision, purpose and released documents are logged and linked to `disclosures`, the playbook's accounting shape ([HIPAA in Practice](/books/health-tech/hipaa-in-practice#the-other-rights-a-product-handles) in Part 3).
+- **Consent applies on the way out.** A patient's opt-out of network exchange, or sensitive records under Part 2 or state law, is checked before answering ([State Health Privacy & Sensitive Data](/books/health-tech/state-health-privacy) and [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization) in Part 3).
 
 ## Auditing
 

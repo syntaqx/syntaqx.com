@@ -84,7 +84,7 @@ A merge in health care is a clinical event as much as a data one. When two chart
 - **Re-point, don't copy.** Encounters, documents, orders, results, appointments, charges and ledger entries are re-pointed to the survivor with the list recorded, so an unmerge can put them back.
 - **Unmerge is a clinical review.** After an overlay is split, someone reviews what was charted, ordered, prescribed and disclosed while the records were fused, and corrects each, because the record of care for both people was wrong.
 - **Merges propagate.** Send the merge to every system that holds the patient: the PMS, the EHR, the patient engagement platform, the clearinghouse, the portal. A reminder platform that never processed an A40 keeps texting a retired record.
-- **Merges are disclosures risks.** An overlay may have shown one patient's data to another through the portal or a statement; that is a potential breach to assess (HIPAA in Practice in Part 3).
+- **Merges are disclosures risks.** An overlay may have shown one patient's data to another through the portal or a statement; that is a potential breach to assess ([HIPAA in Practice](/books/health-tech/hipaa-in-practice#breach-notification-and-the-wall-of-shame) in Part 3).
 
 ## Identity Proofing and IAL2
 
@@ -94,7 +94,7 @@ NIST's Digital Identity Guidelines, SP 800-63-4 (final July 2025, superseding 80
 
 Health care has settled on **IAL2** as the bar for a person reaching their records across organizations. TEFCA's IAS SOP v3.0 requires proofing to at least NIST IAL2 by an approved credential service provider before a person's first use, re-proofing when verified demographics change or expire, and the verified demographics (name, birth date, address, email, mobile phone and state ID number) carried in a signed claims token on every request ([Networks & Exchange](/books/health-tech/health-information-exchange#individual-access-services)). The HL7 identity matching guide states the reason directly: verifying a person at a specific assurance level improves match input quality, and matching on a unique digital identifier is preferred over demographics alone.
 
-Inside one practice, a patient portal usually proofs more lightly: an activation code handed out at the desk or printed on a statement, a match on name, birth date and a recent visit, or a link sent to a phone already on file. That is a business decision with a privacy cost, and proxy access (a parent, a caregiver, an adult child) adds its own proofing and authority questions, covered in Consent, Authorization & Proxies in Part 3.
+Inside one practice, a patient portal usually proofs more lightly: an activation code handed out at the desk or printed on a statement, a match on name, birth date and a recent visit, or a link sent to a phone already on file. That is a business decision with a privacy cost, and proxy access (a parent, a caregiver, an adult child) adds its own proofing and authority questions, covered in [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization#minors-proxies-and-personal-representatives) in Part 3.
 
 ## How to Build It
 
