@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { sidebarLabel } from "@/lib/sidebar-labels";
+import { cn } from "@/lib/cn";
 
 /**
  * The docs' and books' sidebar. A title band, an overview link, then each
@@ -38,9 +39,10 @@ const isActive = (item: SidebarItem, pathname: string) =>
   pathname === item.href || (!!item.nested && pathname.startsWith(`${item.href}/`));
 
 const rowClass = (active: boolean) =>
-  `flex items-baseline gap-2.5 px-2.5 py-1.5 text-[0.8rem] leading-snug transition-colors ${
-    active ? "bg-foreground/7 font-medium text-foreground" : "text-dim hover:bg-foreground/4 hover:text-foreground"
-  }`;
+  cn(
+    "flex items-baseline gap-2.5 px-2.5 py-1.5 text-[0.8rem] leading-snug transition-colors",
+    active ? "bg-foreground/7 font-medium text-foreground" : "text-dim hover:bg-foreground/4 hover:text-foreground",
+  );
 
 const bandClass = "inst border-b border-border bg-surface px-4 py-2.5 text-[0.55rem] leading-[1.6] text-dim";
 
@@ -219,7 +221,7 @@ function SingleRow({
       href={item.href}
       onClick={onNavigate}
       aria-current={pathname === item.href ? "page" : undefined}
-      className={`${sectionRowClass} border-b border-border ${active ? "bg-surface text-accent" : "text-dim"}`}
+      className={cn(sectionRowClass, "border-b border-border", active ? "bg-surface text-accent" : "text-dim")}
     >
       <span className="w-3.5 shrink-0" aria-hidden />
       {item.title}
@@ -244,9 +246,11 @@ function Section({
       <Accordion.Header>
         <Accordion.Trigger
           // Transparent while closed, so opening doesn't fade the border in from white.
-          className={`${sectionRowClass} cursor-pointer border-b border-transparent data-[state=open]:border-border ${
-            current ? "text-accent" : "text-dim data-[state=open]:text-foreground"
-          }`}
+          className={cn(
+            sectionRowClass,
+            "cursor-pointer border-b border-transparent data-[state=open]:border-border",
+            current ? "text-accent" : "text-dim data-[state=open]:text-foreground",
+          )}
         >
           <ChevronRight
             size={14}
@@ -271,10 +275,10 @@ function Section({
                   onClick={onNavigate}
                   aria-current={pathname === item.href ? "page" : undefined}
                   // Unnumbered, the title lines up with the section's name.
-                  className={`${rowClass(active)} ${item.number === undefined ? "pl-7.5" : ""}`}
+                  className={cn(rowClass(active), item.number === undefined && "pl-7.5")}
                 >
                   {item.number !== undefined && (
-                    <span className={`w-5 shrink-0 font-mono text-[0.65rem] tabular-nums ${active ? "text-accent" : "text-dim"}`}>
+                    <span className={cn("w-5 shrink-0 font-mono text-[0.65rem] tabular-nums", active ? "text-accent" : "text-dim")}>
                       {String(item.number).padStart(2, "0")}
                     </span>
                   )}
@@ -308,7 +312,7 @@ export function MobileSidebar({
         className="flex w-full items-center justify-between gap-2 border border-border bg-surface px-3 py-2.5 text-sm text-foreground"
       >
         <span className="truncate">{current}</span>
-        <ChevronDown size={14} className={`shrink-0 text-dim transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown size={14} className={cn("shrink-0 text-dim transition-transform", open && "rotate-180")} />
       </button>
       {open && (
         <div className="rail-scroll mt-2 max-h-[70vh] overflow-y-auto border border-border bg-background">

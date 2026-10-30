@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { patterns } from "@/lib/ui";
+import { cn } from "@/lib/cn";
 
 const linkClass = (active: boolean) =>
   `-ml-px flex items-center gap-2 border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors ${
@@ -65,7 +66,7 @@ export function MobileUiSidebar() {
         <span className="truncate">{currentTitle}</span>
         <ChevronDown
           size={14}
-          className={`text-dim shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
+          className={cn("text-dim shrink-0 transition-transform", open && "rotate-180")}
         />
       </button>
       {open && (

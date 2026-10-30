@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowRight, BookOpen, CornerDownLeft, FileText, Hash, History, Loader2, Search, X } from "lucide-react";
 import { BOOKS, getBook } from "@/lib/books";
+import { cn } from "@/lib/cn";
 
 type Scope = "all" | "docs" | "books" | "posts";
 const SCOPES: { value: Scope; label: string }[] = [
@@ -339,9 +340,12 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
   });
 
   const rowClass = (key: string) =>
-    `relative flex cursor-pointer gap-3 px-4 py-2.5 transition-colors ${
-      active === key ? "bg-surface text-foreground before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-accent" : "text-muted"
-    }`;
+    cn(
+      "relative flex cursor-pointer gap-3 px-4 py-2.5 transition-colors",
+      active === key
+        ? "bg-surface text-foreground before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-accent"
+        : "text-muted",
+    );
 
   const excerptClass =
     "line-clamp-2 text-xs leading-relaxed text-dim [&_mark]:bg-transparent [&_mark]:font-medium [&_mark]:text-accent";
@@ -352,7 +356,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
         {loading ? (
           <Loader2 size={17} className="shrink-0 animate-spin text-accent" />
         ) : (
-          <Search size={17} className={`shrink-0 ${term ? "text-accent" : "text-dim"}`} />
+          <Search size={17} className={cn("shrink-0", term ? "text-accent" : "text-dim")} />
         )}
         <input
           ref={inputRef}
@@ -411,9 +415,10 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
                 setSelected(0);
                 inputRef.current?.focus();
               }}
-              className={`inst -mb-px flex shrink-0 cursor-pointer items-center gap-1.5 border-b-2 px-2 py-2.5 transition-colors ${
-                scope === s.value ? "border-accent text-foreground" : "border-transparent text-dim hover:text-foreground"
-              }`}
+              className={cn(
+                "inst -mb-px flex shrink-0 cursor-pointer items-center gap-1.5 border-b-2 px-2 py-2.5 transition-colors",
+                scope === s.value ? "border-accent text-foreground" : "border-transparent text-dim hover:text-foreground",
+              )}
             >
               {s.label}
               <span className="tabular-nums text-dim">{counts[s.value]}</span>
@@ -467,11 +472,11 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
                   {active === h.url && <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />}
                 </a>
                 {h.headings.map((s) => (
-                  <a key={s.url} href={s.url} {...rowProps(s.url, s.url)} className={`${rowClass(s.url)} pl-10`}>
+                  <a key={s.url} href={s.url} {...rowProps(s.url, s.url)} className={cn(rowClass(s.url), "pl-10")}>
                     <Hash size={12} className="mt-1 shrink-0 text-dim" />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[0.8rem]">{s.title}</span>
-                      <span className={`${excerptClass} line-clamp-1!`} dangerouslySetInnerHTML={{ __html: s.excerpt }} />
+                      <span className={cn(excerptClass, "line-clamp-1!")} dangerouslySetInnerHTML={{ __html: s.excerpt }} />
                     </span>
                     {active === s.url && <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />}
                   </a>

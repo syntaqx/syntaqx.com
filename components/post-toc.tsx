@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Heading } from "@/lib/posts";
+import { cn } from "@/lib/cn";
 
 /**
  * Sticky contents rail that follows along: highlights the section you're
@@ -78,14 +79,13 @@ export function PostToc({
             key={h.id}
             href={`#${h.id}`}
             aria-current={on ? "location" : undefined}
-            className={`relative grid grid-cols-[2rem_1fr] py-2 pl-2 text-[0.8rem] leading-snug transition-colors before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:bg-accent before:transition-transform before:duration-200 ${
-              on
-                ? "text-foreground before:scale-y-100"
-                : "text-dim before:scale-y-0 hover:text-foreground"
-            }`}
+            className={cn(
+              "relative grid grid-cols-[2rem_1fr] py-2 pl-2 text-[0.8rem] leading-snug transition-colors before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:bg-accent before:transition-transform before:duration-200",
+              on ? "text-foreground before:scale-y-100" : "text-dim before:scale-y-0 hover:text-foreground",
+            )}
           >
             <span
-              className={`font-voice text-base leading-none font-semibold ${on ? "text-accent" : "text-border-hover"}`}
+              className={cn("font-voice text-base leading-none font-semibold", on ? "text-accent" : "text-border-hover")}
             >
               {String(i + 1).padStart(2, "0")}
             </span>

@@ -20,15 +20,16 @@ function Marker({ on, list = false }: { on: boolean; list?: boolean }) {
   return (
     <span
       aria-hidden
-      className={`absolute bg-accent ${list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-0 -bottom-px h-0.5"}`}
+      className={cn("absolute bg-accent", list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-0 -bottom-px h-0.5")}
     />
   );
 }
 
 const itemClass = (active: boolean) =>
-  `relative flex items-center gap-2 whitespace-nowrap px-3 transition-colors focus-visible:-outline-offset-2 ${
-    active ? "text-foreground" : "text-dim hover:text-foreground"
-  }`;
+  cn(
+    "relative flex items-center gap-2 whitespace-nowrap px-3 transition-colors focus-visible:-outline-offset-2",
+    active ? "text-foreground" : "text-dim hover:text-foreground",
+  );
 
 export function Nav() {
   const pathname = usePathname();
@@ -110,14 +111,14 @@ function NavDisclosure({
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((o) => !o)}
-        className={`${itemClass(active || open)} cursor-pointer uppercase`}
+        className={cn(itemClass(active || open), "cursor-pointer uppercase")}
       >
         <Marker on={active} />
         {group.label}
         <ChevronDown
           size={10}
           aria-hidden
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
+          className={cn("transition-transform", open && "rotate-180")}
         />
       </button>
       <ul
@@ -133,7 +134,7 @@ function NavDisclosure({
                 href={link.href}
                 aria-current={on ? "page" : undefined}
                 onClick={() => setOpen(false)}
-                className={`${itemClass(on)} py-2.5`}
+                className={cn(itemClass(on), "py-2.5")}
               >
                 <Marker on={on} list />
                 {link.label}

@@ -1,4 +1,5 @@
 import { fetchGitHubStats } from "@/lib/github";
+import { cn } from "@/lib/cn";
 
 interface Stat {
   value: string;
@@ -21,7 +22,7 @@ const COLS: Record<number, string> = {
 function Strip({ stats }: { stats: Stat[] }) {
   return (
     <section
-      className={`-mx-6 mb-20 grid grid-cols-2 gap-px border-y border-border bg-border ${COLS[stats.length] ?? "md:grid-cols-4"}`}
+      className={cn("-mx-6 mb-20 grid grid-cols-2 gap-px border-y border-border bg-border", COLS[stats.length] ?? "md:grid-cols-4")}
     >
       {stats.map((s) => {
         const body = (

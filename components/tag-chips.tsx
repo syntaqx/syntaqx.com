@@ -26,11 +26,10 @@ export function TagChips({
             key={tag.slug}
             href={`/tags/${tag.slug}`}
             aria-current={isActive ? "page" : undefined}
-            className={`inst inline-flex items-center gap-2 border px-2.5 py-1.5 transition-colors ${
-              isActive
-                ? "border-accent text-accent"
-                : "border-border text-muted hover:border-accent hover:text-accent"
-            }`}
+            className={cn(
+              "inst inline-flex items-center gap-2 border px-2.5 py-1.5 transition-colors",
+              isActive ? "border-accent text-accent" : "border-border text-muted hover:border-accent hover:text-accent",
+            )}
           >
             <span>{tag.label}</span>
             {showCounts && <span className="text-dim">{tag.count}</span>}

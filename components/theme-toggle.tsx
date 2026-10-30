@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Sun, Moon, Monitor, Check } from "lucide-react";
 import { Menu, MenuContent, MenuRadioGroup, MenuRadioItem, MenuTrigger } from "@/components/menu";
+import { cn } from "@/lib/cn";
 
 type Theme = "light" | "dark" | "system";
 
@@ -75,11 +76,10 @@ export function ThemeToggle() {
               <MenuRadioItem
                 key={t.value}
                 value={t.value}
-                className={`w-full items-center gap-2 py-1.5 text-xs ${
-                  active
-                    ? "text-accent"
-                    : "text-dim data-highlighted:text-foreground"
-                }`}
+                className={cn(
+                  "w-full items-center gap-2 py-1.5 text-xs",
+                  active ? "text-accent" : "text-dim data-highlighted:text-foreground",
+                )}
               >
                 <Icon size={12} />
                 {t.label}
