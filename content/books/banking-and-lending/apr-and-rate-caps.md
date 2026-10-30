@@ -90,7 +90,7 @@ The disclosed APR is an input to rules that change what the lender may do:
 - **HOEPA high-cost mortgages** for 2026: among other triggers, points and fees above 5% of the total loan amount for loans of $27,592 or more, or above the lesser of $1,380 or 8% for smaller loans.
 - **State caps** measured as an APR, and the MLA's MAPR (below).
 
-The worked loan's points and fees ($4,995) are well under the 3% cap ($9,000) for its size; its 6.662% APR is a higher-priced loan or not depending on the APOR for the week its rate was set, which is why the APOR table is reference data with an effective week and the rate-set date is a recorded event. The mortgage program side of ATR/QM is in Mortgages & Home Equity.
+The worked loan's points and fees ($4,995) are well under the 3% cap ($9,000) for its size; its 6.662% APR is a higher-priced loan or not depending on the APOR for the week its rate was set, which is why the APOR table is reference data with an effective week and the rate-set date is a recorded event. The mortgage program side of ATR/QM is in [Ability to Repay and Qualified Mortgages](/books/banking-and-lending/mortgages#ability-to-repay-and-qualified-mortgages).
 
 ## The Military Lending Act
 
@@ -185,11 +185,7 @@ ALTER TABLE loans
   ADD COLUMN rate_authority     TEXT CHECK (rate_authority IN ('nba_85', 'fdia_27', 'hola',
                                   'fcua', 'state_license', 'state_usury')),
   ADD COLUMN rate_home_state    CHAR(2),       -- the exporting bank's state, if exported
-  ADD COLUMN borrower_state     CHAR(2),       -- at consummation: what opt-outs and caps read
-  ADD COLUMN apor_rate_set_date DATE,          -- mortgages: the week the APOR comparison uses
-  ADD COLUMN qm_status          TEXT CHECK (qm_status IN ('general_qm_safe_harbor',
-                                  'general_qm_rebuttable', 'seasoned_qm', 'small_creditor_qm',
-                                  'non_qm', 'exempt'));
+  ADD COLUMN borrower_state     CHAR(2);       -- at consummation: what opt-outs and caps read
 
 CREATE TABLE covered_borrower_checks (       -- the MLA lookup before every offer
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -221,7 +217,7 @@ How it runs:
 1. **Classify, then solve.** The offer engine classifies every charge through `finance_charge_rules` for the product scope and date, computes the amount financed and finance charge, solves the APR, and writes `apr_computations` with the charges and the payment stream as solved. The same row is what the disclosure renders and what the caps read, so the APR shown, the APR tested and the APR on `loans.apr` are one number. Solver accuracy is tested against the FFIEC tool and Appendix J's published examples in CI ([Rounding](/docs/payments/money#rounding)).
 2. **Check the borrower before pricing.** `covered_borrower_checks` runs before any offer; a covered result switches the cap evaluation to the MAPR, computed with `in_mapr` charges, and writes a second `apr_computations` row.
 3. **Evaluate every applicable cap** from `rate_cap_rules` on the borrower's state, the lender of record's charter and `rate_authority`, and the date, including opt-out rules and their litigation status, and write `rate_cap_evaluations` for each, pass or fail.
-4. **Mortgage tests read the same row:** the APR against the APOR for `apor_rate_set_date`, the points and fees against the year's thresholds, and the result on `qm_status`.
+4. **Mortgage tests read the same row:** the APR, APOR, rate-set date, points and fees and the result go on `atr_qm_determinations`, which [Mortgages & Home Equity](/books/banking-and-lending/mortgages#how-to-build-it) defines; the APR it stores is the `apr_computations` rate, never a recomputation.
 5. **SCRA benefits repost history.** Applying a benefit reverses and reposts interest from the start of `benefit_period` at the capped rate, records the forgiven amount as a journal entry against interest income, and regenerates the payment schedule as a new version ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
 6. **Ownership history supports the partnership.** Every sale of a bank-originated loan keeps the original lender of record and `rate_authority` on the loan, which is what a valid-when-made defense and a true lender inquiry both read.
 

@@ -106,7 +106,7 @@ One limit carries into servicing: E-SIGN's consent rules don't reach notices of 
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). The loan is a `loans` row, the home a `collateral` row whose `lien_ref` holds the recorded instrument, and every signed document and notice a `disclosures` row or a closing document. This chapter adds the closing, its documents and notarizations, the eNote and its control history, rescission, and post-closing items, and puts the MIN on the loan.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). The loan is a `loans` row, the home a `collateral` row whose `lien_ref` holds the recorded instrument, and every signed document and notice a `disclosures` row or a closing document. [Mortgages & Home Equity](/books/banking-and-lending/mortgages#how-to-build-it) defines `rescission_periods` (consummation, notice and material disclosure times, expiry, extension, waiver, funds release), which the closing reads. This chapter adds the closing, its documents and notarizations, the eNote and its control history, and post-closing items, and puts the MIN on the loan.
 
 ```sql
 ALTER TABLE loans
@@ -186,19 +186,6 @@ CREATE TABLE enote_control_transfers (       -- the eRegistry history, as confir
   rejected_reason       TEXT
 );
 
-CREATE TABLE rescission_periods (            -- 12 CFR 1026.23, per consumer with the right
-  closing_id            UUID NOT NULL REFERENCES closings (id),
-  party_id              UUID NOT NULL REFERENCES parties (id),
-  notice_disclosure_id  UUID REFERENCES disclosures (id),
-  starts_on             DATE NOT NULL,         -- latest of consummation, notice, material disclosures
-  expires_at            TIMESTAMPTZ NOT NULL,  -- midnight, third specific business day
-  extended_until        DATE,                  -- up to three years if disclosures were defective
-  waived                BOOLEAN NOT NULL DEFAULT FALSE,
-  waiver_ref            TEXT,
-  rescinded_case_id     UUID REFERENCES cases (id),
-  PRIMARY KEY (closing_id, party_id)
-);
-
 CREATE TABLE post_closing_items (
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id            UUID NOT NULL REFERENCES loans (account_id),
@@ -215,7 +202,7 @@ CREATE TABLE post_closing_items (
 How it runs:
 
 1. **Eligibility decides the closing type.** Before scheduling, a rule set reads the property state's notarization law, the county's eRecording, the title insurer, the investor's eMortgage approval and the warehouse lender's eNote acceptance, and writes `closings.closing_type` with the inputs.
-2. **Funding has a gate.** For a rescindable transaction, `funding_gate_at` is computed from `rescission_periods` with the specific business-day calendar (the same calendar [TRID & Mortgage Disclosures](/books/banking-and-lending/mortgage-disclosures#how-to-build-it) uses), and the funding job won't release the wire before it or while any consumer's period is open or rescinded.
+2. **Funding has a gate.** For a rescindable transaction, `funding_gate_at` copies `rescission_periods.expires_at`, computed with the specific business-day calendar (the same calendar [TRID & Mortgage Disclosures](/books/banking-and-lending/mortgage-disclosures#how-to-build-it) uses), and the funding job won't release the wire before it, or at all once `rescinded_at` is set. Each consumer's rescission notice is a `disclosures` row, and the latest delivery is what the period reads.
 3. **An eNote is registered within a business day.** Signing writes `enotes` with the seal's digest; registration on the eRegistry is a job with a deadline of one business day, and its confirmation writes the first `enote_control_transfers` row. The lender's copy of the eNote is never the authoritative one; `document_ref` points at a marked copy, and the vault holds the original ([Storage and Retrieval](/docs/compliance/electronic-signatures#storage-and-retrieval)).
 4. **Sales move control, then ownership.** A sale writes `loans.owner` only after the eRegistry confirms the transfer of control to the investor and the release of the warehouse lender's secured party; a rejected transfer opens an exception.
 5. **Notarizations carry their retention.** `retain_until` is the longest of the state's requirement and the lender's policy, and the recording reference survives a change of notary platform.

@@ -585,7 +585,7 @@ Each later chapter extends a defined part of this spine. The chapters and the ta
 | [Model Risk Management](/books/banking-and-lending/model-risk#how-to-build-it) | `credit_decisions`; adds `model_inventory`, `model_versions`, `model_validations`, `model_findings`, `model_monitoring_runs` |
 | [APR, Finance Charges & Rate Caps](/books/banking-and-lending/apr-and-rate-caps#how-to-build-it) | `loans`, `disclosures`, `rate_cap_rules`; adds `finance_charge_rules`, `apr_computations`, `covered_borrower_checks`, `scra_benefits` |
 | [TRID & Mortgage Disclosures](/books/banking-and-lending/mortgage-disclosures#how-to-build-it) | `applications`, `disclosures`; adds `legal_public_holidays`, `closing_cost_items`, `changed_circumstances`, `disclosure_deadlines`, `tolerance_cures` |
-| [Closing, eNotes & MERS](/books/banking-and-lending/closing-and-enotes#how-to-build-it) | `loans`, `collateral`, `disclosures`; adds `closings`, `closing_documents`, `notarizations`, `enotes`, `enote_control_transfers`, `rescission_periods`, `post_closing_items` |
+| [Closing, eNotes & MERS](/books/banking-and-lending/closing-and-enotes#how-to-build-it) | `loans`, `collateral`, `disclosures`; adds `closings`, `closing_documents`, `notarizations`, `enotes`, `enote_control_transfers`, `post_closing_items` |
 | Loan Servicing | `loans`, `loan_payments`, `payment_allocations`, `payment_schedules` |
 | Mortgage Servicing, Escrow & Loss Mitigation | `loans`, `schedule_installments`, `cases` |
 | Furnishing Credit Data | `accounts`, `loans`, `cases` |
