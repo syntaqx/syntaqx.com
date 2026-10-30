@@ -99,7 +99,7 @@ What a platform that offers financing builds:
 - **Two ledgers, never one.** A financed balance is paid off on the practice's ledger by the lender's funding (a payment of type `financing`, net of the merchant fee, which is a practice expense, not a patient credit); what the patient owes the lender is not on the practice's books. A refund after financing goes back to the lender, not to the patient's card.
 - **Credit reporting is the lender's, not the practice's.** The CFPB's January 2025 rule barring medical debt from credit reports was vacated by the Eastern District of Texas on July 11, 2025, on the joint request of the Bureau and the plaintiffs; state laws on medical debt reporting are covered in [Patient Statements, Estimates & Collections](/books/health-tech/patient-financial-experience#medical-debt-and-credit-reporting).
 
-The lender's side of these products (underwriting, TILA disclosures, servicing) is credit, and belongs to the Banking & Lending volume.
+The lender's side of these products (underwriting, TILA disclosures, servicing) is credit, and belongs to the Banking & Lending volume: a medical credit card's deferred-interest promotion is one of a card's [balance segments](/books/banking-and-lending/credit-cards#balance-segments-and-aprs), governed by [the CARD Act rules](/books/banking-and-lending/credit-cards#the-card-act-rules), and a point-of-sale plan is an [installment loan](/books/banking-and-lending/installment-loans#the-product-and-its-disclosures) with its own disclosures and [state rate caps](/books/banking-and-lending/installment-loans#state-rate-caps-as-data).
 
 ## Surcharging at the Front Desk
 

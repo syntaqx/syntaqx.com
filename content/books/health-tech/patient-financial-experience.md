@@ -95,7 +95,7 @@ A payment plan is the practice's agreement to take a balance in installments, us
 
 - **The plan is against a balance that can change.** A late insurance payment or an adjustment reduces the balance, and the plan recomputes its remaining installments; it never overcharges.
 - **New charges don't join automatically.** A new visit's balance is added to the plan only with the patient's agreement.
-- **A plan is the practice's receivable;** third-party financing (a medical credit card or loan) is the lender's, with its own law, and the two are kept apart in the ledger and the patient's view. Banking & Lending will cover the credit products themselves.
+- **A plan is the practice's receivable;** third-party financing (a medical credit card or loan) is the lender's, with its own law, and the two are kept apart in the ledger and the patient's view. The credit products themselves are covered in Banking & Lending's [Credit Cards](/books/banking-and-lending/credit-cards) and [Installment Loans](/books/banking-and-lending/installment-loans).
 - **Missed payments follow the statement cadence,** not instant collection.
 
 ## Medical Debt and Credit Reporting
