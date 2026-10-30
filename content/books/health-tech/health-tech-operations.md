@@ -20,7 +20,7 @@ As of October 2026, from public status pages and documentation:
 | **Weave** | Eleven components: phone service, SMS, automated schedule reminders, reviews, call recording, email marketing, fax, mobile app, desktop application, payments and the portal | Components are the features a front desk uses, not the services behind them |
 | **NexHealth** | Patient experience site, developer portal, authentication, analytics, practice overview, scheduling, practice financials, sandbox, patient communications, and a Synchronizer group of 16 components | The sync to each practice management system family is a component of its own |
 | **DrChrono** | The web EHR, iPad EHR, check-in kiosk, telehealth, the patient app and portal, and a third-party group naming its vendors: fax, two-factor authentication, payments, SMS, file storage, clearinghouses (Change Healthcare, TriZetto, Waystar), labs (Quest, Labcorp), Health Gorilla, ID.me | Upstream vendors are listed by name, so a practice can see a clearinghouse outage as one |
-| **Epic (as a hospital runs it)** | Each health system runs its own downtime process | Business Continuity Access: a read-only copy containing "all documentation, orders, results, etc., up to the moment the system went down," downtime reports printed from designated BCA PCs, paper during the outage and re-entry after |
+| **Epic (as a hospital runs it)** | Each health system runs its own downtime process | Business Continuity Access: an Epic Read Only copy containing "all documentation, orders, results, etc., up to the moment the system went down," downtime reports printed from designated BCA PCs, paper during the outage and re-entry after |
 
 Three patterns run through the table:
 

@@ -17,7 +17,7 @@ As of October 2026, from filings and company pages:
 
 | Company | Role | What its public record says |
 | --- | --- | --- |
-| **IQVIA** | Largest CRO and data company | 2025 revenue $16,310 million, R&D Solutions $8,896 million, contracted backlog $32.7 billion at year end; reorganized into Commercial Solutions and R&D Solutions from January 1, 2026 (10-K) |
+| **IQVIA** | Largest CRO and data company | 2025 revenue $16,310 million, R&D Solutions $8,896 million, R&D Solutions contracted backlog $32.7 billion at year end; reorganized into Commercial Solutions and R&D Solutions from January 1, 2026 (10-K) |
 | **Medpace** | Full-service CRO | 2025 revenue $2,530.2 million, backlog $3,027.2 million, about 6,200 employees in 46 countries (10-K) |
 | **ICON** | Full-service CRO | "Clinical Research Organisation (CRO) for Drug Development," with full service outsourcing and flexible support for biotech |
 | **Medidata** (Dassault Systèmes) | Trial software platform | "42 K+ clinical trials," "13 M+ patients," and "80% of FDA novel drug approvals used Medidata" |
@@ -32,12 +32,12 @@ Three patterns:
 
 ## Phases and the IND
 
-FDA describes drug development in phases (21 CFR 312.21):
+FDA describes drug development before approval in three phases (21 CFR 312.21), with a fourth after it (21 CFR 312.85):
 
 - **Phase 1** "includes the initial introduction of an investigational new drug into humans," typically 20 to 80 subjects, to learn safety, metabolism and dosing.
 - **Phase 2** are "controlled clinical studies conducted to evaluate the effectiveness of the drug" for a particular indication, usually "involving no more than several hundred subjects."
 - **Phase 3** "usually include from several hundred to several thousand subjects," gathering the evidence of effectiveness and safety for a marketing application.
-- **Phase 4** studies are conducted after approval, often as a condition of it.
+- **Phase 4** studies are postmarketing studies FDA may seek the sponsor's agreement to conduct "Concurrent with marketing approval," to learn more about the drug's risks, benefits and optimal use.
 
 A sponsor files an Investigational New Drug application before testing an unapproved drug in people; it goes into effect "Thirty days after FDA receives the IND, unless FDA notifies the sponsor" of a clinical hold (21 CFR 312.40), and an annual report is due "within 60 days of the anniversary date that the IND went into effect" (21 CFR 312.33). Devices follow a parallel path under an investigational device exemption. The IND is the anchor record: protocols, amendments, investigators, safety reports and annual reports all attach to it.
 
@@ -70,7 +70,7 @@ The FDA Amendments Act of 2007, section 801, and its regulation (42 CFR Part 11,
 - **Applicable clinical trials.** For trials initiated on or after January 18, 2017: an interventional drug or biologic trial whose "Study Phase is other than phase 1," or an interventional device trial whose "Primary Purpose" is "other than a feasibility study," of an FDA-regulated product, with a US site, a US-manufactured product for export, or an IND or IDE (42 CFR 11.22).
 - **Registration.** "21 calendar days after the first human subject is enrolled" (42 CFR 11.24).
 - **Results.** "no later than 1 year after the primary completion date," with delayed submission allowed for unapproved products under a certification, up to 2 years after the certification (42 CFR 11.44).
-- **Penalties.** Civil money penalties under 21 U.S.C. 333(f)(3) are $15,107 per violation and $15,107 per day for violations not corrected within 30 days of notice, at the inflation-adjusted amounts last amended January 28, 2026 (45 CFR 102.3).
+- **Penalties.** Civil money penalties under 21 U.S.C. 333(f)(3) are up to $15,107 for all violations adjudicated in a single proceeding and $15,107 per day for violations not corrected within 30 days of notice, at the inflation-adjusted amounts last amended January 28, 2026 (45 CFR 102.3).
 - **Enforcement in practice.** FDA's notices-of-noncompliance page, current as of October 22, 2026, lists 10 notices to 9 sponsors since 2021, the most recent two dated October 7, 2026, and no civil money penalty actions.
 
 The record behind registration is the protocol's metadata (arms, interventions, outcomes, eligibility, sites, status), kept current: recruitment status and site lists must be updated as they change, and the results upload (participant flow, baseline, outcomes, adverse events) is a structured dataset derived from the study database. Registration also has to agree with the consent form statement above and with the WHO-registry or EU registration the same trial may need (the EU side is in [The EU](/books/health-tech/eu-health-data)).
@@ -79,7 +79,7 @@ The record behind registration is the protocol's metadata (arms, interventions, 
 
 Enrollment is the slowest part of most trials. Recruitment channels include site patient databases and EHR queries, referral networks, advertising (IRB-approved), registries and patient communities, and vendors that pre-screen online; each pre-screen collects health information about people who are not yet subjects, so privacy terms and IRB-approved materials govern what is asked and kept. Where a site uses its EHR to find candidates, the HIPAA research rules apply (preparatory to research reviews and waivers of authorization), which [De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use) covers.
 
-**Diversity action plans.** The Food and Drug Omnibus Reform Act of 2022 requires sponsors of certain late-stage trials to submit diversity action plans. FDA's draft guidance (June 2024) was removed from FDA's site in January 2025 and restored under a court order, and the restored page carries an HHS banner rejecting its content; as of October 2026 it is still a draft marked "Not for implementation," and the Federal Register shows no final guidance. Because the statutory requirement applies to studies starting enrollment a set period after final guidance is published, the clock has not started; a sponsor's system should still be able to record a plan, enrollment targets and actual enrollment by demographic group.
+**Diversity action plans.** The Food and Drug Omnibus Reform Act of 2022 requires sponsors of certain late-stage trials to submit diversity action plans. FDA's draft guidance (June 2024) was removed from FDA's site in January 2025 and restored under a court order, and the restored page carries an HHS banner calling its gender-related content inaccurate; as of October 2026 it is still a draft marked "Not for implementation," and the Federal Register shows no final guidance. Because the statutory requirement applies to studies starting enrollment a set period after final guidance is published, the clock has not started; a sponsor's system should still be able to record a plan, enrollment targets and actual enrollment by demographic group.
 
 ## How to Build It
 
@@ -187,6 +187,7 @@ FDA inspects sites (bioresearch monitoring) and sponsors; the questions are alwa
 **Regulations**
 
 - [21 CFR 312.21: Phases of an investigation (Cornell LII)](https://www.law.cornell.edu/cfr/text/21/312.21), phase 1, 2 and 3 definitions and typical sizes
+- [21 CFR 312.85: Phase 4 studies (eCFR)](https://www.ecfr.gov/current/title-21/part-312/section-312.85), postmarketing studies agreed concurrent with approval
 - [21 CFR 312.40: General requirements for use of an investigational new drug (eCFR)](https://www.ecfr.gov/current/title-21/part-312/section-312.40), the IND in effect 30 days after receipt unless on clinical hold
 - [21 CFR 312.33: Annual reports (eCFR)](https://www.ecfr.gov/current/title-21/part-312/section-312.33), due within 60 days of the IND anniversary
 - [21 CFR 312.52: Transfer of obligations to a contract research organization (eCFR)](https://www.ecfr.gov/current/title-21/part-312/section-312.52), written transfer, untransferred obligations, CRO subject to the same actions
@@ -199,7 +200,7 @@ FDA inspects sites (bioresearch monitoring) and sponsors; the questions are alwa
 - [42 CFR 11.22: Applicable clinical trials (eCFR)](https://www.ecfr.gov/current/title-42/part-11/section-11.22), drug and device criteria for trials from January 18, 2017
 - [42 CFR 11.24: Registration deadline (eCFR)](https://www.ecfr.gov/current/title-42/part-11/section-11.24), 21 days after first enrollment
 - [42 CFR 11.44: Results submission deadline (eCFR)](https://www.ecfr.gov/current/title-42/part-11/section-11.44), 1 year after primary completion, delayed submission
-- [45 CFR 102.3: Civil monetary penalty adjustments (eCFR)](https://www.ecfr.gov/current/title-45/part-102/section-102.3), $15,107 per violation and per day for ClinicalTrials.gov violations
+- [45 CFR 102.3: Civil monetary penalty adjustments (eCFR)](https://www.ecfr.gov/current/title-45/part-102/section-102.3), $15,107 per proceeding and per uncorrected day for ClinicalTrials.gov violations
 
 **FDA**
 
@@ -213,7 +214,7 @@ FDA inspects sites (bioresearch monitoring) and sponsors; the questions are alwa
 
 **Filings and companies**
 
-- [IQVIA: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1478242/000162828026008322/iqv-20251231.htm), revenue by segment, backlog, 2026 segment change
+- [IQVIA: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1478242/000162828026008322/iqv-20251231.htm), revenue by segment, R&D Solutions backlog, 2026 segment change
 - [Medpace: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1668397/000166839726000006/medp-20251231.htm), revenue, backlog, employees and countries
 - [ICON](https://www.iconplc.com/), full-service CRO
 - [Medidata](https://www.medidata.com/en/), trials, patients and the share of novel approvals
