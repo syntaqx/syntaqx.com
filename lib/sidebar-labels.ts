@@ -34,6 +34,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Other Property Types": "Property Types",
   "Peer-to-Peer Marketplaces": "P2P Marketplaces",
   "Point of Sale and Stores": "Point of Sale",
+  "Practice Management and Patient Engagement": "Practices",
   "Properties, Owners and Investors": "Properties",
   "Records and Interoperability": "Records",
   "Rent and Resident Money": "Rent and Money",
