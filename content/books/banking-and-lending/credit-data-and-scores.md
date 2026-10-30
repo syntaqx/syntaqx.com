@@ -97,7 +97,7 @@ For the system: the score model is a per-loan attribute chosen at pull time and 
 
 ## No File, Thin File, No Score
 
-Some people have no bureau file ("credit invisible"); others have a file too thin or too stale to score. The CFPB's June 2025 technical correction cut its 2015 estimate of credit invisibles roughly in half, after a data change revealed records the earlier method missed, with an almost matching increase in the count of unscored records. The practical point holds either way: some applicants come back "no hit" or "no score," and the engine needs a path for them, a different bureau, a specialty agency, a cash-flow report, or a manual review, rather than an automatic decline. VantageScore says version 4.0 drops the requirements for recent activity and a file older than six months, which is how it claims to score more people. Credit Builders & Secured Products covers products designed to create a file.
+Some people have no bureau file ("credit invisible"); others have a file too thin or too stale to score. The CFPB's June 2025 technical correction cut its 2015 estimate of credit invisibles roughly in half, after a data change revealed records the earlier method missed, with an almost matching increase in the count of unscored records. The practical point holds either way: some applicants come back "no hit" or "no score," and the engine needs a path for them, a different bureau, a specialty agency, a cash-flow report, or a manual review, rather than an automatic decline. VantageScore says version 4.0 drops the requirements for recent activity and a file older than six months, which is how it claims to score more people. [Credit Builders & Secured Products](/books/banking-and-lending/credit-builders) covers products designed to create a file.
 
 If the engine declines for lack of a score, the notice must say so specifically ("no credit file" or "limited credit experience" are among Reg B's sample reasons), and the FCRA's risk-based pricing rules have a notice for the case where no score is available ([What the FCRA Adds](/books/banking-and-lending/adverse-action#what-the-fcra-adds)).
 
@@ -113,13 +113,13 @@ How the data reaches the lender, as of October 2026:
 
 - **Through a consumer reporting agency.** Plaid Check, Nova Credit and Experian sell permissioned bank-data reports, attributes and scores as consumer reports, with reason codes. The consumer connects their accounts and authorizes the report; the lender orders it under a permissible purpose; the agency handles disputes. FICO and Plaid announced a cash-flow UltraFICO in November 2025 to be distributed through Plaid Check (reported in trade press; FICO's own page says only that it "is coming").
 - **Directly from an aggregator** to a lender that analyzes the data itself. The lender then holds raw transactions and computes its own attributes, which makes the lender's model, not an agency, the source of every reason it gives.
-- **Under the open banking rule.** Section 1033 would give consumers a right to share their data with a lender through the bank's interface; its status as of October 2026 is Open Banking in the US's subject.
+- **Under the open banking rule.** Section 1033 would give consumers a right to share their data with a lender through the bank's interface; its status as of October 2026 is in [The Injunction and the Rewrite](/books/banking-and-lending/open-banking#the-injunction-and-the-rewrite).
 
 What to get right with bank data: **consent is per account and per purpose, and it ends** (the consumer can disconnect), so a report is a dated snapshot and a later refresh needs a basis. **Transaction categorization is the model's first layer,** and a miscategorized payroll deposit or rent payment is an inaccuracy the consumer can dispute. **Income from bank data is evidence for ability to repay,** and the GSE validation programs accept it with at least 12 months of history ([Documents and Verification Services](/books/banking-and-lending/loan-origination#documents-and-verification-services)).
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model): `parties` and `party_identities` (the identifiers a bureau matches on), `applications` and `application_parties` from [Loan Origination](/books/banking-and-lending/loan-origination#how-to-build-it), and `credit_decisions`, whose `inputs_ref` freezes everything the decision read. This chapter adds the pulls, the scores, the bank-data reports and the prescreen campaigns. Property Tech's `screening_reports` is the same record as `credit_report_pulls` for a landlord.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model): `parties` and `party_identities` (the identifiers a bureau matches on), `applications` and `application_parties` from [Loan Origination](/books/banking-and-lending/loan-origination#how-to-build-it), and `credit_decisions`, whose `inputs_ref` freezes everything the decision read. Consumer-permissioned bank data arrives through `data_connections` and `data_authorizations` from [Open Banking in the US](/books/banking-and-lending/open-banking#how-to-build-it), which carry the consent, its purpose and its revocation. This chapter adds the pulls, the scores, the representative score and the prescreen campaigns. Property Tech's `screening_reports` is the same record as `credit_report_pulls` for a landlord.
 
 ```sql
 CREATE TABLE credit_report_pulls (           -- one request to one agency for one person
@@ -134,6 +134,7 @@ CREATE TABLE credit_report_pulls (           -- one request to one agency for on
   permissible_purpose TEXT NOT NULL CHECK (permissible_purpose IN ('credit_application',
                         'written_instructions', 'account_review', 'collection', 'prescreen')),
   consent_disclosure_id UUID REFERENCES disclosures (id),     -- required for written_instructions
+  data_authorization_id UUID REFERENCES data_authorizations (id),  -- bank-data reports: the consent relied on
   result              TEXT NOT NULL CHECK (result IN ('hit', 'no_hit', 'frozen', 'error')),
   report_ref          TEXT,                   -- the report as received, encrypted, never edited
   pulled_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -164,18 +165,6 @@ CREATE TABLE representative_scores (         -- which score decided, and by whic
   PRIMARY KEY (credit_decision_id, party_id)
 );
 
-CREATE TABLE bank_data_connections (         -- consumer-permissioned accounts, with their lifespan
-  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  party_id            UUID NOT NULL REFERENCES parties (id),
-  provider            TEXT NOT NULL,          -- the agency or aggregator
-  institution_name    TEXT NOT NULL,
-  account_mask        TEXT NOT NULL,
-  consent_disclosure_id UUID NOT NULL REFERENCES disclosures (id),
-  purpose             TEXT NOT NULL,          -- 'underwriting', 'verification', 'servicing'
-  connected_at        TIMESTAMPTZ NOT NULL,
-  revoked_at          TIMESTAMPTZ
-);
-
 CREATE TABLE prescreen_campaigns (           -- firm offers: Reg B keeps text and criteria 25 months
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   institution_id      UUID NOT NULL REFERENCES institutions (id),
@@ -190,7 +179,7 @@ CREATE TABLE prescreen_campaigns (           -- firm offers: Reg B keeps text an
 );
 ```
 
-Every bureau call goes through one client that refuses to send a request without a `permissible_purpose`, and the check constraints make a written-instructions pull without its consent unrepresentable ([Licensed Data](/docs/architecture/record-linkage#licensed-data)). Reports are stored as received, encrypted and access-logged, because they hold SSNs and full credit histories ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)); the decision engine reads parsed attributes, and `credit_decisions.inputs_ref` freezes the attributes and score IDs it used. `credit_scores` keeps every score returned, including the ones the representative-score rule discarded, because the adverse action notice and the mortgage score disclosure may need them. `bank_data_connections.revoked_at` stops refreshes and is checked before any servicing use; a revoked connection's past reports stay as evidence for the decisions they informed. Prescreened applicants who respond are matched back to their campaign so the firm offer is honored on its terms, unless the lender's stated post-screening criteria aren't met.
+Every bureau call goes through one client that refuses to send a request without a `permissible_purpose`, and the check constraints make a written-instructions pull without its consent unrepresentable ([Licensed Data](/docs/architecture/record-linkage#licensed-data)). Reports are stored as received, encrypted and access-logged, because they hold SSNs and full credit histories ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)); the decision engine reads parsed attributes, and `credit_decisions.inputs_ref` freezes the attributes and score IDs it used. `credit_scores` keeps every score returned, including the ones the representative-score rule discarded, because the adverse action notice and the mortgage score disclosure may need them. A bank-data report points at the `data_authorizations` row it relied on; that row's `revoked_at` stops refreshes and is checked before any servicing use, and a revoked connection's past reports stay as evidence for the decisions they informed. Prescreened applicants who respond are matched back to their campaign so the firm offer is honored on its terms, unless the lender's stated post-screening criteria aren't met.
 
 ## Auditing
 
@@ -199,7 +188,7 @@ Credit data is the most sensitive data a lender holds, and the FCRA and Reg B bo
 - **Every pull,** with the person, agency, product, inquiry type, permissible purpose, the application or account it served, and the consent where the purpose needed one.
 - **Every report as received** and who opened it, when.
 - **Every score returned,** with model, version, range, date, provider and key factors, and which rule chose the representative score.
-- **Every bank-data connection,** its consent, purpose and revocation.
+- **Every bank-data report's authorization,** its purpose and any revocation.
 - **Every prescreen campaign's** criteria and solicitation text, kept for 25 months after the offer.
 - **The model each loan's score came from,** carried to investor delivery.
 - **Pulls without an application or account** (other than prescreens): there should be none, and a query proving it.

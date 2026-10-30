@@ -103,7 +103,7 @@ For the system that means:
 
 - **Each partner's criteria are a versioned policy layer,** approved by the partner, run before the platform's own model, with the approval recorded ([The Lending Business](/books/banking-and-lending/lending-business#how-to-build-it) puts `partner_criteria_ref` on each pricing grid).
 - **Routing is a decision too:** which partner's program an application goes to, by state, product and criteria, is stored with the decision, because it decides the lender of record, the disclosures and the notice's creditor name.
-- **The bank must be able to see and test it:** decision logs, model documentation, overrides and fair lending results are the bank's examination materials, produced from the platform's records (Sponsor Bank Oversight covers the supervision).
+- **The bank must be able to see and test it:** decision logs, model documentation, overrides and fair lending results are the bank's examination materials, produced from the platform's records ([Sponsor Bank Oversight](/books/banking-and-lending/sponsor-bank-oversight) covers the supervision).
 
 ## Manual Review, Referrals and Overrides
 
