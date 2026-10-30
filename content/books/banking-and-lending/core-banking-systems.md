@@ -17,7 +17,7 @@ Strip the vendor names away and every core does the same jobs, whether it runs o
 
 | Job | What it means | Where this volume covers it |
 | --- | --- | --- |
-| **Customer information file (CIF)** | Parties, their identifiers, addresses and relationships, and which accounts each is attached to and in what role | The Banking & Lending Business; KYC & Account Opening |
+| **Customer information file (CIF)** | Parties, their identifiers, addresses and relationships, and which accounts each is attached to and in what role | [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model); KYC & Account Opening |
 | **Product definitions** | The rules an account inherits: rate, balance method, fees, limits, maturity, dormancy, GL mapping | [Products & Product Configuration](/books/banking-and-lending/product-configuration) |
 | **Account servicing** | Opening, maintenance, status changes (dormant, frozen, charged off, closed), stop payments, standing orders | Dormancy, Escheat & Closing Accounts |
 | **Posting** | Applying debits and credits in a defined order, computing ledger, available and collected balances, holds | [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances) |
@@ -50,7 +50,7 @@ The double-entry rules themselves (balanced entries, append-only rows, correctio
 
 ## How the Platforms Do It
 
-As of October 2026, the US core market is a few incumbents with large installed bases, the same incumbents' newer platforms, and a set of cloud-native vendors whose public customers are mostly outside the US or are new digital banks.
+[The Banking Landscape](/books/banking-and-lending/banking-landscape#how-the-platforms-do-it) maps the vendors as a market; this table is what each core is and how it's delivered. As of October 2026, the US core market is a few incumbents with large installed bases, the same incumbents' newer platforms, and a set of cloud-native vendors whose public customers are mostly outside the US or are new digital banks.
 
 | Vendor | Cores named publicly | Delivery | What the public record shows |
 | --- | --- | --- | --- |
@@ -116,77 +116,85 @@ Every one of those integrations is a contract, a data feed and a failure mode. W
 
 ## How to Build It
 
-The tables below extend the core data model named in The Banking & Lending Business: `institutions`, `products`, `accounts`, `gl_accounts`, `journal_entries` and `journal_lines`, `transactions` and `balance_snapshots`. Amounts are integer minor units ([Integer Minor Units](/docs/payments/money#integer-minor-units)). This chapter adds the GL mapping that turns account activity into journal entries, the daily subledger-to-GL proof, and a record of which system of record holds each account, which matters the moment a bank runs two cores ([Coexistence](/books/banking-and-lending/core-modernization#coexistence-and-the-system-of-record)).
+These tables extend `products`, `accounts`, `gl_accounts`, `journal_entries` and `journal_lines` from [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). In that model the subledger is already in the journal: a `journal_lines` row with an `account_id` is a customer account's line, one without is a pure GL line, and an account's ledger balance is the sum of its lines. This chapter adds the GL mapping that decides which `gl_accounts` each kind of activity on each product version posts to, the daily proof that account balances and their GL control lines agree, the summary a bank's separate accounting system receives, and a record of which system of record holds each account, which matters the moment a bank runs two cores ([Coexistence and the System of Record](/books/banking-and-lending/core-modernization#coexistence-and-the-system-of-record)). Amounts are integer minor units, and `journal_lines.amount` is debit positive, credit negative.
 
 ```sql
--- How each transaction type on each product version posts to the GL.
+-- The GL lines an account's balance and accrued interest live on, per product version.
+ALTER TABLE products
+  ADD COLUMN control_gl_account_id  UUID REFERENCES gl_accounts (id),  -- e.g. 'NOW accounts' or 'Consumer loans: unsecured'
+  ADD COLUMN accrued_gl_account_id  UUID REFERENCES gl_accounts (id);  -- accrued interest payable or receivable
+
+-- How each kind of activity on each product version posts.
 CREATE TABLE gl_mappings (
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  institution_id     UUID NOT NULL REFERENCES institutions (id),
-  product_id         UUID NOT NULL REFERENCES products (id),
-  transaction_type   TEXT NOT NULL,            -- 'deposit', 'withdrawal', 'interest_accrual', 'interest_credit', 'fee:monthly_service', ...
+  id                   UUID PRIMARY KEY DEFAULT uuidv7(),
+  institution_id       UUID NOT NULL REFERENCES institutions (id),
+  product_id           UUID NOT NULL REFERENCES products (id),   -- a product version
+  entry_kind           TEXT NOT NULL,       -- journal_entries.kind: 'ach_credit', 'interest_accrual', 'interest_post', 'fee:monthly_service', ...
   debit_gl_account_id  UUID NOT NULL REFERENCES gl_accounts (id),
   credit_gl_account_id UUID NOT NULL REFERENCES gl_accounts (id),
-  effective_during   DATERANGE NOT NULL,        -- a mapping change is a new row, never an edit
-  approved_by        UUID NOT NULL,
-  EXCLUDE USING gist (product_id WITH =, transaction_type WITH =, effective_during WITH &&)
+  valid_during         DATERANGE NOT NULL,   -- a mapping change is a new row, never an edit
+  approved_by          UUID NOT NULL,
+  EXCLUDE USING gist (product_id WITH =, entry_kind WITH =, valid_during WITH &&)
 );
 
--- The summary journal the core hands the GL each business day, per mapping and branch.
-ALTER TABLE journal_entries
-  ADD COLUMN business_date DATE NOT NULL,
-  ADD COLUMN source        TEXT NOT NULL CHECK (source IN ('subledger_summary', 'manual', 'accrual', 'conversion')),
-  ADD COLUMN branch_id     UUID;
-
--- Which account transactions a summary line covers, so the GL can be walked back to accounts.
-CREATE TABLE journal_line_sources (
-  journal_line_id UUID NOT NULL REFERENCES journal_lines (id),
-  transaction_id  UUID NOT NULL REFERENCES transactions (id),
-  PRIMARY KEY (journal_line_id, transaction_id)
-);
-
--- The daily proof: subledger total against the GL control account.
+-- The daily proof: the sum of account balances against the GL control line.
 CREATE TABLE subledger_proofs (
+  institution_id    UUID NOT NULL REFERENCES institutions (id),
   business_date     DATE NOT NULL,
   gl_account_id     UUID NOT NULL REFERENCES gl_accounts (id),
-  subledger         TEXT NOT NULL,             -- 'deposits:ledger_balance', 'deposits:accrued_interest', 'loans:principal', ...
+  subledger         TEXT NOT NULL,          -- 'ledger_balance', 'accrued_interest', 'loan_principal', ...
   subledger_total   BIGINT NOT NULL,
   gl_balance        BIGINT NOT NULL,
   difference        BIGINT GENERATED ALWAYS AS (subledger_total - gl_balance) STORED,
-  explained_by      TEXT,                      -- required when difference <> 0
-  PRIMARY KEY (business_date, gl_account_id, subledger)
+  explained_by      TEXT,                   -- required when difference <> 0
+  PRIMARY KEY (institution_id, business_date, gl_account_id, subledger)
 );
 
--- Which core holds each account, for banks running more than one.
+-- Summary journals sent to an accounting system outside the core, one row per line per day.
+CREATE TABLE gl_exports (
+  institution_id    UUID NOT NULL REFERENCES institutions (id),
+  business_date     DATE NOT NULL,
+  gl_account_id     UUID NOT NULL REFERENCES gl_accounts (id),
+  branch            TEXT NOT NULL DEFAULT '',
+  debit_total       BIGINT NOT NULL,
+  credit_total      BIGINT NOT NULL,
+  line_count        INTEGER NOT NULL,       -- the journal_lines behind it, for the walk back
+  batch_ref         TEXT NOT NULL,          -- the accounting system's batch or journal ID
+  exported_at       TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (institution_id, business_date, gl_account_id, branch)
+);
+
+-- Which core holds each account, for institutions running more than one.
 ALTER TABLE accounts
   ADD COLUMN system_of_record TEXT NOT NULL DEFAULT 'primary_core',
-  ADD COLUMN core_account_ref TEXT;            -- the account's number or key in that system
+  ADD COLUMN core_account_ref TEXT;         -- the account's key in that system
 ```
 
-The proof for one day and one GL line, which the end-of-day job stores and the close reviews:
+The proof for one business date, which end of day stores and the close reviews. Deposit liabilities carry credit balances, so the GL side is negated to compare with positive account balances:
 
 ```sql
-SELECT g.id AS gl_account_id,
-       SUM(b.ledger_balance)                           AS subledger_total,
-       (SELECT SUM(jl.amount) FROM journal_lines jl
+SELECT p.control_gl_account_id                      AS gl_account_id,
+       SUM(b.ledger_balance)                        AS subledger_total,
+       (SELECT -COALESCE(SUM(jl.amount), 0)
+          FROM journal_lines jl
           JOIN journal_entries je ON je.id = jl.journal_entry_id
-         WHERE jl.gl_account_id = g.id AND je.business_date <= :day) AS gl_balance
+         WHERE jl.gl_account_id = p.control_gl_account_id
+           AND je.effective_date <= :day)            AS gl_balance
 FROM balance_snapshots b
-JOIN accounts a  ON a.id = b.account_id
-JOIN gl_mappings m ON m.product_id = a.product_id
-                  AND m.transaction_type = 'deposit'
-                  AND :day <@ m.effective_during
-JOIN gl_accounts g ON g.id = m.credit_gl_account_id   -- the deposit liability line
+JOIN accounts a ON a.id = b.account_id
+JOIN products p ON p.id = a.product_id
 WHERE b.business_date = :day
-GROUP BY g.id;
+  AND a.institution_id = :institution_id
+  AND a.account_kind = 'deposit'
+GROUP BY p.control_gl_account_id;
 ```
 
 How it runs:
 
-1. **Every posted transaction resolves a mapping** for its product and type on its effective date, or it doesn't post. An unmapped transaction type is a configuration error caught at posting, not at month end.
-2. **End of day summarizes by mapping and branch** into one journal entry per business date, with `journal_line_sources` linking every line to the account activity it covers.
-3. **The proof runs after the summary posts.** A nonzero difference opens a break with an owner, the same way a cash break does in [Breaks](/books/payments/ledger-and-reconciliation#breaks).
-4. **Manual GL entries never touch a control account** that a subledger proves against. A correction to customer balances is a transaction on the account, which flows to the GL through the mapping.
+1. **Every journal entry resolves a mapping** for its kind on the account's product version and effective date, or it doesn't post. An unmapped kind is a configuration error caught at posting, not at month end.
+2. **The proof runs after end of day snapshots,** one row per control line and subledger. A nonzero difference means a snapshot and the journal disagree (a transaction without its lines, lines without the account), and opens a break with an owner, the same way a cash break does in [Breaks](/books/payments/ledger-and-reconciliation#breaks).
+3. **Where the bank's GL lives in a separate accounting system,** end of day summarizes the day's lines by GL account and branch into `gl_exports`, idempotent per business date, and that system's batch ID comes back for the walk from its books to the core's ([Idempotent Sync](/docs/payments/accounting#idempotent-sync)).
+4. **Manual GL entries never touch a control line** that a subledger proves against. A correction to customer balances is a transaction on the account, which reaches the GL through the mapping.
 
 ## Auditing
 

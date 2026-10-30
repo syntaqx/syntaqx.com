@@ -148,64 +148,72 @@ Either way, the accounting period decides how far back an entry may book. Mambu 
 
 ## How to Build It
 
-These tables extend `transactions`, `holds` and `balance_snapshots` from the core data model in The Banking & Lending Business, with `journal_entries` as the hard-posted record behind each transaction. Card holds placed by an issuer processor reuse the Payments volume's authorization records for their card-side detail; here they are rows in `holds` that point to them.
+These tables extend `transactions`, `holds`, `balance_snapshots` and `journal_entries` from [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). There, a `transactions` row is a hard post (it has a `journal_entry_id`), its `effective_date` is the value date, and `holds` already carry a reason, a source, an expiry and a release. What this chapter adds is the memo post as its own record, the booking date and posting sequence on each hard post, the inputs to the three balances, posting order as configuration, the core's business calendar, and a record of the balance each decision read. Card holds placed by an issuer processor keep their card-side detail in the Payments volume's authorization records ([Issuer Processing](/books/payments/issuer-processing#how-to-build-it)); here they are `holds` rows that point to them.
 
 ```sql
--- One customer-visible row per memo or hard post, linked.
+-- Intraday items not yet hard posted; a debit memo post carries a hold.
+CREATE TABLE memo_posts (
+  id                    UUID PRIMARY KEY DEFAULT uuidv7(),
+  account_id            UUID NOT NULL REFERENCES accounts (id),
+  kind                  TEXT NOT NULL CHECK (kind IN ('card_authorization', 'deposit_item',
+                          'ach_pending', 'teller', 'instant_payment', 'other')),
+  direction             TEXT NOT NULL CHECK (direction IN ('credit', 'debit')),
+  amount                BIGINT NOT NULL CHECK (amount > 0),
+  hold_id               UUID REFERENCES holds (id),
+  source_ref            TEXT NOT NULL,      -- the authorization, deposit item or file entry
+  business_date         DATE NOT NULL,
+  received_at           TIMESTAMPTZ NOT NULL,
+  state                 TEXT NOT NULL CHECK (state IN ('pending', 'posted', 'reversed', 'expired')),
+  posted_transaction_id UUID REFERENCES transactions (id),
+  ended_at              TIMESTAMPTZ,
+  UNIQUE (account_id, kind, source_ref)
+);
+
+-- Hard posts: when they posted, in which run and position, and the memo post they replace.
 ALTER TABLE transactions
-  ADD COLUMN posting_state   TEXT NOT NULL CHECK (posting_state IN ('memo', 'posted', 'reversed', 'expired')),
-  ADD COLUMN memo_of_id      UUID REFERENCES transactions (id),  -- the hard post points to its memo
-  ADD COLUMN value_date      DATE NOT NULL,                     -- drives interest and fees
-  ADD COLUMN booking_date    DATE NOT NULL,                     -- business date it posted on
-  ADD COLUMN recorded_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  ADD COLUMN posting_class   TEXT NOT NULL,                     -- 'credit', 'card_debit', 'ach_debit', 'check', 'fee', ...
-  ADD COLUMN posting_run_id  UUID,                              -- the batch or stream run that hard posted it
-  ADD COLUMN posting_seq     INTEGER,                           -- its position in that run
-  ADD COLUMN corrects_id     UUID REFERENCES transactions (id),
-  ADD CONSTRAINT posted_has_entry CHECK (posting_state <> 'posted' OR journal_entry_id IS NOT NULL);
+  ADD COLUMN booking_date   DATE NOT NULL,          -- the business date it posted on; effective_date is the value date
+  ADD COLUMN posting_class  TEXT NOT NULL,          -- 'credit', 'card_debit', 'ach_debit', 'check', 'fee', ...
+  ADD COLUMN posting_run_id UUID,                   -- the batch or stream run that posted it
+  ADD COLUMN posting_seq    INTEGER,                -- its position in that run
+  ADD COLUMN memo_post_id   UUID REFERENCES memo_posts (id),
+  ADD CONSTRAINT value_not_after_booking CHECK (effective_date <= booking_date);
 
--- Holds and blocks in one table.
+-- Holds: a target amount and what is currently secured, disputes as a reason, and who acted.
 ALTER TABLE holds
-  ADD COLUMN kind             TEXT NOT NULL CHECK (kind IN ('card_authorization', 'deposit_availability',
-                                 'risk', 'legal', 'pledge', 'dispute', 'other')),
-  ADD COLUMN target_amount    BIGINT NOT NULL,     -- what the hold is for
-  ADD COLUMN secured_amount   BIGINT NOT NULL,     -- what it currently reduces available balance by
-  ADD COLUMN source_type      TEXT NOT NULL,       -- 'card_authorization', 'deposit_item', 'case', 'loan', ...
-  ADD COLUMN source_id        UUID NOT NULL,
-  ADD COLUMN state            TEXT NOT NULL CHECK (state IN ('active', 'released', 'expired', 'settled', 'seized')),
+  DROP CONSTRAINT holds_reason_check,
+  ADD CONSTRAINT holds_reason_check CHECK (reason IN ('card_authorization', 'deposit_availability',
+    'legal_process', 'fraud', 'collateral', 'dispute', 'manual')),
+  ADD COLUMN secured_amount    BIGINT NOT NULL,    -- what it reduces available balance by now; amount is the target
   ADD COLUMN release_condition TEXT,               -- for blocks with no expires_at
-  ADD COLUMN placed_by        TEXT NOT NULL,
-  ADD COLUMN ended_at         TIMESTAMPTZ,
-  ADD COLUMN ended_by         TEXT,
-  ADD CONSTRAINT holds_source_key UNIQUE (source_type, source_id, kind);
+  ADD COLUMN placed_by         TEXT NOT NULL,
+  ADD COLUMN released_by       TEXT,
+  ADD CONSTRAINT secured_within_target CHECK (secured_amount BETWEEN 0 AND amount);
 
--- The three balances, per account per business date.
+-- The inputs behind each day's three balances.
 ALTER TABLE balance_snapshots
-  ADD COLUMN ledger_balance    BIGINT NOT NULL,
-  ADD COLUMN collected_balance BIGINT NOT NULL,
-  ADD COLUMN available_balance BIGINT NOT NULL,
-  ADD COLUMN float_amount      BIGINT NOT NULL,
-  ADD COLUMN holds_amount      BIGINT NOT NULL;
+  ADD COLUMN float_amount BIGINT NOT NULL,         -- deposited items not yet collected
+  ADD COLUMN holds_amount BIGINT NOT NULL;
 
 -- Posting order as versioned configuration.
 CREATE TABLE posting_order_rules (
   id             UUID PRIMARY KEY DEFAULT uuidv7(),
   institution_id UUID NOT NULL REFERENCES institutions (id),
   version        INTEGER NOT NULL,
-  rank           INTEGER NOT NULL,          -- lower posts first
+  rank           INTEGER NOT NULL,                 -- lower posts first
   posting_class  TEXT NOT NULL,
-  within_class   TEXT NOT NULL CHECK (within_class IN ('authorized_at', 'received_at', 'amount_asc', 'amount_desc', 'check_number')),
+  within_class   TEXT NOT NULL CHECK (within_class IN ('authorized_at', 'received_at',
+                   'amount_asc', 'amount_desc', 'check_number')),
   effective_from DATE NOT NULL,
   UNIQUE (institution_id, version, rank)
 );
 
--- The core's own calendar and the night's run.
+-- The core's own calendar, and the night's checkpoints.
 CREATE TABLE business_days (
-  institution_id UUID NOT NULL REFERENCES institutions (id),
-  business_date  DATE NOT NULL,
-  state          TEXT NOT NULL CHECK (state IN ('open', 'cut_off', 'closing', 'closed')),
-  cutoff_at      TIMESTAMPTZ,
-  closed_at      TIMESTAMPTZ,
+  institution_id        UUID NOT NULL REFERENCES institutions (id),
+  business_date         DATE NOT NULL,
+  state                 TEXT NOT NULL CHECK (state IN ('open', 'cut_off', 'closing', 'closed')),
+  cutoff_at             TIMESTAMPTZ,
+  closed_at             TIMESTAMPTZ,
   posting_rules_version INTEGER,
   PRIMARY KEY (institution_id, business_date)
 );
@@ -213,8 +221,8 @@ CREATE TABLE business_days (
 CREATE TABLE eod_steps (
   institution_id UUID NOT NULL,
   business_date  DATE NOT NULL,
-  step           TEXT NOT NULL,            -- 'hard_post', 'item_fees', 'accrue', 'date_events', 'snapshot', 'gl_summary', 'files', 'roll'
-  account_id     UUID,                     -- NULL for institution-wide steps
+  step           TEXT NOT NULL,     -- 'hard_post', 'item_fees', 'accrue', 'date_events', 'snapshot', 'gl_proof', 'files', 'roll'
+  account_id     UUID,              -- NULL for institution-wide steps
   completed_at   TIMESTAMPTZ NOT NULL,
   UNIQUE NULLS NOT DISTINCT (institution_id, business_date, step, account_id),
   FOREIGN KEY (institution_id, business_date) REFERENCES business_days (institution_id, business_date)
@@ -222,46 +230,46 @@ CREATE TABLE eod_steps (
 
 -- What each balance-dependent decision read.
 CREATE TABLE balance_decisions (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  account_id      UUID NOT NULL REFERENCES accounts (id),
-  transaction_id  UUID REFERENCES transactions (id),
-  decision        TEXT NOT NULL,           -- 'authorize', 'decline_nsf', 'pay_into_overdraft', 'return_item', 'assess_fee'
-  balance_kind    TEXT NOT NULL CHECK (balance_kind IN ('ledger', 'available', 'collected')),
-  balance_value   BIGINT NOT NULL,
-  decided_at      TIMESTAMPTZ NOT NULL
+  id             UUID PRIMARY KEY DEFAULT uuidv7(),
+  account_id     UUID NOT NULL REFERENCES accounts (id),
+  memo_post_id   UUID REFERENCES memo_posts (id),
+  transaction_id UUID REFERENCES transactions (id),
+  decision       TEXT NOT NULL,     -- 'authorize', 'decline_nsf', 'pay_into_overdraft', 'return_item', 'assess_fee'
+  balance_kind   TEXT NOT NULL CHECK (balance_kind IN ('ledger', 'available', 'collected')),
+  balance_value  BIGINT NOT NULL,
+  decided_at     TIMESTAMPTZ NOT NULL
 );
 ```
 
-Available balance computed from its inputs, the query the authorization path and every channel should agree with:
+Available balance computed from its inputs, the query the authorization path and every channel should agree with. Deposit availability holds are rows like any other, so the uncollected part of a deposit reduces available balance through the same sum, and the expiry test enforces expiry on read whether or not the expiry job has run:
 
 ```sql
 SELECT a.id,
        l.ledger,
-       h.holds,
-       l.ledger - h.holds AS available
+       h.held,
+       l.ledger - h.held AS available
 FROM accounts a
 CROSS JOIN LATERAL (
-  SELECT COALESCE(SUM(t.amount), 0) AS ledger
+  SELECT COALESCE(SUM(CASE t.direction WHEN 'credit' THEN t.amount ELSE -t.amount END), 0) AS ledger
   FROM transactions t
-  WHERE t.account_id = a.id AND t.posting_state = 'posted'
+  WHERE t.account_id = a.id
 ) l
 CROSS JOIN LATERAL (
-  SELECT COALESCE(SUM(x.secured_amount), 0) AS holds
+  SELECT COALESCE(SUM(x.secured_amount), 0) AS held
   FROM holds x
-  WHERE x.account_id = a.id AND x.state = 'active'
+  WHERE x.account_id = a.id
+    AND x.released_at IS NULL
     AND (x.expires_at IS NULL OR x.expires_at > NOW())   -- expiry enforced on read
 ) h
 WHERE a.id = :account_id;
 ```
 
-Deposit availability holds are rows like any other, so the uncollected part of a deposit reduces available balance through the same sum, and the expiry check in the query enforces expiry on read whether or not the expiry job has run.
-
 How it runs:
 
-1. **Memo posts create a `transactions` row and a hold;** the hard post creates the `posted` row with `memo_of_id`, settles the hold and posts the journal entry, in one database transaction ([Publishing Events With the Write](/books/payments/architecture-at-scale#publishing-events-with-the-write)).
-2. **The night's hard posting** selects the day's items, sorts them by the `posting_order_rules` version recorded on `business_days`, and writes `posting_seq`, so the order is reproducible.
+1. **A memo post creates a `memo_posts` row,** and for a debit a hold; the hard post creates the `transactions` row with `memo_post_id` and its journal entry, marks the memo post `posted` and releases the hold as `settled`, in one database transaction that also writes the outbox event ([Publishing Events With the Write](/books/payments/architecture-at-scale#publishing-events-with-the-write)).
+2. **The night's hard posting** selects the day's items, sorts them by the `posting_order_rules` version recorded on `business_days`, and writes `posting_seq`, so the order of any past night is reproducible.
 3. **Every overdraft, decline and fee decision** writes `balance_decisions` with the balance it read.
-4. **Backdated corrections** post today with a past `value_date` and `corrects_id`, and an adjustment job posts the interest and fee differences as linked transactions.
+4. **A backdated correction** posts today (`booking_date`) with a past `effective_date`, reversing the wrong entry by `reverses_id`, and an adjustment job posts the interest and fee differences as their own linked transactions.
 5. **`eod_steps` checkpoints** make the night restartable per account and step; the business date rolls only when every step has completed for every account.
 
 ## Auditing

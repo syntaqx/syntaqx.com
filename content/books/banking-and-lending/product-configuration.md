@@ -73,7 +73,7 @@ Each assessment records the fee definition and version that produced it, the tri
 
 ## Versions, Not Edits
 
-Model every product as a sequence of immutable **versions**, each effective from a date, and pin every account to the version it holds.
+Model every product as a sequence of immutable **versions**, each effective from a date, and pin every account to the version it holds. [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model) already does: each `products` row is one version of a product code, and `accounts.product_id` names the exact one.
 
 - **A change creates a version.** The new version has its own effective date and the change that produced it. Nothing about a past version changes after it has been used, so an account's interest, fees and disclosures for any past date are computed from the terms in force then ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 - **Accounts point to versions, and move between them only by an event.** Opening pins an account to the current version. A change in terms moves a defined set of accounts to a new version on its effective date, as a recorded event per account. An account that wasn't moved keeps its version, which is what grandfathering is.
@@ -128,69 +128,63 @@ Track grandfathering as data: the number of accounts and balances on each versio
 
 ## How to Build It
 
-These tables extend `products`, `accounts`, `fee_assessments` and `disclosures` from the core data model in The Banking & Lending Business. Each `products` row is a product line; its terms live in versions. Rates are in basis points, amounts in integer minor units.
+These tables extend `products`, `accounts`, `fee_assessments` and `disclosures` from [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). There, each `products` row is already one version (a stable `code` plus a `version` number, with the terms as JSONB and `valid_during` saying when new accounts may open on it), and `accounts.product_id` names the exact version an account holds. This chapter types the terms the core computes with, adds tiers, fee definitions and promotions, keeps each account's history of versions, and makes a change in terms a record with its notices. Rates are decimal fractions as in `interest_accruals.annual_rate`; amounts are integer minor units.
 
 ```sql
--- Immutable versions of each product's terms.
-CREATE TABLE product_versions (
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  product_id       UUID NOT NULL REFERENCES products (id),
-  version          INTEGER NOT NULL,
-  effective_from   DATE NOT NULL,                  -- business date
-  rate_source      TEXT NOT NULL CHECK (rate_source IN ('fixed', 'index_spread', 'discretionary')),
-  index_name       TEXT,
-  spread_bp        NUMERIC(10, 4),
-  tier_method      TEXT CHECK (tier_method IN ('whole_balance', 'marginal')),
-  balance_basis    TEXT NOT NULL CHECK (balance_basis IN ('daily', 'average_daily')),
-  day_count        TEXT NOT NULL CHECK (day_count IN ('act_365', 'act_360', '30_360', 'act_act')),
-  compounding      TEXT NOT NULL CHECK (compounding IN ('none', 'daily', 'at_crediting')),
-  crediting        TEXT NOT NULL,                  -- 'monthly', 'quarterly', 'at_maturity', ...
-  minimum_to_earn  BIGINT,
-  term_months      INTEGER,                        -- time accounts
-  grace_days       INTEGER,
-  early_withdrawal_penalty JSONB,                  -- e.g. {"days_interest": 90}
-  renews_to_product_id UUID REFERENCES products (id),
-  dormancy_days    INTEGER,
-  posting_class_rules_version INTEGER,
-  terms            JSONB NOT NULL,                 -- everything else, validated by the product kind's schema
-  created_by       UUID NOT NULL,
-  approved_by      UUID NOT NULL,
-  CHECK (approved_by <> created_by),
-  UNIQUE (product_id, version)
-);
+-- Typed terms on each version; products.terms keeps the rest, validated per category.
+ALTER TABLE products
+  ADD COLUMN rate_source      TEXT CHECK (rate_source IN ('fixed', 'index_spread', 'discretionary')),
+  ADD COLUMN index_name       TEXT,
+  ADD COLUMN spread           NUMERIC(9, 6),
+  ADD COLUMN tier_method      TEXT CHECK (tier_method IN ('whole_balance', 'marginal')),
+  ADD COLUMN balance_method   TEXT CHECK (balance_method IN ('daily', 'average_daily')),
+  ADD COLUMN day_count        TEXT,              -- 'actual_365', 'actual_360', ...
+  ADD COLUMN compounding      TEXT CHECK (compounding IN ('none', 'daily', 'at_crediting')),
+  ADD COLUMN crediting        TEXT,              -- 'monthly', 'quarterly', 'at_maturity', ...
+  ADD COLUMN rounding_rule    TEXT,
+  ADD COLUMN minimum_to_earn  BIGINT,
+  ADD COLUMN term_months      INTEGER,           -- time accounts
+  ADD COLUMN grace_days       INTEGER,
+  ADD COLUMN early_withdrawal_penalty JSONB,     -- e.g. {"days_interest": 90}
+  ADD COLUMN renews_to_code   TEXT,              -- the product line a maturing account renews into
+  ADD COLUMN dormancy_days    INTEGER,
+  ADD COLUMN created_by       UUID NOT NULL,
+  ADD COLUMN approved_by      UUID NOT NULL,
+  ADD CONSTRAINT products_two_people CHECK (approved_by <> created_by);
 
 CREATE TABLE product_rate_tiers (
-  product_version_id UUID NOT NULL REFERENCES product_versions (id),
-  floor_balance      BIGINT NOT NULL,              -- tier starts at this balance
-  rate_bp            NUMERIC(10, 4) NOT NULL,
-  PRIMARY KEY (product_version_id, floor_balance)
+  product_id     UUID NOT NULL REFERENCES products (id),
+  floor_balance  BIGINT NOT NULL,                -- the tier starts at this balance
+  annual_rate    NUMERIC(9, 6) NOT NULL,
+  PRIMARY KEY (product_id, floor_balance)
 );
 
 CREATE TABLE product_fees (
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  product_version_id UUID NOT NULL REFERENCES product_versions (id),
-  code               TEXT NOT NULL,               -- 'monthly_service', 'overdraft', 'returned_item', 'wire_out', ...
-  trigger            TEXT NOT NULL,               -- 'event:overdraft_paid', 'date:monthly', 'manual'
-  amount_method      TEXT NOT NULL CHECK (amount_method IN ('flat', 'percent', 'tiered_count')),
-  amount             BIGINT,
-  percent_bp         NUMERIC(10, 4),
-  waiver_rule        TEXT,                        -- named, versioned rule
-  cap_per_day        INTEGER,
-  cap_per_period     INTEGER,
-  gl_mapping_id      UUID NOT NULL REFERENCES gl_mappings (id),
-  UNIQUE (product_version_id, code)
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  product_id      UUID NOT NULL REFERENCES products (id),
+  code            TEXT NOT NULL,                 -- 'monthly_service', 'overdraft', 'returned_item', 'wire_out', ...
+  trigger         TEXT NOT NULL,                 -- 'event:overdraft_paid', 'date:monthly', 'manual'
+  amount_method   TEXT NOT NULL CHECK (amount_method IN ('flat', 'percent', 'tiered_count')),
+  amount          BIGINT,
+  percent         NUMERIC(9, 6),
+  waiver_rule     TEXT,                          -- a named, versioned rule
+  cap_per_day     INTEGER,
+  cap_per_period  INTEGER,
+  gl_mapping_id   UUID NOT NULL REFERENCES gl_mappings (id),
+  UNIQUE (product_id, code)
 );
 
--- Which version each account holds, and any approved overrides, over time.
+-- Which version each account held over time, and any approved overrides.
 CREATE TABLE account_terms (
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  account_id         UUID NOT NULL REFERENCES accounts (id),
-  product_version_id UUID NOT NULL REFERENCES product_versions (id),
-  effective_during   DATERANGE NOT NULL,
-  reason             TEXT NOT NULL CHECK (reason IN ('opened', 'term_change', 'renewal', 'conversion', 'override')),
-  term_change_id     UUID,                        -- set when reason = 'term_change'
-  overrides          JSONB,                       -- negotiated rate, fee waiver, with approver and end
-  EXCLUDE USING gist (account_id WITH =, effective_during WITH &&)
+  id              UUID PRIMARY KEY DEFAULT uuidv7(),
+  account_id      UUID NOT NULL REFERENCES accounts (id),
+  product_id      UUID NOT NULL REFERENCES products (id),
+  valid_during    DATERANGE NOT NULL,            -- business dates
+  reason          TEXT NOT NULL CHECK (reason IN ('opened', 'term_change', 'renewal',
+                    'conversion', 'override')),
+  term_change_id  UUID,                          -- set when reason = 'term_change'
+  overrides       JSONB,                         -- negotiated rate or fee waiver, with approver and end
+  EXCLUDE USING gist (account_id WITH =, valid_during WITH &&)
 );
 
 -- Promotions as dated terms on the account.
@@ -198,7 +192,7 @@ CREATE TABLE account_promotions (
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id      UUID NOT NULL REFERENCES accounts (id),
   kind            TEXT NOT NULL CHECK (kind IN ('intro_rate', 'bonus', 'fee_waiver')),
-  rate_bp         NUMERIC(10, 4),
+  annual_rate     NUMERIC(9, 6),
   bonus_amount    BIGINT,
   conditions      JSONB,
   during          DATERANGE NOT NULL,
@@ -206,45 +200,44 @@ CREATE TABLE account_promotions (
   outcome         TEXT CHECK (outcome IN ('earned', 'forfeited', 'expired'))
 );
 
--- A change in terms and each account's notice.
+-- A change in terms, and each account's notice.
 CREATE TABLE term_changes (
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  from_version_id    UUID NOT NULL REFERENCES product_versions (id),
-  to_version_id      UUID NOT NULL REFERENCES product_versions (id),
-  adverse            BOOLEAN NOT NULL,
-  governing_rule     TEXT NOT NULL,               -- '12 CFR 1030.5(a)', '12 CFR 1026.9(c)(2)', 'none:variable_rate'
-  notice_days        INTEGER NOT NULL,
-  effective_date     DATE NOT NULL,
-  notice_deadline    DATE GENERATED ALWAYS AS (effective_date - notice_days) STORED,
-  selection          JSONB NOT NULL,              -- the account criteria, as of a date
-  status             TEXT NOT NULL CHECK (status IN ('draft', 'approved', 'noticing', 'applied', 'cancelled')),
-  approved_by        UUID
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  from_product_id  UUID NOT NULL REFERENCES products (id),
+  to_product_id    UUID NOT NULL REFERENCES products (id),
+  adverse          BOOLEAN NOT NULL,
+  governing_rule   TEXT NOT NULL,                -- '12 CFR 1030.5(a)', '12 CFR 1026.9(c)(2)', 'none:variable_rate'
+  notice_days      INTEGER NOT NULL,
+  effective_date   DATE NOT NULL,
+  notice_deadline  DATE GENERATED ALWAYS AS (effective_date - notice_days) STORED,
+  selection        JSONB NOT NULL,               -- the account criteria, as of a date
+  status           TEXT NOT NULL CHECK (status IN ('draft', 'approved', 'noticing', 'applied', 'cancelled')),
+  approved_by      UUID
 );
 
 CREATE TABLE term_change_accounts (
-  term_change_id   UUID NOT NULL REFERENCES term_changes (id),
-  account_id       UUID NOT NULL REFERENCES accounts (id),
-  disclosure_id    UUID REFERENCES disclosures (id),   -- the notice as sent
-  delivered_at     TIMESTAMPTZ,
-  delivery_failed  BOOLEAN NOT NULL DEFAULT false,
-  rejected_at      TIMESTAMPTZ,                         -- credit card right to reject
-  applied_at       TIMESTAMPTZ,
+  term_change_id  UUID NOT NULL REFERENCES term_changes (id),
+  account_id      UUID NOT NULL REFERENCES accounts (id),
+  disclosure_id   UUID REFERENCES disclosures (id),  -- the notice as sent
+  sent_at         TIMESTAMPTZ,
+  delivery_failed BOOLEAN NOT NULL DEFAULT false,
+  rejected_at     TIMESTAMPTZ,                      -- credit card right to reject
+  applied_at      TIMESTAMPTZ,
   PRIMARY KEY (term_change_id, account_id)
 );
 
--- Every fee assessment names the definition that produced it, including waivers.
+-- Each assessment names the fee definition and the inputs it evaluated.
 ALTER TABLE fee_assessments
-  ADD COLUMN product_fee_id   UUID NOT NULL REFERENCES product_fees (id),
-  ADD COLUMN trigger_ref      TEXT NOT NULL,               -- the event or date
-  ADD COLUMN evaluated        JSONB NOT NULL,              -- balance, count, rule inputs
-  ADD COLUMN waived_by_rule   TEXT,
-  ADD COLUMN waived_amount    BIGINT NOT NULL DEFAULT 0;
+  ADD COLUMN product_fee_id  UUID REFERENCES product_fees (id),
+  ADD COLUMN evaluated       JSONB,               -- balance, count, rule inputs
+  ADD COLUMN waived_by_rule  TEXT;
 
+-- Disclosures rendered from a version point to it.
 ALTER TABLE disclosures
-  ADD COLUMN product_version_id UUID REFERENCES product_versions (id);
+  ADD COLUMN product_id UUID REFERENCES products (id);
 ```
 
-Accounts that may move on an effective date, which the apply job runs and the notice report reconciles against:
+Accounts that may move on a change's effective date, which the apply job runs and the notice report reconciles against:
 
 ```sql
 SELECT tca.account_id
@@ -253,18 +246,18 @@ JOIN term_change_accounts tca ON tca.term_change_id = tc.id
 WHERE tc.id = :term_change_id
   AND tc.status = 'noticing'
   AND (NOT tc.adverse
-       OR (tca.delivered_at IS NOT NULL
+       OR (tca.sent_at IS NOT NULL
            AND NOT tca.delivery_failed
-           AND tca.delivered_at::date <= tc.notice_deadline))
+           AND tca.sent_at::date <= tc.notice_deadline))
   AND tca.rejected_at IS NULL;
 ```
 
 How it runs:
 
-1. **A product change is a new version** created by one person and approved by another, with its disclosures rendered from it before any account can hold it.
-2. **Account opening writes `account_terms`** with `reason = 'opened'` and the disclosure records the customer received.
-3. **Every interest and fee computation resolves the account's version** for the business date it's computing, plus any override and promotion in force that day.
-4. **A term change** selects accounts, computes its deadline, sends notices as disclosures, and on the effective date closes each eligible account's current `account_terms` range and opens one on the new version; ineligible accounts are reported, not moved.
+1. **A product change is a new `products` row** (same `code`, next `version`) created by one person and approved by another, with its disclosures rendered from it before any account can hold it.
+2. **Account opening sets `accounts.product_id`** and writes `account_terms` with `reason = 'opened'`, beside the disclosure records the customer received.
+3. **Every interest and fee computation resolves the account's version** from `account_terms` for the business date it's computing, plus any override and promotion in force that day.
+4. **A term change** selects accounts, computes its deadline, sends notices as `disclosures` rows, and on the effective date closes each eligible account's current `account_terms` range, opens one on the new version and updates `accounts.product_id`; ineligible accounts are reported, not moved.
 5. **Promotion ends and maturities** are date events in end of day, moving accounts to their following terms and recording the outcome.
 
 ## Auditing

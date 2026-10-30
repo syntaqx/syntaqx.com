@@ -155,7 +155,7 @@ For a conversion, outsourcing risk shows up on both ends: the outgoing vendor's 
 
 ## How to Build It
 
-These tables support a conversion or a coexistence period, extending `accounts` (with `system_of_record` from [Core Banking Systems](/books/banking-and-lending/core-banking-systems#how-to-build-it)), `product_versions` from [Products & Product Configuration](/books/banking-and-lending/product-configuration#how-to-build-it), and `cases` from the core data model.
+These tables support a conversion or a coexistence period. They extend `accounts` (with `system_of_record` from [Core Banking Systems](/books/banking-and-lending/core-banking-systems#how-to-build-it)), `balance_snapshots` and `journal_lines` (the opening balances a conversion loads are journal entries of kind `conversion`, so the new core's ledger balance is still the sum of its lines), `products` versions as typed in [Products & Product Configuration](/books/banking-and-lending/product-configuration#how-to-build-it), and `cases` from [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model), whose `opened_at` must stay the original notice time so converted claims keep their clocks.
 
 ```sql
 CREATE TABLE conversions (
@@ -197,7 +197,7 @@ CREATE TABLE conversion_crosswalk (
 CREATE TABLE conversion_product_mappings (
   conversion_id     UUID NOT NULL REFERENCES conversions (id),
   source_product_ref TEXT NOT NULL,         -- old core's product and version
-  target_version_id UUID NOT NULL REFERENCES product_versions (id),
+  target_product_id UUID NOT NULL REFERENCES products (id),   -- the exact version
   exact             BOOLEAN NOT NULL,
   differences       JSONB,                  -- required when exact = false
   term_change_id    UUID,                   -- the noticed change when a difference is adverse
@@ -228,10 +228,9 @@ CREATE TABLE conversion_in_flight (
   PRIMARY KEY (run_id, item_type, source_ref)
 );
 
--- Converted cases keep their original clock start.
+-- Converted cases keep opened_at as the original notice time, so due_at is unchanged.
 ALTER TABLE cases
-  ADD COLUMN converted_from_ref TEXT,
-  ADD COLUMN clock_started_at   TIMESTAMPTZ;
+  ADD COLUMN converted_from_ref TEXT;
 ```
 
 The go/no-go gate is a query, not a meeting's impression:

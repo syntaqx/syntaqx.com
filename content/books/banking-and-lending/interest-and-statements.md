@@ -173,52 +173,53 @@ Three things make tax reporting a core design concern rather than a year-end exp
 
 ## How to Build It
 
-These tables extend `interest_accruals`, `statements` and `accounts` from the core data model in The Banking & Lending Business; rates, tiers and day counts come from the product version in [Products & Product Configuration](/books/banking-and-lending/product-configuration#how-to-build-it). Accrual amounts are stored in micro-units (millionths of the currency's major unit) so daily accrual keeps the precision Appendix A allows; everything credited is integer minor units.
+These tables extend `interest_accruals`, `statements` and `products` from [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). There, an `interest_accruals` row is one account's interest for one business date, with the balance the rate applied to, the rate, the day count and the amount in minor units to six decimal places, and `posted_in_id` set when it is credited or billed; a `statements` row is the statement as issued, with its totals and rendered document. Rates, tiers and the balance method come from the product version in [Products & Product Configuration](/books/banking-and-lending/product-configuration#how-to-build-it). This chapter adds what an examiner needs to recompute any day, corrections that leave the original day intact, the single rounding at crediting, the statement's Regulation DD fields, and year-end tax figures.
 
 ```sql
--- One row per account per accrual day.
+-- What each day's accrual used, and its booking.
 ALTER TABLE interest_accruals
-  ADD COLUMN accrual_date      DATE NOT NULL,
-  ADD COLUMN product_version_id UUID NOT NULL,          -- the terms in force that day
-  ADD COLUMN balance_basis     TEXT NOT NULL CHECK (balance_basis IN ('daily', 'average_daily')),
-  ADD COLUMN day_count         TEXT NOT NULL CHECK (day_count IN ('act_365', 'act_360', '30_360', 'act_act')),
-  ADD COLUMN accrual_balance   BIGINT NOT NULL,         -- minor units; negative stored as zero
-  ADD COLUMN annual_rate_bp    NUMERIC(12, 6) NOT NULL, -- rate in basis points, after tiers and promotions
-  ADD COLUMN tier_detail       JSONB,                   -- per-slice balance and rate under marginal tiering
-  ADD COLUMN amount_micros     BIGINT NOT NULL,         -- the day's interest, unrounded to six places
-  ADD COLUMN accrued_to_date_micros BIGINT NOT NULL,    -- since the last crediting
-  ADD COLUMN journal_entry_id  UUID REFERENCES journal_entries (id),
-  ADD COLUMN corrects_id       UUID REFERENCES interest_accruals (id),
-  ADD CONSTRAINT interest_accruals_day_key UNIQUE NULLS NOT DISTINCT (account_id, accrual_date, corrects_id);
+  ADD COLUMN product_id      UUID NOT NULL REFERENCES products (id),  -- the version in force that day
+  ADD COLUMN balance_method  TEXT NOT NULL CHECK (balance_method IN ('daily', 'average_daily')),
+  ADD COLUMN tier_detail     JSONB,                    -- per-slice balance and rate under marginal tiering
+  ADD COLUMN accrued_to_date NUMERIC(20, 6) NOT NULL,  -- since the last crediting, minor units
+  ADD COLUMN journal_entry_id UUID REFERENCES journal_entries (id);  -- the day's expense or income booking
+
+-- Corrections to past days, without rewriting them.
+CREATE TABLE interest_accrual_adjustments (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  account_id       UUID NOT NULL,
+  business_date    DATE NOT NULL,              -- the day being corrected
+  amount           NUMERIC(20, 6) NOT NULL,    -- the difference, signed
+  cause_transaction_id UUID REFERENCES transactions (id),  -- the backdated item that caused it
+  reason           TEXT NOT NULL,
+  recorded_on      DATE NOT NULL,              -- the business date it was booked
+  journal_entry_id UUID REFERENCES journal_entries (id),
+  FOREIGN KEY (account_id, business_date) REFERENCES interest_accruals (account_id, business_date)
+);
 
 -- Each crediting (or loan interest billing) rounds once and records how.
 CREATE TABLE interest_credits (
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id       UUID NOT NULL REFERENCES accounts (id),
-  period           DATERANGE NOT NULL,               -- accrual days covered
-  accrued_micros   BIGINT NOT NULL,
-  credited_amount  BIGINT NOT NULL,                  -- minor units actually paid
-  rounding_rule    TEXT NOT NULL,                    -- 'half_up', 'half_even', 'down'
-  residual_micros  BIGINT NOT NULL,                  -- accrued minus credited; disposed of by rule, never silently carried
+  period           DATERANGE NOT NULL,         -- accrual days covered
+  accrued          NUMERIC(20, 6) NOT NULL,    -- accruals plus adjustments for the period
+  credited_amount  BIGINT NOT NULL,            -- minor units actually paid
+  rounding_rule    TEXT NOT NULL,              -- 'half_up', 'half_even', 'down', as the product names it
+  residual         NUMERIC(20, 6) NOT NULL,    -- accrued minus credited; disposed of by rule, never silently carried
   transaction_id   UUID NOT NULL REFERENCES transactions (id),
-  tax_year         SMALLINT NOT NULL,                -- from the crediting date
+  tax_year         SMALLINT NOT NULL,          -- from the crediting date
   UNIQUE (account_id, period)
 );
 
--- What the statement showed, as computed, kept with the rendered document.
+-- The statement's computed Regulation DD figures, beside its totals and document.
 ALTER TABLE statements
-  ADD COLUMN period              DATERANGE NOT NULL,
-  ADD COLUMN days_in_period      INTEGER NOT NULL,
+  ADD COLUMN days_in_period        INTEGER NOT NULL,
   ADD COLUMN average_daily_balance BIGINT NOT NULL,
-  ADD COLUMN interest_amount     BIGINT NOT NULL,
-  ADD COLUMN interest_label      TEXT NOT NULL CHECK (interest_label IN ('interest_paid', 'interest_earned', 'interest_accrued')),
-  ADD COLUMN apy_earned_bp       INTEGER,            -- NULL when the period's figures are deferred to a later statement
-  ADD COLUMN overdraft_fees_period BIGINT NOT NULL DEFAULT 0,
-  ADD COLUMN overdraft_fees_ytd    BIGINT NOT NULL DEFAULT 0,
-  ADD COLUMN returned_item_fees_period BIGINT NOT NULL DEFAULT 0,
-  ADD COLUMN returned_item_fees_ytd    BIGINT NOT NULL DEFAULT 0,
-  ADD COLUMN rendered_uri        TEXT NOT NULL,       -- immutable
-  ADD COLUMN rendered_sha256     BYTEA NOT NULL;
+  ADD COLUMN interest_label        TEXT NOT NULL CHECK (interest_label IN ('interest_paid',
+                                     'interest_earned', 'interest_accrued')),
+  ADD COLUMN apy_earned            NUMERIC(6, 2),   -- percent; NULL when deferred to a later statement
+  ADD COLUMN document_sha256       BYTEA NOT NULL;
+-- totals carries interest, fees by type, and overdraft and returned item fees for the period and year to date.
 
 -- Year-end tax reporting, maintained as interest is credited or collected.
 CREATE TABLE tax_reportables (
@@ -240,33 +241,32 @@ CREATE TABLE tax_forms (
   furnished_at   TIMESTAMPTZ,
   filed_at       TIMESTAMPTZ,
   content        JSONB NOT NULL,                            -- the boxes as furnished
-  rendered_uri   TEXT NOT NULL
+  document_ref   TEXT NOT NULL
 );
 ```
 
-APY earned for a closed statement, computed from the stored snapshots and the credited amount, the query a statement job and a complaint investigation should both get the same answer from:
+APY earned for a closed statement period, computed from the stored snapshots and the amount actually paid; the statement job and a complaint investigation should get the same answer from it:
 
 ```sql
 WITH days AS (
-  SELECT b.business_date, GREATEST(b.ledger_balance, 0) AS bal
+  SELECT GREATEST(b.ledger_balance, 0) AS bal          -- negative balances count as zero
   FROM balance_snapshots b
   WHERE b.account_id = :account_id AND b.business_date <@ :period
 ), adb AS (
   SELECT AVG(bal)::numeric AS adb, COUNT(*) AS days FROM days
 )
 SELECT adb.adb,
-       :interest_paid AS interest,
        ROUND(100 * (POWER(1 + :interest_paid / NULLIF(adb.adb, 0), 365.0 / adb.days) - 1), 2) AS apy_earned
 FROM adb;
 ```
 
 How it runs:
 
-1. **Accrual is an end-of-day step after posting,** one row per interest-bearing account per day, with the product version, rate, basis and balance it used ([End of Day and the Business Date](/books/banking-and-lending/posting-holds-and-balances#end-of-day-and-the-business-date)).
-2. **The GL entry** for accruals posts per product and branch with `journal_line_sources` back to the accrual rows.
-3. **Crediting rounds once,** records the residual and the rule, posts the customer transaction, and updates `tax_reportables` for the crediting date's tax year.
-4. **Backdated corrections** write correcting accrual rows (`corrects_id`) for the affected days and post the difference at the next crediting or as an immediate adjustment, including the tax year it belongs to.
-5. **Statements** are computed from closed snapshots and credits, rendered, hashed and stored; the fee totals come from the fee assessments in the period and year.
+1. **Accrual is an end-of-day step after posting,** one row per interest-bearing account per day, with the product version, rate, method, day count and balance it used ([End of Day and the Business Date](/books/banking-and-lending/posting-holds-and-balances#end-of-day-and-the-business-date)).
+2. **The GL booking** for the day's accruals posts per product to the accrued interest line ([The General Ledger and Its Subledgers](/books/banking-and-lending/core-banking-systems#the-general-ledger-and-its-subledgers)).
+3. **Crediting rounds once,** records the residual and the rule, posts the customer transaction, sets `posted_in_id` on the period's accruals, and updates `tax_reportables` for the crediting date's tax year.
+4. **Backdated items** write `interest_accrual_adjustments` for each affected day, and the difference posts at the next crediting or as an immediate adjustment, in the tax year it belongs to.
+5. **Statements** are computed from closed snapshots and credits, rendered, hashed and stored; corrections appear on the next statement.
 
 ## Auditing
 
