@@ -5,6 +5,9 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeShiki from "@shikijs/rehype";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Info, Lightbulb, MessageSquareWarning, OctagonAlert, TriangleAlert, type LucideIcon } from "lucide-react";
 import { isPostScene, type PostSceneName } from "@/lib/scene/scenes";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
@@ -372,12 +375,14 @@ function rehypeDiagrams() {
   };
 }
 
-const CALLOUT_ICONS: Record<string, string> = {
-  note: '<circle cx="8" cy="8" r="6.5"/><path d="M8 7.25v4M8 4.75v.01"/>',
-  tip: '<path d="M5.75 12.5h4.5M6.5 14.75h3M8 1.75a4.5 4.5 0 0 0-2.6 8.17c.4.3.6.7.6 1.2v.38h4v-.38c0-.5.2-.9.6-1.2A4.5 4.5 0 0 0 8 1.75Z"/>',
-  important: '<rect x="1.75" y="1.75" width="12.5" height="10" rx="2"/><path d="M5 11.75v2.5l3-2.5M8 4.5v3.5M8 9.75v.01"/>',
-  warning: '<path d="M8 1.75 1.25 13.5h13.5L8 1.75Z"/><path d="M8 6v3.5M8 11.25v.01"/>',
-  caution: '<path d="M5.25 1.75h5.5l3.5 3.5v5.5l-3.5 3.5h-5.5l-3.5-3.5v-5.5l3.5-3.5Z"/><path d="M8 4.75v4M8 10.75v.01"/>',
+// Lucide, like the rest of the site's icons. Size and stroke come from the
+// `.callout-title svg` styles.
+const CALLOUT_ICONS: Record<string, LucideIcon> = {
+  note: Info,
+  tip: Lightbulb,
+  important: MessageSquareWarning,
+  warning: TriangleAlert,
+  caution: OctagonAlert,
 };
 
 /**
@@ -400,7 +405,7 @@ function rehypeCallouts() {
       lead.value = (lead.value ?? "").slice(match[0].length);
       if (!lead.value) first.children = first.children?.slice(1).filter((c, i) => i || c.tagName !== "br");
       if (!first.children?.some((c) => c.type !== "text" || c.value?.trim())) n.children = n.children?.filter((c) => c !== first);
-      const icon = `<svg viewBox="0 0 16 16" aria-hidden="true">${CALLOUT_ICONS[kind]}</svg>`;
+      const icon = renderToStaticMarkup(createElement(CALLOUT_ICONS[kind], { "aria-hidden": true }));
       n.tagName = "aside";
       n.properties = { className: ["callout", `callout-${kind}`] };
       n.children = [{ type: "raw", value: `<p class="callout-title">${icon}${title}</p>` }, ...(n.children ?? [])];

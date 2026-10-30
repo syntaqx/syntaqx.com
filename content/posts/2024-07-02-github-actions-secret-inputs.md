@@ -55,7 +55,8 @@ jobs:
 
 And that's it! No more asking operations to update your environment variables.
 
-> __ℹ️ Note:__ In an ideal world, we'd "shift left" and have our K8s manifests stored in application repositories, allowing engineers to maintain their own `ConfigMap` or other settings. Unfortunately, we're not quite there yet.
+> [!NOTE]
+> In an ideal world, we'd "shift left" and have our K8s manifests stored in application repositories, allowing engineers to maintain their own `ConfigMap` or other settings. Unfortunately, we're not quite there yet.
 >
 > Depending on the service, updating an environment variable may be as simple as updating a secret in AWS Secrets Manager, or as complex as updating a file on an EC2 instance. This workflow allows us to abstract that complexity away from the engineers, and let them focus on what they do best: writing code.
 
@@ -118,7 +119,8 @@ To initially test my theory, I added a simple handler to my personal API that wo
 - `POST https://api.syntaqx.com/secrets` - Create a new secret, get back a one-time link
 - `GET https://api.syntaqx.com/secrets/{id}` - Retrieve the secret, which deletes it
 
-> __ℹ️ Update (October 2026):__ The original proof of concept kept values in memory and is long gone. These endpoints are live again, rebuilt so you can follow this post for real: secrets are stored in Redis, encrypted under a key derived from the link (so the stored data alone can't be read), deleted on the first read, and expire unread after an hour by default (`ttl`, from 60 seconds up to a day). The [API reference](/docs/api) has the full schema.
+> [!NOTE] Update, October 2026
+> The original proof of concept kept values in memory and is long gone. These endpoints are live again, rebuilt so you can follow this post for real: secrets are stored in Redis, encrypted under a key derived from the link (so the stored data alone can't be read), deleted on the first read, and expire unread after an hour by default (`ttl`, from 60 seconds up to a day). The [API reference](/docs/api) has the full schema.
 >
 > It's still a demo with no SLA, so don't send it production credentials. We ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
 >
