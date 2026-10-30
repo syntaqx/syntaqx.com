@@ -74,7 +74,7 @@ Current guidance and infrastructure, as of October 2026:
 - **EUDAMED** became partly mandatory on May 28, 2026: actor registration, UDI and device registration, notified bodies and certificates, and market surveillance, after a Commission decision published November 27, 2025 started a six-month transition under Regulation (EU) 2024/1860; the clinical investigation and vigilance modules are not yet mandatory.
 - **Notified body requirements** continue to be refined; an implementing regulation on conformity assessment requirements (Regulation (EU) 2026/977) was adopted in May 2026.
 
-Wellness and administrative software (scheduling, billing, general fitness tracking) is generally not a device; the line, and the FDA's equivalent in the US, is Digital Health Apps & Devices.
+Wellness and administrative software (scheduling, billing, general fitness tracking) is generally not a device; the line, and the FDA's equivalent in the US, is [Digital Health Apps & Devices](/books/health-tech/digital-health-and-devices#wellness-or-medical-device).
 
 ## The AI Act and Medical AI
 
