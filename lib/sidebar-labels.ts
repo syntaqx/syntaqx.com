@@ -39,6 +39,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Social and Short-Form": "Short-Form",
   "Storefront and Checkout": "Storefront",
   "Subscriptions and Memberships": "Subscriptions",
+  "Tenancy and Identity": "Tenancy",
   "The Stack, Bottom to Top": "The Stack",
   "Wholesale and B2B": "Wholesale",
 };
