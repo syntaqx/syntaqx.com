@@ -69,21 +69,23 @@ The ownership history explains much of the integration landscape: who has a part
 | Date | Event |
 | --- | --- |
 | February 7, 2019 | Henry Schein spins off its animal health business and merges it with Vets First Choice as Covetrus |
-| February 11, 2019 | athenahealth taken private by funds controlled by Veritas Capital and Elliott's Evergreen Coast Capital at $135.00 a share |
+| February 11, 2019 | athenahealth taken private by investment funds controlled by Veritas Capital and Evergreen Coast Capital at $135.00 a share |
 | July 17, 2019 | Phreesia prices its IPO at $18.00 a share on the NYSE |
 | November 2, 2021 | Kareo and PatientPop announce the closing of their merger as Tebra, with $65 million in growth financing from Golub Capital |
+| November 10, 2021 | Weave Communications prices its IPO at $24.00 a share on the NYSE |
 | June 8, 2022 | Oracle completes its acquisition of Cerner at $95.00 a share, now Oracle Health |
 | October 3, 2022 | Optum completes its combination with Change Healthcare |
 | October 13, 2022 | CD&R and TPG complete their take-private of Covetrus |
 | November 10, 2023 | Thoma Bravo completes its $1.8 billion take-private of NextGen Healthcare at $23.95 a share |
 | February 21, 2024 | Cyberattack on Change Healthcare |
+| June 6, 2024 | Waystar prices its IPO at $21.50 a share on Nasdaq |
 | April 17, 2025 | Patient Square Capital completes its acquisition of Patterson Companies |
 
 The pattern across vet and dental is a distributor (Henry Schein, Patterson, Covetrus) or a diagnostics company (IDEXX) owning the practice software, because software is how a supplier stays in the practice's daily workflow; the pattern in medicine is private equity buying EHR and RCM vendors and merging them. Both matter to an integrator, since a vendor that also sells patient engagement has reason to make a competitor's integration slow or expensive ([Integrating with Practice Management Systems](/books/health-tech/pms-integration#gatekeeping-fees-and-the-law) covers the antitrust history).
 
 ## The Change Healthcare Attack
 
-On February 21, 2024, attackers disrupted Change Healthcare's systems, and because Change sat between a large share of US providers and their payers, claims, eligibility checks, prior authorizations and pharmacy claims stopped flowing for weeks for practices that used it directly or through vendors that did. Practices that had never signed with Change found their PMS vendor's claims service, or their clearinghouse's downstream connection, ran through it. UnitedHealth provided interest-free loans to affected providers, and in the fourth quarter of 2025 increased its reserves against those loans' collection by $799 million. CMS made accelerated and advance Medicare payments available from March 9, 2024, sized at a month of the provider's claims and recouped from Medicare claims over 90 days. UnitedHealth later notified individuals whose information was taken; on July 31, 2025 Change told HHS OCR the breach affected about 192.7 million individuals ([Breach Notification and the Wall of Shame](/books/health-tech/hipaa-in-practice#breach-notification-and-the-wall-of-shame)).
+On February 21, 2024, attackers disrupted Change Healthcare's systems, and because Change sat between a large share of US providers and their payers, claims, eligibility checks, prior authorizations and pharmacy claims stopped flowing for weeks for practices that used it directly or through vendors that did. Practices that had never signed with Change found their PMS vendor's claims service, or their clearinghouse's downstream connection, ran through it. UnitedHealth provided interest-free loans to affected providers, and in the fourth quarter of 2025 increased its reserves against provider loans and other customer balances it may not collect by $799 million. CMS made accelerated and advance Medicare payments available from March 9, 2024, sized at a month of the provider's claims and recouped from Medicare claims over 90 days. UnitedHealth later notified individuals whose information was taken; on July 31, 2025 Change told HHS OCR the breach affected about 192.7 million individuals ([Breach Notification and the Wall of Shame](/books/health-tech/hipaa-in-practice#breach-notification-and-the-wall-of-shame)).
 
 For the landscape, the lessons were about concentration. A practice's revenue depends on a clearinghouse it may not know it uses; a payer connection is a single point of failure unless a second clearinghouse is enrolled and tested; and enrollment for EDI, ERA and EFT with a new clearinghouse takes weeks per payer, so switching in a crisis is slow. [Security for Health Data](/books/health-tech/health-records-security#ransomware-and-the-sector) covers the security side and [Clearinghouses](/books/health-tech/clearinghouses#switching-clearinghouses) the redundancy.
 
@@ -155,6 +157,8 @@ ORDER BY o.display_name;
 - [Covetrus: completion of acquisition by CD&R and TPG (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1752836/000119312522261932/d335086dex991.htm), October 13, 2022
 - [Patterson Companies: completion of acquisition by Patient Square Capital (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/891024/000119312525087961/d913697dex991.htm), closing April 17, 2025
 - [Weave Communications: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1609151/000160915126000016/weav-20251231.htm), revenue, verticals and locations
+- [Weave Communications: IPO prospectus (424B4)](https://www.sec.gov/Archives/edgar/data/1609151/000162828021023138/weave424b4.htm), November 10, 2021, 5,000,000 shares at $24.00 on the NYSE
+- [Waystar: IPO prospectus (424B4)](https://www.sec.gov/Archives/edgar/data/1990354/000110465924069649/tm2333808-12_424b4.htm), June 6, 2024, 45,000,000 shares at $21.50 on the Nasdaq Global Select Market
 - [Phreesia: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1412408/000141240826000079/phr-20260131.htm), revenue and patient visits
 - [Phreesia: Pricing of initial public offering](https://ir.phreesia.com/news/news-details/2019/Phreesia-Announces-Pricing-of-Initial-Public-Offering/default.aspx), July 17, 2019 at $18.00
 - [R1 RCM: Form 10-K for 2023](https://www.sec.gov/Archives/edgar/data/1910851/000162828024007062/ah-20231231.htm), outsourced revenue cycle and its fees
