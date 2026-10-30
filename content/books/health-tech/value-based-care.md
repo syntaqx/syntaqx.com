@@ -227,7 +227,7 @@ Design notes:
 
 **Medicare Advantage and risk adjustment**
 
-- [KFF: Medicare Advantage enrollment update and key trends](https://www.kff.org/medicare/medicare-advantage-enrollment-update-and-key-trends/), 35.2 million enrollees and 55% of eligible beneficiaries in 2026
+- [KFF: Medicare Advantage in 2026, enrollment update and key trends](https://www.kff.org/medicare/medicare-advantage-in-2026-enrollment-update-and-key-trends/), 35.2 million enrollees and 55% of eligible beneficiaries in 2026
 - [CMS: 2026 Medicare Advantage and Part D rate announcement](https://www.cms.gov/newsroom/fact-sheets/2026-medicare-advantage-and-part-d-rate-announcement), full use of the 2024 CMS-HCC model and the projected payment change
 - [CMS: Strategy to enhance and accelerate Medicare Advantage audits (May 21, 2025)](https://www.cms.gov/newsroom/press-releases/cms-rolls-out-aggressive-strategy-enhance-and-accelerate-medicare-advantage-audits), RADV scope, timeline and staffing
 - [DOJ: Kaiser Permanente affiliates pay $556M](https://www.justice.gov/opa/pr/kaiser-permanente-affiliates-pay-556m-resolve-false-claims-act-allegations), the risk adjustment settlement

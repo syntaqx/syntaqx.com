@@ -71,7 +71,7 @@ A review is the patient's own disclosure; a reply is the practice's. HIPAA lets 
 | **Elite Dental Associates** (Dallas, Texas) | Disclosed patients' PHI in replies on its Yelp page | $10,000 settlement and a corrective action plan (announced October 2, 2019) |
 | **Dr. U. Phillip Igbinadolor, D.M.D. & Associates** (North Carolina) | Posted a patient's PHI on a webpage in response to a negative online review; didn't respond to OCR's data request or subpoena | $50,000 civil money penalty |
 | **New Vision Dental** (California) | Disclosed PHI in responses to online reviews | $23,000 settlement and a corrective action plan |
-| **Manasa Health Center** (New Jersey psychiatric practice) | Disclosed a patient's PHI in reply to a negative review (complaint April 2020); OCR also found missing Privacy Rule policies | $30,000 settlement and a corrective action plan |
+| **Manasa Health Center** (New Jersey psychiatric practice) | Disclosed a patient's PHI in reply to a negative review (complaint April 2020); the investigation found four patients' PHI disclosed in replies to Google reviews, and missing Privacy Rule policies | $30,000 settlement and a corrective action plan |
 
 Three of the four are dental practices and the fourth a psychiatric practice. The rule a reply has to follow:
 
