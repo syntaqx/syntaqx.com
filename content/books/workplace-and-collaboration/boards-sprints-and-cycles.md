@@ -23,7 +23,7 @@ As of October 2026:
 | **Azure Boards** | Team backlog by area path; columns mapped to states | Iteration paths, up to 300 per team | Not covered in the sources cited here | Effort, story points or size; capacity in hours | Soft limits; highlights the count | Velocity (up to 15 sprints), sprint burndown, cumulative flow |
 | **GitHub Projects** | Project items; columns from a single-select or iteration field | Iteration field in days or weeks, with breaks | Not covered in the sources cited here | Number fields, summed per column | Per-view column limit, not enforced | Burn up and custom insights charts |
 | **Linear** | Team issues; columns from statuses | Cycles of 1 to 8 weeks, automatic, with optional cooldown | Open issues roll over automatically | Linear, exponential, Fibonacci or T-shirt scales | Not covered in the sources cited here | Cycle graph, project graph, Insights |
-| **ClickUp** | Lists and boards | Sprints on every plan | Not covered in the sources cited here | Sprint Points on Business and above | Not covered in the sources cited here | Not covered in the sources cited here |
+| **ClickUp** | Lists and boards | Sprints with custom durations on every plan; Sprint automations from Business | Not covered in the sources cited here | Sprint Points: 100 uses on Free Forever and Unlimited, a trial on Core, unlimited from Business | Not covered in the sources cited here | Sprint dashboard cards from Business |
 
 Three patterns run through the table. **The board is a view, not a container:** in Jira a board is a saved filter, in GitHub a field, so the same item can sit on many boards. **"Done" is a column decision:** only the last column counts as complete in Jira, and the Completed category maps to the final column in Azure. **WIP limits are advisory everywhere:** none of the products blocks a card from entering a full column; they color the header.
 
@@ -33,13 +33,13 @@ Three patterns run through the table. **The board is a view, not a container:** 
 
 ### Columns Are Mapped Statuses
 
-A column is a set of statuses, not a status. Jira's default mapping puts Open and Reopened under To Do, In Progress under In Progress, and Resolved and Closed under Done; "unmapped statuses will hide work items both in your board view and backlog view," and "only the right-most column counts as complete." Azure Boards gives the same rule from the other side: states belong to categories, Proposed maps to the first column and Completed to the last, and "if a state isn't mapped, it doesn't appear on the board." Azure draws the line between the two layers: "State: Project-level workflow logic shared across teams. Column: Team-level board visualization," so team administrators can add columns (split "In Progress" into "Doing" and "Review") without touching the shared workflow. GitHub's board takes its columns from "any single select or iteration field," which makes any field a possible board.
+A column is a set of statuses, not a status. Jira's default mapping puts Open and Reopened under To Do, In Progress under In Progress, and Resolved and Closed under Done; "unmapped statuses will hide work items both in your board view and backlog view," and "Jira only considers work items in the right-most column of your board as complete." Azure Boards gives the same rule from the other side: states belong to categories, Proposed maps to the first column and Completed to the last, and "if a state isn't mapped, it doesn't appear on the board." Azure draws the line between the two layers: "State: Project-level workflow logic shared across teams. Column: Team-level board visualization," so team administrators can add columns (split "In Progress" into "Doing" and "Review") without touching the shared workflow. GitHub's board takes its columns from "any single select or iteration field," which makes any field a possible board.
 
 The mapping is the source of most board confusion: a new status added to the workflow and not mapped makes items disappear from the board. A builder should flag unmapped statuses on the board itself ("3 items in statuses not on this board") rather than hiding them silently, and should derive the done line from status categories, not from whichever column happens to be last.
 
 ### What a Board Holds
 
-Boards have display limits that say something about their cost. Jira's company-managed board, backlog and timeline "can each only show up to 5,000 work items at a time" (the new board view rolling out as of October 2026 removes that limit), while "there's no limit on the number of work items that can be included in a filter"; without sprints, completed work leaves a Kanban board's last column after 14 days. Azure shows 1,000 cards per board excluding the Proposed and Completed categories, 1,000 tasks on a taskboard, 10,000 items on a backlog, and hides completed items whose Changed Date is older than 183 days. GitHub Projects allow 50,000 items per project.
+Boards have display limits that say something about their cost. Jira's company-managed board, backlog and timeline can each show "up to 5,000 work items at a time" (the new board view rolling out as of October 2026 removes that limit except for company-managed boards that pull work items from multiple spaces), while "there's no limit on the number of work items that can be included in a filter"; without sprints, completed work leaves a Kanban board's last column after 14 days. Azure shows 1,000 cards per board excluding the Proposed and Completed categories, 1,000 tasks on a taskboard, 10,000 items on a backlog, and hides completed or closed items whose Changed Date is older than a year. GitHub Projects allow 50,000 items per project.
 
 The pattern is that boards show working sets, and history lives in queries and reports. My rule is the same: a board's query should exclude old completed work by default, the exclusion should be stated on the board, and every chart should read from history tables, not from what the board currently shows.
 
@@ -235,7 +235,7 @@ Closing a sprint runs in one transaction: close open membership rows with `compl
 
 **Vendor documentation**
 
-- [Atlassian Support: What is a Jira board?](https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-board/), boards, default columns, the 5,000-item limit and new board view, 14-day removal of done work without sprints
+- [Atlassian Support: What is a Jira board?](https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-board/), boards, default columns, the 5,000-item limit and where the new board view keeps it, 14-day removal of done work without sprints
 - [Atlassian Support: Work item limits in company-managed spaces](https://support.atlassian.com/jira-software-cloud/docs/issue-limits-in-company-managed-projects/), board, backlog and timeline display limits and unlimited filters
 - [Atlassian Support: Configure columns](https://support.atlassian.com/jira-software-cloud/docs/configure-columns/), column constraints, status mapping, unmapped statuses and the right-most column
 - [Atlassian Support: Plan a sprint](https://support.atlassian.com/jira-software-cloud/docs/plan-a-sprint/), starting a sprint and the sprint goal
@@ -267,7 +267,7 @@ Closing a sprint runs in one transaction: close open membership rows with `compl
 - [Linear Docs: Creating issues](https://linear.app/docs/creating-issues), T-shirt estimate mapping
 - [Linear Docs: Filters](https://linear.app/docs/filters), issues added to a cycle after its first 24 hours
 - [Linear Docs: Insights](https://linear.app/docs/insights), burn-up history as cumulative flow
-- [ClickUp: Pricing](https://clickup.com/pricing), Sprints on every plan and Sprint Points by plan
+- [ClickUp Help: Sprints feature availability and limits](https://help.clickup.com/hc/en-us/articles/35714017592471-Sprints-feature-availability-and-limits), Sprints, Sprint Points, Sprint Cards and Sprint automations by plan
 
 **Methods and research**
 

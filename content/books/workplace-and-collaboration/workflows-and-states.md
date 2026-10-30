@@ -40,7 +40,7 @@ Azure's process rules also bound the shape: at least two states, at least one in
 
 Jira's boards make the same decision by column: on a board, only the right-most column counts as complete, and work items "are considered as complete once they have been moved to the last column on the board" when a sprint closes ([Boards, Sprints & Cycles](/books/workplace-and-collaboration/boards-sprints-and-cycles#sprints)).
 
-Linear's model is a workflow per team, "a group of ordered issue statuses defined per-team," created from a default and customizable in team settings; sub-teams can inherit a parent team's workflow. Its statuses fall into a small set of categories that the product defines (backlog, unstarted, started, completed and canceled, plus triage), which is what lets cycles, project graphs and Insights read every team's workflow the same way. <!-- source-gap: linear-status-categories | missing | the names of Linear's fixed status categories (backlog, unstarted, started, completed, canceled, triage) | closes with: a Linear documentation or API reference page listing workflow state types | checked: 2026-10-29 -->
+Linear's model is a workflow per team, "a group of ordered issue statuses defined per-team," created from a default and customizable in team settings; sub-teams can inherit a parent team's workflow. Every status carries a type the product defines: Linear's API schema lists them as triage, backlog, unstarted, started, completed and canceled, plus a duplicate type for issues closed as duplicates. The type, not the status name, is what lets cycles, project graphs and Insights read every team's workflow the same way.
 
 The categories are why a system can let customers name anything. My rule is that the product never branches on a status name, only on a category, and that every report, automation trigger and integration defines "done" by category. A customer who renames "Done" to "Shipped" then breaks nothing.
 
@@ -251,4 +251,5 @@ GROUP BY item_id;
 - [Microsoft Learn: Rules reference](https://learn.microsoft.com/en-us/azure/devops/organizations/settings/work/rule-reference), conditions and actions per rule, enforcement on every path and the bypass permission
 - [Microsoft Learn: Work tracking, process, and project limits](https://learn.microsoft.com/en-us/azure/devops/organizations/settings/work/object-limits), 32 states per type and the per-project validation expression
 - [Linear Docs: Conceptual model](https://linear.app/docs/conceptual-model), per-team ordered workflows, sub-team inheritance and triage
+- [Linear SDK: GraphQL schema](https://github.com/linear/linear/blob/master/packages/sdk/src/schema.graphql), the `WorkflowState` type and its state types (triage, backlog, unstarted, started, completed, canceled, duplicate)
 - [GitHub Docs: Closing an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/administering-issues/closing-an-issue), closing as completed or not planned

@@ -19,12 +19,12 @@ As of October 2026:
 
 | Platform | Shape | Publishing model | Targeting | Freshness |
 | --- | --- | --- | --- | --- |
-| **SharePoint and the SharePoint app in Teams** (formerly Viva Connections) | Communication sites, hub sites, one or more home sites; app inside Teams | News posts, boosted news, announcements, dashboard cards, resources | Microsoft Entra and Microsoft 365 groups; filtering, not security | Not covered here |
-| **Google Sites** | Google Workspace site builder | Published sites | Not covered here | Not covered here |
+| **SharePoint and the SharePoint app in Teams** (formerly Viva Connections) | Communication sites, hub sites, one or more home sites; app inside Teams | News posts, boosted news, announcements, dashboard cards, resources | Microsoft Entra and Microsoft 365 groups; filtering, not security | Not covered in the sources cited here |
+| **Google Sites** | Google Workspace site builder | Published sites, shared and published under the Drive sharing settings | Site sharing only; no audience targeting documented | No freshness or verification feature documented |
 | **Confluence as intranet** | Spaces and page trees | Pages with a publish step | Space and page permissions | Owners, archiving, inactivity filters |
 | **Guru** | Cards in collections, plus connected sources | Cards surfaced in other tools | Collections and groups | Verifier per card, intervals from 30 days to 1 year, AI auto-unverify |
-| **Staffbase** | Employee app, intranet and email | Communications for comms, HR and IT | By role, location and context | Not covered here |
-| **Simpplr** | AI intranet and employee experience platform | Intranet content and search | Not covered here | Governance of trusted content |
+| **Staffbase** | Employee app, intranet and email | Communications for comms, HR and IT | By role, location and context | Not covered in the sources cited here |
+| **Simpplr** | AI intranet and employee experience platform | Intranet content and search | Not covered in the sources cited here | Governance of trusted content |
 
 The suites build intranets out of their file and site platforms; the specialists (Staffbase, Simpplr and similar) sell to internal communications teams who want an employee app, newsletters and measurement on top of, or instead of, those sites; knowledge tools (Guru) sell verification and answer delivery inside the tools people already use. Microsoft's own trajectory shows where the suite is heading: Viva Topics, the AI-built knowledge layer, was retired on February 22, 2025, with Microsoft pointing customers to publish knowledge as SharePoint pages that Copilot and Microsoft Search use instead, and Viva Connections is now documented as "the SharePoint app in Teams."
 
@@ -43,7 +43,7 @@ The inversion is plain: Microsoft provides the slots, but the customer's communi
 
 ## Google Sites and Confluence
 
-**Google Sites** is the Google Workspace site builder. Its published limits as of October 2026: 15,000,000 characters per page, 40,000,000 characters per site, 10,000 pages per site and 15,000 images per site. I found no news ranking or audience targeting model documented for it, which is why it tends to serve departmental portals rather than a corporate front page.
+**Google Sites** is the Google Workspace site builder. Its published limits as of October 2026: 15,000,000 characters per page, 40,000,000 characters per site, 10,000 pages per site and 15,000 images per site. I found no news ranking or audience targeting model documented for it, which is why it tends to serve departmental portals rather than a corporate front page. Its admin model is borrowed from Drive. An admin with the Sites administrator privilege can switch the service off for everyone (then "no one in your organization can create, view, or access Google Sites"), and two settings, "Users can edit sites" and "Allow users to create new sites," both on by default, can be turned off for organizational units that shouldn't build sites. Who can see a published site is not a Sites setting at all: "you define how people can share and publish sites in your organization in the Drive settings," so the external-sharing policy that governs files governs the intranet too, and Sites needs Drive turned on for every user who builds one.
 
 **Confluence** works as an intranet when a company standardizes on it: a top-level space for company-wide content, department spaces beneath, and the page-tree restrictions of [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#containers-trees-and-restrictions). Its strengths are the ones a knowledge base needs: published pages with a review step, owners separate from creators, and archiving that removes stale pages from trees, search and feeds without breaking links, with Premium and Enterprise admins able to filter pages with no views, comments or updates over a period and reassign pages without active owners. Its weakness as an intranet is the same as any wiki's: it has no native model for audience-targeted news or a mobile employee app.
 
@@ -225,6 +225,8 @@ Read analytics live outside the audit store, aggregated by default, with per-per
 - [Microsoft Learn: SharePoint limits](https://learn.microsoft.com/en-us/office365/servicedescriptions/sharepoint-online-service-description/sharepoint-online-limits), subsites, 2,000 hub sites, 500 navigation links per level
 - [Microsoft Learn: Changes coming to Topics](https://learn.microsoft.com/en-us/microsoft-365/topics/changes-coming-to-topics), Viva Topics retired February 22, 2025, and what happened to topic pages
 - [Microsoft Learn: Manage bookmarks](https://learn.microsoft.com/en-us/microsoftsearch/manage-bookmarks), bookmark states, reserved keywords, 5,000-bookmark limit, keyword guidance, Microsoft Search in Bing retired March 31, 2025, Teams ranking threshold
+- [Google Workspace Admin Help: Turn Sites on or off for users](https://knowledge.workspace.google.com/admin/users/access/turn-sites-on-or-off-for-users), service on or off, the create and edit settings and their defaults, the Sites administrator privilege, Drive required
+- [Google Workspace Admin Help: Support your Google Sites users](https://knowledge.workspace.google.com/admin/sites/support-your-google-sites-users?hl=en), sharing and publishing defined in the Drive settings
 - [Google: Files you can store in Google Drive](https://support.google.com/drive/answer/37603?hl=en), Google Sites limits per page and per site
 - [Atlassian: Introducing page and bulk archiving in Confluence Cloud (2020)](https://www.atlassian.com/blog/confluence/introducing-page-and-bulk-archiving-in-confluence-cloud), archiving behavior, inactivity filters, pages without active owners, plan availability
 - [Guru: Verifying and unverifying cards](https://help.getguru.com/docs/verifying-and-unverifying-cards), verifiers, intervals, default for new collections, auto-unverify rules, 7-day re-review, quality log

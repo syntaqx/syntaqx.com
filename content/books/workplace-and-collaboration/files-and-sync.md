@@ -18,9 +18,9 @@ As of October 2026:
 | Platform | Ownership model | Max file size | Version history | Bulk recovery | Storage pool |
 | --- | --- | --- | --- | --- | --- |
 | **Dropbox** | Member folders and team folders | 2 TB (web uploads over 375 GB may time out) | 30 days (Basic, Plus) to 365 days (Business Plus, Advanced, Enterprise) | Rewind, within version history | Team storage |
-| **Box** | Folders with waterfall permissions | 250 MB (free) to 500 GB (Enterprise Advanced) | Not researched here | Not researched here | Enterprise storage |
+| **Box** | Folders with waterfall permissions | 250 MB (free) to 500 GB (Enterprise Advanced) | 25 versions (Business Starter), 50 (Business, Business Plus), 100 (Enterprise), unlimited (Enterprise Plus, Enterprise Advanced) | Not covered in the sources cited here | 100 GB on Business Starter, unlimited from Business |
 | **OneDrive and SharePoint** | OneDrive per user; SharePoint sites per group or team | 250 GB | Admin-set count and age limits; 50,000 major versions maximum | Restore OneDrive to any point in the last 30 days | 1 TB plus 10 GB per license for SharePoint, separate from OneDrive |
-| **Google Drive** | My Drive per user; shared drives owned by the organization | 5 TB for non-Google files | Not covered here | Not covered here | Pooled per user: 30 GB (Business Starter), 2 TB (Standard), 5 TB (Plus) |
+| **Google Drive** | My Drive per user; shared drives owned by the organization | 5 TB for non-Google files | Non-Google files: a version may be deleted after 30 days or 100 newer versions unless kept forever | Ransomware detection on desktop sync; restore of the last 25 days of revisions, account-wide | Pooled per user: 30 GB (Business Starter), 2 TB (Standard), 5 TB (Plus) |
 
 The choice that shapes everything else is **who owns a file**. Personal ownership (My Drive, OneDrive, a Dropbox member folder) is natural for drafts and fails at offboarding, because the file's fate is tied to an account that will be deleted. Container ownership (shared drives, SharePoint sites, Dropbox team folders) ties the file to a team that outlives any member. Every platform has both, and the admin's job is to push durable content into containers.
 
@@ -86,6 +86,10 @@ Ransomware turns version history into a recovery system. An infected laptop encr
 - **Dropbox Rewind** undoes edits, renames, additions and deletions back to a chosen point, including in shared and team folders where the user can edit, within the account's version history; on teams only admins can rewind by default. It can't bring back permanently deleted files or undo folder membership changes.
 - **OneDrive Restore** undoes all actions on files and folders within the last 30 days for Microsoft 365 subscribers, with an activity chart to find the spike, and after automatic ransomware detection pre-fills a suggested restore date. Files permanently deleted from the recycle bin can't come back; files created after the restore point go to the recycle bin.
 
+- **Google Drive** checks files for ransomware as Drive for desktop syncs them (on by default, for Business, Enterprise, Education and Frontline editions): when it finds encrypted files it pauses desktop sync, alerts the user and the Admin console, and offers a restore that copies earlier versions back as the new current versions from "the last 25 days of revisions." The restore picks a point in the account's change history, not files ("You can't select individual files"), and no versions are deleted. Separately, an admin can recover files a user emptied from trash "within 25 days," by date range only, one restore at a time.
+
+Version windows still differ by an order of magnitude underneath. Box counts versions, not days, as a plan feature: 25 on Business Starter, 50 on Business and Business Plus, 100 on Enterprise, unlimited on Enterprise Plus and Enterprise Advanced. Google Drive keeps non-Google files' versions for 30 days or 100 newer versions unless someone marks a version "Keep forever"; native Docs, Sheets and Slides keep their own revision history ([Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#versions-and-restore)).
+
 My rule: **the ransomware window is the shortest of version history, recycle bin and trim policy, and admins must see that number.** A tenant with 365 days of versions and a 14-day trim job can recover 14 days. Backups outside the platform are the second line ([Restores Are What Matter](/docs/operations/disaster-recovery#restores-are-what-matter)).
 
 ## Large Files and Upload Limits
@@ -93,7 +97,7 @@ My rule: **the ransomware window is the shortest of version history, recycle bin
 Per-file limits differ by two orders of magnitude, and on Box they're a plan feature:
 
 - **Dropbox**: 2 TB per file (2,199,019,061,248 bytes); uploads over 375 GB in a browser may time out, so the desktop app or API is recommended.
-- **Box**: 250 MB on free personal accounts, 2 GB Starter, 5 GB Business, 50 GB Enterprise, 150 GB Enterprise Plus, 500 GB Enterprise Advanced.
+- **Box**: 250 MB on free personal accounts, 2 GB Starter, 5 GB Business, 15 GB Business Plus, 50 GB Enterprise, 150 GB Enterprise Plus, 500 GB Enterprise Advanced.
 - **Google Drive**: 5 TB for files that aren't converted to Google formats, and each user can upload and copy 750 GB within 24 hours.
 - **SharePoint, OneDrive and Teams**: 250 GB per file, 250 MB per attachment on a list item, 20 GB for generated ZIP downloads, and moves or copies across sites limited to 100 GB and 30,000 files per operation.
 
@@ -260,6 +264,11 @@ Download and sync events are high volume and employee-identifying; keep them in 
 - [Microsoft Learn: Version history limits for document library and OneDrive](https://learn.microsoft.com/en-us/sharepoint/document-library-version-history-limits), cascade of settings, automatic and manual limits, minimums, trimming behavior, holds and records, audit events
 - [Microsoft Support: Restore your OneDrive](https://support.microsoft.com/en-us/office/restore-your-onedrive-fa231298-759d-41cf-bcd0-25ac53eb8a15), 30-day restore, ransomware detection, recycle bin limits
 - [Microsoft Learn: Built-in virus protection in SharePoint, OneDrive and Teams](https://learn.microsoft.com/en-us/defender-office-365/anti-malware-protection-for-spo-odfb-teams-about), asynchronous heuristic scanning, default download after warning, `DisallowInfectedFileDownload`, forensic extraction, sync behavior
+- [Box: Plans and pricing](https://www.box.com/pricing), version history counts, storage and upload limits by plan
+- [Google Drive Help: Check activity and file versions](https://support.google.com/drive/answer/2409045?hl=en), non-Google file versions deleted after 30 days or 100 newer versions unless kept forever
+- [Google Workspace Admin Help: Detect ransomware and recover files in Drive for desktop](https://knowledge.workspace.google.com/admin/drive/detect-ransomware-and-recover-files-in-drive-for-desktop), detection on sync, paused sync and alerts, on by default, 25-day restore window, editions
+- [Google Drive Help: Restore files in bulk](https://support.google.com/drive/answer/16482799?hl=en), last 25 days of revisions, no individual file selection, restored versions copied as current
+- [Google Workspace Admin Help: Recover deleted files and folders for Drive users](https://knowledge.workspace.google.com/admin/drive/recover-deleted-files-and-folders-for-drive-users?hl=en), 25 days after trash is emptied, date range only, one restore at a time
 - [Google: Files you can store in Google Drive](https://support.google.com/drive/answer/37603?hl=en), 5 TB for other files
 - [Google Workspace Admin Help: Shared drive limits](https://support.google.com/a/answer/7338880?hl=en), 500,000 items, 600 members and 100 groups, 100 nesting levels, 750 GB per user per 24 hours
 - [Google Workspace: Shared drives vs. My Drive](https://support.google.com/a/users/answer/9310249?hl=en), external contributions owned by the organization, member removal

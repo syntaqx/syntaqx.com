@@ -21,7 +21,7 @@ As of October 2026, from public sources:
 | --- | --- | --- | --- | --- |
 | **Google Docs** | OT over a revision log of insert, delete and style operations | Central server | Limited | 2010 Drive blog series on collaboration |
 | **Figma** | Per-property last-writer-wins on an object tree, CRDT-inspired | One server process per document | Arbitrary length; edits reapplied on reconnect | 2019 engineering post |
-| **Notion** | Record-level operations in transactions; offline pages moved to a CRDT data model | Server commits or rejects transactions | Pages marked for offline use | 2021 data model post, 2025 offline post |
+| **Notion** | Record-level operations in transactions; offline pages moved to a CRDT data model | Server commits or rejects transactions | Pages marked for offline use | 2021 data model post, December 2025 offline post |
 | **Microsoft Loop and Fluid Framework** | Distributed data structures merged on clients | Ordering service assigns sequence numbers | Through client merge | Fluid architecture docs |
 | **Confluence live docs** | Real-time editing without a publish step | Not publicly detailed | Not publicly detailed | Help center limits: 100 viewers, 40 editors |
 | **Yjs** (library) | CRDT shared types | Nobody; updates merge in any order | Yes, with persistence providers | Library docs |
@@ -86,7 +86,7 @@ This is the model I reach for when the content is structured objects (diagrams, 
 
 Microsoft's Fluid Framework, under Loop components, splits the work differently. The service is a **total-order broadcast**: it assigns each client operation a sequence number, broadcasts it to connected clients and acknowledges the sender, while "the service knows nothing about the contents of any Fluid container." Clients run the merge logic in distributed data structures, which keeps the server simple and fast, and the service stores **summaries** so new clients load without replaying the whole operation log. It's OT's central order with CRDT-style client merges, and a reminder that the question is not OT versus CRDT but where ordering, merging and compaction each happen.
 
-Notion sits at the record level. Edits are operations on block records, grouped into transactions the server commits or rejects whole after checking permissions and coherence; clients subscribe to the records they render and fetch new versions when notified ([Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#blocks-notion-s-model)). For offline mode, Notion's December 2025 post says pages marked for offline use are migrated to a new CRDT data model for conflict resolution, and that never showing partially downloaded pages offline keeps merges predictable.
+Notion sits at the record level. Edits are operations on block records, grouped into transactions the server commits or rejects whole after checking permissions and coherence; clients subscribe to the records they render and fetch new versions when notified ([Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#blocks-notion-s-model)). For offline mode, Notion's December 2025 post says pages marked for offline use are migrated to a new CRDT data model for conflict resolution, and that never showing partially downloaded pages offline keeps merges predictable. A page is kept offline for any of several independent reasons (marked by the user, visited recently, favorited, or inherited from a database marked offline, which downloads up to 50 pages of its current view), and stays offline until the last reason goes away: offline availability is a reference count, not a flag.
 
 ## Presence and Cursors
 
@@ -216,7 +216,7 @@ Edits by apps and AI assistants are attributed to the app installation and the m
 - [Google Drive Blog: What's different about the new Google Docs, Conflict resolution (September 22, 2010)](https://drive.googleblog.com/2010/09/whats-different-about-new-google-docs_22.html), revision log of insert, delete and style operations, the transform example, style range expansion, server relay
 - [Figma: How Figma's multiplayer technology works (2019)](https://www.figma.com/blog/how-figmas-multiplayer-technology-works/), why not OT, object tree, per-property last-writer-wins, fractional indexing, cycle rejection, undo principle, offline reapply, one process per document
 - [Notion: The data model behind Notion's flexibility (2021)](https://www.notion.com/blog/data-model-behind-notion), operations, transactions, server validation and record subscriptions
-- [Notion: How we made Notion available offline (December 11, 2025)](https://www.notion.com/blog/how-we-made-notion-available-offline), offline page tracking and migration of offline pages to a CRDT data model
+- [Notion: How we made Notion available offline (December 11, 2025)](https://www.notion.com/blog/how-we-made-notion-available-offline), offline page tracking (marked, recent, favorited, inherited, 50 pages per database view) and migration of offline pages to a CRDT data model
 
 **Research**
 
