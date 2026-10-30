@@ -39,7 +39,7 @@ Regulation E's error list is short and specific (12 CFR 1005.11(a)):
 
 It excludes routine balance inquiries, requests for tax or recordkeeping information and requests for duplicate documentation. And it only covers what is an electronic fund transfer in the first place: checks, Fedwire and similar wire transfers, most securities transfers, the institution's own automatic transfers between a consumer's accounts and transfers initiated by an ordinary phone call to the bank are all outside it (12 CFR 1005.3(c)), as are business accounts. A dispute about goods not received or not as described is a merchant dispute the card network may handle, not a Reg E error; Unit and Synctera both draw that line, with Unit noting exceptions for ATM dispense errors, small transactions and processing errors.
 
-Two CFPB answers settle the arguments that come up most. A transfer made by someone who tricked the consumer into sharing their credentials "is an unauthorized EFT under Regulation E", and "negligence by the consumer cannot be used as the basis for imposing greater liability" than the regulation allows. A consumer who sends money themselves to a scammer is a different case, the subject of Account Takeover & Scams.
+Two CFPB answers settle the arguments that come up most. A transfer made by someone who tricked the consumer into sharing their credentials "is an unauthorized EFT under Regulation E", and "negligence by the consumer cannot be used as the basis for imposing greater liability" than the regulation allows. A consumer who sends money themselves to a scammer is a different case, the subject of [Account Takeover & Scams](/books/banking-and-lending/account-takeover-and-scams#unauthorized-or-authorized).
 
 ## The Notice and the Clock
 

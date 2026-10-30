@@ -100,9 +100,9 @@ Most banks are owned by a holding company, and the Federal Reserve supervises ba
 
 **The CFPB** has "exclusive authority to require reports and conduct examinations on a periodic basis" for federal consumer financial law at insured banks and credit unions with more than $10 billion in assets, and their affiliates (12 USC 5515), with primary enforcement authority over those laws. Below $10 billion, the prudential regulator examines consumer compliance. The statute requires the CFPB and the prudential regulator to coordinate schedules, conduct simultaneous examinations unless the institution asks otherwise, share draft reports with at least 30 days to comment, and gives the institution an appeal to a governing panel if their findings conflict. The $10 billion line therefore changes a bank's examiners as well as its debit interchange. The CFPB's own rules (Regulations E, Z, B, DD and the rest) apply to every bank regardless of size; what changes at $10 billion is who checks.
 
-**FinCEN** holds "overall authority for enforcement and compliance" with the Bank Secrecy Act and delegates examination to the OCC, the Federal Reserve, the FDIC and NCUA for the institutions they examine (31 CFR 1010.810), which is why a bank's AML program is reviewed by its usual examiners and why FinCEN, the agency and sometimes the Justice Department each act in a large case (BSA/AML Programs).
+**FinCEN** holds "overall authority for enforcement and compliance" with the Bank Secrecy Act and delegates examination to the OCC, the Federal Reserve, the FDIC and NCUA for the institutions they examine (31 CFR 1010.810), which is why a bank's AML program is reviewed by its usual examiners and why FinCEN, the agency and sometimes the Justice Department each act in a large case ([BSA/AML Programs](/books/banking-and-lending/bsa-aml)).
 
-**OFAC**, also at Treasury, administers sanctions, which apply to every US person, bank or not (Sanctions Screening).
+**OFAC**, also at Treasury, administers sanctions, which apply to every US person, bank or not ([Sanctions Screening](/books/banking-and-lending/sanctions-screening)).
 
 **State attorneys general** can sue national banks in court to enforce applicable law; the National Bank Act's limits on state "visitorial powers" don't stop them (12 USC 25b(i)).
 
