@@ -34,7 +34,7 @@ Three things stand out. **The NSF fee is nearly gone at large banks,** because c
 
 Banks with assets over $1 billion have reported overdraft and NSF fee revenue in their call reports since 2015, so the trend is public. In the CFPB's April 2024 Data Spotlight, combined revenue was **$5.83 billion in 2023**, down 51% from **$11.96 billion in 2019** and 24% below the $7.61 billion of 2022. Revenue was flat across the quarters of 2023, which the CFPB read as the 2022 policy changes having run their course. The data excludes banks at or under $1 billion and all credit unions. That spotlight is the most recent edition of the series I found; the call report data it comes from is the place to recompute the trend.
 
-The shift moved the business model rather than ending it. A program that doesn't charge overdraft fees still lends on overdrafts; it prices the risk through eligibility and limits, and earns on interchange and deposits instead, which is the Neobanks & Consumer Fintech story for programs whose bank is under $10 billion in assets.
+The shift moved the business model rather than ending it. A program that doesn't charge overdraft fees still lends on overdrafts; it prices the risk through eligibility and limits, and earns on interchange and deposits instead, which is the [Neobanks & Consumer Fintech](/books/banking-and-lending/neobanks) story for programs whose bank is under $10 billion in assets.
 
 ## The Product Lines
 

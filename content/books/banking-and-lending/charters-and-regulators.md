@@ -76,7 +76,7 @@ The result is the one route by which a retailer, an automaker or a fintech can o
 
 As of October 2026:
 
-- **Fintech ILCs:** Square Financial Services (Block's bank) and Nelnet Bank were approved in 2020 (Neobanks & Consumer Fintech covers what Block does with its bank).
+- **Fintech ILCs:** Square Financial Services (Block's bank) and Nelnet Bank were approved in 2020 ([Neobanks & Consumer Fintech](/books/banking-and-lending/neobanks) covers what Block does with its bank).
 - **Policy:** on July 15, 2025 the FDIC withdrew its August 2024 proposal to tighten Part 354 for ILC parents, said it no longer intends to finalize it, and opened a request for information on how it reviews ILC filings against the statutory factors.
 - **The 2026 wave:** the FDIC conditionally approved Ford Credit Bank and GM Financial Bank in January 2026, both based in Salt Lake City to buy auto retail installment contracts and fund with online savings and time deposits, each to be established within 12 months. GM Financial Bank's conditions included $667 million of initial paid-in capital and a 15% leverage ratio, Ford Credit Bank's $1.5 billion, and conditional approvals followed for Stellantis Bank and Edward Jones Bank.
 
