@@ -69,7 +69,7 @@ Four patterns run through the table:
 
 - **Three vendors run most US cores.** Fiserv, FIS and Jack Henry sell several cores each, most of them acquired over decades, and an institution's core is typically hosted in the vendor's data center on a long contract. Jack Henry's own 10-K puts SilverLake at nearly 12% of domestic banks under $55 billion. Core Banking Systems covers what each kind of core does.
 - **Cloud-native cores win greenfield and big banks first.** Thought Machine, 10x and Mambu publish their customer lists, and the names are new digital banks, large banks building a second core beside the first, and banks outside the US. A US community bank conversion to one is rare, and Core Modernization & Conversions covers why.
-- **The layer above the core is a separate market.** Digital banking (Q2, Alkami, Jack Henry's Banno, the core vendors' own), account opening (Alkami's MANTL) and origination (nCino, ICE Encompass for mortgages, Blend, MeridianLink) are sold to institutions that keep their core, and each integrates with every core it supports. Digital & Mobile Banking and [Loan Origination](/books/banking-and-lending/loan-origination) cover them.
+- **The layer above the core is a separate market.** Digital banking (Q2, Alkami, Jack Henry's Banno, the core vendors' own), account opening (Alkami's MANTL) and origination (nCino, ICE Encompass for mortgages, Blend, MeridianLink) are sold to institutions that keep their core, and each integrates with every core it supports. [Digital & Mobile Banking](/books/banking-and-lending/digital-banking) and [Loan Origination](/books/banking-and-lending/loan-origination) cover them.
 - **Cores are becoming BaaS platforms.** Q2 calls Helix "cloud-native core processing and BaaS"; Fiserv's Finxact also runs its embedded finance ledger. The same software that runs a bank's own accounts now runs programs on that bank's charter.
 
 ## Sponsor Banks and BaaS
@@ -138,7 +138,7 @@ Almost every institution should buy its core; the question is what else.
 
 **Partner** when the product is new and the charter is the hard part: a program on a sponsor bank, a loan program through a bank partner, a BaaS platform for the first year. The trade is control and margin for speed, and the partner's consent orders become your roadmap.
 
-**Build** where the product is the difference: the digital experience, the decision engine, the subledger a program runs on, the servicing rules no vendor models, or the whole stack when the institution is itself the platform (Column's model, or a large bank's second core). Banking Architecture covers building it.
+**Build** where the product is the difference: the digital experience, the decision engine, the subledger a program runs on, the servicing rules no vendor models, or the whole stack when the institution is itself the platform (Column's model, or a large bank's second core). [Banking Architecture](/books/banking-and-lending/banking-architecture) covers building it.
 
 ## How to Build It
 
@@ -188,7 +188,7 @@ Design notes:
 ## Auditing
 
 - **Where each fact came from.** Every institution event with its source URL and effective date, so a routing change or a failure can be traced to the agency's release.
-- **Which vendor ran what, when.** Every institution's core, card processor and digital platform over time, because an exam finding, an outage or a conversion error is investigated against the system in force that day (Security, Resilience & Incident Notice covers vendor concentration as a risk).
+- **Which vendor ran what, when.** Every institution's core, card processor and digital platform over time, because an exam finding, an outage or a conversion error is investigated against the system in force that day ([Security, Resilience & Incident Notice](/books/banking-and-lending/security-and-resilience) covers vendor concentration as a risk).
 - **Market figures with their definitions.** Any count, asset total or share used in a decision, kept with its release and as-of date, since the FDIC, NCUA and the Fed count different populations.
 
 ## What This Means for the System You Build
