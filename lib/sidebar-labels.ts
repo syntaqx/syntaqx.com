@@ -34,6 +34,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Orders, Inventory and Fulfillment": "Fulfillment",
   "Other Property Types": "Property Types",
   "Peer-to-Peer Marketplaces": "P2P Marketplaces",
+  "Pharma and Clinical Trials": "Pharma & Trials",
   "Point of Sale and Stores": "Point of Sale",
   "Practice Management and Patient Engagement": "Practices",
   "Properties, Owners and Investors": "Properties",
